@@ -36,8 +36,8 @@ export const UpdateWorld = async function (installedVersion, migrationVersion) {
         for (const id of game.items.invalidDocumentIds) {
             try {
                 const item = game.items.getInvalid(id);
-                console.error(`Item ${item.name} is of a not valid type ${item.type} and have been removed from the system`);
-                await item.delete()
+                // WoDX: never delete items of an unknown type; log them so a bad migration cannot destroy world data.
+                console.error(`WoDX | Item ${item.name} is of a not valid type ${item.type}; kept untouched (not deleted)`);
             }
             catch(err) {
                 console.error(`invalidDocumentIds ${item.name}: ${err.message}`);
