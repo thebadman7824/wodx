@@ -180,6 +180,7 @@ test("GATE: 1197 to 2025 with nothing lost (the in-world time-skip test)", async
   const r = await api().runSkipTest();
   const failed = r.results.filter(x => !x.pass);
   assert.deepEqual(failed, [], JSON.stringify(failed));
+  assert.equal(r.total, 27, "the checklist promises 27 checks");
   assert.equal(api().time.yearOf(game.time.worldTime), 2025);
   assert.deepEqual(r.stepLog.map(s => s.year), [1347, 1450, 1837, 1914, 1997, 2025]);
   assert.match(game.journal.find(j => j.getFlag(M, "kind") === "skip-test").pages.getName("Result").text.content, new RegExp(`${r.total} of ${r.total} checks passed`));

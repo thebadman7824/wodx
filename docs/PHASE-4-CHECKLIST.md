@@ -16,6 +16,6 @@
 5. **Gate, in wodx-template** (it moves that world's clock to 2025 for good):
    - Manage Modules: make sure WoDX Chronicle and WoDX Creation are enabled.
    - Droplet button → **Time-skip test** → confirm.
-   - The "WoDX Time-Skip Test" journal should say 23 of 23 checks passed. The five "Skip Test ·" characters show the results. Two mortals are in "WoDX · The Dead", the ghoul is alive with an 18-point blood pool, and the elder's sheet has Firearms and Computer while keeping Melee 3, Dominate 3 and Theology 3.
+   - The "WoDX Time-Skip Test" journal should say 27 of 27 checks passed. The five "Skip Test ·" characters show the results. Two mortals are in "WoDX · The Dead", the ghoul is alive with an 18-point blood pool, and the elder's sheet has Firearms and Computer while keeping Melee 3, Dominate 3 and Theology 3.
 6. **Optional, in rothenstein-wodx: a plan only.** Clock → **Pass the years** → 50 → "Show what happens", then "Write the plan to a journal". Read it in "WoDX Time Skips". Do not press "Pass the years" there unless you mean to skip your chronicle ahead.
 7. Look at the browser console (F12) for red lines starting with "WoDX", then tell Claude you're done.
