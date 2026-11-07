@@ -16,7 +16,7 @@ WoDX notes:
 
 | Module | Version | Phase | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.1.3 | 1 | rothenstein-wodx, wodx-template |
-| wodx-otherworlds | 0.1.1 | 2 | rothenstein-wodx, wodx-template |
+| wodx-chronicle | 0.1.4 | 1 | rothenstein-wodx, wodx-template |
+| wodx-otherworlds | 0.1.2 | 2 | rothenstein-wodx, wodx-template |
 
 Both stay idle in worlds without `flags.wodx` (the original Rothenstein world).

@@ -7,6 +7,7 @@ import * as safety from "./safety.mjs";
 import {ClockApp, setDateDialog} from "./clock-app.mjs";
 import {HouseRulesApp} from "./house-rules-app.mjs";
 import {runEraTest} from "./era-test.mjs";
+import * as contentFixes from "./content-fixes.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -77,6 +78,7 @@ Hooks.once("ready", async () => {
 
   await eras.loadProfiles();
   eras.registerEraHandler();
+  contentFixes.registerContentFixes();
   eras.applyProfile(eras.activeEra().profile);
 
   game.socket.on(SOCKET, onSocket);
@@ -88,7 +90,8 @@ Hooks.once("ready", async () => {
     propose: approvals.propose,
     registerApprovalHandler: approvals.registerHandler,
     rule,
-    runEraTest
+    runEraTest,
+    contentFixes
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});
@@ -96,6 +99,7 @@ Hooks.once("ready", async () => {
   if ( isActiveGM() ) {
     await eras.checkEra();
     await eras.refreshRulesJournal();
+    await contentFixes.checkContentFixes();
     if ( !setting("openingSet") && game.time.worldTime === 0 ) {
       ui.notifications.info("WoDX: set the chronicle's opening date in the Chronicle Clock.");
       ClockApp.open();

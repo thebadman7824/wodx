@@ -290,6 +290,31 @@ test("the charts page is written into Chronicle Rules", async () => {
   assert.match(html, /W20 Gauntlet Chart \(p\. 309\)/);
 });
 
+test("saving ratings keeps an existing report up to date", async () => {
+  const {TaggingApp, writeReport} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
+  const saved = game.scenes;
+  class Coll extends Map { find(f) { for ( const v of this.values() ) if ( f(v) ) return v; } [Symbol.iterator]() { return this.values(); } }
+  const square = makeScene("sq", "Lower Town · Market Square", null);
+  const grove = makeScene("gr", "Locus · The Old Grove", null);
+  game.scenes = new Coll([[square.id, square], [grove.id, grove]]);
+  globalThis.Scene = {updateDocuments: async list => {
+    for ( const u of list ) game.scenes.get(u._id).flags[M] = {ratings: u[`flags.${M}.ratings`]};
+    return list;
+  }};
+  await writeReport();
+  const page = () => game.journal.find(j => j.getFlag(M, "kind") === "ratings-report").pages.getName("Scenes").text.content;
+  assert.match(page(), /0 of 2 scenes are tagged/);
+  const app = new TaggingApp();
+  await app.render({force: true});
+  const form = app.element.tagName === "FORM" ? app.element : app.element.querySelector("form");
+  form.elements["sq.settlement"].value = "town";
+  form.elements["gr.settlement"].value = "wilderness";
+  await TaggingApp.DEFAULT_OPTIONS.form.handler.call(app, new Event("submit"), form, null);
+  assert.match(page(), /2 of 2 scenes are tagged/, "Save rewrote the report");
+  assert.ok(mock.log.notifications.some(([, m]) => /Saved ratings for 2 scene\(s\) and updated the report/.test(m)));
+  game.scenes = saved;
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

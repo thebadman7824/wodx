@@ -161,7 +161,10 @@ export class TaggingApp extends ApplicationV2 {
       if ( changed ) updates.push({_id: scene.id, [`flags.${MODULE_ID}.ratings`]: next});
     }
     if ( updates.length ) await Scene.updateDocuments(updates);
-    ui.notifications.info(updates.length ? `Saved ratings for ${updates.length} scene(s).` : "Nothing changed.");
+    // A report that already exists is kept in step with what was saved
+    const reported = updates.length && game.journal.find(j => j.getFlag(MODULE_ID, "kind") === "ratings-report");
+    if ( reported ) await writeReport();
+    ui.notifications.info(updates.length ? `Saved ratings for ${updates.length} scene(s)${reported ? " and updated the report" : ""}.` : "Nothing changed.");
     await this.render();
   }
 

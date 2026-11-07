@@ -15,7 +15,21 @@
 
 - [x] The ratings window was cut off. Fixed in wodx-otherworlds 0.1.1 and wodx-chronicle 0.1.3; every window now scrolls and keeps Save in view (rule B17).
 
-## For you
+## Gate result (2026-11-07)
+
+- [x] Passed. Difficulties 6, 5 and 4 on the three maps; stepping back worked; the prototype moved the token to the Penumbra level. Logs: nothing from WoDX.
+- [x] Found in review: the report was written before Save. wodx-otherworlds 0.1.2 rewrites it on every Save.
+
+## Fix: roofs off their houses (wodx-chronicle 0.1.4)
+
+Foundry 14 places a tile by its centre; the Rothenstein importers placed tiles by their corner. 369 tiles in 113 scenes are affected: roofs, fog and ember effects, and the camp and haven modules. Your scenes and macros were backed up to `Backups\wodx-phase2-tilefix` first.
+
+1. Reload Foundry (F5) in **rothenstein-wodx**.
+2. Open the **Approval queue** (inbox button). Approve **Fix tile positions for Foundry 14**.
+3. View **Dolany Village**: each roof should sit on its house. Check a Lower Town map and the Player Camp too.
+4. Tell Claude what you see.
+
+## Steps you ran for the gate (done)
 
 1. Setup → Backups: snapshot `rothenstein-wodx`.
 2. **Restart Foundry.** The new region behavior type is only registered at startup.
