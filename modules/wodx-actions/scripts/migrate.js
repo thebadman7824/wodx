@@ -55,12 +55,15 @@ export function planMigration() {
     }
     const macros = [];
     const others = [];
+    const taken = new Set();
     for (const m of game.macros ?? []) {
         const usesOld = /game\.vtda20(actions|combat)/.test(m.command ?? "");
         if (/^VtDA20: /.test(m.name)) {
             const name = m.name.replace(/^VtDA20: /, "WoDX: ");
-            const clash = !!game.macros.find(x => x !== m && x.name === name);
-            macros.push({ macro: m, name, command: rewrite(m.command), clash });
+            // Each old module made a "VtDA20: Actor Type"; only the first is renamed, as a new world gets only one
+            const clash = taken.has(name) || !!game.macros.find(x => x !== m && x.name === name);
+            taken.add(name);
+            macros.push({ macro: m, from: m.name, name, command: rewrite(m.command), clash });
         } else if (usesOld) others.push(m);
     }
     const settings = [];
@@ -78,7 +81,7 @@ export function planSummary(plan) {
     if (plan.actors.length) parts.push(`${plan.actors.length} actor(s): copy ${plan.actors.reduce((n, a) => n + a.keys.length, 0)} VtDA20 flag(s) to the WoDX names`);
     const ren = plan.macros.filter(x => !x.clash).length;
     if (ren) parts.push(`${ren} "VtDA20:" macro(s): rename to "WoDX:" and call the WoDX modules`);
-    if (plan.macros.some(x => x.clash)) parts.push(`${plan.macros.filter(x => x.clash).length} macro(s) left as they are: a "WoDX:" macro of that name exists`);
+    if (plan.macros.some(x => x.clash)) parts.push(`${plan.macros.filter(x => x.clash).length} macro(s) left as they are: a "WoDX:" macro of that name exists or comes first`);
     if (plan.others.length) parts.push(`${plan.others.length} other macro(s) use the old names; they keep working through the alias and are not changed`);
     if (plan.settings.length) parts.push(`${plan.settings.length} old setting(s) are read as the WoDX settings' starting values; nothing is written`);
     return parts;
@@ -104,9 +107,9 @@ export async function migrate({ confirmed = false } = {}) {
         catch (e) { console.error("WoDX | migration", e); done.skipped.push(`${a.where}: ${e.message}`); }
     }
     for (const m of plan.macros) {
-        if (m.clash) { done.skipped.push(`Macro "${m.macro.name}": "${m.name}" already exists; left as it is`); continue; }
-        try { await m.macro.update({ name: m.name, command: m.command }); done.macros.push(`"${m.macro.name}" → "${m.name}"`); }
-        catch (e) { console.error("WoDX | migration", e); done.skipped.push(`Macro "${m.macro.name}": ${e.message}`); }
+        if (m.clash) { done.skipped.push(`Macro "${m.from}": "${m.name}" already exists; left as it is`); continue; }
+        try { await m.macro.update({ name: m.name, command: m.command }); done.macros.push(`"${m.from}" → "${m.name}"`); }
+        catch (e) { console.error("WoDX | migration", e); done.skipped.push(`Macro "${m.from}": ${e.message}`); }
     }
     const report = await writeReport(plan, done);
     await game.settings.set(MOD, "migration", { done: true, at: Date.now(), actors: done.actors.length, macros: done.macros.length });

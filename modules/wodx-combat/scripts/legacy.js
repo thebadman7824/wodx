@@ -14,8 +14,11 @@ export function oldSetting(oldModule, key, def) {
         const row = world?.find?.(s => s.key === full) ?? world?.getSetting?.(full)
             ?? (game.data?.settings ?? []).find?.(s => s.key === full);
         if (!row) return def;
-        const v = typeof row.value === "string" ? JSON.parse(row.value) : row.value;
-        return (v === undefined || v === null || typeof v !== typeof def) ? def : v;
+        // Foundry 14 hands back the parsed value; older stores may hold the JSON text
+        let v = row.value;
+        if (typeof v === "string") { try { v = JSON.parse(v); } catch (e) { /* a plain string setting */ } }
+        // With no default given (the migration report), any stored value counts
+        return (v === undefined || v === null || (def !== undefined && typeof v !== typeof def)) ? def : v;
     } catch (e) {
         return def;
     }

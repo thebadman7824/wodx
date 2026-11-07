@@ -13,7 +13,9 @@ CONFIG.worldofdarkness.sheettype = {...CONFIG.worldofdarkness.sheettype, changin
 CONFIG.worldofdarkness.groupKinds = {coterie: "Coterie (Vampire)", pack: "Pack (Werewolf and Fera)", other: "Other"};
 CONFIG.Actor = {dataModels: {Group: class {}}};
 // The old modules' stored settings, as Foundry keeps them (JSON strings)
-game.data = {settings: [{key: "vtda20-combat.showDice", value: "false"}, {key: "vtda20-actions.nightlyBlood", value: "false"}]};
+game.data = {settings: [{key: "vtda20-combat.showDice", value: "false"}, {key: "vtda20-actions.nightlyBlood", value: "false"},
+  // Foundry 14 hands back the parsed value, so a String setting arrives as plain text
+  {key: "vtda20-actions.flavorText", value: "gm"}]};
 
 class Coll extends Map {
   get contents() { return [...this.values()]; }
@@ -150,6 +152,8 @@ game.macros = new Coll();
 let macroIds = 0;
 globalThis.Macro = {create: async d => { const m = {...d, id: `mac${++macroIds}`, async update(ch) { Object.assign(this, ch); return this; }}; game.macros.set(m.id, m); return m; }};
 for ( const [name, command] of [["VtDA20: Actions Menu", "game.vtda20actions.menu();"], ["VtDA20: Attack", "game.vtda20combat.attack();"],
+  // Each old module made one of these
+  ["VtDA20: Actor Type", "game.vtda20actions.pickKind(a);"], ["VtDA20: Actor Type", "game.vtda20combat.pickKind(a);"],
   ["My own macro", "game.vtda20actions.frenzy();"]] ) await Macro.create({name, command, type: "script"});
 game.modules.set("vtda20-actions", {active: false});
 game.modules.set("vtda20-combat", {active: false});
@@ -173,6 +177,7 @@ test("the WoDX modules start, keep the old API names, and take their settings fr
   assert.equal(game.settings.get("wodx-combat", "showDice"), false, "vtda20-combat's stored choice");
   assert.equal(game.settings.get("wodx-actions", "nightlyBlood"), false, "vtda20-actions' stored choice");
   assert.equal(game.settings.get("wodx-combat", "autoApply"), true, "no old value: the default");
+  assert.equal(game.settings.get("wodx-actions", "flavorText"), "gm", "a String setting stored as plain text");
   assert.ok(!game.macros.find(m => m.name === "WoDX: Actions Menu"), "no duplicate beside the VtDA20 macro the migration will rename");
   assert.ok(game.macros.find(m => m.name === "WoDX: Hunt"), "macros the old module never made are made");
 });
@@ -200,7 +205,9 @@ test("the migration: copies flags, renames the old macros, deletes nothing", asy
   const plan = game.wodxActions.planMigration();
   assert.equal(plan.actors.length, 1, "the actor already on WoDX names keeps its own value");
   assert.deepEqual(plan.actors[0].keys.sort(), ["vtda20-actions.frenzyType", "world.form", "world.profile"]);
-  assert.equal(plan.macros.length, 2);
+  assert.equal(plan.macros.length, 4);
+  assert.deepEqual(plan.macros.filter(m => m.clash).map(m => m.command), ["game.wodxCombat.pickKind(a);"], "only the first Actor Type is renamed");
+  assert.equal(plan.settings.length, 3, "the old settings are listed in the report");
   assert.equal(plan.others.length, 1);
   mock.DialogV2.queue(() => true);
   const r = await game.wodxActions.migrate();
@@ -212,7 +219,12 @@ test("the migration: copies flags, renames the old macros, deletes nothing", asy
   assert.ok(game.macros.find(m => m.name === "WoDX: Attack" && m.command === "game.wodxCombat.attack();"));
   assert.equal(game.macros.find(m => m.name === "My own macro").command, "game.vtda20actions.frenzy();", "Ben's own macro is not touched");
   assert.equal(game.macros.size, macroIds, "no macro deleted");
-  assert.match(r.report.pages.getName("Report").text.content, /Nothing was deleted/);
+  const report = r.report.pages.getName("Report").text.content;
+  assert.match(report, /Nothing was deleted/);
+  assert.match(report, /&quot;VtDA20: Attack&quot; → &quot;WoDX: Attack&quot;|"VtDA20: Attack" → "WoDX: Attack"/, "the old name, then the new");
+  assert.match(report, /VtDA20: Actor Type.*already exists; left as it is/);
+  assert.match(report, /vtda20-actions\.flavorText: &quot;gm&quot;|vtda20-actions\.flavorText: "gm"/);
+  assert.equal(game.macros.filter(m => m.name === "WoDX: Actor Type").length, 1, "one WoDX: Actor Type");
   assert.equal(game.settings.get("wodx-actions", "migration").done, true);
   assert.equal(game.wodxActions.planMigration().work, 0, "a second run has nothing to do");
 });
@@ -229,6 +241,21 @@ test("WoDX Combat reads the conditions, and a heavy hit dazes (V20 Dark Ages p. 
   assert.deepEqual(C.dazedThreshold(makeActor("Peasant", "Mortal"), "mortal"), {threshold: 3, label: "Stamina"});
   assert.deepEqual(C.dazedThreshold(d, "kindred"), {threshold: 5, label: "Stamina + 2"});
   assert.deepEqual(C.dazedThreshold(makeActor("Magus", "Mage"), "mage"), {threshold: 3, label: "Stamina"}, "WoDX reading: a mage's body is mortal");
+});
+
+test("damage entered by hand dazes too; outside a fight Dazed lasts the scene", async () => {
+  const C = game.wodxCombat;
+  ChatMessage.getSpeaker ??= () => ({alias: "test"});
+  CONFIG.sounds ??= {dice: ""};
+  await game.settings.set("wodx-combat", "autoApply", false);
+  const peasant = makeActor("Peasant", "Mortal");
+  const r = await C.soakAndApply(peasant, {mode: "levels", amount: 4, type: "bashing", soak: false});
+  assert.equal(r.dazed, true, "4 levels is more than Stamina 3");
+  const e = peasant.effects.find(x => x.name === "Dazed");
+  assert.ok(e, "the Dazed effect is on");
+  assert.equal(chron().timed.timedOf(e).kind, game.combat?.started ? "rounds" : "scene");
+  const r2 = await C.soakAndApply(makeActor("Sturdy", "Mortal"), {mode: "levels", amount: 3, type: "bashing", soak: false});
+  assert.equal(r2.dazed, false, "3 is not more than 3");
 });
 
 test("WoDX Actions refuses to run beside vtda20-actions", async () => {

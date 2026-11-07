@@ -398,6 +398,8 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     const wOpts = weapons.map(w => `<option value="${w.id}" ${w.id === selWeapon ? "selected" : ""}>${w.name}${w.equipped ? " ★" : ""}</option>`).join("");
     // WoDX conditions on both sides (blinded, held, immobilized, staked, knocked down...)
     const cm = conditionMods(attacker, target);
+    // The Blinded condition already puts +2 difficulty in "extra difficulty"; the box would count it twice
+    const blindCounted = !!L.chronicle()?.conditions?.hasCondition?.(attacker, "blinded");
     const condNotes = cm.notes.length ? `<div class="vtc-note wodx-conditions"><b>Conditions:</b><ul>${cm.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
     const kinds = setting("showKindMenus");
     const boosts = R.BOOSTS.map(bo => {
@@ -431,7 +433,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies (10s count twice)</label></div>
     <div class="form-group"><label><input type="checkbox" name="willpower"/> Spend Willpower (+1 auto success) [${willpower(attacker)}]</label></div>
     <div class="form-group"><label><input type="checkbox" name="bypass"/> Aim around armor (+2 diff)</label></div>
-    <div class="form-group"><label><input type="checkbox" name="blind"/> Blind / darkness (+2 diff)</label></div>
+    <div class="form-group"><label><input type="checkbox" name="blind" ${blindCounted ? "disabled" : ""}/> Blind / darkness (+2 diff)${blindCounted ? " (counted above: Blinded)" : ""}</label></div>
     ${cel ? `<div class="form-group"><label><input type="checkbox" name="celDice" ${setting("celerityDice") ? "checked" : ""}/> Celerity ${cel}: add dice to Dexterity</label></div>
     <div class="form-group"><label><input type="checkbox" name="celMulti"/> Celerity activated (1 blood this turn): ignore multiple-action difficulty</label></div>` : ""}
     ${pot ? `<div class="form-group"><label><input type="checkbox" name="potBlood"/> Potence ${pot}: spend 1 blood: auto successes on damage</label></div>` : ""}
@@ -932,18 +934,23 @@ export async function soakAndApply(tok, fd) {
         left = R.damageAfterSoak(dmgLevels, soak.successes, type, profile, { elder: isElder(actor) });
     }
     if (fd.chimerical && kind !== "fae") left = { levels: 0, halved: false };
+    // Damage from one attack, entered by hand, dazes the same way (V20 Dark Ages p. 348)
+    const dz = dazedThreshold(actor, kind);
+    const dazed = left.levels > dz.threshold;
     let html = `<div class="vtc-card"><h3>${actor.name} takes damage</h3>`;
     if (dmgRoll) html += `<div class="vtc-sec"><b>Damage</b> ${fd.amount} dice, diff 6${diceHtml(dmgRoll.faces, 6)}<div class="vtc-res">${dmgLevels} levels</div></div>`;
     else html += `<div class="vtc-sec"><b>Damage</b> ${dmgLevels} ${type} levels</div>`;
     if (soak) html += `<div class="vtc-sec"><b>Soak</b> (${profileLabel(profile)}): ${sp.dice} dice${sp.autoSoak ? ` + ${sp.autoSoak} automatic` : ""}<div class="vtc-parts">${sp.notes.join(" · ")}</div>${diceHtml(soak.faces, 6)}<div class="vtc-res">${soak.successes} soaked${left.halved ? " · bashing halved" : ""}</div></div>`;
     html += `<div class="vtc-big ${left.levels ? "hit" : ""}">${left.levels ? `${left.levels} ${type}` : "No damage"}</div>`;
+    if (dazed) html += `<div class="vtc-note"><b>Dazed:</b> ${left.levels} levels after soak is more than ${dz.label} (${dz.threshold}): ${esc(actor.name)} spends the next turn shaking it off (V20 Dark Ages p. 348).</div>`;
     if (fd.chimerical) html += `<div class="vtc-note">Chimerical damage: only changelings and chimerical beings are hurt; the body of a mortal or other supernatural is unharmed${kind === "fae" ? "" : " — apply nothing to " + actor.name + " unless the Storyteller rules otherwise"}.</div>`;
     if (left.levels) html += `<div class="vtc-pending">${setting("autoApply") ? "Applying…" : ""}<button type="button" class="vtc-apply" data-which="main">Apply ${left.levels} ${type} to ${actor.name}</button></div>`;
     html += `</div>`;
     const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false };
     const msg = await postCard(tok.document ? tok : null, actor, html, rolls, data);
     if (setting("autoApply") && left.levels) await applyFromMessage(msg, "main");
-    return { levels: left.levels, message: msg };
+    if (dazed && setting("statusEffects")) await markDazed(actor);
+    return { levels: left.levels, dazed, message: msg };
 }
 
 /* ------------------------------------------------------------------ */
@@ -1014,7 +1021,7 @@ Hooks.once("init", () => {
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.0.0",
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.0.1",
         conditionMods, dazedThreshold, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
     L.alias("combat", "vtda20combat", api, "vtda20-combat");
@@ -1080,6 +1087,7 @@ async function markDazed(actor) {
     const api = L.chronicle();
     if (!api?.applyTimed) return;
     if (!actor.isOwner) return requestGM({ action: "dazed", uuid: actor.uuid });
-    await api.applyTimed(actor, { name: "Dazed", condition: "dazed", key: "wodx-dazed", duration: { kind: "rounds", rounds: 1 },
-        source: "V20 Dark Ages p. 348" });
+    // In a fight Dazed lasts the next turn; outside one there are no turns, so it lasts until the scene ends
+    const duration = game.combat?.started ? { kind: "rounds", rounds: 1 } : { kind: "scene" };
+    await api.applyTimed(actor, { name: "Dazed", condition: "dazed", key: "wodx-dazed", duration, source: "V20 Dark Ages p. 348" });
 }
