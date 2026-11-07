@@ -159,3 +159,16 @@
   - Each map has one Penumbra level and one Shadowlands level.
 - **Automatic checks:** 19, 9 and 14 unit tests; 77 harness tests (17 new); UI fit passes with the twin levels window and four new dialogs. All pass. The aura overlay draws in well under a frame in the harness.
 - Installed. Gate waiting on Ben: every twin map checked at night.
+
+### Phase 5 gate passed, 2026-11-07
+
+- Ben ran every step, with nothing to report.
+- Read back from rothenstein-wodx's scenes database:
+  - All 22 world maps have both twin levels, with Penumbra and Shadowlands art.
+  - Physical roofs keep to the physical level. Each has two copies in the same place, at 1008 and 2008, with twin art.
+  - Lights are copied twice.
+  - 124 twin roads are linked and on; none are left off.
+  - No scene outside the world maps teleports into them.
+- The 22 scene backups were written to `Data/wodx-backups/scenes` just before the build. Foundry's own world backup ran at 08:56.
+- Log review: no errors since the install. The two errors of 07:55 are the known shutdown race from the Phase 4 restore.
+- Phase 5 complete.

@@ -39,4 +39,10 @@
 
 ## Gate result
 
-- [ ] Every twin map checked at night.
+- [x] Passed, 2026-11-07. Ben checked every twin map at night and ran each step, with nothing to report.
+- [x] Read back from rothenstein-wodx:
+  - All 22 world maps have Penumbra and Shadowlands levels with their twin art.
+  - Every roof and light has its two copies, in the same place and at the right height.
+  - All 124 twin roads are linked and switched on.
+  - No other scene sends tokens into a world map, so no road outside them needed changing.
+- [x] Each scene was backed up (22 files in `Data/wodx-backups/scenes`), and Foundry made a world backup at 08:56. No errors in the server log since the install. Phase 5 complete.
