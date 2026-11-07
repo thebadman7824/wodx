@@ -4,6 +4,8 @@
 
 B17 (2026-11-07): every WoDX window and dialog scrolls, and is laid out so that all its options can be reached and its main buttons stay visible.
 
+B24 (2026-11-07): every WoDX menu that lets you pick entries (a dropdown, a list of checkboxes, a table of rows with buttons) has a search box that filters it as you type. The only exceptions are fixed short choices that never grow, such as the months or Line or Veil; they carry `data-fixed`.
+
 Nothing ships while an item below fails. Each problem found is fixed and the check is run again. The results go in BUILD-LOG.md under the phase.
 
 ## 1. Automatic checks (`tools/quality-check.sh`)
@@ -23,6 +25,7 @@ Nothing ships while an item below fails. Each problem found is fixed and the che
 - [ ] Setting registrations happen synchronously in `init`; nothing reads a setting before it is registered.
 - [ ] Player-to-GM actions work when no GM is online (a clear message, no error).
 - [ ] The diff since the last gate has been read in full.
+- [ ] Every list a person picks from has a search box (rule B24): `searchBox()` from `wodx-chronicle/scripts/search.mjs`. The UI fit check fails a dropdown of more than five entries, or a pickable list or table of more than five rows, that has no search box over it.
 - [ ] Every new window or dialog follows the layout rule (B17): a fixed top, one scrolling middle (`.wodx-scroll`), a fixed footer (`.wodx-footer`). It opens sized to the screen, and dialogs carry the `wodx-dialog` class.
 
 ## 3. Install and smoke test

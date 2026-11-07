@@ -8,6 +8,7 @@ import {ClockApp, setDateDialog} from "./clock-app.mjs";
 import {HouseRulesApp} from "./house-rules-app.mjs";
 import {runEraTest} from "./era-test.mjs";
 import * as contentFixes from "./content-fixes.mjs";
+import {installSearch} from "./search.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -20,6 +21,7 @@ Hooks.once("init", () => {
     return;
   }
   active = true;
+  installSearch();
 
   registerSettings({
     HouseRulesApp,

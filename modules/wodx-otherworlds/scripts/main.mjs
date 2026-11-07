@@ -3,6 +3,7 @@ import {registerStatuses, stepSideways, clearCrossing, onApplyChangeGM, STATUS} 
 import {TaggingApp, writeReport, writeChartsPage} from "./tagging-app.mjs";
 import {buildPenumbraPrototype} from "./prototype.mjs";
 import * as rules from "./rules.mjs";
+import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
 let active = false;
 
@@ -12,6 +13,7 @@ Hooks.once("init", () => {
     return;
   }
   active = true;
+  installSearch();
   const BEHAVIOR_TYPE = behaviorType();
   if ( !game.model?.RegionBehavior?.[BEHAVIOR_TYPE] ) console.warn(`WoDX | ${BEHAVIOR_TYPE} is not in the game model; restart Foundry after installing.`);
   CONFIG.RegionBehavior.dataModels[BEHAVIOR_TYPE] = makeRatingsBehavior();

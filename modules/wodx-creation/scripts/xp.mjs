@@ -1,4 +1,4 @@
-import {MODULE_ID, esc, lineOf, xpTotals, recheck, applyPurchase, kindLabel} from "./actor-data.mjs";
+import {MODULE_ID, esc, lineOf, xpTotals, recheck, applyPurchase, kindLabel, payerOf, canSpendFor} from "./actor-data.mjs";
 import {dateLabel} from "./lineage.mjs";
 
 /**
@@ -41,10 +41,13 @@ export async function spend(actor, purchase, {by = game.user.name, time = game.t
   if ( now.cost !== purchase.cost || now.current !== purchase.current ) {
     return {ok: false, reason: `The sheet changed since the request (now ${now.current} dots, ${now.cost} experience). Ask again.`};
   }
+  const payer = payerOf(actor);
   await applyPurchase(actor, now);
-  await actor.createEmbeddedDocuments("Item", [{name: describe(now), type: "Experience", system: {amount: now.cost, isspent: true},
-    flags: {[MODULE_ID]: {time, kind: now.kind, key: now.key, from: now.current, to: now.next, by}}}]);
-  await writeLogPage(actor);
+  // An ally paid for by its patron: the spend is recorded on the patron, named for the ally
+  const name = payer === actor ? describe(now) : `${actor.name}: ${describe(now)}`;
+  await payer.createEmbeddedDocuments("Item", [{name, type: "Experience", system: {amount: now.cost, isspent: true},
+    flags: {[MODULE_ID]: {time, kind: now.kind, key: now.key, from: now.current, to: now.next, by, for: actor.id}}}]);
+  await writeLogPage(payer);
   return {ok: true, option: now};
 }
 
@@ -58,7 +61,7 @@ export async function requestSpend(actor, purchase) {
     else ui.notifications.warn(r.reason);
     return r;
   }
-  if ( !actor.isOwner ) return refuse("You can only spend experience for your own character.");
+  if ( !canSpendFor(actor, game.user) ) return refuse("You can only spend experience for your own character or its allies.");
   if ( !game.users.activeGM ) return refuse("No Storyteller is connected, so this could not be sent.");
   game.socket.emit(SOCKET, {type: "xp.request", payload: {userId: game.user.id, actorId: actor.id, purchase: slim(purchase)}});
   ui.notifications.info("Sent to the Storyteller for approval.");
@@ -73,7 +76,7 @@ export async function onRequest(payload) {
   const user = game.users.get(payload?.userId);
   const actor = game.actors.get(payload?.actorId);
   if ( !user || !actor || !payload.purchase ) return;
-  if ( !actor.testUserPermission(user, "OWNER") ) return;
+  if ( !canSpendFor(actor, user) ) return;
   const now = recheck(actor, payload.purchase);
   if ( !now?.ok || now.cost !== payload.purchase.cost ) {
     await ChatMessage.create({content: `<div class="wodx-card"><p>The request for ${esc(actor.name)} could not be queued: ${esc(now?.reason ?? "the trait was not found")}.</p></div>`,
@@ -84,7 +87,7 @@ export async function onRequest(payload) {
   await api.approvals.addToQueue({
     id: foundry.utils.randomID(), type: XP_TYPE, key: `xp:${actor.id}:${now.kind}:${now.key}`,
     title: `${actor.name}: ${describe(now)} for ${now.cost} experience`,
-    detail: `${kindLabel(now.kind)}. ${actor.name} has ${xpTotals(actor).available} experience to spend. Cost by ${lineOf(actor)} rules.`,
+    detail: `${kindLabel(now.kind)}. ${payerOf(actor) === actor ? actor.name : `Paid by ${payerOf(actor).name}, who`} has ${xpTotals(payerOf(actor)).available} experience to spend. Cost by ${lineOf(actor)} rules.`,
     data: {actorId: actor.id, purchase: slim(now)}, from: user.id, createdAt: Date.now(), worldTime: game.time.worldTime
   });
 }

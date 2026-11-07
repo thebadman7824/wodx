@@ -46,7 +46,15 @@ class Actor {
   }
   getFlag(s, k) { return this.flags?.[s]?.[k]; }
   async setFlag(s, k, v) { (this.flags[s] ??= {})[k] = structuredClone(v); return this; }
-  async update(changes) { for ( const [k, v] of Object.entries(changes) ) setPath(this, k, v); return this; }
+  async update(changes) {
+    for ( const [k, v] of Object.entries(changes) ) {
+      const del = k.match(/^(.*)\.-=(.+)$/);
+      if ( del ) { const parts = del[1].split("."); let o = this; for ( const p of parts ) o = o?.[p]; if ( o ) delete o[del[2]]; }
+      else setPath(this, k, v);
+    }
+    return this;
+  }
+  async unsetFlag(s, k) { delete this.flags?.[s]?.[k]; return this; }
   async createEmbeddedDocuments(type, list) {
     assert.equal(type, "Item");
     return list.map(d => { const it = new Item(d, this); this.items.set(it.id, it); return it; });
@@ -285,6 +293,83 @@ test("the windows render", async () => {
   await spend.render({force: true});
   assert.match(spend.element.textContent, /10 experience to spend/);
   assert.match(spend.element.textContent, /Obtenebration/);
+});
+
+test("allies: a player improves a ghoul NPC, paid from the patron's experience", async () => {
+  const vampire = game.actors.find(a => a.type === "Vampire" && a.name === anna.name);
+  const {setAlly, CreationApp} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
+  // Not an ally yet: the player may not spend for Tomas
+  assert.equal(api().data.canSpendFor(tomas, game.users.get("p1")), false);
+  // The GM makes Tomas an ally of Anna's vampire, paying from her experience, visible to her player
+  DialogV2.queue(form => {
+    assert.equal(form.elements.patron.value, vampire.id, "the only player character is offered");
+    return set({payer: "patron", observe: true})(form);
+  });
+  await (await import(join(root, "modules/wodx-creation/scripts/apps.mjs"))).allyDialog(tomas);
+  assert.deepEqual(api().data.allyOf(tomas).patron, {id: vampire.id, name: vampire.name});
+  assert.equal(tomas.ownership.p1, 2, "the player can now see the ghoul's sheet");
+  assert.equal(api().data.payerOf(tomas), vampire);
+  assert.equal(api().data.canSpendFor(tomas, game.users.get("p1")), true);
+  // The roster lists the ally; "Show every NPC" adds the rest
+  const hub = new CreationApp();
+  await hub.render({force: true});
+  const names = () => [...hub.element.querySelectorAll("table.wodx-roster tbody tr td:first-child")].map(td => td.textContent);
+  assert.match(hub.element.textContent, /Tomas the Groom[\s\S]*Ally of Anna/);
+  assert.deepEqual(names(), [anna.name, "Tomas the Groom"]);
+  hub.showNPCs = true;
+  await hub.render();
+  assert.ok(names().includes("Sister Marta"), "every NPC, once asked for");
+
+  // The player asks for Celerity for Tomas; it is paid from the vampire's 10 points... not enough (20)
+  mock.asPlayer();
+  const cel = api().data.newDisciplineOption(tomas, "Celerity");
+  assert.equal(cel.ok, false);
+  assert.match(cel.reason, /Needs 20 experience; 10 available/, "the patron's pool, not the ghoul's own 30");
+  mock.asGM();
+  await api().award([vampire], 15, "Bonus");
+  mock.asPlayer();
+  const cel2 = api().data.newDisciplineOption(tomas, "Celerity");
+  assert.equal(cel2.ok, true);
+  await api().xp.requestSpend(tomas, cel2);
+  mock.asGM();
+  await mock.deliver("gm");
+  const entry = game.settings.get("wodx-chronicle", "approvals").pending.find(p => p.type === "xp-spend" && p.data.actorId === tomas.id);
+  assert.ok(entry, "the ally's request is queued");
+  assert.match(entry.detail, new RegExp(`Paid by ${vampire.name}`));
+  await chron().approvals.decide(entry.id, "approve");
+  assert.equal(api().data.disciplinesOf(tomas).find(d => d.name === "Celerity")?.value, 1);
+  assert.equal(xpOf(vampire).available, 5, "10 + 15 − 20");
+  assert.equal(xpOf(tomas).available, 30, "the ghoul's own pool is untouched");
+  assert.ok(vampire.items.find(i => i.name === "Tomas the Groom: New Discipline: Celerity"));
+
+  // Ending the alliance puts the permission back as it was (no entry)
+  await setAlly(tomas, {patron: null});
+  assert.equal(api().data.allyOf(tomas), null);
+  assert.equal("p1" in tomas.ownership, false);
+  assert.equal(api().data.canSpendFor(tomas, game.users.get("p1")), false);
+});
+
+test("search boxes filter selects, lists and tables (rule B24)", async () => {
+  const {searchBox, applySearch, installSearch} = await import(join(root, "modules/wodx-chronicle/scripts/search.mjs"));
+  const div = document.createElement("div");
+  div.className = "application";
+  div.innerHTML = `${searchBox("select[name=who]")}<select name="who"><option value="">Unknown</option><option value="a">Anna</option><option value="b">Bogdan</option><option value="c">Brother Anselm</option></select>
+    ${searchBox("ul.l")}<ul class="l"><li>Sister Marta</li><li>Father Ludovic</li><li>Šárka</li></ul>
+    ${searchBox("table.t")}<table class="t"><tbody><tr data-search-text="Dolany"><td>town select text</td></tr><tr data-search-text="Lower Town"><td>x</td></tr></tbody></table>`;
+  document.body.append(div);
+  installSearch(document);
+  const [b1, b2, b3] = div.querySelectorAll("input.wodx-search");
+  b1.value = "ann";
+  b1.dispatchEvent(new Event("input", {bubbles: true}));
+  assert.deepEqual([...div.querySelectorAll("select option")].filter(o => !o.hidden).map(o => o.value), ["", "a"], "the empty choice stays");
+  assert.equal(div.querySelector("select").value, "", "the current choice is not changed");
+  b2.value = "sarka";
+  assert.equal(applySearch(b2), 1, "accents are ignored");
+  b3.value = "town";
+  assert.equal(applySearch(b3), 1, "rows match their search text, not the words in their selects");
+  b3.value = "";
+  assert.equal(applySearch(b3), 2);
+  div.remove();
 });
 
 test("no error notifications", () => {

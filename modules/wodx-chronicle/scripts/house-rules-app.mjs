@@ -1,5 +1,6 @@
 import {MODULE_ID, esc, rule} from "./util.mjs";
 import {HOUSE_RULES} from "./settings.mjs";
+import {searchBox} from "./search.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 
@@ -25,7 +26,7 @@ export class HouseRulesApp extends ApplicationV2 {
   async _renderHTML() {
     const groups = HOUSE_RULES.groups.map(g => {
       const rows = HOUSE_RULES.switches.filter(s => s.group === g.id).map(s => `
-        <div class="form-group wodx-switch">
+        <div class="form-group wodx-switch" data-search-item>
           <label><input type="checkbox" name="${esc(s.id)}" ${rule(s.id) ? "checked" : ""}> ${esc(s.name)}</label>
           <p class="hint">${esc(s.hint)}${s.laterPhase ? ` Takes effect from Phase ${s.laterPhase}.` : ""}</p>
         </div>`).join("");
@@ -33,7 +34,8 @@ export class HouseRulesApp extends ApplicationV2 {
     }).join("");
     const div = document.createElement("div");
     div.className = "wodx-body";
-    div.innerHTML = `<div class="wodx-scroll">${groups}</div>
+    div.innerHTML = `<div class="wodx-top">${searchBox(".wodx-rules", "Search house rules…", "Search house rules")}</div>
+      <div class="wodx-scroll wodx-rules">${groups}</div>
       <footer class="form-footer wodx-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save house rules</button></footer>`;
     return div;
   }

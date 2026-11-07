@@ -2,6 +2,7 @@ import {MODULE_ID, sceneRatings, activeChartId, behaviorType} from "./ratings.mj
 import {SETTLEMENTS, CHARTS, gauntletFor, suggestSettlement, battlemapParent} from "./rules.mjs";
 import {buildPenumbraPrototype} from "./prototype.mjs";
 import {clearCrossing} from "./crossing.mjs";
+import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -56,9 +57,9 @@ export class TaggingApp extends ApplicationV2 {
     const rows = scenes.map(s => {
       const r = sceneRatings(s) ?? {};
       const g = gauntletFor(chartId, r).gauntlet;
-      return `<tr data-scene="${s.id}" data-name="${esc(s.name)}">
+      return `<tr data-scene="${s.id}" data-name="${esc(s.name)}" data-search-text="${esc(s.name)}">
         <td class="name">${esc(s.name)}</td>
-        <td><select name="${s.id}.settlement">${options(r.settlement ?? "")}</select></td>
+        <td><select name="${s.id}.settlement" data-fixed>${options(r.settlement ?? "")}</select></td>
         <td class="g">${g === null ? "–" : (g === 0 ? "no roll" : g)}</td>
         <td><input type="number" name="${s.id}.gauntlet" value="${r.gauntlet ?? ""}" min="0" max="10" step="1" placeholder="chart"></td>
         <td><input type="number" name="${s.id}.modifier" value="${r.modifier ?? 0}" min="-5" max="5" step="1"></td>
@@ -84,8 +85,9 @@ export class TaggingApp extends ApplicationV2 {
         <button type="button" data-action="clear" title="For the selected tokens">Clear Umbra, Caught, Lost</button>
       </div>
       <p class="wodx-quiet">Filled rows are marked; nothing is saved until you press Save.</p>
+      ${searchBox("table.wodx-scenes", "Search scenes by name…", "Search scenes")}
       </div>
-      <div class="wodx-scroll wodx-table-wrap"><table class="wodx-table">
+      <div class="wodx-scroll wodx-table-wrap"><table class="wodx-table wodx-scenes">
         <thead><tr><th>Scene</th><th>Kind of place</th><th>Gauntlet</th><th>Override</th><th>Mod.</th><th>Shroud</th><th>Banality</th><th title="Reflective surface at hand">Mirror</th><th title="Umbral storm">Storm</th></tr></thead>
         <tbody>${rows}</tbody>
       </table></div>

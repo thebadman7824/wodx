@@ -1,4 +1,5 @@
 import {MODULE_ID, esc, emit, isActiveGM, setting, setSetting} from "./util.mjs";
+import {searchBox} from "./search.mjs";
 
 /**
  * One approval queue for everything automation (or a player) proposes.
@@ -149,8 +150,8 @@ export class ApprovalsApp extends ApplicationV2 {
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
     div.innerHTML = `
-      ${items ? `<ul class="wodx-list">${items}</ul>` : `<p class="wodx-quiet">Nothing is waiting.</p>`}
-      ${past ? `<details><summary>Recently decided</summary><ul class="wodx-list wodx-history">${past}</ul></details>` : ""}`;
+      ${items ? `${searchBox("ul.wodx-pending", "Search requests…", "Search requests")}<ul class="wodx-list wodx-pending">${items}</ul>` : `<p class="wodx-quiet">Nothing is waiting.</p>`}
+      ${past ? `<details><summary>Recently decided</summary>${searchBox("ul.wodx-history", "Search decided…", "Search decided requests")}<ul class="wodx-list wodx-history">${past}</ul></details>` : ""}`;
     return div;
   }
 

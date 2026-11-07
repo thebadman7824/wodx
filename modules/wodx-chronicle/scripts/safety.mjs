@@ -1,4 +1,5 @@
 import {emit, esc, isActiveGM, rule} from "./util.mjs";
+import {searchBox} from "./search.mjs";
 import {recordLineOrVeil, ensureSessionZero, getLinesVeils, removeLinesVeils} from "./journals.mjs";
 
 /* -------------------------------------------- */
@@ -53,7 +54,7 @@ export async function submitLineOrVeil() {
     content: `
       <p>A <strong>line</strong> never appears in the game. A <strong>veil</strong> happens off screen only.</p>
       <div class="form-group"><label>Kind</label>
-        <select name="kind"><option value="line">Line</option><option value="veil">Veil</option></select></div>
+        <select name="kind" data-fixed><option value="line">Line</option><option value="veil">Veil</option></select></div>
       <div class="form-group"><label>What</label><textarea name="text" rows="3" maxlength="500" required></textarea></div>
       ${canSign ? `<div class="form-group"><label><input type="checkbox" name="sign"> Sign it with my name</label></div>` : ""}
       <p class="wodx-quiet">${canSign ? "Unsigned entries are recorded without a name." : "Entries are recorded without a name."}</p>`,
@@ -93,7 +94,8 @@ export async function manageLinesVeils() {
   const stamps = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog"],
     window: {title: "Remove lines or veils"},
-    content: `<p>Tick the entries to remove.</p><ul class="wodx-list">${rows}</ul>`,
+    content: `<p>Tick the entries to remove.</p>${searchBox("ul.wodx-linesveils", "Search lines and veils…", "Search lines and veils")}
+      <ul class="wodx-list wodx-linesveils">${rows}</ul>`,
     ok: {
       label: "Remove ticked",
       callback: (event, button) => [...button.form.querySelectorAll("input[name=rm]:checked")].map(i => Number(i.value))

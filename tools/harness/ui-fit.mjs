@@ -196,6 +196,17 @@ for ( const [vw, vh] of sizes ) {
         if ( !reachable(c) ) { bad++; if ( bad <= 3 ) problems.push(`control cannot be reached: ${c.outerHTML.slice(0, 80)}`); }
       }
       if ( bad > 3 ) problems.push(`... and ${bad - 3} more controls cannot be reached`);
+      // Rule B24: a list a person picks from (more than five entries) has a search box. Fixed short choices
+      // (months, Line or Veil) carry data-fixed.
+      const boxes = [...app.querySelectorAll("input.wodx-search")];
+      const covered = el => boxes.some(bx => { try { return el.matches(bx.dataset.search); } catch { return false; } });
+      for ( const sel of app.querySelectorAll("select:not([data-fixed])") ) {
+        if ( sel.options.length > 5 && !covered(sel) ) problems.push(`no search box for select[name=${sel.name}] (${sel.options.length} entries)`);
+      }
+      for ( const list of app.querySelectorAll("ul, ol, table") ) {
+        const n = list.tagName === "TABLE" ? list.querySelectorAll(":scope > tbody > tr").length : list.querySelectorAll(":scope > li").length;
+        if ( n > 5 && list.querySelector("input, select, button") && !covered(list) ) problems.push(`no search box for a ${list.tagName.toLowerCase()} of ${n} entries`);
+      }
       return {problems, controls: controls.length, height: Math.round(ar.height)};
     });
     const label = `${vw}x${vh} ${w.name}`;

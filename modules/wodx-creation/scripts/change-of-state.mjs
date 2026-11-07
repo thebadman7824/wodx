@@ -1,6 +1,7 @@
 import {MODULE_ID, esc, lineOf, lineage, generationOf, clanOf, clanNameOf, disciplinesOf, disciplineItem, vampireEra, eraProfile} from "./actor-data.mjs";
 import {childeGeneration, clanDisciplines, findClan, generationRow, ghoulBloodMax, bondStage} from "./rules.mjs";
 import {CLANS, EMBRACE, GHOUL} from "../data/vampire.mjs";
+import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {setLineage, setChronology, recordDrink, writeLineageJournal, dateLabel, ordinal} from "./lineage.mjs";
 
 const BEFORE_FOLDER = "WoDX · Before the Embrace";
@@ -214,9 +215,9 @@ export async function embraceDialog() {
     content: `
       <p>The mortal is drained and given the sire's blood (V20 Dark Ages p. 13). A new vampire sheet is made from the
         mortal's; the mortal sheet is kept, in the folder "${BEFORE_FOLDER}".</p>
-      <div class="form-group"><label>Mortal</label><select name="mortal">${options(mortals, pick?.id ?? mortals[0].id)}</select></div>
-      <div class="form-group"><label>Sire</label><select name="sire"><option value="">Unknown</option>${options(vampires, sire0?.id)}</select></div>
-      <div class="form-group"><label>Clan</label><select name="clan">${clanOpts}</select></div>
+      <div class="form-group"><label>Mortal</label>${searchBox("select[name=mortal]", "Search mortals…", "Search mortals")}<select name="mortal">${options(mortals, pick?.id ?? mortals[0].id)}</select></div>
+      <div class="form-group"><label>Sire</label>${searchBox("select[name=sire]", "Search vampires…", "Search sires")}<select name="sire"><option value="">Unknown</option>${options(vampires, sire0?.id)}</select></div>
+      <div class="form-group"><label>Clan</label>${searchBox("select[name=clan]", "Search clans…", "Search clans")}<select name="clan">${clanOpts}</select></div>
       <div class="form-group"><label>Generation</label><input type="number" name="generation" value="${d0.generation}" min="3" max="15" step="1"></div>
       <div class="form-group"><label>Blood on rising</label><input type="number" name="blood" value="${EMBRACE.startBlood}" min="0" max="10" step="1"></div>
       <div class="form-group"><label><input type="checkbox" name="moveTokens" checked> Tokens of the mortal become the vampire</label></div>
@@ -263,8 +264,8 @@ export async function vitaeDialog() {
     content: `
       <p>A mortal who drinks becomes a ghoul and gains Potence 1 (V20 Dark Ages p. 399). Three drinks on three nights
         make a blood oath (pp. 341–342).</p>
-      <div class="form-group"><label>Who drinks</label><select name="drinker">${options(drinkers, pick?.id ?? drinkers[0]?.id)}</select></div>
-      <div class="form-group"><label>Whose blood</label><select name="regnant">${options(vampires, vampires[0].id)}</select></div>
+      <div class="form-group"><label>Who drinks</label>${searchBox("select[name=drinker]", "Search characters…", "Search who drinks")}<select name="drinker">${options(drinkers, pick?.id ?? drinkers[0]?.id)}</select></div>
+      <div class="form-group"><label>Whose blood</label>${searchBox("select[name=regnant]", "Search vampires…", "Search whose blood")}<select name="regnant">${options(vampires, vampires[0].id)}</select></div>
       <div class="form-group"><label>Blood points</label><input type="number" name="points" value="1" min="1" max="10" step="1"></div>
       <p class="wodx-quiet">The vampire's own blood pool is not changed; spend it on that sheet.</p>`,
     ok: {

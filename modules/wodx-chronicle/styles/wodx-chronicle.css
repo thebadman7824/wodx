@@ -61,3 +61,7 @@
 .application.wodx-dialog .window-content { min-height: 0; }
 .application.wodx-dialog .dialog-content { flex: 1 1 auto; min-height: 0; max-height: 60vh; overflow-y: auto; }
 .application.wodx-dialog .form-footer { flex: none; }
+
+/* Rule B24: search boxes over long lists */
+.application.wodx input.wodx-search, .wodx-dialog input.wodx-search { width: 100%; margin: 0 0 0.35rem; flex: none; }
+.application.wodx .form-group input.wodx-search { flex: 1 1 100%; }

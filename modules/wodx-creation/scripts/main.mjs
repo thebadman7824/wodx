@@ -5,6 +5,7 @@ import * as lineage from "./lineage.mjs";
 import * as change from "./change-of-state.mjs";
 import * as xp from "./xp.mjs";
 import {CreationApp, SpendApp, awardDialog} from "./apps.mjs";
+import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -16,6 +17,7 @@ Hooks.once("init", () => {
     return;
   }
   active = true;
+  installSearch();
 });
 
 let started = false;

@@ -73,6 +73,45 @@ export function eraProfile() {
 }
 
 /* -------------------------------------------- */
+/*  Allies: NPCs a player may improve           */
+/* -------------------------------------------- */
+
+/**
+ * An allied NPC (a ghoul, retainer or other follower) belongs to a patron: a player character. The patron's
+ * owners may spend experience on it. It pays from its own experience, or from the patron's.
+ * Stored as flags["wodx-creation"].ally = {patron: {id, name}, payer: "self"|"patron", granted: {<user id>: <old level>}}.
+ */
+export function allyOf(actor) {
+  return actor?.getFlag?.(MODULE_ID, "ally") ?? null;
+}
+
+export function patronOf(actor) {
+  const id = allyOf(actor)?.patron?.id;
+  return id ? game.actors?.get(id) ?? null : null;
+}
+
+/** Whose experience pays for this actor's purchases. */
+export function payerOf(actor) {
+  const ally = allyOf(actor);
+  if ( ally?.payer === "patron" ) return patronOf(actor) ?? actor;
+  return actor;
+}
+
+/** May this user spend experience on this actor? Its owners may, and so may the owners of an ally's patron. */
+export function canSpendFor(actor, user = game.user) {
+  if ( !actor || !user ) return false;
+  if ( user.isGM || actor.testUserPermission?.(user, "OWNER") ) return true;
+  const patron = patronOf(actor);
+  return !!patron && !!patron.testUserPermission?.(user, "OWNER");
+}
+
+/** The actors this user may spend for: their own characters, then their allies. */
+export function spendableFor(user = game.user) {
+  return [...(game.actors ?? [])].filter(a => lineOf(a) && !lineage(a).became && (a.testUserPermission?.(user, "OWNER") || canSpendFor(a, user)))
+    .sort((a, b) => (Number(!!allyOf(a)) - Number(!!allyOf(b))) || a.name.localeCompare(b.name));
+}
+
+/* -------------------------------------------- */
 /*  Experience                                  */
 /* -------------------------------------------- */
 
@@ -98,7 +137,7 @@ export function purchaseOptions(actor) {
   const ownClan = line === "vampire" ? clanOf(actor) : (domitor ? clanOf(domitor) : null);
   const clanList = clanDisciplines(ownClan, vampireEra()).map(d => d.toLowerCase());
   const caitiff = line === "vampire" && ownClan?.id === "caitiff";
-  const {available} = xpTotals(actor);
+  const {available} = xpTotals(payerOf(actor));
   const out = [];
   const add = (kind, key, label, current, extra = {}) => {
     const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen});
@@ -150,7 +189,7 @@ export function newDisciplineOption(actor, name) {
   if ( !line || line === "mortal" || !clean ) return null;
   const domitor = line === "ghoul" ? domitorOf(actor) : null;
   const domitorDisciplines = domitor ? disciplinesOf(domitor).filter(d => d.value > 0).map(d => d.name) : [];
-  const {available} = xpTotals(actor);
+  const {available} = xpTotals(payerOf(actor));
   const cost = XP[line].newDiscipline;
   let reason = "";
   if ( disciplinesOf(actor).some(d => d.name.toLowerCase() === clean.toLowerCase()) ) reason = "Already known; raise it instead";
@@ -164,7 +203,7 @@ export function newAbilityOption(actor, name, group = "skill") {
   const line = lineOf(actor);
   const clean = String(name ?? "").trim();
   if ( !line || !clean ) return null;
-  const {available} = xpTotals(actor);
+  const {available} = xpTotals(payerOf(actor));
   const cost = XP[line].newAbility;
   let reason = "";
   const exists = items(actor).some(i => i.type === "Trait" && i.name.toLowerCase() === clean.toLowerCase())

@@ -6,6 +6,7 @@ import * as safety from "./safety.mjs";
 import {findJournal} from "./journals.mjs";
 import {HouseRulesApp} from "./house-rules-app.mjs";
 import {runEraTest} from "./era-test.mjs";
+import {searchBox} from "./search.mjs";
 
 const {ApplicationV2, DialogV2} = foundry.applications.api;
 
@@ -93,6 +94,7 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="setDate"><i class="fa-solid fa-calendar-day"></i> Set date</button>
         </div>
         <div class="form-group"><label>Era</label>
+          ${searchBox("select[name=eraLock]", "Search eras…", "Search eras")}
           <select name="eraLock">${eraOptions}</select></div>
       </section>` : ""}
       <section class="wodx-tools">
@@ -162,7 +164,7 @@ export async function setDateDialog({title = "Set the date"} = {}) {
     window: {title},
     content: `
       <div class="form-group"><label>Year</label><input type="number" name="year" value="${now.year}" step="1"></div>
-      <div class="form-group"><label>Month</label><select name="month">${months}</select></div>
+      <div class="form-group"><label>Month</label><select name="month" data-fixed>${months}</select></div>
       <div class="form-group"><label>Day</label><input type="number" name="day" value="${now.day}" min="1" max="31" step="1"></div>
       <div class="form-group"><label>Hour</label><input type="number" name="hour" value="${now.hour}" min="0" max="23" step="1"></div>
       <div class="form-group"><label>Minute</label><input type="number" name="minute" value="${now.minute}" min="0" max="59" step="1"></div>
