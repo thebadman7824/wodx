@@ -172,19 +172,26 @@ export function build(ctx) {
     /* ---------------- Changing form ---------------- */
 
     async function setForm(actor, form, i) {
+        if (!G.FORMS.includes(form)) throw new Error(`Unknown form "${form}"`);
         const shapes = foundry.utils.deepClone(actor.system?.shapes ?? {});
         for (const k of Object.keys(shapes)) if (shapes[k] && typeof shapes[k] === "object") shapes[k].isactive = k === form;
+        delete shapes[""];
         if (!shapes[form]) shapes[form] = { isactive: true };
-        await updateActor(actor, { "system.shapes": shapes });
+        await syncGlabro(actor, i);
+        // isupdated false: the system then switches the form's bonuses on and works out the totals (wod-actor-base _onUpdate)
+        await updateActor(actor, { "system.shapes": shapes, "system.settings.isupdated": false });
         await P.setWorldFlag(actor, "form", form);
-        // Dark Ages: Glabro is Manipulation −1, not the system's W20 −2 (DA:W p. 106): an effect makes up the difference
-        const fix = actor.effects?.find?.(e => e.getFlag?.(MOD, "formFix"));
-        if (fix && (form !== "glabro" || basis() !== "daw")) await fix.delete();
-        if (form === "glabro" && basis() === "daw" && !fix && actor.isOwner && i.feraKey === "Garou") {
-            await actor.createEmbeddedDocuments("ActiveEffect", [{ name: "Glabro (Dark Ages): Manipulation −1", img: "icons/svg/aura.svg",
-                changes: [{ key: "system.attributes.manipulation.bonus", mode: 2, value: "1" }], transfer: false,
-                description: "DA:W p. 106 gives Glabro Manipulation −1; the sheet's form table has W20's −2.", flags: { [MOD]: { formFix: true } } }]);
-        }
+        // Phase 6b first build used an effect for the Glabro fix; take any such effect off
+        const old = actor.effects?.find?.(e => e.getFlag?.(MOD, "formFix"));
+        if (old && actor.isOwner) await old.delete();
+    }
+    /** Dark Ages: Glabro is Manipulation −1, not the system's W20 −2 (DA:W p. 106). The sheet's own Glabro bonus follows the era. */
+    async function syncGlabro(actor, i) {
+        if (!actor.isOwner || i.feraKey !== "Garou") return;
+        const it = (actor.items ?? []).find(x => x.type === "Bonus" && x.system?.parentid === "glabro" && x.system?.settingtype === "manipulation");
+        if (!it) return;
+        const want = basis() === "daw" ? -1 : -2, now = Number(it.system?.value);
+        if ((now === -1 || now === -2) && now !== want) await it.update({ "system.value": want });
     }
     function formLabel(actor, k) {
         const l = actor.system?.shapes?.[k]?.label;
@@ -204,6 +211,7 @@ export function build(ctx) {
           <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="0"/></div></form>`;
         return dialog(`Change form — ${actor.name}`, content, "Change", async fd => {
             let to = fd.how === "breed" ? bf : fd.form;
+            if (!G.FORMS.includes(to)) { ctx.notify("Choose a form."); return null; }
             if (lost && to !== bf) { ctx.notify(`${actor.name} has lost the wolf: only the breed form.`); return null; }
             let body = "", rolls = [], reached = to;
             if (fd.how === "rage") {
@@ -748,6 +756,7 @@ export function build(ctx) {
         for (const a of actors) {
             const i = info(a);
             if (i.fera?.rage === false || (i.fera?.rageAt && i.fera.rageAt !== "moon")) continue;
+            if (i.rage.perm <= 0) continue; // a sheet with no Rage set up (a template, a blank sheet)
             if (i.rage.temp <= 0 && i.willpower.temp <= 0) { lines.push(`${a.name}: lost the wolf; no Rage until Willpower returns.`); continue; }
             const g = G.moonRage(m.index, i.auspice, b, DATA.garou?.moonRage);
             const max = Math.max(i.rage.perm, i.rage.temp);

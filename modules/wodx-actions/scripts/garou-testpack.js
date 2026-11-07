@@ -28,6 +28,8 @@ const MORTALS = [
 ];
 
 const T = () => CONFIG.worldofdarkness?.sheettype ?? {};
+// Linked tokens, as for player characters; isupdated false makes the system work out the totals after the change
+const BASE = (name, type, folder) => ({ name, type, folder, prototypeToken: { actorLink: true }, system: { settings: { iscreated: false } } });
 const dots = (o, base) => Object.fromEntries(Object.entries(o ?? {}).flatMap(([k, v]) => [[`system.${base}.${k}.value`, v], ...(base === "abilities" ? [[`system.${base}.${k}.isvisible`, true]] : [])]));
 
 export async function makeTestPack({ confirm = true } = {}) {
@@ -43,7 +45,7 @@ export async function makeTestPack({ confirm = true } = {}) {
     const folder = await Folder.create({ name: FOLDER, type: "Actor", flags: { "wodx-actions": { kind: "6b-test-pack" } } });
     const made = [];
     for (const p of PACK) {
-        const a = await Actor.create({ name: p.name, type: T().werewolf ?? "Werewolf", folder: folder.id, system: { settings: { iscreated: false } } });
+        const a = await Actor.create(BASE(p.name, T().werewolf ?? "Werewolf", folder.id));
         const upd = {
             "system.breed": `wod.bio.breedname.${p.breed}`, "system.auspice": `wod.bio.auspicename.${p.auspice}`,
             "system.tribe": "custom", "system.custom.tribe": D.tribes[p.tribe].label,
@@ -52,13 +54,13 @@ export async function makeTestPack({ confirm = true } = {}) {
             "system.advantages.willpower.permanent": p.willpower, "system.advantages.willpower.temporary": p.willpower,
             "system.renown.rank": p.rank ?? 1,
             ...Object.fromEntries(Object.entries(p.renown).map(([k, v]) => [`system.renown.${k}.permanent`, v])),
-            ...dots(p.attrs, "attributes"), ...dots(p.abilities, "abilities")
+            ...dots(p.attrs, "attributes"), ...dots(p.abilities, "abilities"), "system.settings.isupdated": false
         };
         await a.update(upd);
         if (p.form && p.form !== "homid") {
             const shapes = foundry.utils.deepClone(a.system.shapes ?? {});
             for (const k of Object.keys(shapes)) if (shapes[k] && typeof shapes[k] === "object") shapes[k].isactive = k === p.form;
-            await a.update({ "system.shapes": shapes });
+            await a.update({ "system.shapes": shapes, "system.settings.isupdated": false });
         }
         const names = [D.breeds[p.breed].gifts[0], D.auspices[p.auspice].gifts[0], D.tribes[p.tribe].gifts[0]];
         const items = [...new Set(names)].map(n => GX.findGift(n)).filter(Boolean).map(g => GX.giftItem(g));
@@ -70,17 +72,17 @@ export async function makeTestPack({ confirm = true } = {}) {
         made.push(a);
     }
     for (const f of FERA) {
-        const a = await Actor.create({ name: f.name, type: T().changingbreed ?? "Changing Breed", folder: folder.id, system: { settings: { iscreated: false } } });
+        const a = await Actor.create(BASE(f.name, T().changingbreed ?? "Changing Breed", folder.id));
         await a.update({ "system.changingbreed": f.changingbreed, "system.breed": "wod.bio.breedname.homid",
             "system.advantages.rage.permanent": f.rage, "system.advantages.rage.temporary": f.rage,
             "system.advantages.gnosis.permanent": f.gnosis, "system.advantages.gnosis.temporary": f.gnosis,
             "system.advantages.willpower.permanent": f.willpower, "system.advantages.willpower.temporary": f.willpower,
-            "system.renown.rank": 1 });
+            "system.renown.rank": 1, "system.settings.isupdated": false });
         made.push(a);
     }
     for (const m of MORTALS) {
-        const a = await Actor.create({ name: m.name, type: T().mortal ?? "Mortal", folder: folder.id, system: { settings: { iscreated: false } } });
-        await a.update({ "system.advantages.willpower.permanent": m.willpower, "system.advantages.willpower.temporary": m.willpower, ...dots(m.abilities, "abilities") });
+        const a = await Actor.create(BASE(m.name, T().mortal ?? "Mortal", folder.id));
+        await a.update({ "system.advantages.willpower.permanent": m.willpower, "system.advantages.willpower.temporary": m.willpower, ...dots(m.abilities, "abilities"), "system.settings.isupdated": false });
         if (m.kinfolk) await a.setFlag("world", "wodx", { ...(a.getFlag("world", "wodx") ?? {}), kinfolk: m.kinfolk });
         made.push(a);
     }

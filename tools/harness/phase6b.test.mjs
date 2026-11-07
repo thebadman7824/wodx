@@ -291,35 +291,47 @@ test("reading the sheet: breed, auspice, tribe, form, Fera row", () => {
   assert.equal(GX.isShifter(b), true);
 });
 
-test("changing form: one success per form passed; a partial success goes partway; Dark Ages Glabro fix", async () => {
+test("changing form: one success per form passed; a partial success goes partway; the sheet's Glabro bonus follows the era", async () => {
   reset(); ERA = "dark-ages";
   const a = garou("Shifter");
+  const [glabroMan] = await a.createEmbeddedDocuments("Item", [{name: "Glabro - Manipulation bonus", type: "Bonus", system: {parentid: "glabro", settingtype: "manipulation", type: "attribute_buff", value: -2}}]);
   rolls.push(1);
   forms.push({form: "crinos", how: "roll", mod: 0});
   await E.shift(a);
   assert.equal(GX.info(a).form, "glabro", "one of two successes: Glabro this turn");
   assert.match(posts.at(-1).body, /Partway/);
   assert.equal(a.flags.world.wodx.form, "glabro");
-  const fix = a.effects.find(e => e.flags["wodx-actions"]?.formFix);
-  assert.ok(fix, "DA:W p. 106: Glabro is Manipulation −1, so the sheet's −2 is offset");
-  assert.equal(fix.changes[0].value, "1");
+  assert.equal(a.system.settings?.isupdated, false, "the system is asked to work out the totals");
+  assert.equal(glabroMan.system.value, -1, "DA:W p. 106: Glabro is Manipulation −1");
+  assert.equal(a.system.shapes[""], undefined);
   rolls.push(1);
   forms.push({form: "crinos", how: "roll", mod: 0});
   await E.shift(a);
   assert.equal(GX.info(a).form, "crinos");
-  assert.equal(a.effects.size, 0, "the Glabro fix goes when Glabro does");
   assert.match(posts.at(-1).body, /Delirium/);
   // Rage: instant
   forms.push({form: "lupus", how: "rage"});
   await E.shift(a);
   assert.equal(GX.info(a).form, "lupus");
   assert.equal(a.system.advantages.rage.temporary, 2);
-  // W20: no Glabro fix
+  // W20: the sheet's −2 again
   ERA = "renaissance";
   forms.push({form: "glabro", how: "rage"});
   await E.shift(a);
-  assert.equal(a.effects.size, 0);
+  assert.equal(glabroMan.system.value, -2);
   ERA = "dark-ages";
+  // An empty choice changes nothing
+  forms.push({form: "", how: "rage"});
+  assert.equal(await E.shift(a), null);
+});
+
+test("a dialog's radio buttons read as the one that is checked (Learn a Gift)", async () => {
+  const P = await import(join(root, "modules/wodx-actions/scripts/profiles.js"));
+  const el = document.createElement("form");
+  el.innerHTML = `<input type="radio" name="gift" value="a"><input type="radio" name="gift" value="b" checked><input type="radio" name="gift" value="c" disabled>`;
+  assert.equal(P.readForm(el).gift, "b");
+  const PC = await import(join(root, "modules/wodx-combat/scripts/profiles.js"));
+  assert.equal(PC.readForm(el).gift, "b");
 });
 
 test("losing the wolf: no Rage and no Willpower leaves only the breed form", async () => {
@@ -385,6 +397,8 @@ test("nightfall gives moon Rage once a night: all of it under the auspice's moon
   const cat = garou("Cat", {changingbreed: "Bastet", rage: [1, 5]});
   const coy = garou("Coyote", {changingbreed: "Nuwisha", rage: [0, 0]});
   const npc = garou("Unseen", {rage: [1, 5], player: false});
+  const blank = garou("Blank template", {rage: [0, 0], wp: [0, 0]});
+  game.scenes.active.tokens = [{actor: blank}];
   for ( const a of [ah, rg, cat, coy, npc] ) game.actors.set(a.id, a);
   await game.time.set(t);
   await E.moonRise();
@@ -393,6 +407,7 @@ test("nightfall gives moon Rage once a night: all of it under the auspice's moon
   assert.equal(cat.system.advantages.rage.temporary, 1, "Bastet regain Rage at sunset by their own rule");
   assert.equal(npc.system.advantages.rage.temporary, 1, "not on the scene and nobody's character");
   const card = chats.find(c => /Moonrise/.test(c.content));
+  assert.doesNotMatch(card.content, /Blank template/, "a sheet with no Rage set up is left out");
   assert.ok(card?.whisper?.length, "whispered to the GM");
   rg.system.advantages.rage.temporary = 1;
   await game.time.advance(600);

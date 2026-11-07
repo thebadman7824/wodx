@@ -18,10 +18,10 @@ WoDX notes:
 |---|---|---|---|
 | wodx-chronicle | 0.2.0 | 1, 6a | rothenstein-wodx, wodx-template |
 | wodx-otherworlds | 0.2.0 | 2, 5 | rothenstein-wodx, wodx-template |
-| wodx-creation | 0.4.0 | 3, 4, 6a, 6b | rothenstein-wodx, wodx-template (needs wodx-chronicle) |
-| wodx-actions | 3.1.0 | 6a, 6b | rothenstein-wodx, wodx-template, instead of vtda20-actions (needs wodx-chronicle) |
-| wodx-combat | 3.1.0 | 6a, 6b | rothenstein-wodx, wodx-template, instead of vtda20-combat (needs wodx-chronicle) |
+| wodx-creation | 0.4.1 | 3, 4, 6a, 6b | rothenstein-wodx, wodx-template (needs wodx-chronicle) |
+| wodx-actions | 3.1.1 | 6a, 6b | rothenstein-wodx, wodx-template, instead of vtda20-actions (needs wodx-chronicle) |
+| wodx-combat | 3.1.1 | 6a, 6b | rothenstein-wodx, wodx-template, instead of vtda20-combat (needs wodx-chronicle) |
 
 Chronicle, Otherworlds and Creation stay idle in worlds without `flags.wodx` (the original Rothenstein world). WoDX Actions and WoDX Combat stay off wherever vtda20-actions or vtda20-combat is still enabled; the original Rothenstein world keeps the vtda20 modules, which stay installed.
 
-System fork: 7.3.2-wodx.2 adds the Group actor type (data only; the sheet is in wodx-creation). The 7.3.2-wodx.1 files it replaced are in `wodx-repo/backups/system-7.3.2-wodx.1`.
+System fork: 7.3.2-wodx.2 adds the Group actor type (data only; the sheet is in wodx-creation); 7.3.2-wodx.3 stops the load-time migration error for werewolves with effects. The 7.3.2-wodx.1 files it replaced are in `wodx-repo/backups/system-7.3.2-wodx.1`.

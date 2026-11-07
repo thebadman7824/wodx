@@ -249,15 +249,9 @@ export  const updates = async () => {
 
         await actor.update(actorData);
 
-        // TODO: this should not be needed any longer or just add a patch.
-        if (actor.type == CONFIG.worldofdarkness.sheettype.werewolf) {
-            for (const effect of actor.effects) {
-                if (effect.icon.includes(CONFIG.worldofdarkness.sheettype.werewolf)) {
-                    const effectid = effect.id;
-                    await actor.deleteEmbeddedDocuments("ActiveEffect", [effectid]);
-                }                
-            }
-        }
+        // WoDX fork (7.3.2-wodx.3): upstream deleted a werewolf's old shape effects here by reading effect.icon, which
+        // Foundry 12+ no longer has, so the check threw for every werewolf with any effect (WoDX Gifts and conditions are
+        // effects). Forms are Bonus items since 7.x; nothing is deleted.
     }
 }
 

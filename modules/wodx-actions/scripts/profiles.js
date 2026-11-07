@@ -202,6 +202,7 @@ export function readForm(root) {
     const fd = {};
     for (const f of form?.querySelectorAll?.("input, select, textarea") ?? []) {
         if (!f.name) continue;
+        if (f.type === "radio") { if (f.checked) fd[f.name] = f.value; continue; }
         if (f.type === "checkbox") fd[f.name] = f.checked;
         else if (f.type === "number") fd[f.name] = num(f.value);
         else fd[f.name] = f.value;

@@ -1060,7 +1060,7 @@ Hooks.once("init", () => {
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.1.0",
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.1.1",
         conditionMods, dazedThreshold, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
     L.alias("combat", "vtda20combat", api, "vtda20-combat");

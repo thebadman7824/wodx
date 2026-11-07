@@ -228,3 +228,9 @@
 - **Bugs caught by the new tests and fixed before install:** a talen was never marked spent (the check looked at the roll object); "custom" tribes and the system's tribe keys (`wod.bio.tribename.getoffenris`) weren't recognised; scrolling lists in dialogs collapsed to nothing on a 720-pixel screen (flex shrink), found by UI fit.
 - **Checks:** harness 124 tests (33 new), UI fit every window at three sizes (21 new dialogs), quality-check.sh all pass.
 - **Installed** on Ben's PC: WoDX Actions, Combat and Creation. Replaced files backed up in `wodx-repo/backups/before-6b-3.0.1` first. Gate waiting (PHASE-6B-CHECKLIST.md).
+
+### Phase 6b gate run, 2026-11-07 (by Claude as Gamemaster Test)
+
+- Backup "Before Phase 6b gate" of rothenstein-wodx. The server had auto-launched the original Rothenstein world after the restart; Ben entered the admin password, Claude launched rothenstein-wodx and joined as Gamemaster Test (no password). Claude's own browser refuses Foundry's self-signed certificate, so the run used the Foundry window and a gate script (`tools/gate/gate6b.mjs`).
+- First run 11/18. Fixed: form changes now ask the system to work out totals (`isupdated: false`); the Dark Ages Glabro fix uses the sheet's own Glabro bonus; radio buttons read correctly in dialogs (Learn a Gift took the last Gift); moonrise skips sheets with no Rage; test-pack tokens linked; the fork's migration no longer reads `effect.icon` (red error on every reload for a werewolf with an effect) — fork 7.3.2-wodx.3. Versions: WoDX Actions and Combat 3.1.1, Creation 0.4.1. Replaced files backed up in `wodx-repo/backups/before-3.1.1` and `backups/system-7.3.2-wodx.2`.
+- Second run: every rules check passed (see PHASE-6B-CHECKLIST "Gate result"). Harness 125 tests.

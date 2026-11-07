@@ -71,7 +71,9 @@ export function firstChangeData(mortal, {breed, auspice, tribe, rage, gnosis, wi
     create: {name: mortal.name, type: CONFIG.worldofdarkness?.sheettype?.werewolf ?? "Werewolf", img: src.img, folder: src.folder ?? null,
       ownership: src.ownership, prototypeToken: src.prototypeToken, flags,
       system: {settings: {iscreated: false}}},
-    update: {...Object.fromEntries(Object.entries(sys).map(([k, v]) => [`system.${k}`, v])), ...dots, ...(health ? {"system.health.damage": health} : {})},
+    // isupdated false: the system works out the new sheet's totals after this update
+    update: {...Object.fromEntries(Object.entries(sys).map(([k, v]) => [`system.${k}`, v])), ...dots, ...(health ? {"system.health.damage": health} : {}),
+      "system.settings.isupdated": false},
     items, eraKey
   };
 }
