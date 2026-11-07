@@ -29,6 +29,7 @@ import * as L from "./legacy.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as MIG from "./migrate.js";
 import * as GX from "./garou.js";
+import { makeTestPack } from "./garou-testpack.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -1583,7 +1584,7 @@ const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenz
     chiminage: withActor(a => gx().chiminage(a)),
     awardRenown: () => gx().awardRenown(), delirium: () => gx().deliriumCheck(), moonRise: (o = {}) => gx().moonRise(o),
     applyRenown: (actors, deltas, reason) => gx().applyRenown(actors, deltas, reason), garouInfo: a => GX.info(a),
-    garouRules: GX, gifts: () => GX.gifts() };
+    garouRules: GX, gifts: () => GX.gifts(), giftItem: g => GX.giftItem(g), makeTestPack };
 
 let OFF = false;
 Hooks.once("init", () => {

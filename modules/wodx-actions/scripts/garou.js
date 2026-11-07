@@ -43,6 +43,17 @@ export function findGift(name) {
     return gifts().find(g => g.n.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim() === key) ?? null;
 }
 
+/** Item data for a Gift from the library: a system Power of type Gift, linked back to the library entry. */
+export function giftItem(g) {
+    const pool = G.giftPool(g.r) ?? [];
+    const dice1 = pool[0]?.kind === "attr" ? pool[0].key : "";
+    const dice2 = pool[1]?.kind === "ability" ? pool[1].key : "";
+    return { name: g.n, type: "Power", img: "systems/worldofdarkness/assets/img/items/power_werewolf.svg",
+        system: { level: g.l, game: "werewolf", type: "wod.types.gift", dice1, dice2, difficulty: typeof g.d === "number" ? g.d : 6,
+            description: `<p>${esc(g.e)}</p><p><em>WoDX Gift library: DA:W p. ${g.p}.</em></p>`, reference: `DA:W p. ${g.p}` },
+        flags: { [MOD]: { gift: g.id } } };
+}
+
 /** Rules basis for the era in force (B41). */
 export function basis() {
     const id = chronicle()?.eras?.activeEra?.()?.profile?.id ?? null;
@@ -72,7 +83,7 @@ export function info(actor) {
     return {
         breed: G.breedKey(s.breed) || "homid",
         auspice: G.auspiceKey(s.auspice),
-        tribe: G.tribeKey(s.tribe || s.custom?.tribe, tribes),
+        tribe: G.tribeKey(s.tribe === "custom" ? s.custom?.tribe : (s.tribe || s.custom?.tribe), tribes),
         form: G.currentForm(s.shapes),
         rank: Math.max(0, n(s.renown?.rank)),
         fera, feraKey: feraKey(actor),
@@ -449,13 +460,7 @@ export function build(ctx) {
         return dialog(`Learn a Gift — ${actor.name}`, content, "Learn", async fd => {
             const g = gifts().find(x => x.id === fd.gift); if (!g) return null;
             const own = G.giftIsOwn(g, i), xp = G.giftXP(g.l, own);
-            const pool = G.giftPool(g.r) ?? [];
-            const dice1 = pool[0]?.kind === "attr" ? pool[0].key : "";
-            const dice2 = pool[1]?.kind === "ability" ? pool[1].key : "";
-            const [item] = await actor.createEmbeddedDocuments("Item", [{ name: g.n, type: "Power", img: "systems/worldofdarkness/assets/img/items/power_werewolf.svg",
-                system: { level: g.l, game: "werewolf", type: "wod.types.gift", dice1, dice2, difficulty: typeof g.d === "number" ? g.d : 6,
-                    description: `<p>${esc(g.e)}</p><p><em>WoDX Gift library: DA:W p. ${g.p}.</em></p>`, reference: `DA:W p. ${g.p}` },
-                flags: { [MOD]: { gift: g.id } } }]);
+            await actor.createEmbeddedDocuments("Item", [giftItem(g)]);
             let xpNote = "";
             if (fd.xp) {
                 const xpApi = game.modules.get("wodx-creation")?.api?.xp;
@@ -529,14 +534,15 @@ export function build(ctx) {
         const items = (actor.items ?? []).filter(it => it.type === "Fetish" || it.getFlag?.(MOD, "talen"));
         if (!items.length) return ctx.notify(`${actor.name} carries no fetishes or talens.`);
         const content = `<form><p><b>${esc(actor.name)}</b>: Gnosis ${info(actor).gnosis.temp}/${info(actor).gnosis.perm}.</p>
-          <div class="form-group"><label>Item</label>${items.length > 5 ? searchBox("select[name=item]", "Search fetishes…", "Search fetishes") : ""}<select name="item">${items.map(it => `<option value="${it.id}">${esc(it.name)} (Gnosis ${n(it.system?.gnosis)})${it.getFlag?.(MOD, "attuned") ? " · attuned" : ""}${it.getFlag?.(MOD, "talen") ? " · talen" : ""}</option>`).join("")}</select></div>
+          <div class="form-group"><label>Item</label>${items.length > 5 ? searchBox("select[name=item]", "Search fetishes…", "Search fetishes") : ""}<select name="item">${items.map(it => `<option value="${it.id}">${esc(it.name)} (Gnosis ${n(it.system?.gnosis)})${it.getFlag?.(MOD, "attuned") ? " · attuned" : ""}${it.getFlag?.(MOD, "talen") || it.system?.type === "wod.types.talen" ? " · talen" : ""}${it.getFlag?.(MOD, "spent") ? " · spent" : ""}</option>`).join("")}</select></div>
           <div class="form-group"><label>Do</label><select name="how" data-fixed><option value="activate">Activate: Gnosis roll</option><option value="spend">Activate: spend 1 Gnosis (automatic)</option><option value="attune">Attune (first use)</option></select></div>
           <div class="form-group"><label>This is a talen (one use)</label><input type="checkbox" name="talen"/></div>
           <p class="vta-note">Attune and activate at difficulty = the item's Gnosis; no Rage in the same turn (W20 p. 221; DA:W p. 92). A talen's spirit goes free when used (DA:W p. 149).</p></form>`;
         return dialog(`Use a fetish — ${actor.name}`, content, "Use", async fd => {
             const it = actor.items.get(fd.item); if (!it) return null;
             const gn = Math.max(2, Math.min(10, n(it.system?.gnosis) || 6));
-            const talen = fd.talen || !!it.getFlag?.(MOD, "talen");
+            const talen = fd.talen || !!it.getFlag?.(MOD, "talen") || it.system?.type === "wod.types.talen";
+            if (it.getFlag?.(MOD, "spent")) { ctx.notify(`${it.name} is spent: its spirit has gone.`); return null; }
             let body = "", rolls = [], woke = false;
             if (fd.how === "spend") {
                 const note = await pay(actor, "gnosis", 1); if (note === false) return null;
@@ -807,4 +813,34 @@ export function registerSettings(register) {
     register("moonRage", "Moon Rage at nightfall", "When night falls, shapechangers on the active scene and players' characters regain Rage by the moon (B40; DA:W p. 91, W20 p. 145).", Boolean, true);
     register("autoRegen", "Regenerate each round", "In a fight, shapechangers regenerate a bashing or lethal level each round, rolling Stamina (8) for lethal (DA:W p. 102; W20 p. 256).", Boolean, true);
     game.settings.register(MOD, "moonNight", { scope: "world", config: false, type: Number, default: -1 });
+}
+
+/* ------------------------------------------------------------------ */
+/*  For WoDX Combat                                                    */
+/* ------------------------------------------------------------------ */
+
+/** The bane metals this shapechanger fears (Garou: silver; Corax: gold; Mokole: both). */
+export function banesOf(actor) {
+    return info(actor).fera?.bane ?? ["silver"];
+}
+/** How a bane metal hurts this shapechanger in its current form, by the era's rules. */
+export function baneFor(actor, metal = "silver") {
+    const i = info(actor);
+    return G.baneEffect({ b: basis(), breed: i.breed, form: i.form, metal, fera: i.fera });
+}
+/** Can this shapechanger soak aggravated damage with Stamina now? Dark Ages: not in Homid form (DA:W p. 102). */
+export function aggSoak(actor) {
+    return !(basis() === "daw" && info(actor).form === "homid");
+}
+/** The form's teeth and claws (DA:W pp. 106–107; W20 p. 285): {bite, claw, biteBonus, note}. Types are null when the form has none. */
+export function naturalWeapons(actor) {
+    const f = info(actor).form, daw = basis() === "daw";
+    const T = {
+        homid: { bite: "bashing", claw: null },
+        glabro: daw ? { bite: "lethal", claw: null } : { bite: "aggravated", claw: "aggravated" },
+        crinos: { bite: "aggravated", claw: "aggravated" },
+        hispo: { bite: "aggravated", claw: "aggravated", biteBonus: 1 },
+        lupus: daw ? { bite: "lethal", claw: null } : { bite: "aggravated", claw: null }
+    }[f] ?? { bite: "bashing", claw: null };
+    return { form: f, biteBonus: 0, ...T, note: daw ? "DA:W pp. 106–107" : "W20: aggravated teeth and claws in every form but Homid" };
 }

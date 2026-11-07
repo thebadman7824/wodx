@@ -13,6 +13,16 @@ export const POOLABLE = {
   pack: {source: "W20 pp. 140–141", list: ["Allies", "Contacts", "Fate", "Kinfolk", "Resources"],
     note: "Totem already belongs to the pack as a whole, so it is not pooled (W20 p. 140)."}
 };
+/** The pool list for a kind of group in the era in force: a Dark Ages pack also pools Hunting Grounds, its best Anchor (DA:W p. 84). */
+export function poolableFor(kind) {
+  const base = POOLABLE[kind];
+  if ( !base ) return null;
+  const era = game.modules?.get?.("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id;
+  if ( kind === "pack" && ["dark-ages", "long-night"].includes(era) )
+    return {...base, source: `${base.source}; DA:W p. 84`, list: [...base.list, "Hunting Grounds"],
+      note: `${base.note} In the Dark Ages, Hunting Grounds is the pack's best Anchor (DA:W p. 84).`};
+  return base;
+}
 /** The Storyteller's usual cap on a pooled Background (V20 Dark Ages p. 182). */
 export const POOL_CAP = 10;
 
@@ -110,7 +120,7 @@ export function makeGroupSheet() {
         </tr>`).join("");
       const inRoster = new Set(current.map(m => m.actorId));
       const candidates = [...game.actors].filter(a => a.type !== "Group" && !inRoster.has(a.id)).sort((a, b) => a.name.localeCompare(b.name));
-      const pool = POOLABLE[sys.kind];
+      const pool = poolableFor(sys.kind);
       const bgs = (sys.backgrounds ?? []).map(b => {
         const cells = current.map(m => `<td><input type="number" min="0" max="10" step="1" data-contrib="${b.id}" data-actor="${m.actorId}" value="${Number(b.contributions?.[m.actorId]) || 0}" ${canEdit ? "" : "disabled"} aria-label="${esc(m.actor?.name ?? "")}"></td>`).join("");
         const anchor = b.id === sys.anchorId;
@@ -223,7 +233,7 @@ export function makeGroupSheet() {
       if ( !name ) return ui.notifications.warn("Name the Background to pool.");
       const bgs = foundry.utils.deepClone(this.group.system.backgrounds ?? []);
       if ( bgs.some(b => b.name.toLowerCase() === name.toLowerCase()) ) return ui.notifications.warn(`${name} is already pooled.`);
-      const pool = POOLABLE[this.group.system.kind];
+      const pool = poolableFor(this.group.system.kind);
       if ( pool && !pool.list.includes(name) ) ui.notifications.info(`${name} is not on the book's list for this kind of group (${pool.source}); added as the Storyteller's call.`);
       bgs.push({id: foundry.utils.randomID(), name, note: "", contributions: {}});
       await this.group.update({"system.backgrounds": bgs});

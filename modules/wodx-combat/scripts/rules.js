@@ -53,7 +53,7 @@ export function clampDifficulty(d) {
  * armorPiercing: dice of armor ignored; bypassArmor: attacker took +2 difficulty to ignore armor.
  */
 export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 0, armorPiercing = 0,
-                           bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bane = false, bonus = 0 }) {
+                           bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bane = false, bonus = 0, aggSoak = true }) {
     const notes = [];
     let effArmor = armor;
     if (fireOrSun && effArmor) { effArmor = 0; notes.push("armor does not protect against fire or sunlight"); }
@@ -77,6 +77,7 @@ export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 
         case "lupine":
         case "spirit":
             sta = stamina; fort = fortitude;
+            if (t === "aggravated" && !aggSoak) { sta = 0; fort = 0; notes.push("Dark Ages: no aggravated soak in Homid form (DA:W p. 102)"); }
             break;
         case "wraith":
             if (t !== "aggravated") sta = stamina;

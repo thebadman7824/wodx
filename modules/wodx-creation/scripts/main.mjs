@@ -10,6 +10,7 @@ import {PassYearsApp} from "./pass-years.mjs";
 import {runSkipTest} from "./skip-test.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 import * as groups from "./group-sheet.mjs";
+import * as firstChange from "./first-change.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -43,7 +44,7 @@ function start() {
     runSkipTest,
     open: () => CreationApp.open(),
     spend: actor => SpendApp.openFor(actor),
-    embrace: change.embrace, giveVitae: change.giveVitae, award: xp.award, awardDialog,
+    embrace: change.embrace, giveVitae: change.giveVitae, firstChange: firstChange.firstChange, firstChangeDialog: firstChange.firstChangeDialog, award: xp.award, awardDialog,
     writeLineageJournal: lineage.writeLineageJournal,
     groups
   };

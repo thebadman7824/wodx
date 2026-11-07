@@ -1,6 +1,7 @@
 import {MODULE_ID, esc, lineOf, xpTotals, purchaseOptions, newDisciplineOption, newAbilityOption, kindLabel, lineage, generationOf,
   clanNameOf, domitorOf, allyOf, patronOf, payerOf, canSpendFor, spendableFor} from "./actor-data.mjs";
 import {embraceDialog, vitaeDialog} from "./change-of-state.mjs";
+import {firstChangeDialog} from "./first-change.mjs";
 import {award, requestSpend, writeLogPage} from "./xp.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
 import {XP} from "../data/vampire.mjs";
@@ -32,6 +33,7 @@ export class CreationApp extends ApplicationV2 {
     actions: {
       embrace: () => embraceDialog().then(() => CreationApp.refresh()),
       vitae: () => vitaeDialog().then(() => CreationApp.refresh()),
+      firstChange: () => firstChangeDialog().then(() => CreationApp.refresh()),
       award: () => awardDialog(),
       spend: CreationApp.#onSpend,
       ally: CreationApp.#onAlly,
@@ -87,6 +89,7 @@ export class CreationApp extends ApplicationV2 {
         <div class="wodx-buttons">
           <button type="button" data-action="embrace"><i class="fa-solid fa-skull"></i> Embrace a mortal</button>
           <button type="button" data-action="vitae"><i class="fa-solid fa-droplet"></i> Give vitae</button>
+          ${game.wodxActions?.garouRules ? `<button type="button" data-action="firstChange"><i class="fa-solid fa-moon"></i> The First Change</button>` : ""}
           <button type="button" data-action="award"><i class="fa-solid fa-star"></i> Award experience</button>
           <button type="button" data-action="log"><i class="fa-solid fa-book"></i> Experience log</button>
           <button type="button" data-action="lineage"><i class="fa-solid fa-sitemap"></i> Lineage journal</button>

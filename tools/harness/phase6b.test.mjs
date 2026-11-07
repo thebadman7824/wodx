@@ -520,3 +520,27 @@ test("every menu entry for the lupine profile names a real API function", async 
   const apiBlock = main.slice(main.indexOf("const API = {"), main.indexOf("let OFF"));
   for ( const k of apis ) assert.match(apiBlock, new RegExp(`\\b${k}\\b`), k);
 });
+
+test("for WoDX Combat: teeth and claws by form and era, silver by breed and form, no aggravated soak in Homid (Dark Ages)", async () => {
+  ERA = "dark-ages";
+  const a = garou("Fighter", {form: "glabro"});
+  assert.deepEqual([GX.naturalWeapons(a).bite, GX.naturalWeapons(a).claw], ["lethal", null], "DA:W: Glabro bites lethal, no claws");
+  a.system.shapes.glabro.isactive = false; a.system.shapes.hispo.isactive = true;
+  assert.equal(GX.naturalWeapons(a).biteBonus, 1);
+  assert.equal(GX.naturalWeapons(a).claw, "aggravated");
+  assert.equal(GX.baneFor(a, "silver").type, "aggravated");
+  a.system.shapes.hispo.isactive = false; a.system.shapes.homid.isactive = true;
+  assert.equal(GX.baneFor(a, "silver").soakDiff, 6, "breed form: soak at 6");
+  assert.equal(GX.aggSoak(a), false);
+  ERA = "renaissance";
+  assert.equal(GX.aggSoak(a), true, "W20: every form");
+  assert.equal(GX.baneFor(a, "silver").bane, false);
+  ERA = "dark-ages";
+  const corax = garou("Raven", {changingbreed: "Corax"});
+  assert.deepEqual(GX.banesOf(corax), ["gold"]);
+  const R = await import(join(root, "modules/wodx-combat/scripts/rules.js"));
+  const sp = R.soakPool({profile: "lupine", damageType: "aggravated", stamina: 3, aggSoak: false});
+  assert.equal(sp.dice, 0);
+  assert.match(sp.notes.join(" "), /DA:W p\. 102/);
+  assert.equal(R.soakPool({profile: "lupine", damageType: "aggravated", stamina: 3}).dice, 3);
+});

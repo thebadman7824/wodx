@@ -218,7 +218,19 @@ function weaponList(actor) {
         });
     }
     list.sort((a, b) => (b.equipped - a.equipped) || a.name.localeCompare(b.name));
-    for (const [k, u] of Object.entries(R.UNARMED)) list.push({ id: `unarmed:${k}`, unarmed: true, ranged: false, ...u, secondaryId: "", minStr: 0, piercing: 0 });
+    const GXR = garouRules();
+    const nat = GXR?.isShifter?.(actor) ? GXR.naturalWeapons(actor) : null;
+    for (const [k, u] of Object.entries(R.UNARMED)) {
+        if (nat && (k === "bite" || k === "claw")) {
+            const type = nat[k];
+            if (!type) continue;
+            const form = cap(nat.form);
+            list.push({ id: `unarmed:${k}`, unarmed: true, natural: true, ranged: false, ...u, name: `${k === "bite" ? "Bite" : "Claw"} (${form}, ${type})`,
+                type, dmgBonus: 1 + (k === "bite" ? nat.biteBonus : 0), secondaryId: "", minStr: 0, piercing: 0, desc: nat.note });
+            continue;
+        }
+        list.push({ id: `unarmed:${k}`, unarmed: true, ranged: false, ...u, secondaryId: "", minStr: 0, piercing: 0 });
+    }
     return list;
 }
 
@@ -229,6 +241,18 @@ function weaponAbility(actor, w) {
     const a = ability(actor, w.ability);
     const lbl = game.i18n.localize(actor.system?.abilities?.[w.ability]?.label || w.ability);
     return { ...a, name: lbl.startsWith("wod.") || lbl === w.ability ? cap(w.ability) : lbl };
+}
+
+/** WoDX Actions' Werewolf and Fera helpers, when that module is on (Phase 6b). */
+function garouRules() { return game.wodxActions?.garouRules ?? null; }
+
+/** How a bane metal in this attack hurts a shapechanger target; null when no bane applies. */
+function shifterBane(target, w, fd) {
+    const GXR = garouRules();
+    if (!target || !GXR?.isShifter?.(target)) return null;
+    const txt = `${w.name} ${w.desc || ""}`;
+    const metal = GXR.banesOf(target).find(m => new RegExp(`\\b${m}`, "i").test(txt)) ?? (/\bsilver/i.test(txt) || fd.bane ? "silver" : null);
+    return metal ? { metal, ...GXR.baneFor(target, metal) } : null;
 }
 
 function isCloseCombat(w) {
@@ -592,9 +616,16 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
     // ---- Damage
     let dmg = null, soak = null, outcome = null, armorBroken = false, dmgPool = null;
     const fireSun = !!fd.fireSun;
-    const dmgType = (fireSun || fd.bane2 || (R.BANES[tKind] === "Cold iron" && /cold iron/i.test(w.name))) ? "aggravated" : (w.type || "lethal");
-    const bane = !!(fd.bane || fd.bane2 || (R.BANES[tKind] && new RegExp(R.BANES[tKind], "i").test(`${w.name} ${w.desc || ""}`)));
-    if (bane) log.push(`${R.BANES[tKind] ?? "Bane"} weapon: ${target?.name ?? "the target"} has no natural soak.`);
+    let dmgType = (fireSun || fd.bane2 || (R.BANES[tKind] === "Cold iron" && /cold iron/i.test(w.name))) ? "aggravated" : (w.type || "lethal");
+    let bane = !!(fd.bane || fd.bane2 || (R.BANES[tKind] && new RegExp(R.BANES[tKind], "i").test(`${w.name} ${w.desc || ""}`)));
+    let soakDiff = 6, minLevels = 0;
+    const sb = shifterBane(target, w, fd);
+    if (sb) {
+        // Era-, breed- and form-aware (DA:W p. 102; W20 p. 255; W20 Changing Breeds)
+        bane = sb.bane && !sb.soak;
+        if (sb.bane) { dmgType = sb.type ?? dmgType; soakDiff = sb.soakDiff ?? 6; minLevels = sb.min ?? 0; }
+        log.push(`${cap(sb.metal)}: ${sb.note}`);
+    } else if (bane) log.push(`${R.BANES[tKind] ?? "Bane"} weapon: ${target?.name ?? "the target"} has no natural soak.`);
     if (hit && !maneuver.noDamage) {
         dmgPool = damagePool(attacker, w, net, maneuver, targeting, fd, pot);
         dmg = await rollPool(dmgPool.dice, 6, { canBotch: false, autoSuccesses: dmgPool.auto });
@@ -607,13 +638,15 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
                 profile, damageType: dmgType,
                 stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
                 armor: arm[dmgType] ?? 0, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-                fireOrSun: fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus
+                fireOrSun: fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
+                aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true
             });
             if (fd.fortBlood && sp.autoSoak) spendNotes.push(...await spend(target, 0, 1));
-            soak = await rollPool(sp.dice, 6, { canBotch: false, autoSuccesses: sp.autoSoak });
+            soak = await rollPool(sp.dice, soakDiff, { canBotch: false, autoSuccesses: sp.autoSoak });
             soak.pool = sp;
             if (soak.roll) rolls.push(soak.roll);
             const left = R.damageAfterSoak(dmg.successes, soak.successes, dmgType, profile, { elder: isElder(target) });
+            if (minLevels && left.levels < minLevels) { left.levels = minLevels; log.push(`A ${sb.metal} hit does at least ${minLevels} level.`); }
             outcome = { levels: left.levels, halved: left.halved, type: dmgType };
             const dz = dazedThreshold(target, tKind);
             if (left.levels > dz.threshold) {
@@ -914,7 +947,7 @@ export async function soakDialog({ tokens } = {}) {
 
 export async function soakAndApply(tok, fd) {
     const actor = tok.actor ?? tok;
-    const type = fd.fireSun ? "aggravated" : fd.type;
+    const type0 = fd.fireSun ? "aggravated" : fd.type;
     const rolls = [];
     let dmgLevels = fd.amount, dmgRoll = null;
     if (fd.mode === "pool") {
@@ -924,12 +957,18 @@ export async function soakAndApply(tok, fd) {
     }
     const kind = getKind(actor), profile = P.profileSoak(kind);
     let soak = null, sp = null, left = { levels: dmgLevels, halved: false };
+    // A shapechanger and silver: by era, breed and form (DA:W p. 102; W20 p. 255)
+    const sb = fd.bane ? shifterBane(actor, { name: "silver" }, fd) : null;
+    let type = type0, bane = !!fd.bane, soakDiff = 6;
+    if (sb) { bane = sb.bane && !sb.soak; if (sb.bane) { type = sb.type ?? type; soakDiff = sb.soakDiff ?? 6; } }
     if (fd.soak) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
-            armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: !!fd.bane, bonus: fd.soakBonus });
+            armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
+            aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true });
+        if (sb) sp.notes.push(sb.note);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
-        soak = await rollPool(sp.dice, 6, { canBotch: false, autoSuccesses: sp.autoSoak });
+        soak = await rollPool(sp.dice, soakDiff, { canBotch: false, autoSuccesses: sp.autoSoak });
         if (soak.roll) rolls.push(soak.roll);
         left = R.damageAfterSoak(dmgLevels, soak.successes, type, profile, { elder: isElder(actor) });
     }

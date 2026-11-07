@@ -34,9 +34,13 @@ export function auspiceKey(text) {
 export function tribeKey(text, tribes = {}) {
     const t = norm(text);
     if (!t) return "";
-    for (const [k, v] of Object.entries(tribes)) if (t === norm(v.label) || t === norm(k) || t.includes(norm(v.label))) return k;
-    if (/get of fenris|fenris/.test(t)) return "fenrir";
-    if (/glass walker/.test(t)) return "warders-of-men";
+    const flat = t.replace(/ /g, "");
+    for (const [k, v] of Object.entries(tribes)) {
+        const l = norm(v.label), lf = l.replace(/ /g, "");
+        if (t === l || t === norm(k) || flat === lf || flat === norm(k).replace(/ /g, "") || t.includes(l) || flat.includes(lf)) return k;
+    }
+    if (/fenris|fenrir/.test(flat)) return "fenrir";
+    if (/glasswalker/.test(flat)) return "warders-of-men";
     return t.replace(/\s+/g, "-");
 }
 
