@@ -20,6 +20,13 @@ Phase 6 is split (B32). This first part builds what every line uses. Batch 1 (We
 
 ## For you
 
+Steps 1–7 were run by Claude on 2026-11-07 and passed (see BUILD-LOG). The fixes they led to are in WoDX Actions and WoDX Combat 3.0.1. Two notes from that run:
+
+- rothenstein-wodx has two "WoDX: Actor Type" macros, because the 3.0.0 migration renamed both old ones. They do the same thing; one can be deleted.
+- Hand-entered damage (Soak & Apply Damage) now dazes too, and outside a fight Dazed lasts until the scene ends.
+
+Steps 8–11 are Ben's. A test combat (the deprecated werewolf token and Brother Stanislaw) is running on Dolany Village, and Stanislaw's two tokens carry Blinded and Held; end the combat and clear the statuses afterwards.
+
 1. Setup → Backups: snapshot **rothenstein-wodx** and **wodx-template**.
 2. Restart Foundry. In Setup, the game system should read version 7.3.2-wodx.2.
 3. Open **rothenstein-wodx**. In Manage Modules:
