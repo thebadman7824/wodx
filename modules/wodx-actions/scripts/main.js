@@ -28,6 +28,7 @@ import * as F from "./flavor.js";
 import * as L from "./legacy.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as MIG from "./migrate.js";
+import * as GX from "./garou.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -55,6 +56,7 @@ function registerSettings() {
     s("profileMenu", "Menu follows the actor type",
         "The Actions menu shows the buttons for the actor's profile (Kindred, ghoul, mortal, Garou, mage, changeling, wraith...). Off: always the Kindred menu.", Boolean, true);
     s("nightlyBlood", "Blood cost of rising", "Subtract one blood point from each vampire at New Night (p. 340).", Boolean, true);
+    GX.registerSettings(s);
 }
 const setting = k => game.settings.get(MOD, k);
 
@@ -1473,6 +1475,14 @@ function pm() {
     });
 }
 
+let GXE = null;
+/** The Werewolf and Fera engine (Phase 6b). */
+function gx() {
+    return GXE ??= GX.build({ post, rollPool, rollBlock, dialog, updateActor, attr, findAbility, setting, spendWillpower,
+        notify: m => ui.notifications.warn(m) });
+}
+const withActor = f => (o = {}) => { const a = needActor(o.actor); return a ? f(a, o) : null; };
+
 /** The launcher: the buttons follow the actor's profile (Kindred, ghoul, mortal, Garou, mage, changeling, wraith...). */
 export async function menu({ actor: a } = {}) {
     const actor = a?.actor ?? a ?? resolveActor();
@@ -1524,7 +1534,13 @@ async function onButton(msg, action) {
 function bindCard(msg, el) {
     if (!el || el.dataset?.vtaBound) return;
     if (el.dataset) el.dataset.vtaBound = "1";
-    el.querySelectorAll?.("button.vta-btn").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    el.querySelectorAll?.("button.vta-btn[data-garou]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        if ((msg.getFlag(MOD, "used") || []).includes("*")) return;
+        const r = await gx().onChatButton(b);
+        if (r !== undefined && r !== null && r !== false) await markUsed(msg);
+    }));
+    el.querySelectorAll?.("button.vta-btn:not([data-garou])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -1556,7 +1572,18 @@ const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenz
     getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.0.1",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => pm().uses(o.actor ?? resolveActor(), o.resource ?? "willpower"), cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
-    cast: (o = {}) => pm().cast(o.actor ?? resolveActor()), shift: (o = {}) => pm().shift(o.actor ?? resolveActor()), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()) };
+    cast: (o = {}) => pm().cast(o.actor ?? resolveActor()),
+    shift: withActor(a => GX.isShifter(a) ? gx().shift(a) : pm().shift(a)), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()),
+    // Werewolf and Fera (Phase 6b)
+    shiftForm: withActor(a => gx().shift(a)), rageRoll: withActor((a, o) => gx().rageRoll(a, o)), spendRage: withActor(a => gx().spendRage(a)),
+    garouEndFrenzy: withActor(a => gx().endFrenzy(a)), remainActive: withActor(a => gx().remainActive(a)), meditate: withActor(a => gx().meditate(a)),
+    useGift: withActor(a => gx().useGift(a)), learnGift: withActor(a => gx().learnGift(a)), performRite: withActor(a => gx().performRite(a)),
+    summonSpirit: withActor(a => gx().summonSpirit(a)), useFetish: withActor(a => gx().useFetish(a)), accomplishment: withActor(a => gx().accomplishment(a)),
+    battleScar: withActor(a => gx().battleScar(a)), curse: withActor(a => gx().curse(a)), kinfolk: withActor(a => gx().kinfolk(a)),
+    chiminage: withActor(a => gx().chiminage(a)),
+    awardRenown: () => gx().awardRenown(), delirium: () => gx().deliriumCheck(), moonRise: (o = {}) => gx().moonRise(o),
+    applyRenown: (actors, deltas, reason) => gx().applyRenown(actors, deltas, reason), garouInfo: a => GX.info(a),
+    garouRules: GX, gifts: () => GX.gifts() };
 
 let OFF = false;
 Hooks.once("init", () => {
@@ -1587,8 +1614,31 @@ Hooks.once("ready", async () => {
     });
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
     game.socket.on(SOCKET, onSocket);
+    await GX.loadData();
+    garouHooks();
     await createMacros();
 });
+
+/** Werewolf and Fera hooks: moon Rage at nightfall (B40), regeneration each round, Embrace Pain (Dark Ages). */
+function garouHooks() {
+    let moonBusy = false;
+    Hooks.on("updateWorldTime", () => {
+        if (moonBusy || !game.user.isGM) return;
+        moonBusy = true;
+        gx().moonRise().catch(e => console.error("WoDX |", e)).finally(() => { moonBusy = false; });
+    });
+    Hooks.on("updateCombat", (combat, changed) => {
+        if (!("round" in (changed ?? {})) || !combat.started) return;
+        gx().regenRound(combat).catch(e => console.error("WoDX |", e));
+    });
+    Hooks.on("preUpdateActor", (actor, changes, options) => {
+        if (foundry.utils.hasProperty(changes, "system.health")) options.wodxHealthBefore = foundry.utils.deepClone(actor.system?.health?.damage ?? {});
+    });
+    Hooks.on("updateActor", (actor, changes, options) => {
+        if (!options?.wodxHealthBefore) return;
+        gx().embracePain(actor, options.wodxHealthBefore, actor.system?.health?.damage ?? {}).catch(e => console.error("WoDX |", e));
+    });
+}
 
 Hooks.on("renderTokenHUD", (hud, html) => {
     if (OFF) return;

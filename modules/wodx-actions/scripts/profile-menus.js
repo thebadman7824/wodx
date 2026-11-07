@@ -8,12 +8,14 @@
  *   "cantrip"        Changeling cantrip (Changeling 20th, Cantrips)
  *   "cast"           Mage effect (Arete roll; difficulty from the highest Sphere)
  *   "shift"          Werewolf shapeshifting (form table of the W20 sheet)
- *   "regen"          Werewolf regeneration (W20 p. 148)
+ *   "regen"          Werewolf regeneration (DA:W p. 102; W20 p. 256)
  *   "rules:<key>"    post a rules reminder card
  * Anything marked [house] is a Storyteller convenience, not printed rules.
  */
 
 import * as P from "./profiles.js";
+import * as GX from "./garou.js";
+import * as GR from "./garou-rules.js";
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -41,7 +43,7 @@ export const MENUS = {
     },
     mortal: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -57,9 +59,16 @@ export const MENUS = {
     lupine: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:primalurge", "Primal-Urge (senses)", "fa-nose"], ["preset:trackscent", "Track by scent", "fa-paw"]]],
-            ["Rage", [["uses:rage", "Spend Rage / Rage roll (frenzy test)", "fa-fire-alt"]]],
-            ["Gnosis and spirits", [["uses:gnosis", "Gnosis (Gifts, fetishes, Gauntlet)", "fa-moon"]]],
-            ["Body", [["shift", "Change form", "fa-dog"], ["regen", "Regenerate", "fa-heartbeat"], ["api:hazard", "Fire / fall / silver", "fa-burn"]]],
+            ["Rage", [["api:rageRoll", "Rage roll (frenzy test)", "fa-fire-alt"], ["api:spendRage", "Spend or regain Rage", "fa-bolt"],
+                ["api:garouEndFrenzy", "End frenzy", "fa-hand-paper"], ["api:remainActive", "Rise on Rage (below Incapacitated)", "fa-heart-broken"]]],
+            ["Gifts and Gnosis", [["api:useGift", "Use a Gift", "fa-star"], ["api:learnGift", "Learn a Gift", "fa-book-open"],
+                ["api:useFetish", "Fetish or talen", "fa-gem"], ["api:meditate", "Meditate (regain Gnosis)", "fa-moon"]]],
+            ["Rites and spirits", [["api:performRite", "Perform a rite", "fa-circle-notch"], ["api:summonSpirit", "Summon a spirit", "fa-ghost"],
+                ["api:chiminage", "Chiminage (spirit debts)", "fa-handshake"]]],
+            ["Body", [["api:shiftForm", "Change form", "fa-dog"], ["regen", "Regenerate", "fa-heartbeat"], ["api:hazard", "Fire / fall / silver", "fa-burn"],
+                ["api:battleScar", "Battle Scar", "fa-band-aid"]]],
+            ["Renown and witnesses", [["api:accomplishment", "Rite of Accomplishment", "fa-medal"], ["api:awardRenown", "Award Renown (GM)", "fa-award"],
+                ["api:curse", "The Curse (target a human)", "fa-user-slash"], ["api:delirium", "The Delirium (GM, witnesses)", "fa-eye"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
@@ -367,6 +376,9 @@ export function build(ctx) {
 
     /** Werewolf regeneration: one bashing level per turn; lethal needs Stamina (diff 8) under stress. */
     async function regen(actor) {
+        const gi = GX.isShifter(actor) ? GX.info(actor) : null;
+        const can = gi ? GR.regeneration({ breed: gi.breed, form: gi.form, fera: gi.fera }) : { regen: true, why: "" };
+        if (!can.regen) ctx.notify(`${actor.name}: ${can.why}`);
         const h = actor.system?.health?.damage ?? {};
         const dmg = { bashing: num(h.bashing), lethal: num(h.lethal), aggravated: num(h.aggravated) };
         const content = `<form><p><b>${esc(actor.name)}</b> — ${dmg.bashing}B / ${dmg.lethal}L / ${dmg.aggravated}A</p>
@@ -386,7 +398,8 @@ export function build(ctx) {
                 body += `<div class="vta-big good">One ${fd.type} level regenerates.</div>`;
             } else if (ok) body += `<div class="vta-note">No ${fd.type} damage to heal.</div>`;
             else body += `<div class="vta-note">The lethal wound does not close this turn.</div>`;
-            body += `<div class="vta-note">Aggravated damage heals only slowly and silver wounds do not regenerate (W20 p. 148).</div>`;
+            if (!can.regen) body += `<div class="vta-note bad">${esc(can.why)} (healed anyway at the player's choice).</div>`;
+            body += `<div class="vta-note">Aggravated damage and silver wounds don't regenerate; they heal at one level a day of rest (DA:W p. 102; W20 p. 256).</div>`;
             return post(actor, `${actor.name} regenerates`, body, rolls.filter(Boolean));
         });
     }
