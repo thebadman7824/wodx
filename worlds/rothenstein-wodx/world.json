@@ -1,0 +1,129 @@
+{
+  "title": "WoDX: What Sleeps Beneath Rothenstein",
+  "system": "worldofdarkness",
+  "joinTheme": "minimal",
+  "id": "rothenstein-wodx",
+  "coreVersion": "14.369",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.369"
+  },
+  "systemVersion": "7.3.2",
+  "background": "systems/worldofdarkness/assets/img/graphics/Art%20of%20Vampire%20The%20Masquerade%20Summoning.jpg",
+  "playtime": 0,
+  "packs": [
+    {
+      "name": "v20compendium",
+      "label": "V20.Compendium",
+      "type": "Item",
+      "path": "packs/v20compendium",
+      "system": "worldofdarkness",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "package": "world"
+    },
+    {
+      "name": "c20compendium",
+      "label": "C20.Compendium",
+      "type": "Item",
+      "path": "packs/c20compendium",
+      "system": "worldofdarkness",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "package": "world"
+    },
+    {
+      "name": "wod20actors",
+      "label": "WoD20.Actors",
+      "type": "Actor",
+      "path": "packs/wod20actors",
+      "system": "worldofdarkness",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "package": "world"
+    },
+    {
+      "name": "vtdamiscellaneous",
+      "label": "VtDA Miscellaneous",
+      "type": "Item",
+      "path": "packs/vtdamiscellaneous",
+      "system": "worldofdarkness",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "package": "world"
+    },
+    {
+      "name": "vtda20mastercompendium",
+      "label": "VtDA20.MasterCompendium",
+      "type": "Item",
+      "path": "packs/vtda20mastercompendium",
+      "system": "worldofdarkness",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "package": "world"
+    },
+    {
+      "name": "vtdamiscellaneousnpcs",
+      "label": "VtDA Miscellaneous - NPCs",
+      "type": "Actor",
+      "path": "packs/vtdamiscellaneousnpcs",
+      "system": "worldofdarkness",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "package": "world"
+    },
+    {
+      "name": "v20moderncompendium",
+      "label": "V20 Modern Compendium",
+      "type": "Item",
+      "path": "packs/v20moderncompendium",
+      "system": "worldofdarkness",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "package": "world"
+    },
+    {
+      "name": "vampiremasterrolltables",
+      "label": "Vampire Master Roll Tables",
+      "type": "RollTable",
+      "path": "packs/vampiremasterrolltables",
+      "system": "worldofdarkness",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "package": "world"
+    }
+  ],
+  "description": "<p>World of Darkness Expanded (WoDX) rebuild of the Dark Ages chronicle \"What Sleeps Beneath Rothenstein\". Cloned from the original world on 2026-11-06; the original stays untouched as the archive. Art and sound still load from the original world's assets folder. Private use only.</p>",
+  "flags": {
+    "wodx": {
+      "clonedFrom": "dark-ages-vampire-chronicle-what-sleeps-beneath-rothenstein",
+      "clonedOn": "2026-11-06",
+      "eraProfile": "dark-ages",
+      "phase": 0
+    }
+  }
+}

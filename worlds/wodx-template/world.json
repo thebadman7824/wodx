@@ -1,0 +1,22 @@
+{
+  "title": "WoDX Template",
+  "id": "wodx-template",
+  "system": "worldofdarkness",
+  "coreVersion": "14.369",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.369"
+  },
+  "background": "systems/worldofdarkness/assets/img/graphics/Art%20of%20Vampire%20The%20Masquerade%20Summoning.jpg",
+  "joinTheme": "minimal",
+  "description": "<p>World of Darkness Expanded (WoDX) template world. Phase 0: an empty world on the WoDX system fork. Later phases add the era profiles, modules and starter content. Private use only.</p>",
+  "packs": [],
+  "flags": {
+    "wodx": {
+      "template": true,
+      "eraProfile": "dark-ages",
+      "startYear": 1197,
+      "phase": 0
+    }
+  }
+}
