@@ -1,0 +1,2396 @@
+{
+"source": "Dark Ages: Werewolf (White Wolf, 2003), chapter four",
+"note": "Mechanics only, summarized in WoDX's own words, with page references. Read the book for each Gift's full description. Entries marked chk are partly read from a damaged scan; check the page before relying on them.",
+"gifts": [
+{
+"n": "Artisan's Command",
+"l": 1,
+"g": [
+"warders-of-men"
+],
+"p": 142,
+"c": "w1",
+"r": "manipulation+crafts",
+"d": 7,
+"t": "scene",
+"e": "Works a mechanism from afar (a crossbow, a bolt, a winch).",
+"id": "artisans-command"
+},
+{
+"n": "Aura of Confidence",
+"l": 1,
+"g": [
+"shadow-lords"
+],
+"p": 137,
+"r": "charisma+subterfuge",
+"d": 7,
+"t": "scene",
+"e": "Hides weakness from reading; guards against Soulsight. A roll per encounter.",
+"id": "aura-of-confidence",
+"chk": true
+},
+{
+"n": "Beast Speech",
+"l": 1,
+"g": [
+"galliard",
+"red-talons"
+],
+"p": 124,
+"r": "charisma+animalken",
+"d": 6,
+"t": "scene",
+"e": "Speaks with animals; a roll per encounter and kind of animal.",
+"id": "beast-speech",
+"chk": true
+},
+{
+"n": "Blur of the Milky Eye",
+"l": 1,
+"g": [
+"ragabash"
+],
+"p": 117,
+"r": "manipulation+stealth",
+"d": 7,
+"t": "scene",
+"e": "Each success adds one to the difficulty of Perception rolls to notice him.",
+"id": "blur-of-the-milky-eye"
+},
+{
+"n": "Breath of the Wyld",
+"l": 1,
+"g": [
+"black-furies"
+],
+"p": 128,
+"r": "gnosis",
+"d": "5|6",
+"t": "scene",
+"e": "By touch, an extra die on the recipient's Mental rolls (difficulty 5 on Garou, 6 others).",
+"id": "breath-of-the-wyld"
+},
+{
+"n": "Call of the Wyld",
+"l": 1,
+"g": [
+"galliard"
+],
+"p": 124,
+"r": "stamina+empathy",
+"d": 6,
+"t": "instant",
+"e": "A howl heard far by successes, stirring those who hear it.",
+"id": "call-of-the-wyld",
+"chk": true
+},
+{
+"n": "Cookery",
+"l": 1,
+"g": [
+"bone-gnawers"
+],
+"p": 129,
+"r": "wits+survival",
+"d": "6-10",
+"t": "instant",
+"e": "Makes inedible things into food; difficulty by the ingredients.",
+"id": "cookery"
+},
+{
+"n": "Create Element",
+"l": 1,
+"g": [
+"metis"
+],
+"p": 113,
+"c": "g1",
+"r": "gnosis",
+"d": 6,
+"t": "instant",
+"e": "Creates about a cubic foot of an element per success within 60 feet.",
+"id": "create-element"
+},
+{
+"n": "Distract the Fool",
+"l": 1,
+"g": [
+"fianna"
+],
+"p": 134,
+"r": "manipulation+expression",
+"d": 7,
+"t": "turns",
+"e": "Everyone but allies who hear him gawks where he points, a round per success.",
+"id": "distract-the-fool"
+},
+{
+"n": "Eve's Blessing",
+"l": 1,
+"g": [
+"children-of-gaia"
+],
+"p": 131,
+"c": "g1",
+"t": "week",
+"e": "A laid hand keeps mother and unborn child well for a week.",
+"id": "eves-blessing"
+},
+{
+"n": "Eye of the Falcon",
+"l": 1,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"c": "g1",
+"t": "scene",
+"e": "−1 difficulty on Archery and sight-based Perception.",
+"id": "eye-of-the-falcon"
+},
+{
+"n": "Faerie Light",
+"l": 1,
+"g": [
+"fianna"
+],
+"p": 134,
+"r": "wits+enigmas",
+"d": 6,
+"t": "minutes",
+"e": "A floating light for a minute per success; moves at 10 yards a turn.",
+"id": "faerie-light"
+},
+{
+"n": "Falling Touch",
+"l": 1,
+"g": [
+"ahroun"
+],
+"p": 126,
+"r": "dexterity+medicine",
+"d": "tSta+Athletics",
+"t": "instant",
+"e": "A touch knocks the target down; it does no damage itself.",
+"id": "falling-touch"
+},
+{
+"n": "Fatal Flaw",
+"l": 1,
+"g": [
+"shadow-lords"
+],
+"p": 138,
+"r": "perception+empathy",
+"d": "tWits+Subterfuge",
+"t": "scene",
+"e": "After a turn's study, an extra damage die against the target; more successes reveal more.",
+"id": "fatal-flaw"
+},
+{
+"n": "Gift of Salt",
+"l": 1,
+"g": [
+"warders-of-men"
+],
+"p": 142,
+"c": "g1per20lb",
+"r": "intelligence+medicine|hearthwisdom",
+"d": 6,
+"t": "months",
+"e": "Keeps food fresh a month per success (it tastes salty).",
+"id": "gift-of-salt"
+},
+{
+"n": "Hare's Leap",
+"l": 1,
+"g": [
+"lupus"
+],
+"p": 115,
+"r": "strength+athletics",
+"d": 7,
+"t": "scene",
+"e": "Reflexive; leaping distance doubles.",
+"id": "hares-leap"
+},
+{
+"n": "Heavens' Guidance",
+"l": 1,
+"g": [
+"silent-striders"
+],
+"p": 139,
+"t": "at-will",
+"e": "Perfect sense of direction and distance under a night sky.",
+"id": "heavens-guidance"
+},
+{
+"n": "Heightened Senses",
+"l": 1,
+"g": [
+"lupus"
+],
+"p": 115,
+"c": "g1",
+"t": "scene",
+"e": "Perception difficulties −2 in Homid or Glabro, −3 in the wolf forms.",
+"id": "heightened-senses"
+},
+{
+"n": "Hunter's Harmony",
+"l": 1,
+"g": [
+"fenrir"
+],
+"p": 132,
+"r": "charisma+primalurge",
+"d": 6,
+"t": "instant",
+"e": "Sends a silent message to the pack; more successes, more complex.",
+"id": "hunters-harmony"
+},
+{
+"n": "Inspiration",
+"l": 1,
+"g": [
+"ahroun"
+],
+"p": 126,
+"c": "g1",
+"t": "scene",
+"e": "Allies who see him get an automatic success on Willpower rolls (not the Ahroun himself).",
+"id": "inspiration"
+},
+{
+"n": "Lambent Flame",
+"l": 1,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"c": "w1",
+"t": "scene",
+"e": "Glows with moonlight (100 feet): +1 to hand-to-hand attacks against him, −1 to missiles.",
+"id": "lambent-flame"
+},
+{
+"n": "Ley Lines",
+"l": 1,
+"g": [
+"lupus"
+],
+"p": 116,
+"c": "g1",
+"r": "perception+enigmas",
+"d": 7,
+"t": "instant",
+"e": "Senses a caern nearby; 3 successes give distance and direction, 5 the way.",
+"id": "ley-lines"
+},
+{
+"n": "Man's Skin",
+"l": 1,
+"g": [
+"black-furies"
+],
+"p": 128,
+"r": "charisma+subterfuge",
+"d": 7,
+"t": "scene",
+"e": "Appears as a man; light touch doesn't break it; ends on shifting.",
+"id": "mans-skin"
+},
+{
+"n": "Master of Fire",
+"l": 1,
+"g": [
+"homid"
+],
+"p": 112,
+"c": "g1",
+"t": "scene",
+"e": "Fire damage counts as bashing instead of aggravated.",
+"id": "master-of-fire"
+},
+{
+"n": "Mother's Touch",
+"l": 1,
+"g": [
+"theurge",
+"children-of-gaia"
+],
+"p": 119,
+"c": "g1",
+"r": "intelligence+empathy",
+"d": "tRage|5",
+"t": "instant",
+"e": "Each success heals a health level; can even remove Battle Scars.",
+"id": "mothers-touch"
+},
+{
+"n": "Persuasion",
+"l": 1,
+"g": [
+"homid",
+"warders-of-men"
+],
+"p": 112,
+"r": "charisma+subterfuge",
+"d": 7,
+"t": "scene",
+"e": "Social difficulties drop by one.",
+"id": "persuasion"
+},
+{
+"n": "Prey's Cry",
+"l": 1,
+"g": [
+"red-talons"
+],
+"p": 135,
+"c": "g1",
+"r": "wits+expression",
+"d": "5-9",
+"t": "instant",
+"e": "Mimics an animal or human cry to lure prey; difficulty by the sound.",
+"id": "preys-cry"
+},
+{
+"n": "Razor Claws",
+"l": 1,
+"g": [
+"ahroun"
+],
+"p": 126,
+"c": "r1",
+"t": "scene",
+"e": "After a turn of sharpening, claws do an extra die of damage.",
+"id": "razor-claws"
+},
+{
+"n": "Resist Pain",
+"l": 1,
+"g": [
+"philodox",
+"children-of-gaia",
+"fenrir"
+],
+"p": 121,
+"c": "w1",
+"t": "scene",
+"e": "No wound penalties for the rest of the scene.",
+"id": "resist-pain"
+},
+{
+"n": "Resist Toxin",
+"l": 1,
+"g": [
+"bone-gnawers",
+"fianna"
+],
+"p": 129,
+"r": "stamina+survival",
+"d": 6,
+"t": "scene",
+"e": "Three extra Stamina dice against supernatural poisons.",
+"id": "resist-toxin"
+},
+{
+"n": "Scent of Running Water",
+"l": 1,
+"g": [
+"ragabash"
+],
+"p": 117,
+"t": "at-will",
+"e": "Always on: tracking him by scent is at +2 difficulty.",
+"id": "scent-of-running-water"
+},
+{
+"n": "Scent of the Honeycomb",
+"l": 1,
+"g": [
+"bone-gnawers"
+],
+"p": 129,
+"c": "g1",
+"r": "wits+subterfuge",
+"d": 6,
+"t": "hours",
+"e": "A sweet, clinging scent and lacquer marks a target for an hour per success.",
+"id": "scent-of-the-honeycomb"
+},
+{
+"n": "Scent of the True Form",
+"l": 1,
+"g": [
+"philodox"
+],
+"p": 121,
+"r": "perception+primalurge",
+"d": 6,
+"t": "instant",
+"e": "Smells Kinfolk and Garou at once; one success for a human or animal, more for other beings.",
+"id": "scent-of-the-true-form"
+},
+{
+"n": "Seizing the Edge",
+"l": 1,
+"g": [
+"shadow-lords"
+],
+"p": 138,
+"c": "g1",
+"t": "scene",
+"e": "Ties in opposed rolls go to him, facedowns included.",
+"id": "seizing-the-edge"
+},
+{
+"n": "Sense Wyrm",
+"l": 1,
+"g": [
+"metis",
+"theurge",
+"black-furies",
+"silent-striders",
+"silver-fangs"
+],
+"p": 114,
+"r": "perception+occult",
+"d": "var",
+"t": "instant",
+"e": "Senses Wyrm taint nearby; vampires always register, the older the stronger.",
+"id": "sense-wyrm"
+},
+{
+"n": "Shed",
+"l": 1,
+"g": [
+"metis"
+],
+"p": 114,
+"r": "dexterity+primalurge",
+"d": 7,
+"t": "instant",
+"e": "Sheds fur and skin to slip grapples and bonds (−2 difficulty on such rolls).",
+"id": "shed"
+},
+{
+"n": "Smell of Man",
+"l": 1,
+"g": [
+"homid"
+],
+"p": 112,
+"t": "at-will",
+"e": "Wild animals within 20 feet lose a die; tame animals treat the Garou as master.",
+"id": "smell-of-man"
+},
+{
+"n": "Snow Running",
+"l": 1,
+"g": [
+"ragabash"
+],
+"p": 117,
+"c": "g1",
+"t": "day",
+"e": "Runs on ice and snow as on solid ground, leaving no tracks.",
+"id": "snow-running"
+},
+{
+"n": "Speed of Thought",
+"l": 1,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"c": "g1",
+"t": "scene",
+"e": "Running speed doubles; no extra actions.",
+"id": "speed-of-thought"
+},
+{
+"n": "Spirit Speech",
+"l": 1,
+"g": [
+"theurge"
+],
+"p": 120,
+"t": "at-will",
+"e": "Understands and speaks the language of spirits.",
+"id": "spirit-speech"
+},
+{
+"n": "Truth of Gaia",
+"l": 1,
+"g": [
+"philodox"
+],
+"p": 121,
+"r": "intelligence+empathy",
+"d": "tMan+Subterfuge",
+"t": "instant",
+"e": "Tells which spoken words are true and which false.",
+"id": "truth-of-gaia"
+},
+{
+"n": "Visage of Fenris",
+"l": 1,
+"g": [
+"fenrir"
+],
+"p": 132,
+"r": "charisma+intimidation",
+"d": "var",
+"t": "scene",
+"e": "Foes flinch (−1 initiative); allies are awed.",
+"id": "visage-of-fenris",
+"chk": true
+},
+{
+"n": "Waking Dream",
+"l": 1,
+"g": [
+"galliard"
+],
+"p": 125,
+"c": "w1each",
+"r": "manipulation+empathy",
+"d": "tWp",
+"t": "var",
+"e": "Draws minds into a shared dream; a roll only for the unwilling.",
+"id": "waking-dream"
+},
+{
+"n": "Wolf at the Door",
+"l": 1,
+"g": [
+"red-talons"
+],
+"p": 136,
+"r": "charisma+primalurge",
+"d": "tWp",
+"t": "var",
+"e": "Eye contact fills a human with dread of the wild.",
+"id": "wolf-at-the-door",
+"chk": true
+},
+{
+"n": "Beastmind",
+"l": 2,
+"g": [
+"red-talons"
+],
+"p": 136,
+"r": "manipulation+empathy",
+"d": "tWp",
+"t": "turns",
+"e": "Reduces a target to animal wits for a turn per success.",
+"id": "beastmind"
+},
+{
+"n": "Blissful Ignorance",
+"l": 2,
+"g": [
+"ragabash"
+],
+"p": 117,
+"r": "dexterity+stealth",
+"d": 7,
+"t": "var",
+"e": "Searchers must beat his successes on Perception + Alertness to spot him while he keeps still.",
+"id": "blissful-ignorance"
+},
+{
+"n": "Call of the Wyrm",
+"l": 2,
+"g": [
+"galliard"
+],
+"p": 125,
+"r": "manipulation+performance",
+"d": 7,
+"t": "instant",
+"e": "Resisted by the creature's Willpower; a Wyrm creature that loses must come.",
+"id": "call-of-the-wyrm"
+},
+{
+"n": "Call to Duty",
+"l": 2,
+"g": [
+"philodox"
+],
+"p": 122,
+"r": "charisma+leadership",
+"d": "tWp",
+"t": "instant",
+"e": "Summons a spirit known by name to a task; or 2 Gnosis calls every Gaian spirit within a mile.",
+"id": "call-to-duty"
+},
+{
+"n": "Clap of Thunder",
+"l": 2,
+"g": [
+"shadow-lords"
+],
+"p": 138,
+"c": "g1",
+"t": "turn",
+"e": "Everyone within 10 feet must get a Willpower success (8) or be stunned a turn.",
+"id": "clap-of-thunder"
+},
+{
+"n": "Command Spirit",
+"l": 2,
+"g": [
+"theurge"
+],
+"p": 120,
+"c": "w1",
+"r": "charisma+leadership",
+"d": "tGnosis",
+"t": "instant",
+"e": "Gives a spirit a command; a botch makes it hostile.",
+"id": "command-spirit"
+},
+{
+"n": "Cornered Rat",
+"l": 2,
+"g": [
+"bone-gnawers"
+],
+"p": 130,
+"c": "r1",
+"r": "rage",
+"d": 8,
+"t": "var",
+"e": "Each success adds a Brawl die; he enters berserk frenzy.",
+"id": "cornered-rat"
+},
+{
+"n": "Curse of Aeolus",
+"l": 2,
+"g": [
+"black-furies"
+],
+"p": 128,
+"r": "gnosis",
+"d": "4-9",
+"t": "scene",
+"e": "A fog rises (4 near water, 6 temperate, 9 desert); others in it lose half their dice for sight.",
+"id": "curse-of-aeolus"
+},
+{
+"n": "Curse of Hatred",
+"l": 2,
+"g": [
+"metis"
+],
+"p": 114,
+"c": "g1",
+"r": "manipulation+expression",
+"d": "tWp",
+"t": "instant",
+"e": "The foe loses two Willpower (more in the book).",
+"id": "curse-of-hatred",
+"chk": true
+},
+{
+"n": "Distractions",
+"l": 2,
+"g": [
+"galliard"
+],
+"p": 125,
+"r": "wits+performance",
+"d": "tWp",
+"t": "turn",
+"e": "Each success takes a die from the target's next turn.",
+"id": "distractions"
+},
+{
+"n": "Empathy",
+"l": 2,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"c": "g1",
+"r": "intelligence+empathy",
+"d": 7,
+"t": "instant",
+"e": "Learns a group's feelings and expectations; more successes, more detail.",
+"id": "empathy"
+},
+{
+"n": "Grandmother's Touch",
+"l": 2,
+"g": [
+"children-of-gaia"
+],
+"p": 131,
+"c": "g1",
+"r": "intelligence+empathy",
+"d": "tRage|5",
+"t": "instant",
+"e": "As Mother's Touch, but the Garou may heal herself.",
+"id": "grandmothers-touch"
+},
+{
+"n": "Halt the Coward's Flight",
+"l": 2,
+"g": [
+"fenrir"
+],
+"p": 133,
+"r": "charisma+intimidation",
+"d": "tWp",
+"t": "scene",
+"e": "After a turn's focus, halves a fleeing target's speed.",
+"id": "halt-the-cowards-flight"
+},
+{
+"n": "Howl of the Banshee",
+"l": 2,
+"g": [
+"fianna"
+],
+"p": 134,
+"c": "g1",
+"r": "charisma+intimidation",
+"d": 6,
+"t": "turns",
+"e": "Hearers roll Willpower (8, allies 6) or flee in terror.",
+"id": "howl-of-the-banshee"
+},
+{
+"n": "Luna's Armor",
+"l": 2,
+"g": [
+"children-of-gaia",
+"shadow-lords",
+"silver-fangs"
+],
+"p": 132,
+"c": "g1",
+"r": "stamina+survival",
+"d": 6,
+"t": "scene",
+"e": "After a turn's focus, each success adds one to Stamina for soak (silver included).",
+"id": "lunas-armor"
+},
+{
+"n": "Mask the Predator",
+"l": 2,
+"g": [
+"warders-of-men"
+],
+"p": 142,
+"r": "charisma+animalken",
+"d": 6,
+"t": "scene",
+"e": "Animals treat him as an ordinary human; the Curse on humans stays.",
+"id": "mask-the-predator"
+},
+{
+"n": "Messenger's Fortitude",
+"l": 2,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"c": "g1",
+"t": "var",
+"e": "Runs at full speed 72 hours without rest; then collapses as long. +1 Gnosis to share it.",
+"id": "messengers-fortitude"
+},
+{
+"n": "Plague Visage",
+"l": 2,
+"g": [
+"bone-gnawers"
+],
+"p": 130,
+"r": "manipulation+medicine",
+"d": 6,
+"t": "scene",
+"e": "Appears to carry a dread disease of his choosing.",
+"id": "plague-visage",
+"chk": true
+},
+{
+"n": "Scent of Sight",
+"l": 2,
+"g": [
+"lupus"
+],
+"p": 116,
+"r": "perception+primalurge",
+"d": "var",
+"t": "at-will",
+"e": "Follows a target by scent alone; a roll only when the scent could be lost.",
+"id": "scent-of-sight"
+},
+{
+"n": "Sense Guilt",
+"l": 2,
+"g": [
+"fenrir"
+],
+"p": 133,
+"r": "perception+empathy",
+"d": 8,
+"t": "instant",
+"e": "Reveals hidden guilt; five successes give specifics.",
+"id": "sense-guilt"
+},
+{
+"n": "Sense Silver",
+"l": 2,
+"g": [
+"metis"
+],
+"p": 114,
+"r": "perception+primalurge",
+"d": 7,
+"t": "instant",
+"e": "Detects silver within 15 feet; three successes pinpoint it.",
+"id": "sense-silver"
+},
+{
+"n": "Sense of the Prey",
+"l": 2,
+"g": [
+"ragabash",
+"black-furies"
+],
+"p": 117,
+"r": "perception+enigmas",
+"d": "tWits+Stealth",
+"t": "var",
+"e": "Always knows the way to a chosen quarry; a roll only if it hides.",
+"id": "sense-of-the-prey"
+},
+{
+"n": "Sense the Unnatural",
+"l": 2,
+"g": [
+"lupus"
+],
+"p": 116,
+"r": "perception+enigmas",
+"d": 7,
+"t": "instant",
+"e": "Senses supernatural presences; more successes, more detail.",
+"id": "sense-the-unnatural"
+},
+{
+"n": "Sight from Beyond",
+"l": 2,
+"g": [
+"theurge",
+"red-talons"
+],
+"p": 120,
+"r": "wits+occult",
+"d": 7,
+"t": "var",
+"e": "Receives visions of omens; the roll helps make sense of them.",
+"id": "sight-from-beyond"
+},
+{
+"n": "Speech of the World",
+"l": 2,
+"g": [
+"homid"
+],
+"p": 112,
+"r": "intelligence+linguistics",
+"d": 7,
+"t": "scene",
+"e": "Speaks any human language met, with an accent; no literacy.",
+"id": "speech-of-the-world"
+},
+{
+"n": "Spirit of the Fray",
+"l": 2,
+"g": [
+"ahroun"
+],
+"p": 126,
+"c": "g1opt",
+"t": "permanent",
+"e": "+10 to initiative always; a Gnosis point adds 10 more.",
+"id": "spirit-of-the-fray"
+},
+{
+"n": "Staredown",
+"l": 2,
+"g": [
+"homid"
+],
+"p": 112,
+"r": "charisma+intimidation",
+"d": "5+tRank",
+"t": "turns",
+"e": "One target flees a turn per success (5+: the scene); Garou freeze instead. Willpower resists a turn.",
+"id": "staredown"
+},
+{
+"n": "Strength of Purpose",
+"l": 2,
+"g": [
+"philodox"
+],
+"p": 122,
+"r": "stamina+rituals",
+"d": 7,
+"t": "instant",
+"e": "Once per scene, every two successes restore a Willpower point.",
+"id": "strength-of-purpose"
+},
+{
+"n": "Summon Talisman",
+"l": 2,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"c": "g1",
+"t": "instant",
+"e": "A dedicated handheld item appears in his grip at the end of the turn.",
+"id": "summon-talisman"
+},
+{
+"n": "True Fear",
+"l": 2,
+"g": [
+"ahroun"
+],
+"p": 126,
+"r": "strength+intimidation",
+"d": "tWp",
+"t": "turns",
+"e": "Cows the target a turn per success: it can't attack but may defend.",
+"id": "true-fear"
+},
+{
+"n": "Warrior's Draught",
+"l": 2,
+"g": [
+"fianna"
+],
+"p": 134,
+"c": "g1",
+"t": "day",
+"e": "A brew, potent for a day, that drives the drinker into a strengthened berserk frenzy.",
+"id": "warriors-draught",
+"chk": true
+},
+{
+"n": "Call the Rust",
+"l": 3,
+"g": [
+"bone-gnawers"
+],
+"p": 130,
+"c": "g1",
+"r": "wits+crafts",
+"d": "var",
+"t": "instant",
+"e": "Each success rusts away one iron object; difficulty by the amount of metal.",
+"id": "call-the-rust"
+},
+{
+"n": "Calm the Savage Beast",
+"l": 3,
+"g": [
+"homid"
+],
+"p": 112,
+"c": "w1",
+"r": "manipulation+primalurge",
+"d": 8,
+"t": "instant",
+"e": "By touch, ends a frenzying Garou's frenzy.",
+"id": "calm-the-savage-beast"
+},
+{
+"n": "Coup de Grace",
+"l": 3,
+"g": [
+"black-furies"
+],
+"p": 128,
+"c": "w1",
+"r": "perception+brawl",
+"d": "opposed",
+"t": "instant",
+"e": "Beat the target's Perception + Subterfuge: the next successful attack's damage dice double.",
+"id": "coup-de-grace"
+},
+{
+"n": "Dazzle",
+"l": 3,
+"g": [
+"children-of-gaia"
+],
+"p": 132,
+"r": "charisma+empathy",
+"d": "tWp",
+"t": "scene",
+"e": "The target stands in mute awe until attacked.",
+"id": "dazzle"
+},
+{
+"n": "Devil's Child",
+"l": 3,
+"g": [
+"lupus"
+],
+"p": 116,
+"c": "g1",
+"r": "manipulation+primalurge",
+"d": "tWp",
+"t": "scene",
+"e": "Invokes the full Delirium in any form; a group uses its highest Willpower.",
+"id": "devils-child"
+},
+{
+"n": "Exceptional Swordplay",
+"l": 3,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"c": "w1",
+"r": "intelligence+melee",
+"d": 8,
+"t": "turn",
+"e": "Reflexive; each success is an automatic success to strike. Once per turn.",
+"id": "exceptional-swordplay"
+},
+{
+"n": "Expel Spirit",
+"l": 3,
+"g": [
+"theurge"
+],
+"p": 120,
+"r": "manipulation+intimidation",
+"d": "tWp",
+"t": "instant",
+"e": "After three turns of concentration, drives a spirit out of a body or place.",
+"id": "expel-spirit"
+},
+{
+"n": "Eye of the Asp",
+"l": 3,
+"g": [
+"galliard"
+],
+"p": 125,
+"r": "appearance+enigmas",
+"d": "tWp",
+"t": "var",
+"e": "Lures a victim to the Garou's side; three successes are needed.",
+"id": "eye-of-the-asp"
+},
+{
+"n": "Eyes of the Cat",
+"l": 3,
+"g": [
+"metis"
+],
+"p": 114,
+"t": "at-will",
+"e": "Sees in pitch darkness; no darkness penalties.",
+"id": "eyes-of-the-cat"
+},
+{
+"n": "Faerie Aid",
+"l": 3,
+"g": [
+"fianna"
+],
+"p": 135,
+"c": "g1+",
+"r": "manipulation+occult",
+"d": 8,
+"t": "var",
+"e": "Faeries answer; Gnosis sets their power, successes their number.",
+"id": "faerie-aid"
+},
+{
+"n": "Flames of Hestia",
+"l": 3,
+"g": [
+"black-furies"
+],
+"p": 128,
+"c": "g1",
+"r": "gnosis",
+"d": 7,
+"t": "instant",
+"e": "Each success cleanses a barrel of water or a trencher of food, or heals a level.",
+"id": "flames-of-hestia"
+},
+{
+"n": "Fleet Footed",
+"l": 3,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"c": "r1",
+"r": "dexterity+dodge",
+"d": 6,
+"t": "turn",
+"e": "Each success dodges one missile automatically; not hand-to-hand.",
+"id": "fleet-footed"
+},
+{
+"n": "Friend in Need",
+"l": 3,
+"g": [
+"bone-gnawers"
+],
+"p": 130,
+"c": "w1",
+"r": "willpower",
+"d": 7,
+"t": "scene",
+"e": "Lends a packmate or Bone Gnawer Rage, Willpower, health levels or a Gift he knows.",
+"id": "friend-in-need"
+},
+{
+"n": "Great Leap",
+"l": 3,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"c": "w1",
+"r": "strength+athletics",
+"d": 6,
+"t": "turns",
+"e": "For three turns, 30 extra feet of jump per success.",
+"id": "great-leap"
+},
+{
+"n": "Heart of Fury",
+"l": 3,
+"g": [
+"ahroun"
+],
+"p": 126,
+"r": "willpower",
+"d": "ownRage",
+"t": "scene",
+"e": "Every two successes add one to his frenzy difficulties; afterwards a Willpower point or a frenzy check.",
+"id": "heart-of-fury"
+},
+{
+"n": "Mental Speech",
+"l": 3,
+"g": [
+"metis"
+],
+"p": 114,
+"c": "w1",
+"r": "charisma+empathy",
+"d": 8,
+"t": "var",
+"e": "Speaks mind to mind with someone known or with a token of theirs, at any distance.",
+"id": "mental-speech",
+"chk": true
+},
+{
+"n": "Might of Thor",
+"l": 3,
+"g": [
+"fenrir"
+],
+"p": 133,
+"c": "g1r1",
+"r": "willpower",
+"d": 8,
+"t": "turns",
+"e": "Strength doubles for a turn per success, at a cost afterwards.",
+"id": "might-of-thor",
+"chk": true
+},
+{
+"n": "Name the Spirit",
+"l": 3,
+"g": [
+"lupus"
+],
+"p": 116,
+"c": "w1",
+"r": "perception+occult",
+"d": 8,
+"t": "instant",
+"e": "Learns a spirit's type, name and traits by successes.",
+"id": "name-the-spirit"
+},
+{
+"n": "Open Moon Bridge",
+"l": 3,
+"g": [
+"ragabash"
+],
+"p": 118,
+"c": "g1",
+"t": "var",
+"e": "Opens a bridge to a caern linked by a pathstone, within 1,000 miles.",
+"id": "open-moon-bridge"
+},
+{
+"n": "Pulse of the Invisible",
+"l": 3,
+"g": [
+"theurge"
+],
+"p": 120,
+"r": "gnosis",
+"d": "gauntlet",
+"t": "scene",
+"e": "Sees into the Umbra; automatic if Gnosis is at least the Gauntlet.",
+"id": "pulse-of-the-invisible"
+},
+{
+"n": "Raven's Curse",
+"l": 3,
+"g": [
+"shadow-lords"
+],
+"p": 138,
+"c": "g1",
+"r": "manipulation+archery",
+"d": 7,
+"t": "var",
+"e": "A touch curses the target; successes set how long.",
+"id": "ravens-curse",
+"chk": true
+},
+{
+"n": "Redirect Pain",
+"l": 3,
+"g": [
+"fenrir"
+],
+"p": 133,
+"c": "r1",
+"r": "manipulation+primalurge",
+"d": 8,
+"t": "scene",
+"e": "The target suffers the Fenrir's own wound penalties.",
+"id": "redirect-pain"
+},
+{
+"n": "Reshape Object",
+"l": 3,
+"g": [
+"homid",
+"warders-of-men"
+],
+"p": 112,
+"c": "g1",
+"r": "manipulation+crafts",
+"d": "5-8",
+"t": "permanent",
+"e": "Reshapes a dead natural material into a useful item; difficulty by complexity.",
+"id": "reshape-object"
+},
+{
+"n": "Reynard's Lie",
+"l": 3,
+"g": [
+"ragabash"
+],
+"p": 118,
+"r": "wits+subterfuge",
+"d": "tWits+Subterfuge",
+"t": "instant",
+"e": "Makes a lie believed; more successes convince more listeners.",
+"id": "reynards-lie"
+},
+{
+"n": "Shadow Cutting",
+"l": 3,
+"g": [
+"shadow-lords"
+],
+"p": 138,
+"c": "g1",
+"t": "scene",
+"e": "Spits in a foe's shadow and may then wound him by striking it.",
+"id": "shadow-cutting"
+},
+{
+"n": "Silver Claws",
+"l": 3,
+"g": [
+"ahroun"
+],
+"p": 126,
+"r": "gnosis",
+"d": 7,
+"t": "scene",
+"e": "Claws turn to silver: aggravated damage most Fera can't soak; he gains a Rage point each turn and non-combat difficulties rise by two.",
+"id": "silver-claws"
+},
+{
+"n": "Snap Man's Chains",
+"l": 3,
+"g": [
+"red-talons"
+],
+"p": 136,
+"c": "g1",
+"r": "manipulation+primalurge",
+"d": 8,
+"t": "var",
+"e": "Domestic animals turn feral; successes set the area.",
+"id": "snap-mans-chains"
+},
+{
+"n": "Song of Rage",
+"l": 3,
+"g": [
+"galliard"
+],
+"p": 125,
+"r": "manipulation+leadership",
+"d": "tWp",
+"t": "turns",
+"e": "The target rages (or frenzies) for a turn per success.",
+"id": "song-of-rage"
+},
+{
+"n": "Spirit Friend",
+"l": 3,
+"g": [
+"children-of-gaia"
+],
+"p": 132,
+"r": "charisma+expression",
+"d": 7,
+"t": "scene",
+"e": "Each success adds a die to dealings with spirits nearby (not Banes).",
+"id": "spirit-friend"
+},
+{
+"n": "Spirit Witness",
+"l": 3,
+"g": [
+"philodox"
+],
+"p": 122,
+"r": "charisma+investigation",
+"t": "instant",
+"e": "A spirit that saw an event retells it; Gaian spirits can't refuse.",
+"d": "var",
+"id": "spirit-witness",
+"chk": true
+},
+{
+"n": "Tongues",
+"l": 3,
+"g": [
+"warders-of-men"
+],
+"p": 142,
+"c": "w1",
+"r": "intelligence+linguistics",
+"d": "var",
+"t": "scene",
+"e": "Fluent and literate in any human language met; successes set fluency.",
+"id": "tongues"
+},
+{
+"n": "Trackless Waste",
+"l": 3,
+"g": [
+"red-talons"
+],
+"p": 136,
+"c": "g1",
+"r": "intelligence+primalurge",
+"d": 6,
+"t": "var",
+"e": "Confuses paths in a two-mile radius per success; other Garou may resist.",
+"id": "trackless-waste"
+},
+{
+"n": "Warrior's Eye",
+"l": 3,
+"g": [
+"philodox"
+],
+"p": 122,
+"r": "perception+brawl|melee",
+"d": 8,
+"t": "scene",
+"e": "After a turn of watching a fighter, each success is a bonus die against him.",
+"id": "warriors-eye"
+},
+{
+"n": "Woadling",
+"l": 3,
+"g": [
+"fianna"
+],
+"p": 135,
+"c": "g1each",
+"r": "dexterity+occult",
+"d": 6,
+"t": "scene",
+"e": "Paints woad figures on her body (one per success) that spring to life in a fight.",
+"id": "woadling"
+},
+{
+"n": "Wrath of Gaia",
+"l": 3,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"c": "g1",
+"r": "charisma+intimidation",
+"d": 6,
+"t": "scene",
+"e": "Wyrm-tainted who see him roll Willpower or Courage (7) or flee.",
+"id": "wrath-of-gaia"
+},
+{
+"n": "Angel's Semblance",
+"l": 4,
+"g": [
+"children-of-gaia"
+],
+"p": 132,
+"c": "g1",
+"t": "scene",
+"e": "Witnesses react on the Delirium chart in reverse: awe instead of fear.",
+"id": "angels-semblance"
+},
+{
+"n": "Attunement",
+"l": 4,
+"g": [
+"warders-of-men"
+],
+"p": 142,
+"c": "g1",
+"r": "perception+enigmas",
+"d": 6,
+"t": "instant",
+"e": "Asks a town's spirits what passes there; a botch, they lie.",
+"id": "attunement"
+},
+{
+"n": "Balor's Gaze",
+"l": 4,
+"g": [
+"fianna"
+],
+"p": 135,
+"c": "g1r1",
+"r": "perception+occult",
+"d": 8,
+"t": "scene",
+"e": "Foes meeting her gaze roll Willpower (8) against her successes or suffer.",
+"id": "balors-gaze",
+"chk": true
+},
+{
+"n": "Beast Life",
+"l": 4,
+"g": [
+"lupus",
+"children-of-gaia"
+],
+"p": 116,
+"c": "g1",
+"r": "charisma+animalken",
+"d": 7,
+"t": "scene",
+"e": "Speaks with all animals and draws those within 10 miles per success; they heed requests.",
+"id": "beast-life"
+},
+{
+"n": "Berserker's Song",
+"l": 4,
+"g": [
+"fenrir"
+],
+"p": 134,
+"c": "r2",
+"r": "charisma+primalurge",
+"d": 6,
+"t": "turns",
+"e": "A controlled frenzy for two rounds per success, ended at will.",
+"id": "berserkers-song"
+},
+{
+"n": "Blink",
+"l": 4,
+"g": [
+"bone-gnawers"
+],
+"p": 130,
+"c": "g1",
+"r": "manipulation+stealth",
+"d": 6,
+"t": "instant",
+"e": "Vanishes and reappears within 20 yards per success, out of sight.",
+"id": "blink"
+},
+{
+"n": "Body Wrack",
+"l": 4,
+"g": [
+"black-furies"
+],
+"p": 128,
+"c": "g1",
+"r": "gnosis",
+"d": "tSta+3",
+"t": "turns",
+"e": "Stuns the target a round per success and takes a die per success from its pools.",
+"id": "body-wrack"
+},
+{
+"n": "Bow of Pegasus",
+"l": 4,
+"g": [
+"black-furies"
+],
+"p": 129,
+"c": "g1",
+"r": "gnosis",
+"d": 6,
+"t": "turn",
+"e": "Arrows fly instantly to any target in sight and can't be dodged.",
+"id": "bow-of-pegasus"
+},
+{
+"n": "Bury the Wolf",
+"l": 4,
+"g": [
+"homid"
+],
+"p": 112,
+"c": "g1",
+"r": "gnosis",
+"d": "ownWp",
+"t": "var",
+"e": "Seems a normal human to every sense and power; Rage counts as lower by the successes; no Rage or shifting meanwhile.",
+"id": "bury-the-wolf"
+},
+{
+"n": "Claws of the Glassblower",
+"l": 4,
+"g": [
+"bone-gnawers"
+],
+"p": 130,
+"c": "g1",
+"t": "scene",
+"e": "Claws snap off as glass shards in the wound, adding aggravated damage.",
+"id": "claws-of-the-glassblower",
+"chk": true
+},
+{
+"n": "Dam the Heartflood",
+"l": 4,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"c": "g1",
+"r": "manipulation+medicine",
+"d": "tWp",
+"t": "var",
+"e": "Blocks a blood-pool being's use of blood powers.",
+"id": "dam-the-heartflood"
+},
+{
+"n": "Dolorous Stroke",
+"l": 4,
+"g": [
+"shadow-lords"
+],
+"p": 138,
+"c": "g1",
+"t": "instant",
+"e": "An all-turn attack; on a hit, two extra damage dice and a lasting wound.",
+"id": "dolorous-stroke",
+"chk": true
+},
+{
+"n": "Doppelganger",
+"l": 4,
+"g": [
+"warders-of-men"
+],
+"p": 142,
+"c": "g1",
+"r": "charisma+performance",
+"d": 8,
+"t": "days",
+"e": "Takes another's face, voice and manner for a day per success.",
+"id": "doppelganger"
+},
+{
+"n": "Full Moon's Light",
+"l": 4,
+"g": [
+"ahroun"
+],
+"p": 127,
+"c": "g1",
+"t": "scene",
+"e": "Anyone working against him or his pack glows, even if hidden by powers.",
+"id": "full-moons-light"
+},
+{
+"n": "Gift of the Porcupine",
+"l": 4,
+"g": [
+"metis"
+],
+"p": 115,
+"c": "g1",
+"t": "scene",
+"e": "Quills deal Strength +1 aggravated to anyone grappled or striking bare-handed.",
+"id": "gift-of-the-porcupine"
+},
+{
+"n": "Gnaw",
+"l": 4,
+"g": [
+"lupus"
+],
+"p": 116,
+"c": "w1",
+"r": "stamina+4",
+"d": "3-9",
+"t": "scene",
+"e": "Gnaws through wood (3), iron (6) or steel (9); the bite gains two dice for the scene.",
+"id": "gnaw"
+},
+{
+"n": "Gorge",
+"l": 4,
+"g": [
+"red-talons"
+],
+"p": 136,
+"t": "permanent",
+"e": "Can hold three points above the maximum in one chosen trait (Gnosis, Rage or Willpower).",
+"id": "gorge"
+},
+{
+"n": "Grasp the Beyond",
+"l": 4,
+"g": [
+"theurge"
+],
+"p": 120,
+"c": "w1+",
+"t": "instant",
+"e": "Carries held items or beings across the Gauntlet; Willpower by size.",
+"id": "grasp-the-beyond"
+},
+{
+"n": "Iron Cannot Pierce",
+"l": 4,
+"g": [
+"fenrir"
+],
+"p": 134,
+"c": "g1r1",
+"t": "scene",
+"e": "A carved rune keeps iron weapons from wounding him.",
+"id": "iron-cannot-pierce"
+},
+{
+"n": "Leper's Curse",
+"l": 4,
+"g": [
+"ragabash"
+],
+"p": 118,
+"c": "g1",
+"r": "gnosis",
+"d": "tWp",
+"t": "var",
+"e": "Afflicts the target with a wasting disease; it resists with Gnosis or Stamina.",
+"id": "lepers-curse"
+},
+{
+"n": "Lordly Will",
+"l": 4,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"t": "permanent",
+"e": "Mind control and mental attacks against him are at difficulty 10.",
+"id": "lordly-will"
+},
+{
+"n": "Luna's Blessing",
+"l": 4,
+"g": [
+"ragabash"
+],
+"p": 118,
+"c": "g1",
+"t": "var",
+"e": "Silver strikes roll three extra botch-only dice; silver wounds soak and heal as bashing or lethal. Only while the moon is visible.",
+"id": "lunas-blessing"
+},
+{
+"n": "Quicksand",
+"l": 4,
+"g": [
+"red-talons"
+],
+"p": 136,
+"c": "g1",
+"r": "manipulation+primalurge",
+"d": 7,
+"t": "scene",
+"e": "Turns 10 feet of ground per success to muck: movement halved for all but the Garou.",
+"id": "quicksand"
+},
+{
+"n": "Roll Over",
+"l": 4,
+"g": [
+"philodox"
+],
+"p": 122,
+"r": "willpower",
+"d": "opposed",
+"t": "scene",
+"e": "Extended Willpower contest; foes beaten by three successes submit.",
+"id": "roll-over"
+},
+{
+"n": "Scent of Beyond",
+"l": 4,
+"g": [
+"philodox"
+],
+"p": 122,
+"r": "perception+enigmas",
+"d": "8|gauntlet",
+"t": "var",
+"e": "Senses a far place he knows as if present.",
+"id": "scent-of-beyond"
+},
+{
+"n": "Semblance",
+"l": 4,
+"g": [
+"fianna"
+],
+"p": 135,
+"c": "g1per10cuft",
+"r": "intelligence+expression",
+"d": 6,
+"t": "var",
+"e": "An illusion of 10 cubic feet per Gnosis point; doubters must beat the successes.",
+"id": "semblance"
+},
+{
+"n": "Shadows by the Firelight",
+"l": 4,
+"g": [
+"galliard"
+],
+"p": 125,
+"c": "g3each",
+"r": "manipulation+performance",
+"d": "tWp",
+"t": "var",
+"e": "Draws listeners into acting out a tale; only the unwilling cost Gnosis and a roll.",
+"id": "shadows-by-the-firelight"
+},
+{
+"n": "Sidestep Death",
+"l": 4,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"c": "w3",
+"t": "instant",
+"e": "Once per scene, evades an attack that would take him below Crippled.",
+"id": "sidestep-death"
+},
+{
+"n": "Song of Mockery",
+"l": 4,
+"g": [
+"galliard"
+],
+"p": 125,
+"r": "wits+investigation",
+"d": 8,
+"t": "var",
+"e": "An improvised song that bares a subject's secrets, one per success.",
+"id": "song-of-mockery"
+},
+{
+"n": "Speed Beyond Thought",
+"l": 4,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"c": "g1",
+"r": "stamina+athletics",
+"d": 7,
+"t": "var",
+"e": "Travels at great speed; no extra actions.",
+"id": "speed-beyond-thought"
+},
+{
+"n": "Spirit Ward",
+"l": 4,
+"g": [
+"homid"
+],
+"p": 113,
+"c": "g1",
+"r": "manipulation+rituals",
+"d": 7,
+"t": "scene",
+"e": "Spirits within 100 feet lose a die per success.",
+"id": "spirit-ward"
+},
+{
+"n": "Spirit Wassail",
+"l": 4,
+"g": [
+"theurge"
+],
+"p": 121,
+"r": "gnosis",
+"d": "opposed",
+"t": "scene",
+"e": "Drains a spirit's Essence (resisted Gnosis); every two points drained restore the Garou.",
+"id": "spirit-wassail"
+},
+{
+"n": "Stoking Fury's Furnace",
+"l": 4,
+"g": [
+"ahroun"
+],
+"p": 127,
+"t": "permanent",
+"e": "Innate: regains a Rage point in any turn he takes damage, without a frenzy check from it.",
+"id": "stoking-furys-furnace"
+},
+{
+"n": "Strength of the Dominator",
+"l": 4,
+"g": [
+"shadow-lords"
+],
+"p": 139,
+"r": "wits+intimidation",
+"d": "tWp",
+"t": "turns",
+"e": "Steals a Rage point per turn for a turn per success; once per target per scene.",
+"id": "strength-of-the-dominator"
+},
+{
+"n": "Wither Limb",
+"l": 4,
+"g": [
+"metis"
+],
+"p": 115,
+"c": "g1",
+"r": "willpower",
+"d": "tSta+4",
+"t": "var",
+"e": "A touched limb withers: unusable, +2 to Dexterity difficulties, half speed for a leg.",
+"id": "wither-limb"
+},
+{
+"n": "Assimilation",
+"l": 5,
+"g": [
+"homid"
+],
+"p": 113,
+"r": "manipulation+empathy",
+"d": "5-9",
+"t": "day",
+"e": "Passes as a member of another culture; difficulty by how alien it is.",
+"id": "assimilation"
+},
+{
+"n": "Blaze of Glory",
+"l": 5,
+"g": [
+"fenrir"
+],
+"p": 134,
+"c": "g1r1w1",
+"r": "willpower",
+"d": 6,
+"t": "instant",
+"e": "Each success is five aggravated fire levels to all within 30 feet.",
+"id": "blaze-of-glory"
+},
+{
+"n": "Call for Vengeance",
+"l": 5,
+"g": [
+"galliard"
+],
+"p": 126,
+"r": "stamina+performance",
+"d": 7,
+"t": "var",
+"e": "A howl heard 20 miles per success; Garou who join the hunt gain three Willpower (max 10).",
+"id": "call-for-vengeance"
+},
+{
+"n": "Chimerical Form",
+"l": 5,
+"g": [
+"ragabash"
+],
+"p": 119,
+"c": "g1",
+"r": "intelligence+animalken",
+"d": 6,
+"t": "scene",
+"e": "Takes the shape of any normal animal; more successes allow stranger shapes.",
+"id": "chimerical-form"
+},
+{
+"n": "Command the Blaze",
+"l": 5,
+"g": [
+"warders-of-men"
+],
+"p": 143,
+"c": "g1",
+"r": "willpower",
+"d": 7,
+"t": "var",
+"e": "Controls a single fire; successes set the radius, from arm's reach to a city.",
+"id": "command-the-blaze"
+},
+{
+"n": "Dream Golem",
+"l": 5,
+"g": [
+"galliard"
+],
+"p": 125,
+"r": "intelligence+performance",
+"d": 8,
+"t": "var",
+"e": "Extended roll: shapes a dream creature with a dot of traits per success.",
+"id": "dream-golem"
+},
+{
+"n": "Earthfriend's Pact",
+"l": 5,
+"g": [
+"philodox"
+],
+"p": 123,
+"r": "charisma+expression",
+"d": 8,
+"t": "var",
+"e": "Elementals shake the earth for 25 yards; others must keep their feet (Dexterity + Athletics).",
+"id": "earthfriends-pact",
+"chk": true
+},
+{
+"n": "Elemental Gift",
+"l": 5,
+"g": [
+"lupus"
+],
+"p": 117,
+"c": "g1",
+"r": "gnosis",
+"d": 8,
+"t": "scene",
+"e": "An elemental grants control of about a 20-foot cube of air, earth, fire or water.",
+"id": "elemental-gift"
+},
+{
+"n": "False Comfort",
+"l": 5,
+"g": [
+"homid",
+"warders-of-men"
+],
+"p": 113,
+"c": "g1",
+"r": "gnosis",
+"d": 7,
+"t": "turns",
+"e": "For a turn per success, human works and tools can't touch the Garou unless he wishes.",
+"id": "false-comfort"
+},
+{
+"n": "Fog on the Moor",
+"l": 5,
+"g": [
+"fianna"
+],
+"p": 135,
+"c": "w1",
+"r": "gnosis",
+"d": 6,
+"t": "turns",
+"e": "Becomes ghostly mist a turn per success.",
+"id": "fog-on-the-moor"
+},
+{
+"n": "Gaia's Vengeance",
+"l": 5,
+"g": [
+"red-talons"
+],
+"p": 137,
+"c": "g1r1",
+"r": "charisma+enigmas",
+"d": "gauntlet",
+"t": "var",
+"e": "Gaia answers a plea to cleanse the land as she sees fit.",
+"id": "gaias-vengeance"
+},
+{
+"n": "Gate of the Moon",
+"l": 5,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"c": "g1per100mi",
+"t": "instant",
+"e": "Travels 100 miles per Gnosis point to a place he has seen.",
+"id": "gate-of-the-moon"
+},
+{
+"n": "Gaze of the Gorgon",
+"l": 5,
+"g": [
+"black-furies"
+],
+"p": 129,
+"r": "perception+occult",
+"d": "tWp",
+"t": "turns",
+"e": "With eye contact, turns the victim to stone for a round per success.",
+"id": "gaze-of-the-gorgon"
+},
+{
+"n": "Geas",
+"l": 5,
+"g": [
+"philodox"
+],
+"p": 123,
+"c": "g1",
+"r": "manipulation+leadership",
+"d": "tWp",
+"t": "var",
+"e": "Binds a target to a task until it is done.",
+"id": "geas",
+"chk": true
+},
+{
+"n": "Gift of the Spriggan",
+"l": 5,
+"g": [
+"fianna"
+],
+"p": 135,
+"c": "g1",
+"r": "stamina+primalurge",
+"d": 8,
+"t": "hours",
+"e": "Grows or shrinks for an hour per success, gaining or losing traits.",
+"id": "gift-of-the-spriggan",
+"chk": true
+},
+{
+"n": "Halo of the Sun",
+"l": 5,
+"g": [
+"children-of-gaia"
+],
+"p": 132,
+"c": "g1",
+"t": "scene",
+"e": "Two extra dice of hand-to-hand damage, aggravated even in Homid or Glabro.",
+"id": "halo-of-the-sun"
+},
+{
+"n": "Horde of Valhalla",
+"l": 5,
+"g": [
+"fenrir"
+],
+"p": 134,
+"c": "rgX",
+"r": "charisma+animalken",
+"d": 6,
+"t": "scene",
+"e": "Great Wolves come, one per point of Rage and Gnosis spent.",
+"id": "horde-of-valhalla"
+},
+{
+"n": "Kiss of Helios",
+"l": 5,
+"g": [
+"ahroun"
+],
+"p": 127,
+"c": "g1",
+"t": "scene",
+"e": "Natural fire can't harm him; supernatural fire does a quarter, as bashing; flaming blows add two aggravated dice.",
+"id": "kiss-of-helios"
+},
+{
+"n": "Luna's Avenger",
+"l": 5,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"c": "g1",
+"t": "scene",
+"e": "After a turn's focus, immune to silver, and his blows wound Garou as silver.",
+"id": "lunas-avenger"
+},
+{
+"n": "Madness",
+"l": 5,
+"g": [
+"metis"
+],
+"p": 115,
+"c": "g1",
+"r": "manipulation+intimidation",
+"d": "tWp",
+"t": "days",
+"e": "Inflicts a derangement (DA:V pp. 261–263) for a day per success.",
+"id": "madness"
+},
+{
+"n": "Malleable Spirit",
+"l": 5,
+"g": [
+"theurge"
+],
+"p": 121,
+"r": "gnosis",
+"d": "opposed",
+"t": "var",
+"e": "Reshapes a spirit's traits or nature (resisted Gnosis); difficulty by the change.",
+"id": "malleable-spirit"
+},
+{
+"n": "Maw of the Whale",
+"l": 5,
+"g": [
+"bone-gnawers"
+],
+"p": 130,
+"r": "stamina+primalurge",
+"d": 8,
+"t": "var",
+"e": "Swallows a being or object whole; the target dodges with Dexterity + Dodge.",
+"id": "maw-of-the-whale",
+"chk": true
+},
+{
+"n": "Nightmare Possession",
+"l": 5,
+"g": [
+"theurge"
+],
+"p": 121,
+"c": "gX",
+"r": "wits+empathy",
+"d": "tWp+3",
+"t": "permanent",
+"e": "Destroys Intelligence, one dot per two Gnosis spent.",
+"id": "nightmare-possession"
+},
+{
+"n": "Obedience",
+"l": 5,
+"g": [
+"shadow-lords"
+],
+"p": 139,
+"c": "g1",
+"r": "charisma+leadership",
+"d": 8,
+"t": "var",
+"e": "Those nearby who fail to beat his successes on Willpower (8) obey: 1 mild, 3 most, 5 nearly anything.",
+"id": "obedience"
+},
+{
+"n": "Paws of the Newborn Cub",
+"l": 5,
+"g": [
+"silver-fangs"
+],
+"p": 141,
+"c": "g1",
+"r": "gnosis",
+"d": "tWp",
+"t": "turns",
+"e": "Each success strips all of a target's powers for a turn.",
+"id": "paws-of-the-newborn-cub"
+},
+{
+"n": "Reach the Umbra",
+"l": 5,
+"g": [
+"silent-striders"
+],
+"p": 140,
+"t": "permanent",
+"e": "Steps sideways at will without a roll; −2 to enter or leave Umbral realms.",
+"id": "reach-the-umbra"
+},
+{
+"n": "Shadow Pack",
+"l": 5,
+"g": [
+"shadow-lords"
+],
+"p": 139,
+"c": "gX",
+"r": "gnosis",
+"d": 8,
+"t": "scene",
+"e": "One shadow double per Gnosis spent: same traits, no Gifts, one health level.",
+"id": "shadow-pack"
+},
+{
+"n": "Share the Wolf's Skin",
+"l": 5,
+"g": [
+"red-talons"
+],
+"p": 137,
+"c": "g1",
+"r": "gnosis",
+"d": "tPermWp",
+"t": "var",
+"e": "Turns a human into a wolf (one net success on a resisted roll).",
+"id": "share-the-wolfs-skin"
+},
+{
+"n": "Song of the Great Beast",
+"l": 5,
+"g": [
+"lupus"
+],
+"p": 117,
+"c": "g1",
+"r": "charisma+primalurge",
+"d": 8,
+"t": "var",
+"e": "Calls one of the Great Beasts; extra successes make it more willing.",
+"id": "song-of-the-great-beast"
+},
+{
+"n": "Strength of Will",
+"l": 5,
+"g": [
+"ahroun"
+],
+"p": 127,
+"c": "w1",
+"r": "charisma+leadership",
+"d": 8,
+"t": "scene",
+"e": "Each success gives allies within 100 feet (packmates within 100 miles) a Willpower point.",
+"id": "strength-of-will"
+},
+{
+"n": "The Living Wood",
+"l": 5,
+"g": [
+"children-of-gaia"
+],
+"p": 132,
+"c": "g1",
+"r": "charisma+survival",
+"d": 8,
+"t": "scene",
+"e": "Animates one tree per success.",
+"id": "the-living-wood"
+},
+{
+"n": "Thieving Talons of the Magpie",
+"l": 5,
+"g": [
+"ragabash"
+],
+"p": 118,
+"r": "wits+stealth",
+"d": "tWp",
+"t": "scene",
+"e": "Every three successes steal one use of a foe's power.",
+"id": "thieving-talons-of-the-magpie"
+},
+{
+"n": "Totem Gift",
+"l": 5,
+"g": [
+"metis"
+],
+"p": 115,
+"c": "g1",
+"r": "charisma+rituals",
+"d": 7,
+"t": "instant",
+"e": "Calls on the totem for aid; more successes, a greater intervention.",
+"id": "totem-gift",
+"chk": true
+},
+{
+"n": "Wyld Warp",
+"l": 5,
+"g": [
+"black-furies"
+],
+"p": 129,
+"c": "g1r1",
+"r": "wits+enigmas",
+"d": "gauntlet",
+"t": "var",
+"e": "Summons Wyldlings who change the situation in her favor.",
+"id": "wyld-warp"
+}
+]
+}

@@ -1,0 +1,92 @@
+{
+"source": "Dark Ages: Werewolf (2003) pp. 79–107; W20 pp. 144–146, 251, 255–263, 285–287. Mechanics only, in WoDX's words.",
+"breeds": {
+  "homid": {"label":"Homid","gnosis":1,"breedForm":"homid","gifts":["Master of Fire","Persuasion","Smell of Man"],"page":"DA:W p. 80"},
+  "metis": {"label":"Metis","gnosis":3,"breedForm":"crinos","gifts":["Create Element","Sense Wyrm","Shed"],"page":"DA:W p. 80","chk":true},
+  "lupus": {"label":"Lupus","gnosis":5,"breedForm":"lupus","gifts":["Hare's Leap","Heightened Senses","Ley Lines"],"page":"DA:W p. 80"}
+},
+"auspices": {
+  "ragabash": {"label":"Ragabash","moon":0,"rage":1,"renown":{"any":3},"gifts":["Blur of the Milky Eye","Scent of Running Water","Snow Running"]},
+  "theurge":  {"label":"Theurge","moon":1,"rage":2,"renown":{"wisdom":3},"gifts":["Mother's Touch","Sense Wyrm","Spirit Speech"]},
+  "philodox": {"label":"Philodox","moon":2,"rage":3,"renown":{"honor":3},"gifts":["Resist Pain","Scent of the True Form","Truth of Gaia"]},
+  "galliard": {"label":"Galliard","moon":3,"rage":4,"renown":{"glory":2,"wisdom":1},"gifts":["Beast Speech","Call of the Wyld","Waking Dream"]},
+  "ahroun":   {"label":"Ahroun","moon":4,"rage":5,"renown":{"glory":3},"gifts":["Falling Touch","Inspiration","Razor Claws"]}
+},
+"tribes": {
+  "black-furies":     {"label":"Black Furies","willpower":3,"gifts":["Breath of the Wyld","Man's Skin","Sense Wyrm"]},
+  "bone-gnawers":     {"label":"Bone Gnawers","willpower":4,"noBackgrounds":["Pure Breed","Resources"],"gifts":["Cookery","Resist Toxin","Scent of the Honeycomb"]},
+  "children-of-gaia": {"label":"Children of Gaia","willpower":3,"gifts":["Eve's Blessing","Mother's Touch","Resist Pain"]},
+  "fenrir":           {"label":"Fenrir","willpower":3,"noBackgrounds":["Contacts"],"gifts":["Hunter's Harmony","Resist Pain","Visage of Fenris"]},
+  "fianna":           {"label":"Fianna","willpower":3,"gifts":["Distract the Fool","Faerie Light","Resist Toxin"]},
+  "red-talons":       {"label":"Red Talons","willpower":3,"lupusOnly":true,"noBackgrounds":["Resources","Allies","Contacts (human)","Kinfolk (human)"],"gifts":["Beast Speech","Prey's Cry","Wolf at the Door"]},
+  "shadow-lords":     {"label":"Shadow Lords","willpower":3,"noBackgrounds":["Allies","Mentor"],"gifts":["Aura of Confidence","Fatal Flaw","Seizing the Edge"]},
+  "silent-striders":  {"label":"Silent Striders","willpower":3,"noBackgrounds":["Ancestors","Resources"],"gifts":["Heavens' Guidance","Sense Wyrm","Speed of Thought"]},
+  "silver-fangs":     {"label":"Silver Fangs","willpower":3,"minBackgrounds":{"Pure Breed":3},"gifts":["Eye of the Falcon","Lambent Flame","Sense Wyrm"]},
+  "warders-of-men":   {"label":"Warders of Men","willpower":3,"doubleCost":["Pure Breed","Ancestors"],"gifts":["Artisan's Command","Gift of Salt","Persuasion"]}
+},
+"rankNames": ["Cub","Cliath","Fostern","Adren","Athro","Elder"],
+"rankChart": {
+  "daw": {
+    "ahroun":   [[2,1,0],[4,1,0],[6,3,1],[9,5,2],[10,9,4]],
+    "galliard": [[2,0,1],[4,0,2],[4,2,4],[7,2,6],[9,5,9]],
+    "philodox": [[0,3,0],[1,4,1],[2,6,2],[3,8,4],[4,10,9]],
+    "theurge":  [[0,0,3],[1,0,5],[2,1,7],[4,2,9],[4,9,10]],
+    "ragabash": [3,7,12,17,24],
+    "page": "DA:W p. 101"
+  }
+},
+"frenzyByRank": {"3":{"diff":1},"4":{"diff":2},"5":{"diff":2,"need":5},"6":{"diff":2,"need":6}},
+"moonRage": {
+  "daw": [1,3,3,3,4,3,3,1],
+  "w20": [1,3,3,3,4,2,2,2],
+  "pages": {"daw":"DA:W p. 91","w20":"W20 p. 145"},
+  "note": "By the Chronicle's eight phases (new, waxing crescent, first quarter, waxing gibbous, full, waning gibbous, last quarter, waning crescent). DA:W: new 1, half or waxing 3, full 4 (no waning value is given, so the waning phases use the half and new values). W20: waning 2."
+},
+"rageDifficulty": {
+  "w20": [8,7,6,5,4,5,6,7],
+  "daw": null,
+  "note": "W20 p. 262 sets Rage-roll difficulty by moon (−1 when the moon matches the auspice or in Crinos, not both). DA:W gives no moon table; the Storyteller sets it (default 6) and Crinos is −1 (DA:W p. 107)."
+},
+"rites": {
+  "accord":     {"label":"Accord","pool":"charisma+rituals","diff":7},
+  "caern":      {"label":"Caern","pool":"var","diff":7,"note":"Roll varies by rite; capped by Gnosis."},
+  "death":      {"label":"Death","pool":"charisma+rituals","diff":"8-rank"},
+  "mystic":     {"label":"Mystic","pool":"wits+rituals","diff":7},
+  "punishment": {"label":"Punishment","pool":"charisma+rituals","diff":7},
+  "renown":     {"label":"Renown","pool":"charisma+rituals","diff":6},
+  "seasonal":   {"label":"Seasonal","pool":"stamina+rituals","diff":"8-caern"},
+  "minor":      {"label":"Minor","pool":null,"diff":null},
+  "page": "DA:W pp. 144–145; W20 p. 202"
+},
+"summoning": {
+  "diff": {"Gaffling":4,"Jaggling":5,"Totem avatar":7,"Incarna":8,"Celestine avatar":10},
+  "attitude": ["No answer","Comes eventually, hostile","Comes quickly, hostile","Comes at once, neutral","Comes at once, benign","Comes at once, friendly"],
+  "page": "DA:W p. 150"
+},
+"battleScars": {
+  "daw": [
+    {"n":"Superficial scars","glory":1,"e":"Hairless scar masses in every form; Appearance suffers in some situations."},
+    {"n":"Collapsed lung","glory":1,"e":"−1 die on exertion Stamina rolls, another after five turns; holds breath half as long."},
+    {"n":"Broken jaw","glory":1,"e":"+2 difficulty to speak with humans, +1 to bite."},
+    {"n":"Missing eye","glory":2,"e":"+3 difficulty on depth perception and missiles, +2 on other sight-based Perception."},
+    {"n":"Missing fingers","glory":2,"e":"+3 difficulty on Dexterity rolls with that hand; its claw damage is halved."},
+    {"n":"Brain damage","glory":2,"e":"−1 Mental Attribute (Storyteller's choice) and a die's worth from Gnosis, Willpower or Knowledges."},
+    {"n":"Maimed limb","glory":3,"e":"A useless limb: half speed for a leg; three-quarters in Hispo and Lupus for an arm."},
+    {"n":"Extensive scarring","glory":3,"e":"Appearance 0 and constant pain: −1 to Rage-roll difficulty, +1 on extended rolls."}
+  ],
+  "w20extra": [
+    {"n":"Deep scar","glory":1,"e":"As superficial scars, and it aches with the weather."},
+    {"n":"Improper bone setting","glory":1,"e":"Two or more levels there at once re-break it for an extra lethal level."},
+    {"n":"Cosmetic damage","glory":2,"e":"−1 Appearance with humans unless covered."},
+    {"n":"Gelded","glory":1,"e":"Sterile; +2 difficulty on seduction and Animal Attraction."},
+    {"n":"Spinal damage","glory":2,"e":"−1 Dexterity, −2 initiative, Willpower for balance and precision rolls."}
+  ],
+  "page": "DA:W pp. 93–94; W20 p. 260"
+},
+"delirium": {
+  "daw": {"forget":[1,2,3,4,5],"rationalize":[6,7,8],"remember":[9,10]},
+  "w20": {"forget":[1,2,3,4,5,6],"rationalize":[7,8],"remember":[9,10]},
+  "reactions": ["","Catatonic fear","Panic","Disbelief","Berserk","Terror","Conciliatory","Controlled fear","Curiosity","Bloodlust","No reaction"],
+  "page": "DA:W p. 97; W20 p. 263"
+}
+}
