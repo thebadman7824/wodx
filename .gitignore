@@ -1,0 +1,4 @@
+# LevelDB lock and log files
+**/LOCK
+**/LOG
+**/LOG.old

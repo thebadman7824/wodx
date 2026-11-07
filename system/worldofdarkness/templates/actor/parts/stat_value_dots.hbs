@@ -1,0 +1,7 @@
+{{#numLoop max}}
+	<span class="{{#if (gt ../max 5)}}supernaturalAttribute {{/if}}{{#if (gt ../max 7)}}highMaxAttribute {{/if}}resource-value-step"
+		data-action="editDot"
+		data-type="{{../dotType}}"
+		data-index="{{this}}"
+		{{#if ../itemid}}data-itemid="{{../itemid}}" data-ability="core"{{/if}}></span>
+{{/numLoop}}

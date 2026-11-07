@@ -1,0 +1,184 @@
+.wod20.changeling {
+    --sheet-background-color: var(--changeling-page-background);
+}
+  
+.wod20.changeling .modern {  
+    --main-wod-banner: var(--changeling-banner-background);
+    --main-wod-banner-small: var(--changeling-banner-small-background);
+}
+
+.wod20.changeling:not(.noSplatFont) nav,
+.wod20.changeling:not(.noSplatFont) .splatFont,
+.wod20.changelingDialog:not(.noSplatFont) .splatFont,
+.wod20.changelingItem:not(.noSplatFont) .splatFont {
+	font-family: "changeling", var(--main-font);
+}
+
+.wod20.changelingDialog,
+.wod20.changeling,
+.wod20.changelingItem {
+    --main-full-color: var(--main-changeling-color);
+    --main-mid-color: var(--main-changeling-mid-color);
+    --main-dim-color: var(--main-changeling-dim-color);
+    --color-shadow-primary: var(--main-changeling-color);
+
+    /* Splat-specific font-size defaults (tweak per splat if needed) */
+    --wod-font-xxs: 0.4375rem;   /* 7px */
+    --wod-font-xs: 0.625rem;     /* 10px */
+    --wod-font-sm: 0.75rem;      /* 12px */
+    --wod-font-md: 0.875rem;     /* 14px */
+    --wod-font-base: 1rem;       /* 16px */
+    --wod-font-lg: 1.125rem;     /* 18px */
+    --wod-font-xl: 1.25rem;      /* 20px */
+    --wod-font-xxl: 1.5rem;      /* 24px */
+
+    /* Overrides to preserve current hard-coded sizes in this splat */
+    --wod-font-sheet-headline: 1.875rem; /* 30px (.sheet-headline) */
+    --wod-font-headline-group: 2rem; /* 32px (.headlineGroup) */
+    --wod-font-headline-tabs: 1.5rem; /* 24px (.headlineTabs) */
+    --wod-font-second-headline-tabs: 1.625rem; /* 26px (.secondHeadlineTabs) */
+}
+
+.wod20.changeling .wod-sheet .profile-img-zone button {  
+    background: url('../assets/img/buttons/changeling.png');	
+    color: #e0e0e0;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+}
+
+.wod20.changelingDialog:not(.noSplatFont) .headlineGroup {
+    font-size: var(--wod-font-headline-group);
+}
+
+.wod20.changelingDialog:not(.noSplatFont) .headline {
+    font-size: var(--wod-font-xl);
+}
+  
+.wod20.changeling .lock-icon {
+    margin-left: 4px;
+}
+  
+.wod20.changeling:not(.noSplatFont) .headlineTabs {
+    font-size: var(--wod-font-headline-tabs);
+    line-height: 24px;
+}
+
+.wod20.changeling .splatFont .headlineList {
+    font-size: var(--wod-font-base);
+} 
+  
+.wod20.changeling .pullLeft.healthbox {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+  
+.wod20.changeling .pullRight.healthbox {
+    margin-left: 15px;
+    margin-right: 15px;  
+}
+  
+.wod20.changeling .leftwrapper {
+    border: 1px solid var(--main-changeling-color);
+    border-bottom: 0px;
+    border-right: 0px;
+    padding-left: 5px;
+    /* padding-top: 5px; */
+}
+  
+.wod20.changeling .topwrapper {
+    border: 1px solid var(--main-changeling-color);
+    border-bottom: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    /* padding-top: 5px; */
+}
+  
+.wod20.changeling .rightwrapper {
+    border: 1px solid var(--main-changeling-color);
+    border-bottom: 0px;
+    border-left: 0px;
+    /* padding-top: 5px; */
+    margin-right: 5px;
+}
+  
+.wod20.changeling .wrapperboxleft {
+    padding-left: 10px;
+}
+  
+.wod20.changeling .wrapperboxright {
+    margin-right: 5px;
+}
+  
+.wod20.changeling .imbalance {
+    background-color: red !important;
+}
+
+.wod20.changeling .bonus-power-name {
+    width: 200px;
+}
+
+/* START - Core */
+
+.wod20.changeling .health-headlineWidth {
+    width: 	140px;
+}
+
+.wod20.changeling div.healthBox {
+    padding-right: 15px;
+}
+
+.wod20.changeling .total.experienceValue {
+    line-height: 30px;
+}
+
+/* START - Combat */
+
+.wod20.changeling .armor-type-width {
+    width: 150px;
+}
+
+.wod20.changeling .combat-concealBox {
+    width: 75px;
+}
+
+.wod20.changeling .armor.headlineRowBackground {
+    margin-bottom: -10px;
+}
+
+/* END - Combat */
+
+/* START - Dreaming */
+
+.wod20.changeling .item-row-area.mainpower-row .power-itemlist .width-namebox {
+  font-size: var(--wod-font-xl);
+  font-weight: bold;
+  width: 240px;
+}
+  
+.wod20.changeling .realms-headlineWidth {
+    width: 50%;
+}
+
+.wod20.changeling .highlightedPower {
+    height: 15px;
+    width: 15px;
+    /* margin-top: 5px;     */
+}
+
+.wod20.changeling .realm-resource-values {
+    margin-top: 4px;
+}
+  
+/* END - Dreaming */
+
+/* SETTINGS */
+
+.wod20.changeling:not(.noSplatFont) .secondHeadlineTabs {
+    font-size: var(--wod-font-second-headline-tabs);
+}
+
+.wod20.changeling .secondHeadlineTabs {
+    width: 25%;
+} 

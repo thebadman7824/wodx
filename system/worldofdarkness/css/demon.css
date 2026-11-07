@@ -1,0 +1,210 @@
+.wod20.demon:not(.noSplatFont) nav,
+.wod20.demon:not(.noSplatFont) .splatFont,
+.wod20.demon:not(.noSplatFont) nav,
+.wod20.demon:not(.noSplatFont) .splatFont,
+.wod20.demonDialog:not(.noSplatFont) .splatFont,
+.wod20.demonItem:not(.noSplatFont) .splatFont {
+	font-family: "demon", var(--main-font);
+}
+
+.wod20.demon.window-app .window-content,
+.wod20.demon.wod-sheet .window-content {
+	font-family: var(--main-demon-font);
+}
+
+.wod20.demon button:not(.header-control),
+.wod20.demon input,
+.wod20.demon select {
+	font-family: var(--main-demon-font);
+}
+
+.wod20.demon.wod-item .infobox {
+	font-family: var(--main-demon-font);
+	min-height: 36px;
+}
+
+.wod20.demon.wod-dialog .infobox {
+	font-family: var(--main-demon-font);
+	min-height: 36px;
+}
+
+.wod20.demon.wod-sheet.noSplatFont .sheet-headline,
+.wod20.demon.wod-sheet.noSplatFont .headlineGroup {
+	font-family: var(--main-demon-font);
+}
+
+.wod20.demonDialog,
+.wod20.demon,
+.wod20.demonItem {
+  --main-full-color: var(--main-demon-color);
+  --main-mid-color: var(--main-demon-mid-color);
+  --main-dim-color: var(--main-demon-dim-color);
+  --color-shadow-primary: var(--main-demon-color);
+
+  /* Splat-specific font-size defaults (aligned with exalted) */
+  --wod-font-xxs: 0.4375rem;   /* 7px */
+  --wod-font-xs: 0.625rem;     /* 10px */
+  --wod-font-md: 0.875rem;     /* 14px */
+  --wod-font-base: 1rem;       /* 16px */
+  --wod-font-lg: 1.125rem;     /* 18px */
+  --wod-font-xl: 1.25rem;      /* 20px */
+  --wod-font-xxl: 1.5rem;      /* 24px */
+
+  --wod-font-sheet-headline: 2.25rem; /* 36px (.sheet-headline) */
+  --wod-font-second-headline-tabs: 1.5625rem; /* 25px */
+  --wod-font-sheet-banner-text: 1.625rem; /* 26px (.splatFont.sheet-headline span) */
+  --wod-font-sm: 1rem; /* 16px (.headlineList) */
+  --wod-font-sheet-headline-variant: 1.625rem; /* 26px (.sheet-headline-variant) */
+  --wod-font-experience-value: 1.125rem; /* 18px (.experienceValue) */
+} 
+
+.wod20.demon {
+    --sheet-background-color: var(--demon-page-background);
+}
+  
+.wod20.demon .modern {  
+    --main-wod-banner: none;
+    --main-wod-banner-small: none;
+}
+
+.wod20.wod-sheet.wod20.demon:not(.minimized) {
+    min-height: 950px;
+}
+
+.wod20.demon:not(.noSplatFont) .sheet-headline {
+    font-size: var(--wod-font-sheet-headline);
+}
+
+.wod20.demon.wod20.demon:not(.noSplatFont) .sheet-banner {
+    height: 40px;
+}
+
+.wod20.demon:not(.noSplatFont) .splatFont.sheet-headline span.sheet-banner-text {
+  font-family: "demon", var(--main-font);
+  font-size: var(--wod-font-sheet-banner-text);
+}
+
+.wod20.demon:not(.noSplatFont) .sheet-banner .sheet-banner-text {
+    position: relative;
+    top: 16px;
+}
+
+.wod20.demon:not(.noSplatFont) .sheet-banner-small .sheet-banner-text {
+    font-size: var(--wod-font-sheet-banner-text);
+}
+
+.wod20.demon:not(.noSplatFont) .headlineList,
+.wod20.demon:not(.noSplatFont) .headlineRow {
+    font-family: var(--main-demon-font);
+    font-size: var(--wod-font-sm);
+}
+
+.wod20.demon .sheet-headline-variant {
+    font-size: var(--wod-font-sheet-headline-variant);
+}
+
+.wod20.demon .experienceValue {
+    font-family: var(--main-demon-font);
+    font-size: var(--wod-font-experience-value);
+    line-height: 23px;
+}
+
+/* CORE */
+
+.wod20.demon .ability-headlineWidth {
+	width: 	110px;
+}
+
+.wod20.demon .attribute-rowheight {
+  height: 21px;
+}
+
+/* COMBAT */
+
+.wod20.demon .combat-armor-itemlist .width-valuebox {
+    width: 60px;
+}
+
+.wod20.demon .combat-natural-itemlist .width-namebox,
+.wod20.demon .combat-melee-itemlist .width-namebox,
+.wod20.demon .combat-ranged-itemlist .width-namebox,
+.wod20.demon .combat-armor-itemlist .width-namebox,
+.wod20.demon .gear-itemlist .width-namebox,
+.wod20.demon .feature-itemlist .width-namebox,
+.wod20.demon .description-itemlist .width-namebox {
+    margin-left: 5px;
+}
+
+/* POWER */
+
+.wod20.demon .item-row-area.mainpower-row .power-itemlist .width-namebox {
+    font-size: var(--wod-font-md);
+    width: 260px;
+    margin-left: 5px;
+}
+
+.wod20.demon .item-row-area.power-row .power-itemlist .width-namebox {
+    width: 230px;
+}
+
+/* SETTINGS */
+
+.wod20.demon .secondHeadlineTabs {
+    width: 25%;
+}
+
+.wod20.demon .secondHeadlineTabs:not(.noSplatFont) {
+    font-size: var(--wod-font-second-headline-tabs);
+}
+
+/* PC actor: no splat banner images */
+.wod20.pc-actor.demon .sheet-banner,
+.wod20.pc-actor.demon .sheet-banner-small {
+  background: none;
+  height: auto;
+}
+
+.wod20.pc-actor.demon:not(.noSplatFont) .sheet-banner .sheet-banner-text {
+  position: static;
+  top: auto;
+  font-size: var(--wod-font-sheet-banner-text);
+  font-family: "demon", var(--main-font);
+}
+
+.wod20.pc-actor.demon:not(.noSplatFont) .sheet-banner-small .sheet-banner-text {
+  font-family: "demon", var(--main-font);
+  font-size: var(--wod-font-sheet-banner-text);
+}
+
+/* ===== LOW TORMENT – änglalikt, gyllene, lugnt ===== */
+.wod20 [data-droparea="apocalypticforms-lt"] .item-row-area.feature-itemlist,
+.wod20 [data-droparea="apocalypticforms-lt"] .description {
+    border-left: 3px solid #d4af37;
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.10), transparent 60%);
+    transition: background 0.2s ease;
+}
+
+.wod20 [data-droparea="apocalypticforms-lt"] .item-row-area.feature-itemlist .largeBox {
+    color: #b8860b;
+    text-shadow: 0 0 4px rgba(212, 175, 55, 0.45);
+}
+
+/* ===== HIGH TORMENT – demoniskt, sprucket, rött ===== */
+.wod20 [data-droparea="apocalypticforms-ht"] .item-row-area.feature-itemlist,
+.wod20 [data-droparea="apocalypticforms-ht"] .description {
+    border-left: 3px solid #8b0000;
+    background: linear-gradient(90deg, rgba(139, 0, 0, 0.12), transparent 60%);
+}
+
+.wod20 [data-droparea="apocalypticforms-ht"] .item-row-area.feature-itemlist .largeBox {
+    color: #ff4d4d;
+    text-shadow: 0 0 5px rgba(139, 0, 0, 0.6);
+}
+
+@media all and (max-height : 1024px)
+{
+  .wod-sheet.demon:not(.minimized) {
+    min-height: 400px;
+    height: 400px;
+  }
+}

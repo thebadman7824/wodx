@@ -1,0 +1,94 @@
+{
+	"namespace": "worldofdarkness",
+	"id": "bonus-tour",
+	"title": "What is a bonus?",
+	"canBeResumed": true,
+	"display": true,
+	"permission": {
+		"GM": false,
+		"Players": true
+	},
+	"steps": [
+		{
+			"id": "goto-bonustour",
+			"selector": "[data-tab='actors']",
+			"title": "What is a bonus?",
+			"content": "This tour shows how bonuses work on a gift. Bonuses live on the item itself and only apply while that gift is active.",
+			"action": "addWerewolf"
+		},
+		{
+			"id": "goto-actorsheet-open",
+			"selector": "li[data-entry-id='ExampleWerewolf1'] .entry-name, li[data-document-id='ExampleWerewolf1'] .entry-name, li[data-document-id='ExampleWerewolf1'] h4.document-name",
+			"title": "Example sheet",
+			"content": "An example Werewolf sheet is created for the tour. Open it to continue.",
+			"action": "openActor",
+			"actorId": "ExampleWerewolf1"
+		},
+		{
+			"id": "goto-examplesheet",
+			"selector": "#WerewolfActorSheet-Actor-ExampleWerewolf1 header.window-header, [id*='WerewolfActorSheet-Actor-ExampleWerewolf1'] .window-header, [id*='WerewolfActorSheet-Actor-ExampleWerewolf1']",
+			"title": "Werewolf sheet",
+			"content": "Bonuses can belong to powers, traits, and other items. This tour uses the Rank 1 gift <strong>Persuasion</strong> as the example."
+		},
+		{
+			"id": "goto-unlock",
+			"selector": "div[data-area='unlock'], button.lock-btn",
+			"target": "button.lock-btn",
+			"title": "Unlock sheet",
+			"content": "Unlock the sheet so you can open and edit items.",
+			"action": "unlockSheet",
+			"actorId": "ExampleWerewolf1"
+		},
+		{
+			"id": "goto-giftstab",
+			"selector": "#tabgifts, div[data-tab='gift']",
+			"target": "#tabgifts",
+			"title": "Gifts",
+			"content": "Open the Gifts tab. Gifts are listed by rank; Persuasion is under Rank 1.",
+			"action": "click"
+		},
+		{
+			"id": "goto-persuasion",
+			"selector": ".width-namebox[data-itemid='Y50pP5Ygo88tuvnn'], [data-itemid='Y50pP5Ygo88tuvnn'], a.item-edit[data-item-id='Y50pP5Ygo88tuvnn'], .item-edit[data-item-id='Y50pP5Ygo88tuvnn']",
+			"title": "Open Persuasion",
+			"content": "Open the gift (edit icon once unlocked). Click Next and the tour opens Persuasion for you.",
+			"action": "openItem",
+			"actorId": "ExampleWerewolf1",
+			"itemId": "Y50pP5Ygo88tuvnn"
+		},
+		{
+			"id": "goto-powersheet",
+			"selector": "#WoDItemSheet-Actor-ExampleWerewolf1-Item-Y50pP5Ygo88tuvnn header.window-title, #WoDItemSheet-Actor-ExampleWerewolf1-Item-Y50pP5Ygo88tuvnn",
+			"title": "Gift item sheet",
+			"content": "This is the Persuasion gift sheet. The Bonuses section is further down on this window."
+		},
+		{
+			"id": "goto-bonussection",
+			"selector": "#WoDItemSheet-Actor-ExampleWerewolf1-Item-Y50pP5Ygo88tuvnn [data-drop-area='bonus'], [data-drop-area='bonus']",
+			"title": "Bonuses",
+			"content": "Persuasion already has three difficulty bonuses (Charisma, Manipulation, and Appearance). Use + to add more, the pen to edit, or trash to remove.",
+			"action": "scrollIntoView"
+		},
+		{
+			"id": "goto-addbonus",
+			"selector": "#WoDItemSheet-Actor-ExampleWerewolf1-Item-Y50pP5Ygo88tuvnn [data-drop-area='bonus'] i.item-create[data-type='bonus'], #WoDItemSheet-Actor-ExampleWerewolf1-Item-Y50pP5Ygo88tuvnn [data-drop-area='bonus'] i.item-create",
+			"title": "Add a bonus",
+			"content": "Click + to create a new bonus on this gift. You can also drag a Bonus item from a compendium onto this section."
+		},
+		{
+			"id": "goto-closebonus",
+			"selector": "#WoDItemSheet-Actor-ExampleWerewolf1-Item-Y50pP5Ygo88tuvnn a.header-button.close, #WoDItemSheet-Actor-ExampleWerewolf1-Item-Y50pP5Ygo88tuvnn a.close",
+			"title": "Close the gift",
+			"content": "Close the item sheet when you are done. Changes are already saved. Click Next to close it.",
+			"action": "closeItem",
+			"actorId": "ExampleWerewolf1",
+			"itemId": "Y50pP5Ygo88tuvnn"
+		},
+		{
+			"id": "goto-activatebonus",
+			"selector": "input.item-active[data-item-id='Y50pP5Ygo88tuvnn'], input[data-item-id='Y50pP5Ygo88tuvnn'][data-type='isactive']",
+			"title": "Activate the gift",
+			"content": "Tick the gift active. Its bonuses only count while the gift is active — deactivate it and they stop applying. That ends this tour."
+		}
+	]
+}

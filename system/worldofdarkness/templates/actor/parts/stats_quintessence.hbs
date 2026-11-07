@@ -1,0 +1,40 @@
+<div class="pullLeft" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+    <div class="sheet-boxcontainer">
+        <div style="width: 225px; margin: 0 auto;">
+            <div class="sheet-headline sheet-banner-small splatFont">
+                <span class="sheet-banner-text">
+                    <i class="fa fa-arrow-circle-up quintessenceBtn pointer" aria-hidden="true" data-itemid="{{actor.system.advantages.quintessence._id}}" data-field="temporary" data-value="1" data-action="quintessenceHandling"></i>
+                    {{localize actor.system.advantages.quintessence.system.label}}
+                    <i class="fa fa-arrow-circle-down quintessenceBtn pointer" aria-hidden="true" data-itemid="{{actor.system.advantages.quintessence._id}}" data-field="temporary" data-value="-1" data-action="quintessenceHandling"></i>
+                </span>
+            </div>
+
+            <div class="quintessence quintessence-wheel" data-name="data.system.quintessence" style="--count: {{actor.system.advantages.quintessence.system.max}};">
+                {{#numLoop actor.system.advantages.quintessence.system.max}}
+                    <span class="resource-value-step quintessence wheel-step"
+                          style="--index: {{this}};"
+                          data-type="{{../config.sheettype.mage}}"
+                          data-index="{{this}}"
+                          data-state="{{quintessenceWheel_v2 ../actor.system.advantages.quintessence ../actor.system.advantages.paradox this}}"
+                          data-action="quintessenceWheelClick"
+                          data-quintessenceid="{{../actor.system.advantages.quintessence._id}}"
+                          data-paradoxid="{{../actor.system.advantages.paradox._id}}"></span>
+                {{/numLoop}}
+            </div>
+
+            {{#if showParadox}}
+
+                <div class="sheet-headline sheet-banner-small splatFont" style="margin-top: 10px;">
+                    <span class="sheet-banner-text">
+                        <i class="fa fa-arrow-circle-up paradoxBtn pointer" aria-hidden="true" data-itemid="{{actor.system.advantages.paradox._id}}" data-field="temporary" data-value="1" data-action="quintessenceHandling"></i>
+                        <span class="vrollable" data-type="{{config.sheettype.mage}}" data-key="paradox" data-noability="true" data-action="rollDice">
+                            {{localize actor.system.advantages.paradox.system.label}}
+                        </span>
+                        <i class="fa fa-arrow-circle-down paradoxBtn pointer" aria-hidden="true" data-itemid="{{actor.system.advantages.paradox._id}}" data-field="temporary" data-value="-1" data-action="quintessenceHandling"></i>
+                    </span>
+                </div>
+
+            {{/if}}
+        </div>
+    </div>
+</div>
