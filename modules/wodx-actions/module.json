@@ -1,0 +1,40 @@
+{
+  "id": "vtda20-actions",
+  "title": "VtDA20 Non-Combat Actions",
+  "description": "Non-combat actions for the World of Darkness 20th Edition system with a menu for every actor type: Kindred (hunting, feeding, blood, frenzy, Road, torpor, diablerie), ghoul, mortal, hunter, Garou (Rage, Gnosis, forms, regeneration), mage (Arete casting), changeling (cantrips, Glamour, Banality), wraith (Pathos, Corpus, Angst), spirit, creature and generic Demon/Mummy/Exalted, plus the dramatic-system presets.",
+  "version": "2.2.1",
+  "authors": [
+    {
+      "name": "Benjamin LeBrun"
+    }
+  ],
+  "compatibility": {
+    "minimum": "12",
+    "verified": "14"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "worldofdarkness",
+        "type": "system",
+        "compatibility": {
+          "minimum": "3.0.0"
+        }
+      }
+    ],
+    "recommends": [
+      {
+        "id": "vtda20-combat",
+        "type": "module",
+        "reason": "Shares the health-track rules; damage is routed through it when both are active."
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/vtda20-actions.js"
+  ],
+  "styles": [
+    "styles/vtda20-actions.css"
+  ],
+  "socket": true
+}

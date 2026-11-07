@@ -1,0 +1,33 @@
+{
+  "id": "vtda20-combat",
+  "title": "VtDA20 Combat Automation",
+  "description": "Combat automation for the World of Darkness 20th Edition system with actor-type profiles: Kindred, ghoul, mortal, hunter, Garou/Changing Breed, mage, changeling, wraith/ghost, spirit, creature, demon, mummy and Exalted. Attack, defense, damage, soak (silver, cold iron, Fortitude, armor), health track, Rage extra actions, VtDA20 maneuvers and optional World of Darkness: Combat maneuvers.",
+  "version": "2.2.1",
+  "authors": [
+    {
+      "name": "Benjamin LeBrun"
+    }
+  ],
+  "compatibility": {
+    "minimum": "12",
+    "verified": "14"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "worldofdarkness",
+        "type": "system",
+        "compatibility": {
+          "minimum": "3.0.0"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/vtda20-combat.js"
+  ],
+  "styles": [
+    "styles/vtda20-combat.css"
+  ],
+  "socket": true
+}

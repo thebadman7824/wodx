@@ -1,0 +1,37 @@
+.vta-card h3 { margin: 0 0 3px; border-bottom: 1px solid #5b1a3a; color: #4a0f2e; font-size: 1.05em; }
+.vta-card .vta-sub { font-style: italic; font-size: 0.9em; margin-bottom: 3px; }
+.vta-card .vta-sec { margin: 4px 0; padding: 3px 4px; background: rgba(0,0,0,0.05); border-radius: 3px; }
+.vta-card .vta-parts { font-size: 0.8em; color: #555; }
+.vta-card .vta-res { font-weight: bold; }
+.vta-card .vta-res.good, .vta-card .vta-big.good { color: #1d5e1d; }
+.vta-card .vta-res.bad, .vta-card .vta-big.bad, .vta-card .vta-warn { color: #9b1010; }
+.vta-card .vta-big { text-align: center; font-weight: bold; margin: 4px 0; }
+.vta-card .vta-note, .vta-dialog .vta-note { font-size: 0.85em; font-style: italic; }
+.vta-card button.vta-btn { margin-top: 3px; line-height: 1.6; }
+.vta-card ul { margin: 2px 0; padding-left: 1.2em; }
+.vta-dice { display: flex; flex-wrap: wrap; gap: 2px; margin: 2px 0; }
+.vta-die { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 3px; border: 1px solid #444; font-weight: bold; font-size: 0.85em; }
+.vta-die.hit { background: #d9ead3; }
+.vta-die.spec { background: #b6d7a8; outline: 2px solid #38761d; }
+.vta-die.one { background: #f4cccc; color: #900; }
+.vta-die.miss { background: #eee; color: #888; }
+.vta-dialog fieldset { margin-bottom: 6px; }
+.vta-dialog .form-group label { flex: 2; }
+.vta-dialog .vta-table { width: 100%; font-size: 0.9em; }
+.vta-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 6px; }
+.vta-menu button { text-align: left; line-height: 1.8; }
+.vtda20-dialog fieldset { margin-bottom: 6px; }
+.vtda20-dialog .form-group { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+.vtda20-dialog .form-group label { flex: 2; }
+
+/* ---- v2.0.1: dialogs never taller than the screen; content scrolls; compact type menu ---- */
+.vtda20-dialog .window-content, .vta-dialog .window-content, .vtc-dialog .window-content { overflow-y: auto; min-height: 0; }
+.vtda20-dialog .dialog-content, .vta-dialog .dialog-content, .vtc-dialog .dialog-content { overflow-y: auto; min-height: 0; }
+.vta-grp-wrap { font-size: 0.92em; }
+.vta-grp-wrap .vta-menu-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin: 0 0 4px; }
+.vta-grp-wrap fieldset.vta-grp { margin: 0 0 4px; padding: 2px 6px 6px; border-radius: 4px; }
+.vta-grp-wrap fieldset.vta-grp legend { font-size: 0.85em; padding: 0 4px; opacity: 0.8; }
+.vta-grp-wrap .vta-grp-btns { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 3px; }
+.vta-grp-wrap .vta-grp-btns button { text-align: left; line-height: 1.5; padding: 2px 6px; white-space: normal; height: auto; min-height: 26px; margin: 0; }
+
+.vta-card .vta-flavor { margin: 6px 2px 2px; padding-top: 4px; border-top: 1px dotted #7a1e1e; font-style: italic; font-family: "Signika", serif; color: #3a2a22; line-height: 1.3; }
