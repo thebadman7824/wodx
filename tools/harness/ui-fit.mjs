@@ -34,7 +34,16 @@ for ( let i = 0; i < 211; i++ ) {
   const id = `scene${String(i).padStart(11, "0")}`;
   game.scenes.set(id, {id, name: i % 3 ? `⚔ BATTLEMAP · Locus · A Very Long Scene Name Number ${i}` : `Lower Town · Place ${i}`,
     flags: {}, regions: [], getFlag(s, k) { return this.flags?.[s]?.[k]; }});
+  // Thirty world maps with twin art, for the twin levels window
+  if ( i < 30 ) {
+    const lv = {id: `${id}L`, name: "Ground", elevation: {bottom: 0, top: 20, base: 0}, background: {src: `maps/m${i}.webp`}, flags: {}, getFlag() { return undefined; }};
+    const s = game.scenes.get(id);
+    s.levels = new Coll([[lv.id, lv]]);
+    s.tiles = Array.from({length: 6}, (_, k) => ({id: `${id}t${k}`, texture: {src: `maps/roofs/m${i}--0${k}.webp`}, levels: new Set(), getFlag() {}}));
+    s.lights = [];
+  }
 }
+const twinManifest = {files: Object.fromEntries(Array.from({length: 30}, (_, i) => [`maps/m${i}.webp`, {penumbra: `t/m${i}--penumbra.webp`, shadowlands: `t/m${i}--shadowlands.webp`}]))};
 await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-otherworlds/scripts/main.mjs"));
 await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
@@ -75,6 +84,8 @@ const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
 const {PassYearsApp} = await import(join(root, "modules/wodx-creation/scripts/pass-years.mjs"));
 const timeMod = await import(join(root, "modules/wodx-creation/scripts/time.mjs"));
 // The window with a plan on show: every character has changes to tick
+const {TwinsApp} = await import(join(root, "modules/wodx-otherworlds/scripts/twins-app.mjs"));
+class LoadedTwinsApp extends TwinsApp { constructor(o) { super(o); this.manifest = twinManifest; } }
 class PlannedPassYears extends PassYearsApp {
   constructor(o) { super(o); this.plan = timeMod.planSkip({from: game.time.worldTime, to: timeMod.addYears(game.time.worldTime, 150)}); }
 }
@@ -83,7 +94,7 @@ const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
   ["House rules", HouseRulesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
   ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
-  ["Pass the years", PlannedPassYears, {}]] ) {
+  ["Pass the years", PlannedPassYears, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);
   await app.render({force: true});
   const content = app.element.querySelector("section.window-content").innerHTML;
@@ -113,6 +124,14 @@ globalThis.canvas = {tokens: {controlled: [{document: {name: "Test Garou", actor
 CONFIG.worldofdarkness.sheettype.changingbreed = "Changing Breed";
 const ow = await import(join(root, "modules/wodx-otherworlds/scripts/crossing.mjs"));
 await ow.stepSideways({mode: "cross"});
+globalThis.game.user.targets = new Set([{document: {name: "Target", actor: {name: "Target", type: "Mortal", getFlag() {}}}}]);
+const senses = await import(join(root, "modules/wodx-otherworlds/scripts/senses.mjs"));
+await senses.readTheSoul({reader: canvas.tokens.controlled[0].document, target: {name: "Target", actor: {name: "Target", type: "Mortal", getFlag() {}}}});
+await senses.editAura({name: "Sister Agnes", type: "Mortal", system: {}, getFlag() {}});
+await ow.crossShroud();
+const tw = await import(join(root, "modules/wodx-otherworlds/scripts/twins.mjs"));
+const twinned = {...scene, levels: new Coll([["a", {id: "a", getFlag: () => "penumbra", flags: {}}]]), tiles: [], lights: [], tokens: [], unsetFlag() {}};
+await tw.removeTwins(twinned);
 const {buildPenumbraPrototype} = await import(join(root, "modules/wodx-otherworlds/scripts/prototype.mjs"));
 await buildPenumbraPrototype(scene);
 const change = await import(join(root, "modules/wodx-creation/scripts/change-of-state.mjs"));

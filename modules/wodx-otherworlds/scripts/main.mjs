@@ -1,5 +1,8 @@
 import {MODULE_ID, behaviorType, makeRatingsBehavior, placeOf} from "./ratings.mjs";
-import {registerStatuses, stepSideways, clearCrossing, onApplyChangeGM, STATUS} from "./crossing.mjs";
+import {registerStatuses, stepSideways, clearCrossing, onApplyChangeGM, STATUS, crossShroud, checkYearAndDay, registerYearHandler, disconnectionOf, worldOf} from "./crossing.mjs";
+import * as twins from "./twins.mjs";
+import {TwinsApp} from "./twins-app.mjs";
+import * as senses from "./senses.mjs";
 import {TaggingApp, writeReport, writeChartsPage} from "./tagging-app.mjs";
 import {buildPenumbraPrototype} from "./prototype.mjs";
 import * as rules from "./rules.mjs";
@@ -32,12 +35,25 @@ Hooks.once("ready", () => {
     stepSideways: () => stepSideways({mode: "cross"}),
     peek: () => stepSideways({mode: "peek"}),
     clearCrossing, openRatings: () => TaggingApp.open(), writeReport, writeChartsPage,
-    buildPenumbraPrototype, placeOf, rules, STATUS
+    buildPenumbraPrototype, placeOf, rules, STATUS,
+    crossShroud, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
+    readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {otherworlds: api});
   // Record the charts in Chronicle Rules once WoDX Chronicle has written that journal
   if ( game.users.activeGM?.isSelf ) setTimeout(() => writeChartsPage().catch(err => console.error("WoDX |", err)), 3000);
+  // The year-and-a-day proposals go to WoDX Chronicle's approval queue
+  if ( game.modules.get("wodx-chronicle")?.api ) registerYearHandler();
+  else Hooks.once("wodxChronicleReady", () => registerYearHandler());
+});
+
+const skipping = () => !!game.modules.get("wodx-chronicle")?.api?.isSkipping?.();
+Hooks.on("updateWorldTime", () => {
+  if ( active && !skipping() ) checkYearAndDay().catch(err => console.error("WoDX |", err));
+});
+Hooks.on("wodxSkipEnd", () => {
+  if ( active ) checkYearAndDay().catch(err => console.error("WoDX |", err));
 });
 
 Hooks.on("wodxEraApplied", () => {
@@ -55,6 +71,22 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxPeek = {
     name: "wodxPeek", title: "Peek across the Gauntlet", icon: "fa-solid fa-eye", order: 111,
     button: true, visible: true, onChange: () => stepSideways({mode: "peek"})
+  };
+  tokens.tools.wodxShroud = {
+    name: "wodxShroud", title: "Cross the Shroud (Storyteller)", icon: "fa-solid fa-skull", order: 113,
+    button: true, visible: game.user.isGM, onChange: () => crossShroud()
+  };
+  tokens.tools.wodxTwins = {
+    name: "wodxTwins", title: "Penumbra and Shadowlands levels", icon: "fa-solid fa-clone", order: 114,
+    button: true, visible: game.user.isGM, onChange: () => TwinsApp.open()
+  };
+  tokens.tools.wodxSoul = {
+    name: "wodxSoul", title: "Read the Soul (select the reader, target the one read)", icon: "fa-solid fa-hand-sparkles", order: 115,
+    button: true, visible: true, onChange: () => senses.readTheSoul()
+  };
+  tokens.tools.wodxAura = {
+    name: "wodxAura", title: "Set the aura of the selected token's character", icon: "fa-solid fa-palette", order: 116,
+    button: true, visible: game.user.isGM, onChange: () => senses.editAura(canvas?.tokens?.controlled?.[0]?.actor)
   };
   tokens.tools.wodxRatings = {
     name: "wodxRatings", title: "Otherworld ratings by scene", icon: "fa-solid fa-ghost", order: 112,

@@ -114,3 +114,19 @@ test("Rothenstein preset uses the plan's three tags only", () => {
   assert.equal(p.scenes["Locus · The Silver Adit"], "wilderness");
   assert.equal(p.scenes["Dolany Village"], "village");
 });
+
+test("Disconnection: +1 per lunar cycle in one world, a year and a day at 366 days (W20 p. 319)", () => {
+  const day = 86400;
+  assert.deepEqual(R.disconnection(null), {known: false, days: 0, cycles: 0, yearAndDay: false});
+  assert.equal(R.disconnection(29 * day).cycles, 0);
+  assert.equal(R.disconnection(30 * day).cycles, 1);
+  assert.equal(R.disconnection(120 * day).cycles, 4);
+  assert.equal(R.disconnection(365 * day).yearAndDay, false);
+  assert.equal(R.disconnection(366 * day).yearAndDay, true);
+  const base = {procedure: "w20", gauntlet: 5, mode: "cross", inUmbra: false, reflective: true};
+  assert.equal(R.planAttempt({...base, cycles: 2}).difficulty, 7);
+  assert.match(R.planAttempt({...base, cycles: 2}).lines.join(" "), /Disconnection: 2 lunar cycles/);
+  assert.equal(R.planAttempt({...base, cycles: 9}).difficulty, 10, "at most 10");
+  assert.equal(R.planAttempt({...base, mode: "peek", cycles: 3}).difficulty, 8, "peeking is not crossing: only +3 for the peek");
+  assert.match(R.planAttempt({...base, procedure: "dark-ages", cycles: 1}).lines.join(" "), /WoDX choice/);
+});

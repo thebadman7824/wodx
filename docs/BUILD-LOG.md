@@ -133,3 +133,29 @@
 - Read back from the worlds: wodx-template's "WoDX Time-Skip Test" journal says 27 of 27 checks passed (steps 1347, 1450, 1837, 1914, 1997, 2025). rothenstein-wodx is restored from Foundry's 7 November backup: Dark Ages era, clock back in 1200.
 - Log review: two errors at 07:55:57, when the world was shut down for the restore ("Database settings is not ready", then the core "semaphore" error). A client wrote while the world closed; the same core race seen in Phases 1 and 2. Nothing else from WoDX.
 - rothenstein-wodx stays the project testbed (B30). Phase 4 complete.
+
+### Phase 5, built 2026-11-07: the twin worlds and Read the Soul
+
+- **Twin night maps.** Ben chose the 22 world maps, Penumbra and Shadowlands, and twins filtered from the night maps. 44 map twins and 208 roof twins were made, keeping the geometry and keeping it night. They are in `Data/wodx-assets/twins`, listed in `manifest.json`. Contact sheets were checked by eye.
+  - Penumbra: silvered moonlight, living things glowing faintly, and a fine Weaver web on stonework.
+  - Shadowlands: colour drained, rot and cracks, lights turned to a pale grave-light.
+- **WoDX Otherworlds 0.2.0.**
+  - Twin levels:
+    - Each scene gets a Penumbra level (1000–1008) and a Shadowlands level (2000–2008).
+    - Roofs, props and lights are copied onto each twin level. Lights are colder and dimmer there.
+    - Travel regions are copied too, and each copy is linked to the far side's twin.
+    - A backup goes to `Data/wodx-backups/scenes` first. Building again only adds what is missing. Removal asks first.
+  - Stepping sideways keeps the token's height.
+  - Cross the Shroud.
+  - Disconnection (W20 p. 319), with the year-and-a-day proposal.
+  - Umbral paths.
+  - Read the Soul (V20 Dark Ages p. 195), with a blind roll, a false reading on a botch, and an aura overlay for the reader only.
+- **Found while checking the world's data.** The 22 maps carry 62 Teleport Token travel regions on every level. Foundry 14 refuses to teleport into a region that is on every level of a scene with several levels ("Region is in multiple levels"), so building twins would have broken every road between maps.
+  - Fix: the physical road now keeps to the physical level.
+  - Each twin level gets its own copy, pointed at the far side's twin.
+  - A twin road stays switched off until the far side is built, so nobody in the Umbra lands in the physical world.
+- **New rule B31:** one Umbra. Where the lines conflict, Wraith comes first, then Werewolf, then Mage. It is in the Master Plan, DECISIONS and Chronicle Rules. Two conflicts are decided so far:
+  - The Shadowlands lie beyond the Shroud, not the Gauntlet.
+  - Each map has one Penumbra level and one Shadowlands level.
+- **Automatic checks:** 19, 9 and 14 unit tests; 77 harness tests (17 new); UI fit passes with the twin levels window and four new dialogs. All pass. The aura overlay draws in well under a frame in the harness.
+- Installed. Gate waiting on Ben: every twin map checked at night.

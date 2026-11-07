@@ -235,6 +235,13 @@ export async function writeChartsPage() {
       <li><strong>Shift time:</strong> 1 success, five minutes; 2, thirty seconds; 3 or more, instantly.</li>
       <li><strong>Packs:</strong> the opener of the way, usually the highest Gnosis, rolls once for the whole pack.</li>
       <li><strong>WoDX reading:</strong> when a caught traveler succeeds, or a packmate's roll frees them, they arrive on the far side.</li>
+      <li><strong>Disconnection</strong> (W20 p. 319): each lunar cycle spent in one world makes crossing to the other 1 harder; after a year and a day in the Penumbra a shapechanger begins to become a creature of spirit (proposed to the Storyteller). WoDX choice: the same rule is used in the Dark Ages, which gives none.</li>
+    </ul>
+    <h2>One Umbra</h2>
+    <p>Where the lines' rules or ideas of the spirit world conflict, WoDX follows Wraith: the Oblivion first, then Werewolf: the Apocalypse, then Mage: the Ascension. Conflicts decided so far:</p>
+    <ul>
+      <li><strong>The Shadowlands are beyond the Shroud, not the Gauntlet.</strong> Wraith puts the Shroud between the living world and the Shadowlands; Werewolf and Mage fold the lands of the dead into the wider Umbra behind the Gauntlet. WoDX keeps them apart: a map's Shadowlands level is reached by crossing the Shroud, and stepping sideways cannot start or end there.</li>
+      <li><strong>Each map has one Penumbra and one Shadowlands level.</strong> Mage's three Umbrae and Werewolf's Near Umbra realms beyond the Penumbra are scenes of their own, reached by Umbral paths.</li>
     </ul>`;
   const page = rules.pages.getName("Gauntlet charts");
   if ( page ) await page.update({"text.content": html});

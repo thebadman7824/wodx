@@ -174,6 +174,11 @@ export function planAttempt(p) {
     }
     difficulty = Math.min(10, difficulty);
   }
+  // Disconnection (W20 p. 319): each lunar cycle spent in one world makes crossing to the other 1 harder
+  if ( p.mode === "cross" && p.cycles > 0 ) {
+    difficulty = Math.min(10, difficulty + p.cycles);
+    lines.push(`Disconnection: ${p.cycles} lunar cycle${p.cycles === 1 ? "" : "s"} in this world +${p.cycles} (W20 p. 319${p.procedure === "dark-ages" ? "; WoDX choice to use it in the Dark Ages" : ""})`);
+  }
   difficulty = Math.max(1, difficulty);
   const allowed = blocks.length === 0 || !!p.override;
   if ( blocks.length && p.override ) lines.push("The Storyteller allows the attempt anyway.");
@@ -246,4 +251,24 @@ export function suggestSettlement(name) {
 export function battlemapParent(name) {
   const m = /^⚔\s*BATTLEMAP\s*·\s*(.+)$/u.exec(String(name ?? ""));
   return m ? m[1] : null;
+}
+
+/* -------------------------------------------- */
+/*  Disconnection                               */
+/* -------------------------------------------- */
+
+/** One lunar cycle, new moon to new moon, in days. */
+export const LUNAR_CYCLE_DAYS = 29.53059;
+/** A year and a day (W20 p. 319), taken as 366 days. */
+export const YEAR_AND_A_DAY_DAYS = 366;
+
+/**
+ * How long a traveler has been in one world, and what it costs.
+ * @param {number|null} seconds   Time since they last crossed; null when there is no record
+ * @returns {{known: boolean, days: number, cycles: number, yearAndDay: boolean}}
+ */
+export function disconnection(seconds) {
+  if ( seconds === null || seconds === undefined || !Number.isFinite(seconds) || seconds < 0 ) return {known: false, days: 0, cycles: 0, yearAndDay: false};
+  const days = seconds / 86400;
+  return {known: true, days, cycles: Math.floor(days / LUNAR_CYCLE_DAYS), yearAndDay: days >= YEAR_AND_A_DAY_DAYS};
 }

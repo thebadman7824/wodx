@@ -83,11 +83,11 @@ await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-otherworlds/scripts/main.mjs"));
 game.modules.set(M, {});
 
-test("init registers the ratings behavior and the three statuses", async () => {
+test("init registers the ratings behavior and the four statuses", async () => {
   await Hooks.callAll("init");
   assert.ok(CONFIG.RegionBehavior.dataModels[`${M}.ratings`]);
   assert.equal(CONFIG.RegionBehavior.typeLabels[`${M}.ratings`], "WoDX: Otherworld ratings");
-  assert.deepEqual(CONFIG.statusEffects.map(s => s.id).sort(), ["wodx-caught", "wodx-lost", "wodx-umbra"]);
+  assert.deepEqual(CONFIG.statusEffects.map(s => s.id).sort(), ["wodx-caught", "wodx-lost", "wodx-shadowlands", "wodx-umbra"]);
 });
 
 test("ready exposes the API and the Dark Ages chart is in force", async () => {
