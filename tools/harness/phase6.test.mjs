@@ -371,6 +371,83 @@ test("the automatic attack picks the weapon with the most expected harm", async 
   assert.equal(R.expectedHarm({atkDice: 0, atkDiff: 6, dmgBase: 4}).hitChance, 0);
 });
 
+test("automatic options: facing, Fortitude policy, when spending is worth it (pure rules)", async () => {
+  const AU = game.wodxCombat.auto;
+  const t = {x: 0, y: 0};
+  assert.equal(AU.facingSide(t, 180, {x: 0, y: -50}), "front", "rotation 180: facing up the screen");
+  assert.equal(AU.facingSide(t, 180, {x: 0, y: 50}), "rear");
+  assert.equal(AU.facingSide(t, 180, {x: 50, y: 0}), "flank");
+  assert.equal(AU.facingSide(t, 0, {x: 0, y: 50}), null, "rotation never set: facing unknown, so front");
+  assert.equal(AU.fortitudeDecision("aggravated", {dmgType: "aggravated", fortitude: 2, blood: 3}), true);
+  assert.equal(AU.fortitudeDecision("aggravated", {dmgType: "lethal", fortitude: 2, blood: 3}), false);
+  assert.equal(AU.fortitudeDecision("always", {dmgType: "lethal", fortitude: 2, blood: 3}), true);
+  assert.equal(AU.fortitudeDecision("always", {dmgType: "aggravated", fortitude: 2, blood: 3, fireOrSun: true}), false, "never against fire or sunlight");
+  assert.equal(AU.fortitudeDecision("always", {dmgType: "lethal", fortitude: 2, blood: 0}), false, "no blood, no spend");
+  assert.equal(AU.worthIt({hitChance: 0.4, expectedLevels: 1}, {hitChance: 0.6, expectedLevels: 1.1}), true);
+  assert.equal(AU.worthIt({hitChance: 0.9, expectedLevels: 2}, {hitChance: 0.93, expectedLevels: 2.1}), false);
+  assert.equal(AU.countThisRound([{combatId: "c", round: 2, attacker: "A"}, {combatId: "c", round: 1, attacker: "A"}], {combatId: "c", round: 2}, d => d.attacker === "A"), 1);
+});
+
+test("quick attack: one click, automatic everything; the second attack and defense of the turn are counted", async () => {
+  const C = game.wodxCombat;
+  // Dice: a queue of faces, then 10s
+  const faces = [];
+  globalThis.Roll = class { constructor(f) { this.formula = f; } async evaluate() {
+    const n = Number(/^(\d+)d10/.exec(this.formula)?.[1] ?? 1); const res = Array.from({length: n}, () => ({result: faces.shift() ?? 10}));
+    this.dice = [{results: res, total: res.reduce((a, r) => a + r.result, 0)}]; this.total = this.dice[0].total; return this; } };
+  const msgs = [];
+  game.messages = {get contents() { return msgs; }, get size() { return msgs.length; }, get: id => msgs.find(m => m.id === id)};
+  const origCreate = ChatMessage.create;
+  ChatMessage.create = async data => { const m = {...data, id: `m${msgs.length}`, getFlag(s, k) { return this.flags?.[s]?.[k]; }, async update() { return this; }}; msgs.push(m); return m; };
+  ChatMessage.getSpeaker ??= () => ({alias: "test"});
+  CONFIG.sounds ??= {dice: ""};
+  await game.settings.set("wodx-combat", "autoApply", false);
+  const prevCombat = game.combat;
+  game.combat = {id: "c1", started: true, round: 3};
+  const sys = (ab) => ({attributes: Object.fromEntries(Object.entries({dexterity: 3, strength: 3, stamina: 2, wits: 2}).map(([k, v]) => [k, {value: v, total: v}])),
+    abilities: Object.fromEntries(Object.entries(ab).map(([k, v]) => [k, {value: v}])), health: {damage: {woundpenalty: 0}}});
+  const atk = makeActor("Quick Swordsman", "Mortal", {system: sys({melee: 3})});
+  atk.items = [{id: "sw2", type: "Melee Weapon", name: "Long sword", system: {isequipped: true, damage: {attribute: "strength", bonus: 2, type: "lethal"}, attack: {attribute: "dexterity", ability: "melee"}, difficulty: 6}}];
+  const def = makeActor("Quick Victim", "Mortal", {system: sys({athletics: 2})});
+  const [r1] = await C.quickAttack({attacker: {actor: atk}, target: {actor: def}});
+  assert.ok(r1?.message, "an attack card");
+  const d1 = r1.message.flags["wodx-combat"].data;
+  assert.equal(d1.combatId, "c1"); assert.equal(d1.round, 3); assert.equal(d1.defended, true, "the victim dodged");
+  assert.match(r1.message.content, /Automatic attack: Long sword/);
+  assert.equal(C.defensesThisRound(def), 1);
+  assert.equal(C.attacksThisRound(atk), 1);
+  const [r2] = await C.quickAttack({attacker: {actor: atk}, target: {actor: def}});
+  assert.match(r2.message.content, /attack 2 this turn/);
+  assert.match(r2.message.content, /defense 2 this turn \(−1 die\)/);
+  // Hints: Willpower and the maneuver suggestion are computed, never applied
+  const hints = C.attackHints(atk, def, {weapon: "auto", maneuver: "normal", defense: "auto", flank: "auto", multi: "auto", defIndex: "auto"});
+  assert.match(hints[0], /Expected:/);
+  game.combat = prevCombat;
+  ChatMessage.create = origCreate;
+});
+
+test("initiative rolls itself when a fight starts and each new turn (setting)", async () => {
+  const msgs = [];
+  const origCreate = ChatMessage.create;
+  ChatMessage.create = async data => { msgs.push(data); return data; };
+  const mk = name => ({id: name, name, isOwner: true, isDefeated: false, actor: makeActor(name, "Mortal", {system: {attributes: {dexterity: {value: 2, total: 2}, wits: {value: 3, total: 3}}, health: {damage: {woundpenalty: 0}}}})});
+  const updates = [];
+  const combat = {id: "c9", round: 1, started: true, combatants: {contents: [mk("Ann"), mk("Bo")]}, async updateEmbeddedDocuments(t, u) { updates.push(...u); }};
+  assert.equal(game.settings.get("wodx-combat", "autoInitiative"), "round");
+  await Hooks.callAll("combatStart", combat);
+  await new Promise(r => setTimeout(r, 30));
+  assert.equal(updates.length, 2, "both combatants rolled");
+  assert.match(msgs.at(-1).content, /Initiative, turn 1/);
+  combat.round = 2;
+  await Hooks.callAll("updateCombat", combat, {round: 2});
+  await new Promise(r => setTimeout(r, 30));
+  assert.equal(updates.length, 4, "rolled again on the new turn");
+  await Hooks.callAll("updateCombat", combat, {round: 2});
+  await new Promise(r => setTimeout(r, 30));
+  assert.equal(updates.length, 4, "not twice for one turn");
+  ChatMessage.create = origCreate;
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

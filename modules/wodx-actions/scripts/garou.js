@@ -327,6 +327,11 @@ export function build(ctx) {
             if (fd.use === "actions" && pts > capx.max) { ctx.notify(`At most ${capx.max} Rage for actions this turn.`); return null; }
             const note = await pay(actor, "rage", pts); if (note === false) return null;
             let body = `<div class="vta-parts">${esc(note)}</div>` + await markTurn(actor, "rage");
+            if (fd.use === "actions" && turnKey() && actor.isOwner) {
+                // WoDX Combat reads this: the extra actions carry no multiple-action penalty, and the initiative card lists them
+                const prev = actor.getFlag?.(MOD, "extraActions");
+                await actor.setFlag(MOD, "extraActions", { key: turnKey(), n: (prev?.key === turnKey() ? n(prev.n) : 0) + pts });
+            }
             if (fd.use === "actions") body += `<div class="vta-note">${pts} extra action${pts === 1 ? "" : "s"}; no splitting pools${b === "daw" && pts > capx.safe ? `; actions past ${capx.safe} are at +3 difficulty` : ""}. Spent Rage is lost even if an action goes unused.</div>`;
             if (fd.use === "stun") body += `<div class="vta-note">Acts normally despite losing more levels than Stamina this turn (W20 p. 144; DA:W p. 91).</div>`;
             if (fd.use === "pain") body += `<div class="vta-note">One health level's penalty is ignored for this turn; the wound stays (DA:W p. 91).</div>`;

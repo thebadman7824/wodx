@@ -21,6 +21,7 @@ import * as R from "./rules.js";
 import * as P from "./profiles.js";
 import * as F from "./flavor.js";
 import * as L from "./legacy.js";
+import * as AU from "./auto.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -59,6 +60,9 @@ function registerSettings() {
     s("showKindMenus", "Show actor-type options",
         "Show the attacker/defender type selectors and the type-specific options (Rage, Glamour, Pathos, banes...) in the attack dialog.",
         Boolean, true);
+    s("autoInitiative", "Roll initiative automatically",
+        "Roll everyone's initiative (d10 + Dexterity + Wits) when a fight starts, or at the start of every turn as VtDA20 does (p. 322).",
+        String, "round", { choices: { round: "Every turn", start: "When the fight starts", off: "Off" } });
     s("flavorText", "Flavor text on attack cards",
         "Add one short line of description under the dice of each attack card, picked to fit the outcome (miss, hit, heavy hit, soaked, botch). Edit the lines in scripts/flavor.js.",
         String, "all", { choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
@@ -438,6 +442,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
 <form class="vtc-form">
   <p class="vtc-head"><b>${attacker.name}</b> attacks <b>${target ? target.name : "(no target)"}</b></p>
   ${condNotes}
+  <div class="vtc-note vtc-hints" aria-live="polite"></div>
   ${kinds ? `<fieldset><legend>Actor types</legend>
     <div class="form-group"><label>Attacker</label><select name="atkKind" data-fixed>${kindOpts("auto", `Automatic — ${P.profileLabel(aKind)}`)}</select></div>
     <div class="form-group"><label>Defender</label><select name="profile" data-fixed>${kindOpts("auto", `Automatic — ${P.profileLabel(tKind)}`)}</select></div>
@@ -449,10 +454,11 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>
     <div class="form-group"><label>Range (ranged)</label><select name="range" data-fixed>${opts(R.RANGE, "short")}</select></div>
     <div class="form-group"><label>Position</label><select name="flank" data-fixed>
-       <option value="">Front</option><option value="flank">Flank (+1 die)</option><option value="rear">Rear (+2 dice)</option></select></div>
+       <option value="auto" selected>Automatic: from the tokens' facing</option><option value="">Front</option><option value="flank">Flank (+1 die)</option><option value="rear">Rear (+2 dice)</option></select></div>
     <div class="form-group"><label>Multiple actions: this is action #</label><select name="multi" data-fixed>
-       <option value="0">Only action</option><option value="1">1 of several (+1/-1)</option><option value="2">2 (+2/-2)</option><option value="3">3 (+3/-3)</option><option value="4">4 (+4/-4)</option></select></div>
-    <div class="form-group"><label>Opponents engaged</label><input type="number" name="opponents" value="1" min="1" max="6"/></div>
+       <option value="auto" selected>Automatic: count this turn's attacks</option><option value="0">Only action</option><option value="1">1 of several (+1/-1)</option><option value="2">2 (+2/-2)</option><option value="3">3 (+3/-3)</option><option value="4">4 (+4/-4)</option></select></div>
+    <div class="form-group"><label>Opponents engaged</label><input type="number" name="opponents" value="1" min="1" max="6"/>
+       <label><input type="checkbox" name="oppAuto" checked/> count from the tokens</label></div>
     <div class="form-group"><label>Extra dice / extra difficulty</label>
        <input type="number" name="extraDice" value="${cm.attackerDice}" style="width:4em"/> <input type="number" name="extraDiff" value="${cm.attackerDiff}" style="width:4em"/></div>
     <div class="form-group"><label>Extra damage dice</label><input type="number" name="extraDmg" value="0"/></div>
@@ -472,11 +478,12 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
       <option value="none">None / cannot defend</option><option value="dodge">Dodge (Dex + Athletics)</option>
       <option value="block">Block (Dex + Brawl)</option><option value="parry">Parry (Dex + Melee)</option></select></div>
     <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex" data-fixed>
-      <option value="0">First (full pool)</option><option value="1">Second (-1 die)</option><option value="2">Third (-2)</option><option value="3">Fourth (-3)</option></select></div>
+      <option value="auto" selected>Automatic: count this turn's defenses</option><option value="0">First (full pool)</option><option value="1">Second (-1 die)</option><option value="2">Third (-2)</option><option value="3">Fourth (-3)</option></select></div>
     <div class="form-group"><label>Defender extra dice / difficulty</label>
        <input type="number" name="defDice" value="0" style="width:4em"/> <input type="number" name="defDiff" value="${target ? L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0 : 0}" style="width:4em"/></div>
     ${tCel ? `<div class="form-group"><label><input type="checkbox" name="defCel" checked/> Defender Celerity ${tCel} (adds dice; dodge arrows normally)</label></div>` : ""}
-    ${tFort ? `<div class="form-group"><label><input type="checkbox" name="fortBlood"/> Fortitude ${tFort}: spend 1 blood to soak automatically</label></div>` : ""}
+    ${tFort ? `<div class="form-group"><label>Fortitude ${tFort}: spend 1 blood to soak automatically</label><select name="fortBlood" data-fixed>
+       <option value="auto" selected>Automatic: ${esc(AU.SOAK_POLICIES[soakPolicy(target)])}</option><option value="yes">Spend</option><option value="no">Don't spend</option></select></div>` : ""}
     <div class="form-group"><label><input type="checkbox" name="fireSun"/> Fire or sunlight (aggravated, armor useless)</label></div>
     <div class="form-group vtc-kind" data-dkinds="lupine demon mummy exalted"><label><input type="checkbox" name="bane" /> Silver: the Garou has no natural soak</label></div>
     <div class="form-group vtc-kind" data-dkinds="fae"><label><input type="checkbox" name="bane2"/> Cold iron: aggravated, no natural soak</label></div>
@@ -527,7 +534,7 @@ export async function attack({ attacker: a, target: t, weaponId } = {}) {
         title: `WoDX Attack — ${P.profileLabel(aKind)}`,
         content, width: 500, classes: ["vtc-dialog"],
         buttons: [{ id: "attack", label: "Attack", icon: "fas fa-dice-d10", default: true }, { id: "cancel", label: "Cancel" }],
-        onRender: root => bindKinds(root, aKind, tKind)
+        onRender: root => { bindKinds(root, aKind, tKind); bindHints(root, { attacker, target, attackerTok, targetTok }); }
     });
     if (!r || r.id !== "attack") return null;
     const fd = r.data;
@@ -548,11 +555,16 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
     const cel = discipline(attacker, "Celerity"), pot = discipline(attacker, "Potence");
 
+    // ---- Automatic position, multiple actions, opponents and defense count (3.4.0)
+    const autoNotes = resolveAutoOptions(attacker, target, fd, { attackerTok, targetTok });
     // ---- Automatic weapon: the attack with the most expected harm against this target
     let autoAtkNote = "";
     if (w?.id === "auto" || !w) {
         const { best, plans, distance, ignoredDistance } = bestAttack(attacker, target, fd, { attackerTok, targetTok });
-        if (!best) throw new Error("No attack is possible from here with what is on the sheet.");
+        if (!best) {
+            const noDice = plans.some(p => p.why === "no dice to roll");
+            throw new Error(noDice ? `${attacker.name} has no dice left for an attack (wounds, penalties or multiple actions): it fails.` : "No attack is possible from here with what is on the sheet.");
+        }
         w = best.w;
         if (best.rangeBand && fd.range !== best.rangeBand) fd.range = best.rangeBand;
         const shown = plans.filter(p => p.valid).sort((a, b) => b.score - a.score).slice(0, 4)
@@ -630,6 +642,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const dp = damageProfile(target, tKind, w, fd);
     const { dmgType, bane, soakDiff, minLevels, sb } = dp;
     if (dp.note) log.push(dp.note);
+    const fortChoice = fd.fortBlood;
+    fd.fortBlood = resolveFortitude(target, fortChoice, dp, fd);
+    if (target && fortChoice === "auto" && fd.fortBlood && hit) autoNotes.push(`${target.name} spends blood for Fortitude (${AU.SOAK_POLICIES[soakPolicy(target)].toLowerCase()})`);
     if (hit && !maneuver.noDamage) {
         dmgPool = damagePool(attacker, w, net, maneuver, targeting, fd, pot);
         dmg = await rollPool(dmgPool.dice, 6, { canBotch: false, autoSuccesses: dmgPool.auto });
@@ -663,12 +678,15 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     }
 
     // ---- Chat card
+    const rk = roundKey();
     const data = {
         attacker: attacker.uuid, target: target?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
+        combatId: rk?.combatId ?? null, round: rk?.round ?? null, defended: !!(def && !def.invalid),
         type: outcome?.type, levels: outcome?.levels ?? 0, applied: false,
         counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null
     };
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
+    if (autoNotes.length) log.unshift(esc(`Automatic: ${autoNotes.join("; ")}.`));
     let html = attackCard({ attacker, target, w, ab, attrKey, pool, atk, def, defNote, autoNote, net, hit, dmg, dmgPool, soak, outcome, profile, armorBroken, counter, spendNotes, fd, maneuver, log });
     const fkey = F.attackKey({ hit, botch: atk.botch, noDamage: !!maneuver.noDamage, levels: soak ? (outcome?.levels ?? 0) : (dmg?.successes ?? 0),
         type: outcome?.type ?? w.type, soaked: !!(soak && hit && !maneuver.noDamage && !outcome?.levels) });
@@ -801,6 +819,7 @@ function planAttacks(attacker, target, fd, distance) {
             if (d?.valid) { defDice = d.dice; defDiff = d.diff; }
         }
         const dp = target ? damageProfile(target, tKind, w, f) : { dmgType: w.type || "lethal", minLevels: 0 };
+        if (target) f.fortBlood = resolveFortitude(target, fd.fortBlood, dp, f);
         const dmg = damagePool(attacker, w, 0, maneuver, targeting, f, pot);
         const sp = target ? soakPoolFor(target, profile, w, f, dp) : { dice: 0, autoSoak: 0 };
         const harm = R.expectedHarm({ atkDice: pool.dice, atkDiff: Math.min(10, pool.difficulty), atkAuto: f.willpower ? 1 : 0, defDice, defDiff,
@@ -1083,7 +1102,8 @@ export async function soakDialog({ tokens } = {}) {
   <div class="form-group"><label><input type="checkbox" name="noArmor"/> Armor does not apply</label></div>
   <div class="form-group"><label><input type="checkbox" name="bane"/> Bane: silver (Garou) or cold iron (changeling): no natural soak</label></div>
   <div class="form-group"><label><input type="checkbox" name="chimerical"/> Chimerical damage (only affects chimerical beings / changelings)</label></div>
-  <div class="form-group"><label><input type="checkbox" name="fortBlood"/> Spend blood for automatic Fortitude soak</label></div>
+  <div class="form-group"><label>Spend blood for automatic Fortitude soak</label><select name="fortBlood" data-fixed>
+     <option value="auto" selected>Automatic: each character's soak policy</option><option value="yes">Spend</option><option value="no">Don't spend</option></select></div>
   <div class="form-group"><label>Extra soak dice</label><input type="number" name="soakBonus" value="0"/></div>
 </form>`;
     const r = await P.ask({
@@ -1110,6 +1130,7 @@ export async function soakAndApply(tok, fd) {
     const sb = fd.bane ? shifterBane(actor, { name: "silver" }, fd) : null;
     let type = type0, bane = !!fd.bane, soakDiff = 6;
     if (sb) { bane = sb.bane && !sb.soak; if (sb.bane) { type = sb.type ?? type; soakDiff = sb.soakDiff ?? 6; } }
+    fd = { ...fd, fortBlood: resolveFortitude(actor, fd.fortBlood, { dmgType: type }, fd) };
     if (fd.soak) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
@@ -1146,7 +1167,7 @@ export async function soakAndApply(tok, fd) {
 /* ------------------------------------------------------------------ */
 
 /** VtDA20 initiative: 1d10 + Dexterity + Wits (+ Celerity) – wound penalty. */
-export async function rollInitiative({ combat = game.combat, combatants = null, all = false } = {}) {
+export async function rollInitiative({ combat = game.combat, combatants = null, all = false, automatic = false } = {}) {
     if (!combat) return ui.notifications.warn("WoDX Combat: no active combat encounter.");
     let list = combatants ?? (all ? combat.combatants.contents
         : combat.combatants.filter(c => c.isOwner && (canvas.tokens.controlled.length === 0 ? true : canvas.tokens.controlled.some(t => t.id === c.tokenId))));
@@ -1170,8 +1191,10 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         lines.push(`<tr><td>${c.name}</td><td>${roll.dice[0].total}</td><td>${dex}+${wits}${cel ? `+${cel}` : ""}${wp ? ` ${wp > -99 ? wp : ""}` : ""}</td><td><b>${roll.total}</b>${inc}</td></tr>`);
     }
     await combat.updateEmbeddedDocuments("Combatant", updates);
-    const content = `<div class="vtc-card"><h3>Initiative</h3><table class="vtc-init"><tr><th></th><th>d10</th><th>Dex+Wits</th><th>Total</th></tr>${lines.join("")}</table>
-      <div class="vtc-note">Actions are declared from lowest to highest initiative and resolved from highest to lowest (VtDA20 p. 322).</div></div>`;
+    const extra = list.map(c => [c.name, freeActionsIn(c.actor, combat)]).filter(([, n]) => n > 0);
+    const content = `<div class="vtc-card"><h3>Initiative${automatic ? `, turn ${combat.round || 1}` : ""}</h3><table class="vtc-init"><tr><th></th><th>d10</th><th>Dex+Wits</th><th>Total</th></tr>${lines.join("")}</table>
+      ${extra.length ? `<div class="vtc-note">Extra actions declared: ${extra.map(([n, k]) => `${esc(n)} ${k}`).join(", ")}.</div>` : ""}
+      <div class="vtc-note">Actions are declared from lowest to highest initiative and resolved from highest to lowest (VtDA20 p. 322).${automatic ? " Rolled automatically (setting)." : ""}</div></div>`;
     const md = { speaker: ChatMessage.getSpeaker(), content, rolls };
     if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL;
     return ChatMessage.create(md);
@@ -1185,7 +1208,9 @@ const MACROS = [
     { name: "WoDX: Attack", img: "icons/skills/melee/strike-sword-steel-yellow.webp", command: "game.wodxCombat.attack();" },
     { name: "WoDX: Soak & Apply Damage", img: "icons/equipment/shield/heater-steel-worn.webp", command: "game.wodxCombat.soakDialog();" },
     { name: "WoDX: Actor Type", img: "icons/svg/mystery-man.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.pickKind(a); else ui.notifications.warn('Select a token first.');" },
-    { name: "WoDX: Initiative", img: "icons/svg/d20-highlight.svg", command: "game.wodxCombat.rollInitiative({ all: game.user.isGM && canvas.tokens.controlled.length === 0 });" }
+    { name: "WoDX: Initiative", img: "icons/svg/d20-highlight.svg", command: "game.wodxCombat.rollInitiative({ all: game.user.isGM && canvas.tokens.controlled.length === 0 });" },
+    { name: "WoDX: Quick Attack", img: "icons/skills/melee/blade-tip-orange.webp", command: "game.wodxCombat.quickAttack();" },
+    { name: "WoDX: Soak Policy", img: "icons/svg/shield.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.setSoakPolicy(a); else ui.notifications.warn('Select a token first.');" }
 ];
 
 async function createMacros() {
@@ -1209,8 +1234,9 @@ Hooks.once("init", () => {
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.3.0",
-        conditionMods, dazedThreshold, bestDefense, bestAttack, _dialogs: { attackDialogHtml } };
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.4.0",
+        conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
+        defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
     L.alias("combat", "vtda20combat", api, "vtda20-combat");
     const mod = game.modules.get(MOD);
@@ -1225,6 +1251,23 @@ Hooks.once("ready", async () => {
     console.log(`${MOD} | ready`);
 });
 
+/* ------------------------------------------------------------------ */
+/*  Automatic initiative (3.4.0)                                       */
+/* ------------------------------------------------------------------ */
+
+const isActiveGM = () => game.user.isGM && (game.users.activeGM ? game.users.activeGM.id === game.user.id : true);
+Hooks.on("combatStart", combat => {
+    if (OFF || !isActiveGM() || setting("autoInitiative") === "off") return;
+    autoInitiative(combat).catch(e => console.error("WoDX |", e));
+});
+const lastInitRound = new Map();
+Hooks.on("updateCombat", (combat, changed) => {
+    if (OFF || !isActiveGM() || setting("autoInitiative") !== "round" || !("round" in (changed ?? {})) || !combat.started) return;
+    if (combat.round <= 1 || combat.round <= (lastInitRound.get(combat.id) ?? 0)) return;
+    lastInitRound.set(combat.id, combat.round);
+    autoInitiative(combat).catch(e => console.error("WoDX |", e));
+});
+
 Hooks.once("init", () => {
     if (OFF) return;
     if (GEN() >= 13) {
@@ -1233,6 +1276,203 @@ Hooks.once("init", () => {
         Hooks.on("renderChatMessage", (msg, html) => { if (msg.getFlag(MOD, "data")) bindCard(msg, html[0] ?? html); });
     }
 });
+
+/* ------------------------------------------------------------------ */
+/*  Automatic options (3.4.0)                                          */
+/* ------------------------------------------------------------------ */
+
+function roundKey() {
+    const c = game.combat;
+    return c?.started ? { combatId: c.id, round: c.round } : null;
+}
+/** The data of this module's recent attack cards (the last 300 messages). */
+function recentCards() {
+    return (game.messages?.contents ?? []).slice(-300).map(m => m.getFlag?.(MOD, "data")).filter(Boolean);
+}
+/** How many times this defender has already defended this turn (each further defense is −1 die, VtDA20 p. 344). */
+export function defensesThisRound(target) {
+    return target ? AU.countThisRound(recentCards(), roundKey(), d => d.defended && d.target === target.uuid) : 0;
+}
+/** How many attacks this attacker has already made this turn. */
+export function attacksThisRound(attacker) {
+    return attacker ? AU.countThisRound(recentCards(), roundKey(), d => d.attacker === attacker.uuid) : 0;
+}
+/** Extra actions bought this turn without the multiple-action penalty (Rage, recorded by WoDX Actions). */
+function freeActionsIn(actor, combat) {
+    const f = actor?.getFlag?.("wodx-actions", "extraActions");
+    return combat && f?.key === `${combat.id}:${combat.round}` ? num(f.n) : 0;
+}
+function freeActions(attacker) {
+    const k = roundKey(), f = attacker?.getFlag?.("wodx-actions", "extraActions");
+    return k && f?.key === `${k.combatId}:${k.round}` ? num(f.n) : 0;
+}
+/** Tokens hostile to this token within reach (1.5 squares), not defeated. */
+function opponentsAround(tok) {
+    const t = tok?.document ?? tok, obj = tok?.object ?? tok;
+    if (!t?.parent || !obj?.center) return null;
+    const unit = t.parent.grid?.distance ?? 5;
+    const disp = t.disposition;
+    let n = 0;
+    for (const o of t.parent.tokens ?? []) {
+        if (o.id === t.id || !o.object?.center || o.hidden) continue;
+        if (o.actor?.statuses?.has?.("dead") || o.actor?.statuses?.has?.("unconscious")) continue;
+        const hostile = (disp === 1 && o.disposition === -1) || (disp === -1 && o.disposition === 1) || (disp === 0 && o.disposition !== 0);
+        if (!hostile) continue;
+        const d = tokenDistance(obj, o.object);
+        if (d != null && d <= unit * 1.5) n++;
+    }
+    return n;
+}
+
+/**
+ * Fill in the dialog's "Automatic" choices from the scene and this turn's cards: position (token facing), multiple
+ * actions, opponents engaged and the defender's defense count. Changes fd; returns notes for the card.
+ */
+function resolveAutoOptions(attacker, target, fd, { attackerTok = null, targetTok = null } = {}) {
+    const notes = [];
+    const aTok = attackerTok ?? attacker?.getActiveTokens?.()[0] ?? null;
+    const tTok = targetTok ?? target?.getActiveTokens?.()[0] ?? null;
+    if (fd.flank === "auto" || fd.flank === undefined) {
+        const side = tTok && aTok ? AU.facingSide(tTok.center ?? tTok.object?.center, (tTok.document ?? tTok).rotation, aTok.center ?? aTok.object?.center) : null;
+        fd.flank = side === "flank" ? "flank" : side === "rear" ? "rear" : "";
+        if (side === "flank") notes.push("from the flank (+1 die)");
+        else if (side === "rear") notes.push("from behind (+2 dice)");
+    }
+    if (fd.multi === "auto" || fd.multi === undefined) {
+        const k = attacksThisRound(attacker), free = freeActions(attacker);
+        fd.multi = Math.max(0, Math.min(4, k - free));
+        if (k) notes.push(`attack ${k + 1} this turn${fd.multi ? ` (−${fd.multi} die, +${fd.multi} difficulty)` : " (an extra action bought with Rage: no penalty)"}`);
+    }
+    if (fd.oppAuto) {
+        const n = opponentsAround(aTok);
+        if (n != null) { fd.opponents = Math.max(1, n); if (n > 1) notes.push(`${n} opponents engaged (+${Math.min(4, n - 1)} difficulty)`); }
+    }
+    if (target && (fd.defIndex === "auto" || fd.defIndex === undefined)) {
+        const k = defensesThisRound(target);
+        fd.defIndex = k;
+        if (k) notes.push(`${target.name}'s defense ${k + 1} this turn (−${k} ${k === 1 ? "die" : "dice"})`);
+    }
+    return notes;
+}
+
+/** A character's soak policy for automatic Fortitude (stored on the actor). */
+export function soakPolicy(actor) {
+    const p = actor?.getFlag?.(MOD, "soakPolicy");
+    return AU.SOAK_POLICIES[p] ? p : "aggravated";
+}
+/** "auto" | "yes" | "no" | boolean → spend a blood point for Fortitude on this hit? */
+function resolveFortitude(target, choice, dp, fd) {
+    if (choice === true || choice === "yes") return true;
+    if (!choice || choice === "no") return false;
+    if (choice !== "auto" || !target) return false;
+    return AU.fortitudeDecision(soakPolicy(target), { dmgType: dp?.dmgType, fireOrSun: !!fd.fireSun,
+        fortitude: discipline(target, "Fortitude"), blood: num(P.resource(target, "blood").value) });
+}
+export async function setSoakPolicy(actor) {
+    const a = actor?.actor ?? actor;
+    if (!a) return null;
+    const cur = soakPolicy(a);
+    const r = await P.ask({ title: `Soak policy — ${a.name}`, width: 420, classes: ["vtc-dialog"],
+        content: `<form class="vtc-form"><p>When ${esc(a.name)} is hit and the attack dialog's Fortitude choice is Automatic, spend a blood point for automatic Fortitude soak (VtDA20 p. 218):</p>
+          <div class="form-group"><label>Policy</label><select name="policy" data-fixed>${Object.entries(AU.SOAK_POLICIES).map(([k, v]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${esc(v)}</option>`).join("")}</select></div></form>`,
+        buttons: [{ id: "ok", label: "Save", icon: "fas fa-check", default: true }, { id: "cancel", label: "Cancel" }] });
+    if (!r || r.id !== "ok") return null;
+    if (a.isOwner) await a.setFlag(MOD, "soakPolicy", r.data.policy);
+    else requestGM({ action: "update", uuid: a.uuid, data: { [`flags.${MOD}.soakPolicy`]: r.data.policy } });
+    ui.notifications.info(`${a.name}: ${AU.SOAK_POLICIES[r.data.policy]}.`);
+    return r.data.policy;
+}
+
+/** Plan one attack with the dialog's choices: a named weapon, or the automatic best. */
+function planChoice(attacker, target, fd, weaponId, tokens) {
+    const r = bestAttack(attacker, target, fd, tokens);
+    if (weaponId && weaponId !== "auto") return r.plans.find(p => p.w.id === weaponId && p.valid) ?? null;
+    return r.best;
+}
+
+/**
+ * Suggestions for the attack dialog (never applied on their own): Willpower and Potence blood when they change the
+ * likely outcome, and the maneuver with the most expected harm. Returns an array of HTML lines.
+ */
+export function computeHints(attacker, target, fdIn = {}, tokens = {}) {
+    if (!attacker || !target) return [];
+    const fd = { ...fdIn };
+    resolveAutoOptions(attacker, target, fd, tokens);
+    const base = planChoice(attacker, target, fd, fd.weapon, tokens);
+    if (!base) return [];
+    const lines = [`<b>Expected:</b> ${esc(base.w.name)} hits ${AU.pct(base.hitChance)} of the time, ${base.expectedLevels.toFixed(1)} ${base.dmgType} levels on average.`];
+    if (!fd.willpower && willpower(attacker) > 0) {
+        const wp = planChoice(attacker, target, { ...fd, willpower: true }, base.w.id, tokens);
+        if (wp && AU.worthIt(base, wp)) lines.push(`<b>Willpower is worth it:</b> hits ${AU.pct(base.hitChance)} → ${AU.pct(wp.hitChance)}, ${base.expectedLevels.toFixed(1)} → ${wp.expectedLevels.toFixed(1)} levels.`);
+    }
+    const pot = discipline(attacker, "Potence");
+    if (pot && !fd.potBlood && base.w.dmgAttr === "strength" && num(P.resource(attacker, "blood").value) > 0) {
+        const pb = planChoice(attacker, target, { ...fd, potBlood: true }, base.w.id, tokens);
+        if (pb && AU.worthIt(base, pb)) lines.push(`<b>Potence blood is worth it:</b> ${base.expectedLevels.toFixed(1)} → ${pb.expectedLevels.toFixed(1)} levels.`);
+    }
+    const table = maneuverTable();
+    let best = null;
+    for (const [k, m] of Object.entries(table)) {
+        if (AU.SUGGEST_SKIP.has(k) || m.noDamage) continue;
+        const p = planChoice(attacker, target, { ...fd, maneuver: k }, fd.weapon, tokens);
+        if (p && (!best || p.expectedLevels > best.p.expectedLevels)) best = { k, m, p };
+    }
+    const cur = fd.maneuver || "normal";
+    if (best && best.k !== cur && best.p.expectedLevels > base.expectedLevels * 1.1 + 0.05)
+        lines.push(`<b>Maneuver for the most harm:</b> ${esc(best.m.label)}: ${base.expectedLevels.toFixed(1)} → ${best.p.expectedLevels.toFixed(1)} levels${best.m.note ? ` <i>(${esc(String(best.m.note).replace(/\{name\}/g, attacker.name))})</i>` : ""}.`);
+    return lines;
+}
+
+/** Keep the dialog's suggestions up to date as choices change. */
+function bindHints(root, { attacker, target, attackerTok, targetTok }) {
+    const form = root?.querySelector?.("form") ?? root;
+    const box = form?.querySelector?.(".vtc-hints");
+    if (!box) return;
+    let t = null;
+    const upd = () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+            try {
+                const lines = computeHints(attacker, target, readForm(form), { attackerTok, targetTok });
+                box.innerHTML = lines.join("<br>");
+                box.style.display = lines.length ? "" : "none";
+            } catch (e) { console.warn("WoDX | attack hints", e); box.style.display = "none"; }
+        }, 120);
+    };
+    form.addEventListener("change", upd);
+    form.addEventListener("input", upd);
+    upd();
+}
+
+/**
+ * One click, no dialog: every automatic choice (weapon, defense, position, counts, Fortitude policy) and the conditions'
+ * dice and difficulty. With several tokens selected, each attacks the target in turn. Spends no Willpower or blood
+ * of its own accord.
+ */
+export async function quickAttack({ attacker: a = null, target: t = null } = {}) {
+    const attackers = a ? [a] : (canvas.tokens?.controlled?.length ? [...canvas.tokens.controlled] : [null]);
+    const results = [];
+    for (const one of attackers) {
+        const { attacker, attackerTok, target, targetTok } = resolveTokens(one, t);
+        if (!attacker) { ui.notifications.warn("WoDX Combat: select your token (or assign a character) first."); continue; }
+        if (!target) { ui.notifications.warn("WoDX Combat: target someone for the quick attack."); return results; }
+        const cm = conditionMods(attacker, target);
+        const fd = { weapon: "auto", maneuver: "normal", targeting: "none", range: "short", flank: "auto", multi: "auto", opponents: 1, oppAuto: true,
+            extraDice: cm.attackerDice, extraDiff: cm.attackerDiff, extraDmg: 0, defense: "auto", defIndex: "auto", defDice: 0,
+            defDiff: L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0, defCel: discipline(target, "Celerity") > 0,
+            celDice: setting("celerityDice"), fortBlood: "auto", soakBonus: 0, atkKind: "auto", profile: "auto" };
+        try { results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: { id: "auto" }, fd })); }
+        catch (e) { console.error(e); ui.notifications.error(`WoDX Combat: ${attacker.name}: ${e.message}`); }
+    }
+    return results;
+}
+
+/** Active GM: everyone's initiative at the start of a fight or a turn, with the extra actions bought so far. */
+async function autoInitiative(combat) {
+    const list = combat.combatants.contents.filter(c => c.actor && !c.isDefeated);
+    if (!list.length) return null;
+    return rollInitiative({ combat, combatants: list, all: true, automatic: true });
+}
 
 /** Token HUD shortcut: right-click a token and press the sword to attack your current target with it. */
 Hooks.on("renderTokenHUD", (hud, html) => {
@@ -1246,8 +1486,8 @@ Hooks.on("renderTokenHUD", (hud, html) => {
     btn.className = "control-icon vtc-hud";
     btn.title = "WoDX Attack";
     btn.innerHTML = '<i class="fas fa-khanda"></i>';
-    btn.title = "WoDX Attack (right-click: set actor type)";
-    btn.addEventListener("click", () => attack({ attacker: tok }));
+    btn.title = "WoDX Attack (shift-click: quick attack with every automatic choice; right-click: set actor type)";
+    btn.addEventListener("click", ev => ev.shiftKey ? quickAttack({ attacker: tok }) : attack({ attacker: tok }));
     btn.addEventListener("contextmenu", ev => { ev.preventDefault(); pickKind(tok.actor); });
     col.appendChild(btn);
 });

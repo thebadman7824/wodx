@@ -1,4 +1,4 @@
-# WoDX Combat 3.3.0
+# WoDX Combat 3.4.0
 
 World of Darkness Expanded. Private use only; not for distribution or sale.
 
@@ -12,6 +12,15 @@ WoDX Combat is vtda20-combat 2.2.1 brought into the WoDX project under a new id.
   - an immobilized or staked target, who is hit automatically;
   - a target who is knocked down or dazed.
 - **Dazed.** When one attack does more damage after soak than the target's Stamina (Stamina + 2 for the supernatural), the target is Dazed for one round. It shows as a timed effect.
+- **More automatic choices** (3.4.0). Each is the new default in the attack dialog and can be changed by hand:
+  - *Defense count:* the defender's defenses this turn are counted from the turn's attack cards; each one after the first is −1 die (VtDA20 p. 344).
+  - *Multiple actions:* the attacker's attacks this turn are counted the same way; extra actions bought with Rage in WoDX Actions carry no penalty.
+  - *Position:* flank (+1 die) or rear (+2 dice) from the target token's facing (its rotation). A token never rotated counts as facing you.
+  - *Opponents engaged:* hostile tokens within reach of the attacker, when "count from the tokens" is ticked.
+  - *Fortitude blood:* each character's soak policy (macro "WoDX: Soak Policy"): only against aggravated damage (the default), always, or never. Never against fire or sunlight, and never without blood.
+  - *Suggestions:* the dialog shows the expected result, and says when Willpower or Potence blood would change it markedly, and which maneuver would do the most harm (with its drawback). Suggestions are never applied.
+  - *Quick attack:* shift-click the sword on the token HUD, or the "WoDX: Quick Attack" macro, to attack your target with every automatic choice and no dialog; with several tokens selected, each attacks in turn. It spends no Willpower or blood by itself.
+  - *Initiative:* rolled for everyone when a fight starts and at the start of every turn (setting "Roll initiative automatically": every turn, start only, or off); the card lists extra actions declared with Rage.
 - **Automatic attack** (3.3.0). The Weapon list starts on "Automatic: best attack for this character". When the attack is rolled it tries every weapon, natural weapon and unarmed attack on the sheet against this target with the dialog's other choices (maneuver, targeting, position, multiple actions, Willpower...), and uses the one with the most expected health levels after the target's own best defense and soak. The odds are worked out exactly from the dice (a 1 cancels a success; VtDA20 pp. 251, 344–345); lethal counts ×1.25 and aggravated ×1.6 when ranking, and bashing against a vampire is halved. It leaves out a mortal's bite (it needs a hold first), claws without Protean 2, Vicissitude or a shapechanger's body, melee weapons when the target is out of reach, and missiles beyond three times their range; with both tokens on the scene a missile's range band is set from the distance. The card names the choice, the runners-up and what was left out. Every weapon is still in the list to pick by hand.
 - **Automatic defense** (3.2.0). The attack dialog's Defense list starts on "Automatic: best for this character". When the attack is rolled it works out parry, block and dodge from the defender's sheet for this attack, and rolls the one with the most expected successes (ties: parry, then block, then dodge). It follows the book's limits (VtDA20 p. 344): no parry or block against missiles, no block against lethal or aggravated damage without Fortitude or armor, dodging missiles +2 difficulty unless Celerity is in play. A parry counts only with a melee weapon on the sheet. The card says what it picked and what the others would have been. None, Dodge, Block and Parry are still in the list to choose by hand.
 - **Werewolves and Fera** (3.1.0, Phase 6b). Silver and gold follow era, breed and form; teeth and claws follow the form; in the Dark Ages a Garou in Homid can't soak aggravated damage.
