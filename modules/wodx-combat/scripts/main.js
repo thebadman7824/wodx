@@ -385,7 +385,11 @@ async function onSocket(p) {
     if (!actor) return;
     if (p.action === "applyDamage") {
         const r = await applyDamage(actor, p.type, p.levels);
-        if (p.messageId) await recordApplied(p.messageId, actor, r);
+        if (p.messageId) {
+            const d = game.messages.get(p.messageId)?.getFlag(MOD, "data") ?? {};
+            Hooks.callAll("wodxDamageApplied", actor, { type: p.type, levels: p.levels, before: r.before, after: r.after, fireSun: !!d.fireSun, attacker: d.attacker ?? null, messageId: p.messageId });
+            await recordApplied(p.messageId, actor, r);
+        }
     } else if (p.action === "setDamage") await setDamage(actor, p.damage);
     else if (p.action === "dazed") await markDazed(actor);
     else if (p.action === "update") await actor.update(p.data);
@@ -682,7 +686,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const data = {
         attacker: attacker.uuid, target: target?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
         combatId: rk?.combatId ?? null, round: rk?.round ?? null, defended: !!(def && !def.invalid),
-        type: outcome?.type, levels: outcome?.levels ?? 0, applied: false,
+        type: outcome?.type, levels: outcome?.levels ?? 0, applied: false, fireSun: !!fd.fireSun,
         counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null
     };
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
@@ -1048,6 +1052,9 @@ async function applyFromMessage(msg, which = "main") {
         return;
     }
     const r = await applyDamage(actor, src.type, src.levels);
+    // Other WoDX modules react to applied damage (WoDX Actions: frenzy, Rötschreck, sin and torpor prompts)
+    Hooks.callAll("wodxDamageApplied", actor, { type: src.type, levels: src.levels, before: r.before, after: r.after,
+        fireSun: !isCounter && !!data.fireSun, attacker: isCounter ? data.target : (data.attacker ?? null), messageId: msg.id });
     const key = isCounter ? "counterApplied" : "applied";
     const undoKey = isCounter ? "counterUndo" : "undo";
     const newData = { ...data, [key]: true, [undoKey]: { uuid: actor.uuid, damage: r.before } };
@@ -1155,7 +1162,7 @@ export async function soakAndApply(tok, fd) {
     if (fd.chimerical) html += `<div class="vtc-note">Chimerical damage: only changelings and chimerical beings are hurt; the body of a mortal or other supernatural is unharmed${kind === "fae" ? "" : " — apply nothing to " + actor.name + " unless the Storyteller rules otherwise"}.</div>`;
     if (left.levels) html += `<div class="vtc-pending">${setting("autoApply") ? "Applying…" : ""}<button type="button" class="vtc-apply" data-which="main">Apply ${left.levels} ${type} to ${actor.name}</button></div>`;
     html += `</div>`;
-    const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false };
+    const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun };
     const msg = await postCard(tok.document ? tok : null, actor, html, rolls, data);
     if (setting("autoApply") && left.levels) await applyFromMessage(msg, "main");
     if (dazed && setting("statusEffects")) await markDazed(actor);
@@ -1234,7 +1241,7 @@ Hooks.once("init", () => {
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.4.0",
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.4.1",
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

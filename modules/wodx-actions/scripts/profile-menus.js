@@ -28,23 +28,25 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
             ["Blood", [["api:feed", "Feed on target", "fa-tint"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
+            ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:setRoad", "Road and Path", "fa-road"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"]]],
             ["The Beast", [["api:frenzy", "Frenzy", "fa-fire-alt"], ["api:rotschreck", "Rötschreck", "fa-running"], ["api:endFrenzy", "End frenzy", "fa-hand-paper"], ["api:sin", "Sin / degeneration", "fa-balance-scale"]]],
             ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"]]],
+            ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:endStory", "End of story", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:newNight", "New night (GM)", "fa-moon"], WILL]]
         ]
     },
     ghoul: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
-            ["Vitae", [["uses:blood", "Spend vitae", "fa-tint"], ["rules:ghoul", "Ghoul rules", "fa-book"], ["api:bloodOath", "Blood Oath / bond", "fa-link"]]],
-            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:frenzy", "Fear / frenzy check", "fa-fire-alt"]]],
+            ["Vitae", [["uses:blood", "Spend vitae", "fa-tint"], ["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["rules:ghoul", "Ghoul rules", "fa-book"], ["api:bloodOath", "Blood Oath / bond", "fa-link"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:frenzy", "Fear / frenzy check", "fa-fire-alt"], ["api:healing", "Healing", "fa-band-aid"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
     mortal: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
-            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["rules:mortal", "Mortal rules", "fa-book"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
@@ -52,7 +54,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
             ["Faith and conviction", [["uses:faith", "Faith", "fa-cross"], ["uses:conviction", "Conviction", "fa-fist-raised"]]],
-            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["rules:mortal", "Mortal rules", "fa-book"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
@@ -66,7 +68,7 @@ export const MENUS = {
             ["Rites and spirits", [["api:performRite", "Perform a rite", "fa-circle-notch"], ["api:summonSpirit", "Summon a spirit", "fa-ghost"],
                 ["api:chiminage", "Chiminage (spirit debts)", "fa-handshake"]]],
             ["Body", [["api:shiftForm", "Change form", "fa-dog"], ["regen", "Regenerate", "fa-heartbeat"], ["api:hazard", "Fire / fall / silver", "fa-burn"],
-                ["api:battleScar", "Battle Scar", "fa-band-aid"]]],
+                ["api:battleScar", "Battle Scar", "fa-band-aid"], ["api:healing", "Healing with time", "fa-clock"]]],
             ["Renown and witnesses", [["api:accomplishment", "Rite of Accomplishment", "fa-medal"], ["api:awardRenown", "Award Renown (GM)", "fa-award"],
                 ["api:curse", "The Curse (target a human)", "fa-user-slash"], ["api:delirium", "The Delirium (GM, witnesses)", "fa-eye"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -76,7 +78,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
             ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"]]],
-            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["rules:mage", "Mage rules", "fa-book"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },

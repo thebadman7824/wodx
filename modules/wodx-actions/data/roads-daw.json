@@ -1,0 +1,463 @@
+{
+ "source": "V20 Dark Ages (VtDA20), The Roads We Walk, pp. 110–145. Sins are WoDX paraphrases; the book's rationales are not reproduced.",
+ "aura": {
+  "table": "p. 114",
+  "note": "Road 10: −2 difficulty … Road 1: +2 (aura modifiers apply to Social rolls with humans)."
+ },
+ "virtueLabels": {
+  "conscience": "Conscience",
+  "conviction": "Conviction",
+  "selfcontrol": "Self-Control",
+  "instinct": "Instinct",
+  "courage": "Courage"
+ },
+ "roads": {
+  "beast": {
+   "name": "Road of the Beast",
+   "latin": "Via Bestiae",
+   "nick": "Apostates",
+   "p": 115,
+   "aura": "Menace",
+   "virtues": [
+    "conviction",
+    "instinct"
+   ],
+   "hp": 116,
+   "sins": [
+    "Putting your own existence at risk",
+    "Following a leader",
+    "Killing for fun",
+    "Choosing order over wildness",
+    "Pointless cruelty",
+    "Acting with no gain to you",
+    "Not killing when it is you or them",
+    "Not defending what is yours",
+    "Owning nothing, marking no territory",
+    "Starving yourself while hungry"
+   ],
+   "paths": [
+    {
+     "name": "Path of the Hunter",
+     "p": 117
+    },
+    {
+     "name": "Path of Journeys",
+     "p": 118
+    },
+    {
+     "name": "Path of Liberation",
+     "p": 118
+    }
+   ]
+  },
+  "heaven": {
+   "name": "Road of Heaven",
+   "latin": "Via Caeli",
+   "nick": "the Faithful",
+   "p": 119,
+   "aura": "Holiness",
+   "virtues": [
+    "conscience",
+    "selfcontrol"
+   ],
+   "hp": 120,
+   "sins": null,
+   "note": "No base hierarchy: each faith's Path has its own (pp. 120–121, 137–138).",
+   "paths": [
+    {
+     "name": "Path of Christ",
+     "p": 120,
+     "sins": [
+      "Not speaking out against corruption",
+      "Acting from pride, greed or lust",
+      "Lying under oath or about others",
+      "Harming a devout person",
+      "Feeding on an innocent without leave",
+      "Blasphemy or heresy",
+      "Killing an innocent",
+      "Idolatry",
+      "Helping demons or other evil",
+      "Not spreading the faith"
+     ]
+    },
+    {
+     "name": "Derech Chaim (Path of Life)",
+     "p": 120,
+     "sins": [
+      "Letting ritual purity lapse",
+      "Needless dealings with outsiders to the faith",
+      "No rabbinical authority, or ignoring its rulings",
+      "Breaking the community's laws and customs",
+      "Cutting ties with a local community of the faith",
+      "Drinking forbidden blood",
+      "Idolatry",
+      "Sexual violence",
+      "Murder",
+      "Putting the community in danger"
+     ]
+    },
+    {
+     "name": "Path of the Prophet",
+     "p": 121,
+     "sins": [
+      "Disrespecting your elders",
+      "Neglecting the defenceless",
+      "Cheating or unfair dealing",
+      "Breaking a promise",
+      "Boasting or arrogance",
+      "Feeding outside the faith",
+      "Unjust killing",
+      "Acknowledging another god",
+      "Dividing the faithful",
+      "Not submitting to the divine will"
+     ]
+    },
+    {
+     "name": "Path of the Eightfold Wheel",
+     "p": 137,
+     "sins": [
+      "No time alone in wild silence",
+      "Revealing a secret",
+      "Neglecting the sick and weak",
+      "Pride over justice",
+      "Disrespecting nature's spirits",
+      "Disrespecting the gods",
+      "Breaking a promise",
+      "Upsetting nature's balance",
+      "Dishonourable conduct",
+      "Not seeking to know yourself"
+     ]
+    },
+    {
+     "name": "Path of the Watchful Gods",
+     "p": 138,
+     "sins": [
+      "Skipping the regular offerings",
+      "Lying",
+      "Violence that offends gods or spirits",
+      "Dishonourable acts",
+      "Stealing from offerings",
+      "Disrespecting priests",
+      "Killing a sacred animal",
+      "Defiling a holy place",
+      "Damaging the gods' images",
+      "Cursing the gods"
+     ]
+    }
+   ]
+  },
+  "humanity": {
+   "name": "Road of Humanity",
+   "latin": "Via Humanitas",
+   "nick": "Prodigals",
+   "p": 121,
+   "aura": "Flickering bright spots (humanity)",
+   "virtues": [
+    "conscience",
+    "selfcontrol"
+   ],
+   "hp": 123,
+   "sins": [
+    "Selfish thoughts",
+    "Small selfish acts",
+    "Hurting another, even by accident",
+    "Theft",
+    "Harming another by accident",
+    "Wanton destruction",
+    "Harming another in passion",
+    "Harming another by design",
+    "Harming another without a thought",
+    "The most monstrous acts"
+   ],
+   "paths": [
+    {
+     "name": "Path of Breath",
+     "p": 123
+    },
+    {
+     "name": "Path of Community",
+     "p": 124
+    },
+    {
+     "name": "Path of Illumination",
+     "p": 124
+    }
+   ]
+  },
+  "kings": {
+   "name": "Road of Kings",
+   "latin": "Via Regalis",
+   "nick": "Luminaries",
+   "p": 125,
+   "aura": "Command",
+   "virtues": [
+    "conviction",
+    "selfcontrol"
+   ],
+   "hp": 126,
+   "sins": [
+    "Neglecting your duty",
+    "Disrespecting a peer",
+    "Wants before duty",
+    "Treating an inferior as an equal",
+    "Killing with no purpose",
+    "Showing weakness before inferiors",
+    "Letting a challenge to your honour pass",
+    "Disrespecting a superior",
+    "Breaking your word or oath",
+    "Losing yourself to the Beast (frenzy)"
+   ],
+   "paths": [
+    {
+     "name": "Path of Chivalry",
+     "p": 126,
+     "sins": [
+      "Neglecting your duty for any reason",
+      "Dishonourable acts",
+      "Disrespecting another",
+      "Acting unjustly",
+      "Not helping someone in need",
+      "Disrespecting a superior",
+      "Wants before duty",
+      "Letting a challenge to your honour pass",
+      "Breaking your word",
+      "Breaking a sworn oath"
+     ]
+    },
+    {
+     "name": "Path of Devaraja",
+     "p": 127,
+     "sins": [
+      "Not acknowledging the divine",
+      "Neglecting your duty",
+      "Disrespecting another",
+      "Treating an inferior as an equal",
+      "Wants before duty",
+      "Letting a chance at power pass",
+      "Letting a challenge to your honour pass",
+      "Killing with no purpose",
+      "Breaking your word or oath",
+      "Losing yourself to the Beast (frenzy)"
+     ]
+    },
+    {
+     "name": "Path of Daena",
+     "p": 128,
+     "sins": [
+      "Neglecting your duty for any reason",
+      "Breaking the law",
+      "Disrespecting another",
+      "Acting unjustly",
+      "Killing with no purpose",
+      "Not helping someone in need",
+      "Disrespecting a superior",
+      "Not upholding the law",
+      "Breaking your word or oath",
+      "Losing yourself to the Beast (frenzy)"
+     ]
+    }
+   ]
+  },
+  "lilith": {
+   "name": "Road of Lilith",
+   "latin": "",
+   "nick": "Bahari",
+   "p": 128,
+   "aura": "Carved and bleeding",
+   "virtues": [
+    "conviction",
+    "instinct"
+   ],
+   "hp": 130,
+   "sins": [
+    "Feeding the moment you hunger",
+    "Joining a system built by the unwise",
+    "Ignoring one of Lilith's faces",
+    "Dismissing another's suffering",
+    "Cruelty for its own sake",
+    "Passing off another's learning as yours",
+    "Destroying a thinking being",
+    "Not seeking Lilith's teachings",
+    "Standing between someone and a hard lesson",
+    "Avoiding pain"
+   ],
+   "paths": [
+    {
+     "name": "Path of Thorns",
+     "p": 130
+    },
+    {
+     "name": "Path of Veils",
+     "p": 131
+    },
+    {
+     "name": "Path of Making",
+     "p": 131
+    }
+   ]
+  },
+  "metamorphosis": {
+   "name": "Road of Metamorphosis",
+   "latin": "Via Mutationis",
+   "nick": "Metamorphosists, Seekers",
+   "p": 131,
+   "aura": "Inhumanity",
+   "virtues": [
+    "conviction",
+    "instinct"
+   ],
+   "hp": 132,
+   "sins": [
+    "Not riding out a frenzy",
+    "Offering knowledge unasked",
+    "Letting pleasure or feeling distract you",
+    "Asking another for knowledge",
+    "Denying yourself food",
+    "Giving in to ordinary morality",
+    "Others before your search",
+    "Not experimenting out of pity or disgust",
+    "Loving another",
+    "Not changing your own body"
+   ],
+   "paths": [
+    {
+     "name": "Path of Spirit",
+     "p": 133
+    }
+   ]
+  },
+  "sin": {
+   "name": "Road of Sin",
+   "latin": "Via Peccati",
+   "nick": "Sinners",
+   "p": 133,
+   "aura": "Temptation",
+   "virtues": [
+    "conviction",
+    "instinct"
+   ],
+   "hp": 134,
+   "sins": [
+    "Acknowledging any authority over you",
+    "Not indulging a new desire",
+    "Not riding the wave of frenzy",
+    "Short pleasures over lasting ones",
+    "Others' needs before your pleasure",
+    "Swearing an oath",
+    "Not acting against those who would bind you",
+    "Not feeding or killing when needed",
+    "Encouraging another Road's virtues",
+    "Acting against your own interest"
+   ],
+   "paths": [
+    {
+     "name": "Path of Pleasure",
+     "p": 135,
+     "sins": [
+      "Feeling shame for your acts",
+      "Not indulging your desires",
+      "Not riding the wave of frenzy",
+      "Modesty",
+      "Others' needs before your interest",
+      "Swearing an oath",
+      "Keeping joyless company",
+      "Not feeding or killing when needed",
+      "Encouraging virtue",
+      "Acting against your own interest"
+     ]
+    },
+    {
+     "name": "Path of Rebellion",
+     "p": 136,
+     "sins": [
+      "Acknowledging the laws of God or man",
+      "Not indulging a new desire",
+      "Not riding the wave of frenzy",
+      "Not helping a lost soul",
+      "Refusing a harmless pleasure",
+      "Swearing an oath",
+      "Not acting against those who bind you",
+      "Not feeding or killing when needed",
+      "Wealth over higher things",
+      "Encouraging false virtue"
+     ]
+    },
+    {
+     "name": "Path of Damnation",
+     "p": 136,
+     "sins": [
+      "Acknowledging any law but Hell's",
+      "Not indulging your desires",
+      "Not riding the wave of frenzy",
+      "Not feeding or killing when needed",
+      "Sparing others harm",
+      "Mercy or pity",
+      "Not acting for Hell",
+      "Selflessness",
+      "Acting against Hell's servants",
+      "Encouraging virtue"
+     ]
+    },
+    {
+     "name": "Path of Screams",
+     "p": 136
+    }
+   ]
+  },
+  "bones": {
+   "name": "Road of Bones",
+   "latin": "Via Ossium",
+   "nick": "Necronomists",
+   "p": 139,
+   "aura": "Silence",
+   "virtues": [
+    "conviction",
+    "selfcontrol"
+   ],
+   "hp": 140,
+   "sins": [
+    "Withholding knowledge from a worthy seeker",
+    "Wanton destruction or cruelty",
+    "Not killing when useful",
+    "Being swayed by feeling",
+    "Frenzy",
+    "Seeking power, status or mortal ties",
+    "Letting pity sway you",
+    "Needlessly preventing a death",
+    "Fearing death",
+    "Destroying knowledge that can't be replaced"
+   ],
+   "paths": [
+    {
+     "name": "Path of Death",
+     "p": 140
+    }
+   ]
+  },
+  "yasa": {
+   "name": "Road of Yasa",
+   "latin": "Via Yasaq",
+   "nick": "Bloodbrothers",
+   "p": 140,
+   "aura": "Trust",
+   "virtues": [
+    "conviction",
+    "selfcontrol"
+   ],
+   "hp": 141,
+   "sins": [
+    "Letting an insult pass",
+    "Insulting someone who didn't earn it",
+    "Lying to someone proven honest",
+    "Mistreating your herd",
+    "Mercy to one who hasn't yielded",
+    "Losing a fight through pride",
+    "Hurting kin, herd or allies in frenzy",
+    "Disobeying your commander",
+    "Betraying your family",
+    "Betraying your blood-brothers"
+   ],
+   "paths": []
+  }
+ }
+}

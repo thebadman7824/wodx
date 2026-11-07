@@ -143,6 +143,13 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors} 
       add("torpor", "Sleeps the years away in torpor", `Road ${road}: the sleep lasts at least ${TORPOR.labels[road]} (V20 Dark Ages p. 350)${enough ? "" : "; longer than this skip"}`, false, {road});
     }
 
+    // Wounds heal over the skip: WoDX Actions heals with the clock when the skip ends (the same code as any clock advance)
+    const heal = game.wodxActions?.healPlan?.(actor, Math.max(0, to - from));
+    if ( heal ) {
+      const got = Object.entries(heal.healed ?? {}).filter(([, v]) => v).map(([k, v]) => `${v} ${k}`);
+      if ( got.length || heal.needsCare ) notes.push(`Wounds: ${got.length ? `heals ${got.join(", ")}` : "no healing"}${heal.needsCare ? "; lethal wounds past Hurt need care" : ""} (WoDX Actions, VtDA20 p. 352)`);
+    }
+
     const t = toEra ? translationFor(actor, toEra) : null;
     if ( t ) {
       const parts = [];

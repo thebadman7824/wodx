@@ -214,6 +214,13 @@ game.world.id = worldId;
     ["Blood Oath", () => game.wodxActions.bloodOath({actor})], ["Torpor", () => game.wodxActions.torpor({actor})], ["Hazard", () => game.wodxActions.hazard({actor})],
     ["Sin", () => game.wodxActions.sin({actor})], ["Willpower uses", () => game.wodxActions.uses({actor, resource: "willpower"})],
     ["Migration", () => game.wodxActions.migrate()]];
+  // 3.2.0: a Cainite with many Disciplines and a path; the Road, downtime, healing, prestation and Masquerade dialogs
+  for ( const [d, v] of [["Dominate", 5], ["Auspex", 5], ["Obfuscate", 5], ["Presence", 5], ["Animalism", 5], ["Celerity", 3], ["Fortitude", 3], ["Potence", 2], ["Path of Bone", 5], ["Potestas Vitae", 3]] )
+    actor.items.set(`d${d}`, {id: `d${d}`, name: d, type: "Power", system: {type: d.startsWith("Path") || d.startsWith("Potestas") ? "wod.types.disciplinepath" : "wod.types.discipline", value: v}, getFlag: () => undefined});
+  actor.getFlag ??= () => undefined;
+  tries.push(["Use a Discipline", () => game.wodxActions.useDiscipline({actor})], ["Road", () => game.wodxActions.setRoad({actor})],
+    ["Downtime", () => game.wodxActions.downtime({actor})], ["Healing", () => game.wodxActions.healing({actor: target})],
+    ["Prestation", () => game.wodxActions.boons({actor})], ["Masquerade", () => game.wodxActions.masquerade({actor})]);
   // Phase 6b: a Dark Ages Garou with a full hand of Gifts, a fetish, a talen and a rite; Kinfolk and the First Change
   {
     const GX = await import(join(root, "modules/wodx-actions/scripts/garou.js"));

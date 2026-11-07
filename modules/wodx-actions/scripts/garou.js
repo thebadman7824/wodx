@@ -181,6 +181,7 @@ export function build(ctx) {
         // isupdated false: the system then switches the form's bonuses on and works out the totals (wod-actor-base _onUpdate)
         await updateActor(actor, { "system.shapes": shapes, "system.settings.isupdated": false });
         await P.setWorldFlag(actor, "form", form);
+        Hooks.callAll("wodxFormChanged", actor, form);
         // Phase 6b first build used an effect for the Glabro fix; take any such effect off
         const old = actor.effects?.find?.(e => e.getFlag?.(MOD, "formFix"));
         if (old && actor.isOwner) await old.delete();
@@ -674,10 +675,10 @@ export function build(ctx) {
     function isKinfolk(a) { return !!P.worldFlag(a, "kinfolk"); }
     const HUMAN = ["mortal", "hunter", "ghoul"];
 
-    async function deliriumCheck() {
+    async function deliriumCheck({ tokens: given = null } = {}) {
         if (!game.user.isGM) return ctx.notify("The Storyteller runs the Delirium.");
         const b = basis(), T = DATA.garou?.delirium;
-        const tokens = [...(game.user.targets ?? [])].length ? [...game.user.targets] : (canvas.tokens?.controlled ?? []);
+        const tokens = given?.length ? given : [...(game.user.targets ?? [])].length ? [...game.user.targets] : (canvas.tokens?.controlled ?? []);
         if (!tokens.length) return ctx.notify("Target or select the witnesses first.");
         const content = `<form><p>${tokens.length} witness${tokens.length === 1 ? "" : "es"} of a Crinos. Reaction and memory by Willpower (${b === "daw" ? "DA:W p. 97" : "W20 p. 263"}); Kinfolk are immune.</p>
           <div class="form-group"><label>Witnesses who know the occult roll Wits + Occult (9) for extra Willpower</label><input type="checkbox" name="occult"/></div>

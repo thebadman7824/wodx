@@ -258,3 +258,26 @@
 - Pure rules in `scripts/auto.js`. Harness: three new tests (phase6.test.mjs).
 - Live check in rothenstein-wodx (Gamemaster Test): a new test combat rolled initiative by itself at the start and again on turn 2. Miller Jost, placed behind Wilhelm (Wilhelm's token turned to face up the screen), quick-attacked twice: the first card read "from behind (+2 dice)"; the second added the multiple-action penalty (−1 die, +1 difficulty) and Wilhelm's second defense (−1 die). The suggestions box showed the expected result, Willpower as worth it (hit 65% → 100%: Wilhelm had no defense dice left) and Great Blow as the most harmful maneuver. Fixed on the way: when every attack has no dice left, the card now says so instead of "no attack is possible".
 - Left for Ben: two more test combats on Dolany Village; Miller Jost (test) given Dexterity 3 and Melee 2 and healed, and moved behind Wilhelm, whose token now faces up the screen.
+
+### WoDX Actions 3.2.0 (Combat 3.4.1, Creation 0.4.2), 2026-11-07: the Actions suggestions (Ben's request)
+
+- **New data** (mechanics as codes, summaries in WoDX's own words, page references; no book text):
+  - `data/disciplines-daw.json`: 329 entries from VtDA20 pp. 188–316 — every Discipline and variant at levels 1–5 with roll, difficulty, cost, duration and a short summary; Celerity, Fortitude and Potence 1–5 as passive; Thaumaturgy, Koldunic and Necromancy path powers with their tradition's rule; 122 elder powers by name, level and page.
+  - `data/roads-daw.json`: nine Roads (Beast, Heaven, Humanity, Kings, Lilith, Metamorphosis, Sin, Bones, Yasa) and their Paths, with aura, Virtues, pages and paraphrased hierarchies of sins (rationales not reproduced).
+- **New features** (`scripts/kindred.js`, pure rules in `scripts/kindred-rules.js`):
+  - Use a Discipline: powers from the sheet's dots and paths (search box), pool, difficulty from the target, blood and Willpower paid, a timed effect for its duration. The Forgetful Mind marks a witness as made to forget.
+  - Road and Path: pick from the data; sin, frenzy and Rötschreck rolls use that Road's Virtues; the sin dialog lists the hierarchy with the character's rating marked.
+  - Prestation ledger ("WoDX Prestation": outstanding and the full ledger). Downtime and domain (Herd, Retainers, Influence, Resources, Contacts, Domain, Hunting Grounds) on the character's own dots or a Group's pool; Herd adds blood; optional clock advance. Masquerade records ("WoDX Masquerade").
+  - One Blood Oath record: with WoDX Creation on, feeding, giving blood and the Blood Oath dialog all read and write Creation's lineage bonds (same-night rule, ghouling, lineage journal).
+  - History journal ("WoDX History"): a page per character, written by sins, frenzies, oaths, diablerie, torpor, kills, boons, downtime and Road changes.
+- **Automatic** (each behind a setting, all on by default):
+  - Healing with the clock: mortals and ghouls by VtDA20 p. 352 (worst level first; lethal past Hurt needs "treated"); shapechangers regenerate. Pass the Years lists it per character and the skip heals through the same code.
+  - Dawn and dusk cards: stay awake (Road 8), sunlight for tokens in sunlit places (scene flag "outdoors" or a region named sunlit; shade/shelter/indoors regions protect), Run New Night (or automatic), heal with blood on rising down to the hunger line.
+  - Torpor from a track full of lethal, with its end date and a reminder card when she may rise.
+  - Prompts: grievous wounds and life-threatening wounds (frenzy), fire or sunlight from Combat (Rötschreck), blood under the hunger line, a vessel drained or a mortal killed (the sin level the Road names), frenzy itself on Roads that count it, a shapechanger beyond Incapacitated (rise on Rage), a Crinos seen by mortal tokens (the Delirium, once a scene per witness).
+  - Witnesses for feeding: living tokens in range and sight (walls block); a button records them.
+  - Willpower recovery setting (a night / a story / off) and End of story.
+  - Action dialog: Suggest the best Attribute + Ability under the untrained rules; extended actions can roll until done and advance the clock; resisted rolls read the same pool from the target's sheet; teamwork rolls the other selected tokens.
+- Combat 3.4.1 fires `wodxDamageApplied` when a card's damage is applied (fire/sun flag, attacker). Garou: `wodxFormChanged` hook; the Delirium accepts tokens.
+- Harness: 20 new tests (`kindred.test.mjs`), 150 in all; UI fit passes with six new dialogs; quality-check passes. Backup: `wodx-repo/backups/before-actions-3.2.0`.
+- Live check (Gamemaster Test): versions and data load, settings present, every vampire's Road recognized but "Via Hyron (Road of the Hive)" (not a Road in the book's list), powers listed per sheet. Fixed on the way: the sheet spelling "Daimonion" now matches the book's Daimoinon; the power list is a dropdown (a tall list was squashed by Foundry's CSS). Use a Discipline (Dominate: Command) posted its card.
