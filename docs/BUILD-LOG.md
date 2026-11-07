@@ -28,3 +28,18 @@
   - One failed administrator password at 22:36:12.
 - Found in review and fixed in 0.1.1: the Chronicle Rules journal kept the date it was first written (1 January 1197 in rothenstein-wodx, before the opening date was set). Setting the date now rewrites it, and the stamp reads "Updated (in-game date)". 0.1.1 is a patch release, so only the automatic checks were rerun; all pass.
 - Phase 1 complete.
+
+## Phase 2, 2026-11-07
+
+- Read the rules from the books in the library: Dark Ages: Werewolf (Stepping Sideways, Gauntlet and Shift Time charts, PDF pp. 93–94), W20 (pp. 308–309, peeking p. 313), the W20 Wyld West Expansion Pack (p. 7, pp. 27–28), and Wraith 20th's Shroud range (pp. 282–284).
+- Built `wodx-otherworlds` 0.1.0: ratings behavior and scene ratings, three charts, step sideways and peek, pack opener, the Umbra, Caught and Lost statuses, tagging window with the Rothenstein preset, report journal, Gauntlet charts page in Chronicle Rules, Penumbra prototype.
+- `wodx-chronicle` 0.1.2: era profiles name their Gauntlet chart (data change only).
+- Checked against the Foundry 14.369 source: RegionBehaviorType and the behavior config (dataModels, typeLabels, typeHints, typeIcons), module documentTypes, StringField choices, CONFIG.statusEffects (array proxy keyed by id), Actor#toggleStatusEffect, TokenDocument#regions and #move (with the displace action), Level documents (elevation.base, background, flags), Document#clone. Checked against upstream: Gnosis lives at system.advantages.gnosis (roll and permanent).
+- Bugs found and fixed during the check:
+  - An unknown chart id in an era profile would have crashed the dialog; it now falls back to W20.
+  - A trapped or Lost Garou could still roll alone; now blocked, while a packmate can still lead a rescue roll.
+  - In a pack with a caught member, the caught Garou could be picked as the roller; the opener is now the highest-Gnosis member who is not caught.
+  - The behavior's type key is read from Foundry's game model rather than assumed.
+  - The prototype's physical level could be open-ended and overlap the Penumbra; the copy now gives it a ceiling.
+- Rothenstein has no Garou actors (its wolves are Creatures), so the gate uses a test Werewolf.
+- Installed. Gate and log review waiting on Ben.

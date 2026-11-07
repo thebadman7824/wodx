@@ -1,4 +1,4 @@
-# WoDX Chronicle 0.1.1 (Phase 1)
+# WoDX Chronicle 0.1.2 (Phase 1)
 
 Part of the World of Darkness Expanded project. Private use only; not for distribution or sale.
 

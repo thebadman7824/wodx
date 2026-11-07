@@ -222,8 +222,8 @@ export function installMock({dataRoot, worldFlags = {wodx: {phase: 1}}, worldId 
         : ["modern", "victorian", "darkages", "classical", "livinggods"]).map(c => [c, c]))});
   }
 
-  const gm = {id: "gm", name: "Storyteller", isGM: true};
-  const player = {id: "p1", name: "Anna", isGM: false};
+  const gm = {id: "gm", name: "Storyteller", isGM: true, get isSelf() { return game.user === this; }};
+  const player = {id: "p1", name: "Anna", isGM: false, get isSelf() { return game.user === this; }};
   const users = new Collection([[gm.id, gm], [player.id, player]]);
   Object.defineProperty(users, "activeGM", {get: () => (globalThis.__gmOnline === false ? null : gm)});
 

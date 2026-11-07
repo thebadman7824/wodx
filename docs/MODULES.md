@@ -11,3 +11,12 @@ Read from the world's `core.moduleConfiguration` setting. The clone `rothenstein
 WoDX notes:
 - vtda20-actions and vtda20-combat are the ones WoDX will replace (as wodx-actions and wodx-combat, decision B6).
 - Monk's Active Tiles and Monk's TokenBar are installed but off; the plan uses Foundry's own Region behaviors instead.
+
+## WoDX modules
+
+| Module | Version | Phase | Enable in |
+|---|---|---|---|
+| wodx-chronicle | 0.1.2 | 1 | rothenstein-wodx, wodx-template |
+| wodx-otherworlds | 0.1.0 | 2 | rothenstein-wodx, wodx-template |
+
+Both stay idle in worlds without `flags.wodx` (the original Rothenstein world).

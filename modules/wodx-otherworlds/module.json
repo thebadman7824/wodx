@@ -1,0 +1,17 @@
+{
+  "id": "wodx-otherworlds",
+  "title": "WoDX Otherworlds",
+  "description": "World of Darkness Expanded: Gauntlet, Shroud and Banality ratings for scenes and regions, and stepping sideways and peeking by the era's rules. Private use only; not for distribution or sale.",
+  "version": "0.1.0",
+  "authors": [{"name": "WoDX Project (private)"}],
+  "compatibility": {"minimum": "14", "verified": "14.369"},
+  "relationships": {
+    "systems": [{"id": "worldofdarkness", "type": "system", "compatibility": {"minimum": "7.3.2"}}],
+    "recommends": [{"id": "wodx-chronicle", "type": "module", "reason": "Picks the Gauntlet chart from the era in force."}]
+  },
+  "documentTypes": {"RegionBehavior": {"ratings": {}}},
+  "esmodules": ["scripts/main.mjs"],
+  "styles": ["styles/wodx-otherworlds.css"],
+  "socket": true,
+  "flags": {"wodx": {"phase": 2}}
+}

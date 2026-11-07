@@ -1,0 +1,19 @@
+/* WoDX Otherworlds. Night palette, shared tokens with WoDX Chronicle. */
+.wodx-tagging .window-content { background: #16141a; color: #e8e2d6; }
+.wodx-tagging .wodx-table-wrap { max-height: calc(100% - 9rem); overflow-y: auto; margin: 0.5rem 0; }
+.wodx-tagging .wodx-table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+.wodx-tagging .wodx-table th { position: sticky; top: 0; background: #1f1c24; text-align: left; }
+.wodx-tagging .wodx-table td, .wodx-tagging .wodx-table th { padding: 2px 4px; border-bottom: 1px solid #3b3540; }
+.wodx-tagging .wodx-table td.name { max-width: 18rem; }
+.wodx-tagging .wodx-table input[type=number] { width: 3.5rem; }
+.wodx-tagging .wodx-table select { width: 14rem; }
+.wodx-tagging tr.wodx-filled td.name::after { content: " (filled)"; color: #c9a14a; font-size: 0.85em; }
+.wodx-tagging .wodx-buttons { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+.wodx-tagging .wodx-buttons button, .wodx-tagging .wodx-buttons select { width: auto; flex: 0 1 auto; }
+.wodx-tagging .wodx-quiet { color: #a99f8f; font-size: 0.9em; }
+
+.wodx-crossing .wodx-die { display: inline-block; min-width: 1.4em; text-align: center; margin: 0 1px; border: 1px solid #777; border-radius: 3px; }
+.wodx-crossing .wodx-die.hit { font-weight: 700; border-color: #4d6e4c; }
+.wodx-crossing .wodx-die.one { border-color: #d8572a; color: #d8572a; }
+.wodx-crossing .wodx-outcome.botch { color: #d8572a; }
+.wodx-crossing ul { margin: 0.25rem 0; padding-left: 1.2rem; }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "notes": "Years are inclusive. 'system' picks the upstream ability set each line gets at creation (worldofdarkness eraMortal/eraVampire/eraWerewolf/eraMage). Upstream has no Dark Ages or Renaissance set for Mage, so mages before 1837 use its Victorian set; that and the Great War mapping are WoDX choices, marked 'ourCall'.",
+  "notes": "Years are inclusive. 'system' picks the upstream ability set each line gets at creation (worldofdarkness eraMortal/eraVampire/eraWerewolf/eraMage). Upstream has no Dark Ages or Renaissance set for Mage, so mages before 1837 use its Victorian set; that and the Great War mapping are WoDX choices, marked 'ourCall'. 'rules.gauntletChart' names the WoDX Otherworlds chart: Dark Ages: Werewolf before 1601, the Wyld West book for the Wild West, and W20 (the basis book) for the Victorian age onward.",
   "profiles": [
     {
       "id": "dark-ages",
@@ -9,9 +9,20 @@
       "end": 1346,
       "basis": "V20 Dark Ages, Dark Ages: Werewolf, Mage: The Dark Ages, Dark Ages: Fae, Dark Ages: Inquisitor",
       "switches": "Roads; medieval abilities; Gauntlet chart 2 to 8; Pillars; no firearms; demons as spirits",
-      "system": {"mortal": "darkages", "vampire": "darkages", "werewolf": "darkages", "mage": "victorian"},
-      "ourCall": ["Mage uses upstream's Victorian ability set"],
-      "rules": {"firearms": false, "morality": "roads", "gauntletChart": "dark-ages"},
+      "system": {
+        "mortal": "darkages",
+        "vampire": "darkages",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Mage uses upstream's Victorian ability set"
+      ],
+      "rules": {
+        "firearms": false,
+        "morality": "roads",
+        "gauntletChart": "dark-ages"
+      },
       "kit": "dark-ages"
     },
     {
@@ -21,9 +32,20 @@
       "end": 1449,
       "basis": "Same as the Dark Ages",
       "switches": "Banality spike and the Shattering; Cappadocians fall in 1444",
-      "system": {"mortal": "darkages", "vampire": "darkages", "werewolf": "darkages", "mage": "victorian"},
-      "ourCall": ["Mage uses upstream's Victorian ability set"],
-      "rules": {"firearms": false, "morality": "roads", "gauntletChart": "dark-ages"},
+      "system": {
+        "mortal": "darkages",
+        "vampire": "darkages",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Mage uses upstream's Victorian ability set"
+      ],
+      "rules": {
+        "firearms": false,
+        "morality": "roads",
+        "gauntletChart": "dark-ages"
+      },
       "kit": "dark-ages"
     },
     {
@@ -33,9 +55,20 @@
       "end": 1600,
       "basis": "V20 Dark Ages rules with period setting; The Sorcerers Crusade",
       "switches": "Spheres and the Order of Reason; Camarilla in 1486, Convention of Thorns in 1493, the Sabbat; early firearms",
-      "system": {"mortal": "darkages", "vampire": "darkages", "werewolf": "darkages", "mage": "victorian"},
-      "ourCall": ["Mage uses upstream's Victorian ability set"],
-      "rules": {"firearms": "early", "morality": "roads", "gauntletChart": "dark-ages"},
+      "system": {
+        "mortal": "darkages",
+        "vampire": "darkages",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Mage uses upstream's Victorian ability set"
+      ],
+      "rules": {
+        "firearms": "early",
+        "morality": "roads",
+        "gauntletChart": "dark-ages"
+      },
       "kit": "renaissance"
     },
     {
@@ -45,8 +78,17 @@
       "end": 1901,
       "basis": "V20 with Victorian Age setting, W20, M20, C20, Wraith 20th",
       "switches": "Humanity plus Paths; gaslight cities; Ride stays",
-      "system": {"mortal": "victorian", "vampire": "victorian", "werewolf": "victorian", "mage": "victorian"},
-      "rules": {"firearms": true, "morality": "humanity-and-paths", "gauntletChart": "victorian"},
+      "system": {
+        "mortal": "victorian",
+        "vampire": "victorian",
+        "werewolf": "victorian",
+        "mage": "victorian"
+      },
+      "rules": {
+        "firearms": true,
+        "morality": "humanity-and-paths",
+        "gauntletChart": "w20"
+      },
       "kit": "victorian"
     },
     {
@@ -54,11 +96,22 @@
       "name": "Wild West",
       "start": 1860,
       "end": 1899,
-      "regions": ["americas"],
+      "regions": [
+        "americas"
+      ],
       "basis": "V20 The Wild West, W20 Wyld West Expansion Pack",
       "switches": "Railroads thicken the Gauntlet; Storm Umbra; revolvers and rifles",
-      "system": {"mortal": "victorian", "vampire": "victorian", "werewolf": "victorian", "mage": "victorian"},
-      "rules": {"firearms": true, "morality": "humanity-and-paths", "gauntletChart": "victorian"},
+      "system": {
+        "mortal": "victorian",
+        "vampire": "victorian",
+        "werewolf": "victorian",
+        "mage": "victorian"
+      },
+      "rules": {
+        "firearms": true,
+        "morality": "humanity-and-paths",
+        "gauntletChart": "wild-west"
+      },
       "kit": "wild-west"
     },
     {
@@ -68,9 +121,20 @@
       "end": 1918,
       "basis": "Wraith: The Great War, plus each line's 20th book",
       "switches": "Storm-torn Shroud; trench, gas and artillery hazards",
-      "system": {"mortal": "victorian", "vampire": "victorian", "werewolf": "victorian", "mage": "victorian"},
-      "ourCall": ["Every line uses upstream's Victorian ability set, the closest it has to 1914"],
-      "rules": {"firearms": true, "morality": "humanity-and-paths", "gauntletChart": "victorian"},
+      "system": {
+        "mortal": "victorian",
+        "vampire": "victorian",
+        "werewolf": "victorian",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Every line uses upstream's Victorian ability set, the closest it has to 1914"
+      ],
+      "rules": {
+        "firearms": true,
+        "morality": "humanity-and-paths",
+        "gauntletChart": "w20"
+      },
       "kit": "great-war"
     },
     {
@@ -80,8 +144,17 @@
       "end": 2003,
       "basis": "Every 20th book; Hunter, Demon, Mummy, Kindred of the East, Orpheus in their basis editions",
       "switches": "Full modern abilities; Gauntlet chart 2 to 9; the 1999 switches",
-      "system": {"mortal": "modern", "vampire": "modern", "werewolf": "modern", "mage": "modern"},
-      "rules": {"firearms": true, "morality": "humanity-and-paths", "gauntletChart": "modern"},
+      "system": {
+        "mortal": "modern",
+        "vampire": "modern",
+        "werewolf": "modern",
+        "mage": "modern"
+      },
+      "rules": {
+        "firearms": true,
+        "morality": "humanity-and-paths",
+        "gauntletChart": "w20"
+      },
       "kit": "modern"
     },
     {
@@ -92,8 +165,17 @@
       "requiresRule": "timeOfJudgment",
       "basis": "As Modern",
       "switches": "One optional ending per line",
-      "system": {"mortal": "modern", "vampire": "modern", "werewolf": "modern", "mage": "modern"},
-      "rules": {"firearms": true, "morality": "humanity-and-paths", "gauntletChart": "modern"},
+      "system": {
+        "mortal": "modern",
+        "vampire": "modern",
+        "werewolf": "modern",
+        "mage": "modern"
+      },
+      "rules": {
+        "firearms": true,
+        "morality": "humanity-and-paths",
+        "gauntletChart": "w20"
+      },
       "kit": "modern"
     },
     {
@@ -104,9 +186,21 @@
       "requiresRule": "futureBranch",
       "basis": "V20, World of Future Darkness, Cyberpunk 2020",
       "switches": "Masquerade erosion; cyberware and Humanity cost; the Net; Technica; the Fourth Corporate War",
-      "system": {"mortal": "modern", "vampire": "modern", "werewolf": "modern", "mage": "modern"},
-      "ourCall": ["The end year is open; 2099 is a placeholder"],
-      "rules": {"firearms": true, "morality": "humanity-and-paths", "gauntletChart": "modern", "cyberware": true},
+      "system": {
+        "mortal": "modern",
+        "vampire": "modern",
+        "werewolf": "modern",
+        "mage": "modern"
+      },
+      "ourCall": [
+        "The end year is open; 2099 is a placeholder"
+      ],
+      "rules": {
+        "firearms": true,
+        "morality": "humanity-and-paths",
+        "gauntletChart": "w20",
+        "cyberware": true
+      },
       "kit": "future-darkness"
     },
     {
@@ -115,9 +209,19 @@
       "prologue": true,
       "basis": "Upstream's Classical era",
       "switches": "For prologues only: chosen with the era lock, never by date",
-      "system": {"mortal": "classical", "vampire": "classical", "werewolf": "darkages", "mage": "victorian"},
-      "ourCall": ["Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Classical set for them"],
-      "rules": {"firearms": false},
+      "system": {
+        "mortal": "classical",
+        "vampire": "classical",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Classical set for them"
+      ],
+      "rules": {
+        "firearms": false,
+        "gauntletChart": "dark-ages"
+      },
       "kit": "dark-ages"
     },
     {
@@ -126,9 +230,19 @@
       "prologue": true,
       "basis": "Upstream's Living Gods era",
       "switches": "For prologues only: chosen with the era lock, never by date",
-      "system": {"mortal": "livinggods", "vampire": "livinggods", "werewolf": "darkages", "mage": "victorian"},
-      "ourCall": ["Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Living Gods set for them"],
-      "rules": {"firearms": false},
+      "system": {
+        "mortal": "livinggods",
+        "vampire": "livinggods",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "Werewolf uses the Dark Ages set and Mage the Victorian set; upstream has no Living Gods set for them"
+      ],
+      "rules": {
+        "firearms": false,
+        "gauntletChart": "dark-ages"
+      },
       "kit": "dark-ages"
     }
   ]
