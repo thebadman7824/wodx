@@ -319,3 +319,73 @@ export function pickDefense(plans) {
     const order = { parry: 0, block: 1, dodge: 2 };
     return [...plans].sort((a, b) => (b.expected - a.expected) || (order[a.type] - order[b.type]))[0] ?? null;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Odds, for the automatic choices (attack and defense)               */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Chance of each success total for a pool: a die succeeds on diff..10, each 1 cancels a success, the total never goes
+ * below 0 (a botch counts as 0 here). autoSuccesses are added after. Returns an array: p[k] = chance of k successes.
+ */
+export function successDistribution(dice, difficulty, { autoSuccesses = 0 } = {}) {
+    const n = Math.max(0, Math.min(40, Number(dice) || 0));
+    const d = clampDifficulty(Number(difficulty) || 6);
+    const ps = (11 - d) / 10, p1 = 0.1, p0 = 1 - ps - p1;
+    // net successes before the floor: from -n to n, offset by n
+    let cur = new Array(2 * n + 1).fill(0); cur[n] = 1;
+    for (let i = 0; i < n; i++) {
+        const next = new Array(2 * n + 1).fill(0);
+        for (let k = 0; k <= 2 * n; k++) {
+            if (!cur[k]) continue;
+            if (k + 1 <= 2 * n) next[k + 1] += cur[k] * ps;
+            if (k - 1 >= 0) next[k - 1] += cur[k] * p1;
+            next[k] += cur[k] * p0;
+        }
+        cur = next;
+    }
+    const out = new Array(n + 1 + Math.max(0, autoSuccesses)).fill(0);
+    for (let k = 0; k <= 2 * n; k++) out[Math.max(0, k - n) + Math.max(0, autoSuccesses)] += cur[k];
+    return out;
+}
+
+/** Expected value of max(0, X - Y) for two independent distributions. */
+function expectedExcess(px, py, floor = 0) {
+    let e = 0;
+    for (let x = 0; x < px.length; x++) {
+        if (!px[x]) continue;
+        for (let y = 0; y < py.length; y++) if (py[y]) e += px[x] * py[y] * Math.max(floor, x - y);
+    }
+    return e;
+}
+
+/**
+ * Expected health levels from one attack: attack against defense, then net successes added to the damage pool,
+ * then soak (VtDA20 pp. 344–345). halveBashing for vampires; minLevels for silver (at least one level on a hit).
+ * Returns {hitChance, expectedNet, expectedLevels}.
+ */
+export function expectedHarm({ atkDice, atkDiff, atkAuto = 0, defDice = 0, defDiff = 6, dmgBase = 0, dmgAuto = 0, soakDice = 0, soakDiff = 6,
+    soakAuto = 0, halveBashing = false, minLevels = 0, noDamage = false }) {
+    const pa = successDistribution(atkDice, atkDiff, { autoSuccesses: atkAuto });
+    const pd = defDice > 0 ? successDistribution(defDice, defDiff) : [1];
+    const ps = soakDice > 0 || soakAuto ? successDistribution(soakDice, soakDiff, { autoSuccesses: soakAuto }) : [1];
+    let hit = 0, net = 0, levels = 0;
+    for (let a = 1; a < pa.length; a++) {
+        if (!pa[a]) continue;
+        for (let b = 0; b < pd.length && b < a; b++) {
+            const p = pa[a] * pd[b];
+            if (!p) continue;
+            const k = a - b;
+            hit += p; net += p * k;
+            if (noDamage) continue;
+            const pdmg = successDistribution(Math.max(0, dmgBase + k), 6, { autoSuccesses: dmgAuto });
+            let l = expectedExcess(pdmg, ps);
+            if (halveBashing) l /= 2;
+            levels += p * Math.max(minLevels, l);
+        }
+    }
+    return { hitChance: hit, expectedNet: net, expectedLevels: levels };
+}
+
+/** How much worse each damage type is, for ranking attacks of equal expected levels against each other. */
+export const HARM_WEIGHT = { bashing: 1, lethal: 1.25, aggravated: 1.6 };

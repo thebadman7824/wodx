@@ -344,6 +344,33 @@ test("the automatic defense picks the best the sheet allows (VtDA20 p. 344)", as
   assert.ok(C.rules.expectedSuccesses(6, 6) > C.rules.expectedSuccesses(6, 8));
 });
 
+test("the automatic attack picks the weapon with the most expected harm", async () => {
+  const C = game.wodxCombat;
+  const sys = (ab, attrs = {}) => ({attributes: Object.fromEntries(Object.entries({dexterity: 3, strength: 3, stamina: 2, ...attrs}).map(([k, v]) => [k, {value: v, total: v}])),
+    abilities: Object.fromEntries(Object.entries(ab).map(([k, v]) => [k, {value: v}])), health: {damage: {woundpenalty: 0}}});
+  const swordsman = makeActor("Swordsman", "Mortal", {system: sys({melee: 3, brawl: 1})});
+  swordsman.items = [{id: "sw1", type: "Melee Weapon", name: "Sword", system: {isequipped: true, damage: {attribute: "strength", bonus: 2, type: "lethal"}, attack: {attribute: "dexterity", ability: "melee"}, difficulty: 6}}];
+  const victim = makeActor("Victim", "Mortal", {system: sys({athletics: 1})});
+  const fd = {defense: "auto", defIndex: 0};
+  const r = C.bestAttack(swordsman, victim, fd);
+  assert.equal(r.best.w.name, "Sword");
+  assert.ok(r.best.expectedLevels > 0);
+  const bite = r.plans.find(p => p.w.id === "unarmed:bite");
+  assert.equal(bite.valid, false, "a mortal's bite needs a hold first");
+  assert.equal(r.plans.find(p => p.w.id === "unarmed:claw").valid, false, "no claws without Protean or Vicissitude");
+  // A brawler with no weapon: an unarmed attack
+  const brawler = makeActor("Brawler", "Mortal", {system: sys({brawl: 4})});
+  brawler.items = [];
+  assert.match(C.bestAttack(brawler, victim, fd).best.w.id, /^unarmed:/);
+  // Expected harm grows with the pool and shrinks with the defense
+  const R = C.rules;
+  const a = R.expectedHarm({atkDice: 6, atkDiff: 6, dmgBase: 4, soakDice: 2});
+  const b = R.expectedHarm({atkDice: 6, atkDiff: 6, defDice: 5, defDiff: 6, dmgBase: 4, soakDice: 2});
+  assert.ok(a.expectedLevels > b.expectedLevels && a.hitChance > b.hitChance);
+  assert.ok(Math.abs(R.successDistribution(5, 6).reduce((x, y) => x + y, 0) - 1) < 1e-9);
+  assert.equal(R.expectedHarm({atkDice: 0, atkDiff: 6, dmgBase: 4}).hitChance, 0);
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

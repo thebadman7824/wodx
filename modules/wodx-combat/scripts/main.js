@@ -225,7 +225,8 @@ function weaponList(actor) {
             const type = nat[k];
             if (!type) continue;
             const form = cap(nat.form);
-            list.push({ id: `unarmed:${k}`, unarmed: true, natural: true, ranged: false, ...u, name: `${k === "bite" ? "Bite" : "Claw"} (${form}, ${type})`,
+            // In Homid a Garou bites as a human does: only after a hold, so it is not counted as a natural weapon
+            list.push({ id: `unarmed:${k}`, unarmed: true, natural: nat.form !== "homid", ranged: false, ...u, name: `${k === "bite" ? "Bite" : "Claw"} (${form}, ${type})`,
                 type, dmgBonus: 1 + (k === "bite" ? nat.biteBonus : 0), secondaryId: "", minStr: 0, piercing: 0, desc: nat.note });
             continue;
         }
@@ -419,7 +420,8 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     const tKind = target ? getKind(target) : "mortal";
     const tFort = target ? discipline(target, "Fortitude") : 0;
     const tCel = target ? discipline(target, "Celerity") : 0;
-    const wOpts = weapons.map(w => `<option value="${w.id}" ${w.id === selWeapon ? "selected" : ""}>${w.name}${w.equipped ? " ★" : ""}</option>`).join("");
+    const wOpts = `<option value="auto" ${selWeapon === "auto" ? "selected" : ""}>Automatic: best attack for this character</option>`
+        + weapons.map(w => `<option value="${w.id}" ${w.id === selWeapon ? "selected" : ""}>${w.name}${w.equipped ? " ★" : ""}</option>`).join("");
     // WoDX conditions on both sides (blinded, held, immobilized, staked, knocked down...)
     const cm = conditionMods(attacker, target);
     // The Blinded condition already puts +2 difficulty in "extra difficulty"; the box would count it twice
@@ -518,7 +520,7 @@ export async function attack({ attacker: a, target: t, weaponId } = {}) {
     if (!target) ui.notifications.info("WoDX Combat: no target selected: the attack will be rolled without defense or soak.");
     if ((game.user.targets?.size ?? 0) > 1) ui.notifications.info("WoDX Combat: several targets selected: using the first one.");
     const weapons = weaponList(attacker);
-    const sel = weaponId ?? weapons[0]?.id;
+    const sel = weaponId ?? "auto";
     const content = attackDialogHtml(attacker, target, weapons, sel);
     const aKind = getKind(attacker), tKind = target ? getKind(target) : "mortal";
     const r = await P.ask({
@@ -529,7 +531,7 @@ export async function attack({ attacker: a, target: t, weaponId } = {}) {
     });
     if (!r || r.id !== "attack") return null;
     const fd = r.data;
-    const w = weapons.find(x => x.id === fd.weapon);
+    const w = fd.weapon === "auto" ? { id: "auto" } : weapons.find(x => x.id === fd.weapon);
     try { return await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); }
     catch (e) { console.error(e); ui.notifications.error(`WoDX Combat: ${e.message}`); return null; }
 }
@@ -538,19 +540,29 @@ export async function attack({ attacker: a, target: t, weaponId } = {}) {
 /*  Attack resolution                                                  */
 /* ------------------------------------------------------------------ */
 
-async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }) {
+async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon, fd }) {
+    let w = weapon;
     const log = [], rolls = [], spendNotes = [];
     const maneuver = maneuverTable()[fd.maneuver] ?? R.MANEUVERS.normal;
     const aKind = (fd.atkKind && fd.atkKind !== "auto") ? fd.atkKind : getKind(attacker);
     const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
     const cel = discipline(attacker, "Celerity"), pot = discipline(attacker, "Potence");
 
+    // ---- Automatic weapon: the attack with the most expected harm against this target
+    let autoAtkNote = "";
+    if (w?.id === "auto" || !w) {
+        const { best, plans, distance, ignoredDistance } = bestAttack(attacker, target, fd, { attackerTok, targetTok });
+        if (!best) throw new Error("No attack is possible from here with what is on the sheet.");
+        w = best.w;
+        if (best.rangeBand && fd.range !== best.rangeBand) fd.range = best.rangeBand;
+        const shown = plans.filter(p => p.valid).sort((a, b) => b.score - a.score).slice(0, 4)
+            .map(p => `${p.w.name} ${p.expectedLevels.toFixed(1)} ${p.dmgType}`).join("; ");
+        const out = plans.filter(p => !p.valid).map(p => `${p.w.name}: ${p.why}`).join("; ");
+        autoAtkNote = `Automatic attack: ${w.name} (expected health levels: ${shown})${out ? `. Not used: ${out}` : ""}`
+            + (ignoredDistance ? `. Nothing reaches at the tokens' distance (${Math.round(distance)}): chosen as if in reach` : distance != null ? `. Distance ${Math.round(distance)}` : "") + ".";
+    }
     // ---- Attack pool
-    const attrKey = w.attribute || "dexterity";
-    const attrVal = attr(attacker, attrKey);
-    const ab = weaponAbility(attacker, w);
-    const str = attr(attacker, "strength");
-    const minStrDiff = w.minStr && str < w.minStr ? (w.minStr - str) : 0;
+    const { attrKey, ab, minStrDiff } = attackBasics(attacker, w);
     // ---- Profile boosts (blood, Rage extra actions, house Glamour/Pathos/... dice)
     let boostDice = 0, rageAction = 0;
     const boostSpend = [];
@@ -568,17 +580,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
         if (use) boostSpend.push([bo.res, use]);
     }
     if (rageAction) fd.multi = 0;
-    const pool = R.attackPool({
-        attribute: attrVal, attributeLabel: cap(attrKey),
-        ability: ab.value, abilityLabel: ab.name,
-        accuracy: w.accuracy, maneuverDice: maneuver.dice || 0,
-        celerityDice: (fd.celDice && attrKey === "dexterity") ? cel : 0,
-        flank: fd.flank, extraDice: (fd.extraDice || 0) + boostDice, woundPenalty: woundPenalty(attacker),
-        multiIndex: fd.multi, celerityIgnoresMulti: !!fd.celMulti,
-        baseDifficulty: w.diff, maneuverDiff: maneuver.diff, targetingDiff: targeting.diff,
-        rangeDiff: w.ranged ? (R.RANGE[fd.range]?.diff ?? 0) : 0, minStrDiff,
-        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind, extraDiff: fd.extraDiff
-    });
+    const pool = attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice);
     if (pool.difficulty > 10) log.push(`<b>Difficulty ${pool.difficulty}:</b> above 10: the action is impossible (VtDA20 p. 323). Rolled at 10.`);
 
     let bloodSpent = (fd.potBlood ? 1 : 0) + (fd.celMulti ? 1 : 0) + (fd.extraBlood || 0);
@@ -625,16 +627,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
     // ---- Damage
     let dmg = null, soak = null, outcome = null, armorBroken = false, dmgPool = null;
     const fireSun = !!fd.fireSun;
-    let dmgType = (fireSun || fd.bane2 || (R.BANES[tKind] === "Cold iron" && /cold iron/i.test(w.name))) ? "aggravated" : (w.type || "lethal");
-    let bane = !!(fd.bane || fd.bane2 || (R.BANES[tKind] && new RegExp(R.BANES[tKind], "i").test(`${w.name} ${w.desc || ""}`)));
-    let soakDiff = 6, minLevels = 0;
-    const sb = shifterBane(target, w, fd);
-    if (sb) {
-        // Era-, breed- and form-aware (DA:W p. 102; W20 p. 255; W20 Changing Breeds)
-        bane = sb.bane && !sb.soak;
-        if (sb.bane) { dmgType = sb.type ?? dmgType; soakDiff = sb.soakDiff ?? 6; minLevels = sb.min ?? 0; }
-        log.push(`${cap(sb.metal)}: ${sb.note}`);
-    } else if (bane) log.push(`${R.BANES[tKind] ?? "Bane"} weapon: ${target?.name ?? "the target"} has no natural soak.`);
+    const dp = damageProfile(target, tKind, w, fd);
+    const { dmgType, bane, soakDiff, minLevels, sb } = dp;
+    if (dp.note) log.push(dp.note);
     if (hit && !maneuver.noDamage) {
         dmgPool = damagePool(attacker, w, net, maneuver, targeting, fd, pot);
         dmg = await rollPool(dmgPool.dice, 6, { canBotch: false, autoSuccesses: dmgPool.auto });
@@ -643,13 +638,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
         if (target) {
             const arm = armor(target);
             const armorRating = Math.max(arm.bashing, arm.lethal, arm.aggravated);
-            const sp = R.soakPool({
-                profile, damageType: dmgType,
-                stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
-                armor: arm[dmgType] ?? 0, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-                fireOrSun: fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
-                aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true
-            });
+            const sp = soakPoolFor(target, profile, w, fd, dp);
             if (fd.fortBlood && sp.autoSoak) spendNotes.push(...await spend(target, 0, 1));
             soak = await rollPool(sp.dice, soakDiff, { canBotch: false, autoSuccesses: sp.autoSoak });
             soak.pool = sp;
@@ -679,6 +668,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
         type: outcome?.type, levels: outcome?.levels ?? 0, applied: false,
         counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null
     };
+    if (autoAtkNote) log.unshift(esc(autoAtkNote));
     let html = attackCard({ attacker, target, w, ab, attrKey, pool, atk, def, defNote, autoNote, net, hit, dmg, dmgPool, soak, outcome, profile, armorBroken, counter, spendNotes, fd, maneuver, log });
     const fkey = F.attackKey({ hit, botch: atk.botch, noDamage: !!maneuver.noDamage, levels: soak ? (outcome?.levels ?? 0) : (dmg?.successes ?? 0),
         type: outcome?.type ?? w.type, soaked: !!(soak && hit && !maneuver.noDamage && !outcome?.levels) });
@@ -696,6 +686,134 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
 }
 
 function cap(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
+
+/* ------------------------------------------------------------------ */
+/*  Building blocks shared by the roll and the automatic choices       */
+/* ------------------------------------------------------------------ */
+
+function attackBasics(attacker, w) {
+    const attrKey = w.attribute || "dexterity";
+    const ab = weaponAbility(attacker, w);
+    const str = attr(attacker, "strength");
+    const minStrDiff = w.minStr && str < w.minStr ? (w.minStr - str) : 0;
+    return { attrKey, ab, minStrDiff };
+}
+
+function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0) {
+    const { attrKey, ab, minStrDiff } = attackBasics(attacker, w);
+    const cel = discipline(attacker, "Celerity");
+    return R.attackPool({
+        attribute: attr(attacker, attrKey), attributeLabel: cap(attrKey),
+        ability: ab.value, abilityLabel: ab.name,
+        accuracy: w.accuracy, maneuverDice: maneuver.dice || 0,
+        celerityDice: (fd.celDice && attrKey === "dexterity") ? cel : 0,
+        flank: fd.flank, extraDice: (fd.extraDice || 0) + boostDice, woundPenalty: woundPenalty(attacker),
+        multiIndex: num(fd.multi), celerityIgnoresMulti: !!fd.celMulti,
+        baseDifficulty: w.diff, maneuverDiff: maneuver.diff, targetingDiff: targeting.diff,
+        rangeDiff: w.ranged ? (R.RANGE[fd.range]?.diff ?? 0) : 0, minStrDiff,
+        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind, extraDiff: fd.extraDiff
+    });
+}
+
+/** Damage type, bane and soak difficulty for this weapon against this target. */
+function damageProfile(target, tKind, w, fd) {
+    let dmgType = (fd.fireSun || fd.bane2 || (R.BANES[tKind] === "Cold iron" && /cold iron/i.test(w.name))) ? "aggravated" : (w.type || "lethal");
+    let bane = !!(fd.bane || fd.bane2 || (R.BANES[tKind] && new RegExp(R.BANES[tKind], "i").test(`${w.name} ${w.desc || ""}`)));
+    let soakDiff = 6, minLevels = 0, note = "";
+    const sb = shifterBane(target, w, fd);
+    if (sb) {
+        // Era-, breed- and form-aware (DA:W p. 102; W20 p. 255; W20 Changing Breeds)
+        bane = sb.bane && !sb.soak;
+        if (sb.bane) { dmgType = sb.type ?? dmgType; soakDiff = sb.soakDiff ?? 6; minLevels = sb.min ?? 0; }
+        note = `${cap(sb.metal)}: ${sb.note}`;
+    } else if (bane) note = `${R.BANES[tKind] ?? "Bane"} weapon: ${target?.name ?? "the target"} has no natural soak.`;
+    return { dmgType, bane, soakDiff, minLevels, sb, note };
+}
+
+function soakPoolFor(target, profile, w, fd, dp) {
+    const arm = armor(target);
+    return R.soakPool({
+        profile, damageType: dp.dmgType,
+        stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
+        armor: arm[dp.dmgType] ?? 0, armorPiercing: w.piercing, bypassArmor: fd.bypass,
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: fd.soakBonus,
+        aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true
+    });
+}
+
+/** Distance between two tokens in scene units (null when either is missing). */
+function tokenDistance(a, b) {
+    try {
+        const pa = a?.center ?? a?.object?.center, pb = b?.center ?? b?.object?.center;
+        if (!pa || !pb || !globalThis.canvas?.grid) return null;
+        return canvas.grid.measurePath([pa, pb]).distance;
+    } catch (e) { return null; }
+}
+
+/** Can this attack be used at all? Bites and claws need the right body; melee needs reach; missiles need range. */
+function attackUsable(attacker, w, distance) {
+    const shifter = !!garouRules()?.isShifter?.(attacker);
+    if (w.id === "unarmed:bite" && !w.natural) return "a bite needs a hold first (clinch, hold or tackle)";
+    if (w.id === "unarmed:claw" && !w.natural && !(discipline(attacker, "Protean") >= 2 || discipline(attacker, "Vicissitude") >= 1 || shifter))
+        return "no claws (Protean 2 or Vicissitude)";
+    const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
+    if (distance != null) {
+        if (!w.ranged && distance > unit * 1.5) return "out of reach";
+        if (w.ranged && w.range > 0 && distance > w.range * 3) return "beyond three times its range";
+    }
+    return "";
+}
+
+/**
+ * The best attack for this attacker against this target (the "Automatic" weapon): every weapon, natural weapon and
+ * unarmed attack on the sheet, scored by expected health levels after the target's own best defense and soak
+ * (weighted: lethal ×1.25, aggravated ×1.6). Maneuver, targeting and the rest of the dialog's choices apply to each.
+ */
+export function bestAttack(attacker, target, fd = {}, { attackerTok = null, targetTok = null, ignoreDistance = false } = {}) {
+    const aTok = attackerTok ?? attacker?.getActiveTokens?.()[0] ?? null;
+    const tTok = targetTok ?? target?.getActiveTokens?.()[0] ?? null;
+    const measured = tokenDistance(aTok, tTok);
+    const first = planAttacks(attacker, target, fd, ignoreDistance ? null : measured);
+    // Nothing reaches: the tokens may not show where the fighters really are, so choose as if in reach and say so
+    if (!first.best && measured != null && !ignoreDistance) return { ...planAttacks(attacker, target, fd, null), distance: measured, ignoredDistance: true };
+    return { ...first, distance: measured };
+}
+
+function planAttacks(attacker, target, fd, distance) {
+    const maneuver = maneuverTable()[fd.maneuver] ?? R.MANEUVERS.normal;
+    const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
+    const tKind = target ? ((fd.profile && fd.profile !== "auto") ? fd.profile : getKind(target)) : "mortal";
+    const profile = P.profileSoak(tKind);
+    const pot = discipline(attacker, "Potence");
+    const plans = [];
+    for (const w of weaponList(attacker)) {
+        const why = attackUsable(attacker, w, distance);
+        if (why) { plans.push({ w, valid: false, why, score: -1 }); continue; }
+        // Range band from the distance, for missiles
+        let rangeBand = null;
+        if (w.ranged && distance != null && w.range > 0) rangeBand = distance <= w.range ? "short" : distance <= w.range * 2 ? "double" : "triple";
+        const f = { ...fd, range: rangeBand ?? fd.range };
+        const pool = attackPoolFor(attacker, w, f, maneuver, targeting);
+        if (pool.dice <= 0) { plans.push({ w, valid: false, why: "no dice to roll", score: -1 }); continue; }
+        let defDice = 0, defDiff = 6;
+        if (target && f.defense !== "none") {
+            const d = (f.defense && f.defense !== "auto") ? planDefense(target, f.defense, f, w, maneuver) : bestDefense(target, f, w, maneuver).best;
+            if (d?.valid) { defDice = d.dice; defDiff = d.diff; }
+        }
+        const dp = target ? damageProfile(target, tKind, w, f) : { dmgType: w.type || "lethal", minLevels: 0 };
+        const dmg = damagePool(attacker, w, 0, maneuver, targeting, f, pot);
+        const sp = target ? soakPoolFor(target, profile, w, f, dp) : { dice: 0, autoSoak: 0 };
+        const harm = R.expectedHarm({ atkDice: pool.dice, atkDiff: Math.min(10, pool.difficulty), atkAuto: f.willpower ? 1 : 0, defDice, defDiff,
+            dmgBase: dmg.dice, dmgAuto: dmg.auto, soakDice: target ? sp.dice : 0, soakDiff: dp.soakDiff ?? 6, soakAuto: sp.autoSoak ?? 0,
+            halveBashing: dp.dmgType === "bashing" && (profile === "vampire" || (profile === "ghoul" && isElder(target))),
+            minLevels: dp.minLevels ?? 0, noDamage: !!maneuver.noDamage });
+        const score = maneuver.noDamage ? harm.expectedNet : harm.expectedLevels * (R.HARM_WEIGHT[dp.dmgType] ?? 1);
+        plans.push({ w, valid: true, score: score + (w.equipped ? 1e-6 : 0), dmgType: dp.dmgType, rangeBand,
+            atkDice: pool.dice, atkDiff: pool.difficulty, defDice, ...harm });
+    }
+    const best = plans.filter(p => p.valid).sort((a, b) => b.score - a.score)[0] ?? null;
+    return { best, plans };
+}
 
 /**
  * Works out one defense without rolling: {type, valid, invalid?, dice, diff, abilityName, abKey, notes, weapon, expected}.
@@ -1091,8 +1209,8 @@ Hooks.once("init", () => {
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.2.0",
-        conditionMods, dazedThreshold, bestDefense, _dialogs: { attackDialogHtml } };
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.3.0",
+        conditionMods, dazedThreshold, bestDefense, bestAttack, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
     L.alias("combat", "vtda20combat", api, "vtda20-combat");
     const mod = game.modules.get(MOD);
