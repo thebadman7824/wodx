@@ -19,3 +19,11 @@
    - The "WoDX Time-Skip Test" journal should say 27 of 27 checks passed. The five "Skip Test ·" characters show the results. Two mortals are in "WoDX · The Dead", the ghoul is alive with an 18-point blood pool, and the elder's sheet has Firearms and Computer while keeping Melee 3, Dominate 3 and Theology 3.
 6. **Optional, in rothenstein-wodx: a plan only.** Clock → **Pass the years** → 50 → "Show what happens", then "Write the plan to a journal". Read it in "WoDX Time Skips". Do not press "Pass the years" there unless you mean to skip your chronicle ahead.
 7. Look at the browser console (F12) for red lines starting with "WoDX", then tell Claude you're done.
+
+## After the first run (wodx-creation 0.2.1)
+
+The test ran in rothenstein-wodx. To put Rothenstein back and finish the gate:
+
+1. Return to Setup. In **Backups**, pick rothenstein-wodx and restore the backup from 7 November (the newest one, made just before the test). This replaces the world as it is now, so do it only if you didn't change anything else in Rothenstein since then that you want to keep.
+2. Restart Foundry, so it loads wodx-creation 0.2.1.
+3. Open **wodx-template** and enable WoDX Chronicle and WoDX Creation there if they are off. The droplet button → **Time-skip test** (the button only appears in that world). It should report 27 of 27.

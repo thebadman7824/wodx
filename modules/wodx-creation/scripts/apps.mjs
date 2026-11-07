@@ -6,7 +6,7 @@ import {writeLineageJournal, ordinal} from "./lineage.mjs";
 import {XP} from "../data/vampire.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
-import {runSkipTest} from "./skip-test.mjs";
+import {runSkipTest, isTestWorld} from "./skip-test.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const OBSERVER = 2;
@@ -91,7 +91,7 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="log"><i class="fa-solid fa-book"></i> Experience log</button>
           <button type="button" data-action="lineage"><i class="fa-solid fa-sitemap"></i> Lineage journal</button>
           <button type="button" data-action="passYears"><i class="fa-solid fa-hourglass-half"></i> Pass the years</button>
-          <button type="button" data-action="skipTest" title="The Phase 4 gate. Moves the clock: run it in wodx-template"><i class="fa-solid fa-vial"></i> Time-skip test</button>
+          ${isTestWorld() ? `<button type="button" data-action="skipTest" title="The Phase 4 gate. Moves this world's clock to 2025"><i class="fa-solid fa-vial"></i> Time-skip test</button>` : ""}
         </div>
         <div class="form-group"><label><input type="checkbox" data-action="toggleNPCs" ${this.showNPCs ? "checked" : ""}> Show every NPC (to make one an ally)</label></div>
         ${searchBox("table.wodx-roster", "Search characters…", "Search characters")}

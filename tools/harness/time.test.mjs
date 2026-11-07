@@ -102,7 +102,7 @@ test("applying a plan: only ticked changes, and nothing is lost", async () => {
   assert.equal(game.actors.size, before + 1, "the heir is the only new sheet; nobody is deleted");
   assert.ok([...game.actors].reduce((n, a) => n + a.items.size, 0) >= itemCount, "no item lost");
   assert.equal(api().time.yearOf(api().data.chronology(hedwig).died), 1261);
-  assert.equal(game.folders.get(hedwig.folder).name, "WoDX · The Dead");
+  assert.equal(hedwig.folder.name, "WoDX · The Dead", "Foundry's actor.folder is the Folder");
   const heir = game.actors.getName("Heir of Hedwig");
   assert.equal(api().data.chronology(heir).bornYear, 1236);
   assert.equal(heir.items.filter(i => i.type === "Experience").length, 0);
@@ -175,7 +175,19 @@ test("the Pass the Years window", async () => {
   assert.equal(app.plan, null);
 });
 
+test("the time-skip test refuses to run outside the template world", async () => {
+  const id = game.world.id;
+  game.world.id = "rothenstein-wodx";
+  const t = game.time.worldTime;
+  assert.equal(await api().runSkipTest(), null);
+  assert.equal(game.time.worldTime, t, "nothing moved");
+  assert.ok(mock.log.notifications.some(([l, m]) => l === "error" && /only runs in wodx-template/.test(m)));
+  mock.log.notifications.length = 0;
+  game.world.id = id;
+});
+
 test("GATE: 1197 to 2025 with nothing lost (the in-world time-skip test)", async () => {
+  game.world.id = "wodx-template";
   DialogV2.queue(() => true);
   const r = await api().runSkipTest();
   const failed = r.results.filter(x => !x.pass);

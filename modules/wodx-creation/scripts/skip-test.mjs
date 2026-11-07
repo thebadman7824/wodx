@@ -46,8 +46,17 @@ async function makeCast(folder) {
   return {elder, smith, ward, ghoul, thrall};
 }
 
+/** The test moves the clock and kills characters, so it only runs in the template world. */
+export function isTestWorld(world = game.world) {
+  return world?.id === "wodx-template" || !!world?.flags?.wodx?.testWorld;
+}
+
 export async function runSkipTest() {
   if ( !game.user.isGM ) return null;
+  if ( !isTestWorld() ) {
+    ui.notifications.error(`The time-skip test only runs in wodx-template: it moves the clock to 2025 and passes 800 years over every character. This world is ${game.world?.title ?? game.world?.id}.`);
+    return null;
+  }
   const {DialogV2} = foundry.applications.api;
   const ok = await DialogV2.confirm({
     classes: ["wodx", "wodx-dialog"],
@@ -92,7 +101,10 @@ export async function runSkipTest() {
   const died = a => chronology(game.actors.get(a.id)).died;
   check("Old Smith (born 1150) died of age by 1347", died(smith) !== undefined && yearOf(died(smith)) === 1347);
   check("Young Ward (born 1290) lived past 1347 and died by 1450", died(ward) !== undefined && yearOf(died(ward)) === 1450);
-  check("The dead are kept, filed in WoDX · The Dead", game.actors.get(smith.id)?.folder && game.folders.get(game.actors.get(smith.id).folder)?.name === "WoDX · The Dead");
+  // In Foundry an actor's `folder` is the Folder itself, not its id
+  const folderName = a => a?.folder?.name ?? game.folders.get(a?.folder)?.name;
+  check("The dead are kept, filed in WoDX · The Dead", folderName(game.actors.get(smith.id)) === "WoDX · The Dead" && folderName(game.actors.get(ward.id)) === "WoDX · The Dead",
+    `${folderName(game.actors.get(smith.id))}; ${folderName(game.actors.get(ward.id))}`);
   const g = game.actors.get(ghoul.id);
   check("The fed ghoul is alive and still a ghoul", lineOf(g) === "ghoul" && died(ghoul) === undefined);
   check("The ghoul's blood pool grew one a century (18 after 825 years)", Number(g.system.advantages.bloodpool.max) === 18, `${g.system.advantages.bloodpool.max}`);

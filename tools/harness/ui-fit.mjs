@@ -120,7 +120,11 @@ await change.embraceDialog();
 await change.vitaeDialog();
 await awardDialog();
 const {runSkipTest} = await import(join(root, "modules/wodx-creation/scripts/skip-test.mjs"));
+// The test only runs in the template world
+const worldId = game.world.id;
+game.world.id = "wodx-template";
 await runSkipTest();
+game.world.id = worldId;
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: 400, height: "auto",

@@ -47,8 +47,9 @@ export async function installActors(root) {
   }
   class Actor {
     constructor(data) {
-      const {items = [], ...rest} = structuredClone(data);
+      const {items = [], folder = null, ...rest} = structuredClone(data);
       Object.assign(this, rest);
+      this._folder = folder;
       this.id = data._id ?? newId();
       this.flags ??= {};
       this.ownership ??= {default: 0};
@@ -74,6 +75,9 @@ export async function installActors(root) {
       game.actors.set(a.id, a);
       return a;
     }
+    // As in Foundry: `folder` reads as the Folder document; updates and toObject() use its id
+    get folder() { return this._folder ? (game.folders.get(this._folder) ?? null) : null; }
+    set folder(v) { this._folder = v?.id ?? v ?? null; }
     getFlag(s, k) { return this.flags?.[s]?.[k]; }
     async setFlag(s, k, v) { (this.flags[s] ??= {})[k] = structuredClone(v); return this; }
     async unsetFlag(s, k) { delete this.flags?.[s]?.[k]; return this; }
@@ -89,7 +93,7 @@ export async function installActors(root) {
       if ( type !== "Item" ) throw new Error(`Unexpected embedded type ${type}`);
       return list.map(d => { const it = new Item(d, this); this.items.set(it.id, it); return it; });
     }
-    toObject() { const {items, ...rest} = this; return structuredClone({...rest, _id: this.id, items: [...items.values()].map(i => { const {parent, ...r} = i; return {...structuredClone(r), _id: i.id}; })}); }
+    toObject() { const {items, _folder, ...rest} = this; return structuredClone({...rest, folder: _folder, _id: this.id, items: [...items.values()].map(i => { const {parent, ...r} = i; return {...structuredClone(r), _id: i.id}; })}); }
     testUserPermission(user) { return user.isGM || (this.ownership?.[user.id] ?? this.ownership?.default ?? 0) >= 3; }
     get isOwner() { return this.testUserPermission(game.user); }
     get hasPlayerOwner() { return Object.entries(this.ownership).some(([id, l]) => id !== "default" && l >= 3 && !game.users.get(id)?.isGM); }
