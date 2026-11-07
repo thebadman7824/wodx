@@ -172,6 +172,16 @@ await buildPenumbraPrototype(scene);
 const change = await import(join(root, "modules/wodx-creation/scripts/change-of-state.mjs"));
 await change.embraceDialog();
 await change.vitaeDialog();
+// The First Change needs WoDX Actions' rules: load them on their own here (game.wodxActions comes later)
+{
+  const GX = await import(join(root, "modules/wodx-actions/scripts/garou.js"));
+  await GX.loadData();
+  const keep = game.wodxActions;
+  game.wodxActions = {garouRules: GX, gifts: () => GX.gifts(), giftItem: g => GX.giftItem(g)};
+  const fc = await import(join(root, "modules/wodx-creation/scripts/first-change.mjs"));
+  await fc.firstChangeDialog();
+  game.wodxActions = keep;
+}
 await awardDialog();
 const {runSkipTest} = await import(join(root, "modules/wodx-creation/scripts/skip-test.mjs"));
 // The test only runs in the template world
@@ -204,6 +214,36 @@ game.world.id = worldId;
     ["Blood Oath", () => game.wodxActions.bloodOath({actor})], ["Torpor", () => game.wodxActions.torpor({actor})], ["Hazard", () => game.wodxActions.hazard({actor})],
     ["Sin", () => game.wodxActions.sin({actor})], ["Willpower uses", () => game.wodxActions.uses({actor, resource: "willpower"})],
     ["Migration", () => game.wodxActions.migrate()]];
+  // Phase 6b: a Dark Ages Garou with a full hand of Gifts, a fetish, a talen and a rite; Kinfolk and the First Change
+  {
+    const GX = await import(join(root, "modules/wodx-actions/scripts/garou.js"));
+    await GX.loadData();
+    const wolf = {system: JSON.parse(JSON.stringify(actor.system ?? {})), flags: {}};
+    Object.assign(wolf, {id: "wolf00000000001", uuid: "Actor.wolf00000000001", name: "Wilhelm Eisenfang, a Garou with a fairly long name", type: "Werewolf",
+      getActiveTokens: () => [], effects: [], statuses: new Set(), update: async () => wolf, setFlag: async () => wolf, getFlag: () => undefined, isOwner: true,
+      items: new Map()});
+    wolf.items.find = f => [...wolf.items.values()].find(f);
+    wolf.items.filter = f => [...wolf.items.values()].filter(f);
+    wolf.items.some = f => [...wolf.items.values()].some(f);
+    wolf.system = {...wolf.system, breed: "wod.bio.breedname.homid", auspice: "wod.bio.auspicename.ahroun", tribe: "custom", custom: {tribe: "Fenrir"},
+      shapes: Object.fromEntries(["homid", "glabro", "crinos", "hispo", "lupus"].map(k => [k, {isactive: k === "homid", label: k}])),
+      advantages: {...wolf.system.advantages, rage: {permanent: 5, temporary: 4}, gnosis: {permanent: 3, temporary: 3}, willpower: {permanent: 4, temporary: 4}},
+      renown: {rank: 2, glory: {permanent: 4, temporary: 10}, honor: {permanent: 1, temporary: 0}, wisdom: {permanent: 0, temporary: 0}},
+      health: {damage: {bashing: 1, lethal: 1, aggravated: 0}}, conditions: {isfrenzy: true}};
+    for ( const g of GX.gifts().slice(0, 12) ) { const it = GX.giftItem(g); it.id = `g${g.id}`.slice(0, 16); it.getFlag = (s, k) => it.flags?.[s]?.[k]; wolf.items.set(it.id, it); }
+    for ( const [k, d] of [["f1", {name: "Fang Dagger", type: "Fetish", system: {gnosis: 5}}], ["f2", {name: "Moon Bridge Pebble", type: "Fetish", system: {type: "wod.types.talen", gnosis: 4}}],
+      ["r1", {name: "Rite of Cleansing", type: "Power", system: {type: "wod.types.rite", level: 1}}]] ) wolf.items.set(k, {id: k, ...d, getFlag: () => undefined});
+    game.actors.set(wolf.id, wolf);
+    game.time ??= {worldTime: 0};
+    const ga = game.wodxActions;
+    tries.push(["Garou menu", () => ga.menu({actor: {actor: wolf}})], ["Change form", () => ga.shiftForm({actor: {actor: wolf}})], ["Rage roll", () => ga.rageRoll({actor: {actor: wolf}})],
+      ["Spend Rage", () => ga.spendRage({actor: {actor: wolf}})], ["End frenzy (Garou)", () => ga.garouEndFrenzy({actor: {actor: wolf}})], ["Rise on Rage", () => ga.remainActive({actor: {actor: wolf}})],
+      ["Meditate", () => ga.meditate({actor: {actor: wolf}})], ["Use a Gift", () => ga.useGift({actor: {actor: wolf}})], ["Learn a Gift", () => ga.learnGift({actor: {actor: wolf}})],
+      ["Perform a rite", () => ga.performRite({actor: {actor: wolf}})], ["Summon a spirit", () => ga.summonSpirit({actor: {actor: wolf}})], ["Fetish", () => ga.useFetish({actor: {actor: wolf}})],
+      ["Accomplishment", () => ga.accomplishment({actor: {actor: wolf}})], ["Battle Scar", () => ga.battleScar({actor: {actor: wolf}})], ["Award Renown", () => ga.awardRenown()],
+      ["Delirium", () => ga.delirium()], ["Kinfolk", () => ga.kinfolk({actor: {actor: target}})], ["Chiminage", () => ga.chiminage({actor: {actor: wolf}})],
+      ["Regenerate", () => ga.regen({actor: {actor: wolf}})], ["Attack (Garou)", () => game.wodxCombat.attack({attacker: wolf, target})]);
+  }
   for ( const [label, fn] of tries ) {
     const n = captured.length;
     try { fn(); await new Promise(r => setTimeout(r, 20)); }
@@ -253,7 +293,7 @@ for ( const [vw, vh] of sizes ) {
         <header class="window-header"><h1 class="window-title">${w.name}</h1></header>
         <section class="window-content">${w.content}</section>
       </${w.tag}></body></html>`;
-    const file = join(outDir ?? "/tmp", `ui-fit-${vw}x${vh}-${w.name.replaceAll(" ", "-")}.html`);
+    const file = join(outDir ?? "/tmp", `ui-fit-${vw}x${vh}-${w.name.replace(/[\s\/]+/g, "-")}.html`);
     writeFileSync(file, html);
     await page.goto(pathToFileURL(file).href);
     // Foundry centers the window and clamps it to the screen (ApplicationV2#setPosition)
@@ -323,7 +363,7 @@ for ( const [vw, vh] of sizes ) {
     }
     if ( outDir ) {
       await page.evaluate(() => document.querySelectorAll(".wodx-scroll").forEach(s => s.scrollTop = 0));
-      await page.screenshot({path: join(outDir, `ui-fit-${vw}x${vh}-${w.name.replaceAll(" ", "-")}.png`)});
+      await page.screenshot({path: join(outDir, `ui-fit-${vw}x${vh}-${w.name.replace(/[\s\/]+/g, "-")}.png`)});
     }
     await page.close();
   }

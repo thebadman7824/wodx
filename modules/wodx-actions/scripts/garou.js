@@ -360,7 +360,7 @@ export function build(ctx) {
         const diff = G.meditationDifficulty(earlier);
         const content = `<form><p><b>${esc(actor.name)}</b>: Gnosis ${i.gnosis.temp}/${i.gnosis.perm}. Wits + Enigmas at ${diff}${earlier ? ` (+${earlier} for earlier days this week)` : ""}; up to one point an hour (DA:W p. 92; W20 p. 146).</p>
           <div class="form-group"><label>Hours of meditation</label><input type="number" name="hours" value="1" min="1"/></div>
-          <div class="form-group"><label>Advance the clock</label><input type="checkbox" name="advance" checked/></div></form>`;
+          <div class="form-group"><label>Advance the clock by the hours (Storyteller)</label><input type="checkbox" name="advance"/></div></form>`;
         return dialog(`Meditate — ${actor.name}`, content, "Roll", async fd => {
             const rr = await rollPool(attr(actor, "wits") + abilityDots(actor, "enigmas"), diff);
             const gain = Math.min(rr.botch ? 0 : rr.successes, Math.max(1, n(fd.hours)), Math.max(0, i.gnosis.perm - i.gnosis.temp));
@@ -454,7 +454,7 @@ export function build(ctx) {
         const groupsTxt = g => g.g.map(cap).join(", ").replace(/-/g, " ");
         const content = `<form class="wodx-learn"><p><b>${esc(actor.name)}</b>: ${esc(cap(i.breed))}, ${esc(cap(i.auspice) || "no auspice")}, ${esc(cap(i.tribe).replace(/-/g, " ") || "no tribe")}; Rank ${i.rank} (Gifts up to level ${rankCap}, DA:W p. 111).</p>
           ${searchBox("ul.wodx-gift-list", "Search Gifts…", "Search Gifts")}
-          <ul class="wodx-gift-list" style="max-height:340px;overflow:auto">${rows.map(r => `<li data-search-item><label><input type="radio" name="gift" value="${r.g.id}" ${r.ok ? "" : "disabled"}/> <b>${esc(r.g.n)}</b> (level ${r.g.l}) — ${esc(groupsTxt(r.g))} · ${r.xp} XP${r.own ? "" : " (outside)"}${r.ok ? "" : " · rank too low"}<br><span class="wodx-quiet">${esc(r.g.e)}</span></label></li>`).join("")}</ul>
+          <ul class="wodx-gift-list" style="max-height:340px;overflow-y:auto;flex:none">${rows.map(r => `<li data-search-item><label><input type="radio" name="gift" value="${r.g.id}" ${r.ok ? "" : "disabled"}/> <b>${esc(r.g.n)}</b> (level ${r.g.l}) — ${esc(groupsTxt(r.g))} · ${r.xp} XP${r.own ? "" : " (outside)"}${r.ok ? "" : " · rank too low"}<br><span class="wodx-quiet">${esc(r.g.e)}</span></label></li>`).join("")}</ul>
           <div class="form-group"><label>Spend experience through the log</label><input type="checkbox" name="xp" checked/></div>
           <p class="vta-note">Learned from a spirit (summoned at a caern), another Garou (a month; +1 difficulty until practised) or a quest (DA:W p. 111). Cost: level × 3 for the breed's, auspice's or tribe's own, × 5 otherwise (p. 107).</p></form>`;
         return dialog(`Learn a Gift — ${actor.name}`, content, "Learn", async fd => {
@@ -613,8 +613,8 @@ export function build(ctx) {
         const shifters = game.actors.filter(a => isShifter(a));
         const sel = new Set((canvas.tokens?.controlled ?? []).map(t => t.actor?.id));
         const content = `<form><p>Renown is earned only when others hear of the deed; spirits count (DA:W p. 98).</p>
-          ${searchBox("ul.wodx-renown-actors", "Search characters…", "Search characters")}
-          <ul class="wodx-renown-actors" style="max-height:220px;overflow:auto">${shifters.map(a => `<li data-search-item><label><input type="checkbox" name="a_${a.id}" ${sel.has(a.id) ? "checked" : ""}/> ${esc(a.name)}</label></li>`).join("")}</ul>
+          ${shifters.length > 5 ? searchBox("div.wodx-renown-actors", "Search characters…", "Search characters") : ""}
+          <div class="wodx-renown-actors" style="max-height:220px;overflow-y:auto;flex:none">${shifters.map(a => `<div class="form-group" data-search-item><label>${esc(a.name)}</label><input type="checkbox" name="a_${a.id}" ${sel.has(a.id) ? "checked" : ""}/></div>`).join("")}</div>
           ${RENOWN.map(k => `<div class="form-group"><label>${cap(k)} (temporary)</label><input type="number" name="${k}" value="0"/></div>`).join("")}
           <div class="form-group"><label>For</label><input type="text" name="reason" placeholder="the deed"/></div>
           <p class="vta-note">Losses beyond the pool break a permanent dot into ten (DA:W p. 100). Fera use their own Renown names for the same three slots.</p></form>`;

@@ -189,7 +189,7 @@ export async function firstChangeDialog() {
       <div class="form-group"><label>Glory · Honor · Wisdom</label><input type="number" name="glory" min="0" max="10"><input type="number" name="honor" min="0" max="10"><input type="number" name="wisdom" min="0" max="10"></div>
       <fieldset><legend>Starting Gifts: one each from breed, auspice and tribe, marked at the top (DA:W p. 107)</legend>
         ${searchBox("ul.wodx-fc-gifts", "Search Gifts…", "Search Gifts")}
-        <ul class="wodx-fc-gifts" style="max-height:220px;overflow:auto;list-style:none;padding-left:0">${giftRows.map(g =>
+        <ul class="wodx-fc-gifts" style="max-height:220px;overflow-y:auto;flex:none;list-style:none;padding-left:0">${giftRows.map(g =>
           `<li data-search-item><label><input type="checkbox" name="gift" value="${esc(g.id)}" data-name="${esc(g.n)}"> ${esc(g.n)} <b class="wodx-fc-tag"></b> <span class="wodx-quiet">(${esc(g.g.join(", "))}; p. ${g.p})</span></label></li>`).join("")}</ul>
       </fieldset>
       <p class="wodx-fc-notes wodx-quiet"></p>

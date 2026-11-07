@@ -1570,7 +1570,7 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.0.1",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.1.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => pm().uses(o.actor ?? resolveActor(), o.resource ?? "willpower"), cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
     cast: (o = {}) => pm().cast(o.actor ?? resolveActor()),
@@ -1624,12 +1624,17 @@ Hooks.once("ready", async () => {
 function garouHooks() {
     let moonBusy = false;
     Hooks.on("updateWorldTime", () => {
-        if (moonBusy || !game.user.isGM) return;
+        if (moonBusy || !game.user.isGM || L.chronicle()?.isSkipping?.()) return;
         moonBusy = true;
         gx().moonRise().catch(e => console.error("WoDX |", e)).finally(() => { moonBusy = false; });
     });
+    Hooks.on("wodxSkipEnd", () => { if (game.user.isGM) gx().moonRise().catch(e => console.error("WoDX |", e)); });
+    const lastRound = new Map();
     Hooks.on("updateCombat", (combat, changed) => {
         if (!("round" in (changed ?? {})) || !combat.started) return;
+        // Only a new round, not stepping back through the tracker
+        if (combat.round <= (lastRound.get(combat.id) ?? 0)) return;
+        lastRound.set(combat.id, combat.round);
         gx().regenRound(combat).catch(e => console.error("WoDX |", e));
     });
     Hooks.on("preUpdateActor", (actor, changes, options) => {
