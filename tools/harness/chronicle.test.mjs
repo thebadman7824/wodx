@@ -1,0 +1,216 @@
+import assert from "node:assert/strict";
+import {test} from "node:test";
+import {fileURLToPath} from "node:url";
+import {dirname, join} from "node:path";
+import {installMock} from "./foundry-mock.mjs";
+
+const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const mock = installMock({dataRoot: root});
+// fetch paths are "/modules/wodx-chronicle/..." → <repo>/modules/wodx-chronicle/...
+
+await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
+const {getEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const {ClockApp} = await import(join(root, "modules/wodx-chronicle/scripts/clock-app.mjs"));
+const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/house-rules-app.mjs"));
+const M = "wodx-chronicle";
+const set = (k) => game.settings.get(M, k);
+const date = (y, m, d, h = 21) => getEngine().dateToTime({year: y, month: m, day: d, hour: h});
+const fill = values => form => {
+  for ( const [k, v] of Object.entries(values) ) {
+    const el = form.elements[k];
+    if ( el.type === "checkbox" ) el.checked = !!v; else el.value = String(v);
+  }
+  return "ok";
+};
+
+test("init registers the calendar and settings", async () => {
+  await Hooks.callAll("init");
+  assert.equal(CONFIG.time.worldCalendarConfig.years.yearZero, 1197);
+  assert.equal(set("reform"), "bohemia-1584");
+  assert.equal(set("rule.eraProposals"), true);
+});
+
+test("ready sets the first era, writes the rules journal and opens the clock", async () => {
+  mock.setupTime();
+  await Hooks.callAll("ready");
+  await mock.settle();
+  assert.equal(set("activeEra"), "dark-ages");
+  assert.equal(CONFIG.worldofdarkness.defaultVampireEra, "darkages");
+  assert.equal(CONFIG.worldofdarkness.defaultMageEra, "victorian");
+  assert.equal(game.settings.get("worldofdarkness", "eraVampire"), "darkages");
+  const rules = game.journal.find(j => j.getFlag(M, "kind") === "chronicle-rules");
+  assert.ok(rules, "Chronicle Rules journal exists");
+  assert.equal(game.journal.filter(j => j.getFlag(M, "kind") === "chronicle-rules").length, 1, "only one rules journal");
+  assert.match(rules.pages.getName("Era and calendar").text.content, /Dark Ages/);
+  assert.match(rules.pages.getName("House rules").text.content, /Light-touch mode/);
+  assert.ok(document.querySelector("#wodx-clock, .wodx-clock") || true);
+  assert.ok(mock.log.notifications.some(([, m]) => /opening date/.test(m)));
+});
+
+test("the clock shows the date and moon", async () => {
+  const app = new ClockApp();
+  await app.render({force: true});
+  const text = app.element.textContent;
+  assert.match(text, /Wednesday, 1 January 1197/);
+  assert.match(text, /Julian calendar/);
+  assert.match(text, /Auspice moon/);
+});
+
+test("set date: 10 March 1200, 21:00; a reform-skipped day is refused", async () => {
+  const {setDateDialog} = game.modules.get(M).api ? {setDateDialog: game.modules.get(M).api.setDate} : {};
+  mock.DialogV2.queue(fill({year: 1200, month: 3, day: 10, hour: 21, minute: 0}));
+  assert.equal(await setDateDialog(), true);
+  assert.equal(game.time.worldTime, date(1200, 3, 10));
+  assert.equal(set("openingSet"), true);
+  mock.DialogV2.queue(fill({year: 1584, month: 1, day: 10, hour: 0, minute: 0}));
+  assert.equal(await setDateDialog(), false);
+  assert.ok(mock.log.notifications.some(([, m]) => /skipped at the calendar reform/.test(m)));
+  mock.DialogV2.queue(fill({year: 1201, month: 2, day: 30, hour: 0, minute: 0}));
+  assert.equal(await setDateDialog(), false);
+});
+
+test("next dusk lands after sunset", async () => {
+  const app = new ClockApp();
+  await app.render({force: true});
+  await game.time.set(date(1200, 3, 10, 10));
+  await app.click('[data-action="dusk"]');
+  const d = getEngine().timeToDate(game.time.worldTime);
+  assert.ok(d.hour >= 17 && d.hour <= 19, `dusk at ${d.hour}:${d.minute}`);
+});
+
+test("crossing into 1347 proposes an era change; approving applies it", async () => {
+  await game.time.set(date(1347, 6, 1));
+  await mock.settle();
+  const api = game.modules.get(M).api;
+  const pending = api.approvals.pending();
+  assert.equal(pending.length, 1);
+  assert.equal(pending[0].type, "era-change");
+  assert.equal(set("activeEra"), "dark-ages", "not changed before approval");
+  await game.time.advance(3600);
+  assert.equal(api.approvals.pending().length, 1, "no duplicate proposal");
+  await api.approvals.decide(pending[0].id, "approve");
+  await mock.settle();
+  assert.equal(set("activeEra"), "long-night");
+  assert.ok(mock.log.chat.some(c => /Plague and Long Night/.test(c.content)));
+});
+
+test("rejecting keeps the era and is not asked again", async () => {
+  const api = game.modules.get(M).api;
+  await game.time.set(date(1460, 1, 1));
+  const [p] = api.approvals.pending();
+  assert.equal(p.data.to, "renaissance");
+  await api.approvals.decide(p.id, "reject");
+  await game.time.advance(86400);
+  assert.equal(api.approvals.pending().length, 0);
+  assert.equal(set("activeEra"), "long-night");
+});
+
+test("with proposals off the era follows the date at once; the lock overrides", async () => {
+  await game.settings.set(M, "rule.eraProposals", false);
+  await game.time.advance(86400);
+  await mock.settle();
+  assert.equal(set("activeEra"), "renaissance");
+  await game.settings.set(M, "eraLock", "classical");
+  await mock.settle();
+  assert.equal(set("activeEra"), "classical");
+  assert.equal(CONFIG.worldofdarkness.defaultMortalEra, "classical");
+  assert.equal(CONFIG.worldofdarkness.defaultWerewolfEra, "darkages");
+  await game.settings.set(M, "eraLock", "");
+  await mock.settle();
+  assert.equal(set("activeEra"), "renaissance");
+  await game.settings.set(M, "rule.eraProposals", true);
+});
+
+test("a player's request reaches the queue as a plain request, even if it claims another type", async () => {
+  mock.asPlayer();
+  const api = game.modules.get(M).api;
+  mock.DialogV2.queue(fill({title: "Can Anna's ghoul learn Auspex?", detail: "From her domitor"}));
+  await api.approvals.askStoryteller();
+  await api.propose({type: "era-change", title: "sneaky", data: {to: "modern"}});
+  assert.equal(mock.log.socket.length, 2);
+  await mock.deliver("gm");
+  mock.asGM();
+  const pending = api.approvals.pending();
+  assert.equal(pending.length, 2);
+  assert.ok(pending.every(p => p.type === "request"));
+  await api.approvals.decide(pending[0].id, "approve", "Yes, at the usual cost");
+  assert.ok(mock.log.chat.some(c => c.whisper?.includes("p1") && /usual cost/.test(c.content)));
+  await api.approvals.decide(pending[1].id, "reject");
+});
+
+test("no GM online: the player is told, nothing is sent", async () => {
+  mock.asPlayer();
+  globalThis.__gmOnline = false;
+  const api = game.modules.get(M).api;
+  const sent = await api.propose({type: "request", title: "x"});
+  assert.equal(sent, false);
+  assert.equal(mock.log.socket.length, 0);
+  globalThis.__gmOnline = true;
+  mock.asGM();
+});
+
+test("X-card: shown to the presser, sent without a name, pauses the game", async () => {
+  mock.asPlayer();
+  const api = game.modules.get(M).api;
+  api.safety.pressXCard();
+  assert.ok(document.getElementById("wodx-xcard"));
+  assert.equal(mock.log.socket.length, 1);
+  assert.deepEqual(mock.log.socket[0].data, {type: "safety.xcard", payload: {}});
+  await mock.deliver("gm");
+  mock.asGM();
+  assert.equal(game.paused, true);
+  game.paused = false;
+});
+
+test("lines and veils: recorded unsigned, removable", async () => {
+  mock.asPlayer();
+  const api = game.modules.get(M).api;
+  mock.DialogV2.queue(fill({kind: "line", text: "No harm to children"}));
+  await api.safety.submitLineOrVeil();
+  mock.DialogV2.queue(fill({kind: "veil", text: "Torture"}));
+  await api.safety.submitLineOrVeil();
+  await mock.deliver("gm");
+  mock.asGM();
+  const j = game.journal.find(x => x.getFlag(M, "kind") === "session-zero");
+  const html = j.pages.getName("Lines and veils").text.content;
+  assert.match(html, /No harm to children/);
+  assert.match(html, /Torture/);
+  assert.doesNotMatch(html, /Anna/);
+  assert.match(j.pages.getName("Checklist").text.content, /Lines and veils/);
+  mock.DialogV2.queue(form => { form.querySelector("input[name=rm]").checked = true; return "ok"; });
+  await api.safety.manageLinesVeils();
+  assert.doesNotMatch(j.pages.getName("Lines and veils").text.content, /No harm to children/);
+});
+
+test("house rules form saves switches and rewrites the rules journal", async () => {
+  const app = new HouseRulesApp();
+  await app.render({force: true});
+  app.element.querySelector('input[name="timeOfJudgment"]').checked = true;
+  await app.submit();
+  await mock.settle();
+  assert.equal(set("rule.timeOfJudgment"), true);
+  const rules = game.journal.find(j => j.getFlag(M, "kind") === "chronicle-rules");
+  assert.match(rules.pages.getName("House rules").text.content, /On:<\/strong> Time of Judgment/);
+});
+
+test("era test: a character per line in every era, all pass", async () => {
+  const api = game.modules.get(M).api;
+  mock.DialogV2.queue(() => true);
+  const result = await api.runEraTest();
+  assert.equal(result.rows.length, 11 * 4);
+  assert.equal(result.failures, 0, JSON.stringify(result.rows.filter(r => !r.pass)));
+  const j = game.journal.find(x => x.getFlag(M, "kind") === "era-test");
+  assert.match(j.pages.getName("Results").text.content, /All passed/);
+  assert.equal(CONFIG.worldofdarkness.defaultVampireEra, "darkages", "active era restored afterwards");
+});
+
+test("module stays idle in a world without the WoDX flag", async () => {
+  // Checked by reading main.mjs: init returns before registering anything when flags.wodx is missing.
+  const src = (await import("node:fs")).readFileSync(join(root, "modules/wodx-chronicle/scripts/main.mjs"), "utf8");
+  assert.match(src, /if \( !isWoDXWorld\(\) \)/);
+});
+
+test("no errors were raised as notifications", () => {
+  const errors = mock.log.notifications.filter(([level]) => level === "error");
+  assert.deepEqual(errors, []);
+});

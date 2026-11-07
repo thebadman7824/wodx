@@ -1,0 +1,1 @@
+{"name": "wodx-harness", "private": true, "type": "module", "dependencies": {"jsdom": "24.1.3"}}

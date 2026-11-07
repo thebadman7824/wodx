@@ -1,0 +1,48 @@
+/* WoDX Chronicle. Night palette; colours chosen to stay readable for colour-blind players. */
+.wodx {
+  --wodx-ink: #e8e2d6;
+  --wodx-quiet: #a99f8f;
+  --wodx-panel: #16141a;
+  --wodx-line: #3b3540;
+  --wodx-accent: #c9a14a;
+  --wodx-alert: #d8572a;
+}
+.wodx .window-content { background: var(--wodx-panel); color: var(--wodx-ink); }
+.wodx section + section { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--wodx-line); }
+.wodx h3 { margin: 0 0 0.25rem; border: none; color: var(--wodx-ink); }
+.wodx p { margin: 0.25rem 0; }
+.wodx .wodx-quiet { color: var(--wodx-quiet); font-size: 0.9em; }
+.wodx .wodx-notice { color: var(--wodx-accent); }
+.wodx .wodx-tag {
+  display: inline-block; padding: 0 0.4em; border: 1px solid var(--wodx-line); border-radius: 4px;
+  font-size: 0.8em; color: var(--wodx-quiet); vertical-align: middle;
+}
+.wodx .wodx-tag.approve { color: #7fb77e; border-color: #4d6e4c; }
+.wodx .wodx-tag.reject { color: var(--wodx-alert); border-color: #6e3b28; }
+.wodx .wodx-buttons { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.wodx .wodx-buttons button { flex: 1 1 auto; width: auto; }
+.wodx .wodx-date { font-size: 1.25em; font-weight: 600; }
+.wodx .wodx-time { font-size: 1.6em; font-weight: 600; letter-spacing: 0.04em; }
+.wodx .wodx-facts { display: grid; grid-template-columns: auto 1fr; gap: 0.1rem 0.75rem; margin: 0.5rem 0 0; }
+.wodx .wodx-facts dt { color: var(--wodx-quiet); }
+.wodx .wodx-facts dd { margin: 0; }
+.wodx .wodx-list { list-style: none; margin: 0; padding: 0; }
+.wodx .wodx-list > li { padding: 0.5rem 0; border-bottom: 1px solid var(--wodx-line); }
+.wodx .wodx-xcard-button { border-color: var(--wodx-alert); color: var(--wodx-alert); }
+.wodx fieldset { border: 1px solid var(--wodx-line); margin-bottom: 0.5rem; }
+.wodx .wodx-switch .hint { margin: 0 0 0.25rem 1.6rem; color: var(--wodx-quiet); }
+
+/* The X-card, shown to everyone */
+.wodx-xcard {
+  position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center;
+  background: rgba(0, 0, 0, 0.72); cursor: pointer;
+}
+.wodx-xcard-card {
+  max-width: 28rem; padding: 2rem; text-align: center; border-radius: 12px;
+  background: #16141a; color: #e8e2d6; border: 3px solid #d8572a; font-size: 1.1rem;
+}
+.wodx-xcard-x { font-size: 6rem; line-height: 1; font-weight: 700; color: #d8572a; }
+.wodx-xcard .wodx-quiet { color: #a99f8f; font-size: 0.85rem; }
+
+/* Chat cards */
+.wodx-card h3 { margin: 0 0 0.25rem; }
