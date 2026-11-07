@@ -17,6 +17,10 @@
 5. Gate: open `rothenstein-wodx` and check the counts below; then open the original world and `wodx-template` once each.
 6. Pick how players will connect (same machine, LAN, port forward or a relay). That choice doesn't block Phase 1.
 
+## Gate result
+
+Passed on 2026-11-06. All three worlds opened on 7.3.2-wodx.1. Foundry's server log for `rothenstein-wodx` shows 252 actors, 2,242 items and 211 scenes, matching the original. Foundry also wrote its own backups of the system and both new worlds before migrating.
+
 ## Gate counts for rothenstein-wodx
 
 | What | Count |

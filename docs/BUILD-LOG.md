@@ -10,3 +10,4 @@
 - Created `wodx-template` (world.json only; Foundry creates the database on first launch).
 - Installed the fork into `Data\systems\worldofdarkness`. The installed files were checked against upstream 7.3.2 before the overwrite.
 - Private use only; nothing here is for distribution or sale.
+- Gate passed: Ben restarted Foundry and opened all three worlds. The server log for the clone shows 252 actors, 2,242 items and 211 scenes, matching the original.
