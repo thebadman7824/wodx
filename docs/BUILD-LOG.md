@@ -218,3 +218,13 @@
 - The link to Ben's computer dropped during step 8. A combat is running in rothenstein-wodx (the deprecated werewolf token and Brother Stanislaw); Stanislaw's two tokens still carry Blinded and Held.
 
 - **Phase 6a gate passed (2026-11-07).** Ben ran steps 8–11 (Dazed over two rounds, the Group actor, the original Rothenstein world, the console) and reported no issues. Phase 6a complete; batch 1 next (Werewolf and Fera, mortals, hunters with True Faith, wraiths).
+
+### Phase 6b build, 2026-11-07 (Werewolf and Fera)
+
+- **Research and data** (commit 53a98be): DA:W chapters 3–5 OCR'd and read; W20's Garou rules; Changing Breeds trait sections. Mechanics notes with page references in `docs/research/6b-werewolf-notes.md`. Data files `garou.json`, `fera.json` and the 179-Gift library `gifts-daw.json` (B39).
+- **WoDX Actions 3.1.0.** `garou-rules.js` (pure rules) and `garou.js` (dialogs, cards, hooks): change form through the system's shapes, Rage and frenzy, Gnosis and meditation, Gifts (use and learn), rites, summoning, fetishes and talens, Renown and Rank, Battle Scars, the Delirium, the Curse, Kinfolk, chiminage. Moon Rage at nightfall with a whispered card (B40); regeneration each round; Dark Ages Embrace Pain. Rules basis by era (B41). The Werewolf / Changing Breed menu rebuilt; Kinfolk added to the mortal menu. `garou-testpack.js` makes a test pack for the gate.
+- **WoDX Combat 3.1.0.** Silver and gold by era, breed and form; teeth and claws by form; Dark Ages: no aggravated soak in Homid.
+- **WoDX Creation 0.4.0.** The First Change wizard; Hunting Grounds poolable by a Dark Ages pack.
+- **Bugs caught by the new tests and fixed before install:** a talen was never marked spent (the check looked at the roll object); "custom" tribes and the system's tribe keys (`wod.bio.tribename.getoffenris`) weren't recognised; scrolling lists in dialogs collapsed to nothing on a 720-pixel screen (flex shrink), found by UI fit.
+- **Checks:** harness 124 tests (33 new), UI fit every window at three sizes (21 new dialogs), quality-check.sh all pass.
+- **Installed** on Ben's PC: WoDX Actions, Combat and Creation. Replaced files backed up in `wodx-repo/backups/before-6b-3.0.1` first. Gate waiting (PHASE-6B-CHECKLIST.md).
