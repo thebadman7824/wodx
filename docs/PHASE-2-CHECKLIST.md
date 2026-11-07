@@ -29,6 +29,8 @@ Foundry 14 places a tile by its centre; the Rothenstein importers placed tiles b
 3. View **Dolany Village**: each roof should sit on its house. Check a Lower Town map and the Player Camp too.
 4. Tell Claude what you see.
 
+- [x] Verified by Ben, 2026-11-07: all roofs fixed.
+
 ## Steps you ran for the gate (done)
 
 1. Setup → Backups: snapshot `rothenstein-wodx`.
