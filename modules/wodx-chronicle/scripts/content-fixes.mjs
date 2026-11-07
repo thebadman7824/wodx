@@ -33,7 +33,8 @@ const kindOf = tile => KINDS.find(([, test]) => test(tile))?.[0] ?? null;
 
 /** Does this tile still sit by its corner? */
 export function needsAnchorFix(tile) {
-  if ( tile.flags?.[MODULE_ID]?.[MARK] ) return false;
+  // Marked by this fix, or by the same fix run on a world without WoDX (the archive world)
+  if ( tile.flags?.[MODULE_ID]?.[MARK] || tile.flags?.world?.wodxAnchored ) return false;
   const tex = tile.texture ?? {};
   if ( (tex.anchorX ?? 0.5) !== 0.5 || (tex.anchorY ?? 0.5) !== 0.5 ) return false;
   return !!kindOf(tile);

@@ -34,7 +34,18 @@ export function installMock({dataRoot, worldFlags = {wodx: {phase: 1}}, worldId 
     deepClone: o => (o === undefined ? o : structuredClone(o)),
     randomID: () => `id${(++idCounter).toString().padStart(14, "0")}`,
     getRoute: p => `/${p}`,
-    isSubclass: (a, b) => a === b || a.prototype instanceof b
+    isSubclass: (a, b) => a === b || a.prototype instanceof b,
+    mergeObject(original, other = {}, {inplace = true} = {}) {
+      const target = inplace ? original : structuredClone(original);
+      const merge = (t, o) => {
+        for ( const [k, v] of Object.entries(o) ) {
+          if ( v && typeof v === "object" && !Array.isArray(v) && t[k] && typeof t[k] === "object" ) merge(t[k], v);
+          else t[k] = structuredClone(v);
+        }
+        return t;
+      };
+      return merge(target, other);
+    }
   };
 
   /* Calendar base: holds config like Foundry's DataModel would */

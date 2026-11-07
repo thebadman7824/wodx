@@ -95,6 +95,8 @@ Hooks.once("ready", async () => {
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});
+  // Other WoDX modules wait for this: Foundry does not wait for an async ready hook to finish
+  Hooks.callAll("wodxChronicleReady", api);
 
   if ( isActiveGM() ) {
     await eras.checkEra();

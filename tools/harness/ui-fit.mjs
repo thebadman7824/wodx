@@ -37,7 +37,27 @@ for ( let i = 0; i < 211; i++ ) {
 }
 await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-otherworlds/scripts/main.mjs"));
+await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
 game.modules.set("wodx-otherworlds", {});
+game.modules.set("wodx-creation", {});
+// Characters for the Creation windows: a long sheet, so the spend window must scroll
+class Items extends Map { filter(f) { return [...this.values()].filter(f); } some(f) { return [...this.values()].some(f); } find(f) { return [...this.values()].find(f); } [Symbol.iterator]() { return this.values(); } }
+const attr = v => ({value: v, max: 5, label: "", isvisible: true});
+function uiActor(i, type, variant = "general") {
+  const items = new Items();
+  for ( const [n, v] of [["Dominate", 2], ["Obtenebration", 1], ["Potence", 3], ["Auspex", 0]] ) items.set(`p${i}${n}`, {id: `p${i}${n}`, name: n, type: "Power", system: {type: "wod.types.discipline", value: v}});
+  for ( let k = 0; k < 6; k++ ) items.set(`t${i}${k}`, {id: `t${i}${k}`, name: `Secondary Knowledge ${k}`, type: "Trait", system: {type: "wod.types.knowledgesecondability", value: 1}});
+  items.set(`x${i}`, {id: `x${i}`, name: "Award", type: "Experience", system: {amount: 40, isspent: false}});
+  const attributes = Object.fromEntries(["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"].map(k => [k, {...attr(2), label: k}]));
+  const abilities = Object.fromEntries(Array.from({length: 30}, (_, k) => [`ab${k}`, {value: 1, max: 5, label: `Ability number ${k}`, isvisible: true}]));
+  return {id: `actor${String(i).padStart(11, "0")}`, name: `${type} character with a fairly long name ${i}`, type,
+    hasPlayerOwner: i % 2 === 0, isOwner: true, items, flags: {}, ownership: {default: 3},
+    system: {settings: {variant}, clan: "custom", custom: {clan: "Lasombra"}, generation: 10, generationmod: 0, attributes, abilities,
+      advantages: {willpower: {permanent: 5}, path: {permanent: 6, label: "custom", custom: "Road of Humanity"},
+        virtues: {conscience: {permanent: 3, label: "Conscience"}, selfcontrol: {permanent: 3, label: "Self-Control"}, courage: {permanent: 3, label: "Courage"}}}},
+    getFlag(s, k) { return this.flags?.[s]?.[k]; }, testUserPermission: () => true};
+}
+for ( let i = 0; i < 24; i++ ) { const a = uiActor(i, i % 3 === 0 ? "Vampire" : "Mortal", i % 3 === 1 ? "ghoul" : "general"); game.actors.set(a.id, a); }
 await Hooks.callAll("init");
 mock.setupTime();
 await Hooks.callAll("ready");
@@ -50,10 +70,13 @@ const {ClockApp} = await import(join(root, "modules/wodx-chronicle/scripts/clock
 const {ApprovalsApp} = await import(join(root, "modules/wodx-chronicle/scripts/approvals.mjs"));
 const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/house-rules-app.mjs"));
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
+const {CreationApp, SpendApp, awardDialog} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
+const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
 
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
-  ["House rules", HouseRulesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}]] ) {
+  ["House rules", HouseRulesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
+  ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}]] ) {
   const app = new App(opts);
   await app.render({force: true});
   const content = app.element.querySelector("section.window-content").innerHTML;
@@ -85,20 +108,25 @@ const ow = await import(join(root, "modules/wodx-otherworlds/scripts/crossing.mj
 await ow.stepSideways({mode: "cross"});
 const {buildPenumbraPrototype} = await import(join(root, "modules/wodx-otherworlds/scripts/prototype.mjs"));
 await buildPenumbraPrototype(scene);
+const change = await import(join(root, "modules/wodx-creation/scripts/change-of-state.mjs"));
+await change.embraceDialog();
+await change.vitaeDialog();
+await awardDialog();
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: 400, height: "auto",
     content: `<form class="dialog-form standard-form">${c.content ? `<div class="dialog-content standard-form">${c.content}</div>` : ""}
       <footer class="form-footer"><button type="submit">OK</button><button type="button">Cancel</button></footer></form>`});
 }
-if ( captured.length < 7 ) { console.error(`Only ${captured.length} dialogs captured`); process.exit(1); }
+if ( captured.length < 10 ) { console.error(`Only ${captured.length} dialogs captured`); process.exit(1); }
 const unclassed = captured.filter(c => !(c.classes ?? []).includes("wodx-dialog"));
 if ( unclassed.length ) { console.error(`Dialogs without the wodx-dialog class: ${unclassed.map(c => c.window?.title).join(", ")}`); process.exit(1); }
 
 /* ---- Lay them out in Chromium with Foundry's CSS ---- */
 const css = [pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-chronicle/styles/wodx-chronicle.css")).href,
-  pathToFileURL(join(root, "modules/wodx-otherworlds/styles/wodx-otherworlds.css")).href];
+  pathToFileURL(join(root, "modules/wodx-otherworlds/styles/wodx-otherworlds.css")).href,
+  pathToFileURL(join(root, "modules/wodx-creation/styles/wodx-creation.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 const browser = await chromium.launch();
 let failures = 0;
@@ -112,6 +140,8 @@ for ( const [vw, vh] of sizes ) {
       w.height = Math.max(360, Math.min(720, vh - 120));
       w.width = Math.max(480, Math.min(900, vw - 40));
     }
+    // So does the spend window (SpendApp.openFor)
+    if ( w.name === "Spend experience" ) w.height = Math.max(360, Math.min(640, vh - 120));
     const html = `<!doctype html><html><head><meta charset="utf-8">${css.map(h => `<link rel="stylesheet" href="${h}">`).join("")}</head>
       <body class="vtt game system-worldofdarkness theme-dark">
       <${w.tag} id="app" class="${w.classes}" style="width:${w.width}px;${w.height === "auto" ? "" : `height:${w.height}px;`}left:20px;top:0">

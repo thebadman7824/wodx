@@ -1,0 +1,9 @@
+/* WoDX Creation. The window layout (scrolling middle, fixed top and footer) comes from wodx-chronicle.css, rule B17. */
+.application.wodx-creation h3, .application.wodx-spend h3 { margin: 0.5rem 0 0.25rem; font-size: 1rem; }
+.application.wodx .wodx-table { width: 100%; border-collapse: collapse; }
+.application.wodx .wodx-table td, .application.wodx .wodx-table th { padding: 2px 4px; text-align: left; }
+.application.wodx .wodx-table button { white-space: nowrap; }
+.application.wodx .wodx-muted td { opacity: 0.6; }
+.application.wodx-spend .form-group { display: flex; gap: 0.25rem; align-items: center; flex-wrap: wrap; }
+.application.wodx-spend .form-group input[type=text] { flex: 1 1 8rem; min-width: 6rem; }
+.wodx-card.wodx-embrace h3, .wodx-card.wodx-vitae h3, .wodx-card.wodx-xp h3 { margin: 0 0 0.25rem; }
