@@ -38,14 +38,14 @@ export function currentYear() {
   return getEngine().timeToDate(game.time.worldTime).year;
 }
 
-/** What the date (or the Storyteller's lock) calls for right now. */
-export function targetEra() {
+/** What the date (or the Storyteller's lock) calls for, now or in a given year. */
+export function targetEra(year = currentYear()) {
   const lockId = setting("eraLock");
   if ( lockId ) {
     const locked = getProfile(lockId);
     if ( locked ) return {profile: locked, interlude: false, locked: true};
   }
-  const r = resolveEra(state.profiles, currentYear(), {
+  const r = resolveEra(state.profiles, year, {
     region: setting("region"),
     rules: {timeOfJudgment: rule("timeOfJudgment"), futureBranch: rule("futureBranch")}
   });

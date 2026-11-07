@@ -72,11 +72,18 @@ const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
 const {CreationApp, SpendApp, awardDialog} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
 const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
+const {PassYearsApp} = await import(join(root, "modules/wodx-creation/scripts/pass-years.mjs"));
+const timeMod = await import(join(root, "modules/wodx-creation/scripts/time.mjs"));
+// The window with a plan on show: every character has changes to tick
+class PlannedPassYears extends PassYearsApp {
+  constructor(o) { super(o); this.plan = timeMod.planSkip({from: game.time.worldTime, to: timeMod.addYears(game.time.worldTime, 150)}); }
+}
 
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
   ["House rules", HouseRulesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
-  ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}]] ) {
+  ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
+  ["Pass the years", PlannedPassYears, {}]] ) {
   const app = new App(opts);
   await app.render({force: true});
   const content = app.element.querySelector("section.window-content").innerHTML;
@@ -112,13 +119,15 @@ const change = await import(join(root, "modules/wodx-creation/scripts/change-of-
 await change.embraceDialog();
 await change.vitaeDialog();
 await awardDialog();
+const {runSkipTest} = await import(join(root, "modules/wodx-creation/scripts/skip-test.mjs"));
+await runSkipTest();
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: 400, height: "auto",
     content: `<form class="dialog-form standard-form">${c.content ? `<div class="dialog-content standard-form">${c.content}</div>` : ""}
       <footer class="form-footer"><button type="submit">OK</button><button type="button">Cancel</button></footer></form>`});
 }
-if ( captured.length < 10 ) { console.error(`Only ${captured.length} dialogs captured`); process.exit(1); }
+if ( captured.length < 11 ) { console.error(`Only ${captured.length} dialogs captured`); process.exit(1); }
 const unclassed = captured.filter(c => !(c.classes ?? []).includes("wodx-dialog"));
 if ( unclassed.length ) { console.error(`Dialogs without the wodx-dialog class: ${unclassed.map(c => c.window?.title).join(", ")}`); process.exit(1); }
 
@@ -142,6 +151,11 @@ for ( const [vw, vh] of sizes ) {
     }
     // So does the spend window (SpendApp.openFor)
     if ( w.name === "Spend experience" ) w.height = Math.max(360, Math.min(640, vh - 120));
+    // ...and Pass the Years (PassYearsApp.open)
+    if ( w.name === "Pass the years" ) {
+      w.height = Math.max(360, Math.min(720, vh - 100));
+      w.width = Math.max(480, Math.min(820, vw - 40));
+    }
     const html = `<!doctype html><html><head><meta charset="utf-8">${css.map(h => `<link rel="stylesheet" href="${h}">`).join("")}</head>
       <body class="vtt game system-worldofdarkness theme-dark">
       <${w.tag} id="app" class="${w.classes}" style="width:${w.width}px;${w.height === "auto" ? "" : `height:${w.height}px;`}left:20px;top:0">

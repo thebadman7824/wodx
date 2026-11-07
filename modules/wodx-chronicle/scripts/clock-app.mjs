@@ -22,6 +22,7 @@ export class ClockApp extends ApplicationV2 {
       dusk: ClockApp.#onDusk,
       dawn: ClockApp.#onDawn,
       setDate: ClockApp.#onSetDate,
+      passYears: () => (game.modules.get("wodx-creation")?.api?.passYears?.() ?? ui.notifications.warn("Pass the Years needs WoDX Creation (0.2 or later).")),
       lockEra: ClockApp.#onLockEra,
       xcard: () => safety.pressXCard(),
       linesVeils: () => safety.submitLineOrVeil(),
@@ -92,6 +93,7 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="advance" data-seconds="86400">+1 day</button>
           <button type="button" data-action="advance" data-seconds="604800">+1 week</button>
           <button type="button" data-action="setDate"><i class="fa-solid fa-calendar-day"></i> Set date</button>
+          <button type="button" data-action="passYears" title="A time skip: years pass, and each character's changes are proposed"><i class="fa-solid fa-hourglass-half"></i> Pass the years</button>
         </div>
         <div class="form-group"><label>Era</label>
           ${searchBox("select[name=eraLock]", "Search eras…", "Search eras")}

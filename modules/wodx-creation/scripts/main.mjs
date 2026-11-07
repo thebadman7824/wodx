@@ -5,6 +5,9 @@ import * as lineage from "./lineage.mjs";
 import * as change from "./change-of-state.mjs";
 import * as xp from "./xp.mjs";
 import {CreationApp, SpendApp, awardDialog} from "./apps.mjs";
+import * as time from "./time.mjs";
+import {PassYearsApp} from "./pass-years.mjs";
+import {runSkipTest} from "./skip-test.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
@@ -32,7 +35,9 @@ function start() {
     if ( message?.type === "xp.request" ) await xp.onRequest(message.payload);
   });
   const api = {
-    rules, data, lineage, change, xp,
+    rules, data, lineage, change, xp, time,
+    passYears: () => PassYearsApp.open(),
+    runSkipTest,
     open: () => CreationApp.open(),
     spend: actor => SpendApp.openFor(actor),
     embrace: change.embrace, giveVitae: change.giveVitae, award: xp.award, awardDialog,

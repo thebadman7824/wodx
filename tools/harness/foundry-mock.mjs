@@ -163,6 +163,8 @@ export function installMock({dataRoot, worldFlags = {wodx: {phase: 1}}, worldId 
     filter(fn) { return [...this.values()].filter(fn); }
     getName(n) { return this.find(v => v.name === n); }
     get contents() { return [...this.values()]; }
+    // Foundry's Collection iterates its values, not [key, value] pairs
+    [Symbol.iterator]() { return this.values(); }
   }
   class Page extends Doc {
     async update(changes) { for ( const [k, v] of Object.entries(changes) ) foundry.utils.setPath?.(this, k, v) ?? setPath(this, k, v); return this; }

@@ -9,6 +9,7 @@ import {HouseRulesApp} from "./house-rules-app.mjs";
 import {runEraTest} from "./era-test.mjs";
 import * as contentFixes from "./content-fixes.mjs";
 import {installSearch} from "./search.mjs";
+import * as skip from "./skip.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -93,7 +94,9 @@ Hooks.once("ready", async () => {
     registerApprovalHandler: approvals.registerHandler,
     rule,
     runEraTest,
-    contentFixes
+    contentFixes,
+    timeSkip: skip.timeSkip,
+    isSkipping: skip.isSkipping
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});
@@ -114,8 +117,16 @@ Hooks.once("ready", async () => {
 
 Hooks.on("updateWorldTime", () => {
   if ( !active ) return;
+  // Per-tick work waits while a time skip runs; it is done once when the skip ends
+  if ( skip.isSkipping() ) return;
   ClockApp.refresh();
   eras.checkEra();
+});
+
+Hooks.on("wodxSkipEnd", info => {
+  if ( !active ) return;
+  ClockApp.refresh();
+  if ( !info?.eraHandled ) eras.checkEra();
 });
 
 Hooks.on("getSceneControlButtons", controls => {

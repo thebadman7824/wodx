@@ -135,12 +135,20 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
   if ( drinker.id === regnant.id ) throw new Error("A vampire cannot bond to itself");
   const before = lineage(drinker).bonds?.[regnant.id];
   const sameNight = before?.last !== undefined && nightOf(before.last) === nightOf(time);
+  // Once a full blood oath is sworn, no new bond can form (V20DA p. 341)
+  const oath = Object.entries(lineage(drinker).bonds ?? {}).find(([id, b]) => id !== regnant.id && bondStage(b.drinks).stage >= 3);
   let stage;
-  if ( sameNight ) {
-    stage = bondStage(before.drinks);
-    await setLineage(drinker, {bonds: {...lineage(drinker).bonds, [regnant.id]: {...before, last: time}}});
+  if ( sameNight || oath ) {
+    stage = bondStage(before?.drinks ?? 0);
+    await setLineage(drinker, {bonds: {...lineage(drinker).bonds, [regnant.id]: {name: regnant.name, drinks: before?.drinks ?? 0, ...(before ?? {}), last: time}}});
   } else {
     stage = await recordDrink(drinker, regnant, time);
+    // At the full oath, all lesser bonds vanish (p. 341)
+    if ( stage.stage >= 3 ) {
+      const bonds = {...lineage(drinker).bonds};
+      for ( const [id, b] of Object.entries(bonds) ) if ( id !== regnant.id && bondStage(b.drinks).stage < 3 && b.drinks > 0 ) bonds[id] = {...b, drinks: 0};
+      await setLineage(drinker, {bonds});
+    }
   }
 
   const notes = [];
@@ -171,7 +179,7 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
     await drinker.update({"system.advantages.bloodpool.temporary": Math.min(max, (Number(pool.temporary) || 0) + (Number(points) || 0))});
     if ( !lineage(drinker).domitor ) await setLineage(drinker, {domitor: {id: regnant.id, name: regnant.name}});
   }
-  notes.push(sameNight ? `${stage.label} (a second drink the same night does not deepen the bond)` : stage.label);
+  notes.push(oath ? `already sworn to ${oath[1].name}, so no new bond forms` : (sameNight ? `${stage.label} (a second drink the same night does not deepen the bond)` : stage.label));
 
   await ChatMessage.create({
     content: `<div class="wodx-card wodx-vitae"><h3>Vitae</h3>
@@ -181,7 +189,7 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
     whisper: game.users.filter(u => u.isGM).map(u => u.id)
   });
   await writeLineageJournal();
-  return {stage, becameGhoul, sameNight};
+  return {stage, becameGhoul, sameNight, oath: oath?.[1]?.name ?? null};
 }
 
 /* -------------------------------------------- */

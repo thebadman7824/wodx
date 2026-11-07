@@ -7,4 +7,10 @@ Phase 3 of World of Darkness Expanded. Private use only.
 - **Lineage.** Sire, domitor, bonds and the life before the Embrace are kept on each actor (`flags["wodx-creation"]`). The "WoDX Lineage" journal shows the trees, reading the sheets' Sire fields too.
 - **Experience log.** The Storyteller awards experience; players ask to spend it from the droplet button. Costs come from each line's book (vampires V20 Dark Ages p. 183 and V20 p. 124; ghouls V20 Dark Ages p. 399 and Ghouls and Revenants p. 139). Requests wait in the WoDX approval queue, and the cost is checked again when approved. Awards and spends are the system's own Experience items, so the sheet's totals stay right; the "WoDX Experience Log" journal lists them by in-game date.
 
-Needs WoDX Chronicle 0.1.5 or later. Werewolf, Mage and the other lines get their change-of-state wizards and costs in Phase 6.
+Needs WoDX Chronicle 0.1.7 or later. Werewolf, Mage and the other lines get their change-of-state wizards and costs in Phase 6.
+
+## Phase 4: Pass the Years
+
+- **Allies.** Any NPC can be made the ally of a player character; the patron's owners may then spend experience on it, from its own pool or the patron's.
+- **Pass the Years** (Clock or droplet button). Pick a number of years and press "Show what happens". Each character's changes are listed: ageing and death checks, an heir, ghoul feeding or lapse (V20 Dark Ages p. 399), bonds fading (p. 341), voluntary torpor (p. 350), the new era's ability list, and Backgrounds to review. Tick what to accept, then "Pass the years". A plan can be written to the "WoDX Time Skips" journal without changing anything. Nothing is deleted: the dead go to "WoDX · The Dead".
+- **Time-skip test.** The Phase 4 gate: it makes test characters and passes the years from 1200 to 2025. It moves the clock, so use it in wodx-template.
