@@ -195,6 +195,9 @@ Hooks.once("init", async function() {
 
 	// Register datamodels
 	CONFIG.Actor.dataModels.PC = actorModels.PCDataModel;
+	// WoDX fork: the Group actor (data only; the sheet is in WoDX Creation)
+	CONFIG.Actor.dataModels.Group = actorModels.GroupDataModel;
+	CONFIG.worldofdarkness.groupKinds = actorModels.GROUP_KINDS;
 
 	CONFIG.Item.dataModels.Ability = itemModels.AbilityDataModel;
 	CONFIG.Item.dataModels.Advantage = itemModels.AdvantageDataModel;

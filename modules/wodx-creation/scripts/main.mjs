@@ -9,6 +9,7 @@ import * as time from "./time.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
 import {runSkipTest} from "./skip-test.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
+import * as groups from "./group-sheet.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -21,6 +22,8 @@ Hooks.once("init", () => {
   }
   active = true;
   installSearch();
+  // The fork's Group actor (coterie, pack, cabal...) gets its sheet here
+  if ( !groups.registerGroupSheet() ) console.warn("WoDX | No Group actor type in this system; update the WoDX fork to 7.3.2-wodx.2.");
 });
 
 let started = false;
@@ -41,7 +44,8 @@ function start() {
     open: () => CreationApp.open(),
     spend: actor => SpendApp.openFor(actor),
     embrace: change.embrace, giveVitae: change.giveVitae, award: xp.award, awardDialog,
-    writeLineageJournal: lineage.writeLineageJournal
+    writeLineageJournal: lineage.writeLineageJournal,
+    groups
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {creation: api});

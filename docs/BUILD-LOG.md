@@ -172,3 +172,32 @@
 - The 22 scene backups were written to `Data/wodx-backups/scenes` just before the build. Foundry's own world backup ran at 08:56.
 - Log review: no errors since the install. The two errors of 07:55 are the known shutdown race from the Phase 4 restore.
 - Phase 5 complete.
+
+### Phase 6a, built 2026-11-07: the shared parts
+
+- Ben's choices (B32–B34):
+  - Phase 6 is split: the shared parts first, then the lines in batches, Rothenstein's lines first.
+  - The VtDA20 modules become new ids, with a migration.
+  - The Group actor is a new type in the fork.
+- **Survey.** In rothenstein-wodx: 16 actors carry `flags.world.vtda20.profile`, the old modules made 12 "VtDA20:" macros (two of them named "VtDA20: Actor Type"), and 13 VtDA20 settings are stored. No actor has a module-scoped VtDA20 flag, and there are no Active Effects. The "import-rothenstein" macro only names the old modules in its instructions.
+- **System fork 7.3.2-wodx.2.** Adds the Group actor type: data only (kind, roster, pooled Backgrounds, Anchor, notes). Guards are added so the system's character code and migration skip it. The device's 7.3.2-wodx.1 files were checked against the repo (identical but for line endings) and backed up before the change.
+- **WoDX Chronicle 0.2.0.** Adds the conditions registry and timed effects.
+  - Conditions from V20 Dark Ages pp. 13, 348, 350, 351 and 356–358 become token statuses, listed in Chronicle Rules.
+  - Timed effects end by round, scene, night (at dawn) or clock time. A reverter takes back what each one changed.
+  - The sweep covers world actors and the unlinked tokens of the active and viewed scenes only, not all 211 scenes.
+  - The Clock has an "End the scene" button.
+- **WoDX Creation 0.3.0.** Adds the Group sheet. Pooling follows V20 Dark Ages p. 182 and W20 pp. 140–141. Pass the Years skips groups.
+- **WoDX Actions 3.0.0 and WoDX Combat 3.0.0.** vtda20 2.2.1 was committed as found, then ported:
+  - New ids. API aliases. Settings start from the old values. They refuse to run beside the old modules.
+  - A migration through the approval queue that copies flags and renames macros, never overwriting and never deleting.
+  - Quickening is a timed effect with a reverter.
+  - Frenzy, Rötschreck and torpor set condition statuses.
+  - The attack dialog reads conditions and prefills their dice and difficulty.
+  - Dazed is automatic (B36).
+  - B24 pass: search boxes on Abilities, dramatic systems, weapons (more than five) and bonds (more than five). Fixed rule tables are marked.
+- **Checks.**
+  - Unit tests: 19, 9 and 14.
+  - Harness: 90 tests, 13 of them new (phase6.test.mjs).
+  - UI fit: every window and dialog at three sizes, including the Group sheet and 16 WoDX Actions and Combat dialogs. Its first run caught missing search boxes in the Action, Hunt, Frenzy and Hazard dialogs; all fixed.
+  - quality-check.sh now checks imports in .js files too.
+- Installed: the fork files, WoDX Chronicle, WoDX Creation, WoDX Actions and WoDX Combat. The vtda20 modules stay installed for the original Rothenstein world. Gate waiting on Ben (PHASE-6A-CHECKLIST.md).

@@ -2,6 +2,7 @@
 	"Actor": {
 		"types": [
 			"PC",
+			"Group",
 			"Changeling",
 			"Changing Breed",
 			"Creature",
@@ -1386,6 +1387,7 @@
 			}		
 		},
 		"PC": {},
+		"Group": {},
 		"Mortal": {
 			"templates": [
 				"base",

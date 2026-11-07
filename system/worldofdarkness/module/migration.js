@@ -148,7 +148,7 @@ export  const updates = async () => {
     }
 
     for (const actor of game.actors) {
-        if (actor.type === "PC") {
+        if (actor.type === "PC" || actor.type === "Group") {
             continue;
         }
 
@@ -271,6 +271,8 @@ export  const updates = async () => {
  * @param migrationVersion   The version that is being pushed at the world * 
  */
  export const updateActor = async function(actor, migrationVersion) {
+
+    if (actor.type == "Group") return; // WoDX fork: nothing to migrate
 
     if (actor.type == "PC") {
         await updatePCActor(actor);

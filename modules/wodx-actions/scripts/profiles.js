@@ -1,22 +1,36 @@
 /**
- * VtDA20 shared actor profiles (identical copy ships in vtda20-combat and vtda20-actions, v2.0).
+ * WoDX shared actor profiles (identical copy ships in WoDX Combat and WoDX Actions). Ported from vtda20 2.2.1.
  *
  * A "profile" decides which combat menu, soak model and action menu an actor gets.
  * Detection order:
- *   1. override flag  flags.world.vtda20.profile   (set from the Profile button in either menu)
- *      -- falls back to the legacy flags of v1.x: flags["vtda20-combat"].profile / flags["vtda20-actions"].profile
+ *   1. override flag  flags.world.wodx.profile   (set from the Profile button in either menu)
+ *      -- falls back to the VtDA20 flags until the migration copies them: flags.world.vtda20.profile, then the
+ *         v1.x flags flags["vtda20-combat"].profile / flags["vtda20-actions"].profile
  *   2. actor.type     (Vampire, Werewolf, Changing Breed, Mage, Changeling, Wraith, Hunter, Demon, Mummy, Exalted,
  *                      Creature, Mortal) and, for the new "PC" type, system.settings.splat
  *   3. variant / Disciplines (ghouls and revenants)
  *   4. mortal
  *
- * The first module to load registers game.vtda20 = { profiles }. The second one finds it already there and leaves it.
+ * The first module to load registers game.wodx.profiles. The second one finds it already there and leaves it.
  */
 
-export const SHARED_VERSION = "2.0.0";
+export const SHARED_VERSION = "3.0.0";
 const FLAG_SCOPE = "world";
-const FLAG_KEY = "vtda20";
+const FLAG_KEY = "wodx";
+const OLD_KEY = "vtda20";
 const LEGACY_FLAGS = ["vtda20-combat", "vtda20-actions"];
+
+/**
+ * A per-actor value kept under flags.world.wodx (profile, form, elder), read from flags.world.vtda20 until the
+ * migration has copied it.
+ */
+export function worldFlag(actor, key) {
+    const w = actor?.flags?.[FLAG_SCOPE];
+    return w?.[FLAG_KEY]?.[key] ?? w?.[OLD_KEY]?.[key];
+}
+export async function setWorldFlag(actor, key, value) {
+    return actor.setFlag(FLAG_SCOPE, `${FLAG_KEY}.${key}`, value);
+}
 
 const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
 
@@ -72,7 +86,7 @@ export const RES = {
 /* ------------------------------------------------------------------ */
 
 function flagOf(actor) {
-    let f = actor?.getFlag?.(FLAG_SCOPE, FLAG_KEY)?.profile ?? actor?.flags?.[FLAG_SCOPE]?.[FLAG_KEY]?.profile;
+    let f = worldFlag(actor, "profile");
     if (f) return f;
     for (const mod of LEGACY_FLAGS) {
         f = actor?.flags?.[mod]?.profile;
@@ -128,8 +142,8 @@ export function profileSoak(key) { return PROFILES[key]?.soak ?? "mortal"; }
 export async function setProfile(actor, key) {
     if (!actor) return;
     if (!key || key === "auto") {
-        await actor.unsetFlag?.(FLAG_SCOPE, `${FLAG_KEY}.profile`);
-        for (const mod of LEGACY_FLAGS) if (actor.flags?.[mod]?.profile) await actor.unsetFlag(mod, "profile");
+        // "Automatic" is stored, not a deletion, so an old VtDA20 flag underneath cannot come back into force
+        await actor.setFlag(FLAG_SCOPE, `${FLAG_KEY}.profile`, "auto");
         return;
     }
     await actor.setFlag(FLAG_SCOPE, `${FLAG_KEY}.profile`, key);
@@ -210,7 +224,7 @@ export function fit(app) {
         const height = Math.min(h, max);
         const top = Math.max(margin, Math.round((vh - height) / 2));
         app.setPosition?.({ top, height });
-    } catch (e) { console.warn("vtda20 | fit", e); }
+    } catch (e) { console.warn("WoDX | fit", e); }
 }
 
 /**
@@ -226,7 +240,7 @@ export function ask({ title, content, buttons, width = 480, classes = [], onRend
             const dlg = new V2({
                 window: { title },
                 position: { width },
-                classes: ["vtda20-dialog", ...classes],
+                classes: ["wodx", "wodx-dialog", "vtda20-dialog", ...classes],
                 content,
                 buttons: buttons.map(b => ({
                     action: b.id, label: b.label, icon: b.icon, default: !!b.default,
@@ -235,7 +249,7 @@ export function ask({ title, content, buttons, width = 480, classes = [], onRend
                 rejectClose: false
             });
             dlg.addEventListener?.("close", () => finish(null));
-            Promise.resolve(dlg.render({ force: true })).then(() => { try { onRender?.(dlg.element, () => { finish(null); dlg.close(); }); fit(dlg); } catch (e) { console.warn("vtda20 | dialog onRender", e); } });
+            Promise.resolve(dlg.render({ force: true })).then(() => { try { onRender?.(dlg.element, () => { finish(null); dlg.close(); }); fit(dlg); } catch (e) { console.warn("WoDX | dialog onRender", e); } });
         });
     }
     return new Promise(resolve => {
@@ -243,7 +257,7 @@ export function ask({ title, content, buttons, width = 480, classes = [], onRend
         for (const b of buttons) bs[b.id] = { icon: b.icon ? `<i class="${b.icon}"></i>` : "", label: b.label, callback: html => resolve({ id: b.id, data: readForm(html) }) };
         const def = buttons.find(b => b.default)?.id ?? buttons[0].id;
         const d = new Dialog({ title, content, buttons: bs, default: def, close: () => resolve(null),
-            render: html => { try { onRender?.(html[0] ?? html, () => d.close()); setTimeout(() => fit(d), 0); } catch (e) { console.warn("vtda20 | dialog onRender", e); } } },
+            render: html => { try { onRender?.(html[0] ?? html, () => d.close()); setTimeout(() => fit(d), 0); } catch (e) { console.warn("WoDX | dialog onRender", e); } } },
             { width, classes: ["dialog", "vtda20-dialog", ...classes] }).render(true);
     });
 }
@@ -256,8 +270,8 @@ export async function pickProfile(actor) {
         .concat(Object.entries(PROFILES).map(([k, p]) => `<option value="${k}" ${cur === k ? "selected" : ""}>${p.label}</option>`));
     const r = await ask({
         title: `Actor type — ${actor.name}`,
-        content: `<form class="vtda20-profile"><p>Choose which combat and action menus ${actor.name} uses. Automatic reads the actor type, then the variant and Disciplines.</p>
-          <div class="form-group"><label>Menu profile</label><select name="profile">${opts.join("")}</select></div></form>`,
+        content: `<form class="vtda20-profile wodx-profile"><p>Choose which combat and action menus ${actor.name} uses. Automatic reads the actor type, then the variant and Disciplines.</p>
+          <div class="form-group"><label>Menu profile</label><select name="profile" data-fixed>${opts.join("")}</select></div></form>`,
         buttons: [{ id: "ok", label: "Set", icon: "fas fa-check", default: true }, { id: "no", label: "Cancel", icon: "fas fa-times" }],
         width: 420
     });
@@ -266,10 +280,10 @@ export async function pickProfile(actor) {
     return detectProfile(actor);
 }
 
-/** Register game.vtda20 once (first module to load wins). */
+/** Register game.wodx.profiles once (first module to load wins). */
 export function register() {
-    game.vtda20 ??= {};
-    if (game.vtda20.profiles) return game.vtda20.profiles;
-    game.vtda20.profiles = { SHARED_VERSION, PROFILES, RES, detectProfile, setProfile, pickProfile, resource, adjust, canAfford, profileLabel, profileSoak };
-    return game.vtda20.profiles;
+    game.wodx ??= {};
+    if (game.wodx.profiles) return game.wodx.profiles;
+    game.wodx.profiles = { SHARED_VERSION, PROFILES, RES, detectProfile, setProfile, pickProfile, resource, adjust, canAfford, profileLabel, profileSoak, worldFlag, setWorldFlag };
+    return game.wodx.profiles;
 }

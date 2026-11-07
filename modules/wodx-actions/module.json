@@ -1,16 +1,19 @@
 {
-  "id": "vtda20-actions",
-  "title": "VtDA20 Non-Combat Actions",
-  "description": "Non-combat actions for the World of Darkness 20th Edition system with a menu for every actor type: Kindred (hunting, feeding, blood, frenzy, Road, torpor, diablerie), ghoul, mortal, hunter, Garou (Rage, Gnosis, forms, regeneration), mage (Arete casting), changeling (cantrips, Glamour, Banality), wraith (Pathos, Corpus, Angst), spirit, creature and generic Demon/Mummy/Exalted, plus the dramatic-system presets.",
-  "version": "2.2.1",
+  "id": "wodx-actions",
+  "title": "WoDX Actions",
+  "description": "World of Darkness Expanded: non-combat actions with a menu for every line (Kindred hunting, feeding, blood, frenzy, Road, torpor, diablerie; ghouls, mortals, hunters, Garou, mages, changelings, wraiths, spirits, creatures, demons, mummies, Exalted), powers as timed effects, and the move from VtDA20. Replaces vtda20-actions. Private use only; not for distribution or sale.",
+  "version": "3.0.0",
   "authors": [
     {
       "name": "Benjamin LeBrun"
+    },
+    {
+      "name": "WoDX Project (private)"
     }
   ],
   "compatibility": {
-    "minimum": "12",
-    "verified": "14"
+    "minimum": "14",
+    "verified": "14.369"
   },
   "relationships": {
     "systems": [
@@ -18,23 +21,45 @@
         "id": "worldofdarkness",
         "type": "system",
         "compatibility": {
-          "minimum": "3.0.0"
+          "minimum": "7.3.2"
         }
+      }
+    ],
+    "requires": [
+      {
+        "id": "wodx-chronicle",
+        "type": "module",
+        "reason": "Conditions, timed effects, the approval queue and search boxes.",
+        "compatibility": {
+          "minimum": "0.2.0"
+        }
+      }
+    ],
+    "conflicts": [
+      {
+        "id": "vtda20-actions",
+        "type": "module",
+        "reason": "WoDX Actions replaces vtda20-actions; disable vtda20-actions."
       }
     ],
     "recommends": [
       {
-        "id": "vtda20-combat",
+        "id": "wodx-combat",
         "type": "module",
-        "reason": "Shares the health-track rules; damage is routed through it when both are active."
+        "reason": "Shares the health-track rules; damage goes through it when both are on."
       }
     ]
   },
   "esmodules": [
-    "scripts/vtda20-actions.js"
+    "scripts/main.js"
   ],
   "styles": [
-    "styles/vtda20-actions.css"
+    "styles/wodx-actions.css"
   ],
-  "socket": true
+  "socket": true,
+  "flags": {
+    "wodx": {
+      "phase": 6
+    }
+  }
 }

@@ -10,6 +10,8 @@ import {runEraTest} from "./era-test.mjs";
 import * as contentFixes from "./content-fixes.mjs";
 import {installSearch} from "./search.mjs";
 import * as skip from "./skip.mjs";
+import * as conditions from "./conditions.mjs";
+import * as timed from "./timed.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -23,6 +25,9 @@ Hooks.once("init", () => {
   }
   active = true;
   installSearch();
+  // Conditions are token statuses, so they are registered before the canvas is drawn
+  conditions.registerCoreConditions();
+  timed.registerTimedHooks();
 
   registerSettings({
     HouseRulesApp,
@@ -96,7 +101,11 @@ Hooks.once("ready", async () => {
     runEraTest,
     contentFixes,
     timeSkip: skip.timeSkip,
-    isSkipping: skip.isSkipping
+    isSkipping: skip.isSkipping,
+    conditions, timed,
+    registerCondition: conditions.registerCondition,
+    applyTimed: timed.applyTimed,
+    endScene: timed.endScene
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});

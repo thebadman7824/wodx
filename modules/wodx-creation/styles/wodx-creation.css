@@ -9,3 +9,16 @@
 .wodx-card.wodx-embrace h3, .wodx-card.wodx-vitae h3, .wodx-card.wodx-xp h3 { margin: 0 0 0.25rem; }
 .application.wodx .wodx-indent { margin-left: 1.6em; }
 .application.wodx-pass-years td { vertical-align: top; }
+
+/* The Group sheet (rule B17: the body scrolls, nothing is cut off) */
+.application.wodx-group .window-content { background: #16141a; color: #e8e2d6; }
+.application.wodx-group .wodx-group-head { display: flex; gap: 0.5rem; align-items: center; }
+.application.wodx-group .wodx-group-head input[name=name] { flex: 1 1 auto; font-size: 1.2em; }
+.application.wodx-group .wodx-group-head select { flex: 0 1 16rem; }
+.application.wodx-group .wodx-group-pools input[type=number] { width: 3.2rem; }
+.application.wodx-group .wodx-group-pools td.total { font-weight: 700; }
+.application.wodx-group .wodx-add-member, .application.wodx-group .wodx-add-bg { display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap; }
+.application.wodx-group .wodx-add-member select { flex: 1 1 12rem; }
+.application.wodx-group .wodx-warnings { color: #d8a24a; }
+.application.wodx-group textarea { width: 100%; }
+.application.wodx-group .wodx-quiet { color: #a99f8f; font-size: 0.9em; }

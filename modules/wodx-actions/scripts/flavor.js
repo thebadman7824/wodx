@@ -1,4 +1,4 @@
-/* VtDA20 Actions: flavor lines shown under the result of each action card.
+/* WoDX Actions: flavor lines shown under the result of each action card.
  * The card is sorted into a theme (from its title and text) and an outcome (success, failure, botch),
  * and one line is picked at random. {name} is the acting character, {target} the other party if there is one.
  * A line may start with tags in square brackets that say who {name} must be: kindred, living (mortals, ghouls, Garou...),

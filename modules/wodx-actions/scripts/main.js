@@ -1,8 +1,8 @@
 /**
- * VtDA20 Actions — non-combat automation for Vampire: The Dark Ages 20th Anniversary
+ * WoDX Actions — non-combat automation for Vampire: The Dark Ages 20th Anniversary
  * on the World of Darkness 20th Edition system (Foundry VTT).
  *
- * game.vtda20actions
+ * game.wodxActions
  *   menu()                         launcher with every action below
  *   action({actor, preset})        any Attribute + Ability roll: simple, extended, resisted, teamwork
  *   hunt({actor})                  hunting for prey, hunger and feeding
@@ -17,7 +17,7 @@
  *   diablerie({actor, victim})     the Amaranth
  *   seduction({actor, target})     the three-roll seduction
  *   newNight({actors}) / endScene({actors})
- *   getKind(actor) / setKind(actor, key) / pickKind(actor)   actor-type profile (shared with vtda20-combat)
+ *   getKind(actor) / setKind(actor, key) / pickKind(actor)   actor-type profile (shared with WoDX Combat)
  *   profileMenu({actor})           the launcher shows a different menu for each actor type (v2.0)
  */
 
@@ -25,8 +25,11 @@ import * as R from "./rules.js";
 import * as P from "./profiles.js";
 import * as PM from "./profile-menus.js";
 import * as F from "./flavor.js";
+import * as L from "./legacy.js";
+import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import * as MIG from "./migrate.js";
 
-const MOD = "vtda20-actions";
+const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
 const GEN = () => game.release?.generation ?? 11;
 const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
@@ -38,16 +41,17 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 /* ================================================================== */
 
 function registerSettings() {
+    // A new setting starts from the choice made in vtda20-actions, if there was one (nothing is written)
     const s = (key, name, hint, type, def) =>
-        game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: def });
+        game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: L.oldSetting("vtda20-actions", key, def) });
     game.settings.register(MOD, "flavorText", { name: "Flavor text on action cards",
         hint: "Add one short line of description under the result of each action card, picked to fit what was attempted and how it went. Edit the lines in scripts/flavor.js.",
-        scope: "world", config: true, type: String, default: "all", choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
+        scope: "world", config: true, type: String, default: L.oldSetting("vtda20-actions", "flavorText", "all"), choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
     s("spendResources", "Deduct Willpower and blood", "Update the character sheet when Willpower or blood is spent or gained.", Boolean, true);
     s("applyChanges", "Apply results to sheets", "Apply health, Road, Virtue, frenzy and blood results automatically. Off: results are reported only.", Boolean, true);
     s("showDice", "Show the dice in chat", "List each die face in result cards.", Boolean, true);
     s("untrained", "Untrained ability rules", "Talents default to the Attribute, Skills at +1 difficulty, Knowledges cannot be attempted (V20 standard).", Boolean, true);
-    s("createMacros", "Create hotbar macros", "Create the VtDA20 Actions macros in the Macro directory if missing.", Boolean, true);
+    s("createMacros", "Create hotbar macros", "Create the WoDX Actions macros in the Macro directory if missing.", Boolean, true);
     s("profileMenu", "Menu follows the actor type",
         "The Actions menu shows the buttons for the actor's profile (Kindred, ghoul, mortal, Garou, mage, changeling, wraith...). Off: always the Kindred menu.", Boolean, true);
     s("nightlyBlood", "Blood cost of rising", "Subtract one blood point from each vampire at New Night (p. 340).", Boolean, true);
@@ -179,7 +183,7 @@ async function setFlag(actor, k, v) {
     return requestGM({ action: "update", uuid: actor.uuid, data: v === null ? { [`flags.${MOD}.-=${k}`]: null } : { [`flags.${MOD}.${k}`]: v } });
 }
 function requestGM(payload) {
-    if (!game.users.find(u => u.isGM && u.active)) { ui.notifications.warn("VtDA20 Actions: no GM is connected to apply the change."); return false; }
+    if (!game.users.find(u => u.isGM && u.active)) { ui.notifications.warn("WoDX Actions: no GM is connected to apply the change."); return false; }
     game.socket.emit(SOCKET, payload);
     return true;
 }
@@ -210,7 +214,7 @@ async function changeBlood(actor, delta) {
 }
 
 /* ================================================================== */
-/*  Health (same model as the WoD20 system / vtda20-combat)           */
+/*  Health (same model as the WoD20 system / WoDX Combat)           */
 /* ================================================================== */
 
 function healthTrack(actor) {
@@ -239,7 +243,7 @@ function healthText(actor, damage) {
 }
 async function applyDamage(actor, type, levels) {
     if (!levels) return null;
-    if (game.vtda20combat?.applyDamage && actor.isOwner) return game.vtda20combat.applyDamage(actor, type, levels);
+    if (game.wodxCombat?.applyDamage && actor.isOwner) return game.wodxCombat.applyDamage(actor, type, levels);
     if (!actor.isOwner) { requestGM({ action: "damage", uuid: actor.uuid, type, levels }); return { requested: true }; }
     const t = healthTrack(actor);
     const p = profile(actor);
@@ -287,7 +291,7 @@ async function post(actor, title, body, rolls = [], data = null) {
             { group: F.actorGroup(actor ? P.detectProfile(actor) : null) });
     }
     const content = `<div class="vta-card"><h3>${title}</h3>${body}${mode === "all" ? F.html(flav) : ""}</div>`;
-    if (flav && mode === "gm") ChatMessage.create({ content: `<div class="vta-card">${F.html(flav)}</div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "VtDA20" } });
+    if (flav && mode === "gm") ChatMessage.create({ content: `<div class="vta-card">${F.html(flav)}</div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" } });
     const md = { speaker: ChatMessage.getSpeaker({ actor }), content, rolls: rolls.filter(Boolean) };
     if (rolls.filter(Boolean).length) { md.sound = CONFIG.sounds.dice; if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL; }
     if (data) md.flags = { [MOD]: data };
@@ -312,7 +316,7 @@ async function dialog(title, content, label, callback, { width = 460, render = n
     });
     if (!r || r.id !== "ok") return null;
     try { return await callback(r.data, null); }
-    catch (e) { console.error(e); ui.notifications.error(`VtDA20 Actions: ${e.message}`); return null; }
+    catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); return null; }
 }
 
 function resolveActor(a) {
@@ -327,7 +331,7 @@ function targetActor(t) {
 }
 function needActor(a) {
     const actor = resolveActor(a);
-    if (!actor) ui.notifications.warn("VtDA20 Actions: select a token or assign a character first.");
+    if (!actor) ui.notifications.warn("WoDX Actions: select a token or assign a character first.");
     return actor;
 }
 
@@ -368,8 +372,8 @@ function poolSelectors(actor, prefix = "", sel = {}) {
     const ab = abilityList(actor);
     const abOpts = [["", "— none —"], ...ab.map(a => [a.id, `${a.name} (${a.value})${a.specialty ? ` [${a.specialty}]` : ""}`])];
     return `
-    <div class="form-group"><label>Attribute / Trait</label><select name="${prefix}attr">${opts(attrOpts, sel.attr ?? "dexterity")}</select></div>
-    <div class="form-group"><label>Ability</label><select name="${prefix}ability">${opts(abOpts, sel.ability ?? "")}</select></div>`;
+    <div class="form-group"><label>Attribute / Trait</label><select name="${prefix}attr" data-fixed>${opts(attrOpts, sel.attr ?? "dexterity")}</select></div>
+    <div class="form-group"><label>Ability</label>${searchBox(`select[name=${prefix}ability]`, "Search Abilities…", "Search Abilities")}<select name="${prefix}ability">${opts(abOpts, sel.ability ?? "")}</select></div>`;
 }
 /** Resolve a dialog's selection into numbers. */
 function readPool(actor, attrSel, abilitySel) {
@@ -434,7 +438,7 @@ export async function action({ actor: a, preset = "" } = {}) {
     const day = !!flag(actor, "daytime");
     const presetOpts = Object.entries(PRESETS).map(([k, p]) => [k, p.label]);
     const content = `<form>
-      <div class="form-group"><label>Dramatic system</label><select name="preset">${opts(presetOpts, preset)}</select></div>
+      <div class="form-group"><label>Dramatic system</label>${searchBox("select[name=preset]", "Search dramatic systems…", "Search dramatic systems")}<select name="preset">${opts(presetOpts, preset)}</select></div>
       <p class="vta-note vta-preset-note"></p>
       ${poolSelectors(actor)}
       <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="2" max="10"/></div>
@@ -484,7 +488,7 @@ export async function action({ actor: a, preset = "" } = {}) {
         if (preset) f.preset.dispatchEvent(new Event("change"));
         sync();
     };
-    return dialog("VtDA20 Action", content, "Roll", fd => resolveAction(actor, target, fd), { render, width: 500 });
+    return dialog("WoDX Action", content, "Roll", fd => resolveAction(actor, target, fd), { render, width: 500 });
 }
 
 function opponentPool(target, spec, fd) {
@@ -635,7 +639,7 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
     const golconda = !!flag(actor, "golconda");
     const content = `<form>
       <p>${esc(actor.name)}: ${v.selfcontrol.label} ${v.selfcontrol.value}, ${v.conscience.label} ${v.conscience.value}, ${rd.name} ${rd.value}, blood ${b.value}${golconda ? " — <b>Golconda: immune to frenzy</b>" : ""}</p>
-      <div class="form-group"><label>Provocation</label><select name="prov">${opts(Object.entries(R.FRENZY_PROVOCATIONS).map(([k, p]) => [k, `${p.label}${p.diff ? ` (${p.diff})` : ""}`]), provocation)}</select></div>
+      <div class="form-group"><label>Provocation</label><select name="prov" data-fixed>${opts(Object.entries(R.FRENZY_PROVOCATIONS).map(([k, p]) => [k, `${p.label}${p.diff ? ` (${p.diff})` : ""}`]), provocation)}</select></div>
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="${difficulty ?? 6}"/></div>
       <div class="form-group"><label>Difficulty modifier (drugs –1, Intimidation powers +n…)</label><input type="number" name="mod" value="0"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
@@ -657,7 +661,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
     const v = virtues(actor), rd = road(actor);
     const content = `<form>
       <p>${esc(actor.name)}: Courage ${v.courage.value}, ${rd.name} ${rd.value}</p>
-      <div class="form-group"><label>Provocation</label><select name="prov">${opts(Object.entries(R.ROTSCHRECK_PROVOCATIONS).map(([k, p]) => [k, `${p.label} (${p.diff})`]), provocation)}</select></div>
+      <div class="form-group"><label>Provocation</label><select name="prov" data-fixed>${opts(Object.entries(R.ROTSCHRECK_PROVOCATIONS).map(([k, p]) => [k, `${p.label} (${p.diff})`]), provocation)}</select></div>
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="6"/></div>
       <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="0"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
@@ -704,7 +708,7 @@ async function beastRoll(actor, d, msg = null) {
     }
     if (enter) {
         body += `<div class="vta-note">In frenzy: ignore wound penalties; +2 difficulty to Dominate her, –2 to resist it; immune to Rötschreck. A Willpower point controls one action for a turn. Usually lasts a scene.${!fear && d.kind !== "instinct" ? " Frenzying without risking a Road dot can bring a Moment of Truth." : ""}</div>`;
-        if (setting("applyChanges")) { await updateActor(actor, { "system.conditions.isfrenzy": true }); await setFlag(actor, "frenzyType", fear ? "fear" : "rage"); }
+        if (setting("applyChanges")) { await updateActor(actor, { "system.conditions.isfrenzy": true }); await setFlag(actor, "frenzyType", fear ? "fear" : "rage"); await condition(actor, fear ? "rotschreck" : "frenzy", true); }
         body += btn("endfrenzy", "End frenzy");
         data = { kind: "endfrenzy", actor: actor.uuid };
     }
@@ -717,6 +721,8 @@ export async function endFrenzy({ actor: a } = {}) {
     if (!actor) return;
     await updateActor(actor, { "system.conditions.isfrenzy": false });
     await setFlag(actor, "frenzyType", null);
+    await condition(actor, "frenzy", false);
+    await condition(actor, "rotschreck", false);
     return post(actor, `${actor.name} regains control`, `<div class="vta-note">The frenzy ends. Wound penalties return. Consider a sin check for anything done while the Beast ruled.</div>`);
 }
 
@@ -777,18 +783,18 @@ export async function hunt({ actor: a } = {}) {
     const b = blood(actor), v = virtues(actor);
     const content = `<form>
       <p>${esc(actor.name)} — blood ${b.value}/${b.max}; hungry below ${7 - v.selfcontrol.value} (7 – ${v.selfcontrol.label})</p>
-      <div class="form-group"><label>Hunting ground</label><select name="area">${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), "market")}</select></div>
+      <div class="form-group"><label>Hunting ground</label><select name="area" data-fixed>${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), "market")}</select></div>
       ${poolSelectors(actor, "", { attr: "wits", ability: findAbility(actor, "streetwise")?.id ?? findAbility(actor, "subterfuge")?.id ?? "" })}
       <div class="form-group"><label>Fame / Domain / Herd</label>
         <input type="number" name="fame" value="${background(actor, "Fame")}" style="width:3.5em"/> <input type="number" name="domain" value="${background(actor, "Domain")}" style="width:3.5em"/> <input type="number" name="herd" value="${background(actor, "Herd")}" style="width:3.5em"/></div>
       <div class="form-group"><label>Inhumanity / other difficulty</label><input type="number" name="inhuman" value="0"/></div>
       <div class="form-group"><label>Hours available</label><input type="number" name="hours" value="3" min="1"/></div>
-      <div class="form-group"><label>Prey</label><select name="vessel">${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), "human")}</select></div>
+      <div class="form-group"><label>Prey</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), "human")}</select></div>
       <div class="form-group"><label>Blood to take (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
       <div class="form-group"><label><input type="checkbox" name="dieWorth"/> Storyteller option: prey yields one die's worth of blood</label></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
     </form>`;
-    return dialog("VtDA20 Hunt", content, "Hunt", fd => resolveHunt(actor, fd), { width: 500 });
+    return dialog("WoDX Hunt", content, "Hunt", fd => resolveHunt(actor, fd), { width: 500 });
 }
 
 async function resolveHunt(actor, fd) {
@@ -822,11 +828,11 @@ export async function feed({ actor: a, vessel: t } = {}) {
     const vb = vessel ? blood(vessel) : null;
     const content = `<form>
       <p>${esc(actor.name)} feeds${vessel ? ` from <b>${esc(vessel.name)}</b> (blood ${vb.value})` : " (no target selected)"}</p>
-      <div class="form-group"><label>Vessel</label><select name="vessel">${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vessel && isVampire(vessel) ? "vampire" : "human")}</select></div>
+      <div class="form-group"><label>Vessel</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vessel && isVampire(vessel) ? "vampire" : "human")}</select></div>
       <div class="form-group"><label>Blood points to drink (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
       <div class="form-group"><label>Minutes the blood has been outside a living body</label><input type="number" name="cold" value="0" min="0"/></div>
     </form>`;
-    return dialog("VtDA20 Feed", content, "Feed", async fd => {
+    return dialog("WoDX Feed", content, "Feed", async fd => {
         const rolls = [];
         const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls });
         return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls);
@@ -979,7 +985,11 @@ async function resolveSpend(actor, fd) {
             const newVal = num(at.total ?? at.value) + n;
             bits.push(`${cap(k)} ${newVal}${newVal > maxT ? ` (above ${maxT}: fades three turns after she stops spending)` : ""}`);
         }
-        if (setting("applyChanges")) { await updateActor(actor, upd); await setFlag(actor, "quickening", cur); }
+        if (setting("applyChanges")) {
+            await updateActor(actor, upd);
+            await setFlag(actor, "quickening", cur);
+            await quickeningEffect(actor, q);
+        }
         html += `<div class="vta-sec"><b>Quickening:</b> ${bits.join(", ")} for the scene. Announce before rolling.</div>`;
     }
     if (imitate) { spent += imitate; html += `<div class="vta-sec"><b>Imitates life</b> for the scene: warmth, breath, blush (${imitate} blood).</div>`; }
@@ -1037,7 +1047,7 @@ export async function bloodOath({ actor: a } = {}) {
       <p>${esc(actor.name)} — Willpower ${wp.perm} (${wp.temp} left). A bond fades one step after ${R.oathDecayMonths(wp.perm)} months without drinking.</p>
       ${list.length ? `<table class="vta-table"><tr><th>Regnant</th><th>Stage</th><th>Drinks</th></tr>${list.map(([k, b]) => `<tr><td>${esc(b.name)}</td><td>${b.stage}</td><td>${b.drinks}</td></tr>`).join("")}</table>` : "<p><i>No bonds recorded.</i></p>"}
       <div class="form-group"><label>Action</label><select name="act">${opts([["resist", "Resist the bond (Willpower roll, then spend Willpower)"], ["drink", "Record a drink from the targeted Cainite"], ["fade", "Bond fades one step (months apart)"], ["clear", "Break the bond completely"]], "resist")}</select></div>
-      <div class="form-group"><label>Bond</label><select name="bond">${opts(list.map(([k, b]) => [k, `${b.name} (stage ${b.stage})`]), list[0]?.[0])}</select></div>
+      <div class="form-group"><label>Bond</label>${list.length > 5 ? searchBox("select[name=bond]", "Search bonds…", "Search bonds") : ""}<select name="bond">${opts(list.map(([k, b]) => [k, `${b.name} (stage ${b.stage})`]), list[0]?.[0])}</select></div>
       <div class="form-group"><label>Nature / treatment modifiers (kindness +, cruelty –)</label><input type="number" name="nature" value="0" style="width:4em"/> <input type="number" name="treat" value="0" style="width:4em"/></div>
       <div class="form-group"><label>Rebellion</label><select name="scope">${opts([["scene", "Plot against / betray (one scene)"], ["turn", "Attack the regnant (one turn)"]], "scene")}</select></div>
     </form>`;
@@ -1117,11 +1127,11 @@ export async function torpor({ actor: a } = {}) {
         if (fd.act === "enter" || fd.act === "voluntary") {
             const vol = fd.act === "voluntary";
             await setFlag(actor, "torpor", { since: game.time.worldTime, days: tl.days, voluntary: vol });
-            await statusEffect(actor, "unconscious", true);
+            await statusEffect(actor, "unconscious", true); await condition(actor, "torpor", true);
             return post(actor, `${actor.name} sinks into torpor`, `<div class="vta-big">${tl.text}${vol ? ` (may try to rise after ${Math.ceil(tl.days / 2)} days)` : ""}.</div><div class="vta-note">No blood is lost while in torpor. Rising from injury also needs blood from an outside source.</div>`);
         }
         if (fd.act === "wake") {
-            await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false);
+            await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false); await condition(actor, "torpor", false);
             return post(actor, `${actor.name} rises from torpor`, `<div class="vta-note">She rises Crippled and should heal or hunt at once.</div>`);
         }
         const minDays = t.voluntary ? Math.ceil(t.days / 2) : t.days;
@@ -1132,7 +1142,7 @@ export async function torpor({ actor: a } = {}) {
         const r = await rollPool(rd.value, 8);
         html += rollBlock(`${rd.name} (1 blood spent)`, r);
         if (r.successes) {
-            await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false);
+            await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false); await condition(actor, "torpor", false);
             html += `<div class="vta-big good">She rises: Crippled; heal or hunt immediately.</div>`;
         } else html += `<div class="vta-big bad">She sleeps on. Wait a night, spend another blood point, and try again.</div>`;
         return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
@@ -1151,11 +1161,13 @@ async function statusEffect(actor, id, active) {
 }
 
 /** Clear scene-length effects: Quickening, ignoring pain, daytime activity. */
-export async function endScene({ actors } = {}) {
-    const list = actors ?? (canvas.tokens.controlled.length ? canvas.tokens.controlled.map(t => t.actor) : game.actors.filter(a => a.hasPlayerOwner && a.isOwner));
+export async function endScene({ actors, fromChronicle = false } = {}) {
+    const list = actors ?? (canvas.tokens.controlled.length ? canvas.tokens.controlled.map(t => t.actor) : game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner && a.isOwner));
     const lines = [];
     for (const actor of list) {
         if (!actor?.isOwner) continue;
+        // WoDX timed effects of the scene end first (Quickening takes itself back through its reverter)
+        if (!fromChronicle) await L.chronicle()?.timed?.endFor?.(actor, { kind: "scene", why: "End of scene" });
         const upd = {}, bits = [];
         const q = flag(actor, "quickening");
         if (q) {
@@ -1173,14 +1185,50 @@ export async function endScene({ actors } = {}) {
         if (flag(actor, "daytime")) { await actor.unsetFlag(MOD, "daytime"); bits.push("daytime activity ends"); }
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
+    if (fromChronicle && !lines.length) return null;
     return post(null, "End of scene", lines.length ? `<ul>${lines.join("")}</ul>` : "<p>Nothing to clear.</p>");
+}
+
+/** Quickening as a WoDX timed effect: it lasts the scene and takes itself back when the scene ends (p. 340). */
+async function quickeningEffect(actor, added) {
+    const api = L.chronicle();
+    if (!api?.applyTimed || !actor.isOwner) return null;
+    const parts = Object.entries(added).filter(([, n]) => n).map(([k, n]) => `${cap(k)} +${n}`);
+    if (!parts.length) return null;
+    return api.applyTimed(actor, { name: `Quickening: ${parts.join(", ")}`, img: "icons/svg/regen.svg",
+        description: "Blood raises Physical Attributes for the scene.", duration: { kind: "scene" },
+        revert: { key: "wodx-actions.quickening", data: { added } }, source: "V20 Dark Ages p. 340" });
+}
+
+/** Take back one Quickening effect: its own points, and only those still recorded on the sheet. */
+async function revertQuickening(actor, { added = {} } = {}) {
+    const cur = { ...(flag(actor, "quickening") ?? {}) };
+    const upd = {};
+    for (const [k, n0] of Object.entries(added)) {
+        const n = Math.min(num(n0), num(cur[k]));
+        const at = actor.system.attributes?.[k];
+        if (!n || !at) continue;
+        upd[`system.attributes.${k}.bonus`] = Math.max(0, num(at.bonus) - n);
+        upd[`system.attributes.${k}.total`] = num(at.total ?? at.value) - n;
+        cur[k] = num(cur[k]) - n;
+        if (cur[k] <= 0) delete cur[k];
+    }
+    if (Object.keys(upd).length) await actor.update(upd);
+    await actor.unsetFlag(MOD, "quickening");
+    if (Object.keys(cur).length) await actor.setFlag(MOD, "quickening", cur);
+}
+
+/** Frenzy, Rötschreck and torpor show as WoDX condition statuses too. */
+async function condition(actor, id, active) {
+    try { if (actor?.isOwner) await L.chronicle()?.conditions?.setCondition?.(actor, id, active); }
+    catch (e) { console.warn("WoDX | condition", e); }
 }
 
 /** A new night: rising costs one blood, one Willpower returns, aggravated wounds rested on heal. */
 export async function newNight({ actors } = {}) {
     if (!game.user.isGM && !actors) return ui.notifications.warn("New Night is for the GM (or pass your own actors).");
     await endScene({ actors });
-    const list = actors ?? game.actors.filter(a => a.hasPlayerOwner || canvas.tokens.placeables.some(t => t.actor?.id === a.id));
+    const list = actors ?? game.actors.filter(a => a.type !== "Group" && (a.hasPlayerOwner || canvas.tokens.placeables.some(t => t.actor?.id === a.id)));
     const lines = [];
     for (const actor of list) {
         if (!actor?.isOwner) continue;
@@ -1210,7 +1258,7 @@ export async function newNight({ actors } = {}) {
             bits.push(`${healed} aggravated level${healed === 1 ? "" : "s"} heal`);
             await actor.unsetFlag(MOD, "aggHealing");
         }
-        if (actor.system?.conditions?.isfrenzy) { upd["system.conditions.isfrenzy"] = false; await actor.unsetFlag(MOD, "frenzyType"); bits.push("frenzy over"); }
+        if (actor.system?.conditions?.isfrenzy) { upd["system.conditions.isfrenzy"] = false; await actor.unsetFlag(MOD, "frenzyType"); await condition(actor, "frenzy", false); await condition(actor, "rotschreck", false); bits.push("frenzy over"); }
         if (Object.keys(upd).length) await actor.update(upd);
         if (vamp) {
             const rd = road(actor).value;
@@ -1233,9 +1281,9 @@ export async function hazard({ actor: a, kind = "sun" } = {}) {
     const content = `<form>
       <p>${esc(actor.name)} — ${profile(actor)}, Fortitude ${fort}, Stamina ${attr(actor, "stamina")}</p>
       <div class="form-group"><label>Hazard</label><select name="kind">${opts([["sun", "Sunlight"], ["fire", "Fire"], ["fall", "Falling"]], kind)}</select></div>
-      <div class="vta-k vta-sun"><div class="form-group"><label>Light</label><select name="light">${opts(Object.entries(R.SUNLIGHT_INTENSITY).map(([k, x]) => [k, `${x.label} (soak ${x.diff})`]), "direct")}</select></div>
-        <div class="form-group"><label>Exposure</label><select name="exposure">${opts(Object.entries(R.SUNLIGHT_EXPOSURE).map(([k, x]) => [k, `${k}/turn: ${x}`]), 3)}</select></div></div>
-      <div class="vta-k vta-fire"><div class="form-group"><label>Heat</label><select name="heat">${opts(Object.entries(R.FIRE_HEAT).map(([k, x]) => [k, `${x.label} (soak ${x.diff})`]), "torch")}</select></div>
+      <div class="vta-k vta-sun"><div class="form-group"><label>Light</label><select name="light" data-fixed>${opts(Object.entries(R.SUNLIGHT_INTENSITY).map(([k, x]) => [k, `${x.label} (soak ${x.diff})`]), "direct")}</select></div>
+        <div class="form-group"><label>Exposure</label><select name="exposure" data-fixed>${opts(Object.entries(R.SUNLIGHT_EXPOSURE).map(([k, x]) => [k, `${k}/turn: ${x}`]), 3)}</select></div></div>
+      <div class="vta-k vta-fire"><div class="form-group"><label>Heat</label><select name="heat" data-fixed>${opts(Object.entries(R.FIRE_HEAT).map(([k, x]) => [k, `${x.label} (soak ${x.diff})`]), "torch")}</select></div>
         <div class="form-group"><label>Size</label><select name="size">${opts(Object.entries(R.FIRE_SIZE).map(([k, x]) => [k, `${k}/turn: ${x}`]), 1)}</select></div></div>
       <div class="vta-k vta-fall"><div class="form-group"><label>Distance (feet)</label><input type="number" name="feet" value="30"/></div>
         <div class="form-group"><label><input type="checkbox" name="sharp"/> Lands on something sharp (lethal)</label></div></div>
@@ -1428,20 +1476,20 @@ function pm() {
 /** The launcher: the buttons follow the actor's profile (Kindred, ghoul, mortal, Garou, mage, changeling, wraith...). */
 export async function menu({ actor: a } = {}) {
     const actor = a?.actor ?? a ?? resolveActor();
-    if (!actor) return ui.notifications.warn("VtDA20 Actions: select a token or assign a character first.");
+    if (!actor) return ui.notifications.warn("WoDX Actions: select a token or assign a character first.");
     const legacy = !setting("profileMenu");
     let html;
     if (legacy) html = `<div class="vta-menu">${MENU.map(([k, i, l]) => `<button type="button" data-k="api:${k}"><i class="fas ${i}"></i> ${l}</button>`).join("")}</div>`;
     else html = (await pm().menuFor(actor)).html;
     const kind = P.detectProfile(actor);
     const r = await P.ask({
-        title: `VtDA20 Actions — ${P.profileLabel(kind)}`, content: html, width: 460, classes: ["vta-dialog"],
+        title: `WoDX Actions — ${P.profileLabel(kind)}`, content: html, width: 460, classes: ["vta-dialog"],
         buttons: [{ id: "close", label: "Close", icon: "fas fa-times" }],
         onRender: (root, close) => {
             root.querySelectorAll("button[data-k]").forEach(b => b.addEventListener("click", async () => {
                 const spec = b.dataset.k;
                 close();
-                try { await pm().run(spec, actor); } catch (e) { console.error(e); ui.notifications.error(`VtDA20 Actions: ${e.message}`); }
+                try { await pm().run(spec, actor); } catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); }
             }));
             root.querySelector("button.vta-kind")?.addEventListener("click", async () => {
                 close();
@@ -1484,33 +1532,41 @@ function bindCard(msg, el) {
 /* ================================================================== */
 
 const MACROS = [
-    ["VtDA20: Actor Type", "icons/svg/mystery-man.svg", "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.vtda20actions.pickKind(a); else ui.notifications.warn('Select a token first.');"],
-    ["VtDA20: Actions Menu", "icons/svg/book.svg", "game.vtda20actions.menu();"],
-    ["VtDA20: Roll Action", "icons/svg/d10-grey.svg", "game.vtda20actions.action();"],
-    ["VtDA20: Hunt", "icons/svg/blood.svg", "game.vtda20actions.hunt();"],
-    ["VtDA20: Spend Blood", "icons/svg/regen.svg", "game.vtda20actions.spendBlood();"],
-    ["VtDA20: Frenzy", "icons/svg/terror.svg", "game.vtda20actions.frenzy();"],
-    ["VtDA20: Rötschreck", "icons/svg/fire.svg", "game.vtda20actions.rotschreck();"],
-    ["VtDA20: New Night", "icons/svg/sun.svg", "game.vtda20actions.newNight();"]
+    ["WoDX: Actor Type", "icons/svg/mystery-man.svg", "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxActions.pickKind(a); else ui.notifications.warn('Select a token first.');"],
+    ["WoDX: Actions Menu", "icons/svg/book.svg", "game.wodxActions.menu();"],
+    ["WoDX: Roll Action", "icons/svg/d10-grey.svg", "game.wodxActions.action();"],
+    ["WoDX: Hunt", "icons/svg/blood.svg", "game.wodxActions.hunt();"],
+    ["WoDX: Spend Blood", "icons/svg/regen.svg", "game.wodxActions.spendBlood();"],
+    ["WoDX: Frenzy", "icons/svg/terror.svg", "game.wodxActions.frenzy();"],
+    ["WoDX: Rötschreck", "icons/svg/fire.svg", "game.wodxActions.rotschreck();"],
+    ["WoDX: New Night", "icons/svg/sun.svg", "game.wodxActions.newNight();"]
 ];
 async function createMacros() {
     if (!game.user.isGM || !setting("createMacros")) return;
     for (const [name, img, command] of MACROS) {
         if (game.macros.find(m => m.name === name)) continue;
+        // The VtDA20 macro of the same name is renamed by the migration, not duplicated
+        if (game.macros.find(m => m.name === name.replace(/^WoDX: /, "VtDA20: "))) continue;
         await Macro.create({ name, type: "script", img, command, ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER } });
     }
 }
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "2.2.1",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.0.0",
+    migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => pm().uses(o.actor ?? resolveActor(), o.resource ?? "willpower"), cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
     cast: (o = {}) => pm().cast(o.actor ?? resolveActor()), shift: (o = {}) => pm().shift(o.actor ?? resolveActor()), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()) };
 
+let OFF = false;
 Hooks.once("init", () => {
+    // Never run beside the module this one replaces: both would answer every button
+    if (L.oldActive("vtda20-actions")) { OFF = true; return; }
     registerSettings();
+    MIG.registerSettings();
     P.register();
-    game.vtda20actions = API;
+    game.wodxActions = API;
+    L.alias("actions", "vtda20actions", API, "vtda20-actions");
     const mod = game.modules.get(MOD);
     if (mod) mod.api = API;
     if (GEN() >= 13) Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]) bindCard(m, el); });
@@ -1518,21 +1574,33 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
+    if (OFF) return L.warnOld("WoDX Actions", "vtda20-actions");
+    // WoDX Chronicle's API may come after this module's ready: Foundry does not wait for async ready hooks
+    const withChronicle = () => {
+        L.chronicle()?.timed?.registerReverter?.("wodx-actions.quickening", revertQuickening);
+        MIG.registerHandler();
+        MIG.offerMigration().catch(e => console.error("WoDX |", e));
+    };
+    if (L.chronicle()) withChronicle(); else Hooks.once("wodxChronicleReady", withChronicle);
+    Hooks.on("wodxEndScene", () => {
+        if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true }).catch(e => console.error("WoDX |", e));
+    });
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
     game.socket.on(SOCKET, onSocket);
     await createMacros();
 });
 
 Hooks.on("renderTokenHUD", (hud, html) => {
+    if (OFF) return;
     const root = rootOf(html);
     const tok = hud.object;
     if (!tok?.actor?.isOwner || !root) return;
     const col = root.querySelector(".col.left");
     if (!col) return;
     const b = document.createElement("div");
-    b.className = "control-icon vta-hud"; b.title = "VtDA20 Actions";
+    b.className = "control-icon vta-hud"; b.title = "WoDX Actions";
     b.innerHTML = '<i class="fas fa-book-dead"></i>';
-    b.title = "VtDA20 Actions (right-click: set actor type)";
+    b.title = "WoDX Actions (right-click: set actor type)";
     b.addEventListener("click", () => menu({ actor: tok.actor }));
     b.addEventListener("contextmenu", ev => { ev.preventDefault(); P.pickProfile(tok.actor); });
     col.appendChild(b);

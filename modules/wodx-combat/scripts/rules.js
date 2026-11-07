@@ -1,5 +1,5 @@
 /**
- * VtDA20 Combat — pure rules logic (no Foundry calls).
+ * WoDX Combat — pure rules logic (no Foundry calls).
  * Everything here works on plain numbers so it can be unit-tested outside Foundry.
  * Rules references are to Vampire: The Dark Ages 20th Anniversary Edition (VtDA20).
  */

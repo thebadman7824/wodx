@@ -87,7 +87,8 @@ test("init registers the ratings behavior and the four statuses", async () => {
   await Hooks.callAll("init");
   assert.ok(CONFIG.RegionBehavior.dataModels[`${M}.ratings`]);
   assert.equal(CONFIG.RegionBehavior.typeLabels[`${M}.ratings`], "WoDX: Otherworld ratings");
-  assert.deepEqual(CONFIG.statusEffects.map(s => s.id).sort(), ["wodx-caught", "wodx-lost", "wodx-shadowlands", "wodx-umbra"]);
+  const ours = ["wodx-caught", "wodx-lost", "wodx-shadowlands", "wodx-umbra"];
+  assert.deepEqual(CONFIG.statusEffects.map(s => s.id).filter(id => ours.includes(id)).sort(), ours, "WoDX Chronicle adds its conditions beside these");
 });
 
 test("ready exposes the API and the Dark Ages chart is in force", async () => {

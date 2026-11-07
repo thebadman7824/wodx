@@ -1,5 +1,5 @@
 /**
- * VtDA20 Actions — pure rules for non-combat systems (no Foundry calls).
+ * WoDX Actions — pure rules for non-combat systems (no Foundry calls).
  * Page references are to Vampire: The Dark Ages 20th Anniversary Edition.
  */
 export * from "./core-rules.js";

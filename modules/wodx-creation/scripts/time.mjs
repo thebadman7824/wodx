@@ -88,6 +88,7 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors} 
   const rows = [];
 
   for ( const actor of actors ) {
+    if ( actor.type === "Group" ) continue; // a coterie or pack ages through its members
     const line = lineOf(actor);
     const l = lineage(actor);
     const c = chronology(actor);

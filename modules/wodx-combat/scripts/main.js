@@ -1,10 +1,10 @@
 /**
- * VtDA20 Combat Automation for the World of Darkness 20th Edition system (Foundry VTT).
+ * WoDX Combat Automation for the World of Darkness 20th Edition system (Foundry VTT).
  *
  * Automates the Vampire: The Dark Ages 20th Anniversary combat sequence:
  *   attack roll -> defense (dodge / block / parry) -> damage roll -> soak roll -> health track.
  *
- * Public API: game.vtda20combat
+ * Public API: game.wodxCombat
  *   attack({attacker, target, weaponId})   open the attack dialog (defaults: controlled token -> targeted token)
  *   soakDialog({tokens})                   soak & apply arbitrary damage (falls, fire, sunlight, traps)
  *   applyDamage(actor, type, levels)       write damage straight to the health track (no soak)
@@ -12,7 +12,7 @@
  *   rollInitiative({combat})               VtDA20 initiative for the active combat
  *   getProfile(actor)                      soak model: "vampire" | "ghoul" | "mortal" | "lupine" | "fae" | "wraith" | "spirit"
  *   getKind(actor)                         actor profile: kindred | ghoul | mortal | hunter | lupine | mage | fae | wraith | spirit | beast | demon | mummy | exalted
- *   setKind(actor, key|"auto")             override the detected profile (flag world.vtda20.profile)
+ *   setKind(actor, key|"auto")             override the detected profile (flag world.wodx.profile)
  *   pickKind(actor)                        dialog to choose the profile
  *   menu / macros keep working from v1.x
  */
@@ -20,8 +20,11 @@
 import * as R from "./rules.js";
 import * as P from "./profiles.js";
 import * as F from "./flavor.js";
+import * as L from "./legacy.js";
+import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+const esc = L.esc;
 
-const MOD = "vtda20-combat";
+const MOD = "wodx-combat";
 const SOCKET = `module.${MOD}`;
 const GEN = () => game.release?.generation ?? 11;
 
@@ -30,8 +33,9 @@ const GEN = () => game.release?.generation ?? 11;
 /* ------------------------------------------------------------------ */
 
 function registerSettings() {
+    // A new setting starts from the choice made in vtda20-combat, if there was one (nothing is written)
     const s = (key, name, hint, type, def, extra = {}) =>
-        game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: def, ...extra });
+        game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: L.oldSetting("vtda20-combat", key, def), ...extra });
     s("autoApply", "Apply damage automatically",
         "Write damage to the target's health track as soon as the attack resolves. Off: the chat card shows an Apply button.",
         Boolean, true);
@@ -46,7 +50,7 @@ function registerSettings() {
     s("statusEffects", "Set token status effects",
         "Mark tokens unconscious, in torpor or dead when the health track fills.", Boolean, true);
     s("createMacros", "Create hotbar macros",
-        "On load, create the VtDA20 macros (Attack, Soak & Apply, Initiative) in the Macro directory if missing.",
+        "On load, create the WoDX macros (Attack, Soak & Apply, Initiative) in the Macro directory if missing.",
         Boolean, true);
     s("showDice", "Show the dice in chat", "List each die face in the combat card.", Boolean, true);
     s("classicManeuvers", "Offer World of Darkness: Combat maneuvers",
@@ -70,7 +74,7 @@ async function addFlavor(content, key, names, opts = {}) {
     if (!text) return content;
     if (mode === "all") return content.replace(/<\/div>\s*$/, F.html(text) + "</div>");
     const gms = game.users.filter(u => u.isGM).map(u => u.id);
-    await ChatMessage.create({ content: `<div class="vtc-card">${F.html(text)}</div>`, whisper: gms, speaker: { alias: "VtDA20" } });
+    await ChatMessage.create({ content: `<div class="vtc-card">${F.html(text)}</div>`, whisper: gms, speaker: { alias: "WoDX" } });
     return content;
 }
 
@@ -157,7 +161,7 @@ export const pickKind = P.pickProfile;
 /** Soak model for an actor: vampire | ghoul | mortal | lupine | fae | wraith | spirit. */
 export function getProfile(actor) { return P.profileSoak(P.detectProfile(actor)); }
 
-const isElder = actor => !!(actor?.flags?.world?.vtda20?.elder);
+const isElder = actor => !!(P.worldFlag(actor, "elder"));
 
 /* ------------------------------------------------------------------ */
 /*  Dice                                                               */
@@ -333,7 +337,7 @@ export async function healDamage(actor, type, levels) {
 
 function requestGM(payload) {
     if (!game.users.activeGM && !game.users.find(u => u.isGM && u.active)) {
-        ui.notifications.warn("VtDA20 Combat: no GM is connected to apply the change.");
+        ui.notifications.warn("WoDX Combat: no GM is connected to apply the change.");
         return false;
     }
     game.socket.emit(SOCKET, payload);
@@ -354,6 +358,7 @@ async function onSocket(p) {
         const r = await applyDamage(actor, p.type, p.levels);
         if (p.messageId) await recordApplied(p.messageId, actor, r);
     } else if (p.action === "setDamage") await setDamage(actor, p.damage);
+    else if (p.action === "dazed") await markDazed(actor);
     else if (p.action === "update") await actor.update(p.data);
 }
 
@@ -391,6 +396,9 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     const tFort = target ? discipline(target, "Fortitude") : 0;
     const tCel = target ? discipline(target, "Celerity") : 0;
     const wOpts = weapons.map(w => `<option value="${w.id}" ${w.id === selWeapon ? "selected" : ""}>${w.name}${w.equipped ? " ★" : ""}</option>`).join("");
+    // WoDX conditions on both sides (blinded, held, immobilized, staked, knocked down...)
+    const cm = conditionMods(attacker, target);
+    const condNotes = cm.notes.length ? `<div class="vtc-note wodx-conditions"><b>Conditions:</b><ul>${cm.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "";
     const kinds = setting("showKindMenus");
     const boosts = R.BOOSTS.map(bo => {
         const r = P.resource(attacker, bo.res);
@@ -401,23 +409,24 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     return `
 <form class="vtc-form">
   <p class="vtc-head"><b>${attacker.name}</b> attacks <b>${target ? target.name : "(no target)"}</b></p>
+  ${condNotes}
   ${kinds ? `<fieldset><legend>Actor types</legend>
-    <div class="form-group"><label>Attacker</label><select name="atkKind">${kindOpts("auto", `Automatic — ${P.profileLabel(aKind)}`)}</select></div>
-    <div class="form-group"><label>Defender</label><select name="profile">${kindOpts("auto", `Automatic — ${P.profileLabel(tKind)}`)}</select></div>
+    <div class="form-group"><label>Attacker</label><select name="atkKind" data-fixed>${kindOpts("auto", `Automatic — ${P.profileLabel(aKind)}`)}</select></div>
+    <div class="form-group"><label>Defender</label><select name="profile" data-fixed>${kindOpts("auto", `Automatic — ${P.profileLabel(tKind)}`)}</select></div>
     <div class="form-group"><label><input type="checkbox" name="remember"/> Save these choices on the actors</label></div>
   </fieldset>` : ""}
   <fieldset><legend>Attack</legend>
-    <div class="form-group"><label>Weapon</label><select name="weapon">${wOpts}</select></div>
-    <div class="form-group"><label>Maneuver</label><select name="maneuver">${opts(maneuverTable(), "normal")}</select></div>
-    <div class="form-group"><label>Targeting</label><select name="targeting">${opts(R.TARGETING, "none")}</select></div>
-    <div class="form-group"><label>Range (ranged)</label><select name="range">${opts(R.RANGE, "short")}</select></div>
-    <div class="form-group"><label>Position</label><select name="flank">
+    <div class="form-group"><label>Weapon</label>${weapons.length > 5 ? searchBox("select[name=weapon]", "Search weapons…", "Search weapons") : ""}<select name="weapon">${wOpts}</select></div>
+    <div class="form-group"><label>Maneuver</label><select name="maneuver" data-fixed>${opts(maneuverTable(), "normal")}</select></div>
+    <div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>
+    <div class="form-group"><label>Range (ranged)</label><select name="range" data-fixed>${opts(R.RANGE, "short")}</select></div>
+    <div class="form-group"><label>Position</label><select name="flank" data-fixed>
        <option value="">Front</option><option value="flank">Flank (+1 die)</option><option value="rear">Rear (+2 dice)</option></select></div>
-    <div class="form-group"><label>Multiple actions: this is action #</label><select name="multi">
+    <div class="form-group"><label>Multiple actions: this is action #</label><select name="multi" data-fixed>
        <option value="0">Only action</option><option value="1">1 of several (+1/-1)</option><option value="2">2 (+2/-2)</option><option value="3">3 (+3/-3)</option><option value="4">4 (+4/-4)</option></select></div>
     <div class="form-group"><label>Opponents engaged</label><input type="number" name="opponents" value="1" min="1" max="6"/></div>
     <div class="form-group"><label>Extra dice / extra difficulty</label>
-       <input type="number" name="extraDice" value="0" style="width:4em"/> <input type="number" name="extraDiff" value="0" style="width:4em"/></div>
+       <input type="number" name="extraDice" value="${cm.attackerDice}" style="width:4em"/> <input type="number" name="extraDiff" value="${cm.attackerDiff}" style="width:4em"/></div>
     <div class="form-group"><label>Extra damage dice</label><input type="number" name="extraDmg" value="0"/></div>
     <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies (10s count twice)</label></div>
     <div class="form-group"><label><input type="checkbox" name="willpower"/> Spend Willpower (+1 auto success) [${willpower(attacker)}]</label></div>
@@ -430,13 +439,13 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     ${kinds ? boosts : ""}
   </fieldset>
   <fieldset><legend>Defender</legend>
-    <div class="form-group"><label>Defense</label><select name="defense">
+    <div class="form-group"><label>Defense</label><select name="defense" data-fixed>
       <option value="none">None / cannot defend</option><option value="dodge">Dodge (Dex + Athletics)</option>
       <option value="block">Block (Dex + Brawl)</option><option value="parry">Parry (Dex + Melee)</option></select></div>
-    <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex">
+    <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex" data-fixed>
       <option value="0">First (full pool)</option><option value="1">Second (-1 die)</option><option value="2">Third (-2)</option><option value="3">Fourth (-3)</option></select></div>
     <div class="form-group"><label>Defender extra dice / difficulty</label>
-       <input type="number" name="defDice" value="0" style="width:4em"/> <input type="number" name="defDiff" value="0" style="width:4em"/></div>
+       <input type="number" name="defDice" value="0" style="width:4em"/> <input type="number" name="defDiff" value="${target ? L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0 : 0}" style="width:4em"/></div>
     ${tCel ? `<div class="form-group"><label><input type="checkbox" name="defCel" checked/> Defender Celerity ${tCel} (adds dice; dodge arrows normally)</label></div>` : ""}
     ${tFort ? `<div class="form-group"><label><input type="checkbox" name="fortBlood"/> Fortitude ${tFort}: spend 1 blood to soak automatically</label></div>` : ""}
     <div class="form-group"><label><input type="checkbox" name="fireSun"/> Fire or sunlight (aggravated, armor useless)</label></div>
@@ -478,15 +487,15 @@ function resolveTokens(attackerArg, targetArg) {
 
 export async function attack({ attacker: a, target: t, weaponId } = {}) {
     const { attacker, attackerTok, target, targetTok } = resolveTokens(a, t);
-    if (!attacker) return ui.notifications.warn("VtDA20 Combat: select your token (or assign a character) first.");
-    if (!target) ui.notifications.info("VtDA20 Combat: no target selected: the attack will be rolled without defense or soak.");
-    if ((game.user.targets?.size ?? 0) > 1) ui.notifications.info("VtDA20 Combat: several targets selected: using the first one.");
+    if (!attacker) return ui.notifications.warn("WoDX Combat: select your token (or assign a character) first.");
+    if (!target) ui.notifications.info("WoDX Combat: no target selected: the attack will be rolled without defense or soak.");
+    if ((game.user.targets?.size ?? 0) > 1) ui.notifications.info("WoDX Combat: several targets selected: using the first one.");
     const weapons = weaponList(attacker);
     const sel = weaponId ?? weapons[0]?.id;
     const content = attackDialogHtml(attacker, target, weapons, sel);
     const aKind = getKind(attacker), tKind = target ? getKind(target) : "mortal";
     const r = await P.ask({
-        title: `VtDA20 Attack — ${P.profileLabel(aKind)}`,
+        title: `WoDX Attack — ${P.profileLabel(aKind)}`,
         content, width: 500, classes: ["vtc-dialog"],
         buttons: [{ id: "attack", label: "Attack", icon: "fas fa-dice-d10", default: true }, { id: "cancel", label: "Cancel" }],
         onRender: root => bindKinds(root, aKind, tKind)
@@ -495,7 +504,7 @@ export async function attack({ attacker: a, target: t, weaponId } = {}) {
     const fd = r.data;
     const w = weapons.find(x => x.id === fd.weapon);
     try { return await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); }
-    catch (e) { console.error(e); ui.notifications.error(`VtDA20 Combat: ${e.message}`); return null; }
+    catch (e) { console.error(e); ui.notifications.error(`WoDX Combat: ${e.message}`); return null; }
 }
 
 /* ------------------------------------------------------------------ */
@@ -604,6 +613,11 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
             if (soak.roll) rolls.push(soak.roll);
             const left = R.damageAfterSoak(dmg.successes, soak.successes, dmgType, profile, { elder: isElder(target) });
             outcome = { levels: left.levels, halved: left.halved, type: dmgType };
+            const dz = dazedThreshold(target, tKind);
+            if (left.levels > dz.threshold) {
+                outcome.dazed = true;
+                log.push(`<b>Dazed:</b> ${left.levels} levels after soak is more than ${dz.label} (${dz.threshold}): ${target.name} spends the next turn shaking it off (V20 Dark Ages p. 348).`);
+            }
             if (armorRating > 0 && !fd.bypass && dmg.successes >= armorRating * 2) armorBroken = arm.names.join(", ");
         }
     }
@@ -633,6 +647,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
         if (target && outcome?.levels > 0) await applyFromMessage(msg, "main");
         if (counter?.levels > 0) await applyFromMessage(msg, "counter");
     }
+    if (target && outcome?.dazed && setting("statusEffects")) await markDazed(target);
     return { attack: atk, defense: def, damage: dmg, soak, outcome, counter, message: msg };
 }
 
@@ -823,7 +838,7 @@ async function applyFromMessage(msg, which = "main") {
     if (isCounter ? data.counterApplied : data.applied) return ui.notifications.info("That damage was already applied.");
     const doc = await fromUuid(src.uuid);
     const actor = doc?.actor ?? doc;
-    if (!actor) return ui.notifications.warn("VtDA20 Combat: the target no longer exists.");
+    if (!actor) return ui.notifications.warn("WoDX Combat: the target no longer exists.");
     if (!actor.isOwner) {
         if (requestGM({ action: "applyDamage", uuid: actor.uuid, type: src.type, levels: src.levels, messageId: msg.id }))
             ui.notifications.info(`Damage to ${actor.name} sent to the GM.`);
@@ -870,7 +885,7 @@ function bindCard(msg, el) {
 
 export async function soakDialog({ tokens } = {}) {
     const toks = tokens ?? (game.user.targets?.size ? [...game.user.targets] : canvas.tokens?.controlled ?? []);
-    if (!toks.length) return ui.notifications.warn("VtDA20 Combat: select or target the tokens taking damage.");
+    if (!toks.length) return ui.notifications.warn("WoDX Combat: select or target the tokens taking damage.");
     const content = `
 <form class="vtc-form">
   <p>${toks.map(t => `<b>${t.name}</b>`).join(", ")}</p>
@@ -888,7 +903,7 @@ export async function soakDialog({ tokens } = {}) {
   <div class="form-group"><label>Extra soak dice</label><input type="number" name="soakBonus" value="0"/></div>
 </form>`;
     const r = await P.ask({
-        title: "VtDA20 Soak & Apply Damage", content, width: 440,
+        title: "WoDX Soak & Apply Damage", content, width: 440,
         buttons: [{ id: "go", label: "Resolve", icon: "fas fa-shield-alt", default: true }, { id: "cancel", label: "Cancel" }]
     });
     if (!r || r.id !== "go") return;
@@ -937,11 +952,11 @@ export async function soakAndApply(tok, fd) {
 
 /** VtDA20 initiative: 1d10 + Dexterity + Wits (+ Celerity) – wound penalty. */
 export async function rollInitiative({ combat = game.combat, combatants = null, all = false } = {}) {
-    if (!combat) return ui.notifications.warn("VtDA20 Combat: no active combat encounter.");
+    if (!combat) return ui.notifications.warn("WoDX Combat: no active combat encounter.");
     let list = combatants ?? (all ? combat.combatants.contents
         : combat.combatants.filter(c => c.isOwner && (canvas.tokens.controlled.length === 0 ? true : canvas.tokens.controlled.some(t => t.id === c.tokenId))));
     if (!game.user.isGM) list = list.filter(c => c.isOwner);
-    if (!list.length) return ui.notifications.warn("VtDA20 Combat: no combatants to roll for.");
+    if (!list.length) return ui.notifications.warn("WoDX Combat: no combatants to roll for.");
     const lines = [], rolls = [], updates = [];
     for (const c of list) {
         const a = c.actor;
@@ -972,16 +987,18 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
 /* ------------------------------------------------------------------ */
 
 const MACROS = [
-    { name: "VtDA20: Attack", img: "icons/skills/melee/strike-sword-steel-yellow.webp", command: "game.vtda20combat.attack();" },
-    { name: "VtDA20: Soak & Apply Damage", img: "icons/equipment/shield/heater-steel-worn.webp", command: "game.vtda20combat.soakDialog();" },
-    { name: "VtDA20: Actor Type", img: "icons/svg/mystery-man.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.vtda20combat.pickKind(a); else ui.notifications.warn('Select a token first.');" },
-    { name: "VtDA20: Initiative", img: "icons/svg/d20-highlight.svg", command: "game.vtda20combat.rollInitiative({ all: game.user.isGM && canvas.tokens.controlled.length === 0 });" }
+    { name: "WoDX: Attack", img: "icons/skills/melee/strike-sword-steel-yellow.webp", command: "game.wodxCombat.attack();" },
+    { name: "WoDX: Soak & Apply Damage", img: "icons/equipment/shield/heater-steel-worn.webp", command: "game.wodxCombat.soakDialog();" },
+    { name: "WoDX: Actor Type", img: "icons/svg/mystery-man.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.pickKind(a); else ui.notifications.warn('Select a token first.');" },
+    { name: "WoDX: Initiative", img: "icons/svg/d20-highlight.svg", command: "game.wodxCombat.rollInitiative({ all: game.user.isGM && canvas.tokens.controlled.length === 0 });" }
 ];
 
 async function createMacros() {
     if (!game.user.isGM || !setting("createMacros")) return;
     for (const m of MACROS) {
         if (game.macros.find(x => x.name === m.name)) continue;
+        // The VtDA20 macro of the same name is renamed by the migration, not duplicated
+        if (game.macros.find(x => x.name === m.name.replace(/^WoDX: /, "VtDA20: "))) continue;
         await Macro.create({ name: m.name, type: "script", img: m.img, command: m.command, ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER } });
     }
 }
@@ -990,17 +1007,23 @@ async function createMacros() {
 /*  Hooks                                                              */
 /* ------------------------------------------------------------------ */
 
+let OFF = false;
 Hooks.once("init", () => {
+    // Never run beside the module this one replaces: both would answer every button
+    if (L.oldActive("vtda20-combat")) { OFF = true; return; }
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "2.2.1" };
-    game.vtda20combat = api;
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.0.0",
+        conditionMods, dazedThreshold, _dialogs: { attackDialogHtml } };
+    game.wodxCombat = api;
+    L.alias("combat", "vtda20combat", api, "vtda20-combat");
     const mod = game.modules.get(MOD);
     if (mod) mod.api = api;
 });
 
 Hooks.once("ready", async () => {
+    if (OFF) return L.warnOld("WoDX Combat", "vtda20-combat");
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
     game.socket.on(SOCKET, onSocket);
     await createMacros();
@@ -1008,6 +1031,7 @@ Hooks.once("ready", async () => {
 });
 
 Hooks.once("init", () => {
+    if (OFF) return;
     if (GEN() >= 13) {
         Hooks.on("renderChatMessageHTML", (msg, el) => { if (msg.getFlag(MOD, "data")) bindCard(msg, el); });
     } else {
@@ -1017,6 +1041,7 @@ Hooks.once("init", () => {
 
 /** Token HUD shortcut: right-click a token and press the sword to attack your current target with it. */
 Hooks.on("renderTokenHUD", (hud, html) => {
+    if (OFF) return;
     const root = html instanceof HTMLElement ? html : html[0];
     const tok = hud.object;
     if (!tok?.actor?.isOwner || !root) return;
@@ -1024,10 +1049,37 @@ Hooks.on("renderTokenHUD", (hud, html) => {
     if (!col) return;
     const btn = document.createElement("div");
     btn.className = "control-icon vtc-hud";
-    btn.title = "VtDA20 Attack";
+    btn.title = "WoDX Attack";
     btn.innerHTML = '<i class="fas fa-khanda"></i>';
-    btn.title = "VtDA20 Attack (right-click: set actor type)";
+    btn.title = "WoDX Attack (right-click: set actor type)";
     btn.addEventListener("click", () => attack({ attacker: tok }));
     btn.addEventListener("contextmenu", ev => { ev.preventDefault(); pickKind(tok.actor); });
     col.appendChild(btn);
 });
+
+/* ------------------------------------------------------------------ */
+/*  WoDX conditions (registry in WoDX Chronicle)                       */
+/* ------------------------------------------------------------------ */
+
+/** What the conditions on attacker and defender change: {attackerDice, attackerDiff, notes}. */
+export function conditionMods(attacker, target) {
+    const c = L.chronicle()?.conditions;
+    if (!c || !attacker) return { attackerDice: 0, attackerDiff: 0, autoHit: false, notes: [] };
+    return c.attackModifiers(attacker, target ?? null);
+}
+
+/** Dazed when one attack does more than Stamina after soak; Stamina + 2 for the supernatural (V20 Dark Ages p. 348). */
+export function dazedThreshold(target, kind = getKind(target)) {
+    const stamina = attr(target, "stamina");
+    // WoDX reading: hunters, mages and animals have mortal bodies; every other profile is supernatural
+    const mortalBodied = ["mortal", "hunter", "mage", "beast"].includes(kind);
+    return mortalBodied ? { threshold: stamina, label: "Stamina" } : { threshold: stamina + 2, label: "Stamina + 2" };
+}
+
+async function markDazed(actor) {
+    const api = L.chronicle();
+    if (!api?.applyTimed) return;
+    if (!actor.isOwner) return requestGM({ action: "dazed", uuid: actor.uuid });
+    await api.applyTimed(actor, { name: "Dazed", condition: "dazed", key: "wodx-dazed", duration: { kind: "rounds", rounds: 1 },
+        source: "V20 Dark Ages p. 348" });
+}

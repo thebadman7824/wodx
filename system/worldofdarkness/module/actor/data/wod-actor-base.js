@@ -38,12 +38,16 @@ export class WoDActor extends Actor {
 
         super.prepareData();
 
+        // WoDX fork: a Group actor has no character sheet data to prepare
+        if (this.type === "Group") return;
+
         const actorData = this;
         // Make separate methods for each Actor type (character, npc, etc.) to keep things organized.
         this._prepareCharacterData(actorData);
     }
 
     async prepareDerivedData() {
+        if (this.type === "Group") return; // WoDX fork
         const actorData = this;
         const systemData = actorData.system;
 
@@ -602,6 +606,7 @@ export class WoDActor extends Actor {
      */
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
+        if (this.type === "Group") return; // WoDX fork
         const actor = this;
 
         try {
@@ -805,7 +810,7 @@ export class WoDActor extends Actor {
     async _onUpdate(updateData, options, user) {
         super._onUpdate(updateData, options, user);
 
-        if (this.type !== "PC") {
+        if (this.type !== "PC" && this.type !== "Group") {
             let actor;
 
             try {
@@ -932,7 +937,7 @@ export class WoDActor extends Actor {
     _onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId) {
         super._onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId);
 
-        if (this.type === "PC") return;
+        if (this.type === "PC" || this.type === "Group") return;
         if (this.permission < 3) return;
         if (collection !== "items" || !documents?.length) return;
 

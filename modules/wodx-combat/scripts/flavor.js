@@ -1,4 +1,4 @@
-/* VtDA20 Combat: flavor lines shown under the dice on attack cards.
+/* WoDX Combat: flavor lines shown under the dice on attack cards.
  * One line is picked at random from the pool that fits the outcome. {attacker} and {target} are filled in.
  *
  * Tags (optional). A line may start with tags in square brackets, e.g. "[ranged living] ...".

@@ -42,7 +42,7 @@ for t in "${targets[@]}"; do
     grep -oE "from \"\./[^\"]+\"|from \"\.\./[^\"]+\"" "$f" | sed -E 's/from "(.*)"/\1/' | while read -r imp; do
       [ -f "$dir/$imp" ] || { echo "FAIL import in $f: $imp"; echo x >> /tmp/qc.fail; }
     done
-  done < <(find "$t" -name '*.mjs' | grep -v node_modules)
+  done < <(find "$t" \( -name '*.mjs' -o -name '*.js' \) | grep -v node_modules)
 done
 [ -f /tmp/qc.fail ] && { fail=1; rm -f /tmp/qc.fail; }
 

@@ -1,8 +1,8 @@
 /**
- * VtDA20 Actions — profile menus (v2.0).
+ * WoDX Actions — profile menus (v2.0).
  *
  * The launcher shows a different set of buttons for each actor profile (see profiles.js). Menu entries are data:
- *   "api:<name>"     call a function of game.vtda20actions (hunt, feed, frenzy...)
+ *   "api:<name>"     call a function of game.wodxActions (hunt, feed, frenzy...)
  *   "preset:<key>"   open the Action dialog with a dramatic-system preset
  *   "uses:<res>"     spend a resource for one of its listed uses (optionally rolling a pool)
  *   "cantrip"        Changeling cantrip (Changeling 20th, Cantrips)
@@ -246,7 +246,7 @@ export function build(ctx) {
         const r = resId === "willpower" ? { ok: true, value: willpower(actor).temp, max: willpower(actor).perm, label: "Willpower" } : P.resource(actor, resId);
         const options = def.uses.map((u, i) => `<option value="${i}">${esc(u[0])}</option>`).join("");
         const content = `<form class="vta-uses"><p><b>${esc(actor.name)}</b> — ${esc(def.title)}: ${r.ok ? `${r.value}${r.max ? ` / ${r.max}` : ""}` : "<i>not on the sheet</i>"}</p>
-          <div class="form-group"><label>Use</label><select name="use">${options}</select></div>
+          <div class="form-group"><label>Use</label><select name="use" data-fixed>${options}</select></div>
           <div class="form-group"><label>Points (negative gains)</label><input type="number" name="cost" value="${def.uses[0][1]}"/></div>
           <div class="form-group"><label>Roll difficulty / bonus dice</label><input type="number" name="diff" value="${def.uses.find(u => u[2])?.[2]?.diff ?? 6}" style="width:4em"/> <input type="number" name="bonus" value="0" style="width:4em"/></div>
           <p class="vta-note vta-use-note">${esc(def.uses[0][3] ?? "")}</p></form>`;
@@ -338,10 +338,10 @@ export function build(ctx) {
 
     /** Werewolf shapeshifting. */
     async function shift(actor) {
-        const cur = actor.flags?.world?.vtda20?.form || "homid";
+        const cur = P.worldFlag(actor, "form") || "homid";
         const rage = P.resource(actor, "rage");
         const content = `<form><p><b>${esc(actor.name)}</b> is in <b>${FORMS[cur]?.label ?? cur}</b> form. Rage ${rage.ok ? rage.value : "—"}.</p>
-          <div class="form-group"><label>Change to</label><select name="form">${Object.entries(FORMS).map(([k, f]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${f.label} (diff ${f.diff})</option>`).join("")}</select></div>
+          <div class="form-group"><label>Change to</label><select name="form" data-fixed>${Object.entries(FORMS).map(([k, f]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${f.label} (diff ${f.diff})</option>`).join("")}</select></div>
           <div class="form-group"><label>Method</label><select name="how"><option value="roll">Stamina + Primal-Urge roll</option><option value="rage">Spend 1 Rage (instant)</option></select></div>
           <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="0"/></div></form>`;
         return ctx.dialog(`Change form — ${actor.name}`, content, "Change", async fd => {
@@ -359,7 +359,7 @@ export function build(ctx) {
                 if (!rr.successes) body += `<div class="vta-note">Failure: the change does not happen this turn.</div>`;
                 if (!rr.successes) return post(actor, `${actor.name} struggles to change`, body, rolls.filter(Boolean));
             }
-            if (actor.isOwner) await actor.setFlag("world", "vtda20.form", fd.form);
+            if (actor.isOwner) await P.setWorldFlag(actor, "form", fd.form);
             body += `<div class="vta-note"><b>${f.label}:</b> ${esc(f.mods)}. Apply these to the sheet (the module does not edit attributes). Claws and bite: +1 damage in Glabro, +2 in Crinos (W20).</div>`;
             return post(actor, `${actor.name} changes to ${f.label}`, body, rolls.filter(Boolean));
         });
@@ -380,7 +380,7 @@ export function build(ctx) {
                 ok = rr.successes > 0;
             }
             if (ok && dmg[fd.type] > 0) {
-                const api = game.vtda20combat;
+                const api = game.wodxCombat;
                 if (api?.healDamage) await api.healDamage(actor, fd.type, 1);
                 else await updateActor(actor, { [`system.health.damage.${fd.type}`]: dmg[fd.type] - 1 });
                 body += `<div class="vta-big good">One ${fd.type} level regenerates.</div>`;

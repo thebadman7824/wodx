@@ -49,6 +49,22 @@ await import(join(root, "modules/wodx-otherworlds/scripts/main.mjs"));
 await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
 game.modules.set("wodx-otherworlds", {});
 game.modules.set("wodx-creation", {});
+// WoDX Actions and WoDX Combat (Phase 6a), with the VtDA20 modules off
+class MacroColl extends Map { find(f) { for ( const v of this.values() ) if ( f(v) ) return v; } [Symbol.iterator]() { return this.values(); } }
+game.macros = new MacroColl();
+globalThis.Macro = {create: async d => { game.macros.set(d.name, d); return d; }};
+CONST.DOCUMENT_OWNERSHIP_LEVELS ??= {NONE: 0, LIMITED: 1, OBSERVER: 2, OWNER: 3};
+game.release = {generation: 14};
+game.system.id = "worldofdarkness";
+game.data = {settings: []};
+for ( const id of ["vtda20-actions", "vtda20-combat"] ) game.modules.set(id, {active: false});
+game.modules.set("wodx-actions", {});
+game.modules.set("wodx-combat", {});
+await import(join(root, "modules/wodx-combat/scripts/main.js"));
+await import(join(root, "modules/wodx-actions/scripts/main.js"));
+CONFIG.worldofdarkness.groupKinds = {coterie: "Coterie (Vampire)", pack: "Pack (Werewolf and Fera)", cabal: "Cabal (Mage)", motley: "Motley (Changeling)",
+  circle: "Circle (Wraith)", cell: "Cell (Hunter)", court: "Court (Demon)", amenti: "Amenti (Mummy)", wu: "Wu (Kindred of the East)",
+  crucible: "Crucible (Orpheus)", household: "Household or retinue (mortals)", other: "Other"};
 // Characters for the Creation windows: a long sheet, so the spend window must scroll
 class Items extends Map { filter(f) { return [...this.values()].filter(f); } some(f) { return [...this.values()].some(f); } find(f) { return [...this.values()].find(f); } [Symbol.iterator]() { return this.values(); } }
 const attr = v => ({value: v, max: 5, label: "", isvisible: true});
@@ -103,6 +119,25 @@ for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval 
   windows.push({name, tag: o.tag ?? "div", classes: ["application", ...(o.classes ?? [])].join(" "), width: pos.width, height: pos.height, content});
 }
 
+{
+  // The Group sheet, with 8 members and 7 pooled Backgrounds
+  foundry.applications.sheets = {ActorSheetV2: class extends foundry.applications.api.ApplicationV2 { constructor(o = {}) { super(o); this.document = o.document; } }};
+  const G = await import(join(root, "modules/wodx-creation/scripts/group-sheet.mjs"));
+  const Sheet = G.makeGroupSheet();
+  const members = [...game.actors.values()].slice(0, 8);
+  const g = {id: "group0000000001", name: "The Coterie of the Silver Adit, with a fairly long name", type: "Group", isOwner: true, flags: {},
+    system: {kind: "coterie", anchorId: "b0", notes: "Notes ".repeat(40),
+      roster: members.map((a, i) => ({actorId: a.id, role: i ? "Member" : "Leader", joined: 0, left: null})),
+      backgrounds: ["Allies", "Contacts", "Domain", "Herd", "Influence", "Resources", "Retainers"].map((n, i) => ({id: `b${i}`, name: n, note: "",
+        contributions: Object.fromEntries(members.map(a => [a.id, 1]))}))},
+    async update() { return this; }};
+  const sheet = new Sheet({document: g});
+  await sheet.render({force: true});
+  const o = Sheet.DEFAULT_OPTIONS;
+  windows.push({name: "Group sheet", tag: "div", classes: ["application", "sheet", ...(o.classes ?? [])].join(" "), width: o.position.width, height: o.position.height,
+    content: sheet.element.querySelector("section.window-content").innerHTML});
+}
+
 /* ---- Dialogs: capture what each WoDX dialog would show ---- */
 const captured = [];
 const api = foundry.applications.api;
@@ -144,6 +179,39 @@ const worldId = game.world.id;
 game.world.id = "wodx-template";
 await runSkipTest();
 game.world.id = worldId;
+// WoDX Actions and Combat build their dialogs with new DialogV2(...): capture those too
+{
+  const Orig = api.DialogV2;
+  class CaptureDialog extends Orig {
+    constructor(cfg) { super(); captured.push(cfg); this.cfg = cfg; }
+    render() { return Promise.resolve(this); }
+    addEventListener() {}
+    close() {}
+  }
+  api.DialogV2 = CaptureDialog;
+  const actor = [...game.actors.values()].find(a => a.type === "Vampire");
+  const target = [...game.actors.values()].find(a => a.type === "Mortal");
+  Object.assign(actor, {getActiveTokens: () => [], uuid: `Actor.${actor.id}`, effects: [], statuses: new Set(), update: async () => actor, setFlag: async () => actor});
+  Object.assign(target, {getActiveTokens: () => [], uuid: `Actor.${target.id}`, effects: [], statuses: new Set()});
+  for ( let i = 0; i < 8; i++ ) actor.items.set(`w${i}`, {id: `w${i}`, name: `Sword of a long name ${i}`, type: "Melee Weapon", system: {isequipped: i === 0, damage: {attribute: "strength", bonus: 2, type: "lethal"}, difficulty: 6, attack: {attribute: "dexterity", ability: "melee"}}});
+  globalThis.canvas = {tokens: {controlled: [{actor, document: {actor}}]}, scene};
+  game.user.targets = new Set([{actor: target, document: {actor: target}}]);
+  game.user.character = actor;
+  const tries = [["Attack", () => game.wodxCombat.attack({attacker: actor, target})], ["Soak & Apply", () => game.wodxCombat.soakDialog()],
+    ["Actor type", () => game.wodxCombat.pickKind(actor)], ["Actions menu", () => game.wodxActions.menu({actor})],
+    ["Action", () => game.wodxActions.action({actor})], ["Hunt", () => game.wodxActions.hunt({actor})], ["Spend blood", () => game.wodxActions.spendBlood({actor})],
+    ["Frenzy", () => game.wodxActions.frenzy({actor})], ["Rötschreck", () => game.wodxActions.rotschreck({actor})],
+    ["Blood Oath", () => game.wodxActions.bloodOath({actor})], ["Torpor", () => game.wodxActions.torpor({actor})], ["Hazard", () => game.wodxActions.hazard({actor})],
+    ["Sin", () => game.wodxActions.sin({actor})], ["Willpower uses", () => game.wodxActions.uses({actor, resource: "willpower"})],
+    ["Migration", () => game.wodxActions.migrate()]];
+  for ( const [label, fn] of tries ) {
+    const n = captured.length;
+    try { fn(); await new Promise(r => setTimeout(r, 20)); }
+    catch (err) { console.error(`FAIL could not build the ${label} dialog: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} dialog was not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2 = Orig;
+}
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: 400, height: "auto",

@@ -1,16 +1,19 @@
 {
-  "id": "vtda20-combat",
-  "title": "VtDA20 Combat Automation",
-  "description": "Combat automation for the World of Darkness 20th Edition system with actor-type profiles: Kindred, ghoul, mortal, hunter, Garou/Changing Breed, mage, changeling, wraith/ghost, spirit, creature, demon, mummy and Exalted. Attack, defense, damage, soak (silver, cold iron, Fortitude, armor), health track, Rage extra actions, VtDA20 maneuvers and optional World of Darkness: Combat maneuvers.",
-  "version": "2.2.1",
+  "id": "wodx-combat",
+  "title": "WoDX Combat",
+  "description": "World of Darkness Expanded: combat with actor-type profiles for every line: attack, defense, damage, soak (silver, cold iron, Fortitude, armor), health track, Rage extra actions, V20 Dark Ages maneuvers and WoDX conditions. Replaces vtda20-combat. Private use only; not for distribution or sale.",
+  "version": "3.0.0",
   "authors": [
     {
       "name": "Benjamin LeBrun"
+    },
+    {
+      "name": "WoDX Project (private)"
     }
   ],
   "compatibility": {
-    "minimum": "12",
-    "verified": "14"
+    "minimum": "14",
+    "verified": "14.369"
   },
   "relationships": {
     "systems": [
@@ -18,16 +21,38 @@
         "id": "worldofdarkness",
         "type": "system",
         "compatibility": {
-          "minimum": "3.0.0"
+          "minimum": "7.3.2"
         }
+      }
+    ],
+    "requires": [
+      {
+        "id": "wodx-chronicle",
+        "type": "module",
+        "reason": "Conditions, timed effects, the approval queue and search boxes.",
+        "compatibility": {
+          "minimum": "0.2.0"
+        }
+      }
+    ],
+    "conflicts": [
+      {
+        "id": "vtda20-combat",
+        "type": "module",
+        "reason": "WoDX Combat replaces vtda20-combat; disable vtda20-combat."
       }
     ]
   },
   "esmodules": [
-    "scripts/vtda20-combat.js"
+    "scripts/main.js"
   ],
   "styles": [
-    "styles/vtda20-combat.css"
+    "styles/wodx-combat.css"
   ],
-  "socket": true
+  "socket": true,
+  "flags": {
+    "wodx": {
+      "phase": 6
+    }
+  }
 }
