@@ -190,5 +190,6 @@ export async function setDateDialog({title = "Set the date"} = {}) {
   }
   await game.time.set(time);
   await setSetting("openingSet", true);
+  await eras.refreshRulesJournal();
   return true;
 }

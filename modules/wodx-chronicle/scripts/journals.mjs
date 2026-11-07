@@ -67,7 +67,7 @@ async function _writeChronicleRules({profile, interlude, locked, dateLabel}) {
   const ourCall = (profile?.ourCall ?? []).map(t => `<li>${esc(t)}</li>`).join("");
   const eraHtml = profile ? `
     <h2>${esc(profile.name)}${interlude ? " (between eras)" : ""}${locked ? " (locked by the Storyteller)" : ""}</h2>
-    <p><strong>In force from:</strong> ${stamp}</p>
+    <p><strong>Updated (in-game date):</strong> ${stamp}</p>
     <p><strong>Books used:</strong> ${esc(profile.basis)}</p>
     <p><strong>What this era changes:</strong> ${esc(profile.switches)}</p>
     ${interlude ? "<p>No era book covers this year, so the last era's rules stay in force until the Storyteller locks another.</p>" : ""}
@@ -86,7 +86,7 @@ async function _writeChronicleRules({profile, interlude, locked, dateLabel}) {
     }).join("");
     return rows ? `<h2>${esc(g.name)}</h2><ul>${rows}</ul>` : "";
   }).join("");
-  await setPage(journal, "House rules", `<p>Last changed: ${stamp}</p>${groups}`);
+  await setPage(journal, "House rules", `<p>Updated (in-game date): ${stamp}</p>${groups}`);
   return journal;
 }
 

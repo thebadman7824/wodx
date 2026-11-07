@@ -191,6 +191,7 @@ test("house rules form saves switches and rewrites the rules journal", async () 
   assert.equal(set("rule.timeOfJudgment"), true);
   const rules = game.journal.find(j => j.getFlag(M, "kind") === "chronicle-rules");
   assert.match(rules.pages.getName("House rules").text.content, /On:<\/strong> Time of Judgment/);
+  assert.match(rules.pages.getName("House rules").text.content, /Updated \(in-game date\)/);
 });
 
 test("era test: a character per line in every era, all pass", async () => {

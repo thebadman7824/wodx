@@ -12,7 +12,16 @@
 - [x] Era test tool for the gate.
 - [x] Quality gate, automatic part: 19 unit tests and 16 mock-Foundry tests pass; every Foundry call checked against the 14.369 source.
 
-## For you
+## Gate result
+
+Passed on 2026-11-06. Ben ran every step and saw no errors in the console. Claude then read both worlds' databases and Foundry's logs:
+
+- The "WoDX Era Test" journal in wodx-template reads "All passed": 44 of 44. Each era's ability set shows a different count, for example 23 for Dark Ages vampires, 29 for Victorian, 30 for Modern and 19 for Living Gods.
+- wodx-template reached 1347; the era change went through the approval queue and was approved. Its Session Zero journal holds the test line without a name.
+- rothenstein-wodx is set to 1200, with the Dark Ages profile in force and the upstream era settings unchanged (darkages, with victorian for Mage).
+- The logs show nothing from WoDX. Every warning and error is explained in BUILD-LOG.md.
+
+## For you (done)
 
 1. Setup → Backups: snapshot `rothenstein-wodx` and `wodx-template` (Foundry also made its own backups of both at 22:09 tonight).
 2. Restart Foundry so it sees the new module.

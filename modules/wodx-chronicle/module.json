@@ -2,7 +2,7 @@
   "id": "wodx-chronicle",
   "title": "WoDX Chronicle",
   "description": "World of Darkness Expanded: the Chronicle Clock (Julian and Gregorian calendar, sun and moon), era profiles, house-rule switches, the approval queue and safety tools. Private use only; not for distribution or sale.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [{"name": "WoDX Project (private)"}],
   "compatibility": {"minimum": "14", "verified": "14.369"},
   "relationships": {
