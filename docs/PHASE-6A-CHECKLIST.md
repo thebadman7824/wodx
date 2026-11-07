@@ -59,4 +59,4 @@ Steps 8–11 are Ben's. A test combat (the deprecated werewolf token and Brother
 
 ## Gate result
 
-- [ ] The migration, a timed effect, the conditions, Dazed and a Group all work end to end in rothenstein-wodx, and the original world still opens.
+- [x] The migration, a timed effect, the conditions, Dazed and a Group all work end to end in rothenstein-wodx, and the original world still opens. **Gate passed 2026-11-07**: steps 1–7 run by Claude (with the 3.0.1 fixes), steps 8–11 by Ben, no issues.
