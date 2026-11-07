@@ -62,6 +62,15 @@ else
   echo "  skipped: run 'npm install' in tools/harness first"
 fi
 
+echo "== UI fit (rule B17)"
+FOUNDRY_CSS="${FOUNDRY_CSS:-/mnt/user-data/uploads/Foundry Virtual Tabletop/resources/app/public/css/foundry2.css}"
+if [ -f "$FOUNDRY_CSS" ] && [ -d tools/harness/node_modules ]; then
+  (cd tools/harness && node ui-fit.mjs "$FOUNDRY_CSS" 2>&1 | grep -E "^(FAIL|== UI)")
+  (cd tools/harness && node ui-fit.mjs "$FOUNDRY_CSS" >/dev/null 2>&1) || { echo "FAIL ui-fit"; fail=1; }
+else
+  echo "  skipped: needs Foundry's foundry2.css (set FOUNDRY_CSS) and the harness installed"
+fi
+
 echo "== Writes and deletes to review"
 for t in "${targets[@]}"; do
   grep -nE "\.(delete|deleteEmbeddedDocuments|update|updateEmbeddedDocuments|setFlag|unsetFlag|create|createEmbeddedDocuments)\(|settings\.set\(|setSetting\(|togglePause\(|time\.(set|advance)\(" -r "$t" --include=*.mjs | grep -v "/tests/" | sed 's/^/  /'

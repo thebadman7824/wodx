@@ -48,6 +48,7 @@ export async function submitLineOrVeil() {
   const {DialogV2} = foundry.applications.api;
   const canSign = rule("signedLinesVeils");
   const result = await DialogV2.prompt({
+    classes: ["wodx", "wodx-dialog"],
     window: {title: "Lines and veils"},
     content: `
       <p>A <strong>line</strong> never appears in the game. A <strong>veil</strong> happens off screen only.</p>
@@ -90,6 +91,7 @@ export async function manageLinesVeils() {
   const rows = list.map(e => `<li><label><input type="checkbox" name="rm" value="${e.at}">
     <strong>${e.kind === "veil" ? "Veil" : "Line"}:</strong> ${esc(e.text)}${e.by ? ` <em>(${esc(e.by)})</em>` : ""}</label></li>`).join("");
   const stamps = await DialogV2.prompt({
+    classes: ["wodx", "wodx-dialog"],
     window: {title: "Remove lines or veils"},
     content: `<p>Tick the entries to remove.</p><ul class="wodx-list">${rows}</ul>`,
     ok: {

@@ -29,6 +29,7 @@ export async function runEraTest() {
   const {DialogV2} = foundry.applications.api;
   const list = eras.profiles();
   const ok = await DialogV2.confirm({
+    classes: ["wodx", "wodx-dialog"],
     window: {title: "Era test"},
     content: `<p>This creates ${list.length * LINES.length} test characters (${LINES.join(", ")}) in a folder named
       "${FOLDER_NAME}", one per line in each of the ${list.length} era profiles, and writes the results to the

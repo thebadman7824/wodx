@@ -125,6 +125,7 @@ export async function stepSideways({mode = "cross"} = {}) {
   const verb = mode === "peek" ? "Peek across the Gauntlet" : (inUmbra ? "Step back to the physical world" : "Step sideways into the Umbra");
   const gauntletText = place.gauntlet === null ? "<strong>not rated</strong>" : (place.gauntlet === 0 ? "no roll needed" : String(place.gauntlet));
   const choice = await DialogV2.prompt({
+    classes: ["wodx", "wodx-dialog"],
     window: {title: verb},
     content: `
       <p><strong>${esc(travelers.map(t => t.name).join(", "))}</strong>${excluded.length ? ` <em>(not ${esc(excluded.map(t => t.name).join(", "))}: they cannot step sideways)</em>` : ""}</p>

@@ -61,6 +61,7 @@ export class ClockApp extends ApplicationV2 {
     const moon = now.moon;
     const night = now.isNight ? "Night" : "Day";
     const div = document.createElement("div");
+    div.className = "wodx-body wodx-scroll";
     div.innerHTML = `
       <section class="wodx-clock-face ${now.isNight ? "is-night" : "is-day"}">
         <div class="wodx-date">${esc(now.dateLabel)}</div>
@@ -157,6 +158,7 @@ export async function setDateDialog({title = "Set the date"} = {}) {
   const months = MONTHS.map((m, i) => `<option value="${i + 1}" ${i + 1 === now.month ? "selected" : ""}>${m}</option>`).join("");
   const reform = REFORMS[setting("reform")]?.label ?? "";
   const result = await DialogV2.prompt({
+    classes: ["wodx", "wodx-dialog"],
     window: {title},
     content: `
       <div class="form-group"><label>Year</label><input type="number" name="year" value="${now.year}" step="1"></div>

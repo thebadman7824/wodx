@@ -12,6 +12,7 @@ export async function buildPenumbraPrototype(scene = canvas?.scene) {
   if ( !scene ) return ui.notifications.warn("View the scene to copy first.");
   const {DialogV2} = foundry.applications.api;
   const ok = await DialogV2.confirm({
+    classes: ["wodx", "wodx-dialog"],
     window: {title: "Penumbra prototype"},
     content: `<p>Make a copy of <strong>${esc(scene.name)}</strong> with a second level for the Penumbra? The original scene is not changed.</p>
       <p>The copy's Penumbra level reuses the map with a pale silver tint and keeps it at night. It is a test of Foundry's Scene Levels, not the finished Penumbra art (Phase 5).</p>`,

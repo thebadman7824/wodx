@@ -41,7 +41,10 @@ export class TaggingApp extends ApplicationV2 {
 
   static open() {
     if ( !game.user.isGM ) return;
-    this.#instance ??= new TaggingApp();
+    // Fit the screen: Foundry also caps the height, but start inside it so nothing opens off-screen
+    const height = Math.max(360, Math.min(720, window.innerHeight - 120));
+    const width = Math.max(480, Math.min(900, window.innerWidth - 40));
+    this.#instance ??= new TaggingApp({position: {width, height}});
     return this.#instance.render({force: true});
   }
 
@@ -67,7 +70,9 @@ export class TaggingApp extends ApplicationV2 {
     }).join("");
     const presetOptions = Object.entries(PRESETS).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("");
     const div = document.createElement("div");
+    div.className = "wodx-body";
     div.innerHTML = `
+      <div class="wodx-top">
       <p>Era chart in force: <strong>${esc(chart.name)}</strong> (${esc(chart.source)}). A region with the "WoDX: Otherworld ratings" behavior overrides its scene.</p>
       <div class="wodx-buttons">
         <button type="button" data-action="fillNames" title="Only fills rows that are not set">Suggest from scene names</button>
@@ -79,11 +84,12 @@ export class TaggingApp extends ApplicationV2 {
         <button type="button" data-action="clear" title="For the selected tokens">Clear Umbra, Caught, Lost</button>
       </div>
       <p class="wodx-quiet">Filled rows are marked; nothing is saved until you press Save.</p>
-      <div class="wodx-table-wrap"><table class="wodx-table">
+      </div>
+      <div class="wodx-scroll wodx-table-wrap"><table class="wodx-table">
         <thead><tr><th>Scene</th><th>Kind of place</th><th>Gauntlet</th><th>Override</th><th>Mod.</th><th>Shroud</th><th>Banality</th><th title="Reflective surface at hand">Mirror</th><th title="Umbral storm">Storm</th></tr></thead>
         <tbody>${rows}</tbody>
       </table></div>
-      <footer class="form-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button></footer>`;
+      <footer class="form-footer wodx-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button></footer>`;
     return div;
   }
 

@@ -2,7 +2,7 @@
   "id": "wodx-otherworlds",
   "title": "WoDX Otherworlds",
   "description": "World of Darkness Expanded: Gauntlet, Shroud and Banality ratings for scenes and regions, and stepping sideways and peeking by the era's rules. Private use only; not for distribution or sale.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [{"name": "WoDX Project (private)"}],
   "compatibility": {"minimum": "14", "verified": "14.369"},
   "relationships": {

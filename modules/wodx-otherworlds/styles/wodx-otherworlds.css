@@ -1,6 +1,6 @@
 /* WoDX Otherworlds. Night palette, shared tokens with WoDX Chronicle. */
 .wodx-tagging .window-content { background: #16141a; color: #e8e2d6; }
-.wodx-tagging .wodx-table-wrap { max-height: calc(100% - 9rem); overflow-y: auto; margin: 0.5rem 0; }
+.wodx-tagging .wodx-table-wrap { margin: 0; }
 .wodx-tagging .wodx-table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
 .wodx-tagging .wodx-table th { position: sticky; top: 0; background: #1f1c24; text-align: left; }
 .wodx-tagging .wodx-table td, .wodx-tagging .wodx-table th { padding: 2px 4px; border-bottom: 1px solid #3b3540; }
@@ -17,3 +17,18 @@
 .wodx-crossing .wodx-die.one { border-color: #d8572a; color: #d8572a; }
 .wodx-crossing .wodx-outcome.botch { color: #d8572a; }
 .wodx-crossing ul { margin: 0.25rem 0; padding-left: 1.2rem; }
+
+/* ---- Layout (rule B17): every WoDX window keeps all its controls reachable ----
+   Foundry's .window-content is a fixed-height flex column with overflow hidden. The body fills it;
+   .wodx-scroll is the one part that scrolls; .wodx-top and .wodx-footer stay in view. */
+.application.wodx .window-content { min-height: 0; }
+.application.wodx .wodx-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.application.wodx .wodx-body.wodx-scroll,
+.application.wodx .wodx-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.application.wodx .wodx-top,
+.application.wodx .wodx-footer { flex: none; }
+.application.wodx .wodx-footer { margin: 0; padding-top: 0.5rem; border-top: 1px solid var(--wodx-line, #3b3540); }
+/* Dialogs: long content scrolls, the buttons stay in view */
+.application.wodx-dialog .window-content { min-height: 0; }
+.application.wodx-dialog .dialog-content { flex: 1 1 auto; min-height: 0; max-height: 60vh; overflow-y: auto; }
+.application.wodx-dialog .form-footer { flex: none; }

@@ -43,3 +43,10 @@
   - The prototype's physical level could be open-ended and overlap the Penumbra; the copy now gives it a ceiling.
 - Rothenstein has no Garou actors (its wolves are Creatures), so the gate uses a test Werewolf.
 - Installed. Gate and log review waiting on Ben.
+
+### Phase 2 fix, 2026-11-07: windows cut off
+
+- Reported by Ben: the "Otherworld ratings by scene" window was cut off, and Save could not be reached.
+- Cause: Foundry 14's window content is a fixed-height flex column with overflow hidden (`foundry2.css`). The table's scroll limit was a percentage of a box with no height, so nothing scrolled. The approval queue had the same flaw once more than a few requests were waiting.
+- Fix: every WoDX window and dialog now has a fixed top, one scrolling middle and a fixed footer. The ratings window opens sized to the screen. Long dialogs (such as removing lines and veils) scroll their content and keep the buttons visible. Released as wodx-chronicle 0.1.3 and wodx-otherworlds 0.1.1.
+- New rule B17 and a new automatic check, `tools/harness/ui-fit.mjs`. It renders the 4 windows and 7 dialogs with Foundry's real stylesheet in Chromium at 1280×720, 1366×768 and 1920×1080, and fails if any control can't be reached or a footer button is hidden. It failed the old layout (ratings window and approval queue) and passes the new one, 33 of 33.

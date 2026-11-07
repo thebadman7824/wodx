@@ -1,4 +1,4 @@
-# WoDX Otherworlds 0.1.0 (Phase 2)
+# WoDX Otherworlds 0.1.1 (Phase 2)
 
 Part of the World of Darkness Expanded project. Private use only; not for distribution or sale. Runs only in worlds whose `world.json` carries `flags.wodx`.
 

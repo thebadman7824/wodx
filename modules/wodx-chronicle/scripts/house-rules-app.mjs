@@ -32,8 +32,9 @@ export class HouseRulesApp extends ApplicationV2 {
       return rows ? `<fieldset><legend>${esc(g.name)}</legend>${rows}</fieldset>` : "";
     }).join("");
     const div = document.createElement("div");
-    div.innerHTML = `${groups}
-      <footer class="form-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save house rules</button></footer>`;
+    div.className = "wodx-body";
+    div.innerHTML = `<div class="wodx-scroll">${groups}</div>
+      <footer class="form-footer wodx-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save house rules</button></footer>`;
     return div;
   }
 

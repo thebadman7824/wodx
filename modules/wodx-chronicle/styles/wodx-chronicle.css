@@ -46,3 +46,18 @@
 
 /* Chat cards */
 .wodx-card h3 { margin: 0 0 0.25rem; }
+
+/* ---- Layout (rule B17): every WoDX window keeps all its controls reachable ----
+   Foundry's .window-content is a fixed-height flex column with overflow hidden. The body fills it;
+   .wodx-scroll is the one part that scrolls; .wodx-top and .wodx-footer stay in view. */
+.application.wodx .window-content { min-height: 0; }
+.application.wodx .wodx-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.application.wodx .wodx-body.wodx-scroll,
+.application.wodx .wodx-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.application.wodx .wodx-top,
+.application.wodx .wodx-footer { flex: none; }
+.application.wodx .wodx-footer { margin: 0; padding-top: 0.5rem; border-top: 1px solid var(--wodx-line, #3b3540); }
+/* Dialogs: long content scrolls, the buttons stay in view */
+.application.wodx-dialog .window-content { min-height: 0; }
+.application.wodx-dialog .dialog-content { flex: 1 1 auto; min-height: 0; max-height: 60vh; overflow-y: auto; }
+.application.wodx-dialog .form-footer { flex: none; }

@@ -11,11 +11,15 @@
 - [x] Penumbra prototype: copies a scene with a second Scene Level.
 - [x] Quality gate, automatic part: 13 rule tests and 15 mock-Foundry tests for Otherworlds pass, and Chronicle's still pass. Every Foundry call was checked against the 14.369 source.
 
+## Fix after Ben's first try
+
+- [x] The ratings window was cut off. Fixed in wodx-otherworlds 0.1.1 and wodx-chronicle 0.1.3; every window now scrolls and keeps Save in view (rule B17).
+
 ## For you
 
 1. Setup → Backups: snapshot `rothenstein-wodx`.
 2. **Restart Foundry.** The new region behavior type is only registered at startup.
-3. Open **rothenstein-wodx**. Manage Modules → enable **WoDX Otherworlds** → save and reload.
+3. Reload Foundry (F5) so it loads the fixed windows. Open **rothenstein-wodx**. Manage Modules → enable **WoDX Otherworlds** → save and reload.
 4. Token controls → ghost button (**Otherworld ratings by scene**):
    - Choose the Rothenstein preset → **Fill from preset**.
    - Click **Battlemaps follow their scene**.

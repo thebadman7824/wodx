@@ -147,6 +147,7 @@ export class ApprovalsApp extends ApplicationV2 {
     const past = history().slice(0, 10).map(h => `
       <li><span class="wodx-tag ${h.verdict}">${h.verdict === "approve" ? "Approved" : "Rejected"}</span> ${esc(h.title)}</li>`).join("");
     const div = document.createElement("div");
+    div.className = "wodx-body wodx-scroll";
     div.innerHTML = `
       ${items ? `<ul class="wodx-list">${items}</ul>` : `<p class="wodx-quiet">Nothing is waiting.</p>`}
       ${past ? `<details><summary>Recently decided</summary><ul class="wodx-list wodx-history">${past}</ul></details>` : ""}`;
@@ -174,6 +175,7 @@ export class ApprovalsApp extends ApplicationV2 {
 export async function askStoryteller() {
   const {DialogV2} = foundry.applications.api;
   const result = await DialogV2.prompt({
+    classes: ["wodx", "wodx-dialog"],
     window: {title: "Ask the Storyteller"},
     content: `
       <div class="form-group"><label>What are you asking for?</label><input type="text" name="title" maxlength="200" required></div>
