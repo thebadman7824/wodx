@@ -322,6 +322,28 @@ test("the Group sheet: search boxes, members, pools (rules B17, B24)", async () 
   assert.match(sheet.element.textContent, /Totem already belongs to the pack/);
 });
 
+test("the automatic defense picks the best the sheet allows (VtDA20 p. 344)", async () => {
+  const C = game.wodxCombat;
+  const sys = ab => ({attributes: {dexterity: {value: 3, total: 3}, stamina: {value: 2, total: 2}}, abilities: Object.fromEntries(Object.entries(ab).map(([k, v]) => [k, {value: v}])),
+    health: {damage: {woundpenalty: 0}}});
+  const fencer = makeActor("Fencer", "Mortal", {system: sys({athletics: 2, brawl: 1, melee: 4})});
+  fencer.items = [{type: "Melee Weapon", name: "Sword", system: {isequipped: true}}];
+  const fd = {defIndex: 0, defDice: 0, defDiff: 0};
+  const close = {ranged: false, type: "lethal"}, bow = {ranged: true, type: "lethal"};
+  assert.equal(C.bestDefense(fencer, fd, close).best.type, "parry", "Dex 3 + Melee 4 with a sword");
+  const arrow = C.bestDefense(fencer, fd, bow);
+  assert.equal(arrow.best.type, "dodge", "only a dodge against missiles");
+  assert.equal(arrow.best.diff, 8, "dodging missiles +2");
+  assert.match(arrow.plans.find(p => p.type === "parry").invalid, /close-combat/);
+  const brawler = makeActor("Brawler", "Mortal", {system: sys({athletics: 1, brawl: 4, melee: 3})});
+  assert.equal(C.bestDefense(brawler, fd, close).best.type, "dodge", "no armor or Fortitude: no block against lethal; no weapon: no parry");
+  assert.equal(C.bestDefense(brawler, fd, {ranged: false, type: "bashing"}).best.type, "block", "a fist can be blocked");
+  const nobody = makeActor("Nobody", "Mortal", {system: {...sys({}), attributes: {dexterity: {value: 0, total: 0}}}});
+  assert.equal(C.bestDefense(nobody, fd, close).best, null, "nothing to roll: no defense");
+  assert.ok(C._dialogs.attackDialogHtml, "the dialog builder is there");
+  assert.ok(C.rules.expectedSuccesses(6, 6) > C.rules.expectedSuccesses(6, 8));
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

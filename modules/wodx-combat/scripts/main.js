@@ -466,6 +466,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
   </fieldset>
   <fieldset><legend>Defender</legend>
     <div class="form-group"><label>Defense</label><select name="defense" data-fixed>
+      <option value="auto" selected>Automatic: best for this character</option>
       <option value="none">None / cannot defend</option><option value="dodge">Dodge (Dex + Athletics)</option>
       <option value="block">Block (Dex + Brawl)</option><option value="parry">Parry (Dex + Melee)</option></select></div>
     <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex" data-fixed>
@@ -603,6 +604,14 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
         if (fd.atkKind && fd.atkKind !== "auto") await P.setProfile(attacker, fd.atkKind);
         if (target && fd.profile && fd.profile !== "auto") await P.setProfile(target, fd.profile);
     }
+    // "Automatic": the defense with the most expected successes for this attack, from the defender's sheet
+    let autoNote = "";
+    if (target && (fd.defense === "auto" || !fd.defense)) {
+        const { best, plans } = bestDefense(target, fd, w, maneuver);
+        fd.defense = best?.type ?? "none";
+        const why = plans.map(p => p.valid ? `${cap(p.type)} ${p.dice} dice at ${p.diff}${p.type === "parry" && !p.weapon ? " (no weapon)" : ""}` : `${cap(p.type)}: not possible`).join("; ");
+        autoNote = best ? `Automatic defense: ${cap(best.type)} is the best choice (${why}).` : `Automatic defense: none possible (${why}).`;
+    }
     if (target && fd.defense !== "none") {
         def = await rollDefense(target, fd, w, maneuver);
         if (def.invalid) defNote = def.invalid;
@@ -670,7 +679,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
         type: outcome?.type, levels: outcome?.levels ?? 0, applied: false,
         counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null
     };
-    let html = attackCard({ attacker, target, w, ab, attrKey, pool, atk, def, defNote, net, hit, dmg, dmgPool, soak, outcome, profile, armorBroken, counter, spendNotes, fd, maneuver, log });
+    let html = attackCard({ attacker, target, w, ab, attrKey, pool, atk, def, defNote, autoNote, net, hit, dmg, dmgPool, soak, outcome, profile, armorBroken, counter, spendNotes, fd, maneuver, log });
     const fkey = F.attackKey({ hit, botch: atk.botch, noDamage: !!maneuver.noDamage, levels: soak ? (outcome?.levels ?? 0) : (dmg?.successes ?? 0),
         type: outcome?.type ?? w.type, soaked: !!(soak && hit && !maneuver.noDamage && !outcome?.levels) });
     html = await addFlavor(html, fkey, { attacker: attacker.name, target: target?.name ?? "the enemy" },
@@ -688,24 +697,29 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon:
 
 function cap(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
 
-async function rollDefense(target, fd, w, maneuver) {
-    const type = fd.defense;
+/**
+ * Works out one defense without rolling: {type, valid, invalid?, dice, diff, abilityName, abKey, notes, weapon, expected}.
+ * Rules as in VtDA20 p. 344: parry and block only against close combat; block against lethal or aggravated needs
+ * Fortitude or armor; dodging missiles is +2 difficulty unless Celerity is in play.
+ */
+function planDefense(target, type, fd, w, maneuver) {
     const close = isCloseCombat(w);
     const dmgType = fd.fireSun ? "aggravated" : (w.type || "lethal");
     const hasFort = discipline(target, "Fortitude") > 0;
     const arm = armor(target);
     const hasArmor = arm.bashing + arm.lethal + arm.aggravated > 0;
-    if (type === "parry" && !close) return { invalid: "Parry only works against close-combat attacks: no defense." };
-    if (type === "block" && !close) return { invalid: "Block only works against close-combat attacks: no defense." };
+    const no = invalid => ({ type, valid: false, invalid, expected: 0 });
+    if (type === "parry" && !close) return no("Parry only works against close-combat attacks: no defense.");
+    if (type === "block" && !close) return no("Block only works against close-combat attacks: no defense.");
     if (type === "block" && dmgType !== "bashing" && !hasFort && !hasArmor)
-        return { invalid: "Blocking a lethal or aggravated attack needs Fortitude or armor: no defense." };
+        return no("Blocking a lethal or aggravated attack needs Fortitude or armor: no defense.");
 
     let abKey = { dodge: "athletics", block: "brawl", parry: "melee" }[type];
     let ab = ability(target, abKey);
     if (type === "dodge") { const d2 = ability(target, "dodge"); if (d2.value > ab.value) { ab = d2; abKey = "dodge"; } }
     const cel = fd.defCel ? discipline(target, "Celerity") : 0;
-    let dice = attr(target, "dexterity") + ab.value + (setting("celerityDice") ? cel : 0) + (fd.defDice || 0)
-        + woundPenalty(target) - (fd.defIndex || 0);
+    const dice = Math.max(0, attr(target, "dexterity") + ab.value + (setting("celerityDice") ? cel : 0) + (fd.defDice || 0)
+        + woundPenalty(target) - num(fd.defIndex));
     let diff = 6 + (fd.defDiff || 0) + (maneuver.defDiff || 0);
     const notes = [];
     if (type === "dodge" && w.ranged) {
@@ -713,16 +727,32 @@ async function rollDefense(target, fd, w, maneuver) {
         else { diff += 2; notes.push("dodging missiles +2 diff"); }
     }
     if (maneuver.defDiff) notes.push(`${maneuver.label.split(" ")[0].toLowerCase()} +${maneuver.defDiff} diff`);
-    if (fd.defIndex) notes.push(`full defense: -${fd.defIndex} dice`);
+    if (num(fd.defIndex)) notes.push(`full defense: -${num(fd.defIndex)} dice`);
     let weapon = null;
     if (type === "parry") {
         const mw = target.items.filter(i => i.type === "Melee Weapon" && !i.system?.isnatural);
         weapon = mw.find(i => i.system?.isequipped) ?? mw[0] ?? null;
         if (!weapon) notes.push("no melee weapon on the sheet");
     }
-    const r = await rollPool(Math.max(0, dice), diff);
     const abLabel = game.i18n.localize(target.system?.abilities?.[abKey]?.label || "") || ab.name || abKey;
-    return { ...r, type, abilityName: (abLabel.startsWith("wod.") || abLabel === abKey) ? cap(abKey) : abLabel, notes, weapon };
+    return { type, valid: true, dice, diff: Math.min(10, diff), abKey, notes, weapon,
+        abilityName: (abLabel.startsWith("wod.") || abLabel === abKey) ? cap(abKey) : abLabel,
+        expected: R.expectedSuccesses(dice, Math.min(10, diff)) };
+}
+
+/** The best defense the sheet allows against this attack (the "Automatic" choice). */
+export function bestDefense(target, fd, w, maneuver = {}) {
+    const plans = ["parry", "block", "dodge"].map(t => planDefense(target, t, fd, w, maneuver));
+    // A parry needs a weapon in hand to count as the best choice; otherwise it is Dexterity + Melee with bare hands
+    const usable = plans.filter(p => p.valid && p.dice > 0 && (p.type !== "parry" || p.weapon));
+    return { best: R.pickDefense(usable), plans };
+}
+
+async function rollDefense(target, fd, w, maneuver) {
+    const p = planDefense(target, fd.defense, fd, w, maneuver);
+    if (!p.valid) return { invalid: p.invalid };
+    const r = await rollPool(p.dice, p.diff);
+    return { ...r, type: p.type, abilityName: p.abilityName, notes: p.notes, weapon: p.weapon };
 }
 
 function damagePool(attacker, w, net, maneuver, targeting, fd, pot) {
@@ -783,8 +813,9 @@ function attackCard(c) {
     L.push(diceHtml(atk.faces, atk.difficulty, fd.specialty));
     L.push(`<div class="vtc-res ${atk.botch ? "bad" : atk.successes ? "good" : ""}">${atk.botch ? "BOTCH! The weapon breaks, or the blow strikes an ally." : `${atk.successes} success${atk.successes === 1 ? "" : "es"}`}</div></div>`);
     // Defense
-    if (def || defNote) {
+    if (def || defNote || c.autoNote) {
         L.push(`<div class="vtc-sec"><b>Defense</b> `);
+        if (c.autoNote) L.push(`<div class="vtc-parts">${esc(c.autoNote)}</div>`);
         if (defNote) L.push(`<span class="vtc-warn">${defNote}</span>`);
         else {
             L.push(`${cap(def.type)} (Dexterity + ${def.abilityName}): <b>${def.dice}</b> dice, diff <b>${def.difficulty}</b>`);
@@ -1060,8 +1091,8 @@ Hooks.once("init", () => {
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.1.1",
-        conditionMods, dazedThreshold, _dialogs: { attackDialogHtml } };
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.2.0",
+        conditionMods, dazedThreshold, bestDefense, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
     L.alias("combat", "vtda20combat", api, "vtda20-combat");
     const mod = game.modules.get(MOD);

@@ -304,3 +304,18 @@ export const BOOSTS = [
 
 /** Banes by profile: what ignores natural soak. */
 export const BANES = { lupine: "Silver", fae: "Cold iron" };
+
+/**
+ * Expected successes of a pool: each die succeeds on diff..10, and a 1 takes a success away (VtDA20 p. 251).
+ * Used only to compare defenses, so 10s rerolled under specialties are left out.
+ */
+export function expectedSuccesses(dice, diff) {
+    const d = Math.max(2, Math.min(10, Number(diff) || 6));
+    return Math.max(0, Number(dice) || 0) * ((11 - d) / 10 - 0.1);
+}
+
+/** The best of several planned defenses: most expected successes; ties go to parry, then block, then dodge. */
+export function pickDefense(plans) {
+    const order = { parry: 0, block: 1, dodge: 2 };
+    return [...plans].sort((a, b) => (b.expected - a.expected) || (order[a.type] - order[b.type]))[0] ?? null;
+}
