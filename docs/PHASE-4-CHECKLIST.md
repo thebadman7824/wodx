@@ -27,3 +27,7 @@ The test ran in rothenstein-wodx. To put Rothenstein back and finish the gate:
 1. Return to Setup. In **Backups**, pick rothenstein-wodx and restore the backup from 7 November (the newest one, made just before the test). This replaces the world as it is now, so do it only if you didn't change anything else in Rothenstein since then that you want to keep.
 2. Restart Foundry, so it loads wodx-creation 0.2.1.
 3. Open **wodx-template** and enable WoDX Chronicle and WoDX Creation there if they are off. The droplet button → **Time-skip test** (the button only appears in that world). It should report 27 of 27.
+
+## Gate result
+
+- [x] Passed, 27 of 27, in wodx-template. rothenstein-wodx restored to 1200. Phase 4 complete.
