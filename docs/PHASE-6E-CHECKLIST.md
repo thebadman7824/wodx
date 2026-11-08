@@ -9,6 +9,6 @@
 - [x] Accessibility: contrast tested in every kit and both looks; each player's look (era, light, dark, plain), text size (to 150%), motion (follow the computer, reduce, full); forced-colours mode
 - [x] UI fit (B17) at 1280x720, 1366x768 and 1920x1080 with the look on; screenshot review sheets (look.mjs)
 - [x] Harness: phase6e.test.mjs; all suites pass
-- [ ] Gate 6e in Foundry (tools/gate/gate6e.mjs)
+- [x] Gate 6e in Foundry (tools/gate/gate6e.mjs): 8/8, 2026-11-08
 - [ ] Ben reviews the Kindred, wraith and hunter menus and cards in play and approves the look
 - [ ] Then: roll the look out to the other lines (LINE_LOOK) and group their menus by intent

@@ -96,7 +96,7 @@ test("one card layout keeps the h3 and the vta-card class every script looks for
   const html = TR.cardLayout({title: "Ilse: Frenzy", body: `<div class="vta-sec"><b>Self-Control</b>: 3 dice<div class="vta-res good">2 successes</div></div><div class="vta-note">Held (p. 345).</div>`,
     line: "kindred", changes: [{label: "Willpower", before: 5, after: 4, max: 5}]});
   assert.match(html, /^<div class="vta-card wodx-x wodx-line-kindred" data-line="kindred">/);
-  assert.match(html, /<h3>Ilse: Frenzy<\/h3>/);
+  assert.match(html, /<h3 style="[^"]*">Ilse: Frenzy<\/h3>/);
   assert.ok(html.indexOf("vta-verdict") < html.indexOf("vta-body"), "the verdict is in the header");
   assert.ok(html.indexOf("vta-change") < html.indexOf("vta-ref"), "what changed, then the page");
   assert.match(html, /<footer class="vta-ref">p\. 345<\/footer><\/div>$/);

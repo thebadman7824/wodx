@@ -162,7 +162,7 @@ const REF = /\b(?:pp?\.|pages?)\s?\d/;
 export function extractRefs(body) {
     const refs = [];
     let out = String(body ?? "");
-    out = out.replace(/<(div|span) class="wodx-quiet">([^<>]{1,90})<\/\1>/g, (m, tag, text) => {
+    out = out.replace(/<(div|span|p) class="wodx-quiet">([^<>]{1,90})<\/\1>/g, (m, tag, text) => {
         if (!REF.test(text)) return m;
         refs.push(text.trim().replace(/^\(|\)$/g, ""));
         return "";
@@ -214,6 +214,10 @@ export function changeStrip(changes) {
         `<span class="vta-chg ${Number(c.after) < Number(c.before) ? "down" : "up"}"><b>${esc(c.label)}</b> ${pips(c.before, c.after, c.max)}<span class="vta-chg-n">${esc(c.before)} → ${esc(c.after)}</span></span>`).join("")}</div>`;
 }
 
+/** The worldofdarkness system paints every chat h3 with layered !important rules; only a style on the element itself
+ * outranks them, so the header's h3 carries one. */
+const H3 = "background:none!important;border:0!important;box-shadow:none!important;color:inherit!important";
+
 /**
  * The card: a header band (line mark, title, verdict), the body as the builder wrote it, what changed, the footer with
  * the page references. Keeps the h3 and the "vta-card" class every script and test looks for.
@@ -224,7 +228,7 @@ export function cardLayout({ title, body, line = "", changes = [] }) {
     const mark = LINE_MARK[line] && LINE_LOOK.includes(line) ? `<span class="vta-mark" aria-hidden="true">${LINE_MARK[line]}</span>` : "";
     const cls = lineClass(line);
     return `<div class="vta-card wodx-x${cls ? ` ${cls}` : ""}"${line ? ` data-line="${esc(line)}"` : ""}>`
-        + `<header class="vta-head">${mark}<h3>${title}</h3>${v ? `<span class="vta-verdict ${v.tone}">${esc(v.text)}</span>` : ""}</header>`
+        + `<header class="vta-head">${mark}<h3 style="${H3}">${title}</h3>${v ? `<span class="vta-verdict ${v.tone}">${esc(v.text)}</span>` : ""}</header>`
         + `<div class="vta-body">${b}</div>`
         + changeStrip(changes)
         + (refs.length ? `<footer class="vta-ref">${refs.map(esc).join(" · ")}</footer>` : "")

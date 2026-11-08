@@ -1717,6 +1717,7 @@ const withActor = f => async (o = {}) => {
     const a = needActor(o.actor);
     if (!a) return null;
     const prev = P.setLine(P.detectProfile(a));
+    LEDGER.delete(a.id); // "what changed" counts from here
     try { return await f(a, o); } finally { P.setLine(prev); }
 };
 
@@ -1792,6 +1793,7 @@ export async function menu({ actor: a } = {}) {
                     recentAll[kind] = TR.pushRecent(recentAll[kind], spec);
                     game.settings.set(MOD, "menuRecent", recentAll).catch(() => {});
                     const was = P.setLine(kind);
+                    LEDGER.delete(actor.id);
                     try { await pm().run(spec, actor); } catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); } finally { P.setLine(was); }
                 };
                 root.querySelectorAll("button[data-k]").forEach(b => b.addEventListener("click", () => use(b)));
@@ -1951,7 +1953,7 @@ const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenz
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
     getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.6.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
-    uses: (o = {}) => pm().uses(o.actor ?? resolveActor(), o.resource ?? "willpower"), cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
+    uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
     cast: (o = {}) => pm().cast(o.actor ?? resolveActor()),
     shift: withActor(a => GX.isShifter(a) ? gx().shift(a) : pm().shift(a)), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()),
     // Werewolf and Fera (Phase 6b)

@@ -10,6 +10,9 @@
  */
 import {MODULE_ID} from "./util.mjs";
 
+/** The look's version (the module's own version is read by Foundry only when its server starts). */
+export const VERSION = "0.3.0";
+
 /** The paper each era kit is printed on. */
 export const KIT_TONE = {
   "dark-ages": "light", "long-night": "light", "renaissance": "light", "classical": "light", "living-gods": "light",
@@ -29,10 +32,25 @@ export function toneFor(kit, look, foundryDark = true) {
 
 const get = key => { try { return game.settings.get(MODULE_ID, key); } catch { return undefined; } };
 
+/**
+ * Foundry reads a module's list of stylesheets when its server starts, so after an update the new sheet can be missing
+ * until the next restart. Add it to the page if it is not there.
+ */
+export function ensureStyles(doc = globalThis.document) {
+  if ( !doc?.head || [...doc.styleSheets].some(s => /wodx-theme\.css/.test(s.href ?? "")) || doc.getElementById("wodx-theme-css") ) return false;
+  const link = doc.createElement("link");
+  link.id = "wodx-theme-css";
+  link.rel = "stylesheet";
+  link.href = `modules/${MODULE_ID}/styles/wodx-theme.css`;
+  doc.head.append(link);
+  return true;
+}
+
 /** Write the marks on <body>. Safe to call at any time. */
 export function applyLook(doc = globalThis.document) {
   const body = doc?.body;
   if ( !body ) return;
+  try { ensureStyles(doc); } catch (e) { console.warn("WoDX | theme styles", e); }
   const look = get("look") ?? "era";
   const size = Number(get("textSize") ?? 1) || 1;
   const motion = get("motion") ?? "auto";

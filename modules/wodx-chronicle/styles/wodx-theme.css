@@ -522,7 +522,8 @@ body.wodx-look .vta-card.wodx-x .vta-head {
   background: var(--wx-bar); color: var(--wx-bar-ink); border-bottom: 2px solid var(--wx-accent);
 }
 body.wodx-look .vta-card.wodx-x .vta-head h3 {
-  flex: 1 1 9em; margin: 0; padding: 0; border: 0; color: inherit; line-height: 1.12;
+  flex: 1 1 9em; margin: 0; padding: 0; border: 0; color: var(--wx-bar-ink); line-height: 1.12;
+  background: none; box-shadow: none; text-shadow: none; border-radius: 0;
   font-family: var(--wx-f-title); font-size: calc(var(--wx-title-size) * 0.88); font-weight: var(--wx-title-weight);
   text-transform: var(--wx-title-tt); letter-spacing: var(--wx-title-ls);
 }
@@ -576,10 +577,10 @@ body.wodx-look .vta-card.wodx-x .vta-ref::before { content: "¶ "; color: var(--
 /* The inner voice and the Shadow speak in their own hand: italic, a dashed edge in the line's colour */
 body.wodx-look .vta-card.wodx-x:is(.wodx-shadow, .wodx-voice) { border: 1px dashed var(--wx-accent); }
 body.wodx-look .vta-card.wodx-x:is(.wodx-shadow, .wodx-voice) .vta-body { font-style: italic; }
-body.wodx-look .vta-card.wodx-x:is(.wodx-shadow, .wodx-voice) .vta-head { background: color-mix(in srgb, var(--wx-accent) 14%, var(--wx-paper)); color: var(--wx-ink); --wx-bar-accent: var(--wx-accent); }
+body.wodx-look .vta-card.wodx-x:is(.wodx-shadow, .wodx-voice) .vta-head { background: color-mix(in srgb, var(--wx-accent) 14%, var(--wx-paper)); color: var(--wx-ink); --wx-bar-ink: var(--wx-ink); --wx-bar-accent: var(--wx-accent); }
 /* Chronicle cards share the header */
 body.wodx-look .chat-message .wodx-card { padding: 0.4em 0.6em; }
-body.wodx-look .chat-message .wodx-card h3 { margin: -0.4em -0.6em 0.4em; padding: 0.35em 0.6em; background: var(--wx-bar); color: var(--wx-bar-ink); border: 0; border-bottom: 2px solid var(--wx-accent); font-family: var(--wx-f-title); font-weight: var(--wx-title-weight); font-size: var(--wx-title-size); text-transform: var(--wx-title-tt); letter-spacing: var(--wx-title-ls); }
+body.wodx-look .chat-message .wodx-card h3 { box-shadow: none; text-shadow: none; margin: -0.4em -0.6em 0.4em; padding: 0.35em 0.6em; background: var(--wx-bar); color: var(--wx-bar-ink); border: 0; border-bottom: 2px solid var(--wx-accent); font-family: var(--wx-f-title); font-weight: var(--wx-title-weight); font-size: var(--wx-title-size); text-transform: var(--wx-title-tt); letter-spacing: var(--wx-title-ls); }
 
 /* =====================================================================================================================
    Accessibility
@@ -599,3 +600,12 @@ body.wodx-look[data-wodx-motion="reduce"] .application.wodx { transition: none !
 
 /* The menu's search box and hint line stay in view; keyboard focus and scrolling leave room for them */
 body.wodx-look .application.wodx-menu-dialog :is(.window-content, .dialog-content, form) { scroll-padding: 3.2em 0 3.6em; }
+
+/* The worldofdarkness system dresses every chat h3 (an id selector, colour !important). The WoDX header keeps its own:
+   :not(#wodx-none) gives these rules an id's weight. */
+body.wodx-look .vta-card.wodx-x .vta-head h3:not(#wodx-none) {
+  background: none !important; border: 0 !important; box-shadow: none !important; color: var(--wx-bar-ink) !important;
+}
+body.wodx-look .chat-message .wodx-card h3:not(#wodx-none) {
+  background: var(--wx-bar) !important; color: var(--wx-bar-ink) !important; border: 0 !important; border-bottom: 2px solid var(--wx-accent) !important;
+}

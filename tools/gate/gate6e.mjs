@@ -29,7 +29,10 @@ const set = (root, name, value) => {
 };
 async function until(pred, ms = 6000) { const t = Date.now(); while (Date.now() - t < ms) { const v = pred(); if (v) return v; await sleep(100); } return null; }
 async function step(name, fn) { try { await fn(); } catch (e) { ok(name, false, { error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ") }); } }
-const hex = c => { const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(c); return m ? [m[1], m[2], m[3]].map(Number).map(v => v / 255) : null; };
+// A colour as drawn; a transparent one (a gradient title bar has no background colour) counts as missing
+const hex = c => { const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/.exec(c); return m && (m[4] === undefined || Number(m[4]) > 0.5) ? [m[1], m[2], m[3]].map(Number).map(v => v / 255) : null; };
+// The first colour of a gradient
+const grad = img => { const m = /rgba?\([^)]*\)/.exec(img ?? ""); return m ? hex(m[0]) : null; };
 const lum = rgb => { const [r, g, b] = rgb.map(c => c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
 const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
 
@@ -42,7 +45,8 @@ export async function run() {
     try {
         await step("versions", async () => {
             const ch = game.modules.get(CH)?.version;
-            ok("versions", A().version === "3.6.0" && ch === "0.3.0" && !!game.modules.get(CH).api?.theme, { actions: A().version, chronicle: ch });
+            const th = game.modules.get(CH).api?.theme?.VERSION;
+            ok("versions", A().version === "3.6.0" && (ch === "0.3.0" || th === "0.3.0"), { actions: A().version, chronicle: ch, theme: th, note: ch !== "0.3.0" ? "Foundry shows the manifest read at its last start" : "" });
         });
         await game.settings.set(CH, "look", "era");
         await game.settings.set(CH, "textSize", "1");
@@ -105,7 +109,7 @@ export async function run() {
             const c = await until(() => /vta-change/.test(m?.content ?? "") ? m : null, 3000);
             const el = m ? document.querySelector(`#chat [data-message-id="${m.id}"] .vta-card.wodx-x, [data-message-id="${m.id}"] .vta-card.wodx-x`) : null;
             ok("a card: header, roll, what changed with pips", !!m && /class="vta-head"/.test(m.content) && /data-line="kindred"/.test(m.content) && !!c && /vta-pip/.test(c.content) && /Willpower/.test(c.content),
-                { title: m ? m.content.match(/<h3>(.*?)<\/h3>/)?.[1] : null, changes: c ? c.content.match(/<div class="vta-change">[\s\S]*?<\/div>/)?.[0]?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : null,
+                { title: m ? m.content.match(/<h3[^>]*>(.*?)<\/h3>/)?.[1] : null, changes: c ? c.content.match(/<div class="vta-change">[\s\S]*?<\/div>/)?.[0]?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : null,
                   rendered: !!el, willpower: ilse.system.advantages.willpower.temporary });
         });
 
@@ -122,7 +126,7 @@ export async function run() {
             const cs = card ? getComputedStyle(card) : null;
             const ink = hex(getComputedStyle(el).color), paper = hex(cs.backgroundColor);
             const head = card.querySelector(".vta-head"), hs = getComputedStyle(head);
-            const barBg = hex(hs.backgroundColor) ?? paper, barInk = hex(hs.color);
+            const barBg = hex(hs.backgroundColor) ?? grad(hs.backgroundImage) ?? paper, barInk = hex(hs.color);
             const r1 = ratio(ink, paper), r2 = ratio(barInk, barBg);
             ok("contrast on the card as drawn", r1 >= 7 && r2 >= 4.5, { body: r1.toFixed(2), header: r2.toFixed(2), font: cs.fontFamily.slice(0, 60) });
         });
