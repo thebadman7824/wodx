@@ -328,3 +328,7 @@
 - **Checks:** harness 185 tests (24 new), UI fit (24 new dialogs) and quality check all pass.
 - **Installed** and checked by MD5. Backup: `Backups\wodx-6c-pre-deploy-20261108`.
 - **Gate:** the live gate script `gate6c.mjs` waits for Ben (Foundry wasn't running; the admin password is his to enter). The steps are in PHASE-6C-CHECKLIST.
+- **Gate 6c, 2026-11-08:** Ben's third run passed all 17 steps.
+  - The first two runs exposed gate-script problems: test actors created with 0 Willpower (the system's create helper resets it), state left over from the earlier run, and another module's chat messages read as WoDX cards.
+  - They also exposed one WoDX bug: the wraith's last-Willpower prompt fired after an action that spent no Willpower. Fixed.
+  - Still open: the Great War wraith profile.

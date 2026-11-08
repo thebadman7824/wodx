@@ -94,3 +94,7 @@ All eight failures were in the gate script itself, not WoDX:
 
 - **Reusing the test pack** carried over the first run's state. Ada's Pathos was already spent. The once-a-scene uses (Passion, risking Conviction, second sight) still counted as used this scene. Greta's blood was already raised. The gate now resets the pack's resources and flags at the start, and starts a new scene for the once-a-scene rules.
 - **Another module's chat messages** were taken as WoDX cards (the "d10 Roll Tracker" streak message). That shifted True Faith, Numina and Hedge magic one card each. The gate now waits for the WoDX card itself.
+
+### Ben's third run, 2026-11-08: 17 of 17
+
+The automatic gate passes. One item is still open: the Great War wraith profile (B43), to be added once its OCR is read.
