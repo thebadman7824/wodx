@@ -9,4 +9,4 @@
 - [x] Never a player's character; gender-neutral text (B48)
 - [x] Harness tests (phase7b.test.mjs); UI fit at three sizes
 - [x] Foundry restarted (startup world set to rothenstein-wodx, so no admin password) and WoDX NPC enabled in the world, 2026-11-08
-- [x] Gate 7b in Foundry (gate7b.mjs run): 12/12, 2026-11-08, then 12/12 again with 0.1.1
+- [x] Gate 7b in Foundry (gate7b.mjs run): 12/12, 2026-11-08, then 12/12 again with 0.1.1, then 14/14 with 0.1.2 (large tokens, hex grids)

@@ -160,12 +160,12 @@ export function scoreOptions(profile, state) {
  * (walls, closed doors). maxSteps: stop the search there. Diagonals cost 1.5 (as 5/10/5 counting roughly does).
  * Returns the list of cells from start to goal, or null.
  */
-export function findPath(start, goal, passable, {maxNodes = 4000, diagonals = true} = {}) {
+export function findPath(start, goal, passable, {maxNodes = 4000, diagonals = true, neighbors = null, heuristic = null} = {}) {
   const key = c => `${c.i},${c.j}`;
-  const h = c => { const di = Math.abs(c.i - goal.i), dj = Math.abs(c.j - goal.j); return Math.max(di, dj) + 0.5 * Math.min(di, dj); };
+  const h = heuristic ?? (c => { const di = Math.abs(c.i - goal.i), dj = Math.abs(c.j - goal.j); return Math.max(di, dj) + 0.5 * Math.min(di, dj); });
+  const steps = neighbors ?? (diagonals ? squareSteps : orthoSteps);
   const open = new Map([[key(start), {c: start, g: 0, f: h(start), from: null}]]);
   const closed = new Map();
-  const steps = diagonals ? [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.5], [1, -1, 1.5], [-1, 1, 1.5], [-1, -1, 1.5]] : [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1]];
   let n = 0;
   while ( open.size && n++ < maxNodes ) {
     let best = null;
@@ -177,8 +177,7 @@ export function findPath(start, goal, passable, {maxNodes = 4000, diagonals = tr
       for ( let v = best; v; v = v.from ) path.unshift(v.c);
       return path;
     }
-    for ( const [di, dj, cost] of steps ) {
-      const c = {i: best.c.i + di, j: best.c.j + dj};
+    for ( const {c, cost} of steps(best.c) ) {
       if ( closed.has(key(c)) || !passable(best.c, c) ) continue;
       const g = best.g + cost;
       const have = open.get(key(c));
@@ -188,19 +187,29 @@ export function findPath(start, goal, passable, {maxNodes = 4000, diagonals = tr
   return null;
 }
 
-/** The first cells of a path that fit in a move of `budget` steps (diagonals 1.5). */
-export function trimPath(path, budget) {
+/** Neighbouring cells with their step cost. Square grids: diagonals 1.5 (5/10/5 counted roughly). Other grids pass
+ *  their own, such as Foundry's adjacent offsets on a hex grid at cost 1. */
+export const squareSteps = c => [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.5], [1, -1, 1.5], [-1, 1, 1.5], [-1, -1, 1.5]]
+  .map(([di, dj, cost]) => ({c: {i: c.i + di, j: c.j + dj}, cost}));
+export const orthoSteps = c => [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([di, dj]) => ({c: {i: c.i + di, j: c.j + dj}, cost: 1}));
+/** The cost of one step on a square grid. */
+export const squareCost = (a, b) => (a.i !== b.i && a.j !== b.j) ? 1.5 : 1;
+
+/** The first cells of a path that fit in a move of `budget` (step cost by `cost`, square-grid diagonals 1.5 by default). */
+export function trimPath(path, budget, cost = squareCost) {
   if ( !path?.length ) return [];
   const out = [path[0]];
   let used = 0;
   for ( let k = 1; k < path.length; k++ ) {
-    const d = (path[k].i !== path[k - 1].i && path[k].j !== path[k - 1].j) ? 1.5 : 1;
+    const d = cost(path[k - 1], path[k]);
     if ( used + d > budget + 1e-6 ) break;
     used += d;
     out.push(path[k]);
   }
   return out;
 }
+/** A path's full cost. */
+export const pathCost = (path, cost = squareCost) => (path ?? []).slice(1).reduce((t, c, k) => t + cost(path[k], c), 0);
 
 /** Cells around a target's footprint ({i, j, w, h} in cells), nearest to the mover first. */
 export function besideCells(target, mover) {
@@ -213,16 +222,15 @@ export function besideCells(target, mover) {
 }
 
 /** Every cell reachable within `budget` steps (diagonals 1.5): Map "i,j" -> {c, g, from}. For fleeing. */
-export function reachable(start, passable, budget, {maxNodes = 3000} = {}) {
+export function reachable(start, passable, budget, {maxNodes = 3000, neighbors = squareSteps} = {}) {
   const key = c => `${c.i},${c.j}`;
   const seen = new Map([[key(start), {c: start, g: 0, from: null}]]);
   const queue = [seen.get(key(start))];
-  const steps = [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.5], [1, -1, 1.5], [-1, 1, 1.5], [-1, -1, 1.5]];
   while ( queue.length && seen.size < maxNodes ) {
     queue.sort((a, b) => a.g - b.g);
     const v = queue.shift();
-    for ( const [di, dj, cost] of steps ) {
-      const c = {i: v.c.i + di, j: v.c.j + dj}, g = v.g + cost;
+    for ( const {c, cost} of neighbors(v.c) ) {
+      const g = v.g + cost;
       if ( g > budget + 1e-6 ) continue;
       const have = seen.get(key(c));
       if ( have && have.g <= g ) continue;
@@ -238,10 +246,10 @@ export function reachable(start, passable, budget, {maxNodes = 3000} = {}) {
 export const pathTo = node => { const p = []; for ( let v = node; v; v = v.from ) p.unshift(v.c); return p; };
 
 /** Where to run: the reachable cell farthest from the nearest foe (fewest steps breaks a tie). foes: [{i, j}]. */
-export function fleeCell(map, foes) {
+export function fleeCell(map, foes, dist = (a, b) => Math.max(Math.abs(a.i - b.i), Math.abs(a.j - b.j))) {
   let best = null;
   for ( const n of map.values() ) {
-    const d = foes.length ? Math.min(...foes.map(f => Math.max(Math.abs(f.i - n.c.i), Math.abs(f.j - n.c.j)))) : 0;
+    const d = foes.length ? Math.min(...foes.map(f => dist(f, n.c))) : 0;
     if ( !best || d > best.d || (d === best.d && n.g < best.n.g) ) best = {n, d};
   }
   return best?.n ?? null;

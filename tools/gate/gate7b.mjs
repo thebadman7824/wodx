@@ -196,6 +196,45 @@ export async function run() {
     ok("the way round the wall: never through it", direct && !!way.path && steps.every(x => !x) && way.path.some(c => c.i >= 10),
       {from: a, to: b, blockedStraight: direct, squares: way.path?.length ?? 0, cost: way.cost, through: way.path?.filter(c => c.j === 10 || c.j === 11)});
   });
+  await step("a large NPC (2x2) finds a way it fits through", async () => {
+    await T.runner.document.update({width: 2, height: 2}, {animate: false});
+    await sleep(400);
+    const way = npc().approach(T.runner, T.hero);
+    const steps = (way.path ?? []).slice(1).map((c, k) => npc().wallBetween(way.path[k], c, T.runner));
+    await T.runner.document.update({width: 1, height: 1}, {animate: false});
+    await sleep(300);
+    ok("a large NPC (2x2) finds a way it fits through", !!way.path && steps.every(x => !x) && way.path.some(c => c.i >= 10),
+      {squares: way.path?.length ?? 0, note: way.note ?? null});
+  });
+  await step("a hex grid: the way round the wall there too", async () => {
+    let hx = game.scenes.find(s => s.getFlag(MOD, "gateHexArena"));
+    if ( !hx ) {
+      hx = await Scene.create({name: "Gate 7b hex arena", width: 2000, height: 1400, padding: 0, grid: {type: CONST.GRID_TYPES.HEXODDR, size: 100, distance: 5, units: "ft"},
+        tokenVision: false, fog: {exploration: false}, flags: {[MOD]: {gateHexArena: true}}});
+      await hx.createEmbeddedDocuments("Wall", [{c: [1100, 0, 1100, 1000], move: CONST.WALL_MOVEMENT_TYPES.NORMAL, sight: CONST.WALL_SENSE_TYPES.NORMAL}]);
+    }
+    const ready = new Promise(r => Hooks.once("canvasReady", r)); await hx.view(); await ready; await sleep(600);
+    const want = {hero: {actor: roles.hero, x: 300, y: 500, d: 1}, runner: {actor: roles.runner, x: 1400, y: 500, d: -1}};
+    const H = {};
+    for ( const [role, w] of Object.entries(want) ) {
+      let doc = hx.tokens.find(t => t.getFlag(MOD, "gateRole") === role);
+      if ( !doc ) {
+        const td = (await w.actor.getTokenDocument({x: w.x, y: w.y, actorLink: false, disposition: w.d, width: 1, height: 1})).toObject();
+        td.flags = {...(td.flags ?? {}), [MOD]: {...(td.flags?.[MOD] ?? {}), gateRole: role}};
+        [doc] = await hx.createEmbeddedDocuments("Token", [td]);
+      } else await doc.update({x: w.x, y: w.y}, {animate: false, wodxMove: false});
+      H[role] = doc;
+    }
+    await sleep(600);
+    const runner = canvas.tokens.get(H.runner.id), hero = canvas.tokens.get(H.hero.id);
+    const way = npc().approach(runner, hero);
+    const steps = (way.path ?? []).slice(1).map((c, k) => npc().wallBetween(way.path[k], c, runner));
+    const below = (way.path ?? []).some(c => canvas.grid.getCenterPoint(c).y > 1000);
+    ok("a hex grid: the way round the wall there too", !!way.path && steps.every(x => !x) && below,
+      {grid: canvas.grid.type, steps: way.path?.length ?? 0, note: way.note ?? null});
+    const back = new Promise(r => Hooks.once("canvasReady", r)); await sc.view(); await back; await sleep(600);
+    T = Object.fromEntries(Object.entries(T).map(([k, t]) => [k, canvas.tokens.get(t.id)]));
+  });
   await step("Auto: the NPC moves round the wall on its turn; Undo puts it back", async () => {
     const start = {x: T.runner.document.x, y: T.runner.document.y};
     const msg = await actNow(sc, combat, T.runner, "auto");

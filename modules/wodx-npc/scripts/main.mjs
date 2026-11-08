@@ -13,7 +13,7 @@
 import * as NR from "./npc-rules.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.1.1";
+const VERSION = "0.1.2";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -167,19 +167,47 @@ export function planTurn(tok, combat = game.combat) {
 /*  Moving on the grid                                                 */
 /* ------------------------------------------------------------------ */
 
-const cellOf = tok => canvas.grid.getOffset({x: tok.document.x + 1, y: tok.document.y + 1});
-const footprint = tok => ({...cellOf(tok), w: Math.max(1, Math.round(tok.document.width)), h: Math.max(1, Math.round(tok.document.height))});
+/* Square grids anchor a token by its top-left cell (a 2x2 token covers that cell and three more); hex grids by the cell
+ * under its centre. Gridless scenes are not moved by WoDX. */
+const gridKind = () => canvas.grid?.isSquare || canvas.grid?.type === CONST.GRID_TYPES.SQUARE ? "square"
+  : (canvas.grid?.isHexagonal || [2, 3, 4, 5].includes(canvas.grid?.type)) ? "hex" : "none";
+const squareGrid = () => gridKind() !== "none"; // kept name: "a grid WoDX can walk"
+const sizeOf = tok => ({w: Math.max(1, Math.round(tok.document.width)), h: Math.max(1, Math.round(tok.document.height))});
+const cellOf = tok => gridKind() === "hex" ? canvas.grid.getOffset(tok.center) : canvas.grid.getOffset({x: tok.document.x + 1, y: tok.document.y + 1});
+/** The cells a token would cover with its anchor at cell c. */
+function cellsAt(tok, c) {
+  const {w, h} = sizeOf(tok);
+  if ( gridKind() === "hex" ) {
+    if ( w === 1 && h === 1 ) return [c];
+    try {
+      const p = topLeftFor(tok, c);
+      const offs = tok.document.getOccupiedGridSpaceOffsets?.({x: p.x, y: p.y});
+      if ( offs?.length ) return offs.map(o => ({i: o.i, j: o.j}));
+    } catch (e) { /* fall through */ }
+    return [c];
+  }
+  const out = [];
+  for ( let i = c.i; i < c.i + h; i++ ) for ( let j = c.j; j < c.j + w; j++ ) out.push({i, j});
+  return out;
+}
+/** Where a token's top-left goes for its anchor to sit at cell c. */
+function topLeftFor(tok, c) {
+  if ( gridKind() === "hex" ) { const m = canvas.grid.getCenterPoint(c); return {x: Math.round(m.x - tok.w / 2), y: Math.round(m.y - tok.h / 2)}; }
+  return {...canvas.grid.getTopLeftPoint(c)};
+}
+/** The token's centre with its anchor at cell c (for wall tests). */
+function centreFor(tok, c) { const p = topLeftFor(tok, c); return {x: p.x + tok.w / 2, y: p.y + tok.h / 2}; }
+const footprint = tok => ({...cellOf(tok), ...sizeOf(tok)});
 function occupied(except) {
   const set = new Set();
   for ( const t of canvas.tokens.placeables ) {
     if ( t.id === except.id || t.document.hidden ) continue;
-    const f = footprint(t);
-    for ( let i = f.i; i < f.i + f.h; i++ ) for ( let j = f.j; j < f.j + f.w; j++ ) set.add(`${i},${j}`);
+    for ( const c of cellsAt(t, cellOf(t)) ) set.add(`${c.i},${c.j}`);
   }
   return set;
 }
 function wallBetween(a, b, tok) {
-  const pa = canvas.grid.getCenterPoint(a), pb = canvas.grid.getCenterPoint(b);
+  const pa = centreFor(tok, a), pb = centreFor(tok, b);
   try { if ( typeof tok.checkCollision === "function" ) return !!tok.checkCollision(pb, {origin: pa, type: "move", mode: "any"}); }
   catch (e) { /* fall through */ }
   try {
@@ -191,15 +219,21 @@ function wallBetween(a, b, tok) {
 function passableFor(tok) {
   const busy = occupied(tok);
   const d = canvas.dimensions;
-  const inside = c => { const p = canvas.grid.getTopLeftPoint(c); return p.x >= d.sceneX && p.y >= d.sceneY && p.x < d.sceneX + d.sceneWidth && p.y < d.sceneY + d.sceneHeight; };
-  return (a, b) => inside(b) && !busy.has(`${b.i},${b.j}`) && !wallBetween(a, b, tok);
+  const inside = c => { const p = canvas.grid.getCenterPoint(c); return p.x >= d.sceneX && p.y >= d.sceneY && p.x < d.sceneX + d.sceneWidth && p.y < d.sceneY + d.sceneHeight; };
+  // Every cell the token would cover is inside the scene and free, and no wall stands between its centres
+  return (a, b) => cellsAt(tok, b).every(c => inside(c) && !busy.has(`${c.i},${c.j}`)) && !wallBetween(a, b, tok);
 }
+/** Neighbours and step costs for this scene's grid. */
+const stepsFor = () => gridKind() === "hex"
+  ? (c => (canvas.grid.getAdjacentOffsets?.(c) ?? []).map(o => ({c: {i: o.i, j: o.j}, cost: 1})))
+  : NR.squareSteps;
+const stepCost = () => gridKind() === "hex" ? (() => 1) : NR.squareCost;
+const hexHeuristic = goal => c => { try { return canvas.grid.getDistance?.(canvas.grid.getCenterPoint(c), canvas.grid.getCenterPoint(goal)) / (canvas.scene.grid.distance || 5) || 0; } catch (e) { return 0; } };
 const cellsFor = yards => Math.floor((yards * unitsPerYard()) / (canvas.scene.grid.distance || 5) + 1e-6);
-const squareGrid = () => canvas.grid?.isSquare ?? (canvas.grid?.type === CONST.GRID_TYPES.SQUARE);
 
 async function walk(tok, path) {
   if ( path.length < 2 ) return false;
-  const waypoints = path.slice(1).map(c => ({...canvas.grid.getTopLeftPoint(c)}));
+  const waypoints = path.slice(1).map(c => topLeftFor(tok, c));
   const doc = tok.document;
   if ( typeof doc.move === "function" ) {
     try { await doc.move(waypoints, {autoRotate: true}); }
@@ -210,17 +244,30 @@ async function walk(tok, path) {
   return true;
 }
 
-/** The way to a cell beside a foe: {path, cost} (cost in squares, diagonals 1.5), or {note} when there is none. */
+/** Cells where a token could stand beside a foe, nearest first. */
+function besideFor(tok, target, start) {
+  if ( gridKind() === "hex" ) {
+    const own = cellsAt(target, cellOf(target)), key = c => `${c.i},${c.j}`, taken = new Set(own.map(key)), out = new Map();
+    for ( const c of own ) for ( const {c: n} of stepsFor()(c) ) if ( !taken.has(key(n)) ) out.set(key(n), n);
+    const at = canvas.grid.getCenterPoint(start);
+    return [...out.values()].sort((a, b) => Math.hypot(canvas.grid.getCenterPoint(a).x - at.x, canvas.grid.getCenterPoint(a).y - at.y)
+      - Math.hypot(canvas.grid.getCenterPoint(b).x - at.x, canvas.grid.getCenterPoint(b).y - at.y));
+  }
+  // Square: the ring round the foe, widened by the mover's own size so a large mover's anchor can stand there
+  const f = footprint(target), {w, h} = sizeOf(tok);
+  return NR.besideCells({i: f.i - (h - 1), j: f.j - (w - 1), w: f.w + (w - 1), h: f.h + (h - 1)}, start);
+}
+
+/** The way to a cell beside a foe: {path, cost} (cost in grid steps), or {note} when there is none. */
 function approach(tok, target) {
-  if ( !squareGrid() ) return {note: "WoDX moves NPCs on square grids only: move the token by hand"};
-  const pass = passableFor(tok), start = cellOf(tok);
-  for ( const goal of NR.besideCells(footprint(target), start).slice(0, 8) ) {
-    const path = NR.findPath(start, goal, pass);
-    if ( path ) return {path, cost: pathCost(path)};
+  if ( !squareGrid() ) return {note: "WoDX moves NPCs on square and hex grids only: move the token by hand"};
+  const pass = passableFor(tok), start = cellOf(tok), hex = gridKind() === "hex";
+  for ( const goal of besideFor(tok, target, start).slice(0, 8) ) {
+    const path = NR.findPath(start, goal, pass, {neighbors: stepsFor(), heuristic: hex ? hexHeuristic(goal) : null});
+    if ( path ) return {path, cost: NR.pathCost(path, stepCost())};
   }
   return {note: "no way through to them"};
 }
-const pathCost = path => path.slice(1).reduce((s, c, k) => s + ((c.i !== path[k].i && c.j !== path[k].j) ? 1.5 : 1), 0);
 
 /* ------------------------------------------------------------------ */
 /*  Doing it                                                           */
@@ -272,7 +319,7 @@ async function execute(tok, opt) {
         if ( !way.path ) return {done: false, text: `${tok.name} cannot reach ${target.name} (${way.note}).`};
         if ( way.cost > cellsFor(lim.attackAfter) ) {
           // Too far to strike this turn (VtDA20: no attack after moving past half the running speed): run at them
-          const part = NR.trimPath(way.path, cellsFor(lim.run));
+          const part = NR.trimPath(way.path, cellsFor(lim.run), stepCost());
           const moved = await walk(tok, part);
           return {done: moved, path: part, text: moved ? `${tok.name} runs at ${target.name}, too far to strike this turn.` : `${tok.name} cannot move (${lim.note || "no movement left"}).`};
         }
@@ -289,10 +336,11 @@ async function execute(tok, opt) {
       return {done: true, text: `${tok.name} shoots at ${target.name}.`};
     }
     case "flee": {
-      if ( !squareGrid() ) return {done: false, text: "WoDX moves NPCs on square grids only: move the token by hand."};
+      if ( !squareGrid() ) return {done: false, text: "WoDX moves NPCs on square and hex grids only: move the token by hand."};
       const foes = readFight(tok).enemies.map(cellOf);
-      const map = NR.reachable(cellOf(tok), passableFor(tok), cellsFor(lim.run));
-      const cell = NR.fleeCell(map, foes);
+      const map = NR.reachable(cellOf(tok), passableFor(tok), cellsFor(lim.run), {neighbors: stepsFor()});
+      const px = c => canvas.grid.getCenterPoint(c);
+      const cell = NR.fleeCell(map, foes, gridKind() === "hex" ? ((a, b) => Math.hypot(px(a).x - px(b).x, px(a).y - px(b).y)) : undefined);
       const path = cell ? NR.pathTo(cell) : null;
       const moved = path ? await walk(tok, path) : false;
       return {done: moved, path, text: moved ? `${tok.name} flees.` : `${tok.name} has nowhere to run.`};

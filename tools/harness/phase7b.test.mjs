@@ -156,6 +156,20 @@ test("beside a foe, and fleeing to the farthest reachable cell", () => {
   assert.deepEqual(path.at(-1), cell.c);
 });
 
+test("any grid: neighbours and costs passed in (hex steps cost 1), trimmed and costed alike", () => {
+  // A toy hex-like grid: six neighbours, every step 1
+  const hex = c => [[0, 1], [0, -1], [1, 0], [-1, 0], [1, c.i % 2 ? 1 : -1], [-1, c.i % 2 ? 1 : -1]].map(([di, dj]) => ({c: {i: c.i + di, j: c.j + dj}, cost: 1}));
+  const p = NR.findPath({i: 0, j: 0}, {i: 4, j: 0}, () => true, {neighbors: hex, heuristic: () => 0});
+  assert.ok(p && p.at(-1).i === 4);
+  const one = () => 1;
+  assert.equal(NR.pathCost(p, one), p.length - 1);
+  assert.equal(NR.trimPath(p, 2, one).length, 3);
+  assert.equal(NR.pathCost([{i: 0, j: 0}, {i: 1, j: 1}, {i: 1, j: 2}]), 2.5, "square: a diagonal 1.5 and a straight 1");
+  const m = NR.reachable({i: 0, j: 0}, () => true, 2, {neighbors: hex});
+  assert.ok([...m.values()].every(n => n.g <= 2));
+  assert.ok(NR.fleeCell(m, [{i: 0, j: 0}], (a, b) => Math.abs(a.i - b.i) + Math.abs(a.j - b.j)).g === 2);
+});
+
 test("who hurt whom: only applied damage in this fight", () => {
   const h = NR.harmLog([
     {combatId: "c1", attacker: "A", target: "N", levels: 2, applied: true},
@@ -179,10 +193,10 @@ test("Auto acts only on what WoDX can carry out; the rest wait for the Storytell
 
 test("the module: manifest, API and the card's buttons", () => {
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
-  assert.equal(m.version, "0.1.1");
+  assert.equal(m.version, "0.1.2");
   assert.deepEqual(m.relationships.requires.map(r => r.id).sort(), ["wodx-actions", "wodx-chronicle", "wodx-combat"]);
   const src = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
-  assert.match(src, /const VERSION = "0\.1\.1"/);
+  assert.match(src, /const VERSION = "0\.1\.2"/);
   for ( const k of ["wnpc-go", "wnpc-undo", "wnpc-edit"] ) assert.ok(src.includes(k), k);
   assert.ok(/hasPlayerOwner\s*\)\s*return null/.test(src), "never moves a player's character");
   assert.ok(!/\b(he|she|him|her|his|hers)\b/.test(src.match(/`[^`]*`/g).join(" ").replace(/<[^>]+>/g, " ")), "card text is gender-neutral");
