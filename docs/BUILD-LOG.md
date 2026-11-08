@@ -514,3 +514,5 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - Foundry has no minimize button: a window minimizes by double-clicking its title. The check below makes sure the title keeps room for that.
 - UI fit (ui-fit.mjs) now draws the frame as ApplicationV2 does (icon, title, controls menu, close) and checks the header in every window at each screen size: the close button is there, both buttons sit inside the bar and can be clicked, their icons use the icon font, and the icon has at least 3:1 contrast against every colour of the bar, gradients included. It checks again with a long title and when minimized. Before the fix every window failed on the header icons; after it, none does. Every era kit's bar and ink pair was also checked: all are well above 3:1.
 - Tests: 333 pass; quality check passes.
+- On the PC, with Foundry 14's own foundry2.css and Font Awesome: UI fit passes every window. With the old wodx-theme.css it fails 468 window checks on the header icons, so the check catches the bug against the real stylesheet.
+- Not yet deployed: Foundry was running, so it waits until no game is on.
