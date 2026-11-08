@@ -1,0 +1,399 @@
+/**
+ * WoDX NPC 0.2 (Phase 7c): the pure rules of routines, places and reactions. No Foundry calls, so the harness can test
+ * them. main.mjs and routines.mjs read the clock, the scenes and the tokens and hand the results here.
+ *
+ *   A routine is a list of hour blocks: {from, to, place, activity, when, days, feast, label}. The first block that
+ *   fits the time wins, so the special blocks (Sundays, feast days) come before the everyday ones.
+ *     from, to   whole hours 0 to 24; a block from 21 to 6 runs past midnight; from equal to to (or 0 to 24) is all day
+ *     place      a role ("home", "work", "church" ...) or one place's id
+ *     when       "any", "day" or "night" (by the Chronicle's sunrise and sunset, not by the hour)
+ *     days       weekdays it runs on (0 Monday ... 6 Sunday), or null for every day
+ *     feast      "any", "only" (feast days only) or "not" (never on a feast day)
+ *   A block past midnight belongs to the day it started on: Saturday's 21:00 to 06:00 block is still Saturday's at 02:00.
+ *
+ * "describe" is a function of world time that returns {hour, minute, dayOfWeek, isNight, feast, jdn}: the Chronicle's
+ * describeTime plus feastOn below. Tests build it from WoDX Chronicle's date engine.
+ */
+import {julianToJDN, gregorianToJDN} from "../../wodx-chronicle/scripts/calendar-math.mjs";
+
+export const ACTIVITIES = {
+  sleep: "Sleeping", rest: "At rest", work: "At work", pray: "At prayer", drink: "Drinking", patrol: "On watch",
+  hunt: "Hunting", hide: "In hiding", errand: "On errands", attend: "Attending their master", wander: "Out and about"
+};
+
+/** Kinds of place a scene, or a region inside one, can be tagged with. */
+export const PLACE_KINDS = {
+  home: "Home", workplace: "Workplace or shop", church: "Church, chapel or cloister", tavern: "Tavern or inn",
+  haven: "Haven (a Cainite's resting place)", gate: "Gate, watch-house or barracks", market: "Market or square",
+  street: "Street, lane or road", castle: "Castle, keep or court", wilds: "Woods, fields or wilds", caern: "Caern or sacred site",
+  other: "Other"
+};
+
+/** The roles a routine block can name, and the kinds of place each falls back to when the NPC has none set. */
+export const ROLES = {
+  home: {label: "Home", kinds: ["home"]},
+  work: {label: "Workplace", kinds: ["workplace", "market"]},
+  church: {label: "Church", kinds: ["church"]},
+  tavern: {label: "Tavern", kinds: ["tavern"]},
+  haven: {label: "Haven", kinds: ["haven", "home"]},
+  post: {label: "Watch post", kinds: ["gate", "castle"]},
+  market: {label: "Market", kinds: ["market", "street"]},
+  street: {label: "The streets", kinds: ["street", "market"]},
+  court: {label: "Court", kinds: ["castle"]},
+  wilds: {label: "The wilds", kinds: ["wilds", "caern"]},
+  domitor: {label: "With their domitor", kinds: []}
+};
+
+const all = [0, 1, 2, 3, 4, 5, 6], weekdays = [0, 1, 2, 3, 4, 5];
+const B = (from, to, place, activity, more = {}) => ({from, to, place, activity, when: "any", days: null, feast: "any", label: "", ...more});
+
+/**
+ * Ready routines. Each template of 7b has one by default (DEFAULT_PRESET); the rest can be picked in the editor.
+ * Hours are WoDX readings of the trade, not book rules. The canonical hours follow the Western monastic day. Where
+ * Rothenstein's own notes give a time, the presets follow them: the market shutters at dusk, and the priest is in the
+ * church from dusk until the late bell (Rothenstein Codex, The Lower Town; Places, Ludovic's Presbytery).
+ */
+export const PRESETS = {
+  "night-watch": {label: "Guard, night watch", blocks: [
+    B(18, 24, "street", "patrol", {label: "Rounds of the streets"}), B(0, 6, "post", "patrol", {label: "At the watch post"}),
+    B(6, 14, "home", "sleep"), B(14, 18, "home", "rest")]},
+  "day-watch": {label: "Guard, day watch", blocks: [
+    B(6, 18, "post", "patrol"), B(18, 21, "tavern", "drink", {days: [4, 5, 6]}), B(21, 6, "home", "sleep"), B(0, 24, "home", "rest")]},
+  merchant: {label: "Merchant or shopkeeper", blocks: [
+    B(8, 10, "church", "pray", {days: [6], label: "Mass"}), B(8, 10, "church", "pray", {feast: "only", label: "Mass"}),
+    B(6, 24, "work", "work", {when: "day", days: weekdays, feast: "not", label: "Trading until the market shutters at dusk"}),
+    B(18, 21, "tavern", "drink", {days: [4, 5]}), B(21, 6, "home", "sleep"), B(0, 24, "home", "rest")]},
+  labourer: {label: "Labourer or craftsman", blocks: [
+    B(7, 9, "church", "pray", {days: [6], label: "Mass"}), B(7, 9, "church", "pray", {feast: "only", label: "Mass"}),
+    B(5, 19, "work", "work", {days: weekdays, feast: "not"}), B(19, 21, "tavern", "drink", {days: [5]}),
+    B(21, 5, "home", "sleep"), B(0, 24, "home", "rest")]},
+  priest: {label: "Priest (the canonical hours)", blocks: [
+    B(6, 13, "church", "pray", {days: [6], label: "Mass and the offices"}), B(6, 13, "church", "pray", {feast: "only", label: "Mass and the offices"}),
+    B(2, 3, "church", "pray", {label: "Matins and Lauds"}), B(6, 7, "church", "pray", {label: "Prime"}),
+    B(7, 12, "street", "errand", {label: "Parish rounds"}), B(12, 13, "church", "pray", {label: "Sext"}),
+    B(12, 21, "church", "pray", {when: "night", label: "Vespers to Compline, dusk to the late bell"}),
+    B(13, 24, "home", "work", {when: "day", label: "Parish work"}), B(21, 2, "home", "sleep"), B(3, 6, "home", "sleep"), B(0, 24, "home", "rest")]},
+  innkeeper: {label: "Innkeeper or tavern-keeper", blocks: [
+    B(7, 9, "church", "pray", {days: [6], label: "Mass"}), B(6, 24, "tavern", "work"), B(0, 6, "home", "sleep")]},
+  ghoul: {label: "Ghoul, errands by day", blocks: [
+    B(0, 24, "domitor", "attend", {when: "night"}), B(8, 16, "market", "errand", {when: "day"}), B(0, 24, "haven", "sleep", {when: "day"})]},
+  neonate: {label: "Cainite, hunts by night", blocks: [
+    B(0, 24, "haven", "sleep", {when: "day"}), B(20, 2, "street", "hunt", {when: "night"}), B(0, 24, "haven", "rest", {when: "night"})]},
+  elder: {label: "Cainite elder, holds court", blocks: [
+    B(0, 24, "haven", "sleep", {when: "day"}), B(19, 23, "court", "work", {when: "night", label: "Holds court"}),
+    B(23, 2, "street", "hunt", {when: "night"}), B(0, 24, "haven", "rest", {when: "night"})]},
+  garou: {label: "Garou, guards the wilds", blocks: [B(0, 24, "wilds", "patrol", {when: "night"}), B(0, 24, "home", "rest", {when: "day"})]},
+  hunter: {label: "Hunter, watches by night", blocks: [
+    B(21, 3, "street", "hunt", {when: "night"}), B(7, 18, "work", "work", {days: weekdays, feast: "not"}), B(3, 7, "home", "sleep"),
+    B(0, 24, "home", "rest")]},
+  recluse: {label: "Recluse (stays at home)", blocks: [B(0, 24, "home", "rest")]}
+};
+/** The routine each 7b template starts from. Spirits, ghosts and beasts have none: they keep no hours a town would know. */
+export const DEFAULT_PRESET = {guard: "night-watch", civilian: "labourer", ghoul: "ghoul", neonate: "neonate", elder: "elder", garou: "garou", hunter: "hunter"};
+
+export const blocksOf = (routine, template) => {
+  if ( Array.isArray(routine?.blocks) && routine.blocks.length ) return routine.blocks;
+  const p = PRESETS[routine?.preset] ?? PRESETS[DEFAULT_PRESET[template]];
+  return p?.blocks ?? [];
+};
+
+/* ------------------------------------------------------------------ */
+/*  Which block is current                                             */
+/* ------------------------------------------------------------------ */
+
+const allDay = b => b.from === b.to || (b.from === 0 && b.to === 24);
+const wraps = b => !allDay(b) && b.from > b.to;
+/** Is the hour inside the block's hours? */
+export function hourIn(b, hour) {
+  if ( allDay(b) ) return true;
+  return wraps(b) ? (hour >= b.from || hour < b.to) : (hour >= b.from && hour < b.to);
+}
+
+/** The block in force at a world time, and its index: {block, index} or null. */
+export function blockAt(blocks, time, describe) {
+  const d = describe(time);
+  let yesterday = null;
+  for ( let i = 0; i < (blocks?.length ?? 0); i++ ) {
+    const b = blocks[i];
+    if ( !hourIn(b, d.hour) ) continue;
+    // The part of a block after midnight belongs to the day it started on
+    const day = wraps(b) && d.hour < b.to ? (yesterday ??= describe(time - 86400)) : d;
+    if ( Array.isArray(b.days) && b.days.length && !b.days.includes(day.dayOfWeek) ) continue;
+    if ( b.feast === "only" && !day.feast ) continue;
+    if ( b.feast === "not" && day.feast ) continue;
+    if ( b.when === "day" && d.isNight ) continue;
+    if ( b.when === "night" && !d.isNight ) continue;
+    return {block: b, index: i};
+  }
+  return null;
+}
+
+/** Every change of block between two world times, checked every `step` seconds: [{time, index, block}]. */
+export function changesBetween(blocks, from, to, describe, step = 600) {
+  const out = [];
+  let last = blockAt(blocks, from, describe)?.index ?? -1;
+  for ( let t = from + step; t <= to; t += step ) {
+    const now = blockAt(blocks, t, describe);
+    const k = now?.index ?? -1;
+    if ( k !== last ) { out.push({time: t, index: k, block: now?.block ?? null}); last = k; }
+  }
+  return out;
+}
+
+/** Check a block list a person typed: returns a list of problems (empty when fine). */
+export function checkBlocks(blocks) {
+  const bad = [];
+  (blocks ?? []).forEach((b, i) => {
+    const n = i + 1;
+    if ( !Number.isInteger(b.from) || b.from < 0 || b.from > 24 ) bad.push(`Block ${n}: "from" must be a whole hour, 0 to 24`);
+    if ( !Number.isInteger(b.to) || b.to < 0 || b.to > 24 ) bad.push(`Block ${n}: "to" must be a whole hour, 0 to 24`);
+    if ( !b.place ) bad.push(`Block ${n} has no place`);
+    if ( !ACTIVITIES[b.activity] ) bad.push(`Block ${n} has no activity`);
+  });
+  return bad;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Places                                                             */
+/* ------------------------------------------------------------------ */
+
+const hash = s => { let h = 2166136261; for ( const c of String(s) ) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+
+/**
+ * The place a block sends an NPC to. ctx: {places: [{id, kind}], roles: {role: placeId}, seed (the actor's id),
+ * domitorPlace (the domitor's current place, for "domitor")}.
+ * A role the NPC has set wins; else a place of a fitting kind, the same one for the same NPC each time.
+ * Returns {place, missing}: missing names a role whose place no longer exists.
+ */
+export function resolvePlace(block, {places = [], roles = {}, seed = "", domitorPlace = null} = {}) {
+  if ( !block?.place ) return {place: null, missing: null};
+  const ids = new Set(places.map(p => p.id));
+  const p = block.place;
+  if ( ids.has(p) ) return {place: p, missing: null};
+  if ( p === "domitor" ) {
+    if ( domitorPlace && ids.has(domitorPlace) ) return {place: domitorPlace, missing: null};
+    return resolvePlace({...block, place: "haven"}, {places, roles, seed});
+  }
+  let missing = null;
+  if ( roles?.[p] ) {
+    if ( ids.has(roles[p]) ) return {place: roles[p], missing: null};
+    missing = p;
+  }
+  if ( !ROLES[p] && !missing ) missing = p; // a place id that was deleted
+  for ( const k of ROLES[p]?.kinds ?? [] ) {
+    const cands = places.filter(x => x.kind === k).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+    if ( cands.length ) return {place: cands[hash(`${seed}:${p}`) % cands.length].id, missing};
+  }
+  return {place: null, missing};
+}
+
+/** Where a routine puts an NPC at a time: {place, block, index, missing}. */
+export function placeAt(blocks, time, describe, ctx) {
+  const hit = blockAt(blocks, time, describe);
+  if ( !hit ) return {place: null, block: null, index: -1, missing: null};
+  return {...resolvePlace(hit.block, ctx), block: hit.block, index: hit.index};
+}
+
+const TITLES = /^(captain|father|brother|sister|master|mistress|richter|baba|old|young|sir|lady|lord|dame|frau|herr|mother|the)$/i;
+const strip = s => String(s ?? "").replace(/^⚔\s*BATTLEMAP\s*·\s*/u, "");
+/**
+ * A first guess at a place from a scene's name: {kind, owner}. Rothenstein names its private rooms "Trespass · X's ..."
+ * and its trades "Workplace · ...". Story scenes (encounters, sessions) are left untagged.
+ */
+export function guessPlace(name) {
+  const n = strip(name);
+  if ( /^(encounter|sessio)\b/i.test(n) ) return {kind: "", owner: ""};
+  const own = /([A-ZÀ-Ž][\p{L}'-]+(?:\s+[A-ZÀ-Ž][\p{L}-]+)?)['’]s\b/u.exec(n);
+  const owner = own ? own[1] : "";
+  const rules = [
+    [/\b(lair|haven)\b/i, "haven"],
+    [/\b(watch-house|barracks|gate|toll-post|guardhouse)\b/i, "gate"],
+    [owner ? /\b(house|room|rooms|chambers|cabin|cottage|presbytery|quarters|home)\b/i : /\b(cottage|house)\b/i, "home"],
+    [/\b(church|chapel|cathedral|churchyard|cloister|scriptorium|hermitage|abbey|monastery|church close)\b/i, "church"],
+    [/\b(tavern|inn|alehouse|brewhouse)\b/i, "tavern"],
+    [/\b(keep|castle|bailey|great hall|ward|undercroft)\b/i, "castle"],
+    [/\b(market|square)\b/i, "market"],
+    [/\b(caern)\b/i, "caern"],
+    [/\b(forest|woods?|grove|clearing|fields?|trail|mountain|ashfield|ruins|meadow|moor|marsh|adit|camp)\b/i, "wilds"],
+    [/\b(lane|street|road|quay|close|common|ford|cross|ferry)\b/i, "street"],
+    [/\b(bakery|shop|workshop|store|warehouse|mill|tannery|laboratory|smithy|stables|wellhouse)\b/i, "workplace"]
+  ];
+  for ( const [re, kind] of rules ) if ( re.test(n) ) return {kind, owner};
+  if ( /^workplace\b/i.test(n) ) return {kind: "workplace", owner};
+  if ( /^trespass\b/i.test(n) ) return {kind: "home", owner};
+  return {kind: "", owner};
+}
+
+/** Does an owner's name (from a place's title) fit an actor's name? "Captain Ondrej" fits "Ondrej of the Watch". */
+export function ownerMatches(owner, actorName) {
+  const words = String(owner ?? "").split(/\s+/).filter(w => w.length >= 3 && !TITLES.test(w)).map(w => w.toLowerCase());
+  if ( !words.length ) return false;
+  const have = new Set(String(actorName ?? "").toLowerCase().split(/[^\p{L}'-]+/u));
+  return words.every(w => have.has(w));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Feast days and the curfew                                          */
+/* ------------------------------------------------------------------ */
+
+/** Easter Sunday's JDN for a year, by the Julian or the Gregorian reckoning. */
+export function easterJDN(year, calendar = "julian") {
+  if ( calendar === "julian" ) {
+    const a = year % 4, b = year % 7, c = year % 19, d = (19 * c + 15) % 30, e = (2 * a + 4 * b - d + 34) % 7;
+    const m = Math.floor((d + e + 114) / 31), day = ((d + e + 114) % 31) + 1;
+    return julianToJDN(year, m, day);
+  }
+  const a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
+  const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31), day = ((h + l - 7 * m + 114) % 31) + 1;
+  return gregorianToJDN(year, month, day);
+}
+
+/** The great feasts of the Western church: fixed by date (month, day) and movable by days from Easter. */
+export const FIXED_FEASTS = [[1, 1, "The Circumcision"], [1, 6, "Epiphany"], [2, 2, "Candlemas"], [3, 25, "The Annunciation"],
+  [6, 24, "St John the Baptist"], [6, 29, "Sts Peter and Paul"], [8, 15, "The Assumption"], [9, 8, "The Nativity of Mary"],
+  [9, 29, "Michaelmas"], [11, 1, "All Saints"], [11, 11, "Martinmas"], [12, 25, "Christmas"], [12, 26, "St Stephen"]];
+export const MOVABLE_FEASTS = [[-2, "Good Friday"], [0, "Easter"], [1, "Easter Monday"], [39, "Ascension"], [49, "Pentecost"],
+  [50, "Whit Monday"], [60, "Corpus Christi", 1264]];
+
+/** Parse the Storyteller's own feasts, one per line: "09-01 St Giles". */
+export function parseFeasts(text) {
+  const out = [];
+  for ( const line of String(text ?? "").split(/\r?\n/) ) {
+    const m = /^\s*(\d{1,2})-(\d{1,2})\s+(.+?)\s*$/.exec(line);
+    if ( m && +m[1] >= 1 && +m[1] <= 12 && +m[2] >= 1 && +m[2] <= 31 ) out.push([+m[1], +m[2], m[3]]);
+  }
+  return out;
+}
+
+/** The feast on a date, or null. date: {year, month, day, calendar, jdn}; extra: parseFeasts() output. */
+export function feastOn(date, extra = []) {
+  for ( const [m, d, name] of [...extra, ...FIXED_FEASTS] ) if ( date.month === m && date.day === d ) return name;
+  const off = date.jdn - easterJDN(date.year, date.calendar);
+  for ( const [days, name, since] of MOVABLE_FEASTS ) if ( off === days && (!since || date.year >= since) ) return name;
+  return null;
+}
+
+/** Curfew: from the start hour until dawn (decision B85: about 21:00 to dawn). */
+export function isCurfew({hour, minute = 0, isNight}, start = 21) {
+  const h = hour + minute / 60;
+  return h >= start || (!!isNight && h < 12);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reactions                                                          */
+/* ------------------------------------------------------------------ */
+
+export const TRIGGERS = {enter: "Entering", leave: "Leaving", stay: "Staying"};
+export const CONDITIONS = {night: "At night", curfew: "During the curfew", trespass: "Trespass (a private place)",
+  weapon: "A weapon in hand", supernatural: "The supernatural shown openly"};
+export const RESPONSES = {challenge: "Challenge them", alarm: "Raise the alarm", send: "Send for help", flee: "Flee", fight: "Fight", ignore: "Let it pass"};
+/** Responses WoDX can carry out by itself in Auto; a fight always waits for the Storyteller. */
+export const SELF_RESPONSES = ["challenge", "alarm", "send", "flee", "ignore"];
+
+/** Which of a region's conditions hold. sit: {night, curfew, trespass, weapon, supernatural}. No conditions: always. */
+export function conditionsMet(conds, sit, match = "any") {
+  const list = (conds ?? []).filter(c => CONDITIONS[c]);
+  if ( !list.length ) return {met: true, which: []};
+  const which = list.filter(c => !!sit[c]);
+  return {met: match === "all" ? which.length === list.length : which.length > 0, which};
+}
+
+/** Successes on a roll of dice d10s against a difficulty, with 1s cancelling (V20). rng: () => [0, 1). */
+export function rollSuccesses(pool, diff, rng = Math.random) {
+  const dice = Array.from({length: Math.max(0, pool)}, () => 1 + Math.floor(rng() * 10));
+  const hits = dice.filter(d => d >= diff).length, ones = dice.filter(d => d === 1).length;
+  return {dice, successes: hits - ones, botch: hits === 0 && ones > 0};
+}
+
+/**
+ * Auspex against Obfuscate, by the era's book. Returns {result: "sees" | "roll" | "contest" | "blind", diff, why}.
+ *   V20 (p. 142, the "Seeing the Unseen" sidebar): Auspex higher, Perception + Awareness at 7 minus the difference;
+ *     Obfuscate higher, unseen; equal, a resisted roll at 7, Perception + Awareness against Manipulation + Subterfuge.
+ *   V20 Dark Ages (p. 195, "See the Unseen"): Auspex equal or higher, Perception + Awareness at 8 minus 1 a dot above;
+ *     Obfuscate higher, unseen. No resisted roll.
+ * Pages are printed pages. A mortal without Auspex cannot find an Obfuscated vampire by Awareness alone (both books).
+ */
+export function pierce(auspex, obfuscate, book = "v20da") {
+  const a = Number(auspex) || 0, o = Number(obfuscate) || 0;
+  if ( o <= 0 ) return {result: "sees", diff: null, why: "not hidden by Obfuscate"};
+  if ( a <= 0 || a < o ) return {result: "blind", diff: null, why: `Obfuscate ${o} against Auspex ${a}: unseen`};
+  if ( book === "v20" ) {
+    if ( a === o ) return {result: "contest", diff: 7, why: `Auspex ${a} equals Obfuscate ${o}: a resisted roll (V20 p. 142)`};
+    return {result: "roll", diff: Math.max(2, 7 - (a - o)), why: `Auspex ${a} over Obfuscate ${o} (V20 p. 142)`};
+  }
+  return {result: "roll", diff: Math.max(2, 8 - (a - o)), why: `Auspex ${a} against Obfuscate ${o} (V20 Dark Ages p. 195)`};
+}
+
+/**
+ * Does a watcher notice an intruder? Pure: the caller says what the watcher can see.
+ *   watcher: {perception, alertness, awareness, auspex, awake, inSight}
+ *   intruder: {dexterity, stealth, manipulation, subterfuge, sneaking, obfuscate (0 when not using it)}
+ *   book: "v20" or "v20da" (the era's)
+ * Sneaking (V20 Dark Ages p. 169): Dexterity + Stealth against Perception + Alertness, the watcher needing more
+ * successes. An intruder in plain sight within view is seen.
+ * Returns {noticed, why, rolls}.
+ */
+export function notice(watcher, intruder, {rng = Math.random, diff = 6, book = "v20da"} = {}) {
+  if ( !watcher.awake ) return {noticed: false, why: "asleep"};
+  if ( !watcher.inSight ) return {noticed: false, why: "out of sight"};
+  if ( (intruder.obfuscate ?? 0) > 0 ) {
+    const p = pierce(watcher.auspex, intruder.obfuscate, book);
+    if ( p.result === "blind" ) return {noticed: false, why: p.why};
+    const w = rollSuccesses((watcher.perception ?? 0) + (watcher.awareness ?? 0), p.diff, rng);
+    if ( p.result === "contest" ) {
+      const i = rollSuccesses((intruder.manipulation ?? 0) + (intruder.subterfuge ?? 0), p.diff, rng);
+      return {noticed: w.successes > i.successes, why: `${p.why}: ${w.successes} against ${i.successes}`, rolls: {w, i}};
+    }
+    return {noticed: w.successes > 0, why: `${p.why}: Perception + Awareness at ${p.diff}, ${w.successes} success${w.successes === 1 ? "" : "es"}`, rolls: {w}};
+  }
+  if ( !intruder.sneaking ) return {noticed: true, why: "in plain sight"};
+  const w = rollSuccesses((watcher.perception ?? 0) + (watcher.alertness ?? 0), diff, rng);
+  const i = rollSuccesses((intruder.dexterity ?? 0) + (intruder.stealth ?? 0), diff, rng);
+  return {noticed: w.successes > i.successes,
+    why: `Perception + Alertness ${w.successes} against Dexterity + Stealth ${i.successes} (V20 Dark Ages p. 169)`, rolls: {w, i}};
+}
+
+/**
+ * What a watcher does about what it noticed, scored from its 7b profile. sit:
+ *   {supernatural, weapon, trespass, curfew, night, alliesNear, intruderKind, watcherKind, homeGround}
+ * Returns [{action, score, why}] best first.
+ */
+export function pickReaction(profile, sit) {
+  const p = profile, out = [], tac = p.tactics ?? [], fears = p.fears ?? [];
+  const afraid = (sit.supernatural && fears.includes("supernatural")) || (sit.weapon && fears.includes("violence"));
+  const amiss = [sit.curfew && "abroad in the curfew", sit.trespass && "trespassing", sit.weapon && "weapon drawn", sit.supernatural && "the supernatural shown"].filter(Boolean);
+  const keeper = ["guard", "ghoul", "elder"].includes(p.template) || tac.includes("guard") || (tac.includes("call") && p.loyalty >= 1);
+  if ( keeper ) {
+    let sc = 2 + p.loyalty + (sit.curfew ? 1.5 : 0) + (sit.trespass ? 1.5 : 0) - (sit.weapon ? 0.5 : 0) - (afraid ? 3 : 0);
+    out.push({action: "challenge", score: sc, why: amiss.length ? `keeps order here: ${amiss.join(", ")}` : "keeps order here"});
+  }
+  {
+    const sc = 0.5 + p.caution + (sit.supernatural ? 2 : 0) + (sit.weapon ? 1 : 0) + (sit.alliesNear ? 0.5 : 0) + (afraid ? 1 : 0);
+    out.push({action: "alarm", score: sc, why: sit.alliesNear ? `${sit.alliesNear} others within call` : "shouts for anyone near"});
+  }
+  if ( tac.includes("call") || keeper ) {
+    out.push({action: "send", score: 0.5 + p.loyalty + ((sit.supernatural || sit.weapon) ? 1.5 : 0) - (sit.alliesNear ? 0.5 : 0), why: "sends for the watch"});
+  }
+  {
+    const sc = (amiss.length ? p.cowardice * 1.5 : 0) + (afraid ? 3 + p.caution : 0);
+    const r = [afraid && "faces what it fears", amiss.length && p.cowardice >= 1 && "not one to stand"].filter(Boolean);
+    if ( r.length ) out.push({action: "flee", score: sc, why: r.join("; ")});
+  }
+  {
+    let sc = 2 * p.aggression - 2 + (sit.weapon ? p.aggression : 0) + (sit.homeGround && sit.trespass ? 1.5 : 0) - (afraid ? 4 : 0);
+    const r = [sit.weapon && "a blade is out", sit.homeGround && sit.trespass && "on its own ground"].filter(Boolean);
+    if ( tac.includes("supernatural") && sit.supernatural ) { sc += 3 + p.aggression; r.push("a hunter goes for the monster"); }
+    out.push({action: "fight", score: sc, why: r.length ? r.join("; ") : "picks a fight"});
+  }
+  out.push({action: "ignore", score: amiss.length ? 0.2 : 3, why: amiss.length ? "looks away" : "nothing amiss"});
+  return out.sort((a, b) => b.score - a.score).map(o => ({...o, score: Math.round(o.score * 10) / 10}));
+}
+
+/** Auto carries out the best response it can by itself; a fight stops it and waits for the Storyteller. */
+export function autoReaction(options) {
+  const top = options[0];
+  if ( !top ) return {act: null};
+  return SELF_RESPONSES.includes(top.action) ? {act: top} : {act: null, needsStoryteller: top};
+}

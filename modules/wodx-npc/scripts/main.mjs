@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.1.0 (Phase 7b): NPC profiles and combat tactics.
+ * WoDX NPC 0.2.0: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -11,9 +11,12 @@
  * Attacks go through WoDX Combat's quick attack (every automatic choice), so the dice and the rules are Combat's own.
  */
 import * as NR from "./npc-rules.mjs";
+import * as RR from "./routine-rules.mjs";
+import {build as buildRoutines} from "./routines.mjs";
+import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.1.3";
+const VERSION = "0.2.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -61,7 +64,8 @@ const wounds = actor => {
   return num(d.bashing) + num(d.lethal) + num(d.aggravated);
 };
 const cardsNow = () => (game.messages?.contents ?? []).slice(-400).map(m => m.getFlag?.("wodx-combat", "data")).filter(Boolean);
-const hidden = tok => tok.document.hidden || tok.actor?.statuses?.has?.("invisible") || !!chron()?.conditions?.hasCondition?.(tok.actor, "obfuscated");
+const hiddenByObfuscate = tok => !!tok.actor?.statuses?.has?.("wodx-obfuscated") || !!chron()?.conditions?.hasCondition?.(tok.actor, "obfuscated");
+const hidden = tok => tok.document.hidden || tok.actor?.statuses?.has?.("invisible") || hiddenByObfuscate(tok);
 const supernatural = actor => (C()?.getKind?.(actor) ?? "mortal") !== "mortal";
 /** Plainly inhuman to a mortal eye: a spirit or ghost that shows itself, a war form, or a body twisted by a power. */
 const OBVIOUS_EFFECT = /crinos|hispo|glabro|shape of the beast|horrid form|vicissitude|tenebrous form|wings|bestial|monstrous/i;
@@ -520,10 +524,11 @@ export async function editBehavior(actor) {
   const data = await foundry.applications.api.DialogV2.wait({
     window: {title: `Behaviour: ${actor.name}`, resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 460, height: "auto"}, content,
     buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object},
-      {action: "reset", label: "Back to the template", callback: () => "reset"}, {action: "cancel", label: "Cancel"}],
+      {action: "reset", label: "Back to the template", callback: () => "reset"}, {action: "routine", label: "Routine…", callback: () => "routine"}, {action: "cancel", label: "Cancel"}],
     rejectClose: false
   });
   if ( !data || data === "cancel" ) return null;
+  if ( data === "routine" ) return routines.editRoutine(actor);
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null};
   for ( const k of [...Object.keys(TRAITS), "fleeAt"] ) out[k] = data[k] === "" || data[k] === null || data[k] === undefined ? null : Number(data[k]);
@@ -539,24 +544,34 @@ export async function openNpcPanel() {
   const npcs = canvas.tokens.placeables.filter(t => t.actor && !t.actor.hasPlayerOwner);
   const sceneMode = canvas.scene?.getFlag(MOD, "mode") ?? "";
   const opt = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${k}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
+  const places = routines.listPlaces();
+  const now = a => { const w = routines.whereOf(a), r = routines.routineOf(a); if ( !r?.on ) return "No routine";
+    const pl = places.find(p => p.id === w?.place)?.name ?? "not placed yet"; return `${pl}${w?.activity ? `, ${RR.ACTIVITIES[w.activity].toLowerCase()}` : ""}`; };
   const rows = npcs.map(t => { const p = profileFor(t.actor); return `<tr><td>${esc(t.name)}</td><td>${esc(p.label)}</td><td>${esc(NR.MODES[modeFor(t.actor)].split(" (")[0])}</td>`
-    + `<td><button type="button" data-edit="${t.id}">Edit</button></td></tr>`; }).join("");
+    + `<td>${esc(now(t.actor))}</td><td><button type="button" data-edit="${t.id}">Edit</button> <button type="button" data-routine="${t.id}">Routine</button></td></tr>`; }).join("");
   const content = `<div class="wnpc-panel">
     <div class="wodx-field"><label>The world</label><select name="world" data-fixed>${opt(NR.MODES, setting("mode"))}</select></div>
     <div class="wodx-field"><label>This scene</label><select name="scene" data-fixed>${opt({"": "As the world says", ...NR.MODES}, sceneMode)}</select></div>
     <input type="search" class="wodx-search wnpc-search" data-search=".wnpc-list table" placeholder="Find an NPC…" aria-label="Find an NPC" autocomplete="off" spellcheck="false">
-    <div class="wnpc-list"><table><thead><tr><th>NPC</th><th>Template</th><th>Now</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="4">No NPCs on this scene.</td></tr>`}</tbody></table></div>
+    <div class="wnpc-list"><table><thead><tr><th>NPC</th><th>Template</th><th>In combat</th><th>Routine now</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="5">No NPCs on this scene.</td></tr>`}</tbody></table></div>
+    <div class="wodx-field"><label>Routines on this scene</label><select name="routineScene" data-fixed>${opt({"": "As the world says", ...NR.MODES}, canvas.scene?.getFlag(MOD, "routineMode") ?? "")}</select></div>
     <p class="wodx-quiet">NPCs with a player owner are never moved by WoDX.</p></div>`;
   const data = await foundry.applications.api.DialogV2.wait({
     window: {title: "WoDX NPCs", resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 520, height: "auto"}, content,
     // The search box is WoDX Chronicle's (one listener for every window, rule B24)
-    render: (ev, dlg) => dlg.element.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => editBehavior(canvas.tokens.get(b.dataset.edit)?.actor))),
-    buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object}, {action: "cancel", label: "Close"}],
+    render: (ev, dlg) => {
+      dlg.element.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => editBehavior(canvas.tokens.get(b.dataset.edit)?.actor)));
+      dlg.element.querySelectorAll("[data-routine]").forEach(b => b.addEventListener("click", () => routines.editRoutine(canvas.tokens.get(b.dataset.routine)?.actor)));
+    },
+    buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object},
+      {action: "places", label: "Places…", callback: () => "places"}, {action: "cancel", label: "Close"}],
     rejectClose: false
   });
   if ( !data || data === "cancel" ) return null;
+  if ( data === "places" ) return routines.openPlaces();
   await game.settings.set(MOD, "mode", data.world);
   if ( data.scene ) await canvas.scene.setFlag(MOD, "mode", data.scene); else await canvas.scene.unsetFlag(MOD, "mode");
+  if ( data.routineScene ) await canvas.scene.setFlag(MOD, "routineMode", data.routineScene); else await canvas.scene.unsetFlag(MOD, "routineMode");
   return data;
 }
 
@@ -564,11 +579,27 @@ export async function openNpcPanel() {
 /*  Hooks                                                              */
 /* ------------------------------------------------------------------ */
 
+/* Phase 7c: routines, places and reactions, built with this module's grid helpers */
+const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,
+  hexHeuristic, cellsFor, walk, approach, yardsBetween, obvious, hiddenByObfuscate});
+routines.hooks();
+
 Hooks.once("init", () => {
   registerSettings();
-  const api = {version: VERSION, rules: NR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
-    acceptCard, undoCard, approach, wallBetween, cellOf, postPlan};
+  routines.registerSettings();
+  if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
+  const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
+    acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick};
   game.modules.get(MOD).api = api;
+});
+/* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
+Hooks.once("setup", () => {
+  try {
+    registerCondition({id: "obfuscated", name: "Obfuscated (unseen)", img: "icons/svg/invisible.svg", source: "V20 Dark Ages pp. 195, 224-226", lines: ["vampire"],
+      summary: "Hidden by Obfuscate: only Auspex at least equal to the Obfuscate finds them, with Perception + Awareness at 8, less 1 a dot above.", mods: {}});
+    registerCondition({id: "sneaking", name: "Sneaking", img: "icons/svg/mystery-man.svg", source: "V20 Dark Ages p. 169",
+      summary: "Moving quietly: watchers roll Perception + Alertness against Dexterity + Stealth.", mods: {}});
+  } catch (e) { console.warn(`${MOD} | could not register the Obfuscate and sneaking conditions`, e); }
 });
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
@@ -591,6 +622,8 @@ Hooks.on("getSceneControlButtons", controls => {
   if ( !tokens?.tools ) return;
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
+  tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,
+    button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
 });
 Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !game.user.isGM ) return;
