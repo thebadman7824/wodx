@@ -5,9 +5,9 @@
 export const SECONDS_PER_YEAR = 365.25 * 86400;
 export const SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12;
 
-/** Mortal death checks over a time skip. WoDX choice: the books give no lifespan rule. */
+/** Mortal death checks over a time skip. House rule: the books give no lifespan rule. */
 export const MORTAL = {
-  source: "WoDX choice",
+  source: "House rule",
   // Past this age the Storyteller is asked; the change starts unticked
   mayDieAt: 70,
   // At this age the death is proposed ticked
@@ -30,7 +30,7 @@ export const TORPOR = {
     3: "five decades", 2: "one century", 1: "five centuries", 0: "a millennium or more"}
 };
 
-/** Backgrounds the years wear on. WoDX choice: listed for the Storyteller to review after a skip of 10 years or more. */
+/** Backgrounds the years wear on. House rule: listed for the Storyteller to review after a skip of 10 years or more. */
 export const BACKGROUND_REVIEW = {
   years: 10,
   names: ["allies", "contacts", "herd", "influence", "mentor", "resources", "retainers", "status", "domain", "fame"]

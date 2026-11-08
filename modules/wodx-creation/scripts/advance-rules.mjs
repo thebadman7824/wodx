@@ -161,7 +161,7 @@ export function propose(v, ctx) {
   if ( sw.convert && leavesDAAbilities(ctx.fromEra, ctx.toEra) ) {
     for ( const c of conversions(v.secondaries, ctx.toEra?.id) ) {
       const opts = c.targets.map(t => ({value: t, label: `${ABILITY_LABEL[t] ?? cap(t)} (${Number(v.abilities?.[t]) || 0} → ${Math.min(5, (Number(v.abilities?.[t]) || 0) + Number(c.item.value))})`}));
-      add("adv.convert", `${c.item.name} ${c.item.value} becomes a later Ability`, `${c.row.note ? `${c.row.note}. ` : ""}${c.item.name} stays on the sheet at 0, so this can be undone by hand (WoDX choice).`,
+      add("adv.convert", `${c.item.name} ${c.item.value} becomes a later Ability`, `${c.row.note ? `${c.row.note}. ` : ""}${c.item.name} stays on the sheet at 0, so this can be undone by hand (house rule).`,
         true, {itemId: c.item.id, dots: Number(c.item.value), choice: c.targets[0]}, opts);
     }
   }
@@ -171,7 +171,7 @@ export function propose(v, ctx) {
     if ( v.line === "vampire" && v.road?.key ) {
       const t = roadTarget(v.road.key);
       if ( t ) add("adv.road", `${v.road.label ?? "The Road"} ${v.road.rating ?? ""} becomes ${PATH_LABEL[t.to]}`.replace(/\s+/g, " "),
-        `The rating carries over${t.note ? `; ${t.note}` : ""} (WoDX choice, B83).`, true, {choice: t.to, rating: v.road.rating},
+        `The rating carries over${t.note ? `; ${t.note}` : ""} (house rule).`, true, {choice: t.to, rating: v.road.rating},
         t.choices.length > 1 ? t.choices.map(k => ({value: k, label: PATH_LABEL[k]})) : null);
       else notes.push(`${v.road.label ?? "Road"}: no V20 Path is set for it; pick one by hand`);
     }
@@ -196,7 +196,7 @@ export function propose(v, ctx) {
   if ( v.line === "wraith" && eraChanges ) notes.push("Review the Fetters: people die and places fall between eras (Wraith 20th p. 49)");
   if ( v.line === "kuei-jin" ) notes.push("Does not age; progress is by Dharma, not by years (Kindred of the East pdf pp. 30–31)");
   if ( v.line === "demon" ) notes.push("The host ages as a mortal; when it dies the demon must find another body (Demon p. 171)");
-  if ( v.line === "mummy" ) notes.push("Between deaths the body ages as a mortal's (WoDX choice)");
+  if ( v.line === "mummy" ) notes.push("Between deaths the body ages as a mortal's (house rule)");
   if ( v.line === "orpheus" ) notes.push("The projector's body ages; spirits do not");
 
   return {changes, notes};

@@ -39,7 +39,7 @@ export function clanDisciplines(clan, vampireEra = "darkages") {
 export function ghoulDisciplineCap(domitorGeneration) {
   const g = Math.trunc(Number(domitorGeneration));
   if ( !Number.isFinite(g) || g >= 8 ) return 1;
-  if ( g <= 3 ) return 5; // The book leaves the Third Generation open ("??"); WoDX choice: no lower than the Fourth
+  if ( g <= 3 ) return 5; // The book leaves the Third Generation open ("??"); House rule: no lower than the Fourth
   return GHOUL.disciplineCap[g];
 }
 

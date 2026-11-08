@@ -825,7 +825,7 @@ export function build(ctx) {
 
 /** Settings this part adds (registered by main.js). */
 export function registerSettings(register) {
-    register("moonRage", "Moon Rage at nightfall", "When night falls, shapechangers on the active scene and players' characters regain Rage by the moon (B40; DA:W p. 91, W20 p. 145).", Boolean, true);
+    register("moonRage", "Moon Rage at nightfall", "When night falls, shapechangers on the active scene and players' characters regain Rage by the moon (DA:W p. 91, W20 p. 145).", Boolean, true);
     register("autoRegen", "Regenerate each round", "In a fight, shapechangers regenerate a bashing or lethal level each round, rolling Stamina (8) for lethal (DA:W p. 102; W20 p. 256).", Boolean, true);
     game.settings.register(MOD, "moonNight", { scope: "world", config: false, type: Number, default: -1 });
 }

@@ -72,7 +72,7 @@ export const XP = {
     virtue: 2, road: 2, willpower: 1
   },
   mortal: {
-    source: "WoDX choice: the ghoul table (V20 Ghouls and Revenants p. 139) without Disciplines",
+    source: "House rule: the ghoul table (V20 Ghouls and Revenants p. 139) without Disciplines",
     newAbility: 3, newDiscipline: null,
     attribute: 5, ability: 2, clanDiscipline: null, otherDiscipline: null,
     virtue: 2, road: 2, willpower: 1
@@ -99,7 +99,7 @@ export const BOND = {source: "V20 Dark Ages pp. 341–342", drinksToBind: 3};
 export const EMBRACE = {
   source: "V20 Dark Ages p. 13 (the Embrace), p. 111 (Road of Humanity on the Embrace)",
   road: "Road of Humanity",
-  // WoDX choice: the childe rises hungry with one blood point, and with no Discipline dots until learned
+  // House rule: the childe rises hungry with one blood point, and with no Discipline dots until learned
   startBlood: 1,
   // V20DA p. 144: every character starts at the Twelfth Generation unless the Generation Background says otherwise
   unknownSireGeneration: 12

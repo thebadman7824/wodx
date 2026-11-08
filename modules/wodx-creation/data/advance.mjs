@@ -13,31 +13,31 @@ export const SWITCHES = {
   convert: "yearsConvertAbilities"
 };
 
-/** Mortal decline: at these ages a Physical dot is lost; the player picks which (WoDX choice). */
-export const DECLINE = {source: "WoDX choice", ages: [60, 70, 80], physical: ["strength", "dexterity", "stamina"]};
+/** Mortal decline: at these ages a Physical dot is lost; the player picks which (house rule). */
+export const DECLINE = {source: "House rule", ages: [60, 70, 80], physical: ["strength", "dexterity", "stamina"]};
 
 /**
  * Thick blood: the vampire may drop a Generation for each full century awake, never below the floor by time alone,
  * and each step costs a dot of Humanity or Road (WoDX's version of the rumour, V20 Dark Ages pdf pp. 33, 35).
  */
-export const THICK_BLOOD = {source: "WoDX choice (V20 Dark Ages pdf p. 33 calls it a rumour)", yearsPerStep: 100, floor: 8, noAnimalBloodAt: 6};
+export const THICK_BLOOD = {source: "House rule (V20 Dark Ages pdf p. 33 calls it a rumour)", yearsPerStep: 100, floor: 8, noAnimalBloodAt: 6};
 
-/** Morality drift: for each century awake, Conscience or Conviction at difficulty 7; a failure costs a dot (WoDX choice). */
-export const DRIFT = {source: "WoDX choice", yearsPerRoll: 100, difficulty: 7};
+/** Morality drift: for each century awake, Conscience or Conviction at difficulty 7; a failure costs a dot (house rule). */
+export const DRIFT = {source: "House rule", yearsPerRoll: 100, difficulty: 7};
 
-/** Experience for the years: a point a year awake and active, capped per skip (WoDX choice). */
-export const YEARS_XP = {source: "WoDX choice", perYear: 1, cap: 10};
+/** Experience for the years: a point a year awake and active, capped per skip (house rule). */
+export const YEARS_XP = {source: "House rule", perYear: 1, cap: 10};
 
-/** Backgrounds: a dot per untended decade; these reset in a new era (WoDX choice). Shown unticked (B83). */
+/** Backgrounds: a dot per untended decade; these reset in a new era (house rule). Shown unticked (B83). */
 export const BACKGROUNDS = {
-  source: "WoDX choice",
+  source: "House rule",
   yearsPerDot: 10,
   decays: ["allies", "contacts", "herd", "influence", "mentor", "retainers", "fame"],
   societal: ["status", "domain", "influence"]
 };
 
 /**
- * Dark Ages Abilities and their later counterparts (WoDX choice). `to` is a key of the system's own ability list;
+ * Dark Ages Abilities and their later counterparts (house rule). `to` is a key of the system's own ability list;
  * `or` lists alternatives the player may pick. The old Ability stays on the sheet at 0, so the move can be undone.
  */
 export const ABILITY_CONVERSION = [
@@ -53,7 +53,7 @@ export const ABILITY_CONVERSION = [
 ];
 
 /**
- * Dark Ages Roads to V20 morality (WoDX choice, B83). Keys are WoDX Actions' road keys (roads-daw.json); targets are the
+ * Dark Ages Roads to V20 morality (house rule, B83). Keys are WoDX Actions' road keys (roads-daw.json); targets are the
  * system's own Path keys (wod.advantages.path.<key>), which follow V20's core list. A row with `or` lets the
  * Storyteller pick; the first is the default.
  */
@@ -82,7 +82,7 @@ export const DA_ERAS = ["dark-ages", "long-night"];
 export const LINE_YEARS = {
   demon: {from: 1999, to: null, why: "Before 1999 the fallen are still in the Abyss (Demon pp. 13, 65)"},
   mummy: {from: 1999, to: null, why: "The Reborn are joined after the Sixth Great Maelstrom (Mummy pdf pp. 6, 15)"},
-  imbued: {from: 1999, to: null, why: "The Imbuing begins in 1999 (B42)"},
+  imbued: {from: 1999, to: null, why: "The Imbuing begins in 1999"},
   orpheus: {from: 2000, to: 2010, why: "Orpheus belongs to the early 2000s (Orpheus, 2003)"}
 };
 

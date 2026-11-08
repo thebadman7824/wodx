@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "notes": "Years are inclusive. 'system' picks the upstream ability set each line gets at creation (worldofdarkness eraMortal/eraVampire/eraWerewolf/eraMage). Upstream has no Dark Ages or Renaissance set for Mage, so mages before 1837 use its Victorian set; that and the Great War mapping are WoDX choices, marked 'ourCall'. 'rules.gauntletChart' names the WoDX Otherworlds chart: Dark Ages: Werewolf before 1601, the Wyld West book for the Wild West, and W20 (the basis book) for the Victorian age onward.",
+  "notes": "Years are inclusive. 'system' picks the upstream ability set each line gets at creation (worldofdarkness eraMortal/eraVampire/eraWerewolf/eraMage). Upstream has no Dark Ages or Renaissance set for Mage, so mages before 1837 use its Victorian set; that and the Great War mapping are house rules, marked 'ourCall'. 'rules.gauntletChart' names the WoDX Otherworlds chart: Dark Ages: Werewolf before 1601, the Wyld West book for the Wild West, and W20 (the basis book) for the Victorian age onward.",
   "profiles": [
     {
       "id": "dark-ages",

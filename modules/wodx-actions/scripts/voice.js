@@ -22,7 +22,7 @@ const owners = actor => game.users.filter(u => !u.isGM && actor?.testUserPermiss
 
 export function registerSettings() {
     game.settings.register(MOD, "voicesOn", {
-        name: "Inner voices", hint: "Let players voice each other's Beast, Shadow, Rage or Impulse (Phase 6d). Each player still opts in for their own character; the X-card pauses every voice for the scene.",
+        name: "Inner voices", hint: "Let players voice each other's Beast, Shadow, Rage or Impulse. Each player still opts in for their own character; the X-card pauses every voice for the scene.",
         scope: "world", config: true, type: Boolean, default: false
     });
     game.settings.register(MOD, "voicePause", { scope: "world", config: false, type: String, default: "" });
@@ -118,7 +118,7 @@ export function build(ctx) {
     async function panel(actor) {
         const kind = kindOf(actor);
         if (!kind) return notify(`${actor.name}'s line has no inner voice in WoDX yet.`);
-        if (!maySee(actor)) return notify("Only the character's player, its voice and the Storyteller see this (B55).");
+        if (!maySee(actor)) return notify("Only the character's player, its voice and the Storyteller see this.");
         const v = voiceOf(actor), p = pressureOf(actor), K = V.KINDS[kind];
         const on = game.settings.get(MOD, "voicesOn");
         const players = game.users.filter(u => !u.isGM && !actor.testUserPermission(u, "OWNER"));

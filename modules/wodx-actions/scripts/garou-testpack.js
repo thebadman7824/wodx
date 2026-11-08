@@ -37,7 +37,7 @@ export async function makeTestPack({ confirm = true } = {}) {
     if (game.folders.find(f => f.type === "Actor" && f.name === FOLDER)) return ui.notifications.warn(`The folder "${FOLDER}" is already there. Delete it first to make a new pack.`);
     if (confirm) {
         const ok = await foundry.applications.api.DialogV2.confirm({ window: { title: "Make the 6b test pack" },
-            content: `<p>Creates ${PACK.length} Garou, ${FERA.length} Fera and ${MORTALS.length} mortals in a new folder "${FOLDER}", for the Phase 6b gate. Nothing existing is changed.</p>` });
+            content: `<p>Creates ${PACK.length} Garou, ${FERA.length} Fera and ${MORTALS.length} mortals in a new folder "${FOLDER}", for testing. Nothing existing is changed.</p>` });
         if (!ok) return null;
     }
     await GX.loadData();

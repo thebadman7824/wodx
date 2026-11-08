@@ -59,7 +59,7 @@ export function firstChangeData(mortal, {breed, auspice, tribe, rage, gnosis, wi
   };
   sys.renown = {rank: 1, glory: {permanent: renown.glory, temporary: 0}, honor: {permanent: renown.honor, temporary: 0},
     wisdom: {permanent: renown.wisdom, temporary: 0}};
-  // Every Garou has at least a dot of Primal-Urge once the wolf wakes (WoDX choice)
+  // Every Garou has at least a dot of Primal-Urge once the wolf wakes (house rule)
   dots["system.abilities.primalurge.value"] = Math.max(1, Number(src.system?.abilities?.primalurge?.value) || 0);
   dots["system.abilities.primalurge.isvisible"] = true;
   const health = foundry.utils.deepClone(src.system?.health?.damage ?? null);

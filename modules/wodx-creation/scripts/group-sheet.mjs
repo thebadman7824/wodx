@@ -149,7 +149,7 @@ export function makeGroupSheet() {
           <button type="button" data-action="addMember" ${candidates.length ? "" : "disabled"}>Add member</button></div>` : ""}
         ${former.length ? `<p class="wodx-quiet">Former members: ${former.map(m => esc(m.actor?.name ?? "(missing)")).join(", ")}</p>` : ""}
         <h3>Pooled Backgrounds</h3>
-        <p class="wodx-quiet">${pool ? `${esc(kinds[sys.kind] ?? sys.kind)} may pool: ${esc(pool.list.join(", "))} (${esc(pool.source)}).${pool.note ? ` ${esc(pool.note)}` : ""}` : "Which Backgrounds this kind of group may pool is the Storyteller's call (WoDX choice)."}
+        <p class="wodx-quiet">${pool ? `${esc(kinds[sys.kind] ?? sys.kind)} may pool: ${esc(pool.list.join(", "))} (${esc(pool.source)}).${pool.note ? ` ${esc(pool.note)}` : ""}` : "Which Backgrounds this kind of group may pool is the Storyteller's call (house rule)."}
           Everyone who puts dots in has equal use of the pool. A member who takes their dots out gets back one less.</p>
         ${searchBox("table.wodx-group-pools", "Search Backgrounds…", "Search Backgrounds")}
         <table class="wodx-table wodx-group-pools"><thead><tr><th>Background</th><th>Dots</th>${current.map(m => `<th>${esc(m.actor?.name ?? "")}</th>`).join("")}<th></th></tr></thead>

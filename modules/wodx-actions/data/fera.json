@@ -1,5 +1,5 @@
 {
-"source": "W20 Changing Breeds (Onyx Path, 2013), each breed's Traits section; Dark Ages: Werewolf for the Garou. Mechanics only, in WoDX's words.",
+"source": "W20 Changing Breeds (Onyx Path, 2013), each breed's Traits section; Dark Ages: Werewolf for the Garou.",
 "note": "Form statistics are not repeated here: the system already carries each breed's form table (totals.js). This table holds what the form table doesn't: the bane, regeneration, Rage, frenzy, Delirium and Renown names. Entries marked chk were read from damaged text; check the page.",
 "breeds": {
 "Garou":    {"bane":["silver"], "rage":true, "frenzy":4, "thrall":6, "regen":"garou", "delirium":"crinos", "renown":["Glory","Honor","Wisdom"], "page":"DA:W pp. 90–107; W20 pp. 144–146, 255–263"},

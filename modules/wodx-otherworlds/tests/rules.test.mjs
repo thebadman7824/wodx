@@ -128,5 +128,5 @@ test("Disconnection: +1 per lunar cycle in one world, a year and a day at 366 da
   assert.match(R.planAttempt({...base, cycles: 2}).lines.join(" "), /Disconnection: 2 lunar cycles/);
   assert.equal(R.planAttempt({...base, cycles: 9}).difficulty, 10, "at most 10");
   assert.equal(R.planAttempt({...base, mode: "peek", cycles: 3}).difficulty, 8, "peeking is not crossing: only +3 for the peek");
-  assert.match(R.planAttempt({...base, procedure: "dark-ages", cycles: 1}).lines.join(" "), /WoDX choice/);
+  assert.match(R.planAttempt({...base, procedure: "dark-ages", cycles: 1}).lines.join(" "), /house rule/);
 });

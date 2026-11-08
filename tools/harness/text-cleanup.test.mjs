@@ -41,3 +41,11 @@ test("no em-dashes in prose: only as an empty choice in a list", () => {
   }
   assert.deepEqual(bad, []);
 });
+
+test("in-game text doesn't echo the project's own instructions: no decision numbers, phases, names or 'own words' notes", () => {
+  const ECHO = /\(B\d{1,3}\b|\bB\d{1,3}[:;)]|\bPhase \d|\bBen\b|WoDX's (own )?words|WoDX choice|Mechanics only/;
+  const bad = [];
+  for (const f of files) for (const s of strings(readFileSync(f, "utf8")))
+    if (ECHO.test(s)) bad.push(`${f.slice(root.length + 1)}: ${s.match(new RegExp(`.{0,50}(${ECHO.source}).{0,30}`))?.[0]}`);
+  assert.deepEqual(bad, []);
+});

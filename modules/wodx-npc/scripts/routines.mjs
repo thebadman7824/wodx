@@ -46,7 +46,7 @@ export function build(ctx) {
       scope: "world", config: true, type: String, default: "suggest", choices: NR.MODES
     });
     game.settings.register(MOD, "curfewStart", {
-      name: "Curfew starts at", hint: "The hour the curfew begins; it ends at dawn (B85: about 21:00, Rothenstein's late bell).",
+      name: "Curfew starts at", hint: "The hour the curfew begins; it ends at dawn (about 21:00, Rothenstein's late bell).",
       scope: "world", config: true, type: Number, default: 21, range: {min: 17, max: 24, step: 1}
     });
     game.settings.register(MOD, "feasts", {
