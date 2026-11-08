@@ -2028,7 +2028,7 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.11.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.11.1",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2112,11 +2112,10 @@ Hooks.once("init", () => {
     const mod = game.modules.get(MOD);
     if (mod) mod.api = API;
     // 6e: every WoDX card shown in the one layout, the ones written before 3.6 and the notices too (before the buttons are bound)
-    Hooks.on(GEN() >= 13 ? "renderChatMessageHTML" : "renderChatMessage", (m, el) => { try { upgradeCards(m, el?.[0] ?? el); } catch (e) { console.warn("WoDX | card layout", e); } });
+    Hooks.on("renderChatMessageHTML", (m, el) => { try { upgradeCards(m, el?.[0] ?? el); } catch (e) { console.warn("WoDX | card layout", e); } });
     // 6e: what each sheet update changes, for the card that reports it
     Hooks.on("preUpdateActor", (actor, changes, options, userId) => { if (!userId || userId === game.user.id) recordChanges(actor, changes); });
-    if (GEN() >= 13) Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]) bindCard(m, el); });
-    else Hooks.on("renderChatMessage", (m, html) => { if (m.flags?.[MOD]) bindCard(m, html[0] ?? html); });
+    Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]) bindCard(m, el); });
 });
 
 Hooks.once("ready", async () => {
