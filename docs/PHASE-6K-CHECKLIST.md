@@ -5,4 +5,4 @@
 - [x] scripts/mummy.js: Hekau, Sekhem, Balance, offenses, the resurrection, the Veil, setup; the Gift of Ra each morning
 - [x] The Mummy menu and rules card
 - [x] Harness: phase6k.test.mjs (7); UI fit passes
-- [ ] Gate 6k in Foundry (tools/gate/gate6k.mjs)
+- [x] Gate 6k in Foundry (tools/gate/gate6k.mjs): 10/10, 2026-11-08

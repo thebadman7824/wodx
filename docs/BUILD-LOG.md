@@ -467,3 +467,5 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - Menus for all four (the Kuei-jin and Orpheus menus by the sheet's variant); the inner voice of the fallen (Torment), the Kuei-jin (the P'o and Chi) and spooks (Spite).
 - Tests: phase6i (11), 6j (9), 6k (7), 6l (7); 308 pass; UI fit passes for every new dialog.
 
+- Deployed (Backups/wodx-actions-3.9.0-2026-11-08 first; every file checked by MD5). Gates: 6i 13/13, 6j 12/12, 6k 10/10, 6l 10/10. Gate 6l failed two steps on its first run: raising Spite made the inner voice prompt the Storyteller, and that prompt took a dialog answer meant for a step. The gate now turns the voices off while it runs.
+- A slip during the run: a computer-use clipboard write was refused, so an old gate command was pasted instead (sheet gates 2 and 3, which put back every value they change). Gate commands are now short runner files typed into the console.

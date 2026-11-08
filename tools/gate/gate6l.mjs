@@ -58,6 +58,9 @@ export async function run() {
     const origErr = console.error;
     console.error = (...a) => { R.errors.push(a.map(x => x?.stack ? String(x.stack).split("\n").slice(0, 4).join(" | ") : String(x)).join(" ")); origErr.apply(console, a); };
     let sk, wi;
+    // The inner voice prompts the Storyteller when Spite rises; that prompt would take a dialog answer meant for a step
+    const voices = game.settings.get(MOD, "voicesOn");
+    if (voices) await game.settings.set(MOD, "voicesOn", false);
     try {
         await step("the Shade, Lament, Vitality, Spite and Horrors are read", async () => {
             sk = await makeSpook("Craig (6l, a Poltergeist skimmer)", "Poltergeist", "Skimmer");
@@ -134,6 +137,7 @@ export async function run() {
     } finally {
         Hooks.off("renderDialogV2", hook);
         console.error = origErr;
+        if (voices) await game.settings.set(MOD, "voicesOn", true);
         if (sk) { await sk.update(base("Poltergeist", "Skimmer")); await sk.unsetFlag(MOD, "orpheus"); }
         if (wi) { await wi.update(base("Wisp", "Spirit")); await wi.unsetFlag(MOD, "orpheus"); }
     }

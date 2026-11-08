@@ -5,4 +5,4 @@
 - [x] scripts/demon.js: evoke, the form, Revelation, reap, thralls, sin, kindness, heal, the holy, a name spoken, illusion; the dawn offering
 - [x] The Demon menu, rules card, menu plan; the inner voice: the Torment
 - [x] Harness: phase6i.test.mjs (11); UI fit passes
-- [ ] Gate 6i in Foundry (tools/gate/gate6i.mjs)
+- [x] Gate 6i in Foundry (tools/gate/gate6i.mjs): 13/13, 2026-11-08

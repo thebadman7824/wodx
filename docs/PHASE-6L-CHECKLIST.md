@@ -5,4 +5,4 @@
 - [x] scripts/orpheus.js: a Horror, Vitality, harm, Spite, projection, setup
 - [x] The Orpheus menu by the sheet's variant; the inner voice: Spite
 - [x] Harness: phase6l.test.mjs (7); UI fit passes
-- [ ] Gate 6l in Foundry (tools/gate/gate6l.mjs)
+- [x] Gate 6l in Foundry (tools/gate/gate6l.mjs): 10/10, 2026-11-08 (the first run failed two steps: the inner voice prompted the Storyteller when Spite rose and took a dialog answer meant for a step; the gate now turns the voices off while it runs)

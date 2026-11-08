@@ -5,4 +5,4 @@
 - [x] scripts/kote.js: feed, spend Chi (Disciplines, Demon Arts), the soul, Dharma rolls, the Demon, rise, the sun, heal, sight, setup
 - [x] The Kuei-jin menu by the sheet's variant; the inner voice reads the P'o and the Chi
 - [x] Harness: phase6j.test.mjs (9); UI fit passes
-- [ ] Gate 6j in Foundry (tools/gate/gate6j.mjs)
+- [x] Gate 6j in Foundry (tools/gate/gate6j.mjs): 12/12, 2026-11-08
