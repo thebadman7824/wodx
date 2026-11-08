@@ -327,9 +327,9 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   the mage's languages; 2: mental speech with anyone in sight; always telepathic with the mage), Knowledge (3 dots of
   a Knowledge per dot, or one answer per dot per story), protection (1: +1 die to soak, dodge or an escaping spell; 2:
   an extra defensive action; 3: once a story, carry the mage to safety for 1 Quintessence).
-- **Fount (pp. 86–87):** without it 10 Quintessence held, 2 spent a turn (p. 87; p. 89 says three a turn without
-  Fount: a contradiction, WoDX follows the Fount table and p. 140's "more than two needs Fount"). 1: 12/2? The table
-  reads 1: store 12, spend 2; 2: 14, 3; 3: 16, 4; 4: 18, 5; 5: 20, 6. Refills its rating each month by a rite.
+- **Fount (pp. 86–87):** without it a mage holds 10 Quintessence and spends 2 a turn. By rating: 1 holds 12, spends 2;
+  2 holds 14, spends 3; 3: 16, 4; 4: 18, 5; 5: 20, 6. Refills its rating each month by the mage's own rite. (p. 89
+  says three a turn without Fount; WoDX follows the Fount table and p. 140, which agree on two.)
 - **Library (p. 87):** 2 points a dot. Intelligence + Library to find lore; when buying a Pillar dot, roll Library
   at difficulty 8: −1 experience per success.
 - **Sanctum (p. 87):** no Backlash at all inside; 2: −1 to magic difficulties; 3: −2; 4: also 1 Quintessence for
