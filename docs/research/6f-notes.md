@@ -247,11 +247,59 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   learns a Foundation dot, their hedge magic never succeeds again. Mages do not use it; Storyteller characters may.
   WoDX keeps Sorcerer's hedge magic (B49) for those characters.
 
+## Dark Ages: Mage, Quintessence and Backlash (pp. 136–141)
+
+- **Quintessence and Tass (p. 136).** Tass is Quintessence held in matter (dew, sap, roots, potions, candles) and
+  released by drinking, eating or burning it. Quintessence carries the flavour of its source; the Storyteller may
+  rule a source unfit for a kind of magic. Every Quintessence point spent on a spell that goes wrong counts as an
+  extra 1 for Backlash (p. 136).
+- **Kinds of Backlash:** Branding, Manifestation, Scourging, Twilight (pp. 137–140). The Storyteller picks the kind to
+  suit the spell; WoDX offers the choice on the botch card.
+- **Branding (pp. 137–138):** severity = the 1s rolled × the highest Pillar in the spell. 1–5 a small sign (a glint, a
+  pallor, warmth); 6–12 a clear mark, often +1 or +2 difficulty on Appearance or Charisma (rarely a Physical
+  Attribute); 13–20 a serious change, +2 or +3 to Social difficulties and some physical hindrance, perhaps a small
+  benefit (+1 soak on the part); 21–30 a monstrous change, Appearance near zero, heavy Social penalties except to
+  intimidate; 31+ utterly inhuman. Brandings add up: every third Branding at one level merges into one of the next
+  level.
+- **Manifestation (pp. 138–139):** strength = (highest Pillar + 1 per extra Pillar) × the 1s. Each point buys 3
+  Attribute dots, or 2 dots of Willpower, Quintessence or a Pillar, or 1 Foundation dot, for the being that answers.
+  Most likely after a botched summoning, or for a mage who often calls on the otherworldly.
+- **Scourging (p. 139):** damage per 1 rolled, by the highest Pillar: 1–2 one lethal; 3 two lethal; 4 one aggravated;
+  5 two aggravated. Only the caster's own soak applies (Fortitude and armour that are part of the body). Very large
+  Scourgings can spread to bystanders.
+- **Twilight (pp. 139–140):** temporary Twilight per 1 rolled, by the highest Pillar: 1–2 one; 3–4 two; 5 three. Ten
+  temporary roll over into one permanent (any excess starts the new pool). No symptoms below 2 permanent. Stages:
+  Shallow at 2, Median at 4, Deep at 7, Final at 9; the change is gradual, not stepwise. Final Twilight ends with the
+  mage vanishing from the world.
+- **Mitigating (p. 140):** after a botch, Quintessence cancels 1s: 1 point for the first, then doubling (3 total for
+  two, 7 for three, and so on); all of a 1's cost or none of it; more than 2 points a turn needs Fount (pp. 86–87).
+  Cancelling every 1 turns the botch into a plain failure.
+- **Losing it (pp. 140–141):** only by not using magic (quicker cures exist per fellowship, the Order's the most
+  reliable, but the quicker the less safe). Twilight fades one temporary point a day through the 2nd permanent
+  point; three days a point at 3–4; a week at 5–6; a month in the 7th; four months in the 8th; a year in the 9th.
+  Branding: a 1st-level mark fades in a week of abstinence; a 2nd-level one in two weeks, becoming two 1st-level; a
+  3rd in a month, becoming two 2nd; a 4th in four months, becoming two 3rd; a 5th is usually permanent. Higher marks
+  break down before lower ones fade. Both kinds fade at the same time when a mage has both.
+
+### What WoDX needs from this (for the 6f build)
+- A Dark Ages mage sheet: the fellowship, its Foundation and four Pillars with their names and foci, Quintessence and
+  Fount, Twilight (temporary and permanent) and Brandings (a list with levels and the date gained).
+- The casting card: simple or complex, difficulty 4 + level or 5 + level + 1 per extra Pillar, the cap at 9 with
+  extra successes, hurried casting (Spontaneity 4 and 5 change it), Quintessence to lower difficulty and to steady a
+  Pillar above the Foundation, foci, belief cancelling a 1, the failure and botch penalties in the scene; the
+  duration and distance tables; resisting.
+- The botch card: the 1s (and Quintessence spent) with Quintessence to cancel them, then Branding, Manifestation,
+  Scourging or Twilight worked out from the numbers above; Scourging damage through WoDX Combat; Twilight and
+  Branding recorded with their fading clocks on the Chronicle clock (abstinence counted from the last casting).
+- The fellowships' Foundation perks as automatic modifiers (Al-Ikhlas Alertness, Divinity Expression and a Social
+  Attribute, Spontaneity hurried casting, Modus two Willpower a turn, Sensitivity Umbral sight and Quintessence,
+  Blot's damage as focus and life for dice).
+- Pillar effects stay the Storyteller's to judge, but the numbers above go in as presets on the casting card (healing,
+  damage, Attribute boosts, ward successes, Gauntlet changes, cray creation).
+- The rotes as ready spells with their Pillar levels and systems.
+
 ## To read next
 
-- DA:Mage pp. 136–143 (all six fellowships and hedge magic done, pp. 105–135): each fellowship's Foundation (with its five levels and Specialties), its four Pillars and
-  sample rotes (Ahl-i-Batin, Messianic Voices, Old Faith, Order of Hermes, Spirit-Talkers, Valdaermen; hedge magic);
-  Backlash, Branding and Scourging (pp. 136–143).
 - DA:Mage pp. 77–95: character creation, Backgrounds (Fount, Sanctum, Servants, Talisman), Merits and Flaws.
 - The inner voice for mages (the Avatar): what DA:Mage calls the mage's inner spark and its pressures (Backlash,
   hubris), and M20's Avatar, Seekings and Quiet (pp. 44–46, 267, 339–340, 368–371, 240–243).
