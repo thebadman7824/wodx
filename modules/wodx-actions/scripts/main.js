@@ -43,6 +43,7 @@ import * as RX from "./reckoning.js";
 import * as VR from "./voice-rules.js";
 import * as VX from "./voice.js";
 import * as TR from "./theme-rules.js";
+import * as MXD from "./mage-da.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -1702,8 +1703,14 @@ let PMX = null;
 function pm() {
     return PMX ??= PM.build({
         post, rollPool, rollBlock, resultLine, diceHtml, API, action, updateActor, willpower, attr, findAbility, setting,
-        spendWillpower, dialog, notify: m => ui.notifications.warn(m)
+        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a)
     });
+}
+
+let MXE = null;
+/** Dark Ages mages (3.7.0, Phase 6f). */
+function mx() {
+    return MXE ??= MXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, spendWillpower, notify: m => ui.notifications.warn(m) });
 }
 
 let GXE = null;
@@ -1922,7 +1929,11 @@ function bindCard(msg, el) {
         ev.preventDefault();
         await vx().onChatButton(b);
     }));
-    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    el.querySelectorAll?.("button.vta-btn[data-mx]").forEach(b => {
+        if (b.hasAttribute("data-gm") && !game.user.isGM) { b.remove(); return; }
+        b.addEventListener("click", ev => { ev.preventDefault(); mx().onButton(msg, b.dataset.mx).catch(e => console.error("WoDX |", e)); });
+    });
+    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -1951,10 +1962,13 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.6.2",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.7.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
-    cast: (o = {}) => pm().cast(o.actor ?? resolveActor()),
+    cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : pm().cast(a); },
+    // Dark Ages mages (3.7.0)
+    daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
+    daMageInfo: a => mx().info(resolveActor(a)), daFade: () => mx().fadeAll(), daBacklashButton: (msg, what) => mx().onButton(msg, what),
     shift: withActor(a => GX.isShifter(a) ? gx().shift(a) : pm().shift(a)), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()),
     // Werewolf and Fera (Phase 6b)
     shiftForm: withActor(a => gx().shift(a)), rageRoll: withActor((a, o) => gx().rageRoll(a, o)), spendRage: withActor(a => gx().spendRage(a)),
@@ -2078,6 +2092,13 @@ function kindredHooks() {
     Hooks.on("updateWorldTime", (wt, dt) => {
         if (!game.user.isGM || L.chronicle()?.isSkipping?.()) return;
         sx().onClock(Number(dt) || 0).catch(e => console.error("WoDX |", e));
+    });
+    // Dark Ages mages: Twilight and Brandings fade with abstinence (3.7.0)
+    let fadeBusy = false;
+    Hooks.on("updateWorldTime", () => {
+        if (fadeBusy || !game.user.isGM || L.chronicle()?.isSkipping?.()) return;
+        fadeBusy = true;
+        mx().fadeAll().catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
     });
     const sunRound = new Map();
     Hooks.on("updateCombat", (combat, changed) => {

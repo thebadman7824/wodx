@@ -289,6 +289,17 @@ game.world.id = worldId;
     const ga = game.wodxActions, A = o => ({actor: o});
     // B60: the players' toolbar buttons, with seven players
     for ( let k = 0; k < 6; k++ ) { const u = {id: `player${k}xxxxxxxxx`, name: `Player with a long name ${k}`, isGM: false}; game.users.set(u.id, u); }
+    // Phase 6f: a Dark Ages Hermetic with every Pillar, Fount and a cray, Twilight and Brandings
+    {
+      const magus = mk("magus0000000001", "Magistra Ottilie of the Ninefold Key, Order of Hermes", "Mage", {quintessence: {temporary: 9, max: 20}}, [
+        ["b1", {name: "Fount", type: "Feature", system: {type: "wod.types.background", value: 2}}], ["b2", {name: "Cray", type: "Feature", system: {type: "wod.types.background", value: 3}}],
+        ["b3", {name: "Sanctum", type: "Feature", system: {type: "wod.types.background", value: 3}}]]);
+      const flags = {daMage: {fellowship: "hermes", foundation: 3, pillars: {anima: 2, corona: 1, primus: 3, vires: 3}, twilight: {temp: 4, perm: 2},
+        brandings: [{level: 1, text: "a faint smell of brimstone"}, {level: 2, text: "eyes like polished brass"}]}};
+      magus.getFlag = (sc, k) => sc === "wodx-actions" ? flags[k] : undefined;
+      tries.push(["Fellowship and Pillars", () => ga.daMage({actor: A(magus)})], ["Cast a spell (Dark Ages)", () => ga.daCast({actor: A(magus)})],
+        ["Gather Quintessence", () => ga.daQuintessence({actor: A(magus)})]);
+    }
     tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
       ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],

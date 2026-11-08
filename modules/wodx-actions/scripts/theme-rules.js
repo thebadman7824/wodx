@@ -83,6 +83,13 @@ export const MENU_PLAN = {
         recover: ["api:healing", "uses:willpower"],
         scene: ["api:endScene", "api:voices", "rules:mage"]
     },
+    /** Dark Ages: Mage (3.7.0): the same bands, Foundation and Pillars in place of Arete. */
+    mageDA: {
+        act: ["action", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "preset:researchmage", "api:numina", "api:trueFaith"],
+        resist: ["api:hazard"],
+        recover: ["api:healing", "uses:willpower"],
+        scene: ["api:endScene", "api:voices", "rules:mage"]
+    },
     fae: {
         act: ["action", "cantrip", "uses:glamour", "api:seduction"],
         resist: ["uses:banality", "api:hazard"],
@@ -183,6 +190,9 @@ export const DESC = {
     // Mages
     "preset:researchmage": "Research and lore: Intelligence + Occult or Enigmas",
     "cast": "Cast an effect: the Arete roll, the difficulty from the highest Sphere",
+    "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
+    "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
+    "api:daQuintessence": "Dark Ages: absorb from a cray, harvest Tass, the Fount's monthly rite, a day in the Umbra",
     "uses:quintessence": "Spend or regain Quintessence",
     "uses:paradox": "Paradox gained, or shed after a Backlash",
     "rules:mage": "The mage rules at a glance, with page references",

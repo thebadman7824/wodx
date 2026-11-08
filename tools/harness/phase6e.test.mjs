@@ -28,7 +28,7 @@ test("every line wears the look; each line but mortals has its own accent", () =
 
 test("every menu button of every line is placed and described", () => {
   if (!MENUS) return; // profile-menus needs Foundry globals in some setups
-  for (const kind of TR.LINE_LOOK) {
+  for (const kind of [...TR.LINE_LOOK, "mageDA"]) {
     const specs = MENUS[kind].sections.flatMap(([, b]) => b.map(x => x[0]));
     const g = TR.groupMenu(kind, MENUS[kind].sections, {isGM: true});
     const placed = [...g.bands.flatMap(b => b.buttons), ...g.scene].map(b => b.spec);

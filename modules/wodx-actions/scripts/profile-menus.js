@@ -87,6 +87,17 @@ export const MENUS = {
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
+    /** Dark Ages: Mage (3.7.0): Foundation and Pillars instead of Arete and Spheres. */
+    mageDA: {
+        sections: [
+            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
+            ["Magic", [["api:daCast", "Cast a spell (Foundation + Pillar)", "fa-hat-wizard"], ["api:daMage", "Fellowship and Pillars", "fa-scroll"],
+                ["api:daQuintessence", "Gather Quintessence (cray, Fount)", "fa-gem"], ["uses:quintessence", "Quintessence", "fa-coins"]]],
+            ["Sorcery and Numina", [["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+        ]
+    },
     fae: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
@@ -427,13 +438,13 @@ export function build(ctx) {
     /** Launcher: sections for the actor's profile, the profile toggle and an Auto/override selector. */
     async function menuFor(actor, { recent = [], isGM = !!globalThis.game?.user?.isGM } = {}) {
         const kind = P.detectProfile(actor);
-        const def = MENUS[kind] ?? MENUS.mortal;
+        const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (MENUS[kind] ?? MENUS.mortal);
         const auto = P.detectProfile(actor, { ignoreFlag: true });
         const overridden = kind !== auto;
         const kindBtn = `<button type="button" class="vta-kind" title="Change the actor type"><i class="fas fa-exchange-alt" aria-hidden="true"></i> Type</button>`;
         // 6e: the restyled lines group their buttons by intent, with search, recent uses, hints and keys
         if (TR.LINE_LOOK.includes(kind)) {
-            const g = TR.groupMenu(kind, def.sections, { isGM });
+            const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : kind, def.sections, { isGM });
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
             const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}</span></button>`;
             const rec = recent.map(s => all.find(x => x.spec === s)).filter(Boolean);

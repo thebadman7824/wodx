@@ -11,7 +11,8 @@ export const KINDS = {
     beast: { label: "The Beast", lines: ["kindred", "ghoul"], book: "V20 Dark Ages pp. 341–346 (frenzy, Rötschreck); Ghouls and Revenants p. 42" },
     shadow: { label: "The Shadow", lines: ["wraith"], book: "Wraith 20th pp. 224–245" },
     rage: { label: "Rage", lines: ["lupine"], book: "Dark Ages: Werewolf / W20 frenzy" },
-    impulse: { label: "The Impulse", lines: ["hunter"], book: "Dark Ages: Inquisitor p. 162; Hunter: The Reckoning p. 131" }
+    impulse: { label: "The Impulse", lines: ["hunter"], book: "Dark Ages: Inquisitor p. 162; Hunter: The Reckoning p. 131" },
+    gift: { label: "The Gift (the Avatar)", lines: ["mage"], book: "Dark Ages: Mage pp. 87, 139–140 (Twilight, the Fount's whispers); Mage 20th pp. 338–339 (the Avatar, Seekings)" }
 };
 /** The voice a profile carries (B54); null when the line has none yet. */
 export function kindFor(profile) {
@@ -58,6 +59,17 @@ export function pressure(kind, d = {}) {
             const c = n(d.conviction), p = n(d.piety);
             return { value: c, max: 10, level: lvl(c > p ? 3 : c === p ? 2 : c === p - 1 ? 1 : 0), text: `Conviction ${c} against Piety ${p}` };
         }
+        case "gift": {
+            // Dark Ages: Twilight (symptoms from 2 permanent; Median 4, Deep 7). Later eras: the Avatar's rating and Paradox.
+            if (d.era === "da") {
+                const t = n(d.temp), p = n(d.perm);
+                const i = p >= 7 ? 3 : p >= 4 ? 2 : (p >= 2 || t >= 5) ? 1 : 0;
+                return { value: p * 10 + t, max: 100, level: lvl(i), text: `Twilight ${t} temporary, ${p} permanent` };
+            }
+            const a = n(d.avatar), x = n(d.paradox);
+            const i = Math.max(x >= 10 ? 3 : x >= 5 ? 2 : x >= 3 ? 1 : 0, a >= 4 ? 1 : 0);
+            return { value: x, max: 20, level: lvl(i), text: `Avatar ${a}; Paradox ${x}` };
+        }
         default: return { value: 0, max: 10, level: "calm", text: "" };
     }
 }
@@ -78,6 +90,11 @@ export const PROPOSALS = {
     ],
     rage: [
         { id: "rage", label: "A Rage roll (frenzy)", api: "rageRoll", roller: "owner" }
+    ],
+    gift: [
+        { id: "twilight", label: "Twilight colours what the mage sees (the player plays it; Dark Ages)", api: null, roller: "owner" },
+        { id: "urge", label: "An urge to cast again, or to break abstinence", api: null, roller: "owner" },
+        { id: "seeking", label: "A Seeking: the Avatar's trial (from the Victorian era on)", api: null, roller: "owner" }
     ],
     impulse: [
         { id: "impulse", label: "The Impulse (an inquisitor while Callous)", api: "hunterVirtue", roller: "owner" },

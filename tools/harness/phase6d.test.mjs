@@ -58,7 +58,7 @@ test("which voice a line has (B54), and the four meters", () => {
   assert.equal(VR.kindFor("wraith"), "shadow");
   assert.equal(VR.kindFor("lupine"), "rage");
   assert.equal(VR.kindFor("hunter"), "impulse");
-  assert.equal(VR.kindFor("mage"), null, "the Avatar comes with the Mage line");
+  assert.equal(VR.kindFor("mage"), "gift", "the Gift (the Avatar) came with the Mage line in 6f");
   assert.equal(VR.pressure("beast", {blood: 8, max: 10, selfcontrol: 3}).level, "calm");
   assert.equal(VR.pressure("beast", {blood: 5, max: 10, selfcontrol: 3}).level, "rising");
   assert.equal(VR.pressure("beast", {blood: 3, max: 10, selfcontrol: 3}).level, "breaking", "under 7 − Self-Control");

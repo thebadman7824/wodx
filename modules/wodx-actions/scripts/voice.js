@@ -50,6 +50,7 @@ export function build(ctx) {
     const isVoice = actor => game.user.isGM || voiceOf(actor).user === game.user.id;
 
     /** The line's numbers for the meter. */
+    const eraNow = () => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } };
     function pressureOf(actor) {
         const kind = kindOf(actor);
         if (!kind) return null;
@@ -58,6 +59,15 @@ export function build(ctx) {
         if (kind === "beast") { const b = P.resource(actor, "blood"); d = { blood: b.value, max: b.max || 10, selfcontrol: virtues(actor).selfcontrol.value }; }
         else if (kind === "shadow") { const w = wraithInfo(actor); d = { angst: w.angst.temp, willpower: w.willpower.temp }; }
         else if (kind === "rage") d = { rage: P.resource(actor, "rage").value, willpower: wp };
+        else if (kind === "gift") {
+            const f = actor.getFlag?.(MOD, "daMage");
+            const da = f?.system === "da" || (f?.system !== "m20" && (f?.fellowship || eraNow() === "dark-ages"));
+            if (da) d = { era: "da", temp: n(f?.twilight?.temp), perm: n(f?.twilight?.perm) };
+            else {
+                const av = actor.items?.find?.(i => i.type === "Feature" && /^avatar|^genius/i.test(i.name ?? ""));
+                d = { era: "m20", avatar: n(av?.system?.value), paradox: P.resource(actor, "paradox").value };
+            }
+        }
         else if (kind === "impulse") {
             const q = inquisitor(actor);
             if (q) d = { conviction: q.conviction, piety: q.piety };
