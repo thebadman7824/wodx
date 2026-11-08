@@ -57,7 +57,7 @@ All WoDX buttons sit in the **token controls** on the left. Players see only the
 | Rook | WoDX factions (faction turns, hunting grounds, rumours) | Storyteller |
 | Droplet | Creation and experience (players: Spend experience) | everyone |
 
-On a token's HUD: **WoDX Actions** (the menu), **WoDX Attack** (click for the attack dialog, shift-click for a quick attack, right-click to set the actor type), and on NPCs a **knight** (click for the NPC's behaviour, right-click to plan its turn now).
+On a token's HUD: **WoDX Actions** (the menu), **WoDX Attack** (click for the attack dialog, shift-click for a quick attack, right-click to set the actor type), and on NPCs a **knight** (click for the NPC's behaviour, right-click to plan its turn now). Once WoDX Interactables is on, every token its player owns also gets a **door** (Interact: doors, windows and walls within reach).
 
 ## WoDX Chronicle: the clock, eras and the queue
 
@@ -229,13 +229,29 @@ The **WoDX factions** window (rook) lists the factions, with a search box. Each 
 
 **Masquerade rumours.** A breach recorded in WoDX Actions, or one you enter with **Report a breach…**, spreads day by day through places and Contacts. It rises to the Prince and then to the era's hunters (the Inquisition before 1600, mortal hunters to 1998, the imbued after), and each rise is a proposal in the queue. Deal with every witness first and press **Contain**; a quiet week makes it fade, until the hunters hear of it. Each breach also has **Stop**, **Resume** and **Forget**.
 
+## WoDX Interactables: doors, locks and windows
+
+*New module, not deployed yet: enable WoDX Interactables in the world's modules once it is installed.*
+
+**For players.** Select your token, then press the **door** on its HUD (or the I key). The Interact window lists every door, window and breakable wall within reach, nearest first, and the options for each. Before anything is rolled, each option says the pool, the difficulty, the successes needed, how long a roll takes and how much noise it makes. Clicking a locked door with your token selected opens the same window for that door.
+
+What can be tried: open or close, open quietly (Dexterity + Stealth), lift a bar from its own side, use a key the character carries, pick the lock, beat a keypad or alarm (modern eras), force it, break a pane, heave a stuck window open, listen at it (Perception + Alertness), knock, or **Use a power**, which opens the WoDX actions menu.
+
+**Setting up a door.** Plain doors need nothing: a locked door has a good lock and the build follows the material. For a special one, open the wall's config window and fill in the **WoDX** part: kind, material, build, lock (cheap, good, excellent, masterwork), keypad or alarm, the key's name, a bar and which side it is on, stuck, a secret door's "found", or mark a plain wall as breakable (wattle, timber or brick, stone).
+
+**What happens.** The result applies at once and the card gets an **Undo** for you: the door opens, the lock jams, the pane breaks, the bar lifts. Picking and forcing add up successes on the door, so someone can stop and come back or a friend can take over. A botched pick jams the lock; a botched force is one lethal level. Knocking a wall through is the one thing that waits: it goes to the approval queue, and approving it opens that whole wall segment (split the wall first for a smaller hole).
+
+**Noise and time.** Each attempt is silent, quiet or loud. NPCs within earshot roll to hear it (loud carries 30 yards, 10 through a wall; quiet 5 yards and not through walls), and your copy of the card names who heard and what each would likely do. Nobody moves by themselves: you decide. Attempts that take a minute or more move the clock outside combat.
+
+Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, whether long attempts move the clock, and whether NPCs hear noise. You can Shift-click a locked door yourself to use Interact for the selected token.
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.
 
 **The queue** holds anything big or lasting: era changes, experience spends, generated people, faction results that matter, rumours rising, data fixes. Nothing in it happens until you approve it. Rejecting is always safe.
 
-**Undo on a card** covers small things that apply at once: NPC actions in Auto, routine moves in Auto, small faction results in Auto. Undo puts back exactly what the card changed. Use it soon after: if something else has changed the same token or sheet since, check the result by eye.
+**Undo on a card** covers small things that apply at once: NPC actions in Auto, routine moves in Auto, small faction results in Auto, and every door, lock and window result from Interactables. Undo puts back exactly what the card changed. Use it soon after: if something else has changed the same token or sheet since, check the result by eye.
 
 A good habit for a first live session: leave everything on Suggest, and switch one thing to Auto once you trust it.
 

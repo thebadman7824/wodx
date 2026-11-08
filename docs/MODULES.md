@@ -24,6 +24,7 @@ WoDX notes:
 | wodx-combat | 3.7.4 | 6a, 6b, automation, gridless, the Corpus track, the turn conductor | rothenstein-wodx, wodx-template, instead of vtda20-combat (needs wodx-chronicle) |
 | wodx-sheets | 0.5.0 | Phase 6 sheets: the Dark Ages sheets (Fae, Mage, Inquisitor, Werewolf, V20 Dark Ages Kindred and ghoul) and the later eras' (V20 and ghoul, W20, M20, C20, Wraith 20, Hunter: The Reckoning, Demon, Mummy, Kindred of the East, Orpheus), following the era. 0.5.0: a look of its own for each line (title face, paper and section rules, light and dark), behind the world setting "Sheet look" | rothenstein-wodx (needs wodx-chronicle, wodx-actions 3.11.0) |
 | wodx-npc | 0.3.0 | 7b (NPC profiles and combat tactics), 7c (places, routines on the clock, WoDX: Reaction regions), 7d (factions, faction turns, hunting grounds, Masquerade rumours) | rothenstein-wodx, wodx-template (needs wodx-chronicle, wodx-combat, wodx-actions) |
+| wodx-interactables | 0.1.0 | Interactables step 1: doors, locks, windows and breakable walls on core walls, the Interact window, the door click, results with Undo, noise | rothenstein-wodx, wodx-template (needs wodx-chronicle, wodx-actions; uses wodx-combat and wodx-npc when on). Not deployed yet. |
 
 Chronicle, Otherworlds and Creation stay idle in worlds without `flags.wodx` (the original Rothenstein world). WoDX Actions and WoDX Combat stay off wherever vtda20-actions or vtda20-combat is still enabled; the original Rothenstein world keeps the vtda20 modules, which stay installed.
 

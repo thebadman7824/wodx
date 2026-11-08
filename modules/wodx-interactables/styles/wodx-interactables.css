@@ -1,0 +1,22 @@
+/* WoDX Interactables 0.1.0: the Interact window, the roll dialog, the cards and the WoDX part of a wall's config. Colours come from the WoDX look (wodx-theme.css). */
+.wix-dialog .window-content { overflow-y: auto; max-height: 80vh; }
+.wix-dialog .wix-list { list-style: none; margin: 0.3em 0; padding: 0; max-height: 55vh; overflow-y: auto; }
+.wix-dialog .wix-list > li { margin: 0 0 0.5em; padding-bottom: 0.3em; border-bottom: 1px solid var(--wx-rule, #8886); }
+.wix-dialog .wix-list h4 { margin: 0.2em 0; border: 0; }
+.wix-dialog .wix-ops { list-style: none; margin: 0; padding: 0; }
+.wix-dialog .wix-op { margin: 0.25em 0; }
+.wix-dialog .wix-op button { width: auto; line-height: 1.6; padding: 0 0.6em; }
+.wix-dialog .wix-op.disabled b { opacity: 0.7; }
+.wix-dialog .wix-op .wodx-quiet { font-size: 0.9em; margin: 0.1em 0 0.2em 0.4em; }
+.wix-dialog .wodx-field { display: grid; grid-template-columns: 10em 1fr; align-items: center; gap: 0.5em; margin: 0.2em 0; }
+.wix-dialog .wix-check { display: flex; align-items: center; gap: 0.3em; margin: 0.25em 0; }
+.wix-dialog input[type=search] { width: 100%; margin: 0.3em 0; }
+.wix .wix-lines { margin: 0.2em 0 0.4em; padding-left: 1.2em; }
+.wix .wix-done { margin-top: 0.4em; padding-top: 0.3em; border-top: 1px solid var(--wx-rule, #8886); }
+.wix button { width: auto; line-height: 1.6; padding: 0 0.6em; margin: 0.15em 0; }
+.wall-config .wix-config .form-fields select { max-width: 100%; }
+.wall-config .wix-config input[type=text] { width: 100%; }
+/* The WoDX part makes the wall window taller: keep it inside the screen and let it scroll on small screens */
+.application.wall-config { max-height: 100vh; }
+.application.wall-config .window-content { overflow-y: auto; min-height: 0; }
+.wall-config .wix-config { max-height: 40vh; overflow-y: auto; }
