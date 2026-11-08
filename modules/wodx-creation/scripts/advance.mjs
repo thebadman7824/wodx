@@ -11,6 +11,11 @@ import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {writeLogPage} from "./xp.mjs";
 
 const ACT = "wodx-actions";
+// Flags kept by other WoDX modules are read and written through the flags object, not getFlag/setFlag: Foundry
+// refuses a flag scope whose module is off in the world, and Creation must work with WoDX Actions or Sheets off.
+const flagGet = (doc, scope, key) => doc?.flags?.[scope]?.[key];
+const flagSet = (doc, scope, key, value) => doc.update({[`flags.${scope}.${key}`]: value});
+const flagUnset = (doc, scope, key) => doc.update({[`flags.${scope}.-=${key}`]: null});
 const SNAPSHOT_FOLDER = "WoDX · Before the years";
 const yearOf = time => getEngine().timeToDate(Number(time) || 0).year;
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -36,7 +41,7 @@ export function lineKey(actor) {
     case "Mage": return "mage";
     case "Changeling": return "changeling";
     case "Wraith": return "wraith";
-    case "Hunter": return (actor.getFlag?.(ACT, "imbued") || actor.system?.creed) ? "imbued" : "hunter";
+    case "Hunter": return (flagGet(actor, ACT, "imbued") || actor.system?.creed) ? "imbued" : "hunter";
     case "Demon": return "demon";
     case "Mummy": return "mummy";
     default: return null;
@@ -46,7 +51,7 @@ export function lineKey(actor) {
 /** The Road a vampire walks, by WoDX Actions' key, with its rating and a label. */
 function roadView(actor) {
   const p = actor.system?.advantages?.path ?? {};
-  const f = actor.getFlag?.(ACT, "road");
+  const f = flagGet(actor, ACT, "road");
   let key = f?.key ?? null;
   const name = String(p.custom || loc(p.label || "") || "");
   if ( !key ) {
@@ -82,8 +87,8 @@ export function viewOf(actor) {
     secondaries: items.filter(i => i.type === "Trait" && /secondability/.test(String(i.system?.type ?? ""))).map(i => ({id: i.id, name: loc(i.name), value: n(i.system?.value)})),
     backgrounds: items.filter(i => i.type === "Feature" && i.system?.type === "wod.types.background").map(i => ({id: i.id, name: i.name, value: n(i.system?.value)})),
     tribe: s.tribe === "custom" ? s.custom?.tribe : (s.tribe || s.custom?.tribe || ""),
-    records: {daMage: actor.getFlag?.(ACT, "daMage") ?? null, daFae: actor.getFlag?.(ACT, "daFae") ?? null, inquisitor: actor.getFlag?.(ACT, "inquisitor") ?? null},
-    forcedSheet: !!actor.getFlag?.("wodx-sheets", "sheet")
+    records: {daMage: flagGet(actor, ACT, "daMage") ?? null, daFae: flagGet(actor, ACT, "daFae") ?? null, inquisitor: flagGet(actor, ACT, "inquisitor") ?? null},
+    forcedSheet: !!flagGet(actor, "wodx-sheets", "sheet")
   };
 }
 
@@ -101,10 +106,10 @@ export function proposalsFor(actor, plan, {torporYears = 0} = {}) {
 /* -------------------------------------------- */
 
 async function archive(actor, key, time) {
-  const old = actor.getFlag(ACT, key);
+  const old = flagGet(actor, ACT, key);
   if ( !old ) return;
   const stamp = getEngine().timeToDate(time);
-  await actor.setFlag(ACT, `${key} · archived`, {...old, archivedYear: stamp.year});
+  await flagSet(actor, ACT, `${key} · archived`, {...old, archivedYear: stamp.year});
 }
 
 /** Roll `rolls` checks of the virtue at the drift difficulty; each failure costs a dot. */
@@ -168,25 +173,25 @@ export async function applyAdvance(actor, change, plan, choice = null) {
       await actor.update({"system.advantages.path.label": pick === "humanity" ? "wod.advantages.path.humanity" : `wod.advantages.path.${pick}`,
         // The rating carries as it stands now: thick blood or drift earlier in the same skip may have lowered it
         "system.advantages.path.custom": ""});
-      if ( actor.getFlag(ACT, "road") ) await actor.unsetFlag(ACT, "road");
+      if ( flagGet(actor, ACT, "road") ) await flagUnset(actor, ACT, "road");
       return {note: PATH_LABEL[pick]};
     }
     case "adv.daMage":
       await archive(actor, "daMage", plan.to);
-      await actor.setFlag(ACT, "daMage", {...(actor.getFlag(ACT, "daMage") ?? {}), system: "m20"});
+      await flagSet(actor, ACT, "daMage", {...(flagGet(actor, ACT, "daMage") ?? {}), system: "m20"});
       return null;
     case "adv.daFae":
       await archive(actor, "daFae", plan.to);
-      await actor.setFlag(ACT, "daFae", {...(actor.getFlag(ACT, "daFae") ?? {}), system: "c20", crossing: pick});
+      await flagSet(actor, ACT, "daFae", {...(flagGet(actor, ACT, "daFae") ?? {}), system: "c20", crossing: pick});
       return {note: pick};
     case "adv.inquisitor":
       await archive(actor, "inquisitor", plan.to);
-      await actor.unsetFlag(ACT, "inquisitor");
+      await flagUnset(actor, ACT, "inquisitor");
       return null;
     case "adv.outOfEra": {
       const sheets = game.modules.get("wodx-sheets")?.api;
       const id = sheets?.sheetFor?.(actor);
-      if ( id ) await actor.setFlag("wodx-sheets", "sheet", id);
+      if ( id ) await flagSet(actor, "wodx-sheets", "sheet", id);
       return null;
     }
     case "adv.lostTribe":

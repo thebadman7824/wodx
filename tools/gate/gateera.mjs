@@ -32,6 +32,9 @@ export async function run() {
 
     await step("2. Test characters made, in the Dark Ages", async () => {
       if ( startEra !== "dark-ages" ) await game.settings.set(CH, "activeEra", "dark-ages");
+      // The template's clock can stand in any year: put it in 1200, so the skip to 1840 runs forward (step 7 puts it back)
+      const from = api().time.addYears(game.time.worldTime, 1200 - api().time.yearOf(game.time.worldTime));
+      if ( from !== game.time.worldTime ) await (game.time.set ? game.time.set(from) : game.time.advance(from - game.time.worldTime));
       folder = await Folder.create({name: "WoDX era test pack", type: "Actor"});
       const year = api().time.yearOf(game.time.worldTime);
       vamp = await Actor.create({name: "Wenzel (era test)", type: "Vampire", folder: folder.id,

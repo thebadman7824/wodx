@@ -252,6 +252,43 @@ test("every switch on, every line, every change ticked: the results read right i
   for ( const id of ["yearsThickBlood", "yearsMoralityDrift"] ) await game.settings.set("wodx-chronicle", `rule.${id}`, false);
 });
 
+test("WoDX Actions and Sheets off in the world: Pass the Years still plans and applies (the wodx-template gate)", async () => {
+  // As Foundry does: getFlag, setFlag and unsetFlag refuse a scope whose module is not active
+  const P = Actor.prototype;
+  const orig = {getFlag: P.getFlag, setFlag: P.setFlag, unsetFlag: P.unsetFlag};
+  const off = new Set(["wodx-actions", "wodx-sheets"]);
+  const guard = name => function(s, ...rest) {
+    if ( off.has(s) ) throw new Error(`Flag scope "${s}" is not valid or not currently active`);
+    return orig[name].call(this, s, ...rest);
+  };
+  for ( const k of Object.keys(orig) ) P[k] = guard(k);
+  try {
+    await game.settings.set("wodx-chronicle", "activeEra", "dark-ages");
+    await game.time.set(at(1300));
+    await mock.settle();
+    const kin = await Actor.create({name: "Jitka", type: "Vampire", system: {generation: 10, advantages: {path: {permanent: 5, custom: "Road of Kings"}}}});
+    await api().lineage.setChronology(kin, {embraced: at(1280)});
+    const mage = await Actor.create({name: "Brother Radek", type: "Mage", flags: {"wodx-actions": {daMage: {fellowship: "Order of Hermes"}}}});
+    const inq = await Actor.create({name: "Father Bruno", type: "Hunter", flags: {"wodx-actions": {inquisitor: {piety: 2}}}});
+    const demon = await Actor.create({name: "Sariel", type: "Demon"});
+    const plan = api().time.planSkip({from: game.time.worldTime, to: at(1840), actors: [kin, mage, inq, demon]});
+    const row = a => plan.rows.find(r => r.actorId === a.id);
+    const road = row(kin).changes.find(c => c.kind === "adv.road");
+    assert.ok(road, JSON.stringify(row(kin).changes.map(c => c.kind)));
+    assert.ok(row(mage).changes.some(c => c.kind === "adv.daMage"), "the Dark Ages mage record is read without WoDX Actions");
+    const accept = {};
+    for ( const r of plan.rows ) accept[r.actorId] = Object.fromEntries(r.changes.filter(c => c.kind !== "death" && c.kind !== "torpor").map(c => [c.id, true]));
+    await api().time.applyPlan(plan, {accept, choices: {[kin.id]: {[road.id]: "accord"}}});
+    assert.equal(kin.system.advantages.path.label, "wod.advantages.path.accord");
+    assert.equal(mage.flags["wodx-actions"].daMage.system, "m20");
+    assert.equal(mage.flags["wodx-actions"]["daMage · archived"].fellowship, "Order of Hermes");
+    assert.equal(inq.flags["wodx-actions"].inquisitor, undefined);
+    assert.equal(inq.flags["wodx-actions"]["inquisitor · archived"].piety, 2);
+  } finally {
+    Object.assign(P, orig);
+  }
+});
+
 test("no error notifications (advance)", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

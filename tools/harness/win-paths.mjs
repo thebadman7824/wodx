@@ -16,5 +16,8 @@ export function toURL(s) {
 }
 
 if ( process.platform === "win32" && typeof registerHooks === "function" ) {
-  registerHooks({resolve: (specifier, context, next) => next(toURL(specifier), context)});
+  // Only for import(): the hook also sees require(), which takes a plain C:\ path and fails on a file:// one
+  // (Playwright's own require of its package.json broke ui-fit.mjs that way)
+  const isRequire = context => context?.conditions?.includes?.("require");
+  registerHooks({resolve: (specifier, context, next) => next(isRequire(context) ? specifier : toURL(specifier), context)});
 }
