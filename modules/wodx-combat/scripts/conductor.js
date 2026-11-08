@@ -131,6 +131,12 @@ async function tick() {
     startTurn(combat);
     if (!cur) return;
     const c = combat.combatant, isNPC = !c.actor?.hasPlayerOwner;
+    // A time limit set (or the level raised to Everyone) during a player's turn starts counting now
+    const limit = Number(setting("conductorTimer")) || 0;
+    if (!isNPC && !cur.timerEndsAt && !cur.actionSpent && level() === "everyone" && limit > 0) {
+        cur.timerEndsAt = Date.now() + limit * 1000;
+        writeState(combat).catch(e => console.error(`${MOD} | conductor`, e));
+    }
     let npcMode = "suggest";
     try { npcMode = npcApi()?.modeFor?.(c.actor, combat.scene) ?? (npcApi() ? "suggest" : "off"); } catch (e) { /* none */ }
     const npcPause = (Number(setting("conductorNpcPause")) || 0) * 1000;
@@ -313,6 +319,8 @@ export function installConductor() {
     game.socket.on(SOCKET, p => { if (p?.conductor) onRequest(p).catch(e => console.error(`${MOD} | conductor`, e)); });
     Hooks.on("wodxNpcTurnDone", r => { try { onNpcReport(r); } catch (e) { console.error(e); } });
     Hooks.on("createChatMessage", msg => { try { onMessage(msg); } catch (e) { console.error(e); } });
+    // The turn moved (Next, Step back, or set by hand): coming back to a turn starts it afresh
+    Hooks.on("updateCombat", (combat, changes) => { if (cur?.combatId === combat.id && ("turn" in (changes ?? {}) || "round" in (changes ?? {}))) cur = null; });
     Hooks.on("updateToken", (doc, changes) => {
         if (cur && ("x" in changes || "y" in changes) && game.combat?.combatants.get(cur.combatantId)?.tokenId === doc.id) cur.lastMoveAt = Date.now();
     });

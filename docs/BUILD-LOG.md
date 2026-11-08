@@ -549,3 +549,6 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 
 ### Chat hook, 2026-11-08: WoDX Actions 3.11.1, WoDX Combat 3.7.1
 - Ben asked that WoDX not depend on the renderChatMessage hook (deprecated in Foundry 13, removed in 15). Actions and Combat kept it only as a fallback for Foundry 12 and older, which WoDX no longer runs on; both now bind their cards through renderChatMessageHTML alone. No WoDX module registers renderChatMessage now. The warnings seen in gate 7c also came from other modules (Dice So Nice, Polyglot and the vtda20 modules), which WoDX cannot change.
+
+### Gate 7b1 again, 2026-11-08: WoDX Combat 3.7.2
+- Rerun in rothenstein-wodx after the chat-hook change: 5, 6, 6 and 7 of 8. Two causes, neither from the hook change. In the gate: when an NPC came first in the new round it acted before the gate started looking for its card. In the conductor: a turn that the Storyteller (or a gate) came back to kept its old state, such as an action already spent, and a time limit set, or the level raised to Everyone, during a player's turn never started counting. Fixes: the conductor starts a turn afresh whenever the turn or round changes, and starts the time limit as soon as it applies; the gate looks for cards from before the new round and sets the turn before switching the conductor on.

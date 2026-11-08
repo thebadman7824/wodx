@@ -49,9 +49,10 @@ export async function run() {
   await step("NPC turns: an NPC acts on Auto and the turn moves on by itself; a player's turn waits for the player", async () => {
     await game.settings.set(MOD, "turnConductor", "npc");
     await combat.setFlag(MOD, "conductor", {});
+    // From before the new round: an NPC first in the order acts at once
+    const t0 = Date.now();
     await combat.nextRound(); await sleep(2500);
     const firstNpc = combat.turns.find(c => !c.actor?.hasPlayerOwner);
-    const t0 = Date.now();
     await combat.update({turn: combat.turns.indexOf(firstNpc)});
     const moved = await waitFor(() => combat.combatant?.id !== firstNpc.id, 20000);
     const card = game.messages.contents.find(m => m.timestamp >= t0 && m.getFlag(NPC, "plan")?.combatant === firstNpc.id);
@@ -77,9 +78,10 @@ export async function run() {
   });
 
   await step("the time limit: no action in time, the action is held; Act next puts the hero straight after the current turn", async () => {
+    await game.settings.set(MOD, "turnConductor", "off");
+    await toTurn(T.hero);
     await game.settings.set(MOD, "conductorTimer", 3);
     await game.settings.set(MOD, "turnConductor", "everyone");
-    await toTurn(T.hero);
     const heroC = combat.combatant;
     const held = await waitFor(() => !!heroC.getFlag(MOD, "held") && combat.combatant?.id !== heroC.id, 9000);
     const why4 = {heldFlag: !!heroC.getFlag(MOD, "held"), turnNow: curName(), why: CD().state().why ?? null};

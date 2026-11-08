@@ -68,7 +68,7 @@ test("Hold: a held character steps in right after the current one", () => {
 
 test("wiring: Combat 3.7.0 loads the conductor; NPC 0.1.3 reports its turns; players ask, the Storyteller's client acts", () => {
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-combat/module.json"), "utf8"));
-  assert.equal(m.version, "3.7.1");
+  assert.equal(m.version, "3.7.2");
   const main = readFileSync(join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
   assert.match(main, /CD\.registerConductorSettings\(\)/);
   assert.match(main, /CD\.installConductor\(\)/);
@@ -78,4 +78,10 @@ test("wiring: Combat 3.7.0 loads the conductor; NPC 0.1.3 reports its turns; pla
   const npc = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
   assert.match(npc, /Hooks\.callAll\("wodxNpcTurnDone"/);
   assert.ok(!/\b(he|she|him|her|his|hers)\b/.test(cd.match(/`[^`]*`/g).join(" ").replace(/<[^>]+>/g, " ")), "gender-neutral text (B48)");
+});
+
+test("Combat 3.7.2: a turn come back to starts afresh; a time limit set mid-turn starts counting", () => {
+  const cd = readFileSync(join(root, "modules/wodx-combat/scripts/conductor.js"), "utf8");
+  assert.match(cd, /Hooks\.on\("updateCombat", \(combat, changes\) => \{ if \(cur\?\.combatId === combat\.id && \("turn" in/);
+  assert.match(cd, /if \(!isNPC && !cur\.timerEndsAt && !cur\.actionSpent && level\(\) === "everyone" && limit > 0\)/);
 });
