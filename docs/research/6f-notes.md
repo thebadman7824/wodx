@@ -56,9 +56,63 @@ dagrimoire, m20, c20), joined per book with page markers (`join.py`), headings f
   104–105).
 - **Cancelling** one's own spell: a turn, or one die from the pool if acting too (p. 104).
 
+## Dark Ages: Mage, the fellowships (Ch. 4, from p. 105)
+
+Each fellowship: a Foundation (rated 1–5; each level a lasting perk, not a spell) and four Pillars (1–5; what each
+level lets a spell do). Below: the mechanical hooks WoDX needs, in WoDX's words. Pillar levels are listed only where
+the book gives numbers; the rest is the scope the Storyteller judges by.
+
+### Ahl-i-Batin (pp. 105–109)
+- **Foundation: Al-Ikhlas** (awareness of unity). 1: perceive only. 4: −1 to all Alertness difficulties. 5: a further
+  −1 to Alertness, and Perception and Alertness rolls can no longer botch (a botch is a failure). Specialties:
+  Communication, Comprehension, Movement, Perception, Stealth (p. 105).
+- **Pillars (Ubbadan):** Al-Anbiya (fate), Al-Fatihah (minds), Al-Hajj (space), Al-Layl (secrecy). Foci: chants,
+  prayer, the Qur'an, trance, incense, mantras, mirrors, sacred geometry, veils and darkness (pp. 105–108).
+- Numbers: Al-Fatihah 1 is a simple-spell mental ward (an intruder must beat its successes first); 5 adds one dot of
+  Intelligence or Wits per success. Al-Hajj 2 ward: +1 difficulty per success to view, move or transport the warded;
+  3 teleports within the distance table (p. 104); multiple sight up to the lower of Perception or Wits; 4 carries one
+  person per dot of Wits or per Quintessence spent; 5 adds a dot of Perception per success. Al-Layl 1: successes add
+  to Subterfuge; 2: to Stealth, and unnoticed if Stealth successes beat the onlooker's Perception + Alertness; 3: to
+  Alertness, Investigation and Occult, and to sleight of hand; 4: finding the mage is Alertness or Investigation
+  against the mage's Al-Ikhlas + Al-Layl; 5: wards are walked through, and an enchantment is unmade by matching its
+  successes (pp. 106–108).
+- **Rotes (pp. 108–109):** Swift Road (each success cuts the journey by a fifth, compounding; +1 per success to the
+  difficulty to notice the traveller, from 5; +1 to both Pillars carries one more person per success or Quintessence).
+  Gaze of Suleiman (Al-Anbiya 3, Al-Fatihah 2, Al-Layl 2: each success takes one success off any roll to deceive the
+  mage; a deception cut to zero is seen through, and the surplus goes against the deceiver's mental defences). One
+  Fights as Many (Al-Fatihah 3, Al-Hajj 4: one Quintessence per duplicate, up to the successes; only one self casts or
+  spends Willpower per turn; the mage takes only the highest damage dealt to any self in a turn).
+
+### Messianic Voices (pp. 109–115)
+- **Foundation: Divinity** (relationship to the Divine). 4: −1 to all Expression difficulties. 5: −1 permanently to all
+  rolls with one chosen Social Attribute. Specialties: Communing with Angels, Healing, Obvious Intercessions,
+  Overcoming Dissonance (p. 110). Foci: holy symbols, prayer, scripture, song.
+- **Pillars (the Archangels):** Gavri-El (fire, healing, motion, reason), Mikha-El (leadership, light, war), Repha-El
+  (creativity, peace, water), Uri-El (darkness, death, fear, earth). The book says names and attributes are the
+  player's to vary (p. 111 sidebar).
+- Numbers: Gavri-El 2: heal one lethal or two bashing per success on a simple spell; fire of 1–2 levels; successes
+  add to Enigmas; 3: −1 Knowledge difficulty per two successes (floor 4), fire of one lethal per success, step into the
+  Penumbra, heal aggravated; 4: teleport, near and far Umbrae, +1 Intelligence per success; 5: Astral Umbra, raise the
+  dead of up to one minute per Divinity dot (one Health Level, barely conscious), one aggravated per success. Mikha-El
+  2: +1 per success to the difficulty of supernatural control and coercion; +1 die per success to Archery, Brawl,
+  Melee or damage; 3: +1 Strength or Stamina per success; +1 per success to Leadership; aggravated damage and soak with
+  normal weapons and armour; 4: +1 Charisma per success; sunlight; 5: two aggravated per success; authority that
+  holds unless a Willpower roll matches the successes; +/− one temporary Willpower per success (resisted by magic or
+  Willpower). Repha-El 2: heal any sickness in oneself or a soulless creature; successes add to Crafts, Empathy or
+  Performance; 3: a ward that demons must beat with Willpower successes; 4: banish an otherworldly being with
+  Divinity + Repha-El against its Willpower; 5: +1 Wits per success. Uri-El 2: successes add to Stealth; reach into
+  the Dark Umbra; 3: −1 per success to damage pools of earth, stone or metal weapons; one aggravated per success
+  soaked by Willpower, not Stamina; 4: heal one level per two levels drawn from a soul (killing); 5: slay the
+  undying; bind or force souls (resisted with Willpower) (pp. 111–114).
+- **Rotes (pp. 113–115):** The Word (Mikha-El 2: each success +1 to the difficulty to resist the next short, direct
+  command; authority, not mind control, so those immune to such things are immune). Shattering the Void (Gavri-El 3,
+  Mikha-El 3: two aggravated per success to beings of the Void, soaked as usual; half, rounded up, to beings with some
+  spirit left, such as vampires; nothing to humans however evil; against Willpower above 9 the difficulty stops at 9
+  with extra successes needed). Mortal Clay (Repha-El 3, Uri-El 4: a clay body for a dead soul; to read on, p. 115).
+
 ## To read next
 
-- DA:Mage pp. 106–143: each fellowship's Foundation (with its five levels and Specialties), its four Pillars and
+- DA:Mage pp. 115–143 (Messianic Voices and Ahl-i-Batin done, pp. 105–115): each fellowship's Foundation (with its five levels and Specialties), its four Pillars and
   sample rotes (Ahl-i-Batin, Messianic Voices, Old Faith, Order of Hermes, Spirit-Talkers, Valdaermen; hedge magic);
   Backlash, Branding and Scourging (pp. 136–143).
 - DA:Mage pp. 77–95: character creation, Backgrounds (Fount, Sanctum, Servants, Talisman), Merits and Flaws.
