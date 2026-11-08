@@ -298,9 +298,67 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   damage, Attribute boosts, ward successes, Gauntlet changes, cray creation).
 - The rotes as ready spells with their Pillar levels and systems.
 
+## Dark Ages: Mage, characters (Ch. 3, pp. 77–93)
+
+- **Creation (pp. 79–81):** as Dark Ages: Vampire for concept, Nature and Demeanor (Willpower from Nature as usual),
+  Attributes 7/5/3 and Abilities 13/9/5 (none above 3). No Disciplines, Road or Virtues. 5 Background dots; Foundation
+  starts at 1 and 3 dots go among the Pillars; nothing above 3 at the start; a Pillar may exceed the Foundation
+  (at a Quintessence cost when cast). Willpower 5. Quintessence = the higher of 5 and Fount + Cray. 15 bonus points:
+  Attribute 5, Ability 2, Specialty 1 (at most 3 per Ability), Background 1, Foundation 5, Pillar 3, Willpower 1.
+- **Backgrounds allowed from Dark Ages: Vampire:** Allies, Contacts, Influence, Mentor, Resources (not Generation or
+  Status). New: Chantry, Cray, Destiny, Familiar, Fount, Library, Sanctum, Servants, Talisman. Pooling as DAV pp.
+  157–158; Destiny, Fount and Familiar cannot be pooled (p. 79).
+- **New Abilities (pp. 82–83):** Awareness (Talent: sensing the supernatural, usually with Perception), Cosmology
+  (Knowledge: the Umbrae), Enigmas (Knowledge: riddles and spirits). They replace other Abilities on the mage sheet;
+  any DAV Ability can still be learned. (Our worldofdarkness system already has awareness, cosmology and enigmas
+  keys, seen in 7a.)
+- **Chantry (pp. 83–84):** each dot: size (1: a small home for 1–2 up to 5: a castle for a score), +1 difficulty to
+  break in, −1 Foundation-equivalent Aura for cabal members on the grounds, or acceptance by the neighbours. No cray or
+  sanctum included. Optional flaws trade one area down for another.
+- **Cray (pp. 84–85):** holds 5 × rating Quintessence; regains 1 a day on any day it is not tapped. Harvest as Tass, or
+  absorb directly: Wits + Foundation, difficulty 10 − rating, 1 Quintessence per success. Overdraw: past empty, a
+  further rating's worth can be drawn, at once −1 to the rating, then roll the new rating at difficulty 8: success,
+  refills as normal; failure, dormant (1 a year); botch, dead. Pooled points can hide it (+1 difficulty per point to
+  find it by magic). Maximums 5/10/15/20/25.
+- **Destiny (p. 85):** once a story, against danger to the destiny, roll the rating at difficulty 7: one spent
+  Willpower back per success. Gone when the destiny is fulfilled (the Storyteller may give a permanent Willpower).
+- **Familiar (pp. 85–86):** a Pact (term, duties, prohibitions). Eats Quintessence each week equal to its rating, or
+  weakens and dies. Boons bought with its dots: Backlash negation (once per dot per story), communication (1: speaks
+  the mage's languages; 2: mental speech with anyone in sight; always telepathic with the mage), Knowledge (3 dots of
+  a Knowledge per dot, or one answer per dot per story), protection (1: +1 die to soak, dodge or an escaping spell; 2:
+  an extra defensive action; 3: once a story, carry the mage to safety for 1 Quintessence).
+- **Fount (pp. 86–87):** without it 10 Quintessence held, 2 spent a turn (p. 87; p. 89 says three a turn without
+  Fount: a contradiction, WoDX follows the Fount table and p. 140's "more than two needs Fount"). 1: 12/2? The table
+  reads 1: store 12, spend 2; 2: 14, 3; 3: 16, 4; 4: 18, 5; 5: 20, 6. Refills its rating each month by a rite.
+- **Library (p. 87):** 2 points a dot. Intelligence + Library to find lore; when buying a Pillar dot, roll Library
+  at difficulty 8: −1 experience per success.
+- **Sanctum (p. 87):** no Backlash at all inside; 2: −1 to magic difficulties; 3: −2; 4: also 1 Quintessence for
+  eight hours' sleep; 5: knows any intrusion; +1 die to Foundation. About a year per dot to attune.
+- **Servants (pp. 87–88):** as Retainers; human or magical (bought separately); magical ones do one task, tirelessly.
+- **Talisman (p. 88):** level = the highest Pillar used to make it; 1 a focus or one-use item, 3 armour +3B/+3L, 5 a
+  legend.
+- **Quintessence (pp. 88–89):** lowers difficulty; must be spent for a Pillar above the Foundation; one point makes a
+  spell showy, or alone makes a small cosmetic effect (1 a turn to keep it); 3 a turn without Fount (see the
+  contradiction above). Regained from crays and Tass, Fount monthly, 1 a day in the Umbra; a vampire's blood is Tass
+  (1 point per blood point), with the risk of the blood oath (p. 89).
+- **Aura (p. 89):** a modifier to Social rolls by Foundation, like the vampires' Road aura: 0 none; 1–2 ±1; 3 ±1/±2
+  (OCR unclear, to confirm); 4 ±2; 5 ±3.
+- **Experience (p. 89):** Attribute ×4, Ability ×2, new Ability 3, Specialty = current rating, Foundation ×8 (and the
+  Storyteller judges the mage ready), new Pillar 10, Pillar ×6, Willpower ×1. No Maturation (mages age).
+- **Merits and Flaws (pp. 90–93):** Elderly (4 Flaw: +1 physical difficulties; a botch risks an Attribute dot), Hale
+  (2: −2 to resist disease), Pain Resistant (2: wound penalties −1), Weak Lungs (2 Flaw: +1 on sustained activity),
+  Devotion (1–3: once a session, 1–3 temporary Willpower by prayer), Faint of Heart (2 Flaw: Willpower 6 at gore or
+  +1 to all for minutes), Indomitable (3: +2 to coerce, +1 to supernatural domination), Arcane Heritage (1, Merit or
+  Flaw: ∓2 Social with the impressed), Apprentice (3, Merit or Flaw), Repulsive Practice (3 Flaw), Arcane Madness
+  (3 Flaw: spells a story up to permanent Willpower, then Willpower 7 each time or +1 to all for an hour), Chicanery
+  (3: cosmetic effects with no spend while holding Quintessence; three turns per point), Inept Channeler (4 Flaw:
+  past permanent Willpower in Quintessence in a scene or spell, Willpower 6 per point or a bashing level, lethal on a
+  botch), Living Fount (2, needs Fount: once a story, Fount at 6 for a hint), Pillar Natural (5: that Pillar costs
+  current ×5, first dot 8), Witchwalk (1–5 Flaw: a superstition that binds the mage; at 5, salt wards for a day and
+  does an unsoakable lethal level). Disallowed DAV Merits and Flaws are listed on p. 91 (the vampire-only ones).
+
 ## To read next
 
-- DA:Mage pp. 77–95: character creation, Backgrounds (Fount, Sanctum, Servants, Talisman), Merits and Flaws.
 - The inner voice for mages (the Avatar): what DA:Mage calls the mage's inner spark and its pressures (Backlash,
   hubris), and M20's Avatar, Seekings and Quiet (pp. 44–46, 267, 339–340, 368–371, 240–243).
 - Then Dark Ages: Fae and Changeling 20th.
