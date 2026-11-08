@@ -506,3 +506,12 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - Third run: 7 of 7, no console errors. Afterwards the world had no test characters, snapshots or test folder left, and the clock and era were back as they were (2025, modern).
 - win-paths.mjs also caught require() calls and stopped ui-fit.mjs loading Playwright. It now leaves require() alone.
 - Tests: 333 pass; UI fit passes. Deployed (Backups/wodx-creation-0.6.0-2026-11-08 first; files checked by MD5).
+
+## Phase 7c, 2026-11-08: WoDX NPC 0.2.0
+- Movement and routines, per the Phase 7 Plan (7c Onward) and B85; choices in B87–B90.
+- routine-rules.mjs (pure): hour blocks with day, night, weekday and feast-day conditions, a block past midnight kept with the day it started; presets per template; place roles and kinds; feast days (Easter by the Julian or Gregorian reckoning, the fixed and movable great feasts, the chronicle's own); the curfew; noticing by the era's book (V20 or V20 Dark Ages) with Sneaking and Obfuscate; the reaction pick from the 7b profile.
+- routines.mjs: places as scene and region flags, the Places window (search box, first guesses from scene names, owners matched to NPCs), the routine editor, the clock hooks (walk on the scene in view, jump elsewhere, place on opening a scene and after a skip), routine cards with Accept and Undo, Auto with Undo that never removes a hand-placed token, pauses for a fight or a reaction, reports for the dead and missing.
+- The WoDX: Reaction region behaviour (enter, leave, stay), registered through module.json's documentTypes, so Foundry needs a restart after deploying.
+- Obfuscated and Sneaking registered as WoDX conditions.
+- No NPC dialogue: every card says the Storyteller speaks for the NPC (rule 11). Text is gender-neutral.
+- Tests: 348 pass (15 new: phase7c.test.mjs, phase7c-runtime.test.mjs). UI fit covers the Places window and the two new dialogs. Gate: tools/gate/gate7c.mjs, run in wodx-template with four Rothenstein NPCs copied in (Sergeant Heinz Volker, Ludwig of Regensburg, Father Ludovic, Voivode Bogdan Ursu).
