@@ -2,7 +2,7 @@
   "id": "wodx-actions",
   "title": "WoDX Actions",
   "description": "World of Darkness Expanded: non-combat actions with a menu for every line (Kindred hunting, feeding, blood, frenzy, Road, torpor, diablerie; ghouls, mortals, hunters, Garou, mages, changelings, wraiths, spirits, creatures, demons, mummies, Exalted), powers as timed effects, and the move from VtDA20. Replaces vtda20-actions. Private use only; not for distribution or sale.",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "authors": [
     {
       "name": "Benjamin LeBrun"

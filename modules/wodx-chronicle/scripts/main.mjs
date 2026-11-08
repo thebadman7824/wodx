@@ -12,6 +12,7 @@ import {installSearch} from "./search.mjs";
 import * as skip from "./skip.mjs";
 import * as conditions from "./conditions.mjs";
 import * as timed from "./timed.mjs";
+import * as theme from "./theme.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -37,6 +38,9 @@ Hooks.once("init", () => {
     onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); },
     onRuleChange: async () => { await eras.checkEra(); await eras.refreshRulesJournal(); ClockApp.refresh(); }
   });
+  // The WoDX look (6e): each player's own look, text size and motion
+  theme.registerThemeSettings();
+  theme.applyLook();
 
   // Calendar: Julian, then Gregorian at the chosen reform
   let reform = "bohemia-1584";
@@ -105,7 +109,8 @@ Hooks.once("ready", async () => {
     conditions, timed,
     registerCondition: conditions.registerCondition,
     applyTimed: timed.applyTimed,
-    endScene: timed.endScene
+    endScene: timed.endScene,
+    theme
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});

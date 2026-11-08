@@ -40,6 +40,8 @@ const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
  * res: resources shown/spent by the menus: [id, label].
  * bane: what ignores natural soak (silver, cold iron...).
  */
+import { lineClass } from "./theme-rules.js";
+
 export const PROFILES = {
     kindred:  { label: "Kindred (Cainite)",        soak: "vampire", res: ["blood", "willpower"], bane: "fire / sunlight" },
     ghoul:    { label: "Ghoul / Revenant",         soak: "ghoul",   res: ["blood", "willpower"], bane: "fire / sunlight (no extra defense)" },
@@ -232,8 +234,15 @@ export function fit(app) {
  * Dialog that works on Foundry v11-v14 (DialogV2 when present, classic Dialog otherwise).
  * buttons: [{id,label,icon,default}]; resolves {id, data} with the form values read at click time, or null if closed.
  */
+/** The line whose look the next dialog wears (6e): set while an action for an actor runs. */
+let LINE = "";
+export function setLine(kind) { const prev = LINE; LINE = kind ?? ""; return prev; }
+export const currentLine = () => LINE;
+
 export function ask({ title, content, buttons, width = 480, classes = [], onRender = null }) {
     const V2 = globalThis.foundry?.applications?.api?.DialogV2;
+    const lc = lineClass(LINE);
+    if (lc && !classes.includes(lc)) classes = [...classes, lc];
     if (V2) {
         return new Promise(resolve => {
             let done = false;

@@ -298,7 +298,7 @@ game.world.id = worldId;
 }
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
-    classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: 400, height: "auto",
+    classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: c.position?.width ?? 400, height: "auto",
     content: `<form class="dialog-form standard-form">${c.content ? `<div class="dialog-content standard-form">${c.content}</div>` : ""}
       <footer class="form-footer"><button type="submit">OK</button><button type="button">Cancel</button></footer></form>`});
 }
@@ -307,11 +307,23 @@ const unclassed = captured.filter(c => !(c.classes ?? []).includes("wodx-dialog"
 if ( unclassed.length ) { console.error(`Dialogs without the wodx-dialog class: ${unclassed.map(c => c.window?.title).join(", ")}`); process.exit(1); }
 
 /* ---- Lay them out in Chromium with Foundry's CSS ---- */
-const css = [pathToFileURL(foundryCss).href,
+// Foundry's icons and type, when they sit beside foundry2.css (public/fonts)
+const pub = join(dirname(foundryCss), "..");
+const extras = ["fonts/fontawesome/css/all.min.css", "fonts/signika/signika.css"].map(f => join(pub, f)).filter(existsSync).map(f => pathToFileURL(f).href);
+const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-chronicle/styles/wodx-chronicle.css")).href,
+  pathToFileURL(join(root, "modules/wodx-chronicle/styles/wodx-theme.css")).href,
+  pathToFileURL(join(root, "modules/wodx-actions/styles/wodx-actions.css")).href,
+  pathToFileURL(join(root, "modules/wodx-combat/styles/wodx-combat.css")).href,
   pathToFileURL(join(root, "modules/wodx-otherworlds/styles/wodx-otherworlds.css")).href,
   pathToFileURL(join(root, "modules/wodx-creation/styles/wodx-creation.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
+// 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
+const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));
+const KIT = process.env.WODX_KIT ?? "dark-ages", SCALE = process.env.WODX_SCALE ?? "1", LOOK = process.env.WODX_LOOK ?? "era";
+const bodyAttrs = `class="vtt game system-worldofdarkness theme-dark${LOOK === "plain" ? "" : " wodx-look"}" data-wodx-kit="${KIT}" data-wodx-look="${LOOK}" data-wodx-tone="${toneFor(KIT, LOOK)}" style="--wx-scale:${SCALE}"`;
+console.log(`Look: ${LOOK}, kit ${KIT}, text ${SCALE}`);
+if ( outDir ) { mkdirSync(outDir, {recursive: true}); writeFileSync(join(outDir, "windows.json"), JSON.stringify(windows)); }
 const browser = await chromium.launch();
 let failures = 0;
 if ( outDir ) mkdirSync(outDir, {recursive: true});
@@ -332,7 +344,7 @@ for ( const [vw, vh] of sizes ) {
       w.width = Math.max(480, Math.min(820, vw - 40));
     }
     const html = `<!doctype html><html><head><meta charset="utf-8">${css.map(h => `<link rel="stylesheet" href="${h}">`).join("")}</head>
-      <body class="vtt game system-worldofdarkness theme-dark">
+      <body ${bodyAttrs}>
       <${w.tag} id="app" class="${w.classes}" style="width:${w.width}px;${w.height === "auto" ? "" : `height:${w.height}px;`}left:20px;top:0">
         <header class="window-header"><h1 class="window-title">${w.name}</h1></header>
         <section class="window-content">${w.content}</section>
@@ -406,7 +418,7 @@ for ( const [vw, vh] of sizes ) {
       console.log(`ok   ${label}: ${result.controls} controls reachable, window ${result.height}px`);
     }
     if ( outDir ) {
-      await page.evaluate(() => document.querySelectorAll(".wodx-scroll").forEach(s => s.scrollTop = 0));
+      await page.evaluate(() => document.querySelectorAll("*").forEach(s => { if ( s.scrollTop ) s.scrollTop = 0; }));
       await page.screenshot({path: join(outDir, `ui-fit-${vw}x${vh}-${w.name.replace(/[\s\/]+/g, "-")}.png`)});
     }
     await page.close();

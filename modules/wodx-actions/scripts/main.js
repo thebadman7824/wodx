@@ -42,6 +42,7 @@ import * as KRR from "./reckoning-rules.js";
 import * as RX from "./reckoning.js";
 import * as VR from "./voice-rules.js";
 import * as VX from "./voice.js";
+import * as TR from "./theme-rules.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -75,6 +76,8 @@ function registerSettings() {
     WX.registerSettings(s);
     HX.registerSettings(s);
     VX.registerSettings(s);
+    // 6e: each player's last few menu buttons, per actor type
+    game.settings.register(MOD, "menuRecent", { scope: "client", config: false, type: Object, default: {} });
 }
 const setting = k => game.settings.get(MOD, k);
 
@@ -324,14 +327,57 @@ async function post(actor, title, body, rolls = [], data = null) {
         if (oc) flav = F.line(th, oc, { name: actor?.name ?? "Someone", ...(tgt ? { target: tgt } : {}) },
             { group: F.actorGroup(actor ? P.detectProfile(actor) : null) });
     }
-    const content = `<div class="vta-card"><h3>${title}</h3>${body}${mode === "all" ? F.html(flav) : ""}</div>`;
+    // 6e: one card layout (header, roll, result, what changed, page reference); the changes come from the sheet updates
+    const line = actor ? P.detectProfile(actor) : "";
+    const changes = actor ? takeChanges(actor.id) : [];
+    const content = TR.cardLayout({ title, body: `${body}${mode === "all" ? F.html(flav) : ""}`, line, changes });
     if (flav && mode === "gm") ChatMessage.create({ content: `<div class="vta-card">${F.html(flav)}</div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" } });
     const md = { speaker: ChatMessage.getSpeaker({ actor }), content, rolls: rolls.filter(Boolean) };
     if (rolls.filter(Boolean).length) { md.sound = CONFIG.sounds.dice; if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL; }
     // Cards with prompt buttons (sin, witnesses, Rötschreck after sunlight) need the module's flag to be bound
     if (!data && /data-(kx|sx|wx|vx)=/.test(content)) data = { kind: "buttons" };
     if (data) md.flags = { [MOD]: data };
-    return ChatMessage.create(md);
+    const msg = await ChatMessage.create(md);
+    // Changes written just after the card (most builders post, then update the sheet) join it a moment later
+    if (actor && msg) setTimeout(() => {
+        const late = takeChanges(actor.id);
+        if (late.length) msg.update({ content: TR.withChanges(msg.content, [...changes, ...late]) }).catch(e => console.warn("WoDX | card changes", e));
+    }, 900);
+    return msg;
+}
+
+/** Show a card written without the 3.6 layout (notices, whispers, older messages) in it. Changes the page, not the message. */
+function upgradeCards(m, el) {
+    if (!el?.querySelectorAll) return;
+    for (const card of el.querySelectorAll(".vta-card:not(.wodx-x)")) {
+        const h = card.querySelector(":scope > h3");
+        const title = h ? h.innerHTML : "";
+        h?.remove();
+        const actor = m?.speaker?.actor ? game.actors?.get(m.speaker.actor) : null;
+        const t = document.createElement("template");
+        t.innerHTML = TR.cardLayout({ title, body: card.innerHTML, line: actor ? P.detectProfile(actor) : "" });
+        const nu = t.content.firstElementChild;
+        for (const c of card.classList) nu.classList.add(c);
+        if (!title) nu.querySelector(".vta-head")?.remove();
+        card.replaceWith(nu);
+    }
+}
+
+/* What changed (6e): the tracked numbers each sheet update on this computer changes, kept a few seconds for the card. */
+const LEDGER = new Map();
+function recordChanges(actor, changes) {
+    try {
+        const list = TR.diffResources(actor.system ?? {}, foundry.utils.flattenObject(changes ?? {}), P.RES);
+        if (!list.length) return;
+        const now = Date.now();
+        LEDGER.set(actor.id, [...(LEDGER.get(actor.id) ?? []).filter(c => now - c.t < 8000), ...list.map(c => ({ ...c, t: now }))]);
+    } catch (e) { console.warn("WoDX | change ledger", e); }
+}
+function takeChanges(id, ms = 6000) {
+    const now = Date.now();
+    const out = (LEDGER.get(id) ?? []).filter(c => now - c.t < ms);
+    LEDGER.delete(id);
+    return out;
 }
 const btn = (action, label) => `<button type="button" class="vta-btn" data-action="${action}">${label}</button>`;
 
@@ -1666,7 +1712,13 @@ function gx() {
     return GXE ??= GX.build({ post, rollPool, rollBlock, dialog, updateActor, attr, findAbility, setting, spendWillpower,
         notify: m => ui.notifications.warn(m) });
 }
-const withActor = f => (o = {}) => { const a = needActor(o.actor); return a ? f(a, o) : null; };
+/** Find the actor, and dress the dialogs it opens in its line's look (6e) while the action runs. */
+const withActor = f => async (o = {}) => {
+    const a = needActor(o.actor);
+    if (!a) return null;
+    const prev = P.setLine(P.detectProfile(a));
+    try { return await f(a, o); } finally { P.setLine(prev); }
+};
 
 let SXE = null;
 /** The sunlight system (3.3.0). */
@@ -1721,26 +1773,91 @@ export async function menu({ actor: a } = {}) {
     const actor = a?.actor ?? a ?? resolveActor();
     if (!actor) return ui.notifications.warn("WoDX Actions: select a token or assign a character first.");
     const legacy = !setting("profileMenu");
+    const kind = P.detectProfile(actor);
+    let recentAll = {};
+    try { recentAll = foundry.utils.deepClone(setting("menuRecent") ?? {}); } catch (e) { recentAll = {}; }
     let html;
     if (legacy) html = `<div class="vta-menu">${MENU.map(([k, i, l]) => `<button type="button" data-k="api:${k}"><i class="fas ${i}"></i> ${l}</button>`).join("")}</div>`;
-    else html = (await pm().menuFor(actor)).html;
-    const kind = P.detectProfile(actor);
-    const r = await P.ask({
-        title: `WoDX Actions — ${P.profileLabel(kind)}`, content: html, width: 460, classes: ["vta-dialog"],
-        buttons: [{ id: "close", label: "Close", icon: "fas fa-times" }],
-        onRender: (root, close) => {
-            root.querySelectorAll("button[data-k]").forEach(b => b.addEventListener("click", async () => {
-                const spec = b.dataset.k;
-                close();
-                try { await pm().run(spec, actor); } catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); }
-            }));
-            root.querySelector("button.vta-kind")?.addEventListener("click", async () => {
-                close();
-                if (await P.pickProfile(actor)) menu({ actor });
-            });
-        }
-    });
+    else html = (await pm().menuFor(actor, { recent: recentAll[kind] ?? [], isGM: game.user.isGM })).html;
+    const prev = P.setLine(kind);
+    let r;
+    try {
+        r = await P.ask({
+            title: `WoDX Actions — ${P.profileLabel(kind)}`, content: html, width: legacy || !TR.LINE_LOOK.includes(kind) ? 460 : 560, classes: ["vta-dialog", "wodx-menu-dialog"],
+            buttons: [{ id: "close", label: "Close", icon: "fas fa-times" }],
+            onRender: (root, close) => {
+                const use = async b => {
+                    const spec = b.dataset.k;
+                    close();
+                    recentAll[kind] = TR.pushRecent(recentAll[kind], spec);
+                    game.settings.set(MOD, "menuRecent", recentAll).catch(() => {});
+                    const was = P.setLine(kind);
+                    try { await pm().run(spec, actor); } catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); } finally { P.setLine(was); }
+                };
+                root.querySelectorAll("button[data-k]").forEach(b => b.addEventListener("click", () => use(b)));
+                root.querySelector("button.vta-kind")?.addEventListener("click", async () => {
+                    close();
+                    if (await P.pickProfile(actor)) menu({ actor });
+                });
+                menuKeys(root, use);
+            }
+        });
+    } finally { P.setLine(prev); }
     return r;
+}
+
+/**
+ * The intent menu's keys (6e): typing goes to the search box; arrow keys move between the buttons shown (up and down
+ * by row); Enter in the search box uses the first button found. The hint line follows the hover and the focus.
+ */
+function menuKeys(root, use) {
+    const wrap = root.querySelector(".wodx-menu2");
+    if (!wrap) return;
+    const find = wrap.querySelector(".vta-menu-find");
+    const hint = wrap.querySelector(".vta-hintbar");
+    const shown = () => [...wrap.querySelectorAll("button[data-k]")].filter(b => b.offsetParent !== null && b.style.display !== "none");
+    const say = b => { if (hint) hint.innerHTML = b ? `<b>${esc(b.textContent.trim())}</b>${b.dataset.hint ? ` — ${esc(b.dataset.hint)}` : ""}` : esc(hint.dataset.default ?? ""); };
+    wrap.addEventListener("mouseover", ev => { const b = ev.target.closest?.("button[data-k]"); if (b) say(b); });
+    wrap.addEventListener("focusin", ev => { const b = ev.target.closest?.("button[data-k]"); say(b ?? null); });
+    wrap.addEventListener("mouseleave", () => say(wrap.querySelector("button[data-k]:focus")));
+    wrap.addEventListener("keydown", ev => {
+        const list = shown();
+        if (ev.target === find) {
+            if (ev.key === "Enter" && list.length) { ev.preventDefault(); use(list[0]); }
+            else if (ev.key === "ArrowDown" && list.length) { ev.preventDefault(); list[0].focus(); }
+            return;
+        }
+        const b = ev.target.closest?.("button[data-k]");
+        if (!b) return;
+        const i = list.indexOf(b);
+        const r0 = b.getBoundingClientRect();
+        const byRow = dir => {
+            // The nearest button in the next row up or down, by its middle
+            const cands = list.filter(x => { const r = x.getBoundingClientRect(); return dir > 0 ? r.top > r0.bottom - 2 : r.bottom < r0.top + 2; });
+            if (!cands.length) return null;
+            const rowTop = dir > 0 ? Math.min(...cands.map(x => x.getBoundingClientRect().top)) : Math.max(...cands.map(x => x.getBoundingClientRect().top));
+            const row = cands.filter(x => Math.abs(x.getBoundingClientRect().top - rowTop) < 4);
+            const mid = r0.left + r0.width / 2;
+            return row.sort((p, q) => Math.abs(p.getBoundingClientRect().left + p.offsetWidth / 2 - mid) - Math.abs(q.getBoundingClientRect().left + q.offsetWidth / 2 - mid))[0];
+        };
+        let to = null;
+        if (ev.key === "ArrowRight") to = list[i + 1];
+        else if (ev.key === "ArrowLeft") to = list[i - 1];
+        else if (ev.key === "ArrowDown") to = byRow(1);
+        else if (ev.key === "ArrowUp") to = byRow(-1) ?? find;
+        else if (ev.key === "Home") to = list[0];
+        else if (ev.key === "End") to = list[list.length - 1];
+        else if (ev.key.length === 1 && !ev.ctrlKey && !ev.metaKey && !ev.altKey && /\S/.test(ev.key) && find) {
+            // Typing anywhere in the menu searches
+            ev.preventDefault();
+            find.focus();
+            find.value += ev.key;
+            find.dispatchEvent(new Event("input", { bubbles: true }));
+            return;
+        }
+        if (to) { ev.preventDefault(); to.focus(); }
+    });
+    setTimeout(() => find?.focus(), 50);
 }
 
 /* ================================================================== */
@@ -1832,7 +1949,7 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.5.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.6.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => pm().uses(o.actor ?? resolveActor(), o.resource ?? "willpower"), cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
     cast: (o = {}) => pm().cast(o.actor ?? resolveActor()),
@@ -1889,6 +2006,10 @@ Hooks.once("init", () => {
     L.alias("actions", "vtda20actions", API, "vtda20-actions");
     const mod = game.modules.get(MOD);
     if (mod) mod.api = API;
+    // 6e: every WoDX card shown in the one layout, the ones written before 3.6 and the notices too (before the buttons are bound)
+    Hooks.on(GEN() >= 13 ? "renderChatMessageHTML" : "renderChatMessage", (m, el) => { try { upgradeCards(m, el?.[0] ?? el); } catch (e) { console.warn("WoDX | card layout", e); } });
+    // 6e: what each sheet update changes, for the card that reports it
+    Hooks.on("preUpdateActor", (actor, changes, options, userId) => { if (!userId || userId === game.user.id) recordChanges(actor, changes); });
     if (GEN() >= 13) Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]) bindCard(m, el); });
     else Hooks.on("renderChatMessage", (m, html) => { if (m.flags?.[MOD]) bindCard(m, html[0] ?? html); });
 });

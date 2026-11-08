@@ -43,3 +43,8 @@ Nothing ships while an item below fails. Each problem found is fixed and the che
 ## 5. Record
 
 - [ ] BUILD-LOG.md lists what was checked, what was found, what was fixed, and anything left open with a reason.
+
+## The look review (from Phase 6e)
+- Run ui-fit.mjs with an output folder for each kit that changed (WODX_KIT=dark-ages, victorian, great-war, modern...), and with WODX_SCALE=1.5 once: every window must pass at the three sizes.
+- Run look.mjs on that folder and look at the sheets: the three menus and the chat cards per kit, and the cards across the kits. Check the titles, the accents, the pips and the footers read clearly.
+- phase6e.test.mjs checks the contrast of every kit and accent; a new kit or accent must pass it.

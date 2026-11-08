@@ -16,6 +16,7 @@
 import * as P from "./profiles.js";
 import * as GX from "./garou.js";
 import * as GR from "./garou-rules.js";
+import * as TR from "./theme-rules.js";
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -423,16 +424,35 @@ export function build(ctx) {
     function rules(actor, key) { return post(actor, "Rules reminder", `<div class="vta-note">${RULES[key] ?? ""}</div>`); }
 
     /** Launcher: sections for the actor's profile, the profile toggle and an Auto/override selector. */
-    async function menuFor(actor) {
+    async function menuFor(actor, { recent = [], isGM = !!globalThis.game?.user?.isGM } = {}) {
         const kind = P.detectProfile(actor);
         const def = MENUS[kind] ?? MENUS.mortal;
         const auto = P.detectProfile(actor, { ignoreFlag: true });
         const overridden = kind !== auto;
+        const kindBtn = `<button type="button" class="vta-kind" title="Change the actor type"><i class="fas fa-exchange-alt" aria-hidden="true"></i> Type</button>`;
+        // 6e: the restyled lines group their buttons by intent, with search, recent uses, hints and keys
+        if (TR.LINE_LOOK.includes(kind)) {
+            const g = TR.groupMenu(kind, def.sections, { isGM });
+            const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
+            const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}</span></button>`;
+            const rec = recent.map(s => all.find(x => x.spec === s)).filter(Boolean);
+            const html = `<div class="vta-grp-wrap wodx-menu2" data-line="${esc(kind)}">
+              <div class="vta-menu-head"><span><span class="vta-who">${esc(actor.name)}</span><span class="vta-kindlabel">${esc(P.profileLabel(kind))}${overridden ? " (override)" : ""}</span></span>${kindBtn}</div>
+              <input type="search" class="wodx-search vta-menu-find" data-search=".vta-intents" placeholder="Find an action…" aria-label="Find an action" autocomplete="off" spellcheck="false">
+              ${rec.length ? `<div class="vta-recent" role="group" aria-label="Used lately"><span>Lately</span>${rec.map(x => btn(x, false)).join("")}</div>` : ""}
+              <div class="vta-intents">
+              ${g.bands.map(b => `<fieldset class="vta-grp vta-band vta-band-${b.id}"><legend>${esc(b.label)} <small>${esc(b.hint)}</small></legend><div class="vta-grp-btns">${b.buttons.map(x => btn(x)).join("")}</div></fieldset>`).join("")}
+              ${g.scene.length ? `<div class="vta-scene" role="group" aria-label="The scene">${g.scene.map(x => btn(x)).join("")}</div>` : ""}
+              </div>
+              <p class="vta-hintbar" aria-live="polite" data-default="Type to find an action · arrow keys move · Enter uses it">Type to find an action · arrow keys move · Enter uses it</p>
+            </div>`;
+            return { kind, html };
+        }
         const html = `<div class="vta-grp-wrap">
           <p class="vta-menu-head"><span><b>${esc(actor.name)}</b> — ${esc(P.profileLabel(kind))}${overridden ? " <i>(override)</i>" : " <i>(auto)</i>"}</span>
-             <button type="button" class="vta-kind" title="Change the actor type"><i class="fas fa-exchange-alt"></i> Type</button></p>
+             ${kindBtn}</p>
           ${def.sections.map(([title, btns]) => `<fieldset class="vta-grp"><legend>${esc(title)}</legend><div class="vta-grp-btns">${btns.map(([k, l, i]) =>
-              `<button type="button" data-k="${esc(k)}"><i class="fas ${i}"></i> ${esc(l)}</button>`).join("")}</div></fieldset>`).join("")}
+              `<button type="button" data-k="${esc(k)}" title="${esc(TR.DESC[k] ?? l)}"><i class="fas ${i}"></i> ${esc(l)}</button>`).join("")}</div></fieldset>`).join("")}
         </div>`;
         return { kind, html };
     }

@@ -1,0 +1,601 @@
+/* =====================================================================================================================
+   WoDX Chronicle 0.3 — the WoDX look (Phase 6e, B51).
+   One set of design tokens, themed by era (the era kit, body[data-wodx-kit]) and by line (the line accent, a
+   .wodx-line-<profile> class on a window or card). Everything is scoped to body.wodx-look, so the "Plain" look (or
+   WoDX switched off) leaves Foundry's own styling alone. Only WoDX windows (.application.wodx) and WoDX chat cards
+   (.vta-card.wodx-x, .wodx-card) are restyled; Foundry's own interface is not touched.
+   Fonts: bundled, Latin subset, SIL Open Font License 1.1 (Special Elite: Apache 2.0); see fonts/licenses.
+   ===================================================================================================================== */
+
+@font-face { font-family: "WX Blackletter"; src: url("../fonts/UnifrakturMaguntia.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "WX Uncial"; src: url("../fonts/UncialAntiqua.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "WX Alegreya"; src: url("../fonts/Alegreya.woff2") format("woff2"); font-weight: 400 900; font-display: swap; }
+@font-face { font-family: "WX Alegreya"; src: url("../fonts/Alegreya-Italic.woff2") format("woff2"); font-weight: 400 900; font-style: italic; font-display: swap; }
+@font-face { font-family: "WX Didone"; src: url("../fonts/PlayfairDisplay.woff2") format("woff2"); font-weight: 400 900; font-display: swap; }
+@font-face { font-family: "WX Baskerville"; src: url("../fonts/LibreBaskerville.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "WX Poster"; src: url("../fonts/Rye.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "WX Stencil"; src: url("../fonts/StardosStencil.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "WX Typewriter"; src: url("../fonts/SpecialElite.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "WX Courier"; src: url("../fonts/CourierPrime.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "WX Plex"; src: url("../fonts/IBMPlexSans.woff2") format("woff2"); font-weight: 100 700; font-stretch: 85% 100%; font-display: swap; }
+@font-face { font-family: "WX Plex Mono"; src: url("../fonts/IBMPlexMono.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "WX Techno"; src: url("../fonts/Orbitron.woff2") format("woff2"); font-weight: 400 900; font-display: swap; }
+
+/* ---- Tokens. The default is the night palette (the Modern kit without its type) ---- */
+body.wodx-look {
+  --wx-scale: 1;
+  --wx-paper: #141216;
+  --wx-paper-2: rgba(255, 255, 255, 0.045);
+  --wx-bar: #0b0a0c;
+  --wx-bar-ink: #eee8de;
+  --wx-ink: #e8e2d6;
+  --wx-quiet: #aea494;
+  --wx-rule: #423b46;
+  --wx-field: #1e1b21;
+  --wx-btn: #1b181d;
+  --wx-kit-accent: #c9a14a;
+  --wx-on-accent: #121014;
+  --wx-good: #84c983;
+  --wx-bad: #ff7559;
+  --wx-focus: #ffd479;
+  --wx-texture: none;
+  --wx-frame: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --wx-radius: 4px;
+  --wx-orn: "◆";
+  --wx-glow: none;
+  --wx-bar-mix: 100%;
+  --wx-f-title: var(--font-primary, "Signika"), sans-serif;
+  --wx-f-head: var(--font-primary, "Signika"), sans-serif;
+  --wx-f-body: var(--font-primary, "Signika"), sans-serif;
+  --wx-f-ui: var(--font-primary, "Signika"), sans-serif;
+  --wx-f-mono: var(--font-mono, monospace);
+  --wx-title-size: 1.15em;
+  --wx-title-tt: none;
+  --wx-title-ls: 0;
+  --wx-title-weight: 700;
+  --wx-head-tt: none;
+  --wx-head-ls: 0.02em;
+  --wx-head-variant: normal;
+  --wx-body-size: 1em;
+}
+
+/* Paper and grain, drawn in SVG so nothing is downloaded */
+body.wodx-look {
+  --wx-grain-brown: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .2 0 0 0 0 .08 .55 0 0 0 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --wx-grain-fibre: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.02 .9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .22 0 0 0 0 .12 .5 0 0 0 -.22'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --wx-grain-grunge: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='.6' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .9 0 0 0 -.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --wx-vignette: radial-gradient(ellipse at center, transparent 55%, rgba(70, 40, 10, 0.18) 100%);
+}
+
+/* ---- Era kits ---- */
+/* Dark Ages: illuminated manuscript and woodcut. Blackletter titles, uncial headings, parchment. */
+body.wodx-look[data-wodx-kit="dark-ages"], body.wodx-look[data-wodx-kit="long-night"] {
+  --wx-paper: #eadcbc;
+  --wx-paper-2: rgba(120, 80, 30, 0.08);
+  --wx-bar: linear-gradient(180deg, #dcc89c, #cfb685);
+  --wx-bar-ink: #2a1a0e;
+  --wx-ink: #2b1d12;
+  --wx-quiet: #5d4831;
+  --wx-rule: #8c6a42;
+  --wx-field: rgba(255, 250, 235, 0.6);
+  --wx-btn: rgba(255, 248, 230, 0.45);
+  --wx-kit-accent: #8b1a12;
+  --wx-on-accent: #fcf4e2;
+  --wx-good: #2d6a28;
+  --wx-bad: #9b1c10;
+  --wx-focus: #1d4f9a;
+  --wx-texture: var(--wx-vignette), var(--wx-grain-brown);
+  --wx-frame: inset 0 0 0 3px var(--wx-paper), inset 0 0 0 4px var(--wx-rule);
+  --wx-radius: 3px;
+  --wx-orn: "❦";
+  --wx-f-title: "WX Blackletter", "WX Alegreya", serif;
+  --wx-f-head: "WX Uncial", "WX Alegreya", serif;
+  --wx-f-body: "WX Alegreya", Georgia, serif;
+  --wx-f-ui: "WX Alegreya", Georgia, serif;
+  --wx-title-size: 1.4em;
+  --wx-title-weight: 400;
+  --wx-body-size: 1.05em;
+}
+/* Plague and the Long Night: as the Dark Ages, darker paper */
+body.wodx-look[data-wodx-kit="long-night"] {
+  --wx-paper: #dccaa6;
+  --wx-bar: linear-gradient(180deg, #cdb68b, #bfa57a);
+  --wx-ink: #22150b;
+  --wx-quiet: #4d3a24;
+  --wx-rule: #6f5030;
+  --wx-good: #245820;
+  --wx-vignette: radial-gradient(ellipse at center, transparent 45%, rgba(40, 20, 5, 0.28) 100%);
+}
+/* Sorcerers Crusade (and the ancient eras): old-style roman type, engraved borders */
+body.wodx-look:is([data-wodx-kit="renaissance"], [data-wodx-kit="classical"], [data-wodx-kit="living-gods"]) {
+  --wx-paper: #f0e8d5;
+  --wx-paper-2: rgba(40, 60, 90, 0.06);
+  --wx-bar: #e3d7bb;
+  --wx-bar-ink: #1f1a14;
+  --wx-ink: #1f1a14;
+  --wx-quiet: #574b3b;
+  --wx-rule: #6a5a44;
+  --wx-field: rgba(255, 252, 244, 0.7);
+  --wx-btn: rgba(255, 252, 244, 0.55);
+  --wx-kit-accent: #1e3f66;
+  --wx-on-accent: #f6f0e2;
+  --wx-good: #2d6a28;
+  --wx-bad: #9b1c10;
+  --wx-focus: #8b1a12;
+  --wx-texture: var(--wx-grain-brown);
+  --wx-frame: inset 0 0 0 1px var(--wx-rule), inset 0 0 0 4px var(--wx-paper), inset 0 0 0 5px var(--wx-rule);
+  --wx-radius: 0;
+  --wx-orn: "❧";
+  --wx-f-title: "WX Alegreya", Georgia, serif;
+  --wx-f-head: "WX Alegreya", Georgia, serif;
+  --wx-f-body: "WX Alegreya", Georgia, serif;
+  --wx-f-ui: "WX Alegreya", Georgia, serif;
+  --wx-title-tt: uppercase;
+  --wx-title-ls: 0.12em;
+  --wx-title-size: 1.05em;
+  --wx-head-variant: small-caps;
+  --wx-head-ls: 0.06em;
+  --wx-body-size: 1.05em;
+}
+/* Victorian: Didone and engraved type; black bar, cream page */
+body.wodx-look[data-wodx-kit="victorian"] {
+  --wx-paper: #f4eee2;
+  --wx-paper-2: rgba(0, 0, 0, 0.04);
+  --wx-bar: #1f1b18;
+  --wx-bar-ink: #f4eee2;
+  --wx-bar-mix: 45%;
+  --wx-ink: #1d1a17;
+  --wx-quiet: #59524a;
+  --wx-rule: #7a7166;
+  --wx-field: #fffdf8;
+  --wx-btn: #fbf7ee;
+  --wx-kit-accent: #6b1630;
+  --wx-on-accent: #fbf6ec;
+  --wx-good: #2a5e2a;
+  --wx-bad: #9b1414;
+  --wx-focus: #1d4f9a;
+  --wx-texture: none;
+  --wx-frame: inset 0 0 0 1px #1d1a17, inset 0 0 0 3px var(--wx-paper), inset 0 0 0 4px #1d1a17;
+  --wx-radius: 0;
+  --wx-orn: "❖";
+  --wx-f-title: "WX Didone", Georgia, serif;
+  --wx-f-head: "WX Didone", Georgia, serif;
+  --wx-f-body: "WX Baskerville", Georgia, serif;
+  --wx-f-ui: "WX Didone", Georgia, serif;
+  --wx-title-size: 1.25em;
+  --wx-title-weight: 800;
+  --wx-head-variant: small-caps;
+  --wx-head-ls: 0.05em;
+  --wx-body-size: 0.92em;
+}
+/* Wild West: slab and poster type, wanted-bill paper */
+body.wodx-look[data-wodx-kit="wild-west"] {
+  --wx-paper: #ecdab2;
+  --wx-paper-2: rgba(90, 50, 20, 0.08);
+  --wx-bar: #3b2314;
+  --wx-bar-ink: #f4e6c4;
+  --wx-bar-mix: 40%;
+  --wx-ink: #2a1b10;
+  --wx-quiet: #5b432d;
+  --wx-rule: #7d5a3a;
+  --wx-field: rgba(255, 248, 230, 0.65);
+  --wx-btn: rgba(255, 248, 230, 0.5);
+  --wx-kit-accent: #962c10;
+  --wx-on-accent: #fbf0d8;
+  --wx-good: #2d6a28;
+  --wx-bad: #9b1c10;
+  --wx-focus: #1d4f9a;
+  --wx-texture: var(--wx-grain-fibre);
+  --wx-frame: inset 0 0 0 2px var(--wx-rule);
+  --wx-radius: 0;
+  --wx-orn: "★";
+  --wx-f-title: "WX Poster", Georgia, serif;
+  --wx-f-head: "WX Poster", Georgia, serif;
+  --wx-f-body: "WX Baskerville", Georgia, serif;
+  --wx-f-ui: "WX Baskerville", Georgia, serif;
+  --wx-title-size: 1.2em;
+  --wx-title-weight: 400;
+  --wx-head-ls: 0.04em;
+  --wx-body-size: 0.92em;
+}
+/* The Great War: stencil and typewriter, dispatch paper */
+body.wodx-look[data-wodx-kit="great-war"] {
+  --wx-paper: #ddd5bb;
+  --wx-paper-2: rgba(60, 60, 30, 0.07);
+  --wx-bar: #4a4a2e;
+  --wx-bar-ink: #f1ecd8;
+  --wx-bar-mix: 30%;
+  --wx-ink: #22201a;
+  --wx-quiet: #524d3c;
+  --wx-rule: #7b7558;
+  --wx-field: rgba(250, 247, 235, 0.7);
+  --wx-btn: rgba(250, 247, 235, 0.55);
+  --wx-kit-accent: #8e2318;
+  --wx-on-accent: #f7f1e0;
+  --wx-good: #2d5e22;
+  --wx-bad: #9b1c10;
+  --wx-focus: #1d4f9a;
+  --wx-texture: var(--wx-grain-fibre);
+  --wx-frame: inset 0 0 0 1px var(--wx-rule);
+  --wx-radius: 0;
+  --wx-orn: "■";
+  --wx-f-title: "WX Stencil", "WX Typewriter", monospace;
+  --wx-f-head: "WX Typewriter", "WX Courier", monospace;
+  --wx-f-body: "WX Courier", "Courier New", monospace;
+  --wx-f-ui: "WX Typewriter", "WX Courier", monospace;
+  --wx-f-mono: "WX Courier", monospace;
+  --wx-title-tt: uppercase;
+  --wx-title-ls: 0.08em;
+  --wx-title-size: 1.2em;
+  --wx-head-tt: uppercase;
+  --wx-head-ls: 0.06em;
+  --wx-body-size: 0.95em;
+}
+/* Modern and the Time of Judgment: typewriter and grunge, gothic-punk, neon on black */
+body.wodx-look:is([data-wodx-kit="modern"], [data-wodx-kit="time-of-judgment"]) {
+  --wx-paper: #121014;
+  --wx-bar: #060507;
+  --wx-kit-accent: #ff4f8b;
+  --wx-texture: var(--wx-grain-grunge);
+  --wx-frame: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --wx-radius: 2px;
+  --wx-orn: "✖";
+  --wx-glow: 0 0 6px color-mix(in srgb, var(--wx-accent) 65%, transparent), 0 0 1px var(--wx-accent);
+  --wx-f-title: "WX Typewriter", "WX Courier", monospace;
+  --wx-f-head: "WX Typewriter", "WX Courier", monospace;
+  --wx-f-body: "WX Plex", "Segoe UI", sans-serif;
+  --wx-f-ui: "WX Plex", "Segoe UI", sans-serif;
+  --wx-title-size: 1.2em;
+  --wx-title-weight: 400;
+  --wx-head-tt: uppercase;
+  --wx-head-ls: 0.08em;
+}
+/* Future Darkness: monospace and techno display, scan lines */
+body.wodx-look[data-wodx-kit="future-darkness"] {
+  --wx-paper: #07111b;
+  --wx-paper-2: rgba(63, 212, 255, 0.05);
+  --wx-bar: linear-gradient(90deg, #0b1a28, #0e2436);
+  --wx-bar-ink: #dbeaf3;
+  --wx-ink: #d8e8f2;
+  --wx-quiet: #93abbc;
+  --wx-rule: #24425a;
+  --wx-field: #0b1824;
+  --wx-btn: #0b1824;
+  --wx-kit-accent: #3fd4ff;
+  --wx-on-accent: #04121c;
+  --wx-good: #6fe0a0;
+  --wx-bad: #ff7a6a;
+  --wx-focus: #ffe066;
+  --wx-texture: repeating-linear-gradient(0deg, rgba(63, 212, 255, 0.035) 0 1px, transparent 1px 3px);
+  --wx-frame: inset 0 0 0 1px rgba(63, 212, 255, 0.18);
+  --wx-radius: 0;
+  --wx-orn: "◆";
+  --wx-glow: 0 0 5px color-mix(in srgb, var(--wx-accent) 60%, transparent);
+  --wx-f-title: "WX Techno", "WX Plex", sans-serif;
+  --wx-f-head: "WX Techno", "WX Plex", sans-serif;
+  --wx-f-body: "WX Plex", "Segoe UI", sans-serif;
+  --wx-f-ui: "WX Plex", "Segoe UI", sans-serif;
+  --wx-f-mono: "WX Plex Mono", monospace;
+  --wx-title-tt: uppercase;
+  --wx-title-ls: 0.1em;
+  --wx-title-size: 1.05em;
+  --wx-head-tt: uppercase;
+  --wx-head-ls: 0.1em;
+}
+
+/* ---- The look a player chose (client setting): keep the era's type, swap the paper ---- */
+body.wodx-look[data-wodx-look="light"] {
+  --wx-paper: #f3efe6; --wx-paper-2: rgba(0, 0, 0, 0.04); --wx-bar: #e4ddcf; --wx-bar-ink: #1c1915;
+  --wx-ink: #1c1915; --wx-quiet: #555048; --wx-rule: #8a8276; --wx-field: #fffdf8; --wx-btn: #faf7f0;
+  --wx-kit-accent: #7a1a1a; --wx-on-accent: #fff8ec; --wx-good: #2a5e2a; --wx-bad: #9b1414; --wx-focus: #1d4f9a;
+  --wx-texture: none; --wx-glow: none; --wx-frame: inset 0 0 0 1px var(--wx-rule);
+}
+body.wodx-look[data-wodx-look="dark"] {
+  --wx-paper: #141216; --wx-paper-2: rgba(255, 255, 255, 0.045); --wx-bar: #0b0a0c; --wx-bar-ink: #eee8de;
+  --wx-ink: #e8e2d6; --wx-quiet: #aea494; --wx-rule: #423b46; --wx-field: #1e1b21; --wx-btn: #1b181d;
+  --wx-kit-accent: #c9a14a; --wx-on-accent: #121014; --wx-good: #84c983; --wx-bad: #ff7559; --wx-focus: #ffd479;
+  --wx-texture: none; --wx-frame: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* ---- Every themed surface computes its accent itself, so a line class on the same element can change it ---- */
+body.wodx-look :is(.application.wodx, .vta-card.wodx-x, .wodx-card) {
+  --wx-accent: var(--wx-kit-accent);
+  /* The accent where it sits on the title bar: lightened on the kits with a dark bar */
+  --wx-bar-accent: color-mix(in srgb, var(--wx-accent) var(--wx-bar-mix), #ffffff);
+  --wodx-ink: var(--wx-ink);
+  --wodx-quiet: var(--wx-quiet);
+  --wodx-panel: transparent;
+  --wodx-line: var(--wx-rule);
+  --wodx-accent: var(--wx-accent);
+  --wodx-alert: var(--wx-bad);
+}
+/* Line accents: the colour on light paper, then on dark (body[data-wodx-tone] is set from the kit and the look) */
+body.wodx-look[data-wodx-tone="light"] .wodx-line-kindred { --wx-accent: #8a1414; --wx-on-accent: #fff6ef; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-kindred { --wx-accent: #e5484d; --wx-on-accent: #160607; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-wraith { --wx-accent: #135a5b; --wx-on-accent: #effaf9; --wx-ash: #5e5e58; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-wraith { --wx-accent: #4cc9be; --wx-on-accent: #061615; --wx-ash: #a9a9a1; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-hunter { --wx-accent: #27384a; --wx-on-accent: #ffffff; --wx-glare: 0 0 0 transparent; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-hunter { --wx-accent: #f4f8fc; --wx-on-accent: #0b0f14; --wx-glow: 0 0 8px rgba(255, 255, 255, 0.75), 0 0 2px #fff; }
+/* Accents for the lines that follow once the look is approved (6e gate): defined now, used when rolled out */
+body.wodx-look[data-wodx-tone="light"] .wodx-line-lupine { --wx-accent: #6a4a2c; --wx-on-accent: #fff8ef; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-lupine { --wx-accent: #cdd5df; --wx-on-accent: #121418; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-mage { --wx-accent: #5a2a8c; --wx-on-accent: #fbf6ff; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-mage { --wx-accent: #b98cff; --wx-on-accent: #150a24; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-fae { --wx-accent: #6b5207; --wx-on-accent: #fffaf0; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-fae { --wx-accent: #f0c75e; --wx-on-accent: #1d1503; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-demon { --wx-accent: #8c2f09; --wx-on-accent: #fff6ef; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-demon { --wx-accent: #ff7a3d; --wx-on-accent: #1d0a02; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-mummy { --wx-accent: #1f3f8a; --wx-on-accent: #f6f8ff; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-mummy { --wx-accent: #e1b84a; --wx-on-accent: #161003; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-kote { --wx-accent: #185a3d; --wx-on-accent: #f2fff8; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-kote { --wx-accent: #5fcf98; --wx-on-accent: #04140c; }
+
+/* =====================================================================================================================
+   The WoDX frame: windows
+   ===================================================================================================================== */
+body.wodx-look .application.wodx {
+  background: var(--wx-paper);
+  background-image: var(--wx-texture);
+  color: var(--wx-ink);
+  border: 1px solid var(--wx-rule);
+  border-radius: var(--wx-radius);
+  box-shadow: var(--wx-frame), 0 8px 28px rgba(0, 0, 0, 0.6);
+  font-family: var(--wx-f-body);
+  --background: transparent;
+  --color-text-primary: var(--wx-ink);
+  --color-text-secondary: var(--wx-quiet);
+  --color-text-emphatic: var(--wx-ink);
+  --color-text-subtle: var(--wx-quiet);
+  --color-border: var(--wx-rule);
+  --color-fieldset-border: var(--wx-rule);
+  --color-form-label: var(--wx-ink);
+  --color-form-label-hover: var(--wx-ink);
+  --color-form-hint: var(--wx-quiet);
+  --color-form-hint-hover: var(--wx-ink);
+  --color-header-background: transparent;
+  --hr-gradient: linear-gradient(90deg, transparent, var(--wx-rule) 50%, transparent);
+}
+body.wodx-look .application.wodx .window-content {
+  background: transparent;
+  color: var(--wx-ink);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  font-size: calc(var(--font-size-14, 14px) * var(--wx-scale) * var(--wx-body-size));
+}
+body.wodx-look .application.wodx .window-header {
+  background: var(--wx-bar);
+  color: var(--wx-bar-ink);
+  border-bottom: 2px solid var(--wx-accent);
+  font-family: var(--wx-f-head);
+}
+body.wodx-look .application.wodx .window-header .window-title {
+  font-family: var(--wx-f-head);
+  font-variant: var(--wx-head-variant);
+  text-transform: var(--wx-head-tt);
+  letter-spacing: var(--wx-head-ls);
+  font-size: calc(var(--font-size-14, 14px) * var(--wx-scale));
+}
+body.wodx-look .application.wodx .window-header .window-title::before {
+  content: var(--wx-orn);
+  color: var(--wx-bar-accent);
+  margin-right: 0.45em;
+  text-shadow: var(--wx-glow);
+  font-family: var(--wx-f-body);
+}
+body.wodx-look .application.wodx .window-header :is(button, a) { color: var(--wx-bar-ink); }
+
+/* Dividers and headings inside windows */
+body.wodx-look .application.wodx fieldset {
+  border: 1px solid var(--wx-rule);
+  border-radius: var(--wx-radius);
+  background: var(--wx-paper-2);
+}
+body.wodx-look .application.wodx legend,
+body.wodx-look .application.wodx .window-content h3,
+body.wodx-look .application.wodx .window-content h4 {
+  font-family: var(--wx-f-head);
+  font-variant: var(--wx-head-variant);
+  text-transform: var(--wx-head-tt);
+  letter-spacing: var(--wx-head-ls);
+  color: var(--wx-accent);
+  text-shadow: var(--wx-glow);
+}
+body.wodx-look .application.wodx legend { padding: 0 0.4em; font-size: 0.92em; }
+body.wodx-look .application.wodx hr,
+body.wodx-look .application.wodx hr.wodx-rule {
+  border: 0; height: 1px; margin: 0.6em 0; background: var(--hr-gradient); overflow: visible; text-align: center;
+}
+body.wodx-look .application.wodx hr.wodx-rule::after {
+  content: var(--wx-orn); position: relative; top: -0.72em; padding: 0 0.5em; background: var(--wx-paper); color: var(--wx-accent);
+}
+body.wodx-look .application.wodx .wodx-quiet,
+body.wodx-look .application.wodx .hint,
+body.wodx-look .application.wodx .vta-note { color: var(--wx-quiet); }
+body.wodx-look .application.wodx label { color: var(--wx-ink); }
+body.wodx-look .application.wodx a:not(.header-control) { color: var(--wx-accent); }
+
+/* Fields */
+body.wodx-look .application.wodx :is(input, select, textarea) {
+  --input-background-color: var(--wx-field);
+  --input-text-color: var(--wx-ink);
+  --input-border-color: var(--wx-rule);
+  --input-focus-outline-color: var(--wx-focus);
+  --input-placeholder-color: var(--wx-quiet);
+  font-family: var(--wx-f-body);
+  font-size: 1em;
+}
+body.wodx-look .application.wodx select option { background: var(--wx-paper); color: var(--wx-ink); }
+body.wodx-look .application.wodx input[type="checkbox"],
+body.wodx-look .application.wodx input[type="radio"] {
+  --checkbox-checked-color: var(--wx-accent);
+  --checkbox-background-color: var(--wx-field);
+  --checkbox-checkmark-color: var(--wx-on-accent);
+}
+
+/* Buttons: windows and cards alike */
+body.wodx-look :is(.application.wodx, .vta-card.wodx-x, .wodx-card) :is(button, a.button) {
+  --button-background-color: var(--wx-btn);
+  --button-border-color: var(--wx-rule);
+  --button-text-color: var(--wx-ink);
+  --button-hover-background-color: var(--wx-accent);
+  --button-hover-border-color: var(--wx-accent);
+  --button-hover-text-color: var(--wx-on-accent);
+  --button-focus-outline-color: var(--wx-focus);
+  font-family: var(--wx-f-ui);
+  border-radius: var(--wx-radius);
+}
+body.wodx-look .application.wodx .window-header button { --button-background-color: transparent; --button-border-color: transparent; --button-text-color: var(--wx-bar-ink); }
+body.wodx-look :is(.application.wodx, .vta-card.wodx-x) :is(button, a.button) > i { color: var(--wx-accent); }
+body.wodx-look :is(.application.wodx, .vta-card.wodx-x) :is(button, a.button):is(:hover, :focus-visible) > i { color: inherit; }
+/* The default answer in a dialog's footer */
+body.wodx-look .application.wodx .form-footer button:is([autofocus], .default, [data-action="ok"], [type="submit"]) {
+  --button-background-color: var(--wx-accent);
+  --button-text-color: var(--wx-on-accent);
+  --button-border-color: var(--wx-accent);
+  --button-hover-background-color: color-mix(in srgb, var(--wx-accent) 82%, var(--wx-ink));
+}
+body.wodx-look .application.wodx .form-footer button:is([autofocus], .default, [data-action="ok"], [type="submit"]) > i { color: inherit; }
+body.wodx-look :is(.application.wodx, .vta-card.wodx-x, .wodx-card) :focus-visible {
+  outline: 2px solid var(--wx-focus);
+  outline-offset: 1px;
+}
+
+/* Prompts and empty states: one look everywhere */
+body.wodx-look .application.wodx :is(.wodx-empty, .vta-empty) {
+  margin: 0.6em 0; padding: 0.8em; text-align: center; color: var(--wx-quiet); font-style: italic;
+  border: 1px dashed var(--wx-rule); border-radius: var(--wx-radius); background: var(--wx-paper-2);
+}
+body.wodx-look .application.wodx :is(.wodx-empty, .vta-empty)::before { content: var(--wx-orn); display: block; color: var(--wx-accent); font-style: normal; margin-bottom: 0.2em; }
+body.wodx-look .application.wodx .wodx-prompt { margin: 0 0 0.5em; padding: 0.35em 0.5em; border-left: 3px solid var(--wx-accent); background: var(--wx-paper-2); }
+body.wodx-look .application.wodx .vta-warn { color: var(--wx-bad); font-weight: 600; }
+
+/* =====================================================================================================================
+   Menus grouped by intent (WoDX Actions)
+   ===================================================================================================================== */
+body.wodx-look .wodx-menu2 { display: flex; flex-direction: column; gap: 0.45em; }
+body.wodx-look .wodx-menu2 .vta-menu-head { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 0.5em; }
+body.wodx-look .wodx-menu2 .vta-menu-head .vta-who { font-family: var(--wx-f-title); font-size: 1.25em; line-height: 1.1; font-weight: var(--wx-title-weight); text-transform: var(--wx-title-tt); letter-spacing: var(--wx-title-ls); }
+body.wodx-look .wodx-menu2 .vta-menu-head .vta-who::first-letter { color: var(--wx-accent); text-shadow: var(--wx-glow); }
+body.wodx-look .wodx-menu2 .vta-menu-head .vta-kindlabel { display: block; font-family: var(--wx-f-head); font-size: 0.8em; color: var(--wx-quiet); font-variant: var(--wx-head-variant); text-transform: var(--wx-head-tt); letter-spacing: var(--wx-head-ls); }
+body.wodx-look .wodx-menu2 .vta-menu-find { width: 100%; position: sticky; top: 0; z-index: 2; box-shadow: 0 0 0 0.3em var(--wx-paper); }
+body.wodx-look .wodx-menu2 .vta-recent { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3em; font-size: 0.9em; }
+body.wodx-look .wodx-menu2 .vta-recent > span { color: var(--wx-quiet); font-family: var(--wx-f-head); font-size: 0.85em; text-transform: var(--wx-head-tt); font-variant: var(--wx-head-variant); letter-spacing: var(--wx-head-ls); }
+body.wodx-look .wodx-menu2 .vta-recent button { flex: 0 0 auto; width: auto; min-height: 24px; line-height: 1.4; padding: 1px 8px; margin: 0; }
+body.wodx-look .wodx-menu2 fieldset.vta-band { margin: 0; padding: 0.15em 0.5em 0.5em; border-left: 3px solid var(--wx-band, var(--wx-accent)); }
+body.wodx-look .wodx-menu2 fieldset.vta-band legend { display: flex; align-items: baseline; gap: 0.5em; }
+body.wodx-look .wodx-menu2 fieldset.vta-band legend small { font-family: var(--wx-f-body); font-size: 0.78em; font-variant: normal; text-transform: none; letter-spacing: 0; color: var(--wx-quiet); text-shadow: none; }
+body.wodx-look .wodx-menu2 .vta-band-resist { --wx-band: color-mix(in srgb, var(--wx-bad) 70%, var(--wx-accent)); }
+body.wodx-look .wodx-menu2 .vta-band-recover { --wx-band: var(--wx-good); }
+body.wodx-look .wodx-menu2 .vta-band-st { --wx-band: var(--wx-quiet); border-style: dashed; }
+body.wodx-look .wodx-menu2 .vta-grp-btns { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 4px; }
+body.wodx-look .wodx-menu2 .vta-grp-btns button {
+  text-align: left; white-space: normal; height: auto; min-height: 30px; line-height: 1.25; padding: 4px 7px; margin: 0;
+  display: flex; align-items: center; justify-content: flex-start; gap: 0.45em;
+}
+body.wodx-look .wodx-menu2 .vta-grp-btns button > i { width: 1.1em; text-align: center; flex: none; }
+body.wodx-look .wodx-menu2 .vta-scene { display: flex; flex-wrap: wrap; gap: 4px; padding-top: 0.4em; border-top: 1px solid var(--wx-rule); }
+body.wodx-look .wodx-menu2 .vta-scene button { flex: 1 1 auto; width: auto; min-height: 26px; line-height: 1.3; padding: 2px 8px; margin: 0; font-size: 0.92em; }
+body.wodx-look .wodx-menu2 .vta-hintbar { position: sticky; bottom: 0; z-index: 2; min-height: 2.6em; margin: 0; box-shadow: 0 0 0 0.25em var(--wx-paper); padding: 0.3em 0.45em; font-size: 0.88em; font-style: italic; color: var(--wx-quiet); background: linear-gradient(var(--wx-paper-2), var(--wx-paper-2)), var(--wx-paper); border-radius: var(--wx-radius); }
+body.wodx-look .wodx-menu2 .vta-hintbar b { font-style: normal; color: var(--wx-ink); }
+body.wodx-look .wodx-menu2 .vta-band:not(:has(button:not([style*="none"]))) { display: none; }
+body.wodx-look .wodx-menu2 kbd { font-family: var(--wx-f-mono); font-size: 0.85em; padding: 0 4px; border: 1px solid var(--wx-rule); border-radius: 3px; }
+
+/* =====================================================================================================================
+   The one card layout (chat)
+   ===================================================================================================================== */
+body.wodx-look .vta-card.wodx-x,
+body.wodx-look .chat-message .wodx-card {
+  background: var(--wx-paper);
+  background-image: var(--wx-texture);
+  color: var(--wx-ink);
+  border: 1px solid var(--wx-rule);
+  border-radius: var(--wx-radius);
+  box-shadow: var(--wx-frame);
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--wx-f-body);
+  font-size: calc(1em * var(--wx-scale) * var(--wx-body-size));
+  line-height: 1.35;
+}
+body.wodx-look .vta-card.wodx-x .vta-head {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.2em 0.45em; padding: 0.4em 0.6em 0.35em;
+  background: var(--wx-bar); color: var(--wx-bar-ink); border-bottom: 2px solid var(--wx-accent);
+}
+body.wodx-look .vta-card.wodx-x .vta-head h3 {
+  flex: 1 1 9em; margin: 0; padding: 0; border: 0; color: inherit; line-height: 1.12;
+  font-family: var(--wx-f-title); font-size: calc(var(--wx-title-size) * 0.88); font-weight: var(--wx-title-weight);
+  text-transform: var(--wx-title-tt); letter-spacing: var(--wx-title-ls);
+}
+body.wodx-look .vta-card.wodx-x .vta-head h3::first-letter { color: var(--wx-bar-accent); text-shadow: var(--wx-glow); }
+body.wodx-look .vta-card.wodx-x .vta-mark { color: var(--wx-bar-accent); font-size: 1.15em; line-height: 1; text-shadow: var(--wx-glow); font-family: "Segoe UI Symbol", "DejaVu Sans", sans-serif; }
+body.wodx-look .vta-card.wodx-x .vta-verdict {
+  flex: none; margin-left: auto; padding: 0.05em 0.55em; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap;
+  font-family: var(--wx-f-ui); font-size: 0.78em; font-weight: 700; color: var(--wx-bar-ink);
+}
+body.wodx-look .vta-card.wodx-x .vta-verdict.good { background: var(--wx-good); border-color: var(--wx-good); color: var(--wx-paper); }
+body.wodx-look .vta-card.wodx-x .vta-verdict.bad { background: var(--wx-bad); border-color: var(--wx-bad); color: var(--wx-paper); }
+body.wodx-look .vta-card.wodx-x .vta-body { padding: 0.4em 0.6em 0.35em; }
+body.wodx-look .vta-card.wodx-x .vta-sub { color: var(--wx-quiet); }
+body.wodx-look .vta-card.wodx-x .vta-sec { margin: 0.3em 0; padding: 0.3em 0.45em; background: var(--wx-paper-2); border-left: 2px solid var(--wx-rule); border-radius: 0; }
+body.wodx-look .vta-card.wodx-x .vta-parts { color: var(--wx-quiet); }
+body.wodx-look .vta-card.wodx-x :is(.vta-res, .vta-big) { color: var(--wx-ink); }
+body.wodx-look .vta-card.wodx-x :is(.vta-res, .vta-big).good { color: var(--wx-good); }
+body.wodx-look .vta-card.wodx-x :is(.vta-res, .vta-big).bad,
+body.wodx-look .vta-card.wodx-x .vta-warn { color: var(--wx-bad); }
+body.wodx-look .vta-card.wodx-x .vta-big { font-family: var(--wx-f-head); font-variant: var(--wx-head-variant); letter-spacing: var(--wx-head-ls); font-size: 1.1em; }
+body.wodx-look .vta-card.wodx-x .vta-note { color: var(--wx-quiet); }
+body.wodx-look .vta-card.wodx-x .vta-flavor { color: var(--wx-ink); border-top: 1px dotted var(--wx-rule); font-family: var(--wx-f-body); font-style: italic; }
+body.wodx-look .vta-card.wodx-x .vta-die { border-color: var(--wx-rule); background: var(--wx-field); color: var(--wx-quiet); font-family: var(--wx-f-mono); border-radius: var(--wx-radius); }
+body.wodx-look .vta-card.wodx-x .vta-die.hit { background: color-mix(in srgb, var(--wx-good) 22%, var(--wx-paper)); color: var(--wx-ink); border-color: var(--wx-good); }
+body.wodx-look .vta-card.wodx-x .vta-die.spec { background: color-mix(in srgb, var(--wx-good) 40%, var(--wx-paper)); color: var(--wx-ink); outline: 2px solid var(--wx-good); }
+body.wodx-look .vta-card.wodx-x .vta-die.one { background: color-mix(in srgb, var(--wx-bad) 25%, var(--wx-paper)); color: var(--wx-bad); border-color: var(--wx-bad); }
+body.wodx-look .vta-card.wodx-x .vta-die.miss { opacity: 0.75; }
+body.wodx-look .vta-card.wodx-x button.vta-btn,
+body.wodx-look .vta-card.wodx-x button[data-kx], body.wodx-look .vta-card.wodx-x button[data-sx],
+body.wodx-look .vta-card.wodx-x button[data-wx], body.wodx-look .vta-card.wodx-x button[data-vx] { margin: 0.3em 0 0; }
+/* What changed: the resource pips */
+body.wodx-look .vta-card.wodx-x .vta-change {
+  display: flex; flex-wrap: wrap; gap: 0.2em 0.9em; margin: 0 0.6em 0.4em; padding: 0.3em 0 0;
+  border-top: 1px dashed var(--wx-rule); font-size: 0.9em;
+}
+body.wodx-look .vta-card.wodx-x .vta-change-label { flex: 0 0 100%; font-family: var(--wx-f-ui); font-size: 0.78em; color: var(--wx-quiet); text-transform: uppercase; letter-spacing: 0.08em; font-variant: normal; }
+body.wodx-look .vta-card.wodx-x .vta-chg { display: inline-flex; align-items: center; gap: 0.35em; }
+body.wodx-look .vta-card.wodx-x .vta-chg-n { font-family: var(--wx-f-mono); font-size: 0.9em; color: var(--wx-quiet); }
+.vta-pips { display: inline-flex; gap: 2px; }
+.vta-pip { display: inline-block; width: 0.62em; height: 0.62em; border-radius: 50%; border: 1px solid currentColor; box-sizing: border-box; }
+.vta-pip.on { background: currentColor; }
+.vta-pip.gain { background: var(--wx-good, #2d6a28); border-color: var(--wx-good, #2d6a28); }
+.vta-pip.lost { border: 2px solid var(--wx-accent, #8a1414); background: transparent; }
+.vta-pip.off { opacity: 0.35; }
+/* The page references, always at the foot */
+body.wodx-look .vta-card.wodx-x .vta-ref {
+  padding: 0.25em 0.6em; font-size: 0.8em; font-style: italic; color: var(--wx-quiet);
+  border-top: 1px solid var(--wx-rule); background: var(--wx-paper-2);
+}
+body.wodx-look .vta-card.wodx-x .vta-ref::before { content: "¶ "; color: var(--wx-accent); font-style: normal; }
+/* The inner voice and the Shadow speak in their own hand: italic, a dashed edge in the line's colour */
+body.wodx-look .vta-card.wodx-x:is(.wodx-shadow, .wodx-voice) { border: 1px dashed var(--wx-accent); }
+body.wodx-look .vta-card.wodx-x:is(.wodx-shadow, .wodx-voice) .vta-body { font-style: italic; }
+body.wodx-look .vta-card.wodx-x:is(.wodx-shadow, .wodx-voice) .vta-head { background: color-mix(in srgb, var(--wx-accent) 14%, var(--wx-paper)); color: var(--wx-ink); --wx-bar-accent: var(--wx-accent); }
+/* Chronicle cards share the header */
+body.wodx-look .chat-message .wodx-card { padding: 0.4em 0.6em; }
+body.wodx-look .chat-message .wodx-card h3 { margin: -0.4em -0.6em 0.4em; padding: 0.35em 0.6em; background: var(--wx-bar); color: var(--wx-bar-ink); border: 0; border-bottom: 2px solid var(--wx-accent); font-family: var(--wx-f-title); font-weight: var(--wx-title-weight); font-size: var(--wx-title-size); text-transform: var(--wx-title-tt); letter-spacing: var(--wx-title-ls); }
+
+/* =====================================================================================================================
+   Accessibility
+   ===================================================================================================================== */
+body.wodx-look .wodx-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+body.wodx-look :is(.application.wodx, .vta-card.wodx-x) :is(button, a, input, select) { transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease; }
+body.wodx-look[data-wodx-motion="reduce"] :is(.application.wodx, .vta-card.wodx-x, .wodx-card) *,
+body.wodx-look[data-wodx-motion="reduce"] .application.wodx { transition: none !important; animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  body.wodx-look:not([data-wodx-motion="full"]) :is(.application.wodx, .vta-card.wodx-x, .wodx-card) * { transition: none !important; animation: none !important; }
+}
+/* Windows high-contrast mode: let the system colours through */
+@media (forced-colors: active) {
+  body.wodx-look :is(.application.wodx, .vta-card.wodx-x) { background-image: none; box-shadow: none; }
+  body.wodx-look :is(.application.wodx, .vta-card.wodx-x) * { text-shadow: none !important; }
+}
+
+/* The menu's search box and hint line stay in view; keyboard focus and scrolling leave room for them */
+body.wodx-look .application.wodx-menu-dialog :is(.window-content, .dialog-content, form) { scroll-padding: 3.2em 0 3.6em; }

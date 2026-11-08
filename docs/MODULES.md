@@ -16,10 +16,10 @@ WoDX notes:
 
 | Module | Version | Phase | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.2.1 | 1, 6a, 6d (X-card hook) | rothenstein-wodx, wodx-template |
+| wodx-chronicle | 0.3.0 | 1, 6a, 6d (X-card hook), 6e (the WoDX look: era kits, line accents, bundled fonts) | rothenstein-wodx, wodx-template |
 | wodx-otherworlds | 0.2.0 | 2, 5 | rothenstein-wodx, wodx-template |
 | wodx-creation | 0.4.2 | 3, 4, 6a, 6b, Actions 3.2 | rothenstein-wodx, wodx-template (needs wodx-chronicle) |
-| wodx-actions | 3.5.0 | 6a, 6b, Kindred additions, sunlight, 6c (wraiths, hunters, True Faith, Numina, hedge magic), 6d (the inner voice) | rothenstein-wodx, wodx-template, instead of vtda20-actions (needs wodx-chronicle) |
+| wodx-actions | 3.6.0 | 6a, 6b, Kindred additions, sunlight, 6c (wraiths, hunters, True Faith, Numina, hedge magic), 6d (the inner voice), 6e (menus by intent, one card layout) | rothenstein-wodx, wodx-template, instead of vtda20-actions (needs wodx-chronicle) |
 | wodx-combat | 3.6.0 | 6a, 6b, automation, gridless, the Corpus track | rothenstein-wodx, wodx-template, instead of vtda20-combat (needs wodx-chronicle) |
 
 Chronicle, Otherworlds and Creation stay idle in worlds without `flags.wodx` (the original Rothenstein world). WoDX Actions and WoDX Combat stay off wherever vtda20-actions or vtda20-combat is still enabled; the original Rothenstein world keeps the vtda20 modules, which stay installed.

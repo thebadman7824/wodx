@@ -346,3 +346,11 @@
 - Harness 196 tests, UI fit and quality check pass. Installed and checked by MD5.
 - Claude ran gate 6d in the desktop app: 10/10. Gate 6c still passes on 3.5.0.
 - The table test with real players waits for Ben (PHASE-6D-CHECKLIST).
+
+### Phase 6e built, 2026-11-08: the WoDX look (WoDX Actions 3.6.0, Chronicle 0.3.0)
+- Chronicle 0.3.0: styles/wodx-theme.css (tokens, eleven era kits, line accents, the WoDX frame for windows, the menu and card styles, accessibility); fonts/ with thirteen bundled fonts and their licences; scripts/theme.mjs (client settings: look, text size, motion; body marks wodx-look, data-wodx-look, data-wodx-tone, data-wodx-motion, --wx-scale).
+- Actions 3.6.0: theme-rules.js (pure): LINE_LOOK (kindred, wraith, hunter), the intent plan for their menus, a description for every button, the one card layout (header with the line mark and the verdict, the body, what changed with resource pips, the page references in the footer), the change ledger's diff.
+- Menus for the three lines: Act, Resist, Recover, Storyteller tools (hidden from players), the scene strip; a search box, the last four buttons used, a hint line, arrow keys, Enter, typing searches. Other lines keep their sections in the new frame.
+- Cards: post() writes the layout; sheet updates on the acting computer are kept a few seconds and shown as "what changed" (changes written after the card join it 0.9 s later). Cards written without the layout (notices, older messages) are shown in it when drawn.
+- Dialogs opened for an actor wear the line's class (withActor and the menu set it while the action runs).
+- Quality: phase6e.test.mjs (11 tests, with a contrast check of every kit and accent); ui-fit.mjs now draws with the look on (WODX_KIT, WODX_SCALE, WODX_LOOK), Foundry's icons and type, and the dialogs' real widths; look.mjs renders the review sheets. Gate: tools/gate/gate6e.mjs (8 steps).
