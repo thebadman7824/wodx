@@ -442,7 +442,9 @@ body.wodx-look .application.wodx input[type="radio"] {
 }
 
 /* Buttons: windows and cards alike */
-body.wodx-look :is(.application.wodx, .vta-card.wodx-x, .wodx-card) :is(button, a.button) {
+/* Not the window's own header controls (close, the controls menu): their glyph comes from the icon font, and this
+   rule's font-family would replace it with a text face, leaving an empty button */
+body.wodx-look :is(.application.wodx, .vta-card.wodx-x, .wodx-card) :is(button:not(.header-control), a.button) {
   --button-background-color: var(--wx-btn);
   --button-border-color: var(--wx-rule);
   --button-text-color: var(--wx-ink);
@@ -454,6 +456,11 @@ body.wodx-look :is(.application.wodx, .vta-card.wodx-x, .wodx-card) :is(button, 
   border-radius: var(--wx-radius);
 }
 body.wodx-look .application.wodx .window-header button { --button-background-color: transparent; --button-border-color: transparent; --button-text-color: var(--wx-bar-ink); }
+body.wodx-look .application.wodx .window-header .header-control:is(:hover, :focus-visible) {
+  --button-hover-background-color: color-mix(in srgb, var(--wx-bar-ink) 16%, transparent);
+  --button-hover-text-color: var(--wx-bar-ink);
+  --button-hover-border-color: transparent;
+}
 body.wodx-look :is(.application.wodx, .vta-card.wodx-x) :is(button, a.button) > i { color: var(--wx-accent); }
 body.wodx-look :is(.application.wodx, .vta-card.wodx-x) :is(button, a.button):is(:hover, :focus-visible) > i { color: inherit; }
 /* The default answer in a dialog's footer */

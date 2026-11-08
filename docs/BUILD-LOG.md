@@ -506,3 +506,11 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - Third run: 7 of 7, no console errors. Afterwards the world had no test characters, snapshots or test folder left, and the clock and era were back as they were (2025, modern).
 - win-paths.mjs also caught require() calls and stopped ui-fit.mjs loading Playwright. It now leaves require() alone.
 - Tests: 333 pass; UI fit passes. Deployed (Backups/wodx-creation-0.6.0-2026-11-08 first; files checked by MD5).
+
+### UI review, 2026-11-08: WoDX Chronicle 0.4.2 (header buttons)
+- Ben asked for a check that key buttons, such as close and minimize, can be seen on every WoDX window.
+- Found: in the WoDX look, the close button and the controls menu (⋮) in the title bar of every WoDX window showed blank. Foundry 13 and 14 draw those icons with the Font Awesome font on the button itself. The look's button rule set every button's font-family to the era's text face, which beat Font Awesome's class rule, so the glyph had no font to draw it. The buttons still worked, but nothing showed. Foundry's own windows, and the system's sheets, were never affected; the look only touches `.application.wodx`.
+- Fix (wodx-theme.css): the button rule now skips `.header-control`. The header buttons also get a light hover in the bar's ink colour, in place of the accent fill meant for buttons on the page.
+- Foundry has no minimize button: a window minimizes by double-clicking its title. The check below makes sure the title keeps room for that.
+- UI fit (ui-fit.mjs) now draws the frame as ApplicationV2 does (icon, title, controls menu, close) and checks the header in every window at each screen size: the close button is there, both buttons sit inside the bar and can be clicked, their icons use the icon font, and the icon has at least 3:1 contrast against every colour of the bar, gradients included. It checks again with a long title and when minimized. Before the fix every window failed on the header icons; after it, none does. Every era kit's bar and ink pair was also checked: all are well above 3:1.
+- Tests: 333 pass; quality check passes.

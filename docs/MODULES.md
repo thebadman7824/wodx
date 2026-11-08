@@ -16,7 +16,7 @@ WoDX notes:
 
 | Module | Version | Phase | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.4.1 | 1, 6a, 6d (X-card hook), 6e (the WoDX look: era kits, line accents, bundled fonts; player buttons; Find my character), 7a (the generator core), era advancement (the Passing the years house rules) | rothenstein-wodx, wodx-template |
+| wodx-chronicle | 0.4.2 | 1, 6a, 6d (X-card hook), 6e (the WoDX look: era kits, line accents, bundled fonts; player buttons; Find my character), 7a (the generator core), era advancement (the Passing the years house rules), 0.4.2 (header buttons show in the WoDX look) | rothenstein-wodx, wodx-template |
 | wodx-otherworlds | 0.2.0 | 2, 5 | rothenstein-wodx, wodx-template |
 | wodx-creation | 0.6.1 | 3, 4, 6a, 6b, Actions 3.2, 7a (People), era advancement (B83; 0.6.1 works with WoDX Actions or Sheets off) | rothenstein-wodx, wodx-template (needs wodx-chronicle) |
 | wodx-actions | 3.11.0 | 6a, 6b, Kindred additions, sunlight, 6c (wraiths, hunters, True Faith, Numina, hedge magic), 6d (the inner voice), 6e (menus by intent, one card layout), 6f (Dark Ages mages), 6g (Dark Ages fae), 6h (Changeling 20th), 6i–6l (Demon, Kindred of the East, Mummy, Orpheus), 6m (Mage 20th) | rothenstein-wodx, wodx-template, instead of vtda20-actions (needs wodx-chronicle) |
