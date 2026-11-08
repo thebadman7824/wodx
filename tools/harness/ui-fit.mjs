@@ -73,6 +73,8 @@ await import(join(root, "modules/wodx-npc/scripts/main.mjs"));
 // Phase 7e: WoDX Storyteller (the open world)
 game.modules.set("wodx-storyteller", {});
 await import(join(root, "modules/wodx-storyteller/scripts/main.mjs"));
+game.modules.set("wodx-interactables", {});
+await import(join(root, "modules/wodx-interactables/scripts/main.mjs"));
 CONFIG.worldofdarkness.groupKinds = {coterie: "Coterie (Vampire)", pack: "Pack (Werewolf and Fera)", cabal: "Cabal (Mage)", motley: "Motley (Changeling)",
   circle: "Circle (Wraith)", cell: "Cell (Hunter)", court: "Court (Demon)", amenti: "Amenti (Mummy)", wu: "Wu (Kindred of the East)",
   crucible: "Crucible (Orpheus)", household: "Household or retinue (mortals)", other: "Other"};
@@ -544,6 +546,33 @@ game.world.id = worldId;
   }
   api.DialogV2.wait = wait;
 }
+// Interactables: the Interact window (eight doors, windows and walls in reach, long names), the roll dialog, the WoDX part of a wall's config
+{
+  const ix = game.modules.get("wodx-interactables").api;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const a = [...game.actors.values()].find(x => x.type === "Mortal");
+  a.items.set("picks", {id: "picks", name: "Lock picks", type: "Equipment", system: {}});
+  a.system.abilities.larceny = {value: 3, type: "skill", isvisible: true, speciality: "Old church locks"};
+  const M = "wodx-interactables";
+  const walls = Array.from({length: 8}, (_, k) => ({document: {id: `wall${k}`, c: [100 + k * 20, 200, 100 + k * 20, 300], door: k === 7 ? 0 : 1, ds: k % 3 === 0 ? 2 : k % 3 === 1 ? 0 : 1, levels: new Set(),
+    flags: {[M]: k === 7 ? {wall: "stone"} : {kind: ["door", "window", "gate", "shutter", "hatch", "door", "door"][k], material: ["ironbound", "glass", "heavy", "wood", "wood", "steel", "wood"][k],
+      lock: ["masterwork", "", "good", "", "", "excellent", "cheap"][k], barSide: k === 2 ? "a" : "", barred: k === 2, keyName: k === 0 ? "Key to the crypt of St. Aegidius" : "", electronic: k === 5 ? "excellent" : "none"}}}}));
+  const tok = {id: "itok", name: a.name, actor: a, document: {uuid: "Scene.s.Token.itok", isOwner: true}, w: 100, h: 100, center: {x: 150, y: 250}};
+  const oldCanvas = globalThis.canvas, oldConfigCanvas = CONFIG.Canvas;
+  globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document]))}, grid: {size: 100}, walls: {placeables: walls}, tokens: {placeables: [tok], controlled: [tok]}};
+  CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
+  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  windows.push({name: "Wall config · WoDX part", tag: "form", classes: "application sheet wall-config", width: 480, height: "auto",
+    content: `<div class="standard-form">${ix.configHtml(walls[0].document)}</div><footer class="form-footer"><button type="submit">Update Wall</button></footer>`});
+  globalThis.canvas = oldCanvas;
+  CONFIG.Canvas = oldConfigCanvas;
+  api.DialogV2.wait = wait;
+}
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: c.position?.width ?? 400, height: "auto",
@@ -566,7 +595,8 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-otherworlds/styles/wodx-otherworlds.css")).href,
   pathToFileURL(join(root, "modules/wodx-creation/styles/wodx-creation.css")).href,
   pathToFileURL(join(root, "modules/wodx-npc/styles/wodx-npc.css")).href,
-  pathToFileURL(join(root, "modules/wodx-storyteller/styles/wodx-storyteller.css")).href];
+  pathToFileURL(join(root, "modules/wodx-storyteller/styles/wodx-storyteller.css")).href,
+  pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));
@@ -671,13 +701,13 @@ for ( const [vw, vh] of sizes ) {
       }
       if ( bad > 3 ) problems.push(`... and ${bad - 3} more controls cannot be reached`);
       // Rule B24: a list a person picks from (more than five entries) has a search box. Fixed short choices
-      // (months, Line or Veil) carry data-fixed.
+      // (months, Line or Veil, the moves open at one door) carry data-fixed.
       const boxes = [...app.querySelectorAll("input.wodx-search")];
       const covered = el => boxes.some(bx => { try { return el.matches(bx.dataset.search); } catch { return false; } });
       for ( const sel of app.querySelectorAll("select:not([data-fixed])") ) {
         if ( sel.options.length > 5 && !covered(sel) ) problems.push(`no search box for select[name=${sel.name}] (${sel.options.length} entries)`);
       }
-      for ( const list of app.querySelectorAll("ul, ol, table") ) {
+      for ( const list of app.querySelectorAll("ul:not([data-fixed]), ol:not([data-fixed]), table:not([data-fixed])") ) {
         const n = list.tagName === "TABLE" ? list.querySelectorAll(":scope > tbody > tr").length : list.querySelectorAll(":scope > li").length;
         if ( n > 5 && list.querySelector("input, select, button") && !covered(list) ) problems.push(`no search box for a ${list.tagName.toLowerCase()} of ${n} entries`);
       }
