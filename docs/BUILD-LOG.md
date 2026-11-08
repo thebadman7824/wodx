@@ -484,3 +484,7 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - Tests: sheets2 (6); 321 pass. Gate sheet 4: 13/13. The world is in the Dark Ages, so the gate gives each test character the later-era sheet by the flag and puts it back.
 - Seen in Foundry: the system asked for a sheet type the first time two older test characters opened. General wraith was chosen for Ada (6e) and General vampire for Ilse (6e). Putting the flag back re-rendered sheets the gate had just closed, so they were closed by hand. The gate now puts the flag back before closing.
 
+
+### Design notes, 2026-11-08 (after Phase 6)
+- Era advancement and the passage of time: a living doc, "WoDX: Carrying a Character Across Eras". It extends Pass the Years (WoDX Creation, Phase 4) with one advancer per line. Thick blood, mortal decline, morality drift and experience for the years are optional switches, each marked WoDX's choice where the books are silent. It includes the Dark Ages Ability and Road conversion tables and a list of decisions for Ben.
+- Auto-targeting: a living doc, "WoDX: Auto-Targeting Feasibility". The idea is feasible. Foundry 14's setTargets, WoDX NPC's enemies and allies, and WoDX Combat's reach already exist. The gap is an intent and range tag on about 1,020 powers. The proposal is a WoDX Targeting module with Off, Suggest and Automatic modes.
