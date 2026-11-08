@@ -377,6 +377,8 @@ export function build(ctx) {
             witnesses: witnesses.map(w => ({ name: w.name, uuid: w.uuid, state: "saw" })) });
         await writeMasq(list);
         if (by) await logEvent(by, `Seen by ${witnesses.map(w => w.name).join(", ")}: ${event}.`, "masquerade");
+        // WoDX NPC (7d) follows a recorded breach as a rumour
+        Hooks.callAll("wodxBreach", { entry: list.at(-1), by: by?.uuid ? { uuid: by.uuid, name: by.name } : null });
         return list.at(-1);
     }
     /** A witness's state in every open record (e.g. made to forget). Returns how many records changed. */

@@ -472,6 +472,40 @@ game.world.id = worldId;
   globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
+// Phase 7d: the Factions window (ten factions of long names, five rumours), a faction's editor, hunting, a report, settings
+{
+  const npcApi = game.modules.get("wodx-npc").api;
+  const Fx = npcApi.factions;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const ids = Array.from({length: 10}, (_, i) => `fac${i}`);
+  const people = [...game.actors.values()];
+  await Fx.mutate(st => {
+    st.factions = ids.map((id, i) => ({id, name: `A faction with a rather long name, number ${i}`, kind: Object.keys(Fx.rules.KINDS)[i % 12], ruler: i === 0, leader: people[i]?.id ?? null,
+      members: people.slice(i, i + 3).map(a => a.id), places: [`Scene.scene${String(i * 5).padStart(11, "0")}`],
+      assets: {herd: i % 5, resources: 2, status: (i + 1) % 6, retainers: 1, contacts: 2, domain: 2, security: 1, influence: {church: 2, crown: 1, guild: i % 4}},
+      standing: Object.fromEntries(ids.filter(x => x !== id).slice(0, 4).map((x, k) => [x, k - 2])), goals: [{move: "expand", sphere: "guild"}, {move: "scheme", target: ids[(i + 1) % 10]}]}));
+    st.breaches = Array.from({length: 5}, (_, i) => ({id: `br${i}`, severity: 1 + (i % 5), event: `Something no mortal should see, a long description number ${i}`, faction: ids[i], place: null, state: ["live", "contained", "stopped", "over", "live"][i], stage: i % 3, heard: []}));
+    st.lastTurn = 0;
+    return {state: st};
+  });
+  const oldCanvas = globalThis.canvas;
+  globalThis.canvas = {...(oldCanvas ?? {}), scene: null, tokens: {placeables: [], controlled: []}};
+  const App = Fx.FactionsAppClass();
+  const app = new App({});
+  await app.render({force: true});
+  const o = App.DEFAULT_OPTIONS;
+  windows.push({name: "WoDX factions", tag: o.tag ?? "div", classes: ["application", ...(o.classes ?? [])].join(" "), width: o.position.width, height: o.position.height,
+    content: app.element.querySelector("section.window-content").innerHTML});
+  for ( const [label, fn] of [["Faction editor", () => Fx.editFaction("fac0")], ["New faction", () => Fx.editFaction()], ["Hunting", () => Fx.huntDialog(people.find(a => a.type === "Vampire"))],
+    ["Report a breach", () => Fx.reportDialog()]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  globalThis.canvas = oldCanvas;
+  api.DialogV2.wait = wait;
+}
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: c.position?.width ?? 400, height: "auto",

@@ -1,4 +1,4 @@
-/* WoDX NPC 0.2.0: the Storyteller's cards (turns, routines, reactions) and the behaviour, routine and places windows. Colours come from the WoDX look (wodx-theme.css). */
+/* WoDX NPC 0.3.0: the Storyteller's cards (turns, routines, reactions) and the behaviour, routine and places windows. Colours come from the WoDX look (wodx-theme.css). */
 .wnpc .wnpc-opts { margin: 0.3em 0; padding-left: 1.4em; }
 .wnpc .wnpc-opt { margin: 0.25em 0; }
 .wnpc .wnpc-opt.chosen { font-weight: 600; }
@@ -25,3 +25,13 @@
 .wnpc-places .wodx-table input[type=text] { width: 100%; }
 .wnpc-places h3 { margin: 0.6em 0 0.2em; }
 .wnpc-places textarea { width: 100%; }
+/* 7d: the Factions window, the faction editor, hunting and rumour cards */
+.wnpc-factions .wodx-table td.name { min-width: 12em; }
+.wnpc-factions h3 { margin: 0.6em 0 0.2em; }
+.wnpc-factions .wnpc-tools { white-space: nowrap; }
+.wodx-npc-dialog .wnpc-dots { display: flex; flex-wrap: wrap; gap: 0.3em 1em; }
+.wodx-npc-dialog .wnpc-dots label { display: inline-flex; align-items: center; gap: 0.3em; white-space: nowrap; }
+.wodx-npc-dialog .wnpc-dots input[type=number] { width: 3.2em; }
+.wodx-npc-dialog .wnpc-faction-form table select, .wodx-npc-dialog .wnpc-faction-form table input[type=text] { max-width: 14em; }
+.wodx-npc-dialog .wnpc-faction-form textarea { width: 100%; }
+.wodx-npc-dialog .wnpc-members, .wodx-npc-dialog .wnpc-held, .wodx-npc-dialog .wnpc-standing { max-height: 24vh; }
