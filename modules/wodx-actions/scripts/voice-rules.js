@@ -13,7 +13,9 @@ export const KINDS = {
     rage: { label: "Rage", lines: ["lupine"], book: "Dark Ages: Werewolf / W20 frenzy" },
     impulse: { label: "The Impulse", lines: ["hunter"], book: "Dark Ages: Inquisitor p. 162; Hunter: The Reckoning p. 131" },
     gift: { label: "The Gift (the Avatar)", lines: ["mage"], book: "Dark Ages: Mage pp. 87, 139–140 (Twilight, the Fount's whispers); Mage 20th pp. 338–339 (the Avatar, Seekings)" },
-    mists: { label: "The Mists and the Weave", lines: ["fae"], book: "Dark Ages: Fae pp. 101–104 (imbalance, Lost and Locked); Changeling 20th (Banality, Bedlam)" }
+    mists: { label: "The Mists and the Weave", lines: ["fae"], book: "Dark Ages: Fae pp. 101–104 (imbalance, Lost and Locked); Changeling 20th (Banality, Bedlam)" },
+    spite: { label: "Spite", lines: ["orpheus"], book: "Orpheus pp. 192–193 (Spite against the starting Vitality; the Spectres' call)" },
+    torment: { label: "The Torment", lines: ["demon"], book: "Demon: The Fallen pp. 159–162 (the Hierarchy of Sins, Torment), 169–170 (high-Torment effects and powers)" }
 };
 /** The voice a profile carries (B54); null when the line has none yet. */
 export function kindFor(profile) {
@@ -38,6 +40,12 @@ const lvl = i => LEVELS[Math.max(0, Math.min(3, i))];
 export function pressure(kind, d = {}) {
     switch (kind) {
         case "beast": {
+            // Kindred of the East: the P'o against the Hun, and the Chi left in the body (hungry at 5, ravenous at 2)
+            if (d.kote) {
+                const c = n(d.chi), p = n(d.po), h = n(d.hun);
+                const i = c <= 2 ? 3 : c <= 5 || p >= h + 3 ? 2 : p > h ? 1 : 0;
+                return { value: 20 - c, max: 20, level: lvl(i), text: `Chi ${c}; P'o ${p} against Hun ${h}` };
+            }
             const b = n(d.blood), m = n(d.max) || 10, line = 7 - n(d.selfcontrol);
             const i = b < line ? 3 : b <= line + 1 ? 2 : b <= m / 2 ? 1 : 0;
             return { value: m - b, max: m, level: lvl(i), text: `Blood ${b}/${m}; hunger calls below ${line}` };
@@ -85,6 +93,18 @@ export function pressure(kind, d = {}) {
             const i = (imb > 0 && wp > 0 && imb >= wp - 1) || b >= 9 ? 3 : (imb > 0 || nm >= 8 || b >= 7) ? 2 : (nm >= 5 || b >= 5 || (g > 0 && pts > g) || g === 0) ? 1 : 0;
             return { value: Math.max(b, nm), max: 10, level: lvl(i), text: `Banality ${b}; Glamour ${g}${nm ? `; Nightmare ${nm}` : ""}${imb ? `; Imbalances ${imb}` : ""}` };
         }
+        case "spite": {
+            // Orpheus: Spite's rating against the starting Vitality (p. 193), and the points toward the next rating
+            const r = n(d.rating), v = n(d.vitality), p = n(d.points);
+            const i = r >= v + 1 ? 3 : r >= v ? 2 : r >= v - 1 || p >= 7 ? 1 : 0;
+            return { value: r * 10 + p, max: 100, level: lvl(i), text: `Spite ${r} (${p} points) against Vitality ${v}` };
+        }
+        case "torment": {
+            // The Abyss's memory: permanent Torment (7 brings the high-Torment powers) and the temporary points toward the next one.
+            const p = n(d.perm), t = n(d.temp);
+            const i = p >= 7 || t >= 8 ? 3 : p >= 6 || t >= 5 ? 2 : p >= 5 || t >= 2 ? 1 : 0;
+            return { value: p * 10 + t, max: 100, level: lvl(i), text: `Torment ${p}${t ? ` (+${t} temporary)` : ""}` };
+        }
         default: return { value: 0, max: 10, level: "calm", text: "" };
     }
 }
@@ -116,6 +136,16 @@ export const PROPOSALS = {
         { id: "locked", label: "The Weave tightens: routine, the same cantrip again, a refusal of chaos (Dark Ages)", api: null, roller: "owner" },
         { id: "echo", label: "An Echo bites: the Storyteller calls for its roll", api: "daEcho", roller: "owner" },
         { id: "banality", label: "Banality's weight: the world seems drab and certain (Changeling 20th)", api: null, roller: "owner" }
+    ],
+    spite: [
+        { id: "tap", label: "Tap the hate for strength (Spite for Vitality)", api: "orphVitality", roller: "owner" },
+        { id: "lash", label: "Lash out: the violent effect of a Horror", api: "orphHorror", roller: "owner" },
+        { id: "spectre", label: "The Spectres call: answer, or refuse", api: "orphSpite", roller: "owner" }
+    ],
+    torment: [
+        { id: "dark", label: "The dark effect tempts: choose the high-Torment effect of an evocation", api: "demonEvoke", roller: "owner" },
+        { id: "sin", label: "Lash out: a sin against the Virtues", api: "demonSin", roller: "owner" },
+        { id: "form", label: "Show them the true face: the apocalyptic form", api: "demonForm", roller: "owner" }
     ],
     impulse: [
         { id: "impulse", label: "The Impulse (an inquisitor while Callous)", api: "hunterVirtue", roller: "owner" },

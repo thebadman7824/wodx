@@ -46,6 +46,14 @@ import * as TR from "./theme-rules.js";
 import * as MXD from "./mage-da.js";
 import * as FXD from "./fae-da.js";
 import * as CXD from "./c20.js";
+import * as DXD from "./demon.js";
+import * as DR from "./demon-rules.js";
+import * as KXD from "./kote.js";
+import * as KER from "./kote-rules.js";
+import * as UXD from "./mummy.js";
+import * as UR from "./mummy-rules.js";
+import * as OXD from "./orpheus.js";
+import * as ORR from "./orpheus-rules.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -1705,7 +1713,7 @@ let PMX = null;
 function pm() {
     return PMX ??= PM.build({
         post, rollPool, rollBlock, resultLine, diceHtml, API, action, updateActor, willpower, attr, findAbility, setting,
-        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a)
+        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a), isKotE: a => KXD.isKotE(a), isOrpheus: a => OXD.isOrpheus(a)
     });
 }
 
@@ -1727,6 +1735,36 @@ let CXE = null;
 /** Changelings of the later eras (3.9.0, Phase 6h). */
 function cx() {
     return CXE ??= CXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, background, spendWillpower, notify: m => ui.notifications.warn(m) });
+}
+
+let DXE = null;
+/** The fallen (3.10.0, Phase 6i). */
+function dx() {
+    return DXE ??= DXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+        traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
+            ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
+}
+
+let UXE = null;
+/** The Reborn (3.10.0, Phase 6k). */
+function ux() {
+    return UXE ??= UXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, background, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+        traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
+            ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
+}
+
+let OXE = null;
+/** The crucible (3.10.0, Phase 6l). */
+function ox() {
+    return OXE ??= OXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+        traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
+            ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
+}
+
+let QXE = null;
+/** The Kuei-jin (3.10.0, Phase 6j). */
+function qx() {
+    return QXE ??= KXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, background, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m) });
 }
 
 let GXE = null;
@@ -1807,7 +1845,7 @@ export async function menu({ actor: a } = {}) {
     let r;
     try {
         r = await P.ask({
-            title: `WoDX Actions — ${P.profileLabel(kind)}`, content: html, width: legacy || !TR.LINE_LOOK.includes(kind) ? 460 : 560, classes: ["vta-dialog", "wodx-menu-dialog"],
+            title: `WoDX Actions — ${KXD.isKotE(actor) ? "Kuei-jin (Kindred of the East)" : OXD.isOrpheus(actor) ? "Orpheus (a spook)" : P.profileLabel(kind)}`, content: html, width: legacy || !TR.LINE_LOOK.includes(kind) ? 460 : 560, classes: ["vta-dialog", "wodx-menu-dialog"],
             buttons: [{ id: "close", label: "Close", icon: "fas fa-times" }],
             onRender: (root, close) => {
                 const use = async b => {
@@ -1982,7 +2020,7 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.9.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.10.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : pm().cast(a); },
@@ -1999,6 +2037,18 @@ const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenz
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
     c20Trigger: withActor(a => cx().trigger(a)), c20Epiphany: withActor(a => cx().epiphany(a)), c20Bedlam: withActor(a => cx().bedlam(a)),
     c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Info: a => cx().info(resolveActor(a)),
+    demonEvoke: withActor(a => dx().evoke(a)), demonForm: withActor(a => dx().form(a)), demonRevelation: withActor(a => dx().revelation(a)), demonReap: withActor(a => dx().reap(a)),
+    demonThralls: withActor(a => dx().thralls(a)), demonSin: withActor(a => dx().sin(a)), demonKindness: withActor(a => dx().kindness(a)), demonHeal: withActor(a => dx().heal(a)),
+    demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)),
+    demonDaily: () => dx().daily(), demonRules: DR, isDemon: a => DXD.isDemon(resolveActor(a)),
+    kotFeed: withActor(a => qx().feed(a)), kotSpend: withActor(a => qx().spend(a)), kotNature: withActor(a => qx().nature(a)), kotDharma: withActor(a => qx().dharmaRoll(a)),
+    kotDemon: withActor(a => qx().demon(a)), kotRise: withActor(a => qx().rise(a)), kotSun: withActor(a => qx().sun(a)), kotHeal: withActor(a => qx().heal(a)),
+    kotSight: withActor(a => qx().sight(a)), kotSetup: withActor(a => qx().setup(a)), kotInfo: a => qx().info(resolveActor(a)), kotRules: KER, isKotE: a => KXD.isKotE(resolveActor(a)),
+    mummyCast: withActor(a => ux().cast(a)), mummySekhem: withActor(a => ux().regain(a)), mummyBalance: withActor(a => ux().balance(a)), mummyOffense: withActor(a => ux().offense(a)),
+    mummyResurrect: withActor(a => ux().resurrect(a)), mummyVeil: withActor(a => ux().veil(a)), mummySetup: withActor(a => ux().setup(a)), mummyInfo: a => ux().info(resolveActor(a)),
+    mummyDaily: () => ux().daily(), mummyRules: UR, isMummy: a => UXD.isMummy(resolveActor(a)),
+    orphHorror: withActor(a => ox().horror(a)), orphVitality: withActor(a => ox().vitality(a)), orphHarm: withActor(a => ox().harm(a)), orphSpite: withActor(a => ox().spite(a)),
+    orphProject: withActor(a => ox().project(a)), orphSetup: withActor(a => ox().setup(a)), orphInfo: a => ox().info(resolveActor(a)), orphRules: ORR, isOrpheus: a => OXD.isOrpheus(resolveActor(a)),
     shift: withActor(a => GX.isShifter(a) ? gx().shift(a) : pm().shift(a)), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()),
     // Werewolf and Fera (Phase 6b)
     shiftForm: withActor(a => gx().shift(a)), rageRoll: withActor((a, o) => gx().rageRoll(a, o)), spendRage: withActor(a => gx().spendRage(a)),
@@ -2128,7 +2178,7 @@ function kindredHooks() {
     Hooks.on("updateWorldTime", () => {
         if (fadeBusy || !game.user.isGM || L.chronicle()?.isSkipping?.()) return;
         fadeBusy = true;
-        mx().fadeAll().then(() => fx().daily()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
+        mx().fadeAll().then(() => fx().daily()).then(() => dx().daily()).then(() => ux().daily()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
     });
     const sunRound = new Map();
     Hooks.on("updateCombat", (combat, changed) => {

@@ -106,8 +106,38 @@ export const MENU_PLAN = {
     },
     spirit: { act: ["action", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
     beast: { act: ["action", "preset:trackscent", "preset:sneaking"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices", "rules:beast"] },
-    demon: { act: ["action", "uses:faith"], resist: ["uses:torment", "api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
-    mummy: { act: ["action", "uses:sekhem"], resist: ["uses:balance", "api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
+    /** Kindred of the East (3.10.0). */
+    kote: {
+        act: ["action", "api:kotSpend", "api:kotFeed", "api:hunt", "api:kotSight", "api:seduction", "api:kotDemon"],
+        resist: ["api:kotNature", "api:kotSun", "api:hazard"],
+        recover: ["api:kotHeal", "api:kotRise", "api:kotDharma", "uses:willpower"],
+        st: ["api:kotSetup"],
+        scene: ["api:endScene", "api:voices", "rules:kote"]
+    },
+    /** Demon: The Fallen (3.10.0). */
+    demon: {
+        act: ["action", "api:demonEvoke", "api:demonForm", "api:demonReap", "api:demonThralls", "api:seduction"],
+        resist: ["api:demonSin", "api:demonHoly", "api:demonIllusion", "uses:torment", "api:hazard"],
+        recover: ["api:demonHeal", "api:demonKindness", "uses:willpower"],
+        st: ["api:demonRevelation", "api:demonName"],
+        scene: ["api:endScene", "api:voices", "rules:demon"]
+    },
+    /** Orpheus (3.10.0). */
+    orpheus: {
+        act: ["action", "api:orphHorror", "api:seduction"],
+        resist: ["api:orphHarm", "api:orphSpite", "api:hazard"],
+        recover: ["api:orphVitality", "api:orphProject", "uses:willpower"],
+        st: ["api:orphSetup"],
+        scene: ["api:endScene", "api:voices", "rules:orpheus"]
+    },
+    /** Mummy: The Resurrection (3.10.0). */
+    mummy: {
+        act: ["action", "api:mummyCast", "uses:sekhem", "api:seduction"],
+        resist: ["api:mummyBalance", "api:hazard"],
+        recover: ["api:mummySekhem", "api:mummyResurrect", "uses:willpower"],
+        st: ["api:mummyOffense", "api:mummyVeil", "api:mummySetup"],
+        scene: ["api:endScene", "api:voices", "rules:mummy"]
+    },
     exalted: { act: ["action", "uses:essence"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] }
 };
 
@@ -216,6 +246,17 @@ export const DESC = {
     "api:c20Epiphany": "Changeling 20th: Reverie, Rapture, Ravaging, Revelry, Rhapsody or a night by a balefire",
     "api:c20Trigger": "Changeling 20th: Glamour at 8 against a Banality trigger",
     "api:c20Mists": "Changeling 20th: how much a mortal remembers, by Banality",
+    "api:demonEvoke": "Demon: an evocation of a known lore — its traits at 6, Faith for successes, ravaged thralls; Torment may twist it",
+    "api:demonForm": "Demon: the apocalyptic form — the Faith pool at 6 or a Faith point; its powers, the high-Torment ones, Revelation",
+    "api:demonRevelation": "Demon: the scene's Revelation difficulty, and a witness's Willpower against the demon's Faith",
+    "api:demonReap": "Demon: reap Faith from one mortal — Willpower against Willpower at 7",
+    "api:demonThralls": "Demon: thralls — Faith potential, gifts, and the Faith offered at each dawn",
+    "api:demonHeal": "Demon: heal with Faith — all bashing, or one lethal level, a point",
+    "api:demonSin": "Demon: a sin on the Hierarchy — the Virtue at 8 or a Torment point",
+    "api:demonKindness": "Demon: an act of kindness — the Virtue against Torment; winning takes a Torment point away",
+    "api:demonHoly": "Demon: holy ground or a sacred object — lethal burns at Torment 4 or more",
+    "api:demonName": "Demon: a name is spoken — Faith at 7 or 6 to see and hear the speaker",
+    "api:demonIllusion": "Demon: see through illusion — Perception + Alertness at 7, or the other demon's Faith or Torment",
     "api:c20Bedlam": "Changeling 20th: Nightmare, Imbalance and the Bedlam Thresholds",
     "api:c20ColdIron": "Changeling 20th: cold iron's aggravated wound to both bodies and the Glamour it costs",
     "api:daQuintessence": "Dark Ages: absorb from a cray, harvest Tass, the Fount's monthly rite, a day in the Umbra",
@@ -227,6 +268,33 @@ export const DESC = {
     "uses:glamour": "Spend or regain Glamour",
     "uses:banality": "Banality gained, or a Banality check",
     "rules:fae": "The changeling rules at a glance, with page references",
+    "rules:orpheus": "The rules of the crucible at a glance, with page references",
+    "api:orphHorror": "Orpheus: use a Horror — its roll, the Vitality put in, Spite's penalty, the ripple it makes",
+    "api:orphVitality": "Orpheus: Vitality back — rest, a Willpower point for three, sharing, tapping Spite",
+    "api:orphProject": "Orpheus: a skimmer's hours outside the body",
+    "api:orphSetup": "Orpheus: the Shade, the Lament, the starting traits and the Horrors open to learn",
+    "api:orphHarm": "Orpheus: wounds to a spook's Vitality, or a skimmer's body",
+    "api:orphSpite": "Orpheus: Spite gained, a tether severed, a Spectre's siren-call",
+    "rules:mummy": "The rules of the Reborn at a glance, with page references",
+    "api:mummyCast": "Mummy: a Hekau spell (path + Trait, Sekhem spent either way) or a ritual (extended)",
+    "api:mummySekhem": "Mummy: Sekhem back — the Gift of Ra, Osiris's Blessing in the Web of Faith, a haven's meditation; semektet",
+    "api:mummySetup": "Mummy: the Amenti and its path, and whether the mummy is within the Web of Faith",
+    "api:mummyBalance": "Mummy: Balance — resist a temptation, counter magic, or forbid a malign being",
+    "api:mummyOffense": "Mummy: record an offense against Ma'at for the judges, by the mummy's Balance",
+    "api:mummyResurrect": "Mummy: the resurrection — Willpower or Sekhem + Ba at 8, mending the khat first",
+    "api:mummyVeil": "Mummy: how a mortal witness reacts, by Willpower",
+    "rules:kote": "The Kuei-jin rules at a glance, with page references",
+    "api:kotFeed": "Kuei-jin: feed on flesh, blood, breath or the dragon lines — the Chi each gives, hunger and imbalance",
+    "api:kotSpend": "Kuei-jin: spend Chi on a Discipline — the Dharma's limit a turn; Demon Arts harnessed by Hun; a botch while imbalanced explodes",
+    "api:kotHeal": "Kuei-jin: heal with Chi — a point a level, five for an aggravated level",
+    "api:kotSight": "Kuei-jin: Ghostsight, Lifesight, the Hun's senses and spirit speech, and Horoscope",
+    "api:kotSetup": "Kuei-jin: the Dharma, the direction and the P'o's Archetype, with what the Dharma level gives",
+    "api:kotNature": "Kuei-jin: fire, wave or shadow soul — the Virtue against the P'o, first to two successes",
+    "api:kotDemon": "Kuei-jin: Demon Chi for the scene, the berserk rage, fangs, and breaking mind control",
+    "api:kotDharma": "Kuei-jin: a Dharma roll — an auspicious occasion or an act of blindness",
+    "api:kotRise": "Kuei-jin: rise at dusk on Yin or Yang Chi, and the Demon Chi that returns",
+    "api:kotSun": "Kuei-jin: the sun's grace in minutes, then the rot",
+    "rules:demon": "The rules of the fallen at a glance, with page references",
     // Spirits, creatures and the lines still to come
     "uses:essence": "Spend or regain Essence",
     "preset:sneaking": "Sneak or stalk: Dexterity + Stealth",

@@ -456,3 +456,14 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - The lock and the dots now behave as on the system's sheets.
 - The "The second page" heading is gone (the fae's "Oaths, Echoes and Features" stays), and so is the closing note about the design.
 - Tests: 274 pass. Gate sheet 2: 7/7 (it unlocks the sheet before clicking a dot). New gate sheet 3: 9/9. It checks that the Core page's Clan is the Bio tab's list with the same choice, and that a Clan chosen on Core shows on Bio. A Concept and a Generation set on Bio show on Core, and so does a Tribe set on a werewolf's Bio. The Virtues are the system's own markup and data. The Dark Ages Court set on Bio shows on Core, and a mage's Cabal typed on Core shows in Bio's box. A locked sheet shows text, keeps its permanent dots and still moves points.
+
+### Phase 6i–6l, 2026-11-08: WoDX Actions 3.10.0 (Demon, Kindred of the East, Mummy, Orpheus; B76–B79)
+- Read on the PC: Demon: The Fallen and Kindred of the East from their text layers; Mummy: The Resurrection and Orpheus by OCR, run at below-normal priority. Notes: research/6i-notes.md.
+- The system already has a sheet for each: the Demon and Mummy types, the Vampire sheet's Kindred of the East variant and the Mortal sheet's Orpheus variant. Each WoDX engine reads those sheets' own fields and items.
+- Demon (demon-rules.js, demon.js): evocations from the 23 lore paths with their traits; Torment's twist; the apocalyptic form and its high-Torment powers; Revelation; reaping, thralls and the dawn offering; sins and kindness; Faith healing; the holy; names; illusion.
+- Kindred of the East (kote-rules.js, kote.js): feeding, spending Chi within the Dharma's limit, Demon Arts, the explosion of an imbalanced botch, fire, wave and shadow soul, Dharma rolls, Demon Chi, rising, the sun, healing, sight.
+- Mummy (mummy-rules.js, mummy.js): Hekau spells and rituals, Sekhem's return and semektet, Balance, offenses for the judges, the resurrection, the Veil.
+- Orpheus (orpheus-rules.js, orpheus.js): Horrors with the Vitality put in, Vitality's return and tapping Spite, harm, Spite's thresholds, projection.
+- Menus for all four (the Kuei-jin and Orpheus menus by the sheet's variant); the inner voice of the fallen (Torment), the Kuei-jin (the P'o and Chi) and spooks (Spite).
+- Tests: phase6i (11), 6j (9), 6k (7), 6l (7); 308 pass; UI fit passes for every new dialog.
+

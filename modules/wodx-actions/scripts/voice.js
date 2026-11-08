@@ -32,7 +32,11 @@ export function build(ctx) {
     const { post, dialog, setFlag, notify, api, virtues, wraithInfo, inquisitor } = ctx;
     const sceneKey = () => `${canvas?.scene?.id ?? "none"}:${n(game.settings.get(MOD, "wraithScene"))}`;
 
-    function kindOf(actor) { return V.kindFor(P.detectProfile(actor)); }
+    function kindOf(actor) {
+        // Orpheus spooks play on the mortal sheet: their voice is Spite (3.10.0)
+        if (actor?.type === "Mortal" && actor.system?.settings?.variant === "orpheus") return "spite";
+        return V.kindFor(P.detectProfile(actor));
+    }
     function voiceOf(actor) {
         const f = actor?.getFlag?.(MOD, "voice") ?? {};
         return { user: f.user ?? actor?.getFlag?.(MOD, "shadowguide") ?? null, optIn: !!f.optIn };
@@ -56,7 +60,11 @@ export function build(ctx) {
         if (!kind) return null;
         const wp = n(actor.system?.advantages?.willpower?.temporary);
         let d = {};
-        if (kind === "beast") { const b = P.resource(actor, "blood"); d = { blood: b.value, max: b.max || 10, selfcontrol: virtues(actor).selfcontrol.value }; }
+        if (kind === "beast" && actor.type === "Vampire" && actor.system?.settings?.variant === "kindredeast") {
+            const a = actor.system.advantages ?? {};
+            d = { kote: true, chi: n(a.yinchi?.temporary) + n(a.yangchi?.temporary), po: n(a.po?.permanent), hun: n(a.hun?.permanent) };
+        }
+        else if (kind === "beast") { const b = P.resource(actor, "blood"); d = { blood: b.value, max: b.max || 10, selfcontrol: virtues(actor).selfcontrol.value }; }
         else if (kind === "shadow") { const w = wraithInfo(actor); d = { angst: w.angst.temp, willpower: w.willpower.temp }; }
         else if (kind === "rage") d = { rage: P.resource(actor, "rage").value, willpower: wp };
         else if (kind === "gift") {
@@ -82,6 +90,14 @@ export function build(ctx) {
                 d = { era: "c20", banality: n(adv.banality?.permanent), banalityPoints: n(adv.banality?.temporary), glamour: n(adv.glamour?.permanent),
                     nightmare: n(adv.nightmare?.temporary), imbalances: n(adv.willpower?.imbalance), willpower: n(adv.willpower?.permanent) };
             }
+        }
+        else if (kind === "spite") {
+            const ad = actor.system?.advantages ?? {};
+            d = { rating: n(ad.spite?.permanent), points: n(ad.spite?.temporary), vitality: n(ad.vitality?.permanent) };
+        }
+        else if (kind === "torment") {
+            const t = actor.system?.advantages?.torment ?? {};
+            d = { perm: n(t.permanent), temp: n(t.temporary) };
         }
         else if (kind === "impulse") {
             const q = inquisitor(actor);

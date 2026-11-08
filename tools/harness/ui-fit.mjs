@@ -329,6 +329,61 @@ game.world.id = worldId;
         ["Invoke the Wyrd", () => ga.c20Invoke({actor: A(pk)})], ["Banality trigger", () => ga.c20Trigger({actor: A(pk)})], ["Epiphany", () => ga.c20Epiphany({actor: A(pk)})],
         ["Nightmare and Bedlam", () => ga.c20Bedlam({actor: A(pk)})], ["Cold iron (Changeling 20th)", () => ga.c20ColdIron({actor: A(pk)})], ["The Mists (Changeling 20th)", () => ga.c20Mists({actor: A(pk)})]);
     }
+    // Phase 6i: a Devil of long name with every lore, thralls and a full apocalyptic form
+    {
+      const lores = ["Lore of the Celestials", "Lore of Flame", "Lore of Radiance", "Lore of the Fundament", "Lore of Humanity", "Lore of Longing"];
+      const dm = mk("demon0000000001", "Zaphriel, Messenger of the Dawn, of the House of the Heralds", "Demon",
+        {faith: {permanent: 6, temporary: 5, max: 10}, torment: {permanent: 8, temporary: 3, max: 10}, willpower: {permanent: 6, temporary: 5},
+         virtues: {...(actor.system?.advantages?.virtues ?? {}), conscience: {permanent: 3}, selfcontrol: {permanent: 2}, courage: {permanent: 4}}},
+        lores.map((l, k) => [`l${k}`, {name: l, type: "Power", system: {type: "wod.types.lore", value: 5 - (k % 3)}}]));
+      Object.assign(dm.system, {house: "wod.bio.demon.devil", faction: "wod.bio.demon.luciferan"});
+      const flags = {demon: {thralls: [{name: "Detective James Wong of the Hollenbeck Division", potential: 3, offered: 1, willpower: 5},
+        {name: "Sister Mary-Catherine of the Mission", potential: 4, offered: 2, willpower: 6}, {name: "Ray", potential: 2, offered: 1, willpower: 3}]}};
+      dm.getFlag = (sc, k) => sc === "wodx-actions" ? flags[k] : undefined;
+      tries.push(["Evoke", () => ga.demonEvoke({actor: A(dm)})], ["The apocalyptic form", () => ga.demonForm({actor: A(dm)})],
+        ["Revelation", () => ga.demonRevelation({actor: A(dm)})], ["Reap Faith", () => ga.demonReap({actor: A(dm)})], ["Thralls", () => ga.demonThralls({actor: A(dm)})],
+        ["A sin (Demon)", () => ga.demonSin({actor: A(dm)})], ["An act of kindness", () => ga.demonKindness({actor: A(dm)})], ["Heal with Faith", () => ga.demonHeal({actor: A(dm)})],
+        ["The holy", () => ga.demonHoly({actor: A(dm)})], ["A name is spoken", () => ga.demonName({actor: A(dm)})], ["See through illusion", () => ga.demonIllusion({actor: A(dm)})],
+        ["Demon menu", () => ga.menu({actor: A(dm)})]);
+    }
+    // Phase 6j: a Kuei-jin of the Devil-Tiger with many Disciplines
+    {
+      const arts = ["Black Wind", "Yin Prana", "Yang Prana", "Equilibrium", "Bone Shintai", "Flesh Shintai", "Tapestry"];
+      const kj = mk("kueijin00000001", "Tanaka Hiroko, a Devil-Tiger disciple of the Quincunx of Kyoto", "Vampire",
+        {yin: {permanent: 4}, yang: {permanent: 3}, yinchi: {temporary: 5}, yangchi: {temporary: 2}, hun: {permanent: 3}, po: {permanent: 4}, demonchi: {temporary: 4},
+         dharma: {permanent: 3, label: "Howl of the Devil-Tiger"}, willpower: {permanent: 5, temporary: 5}},
+        arts.map((a, k) => [`d${k}`, {name: a, type: "Power", system: {type: "wod.types.discipline", value: (k % 3) + 1}}]));
+      kj.system.settings = {...(kj.system.settings ?? {}), variant: "kindredeast"};
+      tries.push(["Feed (Kuei-jin)", () => ga.kotFeed({actor: A(kj)})], ["Spend Chi", () => ga.kotSpend({actor: A(kj)})], ["The soul", () => ga.kotNature({actor: A(kj)})],
+        ["Dharma roll", () => ga.kotDharma({actor: A(kj)})], ["The Demon (Kuei-jin)", () => ga.kotDemon({actor: A(kj)})], ["Rise", () => ga.kotRise({actor: A(kj)})],
+        ["Sunlight (Kuei-jin)", () => ga.kotSun({actor: A(kj)})], ["Heal (Kuei-jin)", () => ga.kotHeal({actor: A(kj)})], ["Sight and spirit", () => ga.kotSight({actor: A(kj)})],
+        ["Kuei-jin setup", () => ga.kotSetup({actor: A(kj)})], ["Kuei-jin menu", () => ga.menu({actor: A(kj)})]);
+    }
+    // Phase 6k: a Reborn Kher-minu with every path and many spells
+    {
+      const paths = ["Alchemy", "Amulets", "Celestial", "Effigy", "Necromancy", "Nomenclature"];
+      const sp = ["Ward of the Desert Wind", "Eye of Horus", "Breath of Shu", "Name of the Unseen", "The Scarab's Patience", "Ushabti Servant", "Elixir of the Black Land"];
+      const mu = mk("mummy0000000001", "Neferet-Ankh-Hathor, a Kher-minu Tomb Watcher of the Fayum", "Mummy",
+        {balance: {permanent: 4}, sekhem: {permanent: 4, temporary: 3}, willpower: {permanent: 6, temporary: 5}},
+        [...paths.map((x, k) => [`p${k}`, {name: x, type: "Power", system: {type: "wod.types.hekau", value: (k % 4) + 1}}]),
+         ...sp.map((x, k) => [`s${k}`, {name: x, type: "Power", system: {type: "wod.types.hekaupower", level: (k % 3) + 1}}]),
+         ["b1", {name: "Ba", type: "Feature", system: {type: "wod.types.background", value: 2}}]]);
+      mu.system.amenti = "Kher-minu";
+      tries.push(["Hekau", () => ga.mummyCast({actor: A(mu)})], ["Regain Sekhem", () => ga.mummySekhem({actor: A(mu)})], ["Balance (Mummy)", () => ga.mummyBalance({actor: A(mu)})],
+        ["An offense against Ma'at", () => ga.mummyOffense({actor: A(mu)})], ["The resurrection", () => ga.mummyResurrect({actor: A(mu)})], ["The Veil", () => ga.mummyVeil({actor: A(mu)})],
+        ["The Reborn", () => ga.mummySetup({actor: A(mu)})], ["Mummy menu", () => ga.menu({actor: A(mu)})]);
+    }
+    // Phase 6l: an Orpheus poltergeist skimmer with many Horrors and a crucible
+    {
+      const hs = ["Helter Skelter", "Congeal", "Wail", "Inhabit", "Witch's Nimbus", "Puppetry"];
+      const mkO = (id, nm) => { const o = mk(id, nm, "Mortal", {vitality: {permanent: 6, temporary: 5}, spite: {permanent: 4, temporary: 3}, willpower: {permanent: 7, temporary: 6}},
+        hs.map((x, k) => [`h${k}`, {name: x, type: "Power", system: {type: "wod.types.horror", value: (k % 3) + 1}}]));
+        o.system.settings = {...(o.system.settings ?? {}), variant: "orpheus", hasvitality: true, hasspite: true}; o.system.variant = {shade: "Poltergeist", lament: "Skimmer", role: "Bicycle messenger"}; o.system.nature = "Critic"; return o; };
+      const op = mkO("orpheus00000001", "Craig Whitmore-Delacroix, a Poltergeist skimmer of the Orpheus Group");
+      for ( let k = 0; k < 6; k++ ) mkO(`orpheus0000001${k}`, `Crucible-mate with a long name number ${k}`);
+      tries.push(["A Horror", () => ga.orphHorror({actor: A(op)})], ["Vitality", () => ga.orphVitality({actor: A(op)})], ["Harm to the spook", () => ga.orphHarm({actor: A(op)})],
+        ["Spite", () => ga.orphSpite({actor: A(op)})], ["Projection", () => ga.orphProject({actor: A(op)})], ["Orpheus menu", () => ga.menu({actor: A(op)})]);
+    }
     tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
       ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],

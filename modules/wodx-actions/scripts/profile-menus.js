@@ -146,9 +146,54 @@ export const MENUS = {
     }
 };
 
+/** Demon: The Fallen (3.10.0, Phase 6i). */
+MENUS.demon = {
+    sections: [
+        ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+        ["Faith", [["api:demonEvoke", "Evoke (a lore)", "fa-hand-sparkles"], ["api:demonForm", "The apocalyptic form", "fa-dragon"], ["api:demonRevelation", "Revelation (a witness)", "fa-eye"],
+            ["api:demonReap", "Reap Faith", "fa-hand-holding"], ["api:demonThralls", "Thralls and pacts", "fa-users"], ["api:demonHeal", "Heal with Faith", "fa-band-aid"]]],
+        ["Torment", [["api:demonSin", "A sin (Virtue at 8)", "fa-balance-scale"], ["api:demonKindness", "An act of kindness", "fa-dove"], ["uses:torment", "Torment", "fa-fire"]]],
+        ["Danger", [["api:demonHoly", "Holy ground / sacred object", "fa-cross"], ["api:demonName", "A name is spoken", "fa-comment"], ["api:demonIllusion", "See through illusion", "fa-low-vision"],
+            ["api:hazard", "Fire / fall", "fa-burn"], ["rules:demon", "Demon rules", "fa-book"]]],
+        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+    ]
+};
+
+/** Kindred of the East (3.10.0, Phase 6j): the Kuei-jin, on the system's vampire sheet set to Kindred of the East. */
+MENUS.kote = {
+    sections: [
+        ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
+        ["Chi", [["api:kotFeed", "Feed (flesh, blood, breath)", "fa-tint"], ["api:kotSpend", "Spend Chi / a Discipline", "fa-yin-yang"], ["api:kotHeal", "Heal with Chi", "fa-band-aid"],
+            ["api:kotSight", "Ghostsight, Lifesight, Hun", "fa-eye"], ["api:kotSetup", "Dharma, direction, P'o", "fa-scroll"]]],
+        ["The Demon", [["api:kotNature", "Fire, wave or shadow soul", "fa-fire-alt"], ["api:kotDemon", "Demon Chi and the rage", "fa-dragon"], ["api:kotDharma", "A Dharma roll", "fa-balance-scale"]]],
+        ["Night and day", [["api:kotRise", "Rise at dusk", "fa-moon"], ["api:kotSun", "Sunlight", "fa-sun"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:kote", "Kuei-jin rules", "fa-book"]]],
+        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+    ]
+};
+
+/** Mummy: The Resurrection (3.10.0, Phase 6k). */
+MENUS.mummy = {
+    sections: [
+        ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+        ["Hekau", [["api:mummyCast", "Work Hekau (spell or ritual)", "fa-ankh"], ["api:mummySekhem", "Regain Sekhem", "fa-sun"], ["uses:sekhem", "Sekhem", "fa-coins"], ["api:mummySetup", "Amenti and the Web", "fa-scroll"]]],
+        ["Ma'at", [["api:mummyBalance", "Balance (conviction, counter, forbid)", "fa-balance-scale"], ["api:mummyOffense", "An offense against Ma'at", "fa-gavel"]]],
+        ["Death and life", [["api:mummyResurrect", "The resurrection", "fa-redo"], ["api:mummyVeil", "The Veil (a witness)", "fa-eye-slash"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:mummy", "Mummy rules", "fa-book"]]],
+        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+    ]
+};
+
+/** Orpheus (3.10.0, Phase 6l): the crucible, on the system's mortal sheet set to Orpheus. */
+MENUS.orpheus = {
+    sections: [
+        ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+        ["The spook", [["api:orphHorror", "Use a Horror", "fa-ghost"], ["api:orphVitality", "Vitality (rest, share, tap)", "fa-heartbeat"], ["api:orphProject", "Projection (skimmers)", "fa-bed"], ["api:orphSetup", "Shade, Lament, Horrors", "fa-id-card"]]],
+        ["Danger", [["api:orphHarm", "Harm to the spook", "fa-skull"], ["api:orphSpite", "Spite", "fa-angry"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:orpheus", "Orpheus rules", "fa-book"]]],
+        ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+    ]
+};
+
 // Generic menus for the profiles without a sourcebook in the library: roll, their own traits, scene.
-for (const [k, res] of [["demon", [["uses:faith", "Faith", "fa-cross"], ["uses:torment", "Torment", "fa-fire"]]],
-    ["mummy", [["uses:sekhem", "Sekhem", "fa-sun"], ["uses:balance", "Balance", "fa-balance-scale"]]],
+for (const [k, res] of [
     ["exalted", [["uses:essence", "Essence", "fa-sun"]]]]) {
     MENUS[k] = { sections: [["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"]]], ["Traits", res],
         ["Danger", [["api:hazard", "Fire / fall", "fa-burn"]]], ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]] };
@@ -257,6 +302,10 @@ export const RULES = {
     beast: "<b>Creatures</b> use the mortal soak rules. Natural weapons (claws, bite, horns) are listed on the sheet as <i>natural</i> weapons; set the Creature profile on any animal for the animal menu.",
     mage: "<b>Mages</b> cannot soak lethal or aggravated damage without armor, protection or magick (Mage 20 p. 334). Coincidental magick: difficulty = highest Sphere + 3. Vulgar without witnesses: +4. Vulgar with witnesses: +5. Use the <i>Cast</i> button; Paradox for vulgar effects is set by the Storyteller.",
     faeDA: "<b>Dark Ages fae</b> soak lethal damage only in the fae mien. Cold iron does aggravated damage (soakable) and costs a Mists point per wound. A cantrip: Dominion + the trait it names, difficulty 6; −1 each for the Court's Dominion, its hour and its season; never below 4. Unleashing: Mists + Dominion against 5 Unleashing dice (3 for firstborn), Weaving removes them. Echoes: the mortal's Willpower (7) or 5 dice, less oath successes (Dark Ages: Fae pp. 88, 104, 110–122).",
+    orpheus: "<b>Spooks</b> (ghosts and projected souls) have no health levels: wounds come off Vitality; a skimmer's come out in the body as bashing. At zero Vitality a Willpower point is spent at once for three; at zero of both the spook dissipates. Three Vitality spent in a turn is felt three blocks off, five draws Spectres from five. Spite at or above the starting Vitality: +1 difficulty (Orpheus pp. 190–193).",
+    mummy: "<b>The Reborn</b> soak bashing and lethal with Stamina, never aggravated (save by Hekau); fire is aggravated, no worse. Lethal heals one level faster than a mortal's. Past Incapacitated the khat has five more levels; the resurrection is Willpower + Ba (a permanent Sekhem) or Sekhem + Ba (a permanent Willpower) at 8. A spell: the path + its Trait; Sekhem spent either way (Mummy: The Resurrection pp. 78, 136–138).",
+    kote: "<b>Kuei-jin</b> take aggravated damage from fire, most Chi-based attacks and the claws and fangs of shen; they heal as Kindred with Chi for blood. The sun allows (Stamina − Yin Chi) minutes a day, then rots. Chi a turn follows the Dharma (1 to Dharma 3, 2 at 4–5, 3 at 6). Fire soul: Yin against the P'o; wave soul: Yang; shadow soul: Hun (Kindred of the East pp. 54, 134–151).",
+    demon: "<b>The fallen</b> soak bashing with Stamina; in the apocalyptic form, lethal too; never aggravated (without a power for it). Faith heals all bashing or one lethal level a point, never aggravated. An evocation: its Attribute + Ability at 6; Faith spent buys successes; a success die showing the permanent Torment or less brings the high-Torment effect. Torment 4 or more burns on holy ground (Demon: The Fallen pp. 161, 170–171, 248, 254).",
     fae: "<b>Changelings</b> soak as mortals (bashing only). Cold iron inflicts aggravated damage and a changeling has no natural defense against it (a Balor has only a difficulty-10 chance). Chimerical damage affects only chimerical beings; Banality eats Glamour. Cantrip: Art + lowest primary Realm, difficulty 8 before modifiers (Changeling 20th).",
     wraith: "<b>Wraiths</b> are immune to Stun damage; a corporeal wraith suffers lethal damage only through Corpus. Corpus loss ends in a Harrowing or Oblivion. House soak in this module: Stamina against bashing and lethal, armor only against aggravated damage."
 };
@@ -453,18 +502,18 @@ export function build(ctx) {
     /** Launcher: sections for the actor's profile, the profile toggle and an Auto/override selector. */
     async function menuFor(actor, { recent = [], isGM = !!globalThis.game?.user?.isGM } = {}) {
         const kind = P.detectProfile(actor);
-        const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (kind === "fae" && ctx.isDAFae?.(actor)) ? MENUS.faeDA : (MENUS[kind] ?? MENUS.mortal);
+        const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (kind === "fae" && ctx.isDAFae?.(actor)) ? MENUS.faeDA : (kind === "kindred" && ctx.isKotE?.(actor)) ? MENUS.kote : (kind === "mortal" && ctx.isOrpheus?.(actor)) ? MENUS.orpheus : (MENUS[kind] ?? MENUS.mortal);
         const auto = P.detectProfile(actor, { ignoreFlag: true });
         const overridden = kind !== auto;
         const kindBtn = `<button type="button" class="vta-kind" title="Change the actor type"><i class="fas fa-exchange-alt" aria-hidden="true"></i> Type</button>`;
         // 6e: the restyled lines group their buttons by intent, with search, recent uses, hints and keys
         if (TR.LINE_LOOK.includes(kind)) {
-            const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : def === MENUS.faeDA ? "faeDA" : kind, def.sections, { isGM });
+            const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : def === MENUS.faeDA ? "faeDA" : def === MENUS.kote ? "kote" : def === MENUS.orpheus ? "orpheus" : kind, def.sections, { isGM });
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
             const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}</span></button>`;
             const rec = recent.map(s => all.find(x => x.spec === s)).filter(Boolean);
             const html = `<div class="vta-grp-wrap wodx-menu2" data-line="${esc(kind)}">
-              <div class="vta-menu-head"><span><span class="vta-who">${esc(actor.name)}</span><span class="vta-kindlabel">${esc(P.profileLabel(kind))}${overridden ? " (override)" : ""}</span></span>${kindBtn}</div>
+              <div class="vta-menu-head"><span><span class="vta-who">${esc(actor.name)}</span><span class="vta-kindlabel">${esc(def === MENUS.kote ? "Kuei-jin (Kindred of the East)" : def === MENUS.orpheus ? "Orpheus (a spook)" : P.profileLabel(kind))}${overridden ? " (override)" : ""}</span></span>${kindBtn}</div>
               <input type="search" class="wodx-search vta-menu-find" data-search=".vta-intents" placeholder="Find an action…" aria-label="Find an action" autocomplete="off" spellcheck="false">
               ${rec.length ? `<div class="vta-recent" role="group" aria-label="Used lately"><span>Lately</span>${rec.map(x => btn(x, false)).join("")}</div>` : ""}
               <div class="vta-intents">
