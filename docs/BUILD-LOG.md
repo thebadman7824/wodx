@@ -430,4 +430,4 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
   - Cold iron does damage to both bodies and costs Glamour.
   - The Mists table for mortals.
 - The fae menu for later eras. The inner voice reads Nightmare, Imbalances and Banality.
-- Tests: phase6h.test.mjs (9); 268 pass; UI fit passes. Deployed (backup: Backups/wodx-actions-3.8.0-2026-11-08); gate 6h to run when the screen is free.
+- Tests: phase6h.test.mjs (9); 268 pass; UI fit passes. Backup: Backups/wodx-actions-3.8.0-2026-11-08. Gate 6h: 13/13.

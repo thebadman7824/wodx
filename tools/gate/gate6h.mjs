@@ -29,12 +29,12 @@ const set = (root, name, value) => {
     el.dispatchEvent(new Event("change", { bubbles: true }));
 };
 const text = m => String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-async function untilMsg(after, ms = 6000) {
+async function untilMsg(after, want = /./, ms = 15000) {
     const t = Date.now();
-    while (Date.now() - t < ms) { const m = game.messages.contents.slice(after).find(x => /vta-card/.test(x.content ?? "")); if (m) return m; await sleep(100); }
+    while (Date.now() - t < ms) { const m = game.messages.contents.slice(after).find(x => /vta-card/.test(x.content ?? "") && want.test(text(x))); if (m) return m; await sleep(100); }
     return null;
 }
-async function step(name, fn) { try { await fn(); } catch (e) { ok(name, false, { error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ") }); } }
+async function step(name, fn) { const t = Date.now(); try { await fn(); R.timing?.push([name.slice(0, 30), Date.now() - t]); } catch (e) { ok(name, false, { error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ") }); } }
 const adv = a => a.system.advantages;
 const G = a => Number(adv(a).glamour.temporary), NM = a => Number(adv(a).nightmare?.temporary ?? 0);
 const base = { "system.advantages.glamour.permanent": 5, "system.advantages.glamour.temporary": 5, "system.advantages.banality.permanent": 3, "system.advantages.banality.temporary": 2,
@@ -57,6 +57,9 @@ async function makePooka() {
 
 export async function run() {
     const hook = Hooks.on("renderDialogV2", onRender);
+    const origErr = console.error;
+    console.error = (...a) => { R.errors.push(a.map(x => x?.stack ? String(x.stack).split("\n").slice(0, 4).join(" | ") : String(x)).join(" ")); origErr.apply(console, a); };
+    const t0 = Date.now(); R.timing = [];
     let pk;
     try {
         await step("versions; the sheet's Arts, Realms and Tempers are read", async () => {
@@ -75,7 +78,7 @@ export async function run() {
             const n0 = game.messages.size, g0 = G(pk);
             answer(root => { set(root, "art", "metamorphosis"); set(root, "lvl", 1); set(root, "r-actor", 3); set(root, "wyrd", true); set(root, "bunk", 2); });
             A().cantrip({ actor: pk });
-            const m = await untilMsg(n0);
+            const m = await untilMsg(n0, /weaves a cantrip/);
             ok("the book's first example: Metamorphosis 3 + Actor 3, Wyrd, a −2 bunk: six dice at 6, one Glamour", /6 dice, diff 6/.test(text(m)) && G(pk) === g0 - 1, { card: text(m).slice(0, 260), glamour: G(pk) });
         });
         await step("the book's second example: Primal 3 + Fae 2 with an unknown Time: five dice at 7, two Glamour", async () => {
@@ -83,7 +86,7 @@ export async function run() {
             const n0 = game.messages.size;
             answer(root => { set(root, "art", "primal"); set(root, "r-fae", 1); set(root, "r-time", 1); set(root, "wyrd", true); set(root, "bunk", 2); });
             A().c20Cantrip({ actor: pk });
-            const m = await untilMsg(n0);
+            const m = await untilMsg(n0, /weaves a cantrip/);
             ok("the book's second example: Primal 3 + Fae 2 with an unknown Time: five dice at 7, two Glamour", /5 dice, diff 7/.test(text(m)) && G(pk) === 3 && /Time 1/.test(text(m)), { card: text(m).slice(0, 300), glamour: G(pk) });
         });
         await step("Nightmare at 10: it clears, an Imbalance is marked and a Glamour point returns", async () => {
@@ -91,21 +94,21 @@ export async function run() {
             const n0 = game.messages.size;
             answer(root => { set(root, "k", "nm"); set(root, "nm", 1); });
             A().c20Bedlam({ actor: pk });
-            await untilMsg(n0);
+            await untilMsg(n0, /: Nightmare/);
             ok("Nightmare at 10: it clears, an Imbalance is marked and a Glamour point returns", NM(pk) === 0 && Number(adv(pk).willpower.imbalance) === 1 && G(pk) === 4, { nightmare: NM(pk), imbalance: adv(pk).willpower.imbalance, glamour: G(pk) });
         });
         await step("an Imbalanced Willpower brings a Bedlam Threshold: drowning in Glamour", async () => {
             const n0 = game.messages.size;
             answer(root => { set(root, "k", "spend"); set(root, "t", "drowning"); });
             A().c20Bedlam({ actor: pk });
-            const m = await untilMsg(n0);
+            const m = await untilMsg(n0, /Bedlam Threshold/);
             ok("an Imbalanced Willpower brings a Bedlam Threshold: drowning in Glamour", G(pk) === 5 && Number(adv(pk).willpower.temporary) === 3 && /For 1 scene/.test(text(m)), { glamour: G(pk), wp: adv(pk).willpower.temporary });
         });
         await step("invoking the Autumn: a Willpower point and a Banality trigger roll", async () => {
             const n0 = game.messages.size, w0 = Number(adv(pk).willpower.temporary);
             answer(root => { set(root, "k", "autumn"); });
             A().c20Invoke({ actor: pk });
-            const m = await untilMsg(n0);
+            const m = await untilMsg(n0, /invokes the Autumn/);
             ok("invoking the Autumn: a Willpower point and a Banality trigger roll", Number(adv(pk).willpower.temporary) === w0 - 1 && /Glamour against Banality : 5 dice, diff 8/.test(text(m)), { card: text(m).slice(0, 220) });
         });
         await step("an 11th Banality point becomes a dot", async () => {
@@ -113,7 +116,7 @@ export async function run() {
             const n0 = game.messages.size;
             answer(root => { set(root, "auto", true); });
             A().c20Trigger({ actor: pk });
-            await untilMsg(n0);
+            await untilMsg(n0, /: Banality/);
             ok("an 11th Banality point becomes a dot", Number(adv(pk).banality.permanent) === 4 && Number(adv(pk).banality.temporary) === 0, { banality: adv(pk).banality });
             await pk.update({ "system.advantages.banality.permanent": 3, "system.advantages.banality.temporary": 2 });
         });
@@ -121,12 +124,12 @@ export async function run() {
             await pk.update({ "system.advantages.glamour.temporary": 1, "system.advantages.willpower.imbalance": 1 });
             let n0 = game.messages.size;
             answer(root => { set(root, "k", "revelry"); });
-            A().c20Epiphany({ actor: pk }); await untilMsg(n0);
+            A().c20Epiphany({ actor: pk }); await untilMsg(n0, /Epiphany/);
             const full = G(pk) === 5;
             await pk.update({ "system.advantages.glamour.temporary": 1 });
             n0 = game.messages.size;
             answer(root => { set(root, "k", "revelry"); set(root, "imb", true); });
-            A().c20Epiphany({ actor: pk }); await untilMsg(n0);
+            A().c20Epiphany({ actor: pk }); await untilMsg(n0, /Epiphany/);
             ok("Revelry fills the Glamour pool; or it heals an Imbalance instead", full && Number(adv(pk).willpower.imbalance) === 0 && G(pk) === 1, { full, imbalance: adv(pk).willpower.imbalance, glamour: G(pk) });
         });
         await step("an Unleashing: 2 Glamour and a Nightmare first, Glamour + Nightmare at 7", async () => {
@@ -134,7 +137,7 @@ export async function run() {
             const n0 = game.messages.size;
             answer(root => { set(root, "art", "wayfare"); set(root, "intent", "Gate 6h: over the wall"); });
             A().c20Unleash({ actor: pk });
-            const m = await untilMsg(n0);
+            const m = await untilMsg(n0, /Unleashes/);
             ok("an Unleashing: 2 Glamour and a Nightmare first, Glamour + Nightmare at 7", /Glamour 5 \+ Nightmare 1 : 6 dice, diff 7/.test(text(m)) && G(pk) <= 3 && NM(pk) >= 1, { card: text(m).slice(0, 260), glamour: G(pk), nightmare: NM(pk) });
         });
         await step("cold iron: aggravated to both bodies and a Glamour point a level", async () => {
@@ -142,7 +145,7 @@ export async function run() {
             const n0 = game.messages.size;
             answer(root => { set(root, "k", 1); });
             A().c20ColdIron({ actor: pk });
-            await untilMsg(n0);
+            await untilMsg(n0, /Cold iron/);
             const d = pk.system.health.damage;
             ok("cold iron: aggravated to both bodies and a Glamour point a level", Number(d.aggravated) === 1 && Number(d.chimerical?.aggravated) === 1 && G(pk) === 2, { agg: d.aggravated, chimerical: d.chimerical, glamour: G(pk) });
         });
@@ -150,7 +153,7 @@ export async function run() {
             const n0 = game.messages.size;
             answer(root => { set(root, "b", 6); });
             A().c20Mists({ actor: pk });
-            const m = await untilMsg(n0);
+            const m = await untilMsg(n0, /The Mists/);
             ok("the Mists: a mortal of Banality 6 keeps it about a week", /within a week, vivid flashbacks/.test(text(m)), { card: text(m).slice(0, 160) });
         });
         await step("the inner voice: Bedlam's road", async () => {
@@ -160,6 +163,7 @@ export async function run() {
         });
     } finally {
         Hooks.off("renderDialogV2", hook);
+        console.error = origErr;
         if (pk) await pk.update(base);
     }
     R.finished = new Date().toISOString();
