@@ -1,5 +1,5 @@
 {{#if (eq kind "dots")}}
-	<div class="headlineGroup splatFont centerText {{#if roll}}wodx-roll{{/if}}" {{#if roll}}data-roll="{{roll}}"{{/if}}>{{title}}</div>
+	{{#if title}}<div class="headlineGroup splatFont centerText {{#if roll}}wodx-roll{{/if}}" {{#if roll}}data-roll="{{roll}}"{{/if}}>{{title}}</div>{{/if}}
 	{{#each rows}}
 	<div class="clearareaBox wodx-row">
 		<label class="pullLeft ability-headlineWidth headlineNormal {{#if this.roll}}wodx-roll{{/if}} {{#if this.strong}}wodx-favored{{/if}}" {{#if this.roll}}data-roll="{{this.roll}}"{{/if}} title="{{this.hint}}">{{this.label}}</label>
@@ -17,7 +17,19 @@
 	{{#each lines}}<div class="wodx-line {{#if this.dim}}wodx-inactive{{/if}}">{{#if this.bold}}<b>{{this.bold}}</b> {{/if}}{{this.text}}</div>{{else}}<div class="wodx-quiet">{{empty}}</div>{{/each}}
 	{{#if roll}}<a class="wodx-roll wodx-small" data-roll="{{roll}}">{{rollLabel}}</a>{{/if}}
 {{else if (eq kind "stat")}}
-	{{{getGetStatArea @root.actor stat key true true true}}}
+	{{{getGetStatArea @root.actor stat key roll perm temp}}}
+	{{#if note}}<div class="information-area centerText">{{note}}</div>{{/if}}
+{{else if (eq kind "field")}}
+	<div class="headlineGroup splatFont centerText">{{title}}</div>
+	{{#if @root.locked}}<div class="wodx-line centerText">{{display}}</div>{{else}}<input type="text" class="wodx-text" data-set="{{path}}" value="{{value}}"/>{{/if}}
+{{else if (eq kind "arete")}}
+	<div class="wodx-arete" style="width: 100%;">{{> "systems/worldofdarkness/templates/actor/parts/mage/stats_arete.html" @root}}</div>
+{{else if (eq kind "quintessenceWheel")}}
+	<div class="wodx-quintessence" style="width: 225px; margin: 0 auto;">{{> "systems/worldofdarkness/templates/actor/parts/mage/stats_quintessence.html" @root}}</div>
+{{else if (eq kind "hunterVirtues")}}
+	<div class="wodx-virtues" style="width: 100%;">{{> "systems/worldofdarkness/templates/actor/parts/hunter/stats_virtue.html" @root}}</div>
+{{else if (eq kind "systemHealth")}}
+	<div class="wodx-health" style="width: 100%;">{{> "systems/worldofdarkness/templates/actor/parts/stats_health.html" @root}}</div>
 {{else if (eq kind "track")}}
 	<div class="wodx-track-title {{#if roll}}wodx-roll{{/if}}" {{#if roll}}data-roll="{{roll}}"{{/if}} title="{{hint}}">{{title}}</div>
 	<div class="wodx-track" data-perm="{{permPath}}" data-temp="{{tempPath}}">

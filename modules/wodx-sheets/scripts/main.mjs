@@ -1,5 +1,5 @@
 /**
- * WoDX Sheets 0.2 — character sheets that follow the era and each line's book (B74).
+ * WoDX Sheets 0.4 — character sheets that follow the era and each line's book (B74).
  *
  * Each WoDX sheet extends the World of Darkness system's own sheet for its actor type and keeps every tab the system
  * draws; only the Core tab (and, for the fae, the Dreaming tab) is replaced by the book's sheet, laid out from the
@@ -12,11 +12,21 @@ import HunterActorSheet from "../../../systems/worldofdarkness/module/actor/temp
 import WerewolfActorSheet from "../../../systems/worldofdarkness/module/actor/template/werewolf-actor-sheet.js";
 import VampireActorSheet from "../../../systems/worldofdarkness/module/actor/template/vampire-actor-sheet.js";
 import MortalActorSheet from "../../../systems/worldofdarkness/module/actor/template/mortal-actor-sheet.js";
+import WraithActorSheet from "../../../systems/worldofdarkness/module/actor/template/wraith-actor-sheet.js";
+import DemonActorSheet from "../../../systems/worldofdarkness/module/actor/template/demon-actor-sheet.js";
+import MummyActorSheet from "../../../systems/worldofdarkness/module/actor/template/mummy-actor-sheet.js";
 import { isDA as isFaeDA } from "../../wodx-actions/scripts/fae-da.js";
 import { isDA as isMageDA } from "../../wodx-actions/scripts/mage-da.js";
 import * as FR from "../../wodx-actions/scripts/fae-da-rules.js";
 import * as MR from "../../wodx-actions/scripts/mage-da-rules.js";
 import * as HR from "../../wodx-actions/scripts/hunter-rules.js";
+import { lineNow } from "../../wodx-actions/scripts/hunter.js";
+import { isKotE } from "../../wodx-actions/scripts/kote.js";
+import { isOrpheus } from "../../wodx-actions/scripts/orpheus.js";
+import * as RR from "../../wodx-actions/scripts/reckoning-rules.js";
+import * as KR from "../../wodx-actions/scripts/kote-rules.js";
+import * as UR from "../../wodx-actions/scripts/mummy-rules.js";
+import * as CR from "../../wodx-actions/scripts/c20-rules.js";
 import * as SR from "./sheet-rules.mjs";
 
 const MOD = "wodx-sheets", ACT = "wodx-actions";
@@ -26,15 +36,25 @@ const inDA = () => ["dark-ages", "long-night"].includes(era());
 const loc = s => { const t = game.i18n.localize(String(s ?? "")); return t === s && /^wod\./.test(String(s)) ? String(s).split(".").pop() : t; };
 const profile = a => game.wodxActions?.getKind?.(a) ?? null;
 
-/** Which WoDX sheet an actor gets, or null for the system's own layout. */
+/** Which WoDX sheet an actor gets, or null for the system's own layout. The Kuei-jin and Orpheus follow the sheet's variant. */
 export function sheetFor(actor) {
+  // A Storyteller's choice for one character (one out of their era, say): flags.wodx-sheets.sheet, a sheet for the actor's type
+  const forced = actor?.getFlag?.(MOD, "sheet");
+  if (forced && SR.SHEETS[forced]?.type === actor.type) return forced;
   switch (actor?.type) {
-    case "Changeling": return isFaeDA(actor) ? "faeDA" : null;
-    case "Mage": return isMageDA(actor) ? "mageDA" : null;
-    case "Hunter": return (actor.getFlag(ACT, "inquisitor") || inDA()) ? "inqDA" : null;
-    case "Werewolf": return inDA() ? "werewolfDA" : null;
-    case "Vampire": return inDA() ? "kindredDA" : null;
-    case "Mortal": return inDA() && profile(actor) === "ghoul" ? "ghoulDA" : null;
+    case "Changeling": return isFaeDA(actor) ? "faeDA" : "c20";
+    case "Mage": return isMageDA(actor) ? "mageDA" : "m20";
+    case "Hunter": {
+      if (actor.getFlag(ACT, "inquisitor") || inDA()) return "inqDA";
+      let line = null; try { line = lineNow(); } catch (e) { /* no chronicle */ }
+      return line === "reckoning" || actor.getFlag(ACT, "imbued") || actor.system?.creed ? "htr" : null;
+    }
+    case "Werewolf": return inDA() ? "werewolfDA" : "w20";
+    case "Vampire": return isKotE(actor) ? "kote" : inDA() ? "kindredDA" : "v20";
+    case "Mortal": return isOrpheus(actor) ? "orpheus" : profile(actor) === "ghoul" ? (inDA() ? "ghoulDA" : "ghoul20") : null;
+    case "Wraith": return "wr20";
+    case "Demon": return "demon";
+    case "Mummy": return "mummy";
     default: return null;
   }
 }
@@ -43,10 +63,20 @@ export function sheetFor(actor) {
 /*  Blocks                                                         */
 /* -------------------------------------------------------------- */
 
+const isDAsheet = a => SR.DA_SHEETS.includes(sheetFor(a));
 const itemsOf = (a, test) => [...a.items].filter(test).sort((x, y) => x.name.localeCompare(y.name));
 const itemRows = (list, withDots = true) => list.map(i => ({ id: i.id, name: i.name, dots: withDots ? SR.dots(i.system?.value, Math.max(5, n(i.system?.max) || 5)) : null }));
 const isType = re => i => re.test(String(i.system?.type ?? ""));
 const flagObj = (a, k) => a.getFlag(ACT, k) ?? {};
+/** One of the system's own stat boxes (its helper, its markup, its rolls): permanent dots and/or temporary boxes, as its own sheet draws them. */
+const stat = (key, s, roll = true, perm = true, temp = true) => ({ kind: "stat", key, stat: s, roll, perm, temp });
+const strip = v => String(v ?? "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+const leaf = v => String(v ?? "").split(".").pop().toLowerCase().replace(/[^a-z]/g, "");
+/** Fixed rows (the six Realms, the six Hekau paths) read from items by name: read-only dots, the item opens on a click. */
+function fixedRows(a, names, test) {
+  return names.map(([label, re]) => { const it = [...a.items].find(i => test(i) && re.test(`${i.name} ${i.system?.label ?? ""}`));
+    return { id: it?.id ?? null, name: label, dots: SR.dots(it?.system?.value) }; });
+}
 
 function block(key, a) {
   const fae = flagObj(a, "daFae"), mage = flagObj(a, "daMage"), inq = flagObj(a, "inquisitor");
@@ -57,13 +87,66 @@ function block(key, a) {
     case "meritsFlaws": return { kind: "items", title: a.type === "Werewolf" || a.type === "Hunter" ? "Blessings and Curses" : "Merits and Flaws",
       rows: itemRows(itemsOf(a, i => i.type === "Feature" && isType(/merit|flaw/)(i)), false).map(r => ({ ...r, name: `${r.name}${/flaw/.test(a.items.get(r.id)?.system?.type ?? "") ? " (Flaw)" : ""}` })), empty: "None." };
     case "blessingsCurses": return { ...block("meritsFlaws", a), title: "Blessings and Curses" };
-    case "willpower": return { kind: "stat", key: "willpower", stat: adv.willpower };
-    case "rage": return { kind: "stat", key: "rage", stat: adv.rage };
-    case "gnosis": return { kind: "stat", key: "gnosis", stat: adv.gnosis };
-    case "bloodpool": return { kind: "stat", key: "bloodpool", stat: adv.bloodpool };
-    case "road": return { kind: "stat", key: "path", stat: adv.path };
-    case "conviction": return { kind: "stat", key: "conviction", stat: adv.conviction };
+    case "willpower": return stat("willpower", adv.willpower);
+    case "rage": return stat("rage", adv.rage);
+    case "gnosis": return stat("gnosis", adv.gnosis);
+    case "bloodpool": return a.type === "Vampire" && !isDAsheet(a) ? { ...stat("bloodpool", adv.bloodpool, false, false, true), note: `Blood per turn: ${adv.bloodpool?.perturn ?? "—"}` } : stat("bloodpool", adv.bloodpool);
+    case "road": return isDAsheet(a) ? stat("path", adv.path) : stat("path", adv.path, true, true, false);
+    // Hunter: The Reckoning keeps Conviction as points (the system's own box); the inquisitor's has its rating too
+    case "conviction": return a.type === "Hunter" && sheetFor(a) === "htr" ? stat("conviction", adv.conviction, false, false, true) : stat("conviction", adv.conviction);
+    /* the later eras: the system's own stat boxes, as its sheets draw them */
+    case "renown": return ["glory", "honor", "wisdom"].map(k => ({ ...stat(k, a.system.renown?.[k], false) }));
+    case "rank": return { kind: "dots", title: "Rank", rows: [{ label: "Rank", path: "system.renown.rank", max: 5, dots: SR.dots(a.system.renown?.rank) }] };
+    case "faith": return stat("faith", adv.faith);
+    case "torment": return stat("torment", adv.torment, false);
+    case "glamour": return stat("glamour", adv.glamour);
+    case "banality": return stat("banality", adv.banality);
+    case "nightmare": return stat("nightmare", adv.nightmare, false, false, true);
+    case "corpus": return stat("corpus", adv.corpus, false);
+    case "pathos": return stat("pathos", adv.pathos, false, false, true);
+    case "angst": return stat("angst", adv.angst, false, false, true);
+    case "balance": return stat("balance", adv.balance, true, true, false);
+    case "sekhem": return stat("sekhem", adv.sekhem, false);
+    case "vitality": return stat("vitality", adv.vitality);
+    case "spite": return stat("spite", adv.spite);
+    case "hun": return stat("hun", adv.hun, false, true, false);
+    case "po": return stat("po", adv.po, false, true, false);
+    case "demonchi": return stat("demonchi", adv.demonchi, false, false, true);
+    case "dharma": return [stat("dharma", adv.dharma, false, true, false),
+      { kind: "field", title: "The Dharma", path: "system.advantages.dharma.label", value: adv.dharma?.label ?? "", display: loc(adv.dharma?.label) || "—" }];
+    case "yinYang": return [stat("yin", adv.yin, false, true, false), stat("yinchi", adv.yinchi, false, false, true), stat("yang", adv.yang, false, true, false), stat("yangchi", adv.yangchi, false, false, true)];
+    case "imbalance": { const p = KR.permImbalance(adv.yin?.permanent, adv.yang?.permanent);
+      const t = KR.tempImbalance({ yin: n(adv.yin?.permanent), yang: n(adv.yang?.permanent), yinChi: n(adv.yinchi?.temporary), yangChi: n(adv.yangchi?.temporary) });
+      return { kind: "list", title: "Imbalance", lines: [...(p ? [{ bold: "Permanent:", text: p === "yin" ? "Yin" : "Yang" }] : []), ...t.map(k => ({ bold: "Temporary:", text: k === "yin" ? "Yin" : "Yang" }))],
+        empty: "In balance." }; }
+    case "arete": return { kind: "arete" };
+    case "quintessenceWheel": return { kind: "quintessenceWheel" };
+    case "hunterVirtues": return { kind: "hunterVirtues" };
+    case "spheres1": case "spheres2": case "spheres3": {
+      const k = Number(key.slice(-1)) - 1, list = ["correspondence", "entropy", "forces", "life", "matter", "mind", "prime", "spirit", "time"].slice(k * 3, k * 3 + 3);
+      return { kind: "dots", title: "", rows: list.map(sp => ({ label: loc(a.system.spheres?.[sp]?.label) || sp.replace(/^./, c => c.toUpperCase()), path: `system.spheres.${sp}.value`, max: 5, dots: SR.dots(a.system.spheres?.[sp]?.value), roll: "m20Cast" })) };
+    }
+    case "arts": return { kind: "items", title: "Arts", roll: "c20Cantrip", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.art$/)(i))), empty: "None yet." };
+    case "realms": return { kind: "items", title: "Realms", roll: "c20Cantrip", rows: fixedRows(a, Object.entries(CR.REALMS).map(([k, r]) => [r.label, new RegExp(`\\b${k}\\b`, "i")]), i => /types\.realms?$/.test(i.system?.type ?? "")), empty: "" };
+    case "birthrights": { const s = a.system; return { kind: "list", title: "Birthright/Frailty", lines: [strip(s.birthright1), strip(s.birthright2), strip(s.frailty)].filter(Boolean).map((t, k, l) => ({ bold: k === l.length - 1 && strip(s.frailty) ? "Frailty:" : "", text: t })), empty: "On the Bio tab." }; }
+    case "antithesis": return { kind: "text", title: "Antithesis", value: strip(a.system.antithesis) || "—" };
+    case "threshold": return { kind: "text", title: "Ravaging/Musing Threshold", value: strip(a.system.threshold) || "—" };
+    case "passions": return { kind: "items", title: "Passions", roll: "passion", rows: itemRows(itemsOf(a, i => i.type === "Trait" && isType(/types\.passion$/)(i))), empty: "None yet." };
+    case "fetters": return { kind: "items", title: "Fetters", roll: "fetter", rows: itemRows(itemsOf(a, i => i.type === "Trait" && isType(/types\.fetter$/)(i))), empty: "None yet." };
+    case "darkPassions": return { kind: "items", title: "Dark Passions", rows: itemRows(itemsOf(a, i => i.type === "Trait" && isType(/types\.darkpassion$/)(i))), empty: "None yet." };
+    case "arcanoi": return { kind: "items", title: "Arcanoi", roll: "useArcanos", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.arcanoi$/)(i))), empty: "None yet." };
+    case "psyche": return { kind: "list", title: "The Shadow", lines: [{ bold: "Psyche:", text: strip(a.system.psyche) || "—" }, { bold: "Archetype:", text: loc(a.system.archetype) || strip(a.system.archetype) || "—" }], empty: "", roll: "shadow", rollLabel: "The Shadow" };
+    case "thorns": return { kind: "list", title: "Thorns", lines: strip(a.system.thorns) ? [{ text: strip(a.system.thorns) }] : [], empty: "None (the Bio tab)." };
+    case "edges": return { kind: "items", title: "Edges", roll: "hunterPower", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.edge$/)(i))), empty: "None yet." };
+    case "lores": return { kind: "items", title: "Lore", roll: "demonEvoke", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.lore$/)(i))), empty: "None yet." };
+    case "apocalypticForm": return { kind: "list", title: "Apocalyptic Form", lines: itemsOf(a, i => i.type === "Trait" && isType(/types\.apocalypticform$/)(i)).map(i => ({ text: i.name, bold: i.system?.ishightorment ? "High Torment:" : "" })), empty: "None yet.", roll: "demonForm", rollLabel: "Take the form" };
+    case "hekau": return { kind: "items", title: "Hekau", roll: "mummyCast", rows: fixedRows(a, ["amulets", "alchemy", "celestial", "effigy", "necromancy", "nomenclature"].map(k => [UR.HEKAU[k].label, new RegExp(k.replace(/s$/, ""), "i")]), i => i.type === "Power" && isType(/types\.hekau$/)(i)), empty: "" };
+    case "horrors": return { kind: "items", title: "Horrors", roll: "orphHorror", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.horror$/)(i))), empty: "None yet." };
+    case "stains": return { kind: "items", title: "Stains", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.stain$/)(i))), empty: "None." };
+    case "defaultAbilities": return { kind: "list", title: "Default Abilities", lines: SR.ORPHEUS_DEFAULTS.map(([t, p]) => ({ text: `${t} (${p})` })), empty: "" };
+    case "rites": return { kind: "items", title: "Rites", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.(rite|ritual)$/)(i)), false), empty: "None." };
     case "health": return { kind: "health" };
+    case "systemHealth": return { kind: "systemHealth" };
     case "experience": return { kind: "experience" };
     case "weakness": return { kind: "text", title: "Weakness", value: a.system.weakness || "—" };
     case "derangements": return { kind: "list", title: "Derangements", lines: String(a.system.derangement ?? "").split(/\n+/).filter(Boolean).map(t => ({ text: t })), empty: "None (the Bio tab)." };
@@ -118,7 +201,7 @@ function expand(key, a) {
         note: f.origin ? (FR.ORIGINS[f.origin].alwaysMien ? "Firstborn: always in the fae mien." : f.mien ? "In the fae mien." : "In human shape.") : "Choose an Origin." }];
   }
   const b = block(key, a);
-  return b ? [b] : [];
+  return Array.isArray(b) ? b : b ? [b] : [];
 }
 
 const BUTTONS = {
@@ -126,7 +209,15 @@ const BUTTONS = {
   daMage: ["fa-scroll", "Fellowship and Pillars"], daQuintessence: ["fa-gem", "Gather Quintessence"],
   hunterSheet: ["fa-scroll", "Order, Superior Virtues, Piety"], hunterPower: ["fa-cross", "A Blessing"], prayer: ["fa-praying-hands", "Prayer"],
   rageRoll: ["fa-fire", "Rage"], useGift: ["fa-paw", "Use a Gift"], shiftForm: ["fa-exchange-alt", "Change form"],
-  useDiscipline: ["fa-tint", "Use a Discipline"], frenzy: ["fa-angry", "Frenzy check"], feed: ["fa-glass-whiskey", "Feed"], ghoulBlood: ["fa-tint", "Vitae"]
+  useDiscipline: ["fa-tint", "Use a Discipline"], frenzy: ["fa-angry", "Frenzy check"], feed: ["fa-glass-whiskey", "Feed"], ghoulBlood: ["fa-tint", "Vitae"],
+  m20Cast: ["fa-magic", "Work magick"], m20Counter: ["fa-shield-alt", "Countermagick"],
+  c20Cantrip: ["fa-star", "Cast a cantrip"], c20Unleash: ["fa-bolt", "Unleash"], c20Mists: ["fa-cloud", "The Mists"],
+  useArcanos: ["fa-ghost", "Use an Arcanos"], passion: ["fa-heart", "A Passion"], fetter: ["fa-link", "A Fetter"], shadow: ["fa-mask", "The Shadow"],
+  secondSight: ["fa-eye", "Second Sight"],
+  demonEvoke: ["fa-fire-alt", "Evoke"], demonForm: ["fa-feather-alt", "Apocalyptic form"], demonReap: ["fa-hand-holding", "Reap Faith"],
+  mummyCast: ["fa-ankh", "Hekau"], mummySekhem: ["fa-sun", "Sekhem"], mummyBalance: ["fa-balance-scale", "Balance"],
+  kotFeed: ["fa-tint", "Feed on Chi"], kotSpend: ["fa-yin-yang", "Spend Chi"], kotDharma: ["fa-dharmachakra", "Dharma roll"],
+  orphHorror: ["fa-skull", "A Horror"], orphVitality: ["fa-heartbeat", "Vitality"], orphSpite: ["fa-bolt", "Spite"]
 };
 
 function header(def, a) {
@@ -136,6 +227,8 @@ function header(def, a) {
   };
   const computed = {
     clan: () => { const s = a.system; return s.clan === "custom" ? (s.custom?.clan || "") : loc(s.clan); },
+    legacies: () => [strip(a.system.legacyseelie), strip(a.system.legacyunseelie)].filter(Boolean).join(" / ") || "— (the Bio tab)",
+    startConviction: () => { const c = RR.CREEDS[leaf(a.system.creed)]; return c ? String(c.conviction) : "—"; },
     domitor: () => { const l = a.getFlag("wodx-creation", "lineage") ?? {}; return game.actors.get(l.domitor)?.name ?? (l.domitor || "—"); },
     domitorClan: () => { const l = a.getFlag("wodx-creation", "lineage") ?? {}; const d = game.actors.get(l.domitor); return d ? (d.system.clan === "custom" ? d.system.custom?.clan : loc(d.system.clan)) : "—"; }
   };
@@ -171,9 +264,10 @@ export function viewFor(id, a) {
     id, book: def.book, sheetPage: def.sheetPage, title: def.title,
     header: header(def, a), bio: bioView(def, a), bioTitle: def.title,
     abilityCols: Object.entries(rows).map(([k, list]) => ({ title: titles[k], rows: list.map(r => ({ ...r, dots: SR.dots(r.value) })) })),
-    abilityNote: id === "werewolfDA" ? "Leadership is a Skill in the Dark Ages (Dark Ages: Werewolf p. 79); the printed sheet also lists it under Talents." : "",
-    advantages: cols(def.advantages), lower: cols(def.lower), page2: cols(def.page2 ?? []),
-    page2Title: id === "faeDA" ? "Oaths, Echoes and Features" : "", page2InCore: !def.page2Tab,
+    abilityNote: def.abilityNote ?? "",
+    powers: def.powers ? { title: def.powers.title, cols: cols(def.powers.cols) } : null,
+    advantages: cols(def.advantages), lower: cols(def.lower), hasLower: def.lower.length > 0, page2: cols(def.page2 ?? []),
+    page2Title: id === "faeDA" ? "Oaths, Echoes and Features" : (def.page2Title ?? ""), page2InCore: !def.page2Tab,
     buttons: (def.buttons ?? []).filter(b => BUTTONS[b]).map(b => ({ api: b, icon: BUTTONS[b][0], label: BUTTONS[b][1] }))
   };
 }
@@ -186,7 +280,7 @@ function wodxSheet(Base, type) {
   return class extends Base {
     static get defaultOptions() { return foundry.utils.mergeObject(super.defaultOptions, { classes: [...(super.defaultOptions.classes ?? []), "wodx-sheet"] }); }
     get wodxId() { return sheetFor(this.actor); }
-    get isDA() { return !!this.wodxId; }
+    get hasWodx() { return !!this.wodxId; }
     async getData() {
       const data = await super.getData();
       const id = this.wodxId;
@@ -286,22 +380,27 @@ export const WodxHunterSheet = wodxSheet(HunterActorSheet, "Hunter");
 export const WodxWerewolfSheet = wodxSheet(WerewolfActorSheet, "Werewolf");
 export const WodxVampireSheet = wodxSheet(VampireActorSheet, "Vampire");
 export const WodxMortalSheet = wodxSheet(MortalActorSheet, "Mortal");
-for (const [k, c] of Object.entries({ WodxChangelingSheet, WodxMageSheet, WodxHunterSheet, WodxWerewolfSheet, WodxVampireSheet, WodxMortalSheet })) Object.defineProperty(c, "name", { value: k });
+export const WodxWraithSheet = wodxSheet(WraithActorSheet, "Wraith");
+export const WodxDemonSheet = wodxSheet(DemonActorSheet, "Demon");
+export const WodxMummySheet = wodxSheet(MummyActorSheet, "Mummy");
+for (const [k, c] of Object.entries({ WodxChangelingSheet, WodxMageSheet, WodxHunterSheet, WodxWerewolfSheet, WodxVampireSheet, WodxMortalSheet, WodxWraithSheet, WodxDemonSheet, WodxMummySheet })) Object.defineProperty(c, "name", { value: k });
 
 const LABELS = {
-  Changeling: "WoDX: follows the era (Dark Ages: Fae, or the system's Changeling 20th)", Mage: "WoDX: follows the era (Dark Ages: Mage, or the system's Mage 20th)",
-  Hunter: "WoDX: follows the era (Dark Ages: Inquisitor, or the system's Hunter)", Werewolf: "WoDX: follows the era (Dark Ages: Werewolf, or the system's W20)",
-  Vampire: "WoDX: follows the era (V20 Dark Ages, or the system's V20)", Mortal: "WoDX: follows the era (a Dark Ages ghoul, or the system's Mortal)"
+  Changeling: "WoDX: follows the era (Dark Ages: Fae, or Changeling 20th)", Mage: "WoDX: follows the era (Dark Ages: Mage, or Mage 20th)",
+  Hunter: "WoDX: follows the era (Dark Ages: Inquisitor, Hunter: The Reckoning, or the system's Hunter)", Werewolf: "WoDX: follows the era (Dark Ages: Werewolf, or W20)",
+  Vampire: "WoDX: follows the era (V20 Dark Ages, V20, or Kindred of the East)", Mortal: "WoDX: follows the era (a ghoul, Orpheus, or the system's Mortal)",
+  Wraith: "WoDX: Wraith 20th", Demon: "WoDX: Demon: The Fallen", Mummy: "WoDX: Mummy: The Resurrection"
 };
 
 Hooks.once("init", async () => {
   const reg = foundry.documents.collections.Actors;
-  for (const [type, cls] of [["Changeling", WodxChangelingSheet], ["Mage", WodxMageSheet], ["Hunter", WodxHunterSheet], ["Werewolf", WodxWerewolfSheet], ["Vampire", WodxVampireSheet], ["Mortal", WodxMortalSheet]])
+  for (const [type, cls] of [["Changeling", WodxChangelingSheet], ["Mage", WodxMageSheet], ["Hunter", WodxHunterSheet], ["Werewolf", WodxWerewolfSheet], ["Vampire", WodxVampireSheet], ["Mortal", WodxMortalSheet],
+    ["Wraith", WodxWraithSheet], ["Demon", WodxDemonSheet], ["Mummy", WodxMummySheet]])
     reg.registerSheet(MOD, cls, { types: [type], makeDefault: true, label: LABELS[type] });
   const tpl = foundry.applications.handlebars;
   const block = await tpl.getTemplate(`modules/${MOD}/templates/block.hbs`);
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.3.0", rules: SR, sheetFor, viewFor };
+  game.modules.get(MOD).api = { version: "0.4.0", rules: SR, sheetFor, viewFor };
 });

@@ -11,16 +11,16 @@ const SR = await import(join(root, "modules/wodx-sheets/scripts/sheet-rules.mjs"
 const main = readFileSync(join(root, "modules/wodx-sheets/scripts/main.mjs"), "utf8");
 
 test("six Dark Ages sheets, each on its own actor type, with three header columns of fields", () => {
-  assert.deepEqual(Object.keys(SR.SHEETS), ["faeDA", "mageDA", "inqDA", "werewolfDA", "kindredDA", "ghoulDA"]);
-  assert.deepEqual(Object.values(SR.SHEETS).map(s => s.type), ["Changeling", "Mage", "Hunter", "Werewolf", "Vampire", "Mortal"]);
-  for ( const [id, s] of Object.entries(SR.SHEETS) ) {
+  assert.deepEqual(SR.DA_SHEETS, ["faeDA", "mageDA", "inqDA", "werewolfDA", "kindredDA", "ghoulDA"]);
+  assert.deepEqual(SR.DA_SHEETS.map(k => SR.SHEETS[k].type), ["Changeling", "Mage", "Hunter", "Werewolf", "Vampire", "Mortal"]);
+  for ( const [id, s] of SR.DA_SHEETS.map(k => [k, SR.SHEETS[k]]) ) {
     assert.equal(s.header.length, 2, id); for ( const c of s.header ) assert.equal(c.length, 3, id);
     assert.ok(s.book && s.sheetPage && s.title, id);
   }
 });
 
 test("Abilities in the printed sheets' order; ten a column (nine Talents for the Dark Ages Garou: Leadership is a Skill)", () => {
-  for ( const [id, s] of Object.entries(SR.SHEETS) ) {
+  for ( const [id, s] of SR.DA_SHEETS.map(k => [k, SR.SHEETS[k]]) ) {
     const n = Object.values(s.abilities).map(c => c.length);
     assert.deepEqual(n, id === "werewolfDA" ? [9, 10, 10] : [10, 10, 10], id);
     for ( const c of Object.values(s.abilities) ) for ( const row of c ) assert.ok(row && row[0] && row[1], `${id}: ${JSON.stringify(row)}`);

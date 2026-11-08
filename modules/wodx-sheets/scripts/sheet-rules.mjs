@@ -20,11 +20,19 @@ const T = {
   academics: ["Academics", "academics"], cosmology: ["Cosmology", "cosmology"], enigmas: ["Enigmas", "enigmas"], gramarye: ["Gramarye", "gremayre"],
   hearthwisdom: ["Hearth Wisdom", S("knowledge")], investigation: ["Investigation", "investigation"], law: ["Law", "law"], linguistics: ["Linguistics", "linguistics"],
   medicine: ["Medicine", "medicine"], occult: ["Occult", "occult"], politics: ["Politics", "politics"], rituals: ["Rituals", "rituals"],
-  seneschal: ["Seneschal", S("knowledge")], theology: ["Theology", S("knowledge")]
+  seneschal: ["Seneschal", S("knowledge")], theology: ["Theology", S("knowledge")],
+  /* the later eras */
+  art: ["Art", "art"], intuition: ["Intuition", "intuition"], intrigue: ["Intrigue", S("talent")], persuasion: ["Persuasion", "persuasion"], streetwise: ["Streetwise", "streetwise"],
+  demolitions: ["Demolitions", "demolitions"], drive: ["Drive", "drive"], firearms: ["Firearms", "firearms"], larceny: ["Larceny", "larceny"], martialarts: ["Martial Arts", "martialarts"],
+  meditation: ["Meditation", "meditation"], research: ["Research", "research"], security: ["Security", "security"], technology: ["Technology", "technology"],
+  leadershipSkill: ["Leadership", "leadership"],
+  bureaucracy: ["Bureaucracy", "bureaucracy"], computer: ["Computer", "computer"], esoterica: ["Esoterica", "esoterica"], finance: ["Finance", "finance"], gremayre: ["Gremayre", "gremayre"],
+  religion: ["Religion", "religion"], science: ["Science", "science"], researchK: ["Research", "research"]
 };
 const cols = (t, s, k) => ({ talents: t.map(x => T[x]), skills: s.map(x => T[x]), knowledges: k.map(x => T[x]) });
 
 const sys = (label, path) => ({ label, kind: "system", path });
+const calc = (label, key) => ({ label, kind: "computed", key });
 /** A field the system keeps as a choice (a key it translates): the Bio tab's own control, mirrored. */
 const show = (label, path) => ({ label, kind: "system", path });
 const ftext = (label, path) => ({ label, kind: "flagText", path });
@@ -102,6 +110,130 @@ export const SHEETS = {
   }
 };
 SHEETS.ghoulDA.abilities = SHEETS.kindredDA.abilities;
+SHEETS.werewolfDA.abilityNote = "Leadership is a Skill in the Dark Ages (Dark Ages: Werewolf p. 79); the printed sheet also lists it under Talents.";
+
+/* -------- The later eras (Victorian to modern), from each line's printed sheet -------- */
+const ND = [show("Nature", "system.nature"), show("Demeanor", "system.demeanor"), sys("Concept", "system.concept")];
+const HTR_T = ["alertness", "athletics", "awareness", "brawl", "dodge", "empathy", "expression", "intimidation", "intuition", "leadership", "streetwise", "subterfuge"];
+const HTR_S = ["animalken", "crafts", "demolitions", "drive", "etiquette", "firearms", "melee", "performance", "security", "stealth", "survival", "technology"];
+Object.assign(SHEETS, {
+  v20: {
+    type: "Vampire", book: "Vampire: The Masquerade 20th Anniversary Edition", sheetPage: "p. 519", title: "Vampire: The Masquerade",
+    header: [ND, [sys("Clan", "system.clan"), sys("Generation", "system.generation"), sys("Sire", "system.sire")]],
+    abilities: cols(["alertness", "athletics", "awareness", "brawl", "empathy", "expression", "intimidation", "leadership", "streetwise", "subterfuge"],
+      ["animalken", "crafts", "drive", "etiquette", "firearms", "larceny", "melee", "performance", "stealth", "survival"],
+      ["academics", "computer", "finance", "investigation", "law", "medicine", "occult", "politics", "science", "technology"]),
+    advantages: [["disciplines"], ["backgrounds"], ["virtues"]],
+    lower: [["meritsFlaws"], ["road", "willpower", "bloodpool"], ["systemHealth", "weakness", "experience"]],
+    page2: [], buttons: ["useDiscipline", "frenzy", "feed"]
+  },
+  ghoul20: {
+    type: "Mortal", book: "Vampire: The Masquerade 20th Anniversary Edition (the Kindred sheet, for a ghoul)", sheetPage: "p. 519", title: "Vampire: The Masquerade (ghoul)",
+    header: [ND, [{ label: "Domitor", kind: "computed", key: "domitor" }, ftext("Family", `${A}.ghoulFamily`), { label: "Domitor's clan", kind: "computed", key: "domitorClan" }]],
+    abilities: null,
+    advantages: [["disciplines"], ["backgrounds"], ["virtues"]],
+    lower: [["meritsFlaws"], ["road", "willpower", "bloodpool"], ["systemHealth", "experience"]],
+    page2: [], buttons: ["ghoulBlood", "useDiscipline"]
+  },
+  w20: {
+    type: "Werewolf", book: "Werewolf: The Apocalypse 20th Anniversary Edition", sheetPage: "pdf p. 552", title: "Werewolf: The Apocalypse",
+    header: [[show("Breed", "system.breed"), show("Auspice", "system.auspice"), show("Tribe", "system.tribe")],
+      [sys("Pack Name", "system.packname"), sys("Pack Totem", "system.packtotem"), sys("Concept", "system.concept")]],
+    abilities: cols(["alertness", "athletics", "brawl", "empathy", "expression", "leadership", "intimidation", "primalurge", "streetwise", "subterfuge"],
+      ["animalken", "crafts", "drive", "etiquette", "firearms", "larceny", "melee", "performance", "stealth", "survival"],
+      ["academics", "computer", "enigmas", "investigation", "law", "medicine", "occult", "rituals", "science", "technology"]),
+    advantages: [["backgrounds"], ["gifts"], ["gifts2"]],
+    lower: [["renown", "rank"], ["rage", "gnosis", "willpower"], ["systemHealth", "experience"]],
+    page2: [], buttons: ["rageRoll", "useGift", "shiftForm"]
+  },
+  m20: {
+    type: "Mage", book: "Mage: The Ascension 20th Anniversary Edition", sheetPage: "p. 249", title: "Mage: The Ascension",
+    header: [[show("Nature", "system.nature"), show("Demeanor", "system.demeanor"), show("Essence", "system.essence")],
+      [show("Affiliation", "system.affiliation"), show("Sect", "system.sect"), sys("Concept", "system.concept")]],
+    abilities: cols(["alertness", "art", "athletics", "awareness", "brawl", "empathy", "expression", "intimidation", "leadership", "streetwise", "subterfuge"],
+      ["crafts", "drive", "etiquette", "firearms", "martialarts", "meditation", "melee", "research", "stealth", "survival", "technology"],
+      ["academics", "computer", "cosmology", "enigmas", "esoterica", "investigation", "law", "medicine", "occult", "politics", "science"]),
+    powers: { title: "Spheres", cols: [["spheres1"], ["spheres2"], ["spheres3"]] },
+    advantages: [["backgrounds", "otherTraits"], ["arete", "willpower", "quintessenceWheel"], ["systemHealth", "experience"]],
+    lower: [], page2: [], buttons: ["m20Cast", "m20Counter"]
+  },
+  c20: {
+    type: "Changeling", book: "Changeling: The Dreaming 20th Anniversary Edition", sheetPage: "p. 500", title: "Changeling: The Dreaming",
+    header: [[show("Court", "system.court"), calc("Legacies", "legacies"), show("House", "system.house")],
+      [show("Seeming", "system.seeming"), show("Kith", "system.kith"), ftext("Motley", `${A}.c20.motley`)]],
+    abilities: cols(["alertness", "athletics", "brawl", "empathy", "expression", "intimidation", "kenning", "leadership", "streetwise", "subterfuge"],
+      ["animalken", "crafts", "drive", "etiquette", "firearms", "larceny", "melee", "performance", "stealth", "survival"],
+      ["academics", "computer", "enigmas", "gremayre", "investigation", "law", "medicine", "politics", "science", "technology"]),
+    advantages: [["backgrounds"], ["arts"], ["realms"]],
+    lower: [["birthrights", "antithesis", "experience"], ["glamour", "willpower", "nightmare", "banality"], ["health", "threshold"]],
+    page2: [], buttons: ["c20Cantrip", "c20Unleash", "c20Mists"]
+  },
+  wr20: {
+    type: "Wraith", book: "Wraith: The Oblivion 20th Anniversary Edition", sheetPage: "pdf pp. 592–593", title: "Wraith: The Oblivion",
+    header: [[show("Nature", "system.nature"), show("Demeanor", "system.demeanor"), show("Shadow", "system.shadow")],
+      [sys("Life", "system.life"), sys("Death", "system.death"), sys("Regret", "system.regret")]],
+    abilities: cols(["alertness", "athletics", "awareness", "brawl", "empathy", "expression", "intimidation", "persuasion", "streetwise", "subterfuge"],
+      ["crafts", "drive", "etiquette", "firearms", "larceny", "leadershipSkill", "meditation", "melee", "performance", "stealth"],
+      ["academics", "bureaucracy", "computer", "enigmas", "investigation", "medicine", "occult", "politics", "science", "technology"]),
+    advantages: [["backgrounds"], ["passions"]],
+    lower: [["arcanoi"], ["corpus", "willpower", "pathos"], ["fetters", "experience"]],
+    page2: [["psyche", "thorns"], ["angst"], ["darkPassions"]], page2Title: "The Shadow", buttons: ["useArcanos", "passion", "fetter", "shadow"]
+  },
+  htr: {
+    type: "Hunter", book: "Hunter: The Reckoning", sheetPage: "the printed sheet", title: "Hunter: The Reckoning",
+    header: [ND, [show("Primary Virtue", "system.primaryvirtue"), show("Creed", "system.creed"), calc("Starting Conviction", "startConviction")]],
+    abilities: cols(HTR_T, HTR_S, ["academics", "bureaucracy", "computer", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "researchK", "science"]),
+    advantages: [["backgrounds"], ["edges"], ["hunterVirtues"]],
+    lower: [["derangements"], ["conviction", "willpower", "experience"], ["systemHealth"]],
+    page2: [], buttons: ["hunterPower", "hunterSheet", "secondSight"]
+  },
+  demon: {
+    type: "Demon", book: "Demon: The Fallen", sheetPage: "p. 303", title: "Demon: The Fallen",
+    header: [ND, [show("House", "system.house"), show("Faction", "system.faction"), sys("Visage", "system.visage")]],
+    abilities: cols(HTR_T, HTR_S, ["academics", "computer", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "religion", "researchK", "science"]),
+    advantages: [["backgrounds"], ["lores"], ["virtues"]],
+    lower: [["apocalypticForm"], ["faith", "torment", "willpower"], ["systemHealth", "experience"]],
+    page2: [], buttons: ["demonEvoke", "demonForm", "demonReap"]
+  },
+  mummy: {
+    type: "Mummy", book: "Mummy: The Resurrection", sheetPage: "the printed sheet", title: "Mummy: The Resurrection",
+    header: [ND, [show("Amenti", "system.amenti"), sys("Hamartia", "system.hamartia"), sys("Inheritance", "system.inheritance")]],
+    abilities: cols(HTR_T, ["animalken", "crafts", "drive", "etiquette", "firearms", "melee", "meditation", "performance", "security", "stealth", "survival", "technology"],
+      ["academics", "bureaucracy", "computer", "cosmology", "enigmas", "investigation", "law", "linguistics", "medicine", "occult", "researchK", "science"]),
+    advantages: [["backgrounds"], ["hekau"], ["meritsFlaws"]],
+    lower: [["otherTraits", "experience"], ["balance", "willpower", "sekhem"], ["systemHealth"]],
+    page2: [], buttons: ["mummyCast", "mummySekhem", "mummyBalance"]
+  },
+  kote: {
+    type: "Vampire", book: "Kindred of the East", sheetPage: "the printed sheet", title: "Kindred of the East",
+    header: [[show("Nature", "system.nature"), sys("P'o Nature", "system.ponature"), show("Demeanor", "system.demeanor")],
+      [sys("Balance", "system.balance"), show("Direction", "system.direction"), sys("Wu", "system.wu")]],
+    abilities: cols(["alertness", "athletics", "brawl", "dodge", "empathy", "expression", "intimidation", "leadership", "streetwise", "subterfuge"],
+      ["animalken", "crafts", "drive", "etiquette", "firearms", "martialarts", "melee", "performance", "stealth", "survival"],
+      ["computer", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "rituals", "science"]),
+    advantages: [["disciplines"], ["backgrounds"], ["rites"]],
+    lower: [["yinYang"], ["dharma", "hun", "willpower", "po", "demonchi"], ["systemHealth", "imbalance", "experience"]],
+    page2: [], buttons: ["kotFeed", "kotSpend", "kotDharma"]
+  },
+  orpheus: {
+    type: "Mortal", book: "Orpheus", sheetPage: "p. 310", title: "Orpheus",
+    header: [[show("Nature", "system.nature"), show("Demeanor", "system.demeanor"), show("Shade", "system.variant.shade")],
+      [show("Lament", "system.variant.lament"), sys("Role", "system.variant.role")]],
+    abilities: cols(["alertness", "athletics", "awareness", "brawl", "empathy", "expression", "intimidation", "intrigue", "intuition", "leadership", "streetwise", "subterfuge"],
+      ["animalken", "crafts", "drive", "etiquette", "firearms", "meditation", "melee", "performance", "security", "stealth", "survival", "technology"],
+      ["academics", "bureaucracy", "computer", "enigmas", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "science"]),
+    advantages: [["backgrounds"], ["horrors"], ["stains"]],
+    lower: [["defaultAbilities"], ["vitality", "willpower", "spite"], ["systemHealth", "experience"]],
+    page2: [], buttons: ["orphHorror", "orphVitality", "orphSpite"]
+  }
+});
+SHEETS.ghoul20.abilities = SHEETS.v20.abilities;
+/** The Dark Ages sheets, and those of the later eras. */
+export const DA_SHEETS = ["faeDA", "mageDA", "inqDA", "werewolfDA", "kindredDA", "ghoulDA"];
+export const LATER_SHEETS = ["v20", "ghoul20", "w20", "m20", "c20", "wr20", "htr", "demon", "mummy", "kote", "orpheus"];
+/** Orpheus's default Horrors, as the sheet lists them (Orpheus, the chapter pages given there). */
+export const ORPHEUS_DEFAULTS = [["Dead-Eyes", "p. 82"], ["Detect Nature Group", "p. 148"], ["Incorporeal and Invisible", "p. 82"], ["Manifest", "p. 82"],
+  ["Misery Loves Company", "p. 149"], ["Sense Lifeline", "p. 150"], ["Sever the Strand", "p. 150"], ["Thievery", "p. 151"]];
 /** Back-compatible name for the first sheet. */
 export const FAE_DA = { book: SHEETS.faeDA.book, abilities: SHEETS.faeDA.abilities, dominions: [["Day", "day"], ["Dawn", "dawn"], ["Dusk", "dusk"], ["Night", "night"]] };
 
@@ -131,7 +263,7 @@ export const clickValue = (v, i) => (Number(i) === 1 && Number(v) === 1 ? 0 : Nu
 /** A "flag:" or "system." path as a property path on the actor. */
 export const propPath = p => (String(p).startsWith("flag:") ? `flags.${String(p).slice(5)}` : String(p));
 /** Every block a sheet uses (for checking that main.mjs builds each). */
-export const blocksOf = def => [...def.advantages, ...def.lower, ...(def.page2 ?? [])].flat();
+export const blocksOf = def => [...(def.powers?.cols ?? []), ...def.advantages, ...def.lower, ...(def.page2 ?? [])].flat();
 
 /** The header fields that are WoDX's own (flags), which the Bio tab also shows (B75). */
 export const bioFields = def => def.header.flat().filter(f => f.kind === "flagSelect" || f.kind === "flagText");

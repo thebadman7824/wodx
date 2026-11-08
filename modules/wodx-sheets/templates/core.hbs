@@ -48,6 +48,15 @@
 		</div>
 	</div>
 
+	{{#if wodx.powers}}
+	<div class="sheet-area flex-columns">
+		<div class="clearareaBox area-box wodx-powers">
+			<div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">{{wodx.powers.title}}</span></div>
+			<div class="wodx-cols">{{#each wodx.powers.cols}}<div class="wodx-col">{{#each this}}{{> wodxBlock}}{{/each}}</div>{{/each}}</div>
+		</div>
+	</div>
+	{{/if}}
+
 	<div class="sheet-area flex-columns">
 		<div class="clearareaBox area-box">
 			<div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">Advantages</span></div>
@@ -55,9 +64,11 @@
 		</div>
 	</div>
 
+	{{#if wodx.hasLower}}
 	<div class="sheet-area flex-columns">
 		<div class="clearareaBox wodx-cols wodx-bottom">{{#each wodx.lower}}<div class="wodx-col {{#if @last}}healthBox{{/if}}">{{#each this}}{{> wodxBlock}}{{/each}}</div>{{/each}}</div>
 	</div>
+	{{/if}}
 
 	{{#if wodx.page2InCore}}{{> wodxPage2}}{{/if}}
 </div>

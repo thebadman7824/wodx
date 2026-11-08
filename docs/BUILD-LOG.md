@@ -477,3 +477,10 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - Tests: phase6m (7); 315 pass; UI fit passes.
 - Deployed (Backups/wodx-actions-3.10.0-2026-11-08 first; every file checked by MD5). Gate 6m: 6/6.
 
+### Sheets 4, 2026-11-08: WoDX Sheets 0.4.0 (the later eras, B81)
+- Read on the PC: each line's printed sheet. V20 (p. 519), W20 (pdf p. 552), M20 (p. 249), C20 (p. 500), Wraith 20 (pdf pp. 592–593) and Demon (p. 303) are in their core books. Orpheus (p. 310) was read from its scan. Hunter: The Reckoning, Mummy: The Resurrection and Kindred of the East are separate sheet files.
+- Each sheet: the header fields as printed (the Bio tab's own controls, mirrored), the Abilities in the printed order (10, 11 or 12 a column), the Advantages and the lower row. The trait boxes are the system's own; Spheres, Renown, Arts and Realms, Passions, Fetters and Dark Passions, Edges, Lore and the apocalyptic form, the six Hekau, Rites, Horrors and Stains come from the sheet's items. Kindred of the East shows its Imbalance and the Dharma's name. Orpheus lists its default Horrors with their pages.
+- New sheet classes for the Wraith, Demon and Mummy types. A flag (wodx-sheets.sheet) gives one character another sheet of its type.
+- Tests: sheets2 (6); 321 pass. Gate sheet 4: 13/13. The world is in the Dark Ages, so the gate gives each test character the later-era sheet by the flag and puts it back.
+- Seen in Foundry: the system asked for a sheet type the first time two older test characters opened. General wraith was chosen for Ada (6e) and General vampire for Ilse (6e). Putting the flag back re-rendered sheets the gate had just closed, so they were closed by hand. The gate now puts the flag back before closing.
+
