@@ -1,5 +1,6 @@
 /**
- * WoDX NPC 0.2.1: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs).
+ * WoDX NPC 0.3.0: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
+ * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -13,10 +14,11 @@
 import * as NR from "./npc-rules.mjs";
 import * as RR from "./routine-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
+import {build as buildFactions} from "./factions.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.2.1";
+const VERSION = "0.3.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -583,13 +585,18 @@ export async function openNpcPanel() {
 const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,
   hexHeuristic, cellsFor, walk, approach, yardsBetween, obvious, hiddenByObfuscate});
 routines.hooks();
+/* Phase 7d: factions and domains, on top of 7c's places */
+const factions = buildFactions({MOD, esc, gmIds, isActiveGM, chron, routines});
+factions.hooks();
 
 Hooks.once("init", () => {
   registerSettings();
   routines.registerSettings();
+  factions.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
-    acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick};
+    acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
+    factions, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -603,6 +610,7 @@ Hooks.once("setup", () => {
 });
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
+  if ( chron()?.registerApprovalHandler ) factions.registerHandler(); // else on wodxChronicleReady
   ensureStyles();
 });
 Hooks.on("combatStart", combat => { if ( isActiveGM() ) soon(combat); });
@@ -624,6 +632,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
+  tokens.tools.wodxFactions = {name: "wodxFactions", title: "WoDX factions (faction turns, hunting grounds, rumours)", icon: "fa-solid fa-chess-rook", order: 112,
+    button: true, visible: game.user.isGM, onChange: () => factions.openFactions()};
 });
 Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !game.user.isGM ) return;

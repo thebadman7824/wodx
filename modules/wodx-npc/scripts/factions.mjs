@@ -1,0 +1,749 @@
+/**
+ * WoDX NPC 0.3.0 (Phase 7d): factions and domains.
+ *
+ *   Factions   A world setting holds every faction: members, leader, the places it holds (7c places, or any scene),
+ *              its goals, its Backgrounds (Herd, Resources, Status, Retainers, Contacts, Domain and its security,
+ *              Influence per sphere) and its standing with each other faction. The Factions window edits them.
+ *   Turns      Every faction may act once a week of world time (B99): when a time skip ends (one turn a week, at
+ *              most twelve), when the clock passes the week by itself, and when the Storyteller ends a session or
+ *              asks for a turn. Each faction picks a move (expand, defend, scheme, recruit, hunt, lie low), rolls it
+ *              from its Backgrounds and its leader, and says what it changes (faction-rules.mjs).
+ *   Landing    Suggest (the default): every result goes to the approval queue. Auto: small results apply at once
+ *              with an Undo card, and big ones go to the queue (B86). Off: no turns or rumours run by themselves.
+ *   Hunting    A place's area sets the hunting difficulty; Domain, Fame and Herd adjust it; another's domain is a
+ *              trespass (V20 pp. 113-114, 259-260; V20 Dark Ages pp. 180-181, 334). The Hunting window rolls it.
+ *   Breaches   A breach recorded in WoDX Actions' Masquerade ledger, or reported here, becomes a rumour. It spreads a
+ *              day at a time through places and Contacts and rises to the Prince, then to the hunters of the era
+ *              (in the Dark Ages, the Inquisition: B42). Each rise is a queue card, so the Storyteller can stop it.
+ * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
+ */
+import * as F from "./faction-rules.mjs";
+import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+
+export const TYPE = "wodx-npc.faction";
+
+export function build(ctx) {
+  const {MOD, esc, gmIds, isActiveGM, chron, routines} = ctx;
+  const num = v => Number(v) || 0;
+  const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
+  const skipping = () => { try { return !!chron()?.isSkipping?.(); } catch (e) { return false; } };
+  const opt = (map, cur) => Object.entries(map).map(([k, v]) => `<option value="${esc(k)}"${String(k) === String(cur ?? "") ? " selected" : ""}>${esc(v)}</option>`).join("");
+  const allActors = () => game.actors?.contents ?? [...(game.actors?.values?.() ?? [])];
+
+  /* ------------------------------------------------------------------ */
+  /*  Settings and the state                                             */
+  /* ------------------------------------------------------------------ */
+
+  function registerSettings() {
+    game.settings.register(MOD, "factions", {scope: "world", config: false, type: Object, default: F.blankState()});
+    game.settings.register(MOD, "factionMode", {
+      name: "Faction turns and rumours", hint: "Suggest sends every result to the approval queue. Auto applies small ones (a Background dot, a rumour moving a step) with an Undo card, and sends big ones to the queue (B86).",
+      scope: "world", config: true, type: String, default: "suggest", choices: {suggest: "Suggest (everything to the approval queue)", auto: "Auto (small changes apply, with an undo card)", off: "Off"}
+    });
+    game.settings.register(MOD, "turnDays", {
+      name: "Days between faction turns", hint: "Each faction may act once in this many days of world time (B99: a week).",
+      scope: "world", config: true, type: Number, default: F.TURN_DAYS, range: {min: 1, max: 90, step: 1}
+    });
+  }
+  const state = () => F.normState(foundry.utils.deepClone(setting("factions") ?? F.blankState()));
+  let saving = Promise.resolve();
+  /** Write the state (the active GM only). Writes are queued, so two quick changes never cross. */
+  function save(next) {
+    saving = saving.then(() => game.settings.set(MOD, "factions", F.normState(next))).catch(e => console.error(`${MOD} |`, e));
+    return saving.then(() => { FactionsAppClass().refresh(); });
+  }
+  /** Change the state with a function of it, in the queue of writes, so it always works on the latest. */
+  function mutate(fn) {
+    let result;
+    saving = saving.then(async () => {
+      const s = state();
+      const out = await fn(s);
+      result = out?.result;
+      await game.settings.set(MOD, "factions", F.normState(out?.state ?? s));
+    }).catch(e => console.error(`${MOD} |`, e));
+    return saving.then(() => { FactionsAppClass().refresh(); return result; });
+  }
+  const mode = () => setting("factionMode") ?? "suggest";
+
+  /* ------------------------------------------------------------------ */
+  /*  The world as the rules see it                                      */
+  /* ------------------------------------------------------------------ */
+
+  function eraInfo() {
+    let morality = "roads", year = 1197, name = "Dark Ages";
+    try {
+      const e = chron()?.eras?.activeEra?.();
+      morality = e?.profile?.rules?.morality ?? morality;
+      name = e?.profile?.name ?? name;
+      year = chron()?.eras?.currentYear?.() ?? year;
+    } catch (err) { /* defaults */ }
+    // B42: the Inquisition in the Dark Ages (and while the Roads hold, to 1600); mortal hunters to 1998; then the imbued
+    const hunters = year <= 1600 ? "the Inquisition" : year <= 1998 ? "mortal hunters (The Hunters Hunted II)" : "the imbued (Hunter: The Reckoning)";
+    return {morality, year, name, hunters, spheres: F.spheresFor(morality), areas: F.areasFor(morality)};
+  }
+  const sceneOf = id => { try { return fromUuidSync(id); } catch (e) { return null; } };
+  /** Every place a faction can hold or a rumour can reach: the 7c places, with their hunting area. */
+  /**
+   * The places a rumour can reach and a faction can hold: those tagged in 7c, and every other scene of the world (not a
+   * battle map), with a kind guessed from its name, so a world with no tags still has a valley to talk in.
+   */
+  function placeList() {
+    const out = [], seen = new Set();
+    for ( const p of routines.listPlaces() ) {
+      const doc = p.region ?? p.scene;
+      out.push({id: p.id, name: p.name, kind: p.kind, area: doc?.flags?.[MOD]?.hunt?.area ?? null});
+      if ( p.scene?.uuid && !p.region ) seen.add(p.scene.uuid);
+    }
+    for ( const sc of game.scenes ?? [] ) {
+      if ( !sc?.uuid || seen.has(sc.uuid) || F.NOT_A_PLACE.test(sc.name ?? "") ) continue;
+      out.push({id: sc.uuid, name: sc.name, kind: F.kindFromName(sc.name), area: sc.flags?.[MOD]?.hunt?.area ?? null});
+    }
+    return out;
+  }
+  function placeName(id, list = null) {
+    const p = (list ?? placeList()).find(x => x.id === id);
+    if ( p ) return p.name;
+    const d = sceneOf(id);
+    return d?.name ?? "a place no longer on the map";
+  }
+  function names(s) {
+    const era = eraInfo(), list = placeList();
+    return {
+      faction: id => s.factions.find(f => f.id === id)?.name ?? "a faction gone",
+      place: id => placeName(id, list),
+      actor: id => game.actors?.get(id)?.name ?? "someone gone",
+      sphere: k => era.spheres[k] ?? F.SPHERES.roads[k] ?? F.SPHERES.modern[k] ?? k
+    };
+  }
+  const attrOf = (a, k) => { const x = a?.system?.attributes?.[k]; return num(x?.total ?? x?.value); };
+  function leaders(s) {
+    const out = {};
+    for ( const f of s.factions ) {
+      const a = f.leader ? game.actors?.get(f.leader) : null;
+      if ( !a || routines.downState?.(a) ) continue; // a leader dead or in torpor leads nobody
+      out[f.id] = {manipulation: attrOf(a, "manipulation"), wits: attrOf(a, "wits"), charisma: attrOf(a, "charisma"), perception: attrOf(a, "perception")};
+    }
+    return out;
+  }
+  const pcActors = () => new Set(allActors().filter(a => a.hasPlayerOwner).map(a => a.id));
+  const streamFor = key => {
+    const g = chron()?.gen;
+    if ( g?.random ) return g.random(`faction:${key}`);
+    let x = 0; for ( const c of key ) x = (x * 31 + c.charCodeAt(0)) >>> 0;
+    return () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; };
+  };
+  const newId = () => foundry.utils.randomID();
+  const bgValue = (actor, name) => {
+    const it = (actor?.items?.contents ?? [...(actor?.items ?? [])]).find(i => i.type === "Feature" && i.system?.type === "wod.types.background" && String(i.name).toLowerCase() === name);
+    return num(it?.system?.value);
+  };
+  const factionsOf = (s, actorId) => s.factions.filter(f => f.members.includes(actorId) || f.leader === actorId);
+
+  /* ------------------------------------------------------------------ */
+  /*  Landing results: the queue, or applied with Undo                   */
+  /* ------------------------------------------------------------------ */
+
+  /** Apply changes now and say what they did. Returns {inverse, applied}. */
+  async function applyNow(changes, {reason = ""} = {}) {
+    const res = await mutate(s => {
+      const r = F.applyChanges(s, changes, {ids: newId, now: game.time.worldTime});
+      return {state: r.state, result: {inverse: r.inverse, applied: r.applied}};
+    });
+    for ( const c of res?.applied ?? [] ) if ( c.op === "found" ) await foundCard(c);
+    return res ?? {inverse: [], applied: []};
+  }
+  async function foundCard(c) {
+    const s = state(), n = names(s);
+    return ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(n.faction(c.faction))} has found someone</h3>
+      <p>${esc(n.actor(c.actor))}, of ${esc(n.faction(c.target))}. What the hunters do now is yours to play; WoDX changes nothing.</p></div>`});
+  }
+  function proposeChanges(title, detail, changes, {key = null, kind = "turn", extra = {}} = {}) {
+    return chron()?.propose?.({type: TYPE, key, title, detail, data: {kind, changes, ...extra}});
+  }
+  function registerHandler() {
+    chron()?.registerApprovalHandler?.(TYPE, {
+      label: "Factions",
+      approve: async entry => {
+        const changes = entry.data?.changes ?? [];
+        await applyNow(changes);
+        // A rise approved: the Prince is displeased with the blamed faction; the hunters take up the hunt
+        for ( const c of changes.filter(x => x.op === "stage") ) {
+          const b = state().breaches.find(x => x.id === c.id);
+          if ( !b?.faction ) continue;
+          const more = c.stage === 1
+            ? (c.faction !== b.faction ? [{op: "standing", faction: c.faction, other: b.faction, delta: -1}] : [])
+            : [{op: "goal", faction: c.faction, goal: {move: "hunt", target: b.faction, note: `After the rumour: ${b.event}`}}, {op: "standing", faction: c.faction, other: b.faction, delta: -2}];
+          if ( more.length ) await applyNow(more);
+        }
+      },
+      reject: async entry => {
+        // Rejecting a rise or a spreading step stops the rumour there (the Storyteller's word)
+        const ids = new Set((entry.data?.changes ?? []).filter(c => ["stage", "heard"].includes(c.op)).map(c => c.id));
+        if ( ids.size ) await mutate(s => { for ( const b of s.breaches ) if ( ids.has(b.id) && b.state === "live" ) b.state = "stopped"; return {state: s}; });
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Faction turns                                                      */
+  /* ------------------------------------------------------------------ */
+
+  let running = null;
+  /**
+   * Run faction turns. count turns in a row, for reason ("a time skip", "the end of the session", ...). Each turn's
+   * results land by the mode; a GM card reports them, with Undo for what applied.
+   */
+  async function runTurns({count = 1, reason = "", forced = false, now = game.time.worldTime, stamp = null} = {}) {
+    if ( !isActiveGM() ) return null;
+    if ( running ) await running;
+    const m = forced && mode() === "off" ? "suggest" : mode();
+    if ( m === "off" ) return null;
+    const work = (async () => {
+      const reports = [];
+      for ( let i = 0; i < count; i++ ) {
+        const s = state();
+        if ( !s.factions.some(f => !f.dormant) ) break;
+        const turn = s.turns + 1, era = eraInfo(), list = placeList();
+        const results = F.runTurn(s, {streamFor, seedKey: `turn:${turn}:${Math.floor(now)}`, leaders: leaders(s), places: list, pcActors: pcActors(), spheres: era.spheres, turn, now, ids: newId});
+        const lines = [];
+        let undoAll = [];
+        const n = names(s);
+        for ( const r of results ) {
+          const words = r.changes.map(c => F.describeChange(c, n));
+          const roll = `${F.MOVES[r.move].label}: ${r.pool} dice at ${r.difficulty}, ${r.botch ? "a botch" : `${r.net} success${r.net === 1 ? "" : "es"}`}${r.defence ? ` against ${r.defence.net}` : ""}`;
+          let status = "nothing changes";
+          if ( r.changes.length ) {
+            if ( m === "auto" && r.size === "small" ) {
+              const done = await applyNow(r.changes);
+              undoAll = [...done.inverse, ...undoAll];
+              status = done.applied.length ? "applied" : "nothing to change";
+            } else {
+              await proposeChanges(`${n.faction(r.faction)}: ${r.text}`, `${roll}. ${words.join("; ")}.`, r.changes, {key: `faction:${turn}:${r.faction}`, extra: {turn}});
+              status = r.size === "big" ? "sent to the approval queue (a big change)" : "sent to the approval queue";
+            }
+          }
+          lines.push({faction: n.faction(r.faction), text: r.text, roll, dice: r.dice.join(" "), words, status});
+        }
+        await mutate(st => { st.turns = turn; st.lastTurn = stamp ?? now; st.log = [{turn, at: now, reason, lines: lines.map(l => `${l.text} (${l.status})`)}, ...st.log].slice(0, 100);
+          for ( const f of st.factions ) if ( f.guard && f.guard < turn ) f.guard = 0;
+          return {state: st}; });
+        reports.push({turn, lines});
+        await turnCard(turn, reason, lines, undoAll, m);
+      }
+      return reports;
+    })();
+    running = work.finally(() => { running = null; });
+    return work;
+  }
+  async function turnCard(turn, reason, lines, inverse, m) {
+    const body = lines.map(l => `<li><b>${esc(l.faction)}</b>: ${esc(l.text)} <span class="wodx-quiet">${esc(l.roll)} [${esc(l.dice)}]${l.words.length ? `; ${esc(l.words.join("; "))}` : ""}; ${esc(l.status)}.</span></li>`).join("");
+    return ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"},
+      flags: {[MOD]: {factionTurn: {turn, inverse, undone: false}}},
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>Faction turn ${turn}${reason ? `, ${esc(reason)}` : ""}</h3><ul class="wnpc-lines">${body || "<li>No faction acted.</li>"}</ul>
+        ${inverse.length ? `<div class="wnpc-done">Applied in Auto. <button type="button" class="wnpc-f-undo">Undo</button></div>` : (m === "suggest" ? `<p class="wodx-quiet">Suggest: the results wait in the approval queue.</p>` : "")}</div>`});
+  }
+  async function undoCard(msg, key = "factionTurn") {
+    const data = foundry.utils.deepClone(msg.flags?.[MOD]?.[key]);
+    if ( !data?.inverse?.length || data.undone || !game.user.isGM ) return null;
+    await applyNow(data.inverse);
+    data.undone = true;
+    const html = String(msg.content).replace(/<div class="wnpc-done">[\s\S]*?<\/div>/, `<div class="wnpc-done"><b>Undone.</b></div>`);
+    return msg.update({content: html, [`flags.${MOD}.${key}`]: data});
+  }
+
+  /** On a skip or when the clock moves: run the turns that are due, and the rumours' days. */
+  async function onClock(reason) {
+    if ( !isActiveGM() || mode() === "off" ) return;
+    const now = game.time.worldTime;
+    const s = state();
+    if ( s.lastTurn === null ) { await mutate(st => { st.lastTurn = now; return {state: st}; }); }
+    else {
+      const due = F.turnsDue(s.lastTurn, now, {days: setting("turnDays") ?? F.TURN_DAYS});
+      if ( due.due ) {
+        const label = reason === "skip" ? `a time skip${due.skipped ? ` (${due.skipped} more quiet week${due.skipped === 1 ? "" : "s"} pass unplayed)` : ""}` : "a week passes";
+        // The week's remainder carries over: the next turn falls a whole week after this one's week, not after now
+        const stamp = due.skipped ? now : s.lastTurn + due.due * due.span;
+        await runTurns({count: due.due, reason: label, now, stamp});
+      }
+      if ( reason === "skip" ) await untended(s.lastTurn, now);
+    }
+    await tickBreaches(now);
+  }
+  /** B83 for factions: one whose leader and members are all gone loses a dot of each Background per untended decade. */
+  async function untended(from, to) {
+    const decades = Math.floor((to - from) / (365.25 * 86400) / 10);
+    if ( decades < 1 ) return;
+    for ( const f of state().factions ) {
+      if ( f.dormant ) continue;
+      const people = [f.leader, ...f.members].filter(Boolean).map(id => game.actors?.get(id));
+      const gone = people.length && people.every(a => !a || routines.downState?.(a));
+      if ( !gone ) continue;
+      const ch = F.untendedLoss(f, decades);
+      if ( ch.length ) await proposeChanges(`${f.name}: its Backgrounds go untended`, `Nobody of ${f.name} is left to tend them for ${decades} decade${decades === 1 ? "" : "s"}: a dot of each per decade (B83).`, ch, {key: `untended:${f.id}:${Math.floor(to)}`, kind: "untended"});
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Breaches and rumours                                               */
+  /* ------------------------------------------------------------------ */
+
+  /** WoDX Actions' Masquerade ledger, read straight from the journal's flags. */
+  function masqEntries() {
+    const j = game.journal?.find?.(x => x.flags?.["wodx-actions"]?.kind === "masquerade");
+    return j?.flags?.["wodx-actions"]?.entries ?? [];
+  }
+  /** Start following a breach as a rumour. */
+  async function reportBreach({severity = 1, place = null, by = null, faction = null, event = "", masq = null} = {}) {
+    if ( !game.user.isGM ) return null;
+    const s = state();
+    const byActor = by ? game.actors?.get(by) : null;
+    const fac = faction ?? (byActor ? factionsOf(s, byActor.id).find(f => f.secret)?.id ?? factionsOf(s, byActor.id)[0]?.id : null) ?? null;
+    const id = newId();
+    const done = await applyNow([{op: "breach", id, faction: fac, place, severity, by, event}]);
+    await mutate(st => { const b = st.breaches.find(x => x.id === id); if ( b ) { b.byName = byActor?.name ?? ""; b.masq = masq; } return {state: st}; });
+    const n = names(state());
+    await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, flags: {[MOD]: {breachStart: {id, inverse: done.inverse, undone: false}}},
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>A rumour starts</h3><p>${esc(event || "Something was seen")}${place ? ` at ${esc(n.place(place))}` : ""}. ${esc(F.SEVERITY[severity] ?? "")}.</p>
+        <p class="wodx-quiet">${fac ? `It is laid at the door of ${esc(n.faction(fac))}. ` : ""}It spreads a day at a time; each rise to the Prince or the hunters waits for you.</p>
+        <div class="wnpc-done"><button type="button" class="wnpc-f-undo" data-key="breachStart">Do not follow it</button></div></div>`});
+    return id;
+  }
+  /** From WoDX Actions: a breach recorded in the Masquerade ledger. */
+  async function onActionsBreach({entry, by} = {}) {
+    if ( !isActiveGM() || mode() === "off" || !entry ) return;
+    const actor = by?.uuid ? (await fromUuid(by.uuid)) : null;
+    const a = actor?.actor ?? actor;
+    const where = a ? (routines.whereOf?.(a)?.place ?? null) : null;
+    const tok = a ? canvas?.tokens?.placeables?.find(t => t.actor?.id === a.id) : null;
+    const regionPlace = tok?.document?.regions ? [...tok.document.regions].find(r => r.flags?.[MOD]?.place?.kind)?.uuid : null;
+    const scenePlace = canvas?.scene?.flags?.[MOD]?.place?.kind ? canvas.scene.uuid : null;
+    await reportBreach({severity: F.severityFor(entry.witnesses?.length ?? 1), place: regionPlace ?? scenePlace ?? where, by: a?.id ?? null, event: `${entry.by} ${entry.event}`, masq: entry.id});
+  }
+  /** Each day of each live rumour: it spreads (small), may rise (big, always queued), and fades in a quiet week. */
+  async function tickBreaches(now = game.time.worldTime) {
+    if ( !isActiveGM() || mode() === "off" ) return;
+    const m = mode();
+    let undo = [];
+    const lines = [];
+    const masq = masqEntries();
+    for ( const b0 of state().breaches ) {
+      if ( b0.state !== "live" ) continue;
+      // Every witness dealt with before the talk began: the breach is contained
+      if ( b0.masq ) {
+        const e = masq.find(x => x.id === b0.masq);
+        if ( e && e.witnesses?.length && e.witnesses.every(w => !["saw", "told"].includes(w.state)) && !b0.heard.length ) {
+          await mutate(st => { const b = st.breaches.find(x => x.id === b0.id); if ( b ) b.state = "contained"; return {state: st}; });
+          lines.push(`${b0.event}: every witness is dealt with, and the rumour is contained.`);
+          continue;
+        }
+      }
+      const days = F.daysDue(b0, now);
+      for ( let d = 1; d <= days; d++ ) {
+        const s = state(), b = s.breaches.find(x => x.id === b0.id);
+        if ( !b || b.state !== "live" ) break;
+        const t = b.lastStep + 86400;
+        if ( F.fades(b, t) ) {
+          const ch = [{op: "breach-sev", id: b.id, delta: -1}, {op: "breach-set", id: b.id, lastStep: t, lastFed: t}];
+          if ( m === "auto" ) { const r = await applyNow(ch); undo = [...r.inverse, ...undo]; lines.push(`${b.event}: a quiet week, and the talk fades.`); }
+          else { await proposeChanges(`A rumour fades: ${b.event}`, "A week with nothing new to feed it.", ch, {key: `breach:${b.id}`, kind: "breach"}); break; }
+          continue;
+        }
+        const step = F.spreadDay(s, b, placeList(), streamFor(`breach:${b.id}:${Math.floor(t)}`), {now: t});
+        const small = step.changes.filter(c => c.op !== "stage");
+        const n = names(s);
+        if ( m === "auto" ) { const r = await applyNow(small); undo = [...r.inverse, ...undo]; const w = small.map(c => F.describeChange(c, n)).filter(x => x !== "The rumour lingers"); if ( w.length ) lines.push(`${b.event}: ${w.join("; ")}.`); }
+        if ( step.rise ) {
+          const who = step.rise.stage === 2 ? `${n.faction(step.rise.faction)}, ${eraInfo().hunters}` : n.faction(step.rise.faction);
+          const pre = m === "auto" ? [] : small;
+          await proposeChanges(`The rumour reaches ${step.rise.stage === 1 ? "the Prince" : "the hunters"}: ${b.event}`,
+            `${who} hear${step.rise.stage === 1 ? "s" : ""} of it (${F.SEVERITY[b.severity] ?? ""}). Approve to let it rise; reject to stop the rumour here.`,
+            [...pre, ...step.changes.filter(c => c.op === "stage")], {key: `breach:${b.id}`, kind: "breach"});
+          break;
+        }
+        if ( m !== "auto" ) {
+          const w = small.map(c => F.describeChange(c, n));
+          if ( small.some(c => c.places?.length || c.known?.length) ) { await proposeChanges(`A rumour spreads: ${b.event}`, `${w.join("; ")}.`, small, {key: `breach:${b.id}`, kind: "breach"}); break; }
+          await applyNow(small); // a day with no news only moves the rumour's clock
+        }
+      }
+    }
+    if ( lines.length ) await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, flags: {[MOD]: {factionRumours: {inverse: undo, undone: false}}},
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>Rumours</h3><ul class="wnpc-lines">${lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>
+        ${undo.length ? `<div class="wnpc-done">Applied in Auto. <button type="button" class="wnpc-f-undo" data-key="factionRumours">Undo</button></div>` : ""}</div>`});
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Hunting                                                            */
+  /* ------------------------------------------------------------------ */
+
+  const METHODS = {
+    "appearance+subterfuge": "Appearance + Subterfuge (a seduction)", "wits+streetwise": "Wits + Streetwise (stalking)",
+    "stamina+athletics": "Stamina + Athletics (a chase)", "manipulation+persuasion": "Manipulation + Persuasion (talked into it)",
+    "charisma+empathy": "Charisma + Empathy (a willing vessel)", "dexterity+stealth": "Dexterity + Stealth (taken asleep)"
+  };
+  const abilityOf = (a, k) => {
+    const flat = a?.system?.abilities?.[k];
+    if ( flat && flat.value !== undefined ) return num(flat.value);
+    const it = (a?.items?.contents ?? [...(a?.items ?? [])]).find(i => ["Ability", "Trait"].includes(i.type) && (i.system?.id === k || String(i.name).toLowerCase() === k));
+    return num(it?.system?.value);
+  };
+  /** Hunting for one actor at one place: what the books give, read from the factions (no roll). */
+  function huntingFor(actor, placeId) {
+    const s = state(), era = eraInfo();
+    const place = placeList().find(p => p.id === placeId) ?? {id: placeId, kind: "other"};
+    return F.huntingAt(s, place, {factions: factionsOf(s, actor?.id).map(f => f.id), herd: bgValue(actor, "herd"), domain: bgValue(actor, "domain"), fame: bgValue(actor, "fame")}, era.morality);
+  }
+  async function huntDialog(actor = canvas?.tokens?.controlled?.[0]?.actor ?? null) {
+    if ( !game.user.isGM ) return null;
+    const era = eraInfo(), list = placeList();
+    const hunters = allActors().filter(a => a.type === "Vampire" || a.id === actor?.id).sort((a, b) => a.name.localeCompare(b.name));
+    const content = `<div class="wnpc-hunt">
+      <p class="wodx-quiet">Each hour of hunting is a roll against the area's difficulty. Domain and Fame lower it a dot each (to 3), Herd adds a die a dot where the herd could be, and another's domain is a trespass (${era.morality === "roads" ? "V20 Dark Ages pp. 180-181, 334" : "V20 pp. 113-114, 259-260"}).</p>
+      ${hunters.length > 5 ? searchBox(".wnpc-hunt select[name=actor]", "Search hunters…", "Search hunters") : ""}
+      <div class="wodx-field"><label>Hunter</label><select name="actor">${hunters.map(a => `<option value="${a.id}"${a.id === actor?.id ? " selected" : ""}>${esc(a.name)}</option>`).join("")}</select></div>
+      ${list.length > 5 ? searchBox(".wnpc-hunt select[name=place]", "Search places…", "Search places") : ""}
+      <div class="wodx-field"><label>Where</label><select name="place">${list.map(p => `<option value="${esc(p.id)}"${p.id === canvas?.scene?.uuid ? " selected" : ""}>${esc(p.name)} (${esc(F.areaOf(p, era.morality).label)}, ${F.areaOf(p, era.morality).difficulty})</option>`).join("")}</select></div>
+      <div class="wodx-field"><label>How</label><select name="method" data-fixed>${opt(METHODS, "wits+streetwise")}</select></div>
+      <div class="wodx-field"><label>Hours</label><input type="number" name="hours" value="1" min="1" max="8"></div></div>`;
+    const data = await foundry.applications.api.DialogV2.wait({window: {title: "Hunting"}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 560, height: "auto"}, content,
+      buttons: [{action: "roll", label: "Roll", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object}, {action: "cancel", label: "Cancel"}], rejectClose: false});
+    if ( !data || data === "cancel" ) return null;
+    return hunt(game.actors.get(data.actor), data.place, {method: data.method, hours: num(data.hours) || 1});
+  }
+  /** Roll a hunt: one roll an hour until prey is caught or the hours run out. */
+  async function hunt(actor, placeId, {method = "wits+streetwise", hours = 1} = {}) {
+    if ( !actor ) return null;
+    const h = huntingFor(actor, placeId);
+    const [at, ab] = method.split("+");
+    const pool = attrOf(actor, at) + abilityOf(actor, ab) + h.herdDice;
+    const rolls = [];
+    let caught = false, botch = false;
+    for ( let i = 0; i < Math.max(1, Math.min(8, hours)) && !caught && !botch; i++ ) {
+      const r = await new Roll(`${Math.max(1, pool)}d10`).evaluate();
+      const dice = r.dice[0]?.results?.map(x => x.result) ?? [];
+      const res = F.successes(dice, h.difficulty);
+      rolls.push({roll: r, dice, res});
+      caught = res.net > 0; botch = res.botch;
+    }
+    const s = state(), n = names(s);
+    const last = rolls.at(-1)?.res;
+    const verdict = caught ? `Prey found in hour ${rolls.length}.` : botch ? "A botch: a complication (a vessel killed, a disease, a rival's domain, an attack)." : `${rolls.length} hour${rolls.length === 1 ? "" : "s"} spent, and nothing.`;
+    const tres = h.trespass ? `<p>This is ${esc(h.trespass.name)}'s domain: a trespass, at +${h.trespass.security} for its security (V20 p. 113).</p>` : "";
+    const msg = await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), whisper: actor.hasPlayerOwner ? undefined : gmIds(), rolls: rolls.map(r => r.roll),
+      content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(actor.name)} hunts at ${esc(n.place(placeId))}</h3>
+        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
+        <p>${rolls.map(r => `[${r.dice.join(" ")}]`).join(" ")}</p><p><b>${esc(verdict)}</b></p>${tres}</div>`});
+    // A trespass the holder notices (a botch, or a holder with Domain security watching) sours its standing: queued
+    if ( h.trespass && (botch || (last && h.trespass.security > 0 && last.net <= h.trespass.security)) ) {
+      const mine = factionsOf(s, actor.id)[0];
+      if ( mine ) await proposeChanges(`${h.trespass.name} notices a trespass`, `${actor.name} hunted in its domain without leave.`, [{op: "standing", faction: h.trespass.faction, other: mine.id, delta: -1}], {key: `trespass:${actor.id}:${h.trespass.faction}`, kind: "trespass"});
+    }
+    return {...h, pool, rolls: rolls.map(r => ({dice: r.dice, ...r.res})), caught, botch, message: msg};
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Rothenstein's own factions                                         */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * The powers of the valley as the chronicle's notes give them ("The Domain of Rothenstein", "Overview & Cast", "The
+   * Herd", "The Weavers' Guild Hall", "Hunter & Inquisition Threats"). The dots are WoDX's estimates from those notes
+   * (B102), for the Storyteller to adjust. Members and places are matched by name; anything not found is left out.
+   */
+  const ROTHENSTEIN = [
+    {key: "court", name: "The Voivode's court", kind: "kindred", ruler: true, leader: "Bogdan Ursu", members: ["Bogdan Ursu"], places: [/kranzfels|keep floors|inner ward|great hall/i],
+      assets: {herd: 4, status: 5, domain: 4, security: 1, retainers: 3, contacts: 1, resources: 3, influence: {crown: 2, military: 2}}, goals: [{move: "defend"}, {move: "recruit"}],
+      notes: "Bogdan holds the keep and gives judgment; the Herd is thirty-one named mortals, the Voivode's to ration (Herd 4: thirty vessels)."},
+    {key: "cult", name: "Konrad's cult", kind: "kindred", leader: "Konrad", members: ["Konrad", "Kasimir"], places: [/silver adit|konrad/i],
+      assets: {herd: 1, retainers: 2, status: 1, contacts: 1, influence: {underworld: 1, guild: 1}}, goals: [{move: "recruit"}, {move: "scheme", target: "church"}],
+      notes: "The flesh-smith's believers and the changed miners, under the Adit. Secret even from the court."},
+    {key: "marta", name: "Sister Marta's network", kind: "kindred", leader: "Marta", members: ["Marta"], places: [/marta/i],
+      assets: {status: 2, contacts: 3, resources: 1, influence: {church: 2, folk: 1}}, goals: [{move: "lielow"}, {move: "expand", sphere: "church"}],
+      notes: "A Lasombra in a nun's habit with the church's confidence; help from outside the valley."},
+    {key: "radu", name: "Old Radu", kind: "kindred", leader: "Old Radu", members: ["Old Radu"], places: [/radu|crossroads/i],
+      assets: {status: 2, contacts: 3, influence: {folk: 2}}, goals: [{move: "lielow"}],
+      notes: "A drifter who has watched the valley since before the town had a name."},
+    {key: "council", name: "The German council (the Hospites)", kind: "mortal", leader: "Graff", members: ["Graff", "Jan Dvorak", "Ludwig of Regensburg"], places: [/market square|market floors|graff/i],
+      assets: {resources: 4, status: 2, retainers: 1, contacts: 2, influence: {guild: 3, crown: 1}}, goals: [{move: "expand", sphere: "guild"}],
+      notes: "The council wants profit; the Adit is theirs on paper and fought over in practice."},
+    {key: "church", name: "The parish of St. Aegidius", kind: "church", leader: "Ludovic", members: ["Ludovic", "Paval", "Gizela"], places: [/aegidius|church close|presbytery/i],
+      assets: {status: 2, contacts: 2, resources: 1, influence: {church: 3, folk: 2}}, goals: [{move: "hunt"}],
+      notes: "The church wants heresy stamped out."},
+    {key: "folk", name: "The Moravian villages", kind: "folk", leader: "Yaroslava", members: ["Yaroslava", "Bohumil Krejci", "Jitka"], places: [/dolany|moravian village/i],
+      assets: {contacts: 2, resources: 1, influence: {folk: 3}}, goals: [{move: "defend"}],
+      notes: "The elders of the old families want to be left alone."},
+    {key: "weavers", name: "The Weavers' Guild", kind: "guild", leader: "Lenka Prochazka", members: ["Lenka Prochazka", "Jakub Hlavac"], places: [/craftsmen|weaver/i],
+      assets: {resources: 2, contacts: 2, influence: {guild: 2}}, goals: [{move: "expand", sphere: "guild"}],
+      notes: "The strongest craft guild; favours are kept on a tally and called in."},
+    {key: "ondrej", name: "Ondrej's company", kind: "mercenaries", leader: "Ondrej", members: ["Ondrej"], places: [/outer bailey|barracks/i],
+      assets: {retainers: 3, resources: 1, influence: {military: 2}}, goals: [{move: "recruit"}],
+      notes: "A dozen spears for hire."},
+    {key: "hunters", name: "The Church's hunters", kind: "hunters", leader: "Anselm", members: ["Anselm"], places: [/anselm|mountain trail|hermitage/i],
+      assets: {contacts: 2, resources: 1, influence: {church: 1}}, goals: [],
+      notes: "Brother Anselm keeps a count; the friar, the exorcist and the knight-inquisitor come when the net opens (Act Three)."}
+  ];
+  const ROTH_STANDING = [["court", "church", -2], ["church", "court", -1], ["court", "council", -1], ["council", "court", -1], ["council", "folk", -1], ["folk", "council", -1],
+    ["court", "cult", 1], ["cult", "court", 1], ["cult", "church", -2], ["marta", "court", -1], ["radu", "court", -1], ["folk", "court", -1], ["weavers", "council", 1],
+    ["council", "weavers", 1], ["ondrej", "court", 1], ["court", "ondrej", 1], ["hunters", "court", -1], ["church", "hunters", 1], ["hunters", "church", 1]];
+  /** Find an NPC by a part of its name: the shortest match wins (so "Konrad" finds "Konrad the Flesh-Smith"). */
+  function findActor(part) {
+    const p = part.toLowerCase();
+    return allActors().filter(a => !a.hasPlayerOwner && a.name.toLowerCase().includes(p)).sort((a, b) => a.name.length - b.name.length)[0] ?? null;
+  }
+  const hasRothenstein = () => !!findActor("Bogdan Ursu");
+  /** Build Rothenstein's factions (asks first; never replaces factions already made). */
+  async function setupRothenstein({confirm = true} = {}) {
+    if ( !game.user.isGM ) return null;
+    const s = state();
+    if ( s.factions.length ) { ui.notifications.warn("There are factions already. Rothenstein's are only set up in a world with none."); return null; }
+    if ( confirm ) {
+      const ok = await foundry.applications.api.DialogV2.confirm({window: {title: "Rothenstein's factions"}, classes: ["wodx-dialog", "wodx-npc-dialog"],
+        content: `<p>Set up the valley's ten powers from the chronicle's notes, with their leaders, members and places found by name? The dots are WoDX's estimates; change them as you like.</p>`});
+      if ( !ok ) return null;
+    }
+    const places = placeList();
+    const placeIds = rx => uniqueIds(places.filter(p => rx.test(p.name)).map(p => p.id)).slice(0, 6);
+    const ids = new Map(ROTHENSTEIN.map(r => [r.key, newId()]));
+    const list = ROTHENSTEIN.map(r => {
+      const leader = findActor(r.leader);
+      const members = r.members.map(findActor).filter(Boolean).map(a => a.id);
+      return F.normFaction({id: ids.get(r.key), name: r.name, kind: r.kind, ruler: !!r.ruler, leader: leader?.id ?? null, members, places: r.places.flatMap(placeIds),
+        assets: r.assets, goals: r.goals.map(g => ({...g, target: g.target ? ids.get(g.target) : null})), notes: r.notes,
+        standing: Object.fromEntries(ROTH_STANDING.filter(([a]) => a === r.key).map(([, b, v]) => [ids.get(b), v]))});
+    });
+    await mutate(st => { st.factions = list; st.lastTurn ??= game.time.worldTime; return {state: st}; });
+    const missing = ROTHENSTEIN.filter(r => !findActor(r.leader)).map(r => r.leader);
+    ui.notifications.info(`Set up ${list.length} factions.${missing.length ? ` No NPC found for: ${missing.join(", ")}.` : ""}`);
+    return list;
+  }
+  const uniqueIds = a => [...new Set(a)];
+
+  /* ------------------------------------------------------------------ */
+  /*  Editing a faction                                                  */
+  /* ------------------------------------------------------------------ */
+
+  async function editFaction(id = null) {
+    if ( !game.user.isGM ) return null;
+    const s = state(), era = eraInfo();
+    const f = s.factions.find(x => x.id === id) ?? F.normFaction({id: newId(), name: "A new faction", kind: "kindred"});
+    const others = s.factions.filter(x => x.id !== f.id);
+    const npcs = allActors().filter(a => !a.hasPlayerOwner || f.members.includes(a.id)).sort((a, b) => a.name.localeCompare(b.name));
+    const pcs = allActors().filter(a => a.hasPlayerOwner).sort((a, b) => a.name.localeCompare(b.name));
+    const places = placeList();
+    for ( const p of f.places ) if ( !places.some(x => x.id === p) ) places.push({id: p, name: placeName(p), kind: "other"});
+    const number = (name, v, max = 5) => `<input type="number" name="${name}" value="${v}" min="0" max="${max}">`;
+    const actorOpts = list => list.map(a => `<option value="${a.id}"${a.id === f.leader ? " selected" : ""}>${esc(a.name)}</option>`).join("");
+    const goals = [...f.goals, {move: ""}, {move: ""}].slice(0, Math.max(3, f.goals.length + 1));
+    const content = `<div class="wnpc-faction-form">
+      <div class="wodx-field"><label>Name</label><input type="text" name="name" value="${esc(f.name)}" maxlength="120"></div>
+      <div class="wodx-field"><label>Kind</label><select name="kind" data-fixed>${opt(F.KINDS, f.kind)}</select></div>
+      ${npcs.length + pcs.length > 5 ? searchBox(".wnpc-faction-form select[name=leader]", "Search for a leader…", "Search leaders") : ""}
+      <div class="wodx-field"><label>Leader</label><select name="leader"><option value="">No leader</option>${actorOpts(npcs)}${pcs.length ? `<optgroup label="Player characters">${actorOpts(pcs)}</optgroup>` : ""}</select></div>
+      <p><label class="wnpc-check"><input type="checkbox" name="ruler" ${f.ruler ? "checked" : ""}> Rules the domain (the Prince or its like)</label>
+        <label class="wnpc-check"><input type="checkbox" name="secret" ${f.secret ? "checked" : ""}> Secret (a slip starts a rumour)</label>
+        <label class="wnpc-check"><input type="checkbox" name="dormant" ${f.dormant ? "checked" : ""}> Dormant (takes no turns)</label></p>
+      <fieldset><legend>Backgrounds</legend><div class="wnpc-dots">
+        ${["herd", "resources", "status", "retainers", "contacts", "domain", "security"].map(k => `<label>${esc(F.ASSETS[k])} ${number(`a.${k}`, f.assets[k])}</label>`).join("")}</div>
+        <p class="wodx-quiet">Domain and its security share five dots (V20 p. 113). Herd: 3, 7, 15, 30 or 60 vessels.</p>
+        <div class="wnpc-dots">${Object.entries(era.spheres).map(([k, v]) => `<label>${esc(v)} ${number(`i.${k}`, f.assets.influence[k] ?? 0)}</label>`).join("")}</div></fieldset>
+      <fieldset><legend>Goals (they weigh most when the faction picks a move)</legend>
+        ${others.length > 4 ? searchBox(".wnpc-faction-form select.wnpc-g-target", "Search rivals…", "Search rivals") : ""}${places.length > 4 ? searchBox(".wnpc-faction-form select.wnpc-g-place", "Search places…", "Search goal places") : ""}
+        <table class="wodx-table"><thead><tr><th>Move</th><th>Against</th><th>Sphere</th><th>Place</th><th>Note</th></tr></thead><tbody>
+        ${goals.map((g, k) => `<tr><td><select name="g${k}.move" data-fixed><option value="">None</option>${opt(Object.fromEntries(Object.entries(F.MOVES).map(([m, x]) => [m, x.label])), g.move)}</select></td>
+          <td><select name="g${k}.target" class="wnpc-g-target"><option value="">Anyone</option>${others.map(o => `<option value="${o.id}"${o.id === g.target ? " selected" : ""}>${esc(o.name)}</option>`).join("")}</select></td>
+          <td><select name="g${k}.sphere" data-fixed><option value="">Any</option>${opt(era.spheres, g.sphere)}</select></td>
+          <td><select name="g${k}.place" class="wnpc-g-place"><option value="">None</option>${places.map(p => `<option value="${esc(p.id)}"${p.id === g.place ? " selected" : ""}>${esc(p.name)}</option>`).join("")}</select></td>
+          <td><input type="text" name="g${k}.note" value="${esc(g.note ?? "")}"></td></tr>`).join("")}</tbody></table></fieldset>
+      ${others.length ? `<fieldset><legend>Standing with the others (−3 to +3)</legend>${others.length > 5 ? searchBox(".wnpc-standing", "Search factions…", "Search factions") : ""}<div class="wnpc-standing wnpc-list">
+        ${others.map(o => `<label class="wnpc-check" data-search-item data-search-text="${esc(o.name)}">${esc(o.name)} <select name="st.${o.id}" data-fixed>${[-3, -2, -1, 0, 1, 2, 3].map(v => `<option value="${v}"${v === F.standingOf(f, o.id) ? " selected" : ""}>${v > 0 ? "+" : ""}${v}</option>`).join("")}</select></label>`).join("")}</div></fieldset>` : ""}
+      <fieldset><legend>Members</legend>${searchBox(".wnpc-members", "Search people…", "Search members")}<div class="wnpc-members wnpc-list">
+        ${[...npcs, ...pcs].map(a => `<label class="wnpc-check" data-search-item data-search-text="${esc(a.name)}"><input type="checkbox" name="m.${a.id}" ${f.members.includes(a.id) ? "checked" : ""}> ${esc(a.name)}${a.hasPlayerOwner ? " (player)" : ""}</label>`).join("")}</div></fieldset>
+      <fieldset><legend>Places held (its domain)</legend>${searchBox(".wnpc-held", "Search places…", "Search places")}<div class="wnpc-held wnpc-list">
+        ${places.map(p => `<label class="wnpc-check" data-search-item data-search-text="${esc(p.name)}"><input type="checkbox" name="p.${p.id}" ${f.places.includes(p.id) ? "checked" : ""}> ${esc(p.name)}</label>`).join("")}</div>
+        ${places.length ? "" : `<p class="wodx-quiet">No places are tagged yet: tag them in WoDX places.</p>`}</fieldset>
+      <div class="wodx-field"><label>Notes</label><textarea name="notes" rows="2">${esc(f.notes)}</textarea></div></div>`;
+    const data = await foundry.applications.api.DialogV2.wait({window: {title: `Faction: ${f.name}`, resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 860, height: "auto"}, content,
+      buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object}, {action: "cancel", label: "Cancel"}], rejectClose: false});
+    if ( !data || data === "cancel" ) return null;
+    const next = {id: f.id, name: String(data.name || f.name).trim(), kind: data.kind, ruler: !!data.ruler, secret: !!data.secret, dormant: !!data.dormant, leader: data.leader || null,
+      members: Object.keys(data).filter(k => k.startsWith("m.") && data[k]).map(k => k.slice(2)),
+      places: Object.keys(data).filter(k => k.startsWith("p.") && data[k]).map(k => k.slice(2)),
+      assets: {influence: {}}, standing: {}, goals: [], guard: f.guard, notes: data.notes ?? ""};
+    for ( const k of ["herd", "resources", "status", "retainers", "contacts", "domain", "security"] ) next.assets[k] = num(data[`a.${k}`]);
+    for ( const k of Object.keys(era.spheres) ) if ( num(data[`i.${k}`]) ) next.assets.influence[k] = num(data[`i.${k}`]);
+    for ( const [k, v] of Object.entries(f.assets.influence) ) if ( !(k in era.spheres) ) next.assets.influence[k] = v; // another era's spheres are kept
+    for ( const o of others ) if ( num(data[`st.${o.id}`]) ) next.standing[o.id] = num(data[`st.${o.id}`]);
+    for ( let k = 0; data[`g${k}.move`] !== undefined; k++ ) if ( data[`g${k}.move`] ) next.goals.push({move: data[`g${k}.move`], target: data[`g${k}.target`] || null, sphere: data[`g${k}.sphere`] || null, place: data[`g${k}.place`] || null, note: data[`g${k}.note`] ?? ""});
+    if ( next.leader && !next.members.includes(next.leader) ) next.members.unshift(next.leader);
+    const norm = F.normFaction(next);
+    await mutate(st => {
+      const i = st.factions.findIndex(x => x.id === norm.id);
+      if ( i >= 0 ) st.factions[i] = norm; else st.factions.push(norm);
+      // one ruler at a time
+      if ( norm.ruler ) for ( const x of st.factions ) if ( x.id !== norm.id ) x.ruler = false;
+      // a place belongs to one faction
+      for ( const x of st.factions ) if ( x.id !== norm.id ) x.places = x.places.filter(p => !norm.places.includes(p));
+      st.lastTurn ??= game.time.worldTime;
+      return {state: st};
+    });
+    return norm;
+  }
+  async function deleteFaction(id) {
+    const f = state().factions.find(x => x.id === id);
+    if ( !f ) return false;
+    const ok = await foundry.applications.api.DialogV2.confirm({window: {title: "Delete a faction"}, classes: ["wodx-dialog", "wodx-npc-dialog"],
+      content: `<p>Delete <b>${esc(f.name)}</b>? Its members and places are not touched, only the faction's record.</p>`});
+    if ( !ok ) return false;
+    await mutate(st => { st.factions = st.factions.filter(x => x.id !== id); for ( const x of st.factions ) delete x.standing[id]; for ( const b of st.breaches ) if ( b.faction === id ) b.faction = null; return {state: st}; });
+    return true;
+  }
+  async function reportDialog() {
+    if ( !game.user.isGM ) return null;
+    const s = state(), list = placeList();
+    const content = `<div class="wnpc-report">
+      <div class="wodx-field"><label>What was seen</label><input type="text" name="event" placeholder="a body in the lane with its throat torn"></div>
+      <div class="wodx-field"><label>Severity</label><select name="severity" data-fixed>${opt(F.SEVERITY, 1)}</select></div>
+      ${list.length > 5 ? searchBox(".wnpc-report select[name=place]", "Search places…", "Search places") : ""}
+      <div class="wodx-field"><label>Where</label><select name="place"><option value="">Nowhere in particular</option>${list.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")}</select></div>
+      ${s.factions.length > 5 ? searchBox(".wnpc-report select[name=faction]", "Search factions…", "Search factions") : ""}
+      <div class="wodx-field"><label>Blamed on</label><select name="faction"><option value="">No faction</option>${s.factions.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join("")}</select></div></div>`;
+    const data = await foundry.applications.api.DialogV2.wait({window: {title: "Report a breach"}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 560, height: "auto"}, content,
+      buttons: [{action: "ok", label: "Follow it", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object}, {action: "cancel", label: "Cancel"}], rejectClose: false});
+    if ( !data || data === "cancel" ) return null;
+    return reportBreach({severity: num(data.severity) || 1, place: data.place || null, faction: data.faction || null, event: String(data.event || "Something was seen").trim()});
+  }
+  async function setBreach(id, st) {
+    await mutate(s => { const b = s.breaches.find(x => x.id === id); if ( b ) b.state = st; if ( b && st === "live" ) { b.lastStep = game.time.worldTime; b.lastFed = game.time.worldTime; } return {state: s}; });
+  }
+  async function deleteBreach(id) {
+    const ok = await foundry.applications.api.DialogV2.confirm({window: {title: "Forget a rumour"}, classes: ["wodx-dialog", "wodx-npc-dialog"], content: "<p>Delete this rumour's record?</p>"});
+    if ( ok ) await mutate(s => { s.breaches = s.breaches.filter(b => b.id !== id); return {state: s}; });
+    return ok;
+  }
+  /** Set the hunting area of a place (flags.wodx-npc.hunt.area on its scene or region). */
+  async function setArea(placeId, area) {
+    const doc = sceneOf(placeId);
+    if ( !doc ) return null;
+    return doc.update(area ? {[`flags.${MOD}.hunt`]: {area}} : {[`flags.${MOD}.hunt`]: {area: null}});
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  The Factions window                                                */
+  /* ------------------------------------------------------------------ */
+
+  let appClass = null;
+  function FactionsAppClass() {
+    if ( appClass ) return appClass;
+    const {ApplicationV2} = foundry.applications.api;
+    class FactionsApp extends ApplicationV2 {
+      static DEFAULT_OPTIONS = {
+        id: "wodx-npc-factions", classes: ["wodx", "wnpc-factions"],
+        window: {title: "WoDX factions", icon: "fa-solid fa-chess-rook", resizable: true},
+        position: {width: 900, height: 700},
+        actions: {
+          add: () => editFaction(), edit: (ev, t) => editFaction(t.dataset.id), del: (ev, t) => deleteFaction(t.dataset.id),
+          turn: () => runTurns({reason: "asked for by the Storyteller", forced: true}), session: () => endSession(),
+          roth: () => setupRothenstein(), hunt: () => huntDialog(), report: () => reportDialog(),
+          contain: (ev, t) => setBreach(t.dataset.id, "contained"), stop: (ev, t) => setBreach(t.dataset.id, "stopped"), resume: (ev, t) => setBreach(t.dataset.id, "live"),
+          forget: (ev, t) => deleteBreach(t.dataset.id), settings: FactionsApp.#onSettings
+        }
+      };
+      static #instance;
+      static open() {
+        if ( !game.user.isGM ) return null;
+        const height = Math.max(360, Math.min(720, window.innerHeight - 120)), width = Math.max(480, Math.min(920, window.innerWidth - 40));
+        this.#instance ??= new FactionsApp({position: {width, height}});
+        return this.#instance.render({force: true});
+      }
+      static refresh() { if ( this.#instance?.rendered ) this.#instance.render(); }
+      async _renderHTML() {
+        const s = state(), n = names(s), era = eraInfo();
+        const dots = f => {
+          const a = f.assets, bits = [];
+          for ( const k of ["herd", "resources", "status", "retainers", "contacts"] ) if ( a[k] ) bits.push(`${F.ASSETS[k]} ${a[k]}`);
+          if ( a.domain || a.security ) bits.push(`Domain ${a.domain}${a.security ? ` (+${a.security} security)` : ""}`);
+          const inf = Object.entries(a.influence).map(([k, v]) => `${n.sphere(k)} ${v}`);
+          if ( inf.length ) bits.push(`Influence: ${inf.join(", ")}`);
+          return bits.join("; ") || "No Backgrounds";
+        };
+        const stand = f => Object.entries(f.standing).map(([k, v]) => `${n.faction(k)} ${v > 0 ? "+" : ""}${v}`).join(", ") || "neutral to all";
+        const rows = s.factions.map(f => `<tr data-search-text="${esc(`${f.name} ${F.KINDS[f.kind]}`)}">
+          <td class="name"><b>${esc(f.name)}</b>${f.ruler ? " <span class=\"wodx-tag\">rules</span>" : ""}${f.dormant ? " <span class=\"wodx-tag\">dormant</span>" : ""}${f.secret ? " <span class=\"wodx-tag\">secret</span>" : ""}<br><span class="wodx-quiet">${esc(F.KINDS[f.kind])}</span></td>
+          <td>${esc(f.leader ? n.actor(f.leader) : "None")}<br><span class="wodx-quiet">${f.members.length} member${f.members.length === 1 ? "" : "s"}, ${f.places.length} place${f.places.length === 1 ? "" : "s"}</span></td>
+          <td>${esc(dots(f))}<br><span class="wodx-quiet">${esc(stand(f))}</span></td>
+          <td class="wnpc-tools"><button type="button" data-action="edit" data-id="${f.id}">Edit</button> <button type="button" data-action="del" data-id="${f.id}">Delete</button></td></tr>`).join("");
+        const brows = s.breaches.map(b => `<tr data-search-text="${esc(`${b.event} ${b.byName}`)}">
+          <td>${esc(b.event || "A rumour")}<br><span class="wodx-quiet">${esc(b.place ? n.place(b.place) : "")}${b.faction ? ` · blamed on ${esc(n.faction(b.faction))}` : ""}</span></td>
+          <td>${b.severity}: ${esc((F.SEVERITY[b.severity] ?? "over").split(":")[0])}<br><span class="wodx-quiet">${esc(F.STAGES[b.stage])}; heard in ${b.heard.length} place${b.heard.length === 1 ? "" : "s"}</span></td>
+          <td>${esc({live: "Spreading", contained: "Contained", stopped: "Stopped by the Storyteller", over: "Over"}[b.state])}</td>
+          <td class="wnpc-tools">${b.state === "live" ? `<button type="button" data-action="contain" data-id="${b.id}">Contain</button> <button type="button" data-action="stop" data-id="${b.id}">Stop</button>` : `<button type="button" data-action="resume" data-id="${b.id}">Resume</button>`}
+            <button type="button" data-action="forget" data-id="${b.id}">Forget</button></td></tr>`).join("");
+        const last = s.lastTurn === null ? "No turn has run yet." : `Turn ${s.turns} ran; the next is due ${setting("turnDays") ?? F.TURN_DAYS} days after the last.`;
+        const div = document.createElement("div");
+        div.className = "wodx-body";
+        div.innerHTML = `<div class="wodx-top">
+          <p>Each faction may act once a week of world time: when a skip ends, when the week passes, or when you end a session. ${esc(mode() === "auto" ? "Auto: small changes apply with an Undo; big ones wait in the approval queue." : mode() === "off" ? "Off: nothing runs by itself; Run a turn still asks you." : "Suggest: every result waits in the approval queue.")} ${esc(last)} The era is ${esc(era.name)}; its hunters are ${esc(era.hunters)}.</p>
+          <div class="wodx-buttons">
+            <button type="button" data-action="add"><i class="fa-solid fa-plus"></i> New faction</button>
+            <button type="button" data-action="turn" title="Every faction takes a turn now">Run a turn</button>
+            <button type="button" data-action="session" title="The end of a session: every faction takes a turn">End the session</button>
+            <button type="button" data-action="hunt">Hunting…</button>
+            <button type="button" data-action="report">Report a breach…</button>
+            ${!s.factions.length && hasRothenstein() ? `<button type="button" data-action="roth">Rothenstein's factions</button>` : ""}
+            <button type="button" data-action="settings" title="Mode and days between turns">Settings…</button>
+          </div></div>
+          <div class="wodx-scroll wodx-table-wrap">
+          <h3>Factions</h3>${s.factions.length ? `${searchBox("table.wnpc-faction-table", "Search factions…", "Search factions")}<table class="wodx-table wnpc-faction-table"><thead><tr><th>Faction</th><th>Leader</th><th>Backgrounds and standing</th><th></th></tr></thead><tbody>${rows}</tbody></table>` : `<p class="wodx-quiet">No factions yet.</p>`}
+          <h3>Rumours of breaches</h3>${s.breaches.length ? `${searchBox("table.wnpc-breach-table", "Search rumours…", "Search rumours")}<table class="wodx-table wnpc-breach-table"><thead><tr><th>What</th><th>Severity and reach</th><th>State</th><th></th></tr></thead><tbody>${brows}</tbody></table>` : `<p class="wodx-quiet">No rumours. A breach recorded in WoDX Actions' Masquerade ledger starts one, or Report a breach.</p>`}
+          </div>`;
+        return div;
+      }
+      _replaceHTML(result, content) { content.replaceChildren(result); }
+      static async #onSettings() {
+        const content = `<div class="wodx-field"><label>Mode</label><select name="mode" data-fixed>${opt({suggest: "Suggest (everything to the approval queue)", auto: "Auto (small changes apply, with an undo card)", off: "Off"}, mode())}</select></div>
+          <div class="wodx-field"><label>Days between turns</label><input type="number" name="days" min="1" max="90" value="${setting("turnDays") ?? F.TURN_DAYS}"></div>`;
+        const data = await foundry.applications.api.DialogV2.wait({window: {title: "Faction settings"}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 480, height: "auto"}, content,
+          buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object}, {action: "cancel", label: "Cancel"}], rejectClose: false});
+        if ( !data || data === "cancel" ) return;
+        await game.settings.set(MOD, "factionMode", data.mode);
+        await game.settings.set(MOD, "turnDays", Math.max(1, Math.min(90, num(data.days) || F.TURN_DAYS)));
+        FactionsApp.refresh();
+      }
+    }
+    return (appClass = FactionsApp);
+  }
+  /** The end of a session: every faction takes a turn. */
+  async function endSession() { return runTurns({reason: "the end of the session", forced: true}); }
+
+  /* ------------------------------------------------------------------ */
+  /*  Hooks                                                              */
+  /* ------------------------------------------------------------------ */
+
+  let lastDay = null;
+  function hooks() {
+    Hooks.on("wodxChronicleReady", () => registerHandler());
+    Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) onClock("skip").catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("updateWorldTime", now => {
+      if ( !isActiveGM() || skipping() ) return;
+      const day = Math.floor(now / 86400);
+      if ( lastDay === null ) { lastDay = day; return; }
+      if ( day === lastDay ) return;
+      lastDay = day;
+      onClock("clock").catch(e => console.error(`${MOD} |`, e));
+    });
+    Hooks.on("wodxBreach", p => { onActionsBreach(p).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
+    Hooks.on("renderChatMessageHTML", (msg, el) => {
+      const fl = msg.flags?.[MOD];
+      if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart ) return;
+      el.querySelectorAll("button.wnpc-f-undo").forEach(b => {
+        if ( !game.user.isGM ) { b.remove(); return; }
+        b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoCard(msg, b.dataset.key || "factionTurn").catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
+      });
+    });
+  }
+
+  return {registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
+    setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
+    FactionsAppClass, openFactions: () => FactionsAppClass().open(), rules: F, ROTHENSTEIN};
+}
