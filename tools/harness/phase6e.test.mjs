@@ -9,17 +9,24 @@ import {readFileSync} from "node:fs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const TR = await import(join(root, "modules/wodx-actions/scripts/theme-rules.js"));
 const {MENUS} = await import(join(root, "modules/wodx-actions/scripts/profile-menus.js")).catch(() => ({MENUS: null}));
-const {RES} = await import(join(root, "modules/wodx-actions/scripts/profiles.js"));
+const RESMOD = await import(join(root, "modules/wodx-actions/scripts/profiles.js"));
+const {RES} = RESMOD;
 const theme = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));
 const css = readFileSync(join(root, "modules/wodx-chronicle/styles/wodx-theme.css"), "utf8");
 
-test("only the three lines under review wear their own look", () => {
-  assert.deepEqual(TR.LINE_LOOK, ["kindred", "wraith", "hunter"]);
+test("every line wears the look; each line but mortals has its own accent", () => {
+  const {PROFILES} = RESMOD;
+  assert.deepEqual([...TR.LINE_LOOK].sort(), Object.keys(PROFILES).sort());
   assert.equal(TR.lineClass("kindred"), "wodx-line-kindred");
-  assert.equal(TR.lineClass("lupine"), "");
+  assert.equal(TR.lineClass("nobody"), "");
+  for (const k of TR.LINE_LOOK) {
+    assert.ok(TR.LINE_MARK[k], `${k} has a mark`);
+    if (k === "mortal") continue;
+    for (const tone of ["light", "dark"]) assert.ok(css.includes(`[data-wodx-tone="${tone}"] .wodx-line-${k} {`), `${k} has a ${tone} accent`);
+  }
 });
 
-test("every menu button of the three lines is placed and described", () => {
+test("every menu button of every line is placed and described", () => {
   if (!MENUS) return; // profile-menus needs Foundry globals in some setups
   for (const kind of TR.LINE_LOOK) {
     const specs = MENUS[kind].sections.flatMap(([, b]) => b.map(x => x[0]));
@@ -101,7 +108,7 @@ test("one card layout keeps the h3 and the vta-card class every script looks for
   assert.ok(html.indexOf("vta-change") < html.indexOf("vta-ref"), "what changed, then the page");
   assert.match(html, /<footer class="vta-ref">p\. 345<\/footer><\/div>$/);
   // A line not rolled out yet: no line class, no mark
-  assert.ok(!TR.cardLayout({title: "x", body: "", line: "lupine"}).includes("wodx-line"));
+  assert.ok(!TR.cardLayout({title: "x", body: "", line: "nobody"}).includes("wodx-line"));
   // Late changes join a posted card before its footer
   const later = TR.withChanges(html, [{label: "Blood", before: 8, after: 7, max: 10}]);
   assert.ok(later.indexOf("Blood") < later.indexOf("vta-ref") && (later.match(/vta-change"/g) ?? []).length === 1);

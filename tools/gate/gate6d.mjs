@@ -49,7 +49,7 @@ export async function run() {
     const voiceU = players[0], ownerU = players[1] ?? players[0];
     try {
         await step("versions", async () => {
-            ok("versions", A().version === "3.5.0" && !!A().innerVoice && typeof game.modules.get("wodx-chronicle").api.approvals?.decide === "function",
+            ok("versions", /^3\.([5-9]|\d\d)\./.test(A().version) && !!A().innerVoice && typeof game.modules.get("wodx-chronicle").api.approvals?.decide === "function",
                 { actions: A().version, chronicle: game.modules.get("wodx-chronicle")?.version, voice: voiceU?.name, owner: ownerU?.name });
         });
         if (!voiceU) { ok("players", false, { error: "No player user to stand in as the voice" }); return; }

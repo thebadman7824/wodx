@@ -11,4 +11,4 @@
 - [x] Harness: phase6e.test.mjs; all suites pass
 - [x] Gate 6e in Foundry (tools/gate/gate6e.mjs): 8/8, 2026-11-08
 - [x] Ben reviews the Kindred, wraith and hunter menus and cards and approves the look (2026-11-08)
-- [ ] Then: roll the look out to the other lines (LINE_LOOK) and group their menus by intent
+- [x] Then: the look rolled out to every line, menus grouped by intent (Actions 3.6.1, 2026-11-08)

@@ -358,3 +358,9 @@
 
 ### Phase 6e closed, 2026-11-08
 Ben approved the look and closed the phase. Still open: the other lines get their colours and their menus grouped by intent (LINE_LOOK, MENU_PLAN), and Foundry shows Chronicle 0.3.0 after its next restart.
+
+### The look for every line, 2026-11-08: WoDX Actions 3.6.1, Chronicle 0.3.1 (Ben's request)
+- LINE_LOOK now lists every profile: ghoul, mortal, Garou and Fera, mage, changeling, spirit, creature, demon, mummy and Exalted join Kindred, wraith and hunter. Each has a line mark and an intent plan (Act, Resist, Recover, Storyteller tools, the scene strip), and every button has a description.
+- New accents: ghoul (wine), spirit (Umbral blue), creature (moss), Exalted (sun gold); the lupine, mage, changeling, demon and mummy accents were already defined. Mortals wear the era's accent. The contrast test covers them all.
+- Demon, mummy and Exalted menus now get "Voices I play" like the rest (their menus were made after the voice loop).
+- UI fit passes in the Dark Ages kit and in the Modern kit at 150% text. Gate 6e gains a step for the other lines (9 steps); gate 6d accepts later versions.

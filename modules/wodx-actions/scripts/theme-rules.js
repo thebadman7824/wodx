@@ -12,14 +12,15 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 /* ------------------------------------------------------------------ */
 
 /**
- * The lines restyled so far. The 6e gate: the Storyteller approves the Kindred, wraith and hunter look in play before
- * it is rolled out to the other lines. A line not listed keeps the era's own accent.
+ * The lines in the WoDX look. Kindred, wraith and hunter came first (the 6e gate, approved by Ben on 8 November 2026);
+ * the rest followed. A line with no accent in the stylesheet (mortals) wears the era's own.
  */
-export const LINE_LOOK = ["kindred", "wraith", "hunter"];
+export const LINE_LOOK = ["kindred", "ghoul", "mortal", "hunter", "lupine", "mage", "fae", "wraith", "spirit", "beast", "demon", "mummy", "exalted"];
 /** The class a window or card for this profile carries ("" for a line not rolled out yet). */
 export const lineClass = kind => LINE_LOOK.includes(kind) ? `wodx-line-${kind}` : "";
 /** The mark in a card's header: one glyph a line is known by (shown in the line's accent). */
-export const LINE_MARK = { kindred: "✠", wraith: "☾", hunter: "✶" };
+export const LINE_MARK = { kindred: "✠", ghoul: "♦", mortal: "◇", hunter: "✶", lupine: "◐", mage: "✧", fae: "❀", wraith: "☾",
+    spirit: "❂", beast: "✤", demon: "✹", mummy: "☥", exalted: "☀" };
 
 /* ------------------------------------------------------------------ */
 /*  Menus grouped by intent                                            */
@@ -54,7 +55,45 @@ export const MENU_PLAN = {
         recover: ["api:healing", "uses:willpower", "api:bankConviction"],
         st: ["api:imbue"],
         scene: ["api:hunterSheet", "api:endScene", "api:innerVoice", "api:voices", "rules:mortal"]
-    }
+    },
+    ghoul: {
+        act: ["action", "api:useDiscipline", "uses:blood", "api:ghoulBlood", "api:seduction", "api:bloodOath"],
+        resist: ["api:frenzy", "api:hazard"],
+        recover: ["api:healing", "uses:willpower"],
+        scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:ghoul"]
+    },
+    mortal: {
+        act: ["action", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:kinfolk"],
+        resist: ["api:hazard"],
+        recover: ["api:healing", "uses:willpower"],
+        st: ["api:imbue"],
+        scene: ["api:endScene", "api:voices", "rules:mortal"]
+    },
+    lupine: {
+        act: ["action", "api:useGift", "api:shiftForm", "api:spendRage", "preset:primalurge", "preset:trackscent", "api:useFetish", "api:performRite",
+            "api:summonSpirit", "api:curse", "api:learnGift", "api:chiminage", "api:accomplishment"],
+        resist: ["api:rageRoll", "api:garouEndFrenzy", "api:hazard", "api:battleScar"],
+        recover: ["regen", "api:healing", "api:remainActive", "api:meditate", "uses:willpower"],
+        st: ["api:awardRenown", "api:delirium"],
+        scene: ["api:endScene", "api:innerVoice", "api:voices"]
+    },
+    mage: {
+        act: ["action", "cast", "uses:quintessence", "preset:researchmage", "api:hedgeMagic", "api:numina", "api:trueFaith"],
+        resist: ["uses:paradox", "api:hazard"],
+        recover: ["api:healing", "uses:willpower"],
+        scene: ["api:endScene", "api:voices", "rules:mage"]
+    },
+    fae: {
+        act: ["action", "cantrip", "uses:glamour", "api:seduction"],
+        resist: ["uses:banality", "api:hazard"],
+        recover: ["uses:willpower"],
+        scene: ["api:endScene", "api:voices", "rules:fae"]
+    },
+    spirit: { act: ["action", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
+    beast: { act: ["action", "preset:trackscent", "preset:sneaking"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices", "rules:beast"] },
+    demon: { act: ["action", "uses:faith"], resist: ["uses:torment", "api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
+    mummy: { act: ["action", "uses:sekhem"], resist: ["uses:balance", "api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
+    exalted: { act: ["action", "uses:essence"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] }
 };
 
 /** What each button does, shown on hover, on keyboard focus and in the menu's hint line. Line overrides first. */
@@ -113,7 +152,53 @@ export const DESC = {
     "api:healing": "Heal wounds with time, care or medicine",
     "api:bankConviction": "Bank Conviction for a cash-in at the next stage",
     "api:imbue": "The Imbuing: make this mortal one of the imbued (1999 on)",
-    "rules:mortal": "The mortal rules at a glance, with page references"
+    "rules:mortal": "The mortal rules at a glance, with page references",
+    // Ghouls
+    "uses:blood": "Spend vitae to heal or to raise a Physical Attribute",
+    "api:ghoulBlood": "Drinking vitae, withdrawal, and the day without it (V20 ghouls)",
+    "rules:ghoul": "The ghoul rules at a glance, with page references",
+    // Mortals
+    "api:kinfolk": "Kin to a Garou tribe: immune to the Delirium",
+    // Garou and Fera
+    "preset:primalurge": "Heightened senses: Perception + Primal-Urge",
+    "preset:trackscent": "Follow a trail by scent: Perception + Survival",
+    "api:rageRoll": "A Rage roll: the frenzy test",
+    "api:spendRage": "Spend Rage for extra actions, or regain it",
+    "api:garouEndFrenzy": "Come back out of frenzy",
+    "api:remainActive": "Below Incapacitated, rise on Rage: once a scene",
+    "api:useGift": "Use a Gift: its roll, cost and effect",
+    "api:learnGift": "Learn a Gift from a spirit or a teacher",
+    "api:useFetish": "Activate a fetish or a talen",
+    "api:meditate": "Meditate to regain Gnosis: once a day",
+    "api:performRite": "Perform a rite: its roll and time",
+    "api:summonSpirit": "Call a spirit from the Umbra",
+    "api:chiminage": "Record a debt owed to a spirit or a caern, or one paid",
+    "api:shiftForm": "Change form: the new form's Attributes and difficulty",
+    "regen": "Regenerate a level of damage this turn",
+    "api:battleScar": "A Battle Scar from a grievous wound, and its Glory",
+    "api:accomplishment": "The Rite of Accomplishment: ten temporary Renown become one permanent",
+    "api:awardRenown": "Award Renown for deeds that others heard of",
+    "api:curse": "The Curse: how the targeted human reacts",
+    "api:delirium": "The Delirium: how the witnesses react to a Crinos, and what they remember",
+    // Mages
+    "preset:researchmage": "Research and lore: Intelligence + Occult or Enigmas",
+    "cast": "Cast an effect: the Arete roll, the difficulty from the highest Sphere",
+    "uses:quintessence": "Spend or regain Quintessence",
+    "uses:paradox": "Paradox gained, or shed after a Backlash",
+    "rules:mage": "The mage rules at a glance, with page references",
+    // Changelings
+    "cantrip": "Weave a cantrip: Art, Realm and Bunk",
+    "uses:glamour": "Spend or regain Glamour",
+    "uses:banality": "Banality gained, or a Banality check",
+    "rules:fae": "The changeling rules at a glance, with page references",
+    // Spirits, creatures and the lines still to come
+    "uses:essence": "Spend or regain Essence",
+    "preset:sneaking": "Sneak or stalk: Dexterity + Stealth",
+    "rules:beast": "The creature rules at a glance",
+    "uses:faith": "Spend or regain Faith",
+    "uses:torment": "Torment: a surge, or Torment gained",
+    "uses:sekhem": "Spend or regain Sekhem",
+    "uses:balance": "A Balance check, or Balance shifted"
 };
 
 /**

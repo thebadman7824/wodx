@@ -121,19 +121,20 @@ export const MENUS = {
     }
 };
 
-/* The inner voice (Phase 6d): the voiced lines get its panel; everyone gets the list of voices they play. */
-for (const [k, m] of Object.entries(MENUS)) {
-    const scene = m.sections.find(([t]) => t === "Scene");
-    if (!scene) continue;
-    if (["kindred", "ghoul", "lupine", "wraith", "hunter"].includes(k)) scene[1].unshift(["api:innerVoice", "The inner voice", "fa-comment-dots"]);
-    scene[1].push(["api:voices", "Voices I play", "fa-theater-masks"]);
-}
 // Generic menus for the profiles without a sourcebook in the library: roll, their own traits, scene.
 for (const [k, res] of [["demon", [["uses:faith", "Faith", "fa-cross"], ["uses:torment", "Torment", "fa-fire"]]],
     ["mummy", [["uses:sekhem", "Sekhem", "fa-sun"], ["uses:balance", "Balance", "fa-balance-scale"]]],
     ["exalted", [["uses:essence", "Essence", "fa-sun"]]]]) {
     MENUS[k] = { sections: [["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"]]], ["Traits", res],
         ["Danger", [["api:hazard", "Fire / fall", "fa-burn"]]], ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]] };
+}
+
+/* The inner voice (Phase 6d): the voiced lines get its panel; everyone gets the list of voices they play. */
+for (const [k, m] of Object.entries(MENUS)) {
+    const scene = m.sections.find(([t]) => t === "Scene");
+    if (!scene) continue;
+    if (["kindred", "ghoul", "lupine", "wraith", "hunter"].includes(k)) scene[1].unshift(["api:innerVoice", "The inner voice", "fa-comment-dots"]);
+    scene[1].push(["api:voices", "Voices I play", "fa-theater-masks"]);
 }
 
 /** Pool presets added to the Action dialog by the profile menus. */

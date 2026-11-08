@@ -316,7 +316,15 @@ body.wodx-look[data-wodx-tone="light"] .wodx-line-wraith { --wx-accent: #135a5b;
 body.wodx-look[data-wodx-tone="dark"] .wodx-line-wraith { --wx-accent: #4cc9be; --wx-on-accent: #061615; --wx-ash: #a9a9a1; }
 body.wodx-look[data-wodx-tone="light"] .wodx-line-hunter { --wx-accent: #27384a; --wx-on-accent: #ffffff; --wx-glare: 0 0 0 transparent; }
 body.wodx-look[data-wodx-tone="dark"] .wodx-line-hunter { --wx-accent: #f4f8fc; --wx-on-accent: #0b0f14; --wx-glow: 0 0 8px rgba(255, 255, 255, 0.75), 0 0 2px #fff; }
-/* Accents for the lines that follow once the look is approved (6e gate): defined now, used when rolled out */
+/* The other lines (rolled out after Ben approved the look, 8 November 2026). Mortals wear the era's accent. */
+body.wodx-look[data-wodx-tone="light"] .wodx-line-ghoul { --wx-accent: #7a1d3a; --wx-on-accent: #fff5f8; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-ghoul { --wx-accent: #e8789a; --wx-on-accent: #1a0710; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-spirit { --wx-accent: #2b4a78; --wx-on-accent: #f4f8ff; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-spirit { --wx-accent: #9cc3ff; --wx-on-accent: #08111f; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-beast { --wx-accent: #3b571c; --wx-on-accent: #f6fbef; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-beast { --wx-accent: #a6d36a; --wx-on-accent: #0f1805; }
+body.wodx-look[data-wodx-tone="light"] .wodx-line-exalted { --wx-accent: #664a00; --wx-on-accent: #fffaec; }
+body.wodx-look[data-wodx-tone="dark"] .wodx-line-exalted { --wx-accent: #ffcf4d; --wx-on-accent: #1c1400; }
 body.wodx-look[data-wodx-tone="light"] .wodx-line-lupine { --wx-accent: #6a4a2c; --wx-on-accent: #fff8ef; }
 body.wodx-look[data-wodx-tone="dark"] .wodx-line-lupine { --wx-accent: #cdd5df; --wx-on-accent: #121418; }
 body.wodx-look[data-wodx-tone="light"] .wodx-line-mage { --wx-accent: #5a2a8c; --wx-on-accent: #fbf6ff; }
