@@ -99,7 +99,12 @@ test("applying a plan: only ticked changes, and nothing is lost", async () => {
     born: {[game.actors.getName("No Birth Year").id]: 1240}
   });
   assert.equal(api().time.yearOf(game.time.worldTime), 1261);
-  assert.equal(game.actors.size, before + 1, "the heir is the only new sheet; nobody is deleted");
+  // Era advancement (B83): each character with a ticked change is copied first into "WoDX · Before the years"
+  const snaps = [...game.actors].filter(a => a.getFlag(M, "snapshotOf"));
+  const touched = this_plan.rows.filter(row => row.changes.some(c => (row.name === "Hedwig" && c.kind === "heir") || c.checked)).length;
+  assert.equal(snaps.length, touched, "one snapshot per character with a ticked change");
+  assert.ok(snaps.every(s => s.folder?.name === "WoDX · Before the years" && /\(1201\)$/.test(s.name)));
+  assert.equal(game.actors.size - snaps.length, before + 1, "the heir is the only new sheet; nobody is deleted");
   assert.ok([...game.actors].reduce((n, a) => n + a.items.size, 0) >= itemCount, "no item lost");
   assert.equal(api().time.yearOf(api().data.chronology(hedwig).died), 1261);
   assert.equal(hedwig.folder.name, "WoDX · The Dead", "Foundry's actor.folder is the Folder");

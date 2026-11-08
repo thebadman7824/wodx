@@ -117,7 +117,10 @@ export async function runSkipTest() {
   check("Melee 3 kept", Number(e.system.abilities.melee?.value) === 3);
   check("Dominate 3 kept", disciplinesOf(e).some(x => x.name === "Dominate" && x.value === 3));
   const theo = e.items.find(i => i.type === "Trait" && i.name.toLowerCase() === game.i18n.localize("wod.abilities.theology").toLowerCase());
-  check("The medieval Theology is kept", !!theo && Number(theo.system.value) === 3, `${theo?.system?.value}`);
+  // With "Convert Dark Ages Abilities" on (B83) the dots move to Religion and Theology stays on the sheet at 0
+  const religion = Number(e.system.abilities.religion?.value) || 0;
+  check("The medieval Theology is kept (or its 3 dots moved to Religion)", !!theo && (Number(theo.system.value) === 3 || (Number(theo.system.value) === 0 && religion >= 3)),
+    `Theology ${theo?.system?.value}, Religion ${religion}`);
 
   const passed = results.filter(r => r.pass).length;
   const html = `<p>${passed} of ${results.length} checks passed.</p>

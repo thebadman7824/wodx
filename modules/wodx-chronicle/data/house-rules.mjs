@@ -17,6 +17,10 @@ export default {
     {
       "id": "rules",
       "name": "Rules"
+    },
+    {
+      "id": "years",
+      "name": "Passing the years"
     }
   ],
   "switches": [
@@ -84,6 +88,46 @@ export default {
       "default": true,
       "source": "Ben's decision, final review",
       "laterPhase": 3
+    },
+    {
+      "id": "yearsThickBlood",
+      "group": "years",
+      "name": "Thick blood",
+      "hint": "Pass the Years: a vampire may drop a Generation for each full century awake (never below 8th by time), at a dot of Humanity or Road a step. Off follows the books: Generation falls only through diablerie (V20 p. 294).",
+      "default": false,
+      "source": "WoDX choice, B83 (V20 Dark Ages pdf p. 33 calls it a rumour)"
+    },
+    {
+      "id": "yearsMortalDecline",
+      "group": "years",
+      "name": "Mortal decline",
+      "hint": "Pass the Years: at 60, 70 and 80 a mortal body loses a Physical dot, the player's pick.",
+      "default": true,
+      "source": "WoDX choice, B83"
+    },
+    {
+      "id": "yearsMoralityDrift",
+      "group": "years",
+      "name": "Morality drift",
+      "hint": "Pass the Years: for each century awake a vampire rolls Conscience or Conviction at difficulty 7; a failure costs a dot of Humanity or Road. Off follows the books, which test morality only for a sin.",
+      "default": false,
+      "source": "WoDX choice, B83"
+    },
+    {
+      "id": "yearsExperience",
+      "group": "years",
+      "name": "Experience for the years",
+      "hint": "Pass the Years: 1 experience a year awake and active, at most 10 a skip.",
+      "default": true,
+      "source": "WoDX choice, B83"
+    },
+    {
+      "id": "yearsConvertAbilities",
+      "group": "years",
+      "name": "Convert Dark Ages Abilities",
+      "hint": "Pass the Years: leaving the Dark Ages, offer to move each Dark Ages Ability's dots to its later counterpart (Archery to Firearms, Ride to Drive...). The old Ability stays at 0.",
+      "default": true,
+      "source": "WoDX choice, B83"
     }
   ]
 };

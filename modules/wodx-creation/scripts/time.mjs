@@ -3,6 +3,8 @@ import {ghoulBloodMax, bondStage} from "./rules.mjs";
 import {setLineage, setChronology, writeLineageJournal} from "./lineage.mjs";
 import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY, LINE_OF_TYPE, SECONDS_PER_MONTH} from "../data/time.mjs";
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {viewOf, switches as advanceSwitches, applyAdvance, snapshot, recordYears} from "./advance.mjs";
+import {propose} from "./advance-rules.mjs";
 
 /**
  * Pass the Years (Phase 4). A plan lists, for each character, what the years do to them; the Storyteller ticks
@@ -77,7 +79,7 @@ const domitorAlive = a => { const d = domitorOf(a); return !!d && !isDead(d) && 
  * What `years` of time do to every character. Pure: reads the world, writes nothing.
  * @returns {{from, to, fromYear, toYear, years, fromEra, toEra, rows}}
  */
-export function planSkip({from = game.time.worldTime, to, actors = game.actors} = {}) {
+export function planSkip({from = game.time.worldTime, to, actors = game.actors, rules = null} = {}) {
   const fromYear = yearOf(from);
   const toYear = yearOf(to);
   const years = toYear - fromYear;
@@ -86,16 +88,20 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors} 
   const target = eras?.targetEra?.(toYear) ?? {profile: fromEra};
   const toEra = target.profile ?? fromEra;
   const rows = [];
+  const sw = rules ?? advanceSwitches();
 
   for ( const actor of actors ) {
     if ( actor.type === "Group" ) continue; // a coterie or pack ages through its members
+    if ( actor.getFlag?.(MODULE_ID, "snapshotOf") ) continue; // a copy kept from before an earlier skip
     const line = lineOf(actor);
     const l = lineage(actor);
     const c = chronology(actor);
     if ( l.became || isDead(actor) ) continue;
     const notes = [];
     const changes = [];
-    const add = (kind, label, detail, checked, data = {}) => changes.push({id: `${kind}${changes.length}`, kind, label, detail, checked, data});
+    // Change ids go into form field names split on ".", so they carry no dots
+    const add = (kind, label, detail, checked, data = {}, choices = null) => changes.push({id: `${kind.replace(/\W/g, "")}${changes.length}`, kind, label, detail, checked, data,
+      ...(choices ? {choices} : {})});
     const born = Number.isFinite(Number(c.bornYear)) && c.bornYear !== null && c.bornYear !== undefined ? Number(c.bornYear) : null;
 
     if ( line === "mortal" ) {
@@ -165,6 +171,11 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors} 
       if ( bg.length ) notes.push(`Review after ${years} years: ${bg.map(i => `${i.name} ${i.system.value ?? ""}`.trim()).join(", ")} (WoDX choice)`);
     }
 
+    // Each line's advancer (era advancement, B83): the switches' rules, the era crossing and the line's notes
+    const adv = propose(viewOf(actor), {fromYear, toYear, years, awakeYears: years, fromEra, toEra, switches: sw});
+    for ( const ch of adv.changes ) add(ch.kind, ch.label, ch.detail, ch.checked, ch.data, ch.choices ?? null);
+    notes.push(...adv.notes);
+
     if ( !changes.length && !notes.length ) continue;
     rows.push({actorId: actor.id, name: actor.name, line: line ?? actor.type, born, needsBorn: born === null && ["mortal", "ghoul"].includes(line), notes, changes,
       ally: allyOf(actor)?.patron?.name ?? null, pc: !!actor.hasPlayerOwner});
@@ -201,7 +212,7 @@ async function makeHeir(actor, toYear) {
 }
 
 /** Make one accepted change. */
-async function applyChange(actor, change, plan) {
+async function applyChange(actor, change, plan, choice = null) {
   const d = change.data ?? {};
   switch ( change.kind ) {
     case "death": return die(actor, plan.to, "age");
@@ -232,17 +243,23 @@ async function applyChange(actor, change, plan) {
     case "torpor": return setChronology(actor, {torpor: {from: plan.from, to: plan.to, road: d.road}});
     case "translate": return applyTranslation(actor, d.translation);
   }
+  if ( String(change.kind).startsWith("adv.") ) return applyAdvance(actor, change, plan, choice);
   return null;
 }
+
+const isOn = (accept, row, ch) => accept[row.actorId]?.[ch.id] ?? ch.checked;
 
 /**
  * Apply a plan. `accept` maps actor id → change id → true/false (default: each change's own `checked`);
  * `born` maps actor id → birth year to record first. With `dryRun`, only the report is written.
  */
-export async function applyPlan(plan, {accept = {}, born = {}, dryRun = false, label = ""} = {}) {
+export async function applyPlan(plan, {accept = {}, born = {}, choices = {}, dryRun = false, label = ""} = {}) {
   if ( !game.user.isGM ) return null;
   const done = [];
   if ( !dryRun ) {
+    // Snapshot first: every character with a ticked change is copied into "WoDX · Before the years" (B83)
+    const touched = plan.rows.filter(r => r.changes.some(ch => isOn(accept, r, ch))).map(r => game.actors.get(r.actorId)).filter(Boolean);
+    await snapshot(touched, plan);
     for ( const [id, year] of Object.entries(born) ) {
       const a = game.actors.get(id);
       if ( a && Number.isFinite(Number(year)) && String(year) !== "" ) await setChronology(a, {bornYear: Number(year)});
@@ -258,11 +275,17 @@ export async function applyPlan(plan, {accept = {}, born = {}, dryRun = false, l
     const ordered = [...row.changes].sort((a, b) => (a.kind === "heir" ? -1 : 0) - (b.kind === "heir" ? -1 : 0));
     const taken = [];
     for ( const ch of ordered ) {
-      const on = accept[row.actorId]?.[ch.id] ?? ch.checked;
+      const on = isOn(accept, row, ch);
       if ( !on ) continue;
       if ( ch.kind === "ghoulFed" && (accept[row.actorId]?.[row.changes.find(c => c.kind === "vitaeLapses")?.id] ?? row.changes.find(c => c.kind === "vitaeLapses")?.checked) ) continue;
-      if ( !dryRun ) await applyChange(actor, ch, plan);
-      taken.push(ch);
+      const choice = choices[row.actorId]?.[ch.id] ?? ch.data?.choice ?? null;
+      const picked = ch.choices ? {...ch, picked: ch.choices.find(c => c.value === choice)?.label ?? choice} : ch;
+      if ( !dryRun ) await applyChange(actor, ch, plan, choice);
+      taken.push(picked);
+    }
+    if ( !dryRun && !isDead(actor) ) {
+      const slept = taken.some(c => c.kind === "torpor");
+      await recordYears(actor, plan, {torpor: slept});
     }
     done.push({row, taken});
   }
@@ -274,10 +297,10 @@ export async function applyPlan(plan, {accept = {}, born = {}, dryRun = false, l
 /** One page per skip in "WoDX Time Skips". */
 export async function writeReport(plan, done, {dryRun = false} = {}) {
   const body = done.map(({row, taken}) => {
-    const skipped = row.changes.filter(c => !taken.includes(c));
+    const skipped = row.changes.filter(c => !taken.some(t => t.id === c.id));
     return `<h3>${esc(row.name)}</h3>
       ${row.notes.length ? `<ul>${row.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}
-      ${taken.length ? `<p><strong>${dryRun ? "Would change" : "Changed"}:</strong></p><ul>${taken.map(c => `<li>${esc(c.label)}: ${esc(c.detail)}</li>`).join("")}</ul>` : ""}
+      ${taken.length ? `<p><strong>${dryRun ? "Would change" : "Changed"}:</strong></p><ul>${taken.map(c => `<li>${esc(c.label)}${c.picked ? ` (${esc(c.picked)})` : ""}: ${esc(c.detail)}</li>`).join("")}</ul>` : ""}
       ${skipped.length ? `<p class="wodx-quiet">Not taken: ${esc(skipped.map(c => c.label).join("; "))}</p>` : ""}`;
   }).join("");
   const html = `<p>${dryRun ? "Planned, not applied" : "Applied"}: ${plan.years} years, ${esc(dateLabel(plan.from))} to ${esc(dateLabel(plan.to))}.
