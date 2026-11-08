@@ -637,6 +637,32 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
 
 ## To read next
 
-- M20 for the later eras: Arete, Quintessence and Paradox (pp. 329–335), Quiet, and Ch. 10 the Book of Magick
-  (pp. 498–618), to set the Victorian-to-modern mage beside the Dark Ages one.
+- (Done in 6m; see "Mage 20th for the later eras" below.)
 - Then Dark Ages: Fae and Changeling 20th.
+
+## Mage 20th for the later eras (6m, 2026-11-08)
+
+Printed page numbers (pdf − 1). Mechanics only, in WoDX words.
+
+- **Arete and Willpower (p. 329):** the casting roll is Arete dice, and no Sphere above the lower of Arete and permanent
+  Willpower works.
+- **A casting (pp. 501–503):** difficulty is the highest Sphere used + 3 (coincidental), + 4 (vulgar, unwitnessed) or + 5
+  (vulgar, witnessed). The modifiers chart (p. 503) nets ±3 at most, and each Quintessence point spent counts as −1 toward
+  it (3 at most). The difficulty stays within 3 to 10; each point past 10 is a further success needed. Quintessence spent in a
+  turn is limited by the Avatar rating.
+- **Feats (p. 502):** suggested successes 1 (simple) to 20 (godlike).
+- **Degrees (p. 503):** a botch wastes the Effect and brings Paradox; a failure makes another try +1; a partial success is
+  imperfect; three or more past the need is extraordinary.
+- **Paradox gained (p. 502):** vulgar success or failure, 1; a botch, the highest Sphere (coincidental), 1 + it (vulgar) or
+  2 + twice it (witnessed).
+- **Damage and duration (p. 504):** by successes 0, 2, 6, 8, 10, then twice the successes; Forces adds a success for damage.
+  Mind harm is bashing; most is lethal; aggravated with Prime 2 and a Quintessence point, fire or lightning, or a vulgar
+  Pattern unmade. Duration: a turn, a scene, a day, a story, six months.
+- **Backlash (p. 506):** the Storyteller rolls a die a Paradox point at 6; the successes discharge and set the band (a
+  trivial Flaw up to an aggravated Burn and permanent Paradox). The Quiet's depth follows the points discharged.
+- **Staving off (p. 549):** a Willpower point: the Effect fails and the backlash waits for the scene's end, larger.
+- **Shedding (p. 549):** a pool under five fades a point a week without overt magick. Twenty or more is a disaster (p. 333).
+- **The wheel (p. 331):** Quintessence and Paradox share twenty boxes.
+- **Countermagick (p. 545):** a full action; a dot in one attacking Sphere; Arete at 7; each success cancels one. Protecting
+  another (+1) or reflecting (+2) needs Prime 1 and a Quintessence point. Mind magick is resisted with Willpower at 6 (p. 330).
+- **Experience (p. 336)** and creation (p. 250) as in m20-rules.js.

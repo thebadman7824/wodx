@@ -469,3 +469,11 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 
 - Deployed (Backups/wodx-actions-3.9.0-2026-11-08 first; every file checked by MD5). Gates: 6i 13/13, 6j 12/12, 6k 10/10, 6l 10/10. Gate 6l failed two steps on its first run: raising Spite made the inner voice prompt the Storyteller, and that prompt took a dialog answer meant for a step. The gate now turns the voices off while it runs.
 - A slip during the run: a computer-use clipboard write was refused, so an old gate command was pasted instead (sheet gates 2 and 3, which put back every value they change). Gate commands are now short runner files typed into the console.
+
+### Phase 6m, 2026-11-08: WoDX Actions 3.11.0 (Mage 20th for the later eras, B80)
+- Read on the PC: Mage 20th from its text layer. Notes: research/6f-notes.md, "Mage 20th for the later eras".
+- m20-rules.js and m20.js: a casting by Arete against the highest Sphere, coincidental or vulgar, with the modifiers chart, Quintessence and the Avatar's limit; degrees, Paradox gained, damage and duration; the Storyteller's backlash roll and the Quiet; countermagick; Paradox fading a point a week under five.
+- The cast button now picks the engine: Dark Ages mages keep mage-da.js; every other Mage casts by M20.
+- Tests: phase6m (7); 315 pass; UI fit passes.
+- Deployed (Backups/wodx-actions-3.10.0-2026-11-08 first; every file checked by MD5). Gate 6m: 6/6.
+

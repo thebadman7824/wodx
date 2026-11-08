@@ -79,7 +79,8 @@ export const MENU_PLAN = {
     },
     mage: {
         act: ["action", "cast", "uses:quintessence", "preset:researchmage", "api:hedgeMagic", "api:numina", "api:trueFaith"],
-        resist: ["uses:paradox", "api:hazard"],
+        resist: ["api:m20Counter", "uses:paradox", "api:hazard"],
+        st: ["api:m20Backlash"],
         recover: ["api:healing", "uses:willpower"],
         scene: ["api:endScene", "api:voices", "rules:mage"]
     },
@@ -228,6 +229,8 @@ export const DESC = {
     // Mages
     "preset:researchmage": "Research and lore: Intelligence + Occult or Enigmas",
     "cast": "Cast an effect: the Arete roll, the difficulty from the highest Sphere",
+    "api:m20Counter": "Mage 20th: countermagick (Arete at 7), resisting Mind (Willpower), or a Quiet delusion dispelled",
+    "api:m20Backlash": "Mage 20th: the Storyteller's backlash roll of the Paradox pool, or staving it off with Willpower",
     "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
     "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
     "api:daCantrip": "Dark Ages: a cantrip, Dominion + the trait it names, with the Court's Dominion, its hour and its season",

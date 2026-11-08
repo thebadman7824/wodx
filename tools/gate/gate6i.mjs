@@ -63,7 +63,7 @@ export async function run() {
         await step("versions; the House, lores and visage are read from the sheet", async () => {
             dv = await makeDevil();
             const i = A().demonInfo(dv);
-            ok("versions; the House, lores and visage are read from the sheet", /^3\.10\./.test(A().version) && i.house === "devil" && i.lores.flame === 2 && i.lores.radiance === 1 && i.lores.humanity === 1
+            ok("versions; the House, lores and visage are read from the sheet", /^3\.1\d\./.test(A().version) && i.house === "devil" && i.lores.flame === 2 && i.lores.radiance === 1 && i.lores.humanity === 1
                 && i.primary === "flame" && /Nusku/.test(i.visage) && i.faith.perm === 5 && i.torment.perm === 4 && i.virtues.conviction === 2,
                 { actions: A().version, house: i.house, lores: i.lores, primary: i.primary, visage: i.visage, faith: i.faith, torment: i.torment });
         });

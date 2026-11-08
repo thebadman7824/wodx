@@ -54,6 +54,8 @@ import * as UXD from "./mummy.js";
 import * as UR from "./mummy-rules.js";
 import * as OXD from "./orpheus.js";
 import * as ORR from "./orpheus-rules.js";
+import * as ZXD from "./m20.js";
+import * as ZR from "./m20-rules.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -1761,6 +1763,12 @@ function ox() {
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
 }
 
+let ZXE = null;
+/** Mages of the later eras (3.11.0, Phase 6m). */
+function zx() {
+    return ZXE ??= ZXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, spendWillpower, notify: m => ui.notifications.warn(m) });
+}
+
 let QXE = null;
 /** The Kuei-jin (3.10.0, Phase 6j). */
 function qx() {
@@ -2020,10 +2028,11 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.10.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.11.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
-    cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : pm().cast(a); },
+    cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
+    m20Cast: withActor(a => zx().cast(a)), m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor(a => zx().counter(a)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR,
     // Dark Ages mages (3.7.0)
     daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
     daMageInfo: a => mx().info(resolveActor(a)), daFade: () => mx().fadeAll(), daBacklashButton: (msg, what) => mx().onButton(msg, what),
@@ -2178,7 +2187,7 @@ function kindredHooks() {
     Hooks.on("updateWorldTime", () => {
         if (fadeBusy || !game.user.isGM || L.chronicle()?.isSkipping?.()) return;
         fadeBusy = true;
-        mx().fadeAll().then(() => fx().daily()).then(() => dx().daily()).then(() => ux().daily()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
+        mx().fadeAll().then(() => fx().daily()).then(() => dx().daily()).then(() => ux().daily()).then(() => zx().shedAll()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
     });
     const sunRound = new Map();
     Hooks.on("updateCombat", (combat, changed) => {

@@ -384,6 +384,13 @@ game.world.id = worldId;
       tries.push(["A Horror", () => ga.orphHorror({actor: A(op)})], ["Vitality", () => ga.orphVitality({actor: A(op)})], ["Harm to the spook", () => ga.orphHarm({actor: A(op)})],
         ["Spite", () => ga.orphSpite({actor: A(op)})], ["Projection", () => ga.orphProject({actor: A(op)})], ["Orpheus menu", () => ga.menu({actor: A(op)})]);
     }
+    // Phase 6m: a Mage 20th Hermetic with every Sphere
+    {
+      const zm = mk("m20mage00000001", "Dr. Eleanor Vasquez-Albright, adept of House Tytalus", "Mage", {arete: {permanent: 4}, willpower: {permanent: 6, temporary: 6}}, [["av", {name: "Avatar", type: "Feature", system: {type: "wod.types.background", value: 3}}]]);
+      zm.system.spheres = Object.fromEntries(["correspondence", "entropy", "forces", "life", "matter", "mind", "prime", "spirit", "time"].map((k, x) => [k, {value: (x % 4) + 1}]));
+      zm.system.quintessence = {temporary: 5}; zm.system.paradox = {temporary: 3, permanent: 0};
+      tries.push(["Cast an Effect (Mage 20th)", () => ga.m20Cast({actor: A(zm)})], ["Paradox backlash", () => ga.m20Backlash({actor: A(zm)})], ["Countermagick", () => ga.m20Counter({actor: A(zm)})]);
+    }
     tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
       ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],
