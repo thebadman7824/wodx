@@ -383,3 +383,4 @@ Ben approved the look and closed the phase. Still open: the other lines get thei
 
 ### Phase 7a closed, 2026-11-08
 Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the sheets were made with their Nature, Demeanor, trade and note, every Attribute, Ability, Willpower and Dark Ages Secondary Ability as rolled, and the ghoul of Ilse with its blood pool and Potence.
+- Relettered (B64): 7b NPC profiles and combat tactics, 7c movement and routines, 7d factions and domains, 7e the open world.
