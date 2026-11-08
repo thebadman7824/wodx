@@ -29,7 +29,16 @@ const set = (root, name, value) => {
 };
 const lastMsg = () => game.messages.contents.at(-1);
 const text = m => String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-async function untilMsg(after, ms = 5000) { const t = Date.now(); while (Date.now() - t < ms) { if (game.messages.size > after) return lastMsg(); await sleep(100); } return null; }
+/** The first WoDX card posted after message index `after` (other modules' messages, such as dice trackers, are skipped). */
+async function untilMsg(after, ms = 6000) {
+    const t = Date.now();
+    while (Date.now() - t < ms) {
+        const m = game.messages.contents.slice(after).find(x => /vta-card/.test(x.content ?? ""));
+        if (m) return m;
+        await sleep(100);
+    }
+    return null;
+}
 async function upload() {
     const file = new File([JSON.stringify(R, null, 1)], "gate6c-result.json", { type: "application/json" });
     await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
@@ -58,9 +67,21 @@ async function makePack() {
     const agnes = await mk("Sister Agnes (mortal)", "Mortal", { advantages: { willpower: { permanent: 5, temporary: 5 }, faith: { permanent: 3, temporary: 3 } } }, [
         { name: "Psychometry", type: "Power", system: { type: "wod.types.numina", value: 3 } }, { name: "Hellfire", type: "Power", system: { type: "wod.types.numina", value: 3 } }]);
     const greta = await mk("Greta Lenz (ghoul)", "Mortal", { advantages: { willpower: { permanent: 4, temporary: 4 }, bloodpool: { temporary: 3, max: 10 } } }, []);
-    // The system's create helper resets a new sheet's permanent Willpower (and so its temporary): set it after creating
+    // Every run starts from the same state. The system's create helper resets a new sheet's permanent Willpower
+    // (and so its temporary), so Willpower is set after creating; earlier runs' flags (once-a-scene uses) are cleared.
     for (const [a, w] of [[ada, 5], [anselm, 5], [mara, 3], [agnes, 5], [greta, 4]])
         await a.update({ "system.advantages.willpower.permanent": w, "system.advantages.willpower.temporary": w });
+    await ada.update({ "system.advantages.pathos.temporary": 5, "system.advantages.angst.temporary": 3,
+        "system.health.damage.corpus.bashing": 0, "system.health.damage.corpus.lethal": 0, "system.health.damage.corpus.aggravated": 0 });
+    await anselm.update({ "system.advantages.conviction.permanent": 4, "system.advantages.conviction.temporary": 4 });
+    await mara.update({ "system.advantages.conviction.permanent": 4, "system.advantages.conviction.temporary": 4 });
+    await agnes.update({ "system.advantages.faith.temporary": 3, "system.advantages.faith.permanent": 3 });
+    await greta.update({ "system.advantages.bloodpool.temporary": 3 });
+    for (const a of [ada, anselm, mara, agnes, greta])
+        for (const k of ["passionScene", "memoriamSession", "eidolonSession", "shadowguide", "shadowDominant", "sightScene", "riskScene", "inquisitor", "imbued", "trueFaith"])
+            if (a.getFlag("wodx-actions", k) !== undefined) await a.unsetFlag("wodx-actions", k);
+    // A new scene for the once-a-scene rules, without a chat card
+    await game.settings.set("wodx-actions", "wraithScene", (Number(game.settings.get("wodx-actions", "wraithScene")) || 0) + 1);
     return { folder, ada, anselm, mara, agnes, greta };
 }
 

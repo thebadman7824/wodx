@@ -87,3 +87,10 @@ Batch 1, second half (B38). Rules basis:
 - The three failures were all Sister Agnes: True Faith, Psychic Numina and Hedge magic. Each spends Willpower, and her Willpower was 0. The system's create helper resets a new sheet's permanent Willpower, and its temporary is then clamped to it. This was test data, not a rules bug. The gate now sets Willpower after creating the test actors.
 - Found on the way: the wraith's "last Willpower spent" prompt fired after an Arcanos that spent no Willpower (Ada was at 0 for the same reason). It now fires only when the action spent Willpower. Fixed in `wraith.js` and installed (MD5 checked).
 - To run again: press F5 in Foundry, then run the same gate command. It reuses the test pack.
+
+### Ben's second run, 2026-11-08: 9 of 17
+
+All eight failures were in the gate script itself, not WoDX:
+
+- **Reusing the test pack** carried over the first run's state. Ada's Pathos was already spent. The once-a-scene uses (Passion, risking Conviction, second sight) still counted as used this scene. Greta's blood was already raised. The gate now resets the pack's resources and flags at the start, and starts a new scene for the once-a-scene rules.
+- **Another module's chat messages** were taken as WoDX cards (the "d10 Roll Tracker" streak message). That shifted True Faith, Numina and Hedge magic one card each. The gate now waits for the WoDX card itself.
