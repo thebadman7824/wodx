@@ -77,7 +77,11 @@ export function build(ctx) {
                 const wp = n(actor.system?.advantages?.willpower?.permanent);
                 d = { era: "da", mists: n(f?.mists?.perm), weaving: n(f?.weaving?.perm), willpower: wp, overSpend: spends > n(f?.mists?.perm),
                     lockedRisk: n(f?.weavingStreak) > wp && wp > 0, hiddenDays: f?.hiddenSince != null ? Math.floor(((game.time?.worldTime ?? 0) - n(f.hiddenSince)) / 86400) : null };
-            } else d = { era: "c20", banality: P.resource(actor, "banality").value, glamour: P.resource(actor, "glamour").value };
+            } else {
+                const adv = actor.system?.advantages ?? {};
+                d = { era: "c20", banality: n(adv.banality?.permanent), banalityPoints: n(adv.banality?.temporary), glamour: n(adv.glamour?.permanent),
+                    nightmare: n(adv.nightmare?.temporary), imbalances: n(adv.willpower?.imbalance), willpower: n(adv.willpower?.permanent) };
+            }
         }
         else if (kind === "impulse") {
             const q = inquisitor(actor);

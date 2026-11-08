@@ -113,8 +113,10 @@ export const MENUS = {
     fae: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
-            ["Glamour", [["cantrip", "Weave a cantrip", "fa-wand-magic-sparkles"], ["uses:glamour", "Glamour", "fa-star"], ["uses:banality", "Banality", "fa-cloud"]]],
-            ["Danger", [["api:hazard", "Fire / fall / cold iron", "fa-burn"], ["rules:fae", "Changeling rules", "fa-book"]]],
+            ["Glamour", [["cantrip", "Weave a cantrip", "fa-wand-magic-sparkles"], ["api:c20Unleash", "Unleash an Art", "fa-bolt"], ["api:c20Invoke", "Invoke the Wyrd or the Autumn", "fa-mask"],
+                ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["uses:glamour", "Glamour", "fa-coins"]]],
+            ["Banality", [["api:c20Trigger", "A Banality trigger", "fa-cloud"], ["api:c20Mists", "The Mists (memory)", "fa-smog"], ["uses:banality", "Banality", "fa-cloud-rain"]]],
+            ["Danger", [["api:c20Bedlam", "Nightmare and Bedlam", "fa-dizzy"], ["api:c20ColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:fae", "Changeling rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },

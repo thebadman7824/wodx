@@ -417,3 +417,17 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - scripts/fae-da-rules.js (pure) and scripts/fae-da.js: the three Origins (changeling, inanimae, firstborn) and five Courts; Mists and Weaving; the four Dominions (Day, Night, Dawn, Dusk). A cantrip is Dominion + the trait it names at 6, lowered by the Court's Dominion, its hour and its season (from the Chronicle clock) and a holding, never below 4. Unleashing is Mists + Dominion against 5 Unleashing dice (3 for firstborn), with Weaving to remove them, the four outcomes, Mists regained and Weaving to lower a havoc. Countering by absorbing, scattering or unravelling. Echoes use the mortal's Willpower or 5 dice, shifted by Origin, against the fae's oaths, sprites and Weaving. The Mists can hide the fae, cloak a cantrip, Bestow Kenning or enhance the mien. Also the mien by the Origin's roll, keeping oaths, rest in a faerie realm, and cold iron through WoDX Combat. Each new day warns when a fae has been hidden longer than Willpower or has overspent Weaving.
 - The fae menu and the cantrip button follow the era (MENUS.faeDA). The inner voice "The Mists and the Weave" pulls toward Lost or Locked.
 - Tests: phase6g.test.mjs (11); 259 pass; UI fit passes. Gate 6g: 18/18. The one first-run failure was in the gate itself, which set an Attribute's value but not its total. Backup first: Backups/wodx-actions-3.7.0-2026-11-08.
+
+### Phase 6h, 2026-11-08: WoDX Actions 3.9.0 (changelings of the later eras, B73)
+- Changeling 20th systems noted (research/6f-notes.md). scripts/c20-rules.js and scripts/c20.js:
+  - Cantrips use the Art's rating plus the lowest primary Realm's rating. Scene and Time each add +1 difficulty. Cheated Realms cost Glamour. Wyrd is free while the Wyrd is invoked. Nightmare dice include volunteering three more. Both of the book's worked examples match.
+  - 10s on Nightmare dice and botches add Nightmare; at 10 it turns into an Imbalance and a Glamour point.
+  - Unleashing has four outcomes; a failure or havoc closes the Art, or all Glamour, for the scene.
+  - Invoking the Wyrd and invoking the Autumn.
+  - Banality triggers: an 11th point becomes a dot, and Banality 10 is Undone.
+  - The five Epiphany paths and sanctuary; an Epiphany can heal an Imbalance instead.
+  - Bedlam Thresholds come from spending an Imbalanced Willpower.
+  - Cold iron does damage to both bodies and costs Glamour.
+  - The Mists table for mortals.
+- The fae menu for later eras. The inner voice reads Nightmare, Imbalances and Banality.
+- Tests: phase6h.test.mjs (9); 268 pass; UI fit passes. Deployed (backup: Backups/wodx-actions-3.8.0-2026-11-08); gate 6h to run when the screen is free.

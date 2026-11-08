@@ -317,6 +317,18 @@ game.world.id = worldId;
         ["The Mists", () => ga.daMists({actor: A(fae)})], ["Keep an oath", () => ga.daOath({actor: A(fae)})], ["Rest in a faerie realm", () => ga.daRest({actor: A(fae)})],
         ["Fae menu (Dark Ages)", () => ga.menu({actor: A(fae)})]);
     }
+    // Phase 6h: a Changeling 20th pooka wilder with many Arts and every Realm
+    {
+      const arts = ["Chicanery", "Wayfare", "Primal", "Soothsay", "Metamorphosis"], realms = ["Actor", "Fae", "Nature", "Prop", "Scene", "Time"];
+      const pk = mk("pooka0000000001", "Jamilah al-Taberynn, a pooka wilder of the Seelie Court", "Changeling",
+        {glamour: {permanent: 5, temporary: 4}, banality: {permanent: 3, temporary: 6}, nightmare: {temporary: 4}, willpower: {permanent: 4, temporary: 4, imbalance: 1}},
+        [...arts.map((a, k) => [`a${k}`, {name: a, type: "Power", system: {type: "wod.types.art", value: (k % 3) + 1}}]),
+         ...realms.map((r, k) => [`r${k}`, {name: r, type: "Power", system: {type: "wod.types.realms", value: (k % 4) + 1}}])]);
+      Object.assign(pk.system, {seeming: "Wilder", kith: "Pooka", antithesis: "telling the plain truth when a lie would be kinder"});
+      tries.push(["Cantrip (Changeling 20th)", () => ga.c20Cantrip({actor: A(pk)})], ["Unleash an Art", () => ga.c20Unleash({actor: A(pk)})],
+        ["Invoke the Wyrd", () => ga.c20Invoke({actor: A(pk)})], ["Banality trigger", () => ga.c20Trigger({actor: A(pk)})], ["Epiphany", () => ga.c20Epiphany({actor: A(pk)})],
+        ["Nightmare and Bedlam", () => ga.c20Bedlam({actor: A(pk)})], ["Cold iron (Changeling 20th)", () => ga.c20ColdIron({actor: A(pk)})], ["The Mists (Changeling 20th)", () => ga.c20Mists({actor: A(pk)})]);
+    }
     tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
       ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],

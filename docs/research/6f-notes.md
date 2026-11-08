@@ -555,6 +555,67 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   compared with the Art's rating (to read on, p. 197). A botch: an Imbalance (the Nightmare pool is not reduced), one
   turn of havoc, then a Banality trigger, and no Glamour or Arts for the rest of the scene.
 
+## Changeling 20th, systems (printed pages; pdf = printed + 1)
+
+- **The sheet in the system:** Glamour (permanent, temporary), Banality (permanent, temporary; the pool is not capped by
+  the rating), Nightmare (a pool 0–10), Willpower with an imbalance count; Arts and Realms as Power items (types art and
+  realms); seeming, kith, court, house, antithesis, threshold and revelry as text fields.
+- **Tempers (pp. 172–174, 258–259):** a roll uses the rating. With the pool at 0, a Glamour or Willpower dot converts
+  into points equal to the new rating. An 11th Banality point empties the pool and adds one Banality dot (never more
+  than one dot at a time).
+- **Cantrips (pp. 193–196):** Art (at the dot level used) + the lowest primary Realm used (Actor, Fae, Nature, Prop);
+  Scene and Time widen or bend it and add +1 difficulty each, never dice. A Wyrd cantrip costs 1 Glamour, and each Realm
+  (or level) the caster lacks, "cheated", costs 1 more. Nightmare dice replace dice equal to the Nightmare rating (never
+  adding dice); volunteering 3 more Nightmare dice gives −1 (needs 3 normal dice left). Base difficulty 8; +1 a target
+  of Banality 8+; +1 a place of Banality 8+; +1 a changeling of higher Title without consent; −1 freehold; −1 an
+  enchanted mortal or kinain; −1 the kith's affinity Realm; bunks −1 to −5 (pp. 194–196). A worked example: Wyrd and a
+  cheated Time Realm cost 2 Glamour (p. 236).
+- **Unleashing (pp. 196–197):** state the intent; 2 Glamour and +1 Nightmare first; no Realms needed; Glamour +
+  Nightmare at 7. Botch: an Imbalance (Nightmare not reset), a turn of havoc, then a Banality trigger, and no Glamour or
+  Arts for the scene. Failure: a Banality trigger and that Art is closed for the scene. Successes up to the Art's
+  rating: controlled, the Wyrd is invoked for Glamour turns (a Willpower point for the scene), the mien shows, the
+  player narrates. More than the Art: the intent comes twisted, +1 Nightmare, the Wyrd for the scene, the Storyteller
+  narrates.
+- **Nightmare and Imbalance (p. 275):** +1 Nightmare on a botched Glamour or cantrip roll, +1 when Unleashing, +1 per 10
+  rolled on a Nightmare die (never above 10). At 10, clear it and mark an Imbalance on the rightmost Willpower box;
+  marking it regains a Glamour point. Spending an Imbalanced Willpower brings a Bedlam Threshold for as many scenes as
+  there are Imbalances (p. 294). All Willpower Imbalanced: lost to Bedlam.
+- **Bedlam Thresholds (pp. 294–295):** the Storyteller's pick: whispers and visions (+1 Perception difficulty per
+  Imbalance), memories from a dream (+1 Intelligence per Imbalance), thickened air (+1 Dexterity per Imbalance),
+  unstable dreams (chimera turn hostile), remove the leash (only Unleashing, no cantrips), to thine own self (the Wyrd
+  at once, +2 Nightmare), drowning in Glamour (all Glamour back; a well for others; +1 Nightmare per Glamour spent).
+  Invoking the Autumn eases a threshold for a scene; any Epiphany may remove one Imbalance instead of giving Glamour.
+- **Invoking the Wyrd (p. 259):** 1 Glamour and 1 Willpower; Glamour against the higher of the place's or the
+  character's Banality; for a scene: a Glamour point rerolls a roll once; 10s are rerolled and add; voile and chimera are
+  solid; lethal damage soaks; cantrips are Wyrd and cost no Glamour. A failure is a Banality trigger; a botch, a
+  Banality point per 1.
+- **Invoking the Autumn (p. 271):** a Willpower point: chimerical effects do not touch the character for an action; it
+  is always a Banality trigger.
+- **Banality triggers (pp. 174, 269):** Glamour at 8 (higher for severe; automatic for the worst, such as killing a
+  changeling with cold iron): a failure gives a point, a botch a point per 1. Common triggers: invoking the Autumn,
+  failing to overcome a target's Banality when enchanting (not childlings), destroying a Treasure, killing a
+  changeling's chimerical self (wilders mostly immune), ending a changeling's mortal life, killing an enchanted mortal,
+  Dreamer or kinain, wielding cold iron, Ravaging or Rhapsody, breaking an oath; each seeming adds one (childling:
+  denying a new idea; wilder: refusing adventure; grump: failing someone in their care) and each changeling has an
+  antithesis. A Glamour point may instead remove a Banality point when it is gained (p. 174). Quests of Deed,
+  Inspiration or Dreaming remove a Banality dot (a failed quest adds one) (pp. 174, 271–273).
+- **The Mists (pp. 269–271):** mortals forget by their Banality: 0 a minute, perfect recall; 1 an hour, clarity; 2 six
+  hours, partial; 3 twelve hours, disoriented; 4 a day, uncertain; 5 three days, hazy; 6 a week, flashbacks; 7 two weeks,
+  dreamlike; 8 a month, distant dream; 9 four months, denial; 10 complete blank. A changeling whose Banality points pass
+  the Glamour rating suffers the Mists (lapses, tuned out, confusion, detachment, blackouts, memory gaps, amnesia, at
+  the Storyteller's choice); other changelings present count as two steps lower.
+- **Epiphany (pp. 259–264):** Reverie: Perception + Kenning (8) sets the time needed (1 success a month … 5 a few
+  hours); then Manipulation + a fitting Ability (6), a Glamour point per success; five or more on the Musing Threshold
+  gives a Glamour dot. Rapture: the same time roll, then Attribute + Ability at (Banality − Glamour) + 6, a point per
+  success; five or more gives a dot and a full pool; a botch, a Banality point. Ravaging: Banality dice (6), a Glamour
+  point per success; a failure gives a Banality point, a botch a Banality dot; it is a trigger. Revelry: once a story,
+  a scene of the kith's own revelry fills the pool. Rhapsody (forbidden): 1–5 Glamour invested; Manipulation +
+  Expression + the invested dice (7); the masterpiece holds 2 Glamour per success, released when destroyed; a failure
+  blocks the artist for months equal to the Glamour; a botch, a Banality dot to the artist per 1. Sanctuary: a night in
+  a freehold gives its rating in Glamour, shared, at least 1 each.
+- **Cold iron (pp. 290–291):** aggravated to the chimerical and physical bodies at once, and a Glamour point per level.
+  Chimerical damage marks its own track; the worse penalty of the two applies.
+
 ## The inner voice for mages (for the 6d layer)
 
 - **Mage 20th (pp. 338–339):** the Avatar (or Genius) is an inner mentor that never goes away. Its Essence sets how it

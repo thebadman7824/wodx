@@ -80,9 +80,10 @@ export function pressure(kind, d = {}) {
                 const toward = m > w ? "Lost" : w > m ? "Locked" : null;
                 return { value: gap, max: 10, level: lvl(i), text: `Mists ${m}, Weaving ${w}${toward && gap >= 2 ? `: toward ${toward}` : ""}${hid >= 0 ? `; hidden ${hid} day${hid === 1 ? "" : "s"}` : ""}` };
             }
-            const b = n(d.banality), g = n(d.glamour);
-            const i = b >= 9 ? 3 : b >= 7 ? 2 : (b >= 5 || g === 0) ? 1 : 0;
-            return { value: b, max: 10, level: lvl(i), text: `Banality ${b}; Glamour ${g}` };
+            // Changeling 20th: Bedlam's road (Nightmare and Imbalanced Willpower, p. 274) and Banality's weight (Undone at 10)
+            const b = n(d.banality), g = n(d.glamour), nm = n(d.nightmare), imb = n(d.imbalances), wp = n(d.willpower), pts = n(d.banalityPoints);
+            const i = (imb > 0 && wp > 0 && imb >= wp - 1) || b >= 9 ? 3 : (imb > 0 || nm >= 8 || b >= 7) ? 2 : (nm >= 5 || b >= 5 || (g > 0 && pts > g) || g === 0) ? 1 : 0;
+            return { value: Math.max(b, nm), max: 10, level: lvl(i), text: `Banality ${b}; Glamour ${g}${nm ? `; Nightmare ${nm}` : ""}${imb ? `; Imbalances ${imb}` : ""}` };
         }
         default: return { value: 0, max: 10, level: "calm", text: "" };
     }

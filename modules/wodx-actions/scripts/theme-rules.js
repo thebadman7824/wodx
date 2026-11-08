@@ -98,9 +98,10 @@ export const MENU_PLAN = {
         scene: ["api:endScene", "api:voices", "rules:faeDA"]
     },
     fae: {
-        act: ["action", "cantrip", "uses:glamour", "api:seduction"],
-        resist: ["uses:banality", "api:hazard"],
-        recover: ["uses:willpower"],
+        act: ["action", "cantrip", "api:c20Unleash", "api:c20Invoke", "uses:glamour", "api:seduction"],
+        resist: ["api:c20Trigger", "api:c20Bedlam", "api:c20ColdIron", "uses:banality", "api:hazard"],
+        recover: ["api:c20Epiphany", "uses:willpower"],
+        st: ["api:c20Mists"],
         scene: ["api:endScene", "api:voices", "rules:fae"]
     },
     spirit: { act: ["action", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
@@ -210,6 +211,13 @@ export const DESC = {
     "api:daEcho": "Dark Ages: an Echo's roll against the fae's oaths; the level it reaches",
     "api:daColdIron": "Dark Ages: cold iron's aggravated wound and the Mists it costs",
     "rules:faeDA": "The Dark Ages fae rules at a glance, with page references",
+    "api:c20Unleash": "Changeling 20th: 2 Glamour and a Nightmare; Glamour + Nightmare at 7; no Realm needed",
+    "api:c20Invoke": "Changeling 20th: the Wyrd makes the mien and chimera real; the Autumn wards off the chimerical for an action",
+    "api:c20Epiphany": "Changeling 20th: Reverie, Rapture, Ravaging, Revelry, Rhapsody or a night by a balefire",
+    "api:c20Trigger": "Changeling 20th: Glamour at 8 against a Banality trigger",
+    "api:c20Mists": "Changeling 20th: how much a mortal remembers, by Banality",
+    "api:c20Bedlam": "Changeling 20th: Nightmare, Imbalance and the Bedlam Thresholds",
+    "api:c20ColdIron": "Changeling 20th: cold iron's aggravated wound to both bodies and the Glamour it costs",
     "api:daQuintessence": "Dark Ages: absorb from a cray, harvest Tass, the Fount's monthly rite, a day in the Umbra",
     "uses:quintessence": "Spend or regain Quintessence",
     "uses:paradox": "Paradox gained, or shed after a Backlash",
