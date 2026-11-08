@@ -357,8 +357,27 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   current ×5, first dot 8), Witchwalk (1–5 Flaw: a superstition that binds the mage; at 5, salt wards for a day and
   does an unsoakable lethal level). Disallowed DAV Merits and Flaws are listed on p. 91 (the vampire-only ones).
 
+## The inner voice for mages (for the 6d layer)
+
+- **Mage 20th (pp. 338–339):** the Avatar (or Genius) is an inner mentor that never goes away. Its Essence sets how it
+  presses: Dynamic ignites passions, Static (Pattern) demands perfection, Questing pulls toward new experience,
+  Primal (Primordial) sets enigmas. An Avatar rated 4 or 5 can drive the mage night and day. At crises it can drop the
+  mage into a Seeking, an inner journey past an obstacle on the mage's Path; a Seeking is needed to buy a dot of
+  Arete, and the mage can fail it and wait. Changing focus keeps Arete but needs seven tools of the new practice and
+  halves Spheres (but the affinity Sphere) for a story arc or more; tools are shed again about one per arc (p. 339).
+- **Dark Ages: Mage:** no Avatar Trait. Its pressures are Twilight (figments and voices that urge the mage deeper,
+  or warn them back; pp. 139–140) and Fount (very high Fount mages hear whispers when channelling much Quintessence;
+  p. 87). Arcane Madness (p. 92) and Witchwalk are the Flaws that feed it.
+- **WoDX reading for the voice layer:** in Dark Ages chronicles the mage's voice is "the Gift": its pressure rises with
+  temporary Twilight and with Quintessence spent past the Fount's turn limit, and it speaks as Twilight's figments
+  (Median and deeper) or Fount's whispers. Its proposals: a Twilight-coloured perception the player plays, an urge to
+  cast again, a push past abstinence. From the Victorian era on (when the profile has Mage 20th), the voice is the
+  Avatar with its Essence; its proposal is a Seeking (the Storyteller plays it out or rules the outcome), triggered at
+  crises and when the player buys Arete. Avatar 4–5 raises the pressure floor. B47 to B56 apply as for the other
+  voices (opt-in, the Storyteller's switch, the X-card).
+
 ## To read next
 
-- The inner voice for mages (the Avatar): what DA:Mage calls the mage's inner spark and its pressures (Backlash,
-  hubris), and M20's Avatar, Seekings and Quiet (pp. 44–46, 267, 339–340, 368–371, 240–243).
+- M20 for the later eras: Arete, Quintessence and Paradox (pp. 329–335), Quiet, and Ch. 10 the Book of Magick
+  (pp. 498–618), to set the Victorian-to-modern mage beside the Dark Ages one.
 - Then Dark Ages: Fae and Changeling 20th.
