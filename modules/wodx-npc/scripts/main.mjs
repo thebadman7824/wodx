@@ -13,7 +13,7 @@
 import * as NR from "./npc-rules.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.1.2";
+const VERSION = "0.1.3";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -388,6 +388,9 @@ function cardHtml({tok, profile, options, mode, result = null, chosen = null, un
 }
 
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
+/** Tell WoDX Combat's turn conductor (3.7) how this NPC's turn went. */
+const report = (combatId, combatantId, r) => { if ( combatId && combatantId ) Hooks.callAll("wodxNpcTurnDone", {combatId, combatantId, ...r}); };
+const phaseKey = combat => { const f = combat?.getFlag?.("wodx-combat", "conductor"); return f?.phase === "extra" && f?.round === combat.round ? "extra" : "main"; };
 async function postPlan(tok, combat, {profile, options}, mode) {
   const shown = options.slice(0, setting("options"));
   const flags = {plan: {token: tok.document.uuid, combatId: combat?.id ?? null, round: combat?.round ?? 0, combatant: combat?.combatant?.id ?? null, options: shown, mode}};
@@ -402,8 +405,10 @@ async function postPlan(tok, combat, {profile, options}, mode) {
       flags.plan.done = {k, text: r.text, snap, added: r.added ?? [], path: r.path ?? null};
     } else waiting = pick.needsStoryteller;
   }
-  return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
+  const msg = await ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
     content: cardHtml({tok, profile, options: shown, mode, result, chosen, waiting}), flags: {[MOD]: flags}});
+  if ( mode === "auto" ) report(flags.plan.combatId, flags.plan.combatant, flags.plan.done ? {acted: true} : {waiting: true});
+  return msg;
 }
 
 async function onCardButton(msg, btn) {
@@ -432,6 +437,7 @@ export async function acceptCard(msg, k = 0) {
   const r = await execute(tok, opt);
   plan.done = {k, text: r.text, snap, added: r.added ?? [], path: r.path ?? null};
   await msg.update({[`flags.${MOD}.plan`]: plan, content: cardHtml({tok, profile: profileFor(tok.actor), options: plan.options, mode: plan.mode, result: r.text, chosen: k})});
+  report(plan.combatId, plan.combatant, {acted: true});
   return plan.done;
 }
 
@@ -465,13 +471,14 @@ export async function takeTurn(combat = game.combat, {force = false} = {}) {
   if ( !c || !tok?.actor || c.isDefeated ) return null;
   if ( tok.actor.hasPlayerOwner ) return null;
   if ( tok.scene?.id !== canvas.scene?.id ) return null;
-  const key = `${combat.id}:${combat.round}:${c.id}`;
+  const key = `${combat.id}:${combat.round}:${c.id}:${phaseKey(combat)}`;
   if ( handled.has(key) && !force ) return null;
   handled.add(key);
   const mode = modeFor(tok.actor);
   if ( mode === "off" ) return null;
   const cond = chron()?.conditions;
   const stuck = NO_ACTION.find(id => cond?.hasCondition?.(tok.actor, id)) ?? (wounds(tok.actor) >= 7 ? "incapacitated" : null);
+  if ( stuck ) report(combat.id, c.id, {cannotAct: true});
   if ( stuck ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
     content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(cond?.getCondition?.(stuck)?.name ?? stuck)}).</div></div>`});
   const planned = planTurn(tok, combat);
@@ -481,7 +488,11 @@ let timer = null;
 function soon(combat) {
   clearTimeout(timer);
   // Initiative and the turn order settle first (WoDX Combat rolls them on these same hooks)
-  timer = setTimeout(() => takeTurn(combat).catch(e => console.error(`${MOD} |`, e)), 900);
+  timer = setTimeout(() => {
+    // Never while the game is paused (the X-card pauses it): the turn is taken when play resumes
+    if ( game.paused ) { Hooks.once("pauseGame", paused => { if ( !paused ) soon(combat); }); return; }
+    takeTurn(combat).catch(e => console.error(`${MOD} |`, e));
+  }, 900);
 }
 
 /* ------------------------------------------------------------------ */

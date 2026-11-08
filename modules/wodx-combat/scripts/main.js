@@ -22,6 +22,7 @@ import * as P from "./profiles.js";
 import * as F from "./flavor.js";
 import * as L from "./legacy.js";
 import * as AU from "./auto.js";
+import * as CD from "./conductor.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -1278,9 +1279,10 @@ Hooks.once("init", () => {
     // Never run beside the module this one replaces: both would answer every button
     if (L.oldActive("vtda20-combat")) { OFF = true; return; }
     registerSettings();
+    CD.registerConductorSettings();
     P.register();
-    const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.6.0", movementFor, corpusTrack, corpusCondition,
+    const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.0", movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1292,7 +1294,8 @@ Hooks.once("init", () => {
 Hooks.once("ready", async () => {
     if (OFF) return L.warnOld("WoDX Combat", "vtda20-combat");
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
-    game.socket.on(SOCKET, onSocket);
+    game.socket.on(SOCKET, p => { if (!p?.conductor) onSocket(p); });
+    CD.installConductor();
     await createMacros();
     console.log(`${MOD} | ready`);
 });
