@@ -70,6 +70,9 @@ await import(join(root, "modules/wodx-combat/scripts/main.js"));
 await import(join(root, "modules/wodx-actions/scripts/main.js"));
 game.modules.set("wodx-npc", {});
 await import(join(root, "modules/wodx-npc/scripts/main.mjs"));
+// Phase 7e: WoDX Storyteller (the open world)
+game.modules.set("wodx-storyteller", {});
+await import(join(root, "modules/wodx-storyteller/scripts/main.mjs"));
 game.modules.set("wodx-interactables", {});
 await import(join(root, "modules/wodx-interactables/scripts/main.mjs"));
 CONFIG.worldofdarkness.groupKinds = {coterie: "Coterie (Vampire)", pack: "Pack (Werewolf and Fera)", cabal: "Cabal (Mage)", motley: "Motley (Changeling)",
@@ -508,6 +511,41 @@ game.world.id = worldId;
   globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
+// Phase 7e: the tracker (twelve characters, 300 lines in the feed, a called scene), Out on your own, convening, beats,
+// travel places, tonight's summary, the report between sessions and ending a session
+{
+  const st = game.modules.get("wodx-storyteller").api;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const people = [...game.actors.values()].filter(a => a.hasPlayerOwner);
+  const kinds = Object.keys(st.rules.KINDS);
+  let log = st.rules.blankLog();
+  for ( let i = 0; i < 300; i++ ) {
+    const a = people[i % people.length];
+    log = st.rules.addEntry(log, {id: `l${i}`, kind: kinds[i % kinds.length], at: game.time.worldTime - (300 - i) * 60, actor: a.id, name: a.name, user: "player",
+      place: `Lower Town · Place ${i % 40} with a long name`, text: `Something done at some length, line ${i}, to see the feed wrap across the window`, attention: i % 7 ? null : "A frenzy", hours: i % 3});
+  }
+  await game.settings.set("wodx-storyteller", "log", log);
+  await game.settings.set("wodx-storyteller", "personal", Object.fromEntries(people.map((a, i) => [a.id, {t: game.time.worldTime + (i - 6) * 1800}])));
+  await game.settings.set("wodx-storyteller", "convened", {[people[0].id]: {scene: "scene00000000000", at: game.time.worldTime, reason: "A long reason"}});
+  await game.settings.set("wodx-storyteller", "beats", Array.from({length: 9}, (_, i) => ({id: `beat${i}`, name: `A beat with a rather long name, number ${i}`, on: ["time", "place", "flag"][i % 3],
+    time: game.time.worldTime + i * 3600, place: "Scene.scene00000000003", flag: "world.metTheBishop", actor: people[i % people.length].id, convene: people.slice(0, 3).map(a => a.id), scene: "scene00000000000"})));
+  await game.settings.set("wodx-storyteller", "session", {at: game.time.worldTime - 400 * 60, real: Date.now()});
+  const App = st.TrackerClass();
+  const app = new App({});
+  await app.render({force: true});
+  const o = App.DEFAULT_OPTIONS;
+  windows.push({name: "The Storyteller's tracker", tag: o.tag ?? "div", classes: ["application", ...(o.classes ?? [])].join(" "), width: o.position.width, height: o.position.height,
+    content: app.element.querySelector("section.window-content").innerHTML});
+  for ( const [label, fn] of [["Out on your own", () => st.openOnYourOwn(people[1].id)], ["Convene", () => st.conveneDialog({actorIds: [people[0].id]})],
+    ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
+    ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2.wait = wait;
+}
 // Interactables: the Interact window (eight doors, windows and walls in reach, long names), the roll dialog, the WoDX part of a wall's config
 {
   const ix = game.modules.get("wodx-interactables").api;
@@ -557,6 +595,7 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-otherworlds/styles/wodx-otherworlds.css")).href,
   pathToFileURL(join(root, "modules/wodx-creation/styles/wodx-creation.css")).href,
   pathToFileURL(join(root, "modules/wodx-npc/styles/wodx-npc.css")).href,
+  pathToFileURL(join(root, "modules/wodx-storyteller/styles/wodx-storyteller.css")).href,
   pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.

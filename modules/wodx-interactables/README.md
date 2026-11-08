@@ -7,4 +7,4 @@ Doors, locks, windows and walls that can be broken through, on Foundry 14's own 
 - **Results** apply at once on the Storyteller's client, with Undo on the card. A wall knocked through waits in the approval queue.
 - **Noise**: NPCs in earshot roll to hear quiet and loud attempts; the Storyteller's card names them. Hook: `wodxInteractablesNoise`.
 
-Rules: `scripts/interact-rules.mjs` (pure, tested in tools/harness/interactables.test.mjs). Decisions B103 to B107.
+Rules: `scripts/interact-rules.mjs` (pure, tested in tools/harness/interactables.test.mjs). Decisions B108 to B112.

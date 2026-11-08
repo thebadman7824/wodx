@@ -16,7 +16,8 @@ export const PLAYER_TOOLS = [
   {name: "wodxPeek", label: "Peek across the Gauntlet", module: "WoDX Otherworlds"},
   {name: "wodxSoul", label: "Read the Soul", module: "WoDX Otherworlds"},
   {name: "wodxCreation", label: "Spend experience", module: "WoDX Creation"},
-  {name: "wodxFindMe", label: "Find my character", module: "WoDX Chronicle"}
+  {name: "wodxFindMe", label: "Find my character", module: "WoDX Chronicle"},
+  {name: "wodxOnYourOwn", label: "Out on your own", module: "WoDX Storyteller"}
 ];
 
 /** Does this player see this button? Pure. map: the playerTools setting. */

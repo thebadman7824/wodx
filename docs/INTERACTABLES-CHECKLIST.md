@@ -3,7 +3,7 @@
 Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, ledges and jumps) and 3 (targets) follow.
 
 - [x] Foundry 14.369 source read for door controls, the wall document and the wall config window: the door click extends CONFIG.Canvas.doorControlClass; walls take flags; wall levels are a set (empty means every level)
-- [x] Pure rules (interact-rules.mjs): kinds, materials, builds, four lock grades, keypads, breakable walls, the lock skill by line and era, options for an object and a character, outcomes, noise and hearing, listening (B103 to B107)
+- [x] Pure rules (interact-rules.mjs): kinds, materials, builds, four lock grades, keypads, breakable walls, the lock skill by line and era, options for an object and a character, outcomes, noise and hearing, listening (B108 to B112)
 - [x] The Interact window (token HUD button and the I key): everything within reach on the token's level, nearest first, a search box past three, the pool, difficulty, successes, time and noise before the roll
 - [x] Door-click shortcut on locked doors (world setting; the Storyteller holds Shift)
 - [x] The WoDX part of the wall config window: kind, material, build, lock, keypad, key, bar and side, stuck, secret door found, breakable wall
