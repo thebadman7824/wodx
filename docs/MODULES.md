@@ -17,13 +17,14 @@ WoDX notes:
 
 | Module | Version | Phase | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.4.2 | 1, 6a, 6d (X-card hook), 6e (the WoDX look: era kits, line accents, bundled fonts; player buttons; Find my character), 7a (the generator core), era advancement (the Passing the years house rules), 0.4.2 (header buttons show in the WoDX look) | rothenstein-wodx, wodx-template |
+| wodx-chronicle | 0.4.3 | 1, 6a, 6d (X-card hook), 6e (the WoDX look: era kits, line accents, bundled fonts; player buttons; Find my character), 7a (the generator core), era advancement (the Passing the years house rules), 0.4.2 (header buttons show in the WoDX look), 0.4.3 (Out on your own among the player buttons) | rothenstein-wodx, wodx-template |
 | wodx-otherworlds | 0.2.0 | 2, 5 | rothenstein-wodx, wodx-template |
 | wodx-creation | 0.6.1 | 3, 4, 6a, 6b, Actions 3.2, 7a (People), era advancement (B83; 0.6.1 works with WoDX Actions or Sheets off) | rothenstein-wodx, wodx-template (needs wodx-chronicle) |
 | wodx-actions | 3.11.2 | 6a, 6b, Kindred additions, sunlight, 6c (wraiths, hunters, True Faith, Numina, hedge magic), 6d (the inner voice), 6e (menus by intent, one card layout), 6f (Dark Ages mages), 6g (Dark Ages fae), 6h (Changeling 20th), 6i–6l (Demon, Kindred of the East, Mummy, Orpheus), 6m (Mage 20th), 3.11.2 (tells WoDX NPC of a recorded Masquerade breach) | rothenstein-wodx, wodx-template, instead of vtda20-actions (needs wodx-chronicle) |
 | wodx-combat | 3.7.4 | 6a, 6b, automation, gridless, the Corpus track, the turn conductor | rothenstein-wodx, wodx-template, instead of vtda20-combat (needs wodx-chronicle) |
 | wodx-sheets | 0.5.0 | Phase 6 sheets: the Dark Ages sheets (Fae, Mage, Inquisitor, Werewolf, V20 Dark Ages Kindred and ghoul) and the later eras' (V20 and ghoul, W20, M20, C20, Wraith 20, Hunter: The Reckoning, Demon, Mummy, Kindred of the East, Orpheus), following the era. 0.5.0: a look of its own for each line (title face, paper and section rules, light and dark), behind the world setting "Sheet look" | rothenstein-wodx (needs wodx-chronicle, wodx-actions 3.11.0) |
 | wodx-npc | 0.3.0 | 7b (NPC profiles and combat tactics), 7c (places, routines on the clock, WoDX: Reaction regions), 7d (factions, faction turns, hunting grounds, Masquerade rumours) | rothenstein-wodx, wodx-template (needs wodx-chronicle, wodx-combat, wodx-actions) |
+| wodx-storyteller | 0.1.0 | 7e (the open world: the Storyteller's tracker, personal time and dawn, travel and road encounters, solo play, convening, beats, the spotlight, the report between sessions) | rothenstein-wodx (needs wodx-chronicle 0.4.3; reads wodx-npc and wodx-otherworlds when on). Not deployed yet |
 
 Chronicle, Otherworlds and Creation stay idle in worlds without `flags.wodx` (the original Rothenstein world). WoDX Actions and WoDX Combat stay off wherever vtda20-actions or vtda20-combat is still enabled; the original Rothenstein world keeps the vtda20 modules, which stay installed.
 

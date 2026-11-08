@@ -1,0 +1,26 @@
+/* WoDX Storyteller 0.1.0: the tracker, "Out on your own" and the open-world dialogs. Colours come from the WoDX look (wodx-theme.css). */
+.wstory-tracker h3 { margin: 0.6em 0 0.2em; }
+.wstory-tracker .wstory-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.3em 0.8em; margin: 0.3em 0; }
+.wstory-tracker .wstory-filters label { display: flex; flex-direction: column; gap: 0.15em; min-width: 12em; }
+.wstory-tracker .wstory-filters label.wstory-check { flex-direction: row; align-items: center; min-width: 0; }
+.wstory-tracker .wstory-filters button { width: auto; padding: 0 0.6em; }
+.wstory-tracker .wodx-table td button { width: auto; padding: 0 0.6em; }
+.wstory-tracker .wstory-feed li { margin: 0.25em 0; padding: 0.2em 0.3em; border-left: 3px solid transparent; }
+.wstory-tracker .wstory-feed li.wstory-attn { border-left-color: var(--wx-accent, #b33); }
+.wstory-tracker .wstory-look { background: var(--wx-accent, #b33); color: var(--wx-on-accent, #fff); }
+.wstory-tracker .wstory-spot li { display: grid; grid-template-columns: 10em 8em 1fr; align-items: center; gap: 0.6em; margin: 0.15em 0; }
+.wstory-tracker .wstory-bar { display: block; height: 0.6em; border: 1px solid var(--wx-rule, #8886); border-radius: 3px; overflow: hidden; }
+.wstory-tracker .wstory-bar > span { display: block; height: 100%; background: var(--wx-accent, #b33); }
+.wstory-check { display: inline-flex; align-items: center; gap: 0.3em; white-space: nowrap; }
+.wstory-dialog .window-content { overflow-y: auto; max-height: 80vh; }
+.wstory-dialog .wodx-field { display: grid; grid-template-columns: 11em 1fr; align-items: center; gap: 0.5em; margin: 0.2em 0; }
+.wstory-dialog .wodx-field > span { display: flex; flex-direction: column; gap: 0.2em; }
+.wstory-dialog fieldset { margin: 0.4em 0; }
+.wstory-dialog textarea { width: 100%; }
+.wstory-dialog .wstory-who { max-height: 24vh; overflow-y: auto; }
+.wstory-dialog .wstory-places-wrap { max-height: 50vh; overflow: auto; }
+.wstory-dialog .wstory-places input[type=number] { width: 5em; }
+.wstory-dialog .wstory-places input[type=text] { width: 100%; min-width: 8em; }
+.wstory-dialog .wstory-report { max-height: 60vh; }
+.wstory-dialog .wstory-report h3 { margin: 0.5em 0 0.1em; }
+.wstory-status { margin: 0.3em 0; }
