@@ -105,3 +105,12 @@ The automatic gate passes. One item is still open: the Great War wraith profile 
 ### The Great War addition, 2026-11-08
 
 Installed and checked by MD5; backup in `Backups\wodx-6c-greatwar-pre-deploy`. The gate now has 18 steps: press F5, run the same command, and expect 18/18.
+
+### Claude's run in the Foundry desktop app, 2026-11-08 (as Gamemaster Test): 18 of 18
+
+Phase 6c's automatic gate passes in full, including the Great War step.
+
+The console shows two kinds of yellow warning, neither from WoDX:
+
+- The system's "_handleHunterCalculations – Primary virtue not selected". It fires for Hunter sheets with no primary Virtue chosen, such as the inquisitor test actor, whose Superior Virtues are WoDX's.
+- A Foundry deprecation notice for the old `renderChatMessage` hook, raised by another module.

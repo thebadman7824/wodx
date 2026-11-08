@@ -333,3 +333,4 @@
   - They also exposed one WoDX bug: the wraith's last-Willpower prompt fired after an action that spent no Willpower. Fixed.
   - Still open: the Great War wraith profile.
 - **The Great War profile, 2026-11-08 (B50).** The Great War Arcanoi library has 103 arts; names and levels were read from the page images. There is also a Maelstrom tool with the storm table by force. Harness 27 tests in phase6c; UI fit and quality check pass; installed and checked by MD5. The gate's 18th step waits for Ben.
+- **Gate 6c complete, 2026-11-08:** Claude ran the gate in the Foundry desktop app as Gamemaster Test: 18/18. The procedural generation plan is in the Master Plan (B52), and the WoDX look is planned as Phase 6e (B51).
