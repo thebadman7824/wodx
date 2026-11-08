@@ -72,7 +72,7 @@ async function _writeChronicleRules({profile, interlude, locked, dateLabel}) {
     <p><strong>Books used:</strong> ${esc(profile.basis)}</p>
     <p><strong>What this era changes:</strong> ${esc(profile.switches)}</p>
     ${interlude ? "<p>No era book covers this year, so the last era's rules stay in force until the Storyteller locks another.</p>" : ""}
-    ${ourCall ? `<p><strong>WoDX choices (not from a book):</strong></p><ul>${ourCall}</ul>` : ""}
+    ${ourCall ? `<p><strong>House rules (not from a book):</strong></p><ul>${ourCall}</ul>` : ""}
     <h2>Calendar</h2>
     <p>Julian calendar until the reform, Gregorian after it. Reform: ${esc(reform)}.</p>
     <p>Sunrise and sunset are given in local solar time for latitude ${esc(game.settings.get(MODULE_ID, "latitude"))}° N.</p>`

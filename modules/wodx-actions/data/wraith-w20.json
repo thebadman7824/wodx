@@ -1,5 +1,5 @@
 {
- "source": "Wraith: The Oblivion 20th Anniversary Edition. Mechanics as codes and short summaries in WoDX's own words, with pages; read the book for the full rules.",
+ "source": "Wraith: The Oblivion 20th Anniversary Edition. Codes and short summaries, with pages; read the book for the full rules.",
  "thorns": [
   {"id": "spectre-prestige", "n": "Spectre Prestige", "cost": "1/level", "p": 231, "e": "Standing among Spectres."},
   {"id": "dark-allies", "n": "Dark Allies", "cost": "1/level", "p": 231, "e": "Spectres or others who answer the Shadow."},

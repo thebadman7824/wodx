@@ -185,7 +185,7 @@ export async function writeTwinsReport(done = [], failed = []) {
     <ul>
       <li>Stepping sideways moves a Garou's token to the Penumbra level; stepping back moves it to the physical level. Crossing the Shroud (Storyteller) moves tokens to and from the Shadowlands level.</li>
       <li>A level shows only itself, so a token in the Penumbra sees the Penumbra map, its roofs and lights.</li>
-      <li>Walls, sounds and regions are on every level (WoDX choice): the spirit and shadow worlds keep the physical world's shape.</li>
+      <li>Walls, sounds and regions are on every level (house rule): the spirit and shadow worlds keep the physical world's shape.</li>
       <li>An Umbral path is a Teleport Token region on the Penumbra level only, so only travelers in the Umbra take it.</li>
       <li>Each scene was backed up to Data/wodx-backups/scenes before it changed.</li>
     </ul>`;

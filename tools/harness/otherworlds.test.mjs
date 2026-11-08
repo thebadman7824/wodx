@@ -288,7 +288,7 @@ test("the charts page is written into Chronicle Rules", async () => {
   const rules = game.journal.find(j => j.getFlag("wodx-chronicle", "kind") === "chronicle-rules");
   const html = rules.pages.getName("Gauntlet charts").text.content;
   assert.match(html, /Dark Ages: Werewolf/);
-  assert.match(html, /WoDX choice/);
+  assert.match(html, /House rule/);
   assert.match(html, /W20 Gauntlet Chart \(p\. 309\)/);
 });
 

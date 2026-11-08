@@ -46,7 +46,7 @@ export default {
       "name": "The X-card pauses the game",
       "hint": "Pressing the X-card pauses the game for everyone as well as showing the card.",
       "default": true,
-      "source": "WoDX plan: safety tools"
+      "source": "House rule (safety tools)"
     },
     {
       "id": "storytellerVoiceOptIn",
@@ -54,7 +54,7 @@ export default {
       "name": "The Storyteller can opt a character in to the inner voice",
       "hint": "The inner voice panel gets a Storyteller choice to turn a player's character's voice on or off. The player is told each time and can still opt out.",
       "default": false,
-      "source": "Ben's request, 8 November 2026"
+      "source": "House rule"
     },
     {
       "id": "signedLinesVeils",
@@ -62,7 +62,7 @@ export default {
       "name": "Players may sign their lines and veils",
       "hint": "Off: every line and veil is recorded without a name.",
       "default": false,
-      "source": "WoDX plan: safety tools"
+      "source": "House rule (safety tools)"
     },
     {
       "id": "timeOfJudgment",
@@ -84,9 +84,9 @@ export default {
       "id": "ghoulsDarkAges",
       "group": "rules",
       "name": "Ghouls use V20 Dark Ages rules in every era",
-      "hint": "Recorded now; the Creation module applies it from Phase 3.",
+      "hint": "WoDX Creation applies it to every ghoul it makes or advances.",
       "default": true,
-      "source": "Ben's decision, final review",
+      "source": "House rule",
       "laterPhase": 3
     },
     {
@@ -95,7 +95,7 @@ export default {
       "name": "Thick blood",
       "hint": "Pass the Years: a vampire may drop a Generation for each full century awake (never below 8th by time), at a dot of Humanity or Road a step. Off follows the books: Generation falls only through diablerie (V20 p. 294).",
       "default": false,
-      "source": "WoDX choice, B83 (V20 Dark Ages pdf p. 33 calls it a rumour)"
+      "source": "House rule (V20 Dark Ages pdf p. 33 calls it a rumour)"
     },
     {
       "id": "yearsMortalDecline",
@@ -103,7 +103,7 @@ export default {
       "name": "Mortal decline",
       "hint": "Pass the Years: at 60, 70 and 80 a mortal body loses a Physical dot, the player's pick.",
       "default": true,
-      "source": "WoDX choice, B83"
+      "source": "House rule"
     },
     {
       "id": "yearsMoralityDrift",
@@ -111,7 +111,7 @@ export default {
       "name": "Morality drift",
       "hint": "Pass the Years: for each century awake a vampire rolls Conscience or Conviction at difficulty 7; a failure costs a dot of Humanity or Road. Off follows the books, which test morality only for a sin.",
       "default": false,
-      "source": "WoDX choice, B83"
+      "source": "House rule"
     },
     {
       "id": "yearsExperience",
@@ -119,7 +119,7 @@ export default {
       "name": "Experience for the years",
       "hint": "Pass the Years: 1 experience a year awake and active, at most 10 a skip.",
       "default": true,
-      "source": "WoDX choice, B83"
+      "source": "House rule"
     },
     {
       "id": "yearsConvertAbilities",
@@ -127,7 +127,7 @@ export default {
       "name": "Convert Dark Ages Abilities",
       "hint": "Pass the Years: leaving the Dark Ages, offer to move each Dark Ages Ability's dots to its later counterpart (Archery to Firearms, Ride to Drive...). The old Ability stays at 0.",
       "default": true,
-      "source": "WoDX choice, B83"
+      "source": "House rule"
     }
   ]
 };

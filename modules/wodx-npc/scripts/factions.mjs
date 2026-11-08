@@ -9,7 +9,7 @@
  *              asks for a turn. Each faction picks a move (expand, defend, scheme, recruit, hunt, lie low), rolls it
  *              from its Backgrounds and its leader, and says what it changes (faction-rules.mjs).
  *   Landing    Suggest (the default): every result goes to the approval queue. Auto: small results apply at once
- *              with an Undo card, and big ones go to the queue (B86). Off: no turns or rumours run by themselves.
+ *              with an Undo card, and big ones go to the queue. Off: no turns or rumours run by themselves.
  *   Hunting    A place's area sets the hunting difficulty; Domain, Fame and Herd adjust it; another's domain is a
  *              trespass (V20 pp. 113-114, 259-260; V20 Dark Ages pp. 180-181, 334). The Hunting window rolls it.
  *   Breaches   A breach recorded in WoDX Actions' Masquerade ledger, or reported here, becomes a rumour. It spreads a
@@ -37,11 +37,11 @@ export function build(ctx) {
   function registerSettings() {
     game.settings.register(MOD, "factions", {scope: "world", config: false, type: Object, default: F.blankState()});
     game.settings.register(MOD, "factionMode", {
-      name: "Faction turns and rumours", hint: "Suggest sends every result to the approval queue. Auto applies small ones (a Background dot, a rumour moving a step) with an Undo card, and sends big ones to the queue (B86).",
+      name: "Faction turns and rumours", hint: "Suggest sends every result to the approval queue. Auto applies small ones (a Background dot, a rumour moving a step) with an Undo card, and sends big ones to the queue.",
       scope: "world", config: true, type: String, default: "suggest", choices: {suggest: "Suggest (everything to the approval queue)", auto: "Auto (small changes apply, with an undo card)", off: "Off"}
     });
     game.settings.register(MOD, "turnDays", {
-      name: "Days between faction turns", hint: "Each faction may act once in this many days of world time (B99: a week).",
+      name: "Days between faction turns", hint: "Each faction may act once in this many days of world time (a week by default).",
       scope: "world", config: true, type: Number, default: F.TURN_DAYS, range: {min: 1, max: 90, step: 1}
     });
   }
@@ -279,7 +279,7 @@ export function build(ctx) {
       const gone = people.length && people.every(a => !a || routines.downState?.(a));
       if ( !gone ) continue;
       const ch = F.untendedLoss(f, decades);
-      if ( ch.length ) await proposeChanges(`${f.name}: its Backgrounds go untended`, `Nobody of ${f.name} is left to tend them for ${decades} decade${decades === 1 ? "" : "s"}: a dot of each per decade (B83).`, ch, {key: `untended:${f.id}:${Math.floor(to)}`, kind: "untended"});
+      if ( ch.length ) await proposeChanges(`${f.name}: its Backgrounds go untended`, `Nobody of ${f.name} is left to tend them for ${decades} decade${decades === 1 ? "" : "s"}: a dot of each per decade.`, ch, {key: `untended:${f.id}:${Math.floor(to)}`, kind: "untended"});
     }
   }
 

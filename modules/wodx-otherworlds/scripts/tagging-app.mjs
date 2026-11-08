@@ -226,7 +226,7 @@ export async function writeChartsPage() {
   const html = `
     <p>Which chart applies is set by the era profile: Dark Ages, Long Night and Renaissance use Dark Ages: Werewolf; the Wild West uses the Wyld West Expansion Pack; the Victorian age, the Great War and every later era use W20, the basis book for those years.</p>
     <table><thead><tr><th>Kind of place</th>${head}</tr></thead><tbody>${body}</tbody></table>
-    <p>* WoDX choice, not from a book:</p><ul>${calls}</ul>
+    <p>* House rule, not from a book:</p><ul>${calls}</ul>
     <h2>Sources</h2><ul>${sources}</ul>
     <h2>Crossing rules</h2>
     <ul>
@@ -235,7 +235,7 @@ export async function writeChartsPage() {
       <li><strong>Shift time:</strong> 1 success, five minutes; 2, thirty seconds; 3 or more, instantly.</li>
       <li><strong>Packs:</strong> the opener of the way, usually the highest Gnosis, rolls once for the whole pack.</li>
       <li><strong>WoDX reading:</strong> when a caught traveler succeeds, or a packmate's roll frees them, they arrive on the far side.</li>
-      <li><strong>Disconnection</strong> (W20 p. 319): each lunar cycle spent in one world makes crossing to the other 1 harder; after a year and a day in the Penumbra a shapechanger begins to become a creature of spirit (proposed to the Storyteller). WoDX choice: the same rule is used in the Dark Ages, which gives none.</li>
+      <li><strong>Disconnection</strong> (W20 p. 319): each lunar cycle spent in one world makes crossing to the other 1 harder; after a year and a day in the Penumbra a shapechanger begins to become a creature of spirit (proposed to the Storyteller). House rule: the same rule is used in the Dark Ages, which gives none.</li>
     </ul>
     <h2>One Umbra</h2>
     <p>Where the lines' rules or ideas of the spirit world conflict, WoDX follows Wraith: the Oblivion first, then Werewolf: the Apocalypse, then Mage: the Ascension. Conflicts decided so far:</p>

@@ -5,7 +5,7 @@ import {MODULE_ID} from "./ratings.mjs";
  * the twin night map made from the physical one (Data/wodx-assets/twins). Roofs are copied onto each twin level
  * with their twin art; lights are copied with a colder colour. Travel regions (Teleport Token) are copied too, so a
  * road out of a map's Penumbra leads to the next map's Penumbra. Walls, sounds, notes and other regions stay on
- * every level (WoDX choice: the spirit and shadow worlds keep the physical world's shape).
+ * every level (house rule: the spirit and shadow worlds keep the physical world's shape).
  * Nothing is deleted while building. The scene is written to Data/wodx-backups/scenes first.
  */
 

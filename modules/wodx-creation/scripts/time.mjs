@@ -109,8 +109,8 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       notes.push(born !== null ? `Ages ${years} years (${fromYear - born} → ${ageEnd})` : `Ages ${years} years (birth year not set; taken as ${MORTAL.assumedAge} now)`);
       if ( ageEnd >= MORTAL.mayDieAt ) {
         const certain = ageEnd >= MORTAL.diesAt;
-        add("death", certain ? "Dies of age" : "May die of age", `${ageEnd} years old by ${toYear}${certain ? "" : "; tick if they die"} (WoDX choice)`, certain);
-        add("heir", "An heir inherits", "A new sheet, \"Heir of …\", copied from this one: Backgrounds and belongings, not experience (WoDX choice)", false);
+        add("death", certain ? "Dies of age" : "May die of age", `${ageEnd} years old by ${toYear}${certain ? "" : "; tick if they die"} (house rule)`, certain);
+        add("heir", "An heir inherits", "A new sheet, \"Heir of …\", copied from this one: Backgrounds and belongings, not experience (house rule)", false);
       }
     }
 
@@ -168,7 +168,7 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
     if ( years >= BACKGROUND_REVIEW.years ) {
       const bg = [...(actor.items ?? [])].filter(i => i.type === "Feature" && i.system?.type === "wod.types.background"
         && BACKGROUND_REVIEW.names.some(n => i.name.toLowerCase().includes(n)));
-      if ( bg.length ) notes.push(`Review after ${years} years: ${bg.map(i => `${i.name} ${i.system.value ?? ""}`.trim()).join(", ")} (WoDX choice)`);
+      if ( bg.length ) notes.push(`Review after ${years} years: ${bg.map(i => `${i.name} ${i.system.value ?? ""}`.trim()).join(", ")} (house rule)`);
     }
 
     // Each line's advancer (era advancement, B83): the switches' rules, the era crossing and the line's notes

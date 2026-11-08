@@ -53,7 +53,7 @@ export function embraceData(mortal, {sire = null, clanName, generation, startBlo
   path.label = roads ? "custom" : "wod.advantages.path.humanity";
   path.custom = roads ? EMBRACE.road : "";
   if ( !(Number(path.permanent) > 0) ) {
-    // WoDX choice: a mortal sheet with no Humanity starts at Conscience + Self-Control
+    // House rule: a mortal sheet with no Humanity starts at Conscience + Self-Control
     const v = adv.virtues ?? {};
     const start = Math.max(1, (Number(v.conscience?.permanent) || 1) + (Number(v.selfcontrol?.permanent) || 1));
     path.permanent = path.value = Math.min(10, start);

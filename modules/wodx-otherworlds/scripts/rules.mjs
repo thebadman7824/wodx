@@ -86,7 +86,7 @@ export function gauntletFor(chartId, ratings = {}) {
   } else if ( ratings.settlement && (ratings.settlement in chart.values) ) {
     base = chart.values[ratings.settlement];
     source = `${chart.name}: ${SETTLEMENTS[ratings.settlement]}`;
-    if ( chart.ourCall[ratings.settlement] ) notes.push(`WoDX choice: ${chart.ourCall[ratings.settlement]}`);
+    if ( chart.ourCall[ratings.settlement] ) notes.push(`House rule: ${chart.ourCall[ratings.settlement]}`);
   }
   if ( base === null ) return {gauntlet: null, source: null, notes, chart};
   const modifier = Number.isInteger(ratings.modifier) ? ratings.modifier : 0;
@@ -177,7 +177,7 @@ export function planAttempt(p) {
   // Disconnection (W20 p. 319): each lunar cycle spent in one world makes crossing to the other 1 harder
   if ( p.mode === "cross" && p.cycles > 0 ) {
     difficulty = Math.min(10, difficulty + p.cycles);
-    lines.push(`Disconnection: ${p.cycles} lunar cycle${p.cycles === 1 ? "" : "s"} in this world +${p.cycles} (W20 p. 319${p.procedure === "dark-ages" ? "; WoDX choice to use it in the Dark Ages" : ""})`);
+    lines.push(`Disconnection: ${p.cycles} lunar cycle${p.cycles === 1 ? "" : "s"} in this world +${p.cycles} (W20 p. 319${p.procedure === "dark-ages" ? "; a house rule uses it in the Dark Ages too" : ""})`);
   }
   difficulty = Math.max(1, difficulty);
   const allowed = blocks.length === 0 || !!p.override;

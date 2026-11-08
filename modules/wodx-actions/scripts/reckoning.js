@@ -157,7 +157,7 @@ export function build(ctx) {
 
     async function imbue(actor) {
         if (!game.user.isGM) return ctx.notify("The Storyteller runs the Imbuing.");
-        if (ctx.line?.() && ctx.line() !== "reckoning") return ctx.notify("The Imbuing belongs to 1999 and after (B42): this chronicle's era uses other hunter rules.");
+        if (ctx.line?.() && ctx.line() !== "reckoning") return ctx.notify("The Imbuing belongs to 1999 and after: this chronicle's era uses other hunter rules.");
         const content = `<form><p>The Imbuing of <b>${esc(actor.name)}</b> (Hunter: The Reckoning p. 84): Virtues ${K.IMBUE.virtues} points by creed, Willpower ${K.IMBUE.willpower}, Conviction by creed; an edge for each Virtue point, at most the Virtue's level.${actor.type === "Hunter" ? "" : " A new Hunter sheet is made from this one; the mortal sheet stays as it is."}</p>
           <div class="form-group"><label>Creed</label><select name="creed" data-fixed>${Object.entries(K.CREEDS).map(([k, c]) => `<option value="${k}">${esc(c.label)} (${cap(c.virtue)})</option>`).join("")}</select></div>
           <div class="form-group"><label>Mercy / Vision / Zeal</label><input type="number" name="mercy" value="0" min="0" max="3" style="width:4em"/> <input type="number" name="vision" value="0" min="0" max="3" style="width:4em"/> <input type="number" name="zeal" value="3" min="0" max="3" style="width:4em"/></div>

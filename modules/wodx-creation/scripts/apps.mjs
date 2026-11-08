@@ -97,7 +97,7 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="lineage"><i class="fa-solid fa-sitemap"></i> Lineage journal</button>
           <button type="button" data-action="passYears"><i class="fa-solid fa-hourglass-half"></i> Pass the years</button>
           <button type="button" data-action="people"><i class="fa-solid fa-users"></i> People</button>
-          ${isTestWorld() ? `<button type="button" data-action="skipTest" title="The Phase 4 gate. Moves this world's clock to 2025"><i class="fa-solid fa-vial"></i> Time-skip test</button>` : ""}
+          ${isTestWorld() ? `<button type="button" data-action="skipTest" title="Test worlds only. Moves this world's clock to 2025"><i class="fa-solid fa-vial"></i> Time-skip test</button>` : ""}
         </div>
         <div class="form-group"><label><input type="checkbox" data-action="toggleNPCs" ${this.showNPCs ? "checked" : ""}> Show every NPC (to make one an ally)</label></div>
         ${searchBox("table.wodx-roster", "Search characters…", "Search characters")}
