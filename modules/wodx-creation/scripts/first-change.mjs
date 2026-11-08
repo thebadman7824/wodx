@@ -170,7 +170,7 @@ export async function firstChangeDialog() {
     for ( const li of items ) {
       const c = li.querySelector("input[name=gift]");
       const from = src[c.dataset.name.toLowerCase()];
-      li.querySelector(".wodx-fc-tag").textContent = from ? ` — ${from.join(", ")}` : "";
+      li.querySelector(".wodx-fc-tag").textContent = from ? ` (${from.join(", ")})` : "";
       li.dataset.start = from ? "1" : "";
     }
     items.sort((x, y) => (y.dataset.start === "1") - (x.dataset.start === "1")).forEach(li => ul.appendChild(li));

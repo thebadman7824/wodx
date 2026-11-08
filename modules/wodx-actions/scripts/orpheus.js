@@ -70,7 +70,7 @@ export function build(ctx) {
           <div class="form-group"><label>Ability</label>${searchBox("select[name=b]", "Search Abilities…", "Search Abilities")}<select name="b"><option value="">none</option>${traits.filter(t => !ATTRS.includes(t.key)).map(t => `<option value="${esc(t.key)}">${esc(t.label)} ${t.value}</option>`).join("")}</select></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="d" min="2" max="10" value="6"/></div>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div></form>`;
-        return dialog(`A Horror — ${actor.name}`, content, "Use", async fd => {
+        return dialog(`A Horror: ${actor.name}`, content, "Use", async fd => {
             const it = i.horrors.find(x => x.id === fd.h);
             const k = Math.max(0, Math.min(5, n(fd.v)));
             if (k > i.vitality.now) { notify(`${actor.name} has ${i.vitality.now} Vitality.`); return null; }
@@ -106,7 +106,7 @@ export function build(ctx) {
           <div class="form-group"><label>Hours (rest) or points (share, tap)</label><input type="number" name="x" min="1" max="24" value="8"/></div>
           <div class="form-group"><label><input type="checkbox" name="body"${i.projector ? " checked" : ""}/> Resting in the living body</label></div>
           <div class="form-group"><label>Share with</label>${others.length > 5 ? searchBox("select[name=to]", "Search the crucible…", "Search the crucible") : ""}<select name="to"><option value="">—</option>${others.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join("")}</select></div></form>`;
-        return dialog(`Vitality — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`Vitality: ${actor.name}`, content, "Go", async fd => {
             let body = "", rolls = [];
             if (fd.k === "rest") {
                 const v = O.rest(i.vitality.now, i.vitality.start, n(fd.x), !!fd.body);
@@ -147,7 +147,7 @@ export function build(ctx) {
         const i = info(actor);
         const content = `<form><p>${line(i)}. ${i.lament === "skimmer" ? "A skimmer's soul takes its wounds in the body, as bashing (soak at 5)." : "A ghost's or projected sleeper's wounds come off its Vitality."}</p>
           <div class="form-group"><label>Levels (after soak)</label><input type="number" name="k" min="1" max="10" value="1"/></div></form>`;
-        return dialog(`Harm to the spook — ${actor.name}`, content, "Apply", async fd => {
+        return dialog(`Harm to the spook: ${actor.name}`, content, "Apply", async fd => {
             const k = n(fd.k);
             let body = "";
             if (i.lament === "skimmer") {
@@ -167,7 +167,7 @@ export function build(ctx) {
             <option value="tether">A ghost's tether severed by this spook (the Storyteller may take points)</option><option value="last">The last tether: the ghost moves on (−1 Spite rating)</option>
             <option value="spectre">Facing a Spectre (Willpower at the Spite rating)</option></select></div>
           <div class="form-group"><label>Points</label><input type="number" name="x" min="0" max="10" value="1"/></div></form>`;
-        return dialog(`Spite — ${actor.name}`, content, "Apply", async fd => {
+        return dialog(`Spite: ${actor.name}`, content, "Apply", async fd => {
             let body = "", rolls = [];
             if (fd.k === "gain" || fd.k === "tether") {
                 let pts = i.spite.points + (fd.k === "gain" ? n(fd.x) : -n(fd.x)), rat = i.spite.rating, up = 0;
@@ -194,7 +194,7 @@ export function build(ctx) {
         const content = `<form><p>${line(i)}. ${i.lament === "skimmer" ? "Outside the body: a Vitality point an hour, or a bashing level." : "Only skimmers pay by the hour."}</p>
           <div class="form-group"><label>Hours outside the body</label><input type="number" name="h" min="1" max="24" value="1"/></div>
           <div class="form-group"><label><input type="checkbox" name="hurt"/> Take bashing instead of Vitality</label></div></form>`;
-        return dialog(`Projection — ${actor.name}`, content, "Apply", async fd => {
+        return dialog(`Projection: ${actor.name}`, content, "Apply", async fd => {
             if (i.lament !== "skimmer") { notify(`${actor.name} is not a skimmer.`); return null; }
             const h = n(fd.h);
             let body;

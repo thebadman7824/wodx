@@ -55,7 +55,7 @@
 "r": "manipulation+stealth",
 "d": 7,
 "t": "scene",
-"e": "Each success adds one to the difficulty of Perception rolls to notice him.",
+"e": "Each success adds one to the difficulty of Perception rolls to notice them.",
 "id": "blur-of-the-milky-eye"
 },
 {
@@ -122,7 +122,7 @@
 "r": "manipulation+expression",
 "d": 7,
 "t": "turns",
-"e": "Everyone but allies who hear him gawks where he points, a round per success.",
+"e": "Everyone but allies who hear them gawks where the Garou points, a round per success.",
 "id": "distract-the-fool"
 },
 {
@@ -260,7 +260,7 @@
 "p": 126,
 "c": "g1",
 "t": "scene",
-"e": "Allies who see him get an automatic success on Willpower rolls (not the Ahroun himself).",
+"e": "Allies who see them get an automatic success on Willpower rolls (not the Ahroun themself).",
 "id": "inspiration"
 },
 {
@@ -272,7 +272,7 @@
 "p": 141,
 "c": "w1",
 "t": "scene",
-"e": "Glows with moonlight (100 feet): +1 to hand-to-hand attacks against him, −1 to missiles.",
+"e": "Glows with moonlight (100 feet): +1 to hand-to-hand attacks against them, −1 to missiles.",
 "id": "lambent-flame"
 },
 {
@@ -405,7 +405,7 @@
 ],
 "p": 117,
 "t": "at-will",
-"e": "Always on: tracking him by scent is at +2 difficulty.",
+"e": "Always on: tracking them by scent is at +2 difficulty.",
 "id": "scent-of-running-water"
 },
 {
@@ -444,7 +444,7 @@
 "p": 138,
 "c": "g1",
 "t": "scene",
-"e": "Ties in opposed rolls go to him, facedowns included.",
+"e": "Ties in opposed rolls go to them, facedowns included.",
 "id": "seizing-the-edge"
 },
 {
@@ -601,7 +601,7 @@
 "r": "dexterity+stealth",
 "d": 7,
 "t": "var",
-"e": "Searchers must beat his successes on Perception + Alertness to spot him while he keeps still.",
+"e": "Searchers must beat their successes on Perception + Alertness to spot them while they keep still.",
 "id": "blissful-ignorance"
 },
 {
@@ -667,7 +667,7 @@
 "r": "rage",
 "d": 8,
 "t": "var",
-"e": "Each success adds a Brawl die; he enters berserk frenzy.",
+"e": "Each success adds a Brawl die; the Garou enters berserk frenzy.",
 "id": "cornered-rat"
 },
 {
@@ -736,7 +736,7 @@
 "r": "intelligence+empathy",
 "d": "tRage|5",
 "t": "instant",
-"e": "As Mother's Touch, but the Garou may heal herself.",
+"e": "As Mother's Touch, but the Garou may heal themself.",
 "id": "grandmothers-touch"
 },
 {
@@ -792,7 +792,7 @@
 "r": "charisma+animalken",
 "d": 6,
 "t": "scene",
-"e": "Animals treat him as an ordinary human; the Curse on humans stays.",
+"e": "Animals treat them as an ordinary human; the Curse on humans stays.",
 "id": "mask-the-predator"
 },
 {
@@ -817,7 +817,7 @@
 "r": "manipulation+medicine",
 "d": 6,
 "t": "scene",
-"e": "Appears to carry a dread disease of his choosing.",
+"e": "Appears to carry a dread disease of their choosing.",
 "id": "plague-visage",
 "chk": true
 },
@@ -961,7 +961,7 @@
 "p": 140,
 "c": "g1",
 "t": "instant",
-"e": "A dedicated handheld item appears in his grip at the end of the turn.",
+"e": "A dedicated handheld item appears in their grip at the end of the turn.",
 "id": "summon-talisman"
 },
 {
@@ -1163,7 +1163,7 @@
 "r": "willpower",
 "d": 7,
 "t": "scene",
-"e": "Lends a packmate or Bone Gnawer Rage, Willpower, health levels or a Gift he knows.",
+"e": "Lends a packmate or Bone Gnawer Rage, Willpower, health levels or a Gift they know.",
 "id": "friend-in-need"
 },
 {
@@ -1190,7 +1190,7 @@
 "r": "willpower",
 "d": "ownRage",
 "t": "scene",
-"e": "Every two successes add one to his frenzy difficulties; afterwards a Willpower point or a frenzy check.",
+"e": "Every two successes add one to their frenzy difficulties; afterwards a Willpower point or a frenzy check.",
 "id": "heart-of-fury"
 },
 {
@@ -1328,7 +1328,7 @@
 "p": 138,
 "c": "g1",
 "t": "scene",
-"e": "Spits in a foe's shadow and may then wound him by striking it.",
+"e": "Spits in a foe's shadow and may then wound them by striking it.",
 "id": "shadow-cutting"
 },
 {
@@ -1341,7 +1341,7 @@
 "r": "gnosis",
 "d": 7,
 "t": "scene",
-"e": "Claws turn to silver: aggravated damage most Fera can't soak; he gains a Rage point each turn and non-combat difficulties rise by two.",
+"e": "Claws turn to silver: aggravated damage most Fera can't soak; the Garou gains a Rage point each turn and non-combat difficulties rise by two.",
 "id": "silver-claws"
 },
 {
@@ -1436,7 +1436,7 @@
 "r": "perception+brawl|melee",
 "d": 8,
 "t": "scene",
-"e": "After a turn of watching a fighter, each success is a bonus die against him.",
+"e": "After a turn of watching a fighter, each success is a bonus die against them.",
 "id": "warriors-eye"
 },
 {
@@ -1450,7 +1450,7 @@
 "r": "dexterity+occult",
 "d": 6,
 "t": "scene",
-"e": "Paints woad figures on her body (one per success) that spring to life in a fight.",
+"e": "Paints woad figures on their body (one per success) that spring to life in a fight.",
 "id": "woadling"
 },
 {
@@ -1464,7 +1464,7 @@
 "r": "charisma+intimidation",
 "d": 6,
 "t": "scene",
-"e": "Wyrm-tainted who see him roll Willpower or Courage (7) or flee.",
+"e": "Wyrm-tainted who see them roll Willpower or Courage (7) or flee.",
 "id": "wrath-of-gaia"
 },
 {
@@ -1504,7 +1504,7 @@
 "r": "perception+occult",
 "d": 8,
 "t": "scene",
-"e": "Foes meeting her gaze roll Willpower (8) against her successes or suffer.",
+"e": "Foes meeting their gaze roll Willpower (8) against their successes or suffer.",
 "id": "balors-gaze",
 "chk": true
 },
@@ -1656,7 +1656,7 @@
 "p": 127,
 "c": "g1",
 "t": "scene",
-"e": "Anyone working against him or his pack glows, even if hidden by powers.",
+"e": "Anyone working against them or their pack glows, even if hidden by powers.",
 "id": "full-moons-light"
 },
 {
@@ -1717,7 +1717,7 @@
 "p": 134,
 "c": "g1r1",
 "t": "scene",
-"e": "A carved rune keeps iron weapons from wounding him.",
+"e": "A carved rune keeps iron weapons from wounding them.",
 "id": "iron-cannot-pierce"
 },
 {
@@ -1742,7 +1742,7 @@
 ],
 "p": 141,
 "t": "permanent",
-"e": "Mind control and mental attacks against him are at difficulty 10.",
+"e": "Mind control and mental attacks against them are at difficulty 10.",
 "id": "lordly-will"
 },
 {
@@ -1794,7 +1794,7 @@
 "r": "perception+enigmas",
 "d": "8|gauntlet",
 "t": "var",
-"e": "Senses a far place he knows as if present.",
+"e": "Senses a far place they know as if present.",
 "id": "scent-of-beyond"
 },
 {
@@ -1834,7 +1834,7 @@
 "p": 141,
 "c": "w3",
 "t": "instant",
-"e": "Once per scene, evades an attack that would take him below Crippled.",
+"e": "Once per scene, evades an attack that would take them below Crippled.",
 "id": "sidestep-death"
 },
 {
@@ -1899,7 +1899,7 @@
 ],
 "p": 127,
 "t": "permanent",
-"e": "Innate: regains a Rage point in any turn he takes damage, without a frenzy check from it.",
+"e": "Innate: regains a Rage point in any turn they take damage, without a frenzy check from it.",
 "id": "stoking-furys-furnace"
 },
 {
@@ -2050,7 +2050,7 @@
 "r": "gnosis",
 "d": 7,
 "t": "turns",
-"e": "For a turn per success, human works and tools can't touch the Garou unless he wishes.",
+"e": "For a turn per success, human works and tools can't touch the Garou unless they wish it.",
 "id": "false-comfort"
 },
 {
@@ -2090,7 +2090,7 @@
 "p": 140,
 "c": "g1per100mi",
 "t": "instant",
-"e": "Travels 100 miles per Gnosis point to a place he has seen.",
+"e": "Travels 100 miles per Gnosis point to a place they have seen.",
 "id": "gate-of-the-moon"
 },
 {
@@ -2171,7 +2171,7 @@
 "p": 127,
 "c": "g1",
 "t": "scene",
-"e": "Natural fire can't harm him; supernatural fire does a quarter, as bashing; flaming blows add two aggravated dice.",
+"e": "Natural fire can't harm them; supernatural fire does a quarter, as bashing; flaming blows add two aggravated dice.",
 "id": "kiss-of-helios"
 },
 {
@@ -2183,7 +2183,7 @@
 "p": 141,
 "c": "g1",
 "t": "scene",
-"e": "After a turn's focus, immune to silver, and his blows wound Garou as silver.",
+"e": "After a turn's focus, immune to silver, and their blows wound Garou as silver.",
 "id": "lunas-avenger"
 },
 {
@@ -2252,7 +2252,7 @@
 "r": "charisma+leadership",
 "d": 8,
 "t": "var",
-"e": "Those nearby who fail to beat his successes on Willpower (8) obey: 1 mild, 3 most, 5 nearly anything.",
+"e": "Those nearby who fail to beat their successes on Willpower (8) obey: 1 mild, 3 most, 5 nearly anything.",
 "id": "obedience"
 },
 {
@@ -2389,7 +2389,7 @@
 "r": "wits+enigmas",
 "d": "gauntlet",
 "t": "var",
-"e": "Summons Wyldlings who change the situation in her favor.",
+"e": "Summons Wyldlings who change the situation in their favor.",
 "id": "wyld-warp"
 }
 ]

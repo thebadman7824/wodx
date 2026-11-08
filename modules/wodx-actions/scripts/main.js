@@ -289,7 +289,7 @@ function healthUpdate(actor, damage) {
 function healthText(actor, damage) {
     const t = healthTrack(actor);
     const ws = R.woundState(damage, t.totals, t.penalties, t.labels);
-    return `${damage.bashing}B / ${damage.lethal}L / ${damage.aggravated}A — ${ws.label ? game.i18n.localize(ws.label) : "Unhurt"}`;
+    return `${damage.bashing}B / ${damage.lethal}L / ${damage.aggravated}A, ${ws.label ? game.i18n.localize(ws.label) : "Unhurt"}`;
 }
 async function applyDamage(actor, type, levels) {
     if (!levels) return null;
@@ -326,7 +326,7 @@ function diceHtml(r, specialty = false) {
 function resultLine(r, { degreeText = true } = {}) {
     if (r.botch) return `<div class="vta-res bad">BOTCH</div>`;
     if (!r.successes) return `<div class="vta-res">Failure</div>`;
-    return `<div class="vta-res good">${r.successes} success${r.successes === 1 ? "" : "es"}${degreeText ? ` — ${R.degree(r.successes)}` : ""}</div>`;
+    return `<div class="vta-res good">${r.successes} success${r.successes === 1 ? "" : "es"}${degreeText ? `: ${R.degree(r.successes)}` : ""}</div>`;
 }
 function rollBlock(title, r, parts = [], specialty = false) {
     return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
@@ -486,7 +486,7 @@ function readPool(actor, attrSel, abilitySel) {
 /* ================================================================== */
 
 const PRESETS = {
-    "": { label: "— Custom roll —" },
+    "": { label: "(custom roll)" },
     climbing: { label: "Climbing (Dex + Athletics, extended)", attr: "dexterity", ability: "athletics", diff: 6, mode: "extended", target: 5, note: "3 yards/meters per success on an average climb (5 easy, 2 hard). Protean claws or bone spurs: –2 difficulty. Botch: slip, stuck or fall." },
     riding: { label: "Riding (Dex + Ride)", attr: "dexterity", ability: "ride", diff: 6, note: "Rough terrain +1, at speed +3. Failure: roll again to keep control. Botch: thrown and hurt." },
     driving: { label: "Driving a cart (Dex + Ride)", attr: "dexterity", ability: "ride", diff: 6, note: "Rain or crowds +1; fast while losing pursuers +3. Botch: lose control of the team." },
@@ -509,7 +509,7 @@ const PRESETS = {
     carousing: { label: "Carousing (Cha + Empathy)", attr: "charisma", ability: "empathy", diff: 6, aura: true },
     credibility: { label: "Credibility / a scam (Man + Subterfuge vs Per + Subterfuge)", attr: "manipulation", ability: "subterfuge", diff: 7, mode: "resisted", opp: { attr: "perception", ability: "subterfuge", diff: 7, needMore: true }, aura: true },
     fasttalk: { label: "Fast-Talk (Man + Subterfuge vs Willpower)", attr: "manipulation", ability: "subterfuge", diff: 6, mode: "resisted", opp: { pool: "willpower", diff: 6 }, aura: true, note: "On a tie, more babbling is needed." },
-    interrogate: { label: "Interrogation, peaceful (Man + Empathy vs Willpower)", attr: "manipulation", ability: "empathy", diff: 6, mode: "resisted", opp: { pool: "willpower", diff: 6 }, aura: true, note: "Each extra success reveals more; exceeding the subject's Willpower rating: she tells everything." },
+    interrogate: { label: "Interrogation, peaceful (Man + Empathy vs Willpower)", attr: "manipulation", ability: "empathy", diff: 6, mode: "resisted", opp: { pool: "willpower", diff: 6 }, aura: true, note: "Each extra success reveals more; exceeding the subject's Willpower rating: the subject tells everything." },
     torture: { label: "Interrogation, violent (Man + Intimidation vs Sta + 3 or Willpower)", attr: "manipulation", ability: "intimidation", diff: 6, mode: "resisted", opp: { best: ["willpower", "stamina+3"], diff: 6 }, aura: true, note: "The subject loses a health level per turn of physical torture or a Willpower point per turn of mental torture." },
     intimidate: { label: "Intimidation, subtle (Man + Intimidation vs Willpower)", attr: "manipulation", ability: "intimidation", diff: 6, mode: "resisted", opp: { pool: "willpower", diff: 6 }, aura: true },
     threaten: { label: "Intimidation, blatant (Str + Intimidation vs Willpower or Str + Intimidation)", attr: "strength", ability: "intimidation", diff: 6, mode: "resisted", opp: { best: ["willpower", "strength+intimidation"], diff: 6 }, aura: true },
@@ -689,7 +689,7 @@ async function resolveAction(actor, target, fd) {
         } else if (res.tie) txt = "Tie: neither side succeeds.";
         else txt = res.winner === "a" ? `${actor.name} wins by ${res.margin} (${R.degree(res.margin)}).` : `${target ? esc(target.name) : "The opponent"} resists (by ${res.margin}).`;
         if (fd.preset === "interrogate" || fd.preset === "torture") {
-            if (res.winner === "a" && target && res.margin > willpower(target).perm) txt += ` Extra successes exceed ${esc(target.name)}'s Willpower: she reveals everything.`;
+            if (res.winner === "a" && target && res.margin > willpower(target).perm) txt += ` Extra successes exceed ${esc(target.name)}'s Willpower: ${esc(target.name)} reveals everything.`;
         }
         body += `<div class="vta-big">${txt}</div>`;
     }
@@ -720,7 +720,7 @@ async function resolveAction(actor, target, fd) {
                 const rr = await rollPool(data.dice, data.diff, { specialty: data.specialty });
                 rolls.push(rr.roll);
                 data.state = R.extendedStep(data.state, rr);
-                body += rollBlock(`${data.label} — interval ${data.state.rolls}`, rr, [], data.specialty);
+                body += rollBlock(`${data.label}, interval ${data.state.rolls}`, rr, [], data.specialty);
                 if (data.opp) { const o = await rollPool(data.opp.dice, data.opp.diff); rolls.push(o.roll); data.opp.state = R.extendedStep(data.opp.state, o); body += rollBlock(`${esc(data.opp.name)} (${data.opp.label})`, o); }
                 if (rr.botch) { body += `<div class="vta-warn">Botch on interval ${data.state.rolls}: the work so far is lost or spoiled.</div>`; break; }
             }
@@ -755,7 +755,7 @@ async function continueExtended(msg, d) {
     const rolls = [r.roll];
     const nd = foundry.utils.deepClone(d);
     nd.state = R.extendedStep(d.state, r);
-    let body = rollBlock(`${d.label} — interval ${nd.state.rolls}`, r, [], d.specialty);
+    let body = rollBlock(`${d.label}, interval ${nd.state.rolls}`, r, [], d.specialty);
     if (d.opp) {
         const o = await rollPool(d.opp.dice, d.opp.diff);
         rolls.push(o.roll);
@@ -786,7 +786,7 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
     const v = virtues(actor), rd = road(actor), b = blood(actor);
     const golconda = !!flag(actor, "golconda");
     const content = `<form>
-      <p>${esc(actor.name)}: ${v.selfcontrol.label} ${v.selfcontrol.value}, ${v.conscience.label} ${v.conscience.value}, ${rd.name} ${rd.value}, blood ${b.value}${golconda ? " — <b>Golconda: immune to frenzy</b>" : ""}</p>
+      <p>${esc(actor.name)}: ${v.selfcontrol.label} ${v.selfcontrol.value}, ${v.conscience.label} ${v.conscience.value}, ${rd.name} ${rd.value}, blood ${b.value}${golconda ? "; <b>Golconda: immune to frenzy</b>" : ""}</p>
       <div class="form-group"><label>Provocation</label><select name="prov" data-fixed>${opts(Object.entries(R.FRENZY_PROVOCATIONS).map(([k, p]) => [k, `${p.label}${p.diff ? ` (${p.diff})` : ""}`]), provocation)}</select></div>
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="${difficulty ?? 6}"/></div>
       <div class="form-group"><label>Difficulty modifier (drugs –1, Intimidation powers +n…)</label><input type="number" name="mod" value="0"/></div>
@@ -850,12 +850,12 @@ async function beastRoll(actor, d, msg = null) {
         } else {
             enter = true;
             body += fear
-                ? `<div class="vta-big bad">${state.outcome === "botch" ? "Botch: immediate frenzy, lasting until the Storyteller decides." : "Rötschreck! She flees blindly toward safety, tearing through anyone in the way."}</div>`
-                : `<div class="vta-big bad">${state.outcome === "botch" ? "Botch: frenzy until the Storyteller decides; she may gain a Derangement." : "Frenzy! The Beast does exactly what it wants."}</div>`;
+                ? `<div class="vta-big bad">${state.outcome === "botch" ? "Botch: immediate frenzy, lasting until the Storyteller decides." : "Rötschreck! The vampire flees blindly toward safety, tearing through anyone in the way."}</div>`
+                : `<div class="vta-big bad">${state.outcome === "botch" ? "Botch: frenzy until the Storyteller decides, and a Derangement may follow." : "Frenzy! The Beast does exactly what it wants."}</div>`;
         }
     }
     if (enter) {
-        body += `<div class="vta-note">In frenzy: ignore wound penalties; +2 difficulty to Dominate her, –2 to resist it; immune to Rötschreck. A Willpower point controls one action for a turn. Usually lasts a scene.${!fear && d.kind !== "instinct" ? " Frenzying without risking a Road dot can bring a Moment of Truth." : ""}</div>`;
+        body += `<div class="vta-note">In frenzy: ignore wound penalties; +2 difficulty to Dominate the frenzied vampire, –2 for them to resist it; immune to Rötschreck. A Willpower point controls one action for a turn. Usually lasts a scene.${!fear && d.kind !== "instinct" ? " Frenzying without risking a Road dot can bring a Moment of Truth." : ""}</div>`;
         if (setting("applyChanges")) { await updateActor(actor, { "system.conditions.isfrenzy": true }); await setFlag(actor, "frenzyType", fear ? "fear" : "rage"); await condition(actor, fear ? "rotschreck" : "frenzy", true); }
         body += btn("endfrenzy", "End frenzy");
         data = { kind: "endfrenzy", actor: actor.uuid };
@@ -863,7 +863,7 @@ async function beastRoll(actor, d, msg = null) {
         await kx().logEvent(actor, `${fear ? "Rötschreck" : ridden ? "Rides the wave of frenzy" : "Frenzy"}: ${d.prov}.`, "frenzy");
         // Some Roads count frenzy itself, or failing to ride it, as a sin (Kings, Bones, Sin, Metamorphosis…)
         if (!fear) {
-            const sp = await kx().sinPrompt(actor, d.kind === "instinct" && !ridden ? "notRidden" : ridden ? "none" : "frenzy", ridden ? "" : "She gave the Beast the reins");
+            const sp = await kx().sinPrompt(actor, d.kind === "instinct" && !ridden ? "notRidden" : ridden ? "none" : "frenzy", ridden ? "" : "The Beast was given the reins");
             if (sp?.html) body += sp.html;
         }
     }
@@ -892,10 +892,10 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
     const hier = KR.hierarchyOf(rd.found);
     const lv = Math.max(1, Math.min(10, num(level) || rd.value || 1));
     const levelField = hier
-        ? `<select name="level" data-fixed>${opts(hier.map((x, i) => [10 - i, `${10 - i}: ${x}${10 - i > rd.value ? " (beyond her rating: no roll)" : ""}`]), lv)}</select>`
+        ? `<select name="level" data-fixed>${opts(hier.map((x, i) => [10 - i, `${10 - i}: ${x}${10 - i > rd.value ? " (beyond the rating: no roll)" : ""}`]), lv)}</select>`
         : `<input type="number" name="level" value="${lv}" min="1" max="10"/>`;
     const content = `<form>
-      <p>${esc(actor.name)} — ${esc(rd.name)} ${rd.value}, ${v.conscience.label} ${v.conscience.value}${rd.found ? ` <span class="wodx-quiet">(VtDA20 p. ${rd.found.path?.p ?? rd.found.road.hp ?? rd.found.road.p})</span>` : ""}</p>
+      <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}, ${v.conscience.label} ${v.conscience.value}${rd.found ? ` <span class="wodx-quiet">(VtDA20 p. ${rd.found.path?.p ?? rd.found.road.hp ?? rd.found.road.p})</span>` : ""}</p>
       <div class="form-group"><label>Sin (the Road's hierarchy${hier ? ", WoDX summaries" : ""})</label>${levelField}</div>
       <div class="form-group"><label>The sin</label><input type="text" name="desc" value="${esc(desc)}"/></div>
       <div class="form-group"><label>On failure, lose</label><select name="lose">${opts([["road", "A Road dot"], ["conscience", `A ${v.conscience.label} dot`], ["selfcontrol", `A ${v.selfcontrol.label} dot`], ["courage", "A Courage dot"]], "road")}</select></div>
@@ -919,7 +919,7 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
             if (r.botch) body += `<div class="vta-note">Botch: the Storyteller may add a Derangement tied to the sin.</div>`;
         }
         if (!fail) {
-            body += `<div class="vta-big good">She rationalizes the sin; the Road holds.</div>`;
+            body += `<div class="vta-big good">The sin is rationalized; the Road holds.</div>`;
             if (chk.momentOfTruth) body += `<div class="vta-note">A major sin resisted can spark a Moment of Truth (half-cost Road increase this story).</div>`;
         } else {
             const path = fd.lose === "road" ? "system.advantages.path.permanent" : `system.advantages.virtues.${fd.lose}.permanent`;
@@ -944,7 +944,7 @@ export async function hunt({ actor: a } = {}) {
     if (!actor) return;
     const b = blood(actor), v = virtues(actor);
     const content = `<form>
-      <p>${esc(actor.name)} — blood ${b.value}/${b.max}; hungry below ${7 - v.selfcontrol.value} (7 – ${v.selfcontrol.label})</p>
+      <p>${esc(actor.name)}: blood ${b.value}/${b.max}; hungry below ${7 - v.selfcontrol.value} (7 – ${v.selfcontrol.label})</p>
       <div class="form-group"><label>Hunting ground</label><select name="area" data-fixed>${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), "market")}</select></div>
       ${poolSelectors(actor, "", { attr: "wits", ability: findAbility(actor, "streetwise")?.id ?? findAbility(actor, "subterfuge")?.id ?? "" })}
       <div class="form-group"><label>Fame / Domain / Herd</label>
@@ -1020,10 +1020,10 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         html += rollBlock(`Hunger: ${v.selfcontrol.label} (blood ${b.value} &lt; ${7 - v.selfcontrol.value})`, r, vp.caps.length ? [`capped by ${vp.caps.join(", ")}`] : []);
         if (v.selfcontrol.isInstinct) {
             if (r.successes === 0) gorge = true;
-            html += `<div class="vta-res">${gorge ? "She cannot steer the Beast: she gorges." : "She rides the hunger and stops when she chooses."}</div>`;
+            html += `<div class="vta-res">${gorge ? "The Beast cannot be steered: the vampire gorges." : "The vampire rides the hunger and stops when they choose."}</div>`;
         } else {
             gorge = r.successes === 0;
-            html += `<div class="vta-res">${gorge ? "Hunger frenzy: she gorges until sated, the vessel dies, or she regains control." : "She keeps control."}</div>`;
+            html += `<div class="vta-res">${gorge ? "Hunger frenzy: the vampire gorges until sated, the vessel dies, or control returns." : "Control holds."}</div>`;
         }
     }
     const room = b.max - b.value;
@@ -1032,7 +1032,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const minutes = cold || 0;
     const effective = R.bloodGained(drunk, { minutesDead: minutes });
     const turns = Math.ceil(drunk / 3);
-    html += `<div class="vta-sec"><b>Drinks ${drunk} blood point${drunk === 1 ? "" : "s"}</b> (${turns} turn${turns === 1 ? "" : "s"} at up to 3 per turn)${minutes >= 10 ? ` — cold blood: worth ${effective}` : ""}.</div>`;
+    html += `<div class="vta-sec"><b>Drinks ${drunk} blood point${drunk === 1 ? "" : "s"}</b> (${turns} turn${turns === 1 ? "" : "s"} at up to 3 per turn)${minutes >= 10 ? `; cold blood, worth ${effective}` : ""}.</div>`;
     if (vessel.pool < 1) html += `<div class="vta-note">A ${vessel.label.toLowerCase()} holds only ${vessel.pool} blood point.</div>`;
     const gain = vessel.pool < 1 ? 0 : effective;
     if (gain) {
@@ -1055,7 +1055,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
             await kx().logEvent(actor, `Drains ${vesselActor?.name ?? "a vessel"} to death.`, "kill");
             const sp = await kx().sinPrompt(actor, actor.system?.conditions?.isfrenzy ? "killFrenzy" : "kill", `${vesselActor?.name ?? "The vessel"} is drained to death`);
             if (sp?.html) html += sp.html;
-            else if (!sp) html += `<div class="vta-note">Her Road doesn't count this killing as a sin, or names no level: the Storyteller decides.</div>`;
+            else if (!sp) html += `<div class="vta-note">The Road doesn't count this killing as a sin, or names no level: the Storyteller decides.</div>`;
         }
         html += `<div class="vta-note">Mortals recover one blood point per day.</div>`;
     }
@@ -1085,7 +1085,7 @@ export async function spendBlood({ actor: a } = {}) {
     const b = blood(actor), dmg = healthTrack(actor).damage, rd = road(actor);
     const quick = flag(actor, "quickening") ?? {};
     const content = `<form>
-      <p>${esc(actor.name)} — blood ${b.value}/${b.max}, ${b.perTurn} per turn (Generation ${generationOf(actor)}). Health: ${healthText(actor, dmg)}</p>
+      <p>${esc(actor.name)}: blood ${b.value}/${b.max}, ${b.perTurn} per turn (Generation ${generationOf(actor)}). Health: ${healthText(actor, dmg)}</p>
       <fieldset><legend>Healing</legend>
         <div class="form-group"><label>Lethal / bashing levels to heal (1 blood each)</label><input type="number" name="healL" value="${Math.min(dmg.lethal, b.value)}" style="width:4em"/> <input type="number" name="healB" value="${Math.min(dmg.bashing, Math.max(0, b.value - dmg.lethal))}" style="width:4em"/></div>
         <div class="form-group"><label><input type="checkbox" name="acting"/> Heal while doing something else (Stamina + Survival, diff 8)</label></div>
@@ -1127,7 +1127,7 @@ async function resolveSpend(actor, fd) {
         html += rollBlock("Healing while acting: Stamina + Survival", r);
         if (r.successes === 0) {
             healOK = false;
-            html += `<div class="vta-warn">${r.botch ? "Botch: the blood is wasted, one more blood point is lost, and she takes a health level." : "Failure: the blood is spent with no effect."}</div>`;
+            html += `<div class="vta-warn">${r.botch ? "Botch: the blood is wasted, one more blood point is lost, and the vampire takes a health level." : "Failure: the blood is spent with no effect."}</div>`;
             if (r.botch) { spent += 1; await applyDamage(actor, "lethal", 1); }
         }
     }
@@ -1160,7 +1160,7 @@ async function resolveSpend(actor, fd) {
             upd[`system.attributes.${k}.total`] = num(at.total ?? at.value) + n;
             cur[k] = (cur[k] || 0) + n;
             const newVal = num(at.total ?? at.value) + n;
-            bits.push(`${cap(k)} ${newVal}${newVal > maxT ? ` (above ${maxT}: fades three turns after she stops spending)` : ""}`);
+            bits.push(`${cap(k)} ${newVal}${newVal > maxT ? ` (above ${maxT}: fades three turns after the spending stops)` : ""}`);
         }
         if (setting("applyChanges")) {
             await updateActor(actor, upd);
@@ -1218,7 +1218,7 @@ async function oathStep(thrall, regnant, points = 1) {
         }
         const r = await C.giveVitae(thrall, regnant, { points });
         await kx().logEvent(thrall, `Drinks ${regnant.name}'s vitae: ${r?.oath ? `already sworn to ${r.oath}` : r?.stage?.label ?? ""}.`, "oath");
-        if (r?.stage?.stage >= 3) await kx().logEvent(regnant, `${thrall.name} is blood bound to her.`, "oath");
+        if (r?.stage?.stage >= 3) await kx().logEvent(regnant, `${thrall.name} is blood bound to ${regnant.name}.`, "oath");
         return `<div class="vta-sec"><b>Blood Oath:</b> ${esc(thrall.name)} → ${esc(regnant.name)}: ${esc(r?.oath ? `already sworn to ${r.oath}; no new bond` : r?.sameNight ? `${r.stage.label} (a second drink the same night doesn't deepen it)` : r?.stage?.label ?? "")}${r?.becameGhoul ? "; becomes a ghoul" : ""}. ${r?.stage?.stage ? R.OATH_STAGES[r.stage.stage] ?? "" : ""}</div>`;
     }
     const bonds = foundry.utils.deepClone(flag(thrall, "oaths") ?? {});
@@ -1250,7 +1250,7 @@ export async function bloodOath({ actor: a } = {}) {
     const list = Object.entries(bonds);
     const wp = willpower(actor);
     const content = `<form>
-      <p>${esc(actor.name)} — Willpower ${wp.perm} (${wp.temp} left). A bond fades one step after ${R.oathDecayMonths(wp.perm)} months without drinking.</p>
+      <p>${esc(actor.name)}: Willpower ${wp.perm} (${wp.temp} left). A bond fades one step after ${R.oathDecayMonths(wp.perm)} months without drinking.</p>
       ${list.length ? `<table class="vta-table"><tr><th>Regnant</th><th>Stage</th><th>Drinks</th></tr>${list.map(([k, b]) => `<tr><td>${esc(b.name)}</td><td>${b.stage}</td><td>${b.drinks}</td></tr>`).join("")}</table>` : "<p><i>No bonds recorded.</i></p>"}
       <div class="form-group"><label>Action</label><select name="act">${opts([["resist", "Resist the bond (Willpower roll, then spend Willpower)"], ["drink", "Record a drink from the targeted Cainite"], ["fade", "Bond fades one step (months apart)"], ["clear", "Break the bond completely"]], "resist")}</select></div>
       <div class="form-group"><label>Bond</label>${list.length > 5 ? searchBox("select[name=bond]", "Search bonds…", "Search bonds") : ""}<select name="bond">${opts(list.map(([k, b]) => [k, `${b.name} (stage ${b.stage})`]), list[0]?.[0])}</select></div>
@@ -1322,7 +1322,7 @@ export async function daytime({ actor: a } = {}) {
         const res = R.awakeningResult(r);
         html += `<div class="vta-big ${res.awake ? "good" : "bad"}">${res.text}</div>`;
         if (res.awake) {
-            html += `<div class="vta-note">While active by day, no dice pool may exceed her Road rating (${rd.value}). Enabled on the Action dialog.</div>`;
+            html += `<div class="vta-note">While active by day, no dice pool may exceed the Road rating (${rd.value}). Enabled on the Action dialog.</div>`;
             await setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns });
         }
         return post(actor, `${actor.name} stirs by day`, html, rolls);
@@ -1335,7 +1335,7 @@ export async function torpor({ actor: a } = {}) {
     const rd = road(actor), t = flag(actor, "torpor"), tl = R.torporLength(rd.value), b = blood(actor);
     const elapsed = t ? Math.floor((game.time.worldTime - (t.since ?? 0)) / 86400) : 0;
     const content = `<form>
-      <p>${esc(actor.name)} — ${esc(rd.name)} ${rd.value}: torpor lasts <b>${tl.text}</b>. Blood ${b.value}.</p>
+      <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}: torpor lasts <b>${tl.text}</b>. Blood ${b.value}.</p>
       ${t ? `<p>In ${t.voluntary ? "voluntary " : ""}torpor since ${elapsed} day(s) of game time ago (minimum ${t.voluntary ? Math.ceil(t.days / 2) : t.days} days).</p>` : ""}
       <div class="form-group"><label>Action</label><select name="act">${opts(t ? [["rise", "Attempt to rise (1 blood, Road roll diff 8)"], ["wake", "Wake without a roll (fed / Storyteller)"]] : [["enter", "Enter torpor (from injury)"], ["voluntary", "Enter torpor voluntarily"]], t ? "rise" : "enter")}</select></div>
     </form>`;
@@ -1349,20 +1349,20 @@ export async function torpor({ actor: a } = {}) {
         }
         if (fd.act === "wake") {
             await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false); await condition(actor, "torpor", false);
-            return post(actor, `${actor.name} rises from torpor`, `<div class="vta-note">She rises Crippled and should heal or hunt at once.</div>`);
+            return post(actor, `${actor.name} rises from torpor`, `<div class="vta-note">${esc(actor.name)} rises Crippled and should heal or hunt at once.</div>`);
         }
         const minDays = t.voluntary ? Math.ceil(t.days / 2) : t.days;
         let html = "";
         if (elapsed < minDays) html += `<div class="vta-warn">Only ${elapsed} of ${minDays} days have passed (game time). Rolling anyway at the Storyteller's word.</div>`;
-        if (b.value < 1) return post(actor, `${actor.name} cannot rise`, html + `<div class="vta-big bad">No blood in her body: she cannot rise until fed.</div>`);
+        if (b.value < 1) return post(actor, `${actor.name} cannot rise`, html + `<div class="vta-big bad">No blood in the body: no rising until fed.</div>`);
         await changeBlood(actor, -1);
         const r = await rollPool(rd.value, 8);
         html += rollBlock(`${rd.name} (1 blood spent)`, r);
         if (r.successes) {
             await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false); await condition(actor, "torpor", false);
             await kx().logEvent(actor, "Rises from torpor.", "torpor");
-            html += `<div class="vta-big good">She rises: Crippled; heal or hunt immediately.</div>`;
-        } else html += `<div class="vta-big bad">She sleeps on. Wait a night, spend another blood point, and try again.</div>`;
+            html += `<div class="vta-big good">${esc(actor.name)} rises: Crippled; heal or hunt immediately.</div>`;
+        } else html += `<div class="vta-big bad">${esc(actor.name)} sleeps on. Wait a night, spend another blood point, and try again.</div>`;
         return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
     });
 }
@@ -1519,7 +1519,7 @@ export async function hazard({ actor: a, kind = "sun" } = {}) {
     if (!actor) return;
     const fort = discipline(actor, "Fortitude");
     const content = `<form>
-      <p>${esc(actor.name)} — ${profile(actor)}, Fortitude ${fort}, Stamina ${attr(actor, "stamina")}</p>
+      <p>${esc(actor.name)}: ${profile(actor)}, Fortitude ${fort}, Stamina ${attr(actor, "stamina")}</p>
       <div class="form-group"><label>Hazard</label><select name="kind">${opts([["sun", "Sunlight"], ["fire", "Fire"], ["fall", "Falling"]], kind)}</select></div>
       <div class="vta-k vta-sun"><div class="form-group"><label>Light</label><select name="light" data-fixed>${opts(Object.entries(R.SUNLIGHT_INTENSITY).map(([k, x]) => [k, `${x.label} (soak ${x.diff})`]), "direct")}</select></div>
         <div class="form-group"><label>Exposure</label><select name="exposure" data-fixed>${opts(Object.entries(R.SUNLIGHT_EXPOSURE).map(([k, x]) => [k, `${k}/turn: ${x}`]), 3)}</select></div></div>
@@ -1584,7 +1584,7 @@ async function resolveHazard(actor, fd) {
     if (levels) {
         if (setting("applyChanges")) {
             const res = await applyDamage(actor, type, levels);
-            if (res?.after) html += `<div class="vta-res">Now ${healthText(actor, res.after)}${res.condition?.text ? ` — <b>${res.condition.text}</b>` : ""}</div>`;
+            if (res?.after) html += `<div class="vta-res">Now ${healthText(actor, res.after)}${res.condition?.text ? `: <b>${res.condition.text}</b>` : ""}</div>`;
         } else html += btn("damage", `Apply ${levels} ${type}`);
         data = { kind: "damage", actor: actor.uuid, type, levels };
     }
@@ -1638,14 +1638,14 @@ async function diablerieStep(actor, victim, html = "", msg = null) {
         const vp = R.virtuePool(v.selfcontrol.value, { road: rd.value || 10, blood: blood(actor).value, bloodLimited: true });
         const c = await rollPool(vp.dice, R.diablerieControlDifficulty(rd.value));
         html += rollBlock(`Euphoria: ${v.selfcontrol.label} (10 – Road)`, c);
-        html += `<div class="vta-res">${c.successes ? "She keeps control through the rapture." : "Overwhelmed by the Amaranth's ecstasy: she loses control."}</div>`;
+        html += `<div class="vta-res">${c.successes ? "Control holds through the rapture." : "Overwhelmed by the Amaranth's ecstasy: control is lost."}</div>`;
         const vg = generationOf(victim), ag = generationOf(actor);
         if (vg < ag) {
             const drop = ag - vg >= 5 ? "one (or more, Storyteller's call)" : "one";
             if (setting("applyChanges")) await updateActor(actor, { "system.generation": num(actor.system.generation) - 1 });
             html += `<div class="vta-big good">Generation lowers by ${drop}: now ${ag - 1}.</div><div class="vta-note">Elder vitae may also raise Disciplines a dot or more for a scene.</div>`;
         } else html += `<div class="vta-note">The victim's blood was no stronger: no change of Generation.</div>`;
-        html += `<div class="vta-note">Black veins mark her aura for ${Math.max(1, ag - vg)} year(s). Most Roads forbid murder: Road loss is automatic, not rolled.</div>`;
+        html += `<div class="vta-note">Black veins mark the diablerist's aura for ${Math.max(1, ag - vg)} year(s). Most Roads forbid murder: Road loss is automatic, not rolled.</div>`;
         await kx().logEvent(actor, `Diablerie: consumes ${victim.name}'s soul${vg < ag ? `; Generation ${ag} → ${ag - 1}` : ""}.`, "diablerie");
         await kx().logEvent(victim, `Final Death: diablerized by ${actor.name}.`, "diablerie");
         const sp = await kx().sinPrompt(actor, "diablerie", "Diablerie");
@@ -1678,7 +1678,7 @@ export async function seduction({ actor: a, target: t } = {}) {
         const wpen = woundPenalty(actor);
         const steps = [
             ["Approach", "appearance", "subterfuge", fd.wits + 3, "The subject shows disinterest.", "The subject grows disgusted or angry."],
-            ["Witty repartee", "wits", "subterfuge", fd.int + 3, "The subject breaks off but may be receptive later.", "The subject gains a dangerous insight about her."],
+            ["Witty repartee", "wits", "subterfuge", fd.int + 3, "The subject breaks off but may be receptive later.", "The subject gains a dangerous insight about the speaker."],
             ["Intimate conversation", "charisma", "empathy", fd.per + 3, "The subject breaks off but may be receptive later.", "A drink in the face."]
         ];
         let carry = 0, html = "";
@@ -1853,7 +1853,7 @@ export async function menu({ actor: a } = {}) {
     let r;
     try {
         r = await P.ask({
-            title: `WoDX Actions — ${KXD.isKotE(actor) ? "Kuei-jin (Kindred of the East)" : OXD.isOrpheus(actor) ? "Orpheus (a spook)" : P.profileLabel(kind)}`, content: html, width: legacy || !TR.LINE_LOOK.includes(kind) ? 460 : 560, classes: ["vta-dialog", "wodx-menu-dialog"],
+            title: `WoDX Actions: ${KXD.isKotE(actor) ? "Kuei-jin (Kindred of the East)" : OXD.isOrpheus(actor) ? "Orpheus (a spook)" : P.profileLabel(kind)}`, content: html, width: legacy || !TR.LINE_LOOK.includes(kind) ? 460 : 560, classes: ["vta-dialog", "wodx-menu-dialog"],
             buttons: [{ id: "close", label: "Close", icon: "fas fa-times" }],
             onRender: (root, close) => {
                 const use = async b => {
@@ -1887,7 +1887,7 @@ function menuKeys(root, use) {
     const find = wrap.querySelector(".vta-menu-find");
     const hint = wrap.querySelector(".vta-hintbar");
     const shown = () => [...wrap.querySelectorAll("button[data-k]")].filter(b => b.offsetParent !== null && b.style.display !== "none");
-    const say = b => { if (hint) hint.innerHTML = b ? `<b>${esc(b.textContent.trim())}</b>${b.dataset.hint ? ` — ${esc(b.dataset.hint)}` : ""}` : esc(hint.dataset.default ?? ""); };
+    const say = b => { if (hint) hint.innerHTML = b ? `<b>${esc(b.textContent.trim())}</b>${b.dataset.hint ? `: ${esc(b.dataset.hint)}` : ""}` : esc(hint.dataset.default ?? ""); };
     wrap.addEventListener("mouseover", ev => { const b = ev.target.closest?.("button[data-k]"); if (b) say(b); });
     wrap.addEventListener("focusin", ev => { const b = ev.target.closest?.("button[data-k]"); say(b ?? null); });
     wrap.addEventListener("mouseleave", () => say(wrap.querySelector("button[data-k]:focus")));

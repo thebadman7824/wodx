@@ -347,12 +347,12 @@ export function build(ctx) {
         if (!def) return;
         const r = resId === "willpower" ? { ok: true, value: willpower(actor).temp, max: willpower(actor).perm, label: "Willpower" } : P.resource(actor, resId);
         const options = def.uses.map((u, i) => `<option value="${i}">${esc(u[0])}</option>`).join("");
-        const content = `<form class="vta-uses"><p><b>${esc(actor.name)}</b> — ${esc(def.title)}: ${r.ok ? `${r.value}${r.max ? ` / ${r.max}` : ""}` : "<i>not on the sheet</i>"}</p>
+        const content = `<form class="vta-uses"><p><b>${esc(actor.name)}</b>: ${esc(def.title)}: ${r.ok ? `${r.value}${r.max ? ` / ${r.max}` : ""}` : "<i>not on the sheet</i>"}</p>
           <div class="form-group"><label>Use</label><select name="use" data-fixed>${options}</select></div>
           <div class="form-group"><label>Points (negative gains)</label><input type="number" name="cost" value="${def.uses[0][1]}"/></div>
           <div class="form-group"><label>Roll difficulty / bonus dice</label><input type="number" name="diff" value="${def.uses.find(u => u[2])?.[2]?.diff ?? 6}" style="width:4em"/> <input type="number" name="bonus" value="0" style="width:4em"/></div>
           <p class="vta-note vta-use-note">${esc(def.uses[0][3] ?? "")}</p></form>`;
-        return ctx.dialog(`${def.title} — ${actor.name}`, content, "Use", async fd => {
+        return ctx.dialog(`${def.title}: ${actor.name}`, content, "Use", async fd => {
             const u = def.uses[num(fd.use)];
             const note = await pay(actor, resId, fd.cost);
             if (note === false) return null;
@@ -377,7 +377,7 @@ export function build(ctx) {
     /** Changeling cantrip: Art + lowest primary Realm, base difficulty 8 (Changeling 20th). */
     async function cantrip(actor) {
         const g = P.resource(actor, "glamour");
-        const content = `<form><p><b>${esc(actor.name)}</b> — Glamour ${g.ok ? `${g.value}/${g.max}` : "—"}, Nightmare ${P.resource(actor, "nightmare").value}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Glamour ${g.ok ? `${g.value}/${g.max}` : "—"}, Nightmare ${P.resource(actor, "nightmare").value}</p>
           <div class="form-group"><label>Art rating (level used)</label><input type="number" name="art" value="1" min="0" max="5"/></div>
           <div class="form-group"><label>Lowest primary Realm used</label><input type="number" name="realm" value="1" min="0" max="5"/></div>
           <div class="form-group"><label>Realms or levels not possessed ("cheated")</label><input type="number" name="cheat" value="0" min="0"/></div>
@@ -395,7 +395,7 @@ export function build(ctx) {
           <div class="form-group"><label>Bunk (-1 to -5, enter 0-5)</label><input type="number" name="bunk" value="0" min="0" max="5"/></div>
           </fieldset>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div></form>`;
-        return ctx.dialog(`Cantrip — ${actor.name}`, content, "Weave", async fd => {
+        return ctx.dialog(`Cantrip: ${actor.name}`, content, "Weave", async fd => {
             let diff = 8 + (fd.tBan ? 1 : 0) + (fd.lBan ? 1 : 0) + (fd.scene ? 1 : 0) + (fd.time ? 1 : 0) + (fd.title ? 1 : 0)
                 - (fd.nm ? 1 : 0) - (fd.freehold ? 1 : 0) - (fd.kinain ? 1 : 0) - (fd.affinity ? 1 : 0) - Math.min(5, Math.max(0, fd.bunk));
             const cost = (fd.type === "wyrd" ? 1 : 0) + fd.cheat;
@@ -415,7 +415,7 @@ export function build(ctx) {
     async function cast(actor) {
         const arete = P.resource(actor, "arete");
         const q = P.resource(actor, "quintessence");
-        const content = `<form><p><b>${esc(actor.name)}</b> — Arete ${arete.value || arete.perm || 0}, Quintessence ${q.ok ? q.value : "—"}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Arete ${arete.value || arete.perm || 0}, Quintessence ${q.ok ? q.value : "—"}</p>
           <div class="form-group"><label>Highest Sphere used</label><input type="number" name="sphere" value="2" min="1" max="5"/></div>
           <div class="form-group"><label>Kind of effect</label><select name="kind">
             <option value="3">Coincidental (Sphere + 3)</option><option value="4">Vulgar, no witnesses (Sphere + 4)</option><option value="5">Vulgar, with witnesses (Sphere + 5)</option></select></div>
@@ -424,7 +424,7 @@ export function build(ctx) {
           <div class="form-group"><label>Quintessence spent</label><input type="number" name="quint" value="0" min="0"/></div>
           <div class="form-group"><label>Paradox gained (Storyteller)</label><input type="number" name="paradox" value="0" min="0"/></div>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div></form>`;
-        return ctx.dialog(`Cast an effect — ${actor.name}`, content, "Cast", async fd => {
+        return ctx.dialog(`Cast an effect: ${actor.name}`, content, "Cast", async fd => {
             const diff = Math.min(10, Math.max(2, fd.sphere + num(fd.kind) + fd.mod));
             if (fd.quint) { const n = await pay(actor, "quintessence", fd.quint); if (n === false) return null; }
             if (fd.wp && !(await ctx.spendWillpower(actor, 1))) return null;
@@ -446,7 +446,7 @@ export function build(ctx) {
           <div class="form-group"><label>Change to</label><select name="form" data-fixed>${Object.entries(FORMS).map(([k, f]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${f.label} (diff ${f.diff})</option>`).join("")}</select></div>
           <div class="form-group"><label>Method</label><select name="how"><option value="roll">Stamina + Primal-Urge roll</option><option value="rage">Spend 1 Rage (instant)</option></select></div>
           <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="0"/></div></form>`;
-        return ctx.dialog(`Change form — ${actor.name}`, content, "Change", async fd => {
+        return ctx.dialog(`Change form: ${actor.name}`, content, "Change", async fd => {
             const f = FORMS[fd.form];
             let body = "", rolls = [];
             if (fd.how === "rage") {
@@ -474,10 +474,10 @@ export function build(ctx) {
         if (!can.regen) ctx.notify(`${actor.name}: ${can.why}`);
         const h = actor.system?.health?.damage ?? {};
         const dmg = { bashing: num(h.bashing), lethal: num(h.lethal), aggravated: num(h.aggravated) };
-        const content = `<form><p><b>${esc(actor.name)}</b> — ${dmg.bashing}B / ${dmg.lethal}L / ${dmg.aggravated}A</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: ${dmg.bashing}B / ${dmg.lethal}L / ${dmg.aggravated}A</p>
           <div class="form-group"><label>Heal</label><select name="type"><option value="bashing">1 bashing level (automatic)</option><option value="lethal">1 lethal level (Stamina roll diff 8 in stress)</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="stress" checked/> In a strenuous or stressful situation (roll required)</label></div></form>`;
-        return ctx.dialog(`Regenerate — ${actor.name}`, content, "Regenerate", async fd => {
+        return ctx.dialog(`Regenerate: ${actor.name}`, content, "Regenerate", async fd => {
             let body = "", rolls = [], ok = true;
             if (fd.type === "lethal" && fd.stress) {
                 const rr = await rollPool(attr(actor, "stamina"), 8); rolls.push(rr.roll);
@@ -525,7 +525,7 @@ export function build(ctx) {
             return { kind, html };
         }
         const html = `<div class="vta-grp-wrap">
-          <p class="vta-menu-head"><span><b>${esc(actor.name)}</b> — ${esc(P.profileLabel(kind))}${overridden ? " <i>(override)</i>" : " <i>(auto)</i>"}</span>
+          <p class="vta-menu-head"><span><b>${esc(actor.name)}</b>: ${esc(P.profileLabel(kind))}${overridden ? " <i>(override)</i>" : " <i>(auto)</i>"}</span>
              ${kindBtn}</p>
           ${def.sections.map(([title, btns]) => `<fieldset class="vta-grp"><legend>${esc(title)}</legend><div class="vta-grp-btns">${btns.map(([k, l, i]) =>
               `<button type="button" data-k="${esc(k)}" title="${esc(TR.DESC[k] ?? l)}"><i class="fas ${i}"></i> ${esc(l)}</button>`).join("")}</div></fieldset>`).join("")}

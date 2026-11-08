@@ -215,8 +215,8 @@ test("havens: set by scene or region; dawn warns who is away", async () => {
   await E.dawnWarning(10);
   const c = mock.log.chat.at(-1).content;
   assert.match(c, /Dawn in 10 minutes/);
-  assert.match(c, /Homebody<\/b>: in her haven/);
-  assert.match(c, /Wanderer<\/b>: <b>away from her haven/);
+  assert.match(c, /Homebody<\/b>: in their haven/);
+  assert.match(c, /Wanderer<\/b>: <b>away from their haven/);
   assert.match(c, /Homeless<\/b>: <b>no haven set/);
   for ( const a of [v, w, x] ) game.actors.delete(a.id);
 });

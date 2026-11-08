@@ -283,7 +283,7 @@ export const OATH_STAGES = {
     0: "No bond",
     1: "First drink: intermittent preoccupation; no mechanics.",
     2: "Second drink: Willpower roll needed to harm the regnant; regnant's Social rolls against the thrall –1 difficulty.",
-    3: "Full Blood Oath: regnant may Dominate without eye contact; regnant's Social rolls –2 difficulty; thrall resists her mental control at +2 difficulty. All lesser bonds vanish."
+    3: "Full Blood Oath: regnant may Dominate without eye contact; regnant's Social rolls –2 difficulty; thrall resists the regnant's mental control at +2 difficulty. All lesser bonds vanish."
 };
 export function oathResistDifficulty({ timesFed = 0, natureMod = 0, treatmentMod = 0 }) {
     const raw = 8 + natureMod + treatmentMod + timesFed;

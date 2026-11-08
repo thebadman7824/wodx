@@ -144,7 +144,7 @@ export function build(ctx) {
             <option value=""${!i.f.system ? " selected" : ""}>Follow the era</option><option value="da"${i.f.system === "da" ? " selected" : ""}>Dark Ages: Fae</option><option value="c20"${i.f.system === "c20" ? " selected" : ""}>Changeling 20th</option></select></div>
           <p class="wodx-quiet">${i.O ? `${esc(i.O.label)}: ${esc(i.O.birthright)}; frailty: ${esc(i.O.frailty)} (p. ${i.O.page}).` : "Origins: changeling, inanimae, firstborn (pp. 59–63)."} Cantrips: one per Dominion per Weaving dot. ${REF} pp. 86–115.</p>
         </form>`;
-        return dialog(`Origin and Court — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Origin and Court: ${actor.name}`, content, "Save", async fd => {
             const origin = F.ORIGINS[fd.origin] ? fd.origin : null;
             const court = F.COURTS[fd.court] ? fd.court : null;
             const st = origin ? F.startingTraits(origin) : null;
@@ -183,7 +183,7 @@ export function build(ctx) {
         const clock = await clockNow();
         const known = i.cantrips.map((c, k) => ({ ...c, k }));
         const content = `<form>
-          <p><b>${esc(actor.name)}</b> — ${esc(i.O.label)}${i.C ? `, ${esc(i.C.label)} Court` : ""}; Mists ${i.mists.temp}/${i.mists.perm}, Weaving ${i.weaving.temp}/${i.weaving.perm}.${clock.label ? ` ${esc(clock.label)}.` : ""}</p>
+          <p><b>${esc(actor.name)}</b>: ${esc(i.O.label)}${i.C ? `, ${esc(i.C.label)} Court` : ""}; Mists ${i.mists.temp}/${i.mists.perm}, Weaving ${i.weaving.temp}/${i.weaving.perm}.${clock.label ? ` ${esc(clock.label)}.` : ""}</p>
           <div class="form-group"><label>A cantrip</label>${known.length > 5 ? searchBox("select[name=c]", "Search cantrips…", "Search cantrips") : ""}<select name="c" data-fixed><option value="">(another, by hand)</option>${known.map(c => `<option value="${c.k}">${esc(cantripLine(c))}</option>`).join("")}</select></div>
           <fieldset><legend>By hand</legend>
             <div class="form-group"><label>Dominion</label><select name="dominion" data-fixed>${DOM_OPTS(i.C?.favored, i.dominions)}</select></div>
@@ -197,7 +197,7 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="cloak"/> Cloak it with the Mists (1 Mists)</label></div>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
         </form>`;
-        return dialog(`Cast a cantrip — ${actor.name}`, content, "Cast", async fd => {
+        return dialog(`Cast a cantrip: ${actor.name}`, content, "Cast", async fd => {
             const c = fd.c !== "" && fd.c != null ? known[n(fd.c)] : null;
             const dominion = c?.dominion ?? fd.dominion, level = c ? c.level : n(fd.level);
             const t = traitOf(actor, c?.trait || fd.trait);
@@ -234,7 +234,7 @@ export function build(ctx) {
         if (!i) return null;
         const clock = await clockNow();
         const content = `<form>
-          <p><b>${esc(actor.name)}</b> — Mists ${i.mists.perm}; Unleashing dice ${i.O.unleashDice}. Weaving ${i.weaving.temp} to spend.${i.O.unleashOnlyInMien && !i.mien ? " <b>Not in the mien:</b> a changeling Unleashes only in mien." : ""}</p>
+          <p><b>${esc(actor.name)}</b>: Mists ${i.mists.perm}; Unleashing dice ${i.O.unleashDice}. Weaving ${i.weaving.temp} to spend.${i.O.unleashOnlyInMien && !i.mien ? " <b>Not in the mien:</b> a changeling Unleashes only in mien." : ""}</p>
           <div class="form-group"><label>Dominion</label><select name="dominion" data-fixed>${DOM_OPTS(i.C?.favored, i.dominions)}</select></div>
           <div class="form-group stacked"><label>What the fae wants (a short intent)</label><input type="text" name="intent" value=""/></div>
           <div class="form-group"><label>Weaving to remove Unleashing dice</label><input type="number" name="weave" min="0" max="5" value="0"/></div>
@@ -242,7 +242,7 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="clock" checked/> Use the clock's hour and season</label></div>
           ${i.holdings ? `<div class="form-group"><label><input type="checkbox" name="holding"/> In a holding of this Dominion (−1)</label></div><div class="form-group"><label><input type="checkbox" name="calm"/> The holding calms Unleashing (−1 die)</label></div>` : ""}
         </form>`;
-        return dialog(`Unleash — ${actor.name}`, content, "Unleash", async fd => {
+        return dialog(`Unleash: ${actor.name}`, content, "Unleash", async fd => {
             const d = fd.dominion;
             const time = fd.clock ? F.timeBonus(d, clock) : {};
             const plan = F.unleashPlan({ dominion: d, rating: i.dominions[d], origin: i.origin, court: i.court, mists: i.mists.perm, weaving: i.weaving.perm, mien: i.mien },
@@ -286,7 +286,7 @@ export function build(ctx) {
           <div class="form-group"><label>The caster's successes</label><input type="number" name="theirs" min="0" max="20" value="1"/></div>
           <div class="form-group"><label><input type="checkbox" name="point"/> Spend a point for an automatic success (Weaving to absorb, Mists otherwise)</label></div>
         </form>`;
-        return dialog(`Counter — ${actor.name}`, content, "Counter", async fd => {
+        return dialog(`Counter: ${actor.name}`, content, "Counter", async fd => {
             const plan = F.counterPlan(fd.kind, { mists: i.mists.perm, weaving: i.weaving.perm, rating: i.dominions[fd.dominion], level: n(fd.level) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             const point = !!fd.point && await spend(actor, plan.spend, 1);
@@ -321,7 +321,7 @@ export function build(ctx) {
           ${i.sprites ? `<div class="form-group"><label>Sprites dice to add (up to ${i.sprites} a session)</label><input type="number" name="sprites" min="0" max="${i.sprites}" value="0"/></div>` : ""}
           <div class="form-group"><label>Weaving to spend (2 a success)</label><input type="number" name="weave" min="0" max="10" step="2" value="0"/></div>
         </form>`;
-        return dialog(`Face an Echo — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Face an Echo: ${actor.name}`, content, "Roll", async fd => {
             const e = fd.e !== "" && fd.e != null ? i.echoes[n(fd.e)] : null;
             const rolls = [];
             let er = { successes: 0, botch: false };
@@ -365,7 +365,7 @@ export function build(ctx) {
         if (!i) return null;
         const hidden = i.hiddenDays !== null;
         const content = `<form>
-          <p><b>${esc(actor.name)}</b> — Mists ${i.mists.temp}/${i.mists.perm}.${hidden ? ` Hidden by the Mists for ${i.hiddenDays} day${i.hiddenDays === 1 ? "" : "s"} (Willpower ${i.willpower}).` : ""}${i.suppression.over ? " Weaving overspent today: +2 to Mists rolls." : ""}</p>
+          <p><b>${esc(actor.name)}</b>: Mists ${i.mists.temp}/${i.mists.perm}.${hidden ? ` Hidden by the Mists for ${i.hiddenDays} day${i.hiddenDays === 1 ? "" : "s"} (Willpower ${i.willpower}).` : ""}${i.suppression.over ? " Weaving overspent today: +2 to Mists rolls." : ""}</p>
           <div class="form-group"><label>Use</label><select name="use" data-fixed>
             ${hidden ? `<option value="release">Let the Mists fall (end the hiding)</option>` : `<option value="hide">Hide from mortals (Mists, 7)</option>`}
             <option value="kenning">Bestow Kenning for a day</option>
@@ -373,7 +373,7 @@ export function build(ctx) {
           <div class="form-group"><label>Kenning for</label><select name="target" data-fixed><option value="mortal">a mortal (1)</option><option value="humane-kindred">a Kindred on the Road of Humanity (1)</option><option value="homid">a homid Garou (1)</option><option value="supernatural">another supernatural being (2)</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="unwilling"/> Unwilling: they resist (Willpower 6 against Mists 6)</label></div>
         </form>`;
-        return dialog(`The Mists — ${actor.name}`, content, "Do it", async fd => {
+        return dialog(`The Mists: ${actor.name}`, content, "Do it", async fd => {
             const u = fd.use;
             let body = "", rolls = [];
             if (u === "hide") {
@@ -423,7 +423,7 @@ export function build(ctx) {
         if (!oaths.length) return notify(`${actor.name} keeps no active oath.`);
         const content = `<form><div class="form-group"><label>The oath kept</label><select name="o" data-fixed>${oaths.map(o => `<option value="${o.k}">${esc(oathLine(o))}</option>`).join("")}</select></div>
           <p class="wodx-quiet">Each time the fae takes the time to keep their side, roll the oath's rating (6): a Weaving point per success (p. 102).</p></form>`;
-        return dialog(`Keep an oath — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Keep an oath: ${actor.name}`, content, "Roll", async fd => {
             const o = i.oaths[n(fd.o)];
             const r = await rollPool(o.rating, 6);
             const got = await gain(actor, "weaving", r.botch ? 0 : r.successes);
@@ -437,7 +437,7 @@ export function build(ctx) {
         const content = `<form><div class="form-group"><label>Days in a faerie realm</label><input type="number" name="days" min="0" max="30" value="1"/></div>
           ${i.holdings ? `<div class="form-group"><label>Hours resting in a holding that restores (1 an hour)</label><input type="number" name="hours" min="0" max="24" value="0"/></div>` : ""}
           <p class="wodx-quiet">1 Mists and 1 Weaving a day in a faerie realm (p. 102).</p></form>`;
-        return dialog(`Rest in a faerie realm — ${actor.name}`, content, "Rest", async fd => {
+        return dialog(`Rest in a faerie realm: ${actor.name}`, content, "Rest", async fd => {
             const next = F.realmRest({ days: n(fd.days), hours: n(fd.hours), holdingRestores: !!i.holdings }, i);
             await save(actor, { mists: next.mists, weaving: next.weaving });
             return post(actor, `${actor.name} rests among the fae`, `<div class="vta-res good">Mists ${next.mists.temp}/${next.mists.perm}; Weaving ${next.weaving.temp}/${next.weaving.perm}.</div><div class="wodx-quiet">${REF} pp. 93, 102</div>`);
@@ -455,7 +455,7 @@ export function build(ctx) {
             return post(actor, `Cold iron: ${actor.name}`, `<div class="vta-big bad">${k} aggravated level${k === 1 ? "" : "s"} (soakable); −${lost} Mists.</div>${r?.woundLabel ? `<div class="vta-res">Now ${esc(r.woundLabel)}.</div>` : ""}<div class="wodx-quiet">${REF} p. 88</div>`);
         };
         if (levels != null) return go(Math.max(1, n(levels)));
-        return dialog(`Cold iron — ${actor.name}`, `<form><div class="form-group"><label>Levels after soak</label><input type="number" name="k" min="1" max="10" value="1"/></div></form>`, "Apply", fd => go(Math.max(1, n(fd.k))));
+        return dialog(`Cold iron: ${actor.name}`, `<form><div class="form-group"><label>Levels after soak</label><input type="number" name="k" min="1" max="10" value="1"/></div></form>`, "Apply", fd => go(Math.max(1, n(fd.k))));
     }
 
     /** Card buttons: lower a havoc with Weaving; apply an Echo's level-5 harm. */

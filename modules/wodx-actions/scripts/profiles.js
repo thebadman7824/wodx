@@ -276,10 +276,10 @@ export function ask({ title, content, buttons, width = 480, classes = [], onRend
 export async function pickProfile(actor) {
     const auto = detectProfile(actor, { ignoreFlag: true });
     const cur = flagOf(actor) ?? "auto";
-    const opts = [`<option value="auto" ${cur === "auto" ? "selected" : ""}>Automatic — ${PROFILES[auto].label}</option>`]
+    const opts = [`<option value="auto" ${cur === "auto" ? "selected" : ""}>Automatic: ${PROFILES[auto].label}</option>`]
         .concat(Object.entries(PROFILES).map(([k, p]) => `<option value="${k}" ${cur === k ? "selected" : ""}>${p.label}</option>`));
     const r = await ask({
-        title: `Actor type — ${actor.name}`,
+        title: `Actor type: ${actor.name}`,
         content: `<form class="vtda20-profile wodx-profile"><p>Choose which combat and action menus ${actor.name} uses. Automatic reads the actor type, then the variant and Disciplines.</p>
           <div class="form-group"><label>Menu profile</label><select name="profile" data-fixed>${opts.join("")}</select></div></form>`,
         buttons: [{ id: "ok", label: "Set", icon: "fas fa-check", default: true }, { id: "no", label: "Cancel", icon: "fas fa-times" }],

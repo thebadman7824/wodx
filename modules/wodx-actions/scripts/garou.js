@@ -210,7 +210,7 @@ export function build(ctx) {
           <div class="form-group"><label>Change to</label><select name="form" data-fixed>${forms.filter(f => f !== i.form).map(f => `<option value="${f}">${esc(formLabel(actor, f))}</option>`).join("")}</select></div>
           <div class="form-group"><label>How</label><select name="how" data-fixed><option value="roll">Stamina + Primal-Urge</option><option value="rage">Spend 1 Rage (instant)</option><option value="breed">Back to breed form (instant)</option></select></div>
           <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="0"/></div></form>`;
-        return dialog(`Change form — ${actor.name}`, content, "Change", async fd => {
+        return dialog(`Change form: ${actor.name}`, content, "Change", async fd => {
             let to = fd.how === "breed" ? bf : fd.form;
             if (!G.FORMS.includes(to)) { ctx.notify("Choose a form."); return null; }
             if (lost && to !== bf) { ctx.notify(`${actor.name} has lost the wolf: only the breed form.`); return null; }
@@ -250,7 +250,7 @@ export function build(ctx) {
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="${Math.min(10, base + rankAdd)}"/></div>
           <p class="vta-note">${b === "w20" ? `W20 p. 262: by the moon${G.auspiceMoonMatches(i.auspice, moon.index) ? ", −1 for the auspice moon" : ""}${i.form === "crinos" ? ", −1 in Crinos" : ""}.` : `DA:W gives no moon table: 6 unless the Storyteller says otherwise${i.form === "crinos" ? ", −1 in Crinos (p. 107)" : ""}.`}${rankAdd ? ` Rank ${i.rank}: +${rankAdd} (DA:W p. 101).` : ""}${scarred ? " Extensive scarring: −1." : ""}</p>
           <div class="form-group"><label>Use temporary Rage if higher (extreme provocation)</label><input type="checkbox" name="useTemp"/></div></form>`;
-        return dialog(`Rage roll — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Rage roll: ${actor.name}`, content, "Roll", async fd => {
             const dice = fd.useTemp ? Math.max(i.rage.perm, i.rage.temp) : i.rage.perm;
             const rr = await rollPool(dice, fd.diff);
             let body = rollBlock("Rage", rr, [fd.reason ? esc(fd.reason) : ""].filter(Boolean)) + await markTurn(actor, "rage");
@@ -288,7 +288,7 @@ export function build(ctx) {
         if (actor.getFlag?.(MOD, "frenzyType") === "thrall") ctx.notify("The Thrall of the Wyrm ends only when the Storyteller says.");
         const content = `<form><p><b>${esc(actor.name)}</b>: once what caused the frenzy is over, roll Willpower at difficulty = permanent Rage (${i.rage.perm}); retry each turn (DA:W p. 94; W20 p. 261).</p>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="${Math.max(2, Math.min(10, i.rage.perm))}"/></div></form>`;
-        return dialog(`End frenzy — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`End frenzy: ${actor.name}`, content, "Roll", async fd => {
             const rr = await rollPool(i.willpower.perm, fd.diff);
             let body = rollBlock("Willpower", rr, []);
             if (rr.successes > 0) {
@@ -315,7 +315,7 @@ export function build(ctx) {
         const content = `<form><p><b>${esc(actor.name)}</b>: Rage ${i.rage.temp}/${i.rage.perm}. Up to ${capx.max} Rage a turn for actions${b === "daw" ? `; ${capx.safe} safe, more at +3 difficulty (DA:W p. 90)` : " (W20 p. 144)"}.</p>
           <div class="form-group"><label>Use</label><select name="use" data-fixed>${RAGE_USES.filter(([k]) => k !== "pain" || b === "daw").map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Points</label><input type="number" name="pts" value="1" min="1"/></div></form>`;
-        return dialog(`Spend Rage — ${actor.name}`, content, "Spend", async fd => {
+        return dialog(`Spend Rage: ${actor.name}`, content, "Spend", async fd => {
             if (fd.use === "shift") return shift(actor);
             if (fd.use === "active") return remainActive(actor);
             if (fd.use === "gain") {
@@ -346,7 +346,7 @@ export function build(ctx) {
         if (actor.getFlag?.(MOD, "remainedActive") === scene) return ctx.notify("Only once per scene.");
         const content = `<form><p><b>${esc(actor.name)}</b> is below Incapacitated. Rage roll (${i.rage.perm} dice) at 8; each success heals a level; once a scene.</p>
           <div class="form-group"><label>The worst damage is</label><select name="type" data-fixed><option value="aggravated">aggravated</option><option value="lethal">lethal</option><option value="bashing">bashing</option></select></div></form>`;
-        return dialog(`Remain active — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Remain active: ${actor.name}`, content, "Roll", async fd => {
             const rr = await rollPool(i.rage.perm, 8);
             await actor.setFlag?.(MOD, "remainedActive", scene);
             const ra = G.remainingActive(b, fd.type, rr.botch ? 0 : rr.successes);
@@ -375,7 +375,7 @@ export function build(ctx) {
         const content = `<form><p><b>${esc(actor.name)}</b>: Gnosis ${i.gnosis.temp}/${i.gnosis.perm}. Wits + Enigmas at ${diff}${earlier ? ` (+${earlier} for earlier days this week)` : ""}; up to one point an hour (DA:W p. 92; W20 p. 146).</p>
           <div class="form-group"><label>Hours of meditation</label><input type="number" name="hours" value="1" min="1"/></div>
           <div class="form-group"><label>Advance the clock by the hours (Storyteller)</label><input type="checkbox" name="advance"/></div></form>`;
-        return dialog(`Meditate — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Meditate: ${actor.name}`, content, "Roll", async fd => {
             const rr = await rollPool(attr(actor, "wits") + abilityDots(actor, "enigmas"), diff);
             const gain = Math.min(rr.botch ? 0 : rr.successes, Math.max(1, n(fd.hours)), Math.max(0, i.gnosis.perm - i.gnosis.temp));
             if (gain) await P.adjust(actor, "gnosis", gain);
@@ -424,7 +424,7 @@ export function build(ctx) {
             if (d !== null) root.querySelector("[name=diff]").value = d;
             box.innerHTML = `<b>Level ${g.l}</b> · cost ${esc(costTxt)}${c.per ? ` (${esc(c.per)})` : ""} · ${g.r ? `roll ${esc(poolOf(actor, g.r, i).label)}` : "no roll"} · ${esc(g.t ?? "")} · DA:W p. ${g.p}<br>${esc(g.e)}${g.chk ? "<br><i>Partly read from a damaged scan: check the page.</i>" : ""}${d === null && g.d ? `<br><i>Difficulty from ${esc(g.d)}: target a token or set it.</i>` : ""}`;
         };
-        return dialog(`Use a Gift — ${actor.name}`, content, "Use", async fd => {
+        return dialog(`Use a Gift: ${actor.name}`, content, "Use", async fd => {
             const it = actor.items.get(fd.gift); if (!it) return null;
             const g = giftData(it);
             const c = G.giftCost(g?.c);
@@ -468,10 +468,10 @@ export function build(ctx) {
         const groupsTxt = g => g.g.map(cap).join(", ").replace(/-/g, " ");
         const content = `<form class="wodx-learn"><p><b>${esc(actor.name)}</b>: ${esc(cap(i.breed))}, ${esc(cap(i.auspice) || "no auspice")}, ${esc(cap(i.tribe).replace(/-/g, " ") || "no tribe")}; Rank ${i.rank} (Gifts up to level ${rankCap}, DA:W p. 111).</p>
           ${searchBox("ul.wodx-gift-list", "Search Gifts…", "Search Gifts")}
-          <ul class="wodx-gift-list" style="max-height:340px;overflow-y:auto;flex:none">${rows.map(r => `<li data-search-item><label><input type="radio" name="gift" value="${r.g.id}" ${r.ok ? "" : "disabled"}/> <b>${esc(r.g.n)}</b> (level ${r.g.l}) — ${esc(groupsTxt(r.g))} · ${r.xp} XP${r.own ? "" : " (outside)"}${r.ok ? "" : " · rank too low"}<br><span class="wodx-quiet">${esc(r.g.e)}</span></label></li>`).join("")}</ul>
+          <ul class="wodx-gift-list" style="max-height:340px;overflow-y:auto;flex:none">${rows.map(r => `<li data-search-item><label><input type="radio" name="gift" value="${r.g.id}" ${r.ok ? "" : "disabled"}/> <b>${esc(r.g.n)}</b> (level ${r.g.l}): ${esc(groupsTxt(r.g))} · ${r.xp} XP${r.own ? "" : " (outside)"}${r.ok ? "" : " · rank too low"}<br><span class="wodx-quiet">${esc(r.g.e)}</span></label></li>`).join("")}</ul>
           <div class="form-group"><label>Spend experience through the log</label><input type="checkbox" name="xp" checked/></div>
           <p class="vta-note">Learned from a spirit (summoned at a caern), another Garou (a month; +1 difficulty until practised) or a quest (DA:W p. 111). Cost: level × 3 for the breed's, auspice's or tribe's own, × 5 otherwise (p. 107).</p></form>`;
-        return dialog(`Learn a Gift — ${actor.name}`, content, "Learn", async fd => {
+        return dialog(`Learn a Gift: ${actor.name}`, content, "Learn", async fd => {
             const g = gifts().find(x => x.id === fd.gift); if (!g) return null;
             const own = G.giftIsOwn(g, i), xp = G.giftXP(g.l, own);
             await actor.createEmbeddedDocuments("Item", [giftItem(g)]);
@@ -503,7 +503,7 @@ export function build(ctx) {
           <div class="form-group"><label>Caern level (seasonal rites)</label><input type="number" name="caern" value="0" min="0" max="5"/></div>
           <div class="form-group"><label>Advance the clock (10 minutes a level)</label><input type="checkbox" name="advance"/></div>
           <p class="vta-note">DA:W pp. 144–145: −1 difficulty per five taking part; at least 10 minutes a level (minor rites a few minutes). Rites are taught, not bought with experience, in the Dark Ages.</p></form>`;
-        return dialog(`Perform a rite — ${actor.name}`, content, "Perform", async fd => {
+        return dialog(`Perform a rite: ${actor.name}`, content, "Perform", async fd => {
             const it = fd.rite ? actor.items.get(fd.rite) : null;
             const lvl = it ? n(it.system?.level) : n(fd.level);
             if (lvl > abilityDots(actor, "rituals") && fd.type !== "minor") ctx.notify("A rite's level can't exceed Rituals (DA:W p. 144).");
@@ -527,7 +527,7 @@ export function build(ctx) {
         const content = `<form><p><b>${esc(actor.name)}</b>: Rite of Summoning (DA:W p. 150).</p>
           <div class="form-group"><label>Spirit</label><select name="type" data-fixed>${types.map(t => `<option value="${t}">${esc(t)} (${D.summoning.diff[t]})</option>`).join("")}</select></div>
           <div class="form-group"><label>Hours spent summoning</label><input type="number" name="hours" value="0" min="0"/></div></form>`;
-        return dialog(`Summon a spirit — ${actor.name}`, content, "Summon", async fd => {
+        return dialog(`Summon a spirit: ${actor.name}`, content, "Summon", async fd => {
             const diff = G.summonDifficulty(fd.type, fd.hours, D.summoning);
             const pool = poolOf(actor, "wits+rituals", info(actor));
             const rr = await rollPool(pool.dice, diff);
@@ -537,7 +537,7 @@ export function build(ctx) {
                 rolls.push(gr.roll);
                 body += rollBlock("Gnosis", gr, ["the spirit's attitude"]) + `<div class="vta-big">${esc(G.summonAttitude(gr.successes, D.summoning))}</div>`;
                 if (["Incarna", "Celestine avatar"].includes(fd.type)) body += `<div class="vta-note">Summoning an Incarna or Celestine earns Wisdom.</div>`;
-            } else if (rr.botch) body += `<div class="vta-note bad">A botch: the wrong spirit answers — perhaps a Bane.</div>`;
+            } else if (rr.botch) body += `<div class="vta-note bad">A botch: the wrong spirit answers, perhaps a Bane.</div>`;
             return post(actor, `${actor.name} summons a ${esc(fd.type)}`, body, rolls.filter(Boolean));
         });
     }
@@ -552,7 +552,7 @@ export function build(ctx) {
           <div class="form-group"><label>Do</label><select name="how" data-fixed><option value="activate">Activate: Gnosis roll</option><option value="spend">Activate: spend 1 Gnosis (automatic)</option><option value="attune">Attune (first use)</option></select></div>
           <div class="form-group"><label>This is a talen (one use)</label><input type="checkbox" name="talen"/></div>
           <p class="vta-note">Attune and activate at difficulty = the item's Gnosis; no Rage in the same turn (W20 p. 221; DA:W p. 92). A talen's spirit goes free when used (DA:W p. 149).</p></form>`;
-        return dialog(`Use a fetish — ${actor.name}`, content, "Use", async fd => {
+        return dialog(`Use a fetish: ${actor.name}`, content, "Use", async fd => {
             const it = actor.items.get(fd.item); if (!it) return null;
             const gn = Math.max(2, Math.min(10, n(it.system?.gnosis) || 6));
             const talen = fd.talen || !!it.getFlag?.(MOD, "talen") || it.system?.type === "wod.types.talen";
@@ -613,7 +613,7 @@ export function build(ctx) {
             const perm = Object.fromEntries(RENOWN.map(k => [k, i.renown[k].permanent]));
             const eligible = b === "daw" || D.rankChart?.[b] ? G.rankFor(i.auspice, perm, D.rankChart?.daw) : null;
             const rankNote = eligible !== null && eligible > i.rank ? ` Renown meets Rank ${eligible} (${D.rankNames?.[eligible] ?? ""}): a challenge set by a Garou of that rank is next (DA:W p. 101).` : "";
-            lines.push(`${actor.name}: ${parts.join(", ")}${reason ? ` — ${reason}` : ""}.${rankNote}`);
+            lines.push(`${actor.name}: ${parts.join(", ")}${reason ? ` (${reason})` : ""}.${rankNote}`);
         }
         if (lines.length) {
             await writeRenownLog(lines);
@@ -645,10 +645,10 @@ export function build(ctx) {
         if (!ready.length) return ctx.notify(`${actor.name} has no category with 10 temporary Renown.`);
         const content = `<form><p>The Rite of Accomplishment, performed by a Garou of equal or higher rank outside the pack, turns 10 temporary Renown into one permanent dot (DA:W pp. 99–100, 152).</p>
           <div class="form-group"><label>Category</label><select name="k" data-fixed>${ready.map(k => `<option value="${k}">${esc(renownLabel(i.fera, k))} (${i.renown[k].temporary})</option>`).join("")}</select></div></form>`;
-        return dialog(`Rite of Accomplishment — ${actor.name}`, content, "Perform", async fd => {
+        return dialog(`Rite of Accomplishment: ${actor.name}`, content, "Perform", async fd => {
             const r = G.accomplish(i.renown[fd.k]); if (!r) return null;
             await updateActor(actor, { [`system.renown.${fd.k}.permanent`]: r.permanent, [`system.renown.${fd.k}.temporary`]: r.temporary });
-            await writeRenownLog([`${actor.name}: Rite of Accomplishment — ${renownLabel(i.fera, fd.k)} ${r.permanent} permanent.`]);
+            await writeRenownLog([`${actor.name}: Rite of Accomplishment, ${renownLabel(i.fera, fd.k)} ${r.permanent} permanent.`]);
             return post(actor, `${actor.name}: Rite of Accomplishment`, `<div class="vta-big good">${esc(renownLabel(i.fera, fd.k))} ${r.permanent}</div>`);
         });
     }
@@ -660,7 +660,7 @@ export function build(ctx) {
           <div class="form-group"><label>Scar</label><select name="scar" data-fixed>${list.map((s, k) => `<option value="${k}">${esc(s.n)} (+${s.glory} Glory)</option>`).join("")}<option value="custom">Another (describe below)</option></select></div>
           <div class="form-group"><label>Notes</label><input type="text" name="notes"/></div>
           <div class="form-group"><label>Glory for a custom scar</label><input type="number" name="glory" value="1" min="0" max="3"/></div></form>`;
-        return dialog(`Battle Scar — ${actor.name}`, content, "Record", async fd => {
+        return dialog(`Battle Scar: ${actor.name}`, content, "Record", async fd => {
             const s = fd.scar === "custom" ? { n: fd.notes || "Battle scar", glory: n(fd.glory), e: fd.notes } : list[n(fd.scar)];
             await actor.createEmbeddedDocuments("Item", [{ name: `Battle Scar: ${s.n}`, type: "Feature", img: "icons/svg/blood.svg",
                 system: { type: "wod.types.flaw", description: `<p>${esc(s.e)}</p>${fd.notes && fd.scar !== "custom" ? `<p>${esc(fd.notes)}</p>` : ""}<p><em>${esc(S.page ?? "")}</em></p>` },
@@ -698,7 +698,7 @@ export function build(ctx) {
                     if (occ) { const rr = await rollPool(attr(a, "wits") + occ, 9); rolls.push(rr.roll); if (rr.successes > 0) { w += rr.successes; extra += ` +${rr.successes} (Wits + Occult)`; } }
                 }
                 const d = G.delirium(w, b, T);
-                rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${d.willpower}${esc(extra)}): ${esc(d.reaction)} — ${esc(d.memory)}.</li>`);
+                rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${d.willpower}${esc(extra)}): ${esc(d.reaction)}; ${esc(d.memory)}.</li>`);
             }
             return ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><ul>${rows.join("")}</ul></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: rolls.filter(Boolean) });
         });
@@ -720,7 +720,7 @@ export function build(ctx) {
         const cur = P.worldFlag(actor, "kinfolk") ?? "";
         const content = `<form><p><b>${esc(actor.name)}</b>: Kinfolk are immune to the Delirium and may bear Garou (DA:W p. 85).</p>
           <div class="form-group"><label>Kin to</label><select name="tribe" data-fixed><option value="">Not Kinfolk</option>${Object.entries(tribes).map(([k, v]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${esc(v.label)}</option>`).join("")}<option value="fera" ${cur === "fera" ? "selected" : ""}>Fera</option></select></div></form>`;
-        return dialog(`Kinfolk — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Kinfolk: ${actor.name}`, content, "Save", async fd => {
             await P.setWorldFlag(actor, "kinfolk", fd.tribe || null);
             return post(actor, `${actor.name}`, `<div class="vta-note">${fd.tribe ? `Kinfolk to the ${esc(tribes[fd.tribe]?.label ?? "Fera")}.` : "Not Kinfolk."}</div>`);
         });
@@ -734,7 +734,7 @@ export function build(ctx) {
           <div class="form-group"><label>For</label><input type="text" name="for" placeholder="teaching a Gift, a bridge, a binding…"/></div>
           <div class="form-group"><label>Owed</label><input type="text" name="owed" placeholder="the task or gift"/></div>
           <div class="form-group"><label>Paid</label><input type="checkbox" name="paid"/></div></form>`;
-        return dialog(`Chiminage — ${actor.name}`, content, "Record", async fd => {
+        return dialog(`Chiminage: ${actor.name}`, content, "Record", async fd => {
             const line = `${actor.name} ${fd.paid ? "paid" : "owes"} ${fd.to || "a spirit"}: ${fd.owed || "?"}${fd.for ? ` (for ${fd.for})` : ""}.`;
             let j = game.journal.find(x => x.getFlag?.(MOD, "kind") === "chiminage");
             const row = `<li>${esc(line)}</li>`;

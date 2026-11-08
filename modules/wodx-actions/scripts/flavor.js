@@ -17,7 +17,7 @@ export const POOLS = {
             "The candle gutters and steadies, and the work is done.",
             "{name} steps back, and the thing is finished, as neat as a clerk's ledger.",
             "Even the wind seems to hold still for it.",
-            "Done, and quietly. The best kind of done."
+            "Done, and nobody heard a thing."
         ],
         failure: [
             "It doesn't take. {name} will have to try again, or try something else.",
@@ -25,18 +25,18 @@ export const POOLS = {
             "The moment passes, and {name} is left holding nothing but the effort.",
             "Somewhere a bell rings the hour, as if to say the time for this is gone.",
             "{name}'s fingers are clumsy tonight, and the night has noticed.",
-            "Nothing breaks, nothing gives. The world simply declines.",
-            "It almost works. Almost.",
+            "Nothing breaks and nothing gives. It stays as it was.",
+            "It nearly works, and then it does not.",
             "{name} stops, listens, and starts over with less confidence than before."
         ],
         botch: [
             "Something gives way with a crack that will be heard three houses off.",
-            "{name} has made it worse. Considerably worse.",
+            "{name} has made it a great deal worse.",
             "The noise is enormous. Shutters open across the street.",
             "For a moment {name} can only stare at what has happened, and what it will cost.",
             "A slip, a stumble, and a dozen eyes turn to see what made the sound.",
             "Whatever saint watches over this sort of thing has looked away.",
-            "It goes wrong all at once, the way the worst things always do.",
+            "It all goes wrong at once.",
             "The valley has a way of punishing the careless, and tonight it is {name}'s turn."
         ]
     },
@@ -71,7 +71,7 @@ export const POOLS = {
             "The vessel sighs and goes slack, and the warmth spreads through {name} like wine.",
             "A clean feeding. Two small marks, a lick, and they are gone.",
             "{name} drinks until the Beast settles, and stops, and that is the hard part.",
-            "The heartbeat slows against {name}'s lips. Enough. Just enough.",
+            "The heartbeat slows against {name}'s lips, and {name} stops in time.",
             "Warm, and sweet, and over too soon. The vessel will wake thinking it was a dream.",
             "For a few minutes the hunger is quiet, and the world is almost bearable.",
             "{name} wipes the corner of a mouth and steps back into the dark, fed."
@@ -85,15 +85,15 @@ export const POOLS = {
         ],
         botch: [
             "The hunger rises up through {name}, and for one heartbeat they forget which of them is the hunter.",
-            "Too much. Far too much. The vessel's face has gone the color of tallow.",
+            "{name} has taken too much. The vessel's face has gone the color of tallow.",
             "A scream, and then running feet, and then the watch.",
             "{name} comes back to themselves with blood to the wrist and no memory of the last minute.",
-            "Someone saw. Someone always sees."
+            "Someone saw, and someone will talk."
         ]
     },
     frenzy: {
         success: [
-            "The Beast throws itself against the bars, and the bars hold. This time.",
+            "The Beast throws itself against the bars, and the bars hold, for now.",
             "{name} grips the table until the wood cracks, and breathes, and stays.",
             "A red tide rises, and {name} stands in it and does not drown.",
             "It passes. {name}'s hands are shaking, but they are still {name}'s hands.",
@@ -135,15 +135,15 @@ export const POOLS = {
     },
     conscience: {
         success: [
-            "{name} feels the weight of it, and that feeling is the thing worth keeping.",
+            "{name} feels the weight of it, and is glad still to feel it.",
             "Somewhere inside, a small light that was guttering burns a little steadier.",
             "[kindred] {name} remembers, for a moment, what it was to be one of them.",
             "[kindred] It hurts, and the hurt is good. The Beast does not feel guilt.",
-            "{name} is still someone who minds. That is not nothing.",
+            "{name} still minds what was done.",
             "[living] {name} knows exactly what was done, and will not pretend otherwise."
         ],
         failure: [
-            "It gets easier. That is the horror of it, and {name} knows it.",
+            "It gets easier each time, and {name} knows it.",
             "{name} waits for the guilt, and it does not come.",
             "[kindred] A little more of the mortal falls away, like plaster from an old wall.",
             "The next time will cost less. {name} is not sure that is a mercy.",
@@ -166,7 +166,7 @@ export const POOLS = {
         ],
         failure: [
             "The dark holds on. {name} sleeps on, and dreams of red stone.",
-            "Not yet. The Blood is not ready to let {name} go.",
+            "The Blood is not ready to let {name} go.",
             "Somewhere far away, {name} reaches for waking and finds only more night.",
             "The sleep is deep, and the earth is patient."
         ],
@@ -199,12 +199,12 @@ export const POOLS = {
             "{name} drinks past the blood, into the soul, and the soul tastes of centuries.",
             "Something vast and terrible pours into {name}, and {name} holds it.",
             "Memories that are not {name}'s flood in: a face, a field, a scream in a language long dead.",
-            "{target} is less, and {name} is more, and the arithmetic of it is unbearable."
+            "{target} grows less with every swallow, and {name} grows more."
         ],
         failure: [
             "{target}'s soul clings on, stubborn as a root in winter ground.",
             "{name} pulls, and something pulls back.",
-            "Not yet. The struggle goes on in the dark between them."
+            "The struggle goes on in the dark between them."
         ],
         botch: [
             "The grip slips, and something that was almost {name}'s slides away into the night.",

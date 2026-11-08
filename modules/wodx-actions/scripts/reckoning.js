@@ -46,11 +46,11 @@ export function build(ctx) {
 
     async function sheet(actor) {
         const i = info(actor);
-        const content = `<form><p><b>${esc(actor.name)}</b> — ${esc(i.creedDef?.label ?? "no creed")} · Mercy ${i.virtues.mercy}, Vision ${i.virtues.vision}, Zeal ${i.virtues.zeal} · Conviction ${i.conviction}. Hunter: The Reckoning (1999 on).</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: ${esc(i.creedDef?.label ?? "no creed")} · Mercy ${i.virtues.mercy}, Vision ${i.virtues.vision}, Zeal ${i.virtues.zeal} · Conviction ${i.conviction}. Hunter: The Reckoning (1999 on).</p>
           <div class="form-group"><label>Creed</label><select name="creed" data-fixed><option value="">—</option>${Object.entries(K.CREEDS).map(([k, c]) => `<option value="${k}" ${k === i.creed ? "selected" : ""}>${esc(c.label)} (${cap(c.virtue)}, Conviction ${c.conviction})</option>`).join("")}</select></div>
           <div class="form-group"><label>What</label><select name="k" data-fixed><option value="save">Save the creed</option><option value="cash" ${i.conviction >= 10 ? "" : "disabled"}>Cash in 10 Conviction for a Virtue point</option><option value="story">A new story: Conviction back to the creed's level</option><option value="gain">Gain 1 Conviction (a feat, the creed, or a convert; once a session each)</option></select></div>
           <div class="form-group"><label>Virtue (cash-in) / reason (gain)</label><select name="virtue" data-fixed>${K.VIRTUES.map(v => `<option value="${v}">${cap(v)}</option>`).join("")}</select> <select name="why" data-fixed><option value="feat">An amazing or inventive feat</option><option value="creed">The creed fulfilled dramatically</option><option value="convert">A hunter of another creed won over</option></select></div></form>`;
-        return dialog(`Hunter traits — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`Hunter traits: ${actor.name}`, content, "Go", async fd => {
             if (fd.creed && fd.creed !== i.creed) {
                 await setImbued(actor, { creed: fd.creed });
                 if (actor.system && "creed" in actor.system) await updateActor(actor, { "system.creed": K.CREEDS[fd.creed].label, "system.primaryvirtue": K.CREEDS[fd.creed].virtue });
@@ -84,10 +84,10 @@ export function build(ctx) {
 
     async function secondSight(actor) {
         const i = info(actor), active = actor.getFlag(MOD, "sightScene") === sceneKey();
-        const content = `<form><p><b>${esc(actor.name)}</b> — Conviction ${i.conviction}${active ? "; <b>second sight is active this scene</b>" : ""}. One Conviction point gives second sight and self-control for the scene (p. 132).</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}${active ? "; <b>second sight is active this scene</b>" : ""}. One Conviction point gives second sight and self-control for the scene (p. 132).</p>
           <div class="form-group"><label>What</label><select name="k" data-fixed><option value="spend">Spend 1 Conviction: second sight and self-control</option><option value="react">React to a warning sign (Attribute + primary Virtue, 6)</option><option value="prerogative">Against a mighty foe (primary Virtue, Storyteller)</option></select></div>
           <div class="form-group"><label>Attribute (reaction)</label><select name="attr" data-fixed>${K.REACT.attrs.map(a => `<option value="${a}">${cap(a)}</option>`).join("")}</select> <label>foe</label> <select name="foe" data-fixed><option value="powerful">Powerful (6)</option><option value="mighty">Mighty (7)</option><option value="titanic">Titanic (8)</option></select></div></form>`;
-        return dialog(`Second sight — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`Second sight: ${actor.name}`, content, "Go", async fd => {
             if (fd.k === "spend") {
                 if (active) return ctx.notify("Already active this scene.");
                 if (i.conviction < 1) return ctx.notify("No Conviction: the hunter faces the night as anyone would (p. 132).");
@@ -114,7 +114,7 @@ export function build(ctx) {
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const risked = actor.getFlag(MOD, "riskScene") === sceneKey();
         const lethal = n(actor.system?.health?.damage?.lethal);
-        const content = `<form><p><b>${esc(actor.name)}</b> — Conviction ${i.conviction}; Mercy ${i.virtues.mercy}, Vision ${i.virtues.vision}, Zeal ${i.virtues.zeal}${tgt ? `; target ${esc(tgt.name)}` : ""}.${known.length ? "" : " <i>No edges on the sheet: the list shows what the Virtues allow.</i>"}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}; Mercy ${i.virtues.mercy}, Vision ${i.virtues.vision}, Zeal ${i.virtues.zeal}${tgt ? `; target ${esc(tgt.name)}` : ""}.${known.length ? "" : " <i>No edges on the sheet: the list shows what the Virtues allow.</i>"}</p>
           <div class="form-group"><label>Edge</label>${searchBox("select[name=edge]", "Search edges…", "Search edges")}<select name="edge">${list.map(e => `<option value="${e.id}">${esc(`${e.name} (${K.PATHS[e.path].label} ${"•".repeat(e.level)})`)}</option>`).join("")}</select></div>
           <div class="wodx-edge-info vta-note"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="2" max="10"/> <label>bonus dice</label> <input type="number" name="bonus" value="0" style="width:4em"/></div>
@@ -128,7 +128,7 @@ export function build(ctx) {
             const pool = e.roll ? `${e.roll[0] ? `${cap(e.roll[0])} + ` : ""}${cap(e.roll[1])}` : "no roll";
             root.querySelector(".wodx-edge-info").innerHTML = `<b>${esc(e.name)}</b> · ${pool}${typeof e.diff === "number" ? ` at ${e.diff}` : e.diff ? " (difficulty from the target or the page)" : ""}${e.conviction ? ` · ${e.conviction} Conviction` : ""} · p. ${e.p}<br>${esc(e.e)}${K.edgeAllowed(e, i.virtues) ? "" : `<br><b>${cap(e.virtue)} ${i.virtues[e.virtue]} is below this edge's level.</b>`}`;
         };
-        return dialog(`Use an edge — ${actor.name}`, content, "Use", async fd => {
+        return dialog(`Use an edge: ${actor.name}`, content, "Use", async fd => {
             const e = K.edgeFor(fd.edge);
             if (!e) return null;
             const risk = risked || e.id === "surge" ? 0 : Math.min(n(fd.risk), Math.max(0, i.conviction - e.conviction));

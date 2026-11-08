@@ -149,7 +149,7 @@ export function build(ctx) {
         const fort = ctx.discipline(actor, "Fortitude");
         const diff = S.SOAK_DIFF[light] ?? 10;
         const rolls = [];
-        let html = `<div class="vta-sub">${esc(S.LIGHTS[light] ?? light)}${why ? ` — ${esc(why)}` : ""}: ${exposure} level${exposure === 1 ? "" : "s"} a turn${turns > 1 ? `, ${turns} turns` : ""} (VtDA20 p. 359).</div>`;
+        let html = `<div class="vta-sub">${esc(S.LIGHTS[light] ?? light)}${why ? ` (${esc(why)})` : ""}: ${exposure} level${exposure === 1 ? "" : "s"} a turn${turns > 1 ? `, ${turns} turns` : ""} (VtDA20 p. 359).</div>`;
         let levels = 0;
         const soakDice = lethal ? fort + ctx.attr(actor, "stamina") : fort;
         for (let t = 1; t <= Math.max(1, turns); t++) {
@@ -165,7 +165,7 @@ export function build(ctx) {
         html += `<div class="vta-big ${levels ? "bad" : "good"}">${levels ? `${levels} ${type} level${levels === 1 ? "" : "s"}` : "No damage"}</div>`;
         if (levels) {
             const res = await ctx.applyDamage(actor, type, levels);
-            if (res?.after) html += `<div class="vta-res">Now ${ctx.healthText(actor, res.after)}${res.condition?.text ? ` — <b>${esc(res.condition.text)}</b>` : ""}</div>`;
+            if (res?.after) html += `<div class="vta-res">Now ${ctx.healthText(actor, res.after)}${res.condition?.text ? `: <b>${esc(res.condition.text)}</b>` : ""}</div>`;
             await ctx.logEvent?.(actor, `Burned by the sun: ${levels} ${type}.`, "sun");
         }
         if (!noRotschreck && !actor.system?.conditions?.isfrenzy) html += `<button type="button" class="vta-btn" data-kx="rotschreck" data-actor="${esc(actor.uuid)}" data-arg="${light === "direct" ? "directsun" : "obscuredsun"}">Rötschreck check</button>`;
@@ -176,7 +176,7 @@ export function build(ctx) {
         const mode = setting("sunDamage");
         if (mode === "off") return null;
         if (mode === "apply") return applySun(actor, { light: ex.light, exposure: ex.exposure, turns, why: ex.why, lethal: !!ex.protection?.lethal, noRotschreck: !!ex.protection?.noRotschreck });
-        return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(title)}: ${esc(actor.name)}</h3><p>${esc(S.LIGHTS[ex.light] ?? ex.light)} — ${esc(ex.why)}; ${ex.exposure} level${ex.exposure === 1 ? "" : "s"} a turn, soak ${ex.diff}.${note ? ` ${esc(note)}` : ""}</p>${sbtn("burn", actor, turns > 1 ? `Burn for ${turns} turns` : "Burn for a turn", `${turns}|${ex.light}|${ex.exposure}|${ex.protection?.lethal ? 1 : 0}|${ex.protection?.noRotschreck ? 1 : 0}`)}</div>`,
+        return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(title)}: ${esc(actor.name)}</h3><p>${esc(S.LIGHTS[ex.light] ?? ex.light)} (${esc(ex.why)}); ${ex.exposure} level${ex.exposure === 1 ? "" : "s"} a turn, soak ${ex.diff}.${note ? ` ${esc(note)}` : ""}</p>${sbtn("burn", actor, turns > 1 ? `Burn for ${turns} turns` : "Burn for a turn", `${turns}|${ex.light}|${ex.exposure}|${ex.protection?.lethal ? 1 : 0}|${ex.protection?.noRotschreck ? 1 : 0}`)}</div>`,
             whisper: ownerIds(actor), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
 
@@ -264,7 +264,7 @@ export function build(ctx) {
     async function dawnWarning(minutes) {
         const vamps = ctx.clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor"));
         if (!vamps.length) return null;
-        const rows = vamps.map(a => { const h = havenStatus(a); return `<li><b>${esc(a.name)}</b>: ${h.inside ? `in her haven (${esc(h.where)})` : h.set ? `<b>away from her haven</b> (${esc(h.where)})` : "<b>no haven set</b>"}</li>`; });
+        const rows = vamps.map(a => { const h = havenStatus(a); return `<li><b>${esc(a.name)}</b>: ${h.inside ? `in their haven (${esc(h.where)})` : h.set ? `<b>away from their haven</b> (${esc(h.where)})` : "<b>no haven set</b>"}</li>`; });
         const ids = [...new Set([...gmIds(), ...vamps.flatMap(a => ownerIds(a))])];
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Dawn in ${minutes} minutes</h3><ul>${rows.join("")}</ul><p class="wodx-quiet">Set a haven in WoDX Actions → Sun and haven.</p></div>`,
             whisper: ids, speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
@@ -283,19 +283,19 @@ export function build(ctx) {
         const regionOpts = [];
         for (const sc of scenes) for (const r of sc.regions ?? []) regionOpts.push([`${sc.id}|${r.id}`, `${sc.name}: ${r.name}`]);
         const here = tok ? [...(tok.document?.regions ?? [])][0] : null;
-        const content = `<form><p><b>${esc(actor.name)}</b> — ${sun.phase === "night" ? `night; dawn in ${sun.toDawn !== null ? Math.round(sun.toDawn / 60) : "?"} minutes` : `${sun.phase}: the sun ${Math.round(sun.altitude)}° up`}.${ex ? ` Now: ${ex.exposed ? `<b>in sunlight</b> (${esc(ex.why)})` : esc(ex.why)}.` : ""}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: ${sun.phase === "night" ? `night; dawn in ${sun.toDawn !== null ? Math.round(sun.toDawn / 60) : "?"} minutes` : `${sun.phase}: the sun ${Math.round(sun.altitude)}° up`}.${ex ? ` Now: ${ex.exposed ? `<b>in sunlight</b> (${esc(ex.why)})` : esc(ex.why)}.` : ""}</p>
           <div class="form-group"><label><input type="checkbox" name="cover" ${actor.getFlag(MOD, "sunCover") ? "checked" : ""}/> Heavily clothed: cloak, hood, gloves (light counts as "covered", soak 5)</label></div>
           <div class="form-group"><label><input type="checkbox" name="buried" ${actor.getFlag(MOD, "buried") ? "checked" : ""}/> Buried in the earth (safe from the sun)</label></div>
           <fieldset><legend>Haven (${esc(h.where)})</legend>
             <div class="form-group"><label>Haven</label>${scenes.length > 4 ? searchBox("select[name=haven]", "Search scenes…", "Search scenes") : ""}<select name="haven">
               <option value="keep">Keep as it is</option>
-              ${tok ? `<option value="here">Where her token stands now${here ? ` (${esc(here.name)})` : ""}</option>` : ""}
+              ${tok ? `<option value="here">Where the token stands now${here ? ` (${esc(here.name)})` : ""}</option>` : ""}
               <option value="clear">No haven</option>
               ${scenes.map(sc => `<option value="scene|${sc.id}" ${cur.sceneId === sc.id && !cur.regionId ? "selected" : ""}>The whole scene: ${esc(sc.name)}</option>`).join("")}
             </select></div>
             ${regionOpts.length ? `<div class="form-group"><label>Or a region</label>${regionOpts.length > 5 ? searchBox("select[name=region]", "Search regions…", "Search regions") : ""}<select name="region"><option value="">— none —</option>${regionOpts.map(([v, l]) => `<option value="${v}" ${`${cur.sceneId}|${cur.regionId}` === v ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>` : ""}
           </fieldset></form>`;
-        return dialog(`Sun and haven — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Sun and haven: ${actor.name}`, content, "Save", async fd => {
             await ctx.setFlag(actor, "sunCover", fd.cover ? true : null);
             await ctx.setFlag(actor, "buried", fd.buried ? true : null);
             let haven = null;
@@ -363,7 +363,7 @@ export function build(ctx) {
 export function registerSettings(register) {
     game.settings.register(MOD, "sunDamage", { name: "Sunlight damage", hint: "When a Cainite stands in sunlight (a Sunlight region, a region named sunlit, or the open on a scene marked outdoors, outside walls' shadows): roll and apply it each turn of a fight, on stepping into the sun and while the clock runs; or post a card with a button; or nothing.",
         scope: "world", config: true, type: String, default: "prompt", choices: { prompt: "A card with a button", apply: "Roll and apply it", off: "Off" } });
-    register("dawnWarnings", "Warn before dawn", "Whispered cards 30 and 10 minutes before sunrise, saying whether each Cainite is in her haven.", Boolean, true);
+    register("dawnWarnings", "Warn before dawn", "Whispered cards 30 and 10 minutes before sunrise, saying whether each Cainite is in their haven.", Boolean, true);
     register("wallHeight", "Height of walls (feet)", "For the shadows walls cast by day; a scene can set its own in Sky and sun.", Number, 10);
     game.settings.register(MOD, "sky", { name: "Sky", hint: "The weather caps sunlight: cloudy days are \"cloudy\" (soak 9), heavy cloud, rain or fog \"faint\" (soak 3). Also set from Sky and sun.",
         scope: "world", config: true, type: String, default: "clear", choices: Object.fromEntries(Object.entries(S.SKIES).map(([k, v]) => [k, v.label])) });

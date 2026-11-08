@@ -43,7 +43,7 @@ export function build(ctx) {
     async function cast(actor) {
         const i = info(actor);
         const row = k => `<div class="form-group"><label>${cap(k)} <small>${i.spheres[k]}</small></label><select name="s-${k}" data-fixed><option value="0">—</option>${[1, 2, 3, 4, 5].filter(l => l <= i.spheres[k]).map(l => `<option value="${l}">${l}</option>`).join("")}</select></div>`;
-        const content = `<form><p><b>${esc(actor.name)}</b> — Arete ${i.arete}${i.dice < i.arete ? ` (Willpower ${i.willpower.perm} caps it: ${i.dice} dice)` : ""}; Quintessence ${i.quint}, Paradox ${i.paradox}${i.avatar ? `; Avatar ${i.avatar}` : ""}.</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Arete ${i.arete}${i.dice < i.arete ? ` (Willpower ${i.willpower.perm} caps it: ${i.dice} dice)` : ""}; Quintessence ${i.quint}, Paradox ${i.paradox}${i.avatar ? `; Avatar ${i.avatar}` : ""}.</p>
           <fieldset><legend>Spheres used</legend>${M.SPHERES.filter(k => i.spheres[k]).map(row).join("") || "<p>No Spheres on the sheet.</p>"}</fieldset>
           <div class="form-group"><label>The Effect is</label><select name="kind" data-fixed>${Object.entries(M.KINDS).map(([k, x]) => `<option value="${k}">${esc(x.label)} (highest + ${x.add})</option>`).join("")}</select></div>
           <div class="form-group"><label>The feat</label><select name="feat" data-fixed>${M.FEATS.map(f => `<option value="${f.need}">${esc(f.label)}: ${f.need}</option>`).join("")}</select></div>
@@ -53,7 +53,7 @@ export function build(ctx) {
           <div class="form-group"><label>Quintessence (−1 difficulty each, 3 at most)</label><input type="number" name="q" min="0" max="${Math.min(3, i.quint)}" value="0"/></div>
           <div class="form-group"><label><input type="checkbox" name="dmg"/> The successes go to damage (else duration)</label></div>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div></form>`;
-        return dialog(`Cast an Effect — ${actor.name}`, content, "Cast", async fd => {
+        return dialog(`Cast an Effect: ${actor.name}`, content, "Cast", async fd => {
             const used = M.SPHERES.map(k => ({ sphere: k, level: n(fd[`s-${k}`]) })).filter(x => x.level);
             const mods = Object.keys(M.MODIFIERS).filter(k => fd[`m-${k}`]);
             const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
@@ -84,7 +84,7 @@ export function build(ctx) {
         const i = info(actor);
         const content = `<form><p>${esc(actor.name)}'s Paradox pool: ${i.paradox}${i.paradoxPerm ? ` (${i.paradoxPerm} permanent)` : ""}. The Storyteller rolls a die a point at 6.</p>
           <div class="form-group"><label><input type="checkbox" name="stave"/> Stave it off: ${esc(M.STAVE)}</label></div></form>`;
-        return dialog(`Paradox backlash — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Paradox backlash: ${actor.name}`, content, "Roll", async fd => {
             if (fd.stave) {
                 if (!(await spendWillpower(actor, 1))) return null;
                 await saveFlag(actor, { staved: game.scenes?.viewed?.id ?? "" });
@@ -103,7 +103,7 @@ export function build(ctx) {
         const content = `<form><div class="form-group"><label>How</label><select name="mode" data-fixed><option value="self">Against an Effect aimed at this mage (Arete at 7)</option><option value="dispel">For another: dispel it (8; Prime 1 and a Quintessence)</option><option value="reflect">For another: reflect it (9; Prime 1 and a Quintessence)</option>
             <option value="mind">Resist Mind magick (Willpower at 6)</option><option value="quiet">Dispel a Quiet delusion (a Willpower point; Willpower at 7)</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="share" checked/> Knows at least one of the attacking Spheres</label></div></form>`;
-        return dialog(`Countermagick — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Countermagick: ${actor.name}`, content, "Roll", async fd => {
             if (fd.mode === "mind") {
                 const r = await rollPool(i.willpower.perm, M.resistMind.difficulty);
                 return post(actor, `${actor.name} resists the mind`, rollBlock("Willpower", r) + `<div class="vta-res">${r.successes} taken from the Mind Effect.${r.botch ? " A botch may cost a permanent Willpower point." : ""}</div><div class="wodx-quiet">${REF} p. 330</div>`, [r.roll].filter(Boolean));

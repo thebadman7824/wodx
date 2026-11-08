@@ -294,7 +294,7 @@ test("Roads: the WoDX choice wins over the sheet, and the sin prompt suggests th
   reset();
   const k = actor("Konrad", {road: 5, roadName: "Road of Kings"});
   assert.equal(KX.roadOf(k).key, "kings");
-  await E.sinPrompt(k, "frenzy", "She gave the Beast the reins");
+  await E.sinPrompt(k, "frenzy", "The Beast was given the reins");
   const c = mock.log.chat.at(-1).content;
   assert.match(c, /level 1 sin/);
   assert.match(c, /data-kx="sin"/);

@@ -107,7 +107,7 @@ export function build(ctx) {
         const opt = e => `${e.lore}:${e.level}`;
         const thralls = i.thralls.filter(t => !t.broken);
         const content = `<form>
-          <p><b>${esc(actor.name)}</b> — Faith ${i.faith.temp}/${i.faith.perm}, Torment ${i.torment.perm} (${i.torment.temp})${i.spent ? `, Faith used this scene ${i.spent}` : ""}.</p>
+          <p><b>${esc(actor.name)}</b>: Faith ${i.faith.temp}/${i.faith.perm}, Torment ${i.torment.perm} (${i.torment.temp})${i.spent ? `, Faith used this scene ${i.spent}` : ""}.</p>
           <div class="form-group"><label>Evocation</label>${known.length > 5 ? searchBox("select[name=evo]", "Search evocations…", "Search evocations") : ""}<select name="evo">${known.map(e => `<option value="${opt(e)}"${evocation === opt(e) ? " selected" : ""}>Lore of ${esc(D.LORES[e.lore].label.replace(/^the /, ""))} ${"•".repeat(e.level)} ${esc(e.name)} (${e.attr ? cap(e.attr) : "?"} + ${e.ability ? abil(e.ability) : "?"}${e.faith ? ", 1 Faith" : ""})</option>`).join("")}</select></div>
           <div class="form-group"><label>Attribute</label><select name="attr" data-fixed>${attrOpts("")}</select></div>
           <div class="form-group"><label>Ability</label>${searchBox("select[name=abil]", "Search Abilities…", "Search Abilities")}<select name="abil">${abilOpts(actor, "")}</select></div>
@@ -119,7 +119,7 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="dark"/> Choose the high-Torment effect (a temporary Torment point)</label></div>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
         </form>`;
-        return dialog(`Evoke — ${actor.name}`, content, "Evoke", async fd => {
+        return dialog(`Evoke: ${actor.name}`, content, "Evoke", async fd => {
             const [lore, lvl] = String(fd.evo || "").split(":");
             const e = known.find(x => x.lore === lore && x.level === n(lvl));
             if (!e) { notify(`${actor.name}: choose an evocation.`); return null; }
@@ -149,7 +149,7 @@ export function build(ctx) {
             let body = rollBlock(`${cap(ak)} + ${abil(bk)}`, r, [...plan.notes, ...(wp ? ["Willpower"] : [])]);
             body += out.effect === "botch" ? `<div class="vta-big bad">${head}: it botches.</div>`
                 : out.effect === "none" ? `<div class="vta-big">${head}: nothing happens.</div>`
-                : out.effect === "high" ? `<div class="vta-big bad">${head}: the high-Torment effect${out.chosen ? ", chosen" : " — Torment twists it"} (${r.successes} success${r.successes === 1 ? "" : "es"}).</div>`
+                : out.effect === "high" ? `<div class="vta-big bad">${head}: the high-Torment effect${out.chosen ? ", chosen" : "; Torment twists it"} (${r.successes} success${r.successes === 1 ? "" : "es"}).</div>`
                 : `<div class="vta-big good">${head}: ${r.successes} success${r.successes === 1 ? "" : "es"}, as intended.</div>`;
             for (const x of notes.filter(Boolean)) body += `<div class="vta-note">${esc(x)}</div>`;
             body += `<div class="vta-res">${esc(revealLine(info(actor).spent))}</div>`;
@@ -165,13 +165,13 @@ export function build(ctx) {
         const look = D.visageLook(i.torment.perm, i.willpower.perm);
         const row = (p, k, kind, off) => `<div class="form-group"><label><input type="checkbox" name="${kind}${k}"${off ? "" : " checked"}/> ${esc(p)}</label></div>`;
         const content = `<form>
-          <p><b>${esc(actor.name)}</b> — ${esc(i.visage || "no visage set")}; Faith ${i.faith.temp}/${i.faith.perm}, Torment ${i.torment.perm}.</p>
+          <p><b>${esc(actor.name)}</b>: ${esc(i.visage || "no visage set")}; Faith ${i.faith.temp}/${i.faith.perm}, Torment ${i.torment.perm}.</p>
           <fieldset><legend>Powers</legend>${i.forms.low.map((p, k) => row(p, k, "lo", false)).join("") || "<p>No form powers on the sheet.</p>"}</fieldset>
           <fieldset><legend>High-Torment powers (${slots} gained at Torment ${i.torment.perm})</legend>${i.forms.high.map((p, k) => k < slots ? row(p, k, "hi", false)
             : `<div class="form-group"><label><input type="checkbox" name="peril${k}"/> ${esc(p)} <small>(in peril: for the scene, a Torment point)</small></label></div>`).join("")}</fieldset>
           <div class="form-group"><label><input type="checkbox" name="spend" checked/> Spend a Faith point (no roll)</label></div>
         </form>`;
-        return dialog(`Apocalyptic form — ${actor.name}`, content, "Manifest", async fd => {
+        return dialog(`Apocalyptic form: ${actor.name}`, content, "Manifest", async fd => {
             const spend = !!fd.spend;
             let r = null;
             if (spend) { if (!(await faith(actor, -1))) return null; }
@@ -201,7 +201,7 @@ export function build(ctx) {
         const content = `<form><p>${esc(revealLine(i.spent))}</p>
           <div class="form-group"><label>A witness's Willpower (rolled against Faith ${i.faith.perm})</label><input type="number" name="wp" min="1" max="10" value="3"/></div>
           <div class="form-group"><label>Witness's name</label><input type="text" name="who" value=""/></div></form>`;
-        return dialog(`Revelation — ${actor.name}`, content, "Roll for the witness", async fd => {
+        return dialog(`Revelation: ${actor.name}`, content, "Roll for the witness", async fd => {
             const r = await rollPool(n(fd.wp), Math.max(2, i.faith.perm || 6));
             const re = D.mortalReaction(r);
             const who = fd.who || "The witness";
@@ -214,11 +214,11 @@ export function build(ctx) {
     /* -- reaping and thralls ----------------------------------------- */
     async function reap(actor) {
         const i = info(actor);
-        const content = `<form><p>Reaping needs an act that makes one mortal believe — love or terror, not a glimpse (p. 250).</p>
+        const content = `<form><p>Reaping needs an act that makes one mortal believe: love or terror, not a glimpse (p. 250).</p>
           <div class="form-group"><label>The mortal's Willpower</label><input type="number" name="mwp" min="1" max="10" value="3"/></div>
           <div class="form-group"><label><input type="checkbox" name="res"/> The act strikes the mortal's own beliefs or history (two points)</label></div>
           <div class="form-group"><label>How</label><input type="text" name="how" value=""/></div></form>`;
-        return dialog(`Reap Faith — ${actor.name}`, content, "Reap", async fd => {
+        return dialog(`Reap Faith: ${actor.name}`, content, "Reap", async fd => {
             const me = await rollPool(i.willpower.perm, 7), them = await rollPool(n(fd.mwp), 7);
             const out = D.reapOutcome(me.successes, them.successes, { resonant: !!fd.res });
             if (out.faith) await faith(actor, out.faith, { spend: false });
@@ -236,7 +236,7 @@ export function build(ctx) {
           A thrall can offer up to half the potential, rounded up; the rest buys gifts (p. 253).</p>
           <div class="form-group"><textarea name="t" rows="7" style="width:100%">${esc(lines)}</textarea></div>
           <p class="wodx-quiet">Potential: ${D.POTENTIAL.map((t, k) => `${k} ${esc(t)}`).join("; ")}.</p></form>`;
-        return dialog(`Thralls — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Thralls: ${actor.name}`, content, "Save", async fd => {
             const list = String(fd.t || "").split(/\n+/).map(l => l.split("|").map(x => x.trim())).filter(p => p[0])
                 .map(([name, pot, off, wp, br]) => ({ name, potential: Math.max(0, Math.min(5, n(pot))), offered: Math.min(D.offerCap(n(pot)), Math.max(0, n(off))), willpower: n(wp), broken: /broken/i.test(br ?? "") }));
             await saveFlag(actor, { thralls: list, lastDawn: flag(actor).lastDawn ?? dawnDay() });
@@ -252,9 +252,9 @@ export function build(ctx) {
         const rows = D.SINS.filter(([row]) => D.sinCounts(i.torment.perm, row));
         const content = `<form><p>At Torment ${i.torment.perm}, these acts still risk Torment (p. 159).</p>
           <div class="form-group"><label>The act</label><select name="row" data-fixed>${rows.map(([row, t]) => `<option value="${row}">${row}: ${esc(t)}</option>`).join("")}</select></div>
-          <div class="form-group"><label>Virtue</label><select name="v" data-fixed>${Object.entries(D.SIN_VIRTUE).map(([k, t]) => `<option value="${k}">${cap(k)} ${i.virtues[k]} — ${esc(t)}</option>`).join("")}</select></div></form>`;
+          <div class="form-group"><label>Virtue</label><select name="v" data-fixed>${Object.entries(D.SIN_VIRTUE).map(([k, t]) => `<option value="${k}">${cap(k)} ${i.virtues[k]}: ${esc(t)}</option>`).join("")}</select></div></form>`;
         if (!rows.length) { notify(`${actor.name} is past sin.`); return null; }
-        return dialog(`A sin — ${actor.name}`, content, "Roll the Virtue", async fd => {
+        return dialog(`A sin: ${actor.name}`, content, "Roll the Virtue", async fd => {
             const r = await rollPool(i.virtues[fd.v], 8, { canBotch: false });
             const out = D.sinOutcome(r);
             const note = out.torment ? await torment(actor, 1) : "";
@@ -265,8 +265,8 @@ export function build(ctx) {
     async function kindness(actor) {
         const i = info(actor);
         const content = `<form><p>A truly selfless act, with nothing to gain (p. 161). The Storyteller judges it.</p>
-          <div class="form-group"><label>Virtue</label><select name="v" data-fixed>${[["conscience", "a sacrifice because it is right"], ["conviction", "true to belief at great cost"], ["courage", "valor for another's sake"]].map(([k, t]) => `<option value="${k}">${cap(k)} ${i.virtues[k]} — ${t}</option>`).join("")}</select></div></form>`;
-        return dialog(`An act of kindness — ${actor.name}`, content, "Roll", async fd => {
+          <div class="form-group"><label>Virtue</label><select name="v" data-fixed>${[["conscience", "a sacrifice because it is right"], ["conviction", "true to belief at great cost"], ["courage", "valor for another's sake"]].map(([k, t]) => `<option value="${k}">${cap(k)} ${i.virtues[k]}: ${t}</option>`).join("")}</select></div></form>`;
+        return dialog(`An act of kindness: ${actor.name}`, content, "Roll", async fd => {
             const v = await rollPool(i.virtues[fd.v], 6), t = await rollPool(i.torment.perm, 6);
             const out = D.kindnessOutcome(v.successes, t.successes);
             const note = out.torment ? await torment(actor, -1) : "";
@@ -281,7 +281,7 @@ export function build(ctx) {
         const t = ctx.healthTrack(actor);
         const content = `<form><p>${t.damage.bashing}B / ${t.damage.lethal}L / ${t.damage.aggravated}A. A full turn of stillness; one point a turn (p. 248).</p>
           <div class="form-group"><label>Heal</label><select name="w" data-fixed><option value="bashing">all bashing (1 Faith)</option><option value="lethal">one lethal level (1 Faith)</option></select></div></form>`;
-        return dialog(`Faith heals — ${actor.name}`, content, "Heal", async fd => {
+        return dialog(`Faith heals: ${actor.name}`, content, "Heal", async fd => {
             const out = D.faithHeal(t.damage, fd.w);
             if (!out.ok) { notify(`${actor.name}: ${out.why}.`); return null; }
             if (!(await faith(actor, -1))) return null;
@@ -293,7 +293,7 @@ export function build(ctx) {
         const i = info(actor);
         const content = `<form><div class="form-group"><label>What</label><select name="k" data-fixed><option value="g">Holy ground</option><option value="o">A sacred object against the skin</option></select></div>
           <div class="form-group"><label>Its Faith potential (1–5)</label><input type="number" name="p" min="1" max="5" value="1"/></div></form>`;
-        return dialog(`The holy — ${actor.name}`, content, "Apply", async fd => {
+        return dialog(`The holy: ${actor.name}`, content, "Apply", async fd => {
             const h = D.holy(i.torment.perm, n(fd.p), { ground: fd.k === "g" });
             let body = `<div class="vta-sec">Torment ${i.torment.perm}; potential ${n(fd.p)}.</div>`, rolls = [];
             if (!h.harmed) body += `<div class="vta-res good">${esc(h.why)}.</div>`;
@@ -312,7 +312,7 @@ export function build(ctx) {
     async function named(actor) {
         const i = info(actor);
         const content = `<form><div class="form-group"><label>The name spoken</label><select name="k" data-fixed><option value="7">the Celestial Name (7)</option><option value="6">the True Name (6)</option></select></div></form>`;
-        return dialog(`A name is spoken — ${actor.name}`, content, "Listen", async fd => {
+        return dialog(`A name is spoken: ${actor.name}`, content, "Listen", async fd => {
             if (i.faith.temp < 1) { notify(`${actor.name} needs a Faith point in the pool to listen.`); return null; }
             const r = await rollPool(i.faith.perm, n(fd.k));
             const body = rollBlock("Faith", r) + `<div class="vta-res">${r.successes ? esc(D.INVOKED[Math.min(3, r.successes)]) + (r.successes >= 3 ? "; each further turn, Willpower at 8 to keep listening" : "") : "Only the tug of the name."}</div><div class="wodx-quiet">${REF} p. 171</div>`;
@@ -323,7 +323,7 @@ export function build(ctx) {
         const content = `<form><p>Against another demon, the difficulty is its Faith or Torment, the higher (p. 171).</p>
           <div class="form-group"><label>The other demon's Faith</label><input type="number" name="f" min="0" max="10" value="0"/></div>
           <div class="form-group"><label>Its Torment</label><input type="number" name="t" min="0" max="10" value="0"/></div></form>`;
-        return dialog(`See through illusion — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`See through illusion: ${actor.name}`, content, "Roll", async fd => {
             const diff = D.illusionDifficulty(n(fd.f), n(fd.t));
             const r = await rollPool(ctx.attr(actor, "perception") + n(ctx.findAbility?.(actor, "alertness")?.value), diff);
             const body = rollBlock("Perception + Alertness", r) + `<div class="vta-res ${r.successes ? "good" : ""}">${r.successes ? "The artifice falls away." : "The illusion holds."}</div><div class="wodx-quiet">${REF} p. 171</div>`;

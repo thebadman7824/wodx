@@ -16,7 +16,7 @@ export const MORTAL = {
   assumedAge: 20
 };
 
-/** A ghoul who goes without vitae reverts to her real age; one far past a lifespan turns to dust (V20DA p. 399). */
+/** A ghoul who goes without vitae reverts to their real age; one far past a lifespan turns to dust (V20DA p. 399). */
 export const GHOUL_AGING = {source: "V20 Dark Ages p. 399", dustAt: 100};
 
 /** The blood oath fades by one step for every (12 − Willpower) months without a drink (V20DA p. 341). */

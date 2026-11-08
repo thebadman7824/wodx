@@ -39,7 +39,7 @@ export const POOLS = {
         "[kindred] Bruises rise on {target}'s dead skin and fade almost as fast. The Blood is already at work.",
         "[armed brawl] {attacker} feels the impact all the way up to the elbow.",
         "[flesh] {target}'s head snaps around. A tooth skitters across the boards.",
-        "It is not an elegant blow, but it lands, and that is what matters.",
+        "It is not an elegant blow, but it lands.",
         "{target} reels into the wall and stays there a moment too long.",
         "[beast] {target} yelps and scrambles back, ears flat.",
         "[spirit] {target} wavers like smoke in a draft, and gathers itself back together more slowly.",
@@ -82,7 +82,7 @@ export const POOLS = {
         "[living] Living flesh was never meant to meet a thing like this. {target} may not see the morning.",
         "[beast] {target} shrieks, a sound of pure animal terror.",
         "[spirit] {target} tears like old cloth, and the tear does not close.",
-        "This is the kind of wound that leaves a mark long after it stops hurting.",
+        "That wound will leave a scar, if it ever closes.",
         "Whatever did this, it will not be undone by morning."
     ],
     heavy: [
@@ -109,7 +109,7 @@ export const POOLS = {
         "[beast] Thick hide and muscle take the blow. {target} shakes itself and comes on.",
         "[living] {target} grunts and keeps their feet, and that is all.",
         "[spirit] The blow lands, but there is nothing there for it to hurt.",
-        "Nothing. Whatever {attacker} hoped for, it did not happen."
+        "{attacker} hoped for more. The blow does nothing."
     ],
     botch: [
         "[armed] The hilt turns in {attacker}'s wet grip, and the blow goes wide, toward the nearest friend.",
@@ -135,7 +135,7 @@ export const POOLS = {
         "[armed brawl flesh] {attacker} hooks a heel, and {target} goes over like a felled tree.",
         "[brawl] A grip like a smith's tongs, and {target} is not going anywhere.",
         "[natural] {attacker} bears {target} down with sheer weight, and holds them there.",
-        "The moment turns, and {attacker} is the one who turned it."
+        "{attacker} turns the moment to their own advantage."
     ]
 };
 
