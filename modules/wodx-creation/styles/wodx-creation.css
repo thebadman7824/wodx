@@ -22,3 +22,13 @@
 .application.wodx-group .wodx-warnings { color: #d8a24a; }
 .application.wodx-group textarea { width: 100%; }
 .application.wodx-group .wodx-quiet { color: #a99f8f; font-size: 0.9em; }
+
+/* 7a: the People window. The choices sit in a compact grid so the list gets the room */
+.application.wodx-people .wodx-people-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.35rem 0.6rem; margin: 0.35rem 0; }
+.application.wodx-people .wodx-people-form .wodx-field { display: flex; flex-direction: column; align-items: stretch; gap: 0.15rem; margin: 0; min-width: 0; }
+.application.wodx-people .wodx-people-form .wodx-field > label { font-size: 0.85em; font-weight: 600; }
+.application.wodx-people .wodx-people-form .wodx-field.wide { grid-column: span 2; }
+.application.wodx-people .wodx-people-form .wodx-field > :is(input, select) { width: 100%; height: auto; min-height: 1.9em; }
+.application.wodx-people .wodx-people-form .wodx-search { margin: 0; }
+.application.wodx-people .wodx-people-list td { vertical-align: top; }
+.application.wodx-people .wodx-people-list td:first-child, .application.wodx-people .wodx-people-list td:last-child { width: 2.2em; text-align: center; }

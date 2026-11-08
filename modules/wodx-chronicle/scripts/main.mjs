@@ -14,6 +14,7 @@ import * as conditions from "./conditions.mjs";
 import * as timed from "./timed.mjs";
 import * as theme from "./theme.mjs";
 import * as playerTools from "./player-tools.mjs";
+import * as gen from "./gen.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -44,6 +45,8 @@ Hooks.once("init", () => {
   theme.applyLook();
   // B60: the WoDX buttons each player sees
   playerTools.registerPlayerToolSettings();
+  // Phase 7a: the generator core
+  gen.registerGenSettings();
 
   // Calendar: Julian, then Gregorian at the chosen reform
   let reform = "bohemia-1584";
@@ -115,7 +118,9 @@ Hooks.once("ready", async () => {
     applyTimed: timed.applyTimed,
     endScene: timed.endScene,
     theme,
-    playerTools, openPlayerTools: playerTools.openPlayerTools
+    playerTools, openPlayerTools: playerTools.openPlayerTools,
+    gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
+      registerTables: gen.registerTables, installTables: gen.installTables, cultures: gen.CULTURES}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});

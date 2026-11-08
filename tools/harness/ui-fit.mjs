@@ -98,6 +98,13 @@ const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/t
 const {CreationApp, SpendApp, awardDialog} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
 const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
 const {PassYearsApp} = await import(join(root, "modules/wodx-creation/scripts/pass-years.mjs"));
+// 7a: the People window with a batch rolled (twelve rows)
+const {PeopleApp} = await import(join(root, "modules/wodx-creation/scripts/people.mjs"));
+class RolledPeople extends PeopleApp {
+  constructor(o) { super(o); this.batch = 1; this.opts.count = 12; this.opts.kind = "ghoul";
+    const P = game.modules.get("wodx-creation")?.api?.people;
+    this.people = Array.from({length: 12}, (_, row) => P.generate({batch: 1, row, kind: "ghoul"})); }
+}
 const timeMod = await import(join(root, "modules/wodx-creation/scripts/time.mjs"));
 // The window with a plan on show: every character has changes to tick
 const {TwinsApp} = await import(join(root, "modules/wodx-otherworlds/scripts/twins-app.mjs"));
@@ -110,7 +117,7 @@ const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
   ["House rules", HouseRulesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
   ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
-  ["Pass the years", PlannedPassYears, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
+  ["Pass the years", PlannedPassYears, {}], ["People", RolledPeople, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);
   await app.render({force: true});
   const content = app.element.querySelector("section.window-content").innerHTML;

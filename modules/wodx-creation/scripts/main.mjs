@@ -11,6 +11,7 @@ import {runSkipTest} from "./skip-test.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 import * as groups from "./group-sheet.mjs";
 import * as firstChange from "./first-change.mjs";
+import * as people from "./people.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -23,6 +24,7 @@ Hooks.once("init", () => {
   }
   active = true;
   installSearch();
+  people.registerPeopleSettings();
   // The fork's Group actor (coterie, pack, cabal...) gets its sheet here
   if ( !groups.registerGroupSheet() ) console.warn("WoDX | No Group actor type in this system; update the WoDX fork to 7.3.2-wodx.2.");
 });
@@ -35,6 +37,7 @@ function start() {
   started = true;
   clearTimeout(waiting);
   xp.registerXPHandler();
+  people.registerPeople();
   game.socket.on(`module.${MODULE_ID}`, async message => {
     if ( message?.type === "xp.request" ) await xp.onRequest(message.payload);
   });
@@ -46,7 +49,8 @@ function start() {
     spend: actor => SpendApp.openFor(actor),
     embrace: change.embrace, giveVitae: change.giveVitae, firstChange: firstChange.firstChange, firstChangeDialog: firstChange.firstChangeDialog, award: xp.award, awardDialog,
     writeLineageJournal: lineage.writeLineageJournal,
-    groups
+    groups,
+    people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {creation: api});

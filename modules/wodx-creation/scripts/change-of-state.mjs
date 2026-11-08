@@ -129,6 +129,30 @@ const nightOf = time => Math.floor(((Number(time) || 0) - (NIGHT / 2)) / NIGHT);
  * GM: a character drinks a vampire's blood. A mortal becomes a ghoul on the first drink and gains Potence 1
  * (V20DA p. 399). Each drink on a new night moves the blood oath on; the third binds (V20DA pp. 341–342).
  */
+/**
+ * A mortal's sheet becomes a ghoul's: the blood pool, the Discipline section and Potence 1 (V20DA). The domitor, when
+ * there is one, is written to the ghoul's lineage. Used by giveVitae and by the People generator (7a).
+ */
+export async function makeGhoul(mortal, {domitor = null, points = 1, time = game.time.worldTime} = {}) {
+  const max = ghoulBloodMax(0);
+  await mortal.update({
+    "system.settings.variant": "ghoul",
+    "system.settings.haspath": true,
+    "system.settings.hasbloodpool": true,
+    "system.settings.hasvirtue": true,
+    "system.settings.powers.hasdisciplines": true,
+    "system.settings.variantsheet": CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire",
+    "system.advantages.bloodpool.max": max,
+    "system.advantages.bloodpool.perturn": GHOUL.perTurn,
+    "system.advantages.bloodpool.temporary": Math.min(max, Math.max(0, Number(points) || 0))
+  });
+  const potence = disciplinesOf(mortal).find(d => d.name.toLowerCase() === "potence");
+  if ( !potence ) await mortal.createEmbeddedDocuments("Item", [disciplineItem("Potence", GHOUL.firstDrinkPotence)]);
+  else if ( potence.value < GHOUL.firstDrinkPotence ) await mortal.items.get(potence.id).update({"system.value": 1, "system.level": 1});
+  if ( domitor ) await setLineage(mortal, {domitor: {id: domitor.id, name: domitor.name}});
+  await setChronology(mortal, {ghouled: time});
+}
+
 export async function giveVitae(drinker, regnant, {points = 1, time = game.time.worldTime} = {}) {
   if ( !game.user.isGM ) return null;
   if ( lineOf(regnant) !== "vampire" ) throw new Error(`${regnant?.name} is not a vampire`);
@@ -155,23 +179,7 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
   let becameGhoul = false;
   if ( lineOf(drinker) === "mortal" ) {
     becameGhoul = true;
-    const max = ghoulBloodMax(0);
-    await drinker.update({
-      "system.settings.variant": "ghoul",
-      "system.settings.haspath": true,
-      "system.settings.hasbloodpool": true,
-      "system.settings.hasvirtue": true,
-      "system.settings.powers.hasdisciplines": true,
-      "system.settings.variantsheet": CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire",
-      "system.advantages.bloodpool.max": max,
-      "system.advantages.bloodpool.perturn": GHOUL.perTurn,
-      "system.advantages.bloodpool.temporary": Math.min(max, Math.max(0, Number(points) || 0))
-    });
-    const potence = disciplinesOf(drinker).find(d => d.name.toLowerCase() === "potence");
-    if ( !potence ) await drinker.createEmbeddedDocuments("Item", [disciplineItem("Potence", GHOUL.firstDrinkPotence)]);
-    else if ( potence.value < GHOUL.firstDrinkPotence ) await drinker.items.get(potence.id).update({"system.value": 1, "system.level": 1});
-    await setLineage(drinker, {domitor: {id: regnant.id, name: regnant.name}});
-    await setChronology(drinker, {ghouled: time});
+    await makeGhoul(drinker, {domitor: regnant, points, time});
     notes.push("becomes a ghoul and gains Potence 1");
   } else if ( lineOf(drinker) === "ghoul" ) {
     const pool = drinker.system.advantages?.bloodpool ?? {};
