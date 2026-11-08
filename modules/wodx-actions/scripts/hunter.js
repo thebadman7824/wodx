@@ -66,7 +66,7 @@ export function build(ctx) {
           <div class="form-group"><label>Piety</label><input type="number" name="piety" value="${i.piety}" min="0" max="10"/></div>
           <div class="form-group"><label>Conviction</label><input type="number" name="conviction" value="${i.conviction}" min="0" max="10"/></div>
           <div class="form-group"><label><input type="checkbox" name="start"/> New character: set Conviction, Piety and Willpower from the Virtues (p. 147)</label></div></form>`;
-        return dialog(`Inquisitor — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Inquisitor: ${actor.name}`, content, "Save", async fd => {
             const sv = { faith: Math.min(n(fd.faith), i.v.conscience), wisdom: Math.min(n(fd.wisdom), i.v.selfcontrol), zeal: Math.min(n(fd.zeal), i.v.courage) };
             const clipped = sv.faith < n(fd.faith) || sv.wisdom < n(fd.wisdom) || sv.zeal < n(fd.zeal);
             let piety = n(fd.piety), conv = n(fd.conviction), html = "";
@@ -103,7 +103,7 @@ export function build(ctx) {
         if (i.conviction < 1) return ctx.notify(`${actor.name} has no Conviction: no Blessings until it returns (p. 161).`);
         const list = blessingsOn(actor);
         const risked = actor.getFlag(MOD, "riskScene") === sceneKey();
-        const content = `<form><p><b>${esc(actor.name)}</b> — Conviction ${i.conviction}, Piety ${i.piety}${H.callous(i.conviction, i.piety) ? " (<b>Callous</b>)" : ""}; Faith ${i.faith}, Wisdom ${i.wisdom}, Zeal ${i.zeal}.</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety}${H.callous(i.conviction, i.piety) ? " (<b>Callous</b>)" : ""}; Faith ${i.faith}, Wisdom ${i.wisdom}, Zeal ${i.zeal}.</p>
           <div class="form-group"><label>Blessing</label>${list.length > 5 ? searchBox("select[name=b]", "Search Blessings…", "Search Blessings") : ""}<select name="b" data-fixed><option value="">— another (type its name) —</option>${list.map(b => `<option value="${esc(b.name)}">${esc(b.name)}</option>`).join("")}</select> <input type="text" name="other" placeholder="Name"/></div>
           <div class="form-group"><label>Kind</label><select name="kind" data-fixed>${H.ENDOWMENT_KINDS.map(k => `<option>${k}</option>`).join("")}</select></div>
           <div class="form-group"><label>Application</label><select name="sv" data-fixed>${Object.entries(H.SUPERIOR_LABEL).map(([k, l]) => `<option value="${k}">${l} (${i[k]})</option>`).join("")}<option value="path">A Holy Art path (rating below)</option><option value="virtue">A basic Virtue (Orisons)</option></select></div>
@@ -111,7 +111,7 @@ export function build(ctx) {
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="2" max="10"/> <label>Conviction to spend</label> <input type="number" name="cost" value="1" min="0" max="3" style="width:4em"/></div>
           <div class="form-group"><label>Conviction to risk (1–3, once a scene)</label><input type="number" name="risk" value="0" min="0" max="3" ${risked ? "disabled" : ""}/> ${risked ? "<i>already risked this scene</i>" : ""}</div>
           <div class="form-group"><label><input type="checkbox" name="noroll"/> No roll (the page says so)</label></div></form>`;
-        return dialog(`A Blessing — ${actor.name}`, content, "Invoke", async fd => {
+        return dialog(`A Blessing: ${actor.name}`, content, "Invoke", async fd => {
             const name = fd.other?.trim() || fd.b || "A Blessing";
             const cost = n(fd.cost), risk = risked ? 0 : Math.min(3, n(fd.risk));
             if (cost + risk > i.conviction) return ctx.notify(`Not enough Conviction (${i.conviction}).`);
@@ -139,7 +139,7 @@ export function build(ctx) {
     async function virtueRoll(actor) {
         const i = inq(actor);
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
-        const content = `<form><p><b>${esc(actor.name)}</b> — Conviction ${i.conviction}; Faith ${i.faith}, Wisdom ${i.wisdom}, Zeal ${i.zeal}; Exposure ${i.exposure}. Only Conviction buys a success on these (p. 160).</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}; Faith ${i.faith}, Wisdom ${i.wisdom}, Zeal ${i.zeal}; Exposure ${i.exposure}. Only Conviction buys a success on these (p. 160).</p>
           <div class="form-group"><label>What</label><select name="k" data-fixed>
             <option value="danger">Terror: walk into danger (Courage + Zeal, 6)</option>
             <option value="supernatural">Terror: face the overtly supernatural (Courage + Zeal, 8 − Exposure)</option>
@@ -150,7 +150,7 @@ export function build(ctx) {
             <option value="victory">A victory over the enemy (primary Superior Virtue + Virtue, 7)</option></select></div>
           <div class="form-group"><label>The power's successes (opposed)</label><input type="number" name="vs" value="0" min="0"/></div>
           <div class="form-group"><label><input type="checkbox" name="conv"/> Spend 1 Conviction for a success</label></div></form>`;
-        return dialog(`Virtue roll — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Virtue roll: ${actor.name}`, content, "Roll", async fd => {
             const map = { danger: ["courage", "zeal"], supernatural: ["courage", "zeal"], fear: ["courage", "zeal"], thrall: ["selfcontrol", "wisdom"], memory: ["selfcontrol", "wisdom"], impulse: ["conscience", "faith"] };
             let [vk, sk] = map[fd.k] ?? [];
             if (fd.k === "victory") { sk = H.ORDERS[i.order]?.primary ?? "faith"; vk = H.SUPERIOR[sk]; }
@@ -180,9 +180,9 @@ export function build(ctx) {
 
     async function sin(actor) {
         const i = inq(actor);
-        const content = `<form><p><b>${esc(actor.name)}</b> — Piety ${i.piety}. Sins at or below their Piety call for the roll (Dark Ages: Inquisitor p. 159).</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Piety ${i.piety}. Sins at or below their Piety call for the roll (Dark Ages: Inquisitor p. 159).</p>
           <div class="form-group"><label>The sin</label><select name="lvl" data-fixed>${H.PIETY_SINS.map(([l, t]) => `<option value="${l}" ${H.pietyAt(i.piety, l) ? "" : "disabled"}>${l}: ${esc(t)}</option>`).join("")}</select></div></form>`;
-        return dialog(`A sin against God — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`A sin against God: ${actor.name}`, content, "Roll", async fd => {
             const c = H.callous(i.conviction, i.piety);
             const r = await rollPool(i.v.conscience + i.faith, H.pietyRoll({ callous: c }).difficulty);
             const out = H.pietyResult(r);
@@ -198,12 +198,12 @@ export function build(ctx) {
         const f = i.f, today = Math.floor(game.time.worldTime / 86400);
         if (f.prayerDay === today) return ctx.notify("Prayer renews Conviction once a day (p. 160).");
         const run = f.prayerDay === today - 1 ? n(f.prayerRun) + 1 : 0;
-        const content = `<form><p><b>${esc(actor.name)}</b> — Conviction ${i.conviction}, Piety ${i.piety} (prayer never raises it above Piety).${run ? ` Day ${run + 1} in a row: +${run} difficulty.` : ""}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety} (prayer never raises it above Piety).${run ? ` Day ${run + 1} in a row: +${run} difficulty.` : ""}</p>
           <div class="form-group"><label>Where</label><select name="src" data-fixed><option value="ground">Holy Ground (its rating)</option><option value="relic">Over a Holy Relic</option><option value="flock">With their Flock</option></select></div>
           <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${ctx.background(actor, "flock") || ctx.background(actor, "holy relic") || 1}" min="0" max="5"/></div>
           <div class="form-group"><label>Hours of prayer</label><input type="number" name="hours" value="1" min="1" max="5"/></div>
           <div class="form-group"><label><input type="checkbox" name="advance"/> Advance the clock (GM)</label></div></form>`;
-        return dialog(`Prayer — ${actor.name}`, content, "Pray", async fd => {
+        return dialog(`Prayer: ${actor.name}`, content, "Pray", async fd => {
             const diff = H.prayerDifficulty(n(fd.hours), run);
             const r = await rollPool(n(fd.rating), diff);
             const to = H.convictionGain(i.conviction, r.botch ? 0 : r.successes, i.piety);
@@ -228,10 +228,10 @@ export function build(ctx) {
 
     async function cashIn(actor) {
         const i = inq(actor);
-        const content = `<form><p><b>${esc(actor.name)}</b> — Conviction ${i.conviction}, banked ${i.banked}. Banking takes an hour of prayer a point; more than one a day needs a retreat (p. 161).</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, banked ${i.banked}. Banking takes an hour of prayer a point; more than one a day needs a retreat (p. 161).</p>
           <div class="form-group"><label>Bank this many</label><input type="number" name="bank" value="0" min="0" max="${i.conviction}"/></div>
           <div class="form-group"><label>Then buy</label><select name="buy" data-fixed><option value="">Nothing yet</option>${Object.entries(H.CASH_IN).map(([k, c]) => `<option value="${k}" ${i.banked >= c ? "" : ""}>${{ superior: "A Superior Virtue dot", orison: "An Orison", acolyte: "An Acolyte Endowment", advocate: "An Advocate Endowment", judge: "A Judge Endowment" }[k]} (${c})</option>`).join("")}</select> <select name="which" data-fixed>${Object.entries(H.SUPERIOR_LABEL).map(([k, l]) => `<option value="${k}">${l}</option>`).join("")}</select></div></form>`;
-        return dialog(`Bank Conviction — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`Bank Conviction: ${actor.name}`, content, "Go", async fd => {
             const bank = Math.min(i.conviction, n(fd.bank));
             let banked = i.banked + bank, html = bank ? `<div class="vta-note">${bank} Conviction banked (${banked} in all).</div>` : "";
             if (bank) await setConviction(actor, i.conviction - bank);
@@ -276,12 +276,12 @@ export function build(ctx) {
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const tw = tgt ? (rules === "da20" ? n(tgt.system?.advantages?.willpower?.temporary) : n(tgt.system?.advantages?.willpower?.permanent)) : 0;
         const powers = H.faithPowers(rules, rating);
-        const content = `<form><p><b>${esc(actor.name)}</b> — True Faith ${rating}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: True Faith ${rating}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
           <ul class="wodx-quiet">${powers.map(([k, t]) => `<li>${k ? "•".repeat(k) : "Always"}: ${esc(t)}</li>`).join("")}</ul>
           <div class="form-group"><label>What</label><select name="k" data-fixed><option value="repel">Repel the creature (1 Willpower)</option><option value="resist">Resist a power (1 Willpower)</option><option value="loss">Acting against their faith (Conscience at 9)</option><option value="set">Set the rating (if the sheet has no field)</option></select></div>
           <div class="form-group"><label>Creature's Willpower / the power's successes</label><input type="number" name="cw" value="${tw || 6}" min="1" max="10" style="width:4em"/> <input type="number" name="ps" value="0" min="0" style="width:4em"/> <label><input type="checkbox" name="daim"/> Daimoinon</label></div>
           <div class="form-group"><label>Rating</label><input type="number" name="rating" value="${rating}" min="0" max="5"/></div></form>`;
-        return dialog(`True Faith — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`True Faith: ${actor.name}`, content, "Go", async fd => {
             if (fd.k === "set") { await ctx.setFlag(actor, "trueFaith", n(fd.rating)); return post(actor, `${actor.name}`, `<div class="vta-note">True Faith ${fd.rating}: ${n(fd.rating)} extra Willpower dot${n(fd.rating) === 1 ? "" : "s"} (add them on the sheet).</div>`); }
             if (!rating) return ctx.notify(`${actor.name} has no True Faith.`);
             if (fd.k === "loss") {
@@ -309,8 +309,8 @@ export function build(ctx) {
     async function numina(actor) {
         const items = [...actor.items].filter(i => i.type === "Power" && /numina|edge/.test(i.system?.type ?? "") && !/power$/.test(i.system?.type ?? ""));
         const known = items.map(i => ({ name: i.name, value: n(i.system?.value), key: H.numinaFor(i.name) }));
-        const opts = [...known.map((k, x) => [`s${x}`, `${k.name} (${k.value})${k.key ? "" : " — not in the library"}`]), ...Object.entries(H.NUMINA).filter(([k]) => !known.some(x => x.key === k)).map(([k, v]) => [`l:${k}`, `${v.label} (library)`])];
-        const content = `<form><p><b>${esc(actor.name)}</b> — Willpower ${n(actor.system?.advantages?.willpower?.temporary)}. Numina from The Hunters Hunted II (pp. 70–83).</p>
+        const opts = [...known.map((k, x) => [`s${x}`, `${k.name} (${k.value})${k.key ? "" : " (not in the library)"}`]), ...Object.entries(H.NUMINA).filter(([k]) => !known.some(x => x.key === k)).map(([k, v]) => [`l:${k}`, `${v.label} (library)`])];
+        const content = `<form><p><b>${esc(actor.name)}</b>: Willpower ${n(actor.system?.advantages?.willpower?.temporary)}. Numina from The Hunters Hunted II (pp. 70–83).</p>
           <div class="form-group"><label>Numen</label>${searchBox("select[name=nm]", "Search Numina…", "Search Numina")}<select name="nm">${opts.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-num-info vta-note"></div>
           <div class="form-group"><label>Level used</label><input type="number" name="lvl" value="1" min="1" max="5"/> <label>difficulty</label> <input type="number" name="diff" value="7" min="2" max="10"/> <label>Willpower</label> <input type="number" name="wp" value="1" min="0" max="3" style="width:4em"/></div>
@@ -329,7 +329,7 @@ export function build(ctx) {
             if (item) root.querySelector("[name=rating]").value = item.value;
             box.innerHTML = `<b>${esc(def.label)}</b> (${def.kind === "hedge" ? "hedge magic" : "psychic"}) · ${def.pool.map(cap).join(" + ")} at ${def.diff} · p. ${def.p}<ol>${def.levels.map(l => `<li>${esc(l)}</li>`).join("")}</ol>${def.note ? `<span class="wodx-quiet">${esc(def.note)}</span>` : ""}`;
         };
-        return dialog(`Numina — ${actor.name}`, content, "Use", async fd => {
+        return dialog(`Numina: ${actor.name}`, content, "Use", async fd => {
             const { def, item } = pickV(String(fd.nm ?? ""));
             const rating = item?.value ?? n(fd.rating);
             if (n(fd.lvl) > rating) return ctx.notify(`The rating is ${rating}: level ${fd.lvl} is out of reach.`);
@@ -348,9 +348,9 @@ export function build(ctx) {
         const items = [...actor.items].filter(i => i.type === "Power" && /numina/.test(i.system?.type ?? ""));
         const paths = items.filter(i => !/power$/.test(i.system?.type ?? "")).map(i => ({ id: i.id, name: i.name, value: n(i.system?.value), key: H.sorceryFor(i.name) }));
         const rituals = items.filter(i => /power$/.test(i.system?.type ?? "")).map(i => ({ id: i.id, name: i.name, value: n(i.system?.level ?? i.system?.value) }));
-        const opts = [...paths.map((x, k) => [`s${k}`, `${x.name} (${x.value})${x.key ? "" : " — not a Sorcerer path"}`]), ...Object.entries(H.SORCERY).filter(([k]) => !paths.some(x => x.key === k)).map(([k, v]) => [`l:${k}`, `${v.label} (library)`])];
+        const opts = [...paths.map((x, k) => [`s${k}`, `${x.name} (${x.value})${x.key ? "" : " (not a Sorcerer path)"}`]), ...Object.entries(H.SORCERY).filter(([k]) => !paths.some(x => x.key === k)).map(([k, v]) => [`l:${k}`, `${v.label} (library)`])];
         const wp = n(actor.system?.advantages?.willpower?.temporary);
-        const content = `<form><p><b>${esc(actor.name)}</b> — Willpower ${wp}. Hedge magic by Sorcerer (Revised), Chapter Four: difficulty 4 + the highest aspect, a success for each aspect level above the first.</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Willpower ${wp}. Hedge magic by Sorcerer (Revised), Chapter Four: difficulty 4 + the highest aspect, a success for each aspect level above the first.</p>
           <div class="form-group"><label>Path</label>${searchBox("select[name=path]", "Search Paths…", "Search Paths")}<select name="path">${opts.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-hedge-info vta-note"></div>
           <div class="form-group"><label>Cast</label><select name="mode" data-fixed><option value="spell">A spell</option><option value="ritual">A ritual</option><option value="counter">A counterspell (Wits + Occult, 8)</option></select> <label>rating (library)</label> <input type="number" name="rating" value="1" min="0" max="6" style="width:4em"/></div>
@@ -364,7 +364,7 @@ export function build(ctx) {
             if (item) root.querySelector("[name=rating]").value = item.value;
             root.querySelector(".wodx-hedge-info").innerHTML = def ? `<b>${esc(def.label)}</b> · ${def.pool.filter(Boolean).map(cap).join(" + ") || "see the page"} · ${def.wp ? `${def.wp} Willpower` : "no Willpower"}${def.ritualOnly ? " · rituals only" : ""}${def.noRituals ? " · no rituals" : ""}${def.aspects ? ` · aspects: ${def.aspects.map(esc).join(", ")}` : ""} · p. ${def.p}${def.note ? `<br><span class="wodx-quiet">${esc(def.note)}</span>` : ""}` : "Not a Sorcerer path: set the roll by hand.";
         };
-        return dialog(`Hedge magic — ${actor.name}`, content, "Cast", async fd => {
+        return dialog(`Hedge magic: ${actor.name}`, content, "Cast", async fd => {
             const { def, item } = pick(String(fd.path ?? ""));
             const rating = item?.value ?? n(fd.rating);
             const statOf = k => (k === "willpower" ? n(actor.system?.advantages?.willpower?.permanent) : ATTR.includes(k) ? attr(actor, k) : (findAbility(actor, k)?.value ?? 0));
@@ -399,10 +399,10 @@ export function build(ctx) {
         const b = P.resource(actor, "blood");
         if (!b.ok) return ctx.notify(`${actor.name} has no blood pool on the sheet.`);
         const st = attr(actor, "stamina"), da = lineNow() === "inquisitor";
-        const content = `<form><p><b>${esc(actor.name)}</b> — blood ${b.value}/${b.max}, Stamina ${st}. ${da ? "<b>The chronicle is in the Dark Ages: V20 Dark Ages p. 399 governs ghouls; these are the V20 Ghouls and Revenants rules.</b>" : "V20 Ghouls and Revenants, Chapter Two."}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: blood ${b.value}/${b.max}, Stamina ${st}. ${da ? "<b>The chronicle is in the Dark Ages: V20 Dark Ages p. 399 governs ghouls; these are the V20 Ghouls and Revenants rules.</b>" : "V20 Ghouls and Revenants, Chapter Two."}</p>
           <div class="form-group"><label>What</label><select name="k" data-fixed><option value="drink">Drink vitae (overfeeding, p. 43)</option><option value="withdrawal">Withdrawal: resist a chance to feed (p. 43)</option><option value="day">An elder ghoul stays awake by day (p. 44)</option></select></div>
           <div class="form-group"><label>Blood points drunk</label><input type="number" name="drink" value="1" min="1" max="20"/></div></form>`;
-        return dialog(`Ghoul blood — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`Ghoul blood: ${actor.name}`, content, "Go", async fd => {
             const virt = virtues(actor);
             if (fd.k === "withdrawal") {
                 const r = await rollPool(virt.selfcontrol.value, H.WITHDRAWAL.difficulty);

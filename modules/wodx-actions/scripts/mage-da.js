@@ -77,7 +77,7 @@ export function build(ctx) {
             <option value="m20"${i.f.system === "m20" ? " selected" : ""}>Mage 20th always</option></select></div>
           <p class="wodx-quiet">Quintessence ${i.quintessence.value}${i.quintessence.max ? `/${i.quintessence.max}` : ""}; Fount ${i.fount} (holds ${M.fountLimits(i.fount).hold}, spends ${M.fountLimits(i.fount).perTurn} a turn); Cray ${i.cray}; Sanctum ${i.sanctum}. ${REF} pp. 79–93.</p>
         </form>`;
-        return dialog(`Fellowship and Pillars — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Fellowship and Pillars: ${actor.name}`, content, "Save", async fd => {
             const fel = M.FELLOWSHIPS[fd.fellowship] ? fd.fellowship : null;
             const pillars = {};
             for (const p of M.pillarsOf(fel)) pillars[p.key] = Math.max(0, Math.min(5, n(fd[`p-${p.key}`])));
@@ -99,7 +99,7 @@ export function build(ctx) {
         const rotes = M.ROTES.filter(r => r.f === i.fellowship);
         const lvlSel = p => `<select name="l-${p.key}" data-fixed>${[0, 1, 2, 3, 4, 5].map(v => `<option value="${v}"${v > p.rating ? " disabled" : ""}>${v === 0 ? "not used" : `level ${v}`}</option>`).join("")}</select>`;
         const content = `<form class="wodx-da-cast">
-          <p><b>${esc(actor.name)}</b> — ${esc(i.F.label)}, ${esc(i.F.foundation)} ${i.foundation}; Quintessence ${i.quintessence.value}. Imagine the effect, then the Pillar level it needs (${REF} pp. 97–99).</p>
+          <p><b>${esc(actor.name)}</b>: ${esc(i.F.label)}, ${esc(i.F.foundation)} ${i.foundation}; Quintessence ${i.quintessence.value}. Imagine the effect, then the Pillar level it needs (${REF} pp. 97–99).</p>
           <div class="form-group"><label>A rote</label>${rotes.length > 5 ? searchBox("select[name=rote]", "Search rotes…", "Search rotes") : ""}<select name="rote" data-fixed><option value="">(a spell of the mage's own)</option>${rotes.map(r => `<option value="${r.id}">${esc(r.name)} (${Object.entries(r.levels).map(([k, v]) => `${esc(i.pillars.find(p => p.key === k)?.label ?? k)} ${v}`).join(", ")})</option>`).join("")}</select></div>
           ${i.pillars.map(p => `<div class="form-group"><label>${esc(p.label)} (${p.rating}) <small>${esc(p.domain)}</small></label>${lvlSel(p)}</div>`).join("")}
           <div class="form-group"><label>Quintessence to lower the difficulty</label><input type="number" name="q" min="0" max="3" value="0"/></div>
@@ -112,7 +112,7 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
           <p class="wodx-quiet">Earlier this scene: ${here.failures} failure(s), ${here.botches} Backlash.</p>
         </form>`;
-        return dialog(`Cast a spell — ${actor.name}`, content, "Cast", async fd => {
+        return dialog(`Cast a spell: ${actor.name}`, content, "Cast", async fd => {
             const rote = M.ROTES.find(r => r.id === fd.rote) ?? null;
             const levels = rote ? { ...rote.levels } : Object.fromEntries(i.pillars.map(p => [p.key, n(fd[`l-${p.key}`])]));
             const sanctum = fd.sanctum ? i.sanctum : 0;
@@ -176,7 +176,7 @@ export function build(ctx) {
             if (!most) return notify(`${actor.name} has ${q} Quintessence: not enough to cancel a 1 (1 for the first).`);
             const content = `<form><p>${left} one(s) left; ${q} Quintessence. Cancelling k ones costs 2^k − 1 (pp. 140).</p>
               <div class="form-group"><label>Cancel</label><select name="k" data-fixed>${Array.from({ length: most }, (_, k) => `<option value="${k + 1}">${k + 1} (costs ${M.cancelCost(k + 1)})</option>`).join("")}</select></div></form>`;
-            return dialog(`Cancel the 1s — ${actor.name}`, content, "Spend", async fd => {
+            return dialog(`Cancel the 1s: ${actor.name}`, content, "Spend", async fd => {
                 const k = Math.min(most, n(fd.k)), cost = M.cancelCost(k);
                 await P.adjust(actor, "quintessence", -cost);
                 const now = { ...b, cancelled: b.cancelled + k };
@@ -193,7 +193,7 @@ export function build(ctx) {
             const br = M.branding(left, b.highest);
             const content = `<form><p>Severity ${br.severity} (${left} × Pillar ${b.highest}): level ${br.level}, ${esc(br.effect)} (p. 137).</p>
               <div class="form-group"><label>The mark</label><input type="text" name="text" value="" placeholder="How it shows on the mage or around them"/></div></form>`;
-            return dialog(`Branding — ${actor.name}`, content, "Mark", async fd => {
+            return dialog(`Branding: ${actor.name}`, content, "Mark", async fd => {
                 const marks = M.addBranding(i.brandings, { level: br.level, text: String(fd.text ?? "").slice(0, 200), at: game.time.worldTime });
                 await save(actor, { brandings: marks });
                 await msg.setFlag(MOD, "daBacklash", { ...b, done: "branding" });
@@ -227,13 +227,13 @@ export function build(ctx) {
         const held = i.cray ? (store ? Math.min(M.crayHolds(i.cray), n(store.value) + (store.tapped ? 0 : Math.max(0, day - n(store.day)))) : M.crayHolds(i.cray)) : 0;
         const fountMonth = actor.getFlag(MOD, "fountMonth");
         const month = Math.floor(game.time.worldTime / (30 * DAY));
-        const content = `<form><p><b>${esc(actor.name)}</b> — Quintessence ${i.quintessence.value} (holds ${M.fountLimits(i.fount).hold}). Cray ${i.cray}${i.cray ? `, about ${held} left in it` : ""}; Fount ${i.fount}.</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Quintessence ${i.quintessence.value} (holds ${M.fountLimits(i.fount).hold}). Cray ${i.cray}${i.cray ? `, about ${held} left in it` : ""}; Fount ${i.fount}.</p>
           <div class="form-group"><label>How</label><select name="how" data-fixed>
             ${i.cray ? `<option value="absorb">Absorb from the cray (Wits + Foundation, difficulty ${M.crayAbsorbDifficulty(i.cray)})</option><option value="tass">Harvest Tass (no roll; time and care)</option>` : ""}
             ${i.fount ? `<option value="fount"${fountMonth === month ? " disabled" : ""}>The Fount's rite (once a month: +${i.fount})</option>` : ""}
             <option value="umbra">A day in the Umbra (+1${i.fellowship === "spirit" && i.foundation >= 5 ? `, Sensitivity 5: +${Math.max(3, i.fount)}` : ""})</option></select></div>
           <div class="form-group"><label>Points of Tass</label><input type="number" name="tass" min="1" max="25" value="1"/></div></form>`;
-        return dialog(`Quintessence — ${actor.name}`, content, "Gather", async fd => {
+        return dialog(`Quintessence: ${actor.name}`, content, "Gather", async fd => {
             const room = M.fountLimits(i.fount).hold - i.quintessence.value;
             let gain = 0, body = "", rolls = [];
             if (fd.how === "absorb" || fd.how === "tass") {

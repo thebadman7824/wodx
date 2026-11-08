@@ -12,7 +12,7 @@
 "Intimation": "the target's Willpower (p. 177)",
 "Keening": "as each art",
 "Lifeweb": "the Shroud at the Fetter (Shadowlands 7, Tempest 8, Labyrinth 9) (p. 185)",
-"Mnemosynis": "6 on herself; the target's Willpower (or the Shroud, the higher, across it) (p. 190)",
+"Mnemosynis": "6 on themself; the target's Willpower (or the Shroud, the higher, across it) (p. 190)",
 "Moliate": "as each art; failure backfires (p. 195)",
 "Outrage": "the Shroud across it; 7 Shadowlands, 6 Tempest, 5 Labyrinth (+1 Angst there) (p. 199)",
 "Pandemonium": "the Shroud across it; 6 in Stygia and the Tempest, each 1 rolled a temporary Angst (p. 204)",
@@ -46,7 +46,7 @@
 "diff": "7",
 "c": "c1",
 "angst": false,
-"e": "Opens a gap into the Tempest, or pulls it over herself: +1 Stealth die a success."
+"e": "Opens a gap into the Tempest, or pulls it over themself: +1 Stealth die a success."
 },
 {
 "id": "argos-phantom-wings",
@@ -176,7 +176,7 @@
 "diff": "6",
 "c": "",
 "angst": false,
-"e": "Draws on her own Shadow with less risk."
+"e": "Draws on their own Shadow with less risk."
 },
 {
 "id": "castigate-bulwark",
@@ -189,7 +189,7 @@
 "diff": "var",
 "c": "",
 "angst": false,
-"e": "Shields herself and companions from a Maelstrom."
+"e": "Shields themself and companions from a Maelstrom."
 },
 {
 "id": "castigate-catechize",
@@ -280,7 +280,7 @@
 "diff": "own:angst",
 "c": "",
 "angst": false,
-"e": "Resists her own Shadow's seizure, or helps another resist."
+"e": "Resists their own Shadow's seizure, or helps another resist."
 },
 {
 "id": "embody-whispers",
@@ -371,7 +371,7 @@
 "diff": "shroud",
 "c": "p2",
 "angst": false,
-"e": "Manifests in a solid copy of her mortal body."
+"e": "Manifests in a solid copy of their mortal body."
 },
 {
 "id": "embody-harrow-the-mortal-flesh",
@@ -397,7 +397,7 @@
 "diff": "",
 "c": "",
 "angst": true,
-"e": "Shares her other Embody arts with others."
+"e": "Shares their other Embody arts with others."
 },
 {
 "id": "embody-materialize",
@@ -410,7 +410,7 @@
 "diff": "",
 "c": "",
 "angst": false,
-"e": "Rebuilds her living body almost perfectly, briefly."
+"e": "Rebuilds their living body almost perfectly, briefly."
 },
 {
 "id": "fatalism-kismet",
@@ -449,7 +449,7 @@
 "diff": "side:6",
 "c": "p1",
 "angst": false,
-"e": "Senses when Fate turns toward him: warning in advance."
+"e": "Senses when Fate turns toward them: warning in advance."
 },
 {
 "id": "fatalism-retrace",
@@ -735,7 +735,7 @@
 "diff": "shroud",
 "c": "p3",
 "angst": true,
-"e": "Takes an object as a body she controls."
+"e": "Takes an object as a body to control."
 },
 {
 "id": "inhabit-smiths-tenacity",
@@ -748,7 +748,7 @@
 "diff": "",
 "c": "p1",
 "angst": false,
-"e": "Takes on her tools' toughness."
+"e": "Takes on their tools' toughness."
 },
 {
 "id": "inhabit-wire-rider",
@@ -787,7 +787,7 @@
 "diff": "8",
 "c": "c1w1p7",
 "angst": false,
-"e": "Puts one of her Arcanoi into a relic: a temporary artifact."
+"e": "Puts one of their Arcanoi into a relic: a temporary artifact."
 },
 {
 "id": "inhabit-compel-the-soulsteel",
@@ -826,7 +826,7 @@
 "diff": "var",
 "c": "p1",
 "angst": false,
-"e": "Senses and guards against Intimation on herself."
+"e": "Senses and guards against Intimation on themself."
 },
 {
 "id": "intimation-excise",
@@ -852,7 +852,7 @@
 "diff": "",
 "c": "p2",
 "angst": false,
-"e": "Makes herself an object of desire."
+"e": "Makes themself an object of desire."
 },
 {
 "id": "intimation-unfold-the-animal-heart",
@@ -917,7 +917,7 @@
 "diff": "t:willpower",
 "c": "p4",
 "angst": false,
-"e": "Binds a subject's Passions to her own Psyche."
+"e": "Binds a subject's Passions to their own Psyche."
 },
 {
 "id": "intimation-a-single-thread",
@@ -943,7 +943,7 @@
 "diff": "7",
 "c": "p2",
 "angst": true,
-"e": "Throws her voice into a nearby person or thing."
+"e": "Throws their voice into a nearby person or thing."
 },
 {
 "id": "keening-sotto-voce",
@@ -1073,7 +1073,7 @@
 "diff": "shroud",
 "c": "p1",
 "angst": false,
-"e": "Always knows where her Fetters are; senses through one."
+"e": "Always knows where their Fetters are; senses through one."
 },
 {
 "id": "lifeweb-vibrations-in-the-web",
@@ -1203,7 +1203,7 @@
 "diff": "self:6",
 "c": "",
 "angst": false,
-"e": "Conscious control over her own memories."
+"e": "Conscious control over their own memories."
 },
 {
 "id": "mnemosynis-memory-vault",
@@ -1229,7 +1229,7 @@
 "diff": "self:6",
 "c": "p2",
 "angst": false,
-"e": "A cloak of anonymity: others forget her."
+"e": "A cloak of anonymity: others forget them."
 },
 {
 "id": "mnemosynis-further-reflection",
@@ -1307,7 +1307,7 @@
 "diff": "",
 "c": "",
 "angst": false,
-"e": "Erases her own identity from others' minds."
+"e": "Erases their own identity from others' minds."
 },
 {
 "id": "mnemosynis-muse-of-lies",
@@ -1333,7 +1333,7 @@
 "diff": "6",
 "c": "",
 "angst": false,
-"e": "Changes her face to look like another wraith."
+"e": "Changes their face to look like another wraith."
 },
 {
 "id": "moliate-shapesense",
@@ -1359,7 +1359,7 @@
 "diff": "7",
 "c": "",
 "angst": false,
-"e": "Reshapes her own Corpus or another's."
+"e": "Reshapes their own Corpus or another's."
 },
 {
 "id": "moliate-panoply-of-eyes",
@@ -1398,7 +1398,7 @@
 "diff": "own:stamina+3",
 "c": "",
 "angst": false,
-"e": "Shapes her body into weapons and armor."
+"e": "Shapes their body into weapons and armor."
 },
 {
 "id": "moliate-rend",
@@ -1684,7 +1684,7 @@
 "diff": "realm:6",
 "c": "c3cX",
 "angst": true,
-"e": "A grotesque apparition from her cast-off Corpus."
+"e": "A grotesque apparition from their cast-off Corpus."
 },
 {
 "id": "pandemonium-tesseract-bomb",
@@ -1710,7 +1710,7 @@
 "diff": "realm:6",
 "c": "p4",
 "angst": false,
-"e": "Slows or hastens time around her."
+"e": "Slows or hastens time around them."
 },
 {
 "id": "phantasm-sleepsense",
@@ -1775,7 +1775,7 @@
 "diff": "t:willpower",
 "c": "",
 "angst": false,
-"e": "A mortal who sees her takes it for a dream."
+"e": "A mortal who sees them takes it for a dream."
 },
 {
 "id": "phantasm-deep-slumber",
@@ -1879,7 +1879,7 @@
 "diff": "shroud",
 "c": "p1",
 "angst": true,
-"e": "Speaks through her host."
+"e": "Speaks through their host."
 },
 {
 "id": "puppetry-twitch",

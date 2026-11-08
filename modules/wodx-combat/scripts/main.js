@@ -481,8 +481,8 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
   ${condNotes}
   <div class="vtc-note vtc-hints" aria-live="polite"></div>
   ${kinds ? `<fieldset><legend>Actor types</legend>
-    <div class="form-group"><label>Attacker</label><select name="atkKind" data-fixed>${kindOpts("auto", `Automatic — ${P.profileLabel(aKind)}`)}</select></div>
-    <div class="form-group"><label>Defender</label><select name="profile" data-fixed>${kindOpts("auto", `Automatic — ${P.profileLabel(tKind)}`)}</select></div>
+    <div class="form-group"><label>Attacker</label><select name="atkKind" data-fixed>${kindOpts("auto", `Automatic: ${P.profileLabel(aKind)}`)}</select></div>
+    <div class="form-group"><label>Defender</label><select name="profile" data-fixed>${kindOpts("auto", `Automatic: ${P.profileLabel(tKind)}`)}</select></div>
     <div class="form-group"><label><input type="checkbox" name="remember"/> Save these choices on the actors</label></div>
   </fieldset>` : ""}
   <fieldset><legend>Attack</legend>
@@ -568,7 +568,7 @@ export async function attack({ attacker: a, target: t, weaponId } = {}) {
     const content = attackDialogHtml(attacker, target, weapons, sel);
     const aKind = getKind(attacker), tKind = target ? getKind(target) : "mortal";
     const r = await P.ask({
-        title: `WoDX Attack — ${P.profileLabel(aKind)}`,
+        title: `WoDX Attack: ${P.profileLabel(aKind)}`,
         content, width: 500, classes: ["vtc-dialog"],
         buttons: [{ id: "attack", label: "Attack", icon: "fas fa-dice-d10", default: true }, { id: "cancel", label: "Cancel" }],
         onRender: root => { bindKinds(root, aKind, tKind); bindHints(root, { attacker, target, attackerTok, targetTok }); }
@@ -1036,7 +1036,7 @@ function attackCard(c) {
         }
     }
     if (counter) {
-        L.push(`<div class="vtc-sec"><b>Parry turns the blow</b> (${target.name}'s ${counter.wname} vs unarmed attack — ${attacker.name} may only soak)`);
+        L.push(`<div class="vtc-sec"><b>Parry turns the blow</b> (${target.name}'s ${counter.wname} vs unarmed attack; ${attacker.name} may only soak)`);
         L.push(`<div class="vtc-parts">${counter.parts.join(" · ")}</div>${diceHtml(counter.dmg.faces, 6)}`);
         L.push(`<div class="vtc-res">${counter.dmg.successes} damage · soak ${counter.sp.dice} dice → ${counter.soak.successes}${counter.halved ? " · halved" : ""}</div>`);
         L.push(`<div class="vtc-big ${counter.levels ? "hit" : ""}">${counter.levels ? `${counter.levels} ${counter.type} to ${attacker.name}` : "Soaked"}</div>`);
@@ -1199,7 +1199,7 @@ export async function soakAndApply(tok, fd) {
     if (soak) html += `<div class="vtc-sec"><b>Soak</b> (${profileLabel(profile)}): ${sp.dice} dice${sp.autoSoak ? ` + ${sp.autoSoak} automatic` : ""}<div class="vtc-parts">${sp.notes.join(" · ")}</div>${diceHtml(soak.faces, 6)}<div class="vtc-res">${soak.successes} soaked${left.halved ? " · bashing halved" : ""}</div></div>`;
     html += `<div class="vtc-big ${left.levels ? "hit" : ""}">${left.levels ? `${left.levels} ${type}` : "No damage"}</div>`;
     if (dazed) html += `<div class="vtc-note"><b>Dazed:</b> ${left.levels} levels after soak is more than ${dz.label} (${dz.threshold}): ${esc(actor.name)} spends the next turn shaking it off (V20 Dark Ages p. 348).</div>`;
-    if (fd.chimerical) html += `<div class="vtc-note">Chimerical damage: only changelings and chimerical beings are hurt; the body of a mortal or other supernatural is unharmed${kind === "fae" ? "" : " — apply nothing to " + actor.name + " unless the Storyteller rules otherwise"}.</div>`;
+    if (fd.chimerical) html += `<div class="vtc-note">Chimerical damage: only changelings and chimerical beings are hurt; the body of a mortal or other supernatural is unharmed${kind === "fae" ? "" : "; apply nothing to " + actor.name + " unless the Storyteller rules otherwise"}.</div>`;
     if (left.levels) html += `<div class="vtc-pending">${setting("autoApply") ? "Applying…" : ""}<button type="button" class="vtc-apply" data-which="main">Apply ${left.levels} ${type} to ${actor.name}</button></div>`;
     html += `</div>`;
     const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun };
@@ -1234,7 +1234,7 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         const rating = dex + wits + cel;
         const value = roll.total + rating / 100;
         updates.push({ _id: c.id, initiative: value });
-        const inc = wp <= -99 ? " — <i>Incapacitated, cannot act</i>" : "";
+        const inc = wp <= -99 ? ": <i>Incapacitated, cannot act</i>" : "";
         lines.push(`<tr><td>${c.name}</td><td>${roll.dice[0].total}</td><td>${dex}+${wits}${cel ? `+${cel}` : ""}${wp ? ` ${wp > -99 ? wp : ""}` : ""}</td><td><b>${roll.total}</b>${inc}</td></tr>`);
     }
     await combat.updateEmbeddedDocuments("Combatant", updates);
@@ -1338,12 +1338,12 @@ Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
     const lim = movementFor(doc.actor);
     const p = AU.pace(total, lim);
     if (p === "over" && mode === "block" && !game.user.isGM) {
-        ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past her running speed this turn (${lim.run}${lim.note ? `; ${lim.note}` : ""}).`);
+        ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past their running speed this turn (${lim.run}${lim.note ? `; ${lim.note}` : ""}).`);
         return false;
     }
     foundry.utils.setProperty(changes, `flags.${MOD}.moved`, { tag, yards: Math.round(total * 10) / 10 });
     const label = { walk: "Walking", jog: "Jogging", run: "Running", over: "Past running speed" }[p];
-    const msg = `${label}: ${Math.round(total)} / ${lim.run} yd${lim.note ? ` (${lim.note})` : ""}${total > lim.attackAfter ? " — no attack this turn" : ""}`;
+    const msg = `${label}: ${Math.round(total)} / ${lim.run} yd${lim.note ? ` (${lim.note})` : ""}${total > lim.attackAfter ? "; no attack this turn" : ""}`;
     try { canvas.interface?.createScrollingText?.(doc.object?.center ?? { x: doc.x, y: doc.y }, msg, { anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 22, fill: p === "over" ? "#ff6060" : "#ffffff", stroke: 0x000000, strokeThickness: 4, duration: 2500 }); } catch (e) { /* no canvas */ }
 });
 
@@ -1439,9 +1439,9 @@ function resolveAutoOptions(attacker, target, fd, { attackerTok = null, targetTo
         const n = opponentsAround(aTok);
         if (n != null) { fd.opponents = Math.max(1, n); if (n > 1) notes.push(`${n} opponents engaged (+${Math.min(4, n - 1)} difficulty)`); }
     }
-    // Moving more than half her running speed leaves no attack this turn (VtDA20 p. 333)
+    // Moving more than half their running speed leaves no attack this turn (VtDA20 p. 333)
     const mv = movedThisRound(aTok);
-    if (mv && mv.yards > mv.limits.attackAfter) notes.push(`moved ${Math.round(mv.yards)} yards this turn, more than half her running speed (${mv.limits.attackAfter}): by the book no attack follows`);
+    if (mv && mv.yards > mv.limits.attackAfter) notes.push(`moved ${Math.round(mv.yards)} yards this turn, more than half their running speed (${mv.limits.attackAfter}): by the book no attack follows`);
     else if (mv?.yards) notes.push(`moved ${Math.round(mv.yards)} yards this turn`);
     if (target && (fd.defIndex === "auto" || fd.defIndex === undefined)) {
         const k = defensesThisRound(target);
@@ -1468,7 +1468,7 @@ export async function setSoakPolicy(actor) {
     const a = actor?.actor ?? actor;
     if (!a) return null;
     const cur = soakPolicy(a);
-    const r = await P.ask({ title: `Soak policy — ${a.name}`, width: 420, classes: ["vtc-dialog"],
+    const r = await P.ask({ title: `Soak policy: ${a.name}`, width: 420, classes: ["vtc-dialog"],
         content: `<form class="vtc-form"><p>When ${esc(a.name)} is hit and the attack dialog's Fortitude choice is Automatic, spend a blood point for automatic Fortitude soak (VtDA20 p. 218):</p>
           <div class="form-group"><label>Policy</label><select name="policy" data-fixed>${Object.entries(AU.SOAK_POLICIES).map(([k, v]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${esc(v)}</option>`).join("")}</select></div></form>`,
         buttons: [{ id: "ok", label: "Save", icon: "fas fa-check", default: true }, { id: "cancel", label: "Cancel" }] });

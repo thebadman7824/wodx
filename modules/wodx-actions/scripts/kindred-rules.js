@@ -124,7 +124,7 @@ export function discDuration(code, successes = 1) {
         default: return null;
     }
 }
-export const DURATION_TEXT = { scene: "the scene", conc: "while she concentrates (up to the scene)", turn: "one turn", turns: "a turn per success",
+export const DURATION_TEXT = { scene: "the scene", conc: "while they concentrate (up to the scene)", turn: "one turn", turns: "a turn per success",
     night: "the night", nights: "a night per success", days: "a day per success", instant: "instant", permanent: "permanent", passive: "always on", var: "see the page" };
 
 /* ------------------------------------------------------------------ */

@@ -139,7 +139,7 @@ export function build(ctx) {
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const rows = list.map(p => [p.id, `${p.d} ${"•".repeat(Math.min(5, p.l))}${p.l > 5 ? ` (${p.l})` : ""}: ${p.n}${p.elder ? " (elder)" : p.passive ? " (passive)" : ""}`]);
         const b = ctx.blood(actor);
-        const content = `<form class="wodx-disc"><p><b>${esc(actor.name)}</b> — blood ${b.value}/${b.max}, ${b.perTurn} a turn${tgt ? `; target <b>${esc(tgt.name)}</b>` : ""}</p>
+        const content = `<form class="wodx-disc"><p><b>${esc(actor.name)}</b>: blood ${b.value}/${b.max}, ${b.perTurn} a turn${tgt ? `; target <b>${esc(tgt.name)}</b>` : ""}</p>
           <div class="form-group"><label>Power</label>${searchBox("select[name=power]", "Search powers…", "Search powers")}<select name="power" data-fixed>${rows.map(([v, l], i) => `<option value="${v}" ${i === 0 ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-disc-info vta-note"></div>
           <div class="form-group wodx-disc-attr" style="display:none"><label>Activation Attribute (the page names it)</label><select name="attr" data-fixed>${K.ATTRS.map(a => `<option value="${a}">${lab(a)}</option>`).join("")}</select></div>
@@ -163,7 +163,7 @@ export function build(ctx) {
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
                 + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "");
         };
-        return dialog(`Use a Discipline — ${actor.name}`, content, "Use", async fd => {
+        return dialog(`Use a Discipline: ${actor.name}`, content, "Use", async fd => {
             const p = list.find(x => x.id === fd.power);
             if (!p) return null;
             const spendB = Math.max(0, n(fd.blood)), spendW = Math.max(0, n(fd.wp));
@@ -183,7 +183,7 @@ export function build(ctx) {
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
                 body += rollBlock(pool.label, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : [], fd.specialty);
-                if (r.botch) body += `<div class="vta-warn">Botch: the power turns on her or fails badly (see the page).</div>`;
+                if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(VtDA20 p. ${p.p ?? "?"})</span></div>`;
             const dur = successes > 0 ? K.discDuration(p.t, successes) : null;
@@ -214,11 +214,11 @@ export function build(ctx) {
         const opts = [];
         for (const [k, r] of Object.entries(DATA.roads.roads)) {
             opts.push([`${k}|`, r.name]);
-            for (const p of r.paths) opts.push([`${k}|${p.name}`, `${r.name} — ${p.name}`]);
+            for (const p of r.paths) opts.push([`${k}|${p.name}`, `${r.name}: ${p.name}`]);
         }
         const sel = cur ? `${cur.key}|${cur.path?.name ?? ""}` : "";
         const rating = n(actor.system?.advantages?.path?.permanent);
-        const content = `<form><p><b>${esc(actor.name)}</b> — ${esc(cur ? `${cur.road.name}${cur.path ? `, ${cur.path.name}` : ""}` : "no Road recognized")} ${rating}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: ${esc(cur ? `${cur.road.name}${cur.path ? `, ${cur.path.name}` : ""}` : "no Road recognized")} ${rating}</p>
           <div class="form-group"><label>Road and Path</label>${searchBox("select[name=road]", "Search Roads…", "Search Roads")}<select name="road" data-fixed>${opts.map(([v, l]) => `<option value="${esc(v)}" ${v === sel ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
           <div class="form-group"><label><input type="checkbox" name="writeSheet" checked/> Write the Road's name on the sheet</label></div>
           <div class="wodx-road-info"></div></form>`;
@@ -228,7 +228,7 @@ export function build(ctx) {
             const found = { key: k, road: r, path: r?.paths.find(p => p.name === path) ?? null };
             root.querySelector(".wodx-road-info").innerHTML = r ? `<p class="vta-note"><b>Aura:</b> ${esc(r.aura)} · <b>Virtues:</b> ${r.virtues.map(v => DATA.roads.virtueLabels[v]).join(" and ")} and Courage · VtDA20 p. ${found.path?.p ?? r.p}</p>${hierarchyTable(found, rating)}` : "";
         };
-        return dialog(`Road — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Road: ${actor.name}`, content, "Save", async fd => {
             const [k, path] = String(fd.road).split("|");
             const r = DATA.roads.roads[k];
             if (!r) return null;
@@ -331,7 +331,7 @@ export function build(ctx) {
             root.querySelector("[name=diff]").value = r.d.diff;
             root.querySelector(".wodx-dt-note").textContent = `${r.d.note} [WoDX]`;
         };
-        return dialog(`Downtime — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Downtime: ${actor.name}`, content, "Roll", async fd => {
             const r = rows.find(x => x.k === fd.kind);
             const g = fd.from !== "own" ? game.actors.get(fd.from) : null;
             const dots = g ? pooled(g, r.d.bg) : r.own;
@@ -352,7 +352,7 @@ export function build(ctx) {
                 body += `<div class="vta-res good">Blood ${ch.before} → ${ch.after}</div>`;
             }
             if (fd.advance && game.user.isGM) await game.time.advance(7 * 86400 * Math.max(1, n(fd.weeks)));
-            await logEvent(actor, `Downtime: ${r.d.label.toLowerCase()} — ${total} success${total === 1 ? "" : "es"}.`, "downtime");
+            await logEvent(actor, `Downtime: ${r.d.label.toLowerCase()}, ${total} success${total === 1 ? "" : "es"}.`, "downtime");
             return post(actor, `${actor.name}: ${esc(r.d.label)}`, body, rolls);
         }, { render: root => { sync(root); root.querySelector("[name=kind]").addEventListener("change", () => sync(root)); } });
     }
@@ -459,14 +459,14 @@ export function build(ctx) {
             if (total(after) <= total(before)) return null;
             if (kind === "kindred" && !actor.getFlag(MOD, "torpor")) {
                 const prov = K.woundProvocation(before, after);
-                if (prov && !actor.system?.conditions?.isfrenzy) bits.push(`<p>${prov === "lifethreat" ? "Her existence is in danger" : "A grievous wound"}: the Beast stirs (VtDA20 p. 357).</p>${kbtn("frenzy", actor, "Frenzy check", prov)}`);
+                if (prov && !actor.system?.conditions?.isfrenzy) bits.push(`<p>${prov === "lifethreat" ? "Their existence is in danger" : "A grievous wound"}: the Beast stirs (VtDA20 p. 357).</p>${kbtn("frenzy", actor, "Frenzy check", prov)}`);
                 const t = ctx.healthTrack(actor);
                 const cond = ctx.R.condition(after, t.max, "vampire");
                 if (cond.key === "torpor" && setting("autoTorpor")) await enterTorpor(actor, { cause: "wounds" });
             }
             if (kind === "lupine") {
                 const t = ctx.healthTrack(actor);
-                if (total(after) >= t.max && total(before) < t.max && n(after.aggravated) < t.max) bits.push(`<p>Beyond Incapacitated: Rage can keep the shapechanger on her feet once a scene.</p>${kbtn("riseRage", actor, "Rise on Rage")}`);
+                if (total(after) >= t.max && total(before) < t.max && n(after.aggravated) < t.max) bits.push(`<p>Beyond Incapacitated: Rage can keep the shapechanger on their feet once a scene.</p>${kbtn("riseRage", actor, "Rise on Rage")}`);
             }
         } else {
             if (kind === "kindred" && fireSun && !actor.getFlag(MOD, "torpor")) bits.push(`<p>Burned by fire or sun: Rötschreck (VtDA20 p. 357).</p>${kbtn("rotschreck", actor, "Rötschreck check", "burned")}`);
@@ -489,8 +489,8 @@ export function build(ctx) {
     async function onBlood(actor, before, after) {
         if (!isActiveGM() || !setting("eventPrompts") || P.detectProfile(actor) !== "kindred" || actor.getFlag(MOD, "torpor")) return null;
         const sc = n(actor.system?.advantages?.virtues?.selfcontrol?.permanent);
-        if (K.hungerCrossed(before, after, sc)) return prompt(actor, `${actor.name} hungers`, `<p>Blood ${after}, under ${7 - sc}: the sight, smell or taste of blood can drive her to frenzy (p. 357).</p>${kbtn("frenzy", actor, "Frenzy check (sight of blood)", "sightblood")}`);
-        if (n(after) === 0 && n(before) > 0) return prompt(actor, `${actor.name} is empty`, `<p>No blood left: she is ravenous; hunger frenzy is likely, and she can't rise without blood (p. 340).</p>${kbtn("frenzy", actor, "Frenzy check (hunger)", "hunger")}`);
+        if (K.hungerCrossed(before, after, sc)) return prompt(actor, `${actor.name} hungers`, `<p>Blood ${after}, under ${7 - sc}: the sight, smell or taste of blood can drive ${esc(actor.name)} to frenzy (p. 357).</p>${kbtn("frenzy", actor, "Frenzy check (sight of blood)", "sightblood")}`);
+        if (n(after) === 0 && n(before) > 0) return prompt(actor, `${actor.name} is empty`, `<p>No blood left: ${esc(actor.name)} is ravenous; hunger frenzy is likely, and they can't rise without blood (p. 340).</p>${kbtn("frenzy", actor, "Frenzy check (hunger)", "hunger")}`);
         return null;
     }
 
@@ -503,7 +503,7 @@ export function build(ctx) {
         if (level === null) return null;
         const sinText = K.sinAt(K.hierarchyOf(found), level);
         const roll = level <= rating;
-        const html = `<p>${esc(what)}. On ${esc(found?.path?.name ?? found?.road?.name ?? "her Road")} this is a level ${level} sin${sinText ? ` (“${esc(sinText)}”)` : ""}${roll ? "" : `, beyond her rating of ${rating}: no roll`}.</p>${roll ? kbtn("sin", actor, `Degeneration roll (level ${level})`, `${level}|${what}`) : ""}`;
+        const html = `<p>${esc(what)}. On ${esc(found?.path?.name ?? found?.road?.name ?? "the Road")} this is a level ${level} sin${sinText ? ` (“${esc(sinText)}”)` : ""}${roll ? "" : `, beyond the rating of ${rating}: no roll`}.</p>${roll ? kbtn("sin", actor, `Degeneration roll (level ${level})`, `${level}|${what}`) : ""}`;
         if (isActiveGM()) return prompt(actor, `${actor.name}: a sin?`, html);
         return { html, level };
     }
@@ -517,7 +517,7 @@ export function build(ctx) {
         await ctx.statusEffect(actor, "unconscious", true); await ctx.condition(actor, "torpor", true);
         const when = await clockNow(until);
         await logEvent(actor, `Sinks into torpor (${cause}) for ${tl.text.toLowerCase()}.`, "torpor");
-        return prompt(actor, `${actor.name} sinks into torpor`, `<p>${esc(tl.text)} at Road ${rd}${voluntary ? " (voluntary: half)" : ""}. She may try to rise on <b>${esc(when.dateLabel || "the date")}</b>; WoDX will remind you.</p>`);
+        return prompt(actor, `${actor.name} sinks into torpor`, `<p>${esc(tl.text)} at Road ${rd}${voluntary ? " (voluntary: half)" : ""}. ${esc(actor.name)} may try to rise on <b>${esc(when.dateLabel || "the date")}</b>; WoDX will remind you.</p>`);
     }
 
     /* ---------------- The clock: healing, dawn and dusk, torpor ---------------- */
@@ -582,7 +582,7 @@ export function build(ctx) {
         if (n(a.getFlag(MOD, "healCarry")) !== n(plan.carry)) await a.setFlag(MOD, "healCarry", plan.carry);
         if (got.length) await ctx.setDamage(a, plan.damage);
         if (!got.length && !plan.needsCare) return null;
-        return `<b>${esc(a.name)}</b>: ${got.length ? `heals ${got.join(", ")}` : "no change"}${plan.needsCare ? " — <i>lethal wounds past Hurt need care to heal (tick “treated” in WoDX Actions → Healing)</i>" : ""}`;
+        return `<b>${esc(a.name)}</b>: ${got.length ? `heals ${got.join(", ")}` : "no change"}${plan.needsCare ? "; <i>lethal wounds past Hurt need care to heal (tick “treated” in WoDX Actions → Healing)</i>" : ""}`;
     }
 
     async function torporReminders(now) {
@@ -591,7 +591,7 @@ export function build(ctx) {
             const until = t.until ?? K.torporUntil(t.since ?? 0, n(a.system?.advantages?.path?.permanent), { voluntary: t.voluntary, days: t.days });
             if (now >= until && !t.reminded) {
                 await a.setFlag(MOD, "torpor", { ...t, until, reminded: true });
-                await prompt(a, `${a.name} may rise`, `<p>Her torpor's time has passed. Rising costs a blood point and a Road roll (8).</p>${kbtn("torpor", a, "Attempt to rise")}`);
+                await prompt(a, `${a.name} may rise`, `<p>The torpor's time has passed. Rising costs a blood point and a Road roll (8).</p>${kbtn("torpor", a, "Attempt to rise")}`);
             }
         }
     }
@@ -606,7 +606,7 @@ export function build(ctx) {
             const toks = a.getActiveTokens?.() ?? [];
             // The sunlight system (3.3) decides; without it, regions named sunlit or a scene marked outdoors
             const sun = toks.some(tk => api.sunExposure ? api.sunExposure(tk, sunInfo)?.exposed : sunlit(tk));
-            rows.push(`<li><b>${esc(a.name)}</b>${sun ? " — <b>in the open: the sun will burn her</b>" : ""} ${kbtn("stayAwake", a, "Stay awake (Road, 8)")}${sun ? kbtn("sun", a, "Sunlight") : ""}</li>`);
+            rows.push(`<li><b>${esc(a.name)}</b>${sun ? ": <b>in the open, where the sun will burn them</b>" : ""} ${kbtn("stayAwake", a, "Stay awake (Road, 8)")}${sun ? kbtn("sun", a, "Sunlight") : ""}</li>`);
         }
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Dawn: ${esc(t.timeLabel ?? "")}</h3><p>Sunrise. Cainites sleep unless the Road holds them up (each success a turn, five the scene; VtDA20 pp. 336, 359).</p><ul>${rows.join("")}</ul></div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
@@ -624,7 +624,7 @@ export function build(ctx) {
     async function riseHeal(actor) {
         const b = ctx.blood(actor), dmg = ctx.healthTrack(actor).damage;
         const plan = K.risingHeal(dmg, b.value, n(actor.system?.advantages?.virtues?.selfcontrol?.permanent), ctx.R.planHealing);
-        if (!plan.spent) return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: she rises hurt.</div>`);
+        if (!plan.spent) return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
         await ctx.setDamage(actor, { ...plan.after });
         const ch = await ctx.changeBlood(actor, -plan.spent);
         return post(actor, `${actor.name} heals on rising`, `<div class="vta-sec">Heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing: blood ${ch.before} → ${ch.after}. Now ${ctx.healthText(actor, plan.after)}.</div>`);
@@ -645,7 +645,7 @@ export function build(ctx) {
         const r = await rollPool(rd, 8);
         const res = ctx.R.awakeningResult(r);
         let body = rollBlock(`Road ${rd}`, r) + `<div class="vta-big ${res.awake ? "good" : "bad"}">${esc(res.text)}</div>`;
-        if (res.awake) { await ctx.setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns }); body += `<div class="vta-note">By day no pool may exceed her Road (${rd}).</div>`; }
+        if (res.awake) { await ctx.setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns }); body += `<div class="vta-note">By day no pool may exceed the Road rating (${rd}).</div>`; }
         return post(actor, `${actor.name} fights the dawn`, body, [r.roll]);
     }
 
@@ -711,7 +711,7 @@ export function build(ctx) {
         const content = `<form><p><b>${esc(actor.name)}</b>: ${ctx.healthText(actor, ctx.healthTrack(actor).damage)}.</p>
           <p class="vta-note">${plan ? `In a day: ${Object.entries(plan.healed).filter(([, v]) => v).map(([k, v]) => `${v} ${k}`).join(", ") || "nothing yet"}${plan.next ? `; the next level in ${Math.ceil(plan.next / 3600)} hours` : ""}.` : "This character doesn't heal with time (Cainites heal with blood)."} The clock heals automatically as it advances.</p>
           <div class="form-group"><label><input type="checkbox" name="treated" ${treated ? "checked" : ""}/> Under a healer's care (lethal wounds past Hurt can heal; VtDA20 p. 352)</label></div></form>`;
-        return dialog(`Healing — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Healing: ${actor.name}`, content, "Save", async fd => {
             await ctx.setFlag(actor, "treated", fd.treated ? true : null);
             return post(actor, `${actor.name}`, `<div class="vta-note">${fd.treated ? "In a healer's care." : "No longer in care: lethal wounds past Hurt won't heal (and may worsen a level a day)."}</div>`);
         });
@@ -725,7 +725,7 @@ export function build(ctx) {
 export function registerSettings(register) {
     register("naturalHealing", "Heal with the clock", "As the Chronicle clock advances, mortals and ghouls heal by the chart (VtDA20 p. 352) and shapechangers regenerate; a whispered card lists it.", Boolean, true);
     register("eventPrompts", "Prompts from what happens", "Whispered cards with a button when a wound, fire, sunlight or hunger provokes the Beast, a killing may be a sin, or a shapechanger falls below Incapacitated.", Boolean, true);
-    register("autoTorpor", "Torpor from wounds", "A Cainite whose health track fills with lethal damage sinks into torpor for her Road's length, with a reminder on the date she may rise (VtDA20 p. 350).", Boolean, true);
+    register("autoTorpor", "Torpor from wounds", "A Cainite whose health track fills with lethal damage sinks into torpor for as long as their Road sets, with a reminder on the date they may rise (VtDA20 p. 350).", Boolean, true);
     register("autoDelirium", "The Delirium when a Crinos is seen", "When a shapechanger in Crinos moves or changes where mortal tokens can see it, the GM gets a card to run the Delirium for them.", Boolean, true);
     register("historyLog", "History journal", "Write sins, frenzies, oaths, diablerie, torpor, Renown, boons and downtime to a page per character in \"WoDX History\".", Boolean, true);
     register("witnessRange", "Witness range (feet)", "How far a mortal token can see a feeding, a Discipline or a Crinos for the witness checks (walls block sight).", Number, 60);

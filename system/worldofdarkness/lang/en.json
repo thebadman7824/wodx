@@ -2009,7 +2009,7 @@
 			"rollinginitiative": "Rolling initiative",
 			"rollingsoak": "Rolling soak",
 			"rollingremainactive": "Roll to remain active",
-			"rollingremainactivetext": "Each success heals one health level of any kind of damage. No matter how much damage is healed, the character enters a berserk frenzy. A werewolf gains a Battle Scar whenever she successfully remains active.",
+			"rollingremainactivetext": "Each success heals one health level of any kind of damage. No matter how much damage is healed, the character enters a berserk frenzy. A werewolf gains a Battle Scar whenever they successfully remain active.",
 			"addedautosucc": "The roll add {0} automatic successes",
 			"usingwillpower": "Using Willpower",
 			"nowillpower": "{name} has no temporary Willpower left!",

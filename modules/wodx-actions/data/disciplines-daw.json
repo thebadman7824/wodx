@@ -134,7 +134,7 @@
 "diff": 8,
 "c": "",
 "t": "var",
-"e": "Forces her Beast into another after eye contact: frenzy or worse in the target, calm in herself."
+"e": "Forces their Beast into another after eye contact: frenzy or worse in the target, calm in themself."
 },
 {
 "id": "auspex-heightened-senses",
@@ -290,7 +290,7 @@
 "diff": "",
 "c": "b1",
 "t": "conc",
-"e": "Animates an existing illusion while she concentrates."
+"e": "Animates an existing illusion while the vampire concentrates."
 },
 {
 "id": "chimerstry-permanency",
@@ -530,7 +530,7 @@
 "diff": "var",
 "c": "",
 "t": "instant",
-"e": "Absorbs an object's impressions, erasing them as she learns them."
+"e": "Absorbs an object's impressions, erasing them as they are learned."
 },
 {
 "id": "mytherceria-changeling-ward",
@@ -566,7 +566,7 @@
 "diff": "",
 "c": "b2",
 "t": "scene",
-"e": "A zone of total silence around her, up to 20 feet."
+"e": "A zone of total silence around them, up to 20 feet."
 },
 {
 "id": "obfuscate-unseen-presence",
@@ -698,7 +698,7 @@
 "diff": 6,
 "c": "b1",
 "t": "scene",
-"e": "A sacrificed warrior's head gives her wound immunity and fighting edges for a scene."
+"e": "A sacrificed warrior's head gives them wound immunity and fighting edges for a scene."
 },
 {
 "id": "ogham-mhallacht-of-the-cyoeraeth",
@@ -770,7 +770,7 @@
 "diff": "t:willpower",
 "c": "",
 "t": "var",
-"e": "Bends a subject's emotions: they want to serve her, from hours to months by successes."
+"e": "Bends a subject's emotions: they want to serve the vampire, from hours to months by successes."
 },
 {
 "id": "presence-summon",
@@ -782,7 +782,7 @@
 "diff": 5,
 "c": "",
 "t": "var",
-"e": "Calls someone she has met to come to her, as fast and as willingly as successes allow."
+"e": "Calls someone the vampire has met to come to them, as fast and as willingly as successes allow."
 },
 {
 "id": "presence-majesty",
@@ -794,7 +794,7 @@
 "diff": "",
 "c": "w1",
 "t": "scene",
-"e": "No roll: anyone who would act against her rolls Courage (vs her Charisma + Intimidation) or can't."
+"e": "No roll: anyone who would act against them rolls Courage (vs their Charisma + Intimidation) or can't."
 },
 {
 "id": "protean-eyes-of-the-beast",
@@ -890,7 +890,7 @@
 "diff": "t:stamina",
 "c": "w1",
 "t": "instant",
-"e": "After her blood enters the target, wracks them from afar: lethal damage by successes."
+"e": "After their blood enters the target, wracks them from afar: lethal damage by successes."
 },
 {
 "id": "quietus-cruscitus-baals-caress",
@@ -926,7 +926,7 @@
 "diff": 6,
 "c": "b1",
 "t": "var",
-"e": "Hardens or preserves an object with her blood."
+"e": "Hardens or preserves an object with their blood."
 },
 {
 "id": "quietus-hematus-truth-of-blood",
@@ -1034,7 +1034,7 @@
 "diff": "",
 "c": "bX",
 "t": "var",
-"e": "Births a serpent-beast from her own flesh; a health level stays marked while it lives."
+"e": "Births a serpent-beast from their own flesh; a health level stays marked while it lives."
 },
 {
 "id": "spiritus-aid-from-spirits",
@@ -1202,7 +1202,7 @@
 "diff": 8,
 "c": "w2",
 "t": "conc",
-"e": "A barrier of force around her and those she shields."
+"e": "A barrier of force around them and those they shield."
 },
 {
 "id": "valeren-healer-unburden-the-bestial-soul",
@@ -1238,7 +1238,7 @@
 "diff": 6,
 "c": "",
 "t": "scene",
-"e": "Like Gift of Sleep: dulls her own wound penalties or knocks a foe out."
+"e": "Like Gift of Sleep: dulls their own wound penalties or knocks a foe out."
 },
 {
 "id": "valeren-warrior-burning-touch",
@@ -1274,7 +1274,7 @@
 "diff": 7,
 "c": "w1",
 "t": "instant",
-"e": "A hand over the heart kills peacefully; costly for her Road."
+"e": "A hand over the heart kills peacefully; costly for their Road."
 },
 {
 "id": "valeren-watcher-sense-cycle",
@@ -1286,7 +1286,7 @@
 "diff": 7,
 "c": "w1",
 "t": "instant",
-"e": "Senses a person or event that will matter to her fate."
+"e": "Senses a person or event that will matter to their fate."
 },
 {
 "id": "valeren-watcher-peaceful-touch",
@@ -1298,7 +1298,7 @@
 "diff": "",
 "c": "b1w1",
 "t": "turns",
-"e": "A touched foe is +2 difficulty to strike her for three turns."
+"e": "A touched foe is +2 difficulty to strike them for three turns."
 },
 {
 "id": "valeren-watcher-pariahs-caress",
@@ -1346,7 +1346,7 @@
 "diff": 6,
 "c": "b1",
 "t": "permanent",
-"e": "Reshapes her own face and body (a blood point per change)."
+"e": "Reshapes their own face and body (a blood point per change)."
 },
 {
 "id": "vicissitude-transmogrify-the-mortal-clay",
@@ -1394,7 +1394,7 @@
 "diff": "",
 "c": "b1",
 "t": "var",
-"e": "Gives a severed part of her body a life of its own."
+"e": "Gives a severed part of their body a life of its own."
 },
 {
 "id": "abyss-mysticism-pierce-the-veil",
@@ -1430,7 +1430,7 @@
 "diff": 8,
 "c": "w1",
 "t": "scene",
-"e": "Draws the Abyss into her flesh after a turn of meditation."
+"e": "Draws the Abyss into their flesh after a turn of meditation."
 },
 {
 "id": "abyss-mysticism-calling-the-hungry-shade",
@@ -1490,7 +1490,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets her ignore multiple-action penalties for up to her Celerity in actions (half may be attacks).",
+"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets them ignore multiple-action penalties for up to their Celerity in actions (half may be attacks).",
 "passive": true
 },
 {
@@ -1503,7 +1503,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets her ignore multiple-action penalties for up to her Celerity in actions (half may be attacks).",
+"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets them ignore multiple-action penalties for up to their Celerity in actions (half may be attacks).",
 "passive": true
 },
 {
@@ -1516,7 +1516,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets her ignore multiple-action penalties for up to her Celerity in actions (half may be attacks).",
+"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets them ignore multiple-action penalties for up to their Celerity in actions (half may be attacks).",
 "passive": true
 },
 {
@@ -1529,7 +1529,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets her ignore multiple-action penalties for up to her Celerity in actions (half may be attacks).",
+"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets them ignore multiple-action penalties for up to their Celerity in actions (half may be attacks).",
 "passive": true
 },
 {
@@ -1542,7 +1542,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets her ignore multiple-action penalties for up to her Celerity in actions (half may be attacks).",
+"e": "Adds its dots to Initiative and to yards moved a turn; a blood point lets them ignore multiple-action penalties for up to their Celerity in actions (half may be attacks).",
 "passive": true
 },
 {
@@ -1555,7 +1555,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks her Fortitude automatically.",
+"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks their Fortitude automatically.",
 "passive": true
 },
 {
@@ -1568,7 +1568,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks her Fortitude automatically.",
+"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks their Fortitude automatically.",
 "passive": true
 },
 {
@@ -1581,7 +1581,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks her Fortitude automatically.",
+"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks their Fortitude automatically.",
 "passive": true
 },
 {
@@ -1594,7 +1594,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks her Fortitude automatically.",
+"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks their Fortitude automatically.",
 "passive": true
 },
 {
@@ -1607,7 +1607,7 @@
 "diff": "",
 "c": "b1opt",
 "t": "passive",
-"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks her Fortitude automatically.",
+"e": "Adds its dots to Stamina pools and to bashing and lethal soak; its dice soak aggravated damage; once a turn a blood point soaks their Fortitude automatically.",
 "passive": true
 },
 {

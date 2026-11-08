@@ -68,7 +68,7 @@ export function build(ctx) {
           <div class="form-group"><label>More Sekhem for successes</label><input type="number" name="x" min="0" max="10" value="0"/></div>
           <div class="form-group"><label><input type="checkbox" name="rit"/> A ritual (extended: successes up to its Sekhem cost)</label></div>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div></form>`;
-        return dialog(`Hekau — ${actor.name}`, content, "Cast", async fd => {
+        return dialog(`Hekau: ${actor.name}`, content, "Cast", async fd => {
             if (!i.inWeb && i.sekhem.pool === 0) { notify(`${actor.name} is in semektet: no Hekau.`); return null; }
             const sp = spells.find(x => x.id === fd.sp);
             const level = sp ? n(sp.system?.level) || n(fd.lvl) : n(fd.lvl);
@@ -84,7 +84,7 @@ export function build(ctx) {
             if (!fd.rit) {
                 const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp, autoSuccesses: plan.autoSuccesses }); rolls.push(r.roll);
                 body = rollBlock(label, r, [`${plan.spend} Sekhem`, ...(plan.autoSuccesses ? [`${plan.autoSuccesses} bought successes`] : []), ...(plan.capped ? ["bought successes capped at the path's rating"] : []), ...(wp ? ["Willpower"] : [])]);
-                body += r.botch ? `<div class="vta-big bad">${title}: a calamity — the Storyteller decides its shape.</div>` : r.successes ? `<div class="vta-big good">${title}: ${r.successes} success${r.successes === 1 ? "" : "es"}.</div>` : `<div class="vta-big">${title}: it fails (the Sekhem is spent).</div>`;
+                body += r.botch ? `<div class="vta-big bad">${title}: a calamity, and the Storyteller decides its shape.</div>` : r.successes ? `<div class="vta-big good">${title}: ${r.successes} success${r.successes === 1 ? "" : "es"}.</div>` : `<div class="vta-big">${title}: it fails (the Sekhem is spent).</div>`;
             } else {
                 let st = { got: 0, done: false }, k = 0;
                 const rows = [];
@@ -94,7 +94,7 @@ export function build(ctx) {
                     rows.push(`Roll ${k}: ${r.botch ? "botch" : `${r.successes} (total ${st.got})`}`);
                 }
                 body = `<div class="vta-sec"><b>${label}</b>: ${plan.dice} dice, diff ${plan.difficulty}<br>${rows.join("<br>")}</div>`;
-                body += st.failed ? `<div class="vta-big bad">${title}: botched — all the Sekhem put in is lost; it must start over.</div>` : st.done ? `<div class="vta-big good">${title}: complete in ${k} ${k === 1 ? "stretch" : "stretches"} of the path's ritual time.</div>` : `<div class="vta-big">${title}: unfinished after ten tries.</div>`;
+                body += st.failed ? `<div class="vta-big bad">${title}: botched: all the Sekhem put in is lost; it must start over.</div>` : st.done ? `<div class="vta-big good">${title}: complete in ${k} ${k === 1 ? "stretch" : "stretches"} of the path's ritual time.</div>` : `<div class="vta-big">${title}: unfinished after ten tries.</div>`;
             }
             body += `<div class="wodx-quiet">${REF} p. 78</div>`;
             return post(actor, `${actor.name} works Hekau`, body, rolls.filter(Boolean));
@@ -109,7 +109,7 @@ export function build(ctx) {
             <option value="haven">A haven outside the Web: a day's meditation (Wits + Meditation at 8, then Balance at 9)</option><option value="ra">The Gift of Ra (sunrise: one point)</option></select></div>
           <div class="form-group"><label>The local Shroud</label><input type="number" name="sh" min="2" max="10" value="6"/></div>
           <div class="form-group"><label><input type="checkbox" name="web"${i.inWeb ? " checked" : ""}/> The mummy is within the Web of Faith now</label></div></form>`;
-        return dialog(`Sekhem — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`Sekhem: ${actor.name}`, content, "Go", async fd => {
             await saveFlag(actor, { inWeb: !!fd.web });
             const capS = M.sekhemCap(i.balance, i.sekhem.rating || null);
             let body = "", rolls = [];
@@ -142,7 +142,7 @@ export function build(ctx) {
           <div class="form-group"><label>What</label><select name="k" data-fixed>${Object.entries(M.BALANCE_USES).map(([k, u]) => `<option value="${k}">${esc(u.label)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Difficulty (conviction, 4 to 8)</label><input type="number" name="d" min="4" max="8" value="6"/></div>
           <div class="form-group"><label>The other side's successes or Willpower</label><input type="number" name="o" min="0" max="10" value="3"/></div></form>`;
-        return dialog(`Balance — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Balance: ${actor.name}`, content, "Roll", async fd => {
             const u = M.BALANCE_USES[fd.k];
             const r = await rollPool(i.balance, fd.k === "conviction" ? n(fd.d) : fd.k === "uphold" ? 8 : 6);
             let res = "", rolls = [r.roll];
@@ -163,10 +163,10 @@ export function build(ctx) {
           <div class="form-group"><label>The act</label><select name="row" data-fixed>${rows.map(([row, t]) => `<option value="${row}">${row}: ${esc(t)}</option>`).join("")}</select></div>
           <div class="form-group"><label>What happened</label><input type="text" name="what" value=""/></div>
           <p class="wodx-quiet">On record: ${i.offenses.length ? i.offenses.map(o => `${o.row} (${esc(o.what || "unnamed")})`).join("; ") : "none"}.</p></form>`;
-        return dialog(`An offense against Ma'at — ${actor.name}`, content, "Record", async fd => {
+        return dialog(`An offense against Ma'at: ${actor.name}`, content, "Record", async fd => {
             const list = [...i.offenses, { row: n(fd.row), what: String(fd.what || "").slice(0, 140), at: game.time?.worldTime ?? 0 }];
             await saveFlag(actor, { offenses: list });
-            return post(actor, `${actor.name} offends Ma'at`, `<div class="vta-res bad">${esc(M.OFFENSES.find(([r]) => r === n(fd.row))?.[1] ?? "")}${fd.what ? ` — ${esc(fd.what)}` : ""}.</div><div class="vta-note">${list.length} on record for the Judges of Ma'at. A fall in Balance there brings Hekau above it down to it, and Attributes above five down to it.</div><div class="wodx-quiet">${REF} pp. 141–143</div>`);
+            return post(actor, `${actor.name} offends Ma'at`, `<div class="vta-res bad">${esc(M.OFFENSES.find(([r]) => r === n(fd.row))?.[1] ?? "")}${fd.what ? `: ${esc(fd.what)}` : ""}.</div><div class="vta-note">${list.length} on record for the Judges of Ma'at. A fall in Balance there brings Hekau above it down to it, and Attributes above five down to it.</div><div class="wodx-quiet">${REF} pp. 141–143</div>`);
         });
     }
 
@@ -179,7 +179,7 @@ export function build(ctx) {
         const content = `<form><p>${state(i)}. Ba ${i.ba}: at least ${B.rest} dead before trying${rolls0 ? `; ${rolls0} ${rolls0 === 1 ? "roll" : "rolls"} already this year (each more costs an Attribute dot)` : ""}.</p>
           <div class="form-group"><label>The khat past Incapacitated</label><select name="kh" data-fixed>${M.KHAT.map((k, x) => `<option value="${x + 1}"${x + 1 === (i.khat || 1) ? " selected" : ""}>${x + 1}: ${esc(k)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Spend</label><select name="sp" data-fixed><option value="sekhem">a permanent Sekhem: Willpower + Ba</option><option value="willpower">a permanent Willpower: Sekhem + Ba</option></select></div></form>`;
-        return dialog(`The resurrection — ${actor.name}`, content, "Rise", async fd => {
+        return dialog(`The resurrection: ${actor.name}`, content, "Rise", async fd => {
             const plan = M.resurrectPlan({ spend: fd.sp, willpower: i.willpower.perm, sekhem: i.sekhem.rating, ba: i.ba });
             const upd = plan.cost === "sekhem" ? { "system.advantages.sekhem.permanent": Math.max(0, i.sekhem.rating - 1) } : { "system.advantages.willpower.permanent": Math.max(0, i.willpower.perm - 1) };
             await updateActor(actor, upd);
@@ -192,21 +192,21 @@ export function build(ctx) {
             body += out.risen ? `<div class="vta-big good">The khat is whole enough: the mummy lives again${out.conscious ? "" : ", but not yet awake"}. ${out.remaining} ${out.remaining === 1 ? "level" : "levels"} of damage remain, as aggravated.</div>`
                 : `<div class="vta-big bad">${r.botch ? "A botch: the Ba's full time must pass again." : `Not yet: ${out.mended ?? 0} mended; wait ${out.wait} and try again.`}</div>`;
             if (out.attributeLoss) body += `<div class="vta-note">A second roll this year: the Storyteller lowers an Attribute by a dot (experience restores it).</div>`;
-            if (plan.cost === "willpower" && i.willpower.perm - 1 <= 0) body += `<div class="vta-note">Willpower 0: no will to live — the mummy is destroyed.</div>`;
+            if (plan.cost === "willpower" && i.willpower.perm - 1 <= 0) body += `<div class="vta-note">Willpower 0: no will to live, and the mummy is destroyed.</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 64, 136–138</div>`;
             return post(actor, `${actor.name}: the resurrection`, body, [r.roll].filter(Boolean));
         });
     }
     async function veil(actor) {
         const content = `<form><p>A mortal who sees the supernatural reacts by Willpower (p. 140).</p><div class="form-group"><label>The mortal's Willpower</label><input type="number" name="w" min="1" max="10" value="3"/></div></form>`;
-        return dialog(`The Veil — ${actor.name}`, content, "Show", async fd => post(actor, "The Veil", `<div class="vta-res">Willpower ${n(fd.w)}: ${esc(M.veil(n(fd.w)))}.</div><div class="wodx-quiet">${REF} p. 140</div>`));
+        return dialog(`The Veil: ${actor.name}`, content, "Show", async fd => post(actor, "The Veil", `<div class="vta-res">Willpower ${n(fd.w)}: ${esc(M.veil(n(fd.w)))}.</div><div class="wodx-quiet">${REF} p. 140</div>`));
     }
     async function setup(actor) {
         const i = info(actor);
         const content = `<form><p>${state(i)}.</p>
           <div class="form-group"><label>Amenti</label><select name="a" data-fixed><option value="">as the Bio tab</option>${Object.entries(M.AMENTI).map(([k, a]) => `<option value="${k}"${k === i.f.amenti ? " selected" : ""}>${esc(a.label)} (${esc(a.gloss)})</option>`).join("")}</select></div>
           <div class="form-group"><label><input type="checkbox" name="web"${i.inWeb ? " checked" : ""}/> Within the Web of Faith</label></div></form>`;
-        return dialog(`The Reborn — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`The Reborn: ${actor.name}`, content, "Save", async fd => {
             await saveFlag(actor, { amenti: fd.a || "", inWeb: !!fd.web });
             const j = info(actor);
             const A = M.AMENTI[j.amenti];

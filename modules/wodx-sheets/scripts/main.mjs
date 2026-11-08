@@ -227,7 +227,7 @@ function header(def, a) {
   };
   const computed = {
     clan: () => { const s = a.system; return s.clan === "custom" ? (s.custom?.clan || "") : loc(s.clan); },
-    legacies: () => [strip(a.system.legacyseelie), strip(a.system.legacyunseelie)].filter(Boolean).join(" / ") || "— (the Bio tab)",
+    legacies: () => [strip(a.system.legacyseelie), strip(a.system.legacyunseelie)].filter(Boolean).join(" / ") || "(see the Bio tab)",
     startConviction: () => { const c = RR.CREEDS[leaf(a.system.creed)]; return c ? String(c.conviction) : "—"; },
     domitor: () => { const l = a.getFlag("wodx-creation", "lineage") ?? {}; return game.actors.get(l.domitor)?.name ?? (l.domitor || "—"); },
     domitorClan: () => { const l = a.getFlag("wodx-creation", "lineage") ?? {}; const d = game.actors.get(l.domitor); return d ? (d.system.clan === "custom" ? d.system.custom?.clan : loc(d.system.clan)) : "—"; }

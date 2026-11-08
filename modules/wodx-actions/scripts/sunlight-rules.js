@@ -104,7 +104,7 @@ export function sunTurn({ exposure = 3, soakSuccesses = 0 } = {}) {
  */
 export function protection({ effects = [], torpor = false, buried = false } = {}) {
     const names = effects.map(e => String(e ?? "").toLowerCase());
-    if (names.some(n => n.includes("earth meld"))) return { immune: true, why: "Earth Meld: she sleeps in the soil (VtDA20 p. 240)" };
+    if (names.some(n => n.includes("earth meld"))) return { immune: true, why: "Earth Meld: sleeping in the soil (VtDA20 p. 240)" };
     if (names.some(n => n.includes("unseen hibernation"))) return { immune: true, why: "Unseen Hibernation (VtDA20 p. 189)" };
     if (buried && torpor) return { immune: true, why: "In torpor, under the earth" };
     if (buried) return { immune: true, why: "Buried in the earth" };

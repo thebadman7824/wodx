@@ -130,13 +130,13 @@ export function build(ctx) {
         if (V.storytellerMayOptIn({ isGM: game.user.isGM, rule: stRule, hasPlayerOwner: actor.hasPlayerOwner }))
             acts.push(["stoptin", v.optIn ? "Storyteller: turn the voice off for the player" : "Storyteller: turn the voice on (the player is told)"]);
         if (game.user.isGM) acts.push(["assign", "Assign who voices it"]);
-        const content = `<form class="wodx-voice-panel"><p><b>${esc(actor.name)}</b> — ${esc(K.label)} ${meter(p)}<br><span class="wodx-quiet">${esc(p.text)}. ${esc(K.book)}</span></p>
+        const content = `<form class="wodx-voice-panel"><p><b>${esc(actor.name)}</b>: ${esc(K.label)} ${meter(p)}<br><span class="wodx-quiet">${esc(p.text)}. ${esc(K.book)}</span></p>
           <p>${on ? "" : "<b>Inner voices are off for this chronicle</b> (Storyteller: Configure Settings → WoDX Actions). "}${paused() ? "<b>Paused by the X-card until the scene ends.</b> " : ""}Voiced by <b>${esc(voiceUser(actor)?.name ?? "the Storyteller")}</b>${actor.hasPlayerOwner ? `; the player has ${v.optIn ? (v.optInBy === "storyteller" ? "been opted in by the Storyteller" : "opted in") : "<b>not</b> opted in"}` : ""}.</p>
           <div class="form-group"><label>Do</label><select name="act" data-fixed>${acts.map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Words</label><textarea name="text" rows="3" style="width:100%"></textarea></div>
           <div class="form-group"><label>Check to propose</label><select name="prop" data-fixed>${V.PROPOSALS[kind].map(x => `<option value="${x.id}">${esc(x.label)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Voice (Storyteller)</label><select name="user" data-fixed><option value="">The Storyteller</option>${players.map(u => `<option value="${u.id}" ${u.id === v.user ? "selected" : ""}>${esc(u.name)}</option>`).join("")}</select></div></form>`;
-        return dialog(`Inner voice: ${K.label} — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`Inner voice: ${K.label}: ${actor.name}`, content, "Go", async fd => {
             if (fd.act === "assign") {
                 if (!game.user.isGM) return null;
                 await setFlag(actor, "voice", { ...(actor.getFlag(MOD, "voice") ?? {}), user: fd.user || null });
@@ -226,7 +226,7 @@ export function build(ctx) {
         const list = game.actors.filter(a => kindOf(a) && (game.user.isGM ? (a.hasPlayerOwner || voiceOf(a).user) : voiceOf(a).user === game.user.id));
         if (!list.length) return notify(game.user.isGM ? "No character with a voice has a player or a voice yet." : "You don't voice anyone.");
         const content = `<form><p>${game.user.isGM ? "Characters with an inner voice." : "The voices you play."}</p>
-          <div class="form-group"><label>Character</label><select name="a" data-fixed>${list.map(a => `<option value="${a.id}">${esc(`${a.name} — ${V.KINDS[kindOf(a)].label} (${V.LEVEL_LABEL[pressureOf(a).level]}; ${live(a) ? "live" : "silent"})`)}</option>`).join("")}</select></div></form>`;
+          <div class="form-group"><label>Character</label><select name="a" data-fixed>${list.map(a => `<option value="${a.id}">${esc(`${a.name}: ${V.KINDS[kindOf(a)].label} (${V.LEVEL_LABEL[pressureOf(a).level]}; ${live(a) ? "live" : "silent"})`)}</option>`).join("")}</select></div></form>`;
         return dialog("Inner voices", content, "Open", fd => panel(game.actors.get(fd.a)));
     }
 

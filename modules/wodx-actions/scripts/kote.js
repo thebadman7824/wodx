@@ -58,7 +58,7 @@ export function build(ctx) {
     /* -- feeding -------------------------------------------------------- */
     async function feed(actor) {
         const i = info(actor);
-        const ways = Object.entries(K.FEEDING).map(([k, w]) => `<option value="${k}"${i.dharma.rating < w.dharma ? " disabled" : ""}${k === "blood" ? " selected" : ""}>${esc(w.label)}${w.dharma ? ` — Dharma ${w.dharma}` : ""}</option>`).join("");
+        const ways = Object.entries(K.FEEDING).map(([k, w]) => `<option value="${k}"${i.dharma.rating < w.dharma ? " disabled" : ""}${k === "blood" ? " selected" : ""}>${esc(w.label)}${w.dharma ? ` (Dharma ${w.dharma})` : ""}</option>`).join("");
         const content = `<form><p>${state(i)}.</p>
           <div class="form-group"><label>How</label><select name="w" data-fixed>${ways}</select></div>
           <div class="form-group"><label>Points (blood) or levels (flesh)</label><input type="number" name="k" min="1" max="10" value="2"/></div>
@@ -67,7 +67,7 @@ export function build(ctx) {
           <div class="form-group"><label>Breath or osmosis: the kind</label><select name="kind" data-fixed><option value="yang">Yang</option><option value="yin">Yin</option></select></div>
           <div class="form-group"><label>Breath: the victim's Stamina</label><input type="number" name="sta" min="1" max="10" value="2"/></div>
           <div class="form-group"><label>Osmosis: the local Wall</label><input type="number" name="wall" min="1" max="10" value="6"/></div></form>`;
-        return dialog(`Feed — ${actor.name}`, content, "Feed", async fd => {
+        return dialog(`Feed: ${actor.name}`, content, "Feed", async fd => {
             const w = fd.w, rolls = [];
             let body = "", gain = { yin: 0, yang: 0 };
             if (w === "blood") {
@@ -120,7 +120,7 @@ export function build(ctx) {
           <div class="form-group"><label>Roll (dice, 0 for none)</label><input type="number" name="dice" min="0" max="20" value="0"/></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" min="2" max="10" value="6"/></div>
           <div class="form-group"><label><input type="checkbox" name="eq"/> Equilibrium lets both kinds flow</label></div></form>`;
-        return dialog(`Spend Chi — ${actor.name}`, content, "Spend", async fd => {
+        return dialog(`Spend Chi: ${actor.name}`, content, "Spend", async fd => {
             const it = arts.find(x => x.id === fd.art);
             const def = K.artOf(it?.name);
             const kind = fd.kind || (def?.chi && def.chi !== "either" ? def.chi : "yang");
@@ -158,9 +158,9 @@ export function build(ctx) {
     async function nature(actor, { kind = null } = {}) {
         const i = info(actor);
         const content = `<form><p>${state(i)}.${i.hunger !== "fed" ? ` ${cap(i.hunger)}.` : ""}</p>
-          <div class="form-group"><label>The state</label><select name="k" data-fixed>${Object.entries(K.NATURES).map(([k, x]) => `<option value="${k}"${k === kind ? " selected" : ""}>${cap(x.label)}: ${KIND[x.resist] ?? "Hun"} against the P'o — ${esc(x.triggers.join(", "))}</option>`).join("")}</select></div>
+          <div class="form-group"><label>The state</label><select name="k" data-fixed>${Object.entries(K.NATURES).map(([k, x]) => `<option value="${k}"${k === kind ? " selected" : ""}>${cap(x.label)}: ${KIND[x.resist] ?? "Hun"} against the P'o: ${esc(x.triggers.join(", "))}</option>`).join("")}</select></div>
           <div class="form-group"><label>Difficulty (both sides)</label><input type="number" name="d" min="3" max="10" value="6"/></div></form>`;
-        return dialog(`The soul — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`The soul: ${actor.name}`, content, "Roll", async fd => {
             const N = K.NATURES[fd.k];
             const need = K.natureNeed(fd.k, { ravenous: i.hunger === "ravenous" || i.hunger === "uncontrollable", imbalance: i.perm });
             let st = { virtue: 0, po: 0, turn: 0 }, rolls = [], rows = [];
@@ -187,7 +187,7 @@ export function build(ctx) {
         const content = `<form><p>${i.dharma.key ? `${esc(cap(K.DHARMAS[i.dharma.key].label))}: ${vk === "balance" ? "Balance (the average of the highest and lowest Virtue)" : vk === "po" ? "P'o" : vk === "hun" ? "Hun" : KIND[vk]} ${K.dharmaVirtue(i.dharma.key, i.v)}` : "No Dharma named on the sheet: write it in the Dharma box (for example \"Devil-Tiger\")."} against the P'o ${i.v.po}, at the permanent Willpower (${i.willpower.perm}). No Willpower may be spent.</p>
           <div class="form-group"><label>What</label><select name="k" data-fixed><option value="auspicious">An auspicious occasion</option><option value="blindness">An act of blindness</option></select></div>
           <div class="form-group"><label>Why</label><input type="text" name="why" value=""/></div></form>`;
-        return dialog(`Dharma — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Dharma: ${actor.name}`, content, "Roll", async fd => {
             if (!i.dharma.key) { notify(`${actor.name}: name the Dharma on the sheet first.`); return null; }
             const v = await rollPool(K.dharmaVirtue(i.dharma.key, i.v), Math.max(2, i.willpower.perm)), p = await rollPool(i.v.po, Math.max(2, i.willpower.perm));
             const out = K.dharmaOutcome(fd.k, v.successes, p.successes);
@@ -208,7 +208,7 @@ export function build(ctx) {
             <option value="mind">Break mind control (P'o at 9)</option></select></div>
           <div class="form-group"><label>Points (spend)</label><input type="number" name="p" min="1" max="10" value="1"/></div>
           <div class="form-group"><label><input type="checkbox" name="maw"/> The fanged maw (Strength + 2 aggravated)</label></div></form>`;
-        return dialog(`The Demon — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`The Demon: ${actor.name}`, content, "Go", async fd => {
             let body = "", rolls = [];
             if (fd.k === "evoke" || fd.k === "berserk") {
                 const r = await rollPool(i.v.po, K.demonDiff(i.v.hun)); rolls.push(r.roll);
@@ -227,7 +227,7 @@ export function build(ctx) {
                 body = `<div class="vta-res">${fd.k === "fangs" ? (fd.maw ? "A fanged maw for the scene: Strength + 2 aggravated." : "Fangs for the scene, as a Western vampire's.") : `${k} Demon Chi: ${k} extra ${k === 1 ? "action" : "actions"}, or automatic damage or Strength successes.`}</div><div class="vta-note">Spent Demon Chi is gone until next evening.</div>`;
             } else {
                 const r = await rollPool(i.v.po, 9); rolls.push(r.roll);
-                body = rollBlock("P'o against the control", r) + `<div class="vta-res">${r.successes ? "Free — and a shadow soul check follows at once." : "The control holds."}</div>`;
+                body = rollBlock("P'o against the control", r) + `<div class="vta-res">${r.successes ? "Free, and a shadow soul check follows at once." : "The control holds."}</div>`;
             }
             body += `<div class="wodx-quiet">${REF} pp. 90–91</div>`;
             return post(actor, `${actor.name}: the Demon`, body, rolls.filter(Boolean));
@@ -242,7 +242,7 @@ export function build(ctx) {
         const content = `<form><p>${state(i)}.${fed ? ` Black cycled: no Chi needed tonight (until night ${f.riseUntil}).` : ""}</p>
           <div class="form-group"><label>Rise with</label><select name="a" data-fixed><option value="yang">Yang (scarlet cycle: each night; looks alive)</option><option value="yin"${i.perm === "yin" ? " selected" : ""}>Yin (black cycle: ten nights; +1 Social difficulty with mortals)</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="dc" checked/> Roll P'o at 6 for Demon Chi back</label></div></form>`;
-        return dialog(`Rise — ${actor.name}`, content, "Rise", async fd => {
+        return dialog(`Rise: ${actor.name}`, content, "Rise", async fd => {
             let body = "", rolls = [];
             if (!fed) {
                 const r = K.awaken({ yinChi: i.chi.yin, yangChi: i.chi.yang, permImb: i.perm }, fd.a);
@@ -275,7 +275,7 @@ export function build(ctx) {
           <div class="form-group"><label>Minutes more</label><input type="number" name="m" min="0" max="600" value="1"/></div>
           <div class="form-group"><label>Turns of rot to resolve (past the grace)</label><input type="number" name="t" min="0" max="20" value="0"/></div>
           <div class="form-group"><label>Yang Chi spent to hold the rot back (a turn a point)</label><input type="number" name="y" min="0" max="10" value="0"/></div></form>`;
-        return dialog(`Sunlight — ${actor.name}`, content, "Apply", async fd => {
+        return dialog(`Sunlight: ${actor.name}`, content, "Apply", async fd => {
             const grace = K.sunGrace({ stamina: i.stamina, yinChi: i.chi.yin, yangImbalanced: i.perm === "yang", direct: fd.dir === "1" });
             const total = used + n(fd.m);
             await saveFlag(actor, { sunDay: day, sunMin: total });
@@ -304,7 +304,7 @@ export function build(ctx) {
           <div class="form-group"><label>Heal</label><select name="w" data-fixed><option value="bashing">bashing</option><option value="lethal">lethal</option><option value="aggravated">aggravated</option></select></div>
           <div class="form-group"><label>Levels</label><input type="number" name="k" min="1" max="10" value="1"/></div>
           <div class="form-group"><label>With</label><select name="c" data-fixed><option value="yang">Yang</option><option value="yin">Yin</option></select></div></form>`;
-        return dialog(`Heal — ${actor.name}`, content, "Heal", async fd => {
+        return dialog(`Heal: ${actor.name}`, content, "Heal", async fd => {
             const lv = Math.min(n(fd.k), n(t.damage[fd.w]));
             const cost = lv * K.healCost(fd.w);
             if (!lv) { notify(`${actor.name} has no ${fd.w} damage.`); return null; }
@@ -317,13 +317,13 @@ export function build(ctx) {
     async function sight(actor) {
         const i = info(actor);
         const content = `<form><div class="form-group"><label>What</label><select name="k" data-fixed>
-            <option value="ghost">Ghostsight (1 Yin, a scene): the Yin World — Perception + Occult at the Wall + 2</option>
-            <option value="life">Lifesight (1 Yang, a scene): auras — Perception + Empathy at 9</option>
+            <option value="ghost">Ghostsight (1 Yin, a scene): the Yin World, Perception + Occult at the Wall + 2</option>
+            <option value="life">Lifesight (1 Yang, a scene): auras, Perception + Empathy at 9</option>
             <option value="senses">Sharpened senses (Hun at 6, a scene)</option>
             <option value="speech">Speak with a spirit (Hun against the Wall)</option>
             <option value="horoscope">Horoscope (once a story)</option></select></div>
           <div class="form-group"><label>The local Wall</label><input type="number" name="wall" min="1" max="10" value="6"/></div></form>`;
-        return dialog(`Sight and spirit — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Sight and spirit: ${actor.name}`, content, "Roll", async fd => {
             let r, title, body = "";
             if (fd.k === "ghost" || fd.k === "life") {
                 const kind = fd.k === "ghost" ? "yin" : "yang";
@@ -353,7 +353,7 @@ export function build(ctx) {
           <div class="form-group"><label>Dharma</label><select name="d" data-fixed><option value="">as the sheet's Dharma box</option>${Object.entries(K.DHARMAS).map(([k, d]) => `<option value="${k}"${k === i.f.dharma ? " selected" : ""}>${esc(cap(d.label))} (${d.virtue === "balance" ? "Balance" : d.virtue === "po" ? "P'o" : cap(d.virtue)})</option>`).join("")}</select></div>
           <div class="form-group"><label>Direction</label><select name="dir" data-fixed><option value="">—</option>${Object.keys(K.DIRECTION_LUCKY).map(d => `<option${d === i.direction ? " selected" : ""}>${d}</option>`).join("")}</select></div>
           <div class="form-group"><label>The P'o's Archetype</label><input type="text" name="arch" value="${esc(i.archetype)}" placeholder="the Bandit, the Deceiver, the Legalist…"/></div></form>`;
-        return dialog(`Kuei-jin — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Kuei-jin: ${actor.name}`, content, "Save", async fd => {
             await saveFlag(actor, { dharma: fd.d || "", direction: fd.dir || "", archetype: String(fd.arch || "").trim() });
             const j = info(actor);
             const L = K.dharmaLevel(j.dharma.rating);

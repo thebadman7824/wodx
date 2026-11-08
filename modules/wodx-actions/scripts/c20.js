@@ -98,7 +98,7 @@ export function build(ctx) {
         const i = info(actor);
         if (!Object.values(i.arts).some(v => v > 0)) notify(`${actor.name} has no Arts on the sheet: add them as Powers (Art).`);
         const content = `<form>
-          <p><b>${esc(actor.name)}</b> — Glamour ${i.glamour.temp}/${i.glamour.perm}, Banality ${i.banality.perm} (${i.banality.temp}), Nightmare ${i.nightmare}${i.imbalances ? `, Imbalances ${i.imbalances}` : ""}${i.wyrd ? "; <b>the Wyrd is invoked</b>" : ""}.</p>
+          <p><b>${esc(actor.name)}</b>: Glamour ${i.glamour.temp}/${i.glamour.perm}, Banality ${i.banality.perm} (${i.banality.temp}), Nightmare ${i.nightmare}${i.imbalances ? `, Imbalances ${i.imbalances}` : ""}${i.wyrd ? "; <b>the Wyrd is invoked</b>" : ""}.</p>
           <div class="form-group"><label>Art</label><select name="art" data-fixed>${artOpts(i)}</select></div>
           <div class="form-group"><label>The power's level</label><input type="number" name="lvl" min="1" max="5" value="1"/></div>
           <fieldset><legend>Realms</legend>${Object.keys(C.REALMS).map(r => realmRow(i, r)).join("")}</fieldset>
@@ -115,7 +115,7 @@ export function build(ctx) {
           </fieldset>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
         </form>`;
-        return dialog(`Cast a cantrip — ${actor.name}`, content, "Cast", async fd => {
+        return dialog(`Cast a cantrip: ${actor.name}`, content, "Cast", async fd => {
             if (i.closed?.all) { notify(`${actor.name} is cut off from the Dreaming for this scene.`); return null; }
             if (i.closed?.art === fd.art) { notify(`${C.ARTS[fd.art].label} is closed to ${actor.name} for this scene.`); return null; }
             if (i.f.leashUntil === sceneKey()) { notify(`${actor.name} is in Bedlam's grip: only Unleashing this scene.`); return null; }
@@ -140,10 +140,10 @@ export function build(ctx) {
 
     async function unleash(actor) {
         const i = info(actor);
-        const content = `<form><p><b>${esc(actor.name)}</b> — Glamour ${i.glamour.temp}/${i.glamour.perm}, Nightmare ${i.nightmare}. Unleashing costs 2 Glamour and a Nightmare; no Realm is needed.</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Glamour ${i.glamour.temp}/${i.glamour.perm}, Nightmare ${i.nightmare}. Unleashing costs 2 Glamour and a Nightmare; no Realm is needed.</p>
           <div class="form-group"><label>Art</label><select name="art" data-fixed>${artOpts(i)}</select></div>
           <div class="form-group stacked"><label>The intent, in a few words</label><input type="text" name="intent" value=""/></div></form>`;
-        return dialog(`Unleash an Art — ${actor.name}`, content, "Unleash", async fd => {
+        return dialog(`Unleash an Art: ${actor.name}`, content, "Unleash", async fd => {
             if (i.closed?.all || i.closed?.art === fd.art) { notify(`${actor.name} cannot Unleash that now (closed for the scene).`); return null; }
             const plan = C.unleashPlan({ glamour: i.glamour.perm, nightmare: i.nightmare, glamourPool: i.glamour.temp });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
@@ -184,7 +184,7 @@ export function build(ctx) {
             <option value="wyrd">The Wyrd (1 Glamour, 1 Willpower; Glamour against Banality)</option>
             <option value="autumn">The Autumn (1 Willpower; chimerical effects pass by for an action; a Banality trigger)</option></select></div>
           <div class="form-group"><label>The place's Banality</label><input type="number" name="pb" min="0" max="10" value="5"/></div></form>`;
-        return dialog(`Invoke — ${actor.name}`, content, "Invoke", async fd => {
+        return dialog(`Invoke: ${actor.name}`, content, "Invoke", async fd => {
             if (fd.k === "autumn") {
                 if (!(await spendWillpower(actor, 1))) return null;
                 const t = await trigger(actor, { why: "invoking the Autumn" }, false);
@@ -210,7 +210,7 @@ export function build(ctx) {
           <div class="form-group"><label>Difficulty (8; higher for severe)</label><input type="number" name="d" min="8" max="10" value="8"/></div>
           <div class="form-group"><label><input type="checkbox" name="auto"/> So egregious it is automatic (+1 Banality)</label></div>
           <p class="wodx-quiet">${S ? `${esc(S.label)}: also ${esc(S.trigger)}; immune to ${esc(S.immunity)}.` : ""}${i.antithesis ? ` Antithesis: ${esc(i.antithesis)}.` : ""}</p></form>`;
-        return dialog(`Banality trigger — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Banality trigger: ${actor.name}`, content, "Roll", async fd => {
             if (fd.auto) return post(actor, `${actor.name}: Banality`, `<div class="vta-res bad">${esc(await banality(actor, 1))}</div>`);
             return trigger(actor, { difficulty: n(fd.d) || 8, why: fd.why });
         });
@@ -231,7 +231,7 @@ export function build(ctx) {
           <div class="form-group"><label>Freehold rating and sleepers (Sanctuary)</label><input type="number" name="fr" min="0" max="10" value="${i.freehold || 2}"/><input type="number" name="sl" min="1" max="12" value="1"/></div>
           <div class="form-group"><label><input type="checkbox" name="imb"/> Heal an Imbalance instead of taking Glamour</label></div>
           <div class="form-group"><label><input type="checkbox" name="clear"/> Spend the Glamour gained on Banality points instead</label></div></form>`;
-        return dialog(`Epiphany — ${actor.name}`, content, "Seek it", async fd => {
+        return dialog(`Epiphany: ${actor.name}`, content, "Seek it", async fd => {
             const k = fd.k;
             let r = null, out, body = "";
             if (k === "revelry") out = C.epiphany("revelry");
@@ -266,11 +266,11 @@ export function build(ctx) {
 
     async function bedlam(actor) {
         const i = info(actor);
-        const content = `<form><p><b>${esc(actor.name)}</b> — Willpower ${i.willpower.temp}/${i.willpower.perm}, Imbalances ${i.imbalances}, Nightmare ${i.nightmare}.</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Willpower ${i.willpower.temp}/${i.willpower.perm}, Imbalances ${i.imbalances}, Nightmare ${i.nightmare}.</p>
           <div class="form-group"><label>Do</label><select name="k" data-fixed><option value="spend">Spend an Imbalanced Willpower</option><option value="nm">Add Nightmare by hand</option></select></div>
           <div class="form-group"><label>The threshold (the Storyteller's pick)</label><select name="t" data-fixed>${Object.entries(C.BEDLAM).map(([k, t]) => `<option value="${k}">${esc(t.split(":")[0])}</option>`).join("")}</select></div>
           <div class="form-group"><label>Nightmare to add</label><input type="number" name="nm" min="1" max="10" value="1"/></div></form>`;
-        return dialog(`Nightmare and Bedlam — ${actor.name}`, content, "Do it", async fd => {
+        return dialog(`Nightmare and Bedlam: ${actor.name}`, content, "Do it", async fd => {
             if (fd.k === "nm") return post(actor, `${actor.name}: Nightmare`, `<div class="vta-res">${esc(await nightmare(actor, n(fd.nm)))}</div><div class="wodx-quiet">${REF} p. 274</div>`);
             if (!C.spendIsImbalanced({ temp: i.willpower.temp, perm: i.willpower.perm, imbalances: i.imbalances })) notify(`${actor.name}'s next Willpower point is not an Imbalanced one; spending it anyway.`);
             if (!(await spendWillpower(actor, 1))) return null;
@@ -284,7 +284,7 @@ export function build(ctx) {
     }
 
     async function coldIron(actor) {
-        return dialog(`Cold iron — ${actor.name}`, `<form><div class="form-group"><label>Levels after soak</label><input type="number" name="k" min="1" max="10" value="1"/></div>
+        return dialog(`Cold iron: ${actor.name}`, `<form><div class="form-group"><label>Levels after soak</label><input type="number" name="k" min="1" max="10" value="1"/></div>
           <p class="wodx-quiet">Aggravated to the physical and chimerical bodies at once, and a Glamour point a level (pp. 290–291).</p></form>`, "Apply", async fd => {
             const k = Math.max(1, n(fd.k)), i = info(actor);
             const r = await game.wodxCombat?.applyDamage?.(actor, "aggravated", k);

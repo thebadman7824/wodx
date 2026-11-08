@@ -120,7 +120,7 @@ export function build(ctx) {
         if (!list.length) return ctx.notify(`${actor.name} has no Arcanoi on the sheet the library knows (${i.arcanoi.map(a => a.name).join(", ") || "none"}).`);
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const sh = shroudAt(actor);
-        const content = `<form class="wodx-arcanos"><p><b>${esc(actor.name)}</b> — Pathos ${i.pathos.temp}, Corpus ${i.corpus.max - (i.damage.bashing + i.damage.lethal + i.damage.aggravated)}/${i.corpus.max}, Willpower ${i.willpower.temp}; local Shroud ${sh.rating}${sh.base === null ? " (not rated here: 7)" : ""}${storm() ? `; Maelstrom force ${storm()}` : ""}${tgt ? `; target <b>${esc(tgt.name)}</b>` : ""}. Arts from ${bookOf(lib)}.</p>
+        const content = `<form class="wodx-arcanos"><p><b>${esc(actor.name)}</b>: Pathos ${i.pathos.temp}, Corpus ${i.corpus.max - (i.damage.bashing + i.damage.lethal + i.damage.aggravated)}/${i.corpus.max}, Willpower ${i.willpower.temp}; local Shroud ${sh.rating}${sh.base === null ? " (not rated here: 7)" : ""}${storm() ? `; Maelstrom force ${storm()}` : ""}${tgt ? `; target <b>${esc(tgt.name)}</b>` : ""}. Arts from ${bookOf(lib)}.</p>
           <div class="form-group"><label>Art</label>${searchBox("select[name=art]", "Search arts…", "Search arts")}<select name="art">${list.map((a, k) => `<option value="${a.id}" ${k === 0 ? "selected" : ""}>${esc(`${a.d} ${a.l ? "•".repeat(a.l) : "basic"}: ${a.n}${a.k === "basic" || a.k === "art" ? "" : ` (${a.k})`}`)}</option>`).join("")}</select></div>
           <div class="wodx-art-info vta-note"></div>
           <div class="form-group"><label>Where</label><select name="realm" data-fixed>${Object.entries(W.REALMS).map(([k, l]) => `<option value="${k}" ${k === "shadowlands" ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
@@ -142,7 +142,7 @@ export function build(ctx) {
             root.querySelector(".wodx-art-info").innerHTML = `<b>${esc(a.n)}</b> (${esc(a.d)} ${a.l}, ${esc(a.k)}) · cost ${esc(costTxt)} · ${a.r ? `roll ${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : esc(a.d)} (${attr(actor, at) + second(a, sec)} dice)` : "no roll"}${a.angst ? " · <b>can feed the Shadow Angst</b>" : ""} · ${bookOf(lib)} p. ${a.p}<br>${esc(a.e)}<br><span class="wodx-quiet">${esc(lib.general?.defaults?.[a.d] ?? "")}</span>`
                 + (d === null && a.diff && a.diff !== "var" ? "<br><i>The difficulty comes from the target: target a token or set it.</i>" : "");
         };
-        return dialog(`Use an Arcanos — ${actor.name}`, content, "Use", async fd => {
+        return dialog(`Use an Arcanos: ${actor.name}`, content, "Use", async fd => {
             const a = list.find(x => x.id === fd.art);
             if (!a) return null;
             const notes = [];
@@ -184,11 +184,11 @@ export function build(ctx) {
         const i = info(actor);
         if (!i.passions.length) return ctx.notify(`${actor.name} has no Passions on the sheet.`);
         const used = actor.getFlag(MOD, "passionScene") ?? {};
-        const content = `<form><p><b>${esc(actor.name)}</b> — Pathos ${i.pathos.temp}/${i.pathos.max}.</p>
-          <div class="form-group"><label>Passion</label>${i.passions.length > 5 ? searchBox("select[name=p]", "Search Passions…", "Search Passions") : ""}<select name="p" data-fixed>${i.passions.map(p => `<option value="${p.id}">${esc(p.name)} (${p.value})${used[p.id] === sceneKey() ? " — already tapped this scene" : ""}</option>`).join("")}</select></div>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Pathos ${i.pathos.temp}/${i.pathos.max}.</p>
+          <div class="form-group"><label>Passion</label>${i.passions.length > 5 ? searchBox("select[name=p]", "Search Passions…", "Search Passions") : ""}<select name="p" data-fixed>${i.passions.map(p => `<option value="${p.id}">${esc(p.name)} (${p.value})${used[p.id] === sceneKey() ? " (already tapped this scene)" : ""}</option>`).join("")}</select></div>
           <div class="form-group"><label>How</label><select name="how" data-fixed><option value="live">Living the Passion now (difficulty 6)</option><option value="second">A mortal nearby feels it, in the same context (8)</option><option value="neglect">Neglect check (Storyteller, 9)</option><option value="weaken">Weaken it toward Resolution (9)</option><option value="resolve">Resolution (Willpower)</option></select></div>
           <div class="form-group"><label>Original rating (for Resolution)</label><input type="number" name="orig" value="0" min="0"/></div></form>`;
-        return dialog(`Passion — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Passion: ${actor.name}`, content, "Roll", async fd => {
             const p = i.passions.find(x => x.id === fd.p); const item = actor.items.get(fd.p);
             if (!p || !item) return null;
             if ((fd.how === "live" || fd.how === "second") && used[p.id] === sceneKey()) return ctx.notify(`${p.name} was already tapped this scene (p. 305).`);
@@ -227,10 +227,10 @@ export function build(ctx) {
 
     async function fetter(actor) {
         const i = info(actor);
-        const content = `<form><p><b>${esc(actor.name)}</b> — Willpower ${i.willpower.temp}/${i.willpower.perm}. ${i.fetters.length ? "" : "<b>No Fetters: 1 Willpower a scene in the Shadowlands (p. 308).</b>"}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Willpower ${i.willpower.temp}/${i.willpower.perm}. ${i.fetters.length ? "" : "<b>No Fetters: 1 Willpower a scene in the Shadowlands (p. 308).</b>"}</p>
           ${i.fetters.length ? `<div class="form-group"><label>Fetter</label>${i.fetters.length > 5 ? searchBox("select[name=f]", "Search Fetters…", "Search Fetters") : ""}<select name="f" data-fixed>${i.fetters.map(f => `<option value="${f.id}">${esc(f.name)} (${f.value})</option>`).join("")}</select></div>` : ""}
           <div class="form-group"><label>What</label><select name="how" data-fixed><option value="scene">After a scene with it (6): Willpower</option><option value="slumber">Slumbered in it 8 hours (4): Willpower</option><option value="neglect">Neglect check (Storyteller, 9)</option><option value="lost">It is destroyed (a Harrowing)</option><option value="nofetter">A scene in the Shadowlands with no Fetters (1 Willpower)</option></select></div></form>`;
-        return dialog(`Fetter — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`Fetter: ${actor.name}`, content, "Go", async fd => {
             if (fd.how === "nofetter") { if (!(await spendWillpower(actor, 1))) return null; await afterSpend(actor); return post(actor, `${actor.name}`, `<div class="vta-note">1 Willpower to stay in the Shadowlands this scene without Fetters (p. 308).</div>`); }
             const f = i.fetters.find(x => x.id === fd.f); const item = f ? actor.items.get(f.id) : null;
             if (!f || !item) return ctx.notify("Pick a Fetter.");
@@ -288,11 +288,11 @@ export function build(ctx) {
     async function healCorpus(actor) {
         const i = info(actor);
         const d = i.hasCorpusTrack ? i.damage : (actor.system?.health?.damage ?? {});
-        const content = `<form><p><b>${esc(actor.name)}</b> — Corpus damage ${n(d.bashing)}B / ${n(d.lethal)}L / ${n(d.aggravated)}A; Pathos ${i.pathos.temp}.</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Corpus damage ${n(d.bashing)}B / ${n(d.lethal)}L / ${n(d.aggravated)}A; Pathos ${i.pathos.temp}.</p>
           <div class="form-group"><label>How</label><select name="how" data-fixed><option value="pathos">Spend Pathos now (2 bashing or 1 lethal each)</option><option value="agg">Slumber or meditate 8 hours, 3 Pathos: one aggravated level</option><option value="rest">Rest (a bashing level an hour)</option></select></div>
           <div class="form-group"><label>Pathos to spend at most / hours</label><input type="number" name="max" value="${i.pathos.temp}" min="0" style="width:4em"/> <input type="number" name="hours" value="1" min="1" style="width:4em"/></div>
           <div class="form-group"><label><input type="checkbox" name="advance"/> Advance the clock by the time (GM)</label></div></form>`;
-        return dialog(`Heal Corpus — ${actor.name}`, content, "Heal", async fd => {
+        return dialog(`Heal Corpus: ${actor.name}`, content, "Heal", async fd => {
             let after, html, spent = 0, hours = 0;
             if (fd.how === "rest") { hours = Math.max(1, n(fd.hours)); after = W.corpusRest(d, hours); html = `Rests ${hours} hour${hours === 1 ? "" : "s"}: ${n(d.bashing) - after.bashing} bashing heal.`; }
             else {
@@ -330,7 +330,7 @@ export function build(ctx) {
         const content = `<form><p>Who plays <b>${esc(actor.name)}</b>'s Shadow? The book has another player do it (a Shadowguide), or the Storyteller (Wraith 20th pp. 224–226).</p>
           <div class="form-group"><label>Shadowguide</label><select name="u" data-fixed><option value="">The Storyteller</option>${users.filter(u => !u.isGM).map(u => `<option value="${u.id}" ${u.id === cur ? "selected" : ""}>${esc(u.name)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Permanent Angst (if the sheet has no field)</label><input type="number" name="perm" value="${info(actor).angst.perm}" min="0" max="10"/></div></form>`;
-        return dialog(`Shadowguide — ${actor.name}`, content, "Save", async fd => {
+        return dialog(`Shadowguide: ${actor.name}`, content, "Save", async fd => {
             await ctx.setFlag(actor, "shadowguide", fd.u || null);
             await ctx.setFlag(actor, "voice", { ...(actor.getFlag(MOD, "voice") ?? {}), user: fd.u || null });
             if (!n(actor.system?.advantages?.angst?.permanent)) await ctx.setFlag(actor, "angstPermanent", n(fd.perm));
@@ -356,7 +356,7 @@ export function build(ctx) {
     async function shadow(actor) {
         const i = info(actor);
         const thorns = DATA.wraith?.thorns ?? [];
-        const content = `<form><p><b>${esc(actor.name)}</b> — Angst ${i.angst.temp} (permanent ${i.angst.perm}), Willpower ${i.willpower.temp}/${i.willpower.perm}, Eidolon ${i.eidolon}.${W.catharsisReady(i.angst.temp, i.willpower.temp) ? " <b>Angst is above Willpower: Catharsis may be tried.</b>" : ""}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Angst ${i.angst.temp} (permanent ${i.angst.perm}), Willpower ${i.willpower.temp}/${i.willpower.perm}, Eidolon ${i.eidolon}.${W.catharsisReady(i.angst.temp, i.willpower.temp) ? " <b>Angst is above Willpower: Catharsis may be tried.</b>" : ""}</p>
           <div class="form-group"><label>What</label><select name="act" data-fixed>
             <option value="catharsis">Catharsis: the Shadow tries to take control</option>
             <option value="dice">Offer Shadow Dice on the next roll</option>
@@ -368,7 +368,7 @@ export function build(ctx) {
           <div class="form-group"><label>Dark Passion</label><select name="dp" data-fixed>${i.darkPassions.map(d => `<option value="${d.id}">${esc(d.name)} (${d.value})</option>`).join("") || `<option value="">— none on the sheet —</option>`}</select> <label><input type="checkbox" name="others"/> stirred in someone else (9)</label></div>
           <div class="form-group"><label>Thorn</label>${searchBox("select[name=thorn]", "Search Thorns…", "Search Thorns")}<select name="thorn">${thorns.map(t => `<option value="${t.id}">${esc(t.n)} (${esc(t.cost)})</option>`).join("")}</select></div>
           <div class="form-group"><label>Angst change</label><input type="number" name="delta" value="1"/></div></form>`;
-        return dialog(`The Shadow — ${actor.name}`, content, "Go", async fd => {
+        return dialog(`The Shadow: ${actor.name}`, content, "Go", async fd => {
             const rolls = [];
             if (fd.act === "adjust") { const note = await P.adjust(actor, "angst", n(fd.delta)); return toGuide(actor, "Angst", `<p>${esc(note ?? "No change.")}</p>`); }
             if (fd.act === "start") {
@@ -432,7 +432,7 @@ export function build(ctx) {
           <div class="form-group"><label>Good play lowers the difficulty by</label><select name="good" data-fixed><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="eidolon" ${i.eidolon && !usedEidolon ? "" : "disabled"}/> Roll Eidolon first (${i.eidolon}, at 9, once a session${usedEidolon ? ": used" : ""})</label></div>
           <div class="form-group"><label><input type="checkbox" name="wp" ${i.willpower.temp > 1 ? "" : "disabled"}/> Spend Willpower for an automatic success on the escape (not the last point)</label></div></form>`;
-        return dialog(`Harrowing — ${actor.name}`, content, "Roll", async fd => {
+        return dialog(`Harrowing: ${actor.name}`, content, "Roll", async fd => {
             const rolls = []; let body = "";
             if (fd.eidolon && i.eidolon) {
                 const e = await rollPool(i.eidolon, 9); rolls.push(e.roll);
