@@ -20,7 +20,7 @@ const {LINES} = await import(pathToFileURL(join(root, "tools/skins/skins-data.mj
 
 // The sheet classes to show for each skin (the first selector, as the sheet would carry it)
 const CLASSES = {vampire: "vampire", ghoul: "mortal ghoul", mortal: "mortal", werewolf: "werewolf", mage: "mage", changeling: "changeling",
-  wraith: "wraith", hunter: "hunter", inquisitor: "mortal wodx-inqDA", demon: "demon", mummy: "mummy", kote: "vampire wodx-kote",
+  wraith: "wraith", hunter: "hunter", inquisitor: "hunter wodx-inqDA", demon: "demon", mummy: "mummy", kote: "vampire wodx-kote",
   orpheus: "mortal wodx-orpheus", creature: "creature"};
 const sys = join(root, "system/worldofdarkness");
 const css = ["css/wod.css", "css/werewolf.css", "css/vampire.css", "css/mage.css", "css/changeling.css", "css/hunter.css", "css/demon.css", "css/wraith.css",
@@ -28,15 +28,18 @@ const css = ["css/wod.css", "css/werewolf.css", "css/vampire.css", "css/mage.css
 css.push(pathToFileURL(join(root, "modules/wodx-chronicle/styles/wodx-theme.css")).href, pathToFileURL(join(root, "modules/wodx-sheets/styles/wodx-skins.css")).href);
 
 const dots = n => Array.from({length: 5}, (_, i) => `<span class="dot${i < n ? " on" : ""}"></span>`).join("");
-const sheet = (L, dark) => `<div class="application wod20 wod-sheet ${CLASSES[L.id]}${dark ? " wod-theme-dark" : ""}" data-line="${L.id}">
+// As in Foundry: the system's classes on the window, WoDX Sheets' own class on the form inside it
+const winClass = id => CLASSES[id].split(" ").filter(c => !c.startsWith("wodx-")).join(" ");
+const formClass = id => CLASSES[id].split(" ").filter(c => c.startsWith("wodx-")).join(" ");
+const sheet = (L, dark) => `<div class="application wod20 wod-sheet ${winClass(L.id)}${dark ? " wod-theme-dark" : ""}" data-line="${L.id}">
   <header class="window-header"><h1 class="window-title">${L.label}</h1></header>
-  <section class="window-content">
+  <section class="window-content"><form class="${formClass(L.id)}">
     <div class="sheet-headline sheet-banner splatFont centerText"><span class="sheet-banner-text">Attributes</span></div>
     <div class="cols"><div><b class="splatFont sub">Physical</b><p>Strength ${dots(2)}</p><p>Dexterity ${dots(3)}</p></div>
       <div><b class="splatFont sub">Social</b><p>Charisma ${dots(2)}</p><p>Manipulation ${dots(4)}</p></div></div>
     <div class="cols"><div class="col"><div class="sheet-headline headlineGroup sheet-banner-small splatFont centerText"><span class="sheet-banner-text">Willpower</span></div></div><div class="col"><div class="sheet-headline headlineGroup sheet-banner-small splatFont centerText"><span class="sheet-banner-text">Health</span></div></div></div>
     <p class="note">Notes in the sheet's body text, as the system sets it.</p>
-  </section></div>`;
+  </form></section></div>`;
 const page = dark => `<!doctype html><html><head><meta charset="utf-8">${css.map(h => `<link rel="stylesheet" href="${h}">`).join("")}
 <style>body{margin:0;padding:12px;background:#777;display:grid;grid-template-columns:repeat(2,900px);gap:12px;align-items:start;font-family:serif}
 .application{width:900px!important;height:auto!important;min-height:0!important;max-height:none!important;box-shadow:0 2px 8px #0008;border-radius:4px;overflow:hidden}
@@ -60,7 +63,7 @@ for ( const dark of [false, true] ) {
     const fam = getComputedStyle(a.querySelector(".sheet-banner-text")).fontFamily;
     const loaded = [...document.fonts].filter(f => f.status === "loaded").map(f => f.family.replace(/"/g, ""));
     const face = fam.split(",")[0].replace(/"/g, "").trim();
-    return {line: a.dataset.line, face, faceLoaded: loaded.includes(face), ink: cs.color,
+    return {line: a.dataset.line, accent: getComputedStyle(a).getPropertyValue("--wx-skin-accent").trim(), face, faceLoaded: loaded.includes(face), ink: cs.color,
       banner: getComputedStyle(a.querySelector(".sheet-banner")).backgroundImage.slice(0, 30),
       bannerText: getComputedStyle(a.querySelector(".sheet-banner-text")).backgroundColor, text: getComputedStyle(c.querySelector(".cols p")).color};
   }));
@@ -70,7 +73,10 @@ for ( const dark of [false, true] ) {
 }
 await browser.close();
 writeFileSync(join(out, "skins-report.json"), JSON.stringify(report, null, 1));
-const bad = report.filter(r => !r.faceLoaded || !r.banner.startsWith('url("data:image/svg'));
+// Each sheet must wear its own line's skin, not a neighbour's (a hunter's on an inquisitor, say)
+const own = r => LINES.find(L => L.id === r.line)[r.tone].acc.toLowerCase() === r.accent.toLowerCase();
+const bad = report.filter(r => !r.faceLoaded || !r.banner.startsWith('url("data:image/svg') || !own(r));
+for ( const r of report ) if ( !own(r) ) console.log("WRONG SKIN", r.tone, r.line, r.accent);
 for ( const r of report ) console.log(r.tone.padEnd(5), r.line.padEnd(11), r.face.padEnd(22), r.faceLoaded ? "face ok" : "FACE MISSING", "text", r.text);
 console.log(bad.length ? `${bad.length} problems` : "all skins drew their face and rules");
 process.exitCode = bad.length ? 1 : 0;

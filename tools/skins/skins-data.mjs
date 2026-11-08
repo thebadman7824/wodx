@@ -64,8 +64,8 @@ export const DRAW = {
   // Wraith: a frayed shroud edge, thinning to nothing at both ends
   wraith: (ink, acc, w, h, y) => {
     let out = "";
-    const segs = [[0.06, 0.12, 0.25], [0.14, 0.24, 0.5], [0.26, 0.44, 0.85], [0.46, 0.54, 1], [0.56, 0.74, 0.85], [0.76, 0.86, 0.5], [0.88, 0.94, 0.25]];
-    for ( const [a, b, o] of segs ) out += line(w * a, w * b, y, ink, 1.4, ` opacity='${o}'`);
+    const segs = [[0.06, 0.12, 0.5], [0.14, 0.24, 0.7], [0.26, 0.44, 0.9], [0.46, 0.54, 1], [0.56, 0.74, 0.9], [0.76, 0.86, 0.7], [0.88, 0.94, 0.5]];
+    for ( const [a, b, o] of segs ) out += line(w * a, w * b, y, ink, 1.8, ` opacity='${o}'`);
     for ( const x of [0.22, 0.78] ) out += `<path d='M${w * x} ${y}q4 -${h * 0.2} 0 -${h * 0.36}' stroke='${acc}' stroke-width='1' fill='none' opacity='.7'/>`;
     return out;
   },
@@ -153,7 +153,7 @@ export const LINES = [
   {id: "wraith", label: "Wraith", sel: [".wraith"], title: "WXS Fell DW Pica", rule: "wraith",
     light: {base: "#e9e9e6", ink: "#1a1c1c", rule: "#3e4342", acc: "#135a5b", layers: [G.cracks([70, 75, 75]), G.fine([60, 60, 60])]},
     dark: {base: "#141617", ink: "#e6e8e7", rule: "#9aa3a1", acc: "#4cc9be", layers: [G.cracks([150, 158, 156]), G.fine([0, 0, 0])]}},
-  {id: "hunter", label: "Hunter: The Reckoning", sel: [".hunter"], title: "WX Typewriter", rule: "hunter",
+  {id: "hunter", label: "Hunter: The Reckoning", sel: [".hunter:not(.wodx-inqDA)"], title: "WX Typewriter", rule: "hunter",
     light: {base: "#f6f3e6", ink: "#1a1a1a", rule: "#2c2c2c", acc: "#9a6d00", layers: ["linear-gradient(90deg, transparent 38px, rgba(200, 60, 60, .35) 38px 39px, transparent 39px)", "repeating-linear-gradient(180deg, transparent 0 23px, rgba(60, 110, 170, .18) 23px 24px)", G.fine([60, 60, 40])]},
     dark: {base: "#17181b", ink: "#ebebe6", rule: "#b7b7b0", acc: "#d4a72c", layers: ["linear-gradient(90deg, transparent 38px, rgba(220, 80, 80, .3) 38px 39px, transparent 39px)", "repeating-linear-gradient(180deg, transparent 0 23px, rgba(140, 170, 210, .1) 23px 24px)", G.fine([0, 0, 0])]}},
   {id: "inquisitor", label: "Inquisitor (Dark Ages)", sel: [".wodx-inqDA"], title: "WX Blackletter", rule: "inquisitor",
