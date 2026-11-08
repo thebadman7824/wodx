@@ -7,7 +7,10 @@
 - [x] Pass the Years: the advancers' proposals in the plan, a pick where a change offers one, a snapshot of every changed character in "WoDX · Before the years", an era history and the years awake on each character
 - [x] Five house rules in WoDX Chronicle 0.4.1, group "Passing the years": Thick blood (off), Mortal decline (on), Morality drift (off), Experience for the years (on), Convert Dark Ages Abilities (on)
 - [x] Harness tests (advance.test.mjs, 11; time.test.mjs counts the snapshots); the in-world time-skip test accepts Theology's dots moved to Religion
-- [ ] Gate (Foundry, rothenstein-wodx, after a restart for the new house rules):
+- [x] Deployed 2026-11-08 (Backups/wodx-creation-0.5.0-2026-11-08 and Backups/wodx-chronicle-0.4.0-2026-11-08 first; every file checked by MD5)
+- [ ] Gate, in **wodx-template** only (it moves the clock to 1840, so never in Rothenstein). Scripted in tools/gate/gateera.mjs, copied to Data/wodx-gate. As a Gamemaster in wodx-template, after a reload, run in the console:
+  `await (await import(`/wodx-gate/gateera.mjs?${Date.now()}`)).run()`
+  It writes Data/wodx-gate/gateera-result.json and puts the clock, the era and the test characters back. Its seven steps:
   1. House rules shows the five switches under "Passing the years" with the defaults above.
   2. Make a test vampire on the Road of Kings with Archery 3, Embraced in 1150, and a test mortal born 1170. In the Dark Ages, open Pass the Years for 640 years (to the Victorian age).
   3. The vampire's row offers Archery to Firearms, the Road of Kings to Path of Power and the Inner Voice (with Honorable Accord as the other pick) and 10 experience. The mortal's row offers death of age.
