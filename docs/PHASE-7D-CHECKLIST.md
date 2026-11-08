@@ -11,6 +11,6 @@
 - [x] Breaches: from WoDX Actions' Masquerade ledger (Actions 3.11.2 calls wodxBreach), or reported by hand; spread by day; rise to the Prince, then the era's hunters; contained when every witness is dealt with; fade in a quiet week
 - [x] Gender-neutral text; no NPC dialogue
 - [x] Gate script (tools/gate/gate7d.mjs), for rothenstein-wodx; it never moves the clock
-- [ ] UI fit at three sizes, on the PC
-- [ ] Deployed (NPC 0.3.0, Actions 3.11.2), Foundry restarted
-- [ ] Gate 7d in Foundry, in rothenstein-wodx
+- [x] UI fit at three sizes, on the PC, with Foundry 14's own foundry2.css: every window passes (498 checks)
+- [x] Deployed (NPC 0.3.0, Actions 3.11.2), backups first, every file checked by MD5, Foundry restarted
+- [x] Gate 7d in rothenstein-wodx: 10 of 10 (the first run, 9 of 10, found rumours had no places to spread through in a world with none tagged in 7c; fixed)
