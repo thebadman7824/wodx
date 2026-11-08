@@ -6,8 +6,10 @@
 		<div class="wodx-col wodx-head-col" style="flex:1 1 0; display:flex; flex-direction:column; gap:3px; min-width:0;">
 			{{#each this}}
 			<div class="wodx-field" style="flex:0 0 auto; display:flex; align-items:center; gap:6px;"><label style="min-width:92px;">{{this.label}}</label>
-				{{#if (eq this.kind "select")}}<select class="wodx-pick" data-set="{{this.path}}">{{#each this.options}}<option value="{{this.id}}" {{#if this.sel}}selected{{/if}}>{{this.label}}</option>{{/each}}</select>
-				{{else if (eq this.kind "input")}}<input type="{{#if this.number}}number{{else}}text{{/if}}" class="wodx-text" data-set="{{this.path}}" {{#if this.number}}data-number="1"{{/if}} value="{{this.value}}"/>
+				{{#if @root.locked}}<span class="wodx-shown">{{#if this.display}}{{this.display}}{{else}}{{this.value}}{{/if}}</span>
+				{{else if (eq this.kind "select")}}<select class="wodx-pick" data-set="{{this.path}}">{{#each this.options}}<option value="{{this.id}}" {{#if this.sel}}selected{{/if}}>{{this.label}}</option>{{/each}}</select>
+				{{else if (eq this.kind "input")}}<input type="text" class="wodx-text" data-set="{{this.path}}" value="{{this.value}}"/>
+				{{else if (eq this.kind "mirror")}}<span class="wodx-mirror" data-mirror="{{this.path}}" data-value="{{this.value}}"></span>
 				{{else}}<span class="wodx-shown" title="{{this.hint}}">{{this.value}}</span>{{/if}}
 			</div>
 			{{/each}}

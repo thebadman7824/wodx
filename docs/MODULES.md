@@ -21,7 +21,7 @@ WoDX notes:
 | wodx-creation | 0.5.0 | 3, 4, 6a, 6b, Actions 3.2, 7a (People) | rothenstein-wodx, wodx-template (needs wodx-chronicle) |
 | wodx-actions | 3.9.0 | 6a, 6b, Kindred additions, sunlight, 6c (wraiths, hunters, True Faith, Numina, hedge magic), 6d (the inner voice), 6e (menus by intent, one card layout), 6f (Dark Ages mages), 6g (Dark Ages fae), 6h (Changeling 20th) | rothenstein-wodx, wodx-template, instead of vtda20-actions (needs wodx-chronicle) |
 | wodx-combat | 3.7.0 | 6a, 6b, automation, gridless, the Corpus track, the turn conductor | rothenstein-wodx, wodx-template, instead of vtda20-combat (needs wodx-chronicle) |
-| wodx-sheets | 0.2.0 | Phase 6 sheets: the Dark Ages sheets (Fae, Mage, Inquisitor, Werewolf, V20 Dark Ages Kindred and ghoul), following the era | rothenstein-wodx (needs wodx-chronicle, wodx-actions) |
+| wodx-sheets | 0.3.0 | Phase 6 sheets: the Dark Ages sheets (Fae, Mage, Inquisitor, Werewolf, V20 Dark Ages Kindred and ghoul), following the era | rothenstein-wodx (needs wodx-chronicle, wodx-actions) |
 | wodx-npc | 0.1.3 | 7b (NPC profiles and combat tactics) | rothenstein-wodx, wodx-template (needs wodx-chronicle, wodx-combat, wodx-actions) |
 
 Chronicle, Otherworlds and Creation stay idle in worlds without `flags.wodx` (the original Rothenstein world). WoDX Actions and WoDX Combat stay off wherever vtda20-actions or vtda20-combat is still enabled; the original Rothenstein world keeps the vtda20 modules, which stay installed.

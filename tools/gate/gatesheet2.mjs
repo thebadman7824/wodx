@@ -30,6 +30,7 @@ async function pack() {
 async function check(label, actor, { words, cls, dot = null, read = null }) {
   await step(label, async () => {
     const sheet = actor.sheet;
+    sheet.locked = false; // the system's sheets open locked; permanent dots move only when unlocked
     await sheet.render(true);
     await until(() => sheet.rendered && sheet.element?.[0]?.querySelector(".wodx-book"));
     const el = sheet.element[0];
@@ -41,8 +42,9 @@ async function check(label, actor, { words, cls, dot = null, read = null }) {
     let clicked = null;
     if (dot) {
       const before = foundry.utils.getProperty(actor, read);
-      el.querySelector(`.wodx-dots[data-set='${dot}'] .wodx-dot[data-i='3']`)?.click();
-      const changed = await until(() => Number(foundry.utils.getProperty(actor, read)) === (Number(before) === 3 ? 2 : 3));
+      const i = Number(before) === 3 ? 2 : 3;
+      el.querySelector(`.wodx-dots[data-set='${dot}'] .wodx-dot[data-i='${i}']`)?.click();
+      const changed = await until(() => Number(foundry.utils.getProperty(actor, read)) === i);
       clicked = changed;
       await actor.update({ [read]: before ?? 0 });
     }
@@ -66,8 +68,7 @@ export async function run() {
   await check("Dark Ages: Werewolf: Breed, Pack Totem, Primal Urge, Rituals, Gifts, Rage and Gnosis", t.garou,
     { cls: "WodxWerewolfSheet", words: ["Breed", "Auspice", "Tribe", "Pack Totem", "Primal Urge", "Rituals", "Backgrounds", "Gifts", "Blessings and Curses"] });
   await check("V20 Dark Ages: Clan, Generation, Sire, Disciplines, Virtues, Road, Blood Pool, Weakness, then the second page", t.kindred,
-    { cls: "WodxVampireSheet", words: ["Clan", "Generation", "Sire", "Legerdemain", "Seneschal", "Disciplines", "Backgrounds", "Virtues", "Weakness", "Merits and Flaws", "Rituals", "Paths", "Derangements"],
-      dot: "system.advantages.virtues.courage.permanent", read: "system.advantages.virtues.courage.permanent" });
+    { cls: "WodxVampireSheet", words: ["Clan", "Generation", "Sire", "Legerdemain", "Seneschal", "Disciplines", "Backgrounds", "Virtues", "Weakness", "Merits and Flaws", "Rituals", "Paths", "Derangements"] });
   await check("a Dark Ages ghoul: the Kindred sheet with the domitor", t.ghoul,
     { cls: "WodxMortalSheet", words: ["Domitor", "Disciplines", "Virtues", "Merits and Flaws"] });
   await step("a plain mortal keeps the system's own layout", async () => {

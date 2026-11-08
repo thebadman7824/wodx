@@ -448,3 +448,11 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - Tests: sheets1.test.mjs (6); 274 pass. Gate sheet 2: 7/7.
 - Seen in Foundry: the browser kept an old copy of the stylesheet after a reload, so the header layout is now set inline in the template. A file sent to the PC twice from the same staged path can come through stale, so each deploy uses a new folder and is checked by MD5. New test actors bring up the system's "Set sheet type" window the first time they open: General vampire and Ghoul were chosen for the two test actors.
 - A slip: one gate command went into the chat box instead of the console and was posted as a chat message (id HIsmlg0Td4GRRDs2). It is left in place until Ben says whether to delete it.
+
+### Sheets 3, 2026-11-08: WoDX Sheets 0.3.0 (the Core page and the system's tabs agree, B75)
+- Header system fields are the Bio tab's own controls, cloned when the sheet renders (same options, same value) and written to the same data. On a locked sheet they show as text, as the system shows them.
+- The Virtues block is the system's own part (stats_virtue.html) under the book's heading "Virtues".
+- Each line's WoDX fields also appear in a box at the top of the Bio tab, bound to the same flags.
+- The lock and the dots now behave as on the system's sheets.
+- The "The second page" heading is gone (the fae's "Oaths, Echoes and Features" stays), and so is the closing note about the design.
+- Tests: 274 pass. Gate sheet 2: 7/7 (it unlocks the sheet before clicking a dot). New gate sheet 3: 9/9. It checks that the Core page's Clan is the Bio tab's list with the same choice, and that a Clan chosen on Core shows on Bio. A Concept and a Generation set on Bio show on Core, and so does a Tribe set on a werewolf's Bio. The Virtues are the system's own markup and data. The Dark Ages Court set on Bio shows on Core, and a mage's Cabal typed on Core shows in Bio's box. A locked sheet shows text, keeps its permanent dots and still moves points.

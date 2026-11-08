@@ -25,8 +25,8 @@ const T = {
 const cols = (t, s, k) => ({ talents: t.map(x => T[x]), skills: s.map(x => T[x]), knowledges: k.map(x => T[x]) });
 
 const sys = (label, path) => ({ label, kind: "system", path });
-/** A field the system keeps as a choice (a key it translates): shown here, chosen on the Bio tab. */
-const show = (label, path) => ({ label, kind: "show", path });
+/** A field the system keeps as a choice (a key it translates): the Bio tab's own control, mirrored. */
+const show = (label, path) => ({ label, kind: "system", path });
 const ftext = (label, path) => ({ label, kind: "flagText", path });
 
 /**
@@ -83,7 +83,7 @@ export const SHEETS = {
   kindredDA: {
     type: "Vampire", book: "Vampire: The Dark Ages 20th Anniversary Edition", sheetPage: "pdf pp. 472–473", title: "Vampire: The Dark Ages",
     header: [[show("Nature", "system.nature"), show("Demeanor", "system.demeanor"), sys("Concept", "system.concept")],
-      [{ label: "Clan", kind: "computed", key: "clan" }, { label: "Generation", kind: "system", path: "system.generation", number: true }, sys("Sire", "system.sire")]],
+      [sys("Clan", "system.clan"), sys("Generation", "system.generation"), sys("Sire", "system.sire")]],
     abilities: cols(["alertness", "athletics", "awareness", "brawl", "empathy", "expression", "intimidation", "leadership", "legerdemain", "subterfuge"],
       ["animalken", "archery", "commerce", "crafts", "etiquette", "melee", "performance", "ride", "stealth", "survival"],
       ["academics", "enigmas", "hearthwisdom", "investigation", "law", "medicine", "occult", "politics", "seneschal", "theology"]),
@@ -126,9 +126,12 @@ export function track(perm = 0, temp = 0, max = 10) {
 }
 /** Dots for a rating. */
 export const dots = (v, max = 5) => Array.from({ length: max }, (_, k) => ({ i: k + 1, on: k < Number(v) }));
-/** Click on dot i of value v: the same dot again lowers by one (the system's own habit). */
-export const clickValue = (v, i) => (Number(v) === Number(i) ? Number(i) - 1 : Number(i));
+/** Click on dot i of value v, as the system's own sheets do: the dot sets the value, and the first dot of a 1 clears it. */
+export const clickValue = (v, i) => (Number(i) === 1 && Number(v) === 1 ? 0 : Number(i));
 /** A "flag:" or "system." path as a property path on the actor. */
 export const propPath = p => (String(p).startsWith("flag:") ? `flags.${String(p).slice(5)}` : String(p));
 /** Every block a sheet uses (for checking that main.mjs builds each). */
 export const blocksOf = def => [...def.advantages, ...def.lower, ...(def.page2 ?? [])].flat();
+
+/** The header fields that are WoDX's own (flags), which the Bio tab also shows (B75). */
+export const bioFields = def => def.header.flat().filter(f => f.kind === "flagSelect" || f.kind === "flagText");

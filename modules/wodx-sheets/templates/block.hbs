@@ -25,6 +25,8 @@
 		{{#if tempPath}}<div class="wodx-boxes ten">{{#each cells}}<span class="wodx-box {{#if this.box}}on{{/if}}" data-i="{{this.i}}"></span>{{/each}}</div>{{/if}}
 	</div>
 	{{#if note}}<div class="wodx-quiet">{{note}}</div>{{/if}}
+{{else if (eq kind "systemVirtues")}}
+	<div class="wodx-virtues" style="width: 100%;">{{> "systems/worldofdarkness/templates/actor/parts/stats_virtue.html" @root}}</div>
 {{else if (eq kind "health")}}
 	<div class="wodx-health" style="width: 100%;">{{> "systems/worldofdarkness/templates/actor/parts/stats_health_old.html" @root}}</div>
 {{else if (eq kind "experience")}}

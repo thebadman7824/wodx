@@ -51,7 +51,7 @@ test("ability rows: the system's own keys, secondary-ability items by name, and 
 test("tracks, dots, paths", () => {
   const t = SR.track(4, 2);
   assert.equal(t.filter(x => x.dot).length, 4); assert.equal(t.filter(x => x.box).length, 2);
-  assert.equal(SR.clickValue(3, 3), 2); assert.equal(SR.clickValue(1, 4), 4);
+  assert.equal(SR.clickValue(3, 3), 3); assert.equal(SR.clickValue(1, 1), 0); assert.equal(SR.clickValue(1, 4), 4);
   assert.equal(SR.propPath("flag:wodx-actions.daFae.court"), "flags.wodx-actions.daFae.court");
   assert.equal(SR.propPath("system.nature"), "system.nature");
 });

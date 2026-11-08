@@ -1,0 +1,13 @@
+{{!-- WoDX Sheets: the fields this line's book keeps that the system has no place for, on the Bio tab too --}}
+<div class="clearareaBox area-box wodx-bio-extra">
+	<div class="sheet-headline sheet-banner-small splatFont"><span class="sheet-banner-text">{{wodx.bioTitle}}</span></div>
+	<div class="wodx-cols" style="display:flex; gap:14px; flex-wrap:wrap;">
+		{{#each wodx.bio}}
+		<div class="wodx-field" style="flex:1 1 200px; display:flex; align-items:center; gap:6px;"><label style="min-width:80px;">{{this.label}}</label>
+			{{#if @root.locked}}<span class="wodx-shown">{{this.display}}</span>
+			{{else if (eq this.kind "select")}}<select class="wodx-pick" data-set="{{this.path}}">{{#each this.options}}<option value="{{this.id}}" {{#if this.sel}}selected{{/if}}>{{this.label}}</option>{{/each}}</select>
+			{{else}}<input type="text" class="wodx-text" data-set="{{this.path}}" value="{{this.value}}"/>{{/if}}
+		</div>
+		{{/each}}
+	</div>
+</div>

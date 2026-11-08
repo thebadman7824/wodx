@@ -70,13 +70,8 @@ function block(key, a) {
     case "disciplines": return { kind: "items", title: "Disciplines", roll: "useDiscipline", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.discipline$/)(i))), empty: "None yet." };
     case "rituals": return { kind: "items", title: "Rituals", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/ritual/)(i)), false), empty: "None." };
     case "paths": return { kind: "items", title: "Paths", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/disciplinepath$/)(i))), empty: "None." };
-    case "virtues": {
-      const v = adv.virtues ?? {};
-      const lab = (o, d) => { const l = loc(o?.label); return l && !/^(conscience|selfcontrol|courage)$/.test(l) ? l : d; };
-      const rows = [["conscience", lab(v.conscience, "Conscience")], ["selfcontrol", lab(v.selfcontrol, "Self-Control")], ["courage", lab(v.courage, "Courage")]]
-        .map(([k, label]) => ({ label, path: `system.advantages.virtues.${k}.permanent`, max: 5, dots: SR.dots(v[k]?.permanent) }));
-      return { kind: "dots", title: "Virtues", roll: a.type === "Hunter" ? "hunterVirtue" : null, rows };
-    }
+    // The system's own Virtues (same markup, same data, same rolls as its Core tab)
+    case "virtues": return { kind: "systemVirtues" };
     case "superiorVirtues": return { kind: "dots", title: "Superior Virtues", roll: "hunterPower",
       rows: [["Wisdom", "wisdom"], ["Faith", "faith"], ["Zeal", "zeal"]].map(([label, k]) => ({ label, path: `flag:${ACT}.inquisitor.${k}`, max: 5, dots: SR.dots(inq[k]) })),
       note: "Each at most its Virtue (Dark Ages: Inquisitor p. 157)." };
@@ -144,14 +139,26 @@ function header(def, a) {
     domitor: () => { const l = a.getFlag("wodx-creation", "lineage") ?? {}; return game.actors.get(l.domitor)?.name ?? (l.domitor || "—"); },
     domitorClan: () => { const l = a.getFlag("wodx-creation", "lineage") ?? {}; const d = game.actors.get(l.domitor); return d ? (d.system.clan === "custom" ? d.system.custom?.clan : loc(d.system.clan)) : "—"; }
   };
-  return def.header.map(col => col.map(f => {
-    const v = foundry.utils.getProperty(a, SR.propPath(f.path ?? ""));
-    if (f.kind === "flagSelect") return { ...f, kind: "select", options: [{ id: "", label: "(choose)" }, ...choices[f.options]().map(o => ({ ...o, sel: o.id === v }))] };
-    if (f.kind === "system" || f.kind === "flagText") return { ...f, kind: "input", value: v ?? "" };
-    if (f.kind === "show") return { ...f, value: loc(v) || "—", hint: "Chosen on the Bio tab" };
-    if (f.kind === "computed") return { ...f, value: computed[f.key]?.() || "—" };
-    return { ...f, value: v ?? "" };
-  }));
+  return def.header.map(col => col.map(f => fieldView(f, a, choices, computed)));
+}
+
+/** What a stored value reads as: a system choice is a translation key; "custom" names its own text. */
+function shownValue(a, path, v) {
+  if (v === "custom") { const k = String(path).split(".").pop(); return a.system?.custom?.[k] || "custom"; }
+  return loc(v) || (v === 0 ? "0" : "");
+}
+function fieldView(f, a, choices, computed) {
+  const v = foundry.utils.getProperty(a, SR.propPath(f.path ?? ""));
+  if (f.kind === "flagSelect") { const opts = choices[f.options](); return { ...f, kind: "select", display: opts.find(o => o.id === v)?.label ?? "—", options: [{ id: "", label: "(choose)" }, ...opts.map(o => ({ ...o, sel: o.id === v }))] }; }
+  if (f.kind === "flagText") return { ...f, kind: "input", value: v ?? "", display: v || "—" };
+  if (f.kind === "system") return { ...f, kind: "mirror", value: v ?? "", display: shownValue(a, f.path, v) || "—" };
+  if (f.kind === "computed") return { ...f, value: computed[f.key]?.() || "—" };
+  return { ...f, value: v ?? "" };
+}
+/** The flag fields the Bio tab shows too, built the same way as the header's. */
+function bioView(def, a) {
+  const fake = { ...def, header: [SR.bioFields(def)] };
+  return header(fake, a)[0];
 }
 
 /** Everything the book's layout needs, from the actor. */
@@ -162,7 +169,7 @@ export function viewFor(id, a) {
   const cols = list => list.map(c => c.flatMap(k => expand(k, a)));
   return {
     id, book: def.book, sheetPage: def.sheetPage, title: def.title,
-    header: header(def, a),
+    header: header(def, a), bio: bioView(def, a), bioTitle: def.title,
     abilityCols: Object.entries(rows).map(([k, list]) => ({ title: titles[k], rows: list.map(r => ({ ...r, dots: SR.dots(r.value) })) })),
     abilityNote: id === "werewolfDA" ? "Leadership is a Skill in the Dark Ages (Dark Ages: Werewolf p. 79); the printed sheet also lists it under Talents." : "",
     advantages: cols(def.advantages), lower: cols(def.lower), page2: cols(def.page2 ?? []),
@@ -195,9 +202,25 @@ function wodxSheet(Base, type) {
       const el = html.find ? html : $(html);
       const core = el.find(".tab.core");
       if (core.length) core.html(await foundry.applications.handlebars.renderTemplate(`modules/${MOD}/templates/core.hbs`, data));
+      // The header mirrors the Bio tab's own controls: the same options, the same value, the same lock
+      const bio = el.find(".tab.bio");
+      el.find(".wodx-mirror[data-mirror]").each((_, m) => {
+        const path = m.dataset.mirror;
+        const src = bio.find(`[name="${path}"]`)[0];
+        let ctl;
+        if (src) { ctl = src.cloneNode(true); ctl.removeAttribute("name"); ctl.removeAttribute("id"); if (src.tagName === "SELECT") ctl.value = src.value; }
+        else { ctl = document.createElement("input"); ctl.type = "text"; ctl.value = m.dataset.value ?? ""; }
+        ctl.classList.add("wodx-mirror-ctl"); ctl.dataset.set = path;
+        if (src?.dataset?.dtype) ctl.dataset.dtype = src.dataset.dtype;
+        m.replaceWith(ctl);
+      });
+      // The fields WoDX keeps for this line, on the Bio tab too (bound to the same data)
+      if (bio.length && data.wodx.bio?.length) bio.prepend(await foundry.applications.handlebars.renderTemplate(`modules/${MOD}/templates/bio-extra.hbs`, data));
       const p2 = SR.SHEETS[id].page2Tab;
       if (p2) el.find(`.tab.${p2}`).html(await foundry.applications.handlebars.renderTemplate(`modules/${MOD}/templates/page2-tab.hbs`, data));
       el.find(".sheet-body > .sheet-headline").first().text(SR.SHEETS[id].title);
+      // The system's own Virtues part, under the book's heading
+      el.find(".tab.core .wodx-virtues .sheet-banner-text").first().text("Virtues");
       el.addClass(`wodx-${id}`);
       return html;
     }
@@ -219,16 +242,24 @@ function listeners(sheet, root) {
   }));
   root.querySelectorAll(".wodx-open[data-itemid]").forEach(el => el.addEventListener("click", ev => { ev.preventDefault(); actor.items.get(el.dataset.itemid)?.sheet?.render(true); }));
   if (!sheet.options.editable) return;
+  // As on the system's sheets: a locked sheet keeps its permanent traits; only points (boxes) still change
+  const locked = () => { if (!sheet.locked) return false; ui.notifications.warn(game.i18n.localize("wod.system.sheetlocked")); return true; };
+  root.querySelectorAll(".wodx-mirror-ctl[data-set]").forEach(el => el.addEventListener("change", () => {
+    const raw = el.value, v = el.dataset.dtype === "Number" ? n(raw) : raw;
+    set(el.dataset.set, v);
+  }));
   root.querySelectorAll(".wodx-pick[data-set]").forEach(el => el.addEventListener("change", () => set(el.dataset.set, el.value || null)));
   root.querySelectorAll(".wodx-text[data-set]").forEach(el => el.addEventListener("change", () => set(el.dataset.set, el.dataset.number ? n(el.value) : String(el.value).slice(0, 200))));
   root.querySelectorAll(".wodx-dots[data-set]").forEach(box => box.querySelectorAll(".wodx-dot").forEach(dot => dot.addEventListener("click", ev => {
     ev.preventDefault();
+    if (locked()) return;
     set(box.dataset.set, Math.min(n(box.dataset.max) || 5, SR.clickValue(n(get(box.dataset.set)), n(dot.dataset.i))));
   })));
   root.querySelectorAll(".wodx-track").forEach(tr => {
     const pp = tr.dataset.perm, tp = tr.dataset.temp;
     tr.querySelectorAll(".wodx-dots .wodx-dot").forEach(dot => dot.addEventListener("click", ev => {
       ev.preventDefault();
+      if (locked()) return;
       const perm = SR.clickValue(n(get(pp)), n(dot.dataset.i));
       const upd = { [SR.propPath(pp)]: perm };
       if (tp) upd[SR.propPath(tp)] = Math.min(perm, n(get(tp) ?? get(pp)));
@@ -242,6 +273,7 @@ function listeners(sheet, root) {
   });
   root.querySelectorAll(".wodx-dots[data-add-ability]").forEach(box => box.querySelectorAll(".wodx-dot").forEach(dot => dot.addEventListener("click", async ev => {
     ev.preventDefault();
+    if (locked()) return;
     const v = n(dot.dataset.i), flat = box.dataset.flatkey;
     if (flat) return actor.update({ [`system.abilities.${flat}.value`]: v, [`system.abilities.${flat}.isvisible`]: true });
     return actor.createEmbeddedDocuments("Item", [{ name: box.dataset.addAbility, type: "Trait", system: { type: `wod.types.${box.dataset.group}secondability`, value: v, max: 5 } }]);
@@ -271,5 +303,5 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.2.0", rules: SR, sheetFor, viewFor };
+  game.modules.get(MOD).api = { version: "0.3.0", rules: SR, sheetFor, viewFor };
 });
