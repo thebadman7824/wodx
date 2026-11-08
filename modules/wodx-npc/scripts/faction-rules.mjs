@@ -63,6 +63,25 @@ export const areasFor = morality => (morality === "roads" ? AREAS.roads : AREAS.
 /** A first guess at a place's area from its 7c kind; the Storyteller sets the real one (WoDX reading). */
 export const AREA_GUESS = {tavern: "lower", street: "lower", market: "market", workplace: "market", home: "merchant", church: "merchant",
   gate: "patrolled", castle: "patrolled", haven: "lower", wilds: "market", caern: "market", other: "market"};
+/**
+ * The kind of place a scene's name suggests, for a scene no one has tagged in 7c (WoDX reading). The first match wins,
+ * so "Kranzfels · Outer Bailey" is a gate before it is a castle.
+ */
+const NAME_KINDS = [
+  ["tavern", /\b(tavern|inn|alehouse|taproom|brothel)\b/i], ["market", /\b(market|square|fair|plaza)\b/i],
+  ["church", /\b(church|chapel|cloister|abbey|priory|monastery|convent|shrine|cathedral|parish|churchyard|graveyard)\b/i],
+  ["gate", /\b(gate|gatehouse|watch|barracks|bailey|wall|tower)\b/i], ["castle", /\b(castle|keep|hall|ward|court|palace|kranzfels)\b/i],
+  ["workplace", /\b(mill|forge|smithy|workshop|guild|mine|adit|quarry|tannery|brewery|bakery|shop|warehouse|dock|wharf)\b/i],
+  ["street", /\b(street|lane|road|bridge|alley|crossroads?)\b/i], ["haven", /\b(haven|crypt|tomb|catacombs?|undercroft|cellar)\b/i],
+  ["caern", /\b(caern|standing stones?|barrow)\b/i], ["wilds", /\b(wood|woods|forest|field|fields|marsh|river|lake|hill|valley|glade|moor|cave)\b/i],
+  ["home", /\b(house|home|cottage|farm|village|hamlet|manor|homestead)\b/i]
+];
+export function kindFromName(name) {
+  for ( const [k, rx] of NAME_KINDS ) if ( rx.test(String(name ?? "")) ) return k;
+  return "other";
+}
+/** Scenes that are maps for a fight, not places in the world. */
+export const NOT_A_PLACE = /battle ?map|\bcombat\b|\btest\b|\(gate/i;
 export function areaOf(place, morality) {
   const table = areasFor(morality);
   const key = place?.area && table[place.area] ? place.area : (AREA_GUESS[place?.kind] ?? "market");

@@ -313,3 +313,25 @@ test("a player character is never changed without the Storyteller: a loss for a 
   const radu = s.factions.find(x => x.name.startsWith("Old Radu"));
   assert.equal(F.sizeOf([{op: "bg", faction: radu.id, key: "contacts", delta: -1}], {pcActors: new Set(["ilse"]), state: s}), "big");
 });
+
+test("a world with no places tagged in 7c still has places: every scene but a battle map, its kind from its name, and a rumour spreads through them", async () => {
+  const saved = places.splice(0);
+  game.scenes.push({uuid: "Scene.k1", name: "Kranzfels · Inner Ward and Great Hall", flags: {}}, {uuid: "Scene.k2", name: "Kranzfels · The Outer Bailey", flags: {}},
+    {uuid: "Scene.t1", name: "The Black Boar Tavern", flags: {}}, {uuid: "Scene.b1", name: "Ambush Battlemap", flags: {}});
+  try {
+    const list = Fx.placeList();
+    assert.deepEqual(list.map(p => [p.id, p.kind]), [["Scene.k1", "castle"], ["Scene.k2", "gate"], ["Scene.t1", "tavern"]]);
+    setMode("auto");
+    const id = await Fx.reportBreach({severity: 2, event: "a corpse with no blood"});
+    const start = Fx.state().breaches.find(b => b.id === id).lastStep;
+    game.time.worldTime = start + 86400 + 60;
+    await Fx.tickBreaches();
+    const b = Fx.state().breaches.find(x => x.id === id);
+    assert.deepEqual(b.heard, ["Scene.t1", "Scene.k2"], "the tavern hears first, then the gate");
+    await Fx.mutate(s => { s.breaches = s.breaches.filter(x => x.id !== id); return {state: s}; });
+  } finally {
+    places.push(...saved);
+    game.scenes.length = 0;
+    queue.length = 0;
+  }
+});

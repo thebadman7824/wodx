@@ -83,11 +83,20 @@ export function build(ctx) {
   }
   const sceneOf = id => { try { return fromUuidSync(id); } catch (e) { return null; } };
   /** Every place a faction can hold or a rumour can reach: the 7c places, with their hunting area. */
+  /**
+   * The places a rumour can reach and a faction can hold: those tagged in 7c, and every other scene of the world (not a
+   * battle map), with a kind guessed from its name, so a world with no tags still has a valley to talk in.
+   */
   function placeList() {
-    const out = [];
+    const out = [], seen = new Set();
     for ( const p of routines.listPlaces() ) {
       const doc = p.region ?? p.scene;
       out.push({id: p.id, name: p.name, kind: p.kind, area: doc?.flags?.[MOD]?.hunt?.area ?? null});
+      if ( p.scene?.uuid && !p.region ) seen.add(p.scene.uuid);
+    }
+    for ( const sc of game.scenes ?? [] ) {
+      if ( !sc?.uuid || seen.has(sc.uuid) || F.NOT_A_PLACE.test(sc.name ?? "") ) continue;
+      out.push({id: sc.uuid, name: sc.name, kind: F.kindFromName(sc.name), area: sc.flags?.[MOD]?.hunt?.area ?? null});
     }
     return out;
   }
@@ -492,8 +501,8 @@ export function build(ctx) {
         content: `<p>Set up the valley's ten powers from the chronicle's notes, with their leaders, members and places found by name? The dots are WoDX's estimates; change them as you like.</p>`});
       if ( !ok ) return null;
     }
-    const places = placeList(), scenes = [...(game.scenes ?? [])];
-    const placeIds = rx => uniqueIds([...places.filter(p => rx.test(p.name)).map(p => p.id), ...scenes.filter(sc => rx.test(sc.name) && !/battlemap/i.test(sc.name)).map(sc => sc.uuid)]).slice(0, 6);
+    const places = placeList();
+    const placeIds = rx => uniqueIds(places.filter(p => rx.test(p.name)).map(p => p.id)).slice(0, 6);
     const ids = new Map(ROTHENSTEIN.map(r => [r.key, newId()]));
     const list = ROTHENSTEIN.map(r => {
       const leader = findActor(r.leader);

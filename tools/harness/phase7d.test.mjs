@@ -276,3 +276,16 @@ test("the module: version 0.3.0, the factions in the API, gender-neutral text, n
   assert.match(k, /Hooks\.callAll\("wodxBreach"/);
   assert.equal(JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version, "3.11.2");
 });
+
+test("a scene no one tagged gets a kind from its name, and battle maps are not places", () => {
+  const k = F.kindFromName;
+  assert.equal(k("Kranzfels \u00b7 Inner Ward and Great Hall"), "castle");
+  assert.equal(k("Kranzfels \u00b7 The Outer Bailey"), "gate");
+  assert.equal(k("The Black Boar Tavern"), "tavern");
+  assert.equal(k("Lower Town \u00b7 Market Square"), "market");
+  assert.equal(k("Church of St. Aegidius"), "church");
+  assert.equal(k("The Silver Adit"), "workplace");
+  assert.equal(k("Dolany village"), "home");
+  assert.equal(k("Somewhere"), "other");
+  assert.ok(F.NOT_A_PLACE.test("Ambush Battlemap") && F.NOT_A_PLACE.test("Ambush battle map") && !F.NOT_A_PLACE.test("Kranzfels Keep"));
+});
