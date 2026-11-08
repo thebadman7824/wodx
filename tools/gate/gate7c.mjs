@@ -104,7 +104,7 @@ async function town(R) {
     sc = await Scene.create({name: TOWN, width: 24 * G, height: 16 * G, padding: 0, grid: {type: CONST.GRID_TYPES.SQUARE, size: G, distance: 5, units: "ft"},
       tokenVision: false, fog: {exploration: false}, flags: {[MOD]: {gateTown: true}}});
     // A wall from the top down to row 13, west of the watch-house and the market: the way round is the gap at the bottom
-    await sc.createEmbeddedDocuments("Wall", [{c: [12 * G, 0, 12 * G, 13 * G], move: CONST.WALL_MOVEMENT_TYPES.NORMAL, sight: CONST.WALL_SENSE_TYPES.NORMAL}]);
+    await sc.createEmbeddedDocuments("Wall", [{c: [12 * G, 0, 12 * G, 13 * G], move: CONST.WALL_MOVEMENT_TYPES.NORMAL, sight: (CONST.EDGE_SENSE_TYPES ?? CONST.WALL_SENSE_TYPES).NORMAL}]);
     await sc.createEmbeddedDocuments("Region", REGIONS.map(([name, [j, i, w, h], kind, color]) => ({name, color, shapes: [rect(j, i, w, h)],
       flags: kind ? {[MOD]: {place: {kind, owner: "", private: false}}} : {}})));
     R.notes.push("Built the Gate 7c town");

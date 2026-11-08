@@ -10,6 +10,6 @@
 - [x] Obfuscated and Sneaking registered as WoDX conditions (token statuses)
 - [x] Runtime tests on a stand-in for Foundry (phase7c-runtime.test.mjs); gender-neutral text; no NPC dialogue
 - [x] Gate script (tools/gate/gate7c.mjs), run in wodx-template
-- [ ] UI fit at three sizes, on the PC
-- [ ] Deployed, Foundry restarted for the new region behaviour
-- [ ] Gate 7c in Foundry
+- [x] UI fit at three sizes, on the PC
+- [x] Deployed (0.2.1), Foundry restarted for the new region behaviour
+- [x] Gate 7c in Foundry: 23 of 23 in rothenstein-wodx
