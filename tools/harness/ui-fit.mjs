@@ -474,6 +474,13 @@ async function launchBrowser() {
   }
   throw last;
 }
+// The frame ApplicationV2 draws (Foundry 13 and 14): the window icon, the title, the controls menu and the close button.
+// Windows are minimized by double-clicking the title, so the title has to stay on show beside the buttons.
+const HEADER = title => `<i class="window-icon fa-fw fa-solid fa-moon" inert></i><h1 class="window-title">${title}</h1>
+  <button type="button" class="header-control icon fa-solid fa-ellipsis-vertical" data-action="toggleControls" data-tooltip="Toggle Controls" aria-label="Toggle Controls"></button>
+  <button type="button" class="header-control icon fa-solid fa-xmark" data-action="close" data-tooltip="Close Window" aria-label="Close Window"></button>`;
+const iconCss = extras.some(h => h.includes("fontawesome"));
+if ( !iconCss ) console.log("Note: Font Awesome was not found beside foundry2.css, so the header icon font is not checked");
 const browser = await launchBrowser();
 let failures = 0;
 if ( outDir ) mkdirSync(outDir, {recursive: true});
@@ -496,7 +503,7 @@ for ( const [vw, vh] of sizes ) {
     const html = `<!doctype html><html><head><meta charset="utf-8">${css.map(h => `<link rel="stylesheet" href="${h}">`).join("")}</head>
       <body ${bodyAttrs}>
       <${w.tag} id="app" class="${w.classes}" style="width:${w.width}px;${w.height === "auto" ? "" : `height:${w.height}px;`}left:20px;top:0">
-        <header class="window-header"><h1 class="window-title">${w.name}</h1></header>
+        <header class="window-header">${HEADER(w.name)}</header>
         <section class="window-content">${w.content}</section>
       </${w.tag}></body></html>`;
     const file = join(outDir ?? tmpdir(), `ui-fit-${vw}x${vh}-${w.name.replace(/[\s\/]+/g, "-")}.html`);
@@ -508,7 +515,8 @@ for ( const [vw, vh] of sizes ) {
       const h = el.offsetHeight;
       el.style.top = `${Math.max(0, (window.innerHeight - h) / 2)}px`;
     });
-    const result = await page.evaluate(() => {
+    await page.evaluate(() => document.fonts.ready);
+    const result = await page.evaluate(iconCss => {
       const app = document.getElementById("app");
       const problems = [];
       const ar = app.getBoundingClientRect();
@@ -558,8 +566,77 @@ for ( const [vw, vh] of sizes ) {
         const n = list.tagName === "TABLE" ? list.querySelectorAll(":scope > tbody > tr").length : list.querySelectorAll(":scope > li").length;
         if ( n > 5 && list.querySelector("input, select, button") && !covered(list) ) problems.push(`no search box for a ${list.tagName.toLowerCase()} of ${n} entries`);
       }
+      // The header: close and the controls menu must show, in the icon font, with enough contrast against the bar
+      // (3:1, the WCAG figure for icons). Checked with the window's own title, a long title, and minimized.
+      const parse = c => {
+        let m = c.match(/^rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)$/);
+        if ( m ) return [+m[1], +m[2], +m[3], m[4] === undefined ? 1 : +m[4]];
+        m = c.match(/^color\(srgb ([\d.e-]+) ([\d.e-]+) ([\d.e-]+)(?: \/ ([\d.]+))?\)$/);
+        if ( m ) return [m[1] * 255, m[2] * 255, m[3] * 255, m[4] === undefined ? 1 : +m[4]];
+        return null;
+      };
+      const over = (top, under) => [0, 1, 2].map(i => (top[i] * top[3]) + (under[i] * (1 - top[3]))).concat(1);
+      const lum = ([r, g, b]) => {
+        const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+        return (0.2126 * f(r)) + (0.7152 * f(g)) + (0.0722 * f(b));
+      };
+      const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+      // Every colour the bar can show behind an element: its own and its ancestors' fills, gradient stops included
+      const backdrops = el => {
+        const layers = [];
+        for ( let e = el; e; e = e.parentElement ) {
+          const s = getComputedStyle(e);
+          const stops = (s.backgroundImage.match(/(rgba?\([^)]*\)|color\(srgb[^)]*\))/g) ?? []).map(parse).filter(Boolean);
+          const fill = parse(s.backgroundColor);
+          if ( stops.length ) layers.push(stops);
+          else if ( fill && fill[3] > 0 ) layers.push([fill]);
+          if ( (stops.length && stops.every(c => c[3] >= 1)) || (fill && fill[3] >= 1 && !stops.length) ) break;
+        }
+        let out = [[255, 255, 255, 1]];
+        for ( const layer of layers.reverse() ) out = layer.flatMap(c => out.map(u => over(c, u)));
+        return out;
+      };
+      const header = app.querySelector(".window-header");
+      const checkHeader = when => {
+        const found = [];
+        const ctrls = [...(header?.querySelectorAll(".header-control") ?? [])];
+        if ( !ctrls.some(c => c.dataset.action === "close") ) found.push(`no close button${when}`);
+        for ( const c of ctrls ) {
+          const name = c.dataset.action === "close" ? "close" : "controls menu";
+          const r = c.getBoundingClientRect(), h = header.getBoundingClientRect();
+          if ( r.width < 8 || r.height < 8 ) { found.push(`the ${name} button is too small to see${when}`); continue; }
+          if ( r.left < h.left - 1 || r.right > h.right + 1 || r.top < h.top - 1 || r.bottom > h.bottom + 1 ) found.push(`the ${name} button sits outside the title bar${when}`);
+          if ( !reachable(c) ) found.push(`the ${name} button cannot be clicked${when}`);
+          const s = getComputedStyle(c), glyph = getComputedStyle(c, "::before");
+          if ( s.visibility === "hidden" || +s.opacity < 0.5 ) found.push(`the ${name} button is hidden${when}`);
+          if ( iconCss && (glyph.content === "none" || !/Font Awesome/i.test(glyph.fontFamily)) ) found.push(`the ${name} icon is drawn in ${glyph.fontFamily.split(",")[0]}, not the icon font, so it shows blank${when}`);
+          const ink = parse(s.color);
+          if ( ink ) {
+            const worst = Math.min(...backdrops(c).map(b => ratio(over(ink, b), b)));
+            if ( worst < 3 ) found.push(`the ${name} icon is hard to see against the bar (contrast ${worst.toFixed(2)}:1, needs 3:1)${when}`);
+          }
+        }
+        const t = header?.querySelector(".window-title");
+        if ( t && t.getBoundingClientRect().width < 24 ) found.push(`the title has no room left to double-click (to minimize)${when}`);
+        return found;
+      };
+      problems.push(...checkHeader(""));
+      const title = header?.querySelector(".window-title");
+      if ( title ) {
+        const was = title.textContent;
+        title.textContent = `${was}: ${"a very long name for this window ".repeat(4)}`;
+        problems.push(...checkHeader(" with a long title"));
+        title.textContent = was;
+        // Foundry's minimized window: the frame shrinks to its title bar
+        const style = app.getAttribute("style");
+        app.classList.add("minimized");
+        app.style.width = "200px"; app.style.height = "auto";
+        problems.push(...checkHeader(" when minimized"));
+        app.classList.remove("minimized");
+        app.setAttribute("style", style);
+      }
       return {problems, controls: controls.length, height: Math.round(ar.height)};
-    });
+    }, iconCss);
     const label = `${vw}x${vh} ${w.name}`;
     if ( result.problems.length ) {
       failures++;

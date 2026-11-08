@@ -392,7 +392,18 @@ const LABELS = {
   Wraith: "WoDX: Wraith 20th", Demon: "WoDX: Demon: The Fallen", Mummy: "WoDX: Mummy: The Resurrection"
 };
 
+// The line skins (B91 to B94): WoDX's own fonts, papers and rules on every sheet, or the system's look as it ships
+const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
+
 Hooks.once("init", async () => {
+  game.settings.register(MOD, "sheetLook", {
+    name: "Sheet look",
+    hint: "WoDX gives each line's sheets their own fonts, paper and section rules, in light and dark mode. The system's look brings back the fonts and banners that come with the World of Darkness system.",
+    scope: "world", config: true, type: String, default: "wodx",
+    choices: { wodx: "WoDX line skins", system: "The system's own look" },
+    onChange: skinOn
+  });
+  skinOn(game.settings.get(MOD, "sheetLook"));
   const reg = foundry.documents.collections.Actors;
   for (const [type, cls] of [["Changeling", WodxChangelingSheet], ["Mage", WodxMageSheet], ["Hunter", WodxHunterSheet], ["Werewolf", WodxWerewolfSheet], ["Vampire", WodxVampireSheet], ["Mortal", WodxMortalSheet],
     ["Wraith", WodxWraithSheet], ["Demon", WodxDemonSheet], ["Mummy", WodxMummySheet]])
@@ -402,5 +413,5 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.4.0", rules: SR, sheetFor, viewFor };
+  game.modules.get(MOD).api = { version: "0.5.0", rules: SR, sheetFor, viewFor };
 });
