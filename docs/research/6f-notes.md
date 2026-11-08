@@ -357,6 +357,30 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   current ×5, first dot 8), Witchwalk (1–5 Flaw: a superstition that binds the mage; at 5, salt wards for a day and
   does an unsoakable lethal level). Disallowed DAV Merits and Flaws are listed on p. 91 (the vampire-only ones).
 
+## Changeling 20th, cantrips (Ch. 4, pdf pp. 194–197; printed 193–196)
+
+- **A cantrip** = an Art at a chosen level + at least one Realm (the target or scope) + usually a bunk. Without the
+  Realm the Art cannot reach the target, except by Unleashing (p. 194).
+- **Kinds and cost:** each Art level says chimerical, Wyrd or either. Chimerical (unseen by the unenchanted) costs no
+  Glamour; Wyrd (real in both worlds) costs 1 Glamour. Each Realm or Realm level "cheated" (not known) costs +1
+  Glamour. Paid before rolling (p. 194).
+- **Pool:** Art + the lowest primary Realm used (Actor, Fae, Nature, Prop). Scene and Time change scope, not the pool.
+  Replace dice equal to the Nightmare rating with Nightmare dice (p. 274) (p. 194).
+- **Difficulty 8,** modified: +1 target's Banality over 7; +1 location's Banality over 7; +1 Scene; +1 Time; +1 on a
+  changeling of higher Title without consent; −1 for volunteering at least 3 Nightmare dice; −1 in a freehold; −1 on
+  an enchanted mortal or kinain; −1 to −5 for a bunk; −1 with the kith's affinity Realm (p. 194 table).
+- **Bunks (pp. 194–196):** the Storyteller rates the bunk −1 to −5 by risk, time, how much it brings the Dreaming in,
+  and how the table reacts (a laugh or gasp is worth another −1 or −2). A bunk may need its own roll; failing it does
+  not always lose the bonus (it depends whether the bunk's point was achieved). A bunk usually takes a turn first, or
+  the player splits the pool to bunk and cast in one turn. The book's own scale of examples runs from −1 (a loud
+  burp, sunset) to −5 (skydiving without a parachute); WoDX offers the five steps with short era-fitting examples of
+  its own.
+- **Steps (p. 196):** Art level, Realms, Glamour, pool (with Nightmare dice), bunk, difficulty, roll and read the Art.
+- **Unleashing (pp. 196–197):** state a short intent; spend 2 Glamour and +1 Nightmare; no Realm needed; roll
+  Glamour + Nightmare at difficulty 7 (an exception to the rule against adding Traits to Tempers). The successes are
+  compared with the Art's rating (to read on, p. 197). A botch: an Imbalance (the Nightmare pool is not reduced), one
+  turn of havoc, then a Banality trigger, and no Glamour or Arts for the rest of the scene.
+
 ## The inner voice for mages (for the 6d layer)
 
 - **Mage 20th (pp. 338–339):** the Avatar (or Genius) is an inner mentor that never goes away. Its Essence sets how it
