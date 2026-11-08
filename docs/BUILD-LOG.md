@@ -355,3 +355,6 @@
 - Dialogs opened for an actor wear the line's class (withActor and the menu set it while the action runs).
 - Quality: phase6e.test.mjs (11 tests, with a contrast check of every kit and accent); ui-fit.mjs now draws with the look on (WODX_KIT, WODX_SCALE, WODX_LOOK), Foundry's icons and type, and the dialogs' real widths; look.mjs renders the review sheets. Gate: tools/gate/gate6e.mjs (8 steps).
 - Deployed to rothenstein-wodx (backup in Backups\pre-6e-2026-11-08). Gate 6e: 8/8 after three fixes found in play: Foundry reads a module's stylesheet list only when its server starts, so Chronicle now adds wodx-theme.css itself when it is missing; "what changed" counts only from the start of the action; and the worldofdarkness system's chat styles paint every chat h3 with layered !important rules, so the card header's h3 carries its own style. Foundry still shows Chronicle 0.2.0 until its next restart.
+
+### Phase 6e closed, 2026-11-08
+Ben approved the look and closed the phase. Still open: the other lines get their colours and their menus grouped by intent (LINE_LOOK, MENU_PLAN), and Foundry shows Chronicle 0.3.0 after its next restart.

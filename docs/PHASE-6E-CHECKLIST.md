@@ -10,5 +10,5 @@
 - [x] UI fit (B17) at 1280x720, 1366x768 and 1920x1080 with the look on; screenshot review sheets (look.mjs)
 - [x] Harness: phase6e.test.mjs; all suites pass
 - [x] Gate 6e in Foundry (tools/gate/gate6e.mjs): 8/8, 2026-11-08
-- [ ] Ben reviews the Kindred, wraith and hunter menus and cards in play and approves the look
+- [x] Ben reviews the Kindred, wraith and hunter menus and cards and approves the look (2026-11-08)
 - [ ] Then: roll the look out to the other lines (LINE_LOOK) and group their menus by intent
