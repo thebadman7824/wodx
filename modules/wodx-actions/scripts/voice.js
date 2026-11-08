@@ -68,6 +68,17 @@ export function build(ctx) {
                 d = { era: "m20", avatar: n(av?.system?.value), paradox: P.resource(actor, "paradox").value };
             }
         }
+        else if (kind === "mists") {
+            const f = actor.getFlag?.(MOD, "daFae");
+            const da = f?.system === "da" || (f?.system !== "c20" && (f?.origin || eraNow() === "dark-ages"));
+            if (da) {
+                const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+                const spends = f?.weavingDay?.day === day ? n(f.weavingDay.n) : 0;
+                const wp = n(actor.system?.advantages?.willpower?.permanent);
+                d = { era: "da", mists: n(f?.mists?.perm), weaving: n(f?.weaving?.perm), willpower: wp, overSpend: spends > n(f?.mists?.perm),
+                    lockedRisk: n(f?.weavingStreak) > wp && wp > 0, hiddenDays: f?.hiddenSince != null ? Math.floor(((game.time?.worldTime ?? 0) - n(f.hiddenSince)) / 86400) : null };
+            } else d = { era: "c20", banality: P.resource(actor, "banality").value, glamour: P.resource(actor, "glamour").value };
+        }
         else if (kind === "impulse") {
             const q = inquisitor(actor);
             if (q) d = { conviction: q.conviction, piety: q.piety };

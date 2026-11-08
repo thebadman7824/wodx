@@ -44,6 +44,7 @@ import * as VR from "./voice-rules.js";
 import * as VX from "./voice.js";
 import * as TR from "./theme-rules.js";
 import * as MXD from "./mage-da.js";
+import * as FXD from "./fae-da.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -1703,7 +1704,7 @@ let PMX = null;
 function pm() {
     return PMX ??= PM.build({
         post, rollPool, rollBlock, resultLine, diceHtml, API, action, updateActor, willpower, attr, findAbility, setting,
-        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a)
+        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a)
     });
 }
 
@@ -1711,6 +1712,14 @@ let MXE = null;
 /** Dark Ages mages (3.7.0, Phase 6f). */
 function mx() {
     return MXE ??= MXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, spendWillpower, notify: m => ui.notifications.warn(m) });
+}
+
+let FXE = null;
+/** Dark Ages fae (3.8.0, Phase 6g). */
+function fx() {
+    return FXE ??= FXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, findAbility, spendWillpower, notify: m => ui.notifications.warn(m),
+        traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
+            ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
 }
 
 let GXE = null;
@@ -1933,7 +1942,11 @@ function bindCard(msg, el) {
         if (b.hasAttribute("data-gm") && !game.user.isGM) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); mx().onButton(msg, b.dataset.mx).catch(e => console.error("WoDX |", e)); });
     });
-    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    el.querySelectorAll?.("button.vta-btn[data-fx]").forEach(b => {
+        if (b.hasAttribute("data-gm") && !game.user.isGM) { b.remove(); return; }
+        b.addEventListener("click", ev => { ev.preventDefault(); fx().onButton(msg, b.dataset.fx).catch(e => console.error("WoDX |", e)); });
+    });
+    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx]):not([data-mx]):not([data-fx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -1962,13 +1975,19 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.7.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.8.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
-    uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
+    uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : pm().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : pm().cast(a); },
     // Dark Ages mages (3.7.0)
     daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
     daMageInfo: a => mx().info(resolveActor(a)), daFade: () => mx().fadeAll(), daBacklashButton: (msg, what) => mx().onButton(msg, what),
+    // Dark Ages fae (3.8.0)
+    daFae: withActor(a => fx().sheet(a)), daCantrip: withActor(a => fx().cast(a)), daUnleash: withActor(a => fx().unleash(a)),
+    daCounter: withActor(a => fx().counter(a)), daEcho: withActor(a => fx().echo(a)), daMists: withActor(a => fx().mists(a)),
+    daMien: withActor(a => fx().mien(a)), daOath: withActor(a => fx().keepOath(a)), daRest: withActor(a => fx().rest(a)),
+    daColdIron: withActor(a => fx().coldIron(a)), daFaeInfo: a => fx().info(resolveActor(a)), daFaeDaily: () => fx().daily(),
+    daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,
     shift: withActor(a => GX.isShifter(a) ? gx().shift(a) : pm().shift(a)), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()),
     // Werewolf and Fera (Phase 6b)
     shiftForm: withActor(a => gx().shift(a)), rageRoll: withActor((a, o) => gx().rageRoll(a, o)), spendRage: withActor(a => gx().spendRage(a)),
@@ -2098,7 +2117,7 @@ function kindredHooks() {
     Hooks.on("updateWorldTime", () => {
         if (fadeBusy || !game.user.isGM || L.chronicle()?.isSkipping?.()) return;
         fadeBusy = true;
-        mx().fadeAll().catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
+        mx().fadeAll().then(() => fx().daily()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
     });
     const sunRound = new Map();
     Hooks.on("updateCombat", (combat, changed) => {

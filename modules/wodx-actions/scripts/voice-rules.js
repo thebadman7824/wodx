@@ -12,7 +12,8 @@ export const KINDS = {
     shadow: { label: "The Shadow", lines: ["wraith"], book: "Wraith 20th pp. 224–245" },
     rage: { label: "Rage", lines: ["lupine"], book: "Dark Ages: Werewolf / W20 frenzy" },
     impulse: { label: "The Impulse", lines: ["hunter"], book: "Dark Ages: Inquisitor p. 162; Hunter: The Reckoning p. 131" },
-    gift: { label: "The Gift (the Avatar)", lines: ["mage"], book: "Dark Ages: Mage pp. 87, 139–140 (Twilight, the Fount's whispers); Mage 20th pp. 338–339 (the Avatar, Seekings)" }
+    gift: { label: "The Gift (the Avatar)", lines: ["mage"], book: "Dark Ages: Mage pp. 87, 139–140 (Twilight, the Fount's whispers); Mage 20th pp. 338–339 (the Avatar, Seekings)" },
+    mists: { label: "The Mists and the Weave", lines: ["fae"], book: "Dark Ages: Fae pp. 101–104 (imbalance, Lost and Locked); Changeling 20th (Banality, Bedlam)" }
 };
 /** The voice a profile carries (B54); null when the line has none yet. */
 export function kindFor(profile) {
@@ -70,6 +71,19 @@ export function pressure(kind, d = {}) {
             const i = Math.max(x >= 10 ? 3 : x >= 5 ? 2 : x >= 3 ? 1 : 0, a >= 4 ? 1 : 0);
             return { value: x, max: 20, level: lvl(i), text: `Avatar ${a}; Paradox ${x}` };
         }
+        case "mists": {
+            // Dark Ages: the pull toward Lost or Locked (imbalance, days hidden by the Mists, Weaving overspent).
+            // Later eras: Banality's weight against Glamour (Changeling 20th).
+            if (d.era === "da") {
+                const m = n(d.mists), w = n(d.weaving), gap = Math.abs(m - w), hid = d.hiddenDays == null ? -1 : n(d.hiddenDays), wp = n(d.willpower);
+                const i = (hid > wp && wp > 0) || d.lockedRisk ? 3 : gap >= 3 ? 2 : (gap === 2 || (hid >= 0 && hid >= wp - 1) || d.overSpend) ? 1 : 0;
+                const toward = m > w ? "Lost" : w > m ? "Locked" : null;
+                return { value: gap, max: 10, level: lvl(i), text: `Mists ${m}, Weaving ${w}${toward && gap >= 2 ? `: toward ${toward}` : ""}${hid >= 0 ? `; hidden ${hid} day${hid === 1 ? "" : "s"}` : ""}` };
+            }
+            const b = n(d.banality), g = n(d.glamour);
+            const i = b >= 9 ? 3 : b >= 7 ? 2 : (b >= 5 || g === 0) ? 1 : 0;
+            return { value: b, max: 10, level: lvl(i), text: `Banality ${b}; Glamour ${g}` };
+        }
         default: return { value: 0, max: 10, level: "calm", text: "" };
     }
 }
@@ -95,6 +109,12 @@ export const PROPOSALS = {
         { id: "twilight", label: "Twilight colours what the mage sees (the player plays it; Dark Ages)", api: null, roller: "owner" },
         { id: "urge", label: "An urge to cast again, or to break abstinence", api: null, roller: "owner" },
         { id: "seeking", label: "A Seeking: the Avatar's trial (from the Victorian era on)", api: null, roller: "owner" }
+    ],
+    mists: [
+        { id: "lost", label: "The Mists pull: to Unleash, to hide, to withdraw from the world (Dark Ages)", api: "daUnleash", roller: "owner" },
+        { id: "locked", label: "The Weave tightens: routine, the same cantrip again, a refusal of chaos (Dark Ages)", api: null, roller: "owner" },
+        { id: "echo", label: "An Echo bites: the Storyteller calls for its roll", api: "daEcho", roller: "owner" },
+        { id: "banality", label: "Banality's weight: the world seems drab and certain (Changeling 20th)", api: null, roller: "owner" }
     ],
     impulse: [
         { id: "impulse", label: "The Impulse (an inquisitor while Callous)", api: "hunterVirtue", roller: "owner" },

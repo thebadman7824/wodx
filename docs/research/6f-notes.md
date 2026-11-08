@@ -12,7 +12,7 @@ dagrimoire, m20, c20), joined per book with page markers (`join.py`), headings f
 | Dark Ages: Mage (2002, scan, OCR) | 242 pdf | Ch. 3 Characters (pdf 77–95: creation, Awareness, Cosmology, Enigmas, Backgrounds Fount, Sanctum, Talisman, Merits and Flaws); Ch. 4 Magic (pdf 97–143: casting, foci, belief, Foundation and Pillars, duration and distance, resisting, cancelling, rotes; each fellowship's Foundation, Pillars and rotes; hedge magic; Backlash, Branding, Scourging) |
 | Dark Ages: Mage Grimoire | 161 pdf | to map: more rotes per fellowship, wonders |
 | Mage 20th | 698 pdf | Ch. 6 traits (Avatar essences, Arete, Quintessence and Paradox, pdf 267–340); Ch. 8 rules (384–397); Ch. 10 The Book of Magick (498–618) |
-| Dark Ages: Fae | 226 pdf | the text layer is scrambled (216 of 217 pages): full OCR started 2026-11-08 into `text\batch2\dafae-ocr` |
+| Dark Ages: Fae | 226 pdf | read by OCR (`dafae-ocr.txt`; pdf page = printed page + 1). Ch. 2 Origins (pdf 58–65: Birthright and Frailty); Ch. 3 Characters (pdf 79–116: creation, Mists, Weaving, imbalance, Lost and Locked, Features, Oaths, Echoes, experience); Ch. 4 Dominions (pdf 120–163: casting, Unleashing, countering, the four Dominions and their cantrips); Ch. 5 (pdf 181–183: fae and the other lines; fae blood) |
 | Changeling 20th | 503 pdf | the book's own bookmarks (`c20.toc.txt`), by PDF page: Ch. 2 Kithain pp. 83–138 (Seemings 84–87, kith 88–114, kith creation 115–118, Houses 120–137); Ch. 3 creation and Traits pp. 139–190 (Legacies 157–161, Abilities 163–169, Backgrounds 169–172, Glamour 173–174, Banality 174–175, Merits and Flaws 177–190); Ch. 4 Arts and Realms pp. 193–240 (cantrips 194, bunks 195, Unleashing 197, eighteen Arts 198–232, Realms 233–236); Ch. 6 Systems pp. 251–296 (Tempers 258–264, the Wyrd 260, Epiphany 261, Oaths 265–267, Banality and the Mists 268–274, Nightmare 275, combat 276–290, Cold Iron 291, Bedlam 295) |
 
 ## Dark Ages: Mage, casting (Ch. 4, pp. 97–105)
@@ -356,6 +356,180 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   botch), Living Fount (2, needs Fount: once a story, Fount at 6 for a hint), Pillar Natural (5: that Pillar costs
   current ×5, first dot 8), Witchwalk (1–5 Flaw: a superstition that binds the mage; at 5, salt wards for a day and
   does an unsoakable lethal level). Disallowed DAV Merits and Flaws are listed on p. 91 (the vampire-only ones).
+
+## Dark Ages: Fae (pdf pages; read by OCR)
+
+### Characters (pp. 87–91)
+
+- **Creation:** Origin, Court, Nature and Demeanor. Attributes 7/5/3; Abilities 13/9/5 (none above 3 before bonus
+  points); 5 Backgrounds; Willpower 4; Mists and Weaving by Origin; Dominion dots by Origin, none above 3 at the start;
+  one Echo; Lesser Features equal to Mists (inanimae also one Greater Feature); 15 bonus points (Attribute 5,
+  Ability 2, specialty 1 (up to 3 per Ability), Background 1, Dominion 7, Willpower 2, Mists or Weaving 4) (pp. 87–88).
+- **Origins (p. 87, Birthright and Frailty pp. 60–64):**
+  - Changeling: Mists 2, Weaving 4, Dominions 2. Birthright: Echoes count one level lower (the Echo roll loses a
+    success). Frailty: one fewer Dominion dot, and cannot give a sprite faerie form. Can Unleash only in fae mien.
+  - Inanimae: Mists 3, Weaving 3, Dominions 3. Birthright: near the element, rebuild the body into mien or human
+    shape (Weaving, difficulty 6; a failure locks the form for eight hours). Frailty: one more Echo at the start, and
+    a check for a new Echo when the element shows itself to mortals. No blood; refreshed by the element.
+  - Firstborn: Mists 4, Weaving 2, Dominions 3. Birthright: three Unleashing dice instead of five. Frailty: Echoes
+    count one level higher (the Echo roll gains a success). Always in mien; hides by the Day Dominion or the Mists.
+- **Courts (p. 88):** Spring (favoured Dawn), Summer (Day), Autumn (Dusk), Winter (Night), Solstice (none; no Status).
+- **New Abilities (pp. 91–93):** Kenning (Talent, replaces Empathy on the sheet; always active, roll any time;
+  stands in for Empathy among fae), Enigmas (Knowledge), Gramarye (Knowledge with a field: cantrips, Dominions, flora,
+  fauna, magical beasts, oaths, powders and potions, treasures; needed to brew, forge treasures, make cantrips and
+  forge oaths: Iron 1, Stone 4, Gold 5). Theology and Academics are off the sheet but allowed.
+- **Cold iron (p. 89):** pure iron does aggravated damage to fae in every form (soakable) and each wound from it costs a
+  temporary Mists point. Alloys do nothing special.
+- **In mien (sidebar p. 105):** all fae soak lethal damage in their mien; changelings can Unleash only in mien.
+  Changelings take mien with Mists (difficulty 6) and return with Weaving (6); inanimae switch with Weaving (6); a
+  botch locks the form for Weaving hours (p. 106).
+
+### Backgrounds (pp. 93–97)
+
+- Allowed from DAV: Allies, Contacts, Influence, Mentor, Resources, Status (Solstice may not take Status).
+- **Holdings:** a faerie realm; dots split among Size, Defense (as Domain), Magical Effects and Surroundings, with a
+  favoured Dominion (more cost extra). Each Magical Effect: −1 difficulty for its favoured Dominion inside; 1 Mists or
+  Weaving point an hour of rest; a household sprite (level 2, no fighting, no Echo shield); servile cantrips last
+  indefinitely; −2 to Kenning and to Gramarye with beasts; −1 Unleashing die inside; hidden unless a condition is met.
+  Size cottage to large castle; Surroundings a few acres to 80 acres.
+- **Library** (2 points a dot): Intelligence + Library (difficulty 8) for lost lore; success makes raising a Dominion
+  1 experience cheaper, a botch 1 dearer (until a new understanding).
+- **Oaths:** each oath is its own rating (Iron 1–3, Stone 3–5, Gold 4–5); may be bought more than once, pooled, or be
+  an Anchor. Shields against Echoes and restores Weaving.
+- **Retinue:** mortal servants (1, 2, 4, 8, 16 average; halve for competent, quarter for exceptional). Betrayal needs
+  Willpower at 10; harming the master does aggravated damage equal to the master's Mists. Leaving the realm: Willpower
+  at master's Mists + 3 each month (for as long as they served) or +3 to Wits and Perception rolls for the month.
+- **Sprites:** 2, 4, 6, 8, 10 Charms (or more, weaker sprites). Add dice to Oaths rolls against Echoes (each dot once
+  a session, the sprite need not be present); lend 1 Mists point a dot (present).
+- **Treasures:** faerie treasures and oathcrafted treasures (the stronger kind); levels 1–5 (made with Gramarye).
+
+### Mists and Weaving (pp. 101–105)
+
+- Both rated 1–10, permanent and temporary like Willpower; rolls use the permanent rating.
+- **Mists uses:** Bestow Kenning (1 point a human for a day, 2 for a supernatural being; an unwilling target resists
+  Willpower 6 against Mists 6; 1 point for a Prodigal on the Road of Humanity and for a homid Garou, pp. 182–183);
+  cloak a cantrip (1 point; onlookers need Perception + Kenning at 8; Unleashings cannot be cloaked); counter
+  Dominions (p. 130); enhance the mien (2 points: a Lesser Feature works as a Greater one for the scene, with Echo
+  risk); hide from mortals (Mists at 7; the mien is hidden until the fae uses a Dominion uncloaked or chooses to end
+  it; hidden more days than Willpower, the fae is Lost).
+- **Regaining Mists:** 1 a day in a faerie realm (an hour with Holdings); 1 per two successes on any Unleashing; from
+  sprites.
+- **Weaving uses:** spend 1 a die to remove Unleashing dice (5 removes the danger entirely; the visible signs stay);
+  counter a cantrip (Dominion + Weaving); 2 points per Echo success removed; forge oaths (Weaving equal to the oath's
+  rating, from each fae in it); after an Unleashing botch, 2 points per step lower on the scale (never below one).
+  **Suppressing the Mists:** spending Weaving more times a day than Mists gives +2 to Mists rolls for each such day;
+  more consecutive days than Willpower risks being Locked.
+- **Regaining Weaving:** 1 a day in a faerie realm; Holdings; each time the fae fulfils an oath, roll the oath's rating
+  (difficulty 6), 1 point a success.
+- **Imbalance (p. 103):** Mists or Weaving 3 or more above the other. Mists-imbalanced: +1 to cantrips;
+  Weaving-imbalanced: +1 to Unleashing. Avoidable by taking an extra Echo (no Features) each time the higher trait rises.
+- **Lost and Locked (pp. 103–105):** Lost = withdrawn into a Mists pocket realm (finding one deliberately needs Kenning
+  5 and weeks); Locked = the fae nature dies and the fae becomes human (keeps known cantrips, learns no more). Warning
+  signs (more than two means soon): imbalance; Echoes hurt more (Lost) or less (Locked) and no new oaths can be forged;
+  Mists spoils cantrips or Weaving spoils Unleashings; an overnight change of personality. Pushes: a botch with
+  horrifying effects, Origin (changelings tend to Locked, firstborn to Lost), where the fae lives, desire, curses,
+  overusing cantrips (about five castings of one in a scene). Cures: a month of strict routine and no Unleashing, then
+  Weaving at 8 (Lost); a month of no routine and many Unleashings, then Mists at 8 (Locked).
+
+### Features (pp. 105–108)
+
+- Lesser Features are cosmetic (five or more risk Echoes when mortals see the mien); Greater Features are inhuman and
+  give a bonus (one is enough to risk Echoes). Courtly fae shape their mien by Court; Solstice fae by their highest
+  Dominion. Examples of Greater Features: Armored Hide (3 dice cancel damage levels before soak), Beastly Visage,
+  Elemental Form (by element), Eyes of the Mists, Faerie Size (giant: 3 Bruised levels and +1 Strength, −1 to be hit;
+  tiny: no Hurt level, Strength at most 3, +1 Dexterity, +2 to be hit), Monster's Mien (teeth Strength + 2 aggravated;
+  claws Strength + 1 aggravated; horns Strength + 2 lethal and 3 soak dice on the head), Season's Skin, Size of My
+  Choice (+2 Dodge dice).
+- Each extra Echo taken buys two Lesser or one Greater Feature (p. 91). Raising Mists gives a Lesser Feature (or a
+  Greater one for 3 more experience); a Greater Feature alone costs 5 experience (p. 116).
+
+### Oaths (pp. 108–111)
+
+- An oath has five parts: the fae's deal, the human's duty, how the fae breaks it, how the human breaks it, and the
+  punishments; the Storyteller rates it (the book's examples run from Iron 1 to Gold 5). Forging needs Gramarye for the
+  kind and Weaving equal to the rating from each fae in it; no roll. Iron Oaths last a lifetime, one human and one fae
+  (or up to 4 humans and 5 fae), and fall inactive (not broken) while one side cannot keep it. Christian baptism of
+  either party washes away Iron and Stone Oaths; Gold Oaths survive. Oaths among fae do not shield from Echoes.
+- **Against an Echo (p. 111):** roll the oath's rating (difficulty 7), one roll per oath, each success removing a
+  success from the Echo roll; the oath must be actively kept by both sides.
+
+### Echoes (pp. 111–115)
+
+- Every fae has at least one Echo: a trigger (a cross, bells, cold iron, a true name, salt over the shoulder…).
+- **The roll:** the mortal's Willpower (difficulty 7), or 5 dice when no one wields it (bells, consecrated ground).
+  Firstborn add a success, changelings take one away, then oaths (and sprites) cancel successes. Win, and the fae is
+  free of that Echo for the scene. Otherwise the net successes give the effect level, 1 to 5 (a true name is an
+  automatic 5, oaths still help). Weaving cancels one success per 2 points (p. 102).
+- **Effect levels:** 1 discomfort, keep away, maybe −1 or −2 dice; 2 difficulty penalties to powers; 3 the mien partly
+  shows (Mists can cover it), up to 3 bashing; 4 no Dominions on that mortal and no Unleashing while it lasts, up to 4
+  lethal; 5 banished from the area for 24 hours and terrible harm (firstborn and changelings: 3 aggravated, then 1
+  lethal per two turns in its presence; a changeling gains two permanent Echoes; inanimae fall apart into their
+  element until enough of it gathers). The book lists 25 sample effects by level (pp. 112–114); WoDX uses the level
+  rules and offers a short pick list in its own words.
+- **New Echoes (p. 115):** when mortals see a fae in mien with five or more Lesser or any Greater Feature: 10 dice at
+  difficulty 7, −1 per five Lesser and per Greater Feature, −1 for inanimae, −1 per three mortals, −1 for a visible
+  cantrip that scene, −2 for an Unleashing (−3 if it went awry). Any success is safe; a failure gives one Echo, a botch
+  or no dice two. Kenning-holders, mortals under the Mists and supernatural beings do not count; Messianic, Batini and
+  Hermetic mages do (p. 115).
+- Inquisitors may risk and spend Conviction on Echo rolls (p. 183).
+
+### Experience (p. 116)
+
+- Attribute current ×4; Ability current ×2; new Ability 3; Mists current ×3; Weaving current ×3; favoured Dominion
+  current ×5; other Dominion current ×6; new Dominion 10; Greater Feature 5; Willpower current. Raising a Dominion
+  needs a teacher (p. 115); new cantrips are learned from a fae or book, or worked out by Unleashing and spending
+  Weaving (p. 130).
+
+### Dominions and cantrips (pp. 120–131)
+
+- Four Dominions, each 1–5: Day (light, fire, faith, minds, leadership, mortal guise), Dawn (senses, body, time,
+  healing, shielding minds), Dusk (spirits, travel, gateways, reading minds, air, the past), Night (darkness, fear,
+  cold, misery; the most harmful). Elements: Day fire, Night water, Dawn earth, Dusk air (p. 124).
+- **Cantrips known:** one per Dominion per permanent Weaving dot, each at most the Dominion's rating; unchosen slots
+  can be kept; a higher cantrip may replace a lower one (the old one then needs an Unleashing) (pp. 121, 130).
+- **Casting (p. 121):** Dominion + the Attribute or Ability the cantrip names, difficulty 6 unless it says otherwise.
+  −1 for the Court's favoured Dominion; −1 in its hour (Day noon, Night midnight, Dawn sunrise, Dusk sunset, each with
+  the half hour either side); −1 on its solstice or equinox (summer, winter, vernal, autumnal). Cumulative; never below
+  4. No limit on castings, but overuse pushes toward Locked.
+- **Unleashing (pp. 121–123):** Mists + Dominion against an Unleashing pool of 5 dice (3 for firstborn), both at the
+  base difficulty (Court, hour and season lower only the first). Weaving removes Unleashing dice one for one. Results:
+  base ≥ Unleashing successes (and at least one): the effect happens under control; Unleashing more: it happens out
+  of control; base none: nothing but the visible signs; a botch on either: the Storyteller's havoc (worse with Day and
+  Night). Every Unleashing shows its Dominion's visible signs. Regains 1 Mists per two successes. A fae may Unleash to
+  get a cantrip's effect it knows, but bigger and undirected.
+- **Countering (pp. 130–131):** against a cantrip, either Dominion + Weaving at 7 (must know that Dominion and act
+  first; win by 3 and gain a Mists point; a Weaving point buys an automatic success) or Mists at 5 + the cantrip's
+  level (a Mists point buys an automatic success); the higher successes win. Against an Unleashing: Mists at 8, each
+  success removing one of the caster's base successes; cancelling them all makes it a botch.
+- **Level scope (Day, pp. 132–133, similar for each):** 1 the caster or one touched target, minor; 2 one or two others
+  within about five feet, bashing or lethal harm; 3 a small group within about ten feet, aggravated harm possible;
+  4 a large group within sight, Saining into the Court; 5 any area the fae has seen and touched.
+- **Common cantrips (p. 124):** Call Element (Dominion + Strength), Court Summons, and others shared by all four.
+
+### Fae and the other lines (pp. 181–183)
+
+- **Fae blood for Kindred:** no blood in inanimae. Changeling blood (firstborn doubles it) until spent: Summer +2 soak
+  dice against sunlight and fire but a false sunlight that does 1 lethal a turn to other vampires; Spring +1 Charisma
+  in good spirits, +1 to resist frenzy; Autumn surface thoughts as Auspex 4 but every mind within fifteen feet
+  intrudes; Winter +1 to a Physical Attribute but blood yields half; Solstice nothing.
+- **Disciplines:** a vampire's Dominate fails on a fae with equal or higher Day or Night (Day and Night also resist
+  Presence and other mind powers); Vicissitude and Grave's Decay work, though inanimae can revert to element.
+- **Garou:** fae ignore the Delirium; fetishes call on Gnosis and fae cannot use them.
+- **Mages:** fae blood is Tass (firstborn up to 5 Quintessence a week living, 10 from the body; changelings 2 a week,
+  5 from the body).
+
+### What WoDX needs from this (for the 6g build)
+
+- Pure rules: ORIGINS (Mists, Weaving, Dominions, Unleashing dice, Echo shift), COURTS (favoured Dominion), the
+  Dominion hours and seasons from the Chronicle clock, castPlan (pool, difficulty, floor 4), unleash (two pools and the
+  four outcomes, Weaving removal, Mists regained), counterPlan (the three ways), imbalance, echoPlan (pool, Origin
+  shift, oaths, Weaving) and echoLevel, newEchoPool, XP costs, fae blood effects.
+- Sheet: Origin, Court, Mists, Weaving, Dominions, cantrips (list per Dominion, cap by Weaving), Features (Lesser and
+  Greater), Echoes (trigger and note), Oaths (kind, rating, terms, active), and the mien (in mien or human).
+- Menu: Cast a cantrip, Unleash, Counter, Face an Echo, Mists (hide, cloak, Bestow Kenning, enhance the mien), Take or
+  drop the mien, Keep an oath (regain Weaving), rest in a faerie realm.
+- Combat hooks: cold iron aggravated and −1 Mists; lethal soak only in mien; Greater Feature weapons.
+- Inner voice: the Mists and the Weave (imbalance, days hidden, Weaving overuse), toward Lost or Locked.
 
 ## Changeling 20th, cantrips (Ch. 4, pdf pp. 194–197; printed 193–196)
 

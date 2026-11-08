@@ -300,6 +300,23 @@ game.world.id = worldId;
       tries.push(["Fellowship and Pillars", () => ga.daMage({actor: A(magus)})], ["Cast a spell (Dark Ages)", () => ga.daCast({actor: A(magus)})],
         ["Gather Quintessence", () => ga.daQuintessence({actor: A(magus)})]);
     }
+    // Phase 6g: a Dark Ages firstborn of the Winter Court with every Dominion, many cantrips, oaths and Echoes
+    {
+      const fae = mk("faefirstborn001", "Lord Taalandryn of the Frozen Lake, firstborn of Winter", "Changeling", {}, [
+        ["f1", {name: "Holdings", type: "Feature", system: {type: "wod.types.background", value: 3}}], ["f2", {name: "Sprites", type: "Feature", system: {type: "wod.types.background", value: 2}}]]);
+      const dom = ["night", "dusk", "day", "dawn"], names = ["Gloom", "Hush", "Mindveil", "Still of the Night", "Sword of Ice", "Speed of the Wind", "Evening Mantle", "Candor's Light"];
+      const flags = {daFae: {origin: "firstborn", court: "winter", mists: {perm: 5, temp: 4}, weaving: {perm: 3, temp: 2}, dominions: {night: 3, dusk: 2, day: 1, dawn: 1},
+        cantrips: names.map((nm, k) => ({dominion: dom[k % 4], level: 1, name: nm, trait: "manipulation"})),
+        lesser: ["eyes of black ice", "frost in the hair", "a voice like wind over snow"], greater: ["Monster's Mien: claws of ice"],
+        echoes: [{trigger: "the sound of church bells"}, {trigger: "cold iron horseshoes over a door"}],
+        oaths: [{kind: "iron", rating: 2, terms: "keeps the miller's family from the wolves through every winter", active: true}, {kind: "stone", rating: 3, terms: "the reeve's household and heirs", active: true}],
+        mien: true, hiddenSince: null}};
+      fae.getFlag = (sc, k) => sc === "wodx-actions" ? flags[k] : undefined;
+      tries.push(["Origin and Court", () => ga.daFae({actor: A(fae)})], ["Cast a cantrip (Dark Ages)", () => ga.daCantrip({actor: A(fae)})],
+        ["Unleash", () => ga.daUnleash({actor: A(fae)})], ["Counter", () => ga.daCounter({actor: A(fae)})], ["Face an Echo", () => ga.daEcho({actor: A(fae)})],
+        ["The Mists", () => ga.daMists({actor: A(fae)})], ["Keep an oath", () => ga.daOath({actor: A(fae)})], ["Rest in a faerie realm", () => ga.daRest({actor: A(fae)})],
+        ["Fae menu (Dark Ages)", () => ga.menu({actor: A(fae)})]);
+    }
     tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
       ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],

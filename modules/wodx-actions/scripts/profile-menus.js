@@ -98,6 +98,18 @@ export const MENUS = {
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
+    /** Dark Ages: Fae (3.8.0): Mists, Weaving and the Dominions instead of Glamour and the Arts. */
+    faeDA: {
+        sections: [
+            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
+            ["Dominions", [["api:daCantrip", "Cast a cantrip (Dominion + trait)", "fa-wand-magic-sparkles"], ["api:daUnleash", "Unleash a Dominion", "fa-bolt"],
+                ["api:daCounter", "Counter a cantrip or Unleashing", "fa-shield-alt"], ["api:daFae", "Origin and Court", "fa-scroll"]]],
+            ["The Mists", [["api:daMists", "The Mists (hide, cloak, Kenning)", "fa-smog"], ["api:daMien", "Take or drop the mien", "fa-mask"],
+                ["api:daOath", "Keep an oath (Weaving)", "fa-handshake"], ["api:daRest", "Rest in a faerie realm", "fa-tree"]]],
+            ["Danger", [["api:daEcho", "Face an Echo", "fa-bell"], ["api:daColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:faeDA", "Fae rules", "fa-book"]]],
+            ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
+        ]
+    },
     fae: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
@@ -242,6 +254,7 @@ export const RULES = {
     mortal: "<b>Mortals</b> soak bashing with Stamina; lethal and aggravated damage only with armor, and aggravated damage counts as lethal. (VtDA20 p. 345)",
     beast: "<b>Creatures</b> use the mortal soak rules. Natural weapons (claws, bite, horns) are listed on the sheet as <i>natural</i> weapons; set the Creature profile on any animal for the animal menu.",
     mage: "<b>Mages</b> cannot soak lethal or aggravated damage without armor, protection or magick (Mage 20 p. 334). Coincidental magick: difficulty = highest Sphere + 3. Vulgar without witnesses: +4. Vulgar with witnesses: +5. Use the <i>Cast</i> button; Paradox for vulgar effects is set by the Storyteller.",
+    faeDA: "<b>Dark Ages fae</b> soak lethal damage only in the fae mien. Cold iron does aggravated damage (soakable) and costs a Mists point per wound. A cantrip: Dominion + the trait it names, difficulty 6; −1 each for the Court's Dominion, its hour and its season; never below 4. Unleashing: Mists + Dominion against 5 Unleashing dice (3 for firstborn), Weaving removes them. Echoes: the mortal's Willpower (7) or 5 dice, less oath successes (Dark Ages: Fae pp. 88, 104, 110–122).",
     fae: "<b>Changelings</b> soak as mortals (bashing only). Cold iron inflicts aggravated damage and a changeling has no natural defense against it (a Balor has only a difficulty-10 chance). Chimerical damage affects only chimerical beings; Banality eats Glamour. Cantrip: Art + lowest primary Realm, difficulty 8 before modifiers (Changeling 20th).",
     wraith: "<b>Wraiths</b> are immune to Stun damage; a corporeal wraith suffers lethal damage only through Corpus. Corpus loss ends in a Harrowing or Oblivion. House soak in this module: Stamina against bashing and lethal, armor only against aggravated damage."
 };
@@ -438,13 +451,13 @@ export function build(ctx) {
     /** Launcher: sections for the actor's profile, the profile toggle and an Auto/override selector. */
     async function menuFor(actor, { recent = [], isGM = !!globalThis.game?.user?.isGM } = {}) {
         const kind = P.detectProfile(actor);
-        const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (MENUS[kind] ?? MENUS.mortal);
+        const def = (kind === "mage" && ctx.isDA?.(actor)) ? MENUS.mageDA : (kind === "fae" && ctx.isDAFae?.(actor)) ? MENUS.faeDA : (MENUS[kind] ?? MENUS.mortal);
         const auto = P.detectProfile(actor, { ignoreFlag: true });
         const overridden = kind !== auto;
         const kindBtn = `<button type="button" class="vta-kind" title="Change the actor type"><i class="fas fa-exchange-alt" aria-hidden="true"></i> Type</button>`;
         // 6e: the restyled lines group their buttons by intent, with search, recent uses, hints and keys
         if (TR.LINE_LOOK.includes(kind)) {
-            const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : kind, def.sections, { isGM });
+            const g = TR.groupMenu(def === MENUS.mageDA ? "mageDA" : def === MENUS.faeDA ? "faeDA" : kind, def.sections, { isGM });
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
             const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}</span></button>`;
             const rec = recent.map(s => all.find(x => x.spec === s)).filter(Boolean);

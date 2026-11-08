@@ -90,6 +90,13 @@ export const MENU_PLAN = {
         recover: ["api:healing", "uses:willpower"],
         scene: ["api:endScene", "api:voices", "rules:mage"]
     },
+    /** Dark Ages: Fae (3.8.0): the Dominions, the Mists and Weaving in place of Glamour. */
+    faeDA: {
+        act: ["action", "api:daCantrip", "api:daUnleash", "api:daCounter", "api:daMists", "api:daMien", "api:daFae", "api:seduction"],
+        resist: ["api:daEcho", "api:daColdIron", "api:hazard"],
+        recover: ["api:daOath", "api:daRest", "uses:willpower"],
+        scene: ["api:endScene", "api:voices", "rules:faeDA"]
+    },
     fae: {
         act: ["action", "cantrip", "uses:glamour", "api:seduction"],
         resist: ["uses:banality", "api:hazard"],
@@ -192,6 +199,17 @@ export const DESC = {
     "cast": "Cast an effect: the Arete roll, the difficulty from the highest Sphere",
     "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
     "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
+    "api:daCantrip": "Dark Ages: a cantrip, Dominion + the trait it names, with the Court's Dominion, its hour and its season",
+    "api:daUnleash": "Dark Ages: raw power of a Dominion, Mists + Dominion against the Unleashing dice; Weaving tames it",
+    "api:daCounter": "Dark Ages: absorb or scatter a cantrip, or unravel an Unleashing",
+    "api:daFae": "Dark Ages: Origin, Court, Mists, Weaving, Dominions, cantrips, Features, Echoes and Oaths",
+    "api:daMists": "Dark Ages: hide from mortals, cloak a cantrip, Bestow Kenning, enhance the mien",
+    "api:daMien": "Dark Ages: take the fae mien or a human shape, by the Origin's roll",
+    "api:daOath": "Dark Ages: keep an oath and regain Weaving",
+    "api:daRest": "Dark Ages: days in a faerie realm restore Mists and Weaving",
+    "api:daEcho": "Dark Ages: an Echo's roll against the fae's oaths; the level it reaches",
+    "api:daColdIron": "Dark Ages: cold iron's aggravated wound and the Mists it costs",
+    "rules:faeDA": "The Dark Ages fae rules at a glance, with page references",
     "api:daQuintessence": "Dark Ages: absorb from a cray, harvest Tass, the Fount's monthly rite, a day in the Umbra",
     "uses:quintessence": "Spend or regain Quintessence",
     "uses:paradox": "Paradox gained, or shed after a Backlash",
