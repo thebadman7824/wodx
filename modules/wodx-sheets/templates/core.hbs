@@ -1,0 +1,61 @@
+{{!-- WoDX Sheets: page one of the book's sheet, in place of the system's Core tab --}}
+<i class="macroBtn pointer createicon fa-solid fa-square-plus item-create" title="{{localize 'wod.labels.add.item'}}" aria-hidden="true" data-itemtype="All" data-origin="core"></i>
+<div class="wodx-book" data-sheet="{{wodx.id}}">
+	<div class="wodx-cols wodx-head" style="display:flex; gap:14px; margin:4px 0 8px; align-items:flex-start;">
+		{{#each wodx.header}}
+		<div class="wodx-col wodx-head-col" style="flex:1 1 0; display:flex; flex-direction:column; gap:3px; min-width:0;">
+			{{#each this}}
+			<div class="wodx-field" style="flex:0 0 auto; display:flex; align-items:center; gap:6px;"><label style="min-width:92px;">{{this.label}}</label>
+				{{#if (eq this.kind "select")}}<select class="wodx-pick" data-set="{{this.path}}">{{#each this.options}}<option value="{{this.id}}" {{#if this.sel}}selected{{/if}}>{{this.label}}</option>{{/each}}</select>
+				{{else if (eq this.kind "input")}}<input type="{{#if this.number}}number{{else}}text{{/if}}" class="wodx-text" data-set="{{this.path}}" {{#if this.number}}data-number="1"{{/if}} value="{{this.value}}"/>
+				{{else}}<span class="wodx-shown" title="{{this.hint}}">{{this.value}}</span>{{/if}}
+			</div>
+			{{/each}}
+		</div>
+		{{/each}}
+	</div>
+
+	<div class="sheet-area flex-columns">
+		{{> "systems/worldofdarkness/templates/actor/parts/attributes.html" @root}}
+	</div>
+
+	<div class="sheet-area flex-columns">
+		<div class="clearareaBox area-box">
+			<div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">{{localize 'wod.abilities.abilities'}}</span></div>
+			<div class="wodx-cols">
+				{{#each wodx.abilityCols}}
+				<div class="wodx-col">
+					<div class="headlineGroup splatFont centerText">{{this.title}}</div>
+					{{#each this.rows}}
+					<div class="clearareaBox wodx-row">
+						{{#if this.missing}}
+							<label class="pullLeft ability-headlineWidth headlineNormal wodx-missing" title="Not on the sheet yet: give it a dot to add it">{{this.label}}</label>
+							<div class="pullLeft wodx-dots" data-add-ability="{{this.label}}" data-group="{{this.group}}" data-flatkey="{{#unless this.secondary}}{{this.key}}{{/unless}}">{{#each this.dots}}<span class="wodx-dot" data-i="{{this.i}}"></span>{{/each}}</div>
+						{{else}}
+							<label class="pullLeft vrollable ability-headlineWidth headlineNormal" data-type="{{@root.config.sheettype.mortal}}" data-key="{{this.id}}" data-ability="true">{{this.label}}</label>
+							<div class="pullLeft resource-value" data-value="{{this.value}}" data-name="abilities.{{this.id}}.value" data-key="{{this.id}}" data-ability="{{#if this.secondary}}secondary{{else}}core{{/if}}">
+								{{#each this.dots}}<span class="resource-value-step" data-type="{{@root.config.sheettype.mortal}}" data-index="{{this.i}}" {{#if ../secondary}}data-ability="secondary" data-itemid="{{../id}}"{{else}}data-ability="core"{{/if}}></span>{{/each}}
+							</div>
+						{{/if}}
+					</div>
+					{{/each}}
+				</div>
+				{{/each}}
+			</div>
+			{{#if wodx.abilityNote}}<div class="wodx-quiet">{{wodx.abilityNote}}</div>{{/if}}
+		</div>
+	</div>
+
+	<div class="sheet-area flex-columns">
+		<div class="clearareaBox area-box">
+			<div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">Advantages</span></div>
+			<div class="wodx-cols">{{#each wodx.advantages}}<div class="wodx-col">{{#each this}}{{> wodxBlock}}{{/each}}</div>{{/each}}</div>
+		</div>
+	</div>
+
+	<div class="sheet-area flex-columns">
+		<div class="clearareaBox wodx-cols wodx-bottom">{{#each wodx.lower}}<div class="wodx-col {{#if @last}}healthBox{{/if}}">{{#each this}}{{> wodxBlock}}{{/each}}</div>{{/each}}</div>
+	</div>
+
+	{{#if wodx.page2InCore}}{{> wodxPage2}}{{/if}}
+</div>

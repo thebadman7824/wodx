@@ -2,7 +2,7 @@
   "id": "wodx-sheets",
   "title": "WoDX Sheets",
   "description": "World of Darkness Expanded: character sheets that follow the era and each line's own book (Dark Ages: Fae first). Built on the World of Darkness system's sheets, so their rolls, dots, health, combat and gear keep working. Private use only; not for distribution or sale.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "authors": [{ "name": "WoDX Project (private)" }],
   "compatibility": { "minimum": "14", "verified": "14.369" },
   "relationships": {

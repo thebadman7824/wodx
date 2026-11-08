@@ -1,6 +1,6 @@
 /* WoDX Sheets: the Dark Ages: Fae layout inside the system's sheet frame */
 .wodx-sheet.wodx-fae-da .wodx-head { display: flex; gap: 12px; margin: 4px 8px 6px; flex-wrap: wrap; }
-.wodx-sheet .wodx-field { display: flex; align-items: center; gap: 6px; flex: 1 1 180px; }
+.wodx-sheet .wodx-field { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
 .wodx-sheet .wodx-field label { font-variant: small-caps; font-weight: bold; min-width: 52px; }
 .wodx-sheet .wodx-field select, .wodx-sheet .wodx-field input { flex: 1; min-width: 0; }
 .wodx-sheet .wodx-cols { display: flex; gap: 10px; width: 100%; }
@@ -31,3 +31,14 @@
 .wodx-sheet .wodx-actions-row button { flex: 0 1 auto; width: auto; }
 .wodx-sheet .wodx-bottom { align-items: flex-start; }
 .wodx-sheet .wodx-cantrip { gap: 6px; }
+.wodx-sheet .wodx-head { display: flex; gap: 14px; margin: 4px 8px 6px; flex-wrap: wrap; }
+.wodx-sheet .wodx-head-col { flex: 1 1 240px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.wodx-sheet .wodx-field label { min-width: 92px; }
+.wodx-sheet .wodx-shown { flex: 1; min-width: 0; border-bottom: 1px solid rgba(127,127,127,.5); padding: 1px 3px; }
+.wodx-sheet .wodx-book .headlineGroup.wodx-roll { cursor: pointer; }
+.wodx-sheet .wodx-head.wodx-cols { margin: 4px 0 8px; }
+.wodx-sheet .wodx-head-col { flex: 1 1 0; }
+.wodx-sheet .wodx-health .clearareaBox.health { width: 100%; }
+.wodx-sheet .wodx-actions-row button { color: inherit; opacity: 1; border: 1px solid rgba(127,127,127,.7); background: rgba(127,127,127,.18); padding: 2px 8px; }
+.wodx-sheet .wodx-actions-row button:hover { background: rgba(127,127,127,.35); }
+.wodx-sheet .wodx-head-col .wodx-field { flex: 0 0 auto; }

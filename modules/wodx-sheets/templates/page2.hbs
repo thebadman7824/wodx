@@ -1,0 +1,13 @@
+{{!-- WoDX Sheets: the book's second page (or the rest of it) --}}
+{{#if wodx.page2.length}}
+<div class="sheet-area flex-columns">
+	<div class="clearareaBox area-box wodx-page2">
+		<div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">{{wodx.page2Title}}</span></div>
+		<div class="wodx-cols">{{#each wodx.page2}}<div class="wodx-col">{{#each this}}{{> wodxBlock}}{{/each}}</div>{{/each}}</div>
+	</div>
+</div>
+{{/if}}
+{{#if wodx.buttons.length}}
+<div class="wodx-actions-row">{{#each wodx.buttons}}<button type="button" class="wodx-roll" data-roll="{{this.api}}"><i class="fas {{this.icon}}"></i> {{this.label}}</button>{{/each}}</div>
+{{/if}}
+<div class="wodx-quiet">{{wodx.book}} ({{wodx.sheetPage}}), in WoDX's own design.</div>

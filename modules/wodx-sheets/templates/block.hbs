@@ -1,0 +1,40 @@
+{{#if (eq kind "dots")}}
+	<div class="headlineGroup splatFont centerText {{#if roll}}wodx-roll{{/if}}" {{#if roll}}data-roll="{{roll}}"{{/if}}>{{title}}</div>
+	{{#each rows}}
+	<div class="clearareaBox wodx-row">
+		<label class="pullLeft ability-headlineWidth headlineNormal {{#if this.roll}}wodx-roll{{/if}} {{#if this.strong}}wodx-favored{{/if}}" {{#if this.roll}}data-roll="{{this.roll}}"{{/if}} title="{{this.hint}}">{{this.label}}</label>
+		<div class="pullLeft wodx-dots" data-set="{{this.path}}" data-max="{{this.max}}">{{#each this.dots}}<span class="wodx-dot {{#if this.on}}on{{/if}}" data-i="{{this.i}}"></span>{{/each}}</div>
+	</div>
+	{{/each}}
+	{{#if note}}<div class="wodx-quiet">{{note}}</div>{{/if}}
+{{else if (eq kind "items")}}
+	<div class="headlineGroup splatFont centerText {{#if roll}}wodx-roll{{/if}}" {{#if roll}}data-roll="{{roll}}"{{/if}}>{{title}}</div>
+	{{#each rows}}
+	<div class="clearareaBox wodx-row"><label class="pullLeft ability-headlineWidth headlineNormal wodx-open" data-itemid="{{this.id}}" title="{{this.hint}}">{{this.name}}</label>{{#if this.dots}}<div class="pullLeft wodx-dots ro">{{#each this.dots}}<span class="wodx-dot {{#if this.on}}on{{/if}}"></span>{{/each}}</div>{{/if}}</div>
+	{{else}}<div class="wodx-quiet">{{empty}}</div>{{/each}}
+{{else if (eq kind "list")}}
+	<div class="headlineGroup splatFont centerText">{{title}}</div>
+	{{#each lines}}<div class="wodx-line {{#if this.dim}}wodx-inactive{{/if}}">{{#if this.bold}}<b>{{this.bold}}</b> {{/if}}{{this.text}}</div>{{else}}<div class="wodx-quiet">{{empty}}</div>{{/each}}
+	{{#if roll}}<a class="wodx-roll wodx-small" data-roll="{{roll}}">{{rollLabel}}</a>{{/if}}
+{{else if (eq kind "stat")}}
+	{{{getGetStatArea @root.actor stat key true true true}}}
+{{else if (eq kind "track")}}
+	<div class="wodx-track-title {{#if roll}}wodx-roll{{/if}}" {{#if roll}}data-roll="{{roll}}"{{/if}} title="{{hint}}">{{title}}</div>
+	<div class="wodx-track" data-perm="{{permPath}}" data-temp="{{tempPath}}">
+		{{#if permPath}}<div class="wodx-dots ten">{{#each cells}}<span class="wodx-dot {{#if this.dot}}on{{/if}}" data-i="{{this.i}}"></span>{{/each}}</div>{{/if}}
+		{{#if tempPath}}<div class="wodx-boxes ten">{{#each cells}}<span class="wodx-box {{#if this.box}}on{{/if}}" data-i="{{this.i}}"></span>{{/each}}</div>{{/if}}
+	</div>
+	{{#if note}}<div class="wodx-quiet">{{note}}</div>{{/if}}
+{{else if (eq kind "health")}}
+	<div class="wodx-health" style="width: 100%;">{{> "systems/worldofdarkness/templates/actor/parts/stats_health_old.html" @root}}</div>
+{{else if (eq kind "experience")}}
+	<div class="sheet-headline headlineGroup splatFont">
+		<div class="sheet-banner-small"><span class="sheet-banner-text">{{localize 'wod.experience.experience'}}</span></div>
+		<div class="total experienceValue">{{getTotalExperience @root.actor "total"}}</div>
+	</div>
+{{else if (eq kind "text")}}
+	<div class="headlineGroup splatFont centerText">{{title}}</div>
+	<div class="wodx-line centerText">{{value}}</div>
+	{{#if note}}<div class="wodx-quiet centerText">{{note}}</div>{{/if}}
+{{/if}}
+{{#if warn}}<div class="wodx-warn">{{warn}}</div>{{/if}}
