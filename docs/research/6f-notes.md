@@ -173,9 +173,83 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   Willpower point clears the tally by the previous permanent Willpower rating). Wrath of Apollo (Primus 5, Vires 4:
   three aggravated per success to everything within fifty feet per success; to read on, p. 125).
 
+- Wrath of Apollo, continued: centred anywhere within 100 yards per success; the caster is caught unless the centre
+  is over 200 yards away; leaves a rift in the area's flow of Quintessence that heals slowly (p. 125).
+
+### Spirit-Talkers (pp. 125–130)
+- **Foundation: Sensitivity** (the call of the Invisible World). 1: sees into the Umbra wherever the Gauntlet is at or
+  below the Sensitivity rating. 5: regains Quintessence in the Umbra each day: 3 or the Fount rating, whichever is
+  higher. Specialties: Awakening Spirits, Dreams, Shades of the Dead, Summoning, Travel (pp. 125–126). Foci: dance,
+  drums, chants, prayers to a god or totem.
+- **Pillars (Totems):** Chieftain (leadership), Trickster (deception), Warrior (fury), Wise One (ancient power)
+  (p. 126).
+- Numbers: Chieftain 2: +1 die per success to Leadership; −1 difficulty per success on planning or organizing;
+  impulses that must be obeyed (Willpower resists); 3: +1 Charisma per success; +1 per success to Intimidation; ±1 per
+  success to the difficulty of another's leadership rolls; 4: commands resisted by Willpower; +1 Manipulation per
+  success; 5: +1 per success to Etiquette with spirits (pp. 126–127). Trickster 2: +1 die per success to Legerdemain,
+  Stealth or Subterfuge; −1 die per success to another's Leadership, or −1 Wits per two successes; 3: −1 per success
+  to sleight-of-hand difficulties; +1 per two successes to a target's difficulty; +1 Manipulation per success; hidden
+  from mortal sight unless mystic senses beat the successes; 4: Ability dots equal to half the successes, spread at
+  will; 5: +1 to all of a foe's difficulties per three successes; bypass wards and senses with a contested roll;
+  shapechange (p. 127). Warrior 1: −1 per success to attack difficulties (floor 4); learn others' Archery, Brawl,
+  Dodge and Melee; 2: +1 per two successes to the difficulty to be hit; bashing or lethal blows become aggravated;
+  3: +1 to any Physical Attribute per success; soak one aggravated per success; extra actions equal to the lower of
+  successes and Wits; 4: −1 die per two successes from foes' combat pools; −1 per success to damage pools against the
+  caster; one aggravated per success to an object or creature by touch; 5: two aggravated per success; +1 die to all
+  combat pools and initiative per two successes; spells against the caster lose successes one for one (pp. 127–128).
+  Wise One 1: successes add to Empathy; contest mystic concealment; 2: +1 per success to Enigmas, Hearth Wisdom or
+  Occult; salves heal one lethal or two bashing per success; summon spirits to the Penumbra; 3: +1 to any Mental
+  Attribute per success; through the Gauntlet; add or remove casting successes one for one; 4: −1 Gauntlet per
+  success; −1 difficulty per success on Enigmas, Hearth Wisdom or Occult (floor 4); 5: a cray as Old Faith Autumn 5;
+  each Quintessence spent (up to the successes) removes five casting successes from an enchantment; raise the dead as
+  Old Faith Spring 5; no Gauntlet for the caster (pp. 128–129).
+- **Rotes (pp. 129–130):** Listening to the Heart-Voice (Trickster 2: Sensitivity + Trickster; one more subject in
+  earshot per success past the first; hears what they believe, not the literal truth; scrying and mind-reading wards
+  block it). The Dream Within the Blade (Warrior 3, Wise One 3: the weapon does aggravated damage, harms creatures
+  immune to mundane weapons, and strikes into the Penumbra and Dark Umbra). The Rightful King (Chieftain 4, Wise One 1:
+  the successes go against the Willpower of everyone in the area; the ablest leader for the matter at hand is heeded,
+  more strongly with more successes).
+
+### Valdaermen (pp. 130–135)
+- **Foundation: Blot** (depth of sacrifice). 2: damage taken from any source can serve as a focus for turns equal to
+  the lower of Blot and the Health Levels taken. 5: the mage may take unsoakable lethal damage, healed only by
+  mundane means, for +1 die per Health Level to one casting roll. Specialties: Blatant Magic, Divination, Empathy,
+  Physical Augmentation (pp. 130–131). Foci: blood, offerings, scarification.
+- **Pillars (the Runes):** Fara (travel: Ehwaz, Raidho), Forlog (luck and fortune: Fehu, Gebo, Jera, Othala, Wunjo),
+  Galdrar (magic and secrets: Ansuz, Gebo, Iwaz, Perthro, Uruz), Hjaldar (battle: Isa, Kenaz, Naudhiz, Sowilo,
+  Thurisaz, Tiwaz) (pp. 131–133).
+- Numbers: Fara 3: walk on air or water; +1 die per success to Willpower against mental control or confinement;
+  redirect motion; the Penumbra; 4: teleport, carrying one more per success or Quintessence; deeper Umbrae; 5: dreams,
+  the realms of the Fae, the Astral and Dark Umbrae; astral travel (pp. 131–132). Forlog 2: +1 die per success to
+  Empathy; 3: +1 Manipulation or Subterfuge per success; 4: ±1 die per two successes to a non-mystical Background;
+  5: add or remove successes one for one (against magic, also 1 Quintessence and 1 Willpower); −1 difficulty per
+  success on friendship and fortune (p. 132). Galdrar 1: −1 die per success from others' Subterfuge or Stealth; 2: +1
+  die per success to Empathy or Subterfuge; scrying; 3: the Penumbra; summon nature spirits; ±1 per success to
+  difficulties to notice a subject; 4: +1 per success to Enigmas; remove casting successes one for one; +1 per success
+  to Stealth; 5: a cray as Old Faith Autumn 5 (pp. 132–133). Hjaldar 2: weapons and armour that do and stop
+  aggravated damage to and from incorporeal spirits; 3: fire and ice, one lethal per success; +1 Strength or Stamina
+  per success; −1 per success to a foe's damage or soak pools (floor 0); 4: +1 Leadership per success; shapechange to
+  a predator (gear does not change; armour falls off); blood feud resisted by Willpower; 5: one aggravated per success
+  by lightning; a war form that keeps hands, weapons and armour; +1 Charisma per success (pp. 133–134).
+- **Rotes (pp. 134–135):** Revealing the Dwarf-Hoard (Forlog 1, Galdrar 2: finds valuables by what they mean to their
+  owner; each success cancels one success of a magical concealment, and all cancelled means found). Unsleeping Swords
+  (Fara 3, Galdrar 2 by the heading's dots, to confirm: one Quintessence per corpse raised, up to the successes; a
+  corpse has Strength and Stamina 4, Dexterity and Wits 1, Brawl and Melee 2, Health Levels Healthy, Healthy, −1, −1,
+  −2, −5; two more successes and Quintessence on one body raise an Attribute or add a −1 level, one per success raises
+  an Ability). Curse of Empty and Endless Roads (Fara 4, Galdrar 4: for the standard duration, often cast as an
+  ongoing spell).
+
+### Combining fellowships and hedge magic (p. 135)
+- Learning another fellowship's Pillars takes study under that fellowship's teachers; such spells always need their
+  foci (p. 102, noted above).
+- **Hedge magic** in Dark Ages: Mage is any magic without a Foundation and Pillars: fixed charms and rites. It almost
+  never causes Backlash; it cannot store Quintessence and uses Tass for those spells that need it. Once a character
+  learns a Foundation dot, their hedge magic never succeeds again. Mages do not use it; Storyteller characters may.
+  WoDX keeps Sorcerer's hedge magic (B49) for those characters.
+
 ## To read next
 
-- DA:Mage pp. 125–143 (Ahl-i-Batin, Messianic Voices, Old Faith and Order of Hermes done, pp. 105–125): each fellowship's Foundation (with its five levels and Specialties), its four Pillars and
+- DA:Mage pp. 136–143 (all six fellowships and hedge magic done, pp. 105–135): each fellowship's Foundation (with its five levels and Specialties), its four Pillars and
   sample rotes (Ahl-i-Batin, Messianic Voices, Old Faith, Order of Hermes, Spirit-Talkers, Valdaermen; hedge magic);
   Backlash, Branding and Scourging (pp. 136–143).
 - DA:Mage pp. 77–95: character creation, Backgrounds (Fount, Sanctum, Servants, Talisman), Merits and Flaws.
