@@ -582,7 +582,7 @@ for ( const [vw, vh] of sizes ) {
         <header class="window-header">${HEADER(w.name)}</header>
         <section class="window-content">${w.content}</section>
       </${w.tag}></body></html>`;
-    const file = join(outDir ?? tmpdir(), `ui-fit-${vw}x${vh}-${w.name.replace(/[\s\/]+/g, "-")}.html`);
+    const file = join(outDir ?? tmpdir(), `ui-fit-${vw}x${vh}-${w.name.replace(/[\s\/\\:*?"<>|]+/g, "-")}.html`);
     writeFileSync(file, html);
     await page.goto(pathToFileURL(file).href);
     // Foundry centers the window and clamps it to the screen (ApplicationV2#setPosition)
