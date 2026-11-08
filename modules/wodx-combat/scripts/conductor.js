@@ -98,7 +98,9 @@ function onNpcReport(r) {
 
 /** A card by the current player character counts as their action (WoDX Combat's attacks, WoDX Actions' cards). */
 function onMessage(msg) {
-    if (!cur || !isActiveGM()) return;
+    if (!isActiveGM()) return;
+    if (!cur && game.combat?.started && level() !== "off") startTurn(game.combat);
+    if (!cur) return;
     const combat = game.combats.get(cur.combatId), c = combat?.combatants.get(cur.combatantId);
     if (!c?.actor || !c.actor.hasPlayerOwner) return;
     const atk = msg.getFlag(MOD, "data");
@@ -131,6 +133,12 @@ async function tick() {
     startTurn(combat);
     if (!cur) return;
     const c = combat.combatant, isNPC = !c.actor?.hasPlayerOwner;
+    // A time limit set (or the level raised to Everyone) during a player's turn starts counting now
+    const limit = Number(setting("conductorTimer")) || 0;
+    if (!isNPC && !cur.timerEndsAt && !cur.actionSpent && level() === "everyone" && limit > 0) {
+        cur.timerEndsAt = Date.now() + limit * 1000;
+        writeState(combat).catch(e => console.error(`${MOD} | conductor`, e));
+    }
     let npcMode = "suggest";
     try { npcMode = npcApi()?.modeFor?.(c.actor, combat.scene) ?? (npcApi() ? "suggest" : "off"); } catch (e) { /* none */ }
     const npcPause = (Number(setting("conductorNpcPause")) || 0) * 1000;
@@ -208,9 +216,15 @@ export async function stepIn(combat = game.combat, c) {
     const order = combat.turns.filter(t => t.id !== c.id);
     const at = order.findIndex(t => t.id === curC?.id);
     const next = order[at + 1] ?? null;
-    const init = CR.stepInInitiative(curC?.initiative ?? 0, next?.initiative ?? null);
+    const curInit = Number(curC?.initiative) || 0, nextInit = next ? Number(next.initiative) || 0 : null;
+    const ups = [];
+    // A tie with the next combatant leaves no room between them: the current combatant moves up a hair first
+    const base = nextInit !== null && nextInit >= curInit ? Math.round((nextInit + 0.002) * 10000) / 10000 : curInit;
+    if (curC && base !== curInit) ups.push({ _id: curC.id, initiative: base });
+    const init = CR.stepInInitiative(base, nextInit);
+    ups.push({ _id: c.id, initiative: init });
     await c.unsetFlag(MOD, "held");
-    await combat.updateEmbeddedDocuments("Combatant", [{ _id: c.id, initiative: init }]);
+    await combat.updateEmbeddedDocuments("Combatant", ups);
     // The re-sort can move the current combatant's index: keep the turn on them
     const idx = combat.turns.findIndex(t => t.id === curC?.id);
     if (idx >= 0 && idx !== combat.turn) await combat.update({ turn: idx });
@@ -313,6 +327,12 @@ export function installConductor() {
     game.socket.on(SOCKET, p => { if (p?.conductor) onRequest(p).catch(e => console.error(`${MOD} | conductor`, e)); });
     Hooks.on("wodxNpcTurnDone", r => { try { onNpcReport(r); } catch (e) { console.error(e); } });
     Hooks.on("createChatMessage", msg => { try { onMessage(msg); } catch (e) { console.error(e); } });
+    // The turn moved (Next, Step back, or set by hand): coming back to a turn starts it afresh
+    Hooks.on("updateCombat", (combat, changes) => {
+        if (cur?.combatId !== combat.id || !("turn" in (changes ?? {}) || "round" in (changes ?? {}))) return;
+        cur = null;
+        if (isActiveGM() && combat.started && level() !== "off") startTurn(combat);
+    });
     Hooks.on("updateToken", (doc, changes) => {
         if (cur && ("x" in changes || "y" in changes) && game.combat?.combatants.get(cur.combatantId)?.tokenId === doc.id) cur.lastMoveAt = Date.now();
     });

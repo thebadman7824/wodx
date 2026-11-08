@@ -5,6 +5,7 @@
  * conductor setting, its countdowns and the scene's NPC mode back as they were. Deletes nothing.
  * Result: Data/wodx-gate/gate7b1-result.json.
  */
+const atLeast = (v, min) => { const a = String(v ?? "0").split(".").map(Number), b = min.split(".").map(Number); for ( let k = 0; k < 3; k++ ) { if ( (a[k] || 0) !== (b[k] || 0) ) return (a[k] || 0) > (b[k] || 0); } return true; };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const MOD = "wodx-combat", NPC = "wodx-npc";
 const C = () => game.wodxCombat, CD = () => game.wodxCombat.conductor, npc = () => game.modules.get(NPC).api;
@@ -34,7 +35,7 @@ export async function run() {
   await step("versions, and gate 7b's arena", async () => {
     if ( sc && canvas.scene?.id !== sc.id ) { const r = new Promise(q => Hooks.once("canvasReady", q)); await sc.view(); await r; await sleep(600); }
     for ( const role of ["hero", "fighter", "runner"] ) T[role] = canvas.tokens.placeables.find(t => t.document.getFlag(NPC, "gateRole") === role);
-    ok("versions, and gate 7b's arena", C()?.version === "3.7.0" && !!CD() && /^0\.1\.3/.test(npc()?.version ?? "") && !!sc && !!combat && T.hero && T.fighter && T.runner,
+    ok("versions, and gate 7b's arena", atLeast(C()?.version, "3.7.0") && !!CD() && atLeast(npc()?.version, "0.1.3") && !!sc && !!combat && T.hero && T.fighter && T.runner,
       {combat: C()?.version, npc: npc()?.version, arena: sc?.name, fight: combat?.id, tokens: Object.keys(T).filter(k => T[k])});
     if ( game.paused ) game.togglePause(false, {broadcast: true});
     await game.settings.set(MOD, "conductorNpcPause", 1);
@@ -48,18 +49,21 @@ export async function run() {
   await step("NPC turns: an NPC acts on Auto and the turn moves on by itself; a player's turn waits for the player", async () => {
     await game.settings.set(MOD, "turnConductor", "npc");
     await combat.setFlag(MOD, "conductor", {});
+    // From before the new round: an NPC first in the order acts at once
+    const t0 = Date.now();
     await combat.nextRound(); await sleep(2500);
     const firstNpc = combat.turns.find(c => !c.actor?.hasPlayerOwner);
-    const t0 = Date.now();
     await combat.update({turn: combat.turns.indexOf(firstNpc)});
     const moved = await waitFor(() => combat.combatant?.id !== firstNpc.id, 20000);
     const card = game.messages.contents.find(m => m.timestamp >= t0 && m.getFlag(NPC, "plan")?.combatant === firstNpc.id);
     // Run on to the hero: the conductor stops there at this level
     const reachedHero = await waitFor(() => combat.combatant?.tokenId === T.hero.id || combat.round > (card?.getFlag(NPC, "plan")?.round ?? combat.round), 30000);
     await sleep(2000);
+    if ( combat.combatant?.tokenId === T.hero.id ) await waitFor(() => !!CD().state().why, 3000);
     const heroWaits = combat.combatant?.tokenId === T.hero.id ? /players'/.test(CD().state().why ?? "") : null;
     ok("NPC turns: an NPC acts on Auto and the turn moves on by itself; a player's turn waits for the player", moved && !!card?.getFlag(NPC, "plan")?.done && (heroWaits ?? true),
-      {npc: firstNpc.name, moved, did: card?.getFlag(NPC, "plan")?.done?.text ?? null, nowTurn: curName(), why: CD().state().why ?? null, reachedHero});
+      {npc: firstNpc.name, moved, did: card?.getFlag(NPC, "plan")?.done?.text ?? null, nowTurn: curName(), why: CD().state().why ?? null, reachedHero,
+       cards: game.messages.contents.filter(m => m.timestamp >= t0 && m.getFlag(NPC, "plan")).map(m => { const p = m.getFlag(NPC, "plan"); return {who: p.combatant, mode: p.mode, done: p.done?.text ?? null, options: (p.options ?? []).map(o => o.kind ?? o.type ?? o.label)}; })});
   });
 
   await step("Everyone: the hero's action is spent, a countdown, then the turn ends with no click", async () => {
@@ -75,18 +79,23 @@ export async function run() {
   });
 
   await step("the time limit: no action in time, the action is held; Act next puts the hero straight after the current turn", async () => {
+    await game.settings.set(MOD, "turnConductor", "off");
+    // The hero first in the order: a hold on the last turn of a round is lost at once (VtDA20 p. 344)
+    const top = Math.max(...combat.combatants.map(c => Number(c.initiative) || 0)) + 5;
+    await combat.setInitiative(combat.combatants.find(c => c.tokenId === T.hero.id).id, top); await sleep(300);
+    await toTurn(T.hero);
     await game.settings.set(MOD, "conductorTimer", 3);
     await game.settings.set(MOD, "turnConductor", "everyone");
-    await toTurn(T.hero);
     const heroC = combat.combatant;
     const held = await waitFor(() => !!heroC.getFlag(MOD, "held") && combat.combatant?.id !== heroC.id, 9000);
+    const why4 = {heldFlag: !!heroC.getFlag(MOD, "held"), turnNow: curName(), why: CD().state().why ?? null};
     await game.settings.set(MOD, "turnConductor", "off"); await sleep(500);
     const curC = combat.combatant;
     await CD().stepIn(combat, combat.combatants.get(heroC.id));
     await sleep(800);
     const order = combat.turns.map(c => c.id), after = order.indexOf(heroC.id) === order.indexOf(curC.id) + 1;
     ok("the time limit: no action in time, the action is held; Act next puts the hero straight after the current turn", held && after && combat.combatant?.id === curC.id && !heroC.getFlag(MOD, "held"),
-      {held, after, current: curC.name, order: combat.turns.map(c => c.name)});
+      {held, after, current: curC.name, order: combat.turns.map(c => c.name), ...why4});
     await game.settings.set(MOD, "conductorTimer", 0);
   });
 

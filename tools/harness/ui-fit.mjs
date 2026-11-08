@@ -435,6 +435,43 @@ game.world.id = worldId;
   globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
+// Phase 7c: the Places window (211 scenes, 40 of them tagged, 9 regions in view), an NPC's routine and matching owners
+{
+  const npcApi = game.modules.get("wodx-npc").api;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  let k = 0;
+  for ( const s of game.scenes ) { s.uuid = `Scene.${s.id}`; if ( k++ % 5 === 0 ) s.flags["wodx-npc"] = {place: {kind: "home", owner: `Owner ${k}`}}; }
+  const regions = new Coll(Array.from({length: 9}, (_, i) => [`reg${i}`, {id: `reg${i}`, uuid: `Scene.x.Region.reg${i}`, name: `A region with a long name ${i}`, flags: i % 2 ? {"wodx-npc": {place: {kind: "gate"}}} : {}}]));
+  const viewed = {id: "viewed", uuid: "Scene.viewed", name: "Lower Town · Market Square", regions, flags: {}, getFlag: () => undefined};
+  const oldCanvas = globalThis.canvas;
+  globalThis.canvas = {...(oldCanvas ?? {}), scene: viewed};
+  const Places = npcApi.routines.PlacesAppClass();
+  const app = new Places({});
+  await app.render({force: true});
+  const o = Places.DEFAULT_OPTIONS;
+  windows.push({name: "WoDX places", tag: o.tag ?? "div", classes: ["application", ...(o.classes ?? [])].join(" "), width: o.position.width, height: o.position.height,
+    content: app.element.querySelector("section.window-content").innerHTML});
+  const npc = [...game.actors.values()].find(a => !a.hasPlayerOwner) ?? [...game.actors.values()][1];
+  const saved = npc.flags;
+  npc.flags = {...(npc.flags ?? {}), "wodx-npc": {routine: {on: true, preset: "priest", roles: {}}}};
+  npc.name = "Father Ludovic of the Church of St. Aegidius";
+  for ( const [label, fn] of [["NPC routine", () => npcApi.editRoutine(npc)]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  // Match owners: twelve NPCs named after tagged places' owners
+  for ( let i = 1; i <= 12; i++ ) game.actors.set(`own${i}`, {id: `own${i}`, name: `Owner ${i * 5 - 4}`, hasPlayerOwner: false, flags: {}});
+  {
+    const n = captured.length;
+    try { await npcApi.routines.matchOwners(); } catch (err) { console.error(`FAIL could not build the Match owners window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error("FAIL the Match owners window was not captured"); process.exitCode = 1; }
+  }
+  npc.flags = saved;
+  globalThis.canvas = oldCanvas;
+  api.DialogV2.wait = wait;
+}
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: c.position?.width ?? 400, height: "auto",
@@ -495,6 +532,11 @@ for ( const [vw, vh] of sizes ) {
     }
     // So does the spend window (SpendApp.openFor)
     if ( w.name === "Spend experience" ) w.height = Math.max(360, Math.min(640, vh - 120));
+    // ...and the Places window (PlacesApp.open)
+    if ( w.name === "WoDX places" ) {
+      w.height = Math.max(360, Math.min(720, vh - 120));
+      w.width = Math.max(480, Math.min(900, vw - 40));
+    }
     // ...and Pass the Years (PassYearsApp.open)
     if ( w.name === "Pass the years" ) {
       w.height = Math.max(360, Math.min(720, vh - 100));

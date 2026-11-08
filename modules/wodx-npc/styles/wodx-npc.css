@@ -1,4 +1,4 @@
-/* WoDX NPC 0.1.0: the Storyteller's turn card and the behaviour windows. Colours come from the WoDX look (wodx-theme.css). */
+/* WoDX NPC 0.2.0: the Storyteller's cards (turns, routines, reactions) and the behaviour, routine and places windows. Colours come from the WoDX look (wodx-theme.css). */
 .wnpc .wnpc-opts { margin: 0.3em 0; padding-left: 1.4em; }
 .wnpc .wnpc-opt { margin: 0.25em 0; }
 .wnpc .wnpc-opt.chosen { font-weight: 600; }
@@ -15,3 +15,13 @@
 .wodx-npc-dialog table { width: 100%; }
 .wodx-npc-dialog td button { width: auto; padding: 0 0.6em; }
 .wodx-npc-dialog .wnpc-search { width: 100%; margin: 0.3em 0; }
+/* 7c: routine and reaction cards, the routine editor, the Places window */
+.wnpc .wnpc-lines { margin: 0.2em 0 0.4em; padding-left: 1.2em; }
+.wnpc .wnpc-lines li { margin: 0.1em 0; }
+.wodx-npc-dialog .wnpc-blocks input[type=number] { width: 3.6em; }
+.wodx-npc-dialog .wnpc-blocks input[type=text] { min-width: 8em; }
+.wodx-npc-dialog .wnpc-blocks select { max-width: 14em; }
+.wodx-npc-dialog .wnpc-routine-form .wodx-table-wrap { max-height: 45vh; overflow: auto; }
+.wnpc-places .wodx-table input[type=text] { width: 100%; }
+.wnpc-places h3 { margin: 0.6em 0 0.2em; }
+.wnpc-places textarea { width: 100%; }
