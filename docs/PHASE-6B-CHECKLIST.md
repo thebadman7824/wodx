@@ -72,3 +72,10 @@ Run in rothenstein-wodx with a script that answers each dialog and records the s
 - **Worth knowing:** the system has its own Rage rule (its `wererwolfrageSettings` setting, on in this world) that lowers Charisma and Manipulation by Rage above Willpower on the sheet. WoDX's Curse tool is the DA:W version (dice against one human's Willpower) and only reports; the two don't stack, but the sheet already shows the system's.
 - **Left in the world for you:** the "WoDX 6b test pack" folder and its tokens on Dolany Village (plus a Kinfolk Hedda token), the Werewolf Hedda, two test combats on Dolany Village (and the one from 6a), a "Silver knife (test)" on Miller Jost, and the "WoDX Renown" journal. The clock was put back. Nothing was deleted.
 - **For you (Ben):** relaunch rothenstein-wodx once (Manage Modules should then read WoDX Actions 3.1.1, WoDX Combat 3.1.1, WoDX Creation 0.4.1, system 7.3.2-wodx.3), glance at the console for red "WoDX" lines, and tell Claude whether the gate passes.
+
+### Ben's run, 2026-11-07
+
+- Ben completed the "For you" steps and reported no problems: **Phase 6b passes.**
+- Claude's check afterwards (Gamemaster Test): no WoDX errors in the console; WoDX Actions 3.3.0 and Combat 3.5.0 code is running.
+- Manage Modules still shows the versions from when the server started (Actions 3.1.0, Combat 3.1.0, Creation 0.4.0, system 7.3.2-wodx.2): the server reads module and system manifests only when it starts. The new code is already in use; a full restart of Foundry (close the app and open it again) updates the labels and turns on the "WoDX: Sunlight" region behavior (`documentTypes` in the manifest).
+- Still in the world, to delete whenever you say: the "WoDX 6b test pack" folder and its tokens, "WoDX · Before the First Change", the Werewolf Hedda, the test combats on Dolany Village, the "Silver knife (test)" on Miller Jost, the "WoDX Renown" journal, the gate files in `Data/wodx-gate`, and the extra file `wodx-repo/last-deploy/wodx-combat-main.js`. "Dolany Village (gridless trial)" stays until you've tried it.

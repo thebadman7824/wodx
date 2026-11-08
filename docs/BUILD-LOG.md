@@ -298,3 +298,7 @@
 - Harness: 11 new tests (`sunlight.test.mjs`), 161 in all; UI fit passes with the two new dialogs; quality check passes. Backup: `wodx-repo/backups/before-actions-3.3.0`.
 - Live check (Gamemaster Test): versions, settings and the sun's place (6 July 1200, 21:10: night, 9° under the horizon, dawn in 411 minutes); every token's exposure and movement on Dolany; a test move of Miller Jost two squares counted 3.3 yards (record cleared after). Fixed on the way: Wilhelm's run read as doubled because the form test also matched effect names containing "wolf"; doubling now comes only from Protean's Shape of the Beast.
 - Made for Ben: "Dolany Village (gridless trial)", a copy of Dolany with a gridless grid and the same 12 tokens; the original is untouched.
+
+### Phase 6b closed, 2026-11-07
+
+- Ben completed the Phase 6b checklist steps: the phase passes. No WoDX console errors after his run. The server still shows the start-up manifest versions; a full Foundry restart will update them and register the Sunlight region behavior. Test material is left in the world until Ben says to delete it (list in PHASE-6B-CHECKLIST).
