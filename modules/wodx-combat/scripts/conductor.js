@@ -98,7 +98,9 @@ function onNpcReport(r) {
 
 /** A card by the current player character counts as their action (WoDX Combat's attacks, WoDX Actions' cards). */
 function onMessage(msg) {
-    if (!cur || !isActiveGM()) return;
+    if (!isActiveGM()) return;
+    if (!cur && game.combat?.started && level() !== "off") startTurn(game.combat);
+    if (!cur) return;
     const combat = game.combats.get(cur.combatId), c = combat?.combatants.get(cur.combatantId);
     if (!c?.actor || !c.actor.hasPlayerOwner) return;
     const atk = msg.getFlag(MOD, "data");
@@ -320,7 +322,11 @@ export function installConductor() {
     Hooks.on("wodxNpcTurnDone", r => { try { onNpcReport(r); } catch (e) { console.error(e); } });
     Hooks.on("createChatMessage", msg => { try { onMessage(msg); } catch (e) { console.error(e); } });
     // The turn moved (Next, Step back, or set by hand): coming back to a turn starts it afresh
-    Hooks.on("updateCombat", (combat, changes) => { if (cur?.combatId === combat.id && ("turn" in (changes ?? {}) || "round" in (changes ?? {}))) cur = null; });
+    Hooks.on("updateCombat", (combat, changes) => {
+        if (cur?.combatId !== combat.id || !("turn" in (changes ?? {}) || "round" in (changes ?? {}))) return;
+        cur = null;
+        if (isActiveGM() && combat.started && level() !== "off") startTurn(combat);
+    });
     Hooks.on("updateToken", (doc, changes) => {
         if (cur && ("x" in changes || "y" in changes) && game.combat?.combatants.get(cur.combatantId)?.tokenId === doc.id) cur.lastMoveAt = Date.now();
     });

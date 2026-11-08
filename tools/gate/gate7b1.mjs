@@ -79,6 +79,9 @@ export async function run() {
 
   await step("the time limit: no action in time, the action is held; Act next puts the hero straight after the current turn", async () => {
     await game.settings.set(MOD, "turnConductor", "off");
+    // The hero first in the order: a hold on the last turn of a round is lost at once (VtDA20 p. 344)
+    const top = Math.max(...combat.combatants.map(c => Number(c.initiative) || 0)) + 5;
+    await combat.setInitiative(combat.combatants.find(c => c.tokenId === T.hero.id).id, top); await sleep(300);
     await toTurn(T.hero);
     await game.settings.set(MOD, "conductorTimer", 3);
     await game.settings.set(MOD, "turnConductor", "everyone");
