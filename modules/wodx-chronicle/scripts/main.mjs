@@ -13,6 +13,7 @@ import * as skip from "./skip.mjs";
 import * as conditions from "./conditions.mjs";
 import * as timed from "./timed.mjs";
 import * as theme from "./theme.mjs";
+import * as playerTools from "./player-tools.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -41,6 +42,8 @@ Hooks.once("init", () => {
   // The WoDX look (6e): each player's own look, text size and motion
   theme.registerThemeSettings();
   theme.applyLook();
+  // B60: the WoDX buttons each player sees
+  playerTools.registerPlayerToolSettings();
 
   // Calendar: Julian, then Gregorian at the chosen reform
   let reform = "bohemia-1584";
@@ -92,6 +95,7 @@ Hooks.once("ready", async () => {
   eras.registerEraHandler();
   contentFixes.registerContentFixes();
   eras.applyProfile(eras.activeEra().profile);
+  playerTools.installToolFilter();
 
   game.socket.on(SOCKET, onSocket);
 
@@ -110,7 +114,8 @@ Hooks.once("ready", async () => {
     registerCondition: conditions.registerCondition,
     applyTimed: timed.applyTimed,
     endScene: timed.endScene,
-    theme
+    theme,
+    playerTools, openPlayerTools: playerTools.openPlayerTools
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});
@@ -156,9 +161,17 @@ Hooks.on("getSceneControlButtons", controls => {
     name: "wodxXCard", title: "X-card (anonymous)", icon: "fa-solid fa-xmark", order: base + 1,
     button: true, visible: true, onChange: () => safety.pressXCard()
   };
+  tokens.tools.wodxFindMe = {
+    name: "wodxFindMe", title: "Find my character (goes to your token, on any scene)", icon: "fa-solid fa-location-crosshairs", order: base + 4,
+    button: true, visible: true, onChange: () => playerTools.findMyCharacter()
+  };
   tokens.tools.wodxApprovals = {
     name: "wodxApprovals", title: "Approval queue", icon: "fa-solid fa-inbox", order: base + 2,
     button: true, visible: game.user.isGM, onChange: () => approvals.ApprovalsApp.open()
+  };
+  tokens.tools.wodxPlayerTools = {
+    name: "wodxPlayerTools", title: "Player toolbar buttons", icon: "fa-solid fa-user-gear", order: base + 3,
+    button: true, visible: game.user.isGM, onChange: () => playerTools.openPlayerTools()
   };
 });
 
@@ -172,6 +185,11 @@ async function onSocket(message) {
       break;
     case "safety.lineVeil":
       await safety.onLineVeilGM(payload);
+      break;
+    case "player.findMe":
+    case "player.panTo":
+    case "player.findMeNone":
+      await playerTools.onFindMeSocket(type, payload);
       break;
     case "approval.propose":
       // Players may only send free-form requests; automation proposals come from the GM's own client

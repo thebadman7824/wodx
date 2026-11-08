@@ -368,3 +368,9 @@ Ben approved the look and closed the phase. Still open: the other lines get thei
 ### WoDX Actions 3.6.2, Chronicle 0.3.2, 2026-11-08: the Storyteller's opt-in (B59)
 - House rule storytellerVoiceOptIn (Safety, off). With it on, the inner voice panel offers the Storyteller "turn the voice on (the player is told)" or "turn the voice off" for a player's character; a whisper tells the player, the voice and the Storyteller. The voice flag records optInBy (player or storyteller); the panel shows it.
 - voice-rules.js storytellerMayOptIn; a test in phase6d.test.mjs. UI fit passes (the House rules window keeps every switch reachable).
+
+### Chronicle 0.3.3, 2026-11-08: player toolbar buttons (B60) and Find my character (B61)
+- scripts/player-tools.mjs: PLAYER_TOOLS (the WoDX buttons a player sees), toolShown, fromTicks, the "Player toolbar buttons" window (a tick for each button and player, with search), and a getSceneControlButtons filter installed at ready so it runs after every module's own buttons are added. Setting playerTools (world).
+- Find my character: pickToken (pure), the player's tokens on every scene, scene.view and a pan to the token, selected; the socket fallback (player.findMe → the active GM pulls the player with Scene#pullUsers, then player.panTo).
+- Theme: Foundry's dark table colours give way to the kit's in WoDX windows; an empty checkbox now shows on the paper.
+- Tests: phase6e.test.mjs 13 (player buttons, and every player-visible WoDX token button is in the list; pickToken). UI fit passes with seven players in the window.

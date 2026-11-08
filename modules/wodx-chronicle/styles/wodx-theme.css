@@ -436,7 +436,8 @@ body.wodx-look .application.wodx select option { background: var(--wx-paper); co
 body.wodx-look .application.wodx input[type="checkbox"],
 body.wodx-look .application.wodx input[type="radio"] {
   --checkbox-checked-color: var(--wx-accent);
-  --checkbox-background-color: var(--wx-field);
+  /* An empty box must show on the paper: Foundry draws it as a filled square in this colour */
+  --checkbox-background-color: color-mix(in srgb, var(--wx-rule) 70%, var(--wx-paper));
   --checkbox-checkmark-color: var(--wx-on-accent);
 }
 
@@ -617,3 +618,16 @@ body.wodx-look .vta-card.wodx-x .vta-head h3:not(#wodx-none) {
 body.wodx-look .chat-message .wodx-card h3:not(#wodx-none) {
   background: var(--wx-bar) !important; color: var(--wx-bar-ink) !important; border: 0 !important; border-bottom: 2px solid var(--wx-accent) !important;
 }
+
+/* Tables in WoDX windows (the player buttons, the ratings, the queues): Foundry's dark table colours give way to the kit's */
+body.wodx-look .application.wodx {
+  --table-background-color: transparent;
+  --table-header-bg-color: var(--wx-paper-2);
+  --table-header-border-color: var(--wx-rule);
+  --table-header-text-color: var(--wx-ink);
+  --table-row-color-even: var(--wx-paper-2);
+  --table-row-color-odd: transparent;
+  --table-row-color-highlight: color-mix(in srgb, var(--wx-accent) 14%, transparent);
+}
+body.wodx-look .application.wodx table { color: var(--wx-ink); border-color: var(--wx-rule); }
+body.wodx-look .application.wodx table th { font-family: var(--wx-f-head); font-variant: var(--wx-head-variant); letter-spacing: var(--wx-head-ls); color: var(--wx-ink); text-shadow: none; }

@@ -177,3 +177,39 @@ test("contrast: text on paper, headers, buttons and accents in every kit", () =>
   }
   assert.deepEqual(bad, []);
 });
+
+/* ---- B60: the WoDX buttons each player sees ---- */
+test("player toolbar buttons: players only lose buttons, the X-card always stays", async () => {
+  const PT = await import(join(root, "modules/wodx-chronicle/scripts/player-tools.mjs"));
+  const m = {u1: {wodxPeek: false, wodxXCard: false, wodxShroud: false}};
+  assert.equal(PT.toolShown(m, "u1", "wodxPeek"), false);
+  assert.equal(PT.toolShown(m, "u2", "wodxPeek"), true, "another player keeps it");
+  assert.equal(PT.toolShown(m, "u1", "wodxXCard"), true, "the X-card can't be hidden");
+  assert.equal(PT.toolShown(m, "u1", "wodxShroud"), true, "a Storyteller button is left to its own rule, never touched here");
+  const saved = PT.fromTicks({u1: {wodxClock: true, wodxPeek: false, wodxXCard: false}, u2: {wodxClock: true}});
+  assert.deepEqual(saved, {u1: {wodxPeek: false}});
+  // Every WoDX token button a player sees is in the list, and only those
+  const src = ["wodx-chronicle", "wodx-otherworlds", "wodx-creation"].map(m => readFileSync(join(root, `modules/${m}/scripts/main.mjs`), "utf8")).join("\n");
+  const playerVisible = [...src.matchAll(/tools\.(wodx\w+) = \{[\s\S]*?visible: (true|game\.user\.isGM)/g)].filter(x => x[2] === "true").map(x => x[1]);
+  assert.deepEqual([...playerVisible].sort(), PT.PLAYER_TOOLS.map(t => t.name).sort());
+});
+
+/* ---- B61: Find my character ---- */
+test("find my character: the nearest on this scene, else the one other scene, else a choice; never a hidden token", async () => {
+  const PT = await import(join(root, "modules/wodx-chronicle/scripts/player-tools.mjs"));
+  const T = (id, sceneId, actorId, x = 0, y = 0, hidden = false) => ({id, sceneId, actorId, x, y, hidden});
+  // Two on this scene: the nearer one
+  assert.equal(PT.pickToken({tokens: [T("a", "s1", "c1", 1000, 0), T("b", "s1", "c2", 10, 0)], here: {sceneId: "s1", x: 0, y: 0}}).token.id, "b");
+  // The assigned character before a nearer hireling
+  assert.equal(PT.pickToken({tokens: [T("a", "s1", "c1", 1000, 0), T("b", "s1", "c2", 10, 0)], here: {sceneId: "s1"}, characterId: "c1"}).token.id, "a");
+  // Missed the transition: the token is on another scene
+  const away = PT.pickToken({tokens: [T("a", "s2", "c1")], here: {sceneId: "s1"}});
+  assert.equal(away.token.id, "a"); assert.equal(away.sameScene, false);
+  // Several scenes: the assigned character's, or a choice
+  assert.equal(PT.pickToken({tokens: [T("a", "s2", "c1"), T("b", "s3", "c2")], here: {sceneId: "s1"}, characterId: "c2"}).token.id, "b");
+  const ch = PT.pickToken({tokens: [T("a", "s2", "c1"), T("b", "s3", "c2")], here: {sceneId: "s1"}, activeSceneId: "s3"});
+  assert.deepEqual(ch.choices.map(t => t.id), ["b", "a"], "the active scene first");
+  // Hidden by the Storyteller: not shown
+  assert.deepEqual(PT.pickToken({tokens: [T("a", "s2", "c1", 0, 0, true)], here: {sceneId: "s1"}}), {none: true, hidden: 1});
+  assert.equal(PT.pickToken({tokens: [T("a", "s1", "c1", 0, 0, true), T("b", "s2", "c1")], here: {sceneId: "s1"}}).token.id, "b");
+});

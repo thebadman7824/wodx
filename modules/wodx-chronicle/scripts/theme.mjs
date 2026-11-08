@@ -11,7 +11,7 @@
 import {MODULE_ID} from "./util.mjs";
 
 /** The look's version (the module's own version is read by Foundry only when its server starts). */
-export const VERSION = "0.3.2";
+export const VERSION = "0.3.3";
 
 /** The paper each era kit is printed on. */
 export const KIT_TONE = {

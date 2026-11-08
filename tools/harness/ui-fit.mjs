@@ -278,6 +278,9 @@ game.world.id = worldId;
       virtues: {...(actor.system?.advantages?.virtues ?? {}), mercy: {permanent: 1}, vision: {permanent: 1}, zeal: {permanent: 2}}},
       [["h1", {name: "Cleave", type: "Power", system: {type: "wod.types.edge", value: 1}}], ["h3", {name: "Discern", type: "Power", system: {type: "wod.types.edge", value: 1}}], ["h2", {name: "Psychometry", type: "Power", system: {type: "wod.types.numina", value: 2}}]]);
     const ga = game.wodxActions, A = o => ({actor: o});
+    // B60: the players' toolbar buttons, with seven players
+    for ( let k = 0; k < 6; k++ ) { const u = {id: `player${k}xxxxxxxxx`, name: `Player with a long name ${k}`, isGM: false}; game.users.set(u.id, u); }
+    tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
       ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],
       ["The Shadow", () => ga.shadow({actor: A(ghost)})], ["Whisper", () => ga.shadowWhisper({actor: A(ghost)})], ["Shadowguide", () => ga.shadowguide({actor: A(ghost)})],
