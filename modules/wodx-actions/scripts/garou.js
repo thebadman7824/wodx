@@ -8,6 +8,7 @@
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -398,9 +399,9 @@ export function build(ctx) {
     async function useGift(actor) {
         const list = giftItems(actor);
         if (!list.length) return ctx.notify(`${actor.name} knows no Gifts. Use "Learn a Gift" first.`);
-        const tgt = targetActorOf();
+        let tgt = targetActorOf();
         const rows = list.map(it => { const g = giftData(it); return [it.id, `${it.name}${g ? ` (${g.l})` : ""}`]; });
-        const content = `<form class="wodx-gift"><p><b>${esc(actor.name)}</b>${tgt ? ` → target <b>${esc(tgt.name)}</b>` : ""}</p>
+        const content = `<form class="wodx-gift"><p><b>${esc(actor.name)}</b>${tgt ? `<span class="wodx-hdr-tgt"> → target <b>${esc(tgt.name)}</b></span>` : ""}</p>
           <div class="form-group"><label>Gift</label>${rows.length > 5 ? searchBox("select[name=gift]", "Search Gifts…", "Search Gifts") : ""}<select name="gift" data-fixed>${rows.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-gift-info vta-note"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6"/></div>
@@ -454,7 +455,8 @@ export function build(ctx) {
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(dur.kind === "rounds" ? `${dur.rounds} turn${dur.rounds === 1 ? "" : "s"}` : dur.kind === "scene" ? "the scene" : "its time")}).</div>`;
             }
             return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean));
-        }, { render: root => { describe(root); root.querySelector("[name=gift]")?.addEventListener("change", () => describe(root)); } });
+        }, { render: root => { describe(root); root.querySelector("[name=gift]")?.addEventListener("change", () => describe(root));
+            aim(root, { actor, lib: "gift", power: r => { const it = actor.items.get(r.querySelector("[name=gift]")?.value); return it ? (giftData(it) ?? { id: it.id, n: it.name }) : null; }, onPick: a => { tgt = a; describe(root); } }); } });
     }
 
     async function learnGift(actor) {

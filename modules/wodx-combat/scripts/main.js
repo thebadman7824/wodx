@@ -558,9 +558,16 @@ function resolveTokens(attackerArg, targetArg) {
     return { attacker, attackerTok, target, targetTok };
 }
 
-export async function attack({ attacker: a, target: t, weaponId } = {}) {
-    const { attacker, attackerTok, target, targetTok } = resolveTokens(a, t);
+export async function attack({ attacker: a, target: t, weaponId, noAim = false } = {}) {
+    let { attacker, attackerTok, target, targetTok } = resolveTokens(a, t);
     if (!attacker) return ui.notifications.warn("WoDX Combat: select your token (or assign a character) first.");
+    // WoDX Targeting: with no target set by hand, the attack opens on the likeliest foe (the window can switch it)
+    const aimApi = game.modules.get("wodx-targeting")?.active ? game.modules.get("wodx-targeting").api : null;
+    let pre = null;
+    if (!t && !noAim && aimApi?.preAttack) {
+        try { pre = aimApi.preAttack(attacker); } catch (e) { console.warn("WoDX Combat | targeting", e); }
+        if (pre?.token) ({ attacker, attackerTok, target, targetTok } = resolveTokens(attackerTok ?? a, pre.token));
+    }
     if (!target) ui.notifications.info("WoDX Combat: no target selected: the attack will be rolled without defense or soak.");
     if ((game.user.targets?.size ?? 0) > 1) ui.notifications.info("WoDX Combat: several targets selected: using the first one.");
     const weapons = weaponList(attacker);
@@ -571,7 +578,10 @@ export async function attack({ attacker: a, target: t, weaponId } = {}) {
         title: `WoDX Attack: ${P.profileLabel(aKind)}`,
         content, width: 500, classes: ["vtc-dialog"],
         buttons: [{ id: "attack", label: "Attack", icon: "fas fa-dice-d10", default: true }, { id: "cancel", label: "Cancel" }],
-        onRender: root => { bindKinds(root, aKind, tKind); bindHints(root, { attacker, target, attackerTok, targetTok }); }
+        onRender: (root, close) => {
+            bindKinds(root, aKind, tKind); bindHints(root, { attacker, target, attackerTok, targetTok });
+            if (pre?.token) aimApi.attackPanel(root, pre, tok => { close?.(); attack({ attacker: attackerTok ?? attacker, target: tok ?? undefined, weaponId, noAim: !tok }); });
+        }
     });
     if (!r || r.id !== "attack") return null;
     const fd = r.data;
@@ -1282,7 +1292,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.4", movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.5", movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

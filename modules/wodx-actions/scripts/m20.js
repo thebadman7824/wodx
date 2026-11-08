@@ -11,6 +11,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: m20-rules.js.
  */
 import * as M from "./m20-rules.js";
+import { aim, castIntent } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -77,7 +78,7 @@ export function build(ctx) {
             if (r.botch) body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 501–504</div>`;
             return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean));
-        }, { width: 560 });
+        }, { width: 560, render: root => aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }) });
     }
 
     async function backlashRoll(actor) {

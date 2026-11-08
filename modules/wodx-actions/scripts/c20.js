@@ -15,6 +15,7 @@
  */
 import * as C from "./c20-rules.js";
 import * as P from "./profiles.js";
+import { aim, castIntent } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -135,7 +136,7 @@ export function build(ctx) {
             if (nmNote) body += `<div class="vta-note">${esc(nmNote)}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 193–196, ${art.page}, 274</div>`;
             return post(actor, `${actor.name} weaves a cantrip`, body, [r.roll].filter(Boolean));
-        }, { width: 540 });
+        }, { width: 540, render: root => aim(root, { actor, cast: { from: r => castIntent({ arts: [r.querySelector("[name=art]")?.value ?? ""], realms: Object.keys(C.REALMS).filter(k => Number(r.querySelector(`[name=r-${k}]`)?.value) > 0) }) } }) });
     }
 
     async function unleash(actor) {

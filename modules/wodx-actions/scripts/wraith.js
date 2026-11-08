@@ -18,6 +18,7 @@
 import * as W from "./wraith-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -118,9 +119,9 @@ export function build(ctx) {
         const i = info(actor);
         const list = W.artsFor(lib.arts, i.arcanoi);
         if (!list.length) return ctx.notify(`${actor.name} has no Arcanoi on the sheet the library knows (${i.arcanoi.map(a => a.name).join(", ") || "none"}).`);
-        const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
+        let tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const sh = shroudAt(actor);
-        const content = `<form class="wodx-arcanos"><p><b>${esc(actor.name)}</b>: Pathos ${i.pathos.temp}, Corpus ${i.corpus.max - (i.damage.bashing + i.damage.lethal + i.damage.aggravated)}/${i.corpus.max}, Willpower ${i.willpower.temp}; local Shroud ${sh.rating}${sh.base === null ? " (not rated here: 7)" : ""}${storm() ? `; Maelstrom force ${storm()}` : ""}${tgt ? `; target <b>${esc(tgt.name)}</b>` : ""}. Arts from ${bookOf(lib)}.</p>
+        const content = `<form class="wodx-arcanos"><p><b>${esc(actor.name)}</b>: Pathos ${i.pathos.temp}, Corpus ${i.corpus.max - (i.damage.bashing + i.damage.lethal + i.damage.aggravated)}/${i.corpus.max}, Willpower ${i.willpower.temp}; local Shroud ${sh.rating}${sh.base === null ? " (not rated here: 7)" : ""}${storm() ? `; Maelstrom force ${storm()}` : ""}${tgt ? `<span class="wodx-hdr-tgt">; target <b>${esc(tgt.name)}</b></span>` : ""}. Arts from ${bookOf(lib)}.</p>
           <div class="form-group"><label>Art</label>${searchBox("select[name=art]", "Search arts…", "Search arts")}<select name="art">${list.map((a, k) => `<option value="${a.id}" ${k === 0 ? "selected" : ""}>${esc(`${a.d} ${a.l ? "•".repeat(a.l) : "basic"}: ${a.n}${a.k === "basic" || a.k === "art" ? "" : ` (${a.k})`}`)}</option>`).join("")}</select></div>
           <div class="wodx-art-info vta-note"></div>
           <div class="form-group"><label>Where</label><select name="realm" data-fixed>${Object.entries(W.REALMS).map(([k, l]) => `<option value="${k}" ${k === "shadowlands" ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
@@ -171,7 +172,9 @@ export function build(ctx) {
             if (a.angst) body += `<div class="vta-note">This art can feed the Shadow: the Shadowguide decides how much (see the page).</div>${wbtn("angst", actor, "Shadow takes 1 Angst", "1")}`;
             if (n(fd.wp)) await afterSpend(actor);
             return post(actor, `${actor.name}: ${esc(a.n)}`, body, rolls);
-        }, { width: 560, render: root => { describe(root); for (const k of ["art", "realm", "onSelf"]) root.querySelector(`[name=${k}]`)?.addEventListener("change", () => describe(root)); } });
+        }, { width: 560, render: root => { describe(root); for (const k of ["art", "realm", "onSelf"]) root.querySelector(`[name=${k}]`)?.addEventListener("change", () => describe(root));
+            const artNow = r => (r.querySelector("[name=onSelf]")?.checked ? null : list.find(x => x.id === r.querySelector("[name=art]")?.value));
+            aim(root, { actor, lib: String(list[0]?.id ?? "").startsWith("gw-") ? "gw" : "w20", power: artNow, onPick: a => { tgt = a; describe(root); } }); } });
     }
 
     /* ---------------- Passions, Fetters, Memoriam ---------------- */

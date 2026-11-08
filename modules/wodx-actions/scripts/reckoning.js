@@ -7,6 +7,7 @@
 import * as K from "./reckoning-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -111,10 +112,10 @@ export function build(ctx) {
         const known = i.edges.filter(e => e.def);
         const list = known.length ? known.map(e => e.def) : K.EDGES.filter(e => K.edgeAllowed(e, i.virtues));
         if (!list.length) return ctx.notify(`${actor.name} has no edges (sheet or Virtues).`);
-        const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
+        let tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const risked = actor.getFlag(MOD, "riskScene") === sceneKey();
         const lethal = n(actor.system?.health?.damage?.lethal);
-        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}; Mercy ${i.virtues.mercy}, Vision ${i.virtues.vision}, Zeal ${i.virtues.zeal}${tgt ? `; target ${esc(tgt.name)}` : ""}.${known.length ? "" : " <i>No edges on the sheet: the list shows what the Virtues allow.</i>"}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}; Mercy ${i.virtues.mercy}, Vision ${i.virtues.vision}, Zeal ${i.virtues.zeal}${tgt ? `<span class="wodx-hdr-tgt">; target ${esc(tgt.name)}</span>` : ""}.${known.length ? "" : " <i>No edges on the sheet: the list shows what the Virtues allow.</i>"}</p>
           <div class="form-group"><label>Edge</label>${searchBox("select[name=edge]", "Search edges…", "Search edges")}<select name="edge">${list.map(e => `<option value="${e.id}">${esc(`${e.name} (${K.PATHS[e.path].label} ${"•".repeat(e.level)})`)}</option>`).join("")}</select></div>
           <div class="wodx-edge-info vta-note"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="2" max="10"/> <label>bonus dice</label> <input type="number" name="bonus" value="0" style="width:4em"/></div>
@@ -150,7 +151,8 @@ export function build(ctx) {
             }
             body += `<div class="vta-note">${esc(e.e)}</div><div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`;
             return post(actor, `${actor.name}: ${esc(e.name)}`, body, [r.roll]);
-        }, { width: 560, render: root => { describe(root); root.querySelector("[name=edge]")?.addEventListener("change", () => describe(root)); } });
+        }, { width: 560, render: root => { describe(root); root.querySelector("[name=edge]")?.addEventListener("change", () => describe(root));
+            aim(root, { actor, lib: "edge", power: r => K.edgeFor(r.querySelector("[name=edge]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
     }
 
     /* ---------------- the Imbuing (modern only) ---------------- */

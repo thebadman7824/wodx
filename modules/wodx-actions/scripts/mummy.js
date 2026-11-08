@@ -12,6 +12,7 @@
  */
 import * as M from "./mummy-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -98,7 +99,7 @@ export function build(ctx) {
             }
             body += `<div class="wodx-quiet">${REF} p. 78</div>`;
             return post(actor, `${actor.name} works Hekau`, body, rolls.filter(Boolean));
-        }, { width: 540 });
+        }, { width: 540, render: root => aim(root, { actor, power: r => { const sp = spells.find(x => x.id === r.querySelector("[name=sp]")?.value); return sp ? { id: sp.id, n: sp.name, e: String(sp.system?.description ?? "").replace(/<[^>]+>/g, " ") } : null; } }) });
     }
 
     /* -- Sekhem --------------------------------------------------------- */
