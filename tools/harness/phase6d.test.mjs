@@ -152,3 +152,14 @@ test("the X-card pauses every voice until the scene ends", async () => {
   await E.onEndScene();
   assert.equal(E.live(v), true);
 });
+
+test("the Storyteller's opt-in: only behind the house rule, only for a player's character", async () => {
+  const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+  assert.equal(V.storytellerMayOptIn({isGM: true, rule: true, hasPlayerOwner: true}), true);
+  assert.equal(V.storytellerMayOptIn({isGM: true, rule: false, hasPlayerOwner: true}), false, "off unless the house rule is on");
+  assert.equal(V.storytellerMayOptIn({isGM: false, rule: true, hasPlayerOwner: true}), false, "players use their own opt-in");
+  assert.equal(V.storytellerMayOptIn({isGM: true, rule: true, hasPlayerOwner: false}), false, "NPCs need no opt-in");
+  const rules = (await import(join(root, "modules/wodx-chronicle/data/house-rules.mjs"))).default;
+  const r = rules.switches.find(s => s.id === "storytellerVoiceOptIn");
+  assert.ok(r && r.group === "safety" && r.default === false);
+});

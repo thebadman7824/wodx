@@ -85,9 +85,12 @@ export function build(ctx) {
         if (isVoice(actor) || actor.isOwner) acts.push(["whisper", isVoice(actor) && !actor.isOwner ? `Whisper as ${K.label}` : `Answer ${K.label}`]);
         if (isVoice(actor)) acts.push(["propose", "Propose a check to the Storyteller"]);
         if (actor.isOwner && !game.user.isGM) acts.push(["optin", v.optIn ? "Opt out: no voice for this character" : "Opt in: let the voice speak"]);
+        const stRule = !!game.modules.get("wodx-chronicle")?.api?.rule?.("storytellerVoiceOptIn");
+        if (V.storytellerMayOptIn({ isGM: game.user.isGM, rule: stRule, hasPlayerOwner: actor.hasPlayerOwner }))
+            acts.push(["stoptin", v.optIn ? "Storyteller: turn the voice off for the player" : "Storyteller: turn the voice on (the player is told)"]);
         if (game.user.isGM) acts.push(["assign", "Assign who voices it"]);
         const content = `<form class="wodx-voice-panel"><p><b>${esc(actor.name)}</b> — ${esc(K.label)} ${meter(p)}<br><span class="wodx-quiet">${esc(p.text)}. ${esc(K.book)}</span></p>
-          <p>${on ? "" : "<b>Inner voices are off for this chronicle</b> (Storyteller: Configure Settings → WoDX Actions). "}${paused() ? "<b>Paused by the X-card until the scene ends.</b> " : ""}Voiced by <b>${esc(voiceUser(actor)?.name ?? "the Storyteller")}</b>${actor.hasPlayerOwner ? `; the player has ${v.optIn ? "opted in" : "<b>not</b> opted in"}` : ""}.</p>
+          <p>${on ? "" : "<b>Inner voices are off for this chronicle</b> (Storyteller: Configure Settings → WoDX Actions). "}${paused() ? "<b>Paused by the X-card until the scene ends.</b> " : ""}Voiced by <b>${esc(voiceUser(actor)?.name ?? "the Storyteller")}</b>${actor.hasPlayerOwner ? `; the player has ${v.optIn ? (v.optInBy === "storyteller" ? "been opted in by the Storyteller" : "opted in") : "<b>not</b> opted in"}` : ""}.</p>
           <div class="form-group"><label>Do</label><select name="act" data-fixed>${acts.map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Words</label><textarea name="text" rows="3" style="width:100%"></textarea></div>
           <div class="form-group"><label>Check to propose</label><select name="prop" data-fixed>${V.PROPOSALS[kind].map(x => `<option value="${x.id}">${esc(x.label)}</option>`).join("")}</select></div>
@@ -99,8 +102,16 @@ export function build(ctx) {
                 if (kind === "shadow") await setFlag(actor, "shadowguide", fd.user || null);
                 return whisperTo(actor, `<p>${esc(game.users.get(fd.user)?.name ?? "The Storyteller")} voices ${esc(K.label.toLowerCase())}. ${actor.hasPlayerOwner && !voiceOf(actor).optIn ? "It stays silent until the player opts in." : ""}</p>`, { title: `${K.label}: a voice is chosen` });
             }
+            if (fd.act === "stoptin") {
+                if (!V.storytellerMayOptIn({ isGM: game.user.isGM, rule: !!game.modules.get("wodx-chronicle")?.api?.rule?.("storytellerVoiceOptIn"), hasPlayerOwner: actor.hasPlayerOwner })) return null;
+                await actor.setFlag(MOD, "voice", { ...(actor.getFlag(MOD, "voice") ?? {}), optIn: !v.optIn, optInBy: v.optIn ? null : "storyteller" });
+                return whisperTo(actor, v.optIn
+                    ? `<p>The Storyteller has turned off the inner voice for ${esc(actor.name)}.</p>`
+                    : `<p>The Storyteller has turned on the inner voice for ${esc(actor.name)}: ${esc(K.label.toLowerCase())} may now speak. The player can opt out at any time: WoDX Actions → The inner voice → Opt out.</p>`,
+                    { title: `${K.label}: the Storyteller ${v.optIn ? "turns it off" : "turns it on"}` });
+            }
             if (fd.act === "optin") {
-                await actor.setFlag(MOD, "voice", { ...(actor.getFlag(MOD, "voice") ?? {}), optIn: !v.optIn });
+                await actor.setFlag(MOD, "voice", { ...(actor.getFlag(MOD, "voice") ?? {}), optIn: !v.optIn, optInBy: v.optIn ? null : "player" });
                 return whisperTo(actor, `<p>${esc(actor.name)}'s player ${v.optIn ? "has opted out: the voice falls silent" : "has opted in: the voice may speak"}.</p>`, { title: K.label });
             }
             if (!live(actor)) return notify(paused() ? "Voices are paused until the scene ends (X-card)." : !on ? "Inner voices are off for this chronicle." : "The player hasn't opted in.");

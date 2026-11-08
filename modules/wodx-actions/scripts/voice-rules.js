@@ -86,6 +86,11 @@ export const PROPOSALS = {
 };
 export const proposalFor = (kind, id) => (PROPOSALS[kind] ?? []).find(p => p.id === id) ?? null;
 
+/** May the Storyteller opt a player's character in or out (the house rule "storytellerVoiceOptIn")? */
+export function storytellerMayOptIn({ isGM, rule, hasPlayerOwner }) {
+    return !!(isGM && rule && hasPlayerOwner);
+}
+
 /** Is a voice live? The chronicle switch, the player's opt-in (or a Storyteller character), and no X-card pause (B56). */
 export function live({ chronicleOn, optIn, hasPlayerOwner, paused }) {
     if (!chronicleOn || paused) return false;

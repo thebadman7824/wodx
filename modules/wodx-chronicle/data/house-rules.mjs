@@ -45,6 +45,14 @@ export default {
       "source": "WoDX plan: safety tools"
     },
     {
+      "id": "storytellerVoiceOptIn",
+      "group": "safety",
+      "name": "The Storyteller can opt a character in to the inner voice",
+      "hint": "The inner voice panel gets a Storyteller choice to turn a player's character's voice on or off. The player is told each time and can still opt out.",
+      "default": false,
+      "source": "Ben's request, 8 November 2026"
+    },
+    {
       "id": "signedLinesVeils",
       "group": "safety",
       "name": "Players may sign their lines and veils",

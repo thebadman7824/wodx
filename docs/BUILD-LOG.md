@@ -364,3 +364,7 @@ Ben approved the look and closed the phase. Still open: the other lines get thei
 - New accents: ghoul (wine), spirit (Umbral blue), creature (moss), Exalted (sun gold); the lupine, mage, changeling, demon and mummy accents were already defined. Mortals wear the era's accent. The contrast test covers them all.
 - Demon, mummy and Exalted menus now get "Voices I play" like the rest (their menus were made after the voice loop).
 - UI fit passes in the Dark Ages kit and in the Modern kit at 150% text. Gate 6e gains a step for the other lines (9 steps); gate 6d accepts later versions.
+
+### WoDX Actions 3.6.2, Chronicle 0.3.2, 2026-11-08: the Storyteller's opt-in (B59)
+- House rule storytellerVoiceOptIn (Safety, off). With it on, the inner voice panel offers the Storyteller "turn the voice on (the player is told)" or "turn the voice off" for a player's character; a whisper tells the player, the voice and the Storyteller. The voice flag records optInBy (player or storyteller); the panel shows it.
+- voice-rules.js storytellerMayOptIn; a test in phase6d.test.mjs. UI fit passes (the House rules window keeps every switch reachable).
