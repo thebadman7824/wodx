@@ -281,3 +281,20 @@
 - Combat 3.4.1 fires `wodxDamageApplied` when a card's damage is applied (fire/sun flag, attacker). Garou: `wodxFormChanged` hook; the Delirium accepts tokens.
 - Harness: 20 new tests (`kindred.test.mjs`), 150 in all; UI fit passes with six new dialogs; quality-check passes. Backup: `wodx-repo/backups/before-actions-3.2.0`.
 - Live check (Gamemaster Test): versions and data load, settings present, every vampire's Road recognized but "Via Hyron (Road of the Hive)" (not a Road in the book's list), powers listed per sheet. Fixed on the way: the sheet spelling "Daimonion" now matches the book's Daimoinon; the power list is a dropdown (a tall list was squashed by Foundry's CSS). Use a Discipline (Dominate: Command) posted its card.
+
+### WoDX Actions 3.3.0 and WoDX Combat 3.5.0, 2026-11-07: sunlight and gridless play (Ben's request)
+
+- **Sunlight** (`scripts/sunlight.js`, pure rules `scripts/sunlight-rules.js`; VtDA20 pp. 189, 218, 233, 240, 357, 359):
+  - Where the sun reaches: a new region behavior "WoDX: Sunlight" (light: shade, faint, covered, indirect, cloudy, direct; exposure 1–3; ignore weather), regions named sunlit / shade / shelter / indoors, or a whole scene marked outdoors in Sky and sun. The behavior type is declared in module.json (`documentTypes`), so it appears only after the Foundry server restarts.
+  - The sun's height and bearing from the Chronicle clock and latitude. On outdoor scenes walls cast shadows of wall height ÷ tan(altitude) away from the sun; each scene can set its north and its wall height.
+  - The light is capped by the sky (new Sky setting: clear, cloudy, heavy cloud or rain, storm or fog), by twilight (the sun under 6°: faint) and by heavy clothing (Sun and haven: "covered").
+  - Damage: a card with a button (or rolled and applied, or off: setting "Sunlight damage") each turn of a fight, on stepping into the sun, and while the clock runs by day (a turn ≈ 3 s, up to 20 turns a card). Fortitude soaks at the light's difficulty; the rest is aggravated; then a Rötschreck button.
+  - Protection: Earth Meld, Unseen Hibernation, buried in the earth (Sun and haven); Woad of Taranis makes it lethal, soaked with Stamina + Fortitude, no Rötschreck.
+  - Dawn warnings 30 and 10 minutes before sunrise to the GM and the players, with each Cainite's haven (a scene or a region, set in Sun and haven) checked. The dawn card's sunlight check now uses this system.
+- **Gridless play** (WoDX Combat 3.5.0, rules in `scripts/auto.js`):
+  - Reach is measured from the tokens' edges: the centre distance less the extra size of big tokens, within half a square. The same rule counts the opponents engaged. Distances are straight lines on gridless scenes.
+  - Movement in yards during a fight (setting "Movement in a fight": show the pace, also stop moves past the running speed, or off; the GM is never stopped): walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, plus Celerity (p. 202), doubled in Shape of the Beast (p. 241), limited by wounds (p. 351). Each move shows "Walking / Jogging / Running n / max yd" over the token. Feet, metres and yards are converted.
+  - The attack card notes the yards moved this turn, and says when she moved more than half her running speed, after which the book allows no attack (p. 333).
+- Harness: 11 new tests (`sunlight.test.mjs`), 161 in all; UI fit passes with the two new dialogs; quality check passes. Backup: `wodx-repo/backups/before-actions-3.3.0`.
+- Live check (Gamemaster Test): versions, settings and the sun's place (6 July 1200, 21:10: night, 9° under the horizon, dawn in 411 minutes); every token's exposure and movement on Dolany; a test move of Miller Jost two squares counted 3.3 yards (record cleared after). Fixed on the way: Wilhelm's run read as doubled because the form test also matched effect names containing "wolf"; doubling now comes only from Protean's Shape of the Beast.
+- Made for Ben: "Dolany Village (gridless trial)", a copy of Dolany with a gridless grid and the same 12 tokens; the original is untouched.

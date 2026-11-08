@@ -32,6 +32,8 @@ import * as GX from "./garou.js";
 import { makeTestPack } from "./garou-testpack.js";
 import * as KR from "./kindred-rules.js";
 import * as KX from "./kindred.js";
+import * as SR from "./sunlight-rules.js";
+import * as SX from "./sunlight.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -61,6 +63,7 @@ function registerSettings() {
     s("nightlyBlood", "Blood cost of rising", "Subtract one blood point from each vampire at New Night (p. 340).", Boolean, true);
     GX.registerSettings(s);
     KX.registerSettings(s);
+    SX.registerSettings(s);
 }
 const setting = k => game.settings.get(MOD, k);
 
@@ -314,6 +317,8 @@ async function post(actor, title, body, rolls = [], data = null) {
     if (flav && mode === "gm") ChatMessage.create({ content: `<div class="vta-card">${F.html(flav)}</div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" } });
     const md = { speaker: ChatMessage.getSpeaker({ actor }), content, rolls: rolls.filter(Boolean) };
     if (rolls.filter(Boolean).length) { md.sound = CONFIG.sounds.dice; if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL; }
+    // Cards with prompt buttons (sin, witnesses, Rötschreck after sunlight) need the module's flag to be bound
+    if (!data && /data-(kx|sx)=/.test(content)) data = { kind: "buttons" };
     if (data) md.flags = { [MOD]: data };
     return ChatMessage.create(md);
 }
@@ -1625,7 +1630,7 @@ const MENU = [
     ["torpor", "fa-bed", "Torpor"], ["diablerie", "fa-skull", "Diablerie"], ["endScene", "fa-flag-checkered", "End scene"],
     ["newNight", "fa-moon", "New night (GM)"], ["useDiscipline", "fa-hand-sparkles", "Use a Discipline"], ["setRoad", "fa-road", "Road"],
     ["downtime", "fa-hourglass-half", "Downtime"], ["healing", "fa-band-aid", "Healing"], ["boons", "fa-handshake", "Prestation (GM)"],
-    ["masquerade", "fa-mask", "Masquerade (GM)"], ["endStory", "fa-book", "End of story (GM)"]
+    ["masquerade", "fa-mask", "Masquerade (GM)"], ["endStory", "fa-book", "End of story (GM)"], ["sunAndHaven", "fa-sun", "Sun and haven"], ["skyAndSun", "fa-cloud-sun", "Sky and sun (GM)"]
 ];
 
 let PMX = null;
@@ -1643,6 +1648,14 @@ function gx() {
         notify: m => ui.notifications.warn(m) });
 }
 const withActor = f => (o = {}) => { const a = needActor(o.actor); return a ? f(a, o) : null; };
+
+let SXE = null;
+/** The sunlight system (3.3.0). */
+function sx() {
+    return SXE ??= SX.build({ post, rollPool, rollBlock, dialog, setting, setFlag, attr, discipline, applyDamage, healthText,
+        logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m),
+        clockActors: () => { const on = new Set((game.scenes?.active?.tokens ?? []).map(t => t.actor).filter(Boolean)); return [...new Set([...on, ...game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner)])]; } });
+}
 
 let KXE = null;
 /** The Kindred additions and automatic prompts (3.2.0). */
@@ -1719,7 +1732,15 @@ function bindCard(msg, el) {
             await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
         }
     }));
-    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    el.querySelectorAll?.("button.vta-btn[data-sx]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        const used = msg.getFlag(MOD, "usedKx") || [];
+        const key = `sx|${b.dataset.sx}|${b.dataset.actor}|${b.dataset.arg ?? ""}`;
+        if (used.includes(key)) return ui.notifications.info("Already done.");
+        const r = await sx().onChatButton(b);
+        if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
+    }));
+    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -1748,7 +1769,7 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.2.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.3.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => pm().uses(o.actor ?? resolveActor(), o.resource ?? "willpower"), cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
     cast: (o = {}) => pm().cast(o.actor ?? resolveActor()),
@@ -1771,13 +1792,17 @@ const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenz
     history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),
     healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), enterTorpor: (a, o) => kx().enterTorpor(a, o),
     sunlit: t => kx().sunlit(t), setSceneLight: (scene, light) => (scene ?? canvas.scene)?.setFlag(MOD, "light", light),
-    kindredRules: KR, disciplines: () => KX.DATA.disc, roads: () => KX.DATA.roads };
+    kindredRules: KR, disciplines: () => KX.DATA.disc, roads: () => KX.DATA.roads,
+    // The sunlight system (3.3.0)
+    sunNow: t => sx().sunNow(t), sunExposure: (tok, sun) => sx().exposureOf(tok, sun), applySun: (a, o) => sx().applySun(resolveActor(a), o),
+    sunAndHaven: withActor(a => sx().sunAndHaven(a)), skyAndSun: () => sx().skyAndSun(), havenStatus: a => sx().havenStatus(a), sunlightRules: SR };
 
 let OFF = false;
 Hooks.once("init", () => {
     // Never run beside the module this one replaces: both would answer every button
     if (L.oldActive("vtda20-actions")) { OFF = true; return; }
     registerSettings();
+    SX.registerBehavior();
     MIG.registerSettings();
     P.register();
     game.wodxActions = API;
@@ -1844,6 +1869,17 @@ function kindredHooks() {
         kx().onClock().catch(e => console.error("WoDX |", e)).finally(() => { busy = false; });
     };
     Hooks.on("updateWorldTime", tick);
+    Hooks.on("updateWorldTime", (wt, dt) => {
+        if (!game.user.isGM || L.chronicle()?.isSkipping?.()) return;
+        sx().onClock(Number(dt) || 0).catch(e => console.error("WoDX |", e));
+    });
+    const sunRound = new Map();
+    Hooks.on("updateCombat", (combat, changed) => {
+        if (!game.user.isGM || !("round" in (changed ?? {})) || !combat.started) return;
+        if (combat.round <= (sunRound.get(combat.id) ?? 0)) return;
+        sunRound.set(combat.id, combat.round);
+        sx().onRound(combat).catch(e => console.error("WoDX |", e));
+    });
     Hooks.on("wodxSkipEnd", () => { busy = false; tick(); });
     Hooks.on("preUpdateActor", (actor, changes, options) => {
         if (foundry.utils.hasProperty(changes, "system.advantages.bloodpool.temporary")) options.wodxBloodBefore = num(actor.system?.advantages?.bloodpool?.temporary);
@@ -1864,6 +1900,8 @@ function kindredHooks() {
         movePending = setTimeout(() => {
             for (const t of canvas.tokens?.placeables ?? []) if (t.actor && GX.isShifter(t.actor)) kx().crinosSeen(t).catch(e => console.error("WoDX |", e));
         }, 600);
+        // Into or out of the sun (after the move animates, so the token's regions are current)
+        setTimeout(() => sx().onMove(doc).catch(e => console.error("WoDX |", e)), 700);
     });
     Hooks.on("wodxFormChanged", actor => {
         if (!game.user.isGM) return;

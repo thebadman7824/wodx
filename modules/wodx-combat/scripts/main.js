@@ -66,6 +66,9 @@ function registerSettings() {
     s("flavorText", "Flavor text on attack cards",
         "Add one short line of description under the dice of each attack card, picked to fit the outcome (miss, hit, heavy hit, soaked, botch). Edit the lines in scripts/flavor.js.",
         String, "all", { choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
+    s("movementLimit", "Movement in a fight",
+        "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. Show the pace, or also stop a move past the running speed (the GM is never stopped).",
+        String, "note", { choices: { note: "Show the pace", block: "Show it and stop moves past the running speed", off: "Off" } });
 }
 const setting = k => game.settings.get(MOD, k);
 
@@ -763,24 +766,30 @@ function soakPoolFor(target, profile, w, fd, dp) {
     });
 }
 
-/** Distance between two tokens in scene units (null when either is missing). */
-function tokenDistance(a, b) {
+/**
+ * Distance between two tokens in scene units (null when either is missing): centre to centre, straight on a
+ * gridless scene. With {reach: true}, as if both were one square wide (big tokens reach from their edges).
+ */
+function tokenDistance(a, b, { reach = false } = {}) {
     try {
         const pa = a?.center ?? a?.object?.center, pb = b?.center ?? b?.object?.center;
         if (!pa || !pb || !globalThis.canvas?.grid) return null;
-        return canvas.grid.measurePath([pa, pb]).distance;
+        const d = canvas.grid.measurePath([pa, pb]).distance;
+        if (!reach) return d;
+        const sz = t => Number((t?.document ?? t)?.width) || 1;
+        return AU.reachDistance(d, sz(a), sz(b), canvas.scene?.grid?.distance ?? 5);
     } catch (e) { return null; }
 }
 
 /** Can this attack be used at all? Bites and claws need the right body; melee needs reach; missiles need range. */
-function attackUsable(attacker, w, distance) {
+function attackUsable(attacker, w, distance, reachD = distance) {
     const shifter = !!garouRules()?.isShifter?.(attacker);
     if (w.id === "unarmed:bite" && !w.natural) return "a bite needs a hold first (clinch, hold or tackle)";
     if (w.id === "unarmed:claw" && !w.natural && !(discipline(attacker, "Protean") >= 2 || discipline(attacker, "Vicissitude") >= 1 || shifter))
         return "no claws (Protean 2 or Vicissitude)";
     const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
     if (distance != null) {
-        if (!w.ranged && distance > unit * 1.5) return "out of reach";
+        if (!w.ranged && !AU.inReach(reachD ?? distance, unit)) return "out of reach";
         if (w.ranged && w.range > 0 && distance > w.range * 3) return "beyond three times its range";
     }
     return "";
@@ -795,13 +804,14 @@ export function bestAttack(attacker, target, fd = {}, { attackerTok = null, targ
     const aTok = attackerTok ?? attacker?.getActiveTokens?.()[0] ?? null;
     const tTok = targetTok ?? target?.getActiveTokens?.()[0] ?? null;
     const measured = tokenDistance(aTok, tTok);
-    const first = planAttacks(attacker, target, fd, ignoreDistance ? null : measured);
+    const reachD = tokenDistance(aTok, tTok, { reach: true });
+    const first = planAttacks(attacker, target, fd, ignoreDistance ? null : measured, ignoreDistance ? null : reachD);
     // Nothing reaches: the tokens may not show where the fighters really are, so choose as if in reach and say so
     if (!first.best && measured != null && !ignoreDistance) return { ...planAttacks(attacker, target, fd, null), distance: measured, ignoredDistance: true };
     return { ...first, distance: measured };
 }
 
-function planAttacks(attacker, target, fd, distance) {
+function planAttacks(attacker, target, fd, distance, reachD = distance) {
     const maneuver = maneuverTable()[fd.maneuver] ?? R.MANEUVERS.normal;
     const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
     const tKind = target ? ((fd.profile && fd.profile !== "auto") ? fd.profile : getKind(target)) : "mortal";
@@ -809,7 +819,7 @@ function planAttacks(attacker, target, fd, distance) {
     const pot = discipline(attacker, "Potence");
     const plans = [];
     for (const w of weaponList(attacker)) {
-        const why = attackUsable(attacker, w, distance);
+        const why = attackUsable(attacker, w, distance, reachD);
         if (why) { plans.push({ w, valid: false, why, score: -1 }); continue; }
         // Range band from the distance, for missiles
         let rangeBand = null;
@@ -1241,7 +1251,7 @@ Hooks.once("init", () => {
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.4.1",
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.5.0", movementFor,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1256,6 +1266,53 @@ Hooks.once("ready", async () => {
     game.socket.on(SOCKET, onSocket);
     await createMacros();
     console.log(`${MOD} | ready`);
+});
+
+/* ------------------------------------------------------------------ */
+/*  Movement in yards, any grid (3.5.0)                                */
+/* ------------------------------------------------------------------ */
+
+/** A token's movement allowance this turn (VtDA20 pp. 202, 241, 333, 351). */
+export function movementFor(actor) {
+    const dmg = actor?.system?.health?.damage ?? {};
+    const woundIndex = num(dmg.bashing) + num(dmg.lethal) + num(dmg.aggravated);
+    // Protean's Shape of the Beast (wolf or rat) doubles the running speed (VtDA20 p. 241); the effect comes from Use a Discipline
+    const doubleRun = [...(actor?.effects ?? [])].some(e => /^shape of the beast\b/i.test(e.name ?? ""));
+    return AU.movement({ dexterity: attr(actor, "dexterity"), celerity: discipline(actor, "Celerity"), woundIndex, doubleRun });
+}
+const roundTag = () => { const c = game.combat; return c?.started ? `${c.id}:${c.round}` : null; };
+/** {yards, limits} moved this turn by a token in the running fight, or null. */
+function movedThisRound(tok) {
+    const doc = tok?.document ?? tok, tag = roundTag();
+    if (!doc?.getFlag || !tag) return null;
+    const f = doc.getFlag(MOD, "moved");
+    if (!f || f.tag !== tag) return null;
+    return { yards: Number(f.yards) || 0, limits: movementFor(doc.actor) };
+}
+Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
+    if (OFF || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
+    let mode;
+    try { mode = setting("movementLimit"); } catch (e) { return; }
+    const tag = roundTag();
+    if (mode === "off" || !tag || !doc.actor || !game.combat?.combatants?.some?.(c => c.tokenId === doc.id)) return;
+    let d;
+    try {
+        const from = { x: doc.x, y: doc.y }, to = { x: changes.x ?? doc.x, y: changes.y ?? doc.y };
+        d = canvas.grid.measurePath([from, to]).distance;
+    } catch (e) { return; }
+    const yards = AU.toYards(d, doc.parent?.grid?.units ?? canvas.scene?.grid?.units);
+    const prev = doc.getFlag(MOD, "moved");
+    const total = (prev?.tag === tag ? Number(prev.yards) || 0 : 0) + yards;
+    const lim = movementFor(doc.actor);
+    const p = AU.pace(total, lim);
+    if (p === "over" && mode === "block" && !game.user.isGM) {
+        ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past her running speed this turn (${lim.run}${lim.note ? `; ${lim.note}` : ""}).`);
+        return false;
+    }
+    foundry.utils.setProperty(changes, `flags.${MOD}.moved`, { tag, yards: Math.round(total * 10) / 10 });
+    const label = { walk: "Walking", jog: "Jogging", run: "Running", over: "Past running speed" }[p];
+    const msg = `${label}: ${Math.round(total)} / ${lim.run} yd${lim.note ? ` (${lim.note})` : ""}${total > lim.attackAfter ? " — no attack this turn" : ""}`;
+    try { canvas.interface?.createScrollingText?.(doc.object?.center ?? { x: doc.x, y: doc.y }, msg, { anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 22, fill: p === "over" ? "#ff6060" : "#ffffff", stroke: 0x000000, strokeThickness: 4, duration: 2500 }); } catch (e) { /* no canvas */ }
 });
 
 /* ------------------------------------------------------------------ */
@@ -1313,7 +1370,7 @@ function freeActions(attacker) {
     const k = roundKey(), f = attacker?.getFlag?.("wodx-actions", "extraActions");
     return k && f?.key === `${k.combatId}:${k.round}` ? num(f.n) : 0;
 }
-/** Tokens hostile to this token within reach (1.5 squares), not defeated. */
+/** Tokens hostile to this token within reach (edges within half a square, any token size, gridless too), not defeated. */
 function opponentsAround(tok) {
     const t = tok?.document ?? tok, obj = tok?.object ?? tok;
     if (!t?.parent || !obj?.center) return null;
@@ -1325,8 +1382,8 @@ function opponentsAround(tok) {
         if (o.actor?.statuses?.has?.("dead") || o.actor?.statuses?.has?.("unconscious")) continue;
         const hostile = (disp === 1 && o.disposition === -1) || (disp === -1 && o.disposition === 1) || (disp === 0 && o.disposition !== 0);
         if (!hostile) continue;
-        const d = tokenDistance(obj, o.object);
-        if (d != null && d <= unit * 1.5) n++;
+        const d = tokenDistance(obj, o.object, { reach: true });
+        if (AU.inReach(d, unit)) n++;
     }
     return n;
 }
@@ -1354,6 +1411,10 @@ function resolveAutoOptions(attacker, target, fd, { attackerTok = null, targetTo
         const n = opponentsAround(aTok);
         if (n != null) { fd.opponents = Math.max(1, n); if (n > 1) notes.push(`${n} opponents engaged (+${Math.min(4, n - 1)} difficulty)`); }
     }
+    // Moving more than half her running speed leaves no attack this turn (VtDA20 p. 333)
+    const mv = movedThisRound(aTok);
+    if (mv && mv.yards > mv.limits.attackAfter) notes.push(`moved ${Math.round(mv.yards)} yards this turn, more than half her running speed (${mv.limits.attackAfter}): by the book no attack follows`);
+    else if (mv?.yards) notes.push(`moved ${Math.round(mv.yards)} yards this turn`);
     if (target && (fd.defIndex === "auto" || fd.defIndex === undefined)) {
         const k = defensesThisRound(target);
         fd.defIndex = k;

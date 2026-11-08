@@ -30,8 +30,8 @@ export const MENUS = {
             ["Blood", [["api:feed", "Feed on target", "fa-tint"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
             ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:setRoad", "Road and Path", "fa-road"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"]]],
             ["The Beast", [["api:frenzy", "Frenzy", "fa-fire-alt"], ["api:rotschreck", "Rötschreck", "fa-running"], ["api:endFrenzy", "End frenzy", "fa-hand-paper"], ["api:sin", "Sin / degeneration", "fa-balance-scale"]]],
-            ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"]]],
-            ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:endStory", "End of story", "fa-book"]]],
+            ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:sunAndHaven", "Sun and haven", "fa-house-user"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"]]],
+            ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:skyAndSun", "Sky and sun", "fa-cloud-sun"], ["api:endStory", "End of story", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:newNight", "New night (GM)", "fa-moon"], WILL]]
         ]
     },

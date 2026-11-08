@@ -51,3 +51,51 @@ export function worthIt(before, after) {
 export const SUGGEST_SKIP = new Set(["stake", "impale", "suppress", "disarm", "hold"]);
 
 export const pct = x => `${Math.round((x ?? 0) * 100)}%`;
+
+/* ------------------------------------------------------------------ */
+/*  Gridless play (3.5.0): reach by the tokens' edges, movement in yards */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Centre distance → the distance as if both tokens were one square wide, so reach is "edges within half a square"
+ * on any scene, gridless or not. sizeA, sizeB: token widths in grid squares. unit: scene distance per square.
+ */
+export function reachDistance(centre, sizeA = 1, sizeB = 1, unit = 5) {
+    if (centre === null || centre === undefined) return null;
+    const extra = ((Math.max(1, sizeA) + Math.max(1, sizeB)) / 2 - 1) * unit;
+    return Math.max(0, centre - extra);
+}
+export const inReach = (reachD, unit = 5) => reachD !== null && reachD <= unit * 1.5;
+
+/** Scene distance → yards (VtDA20 counts yards or meters; feet are a third of a yard). */
+export function toYards(distance, units = "ft") {
+    const u = String(units ?? "").toLowerCase().trim();
+    if (["ft", "feet", "foot", "'"].includes(u)) return distance / 3;
+    if (["mi", "mile", "miles"].includes(u)) return distance * 1760;
+    if (["km"].includes(u)) return distance * 1000;
+    return distance; // yd, m, or unnamed: one to one
+}
+
+/**
+ * Movement per turn (VtDA20 p. 333): walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity yards; Celerity adds its dots
+ * (p. 202); an animal form that doubles running speed doubles the run (p. 241). Wounds (p. 351): Injured halves the
+ * run, Wounded walks only, Mauled 3, Crippled 1, Incapacitated 0. woundIndex: levels marked (0 unhurt … 7).
+ */
+export function movement({ dexterity = 2, celerity = 0, woundIndex = 0, doubleRun = false } = {}) {
+    let walk = 7 + celerity, jog = 12 + dexterity + celerity, run = 20 + 3 * dexterity + celerity;
+    if (doubleRun) run *= 2;
+    let note = "";
+    if (woundIndex >= 7) { walk = jog = run = 0; note = "Incapacitated: cannot move"; }
+    else if (woundIndex === 6) { walk = jog = run = 1; note = "Crippled: crawls a yard"; }
+    else if (woundIndex === 5) { walk = jog = run = 3; note = "Mauled: hobbles 3 yards"; }
+    else if (woundIndex === 4) { jog = run = walk; note = "Wounded: may only walk"; }
+    else if (woundIndex === 3) { run = Math.floor(run / 2); jog = Math.min(jog, run); note = "Injured: half running speed"; }
+    return { walk, jog, run, attackAfter: Math.floor(run / 2), note };
+}
+/** How far she has gone this turn: "walk" | "jog" | "run" | "over". */
+export function pace(yards, m) {
+    if (yards <= m.walk + 1e-6) return "walk";
+    if (yards <= m.jog + 1e-6) return "jog";
+    if (yards <= m.run + 1e-6) return "run";
+    return "over";
+}

@@ -220,7 +220,8 @@ game.world.id = worldId;
   actor.getFlag ??= () => undefined;
   tries.push(["Use a Discipline", () => game.wodxActions.useDiscipline({actor})], ["Road", () => game.wodxActions.setRoad({actor})],
     ["Downtime", () => game.wodxActions.downtime({actor})], ["Healing", () => game.wodxActions.healing({actor: target})],
-    ["Prestation", () => game.wodxActions.boons({actor})], ["Masquerade", () => game.wodxActions.masquerade({actor})]);
+    ["Prestation", () => game.wodxActions.boons({actor})], ["Masquerade", () => game.wodxActions.masquerade({actor})],
+    ["Sun and haven", () => game.wodxActions.sunAndHaven({actor})], ["Sky and sun", () => game.wodxActions.skyAndSun()]);
   // Phase 6b: a Dark Ages Garou with a full hand of Gifts, a fetish, a talen and a rite; Kinfolk and the First Change
   {
     const GX = await import(join(root, "modules/wodx-actions/scripts/garou.js"));

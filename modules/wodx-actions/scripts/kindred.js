@@ -600,9 +600,12 @@ export function build(ctx) {
         const vamps = clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor"));
         if (!vamps.length) return null;
         const rows = [];
+        const api = ctx.api();
+        const sunInfo = await api.sunNow?.();
         for (const a of vamps) {
             const toks = a.getActiveTokens?.() ?? [];
-            const sun = toks.some(tk => sunlit(tk));
+            // The sunlight system (3.3) decides; without it, regions named sunlit or a scene marked outdoors
+            const sun = toks.some(tk => api.sunExposure ? api.sunExposure(tk, sunInfo)?.exposed : sunlit(tk));
             rows.push(`<li><b>${esc(a.name)}</b>${sun ? " — <b>in the open: the sun will burn her</b>" : ""} ${kbtn("stayAwake", a, "Stay awake (Road, 8)")}${sun ? kbtn("sun", a, "Sunlight") : ""}</li>`);
         }
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Dawn: ${esc(t.timeLabel ?? "")}</h3><p>Sunrise. Cainites sleep unless the Road holds them up (each success a turn, five the scene; VtDA20 pp. 336, 359).</p><ul>${rows.join("")}</ul></div>`,
