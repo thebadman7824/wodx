@@ -1,0 +1,17 @@
+/* WoDX NPC 0.1.0: the Storyteller's turn card and the behaviour windows. Colours come from the WoDX look (wodx-theme.css). */
+.wnpc .wnpc-opts { margin: 0.3em 0; padding-left: 1.4em; }
+.wnpc .wnpc-opt { margin: 0.25em 0; }
+.wnpc .wnpc-opt.chosen { font-weight: 600; }
+.wnpc .wnpc-opt .wodx-quiet { font-size: 0.9em; margin: 0.1em 0 0.2em; }
+.wnpc .wnpc-score { display: inline-block; min-width: 2.2em; font-family: var(--wx-f-mono, monospace); color: var(--wx-quiet, inherit); }
+.wnpc button { width: auto; line-height: 1.6; padding: 0 0.6em; margin: 0.15em 0; }
+.wnpc .wnpc-done { margin-top: 0.4em; padding-top: 0.3em; border-top: 1px solid var(--wx-rule, #8886); }
+.wnpc .wnpc-tools { text-align: right; }
+.wodx-npc-dialog .window-content { overflow-y: auto; max-height: 80vh; }
+.wodx-npc-dialog .wodx-field { display: grid; grid-template-columns: 11em 1fr; align-items: center; gap: 0.5em; margin: 0.2em 0; }
+.wodx-npc-dialog fieldset { margin: 0.4em 0; }
+.wodx-npc-dialog .wnpc-check { display: inline-flex; align-items: center; gap: 0.25em; margin-right: 0.8em; white-space: nowrap; }
+.wodx-npc-dialog .wnpc-list { max-height: 40vh; overflow-y: auto; }
+.wodx-npc-dialog table { width: 100%; }
+.wodx-npc-dialog td button { width: auto; padding: 0 0.6em; }
+.wodx-npc-dialog .wnpc-search { width: 100%; margin: 0.3em 0; }

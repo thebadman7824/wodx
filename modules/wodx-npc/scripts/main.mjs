@@ -1,0 +1,554 @@
+/**
+ * WoDX NPC 0.1.0 (Phase 7b): NPC profiles and combat tactics.
+ *
+ * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
+ * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
+ *   Suggest: whispers the Storyteller a plan, with an Accept button for each option;
+ *   Auto:    carries out the best option it can (move, attack, flee, full defence), then whispers a card with Undo;
+ *            an option that needs the Storyteller's roll or choice (frenzy, a power, Willpower, calling for help)
+ *            stops it and the card becomes a suggestion;
+ *   Off:     nothing.
+ * Attacks go through WoDX Combat's quick attack (every automatic choice), so the dice and the rules are Combat's own.
+ */
+import * as NR from "./npc-rules.mjs";
+
+const MOD = "wodx-npc";
+const VERSION = "0.1.0";
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const num = v => Number(v) || 0;
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
+const C = () => game.wodxCombat;
+const A = () => game.wodxActions;
+const chron = () => game.modules.get("wodx-chronicle")?.api;
+const setting = k => game.settings.get(MOD, k);
+const isActiveGM = () => game.user.isGM && (game.users.activeGM ? game.users.activeGM.id === game.user.id : true);
+
+/* ------------------------------------------------------------------ */
+/*  Settings and profiles                                              */
+/* ------------------------------------------------------------------ */
+
+function registerSettings() {
+  game.settings.register(MOD, "mode", {
+    name: "NPCs in combat", hint: "What NPCs with no player owner do on their turn, unless the scene or the NPC says otherwise.",
+    scope: "world", config: true, type: String, default: "suggest", choices: NR.MODES
+  });
+  game.settings.register(MOD, "options", {
+    name: "Options on the card", hint: "How many of the NPC's options the Storyteller's card lists.",
+    scope: "world", config: true, type: Number, default: 4, range: {min: 1, max: 8, step: 1}
+  });
+}
+
+/** The line, generation and fighting Abilities WoDX reads to pick a template. */
+function infoOf(actor) {
+  const s = actor.system ?? {};
+  const ab = k => num(s.abilities?.[k]?.value);
+  return {kind: C()?.getKind?.(actor) ?? "mortal", generation: num(s.generation) || 13,
+    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery"))};
+}
+export function savedProfile(actor) { return actor?.getFlag(MOD, "behavior") ?? {}; }
+export function profileFor(actor) { return NR.profileOf(savedProfile(actor), NR.templateFor(infoOf(actor))); }
+export function modeFor(actor, scene = canvas.scene) {
+  return NR.modeOf({npc: savedProfile(actor).mode, scene: scene?.getFlag(MOD, "mode"), world: setting("mode")});
+}
+
+/* ------------------------------------------------------------------ */
+/*  The fight as the NPC sees it                                       */
+/* ------------------------------------------------------------------ */
+
+const wounds = actor => {
+  const ct = C()?.corpusTrack?.(actor);
+  const d = ct?.damage ?? actor?.system?.health?.damage ?? {};
+  return num(d.bashing) + num(d.lethal) + num(d.aggravated);
+};
+const cardsNow = () => (game.messages?.contents ?? []).slice(-400).map(m => m.getFlag?.("wodx-combat", "data")).filter(Boolean);
+const hidden = tok => tok.document.hidden || tok.actor?.statuses?.has?.("invisible") || !!chron()?.conditions?.hasCondition?.(tok.actor, "obfuscated");
+const supernatural = actor => (C()?.getKind?.(actor) ?? "mortal") !== "mortal";
+/** What in an enemy's hands or soul an NPC may fear. */
+function fearSources(actor) {
+  const out = new Set();
+  for ( const i of actor?.items ?? [] ) {
+    const n = String(i.name ?? "").toLowerCase();
+    if ( /torch|fire|flame|burning|incendiar|molotov/.test(n) ) out.add("fire");
+    if ( /silver/.test(n) ) out.add("silver");
+    if ( /true faith/.test(n) ) out.add("faith");
+  }
+  if ( num(actor?.system?.advantages?.faith?.permanent) > 0 ) out.add("faith");
+  if ( [...(actor?.effects ?? [])].some(e => /crinos|hispo/i.test(e.name ?? "")) ) out.add("crinos");
+  return [...out];
+}
+/** Enemies of a token: the other side by disposition; a neutral NPC's enemies are only those who hurt it. */
+function sides(tok, combat, harm) {
+  const me = tok.document.disposition;
+  const D = CONST.TOKEN_DISPOSITIONS;
+  const myHarm = harm.get(tok.actor?.uuid) ?? new Map();
+  // In a fight, the combatants; outside one (a plan asked for from the token HUD), everyone on the scene
+  const fighters = combat?.combatants?.size
+    ? combat.combatants.contents.filter(c => c.token?.object && c.tokenId !== tok.id && !c.isDefeated).map(c => c.token.object)
+    : canvas.tokens.placeables.filter(t => t.id !== tok.id && t.actor);
+  const enemy = t => {
+    const d = t.document.disposition;
+    if ( me === D.NEUTRAL || me === D.SECRET ) return myHarm.has(t.actor?.uuid);
+    if ( d === D.NEUTRAL || d === D.SECRET ) return myHarm.has(t.actor?.uuid);
+    return d !== me;
+  };
+  return {enemies: fighters.filter(enemy), allies: fighters.filter(t => !enemy(t) && t.document.disposition === me)};
+}
+const unitsPerYard = () => 1 / (C()?.auto?.toYards?.(1, canvas.scene?.grid?.units ?? "ft") ?? 1 / 3);
+const yardsBetween = (a, b) => {
+  try { return canvas.grid.measurePath([a.center, b.center]).distance / unitsPerYard(); } catch (e) { return null; }
+};
+
+/** state for NR.scoreOptions, and the tokens behind the ids. */
+export function readFight(tok, combat = game.combat) {
+  const actor = tok.actor, s = actor.system ?? {}, adv = s.advantages ?? {};
+  const harm = NR.harmLog(cardsNow(), combat?.id);
+  const {enemies, allies} = sides(tok, combat, harm);
+  const myHarm = harm.get(actor.uuid) ?? new Map();
+  const lineage = actor.getFlag("wodx-creation", "lineage");
+  const domitorId = lineage?.domitor?.id ?? null;
+  const plans = new Map();
+  const E = enemies.map(t => {
+    let plan = null;
+    try { plan = C().bestAttack(actor, t.actor, {}, {attackerTok: tok, targetTok: t}); } catch (e) { /* no plan */ }
+    plans.set(t.id, plan);
+    const best = plan?.best;
+    return {id: t.id, name: t.name, visible: !hidden(t), distance: yardsBetween(tok, t),
+      reach: !!best && !plan.ignoredDistance && !best.w?.ranged, ranged: !!best?.w?.ranged && !plan.ignoredDistance,
+      hurtMe: myHarm.get(t.actor?.uuid) ?? 0, wounds: wounds(t.actor), supernatural: supernatural(t.actor),
+      fearSources: fearSources(t.actor), attackDice: best?.atkDice ?? 0};
+  });
+  const AL = allies.map(t => {
+    const hurt = harm.get(t.actor?.uuid) ?? new Map();
+    return {id: t.id, name: t.name, hurt: [...hurt.values()].reduce((a, b) => a + b, 0), isDomitor: !!domitorId && t.actor?.id === domitorId,
+      attackerIds: enemies.filter(e => hurt.has(e.actor?.uuid)).map(e => e.id)};
+  });
+  const inFight = new Set((combat?.combatants?.contents ?? []).map(c => c.tokenId));
+  const offstage = canvas.tokens.placeables.filter(t => t.id !== tok.id && !inFight.has(t.id) && t.actor && !t.actor.hasPlayerOwner
+    && t.document.disposition === tok.document.disposition && !t.document.hidden);
+  const visiblePlans = E.filter(e => e.visible).map(e => plans.get(e.id)?.best).filter(Boolean);
+  const kind = C()?.getKind?.(actor) ?? "mortal";
+  const state = {
+    self: {kind, wounds: wounds(actor), willpower: num(adv.willpower?.temporary), blood: num(adv.bloodpool?.temporary), bloodMax: num(adv.bloodpool?.max),
+      selfcontrol: num(adv.virtues?.selfcontrol?.permanent) || 3, rage: num(adv.rage?.temporary), rageMax: num(adv.rage?.permanent),
+      hasPowers: actor.items.some(i => i.type === "Power"), inFrenzy: !!s.conditions?.isfrenzy || !!chron()?.conditions?.hasCondition?.(actor, "frenzy"),
+      rotschreck: !!chron()?.conditions?.hasCondition?.(actor, "rotschreck"),
+      delirious: kind === "mortal" && E.some(e => e.visible && e.fearSources.includes("crinos"))},
+    enemies: E, allies: AL, offstageAllies: offstage.length,
+    bestAttackDice: Math.max(0, ...visiblePlans.map(p => p.atkDice ?? 0)),
+    canRanged: visiblePlans.some(p => p.w?.ranged)
+  };
+  return {state, plans, enemies, allies, offstage};
+}
+
+/** The options for this NPC's turn, best first, with the target filled in for Willpower and named for the card. */
+export function planTurn(tok, combat = game.combat) {
+  const actor = tok.actor;
+  const profile = profileFor(actor);
+  const fight = readFight(tok, combat);
+  let options = NR.scoreOptions(profile, fight.state);
+  if ( fight.state.self.rotschreck ) options.unshift({action: "flee", score: 99, why: "Rötschreck: the Red Fear drives them from fire or sunlight"});
+  const topAttack = options.find(o => o.action === "attack" || o.action === "shoot");
+  options = options.map(o => {
+    const target = o.target ?? (o.action === "willpower" ? topAttack?.target : null);
+    const t = target ? canvas.tokens.get(target) : null;
+    return {...o, target: target ?? null, label: `${NR.ACTION_LABEL[o.action] ?? o.action}${t ? `: ${t.name}` : ""}`};
+  });
+  // One line per foe at most: the best way to hurt each
+  const seen = new Set();
+  options = options.filter(o => { const k = `${o.action}:${o.target ?? ""}`; if ( seen.has(k) ) return false; seen.add(k); return true; });
+  return {profile, options, fight};
+}
+
+/* ------------------------------------------------------------------ */
+/*  Moving on the grid                                                 */
+/* ------------------------------------------------------------------ */
+
+const cellOf = tok => canvas.grid.getOffset({x: tok.document.x + 1, y: tok.document.y + 1});
+const footprint = tok => ({...cellOf(tok), w: Math.max(1, Math.round(tok.document.width)), h: Math.max(1, Math.round(tok.document.height))});
+function occupied(except) {
+  const set = new Set();
+  for ( const t of canvas.tokens.placeables ) {
+    if ( t.id === except.id || t.document.hidden ) continue;
+    const f = footprint(t);
+    for ( let i = f.i; i < f.i + f.h; i++ ) for ( let j = f.j; j < f.j + f.w; j++ ) set.add(`${i},${j}`);
+  }
+  return set;
+}
+function wallBetween(a, b, tok) {
+  const pa = canvas.grid.getCenterPoint(a), pb = canvas.grid.getCenterPoint(b);
+  try { if ( typeof tok.checkCollision === "function" ) return !!tok.checkCollision(pb, {origin: pa, type: "move", mode: "any"}); }
+  catch (e) { /* fall through */ }
+  try {
+    const backend = CONFIG.Canvas.polygonBackends?.move;
+    if ( backend?.testCollision ) return !!backend.testCollision(pa, pb, {type: "move", mode: "any"});
+  } catch (e) { /* none */ }
+  return false;
+}
+function passableFor(tok) {
+  const busy = occupied(tok);
+  const d = canvas.dimensions;
+  const inside = c => { const p = canvas.grid.getTopLeftPoint(c); return p.x >= d.sceneX && p.y >= d.sceneY && p.x < d.sceneX + d.sceneWidth && p.y < d.sceneY + d.sceneHeight; };
+  return (a, b) => inside(b) && !busy.has(`${b.i},${b.j}`) && !wallBetween(a, b, tok);
+}
+const cellsFor = yards => Math.floor((yards * unitsPerYard()) / (canvas.scene.grid.distance || 5) + 1e-6);
+const squareGrid = () => canvas.grid?.isSquare ?? (canvas.grid?.type === CONST.GRID_TYPES.SQUARE);
+
+async function walk(tok, path) {
+  if ( path.length < 2 ) return false;
+  const waypoints = path.slice(1).map(c => ({...canvas.grid.getTopLeftPoint(c)}));
+  const doc = tok.document;
+  if ( typeof doc.move === "function" ) {
+    try { await doc.move(waypoints, {autoRotate: true}); }
+    catch (e) { for ( const w of waypoints ) await doc.update(w); }
+  } else for ( const w of waypoints ) await doc.update(w);
+  try { await tok.movementAnimationPromise; } catch (e) { /* none */ }
+  await sleep(250);
+  return true;
+}
+
+/** The way to a cell beside a foe: {path, cost} (cost in squares, diagonals 1.5), or {note} when there is none. */
+function approach(tok, target) {
+  if ( !squareGrid() ) return {note: "WoDX moves NPCs on square grids only: move the token by hand"};
+  const pass = passableFor(tok), start = cellOf(tok);
+  for ( const goal of NR.besideCells(footprint(target), start).slice(0, 8) ) {
+    const path = NR.findPath(start, goal, pass);
+    if ( path ) return {path, cost: pathCost(path)};
+  }
+  return {note: "no way through to them"};
+}
+const pathCost = path => path.slice(1).reduce((s, c, k) => s + ((c.i !== path[k].i && c.j !== path[k].j) ? 1.5 : 1), 0);
+
+/* ------------------------------------------------------------------ */
+/*  Doing it                                                           */
+/* ------------------------------------------------------------------ */
+
+function snapshot(tokens) {
+  return {
+    tokens: tokens.map(t => ({uuid: t.document.uuid, x: t.document.x, y: t.document.y, moved: t.document.getFlag("wodx-combat", "moved") ?? null})),
+    actors: tokens.map(t => {
+      const a = t.actor, ct = C()?.corpusTrack?.(a), d = ct?.damage ?? a.system?.health?.damage ?? {};
+      return {uuid: a.uuid, damage: {bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated)},
+        willpower: num(a.system?.advantages?.willpower?.temporary), blood: num(a.system?.advantages?.bloodpool?.temporary),
+        statuses: [...(a.statuses ?? [])]};
+    })
+  };
+}
+
+async function undo(snap) {
+  for ( const s of snap.tokens ?? [] ) {
+    const doc = await fromUuid(s.uuid);
+    if ( !doc ) continue;
+    const upd = {x: s.x, y: s.y};
+    await doc.update(upd, {animate: false, wodxMove: false});
+    if ( s.moved ) await doc.setFlag("wodx-combat", "moved", s.moved); else await doc.unsetFlag("wodx-combat", "moved");
+  }
+  for ( const s of snap.actors ?? [] ) {
+    const a = await fromUuid(s.uuid);
+    if ( !a ) continue;
+    await C().setDamage(a, s.damage);
+    await a.update({"system.advantages.willpower.temporary": s.willpower, "system.advantages.bloodpool.temporary": s.blood});
+    for ( const id of ["unconscious", "dead"] ) if ( a.statuses?.has?.(id) && !s.statuses.includes(id) ) {
+      try { await a.toggleStatusEffect(id, {active: false}); } catch (e) { /* none */ }
+    }
+  }
+}
+
+/** Carry out one option. Returns {done, text}. */
+async function execute(tok, opt) {
+  const actor = tok.actor;
+  const target = opt.target ? canvas.tokens.get(opt.target) : null;
+  const lim = C().movementFor(actor);
+  switch ( opt.action ) {
+    case "attack": {
+      if ( !target ) return {done: false, text: "The foe is gone."};
+      const plan = C().bestAttack(actor, target.actor, {}, {attackerTok: tok, targetTok: target});
+      let note = "", path = null;
+      if ( !plan.best || plan.ignoredDistance || plan.best.w?.ranged ) {
+        const way = approach(tok, target);
+        if ( !way.path ) return {done: false, text: `${tok.name} cannot reach ${target.name} (${way.note}).`};
+        if ( way.cost > cellsFor(lim.attackAfter) ) {
+          // Too far to strike this turn (VtDA20: no attack after moving past half the running speed): run at them
+          const part = NR.trimPath(way.path, cellsFor(lim.run));
+          const moved = await walk(tok, part);
+          return {done: moved, path: part, text: moved ? `${tok.name} runs at ${target.name}, too far to strike this turn.` : `${tok.name} cannot move (${lim.note || "no movement left"}).`};
+        }
+        if ( await walk(tok, way.path) ) { note = `${tok.name} moves in (${way.path.length - 1} squares). `; path = way.path; }
+      }
+      await C().quickAttack({attacker: tok, target});
+      return {done: true, text: `${note}${tok.name} attacks ${target.name}.`, path};
+    }
+    case "shoot":
+    case "willpower": {
+      if ( !target ) return {done: false, text: "The foe is gone."};
+      if ( opt.action === "willpower" ) { await C().attack({attacker: tok, target}); return {done: true, text: `The attack window is open for ${tok.name}: tick Willpower there.`}; }
+      await C().quickAttack({attacker: tok, target});
+      return {done: true, text: `${tok.name} shoots at ${target.name}.`};
+    }
+    case "flee": {
+      if ( !squareGrid() ) return {done: false, text: "WoDX moves NPCs on square grids only: move the token by hand."};
+      const foes = readFight(tok).enemies.map(cellOf);
+      const map = NR.reachable(cellOf(tok), passableFor(tok), cellsFor(lim.run));
+      const cell = NR.fleeCell(map, foes);
+      const path = cell ? NR.pathTo(cell) : null;
+      const moved = path ? await walk(tok, path) : false;
+      return {done: moved, path, text: moved ? `${tok.name} flees.` : `${tok.name} has nowhere to run.`};
+    }
+    case "defend":
+      await tok.document.setFlag(MOD, "fullDefense", `${game.combat?.id}:${game.combat?.round}`);
+      return {done: true, text: `${tok.name} goes on full defence: every action this turn is a dodge, block or parry (the Storyteller rolls them as they come).`};
+    case "frenzy":
+      if ( C().getKind(actor) === "lupine" ) await A()?.rageRoll?.({actor});
+      else await A()?.frenzy?.({actor});
+      return {done: true, text: `Frenzy check for ${tok.name}.`};
+    case "power":
+      await A()?.menu?.({actor});
+      return {done: true, text: `The actions menu is open for ${tok.name}: choose the power.`};
+    case "call": {
+      const {offstage} = readFight(tok);
+      const near = offstage.sort((a, b) => (yardsBetween(tok, a) ?? 1e9) - (yardsBetween(tok, b) ?? 1e9)).slice(0, 2);
+      if ( !near.length || !game.combat ) return {done: false, text: "No one answers."};
+      const made = await game.combat.createEmbeddedDocuments("Combatant", near.map(t => ({tokenId: t.id, sceneId: t.scene.id, actorId: t.actor?.id})));
+      return {done: true, text: `${tok.name} calls for help: ${near.map(t => t.name).join(" and ")} join the fight (they roll initiative next turn).`, added: made.map(c => c.id)};
+    }
+    case "search": return {done: true, text: `${tok.name} searches for the unseen (Perception + Alertness, or Auspex against Obfuscate: the Storyteller rolls).`};
+    default: return {done: true, text: `${tok.name} waits.`};
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  The Storyteller's card                                             */
+/* ------------------------------------------------------------------ */
+
+const H3 = "background:none!important;border:0!important;box-shadow:none!important;color:inherit!important";
+function cardHtml({tok, profile, options, mode, result = null, chosen = null, undone = false, waiting = null}) {
+  const line = C()?.getKind?.(tok.actor) ?? "";
+  const rows = options.map((o, k) => `<li class="wnpc-opt${chosen === k ? " chosen" : ""}"><span class="wnpc-score">${o.score}</span> <b>${esc(o.label)}</b>`
+    + `<div class="wodx-quiet">${esc(o.why)}</div>`
+    + (result || undone ? "" : `<button type="button" class="wnpc-go" data-k="${k}">${k === 0 ? "Accept" : "Do this instead"}</button>`) + `</li>`).join("");
+  const head = mode === "auto" ? (waiting ? "Auto, waiting for the Storyteller" : "Auto") : "Suggestion";
+  return `<div class="vta-card wodx-x wnpc wodx-line-${esc(line)}" data-line="${esc(line)}">`
+    + `<header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3><span class="vta-verdict">${head}</span></header>`
+    + `<div class="vta-body"><p class="wodx-quiet">${esc(profile.label)}${profile.template !== savedProfile(tok.actor).template ? " (chosen by line)" : ""}. Flees at ${profile.fleeAt} wound levels.</p>`
+    + (waiting ? `<p><b>Needs the Storyteller:</b> ${esc(waiting.label)}. ${esc(waiting.why)}.</p>` : "")
+    + `<ol class="wnpc-opts">${rows}</ol>`
+    + (result ? `<div class="wnpc-done">${esc(result)}${undone ? " <b>Undone.</b>" : ` <button type="button" class="wnpc-undo">Undo</button>`}</div>` : "")
+    + `<div class="wnpc-tools"><button type="button" class="wnpc-edit">Behaviour…</button></div></div></div>`;
+}
+
+const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
+async function postPlan(tok, combat, {profile, options}, mode) {
+  const shown = options.slice(0, setting("options"));
+  const flags = {plan: {token: tok.document.uuid, combatId: combat?.id ?? null, round: combat?.round ?? 0, combatant: combat?.combatant?.id ?? null, options: shown, mode}};
+  let result = null, chosen = null, waiting = null;
+  if ( mode === "auto" ) {
+    const pick = NR.autoChoice(shown);
+    if ( pick.act ) {
+      const k = shown.indexOf(pick.act);
+      const snap = snapshot([tok, ...(pick.act.target ? [canvas.tokens.get(pick.act.target)].filter(Boolean) : [])]);
+      const r = await execute(tok, pick.act);
+      result = r.text; chosen = k;
+      flags.plan.done = {k, text: r.text, snap, added: r.added ?? [], path: r.path ?? null};
+    } else waiting = pick.needsStoryteller;
+  }
+  return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
+    content: cardHtml({tok, profile, options: shown, mode, result, chosen, waiting}), flags: {[MOD]: flags}});
+}
+
+async function onCardButton(msg, btn) {
+  if ( btn.classList.contains("wnpc-edit") ) {
+    const tok = (await fromUuid(msg.getFlag(MOD, "plan")?.token))?.object;
+    return tok ? editBehavior(tok.actor) : null;
+  }
+  if ( btn.classList.contains("wnpc-go") ) return acceptCard(msg, Number(btn.dataset.k));
+  if ( btn.classList.contains("wnpc-undo") ) return undoCard(msg);
+}
+
+/** Carry out option k of a card (the Accept and "Do this instead" buttons). */
+export async function acceptCard(msg, k = 0) {
+  if ( !game.user.isGM ) return null;
+  msg = typeof msg === "string" ? game.messages.get(msg) : msg;
+  const plan = foundry.utils.deepClone(msg?.getFlag(MOD, "plan"));
+  const tok = (await fromUuid(plan?.token))?.object;
+  if ( !tok ) { ui.notifications.warn("WoDX NPC: the token is not on this scene."); return null; }
+  if ( plan.done ) return plan.done;
+  const opt = plan.options[k];
+  if ( !opt ) return null;
+  if ( plan.combatant && game.combat?.combatant?.id !== plan.combatant ) ui.notifications.info(`WoDX NPC: it is no longer ${tok.name}'s turn; doing it anyway.`);
+  const snap = snapshot([tok, ...(opt.target ? [canvas.tokens.get(opt.target)].filter(Boolean) : [])]);
+  plan.done = {k, text: "…", snap};
+  await msg.update({[`flags.${MOD}.plan`]: plan});
+  const r = await execute(tok, opt);
+  plan.done = {k, text: r.text, snap, added: r.added ?? [], path: r.path ?? null};
+  await msg.update({[`flags.${MOD}.plan`]: plan, content: cardHtml({tok, profile: profileFor(tok.actor), options: plan.options, mode: plan.mode, result: r.text, chosen: k})});
+  return plan.done;
+}
+
+/** Put back what a card did: positions, health, Willpower and blood, and anyone it called into the fight. */
+export async function undoCard(msg) {
+  if ( !game.user.isGM ) return null;
+  msg = typeof msg === "string" ? game.messages.get(msg) : msg;
+  const plan = foundry.utils.deepClone(msg?.getFlag(MOD, "plan"));
+  if ( !plan?.done || plan.done.undone ) return null;
+  await undo(plan.done.snap);
+  if ( plan.done.added?.length && game.combat?.id === plan.combatId ) {
+    const ids = plan.done.added.filter(id => game.combat.combatants.has(id));
+    if ( ids.length ) await game.combat.deleteEmbeddedDocuments("Combatant", ids);
+  }
+  plan.done.undone = true;
+  const tok = (await fromUuid(plan.token))?.object;
+  const content = tok ? cardHtml({tok, profile: profileFor(tok.actor), options: plan.options, mode: plan.mode, result: plan.done.text, chosen: plan.done.k, undone: true}) : msg.content;
+  await msg.update({[`flags.${MOD}.plan`]: plan, content});
+  return plan.done;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Combat turns                                                       */
+/* ------------------------------------------------------------------ */
+
+const NO_ACTION = ["dazed", "incapacitated", "torpor", "staked", "immobilized"];
+const handled = new Set();
+export async function takeTurn(combat = game.combat, {force = false} = {}) {
+  const c = combat?.combatant;
+  const tok = c?.token?.object;
+  if ( !c || !tok?.actor || c.isDefeated ) return null;
+  if ( tok.actor.hasPlayerOwner ) return null;
+  if ( tok.scene?.id !== canvas.scene?.id ) return null;
+  const key = `${combat.id}:${combat.round}:${c.id}`;
+  if ( handled.has(key) && !force ) return null;
+  handled.add(key);
+  const mode = modeFor(tok.actor);
+  if ( mode === "off" ) return null;
+  const cond = chron()?.conditions;
+  const stuck = NO_ACTION.find(id => cond?.hasCondition?.(tok.actor, id)) ?? (wounds(tok.actor) >= 7 ? "incapacitated" : null);
+  if ( stuck ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
+    content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(cond?.getCondition?.(stuck)?.name ?? stuck)}).</div></div>`});
+  const planned = planTurn(tok, combat);
+  return postPlan(tok, combat, planned, mode);
+}
+let timer = null;
+function soon(combat) {
+  clearTimeout(timer);
+  // Initiative and the turn order settle first (WoDX Combat rolls them on these same hooks)
+  timer = setTimeout(() => takeTurn(combat).catch(e => console.error(`${MOD} |`, e)), 900);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Behaviour editor                                                   */
+/* ------------------------------------------------------------------ */
+
+const FEARS = {fire: "Fire", sunlight: "Sunlight", faith: "True Faith", silver: "Silver", supernatural: "The supernatural", violence: "Violence", crinos: "The Crinos form"};
+const TRAITS = {aggression: "Aggression", caution: "Caution", cunning: "Cunning", loyalty: "Loyalty", cowardice: "Cowardice", berserk: "Berserk", power: "Uses powers"};
+
+export async function editBehavior(actor) {
+  if ( !actor || !game.user.isGM ) return null;
+  const saved = savedProfile(actor), p = profileFor(actor), auto = NR.templateFor(infoOf(actor));
+  const opt = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${k}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
+  const tpl = Object.fromEntries([["", `By line (${NR.TEMPLATES[auto].label})`], ...Object.entries(NR.TEMPLATES).map(([k, t]) => [k, t.label])]);
+  const modes = {"": `As the scene or world says (${NR.MODES[modeFor(actor)].split(" (")[0]})`, ...NR.MODES};
+  const content = `<div class="wnpc-edit-form">
+    <div class="wodx-field"><label>Template</label><select name="template" data-fixed>${opt(tpl, saved.template ?? "")}</select></div>
+    <div class="wodx-field"><label>In combat</label><select name="mode" data-fixed>${opt(modes, saved.mode ?? "")}</select></div>
+    <fieldset><legend>Temperament (0 to 2; blank keeps the template's)</legend>
+    ${Object.entries(TRAITS).map(([k, l]) => `<div class="wodx-field"><label>${l}</label><input type="number" name="${k}" min="0" max="2" step="0.1" value="${saved[k] ?? ""}" placeholder="${p[k]}"/></div>`).join("")}
+    <div class="wodx-field"><label>Flees at wound level</label><input type="number" name="fleeAt" min="1" max="7" step="1" value="${saved.fleeAt ?? ""}" placeholder="${p.fleeAt}"/></div>
+    </fieldset>
+    <fieldset><legend>Fears</legend>${Object.entries(FEARS).map(([k, l]) => `<label class="wnpc-check"><input type="checkbox" name="fear-${k}"${p.fears.includes(k) ? " checked" : ""}/> ${l}</label>`).join("")}</fieldset>
+    <p class="wodx-quiet">With no player owner, ${esc(actor.name)} acts on their combat turns as set here. Blank fields follow the template.</p></div>`;
+  const data = await foundry.applications.api.DialogV2.wait({
+    window: {title: `Behaviour: ${actor.name}`, resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 460, height: "auto"}, content,
+    buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object},
+      {action: "reset", label: "Back to the template", callback: () => "reset"}, {action: "cancel", label: "Cancel"}],
+    rejectClose: false
+  });
+  if ( !data || data === "cancel" ) return null;
+  if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
+  const out = {template: data.template || null, mode: data.mode || null};
+  for ( const k of [...Object.keys(TRAITS), "fleeAt"] ) out[k] = data[k] === "" || data[k] === null || data[k] === undefined ? null : Number(data[k]);
+  const fears = Object.keys(FEARS).filter(k => data[`fear-${k}`]);
+  const base = NR.TEMPLATES[out.template ?? auto].fears;
+  out.fears = (fears.length === base.length && fears.every(f => base.includes(f))) ? null : fears;
+  return actor.setFlag(MOD, "behavior", out);
+}
+
+/** The scene's NPCs at a glance, with the world and scene modes. */
+export async function openNpcPanel() {
+  if ( !game.user.isGM ) return null;
+  const npcs = canvas.tokens.placeables.filter(t => t.actor && !t.actor.hasPlayerOwner);
+  const sceneMode = canvas.scene?.getFlag(MOD, "mode") ?? "";
+  const opt = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${k}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
+  const rows = npcs.map(t => { const p = profileFor(t.actor); return `<tr><td>${esc(t.name)}</td><td>${esc(p.label)}</td><td>${esc(NR.MODES[modeFor(t.actor)].split(" (")[0])}</td>`
+    + `<td><button type="button" data-edit="${t.id}">Edit</button></td></tr>`; }).join("");
+  const content = `<div class="wnpc-panel">
+    <div class="wodx-field"><label>The world</label><select name="world" data-fixed>${opt(NR.MODES, setting("mode"))}</select></div>
+    <div class="wodx-field"><label>This scene</label><select name="scene" data-fixed>${opt({"": "As the world says", ...NR.MODES}, sceneMode)}</select></div>
+    <input type="search" class="wodx-search wnpc-search" data-search=".wnpc-list table" placeholder="Find an NPC…" aria-label="Find an NPC" autocomplete="off" spellcheck="false">
+    <div class="wnpc-list"><table><thead><tr><th>NPC</th><th>Template</th><th>Now</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="4">No NPCs on this scene.</td></tr>`}</tbody></table></div>
+    <p class="wodx-quiet">NPCs with a player owner are never moved by WoDX.</p></div>`;
+  const data = await foundry.applications.api.DialogV2.wait({
+    window: {title: "WoDX NPCs", resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 520, height: "auto"}, content,
+    // The search box is WoDX Chronicle's (one listener for every window, rule B24)
+    render: (ev, dlg) => dlg.element.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => editBehavior(canvas.tokens.get(b.dataset.edit)?.actor))),
+    buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object}, {action: "cancel", label: "Close"}],
+    rejectClose: false
+  });
+  if ( !data || data === "cancel" ) return null;
+  await game.settings.set(MOD, "mode", data.world);
+  if ( data.scene ) await canvas.scene.setFlag(MOD, "mode", data.scene); else await canvas.scene.unsetFlag(MOD, "mode");
+  return data;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Hooks                                                              */
+/* ------------------------------------------------------------------ */
+
+Hooks.once("init", () => {
+  registerSettings();
+  const api = {version: VERSION, rules: NR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
+    acceptCard, undoCard, approach, wallBetween, cellOf, postPlan};
+  game.modules.get(MOD).api = api;
+});
+Hooks.once("ready", () => {
+  if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
+  ensureStyles();
+});
+Hooks.on("combatStart", combat => { if ( isActiveGM() ) soon(combat); });
+Hooks.on("updateCombat", (combat, changed) => {
+  if ( !isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {})) ) return;
+  soon(combat);
+});
+Hooks.on("renderChatMessageHTML", (msg, el) => {
+  if ( !msg.getFlag(MOD, "plan") ) return;
+  el.querySelectorAll("button.wnpc-go, button.wnpc-undo, button.wnpc-edit").forEach(b => {
+    if ( !game.user.isGM ) { b.remove(); return; }
+    b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; onCardButton(msg, b).catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
+  });
+});
+Hooks.on("getSceneControlButtons", controls => {
+  const tokens = controls.tokens ?? controls.token;
+  if ( !tokens?.tools ) return;
+  tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
+    button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
+});
+Hooks.on("renderTokenHUD", (hud, html) => {
+  if ( !game.user.isGM ) return;
+  const root = html instanceof HTMLElement ? html : html[0];
+  const actor = hud.object?.actor;
+  const col = root?.querySelector(".col.right");
+  if ( !actor || !col || actor.hasPlayerOwner ) return;
+  const b = document.createElement("div");
+  b.className = "control-icon wnpc-hud";
+  b.title = "WoDX NPC behaviour (right-click: plan this NPC's turn now)";
+  b.innerHTML = '<i class="fa-solid fa-chess-knight"></i>';
+  b.addEventListener("click", () => editBehavior(actor));
+  b.addEventListener("contextmenu", ev => { ev.preventDefault(); const t = hud.object; postPlan(t, game.combat, planTurn(t, game.combat), "suggest").catch(e => console.error(`${MOD} |`, e)); });
+  col.appendChild(b);
+});
+
+/** A new module's stylesheet is read at server start; injecting it means a reload is enough. */
+function ensureStyles() {
+  const href = `modules/${MOD}/styles/wodx-npc.css`;
+  if ( [...document.styleSheets].some(s => s.href?.includes(href)) || document.querySelector(`link[href*="${href}"]`) ) return;
+  const l = document.createElement("link");
+  l.rel = "stylesheet"; l.href = `${href}?v=${VERSION}`;
+  document.head.appendChild(l);
+}

@@ -62,6 +62,8 @@ game.modules.set("wodx-actions", {});
 game.modules.set("wodx-combat", {});
 await import(join(root, "modules/wodx-combat/scripts/main.js"));
 await import(join(root, "modules/wodx-actions/scripts/main.js"));
+game.modules.set("wodx-npc", {});
+await import(join(root, "modules/wodx-npc/scripts/main.mjs"));
 CONFIG.worldofdarkness.groupKinds = {coterie: "Coterie (Vampire)", pack: "Pack (Werewolf and Fera)", cabal: "Cabal (Mage)", motley: "Motley (Changeling)",
   circle: "Circle (Wraith)", cell: "Cell (Hunter)", court: "Court (Demon)", amenti: "Amenti (Mummy)", wu: "Wu (Kindred of the East)",
   crucible: "Crucible (Orpheus)", household: "Household or retinue (mortals)", other: "Other"};
@@ -306,6 +308,25 @@ game.world.id = worldId;
   }
   api.DialogV2 = Orig;
 }
+// Phase 7b: an NPC's behaviour window and the scene's NPC panel (nine NPCs of long names)
+{
+  const npcApi = game.modules.get("wodx-npc").api;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const npc = [...game.actors.values()].find(a => a.type === "Vampire" && !a.hasPlayerOwner) ?? [...game.actors.values()][1];
+  Object.assign(npc, {hasPlayerOwner: false, setFlag: async () => npc, unsetFlag: async () => npc, getFlag: () => undefined});
+  const toks = Array.from({length: 9}, (_, k) => ({id: `npctok${k}`, name: `${npc.name} ${k}`, actor: npc, document: {hidden: false, disposition: -1}}));
+  const sceneMock = {getFlag: () => undefined, setFlag: async () => null, unsetFlag: async () => null};
+  const oldCanvas = globalThis.canvas;
+  globalThis.canvas = {...(oldCanvas ?? {}), scene: sceneMock, tokens: {placeables: toks, get: id => toks.find(t => t.id === id), controlled: []}};
+  for ( const [label, fn] of [["NPC behaviour", () => npcApi.editBehavior(npc)], ["NPC panel", () => npcApi.openNpcPanel()]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  globalThis.canvas = oldCanvas;
+  api.DialogV2.wait = wait;
+}
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: c.position?.width ?? 400, height: "auto",
@@ -326,7 +347,8 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-actions/styles/wodx-actions.css")).href,
   pathToFileURL(join(root, "modules/wodx-combat/styles/wodx-combat.css")).href,
   pathToFileURL(join(root, "modules/wodx-otherworlds/styles/wodx-otherworlds.css")).href,
-  pathToFileURL(join(root, "modules/wodx-creation/styles/wodx-creation.css")).href];
+  pathToFileURL(join(root, "modules/wodx-creation/styles/wodx-creation.css")).href,
+  pathToFileURL(join(root, "modules/wodx-npc/styles/wodx-npc.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));

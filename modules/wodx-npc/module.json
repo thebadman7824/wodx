@@ -1,0 +1,19 @@
+{
+  "id": "wodx-npc",
+  "title": "WoDX NPC",
+  "description": "World of Darkness Expanded: NPC profiles and combat tactics. On an NPC's turn WoDX weighs what it could do from its temperament, fears and the fight, then suggests a plan to the Storyteller or (in Auto) moves and attacks with an undo card. Private use only; not for distribution or sale.",
+  "version": "0.1.0",
+  "authors": [{"name": "WoDX Project (private)"}],
+  "compatibility": {"minimum": "14", "verified": "14.369"},
+  "relationships": {
+    "systems": [{"id": "worldofdarkness", "type": "system", "compatibility": {"minimum": "7.3.2"}}],
+    "requires": [
+      {"id": "wodx-chronicle", "type": "module", "compatibility": {"minimum": "0.4.0"}},
+      {"id": "wodx-combat", "type": "module", "compatibility": {"minimum": "3.6.0"}},
+      {"id": "wodx-actions", "type": "module", "compatibility": {"minimum": "3.6.0"}}
+    ]
+  },
+  "esmodules": ["scripts/main.mjs"],
+  "styles": ["styles/wodx-npc.css"],
+  "flags": {"wodx": {"phase": 7}}
+}
