@@ -94,7 +94,8 @@ export async function run() {
         await step("versions", async () => {
             const v = id => game.modules.get(id)?.version;
             const api = A();
-            ok("versions", api.version === "3.4.0" && game.wodxCombat?.version === "3.6.0",
+            const atLeast = (v, w) => String(v).split(".").map(Number).reduce((r, x, i) => r ?? (x > Number(w.split(".")[i]) ? true : x < Number(w.split(".")[i]) ? false : null), null) ?? true;
+            ok("versions", atLeast(api.version, "3.4.0") && atLeast(game.wodxCombat?.version, "3.6.0"),
                 { actions: api.version, actionsManifest: v("wodx-actions"), combat: game.wodxCombat?.version, era: game.modules.get("wodx-chronicle").api.eras.activeEra()?.profile?.id,
                     line: api.hunterLine?.(), arcanoi: api.arcanoi?.()?.arts?.length });
         });

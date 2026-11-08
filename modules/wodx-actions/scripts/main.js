@@ -40,6 +40,8 @@ import * as HR from "./hunter-rules.js";
 import * as HX from "./hunter.js";
 import * as KRR from "./reckoning-rules.js";
 import * as RX from "./reckoning.js";
+import * as VR from "./voice-rules.js";
+import * as VX from "./voice.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -72,6 +74,7 @@ function registerSettings() {
     SX.registerSettings(s);
     WX.registerSettings(s);
     HX.registerSettings(s);
+    VX.registerSettings(s);
 }
 const setting = k => game.settings.get(MOD, k);
 
@@ -326,7 +329,7 @@ async function post(actor, title, body, rolls = [], data = null) {
     const md = { speaker: ChatMessage.getSpeaker({ actor }), content, rolls: rolls.filter(Boolean) };
     if (rolls.filter(Boolean).length) { md.sound = CONFIG.sounds.dice; if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL; }
     // Cards with prompt buttons (sin, witnesses, Rötschreck after sunlight) need the module's flag to be bound
-    if (!data && /data-(kx|sx|wx)=/.test(content)) data = { kind: "buttons" };
+    if (!data && /data-(kx|sx|wx|vx)=/.test(content)) data = { kind: "buttons" };
     if (data) md.flags = { [MOD]: data };
     return ChatMessage.create(md);
 }
@@ -1686,6 +1689,13 @@ function hx() {
         logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m) });
 }
 
+let VXE = null;
+/** The inner voice (3.5.0, Phase 6d). */
+function vx() {
+    return VXE ??= VX.build({ post, dialog, setFlag, virtues, notify: m => ui.notifications.warn(m), api: () => API, wraithInfo: a => WX.info(a),
+        inquisitor: a => (hx().isInquisitor(a) ? hx().inq(a) : null) });
+}
+
 let RXE = null;
 /** The imbued (3.4.0). */
 function rx() {
@@ -1789,7 +1799,11 @@ function bindCard(msg, el) {
         const r = await wx().onChatButton(b);
         if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
     }));
-    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    el.querySelectorAll?.("button.vta-btn[data-vx]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        await vx().onChatButton(b);
+    }));
+    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx]):not([data-vx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -1818,7 +1832,7 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.4.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.5.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => pm().uses(o.actor ?? resolveActor(), o.resource ?? "willpower"), cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
     cast: (o = {}) => pm().cast(o.actor ?? resolveActor()),
@@ -1856,7 +1870,10 @@ const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenz
     hunterPower: withActor(byLine(a => rx().useEdge(a), a => hx().blessing(a), a => hx().numina(a))),
     hunterVirtue: withActor(byLine(a => rx().secondSight(a), a => hx().virtueRoll(a), hh2Note)),
     inquisitorSheet: withActor(a => hx().inquisitorSheet(a)), blessing: withActor(a => hx().blessing(a)), useEdge: withActor(a => rx().useEdge(a)),
-    secondSight: withActor(a => rx().secondSight(a)), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
+    secondSight: withActor(a => rx().secondSight(a)),
+    // The inner voice (3.5.0)
+    innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
+    voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
     sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
     trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
@@ -1883,6 +1900,8 @@ Hooks.once("ready", async () => {
         L.chronicle()?.timed?.registerReverter?.("wodx-actions.quickening", revertQuickening);
         MIG.registerHandler();
         MIG.offerMigration().catch(e => console.error("WoDX |", e));
+        // The inner voice's proposals (6d): approved in the queue, answered from a card
+        (L.chronicle()?.registerApprovalHandler ?? game.modules.get("wodx-chronicle")?.api?.registerApprovalHandler)?.("wodx-voice", { label: "Inner voice", approve: entry => vx().onApproved(entry) });
     };
     if (L.chronicle()) withChronicle(); else Hooks.once("wodxChronicleReady", withChronicle);
     Hooks.on("wodxEndScene", () => {
@@ -1964,6 +1983,14 @@ function kindredHooks() {
     });
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) wx().newScene({ quiet: true }).catch(e => console.error("WoDX |", e)); });
     wx().onReady().catch(e => console.error("WoDX |", e));
+    // The inner voice (3.5.0): prompts when the pressure rises, the X-card, the scene's end, the approval queue
+    Hooks.on("preUpdateActor", actor => { try { vx().onPreUpdate(actor); } catch (e) { /* not a voiced line */ } });
+    Hooks.on("updateActor", actor => { vx().onUpdate(actor)?.catch?.(e => console.error("WoDX |", e)); });
+    Hooks.on("preUpdateItem", item => { if (item.parent instanceof Actor) try { vx().onPreUpdate(item.parent); } catch (e) { /* not voiced */ } });
+    Hooks.on("updateItem", item => { if (item.parent instanceof Actor) vx().onUpdate(item.parent)?.catch?.(e => console.error("WoDX |", e)); });
+    Hooks.on("wodxXCard", () => { vx().onXCard()?.catch?.(e => console.error("WoDX |", e)); });
+    Hooks.on("wodxEndScene", () => { vx().onEndScene()?.catch?.(e => console.error("WoDX |", e)); });
+
     let movePending = null;
     Hooks.on("updateToken", (doc, changes) => {
         if (!game.user.isGM || !("x" in changes || "y" in changes)) return;

@@ -313,7 +313,7 @@ export function build(ctx) {
     const wbtn = (k, actor, label, arg = "") => `<button type="button" class="vta-btn" data-wx="${k}" data-actor="${esc(actor?.uuid ?? "")}" data-arg="${esc(arg)}">${esc(label)}</button>`;
     /** Who plays this wraith's Shadow: a user id (another player or a GM), else the Storyteller. */
     function guideOf(actor) {
-        const id = actor.getFlag(MOD, "shadowguide");
+        const id = actor.getFlag(MOD, "voice")?.user ?? actor.getFlag(MOD, "shadowguide"); // the inner voice's assignment first (6d)
         return game.users.get(id) ?? game.users.activeGM ?? game.users.find(u => u.isGM) ?? null;
     }
     const isGuide = actor => game.user.isGM || guideOf(actor)?.id === game.user.id;
@@ -332,6 +332,7 @@ export function build(ctx) {
           <div class="form-group"><label>Permanent Angst (if the sheet has no field)</label><input type="number" name="perm" value="${info(actor).angst.perm}" min="0" max="10"/></div></form>`;
         return dialog(`Shadowguide — ${actor.name}`, content, "Save", async fd => {
             await ctx.setFlag(actor, "shadowguide", fd.u || null);
+            await ctx.setFlag(actor, "voice", { ...(actor.getFlag(MOD, "voice") ?? {}), user: fd.u || null });
             if (!n(actor.system?.advantages?.angst?.permanent)) await ctx.setFlag(actor, "angstPermanent", n(fd.perm));
             const g = guideOf(actor);
             return toGuide(actor, `The Shadow of ${actor.name}`, `<p>${esc(g?.isGM ? "The Storyteller" : g?.name ?? "The Storyteller")} plays this Shadow. Its whispers reach only ${esc(actor.name)}'s player and the Storyteller.</p>`);

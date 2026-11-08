@@ -334,3 +334,15 @@
   - Still open: the Great War wraith profile.
 - **The Great War profile, 2026-11-08 (B50).** The Great War Arcanoi library has 103 arts; names and levels were read from the page images. There is also a Maelstrom tool with the storm table by force. Harness 27 tests in phase6c; UI fit and quality check pass; installed and checked by MD5. The gate's 18th step waits for Ben.
 - **Gate 6c complete, 2026-11-08:** Claude ran the gate in the Foundry desktop app as Gamemaster Test: 18/18. The procedural generation plan is in the Master Plan (B52), and the WoDX look is planned as Phase 6e (B51).
+
+### Phase 6d built, 2026-11-08: the inner voice (WoDX Actions 3.5.0, Chronicle 0.2.1)
+
+- B53–B56 are Ben's choices: whispers and proposals, four voices, the visibility rule and consent.
+- One layer covers the Beast, the Shadow, Rage and the Impulse:
+  - an assigned voice and a private channel;
+  - a meter read from the sheet, with prompts when it rises;
+  - proposals through the approval queue, answered from a card with the line's own roll;
+  - consent: the switch, each player's opt-in and the X-card.
+- Harness 196 tests, UI fit and quality check pass. Installed and checked by MD5.
+- Claude ran gate 6d in the desktop app: 10/10. Gate 6c still passes on 3.5.0.
+- The table test with real players waits for Ben (PHASE-6D-CHECKLIST).

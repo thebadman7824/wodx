@@ -281,7 +281,7 @@ game.world.id = worldId;
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
       ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],
       ["The Shadow", () => ga.shadow({actor: A(ghost)})], ["Whisper", () => ga.shadowWhisper({actor: A(ghost)})], ["Shadowguide", () => ga.shadowguide({actor: A(ghost)})],
-      ["Harrowing", () => ga.harrowing({actor: A(ghost)})], ["The Maelstrom", () => ga.maelstrom()],
+      ["Harrowing", () => ga.harrowing({actor: A(ghost)})], ["The Maelstrom", () => ga.maelstrom()], ["The inner voice", () => ga.innerVoice({actor: A(ghost)})],
       ["Hunter menu", () => ga.menu({actor: A(monk)})], ["Hunter traits", () => ga.hunterSheet({actor: A(monk)})], ["Blessing", () => ga.hunterPower({actor: A(monk)})],
       ["Virtue roll", () => ga.hunterVirtue({actor: A(monk)})], ["A sin (Piety)", () => ga.sinGod({actor: A(monk)})], ["Prayer", () => ga.prayer({actor: A(monk)})],
       ["Bank Conviction", () => ga.bankConviction({actor: A(monk)})], ["True Faith", () => ga.trueFaith({actor: A(monk)})], ["Numina", () => ga.numina({actor: A(monk)})], ["Hedge magic", () => ga.hedgeMagic({actor: A(monk)})],

@@ -24,6 +24,7 @@ export function showXCard() {
     </div>`;
   el.addEventListener("click", () => el.remove());
   document.body.append(el);
+  Hooks.callAll("wodxXCard");
   clearTimeout(overlayTimer);
   overlayTimer = setTimeout(() => el.remove(), 12000);
 }
