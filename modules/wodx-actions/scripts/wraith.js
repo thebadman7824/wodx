@@ -155,7 +155,7 @@ export function build(ctx) {
             if (angst) { await gain(actor, "angst", angst); body += `<div class="vta-warn">The Shadow takes ${angst} temporary Angst (${a.d === "Outrage" ? "Outrage in the Labyrinth, p. 199" : "each 1 rolled outside the Shadowlands, p. 204"}).</div>`; }
             body += `<div class="vta-note">${esc(a.e)} <span class="wodx-quiet">(Wraith 20th p. ${a.p})</span></div>`;
             if (a.angst) body += `<div class="vta-note">This art can feed the Shadow: the Shadowguide decides how much (see the page).</div>${wbtn("angst", actor, "Shadow takes 1 Angst", "1")}`;
-            await afterSpend(actor);
+            if (n(fd.wp)) await afterSpend(actor);
             return post(actor, `${actor.name}: ${esc(a.n)}`, body, rolls);
         }, { width: 560, render: root => { describe(root); for (const k of ["art", "realm", "onSelf"]) root.querySelector(`[name=${k}]`)?.addEventListener("change", () => describe(root)); } });
     }

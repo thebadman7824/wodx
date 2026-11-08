@@ -58,6 +58,9 @@ async function makePack() {
     const agnes = await mk("Sister Agnes (mortal)", "Mortal", { advantages: { willpower: { permanent: 5, temporary: 5 }, faith: { permanent: 3, temporary: 3 } } }, [
         { name: "Psychometry", type: "Power", system: { type: "wod.types.numina", value: 3 } }, { name: "Hellfire", type: "Power", system: { type: "wod.types.numina", value: 3 } }]);
     const greta = await mk("Greta Lenz (ghoul)", "Mortal", { advantages: { willpower: { permanent: 4, temporary: 4 }, bloodpool: { temporary: 3, max: 10 } } }, []);
+    // The system's create helper resets a new sheet's permanent Willpower (and so its temporary): set it after creating
+    for (const [a, w] of [[ada, 5], [anselm, 5], [mara, 3], [agnes, 5], [greta, 4]])
+        await a.update({ "system.advantages.willpower.permanent": w, "system.advantages.willpower.temporary": w });
     return { folder, ada, anselm, mara, agnes, greta };
 }
 

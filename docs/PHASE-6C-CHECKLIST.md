@@ -79,3 +79,11 @@ Batch 1, second half (B38). Rules basis:
 8. **True Faith and Numina:** "Sister Agnes" → True Faith (repel a targeted vampire), Psychic Numina, Hedge magic (Hellfire).
 9. **The Imbuing** (only from 1999). Set the Chronicle Clock to 2003 (or use a modern world). Then Mortal → The Imbuing → pick a creed, Virtues and edges. A new Hunter sheet appears, and the mortal sheet is kept.
 10. Look at the console (F12) for red lines starting with "WoDX", then tell Claude you're done. Keep or delete the test pack as you like.
+
+## Gate result
+
+### Ben's first run, 2026-11-08: 14 of 17
+
+- The three failures were all Sister Agnes: True Faith, Psychic Numina and Hedge magic. Each spends Willpower, and her Willpower was 0. The system's create helper resets a new sheet's permanent Willpower, and its temporary is then clamped to it. This was test data, not a rules bug. The gate now sets Willpower after creating the test actors.
+- Found on the way: the wraith's "last Willpower spent" prompt fired after an Arcanos that spent no Willpower (Ada was at 0 for the same reason). It now fires only when the action spent Willpower. Fixed in `wraith.js` and installed (MD5 checked).
+- To run again: press F5 in Foundry, then run the same gate command. It reuses the test pack.
