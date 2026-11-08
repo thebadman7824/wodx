@@ -100,7 +100,7 @@ export const MENUS = {
             ["Passions and Fetters", [["api:passion", "Passion", "fa-heart"], ["api:fetter", "Fetter", "fa-link"], ["api:memoriam", "Memoriam", "fa-book-dead"], ["uses:pathos", "Pathos", "fa-fire-alt"]]],
             ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"]]],
             ["The Shadow", [["api:shadow", "The Shadow (Shadowguide)", "fa-mask"], ["api:shadowWhisper", "Whisper", "fa-comment-dots"], ["api:harrowing", "Harrowing", "fa-skull"], ["api:shadowguide", "Assign the Shadowguide (GM)", "fa-user-secret"]]],
-            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["rules:wraith", "Wraith rules", "fa-book"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["api:maelstrom", "The Maelstrom (GM)", "fa-wind"], ["rules:wraith", "Wraith rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },

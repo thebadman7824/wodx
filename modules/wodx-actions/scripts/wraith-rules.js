@@ -22,16 +22,22 @@ export function shroudRating({ base = 7, supernatural = false, hysteria = 0, hau
  * An art's difficulty (Chapter Five's defaults per Arcanos, or the art's own). ctx: {t: target traits, own: own traits,
  * shroud, realm (across | shadowlands | tempest | labyrinth), onSelf}. null: needs a target or the page decides.
  */
-export function arcanosDifficulty(code, { t = null, own = {}, shroud = 7, realm = "shadowlands", onSelf = false } = {}) {
+export function arcanosDifficulty(code, { t = null, own = {}, shroud = 7, realm = "shadowlands", onSelf = false, storm = 0 } = {}) {
     if (code === undefined || code === null || code === "") return 6;
     const s = String(code);
     if (/^\d+$/.test(s)) return Number(s);
     if (s === "var") return null;
     const across = realm === "across";
     if (s === "shroud") return n(shroud) || 7;
+    // The Great War's codes: the local Maelstrom's level + N, the Shroud + N (at most 10)
+    let m = s.match(/^storm\+(\d+)$/);
+    if (m) return Math.max(2, Math.min(10, n(storm) + Number(m[1])));
+    m = s.match(/^shroud\+(\d+)$/);
+    if (m) return Math.min(10, (n(shroud) || 7) + Number(m[1]));
+    if (s === "10-fetter") return t && Number.isFinite(t.fetter) ? Math.max(2, 10 - n(t.fetter)) : null;
     if (s.startsWith("side:")) {
         if (across) return n(shroud) || 7;
-        return arcanosDifficulty(s.slice(5), { t, own, shroud, realm, onSelf });
+        return arcanosDifficulty(s.slice(5), { t, own, shroud, realm, onSelf, storm });
     }
     if (s.startsWith("self:")) {
         if (onSelf) return Number(s.slice(5)) || 6;
@@ -64,7 +70,7 @@ export function realmAngst(arcanos, realm, faces = []) {
 /** The arts a wraith can use: sheet = [{name, value}] Arcanoi ratings; Common arts to the rating, Initiate arts too (Guild teaching is the Storyteller's call). */
 export function artsFor(arts, sheet) {
     const rating = name => Math.max(0, ...sheet.filter(s => String(s.name).toLowerCase().startsWith(String(name).toLowerCase())).map(s => n(s.value)));
-    return (arts ?? []).filter(a => rating(a.d) >= a.l).map(a => ({ ...a, rating: rating(a.d) }))
+    return (arts ?? []).filter(a => rating(a.d) >= Math.max(1, a.l)).map(a => ({ ...a, rating: rating(a.d) }))
         .sort((a, b) => a.d.localeCompare(b.d) || a.l - b.l || a.n.localeCompare(b.n));
 }
 
@@ -186,3 +192,32 @@ export const CAUL_SELF = { cost: 1, difficulty: 4 };
 /** A Reaper's help: Charisma + Empathy at 9 − the Enfant's Memoriam (min 2); the Reaper gains Memoriam + 2 Pathos. */
 export function reaperDifficulty(memoriam) { return Math.max(2, 9 - n(memoriam)); }
 export const reaperPathos = memoriam => n(memoriam) + 2;
+
+/* ------------------------------------------------------------------ */
+/*  The Great War (B43): which library, and the Fourth Great Maelstrom  */
+/* ------------------------------------------------------------------ */
+
+/** The Great War profile uses Wraith: The Great War's arts (Kinesis in place of Inhabit); every other era Wraith 20th's. */
+export const libraryFor = era => (String(era ?? "") === "great-war" ? "gw" : "w20");
+/**
+ * A Maelstrom by force (Wraith: The Great War p. 87): damage dice a scene to the exposed, how often aggravated,
+ * outdoor difficulty, and what armor and haunts do. Force 0 = no storm.
+ */
+export const MAELSTROM = [
+    null,
+    { dice: [1, 4], agg: "almost never", diff: 0, armor: "Class Two armor or any walls stop it", haunt: "−2 dice a Haunt level" },
+    { dice: [4, 6], agg: "about a quarter of the time", diff: 1, armor: "usual", haunt: "−1 die a Haunt level" },
+    { dice: [6, 8], agg: "up to half the time", diff: 2, armor: "one die less", haunt: "−1 die a Haunt level" },
+    { dice: [8, 12], agg: "about half the time", diff: 3, armor: "one die less", haunt: "one die less than the Haunt level" },
+    { dice: [14, 14], agg: "usually", diff: 3, armor: "half (round down)", haunt: "−1 die per two Haunt levels" }
+];
+/** Dice for an exposed wraith this scene: the force's range (middle by default), less shelter. */
+export function maelstromDice(force, { haunt = 0, roll = null } = {}) {
+    const f = MAELSTROM[Math.max(0, Math.min(5, n(force)))];
+    if (!f) return 0;
+    const [lo, hi] = f.dice;
+    let dice = roll === null ? Math.round((lo + hi) / 2) : Math.max(lo, Math.min(hi, n(roll)));
+    const h = n(haunt);
+    if (h) dice -= n(force) === 1 ? 2 * h : n(force) === 4 ? Math.max(0, h - 1) : n(force) === 5 ? Math.floor(h / 2) : h;
+    return Math.max(0, dice);
+}

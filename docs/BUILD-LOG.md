@@ -332,3 +332,4 @@
   - The first two runs exposed gate-script problems: test actors created with 0 Willpower (the system's create helper resets it), state left over from the earlier run, and another module's chat messages read as WoDX cards.
   - They also exposed one WoDX bug: the wraith's last-Willpower prompt fired after an action that spent no Willpower. Fixed.
   - Still open: the Great War wraith profile.
+- **The Great War profile, 2026-11-08 (B50).** The Great War Arcanoi library has 103 arts; names and levels were read from the page images. There is also a Maelstrom tool with the storm table by force. Harness 27 tests in phase6c; UI fit and quality check pass; installed and checked by MD5. The gate's 18th step waits for Ben.

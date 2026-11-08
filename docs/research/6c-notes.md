@@ -115,3 +115,17 @@ Mechanics only, in WoDX's own words, with page references. No book text. Decisio
 - Overfeeding (p. 43): Stamina extra blood points above the pool; more than that: Stamina at 8; success, the excess can be used at once; failure, a lethal level per excess point and no blood usable until a scene of vomiting. Overdosed: frenzies like a vampire, +1 Dexterity, Perception + Self-Control each scene or hallucinations.
 - Withdrawal (p. 43): from a missed monthly feeding; about a month (or 6 − Stamina weeks); Self-Control (or Instinct) at 7 to resist a chance to feed.
 - Elder ghouls by day (p. 44, optional): fed 100+ years, a Willpower check to stay awake by day; dozing off, Stamina + Alertness at 7 to wake.
+
+## Wraith: The Great War (the Great War profile, B43) — printed page = pdf page; OCR'd on Ben's PC, art names and levels checked against the page images
+- The Arts of the War Dead (p. 115): the Arcanoi differ from Wraith: The Oblivion. Inhabit is not yet possible (Kinesis stands in its place). At the Storyteller's discretion, standard arts may be bought instead.
+- Each Arcanos has Basic Abilities that come with any dot, then five arts (pp. 115–134). The Forbidden Arcanoi (p. 131) are not detailed beyond Mnemosynis being unknown.
+- Alternate arts (p. 134): arts of another level, at a cost.
+- War arts:
+  - haunting a vessel with Lifeweb (p. 74);
+  - Argos ship crossings into the Tempest (p. 75);
+  - binding a ship's crossing (p. 90).
+- The Fourth Great Maelstrom by force (p. 87): damage dice a scene to the exposed, the chance it is aggravated, the outdoor difficulty, and how armor and Haunts protect.
+- Creation (p. 100):
+  - Attributes 7/5/3, Abilities 13/9/5, Arcanoi 5, Backgrounds 7, Passions 10, Fetters 10, Pathos 5 + Memoriam.
+  - Freebies: Arcanoi 5 a dot, Basic Abilities 3 an Arcanos, Willpower 2, Abilities 2, Passions 2, Backgrounds 1, Fetters 1, Pathos 1 per 2 dots.
+  - These belong to WoDX Creation's era tables; not built yet.

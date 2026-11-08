@@ -62,7 +62,10 @@ Batch 1, second half (B38). Rules basis:
   - UI fit passes for every window, with 24 new dialogs.
   - `quality-check.sh` passes.
 - [x] **Installed** on 2026-11-08 and checked by MD5. The files replaced are in `FoundryVTT\Backups\wodx-6c-pre-deploy-20261108`. The gate script is in `Data/wodx-gate/gate6c.mjs`.
-- [ ] **Still reading:** The Great War (Wraith) core, for the Great War profile (B43). It is a scan, being OCR'd on Ben's PC. Its differences go in after.
+- [x] **The Great War profile (B43, B50).**
+  - `arcanoi-gw.json` has Wraith: The Great War's 103 arts, with Basic Abilities and the war arts. The Arcanos dialog switches to it in the Great War era.
+  - The Maelstrom tool (GM; wraith menu → Danger) sets a storm's force on the scene. It rolls the storm's damage onto exposed wraiths' Corpus, after the shelter of Haunts. Art difficulties can read the storm's force.
+  - Harness 27 tests in `phase6c.test.mjs`. A gate step (Tommy Atkins, 1917) checks both.
 
 ## For you
 
@@ -98,3 +101,7 @@ All eight failures were in the gate script itself, not WoDX:
 ### Ben's third run, 2026-11-08: 17 of 17
 
 The automatic gate passes. One item is still open: the Great War wraith profile (B43), to be added once its OCR is read.
+
+### The Great War addition, 2026-11-08
+
+Installed and checked by MD5; backup in `Backups\wodx-6c-greatwar-pre-deploy`. The gate now has 18 steps: press F5, run the same command, and expect 18/18.

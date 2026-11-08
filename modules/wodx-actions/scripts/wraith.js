@@ -28,12 +28,18 @@ const ownerIds = actor => game.users.filter(u => u.isGM || actor?.testUserPermis
 const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);
 const ATTR = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];
 
-export const DATA = { arcanoi: null, wraith: null };
+export const DATA = { arcanoi: null, wraith: null, w20: null, gw: null };
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { return null; } };
-    [DATA.arcanoi, DATA.wraith] = await Promise.all([get("arcanoi-w20.json"), get("wraith-w20.json")]);
+    [DATA.w20, DATA.wraith, DATA.gw] = await Promise.all([get("arcanoi-w20.json"), get("wraith-w20.json"), get("arcanoi-gw.json")]);
+    DATA.arcanoi = DATA.w20;
     return DATA;
 }
+
+/** The era's Arcanoi (B43): Wraith: The Great War's in the Great War profile, Wraith 20th's elsewhere. */
+export function eraId() { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } }
+export function library() { return (W.libraryFor(eraId()) === "gw" ? DATA.gw : DATA.w20) ?? DATA.w20; }
+const bookOf = lib => (lib === DATA.gw ? "Wraith: The Great War" : "Wraith 20th");
 
 /** Is this a wraith (or a Spectre's Psyche)? */
 export const isWraith = a => P.detectProfile(a) === "wraith";
@@ -90,6 +96,12 @@ export function build(ctx) {
 
     /* ---------------- Arcanoi ---------------- */
 
+    /** The local Maelstrom (a scene flag, 0–5; the Storyteller sets it with the Maelstrom tool). */
+    const storm = () => Math.max(0, Math.min(5, n(canvas?.scene?.getFlag?.(MOD, "maelstrom"))));
+    /** The second half of an art's roll: the Arcanos, or an Ability the page names (Cravings: Empathy). */
+    const second = (a, sec) => (!sec || sec === "arc" ? a.rating : (findAbility(actor0, sec)?.value ?? 0));
+    let actor0 = null;
+
     function targetTraits(t) {
         if (!t) return null;
         const s = t.system ?? {}, adv = s.advantages ?? {};
@@ -100,14 +112,16 @@ export function build(ctx) {
     }
 
     async function useArcanos(actor) {
-        if (!DATA.arcanoi) return ctx.notify("The Arcanoi library didn't load.");
+        actor0 = actor;
+        const lib = library();
+        if (!lib) return ctx.notify("The Arcanoi library didn't load.");
         const i = info(actor);
-        const list = W.artsFor(DATA.arcanoi.arts, i.arcanoi);
+        const list = W.artsFor(lib.arts, i.arcanoi);
         if (!list.length) return ctx.notify(`${actor.name} has no Arcanoi on the sheet the library knows (${i.arcanoi.map(a => a.name).join(", ") || "none"}).`);
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const sh = shroudAt(actor);
-        const content = `<form class="wodx-arcanos"><p><b>${esc(actor.name)}</b> — Pathos ${i.pathos.temp}, Corpus ${i.corpus.max - (i.damage.bashing + i.damage.lethal + i.damage.aggravated)}/${i.corpus.max}, Willpower ${i.willpower.temp}; local Shroud ${sh.rating}${sh.base === null ? " (not rated here: 7)" : ""}${tgt ? `; target <b>${esc(tgt.name)}</b>` : ""}</p>
-          <div class="form-group"><label>Art</label>${searchBox("select[name=art]", "Search arts…", "Search arts")}<select name="art">${list.map((a, k) => `<option value="${a.id}" ${k === 0 ? "selected" : ""}>${esc(`${a.d} ${"•".repeat(a.l)}: ${a.n} (${a.k})`)}</option>`).join("")}</select></div>
+        const content = `<form class="wodx-arcanos"><p><b>${esc(actor.name)}</b> — Pathos ${i.pathos.temp}, Corpus ${i.corpus.max - (i.damage.bashing + i.damage.lethal + i.damage.aggravated)}/${i.corpus.max}, Willpower ${i.willpower.temp}; local Shroud ${sh.rating}${sh.base === null ? " (not rated here: 7)" : ""}${storm() ? `; Maelstrom force ${storm()}` : ""}${tgt ? `; target <b>${esc(tgt.name)}</b>` : ""}. Arts from ${bookOf(lib)}.</p>
+          <div class="form-group"><label>Art</label>${searchBox("select[name=art]", "Search arts…", "Search arts")}<select name="art">${list.map((a, k) => `<option value="${a.id}" ${k === 0 ? "selected" : ""}>${esc(`${a.d} ${a.l ? "•".repeat(a.l) : "basic"}: ${a.n}${a.k === "basic" || a.k === "art" ? "" : ` (${a.k})`}`)}</option>`).join("")}</select></div>
           <div class="wodx-art-info vta-note"></div>
           <div class="form-group"><label>Where</label><select name="realm" data-fixed>${Object.entries(W.REALMS).map(([k, l]) => `<option value="${k}" ${k === "shadowlands" ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
           <div class="form-group"><label><input type="checkbox" name="onSelf"/> On themselves</label></div>
@@ -118,14 +132,14 @@ export function build(ctx) {
             const a = list.find(x => x.id === root.querySelector("[name=art]").value);
             if (!a) return;
             const c = W.artCost(a.c);
-            const d = W.arcanosDifficulty(a.diff, { t: targetTraits(tgt), own: { angst: i.angst.temp, stamina: attr(actor, "stamina") }, shroud: sh.rating, realm: root.querySelector("[name=realm]").value, onSelf: root.querySelector("[name=onSelf]").checked });
+            const d = W.arcanosDifficulty(a.diff, { t: targetTraits(tgt), own: { angst: i.angst.temp, stamina: attr(actor, "stamina") }, shroud: sh.rating, storm: storm(), realm: root.querySelector("[name=realm]").value, onSelf: root.querySelector("[name=onSelf]").checked });
             if (d !== null) root.querySelector("[name=diff]").value = d;
             root.querySelector("[name=pathos]").value = c.pathos;
             root.querySelector("[name=corpus]").value = c.corpus;
             root.querySelector("[name=wp]").value = c.willpower;
-            const [at] = String(a.r || "").split("+");
+            const [at, sec] = String(a.r || "").split("+");
             const costTxt = [c.pathos && `${c.pathos} Pathos`, c.corpus && `${c.corpus} Corpus`, c.willpower && `${c.willpower} Willpower`, c.variable && "more as needed"].filter(Boolean).join(", ") || "none";
-            root.querySelector(".wodx-art-info").innerHTML = `<b>${esc(a.n)}</b> (${esc(a.d)} ${a.l}, ${esc(a.k)}) · cost ${esc(costTxt)} · ${a.r ? `roll ${cap(at)} + ${esc(a.d)} (${attr(actor, at) + a.rating} dice)` : "no roll"}${a.angst ? " · <b>can feed the Shadow Angst</b>" : ""} · Wraith 20th p. ${a.p}<br>${esc(a.e)}<br><span class="wodx-quiet">${esc(DATA.arcanoi.general.defaults[a.d] ?? "")}</span>`
+            root.querySelector(".wodx-art-info").innerHTML = `<b>${esc(a.n)}</b> (${esc(a.d)} ${a.l}, ${esc(a.k)}) · cost ${esc(costTxt)} · ${a.r ? `roll ${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : esc(a.d)} (${attr(actor, at) + second(a, sec)} dice)` : "no roll"}${a.angst ? " · <b>can feed the Shadow Angst</b>" : ""} · ${bookOf(lib)} p. ${a.p}<br>${esc(a.e)}<br><span class="wodx-quiet">${esc(lib.general?.defaults?.[a.d] ?? "")}</span>`
                 + (d === null && a.diff && a.diff !== "var" ? "<br><i>The difficulty comes from the target: target a token or set it.</i>" : "");
         };
         return dialog(`Use an Arcanos — ${actor.name}`, content, "Use", async fd => {
@@ -143,17 +157,17 @@ export function build(ctx) {
             const rolls = [];
             let faces = [], successes = 1;
             if (a.r) {
-                const [at] = a.r.split("+");
-                const dice = Math.max(0, attr(actor, at) + a.rating + n(fd.bonus));
+                const [at, sec] = a.r.split("+");
+                const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
                 const r = await rollPool(dice, fd.diff);
                 rolls.push(r.roll); faces = r.faces ?? [];
                 successes = r.botch ? 0 : r.successes;
-                body += rollBlock(`${cap(at)} + ${a.d}`, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : []);
+                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : []);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }
             const angst = W.realmAngst(a.d, fd.realm, faces);
             if (angst) { await gain(actor, "angst", angst); body += `<div class="vta-warn">The Shadow takes ${angst} temporary Angst (${a.d === "Outrage" ? "Outrage in the Labyrinth, p. 199" : "each 1 rolled outside the Shadowlands, p. 204"}).</div>`; }
-            body += `<div class="vta-note">${esc(a.e)} <span class="wodx-quiet">(Wraith 20th p. ${a.p})</span></div>`;
+            body += `<div class="vta-note">${esc(a.e)} <span class="wodx-quiet">(${bookOf(lib)} p. ${a.p})</span></div>`;
             if (a.angst) body += `<div class="vta-note">This art can feed the Shadow: the Shadowguide decides how much (see the page).</div>${wbtn("angst", actor, "Shadow takes 1 Angst", "1")}`;
             if (n(fd.wp)) await afterSpend(actor);
             return post(actor, `${actor.name}: ${esc(a.n)}`, body, rolls);
@@ -506,6 +520,32 @@ export function build(ctx) {
         await game.settings.set(MOD, "lastGmReady", now);
     }
 
+    /** The Maelstrom (GM): set its force here, and roll the storm's damage for exposed wraiths (Wraith: The Great War p. 87). */
+    async function maelstrom() {
+        if (!game.user.isGM || !canvas?.scene) return ctx.notify("The Storyteller calls the Maelstrom.");
+        const cur = storm();
+        const wraiths = (canvas.tokens?.placeables ?? []).filter(t => t.actor && isWraith(t.actor));
+        const content = `<form><p>Maelstrom force here: ${cur || "none"}. A storm's damage each scene to wraiths outside shelter, by force (Wraith: The Great War p. 87; the Great War profile's Fourth Great Maelstrom, and any storm the Storyteller calls).</p>
+          <div class="form-group"><label>Force</label><select name="force" data-fixed>${[0, 1, 2, 3, 4, 5].map(f => `<option value="${f}" ${f === cur ? "selected" : ""}>${f ? `${f}: ${W.MAELSTROM[f].dice.join("–")} dice, aggravated ${W.MAELSTROM[f].agg}; outdoors +${W.MAELSTROM[f].diff}` : "None"}</option>`).join("")}</select></div>
+          <div class="form-group"><label>Roll damage now for the exposed</label><select name="who" data-fixed><option value="none">No, just set the force</option><option value="targets">The targeted wraiths</option><option value="all">Every wraith token here (${wraiths.length})</option></select></div>
+          <div class="form-group"><label>Haunt level sheltering them</label><input type="number" name="haunt" value="0" min="0" max="5"/> <label><input type="checkbox" name="agg"/> This scene's damage is aggravated</label></div></form>`;
+        return dialog("The Maelstrom", content, "Go", async fd => {
+            const force = n(fd.force);
+            if (force) await canvas.scene.setFlag(MOD, "maelstrom", force); else await canvas.scene.unsetFlag(MOD, "maelstrom");
+            const list = fd.who === "all" ? wraiths.map(t => t.actor) : fd.who === "targets" ? [...game.user.targets].map(t => t.actor).filter(a => a && isWraith(a)) : [];
+            const lines = [];
+            for (const a of list) {
+                const dice = W.maelstromDice(force, { haunt: n(fd.haunt) });
+                if (!dice) { lines.push(`<li>${esc(a.name)}: sheltered</li>`); continue; }
+                const r = await rollPool(dice, 6, { canBotch: false });
+                const lv = r.successes;
+                if (lv) await corpusDamage(a, fd.agg ? "aggravated" : "lethal", lv);
+                lines.push(`<li>${esc(a.name)}: ${dice} dice → ${lv} ${fd.agg ? "aggravated" : "lethal"} on the Corpus</li>`);
+            }
+            return ChatMessage.create({ content: `<div class="vta-card"><h3>The Maelstrom${force ? `, force ${force}` : " passes"}</h3>${force ? `<p>Outdoors: +${W.MAELSTROM[force].diff} difficulty to everything. Haunts: ${esc(W.MAELSTROM[force].haunt)} (counted). Armor: ${esc(W.MAELSTROM[force].armor)} (not counted: take it off by hand).</p>` : ""}${lines.length ? `<ul>${lines.join("")}</ul>` : ""}<p class="wodx-quiet">Wraith: The Great War p. 87</p></div>`, speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
+        });
+    }
+
     /** Hysteria (p. 283): the Storyteller lowers this scene's Shroud by one (at most three) until the scene ends. */
     async function hysteria() {
         if (!game.user.isGM || !canvas?.scene) return ctx.notify("The Storyteller calls Hysteria.");
@@ -526,7 +566,7 @@ export function build(ctx) {
         return null;
     }
 
-    return { info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
+    return { maelstrom, storm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
 }
 
 export function registerSettings() {

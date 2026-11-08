@@ -1849,8 +1849,8 @@ const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenz
     useArcanos: withActor(a => wx().useArcanos(a)), passion: withActor(a => wx().passion(a)), fetter: withActor(a => wx().fetter(a)),
     memoriam: withActor(a => wx().memoriam(a)), healCorpus: withActor(a => wx().healCorpus(a)), caul: withActor(a => wx().caul(a)),
     shadow: withActor(a => wx().shadow(a)), shadowWhisper: withActor(a => wx().whisper(a)), shadowguide: withActor(a => wx().shadowguide(a)),
-    harrowing: withActor((a, o) => wx().harrowing(a, o)), hysteria: () => wx().hysteria(), newWraithScene: () => wx().newScene(), newSession: () => wx().newSession(),
-    corpusDamage: (a, type, k) => wx().corpusDamage(resolveActor(a), type, k), wraithInfo: a => WX.info(a), wraithRules: WR, arcanoi: () => WX.DATA.arcanoi,
+    harrowing: withActor((a, o) => wx().harrowing(a, o)), hysteria: () => wx().hysteria(), maelstrom: () => wx().maelstrom(), newWraithScene: () => wx().newScene(), newSession: () => wx().newSession(),
+    corpusDamage: (a, type, k) => wx().corpusDamage(resolveActor(a), type, k), wraithInfo: a => WX.info(a), wraithRules: WR, arcanoi: () => WX.library(), arcanoiLibraries: () => ({ w20: WX.DATA.w20, gw: WX.DATA.gw }),
     // Hunters, True Faith and Numina (3.4.0)
     hunterSheet: withActor(byLine(a => rx().sheet(a), a => hx().inquisitorSheet(a), hh2Note)),
     hunterPower: withActor(byLine(a => rx().useEdge(a), a => hx().blessing(a), a => hx().numina(a))),

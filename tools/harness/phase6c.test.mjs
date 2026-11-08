@@ -476,3 +476,48 @@ test("an imbued hunter: second sight costs a Conviction once a scene; a risked e
   assert.match(posts.at(-1).body, /Dexterity \+ Melee \+ 2 risked: 2 \(7 at 6\)/);
   era = {id: "dark-ages"}; year = 1230;
 });
+
+/* ---------------- The Great War profile (B43) ---------------- */
+
+test("the Great War library: 103 arts in 15 Arcanoi with pages, codes the rules read; Kinesis in place of Inhabit", () => {
+  const GW = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/arcanoi-gw.json"), "utf8"));
+  assert.equal(GW.arts.length, 103);
+  const ds = new Set(GW.arts.map(a => a.d));
+  assert.ok(ds.has("Kinesis") && !ds.has("Inhabit") && ds.size === 15, [...ds].join(","));
+  for ( const a of GW.arts ) {
+    assert.ok(a.id && a.n && a.p >= 74 && a.p <= 134 && a.l >= 0 && a.l <= 5, JSON.stringify(a));
+    assert.ok(ATTR.includes(a.r.split("+")[0]), a.n);
+    const d = WR.arcanosDifficulty(a.diff, {t: {willpower: 6, angst: 4, stamina: 3, fetter: 3}, own: {angst: 3, stamina: 3}, shroud: 7, storm: 3});
+    assert.ok(d === null || (d >= 2 && d <= 10), `${a.n}: ${a.diff} → ${d}`);
+  }
+  assert.equal(new Set(GW.arts.map(a => a.id)).size, GW.arts.length, "ids unique");
+  assert.equal(WR.libraryFor("great-war"), "gw");
+  assert.equal(WR.libraryFor("modern"), "w20");
+  assert.equal(WR.arcanosDifficulty("storm+4", {storm: 3}), 7);
+  assert.equal(WR.arcanosDifficulty("shroud+4", {shroud: 8}), 10);
+  assert.equal(WR.arcanosDifficulty("10-fetter", {t: {fetter: 4}}), 6);
+  const basics = WR.artsFor(GW.arts, [{name: "Argos", value: 1}]);
+  assert.ok(basics.some(a => a.n === "Maelstrom Navigation") && basics.some(a => a.n === "Enshroud") && !basics.some(a => a.n === "Storm Robes"));
+  assert.equal(WR.artsFor(GW.arts, [{name: "Argos", value: 0}]).length, 0, "no basics without a dot");
+});
+
+test("the Maelstrom by force: dice a scene, shelter by Haunt level", () => {
+  assert.equal(WR.maelstromDice(0), 0);
+  assert.equal(WR.maelstromDice(2), 5);
+  assert.equal(WR.maelstromDice(1, {haunt: 1}), 1);
+  assert.equal(WR.maelstromDice(3, {haunt: 2}), 5);
+  assert.equal(WR.maelstromDice(4, {haunt: 3}), 8);
+  assert.equal(WR.maelstromDice(5, {haunt: 3}), 13);
+  assert.equal(WR.MAELSTROM[5].dice[0], 14);
+});
+
+test("in the Great War profile the Arcanos dialog offers the Great War's arts", async () => {
+  reset();
+  era = {id: "great-war"}; year = 1917;
+  const w = wraith("Tommy", {items: [{name: "Kinesis", type: "Power", system: {type: "wod.types.arcanoi", value: 2}}]});
+  forms.push(el => { const opts = [...el.querySelectorAll("[name=art] option")].map(o => o.textContent); assert.ok(opts.some(t => /Reliquary/.test(t)) && opts.some(t => /Sense Kinesis/.test(t)), opts.join("|")); return {art: [...el.querySelectorAll("[name=art] option")].find(o => /Bind/.test(o.textContent)).value, pathos: 0, corpus: 0, wp: 0}; });
+  rolls.push(1);
+  await W.useArcanos(w);
+  assert.match(posts.at(-1).body, /Wraith: The Great War p\. 121/);
+  era = {id: "dark-ages"}; year = 1230;
+});

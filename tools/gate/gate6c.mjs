@@ -225,6 +225,33 @@ export async function run() {
             ok("ghoul overfeeding", !!m && greta.system.advantages.bloodpool.temporary === 5, { card: text(m).slice(0, 160), blood: greta.system.advantages.bloodpool.temporary });
         });
 
+        await step("the Great War profile's arts and the Maelstrom", async () => {
+            const api = game.modules.get("wodx-chronicle").api, old = api.eras;
+            const tommy = await (async () => {
+                const f = game.folders.find(x => x.type === "Actor" && x.name === "WoDX 6c test pack");
+                return game.actors.find(a => a.folder?.id === f.id && a.name === "Tommy Atkins (wraith, 1917)") ?? Actor.create({ name: "Tommy Atkins (wraith, 1917)", type: "Wraith", folder: f.id,
+                    system: { advantages: { pathos: { temporary: 6, max: 10 }, corpus: { temporary: 10, permanent: 10, max: 10 } } },
+                    items: [{ name: "Kinesis", type: "Power", system: { type: "wod.types.arcanoi", value: 2 } }] });
+            })();
+            await tommy.update({ "system.advantages.willpower.permanent": 5, "system.advantages.willpower.temporary": 5, "system.advantages.pathos.temporary": 6 });
+            let opts = [];
+            try {
+                api.eras = { ...old, activeEra: () => ({ profile: { id: "great-war" } }), currentYear: () => 1917 };
+                const n = game.messages.size;
+                answer(root => { opts = [...root.querySelectorAll("[name=art] option")].map(o => o.textContent); const b = [...root.querySelectorAll("[name=art] option")].find(o => /Bind/.test(o.textContent)); set(root, "art", b.value); set(root, "pathos", 0); set(root, "wp", 0); });
+                A().useArcanos(actorOf(tommy));
+                const m = await untilMsg(n);
+                const n2 = game.messages.size;
+                answer(root => { set(root, "force", 2); set(root, "who", "none"); });
+                A().maelstrom();
+                const m2 = await untilMsg(n2);
+                const force = canvas.scene.getFlag("wodx-actions", "maelstrom");
+                await canvas.scene.unsetFlag("wodx-actions", "maelstrom");
+                ok("the Great War profile's arts and the Maelstrom", opts.some(t => /Reliquary/.test(t)) && /Great War p\. 121/.test(text(m)) && force === 2 && /force 2/.test(text(m2)),
+                    { arts: opts.length, card: text(m).slice(0, 160), maelstrom: text(m2).slice(0, 160), force });
+            } finally { api.eras = old; }
+        });
+
         await step("menus follow the profile", async () => {
             const html = async a => (await A().profileMenu?.(a)) ?? null;
             ok("menus follow the profile", true, { wraith: A().getKind(ada), hunter: A().getKind(mara), mortal: A().getKind(agnes) });
