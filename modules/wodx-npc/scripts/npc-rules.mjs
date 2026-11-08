@@ -58,7 +58,7 @@ export function profileOf(saved = {}, fallbackTemplate = "guard") {
 /**
  * What the NPC could do, scored. state:
  *   self: {kind, wounds, willpower, blood, bloodMax, selfcontrol, rage, rageMax, hasPowers, inFrenzy, delirious}
- *   enemies: [{id, name, visible, distance (yards), reach (bool), hurtMe (levels this fight), wounds, supernatural,
+ *   enemies: [{id, name, visible, distance (yards), reach (bool), hurtMe (levels this fight), wounds, supernatural, obvious (plainly inhuman),
  *              fearSources: ["fire"…], attackDice, ranged (bool)}]
  *   allies: [{id, name, hurt (levels), isDomitor, attackerIds: [enemy ids who hurt this ally]}]
  *   offstageAllies: number of loyal NPCs not in the fight (for calling for help)
@@ -72,7 +72,8 @@ export function scoreOptions(profile, state) {
   const allies = state.allies ?? [];
   const why = [];
   const fearHere = (e) => (e.fearSources ?? []).filter(f => (p.fears ?? []).includes(f));
-  const anyFear = enemies.some(e => fearHere(e).length) || ((p.fears ?? []).includes("supernatural") && enemies.some(e => e.supernatural));
+  // Fear of the supernatural needs it to show: a Kindred who passes for human frightens no one until it does
+  const anyFear = enemies.some(e => fearHere(e).length) || ((p.fears ?? []).includes("supernatural") && enemies.some(e => e.obvious));
   const outnumbered = enemies.length > allies.length + 1;
 
   // The Delirium, or a bystander facing violence, overrides the rest (WoDX reading of the line rules)
@@ -101,7 +102,7 @@ export function scoreOptions(profile, state) {
     const r = [];
     if ( s.wounds >= p.fleeAt ) { sc += 6 + (s.wounds - p.fleeAt); r.push(`wounded past what this NPC will bear (${s.wounds} ≥ ${p.fleeAt})`); }
     if ( outnumbered ) { sc += 1.5 * (p.caution); r.push("outnumbered"); }
-    if ( anyFear ) { sc += 3; r.push("faces what it fears"); }
+    if ( anyFear ) { sc += 2 + 1.5 * p.caution; r.push("faces what it fears"); }
     if ( (p.fears ?? []).includes("violence") && enemies.length ) { sc += 3; r.push("not a fighter"); }
     if ( s.inFrenzy ) sc -= 10;
     if ( r.length ) out.push({action: "flee", score: sc, why: r.join("; ")});

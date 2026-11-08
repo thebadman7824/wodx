@@ -13,7 +13,7 @@
 import * as NR from "./npc-rules.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -63,6 +63,10 @@ const wounds = actor => {
 const cardsNow = () => (game.messages?.contents ?? []).slice(-400).map(m => m.getFlag?.("wodx-combat", "data")).filter(Boolean);
 const hidden = tok => tok.document.hidden || tok.actor?.statuses?.has?.("invisible") || !!chron()?.conditions?.hasCondition?.(tok.actor, "obfuscated");
 const supernatural = actor => (C()?.getKind?.(actor) ?? "mortal") !== "mortal";
+/** Plainly inhuman to a mortal eye: a spirit or ghost that shows itself, a war form, or a body twisted by a power. */
+const OBVIOUS_EFFECT = /crinos|hispo|glabro|shape of the beast|horrid form|vicissitude|tenebrous form|wings|bestial|monstrous/i;
+const obvious = actor => ["spirit", "wraith"].includes(C()?.getKind?.(actor)) || [...(actor?.effects ?? [])].some(e => OBVIOUS_EFFECT.test(e.name ?? ""))
+  || !!actor?.getFlag?.(MOD, "obvious");
 /** What in an enemy's hands or soul an NPC may fear. */
 function fearSources(actor) {
   const out = new Set();
@@ -114,7 +118,7 @@ export function readFight(tok, combat = game.combat) {
     const best = plan?.best;
     return {id: t.id, name: t.name, visible: !hidden(t), distance: yardsBetween(tok, t),
       reach: !!best && !plan.ignoredDistance && !best.w?.ranged, ranged: !!best?.w?.ranged && !plan.ignoredDistance,
-      hurtMe: myHarm.get(t.actor?.uuid) ?? 0, wounds: wounds(t.actor), supernatural: supernatural(t.actor),
+      hurtMe: myHarm.get(t.actor?.uuid) ?? 0, wounds: wounds(t.actor), supernatural: supernatural(t.actor), obvious: obvious(t.actor),
       fearSources: fearSources(t.actor), attackDice: best?.atkDice ?? 0};
   });
   const AL = allies.map(t => {

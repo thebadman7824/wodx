@@ -8,5 +8,5 @@
 - [x] Attacks through WoDX Combat's quick attack; Undo puts positions, health, Willpower and blood back
 - [x] Never a player's character; gender-neutral text (B48)
 - [x] Harness tests (phase7b.test.mjs); UI fit at three sizes
-- [ ] Foundry restart (Ben enters the admin password) and WoDX NPC enabled in the world
-- [ ] Gate 7b in Foundry (gate7b.mjs run)
+- [x] Foundry restarted (startup world set to rothenstein-wodx, so no admin password) and WoDX NPC enabled in the world, 2026-11-08
+- [x] Gate 7b in Foundry (gate7b.mjs run): 12/12, 2026-11-08, then 12/12 again with 0.1.1

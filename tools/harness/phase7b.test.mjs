@@ -82,6 +82,15 @@ test("the Beast: hunger and Rage push a frenzy check; the Delirium sends a morta
   assert.ok(!NR.scoreOptions(NR.profileOf({template: "guard"}), {self: {kind: "mortal", wounds: 3}, enemies: [foe()], allies: []}).some(o => o.action === "frenzy"));
 });
 
+test("fear of the supernatural needs it to show: a Kindred passing for human frightens no guard", () => {
+  const guard = NR.profileOf({template: "guard"});
+  const hidden = NR.scoreOptions(guard, {self: {kind: "mortal"}, enemies: [foe({supernatural: true, obvious: false})], allies: [], bestAttackDice: 6});
+  assert.equal(hidden[0].action, "attack");
+  const shown = NR.scoreOptions(guard, {self: {kind: "mortal"}, enemies: [foe({supernatural: true, obvious: true})], allies: [], bestAttackDice: 6});
+  assert.equal(shown[0].action, "flee");
+  assert.match(shown[0].why, /faces what it fears/);
+});
+
 test("unseen foes: nothing to attack, so search; no foes at all, so wait", () => {
   const o = NR.scoreOptions(NR.profileOf({template: "guard"}), {self: {kind: "mortal"}, enemies: [foe({visible: false})], allies: []});
   assert.equal(o[0].action, "search");
@@ -170,10 +179,10 @@ test("Auto acts only on what WoDX can carry out; the rest wait for the Storytell
 
 test("the module: manifest, API and the card's buttons", () => {
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
-  assert.equal(m.version, "0.1.0");
+  assert.equal(m.version, "0.1.1");
   assert.deepEqual(m.relationships.requires.map(r => r.id).sort(), ["wodx-actions", "wodx-chronicle", "wodx-combat"]);
   const src = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
-  assert.match(src, /const VERSION = "0\.1\.0"/);
+  assert.match(src, /const VERSION = "0\.1\.1"/);
   for ( const k of ["wnpc-go", "wnpc-undo", "wnpc-edit"] ) assert.ok(src.includes(k), k);
   assert.ok(/hasPlayerOwner\s*\)\s*return null/.test(src), "never moves a player's character");
   assert.ok(!/\b(he|she|him|her|his|hers)\b/.test(src.match(/`[^`]*`/g).join(" ").replace(/<[^>]+>/g, " ")), "card text is gender-neutral");

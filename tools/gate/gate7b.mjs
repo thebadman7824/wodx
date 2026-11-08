@@ -8,7 +8,7 @@
  * Result: Data/wodx-gate/gate7b-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const MOD = "wodx-npc", GATE = "wodx-gate7b";
+const MOD = "wodx-npc"; // flags go under an active module's scope
 const npc = () => game.modules.get(MOD).api, C = () => game.wodxCombat;
 const ARENA = "Gate 7b arena";
 
@@ -48,10 +48,10 @@ function cast() {
 }
 
 async function arena(roles) {
-  let sc = game.scenes.find(s => s.getFlag(GATE, "arena"));
+  let sc = game.scenes.find(s => s.getFlag(MOD, "gateArena"));
   if ( !sc ) {
     sc = await Scene.create({name: ARENA, width: 2000, height: 1400, padding: 0, grid: {type: CONST.GRID_TYPES.SQUARE, size: 100, distance: 5, units: "ft"},
-      tokenVision: false, fog: {exploration: false}, flags: {[GATE]: {arena: true}}});
+      tokenVision: false, fog: {exploration: false}, flags: {[MOD]: {gateArena: true}}});
     // A wall down the middle with a gap at the bottom (rows 10 to 13)
     await sc.createEmbeddedDocuments("Wall", [{c: [1100, 0, 1100, 1000], move: CONST.WALL_MOVEMENT_TYPES.NORMAL, sight: CONST.WALL_SENSE_TYPES.NORMAL}]);
   }
@@ -62,10 +62,10 @@ async function arena(roles) {
   for ( const [t, a] of roles.byTemplate ) if ( a !== roles.fighter && a !== roles.runner ) want.push({role: `extra-${t}`, actor: a, ...at(12 + Math.floor(extra / 6), 13 + (extra++ % 6)), disposition: -1});
   const made = {};
   for ( const w of want ) {
-    let doc = sc.tokens.find(t => t.getFlag(GATE, "role") === w.role && t.actorId === w.actor.id);
+    let doc = sc.tokens.find(t => t.getFlag(MOD, "gateRole") === w.role && t.actorId === w.actor.id);
     if ( !doc ) {
       const td = (await w.actor.getTokenDocument({x: w.x, y: w.y, actorLink: false, disposition: w.disposition, hidden: false, width: 1, height: 1})).toObject();
-      td.flags = {...(td.flags ?? {}), [GATE]: {role: w.role}};
+      td.flags = {...(td.flags ?? {}), [MOD]: {...(td.flags?.[MOD] ?? {}), gateRole: w.role}};
       [doc] = await sc.createEmbeddedDocuments("Token", [td]);
     } else await doc.update({x: w.x, y: w.y, hidden: false, disposition: w.disposition}, {animate: false, wodxMove: false});
     made[w.role] = doc;
@@ -82,11 +82,12 @@ async function arena(roles) {
 }
 
 async function fight(sc, T) {
-  let combat = game.combats.find(c => c.scene?.id === sc.id && c.getFlag(GATE, "fight"));
-  if ( !combat ) {
-    combat = await Combat.create({scene: sc.id, active: true, flags: {[GATE]: {fight: true}}});
-    await combat.createEmbeddedDocuments("Combatant", ["hero", "fighter", "runner"].map(r => ({tokenId: T[r].id, sceneId: sc.id, actorId: T[r].actor.id})));
-  } else await combat.update({active: true});
+  let combat = game.combats.find(c => c.scene?.id === sc.id && c.getFlag(MOD, "gateFight"));
+  if ( !combat ) combat = await Combat.create({scene: sc.id, active: true, flags: {[MOD]: {gateFight: true}}});
+  else await combat.update({active: true});
+  // Every fighter in the fight (a combat left by an interrupted run may lack some)
+  const missing = ["hero", "fighter", "runner"].filter(r => !combat.combatants.some(c => c.tokenId === T[r].id));
+  if ( missing.length ) await combat.createEmbeddedDocuments("Combatant", missing.map(r => ({tokenId: T[r].id, sceneId: sc.id, actorId: T[r].actor.id})));
   if ( !combat.started ) { await combat.startCombat(); await sleep(2500); }
   return combat;
 }
@@ -113,11 +114,11 @@ export async function run() {
     templates: Object.fromEntries([...roles.byTemplate].map(([t, a]) => [t, a.name]))};
   let sc, T, combat;
   await step("versions", async () => {
-    ok("versions", npc()?.version === "0.1.0" && !!C()?.quickAttack && !!roles.hero && !!roles.fighter,
+    ok("versions", /^0\.1\./.test(npc()?.version ?? "") && !!C()?.quickAttack && !!roles.hero && !!roles.fighter,
       {npc: npc()?.version, combat: C()?.version, actions: game.wodxActions?.version, cast: R.cast});
   });
   await step("the arena: a wall, a player's character and Rothenstein NPCs", async () => {
-    ({sc, T} = await arena(roles));
+    ({sc, tokens: T} = await arena(roles));
     const wall = sc.walls.size >= 1;
     ok("the arena: a wall, a player's character and Rothenstein NPCs", wall && T.hero && T.fighter && T.runner && canvas.scene.id === sc.id,
       {scene: sc.name, tokens: Object.fromEntries(Object.entries(T).map(([k, t]) => [k, t?.name]))});
@@ -167,8 +168,8 @@ export async function run() {
     // Beside the hero for the test, then back
     const back = {x: k.document.x, y: k.document.y};
     if ( k !== T.fighter ) { await k.document.update({x: 400, y: 600}, {animate: false, wodxMove: false}); await sleep(300); }
-    let torch = T.hero.actor.items.find(i => i.getFlag(GATE, "torch"));
-    if ( !torch ) [torch] = await T.hero.actor.createEmbeddedDocuments("Item", [{name: "Torch", type: "Melee Weapon", flags: {[GATE]: {torch: true}},
+    let torch = T.hero.actor.items.find(i => i.getFlag(MOD, "gateTorch"));
+    if ( !torch ) [torch] = await T.hero.actor.createEmbeddedDocuments("Item", [{name: "Torch", type: "Melee Weapon", flags: {[MOD]: {gateTorch: true}},
       system: {isequipped: true, damage: {attribute: "strength", bonus: 1, type: "bashing"}, difficulty: 6, attack: {attribute: "dexterity", ability: "melee"}}}]);
     else await torch.update({name: "Torch"});
     await sleep(300);
