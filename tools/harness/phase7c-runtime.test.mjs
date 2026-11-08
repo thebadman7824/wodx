@@ -14,6 +14,7 @@ const MOD = "wodx-npc";
 
 /* ---- the stand-in ---- */
 const uuids = new Map();
+class ForcedDeletion {}
 const clone = o => (o === undefined ? o : structuredClone(o));
 function setPath(obj, path, value) {
   const parts = path.split(".");
@@ -21,6 +22,7 @@ function setPath(obj, path, value) {
   for ( let k = 0; k < parts.length - 1; k++ ) o = (o[parts[k]] ??= {});
   const last = parts.at(-1);
   if ( last.startsWith("-=") ) delete o[last.slice(2)];
+  else if ( value instanceof ForcedDeletion ) delete o[last];
   else o[last] = clone(value);
 }
 const applyUpdate = (doc, data) => { for ( const [k, v] of Object.entries(data) ) if ( k !== "_id" ) setPath(doc, k, v); };
@@ -102,7 +104,7 @@ globalThis.game = {
   messages: new Coll(),
   modules: new Map()
 };
-globalThis.foundry = {utils: {deepClone: clone, randomID: () => newId("r")}, data: {}, applications: {api: {}}};
+globalThis.foundry = {utils: {deepClone: clone, randomID: () => newId("r")}, data: {operators: {ForcedDeletion}}, applications: {api: {}}};
 globalThis.CONST = {};
 globalThis.CONFIG = {Canvas: {polygonBackends: {sight: {testCollision: () => false}}}};
 globalThis.fromUuid = async u => uuids.get(u) ?? null;
@@ -314,7 +316,7 @@ test("a Reaction region: the guard notices a player character after curfew and c
 test("the module: manifest declares the Reaction behaviour; in-game text is gender-neutral and writes no NPC dialogue", async () => {
   const {readFileSync} = await import("node:fs");
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
-  assert.equal(m.version, "0.2.0");
+  assert.equal(m.version, "0.2.1");
   assert.deepEqual(m.documentTypes, {RegionBehavior: {reaction: {}}});
   for ( const f of ["routines.mjs", "routine-rules.mjs"] ) {
     const src = readFileSync(join(root, "modules/wodx-npc/scripts", f), "utf8");

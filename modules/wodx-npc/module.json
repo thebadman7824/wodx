@@ -2,7 +2,7 @@
   "id": "wodx-npc",
   "title": "WoDX NPC",
   "description": "World of Darkness Expanded: NPC profiles, combat tactics, routines and reactions. On an NPC's turn WoDX weighs what it could do from its temperament, fears and the fight, then suggests a plan to the Storyteller or (in Auto) moves and attacks with an undo card. NPCs with a routine keep hour-by-hour places on the Chronicle clock, and WoDX: Reaction regions let watchers notice and react. Private use only; not for distribution or sale.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "authors": [
     {
       "name": "WoDX Project (private)"

@@ -1,12 +1,13 @@
 /**
- * Phase 7c gate (routines on the clock and region reactions), in Foundry, in the wodx-template world (it moves the
- * clock), as a Gamemaster:
+ * Phase 7c gate (routines on the clock and region reactions), in Foundry, in rothenstein-wodx (Ben's testing world,
+ * 2026-11-08), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate7c.mjs?${Date.now()}`)).run()
+ * Back the world up first: the gate moves the clock, and other WoDX modules act on the clock for every character.
  *
- * The cast is four of Rothenstein's own NPCs, copied out of rothenstein-wodx into Data/wodx-gate/gate7c-cast.json
- * (whole actor documents with their items): a guard (Sergeant Heinz Volker), a merchant (Ludwig of Regensburg), a
- * priest (Father Ludovic) and a Kindred (Voivode Bogdan Ursu). The gate makes copies of them here once, in a folder
- * "Gate 7c", and a player's character for the reactions (an unlinked token, so its statuses stay on the token).
+ * The cast is four of Rothenstein's own NPCs: a guard (Sergeant Heinz Volker), a merchant (Ludwig of Regensburg), a
+ * priest (Father Ludovic) and a Kindred (Voivode Bogdan Ursu). The gate copies them (with their items) into a folder
+ * "Gate 7c", names the copies "(Gate 7c)", and makes a player's character for the reactions (an unlinked token, so its
+ * statuses stay on the token). The originals are never changed.
  *
  * It builds (or reuses) a "Gate 7c town" scene: a square grid, a wall with a gap at the bottom, a way in, and regions
  * tagged as places: a lane, the church, the keep hall, the watch-house, the market, the tavern and the homes, plus a
@@ -20,7 +21,11 @@
  *   6. opening the scene offers every NPC out of place, without walking (Suggest), then Accept
  *   7. a one-week time skip puts everyone where the routines say
  *   8. Undo on every routine card, newest first, takes the town back to how it started
- * The clock is put back at the end; the NPC copies' routines are switched off. Deletes nothing it did not make.
+ * The days used are the next Monday, Tuesday and Wednesday (and the Wednesday after) that are not feast days, in the
+ * world's own year and era.
+ *   9. clean up: the clock goes back; every character, unlinked token and WoDX setting the clock work changed while the
+ *      gate ran is put back as it was; the gate's scenes, folder, cast copies and chat cards are deleted. Nothing it did
+ *      not make is deleted, except items and effects the clock work added to characters during the run.
  * Result: Data/wodx-gate/gate7c-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -29,6 +34,7 @@ const npc = () => game.modules.get(MOD).api, RT = () => npc().routines, RR = () 
 const chron = () => game.modules.get("wodx-chronicle").api;
 const TOWN = "Gate 7c town", ELSEWHERE = "Gate 7c elsewhere";
 const G = 100;
+const unset = k => { const Del = foundry.data?.operators?.ForcedDeletion; return Del ? {[`flags.${MOD}.${k}`]: new Del()} : {[`flags.${MOD}.-=${k}`]: null}; };
 
 async function save(R, name) {
   R.finished = new Date().toISOString();
@@ -55,24 +61,23 @@ async function cast(R) {
   let folder = game.folders.find(f => f.type === "Actor" && f.name === "Gate 7c");
   folder ??= await Folder.create({name: "Gate 7c", type: "Actor"});
   const out = {};
-  let file = null;
   for ( const c of CAST ) {
-    let a = game.actors.find(x => x.getFlag(MOD, "gateRole") === c.role);
+    let a = game.actors.find(x => x.flags?.[MOD]?.gateRole === c.role);
     if ( !a ) {
-      file ??= await (await fetch(`/wodx-gate/gate7c-cast.json?${Date.now()}`, {cache: "no-store"})).json();
-      const src = (Array.isArray(file) ? file : file.actors).find(x => c.name.test(x.name));
-      if ( !src ) throw new Error(`gate7c-cast.json has no actor for the ${c.role}`);
-      const data = foundry.utils.deepClone(src);
+      const src = game.actors.find(x => c.name.test(x.name) && !x.flags?.[MOD]?.gateRole);
+      if ( !src ) throw new Error(`Rothenstein has no actor for the ${c.role}`);
+      const data = src.toObject();
       delete data._id; delete data._stats; delete data.folder;
+      data.name = `${src.name} (Gate 7c)`;
       data.folder = folder.id;
       data.ownership = {default: 0};
       data.flags = {...(data.flags ?? {}), [MOD]: {gateRole: c.role}};
       a = await Actor.create(data);
-      R.notes.push(`Copied ${a.name} from Rothenstein`);
+      R.notes.push(`Copied ${src.name}`);
     }
     out[c.role] = a;
   }
-  let hero = game.actors.find(x => x.getFlag(MOD, "gateRole") === "hero");
+  let hero = game.actors.find(x => x.flags?.[MOD]?.gateRole === "hero");
   hero ??= await Actor.create({name: "Gate 7c wanderer", type: "Mortal", folder: folder.id, ownership: {default: 3}, flags: {[MOD]: {gateRole: "hero"}}});
   out.hero = hero;
   return out;
@@ -134,7 +139,7 @@ function check(sc, cast, t, label) {
     const toks = tokensOf(sc, a);
     if ( p?.region && p.scene.id === sc.id ) {
       if ( toks.length !== 1 ) bad.push(`${role}: ${toks.length} tokens on the town (want 1 in ${p.region.name})`);
-      else if ( !toks[0].regions?.has(p.region) ) bad.push(`${role}: token not inside ${p.region.name}`);
+      else if ( !toks[0].regions?.has(p.region) ) bad.push(`${role}: token not inside ${p.region.name} (at column ${Math.round(toks[0].x / G)}, row ${Math.round(toks[0].y / G)}; in ${[...(toks[0].regions ?? [])].map(r => r.name).join(", ") || "no region"}${a.flags?.[MOD]?.paused ? `; paused: ${a.flags[MOD].paused.reason}` : ""})`);
     } else if ( toks.length ) bad.push(`${role}: should have left the town (${p?.name ?? "nowhere"}) but has a token`);
   }
   return {label, pass: !bad.length, bad};
@@ -142,9 +147,76 @@ function check(sc, cast, t, label) {
 const routineCards = after => game.messages.contents.filter(m => m.getFlag(MOD, "routine") && m.timestamp >= after);
 const reactionCards = after => game.messages.contents.filter(m => m.getFlag(MOD, "reaction") && m.timestamp >= after);
 
+/* ---- Rothenstein is a real world: what the clock work changes is put back, and the gate's own things go ---- */
+const isGate = a => !!a?.flags?.[MOD]?.gateRole;
+const json = o => JSON.stringify(o ?? null);
+/** The registered world settings of the WoDX modules (the routine mode is the gate's own, put back by itself). */
+const wodxSettings = () => [...game.settings.settings.values()].filter(c => /^wodx-/.test(c.namespace) && c.scope === "world" && `${c.namespace}.${c.key}` !== "wodx-npc.routineMode").map(c => `${c.namespace}.${c.key}`);
+const getSetting = k => { const [ns, ...rest] = k.split("."); try { return game.settings.get(ns, rest.join(".")); } catch (e) { return null; } };
+/** Every character (not the gate's), every unlinked token's changes, every WoDX world setting, as they stand. */
+function snapWorld() {
+  const actors = new Map(game.actors.filter(a => !isGate(a)).map(a => [a.id, a.toObject()]));
+  const tokens = new Map();
+  for ( const sc of game.scenes ) for ( const t of sc.tokens ) if ( !t.actorLink ) tokens.set(t.uuid, json(t.toObject().delta));
+  const settings = new Map(wodxSettings().map(k => [k, json(getSetting(k))]));
+  return {actors, tokens, settings};
+}
+async function restoreWorld(b) {
+  const out = {actors: [], tokens: [], settings: [], itemsRemoved: [], itemsBack: []};
+  for ( const [id, old] of b.actors ) {
+    const a = game.actors.get(id);
+    if ( !a ) { out.actors.push(`${old.name}: gone (not put back)`); continue; }
+    const now = a.toObject();
+    if ( json(now.system) !== json(old.system) || json(now.flags) !== json(old.flags) ) {
+      await a.update({system: old.system, flags: old.flags}, {diff: false, recursive: false, wodxGate: true});
+      out.actors.push(a.name);
+    }
+    for ( const kind of ["Item", "ActiveEffect"] ) {
+      const key = kind === "Item" ? "items" : "effects";
+      const was = new Map(old[key].map(x => [x._id, x])), is = new Map(now[key].map(x => [x._id, x]));
+      const added = [...is.keys()].filter(k => !was.has(k));
+      const lost = [...was.values()].filter(x => !is.has(x._id));
+      const changed = [...was.values()].filter(x => is.has(x._id) && json(x) !== json(is.get(x._id)));
+      if ( added.length ) { await a.deleteEmbeddedDocuments(kind, added); out.itemsRemoved.push(`${a.name}: ${added.map(k => is.get(k).name).join(", ")}`); }
+      if ( lost.length ) { await a.createEmbeddedDocuments(kind, lost, {keepId: true}); out.itemsBack.push(`${a.name}: ${lost.map(x => x.name).join(", ")}`); }
+      if ( changed.length ) { await a.updateEmbeddedDocuments(kind, changed, {diff: false, recursive: false}); out.itemsBack.push(`${a.name}: ${changed.map(x => x.name).join(", ")} (changed back)`); }
+    }
+  }
+  for ( const [uuid, delta] of b.tokens ) {
+    const t = await fromUuid(uuid);
+    if ( t && json(t.toObject().delta) !== delta ) { await t.update({delta: JSON.parse(delta)}, {diff: false, recursive: false}); out.tokens.push(t.name); }
+  }
+  for ( const [k, v] of b.settings ) {
+    if ( json(getSetting(k)) === v ) continue;
+    const [ns, ...rest] = k.split(".");
+    await game.settings.set(ns, rest.join("."), JSON.parse(v));
+    out.settings.push(k);
+  }
+  return out;
+}
+/** The gate's scenes, cast copies, wanderer, folder and chat cards (only cards from this run, from this user). */
+async function removeGate(start) {
+  const out = {};
+  for ( const c of game.combats.filter(c => c.scene && (c.scene.flags?.[MOD]?.gateTown || c.scene.flags?.[MOD]?.gateElsewhere)) ) await c.delete();
+  const scenes = game.scenes.filter(x => x.flags?.[MOD]?.gateTown || x.flags?.[MOD]?.gateElsewhere);
+  out.scenes = scenes.map(x => x.name);
+  if ( scenes.length ) await Scene.deleteDocuments(scenes.map(x => x.id));
+  const actors = game.actors.filter(isGate);
+  out.actors = actors.map(a => a.name);
+  if ( actors.length ) await Actor.deleteDocuments(actors.map(a => a.id));
+  const folders = game.folders.filter(f => f.type === "Actor" && f.name === "Gate 7c" && !f.contents?.length);
+  out.folders = folders.length;
+  if ( folders.length ) await Folder.deleteDocuments(folders.map(f => f.id));
+  const msgs = game.messages.filter(m => m.timestamp >= start && (m.author?.id ?? m.user?.id) === game.user.id);
+  out.chat = msgs.length;
+  if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));
+  return out;
+}
+
 export async function run() {
   const {R, ok, step} = harness();
   const start = Date.now(), startTime = game.time.worldTime, startScene = canvas.scene;
+  const before = snapWorld();
   const keepMode = game.settings.get(MOD, "routineMode");
   let cs, T, hero;
   await step("setup", async () => {
@@ -163,7 +235,7 @@ export async function run() {
     for ( const c of CAST ) {
       const a = cs[c.role];
       await a.update({[`flags.${MOD}.behavior`]: {template: c.template}, [`flags.${MOD}.routine`]: {on: true, preset: c.preset, roles: roles[c.role], blocks: null, mode: null},
-        [`flags.${MOD}.-=where`]: null, [`flags.${MOD}.-=paused`]: null});
+        ...unset("where"), ...unset("paused")});
     }
     // No NPC tokens of the cast on the town to begin with; the wanderer stands in the far corner, outside every region
     for ( const c of CAST ) for ( const d of tokensOf(T.sc, cs[c.role]) ) await d.update({x: 23 * G, y: 0}, {animate: false});
@@ -174,29 +246,25 @@ export async function run() {
   });
   if ( !T ) return save(R, "gate7c-result.json");
 
-  // Monday 14 April 2025, 05:00 (Easter is the 20th: no feast); the template's own era
+  // The next Monday after today whose Monday, Tuesday and Wednesday, and the Wednesday after, are not feast days
   const engine = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine();
-  const at = (d, h, m = 0) => engine.dateToTime({year: 2025, month: 4, day: d, hour: h, minute: m});
+  await RT().loadCalendar();
+  const describe = RT().describer();
+  const today = engine.timeToDate(startTime);
+  let mon = engine.dateToTime({year: today.year, month: today.month, day: today.day, hour: 0, minute: 0});
+  const plain = t => !describe(t + 12 * 3600).feast;
+  for ( let k = 0; k < 400; k++ ) {
+    mon += 86400;
+    if ( describe(mon + 12 * 3600).dayOfWeek === 0 && [0, 1, 2, 9].every(d => plain(mon + d * 86400)) ) break;
+  }
+  const at = (d, h, m = 0) => mon + d * 86400 + h * 3600 + m * 60;
+  R.days = {monday: describe(mon + 12 * 3600).dateLabel ?? engine.timeToDate(mon)};
   const set = async t => { await game.time.set(t); await RT().idle(); await sleep(300); };
   const leftOver = [];
   for ( const c of CAST ) leftOver.push(...tokensOf(T.sc, cs[c.role]).map(d => d.id));
 
-  await step("1. the clock, 06:00 to 23:00, in Auto", async () => {
-    await set(at(14, 5));
-    const fails = [];
-    for ( let h = 6; h <= 23; h++ ) {
-      await set(at(14, h));
-      const c = check(T.sc, cs, at(14, h), `${h}:00`);
-      if ( !c.pass ) fails.push(c);
-    }
-    ok("1. every NPC's place at every hour, and every token in its region", !fails.length, {fails});
-    const cards = routineCards(start);
-    ok("1. Auto posted cards with Undo", cards.length > 0 && cards.every(m => m.getFlag(MOD, "routine").mode === "auto"), {cards: cards.length});
-    const notes = cards.flatMap(m => m.getFlag(MOD, "routine").notes ?? []);
-    ok("1. every walk found a way (no 'no way through')", !notes.some(n => /no way through/.test(n)), {notes});
-  });
-
-  await step("1b. a walk into the market goes round the wall", async () => {
+  // At noon the merchant is at work in the market, having walked in from the door
+  const marketWalk = () => step("1b. a walk into the market goes round the wall", async () => {
     const a = cs.merchant, d = tokensOf(T.sc, a)[0];
     const NR = npc().rules, api = npc();
     const tok = d?.object;
@@ -208,24 +276,41 @@ export async function run() {
     ok("1b. the merchant stands in the market", d.regions.has(T.reg("Market stalls")));
   });
 
+  await step("1. the clock, 06:00 to 23:00, in Auto", async () => {
+    await set(at(0, 5));
+    const fails = [];
+    for ( let h = 6; h <= 23; h++ ) {
+      await set(at(0, h));
+      const c = check(T.sc, cs, at(0, h), `${h}:00`);
+      if ( !c.pass ) fails.push(c);
+      if ( h === 12 ) await marketWalk();
+    }
+    ok("1. every NPC's place at every hour, and every token in its region", !fails.length, {fails});
+    const cards = routineCards(start);
+    ok("1. Auto posted cards with Undo", cards.length > 0 && cards.every(m => m.getFlag(MOD, "routine").mode === "auto"), {cards: cards.length});
+    const notes = cards.flatMap(m => m.getFlag(MOD, "routine").notes ?? []);
+    ok("1. every walk found a way (no 'no way through')", !notes.some(n => /no way through/.test(n)), {notes});
+  });
+
+
   await step("2. one hour in Suggest: a card, and nothing moves until Accept", async () => {
     await T.sc.setFlag(MOD, "routineMode", "suggest");
     const before = Date.now();
     const pos = new Map(T.sc.tokens.map(t => [t.id, `${t.x},${t.y}`]));
-    await set(at(15, 0)); // midnight: the guard to the watch-house, the Kindred to the lane
+    await set(at(1, 0)); // midnight: the guard to the watch-house, the Kindred to the lane
     const card = routineCards(before).at(-1);
     const plan = card?.getFlag(MOD, "routine");
     const moved = T.sc.tokens.filter(t => pos.has(t.id) && pos.get(t.id) !== `${t.x},${t.y}`).map(t => t.name);
     ok("2. a Suggestion card, and no token moved", plan?.mode === "suggest" && plan.items.length > 0 && !moved.length, {items: plan?.items?.map(i => i.type), moved});
     await RT().acceptRoutineCard(card);
     await sleep(500);
-    const c = check(T.sc, cs, at(15, 0), "00:00 after Accept");
+    const c = check(T.sc, cs, at(1, 0), "00:00 after Accept");
     ok("2. after Accept everyone is where the routine says", c.pass, c);
     await T.sc.setFlag(MOD, "routineMode", "auto");
   });
 
   await step("3. after curfew, the wanderer enters the church close: the guard challenges", async () => {
-    await set(at(14, 23, 30) + 86400); // Tuesday 23:30: the guard is on rounds in the lane
+    await set(at(1, 23, 30)); // Tuesday 23:30: the guard is on rounds in the lane
     const c = check(T.sc, cs, game.time.worldTime, "23:30 Tuesday");
     ok("3. the guard is in the lane", c.pass, c);
     const before = Date.now();
@@ -264,7 +349,7 @@ export async function run() {
     await sleep(500);
     ok("5. the guard's routine is paused by the fight", game.actors.get(cs.guard.id).getFlag(MOD, "paused")?.reason === "fight");
     const pos = `${g.x},${g.y}`;
-    await set(at(16, 0, 30)); // Wednesday 00:30: the post
+    await set(at(2, 0, 30)); // Wednesday 00:30: the post
     ok("5. paused: the guard stays put", `${g.x},${g.y}` === pos);
     await combat.delete();
     await RT().idle(); await sleep(800);
@@ -304,13 +389,18 @@ export async function run() {
     ok("8. no token WoDX placed is left", !left.length, {cards: cards.length, left});
   });
 
-  // Put things back: the clock, the view, the world's mode; the cast's routines off
+  // 9. Put things back: the clock, the view, the world's mode; then everything the clock work changed; then the gate's own things
   try {
-    for ( const c of CAST ) await cs[c.role].update({[`flags.${MOD}.routine.on`]: false});
+    for ( const c of CAST ) if ( cs?.[c.role] ) await cs[c.role].update({[`flags.${MOD}.routine.on`]: false});
     await game.settings.set(MOD, "routineMode", keepMode);
-    await game.time.set(startTime);
-    await RT().idle();
-    if ( startScene && startScene.id !== canvas.scene?.id ) await startScene.view();
-  } catch (e) { R.errors.push(`restore: ${e.message}`); }
+    if ( game.time.worldTime !== startTime ) await game.time.set(startTime);
+    await RT().idle(); await sleep(2000);
+    if ( startScene && startScene.id !== canvas.scene?.id ) { const ready = new Promise(r => Hooks.once("canvasReady", r)); await startScene.view(); await ready; await sleep(1000); }
+  } catch (e) { R.errors.push(`restore clock: ${e.message}`); }
+  try { R.restored = await restoreWorld(before); } catch (e) { R.errors.push(`restore world: ${e.message}`); }
+  try { R.removed = await removeGate(start); } catch (e) { R.errors.push(`clean up: ${e.message}`); }
+  ok("9. the clock is back", game.time.worldTime === startTime);
+  ok("9. nothing of the gate is left", !game.scenes.some(x => x.flags?.[MOD]?.gateTown || x.flags?.[MOD]?.gateElsewhere)
+    && !game.actors.some(a => a.flags?.[MOD]?.gateRole) && !game.folders.some(f => f.type === "Actor" && f.name === "Gate 7c"), R.removed);
   return save(R, "gate7c-result.json");
 }

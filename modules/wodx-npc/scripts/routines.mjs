@@ -28,6 +28,11 @@ export function build(ctx) {
   const {MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3} = ctx;
   const num = v => Number(v) || 0;
   const flag = (doc, k) => doc?.flags?.[MOD]?.[k];
+  /** An update key that deletes a field: Foundry 14's ForcedDeletion where it exists, else the older "-=" key. */
+  const unsetKey = path => {
+    const Del = globalThis.foundry?.data?.operators?.ForcedDeletion;
+    return Del ? {[path]: new Del()} : {[path.replace(/\.([^.]+)$/, ".-=$1")]: null};
+  };
   const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
   const skipping = () => { try { return !!chron()?.isSkipping?.(); } catch (e) { return false; } };
 
@@ -118,6 +123,18 @@ export function build(ctx) {
   /* ------------------------------------------------------------------ */
 
   const onGrid = () => ctx.gridKind() !== "none";
+  /**
+   * Move a token straight to a spot, through walls: Foundry 14 holds a plain position update at a wall, so a jump is
+   * made as a displacement (a move that ignores walls), then checked; a plain update is the fallback.
+   */
+  async function teleport(doc, xy, opts = {}) {
+    const to = {x: Math.round(xy.x), y: Math.round(xy.y)};
+    if ( typeof doc.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
+      try { await doc.move([{...to, action: "displace"}], {animate: false, ...opts}); } catch (e) { /* the update below */ }
+    }
+    if ( doc.x !== to.x || doc.y !== to.y ) await doc.update(to, {animate: false, ...opts});
+    return doc.x === to.x && doc.y === to.y;
+  }
   function busyCells(exceptIds = []) {
     const set = new Set();
     for ( const t of canvas.tokens.placeables ) {
@@ -205,7 +222,7 @@ export function build(ctx) {
     const hex = ctx.gridKind() === "hex";
     const path = NR.findPath(start, goal, ctx.passableFor(tok), {maxNodes: 40000, neighbors: ctx.stepsFor(), heuristic: hex ? ctx.hexHeuristic(goal) : null});
     if ( path ) { await ctx.walk(tok, hex ? path : corners(path)); return "walked"; }
-    await tok.document.update(ctx.topLeftFor(tok, goal), {animate: false});
+    await teleport(tok.document, ctx.topLeftFor(tok, goal));
     return "jumped";
   }
 
@@ -270,7 +287,9 @@ export function build(ctx) {
           snap.moved.push({uuid: tok.document.uuid, x: tok.document.x, y: tok.document.y});
           const goal = freeCellsIn(p.region, tok, ctx.cellOf(tok), busyCells([tok.id]))[0];
           if ( !goal ) { it.status = "skipped"; notes.push(`${actor.name}: no free room in ${p.name}`); continue; }
-          if ( it.type === "jump" || !onGrid() ) await tok.document.update(ctx.topLeftFor(tok, goal), {animate: false});
+          if ( it.type === "jump" || !onGrid() ) {
+            if ( !(await teleport(tok.document, ctx.topLeftFor(tok, goal))) ) notes.push(`${actor.name}: could not be moved to ${p.name}`);
+          }
           else walks.push(walkTo(tok, goal).then(r => { if ( r === "jumped" ) notes.push(`${actor.name}: no way through, moved straight there`); }));
         } else if ( it.type === "remove" ) {
           const d = scene.tokens.get(it.tokenId);
@@ -299,10 +318,10 @@ export function build(ctx) {
     for ( const u of snap?.created ?? [] ) { const d = await fromUuid(u); if ( d ) await d.delete(); }
     const back = (snap?.removed ?? []).filter(d => !scene.tokens.get(d._id));
     if ( back.length ) await scene.createEmbeddedDocuments("Token", back, {keepId: true});
-    for ( const m of snap?.moved ?? [] ) { const d = await fromUuid(m.uuid); if ( d ) await d.update({x: m.x, y: m.y}, {animate: false, wodxMove: false}); }
+    for ( const m of snap?.moved ?? [] ) { const d = await fromUuid(m.uuid); if ( d ) await teleport(d, m, {wodxMove: false}); }
     for ( const p of snap?.paused ?? [] ) {
       const a = game.actors.get(p.actorId);
-      if ( a ) await a.update(p.prev ? {[`flags.${MOD}.paused`]: p.prev} : {[`flags.${MOD}.-=paused`]: null});
+      if ( a ) await a.update(p.prev ? {[`flags.${MOD}.paused`]: p.prev} : unsetKey(`flags.${MOD}.paused`));
     }
     if ( snap?.combat ) await game.combats.get(snap.combat)?.delete();
   }
@@ -405,7 +424,7 @@ export function build(ctx) {
         continue;
       }
       const p = flag(actor, "paused");
-      if ( p?.until && t >= p.until ) updates.push({_id: actor.id, [`flags.${MOD}.-=paused`]: null});
+      if ( p?.until && t >= p.until ) updates.push({_id: actor.id, ...unsetKey(`flags.${MOD}.paused`)});
       const r = R.placeAt(blocksFor(actor), t, describe, placeCtx(actor, places, computed));
       computed.set(actor.id, r);
       if ( r.missing ) {
@@ -458,7 +477,7 @@ export function build(ctx) {
   }
   async function onCombatEnd(combat) {
     if ( !isActiveGM() ) return;
-    const ups = routineNpcs().filter(a => flag(a, "paused")?.combatId === combat.id).map(a => ({_id: a.id, [`flags.${MOD}.-=paused`]: null}));
+    const ups = routineNpcs().filter(a => flag(a, "paused")?.combatId === combat.id).map(a => ({_id: a.id, ...unsetKey(`flags.${MOD}.paused`)}));
     if ( !ups.length ) return;
     await Actor.updateDocuments(ups);
     await tick("resume");
@@ -791,7 +810,7 @@ export function build(ctx) {
         const next = {kind: form.elements[`${key}.kind`].value, owner: form.elements[`${key}.owner`].value.trim(), private: form.elements[`${key}.private`].checked};
         const prev = flag(doc, "place") ?? {kind: "", owner: "", private: false};
         if ( prev.kind === next.kind && (prev.owner ?? "") === next.owner && !!prev.private === next.private ) continue;
-        const up = next.kind ? {_id: id, [`flags.${MOD}.place`]: next} : {_id: id, [`flags.${MOD}.-=place`]: null};
+        const up = next.kind ? {_id: id, [`flags.${MOD}.place`]: next} : {_id: id, ...unsetKey(`flags.${MOD}.place`)};
         if ( kind === "s" ) scenes.push(up); else regions.set(id, up);
       }
       if ( scenes.length ) await Scene.updateDocuments(scenes);

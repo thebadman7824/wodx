@@ -515,3 +515,10 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - Obfuscated and Sneaking registered as WoDX conditions.
 - No NPC dialogue: every card says the Storyteller speaks for the NPC (rule 11). Text is gender-neutral.
 - Tests: 348 pass (15 new: phase7c.test.mjs, phase7c-runtime.test.mjs). UI fit covers the Places window and the two new dialogs. Gate: tools/gate/gate7c.mjs, run in wodx-template with four Rothenstein NPCs copied in (Sergeant Heinz Volker, Ludwig of Regensburg, Father Ludovic, Voivode Bogdan Ursu).
+
+### Gate 7c, 2026-11-08: WoDX NPC 0.2.1
+- First run in wodx-template: 13 of 20, no console errors. Every hourly place, every walk round the wall, Suggest, Accept, the fight pause, opening a scene and the clean-up passed.
+- Every failure was a token that had to jump across the wall: Foundry 14 holds a plain position update at a wall, so a jump from the watch-house to the lane (and after the week's skip, to the homes and the haven) stopped short. With the guard out of place, the reaction and Obfuscate steps had no watcher. Fix: a jump is now made as a displacement (a move that ignores walls), checked, with a plain update as the fallback; Undo moves tokens back the same way.
+- Foundry 14 warned about the "-=" key for deleting a flag. WoDX NPC now uses ForcedDeletion where Foundry has it (as WoDX Otherworlds already did).
+- The gate's own error: it looked for the merchant's token at 23:00, when the merchant is at home on the other scene. It now checks the walk into the market at noon.
+- Ben, 2026-11-08: testing moves to rothenstein-wodx. The gate now copies its cast from the world itself, picks the next plain Monday to Wednesday in the world's own year, and at the end puts back the clock and every character, unlinked token and WoDX setting the clock work changed, then deletes its scenes, folder, copies and cards.
