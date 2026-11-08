@@ -252,6 +252,42 @@ game.world.id = worldId;
       ["Delirium", () => ga.delirium()], ["Kinfolk", () => ga.kinfolk({actor: {actor: target}})], ["Chiminage", () => ga.chiminage({actor: {actor: wolf}})],
       ["Regenerate", () => ga.regen({actor: {actor: wolf}})], ["Attack (Garou)", () => game.wodxCombat.attack({attacker: wolf, target})]);
   }
+  // Phase 6c: a wraith with Arcanoi, Passions and Fetters; an inquisitor; a mortal with True Faith and Numina
+  {
+    const WX = await import(join(root, "modules/wodx-actions/scripts/wraith.js"));
+    await WX.loadData();
+    const mk = (id, name, type, extra, items) => {
+      const a = {system: JSON.parse(JSON.stringify(actor.system ?? {})), flags: {}};
+      Object.assign(a, {id, uuid: `Actor.${id}`, name, type, getActiveTokens: () => [], effects: [], statuses: new Set(), update: async () => a, setFlag: async () => a,
+        getFlag: () => undefined, unsetFlag: async () => a, isOwner: true, hasPlayerOwner: true, testUserPermission: () => true, items: new Map()});
+      for ( const k of ["find", "filter", "some", "map"] ) a.items[k] = f => [...a.items.values()][k](f);
+      a.items[Symbol.iterator] = function () { return this.values(); };
+      a.system.advantages = {...a.system.advantages, ...extra};
+      for ( const [k, d] of items ) a.items.set(k, {id: k, ...d, getFlag: () => undefined, update: async () => null});
+      game.actors.set(a.id, a);
+      return a;
+    };
+    const ghost = mk("ghost0000000001", "Ada Lovelace-Byron, a wraith with a long name", "Wraith",
+      {pathos: {temporary: 5, max: 10}, angst: {temporary: 6, permanent: 4, max: 10}, corpus: {temporary: 10, permanent: 10, max: 10}, willpower: {permanent: 5, temporary: 5}},
+      [["w1", {name: "Argos", type: "Power", system: {type: "wod.types.arcanoi", value: 3}}], ["w2", {name: "Outrage", type: "Power", system: {type: "wod.types.arcanoi", value: 2}}],
+       ["w3", {name: "Keep my daughter safe from her father", type: "Trait", system: {type: "wod.types.passion", value: 4}}],
+       ["w4", {name: "The house on Rue Morgue", type: "Trait", system: {type: "wod.types.fetter", value: 3}}],
+       ["w5", {name: "Hate the living (Rage)", type: "Trait", system: {type: "wod.types.darkpassion", value: 3}}]]);
+    ghost.system.health = {...(ghost.system.health ?? {}), damage: {bashing: 0, lethal: 0, aggravated: 0, corpus: {bashing: 1, lethal: 1, aggravated: 0}}};
+    const monk = mk("monk00000000001", "Brother Anselm of the Oculi Dei", "Hunter", {conviction: {permanent: 4, temporary: 4, max: 10}, faith: {permanent: 2},
+      virtues: {...(actor.system?.advantages?.virtues ?? {}), mercy: {permanent: 1}, vision: {permanent: 1}, zeal: {permanent: 2}}},
+      [["h1", {name: "Cleave", type: "Power", system: {type: "wod.types.edge", value: 1}}], ["h3", {name: "Discern", type: "Power", system: {type: "wod.types.edge", value: 1}}], ["h2", {name: "Psychometry", type: "Power", system: {type: "wod.types.numina", value: 2}}]]);
+    const ga = game.wodxActions, A = o => ({actor: o});
+    tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
+      ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],
+      ["The Shadow", () => ga.shadow({actor: A(ghost)})], ["Whisper", () => ga.shadowWhisper({actor: A(ghost)})], ["Shadowguide", () => ga.shadowguide({actor: A(ghost)})],
+      ["Harrowing", () => ga.harrowing({actor: A(ghost)})],
+      ["Hunter menu", () => ga.menu({actor: A(monk)})], ["Hunter traits", () => ga.hunterSheet({actor: A(monk)})], ["Blessing", () => ga.hunterPower({actor: A(monk)})],
+      ["Virtue roll", () => ga.hunterVirtue({actor: A(monk)})], ["A sin (Piety)", () => ga.sinGod({actor: A(monk)})], ["Prayer", () => ga.prayer({actor: A(monk)})],
+      ["Bank Conviction", () => ga.bankConviction({actor: A(monk)})], ["True Faith", () => ga.trueFaith({actor: A(monk)})], ["Numina", () => ga.numina({actor: A(monk)})], ["Hedge magic", () => ga.hedgeMagic({actor: A(monk)})],
+      ["Ghoul blood", () => { const g = mk("ghoul0000000001", "Gretchen, a ghoul", "Mortal", {bloodpool: {temporary: 3, max: 10}}, []); return ga.ghoulBlood({actor: A(g)}); }], ["Use an edge", () => ga.useEdge({actor: A(monk)})], ["Second sight", () => ga.secondSight({actor: A(monk)})],
+      ["The Imbuing", () => { const api = game.modules.get("wodx-chronicle")?.api; const old = api?.eras; if ( api ) api.eras = {...old, activeEra: () => ({profile: {id: "modern"}}), currentYear: () => 2003}; const r = ga.imbue({actor: A(monk)}); if ( api ) setTimeout(() => { api.eras = old; }, 30); return r; }]);
+  }
   for ( const [label, fn] of tries ) {
     const n = captured.length;
     try { fn(); await new Promise(r => setTimeout(r, 20)); }

@@ -334,11 +334,37 @@ async function setStatus(actor, cond) {
 /**
  * Apply levels of damage to an actor (no soak). Returns {before, after, condition, woundLabel}.
  */
+/** A wraith's Corpus track (Wraith 20th p. 292): the PC's Corpus Advantage or the Wraith sheet's; null for everyone else. */
+export function corpusTrack(actor) {
+    if (!actor) return null;
+    const item = (actor.items ?? []).find?.(i => i.type === "Advantage" && i.system?.id === "corpus");
+    const legacy = actor.type === "Wraith" ? actor.system?.advantages?.corpus : null;
+    if (!item && !legacy) return null;
+    const max = num(item?.system?.permanent ?? legacy?.permanent) || num(item?.system?.max ?? legacy?.max) || 10;
+    const d = actor.system?.health?.damage?.corpus ?? {};
+    return { max, damage: { bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated) } };
+}
+/** Corpus (Wraith 20th p. 292): wavering when bashing alone fills it, a Harrowing when lethal or worse helps fill it. */
+export function corpusCondition(d, max) {
+    if (d.bashing + d.lethal + d.aggravated >= max && d.lethal + d.aggravated > 0) return { key: "harrowed", label: "Harrowed" };
+    if (d.bashing >= max) return { key: "wavering", label: "Wavering" };
+    return { key: "ok", label: "Corporeal" };
+}
+
 export async function applyDamage(actor, type, levels, { status = true } = {}) {
     if (!actor) throw new Error("No actor");
     if (!actor.isOwner) {
         requestGM({ action: "applyDamage", uuid: actor.uuid, type, levels });
         return { requested: true };
+    }
+    const ct = corpusTrack(actor);
+    if (ct) {
+        const before = { ...ct.damage };
+        const after = R.addDamage(before, type, levels, ct.max);
+        await actor.update({ "system.health.damage.corpus.bashing": after.bashing, "system.health.damage.corpus.lethal": after.lethal, "system.health.damage.corpus.aggravated": after.aggravated });
+        const cond = corpusCondition(after, ct.max);
+        const filled = Math.min(ct.max, after.bashing + after.lethal + after.aggravated);
+        return { before, after, condition: cond, woundLabel: `Corpus ${ct.max - filled}/${ct.max}${cond.key === "ok" ? "" : ` (${cond.label})`}`, penalty: 0, effType: type, corpus: true };
     }
     const t = healthTrack(actor);
     const before = { ...t.damage };
@@ -355,10 +381,13 @@ export async function applyDamage(actor, type, levels, { status = true } = {}) {
 
 export async function setDamage(actor, damage) {
     if (!actor.isOwner) return requestGM({ action: "setDamage", uuid: actor.uuid, damage });
+    if (corpusTrack(actor)) return actor.update({ "system.health.damage.corpus.bashing": num(damage.bashing), "system.health.damage.corpus.lethal": num(damage.lethal), "system.health.damage.corpus.aggravated": num(damage.aggravated) });
     return actor.update(healthUpdate(actor, damage));
 }
 
 export async function healDamage(actor, type, levels) {
+    const ct = corpusTrack(actor);
+    if (ct) return setDamage(actor, R.removeDamage(ct.damage, type, levels));
     const t = healthTrack(actor);
     return setDamage(actor, R.removeDamage(t.damage, type, levels));
 }
@@ -1251,7 +1280,7 @@ Hooks.once("init", () => {
     registerSettings();
     P.register();
     const api = { attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.5.0", movementFor,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.6.0", movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

@@ -34,6 +34,12 @@ import * as KR from "./kindred-rules.js";
 import * as KX from "./kindred.js";
 import * as SR from "./sunlight-rules.js";
 import * as SX from "./sunlight.js";
+import * as WR from "./wraith-rules.js";
+import * as WX from "./wraith.js";
+import * as HR from "./hunter-rules.js";
+import * as HX from "./hunter.js";
+import * as KRR from "./reckoning-rules.js";
+import * as RX from "./reckoning.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -64,6 +70,8 @@ function registerSettings() {
     GX.registerSettings(s);
     KX.registerSettings(s);
     SX.registerSettings(s);
+    WX.registerSettings(s);
+    HX.registerSettings(s);
 }
 const setting = k => game.settings.get(MOD, k);
 
@@ -318,7 +326,7 @@ async function post(actor, title, body, rolls = [], data = null) {
     const md = { speaker: ChatMessage.getSpeaker({ actor }), content, rolls: rolls.filter(Boolean) };
     if (rolls.filter(Boolean).length) { md.sound = CONFIG.sounds.dice; if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL; }
     // Cards with prompt buttons (sin, witnesses, Rötschreck after sunlight) need the module's flag to be bound
-    if (!data && /data-(kx|sx)=/.test(content)) data = { kind: "buttons" };
+    if (!data && /data-(kx|sx|wx)=/.test(content)) data = { kind: "buttons" };
     if (data) md.flags = { [MOD]: data };
     return ChatMessage.create(md);
 }
@@ -1311,6 +1319,7 @@ async function statusEffect(actor, id, active) {
 /** Clear scene-length effects: Quickening, ignoring pain, daytime activity. */
 export async function endScene({ actors, fromChronicle = false } = {}) {
     const list = actors ?? (canvas.tokens.controlled.length ? canvas.tokens.controlled.map(t => t.actor) : game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner && a.isOwner));
+    if (!fromChronicle && game.user.isGM) await wx().newScene({ quiet: true }); // Passions can be tapped again; Hysteria ends
     const lines = [];
     for (const actor of list) {
         if (!actor?.isOwner) continue;
@@ -1428,7 +1437,14 @@ export async function endStory({ actors } = {}) {
         const w = willpower(actor);
         const to = KR.willpowerAfter(setting("willpowerRecovery"), w.temp, w.perm, "story");
         if (to > w.temp) { await actor.update({ "system.advantages.willpower.temporary": to }); lines.push(`<li><b>${esc(actor.name)}</b>: Willpower ${w.temp} → ${to}</li>`); }
+        const c = await hx().newStory(actor);
+        if (c) lines.push(`<li>${esc(c)} (a new story, Dark Ages: Inquisitor p. 160)</li>`);
+        if (actor.type === "Hunter" && HX.lineNow() === "reckoning") {
+            const ri = rx().info(actor), start = ri.creedDef?.conviction;
+            if (start && ri.conviction < start) { await rx().setConviction(actor, start); lines.push(`<li><b>${esc(actor.name)}</b>: Conviction ${ri.conviction} → ${start} (Hunter: The Reckoning p. 138)</li>`); }
+        }
     }
+    await game.settings.set(MOD, "storyId", foundry.utils.randomID());
     return post(null, "The end of a story", lines.length ? `<ul>${lines.join("")}</ul>` : "<p>No Willpower to restore.</p>");
 }
 
@@ -1657,6 +1673,31 @@ function sx() {
         clockActors: () => { const on = new Set((game.scenes?.active?.tokens ?? []).map(t => t.actor).filter(Boolean)); return [...new Set([...on, ...game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner)])]; } });
 }
 
+let WXE = null;
+/** The wraith line (3.4.0). */
+function wx() {
+    return WXE ??= WX.build({ post, rollPool, rollBlock, dialog, updateActor, setFlag, attr, findAbility, abilityList, setting, spendWillpower,
+        applyDamage, setDamage, logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m) });
+}
+let HXE = null;
+/** Hunters, True Faith and Numina (3.4.0). */
+function hx() {
+    return HXE ??= HX.build({ post, rollPool, rollBlock, dialog, updateActor, setFlag, attr, findAbility, setting, spendWillpower, virtues, background, applyDamage,
+        logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m) });
+}
+
+let RXE = null;
+/** The imbued (3.4.0). */
+function rx() {
+    return RXE ??= RX.build({ post, rollPool, rollBlock, dialog, updateActor, setFlag, attr, findAbility, line: () => HX.lineNow(),
+        logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m) });
+}
+/** Hunters by era (B42): the imbued from 1999, inquisitors in the Dark Ages, mortal hunters (Hunters Hunted II) between. */
+function byLine(reckoning, inquisitor, hh2) {
+    return a => { const l = HX.lineNow(); return l === "reckoning" ? reckoning(a) : l === "inquisitor" ? inquisitor(a) : hh2(a); };
+}
+const hh2Note = () => ui.notifications.info("Hunters Hunted II hunters are mortals: use True Faith, Numina and the Action dialog (Virtue rolls are Courage, Conscience and Self-Control).");
+
 let KXE = null;
 /** The Kindred additions and automatic prompts (3.2.0). */
 function kx() {
@@ -1740,7 +1781,15 @@ function bindCard(msg, el) {
         const r = await sx().onChatButton(b);
         if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
     }));
-    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
+    el.querySelectorAll?.("button.vta-btn[data-wx]").forEach(b => b.addEventListener("click", async ev => {
+        ev.preventDefault();
+        const used = msg.getFlag(MOD, "usedKx") || [];
+        const key = `wx|${b.dataset.wx}|${b.dataset.actor}|${b.dataset.arg ?? ""}`;
+        if (used.includes(key)) return ui.notifications.info("Already done.");
+        const r = await wx().onChatButton(b);
+        if (r && (msg.isOwner || game.user.isGM)) await msg.update({ [`flags.${MOD}.usedKx`]: [...used, key] });
+    }));
+    el.querySelectorAll?.("button.vta-btn:not([data-garou]):not([data-kx]):not([data-sx]):not([data-wx])").forEach(b => b.addEventListener("click", ev => { ev.preventDefault(); onButton(msg, b.dataset.action); }));
 }
 
 /* ================================================================== */
@@ -1769,7 +1818,7 @@ async function createMacros() {
 
 const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.3.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.4.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => pm().uses(o.actor ?? resolveActor(), o.resource ?? "willpower"), cantrip: (o = {}) => pm().cantrip(o.actor ?? resolveActor()),
     cast: (o = {}) => pm().cast(o.actor ?? resolveActor()),
@@ -1795,7 +1844,21 @@ const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenz
     kindredRules: KR, disciplines: () => KX.DATA.disc, roads: () => KX.DATA.roads,
     // The sunlight system (3.3.0)
     sunNow: t => sx().sunNow(t), sunExposure: (tok, sun) => sx().exposureOf(tok, sun), applySun: (a, o) => sx().applySun(resolveActor(a), o),
-    sunAndHaven: withActor(a => sx().sunAndHaven(a)), skyAndSun: () => sx().skyAndSun(), havenStatus: a => sx().havenStatus(a), sunlightRules: SR };
+    sunAndHaven: withActor(a => sx().sunAndHaven(a)), skyAndSun: () => sx().skyAndSun(), havenStatus: a => sx().havenStatus(a), sunlightRules: SR,
+    // The wraith line (3.4.0)
+    useArcanos: withActor(a => wx().useArcanos(a)), passion: withActor(a => wx().passion(a)), fetter: withActor(a => wx().fetter(a)),
+    memoriam: withActor(a => wx().memoriam(a)), healCorpus: withActor(a => wx().healCorpus(a)), caul: withActor(a => wx().caul(a)),
+    shadow: withActor(a => wx().shadow(a)), shadowWhisper: withActor(a => wx().whisper(a)), shadowguide: withActor(a => wx().shadowguide(a)),
+    harrowing: withActor((a, o) => wx().harrowing(a, o)), hysteria: () => wx().hysteria(), newWraithScene: () => wx().newScene(), newSession: () => wx().newSession(),
+    corpusDamage: (a, type, k) => wx().corpusDamage(resolveActor(a), type, k), wraithInfo: a => WX.info(a), wraithRules: WR, arcanoi: () => WX.DATA.arcanoi,
+    // Hunters, True Faith and Numina (3.4.0)
+    hunterSheet: withActor(byLine(a => rx().sheet(a), a => hx().inquisitorSheet(a), hh2Note)),
+    hunterPower: withActor(byLine(a => rx().useEdge(a), a => hx().blessing(a), a => hx().numina(a))),
+    hunterVirtue: withActor(byLine(a => rx().secondSight(a), a => hx().virtueRoll(a), hh2Note)),
+    inquisitorSheet: withActor(a => hx().inquisitorSheet(a)), blessing: withActor(a => hx().blessing(a)), useEdge: withActor(a => rx().useEdge(a)),
+    secondSight: withActor(a => rx().secondSight(a)), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
+    sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
+    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 let OFF = false;
 Hooks.once("init", () => {
@@ -1829,6 +1892,7 @@ Hooks.once("ready", async () => {
     game.socket.on(SOCKET, onSocket);
     await GX.loadData();
     await KX.loadData();
+    await WX.loadData();
     garouHooks();
     kindredHooks();
     await createMacros();
@@ -1892,6 +1956,14 @@ function kindredHooks() {
     // A new scene: the Delirium can strike the same witnesses again
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
+    // Wraiths (3.4.0): a Corpus change from the sheet or from Combat; a new scene; the session
+    Hooks.on("updateActor", (actor, changes, options) => {
+        if (!foundry.utils.hasProperty(changes, "system.health.damage.corpus") || !WX.isWraith(actor)) return;
+        const before = options?.wodxHealthBefore?.corpus ?? {};
+        wx().onCorpus(actor, { bashing: num(before.bashing), lethal: num(before.lethal), aggravated: num(before.aggravated) }, actor.system.health.damage.corpus).catch(e => console.error("WoDX |", e));
+    });
+    Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) wx().newScene({ quiet: true }).catch(e => console.error("WoDX |", e)); });
+    wx().onReady().catch(e => console.error("WoDX |", e));
     let movePending = null;
     Hooks.on("updateToken", (doc, changes) => {
         if (!game.user.isGM || !("x" in changes || "y" in changes)) return;

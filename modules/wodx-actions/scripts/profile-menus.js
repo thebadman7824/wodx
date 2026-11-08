@@ -38,7 +38,7 @@ export const MENUS = {
     ghoul: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
-            ["Vitae", [["uses:blood", "Spend vitae", "fa-tint"], ["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["rules:ghoul", "Ghoul rules", "fa-book"], ["api:bloodOath", "Blood Oath / bond", "fa-link"]]],
+            ["Vitae", [["uses:blood", "Spend vitae", "fa-tint"], ["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["rules:ghoul", "Ghoul rules", "fa-book"], ["api:bloodOath", "Blood Oath / bond", "fa-link"], ["api:ghoulBlood", "Drink, withdrawal, day (V20)", "fa-wine-glass"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:frenzy", "Fear / frenzy check", "fa-fire-alt"], ["api:healing", "Healing", "fa-band-aid"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -46,6 +46,7 @@ export const MENUS = {
     mortal: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
+            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -53,7 +54,9 @@ export const MENUS = {
     hunter: {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
-            ["Faith and conviction", [["uses:faith", "Faith", "fa-cross"], ["uses:conviction", "Conviction", "fa-fist-raised"]]],
+            ["The hunter", [["api:hunterSheet", "Hunter traits", "fa-id-card"], ["api:hunterPower", "Blessing / Edge", "fa-hand-sparkles"], ["api:hunterVirtue", "Virtue roll / second sight", "fa-shield-alt"], ["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"]]],
+            ["Faith and conviction", [["api:trueFaith", "True Faith", "fa-cross"], ["api:prayer", "Prayer", "fa-praying-hands"], ["api:sinGod", "A sin (Piety)", "fa-balance-scale"], ["api:relic", "Holy relic", "fa-gem"], ["api:bankConviction", "Bank Conviction", "fa-piggy-bank"], ["uses:conviction", "Conviction", "fa-fist-raised"]]],
+            ["Numina", [["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -78,6 +81,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
             ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"]]],
+            ["Sorcery and Numina", [["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -92,9 +96,11 @@ export const MENUS = {
     },
     wraith: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:arcanos", "Use an Arcanos", "fa-ghost"]]],
-            ["Passions", [["uses:pathos", "Pathos", "fa-heart"], ["uses:corpus", "Corpus", "fa-skull"], ["uses:angst", "Angst (Shadow)", "fa-mask"]]],
-            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["rules:wraith", "Wraith rules", "fa-book"]]],
+            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:useArcanos", "Use an Arcanos", "fa-ghost"]]],
+            ["Passions and Fetters", [["api:passion", "Passion", "fa-heart"], ["api:fetter", "Fetter", "fa-link"], ["api:memoriam", "Memoriam", "fa-book-dead"], ["uses:pathos", "Pathos", "fa-fire-alt"]]],
+            ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"]]],
+            ["The Shadow", [["api:shadow", "The Shadow (Shadowguide)", "fa-mask"], ["api:shadowWhisper", "Whisper", "fa-comment-dots"], ["api:harrowing", "Harrowing", "fa-skull"], ["api:shadowguide", "Assign the Shadowguide (GM)", "fa-user-secret"]]],
+            ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["rules:wraith", "Wraith rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },

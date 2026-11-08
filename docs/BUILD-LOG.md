@@ -302,3 +302,29 @@
 ### Phase 6b closed, 2026-11-07
 
 - Ben completed the Phase 6b checklist steps: the phase passes. No WoDX console errors after his run. The server still shows the start-up manifest versions; a full Foundry restart will update them and register the Sunlight region behavior. Test material is left in the world until Ben says to delete it (list in PHASE-6B-CHECKLIST).
+
+### Phase 6c built, 2026-11-08: WoDX Actions 3.4.0 and WoDX Combat 3.6.0 (mortals, hunters with True Faith, wraiths)
+
+- **Ben's choices:** B42 (hunters by era), B43 (Wraith 20th, the Great War core in its profile), B44 (the Shadowguide), B45 (Numina in 6c). Also new this phase:
+  - B46: the aim widens to a virtual world.
+  - B47: Phase 6d, the inner voice, added to the Master Plan.
+  - B48: gender-neutral in-game text.
+  - B49: hedge magic by Sorcerer.
+- **Research on Ben's PC.** The scanned cores were OCR'd with Ben's go-ahead, using a uv environment (PyMuPDF, RapidOCR; 11 workers):
+  - Dark Ages: Inquisitor, Sorcerer (Revised), Hunter: The Reckoning, V20 Ghouls and Revenants.
+  - The Great War is still running.
+  - The notes hold mechanics with pages only (`research/6c-notes.md`). Three edge names were checked against the page images.
+- **Wraiths:**
+  - Arcanoi library of 160 arts; Passions, Fetters, Memoriam; Corpus healing.
+  - The Shadow: Shadowguide, whispers, Catharsis, Shadow Dice, Dark Passions, Thorns.
+  - Harrowings with automatic prompts; the Caul; Hysteria.
+  - Combat puts wraith damage on the Corpus track.
+- **Hunters:**
+  - Inquisitors: Superior Virtues, Piety, Conviction risk, prayer, relics, banking, Virtue rolls.
+  - True Faith under both rule sets.
+  - Numina from The Hunters Hunted II, and Sorcerer hedge magic with aspects.
+  - The imbued: creeds, second sight, 35 edges, Conviction risk and cash-in, derangements, the Imbuing.
+  - V20 ghoul blood rules.
+- **Checks:** harness 185 tests (24 new), UI fit (24 new dialogs) and quality check all pass.
+- **Installed** and checked by MD5. Backup: `Backups\wodx-6c-pre-deploy-20261108`.
+- **Gate:** the live gate script `gate6c.mjs` waits for Ben (Foundry wasn't running; the admin password is his to enter). The steps are in PHASE-6C-CHECKLIST.
