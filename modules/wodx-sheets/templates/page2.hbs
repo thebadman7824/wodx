@@ -2,7 +2,7 @@
 {{#if wodx.page2.length}}
 <div class="sheet-area flex-columns">
 	<div class="clearareaBox area-box wodx-page2">
-		<div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">{{wodx.page2Title}}</span></div>
+		{{#if wodx.page2Title}}<div class="sheet-headline sheet-banner splatFont"><span class="sheet-banner-text">{{wodx.page2Title}}</span></div>{{/if}}
 		<div class="wodx-cols">{{#each wodx.page2}}<div class="wodx-col">{{#each this}}{{> wodxBlock}}{{/each}}</div>{{/each}}</div>
 	</div>
 </div>

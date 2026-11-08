@@ -166,7 +166,7 @@ export function viewFor(id, a) {
     abilityCols: Object.entries(rows).map(([k, list]) => ({ title: titles[k], rows: list.map(r => ({ ...r, dots: SR.dots(r.value) })) })),
     abilityNote: id === "werewolfDA" ? "Leadership is a Skill in the Dark Ages (Dark Ages: Werewolf p. 79); the printed sheet also lists it under Talents." : "",
     advantages: cols(def.advantages), lower: cols(def.lower), page2: cols(def.page2 ?? []),
-    page2Title: id === "faeDA" ? "Oaths, Echoes and Features" : "The second page", page2InCore: !def.page2Tab,
+    page2Title: id === "faeDA" ? "Oaths, Echoes and Features" : "", page2InCore: !def.page2Tab,
     buttons: (def.buttons ?? []).filter(b => BUTTONS[b]).map(b => ({ api: b, icon: BUTTONS[b][0], label: BUTTONS[b][1] }))
   };
 }
