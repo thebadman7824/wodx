@@ -79,7 +79,11 @@ export async function run() {
 
 export async function check() {
   const {R, ok, step} = harness();
-  const expect = [0, 1, 2].map(row => people().generate({batch: BATCH + 2, row})).concat([people().generate({batch: BATCH + 2, row: 3, kind: "ghoul"})]);
+  // The people as they were sent to the queue (the approved entries carry them)
+  const decided = chron().approvals.history().filter(h => h.type === "wodx-people" && String(h.key).startsWith(`gate7a:${BATCH + 2}:`) && h.verdict === "approve");
+  const byKey = k => decided.find(h => h.key === `gate7a:${BATCH + 2}:${k}`)?.data?.people ?? [];
+  const expect = [...byKey("m"), ...byKey("g")];
+  if ( expect.length < 4 ) R.errors.push(`Only ${expect.length} approved gate people found in the queue's history`);
   const folder = game.folders.find(f => f.type === "Actor" && f.name === "WoDX people");
   const made = expect.map(p => game.actors.find(a => a.folder?.id === folder?.id && a.name === p.name && a.getFlag(CR, "people")?.batch === BATCH + 2));
   await step("the approved people are on their sheets", async () => {

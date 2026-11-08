@@ -99,6 +99,7 @@ Hooks.once("ready", async () => {
   contentFixes.registerContentFixes();
   eras.applyProfile(eras.activeEra().profile);
   playerTools.installToolFilter();
+  await gen.ensureSeed();
 
   game.socket.on(SOCKET, onSocket);
 

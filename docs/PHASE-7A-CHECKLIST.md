@@ -7,6 +7,6 @@
 - [x] Mortal and ghoul NPCs with Nature, Demeanor, motive, secret, a look and a ready sheet (Attributes, Abilities, Dark Ages Secondary Abilities, Willpower, Virtues); ghouls bound to a chosen domitor
 - [x] Gender-neutral text (B48); WoDX's own words, no book text
 - [x] Harness tests (phase7a.test.mjs); UI fit at three sizes
-- [ ] Gate 7a part 1 in Foundry (gate7a.mjs run)
+- [x] Gate 7a part 1 in Foundry (gate7a.mjs run): 6/6, 2026-11-08
 - [ ] Ben approves the four Rothenstein people in the queue
 - [ ] Gate 7a part 2 (gate7a.mjs check)

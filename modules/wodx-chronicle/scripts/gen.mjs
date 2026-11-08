@@ -23,13 +23,22 @@ export function registerGenSettings() {
 }
 
 /** The chronicle's seed: made once, by the Storyteller, when the world first runs the generators. */
+let pendingSeed = null;
 export function seed() {
   let s = game.settings.get(MODULE_ID, "genSeed");
+  if ( !s && pendingSeed ) return pendingSeed;
   if ( !s && game.user.isGM ) {
-    s = foundry.utils.randomID(16);
-    game.settings.set(MODULE_ID, "genSeed", s);
+    // Made once: the setting is written in the background, so the new seed is kept here until it lands
+    s = pendingSeed = foundry.utils.randomID(16);
+    game.settings.set(MODULE_ID, "genSeed", s).finally(() => { pendingSeed = null; });
   }
   return s || "unseeded";
+}
+/** At ready, the Storyteller's client makes sure the seed exists before anything draws. */
+export async function ensureSeed() {
+  if ( !game.user.isGM || game.settings.get(MODULE_ID, "genSeed") ) return;
+  const s = seed();
+  if ( pendingSeed ) await game.settings.set(MODULE_ID, "genSeed", s);
 }
 
 /** Where and when the chronicle is: the era group the tables are written for, and the people's culture. */
@@ -71,7 +80,9 @@ function allTables() {
     seen.add(tableKey(d));
     defs.push(d);
   }
-  for ( const list of SOURCES.values() ) for ( const d of list ) if ( !seen.has(tableKey(d)) ) defs.push(d);
+  // Shipped tables are drawn by range too, exactly as their Roll Tables will be: the same seed then gives the same
+  // result before and after the tables are installed in the world
+  for ( const list of SOURCES.values() ) for ( const d of list ) if ( !seen.has(tableKey(d)) ) defs.push({...d, results: G.withRanges(d.results)});
   cache = defs;
   return defs;
 }
@@ -97,7 +108,13 @@ export function expand(template, {key, nonce = 0, vars = {}, ctx = context()} = 
  * Active GM: put the shipped tables into the world as Roll Tables, once. A table the Storyteller has edited is never
  * overwritten; one left as shipped is brought up to date when WoDX's data changes.
  */
-export async function installTables() {
+let installing = null;
+export function installTables() {
+  // One install at a time (the start-up install and a caller's can overlap)
+  installing ??= doInstall().finally(() => { installing = null; });
+  return installing;
+}
+async function doInstall() {
   if ( !isActiveGM() || !game.tables?.[Symbol.iterator] || !globalThis.RollTable ) return {created: 0, updated: 0, kept: 0};
   let folder = game.folders.find(f => f.type === "RollTable" && f.name === FOLDER);
   if ( !folder ) folder = await Folder.create({name: FOLDER, type: "RollTable", color: "#5b1a1a"});

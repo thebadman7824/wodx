@@ -95,3 +95,11 @@ test("gender-neutral text (B48): the tables and the sheet note", () => {
     assert.ok(!words.test(note.replace(/<[^>]+>/g, " ")), note);
   }
 });
+
+test("a table gives the same result drawn by weight-made ranges as its Roll Table does", () => {
+  const results = [{text: "a", weight: 5}, {text: "b", weight: 2}, {text: "c", weight: 1}];
+  const asRoll = G.withRanges(results).map(r => ({text: r.text, weight: r.weight, range: r.range}));
+  for ( let i = 0; i < 50; i++ ) {
+    assert.equal(G.drawResult(G.stream("s", `k${i}`), G.withRanges(results)).text, G.drawResult(G.stream("s", `k${i}`), asRoll).text);
+  }
+});
