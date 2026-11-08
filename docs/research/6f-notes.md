@@ -12,8 +12,8 @@ dagrimoire, m20, c20), joined per book with page markers (`join.py`), headings f
 | Dark Ages: Mage (2002, scan, OCR) | 242 pdf | Ch. 3 Characters (pdf 77–95: creation, Awareness, Cosmology, Enigmas, Backgrounds Fount, Sanctum, Talisman, Merits and Flaws); Ch. 4 Magic (pdf 97–143: casting, foci, belief, Foundation and Pillars, duration and distance, resisting, cancelling, rotes; each fellowship's Foundation, Pillars and rotes; hedge magic; Backlash, Branding, Scourging) |
 | Dark Ages: Mage Grimoire | 161 pdf | to map: more rotes per fellowship, wonders |
 | Mage 20th | 698 pdf | Ch. 6 traits (Avatar essences, Arete, Quintessence and Paradox, pdf 267–340); Ch. 8 rules (384–397); Ch. 10 The Book of Magick (498–618) |
-| Dark Ages: Fae | 226 pdf | to map |
-| Changeling 20th | 503 pdf | to map (Arts, Realms, Bunk, Glamour, Banality, Nightmare, Bedlam, chimera) |
+| Dark Ages: Fae | 226 pdf | the text layer is scrambled (216 of 217 pages): full OCR started 2026-11-08 into `text\batch2\dafae-ocr` |
+| Changeling 20th | 503 pdf | the book's own bookmarks (`c20.toc.txt`), by PDF page: Ch. 2 Kithain pp. 83–138 (Seemings 84–87, kith 88–114, kith creation 115–118, Houses 120–137); Ch. 3 creation and Traits pp. 139–190 (Legacies 157–161, Abilities 163–169, Backgrounds 169–172, Glamour 173–174, Banality 174–175, Merits and Flaws 177–190); Ch. 4 Arts and Realms pp. 193–240 (cantrips 194, bunks 195, Unleashing 197, eighteen Arts 198–232, Realms 233–236); Ch. 6 Systems pp. 251–296 (Tempers 258–264, the Wyrd 260, Epiphany 261, Oaths 265–267, Banality and the Mists 268–274, Nightmare 275, combat 276–290, Cold Iron 291, Bedlam 295) |
 
 ## Dark Ages: Mage, casting (Ch. 4, pp. 97–105)
 
