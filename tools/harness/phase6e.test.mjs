@@ -190,7 +190,7 @@ test("player toolbar buttons: players only lose buttons, the X-card always stays
   const saved = PT.fromTicks({u1: {wodxClock: true, wodxPeek: false, wodxXCard: false}, u2: {wodxClock: true}});
   assert.deepEqual(saved, {u1: {wodxPeek: false}});
   // Every WoDX token button a player sees is in the list, and only those
-  const src = ["wodx-chronicle", "wodx-otherworlds", "wodx-creation"].map(m => readFileSync(join(root, `modules/${m}/scripts/main.mjs`), "utf8")).join("\n");
+  const src = ["wodx-chronicle", "wodx-otherworlds", "wodx-creation", "wodx-storyteller"].map(m => readFileSync(join(root, `modules/${m}/scripts/main.mjs`), "utf8")).join("\n");
   const playerVisible = [...src.matchAll(/tools\.(wodx\w+) = \{[\s\S]*?visible: (true|game\.user\.isGM)/g)].filter(x => x[2] === "true").map(x => x[1]);
   assert.deepEqual([...playerVisible].sort(), PT.PLAYER_TOOLS.map(t => t.name).sort());
 });
