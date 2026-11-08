@@ -8,5 +8,5 @@
 - [x] Gender-neutral text (B48); WoDX's own words, no book text
 - [x] Harness tests (phase7a.test.mjs); UI fit at three sizes
 - [x] Gate 7a part 1 in Foundry (gate7a.mjs run): 6/6, 2026-11-08
-- [ ] Ben approves the four Rothenstein people in the queue
-- [ ] Gate 7a part 2 (gate7a.mjs check)
+- [x] Ben approves the four Rothenstein people in the queue
+- [x] Gate 7a part 2 (gate7a.mjs check): 4/4, 2026-11-08
