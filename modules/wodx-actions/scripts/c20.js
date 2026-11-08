@@ -29,8 +29,10 @@ export function build(ctx) {
         const out = {};
         for (const i of actor?.items ?? []) {
             const t = String(i.system?.type ?? "");
-            if (i.type !== "Power" || !(kind === "art" ? /types\.art$/.test(t) : /types\.realms?$/.test(t))) continue;
-            const k = keyOf(i.name).replace(/^dragonsire$|^dragons?ire$/, "dragonsire");
+            // Arts are Power items; the system keeps Realms as Trait items with a label key such as "wod.realms.actor"
+            if (!(kind === "art" ? /types\.art$/.test(t) && i.type === "Power" : /types\.realms?$/.test(t) && (i.type === "Trait" || i.type === "Power"))) continue;
+            const raw = String(i.system?.label || i.name || "");
+            const k = keyOf(raw.includes(".") ? raw.split(".").pop() : raw).replace(/^dragons?ire$/, "dragonsire");
             out[k] = Math.max(out[k] ?? 0, n(i.system?.value));
         }
         return out;

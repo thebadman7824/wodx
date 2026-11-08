@@ -431,3 +431,8 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
   - The Mists table for mortals.
 - The fae menu for later eras. The inner voice reads Nightmare, Imbalances and Banality.
 - Tests: phase6h.test.mjs (9); 268 pass; UI fit passes. Backup: Backups/wodx-actions-3.8.0-2026-11-08. Gate 6h: 13/13.
+
+### Sheets 1, 2026-11-08: WoDX Sheets 0.1.0 (the Dark Ages: Fae sheet, B74)
+- New module wodx-sheets. WodxChangelingSheet extends the system's ChangelingActorSheet. In the Dark Ages, or on a sheet set to Dark Ages: Fae, it uses templates/fae-da.hbs. That template follows the book's sheet (pdf pp. 224–225): Court, Origin, Agenda; Attributes; the thirty Dark Ages: Fae Abilities in their columns; Dominions, Backgrounds, Cantrips; Willpower and Other Traits; Mists and Weaving (dots and boxes); Health and Experience. On the second page come Oaths, Echoes and Features, with the WoDX Actions buttons. Abilities the system has no key for (Legerdemain, Archery, Commerce, Ride, Hearth Wisdom, Seneschal) are secondary-ability Traits; the first dot adds one. Otherwise it is the system's Changeling 20th sheet.
+- Found while reading the system: Realms are Trait items with a label key such as "wod.realms.actor". WoDX Actions' Changeling 20th code now reads them that way (it had looked for Power items).
+- Tests: sheets1.test.mjs (4); 272 pass. Deployed, with the world's settings backed up (Backups/rothenstein-wodx-settings-before-wodx-sheets-2026-11-08). Gate (tools/gate/gatesheet1.mjs, 7 steps) not yet run: the module still has to be enabled in the world.

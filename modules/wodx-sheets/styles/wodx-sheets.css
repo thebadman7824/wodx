@@ -1,0 +1,32 @@
+/* WoDX Sheets: the Dark Ages: Fae layout inside the system's sheet frame */
+.wodx-sheet.wodx-fae-da .wodx-head { display: flex; gap: 12px; margin: 4px 8px 6px; flex-wrap: wrap; }
+.wodx-sheet .wodx-field { display: flex; align-items: center; gap: 6px; flex: 1 1 180px; }
+.wodx-sheet .wodx-field label { font-variant: small-caps; font-weight: bold; min-width: 52px; }
+.wodx-sheet .wodx-field select, .wodx-sheet .wodx-field input { flex: 1; min-width: 0; }
+.wodx-sheet .wodx-cols { display: flex; gap: 10px; width: 100%; }
+.wodx-sheet .wodx-col { flex: 1 1 0; min-width: 0; }
+.wodx-sheet .wodx-row { display: flex; align-items: center; min-height: 18px; }
+.wodx-sheet .wodx-row label { flex: 0 0 auto; }
+.wodx-sheet .wodx-dots { display: inline-flex; gap: 2px; cursor: pointer; }
+.wodx-sheet .wodx-dots.ro { cursor: default; }
+.wodx-sheet .wodx-dots.ten { flex-wrap: wrap; justify-content: center; }
+.wodx-sheet .wodx-dot { width: 11px; height: 11px; border-radius: 50%; border: 1px solid currentColor; display: inline-block; opacity: .8; }
+.wodx-sheet .wodx-dot.on { background: currentColor; opacity: 1; }
+.wodx-sheet .wodx-boxes { display: flex; gap: 2px; justify-content: center; margin: 2px 0 6px; cursor: pointer; }
+.wodx-sheet .wodx-box { width: 11px; height: 11px; border: 1px solid currentColor; display: inline-block; opacity: .8; }
+.wodx-sheet .wodx-box.on { background: currentColor; opacity: 1; }
+.wodx-sheet .wodx-track-title { text-align: center; font-variant: small-caps; font-weight: bold; margin-top: 4px; }
+.wodx-sheet .wodx-roll { cursor: pointer; }
+.wodx-sheet .wodx-roll:hover, .wodx-sheet .wodx-open:hover { text-decoration: underline; }
+.wodx-sheet .wodx-open { cursor: pointer; }
+.wodx-sheet .wodx-favored { font-weight: bold; }
+.wodx-sheet .wodx-missing { opacity: .65; font-style: italic; }
+.wodx-sheet .wodx-quiet { opacity: .7; font-size: .9em; }
+.wodx-sheet .wodx-warn { color: #b3261e; font-size: .9em; text-align: center; }
+.wodx-sheet .wodx-line { margin: 2px 0; }
+.wodx-sheet .wodx-inactive { opacity: .55; text-decoration: line-through; }
+.wodx-sheet .wodx-small { display: inline-block; margin-top: 4px; font-size: .9em; }
+.wodx-sheet .wodx-actions-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 6px; }
+.wodx-sheet .wodx-actions-row button { flex: 0 1 auto; width: auto; }
+.wodx-sheet .wodx-bottom { align-items: flex-start; }
+.wodx-sheet .wodx-cantrip { gap: 6px; }

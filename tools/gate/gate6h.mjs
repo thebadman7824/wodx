@@ -46,9 +46,11 @@ async function makePooka() {
     if (!folder) folder = await Folder.create({ name: "WoDX 6h test pack", type: "Actor" });
     const name = "Jamilah (6h, pooka wilder)";
     const pw = (nm, type, v) => ({ name: nm, type: "Power", system: { type: `wod.types.${type}`, value: v } });
+    // The system keeps Realms as Trait items whose label is a key such as "wod.realms.actor"
+    const rl = (k, v) => ({ name: k[0].toUpperCase() + k.slice(1), type: "Trait", system: { type: "wod.types.realms", label: `wod.realms.${k}`, value: v, max: 5 } });
     let a = game.actors.find(x => x.folder?.id === folder.id && x.name === name);
     if (!a) a = await Actor.create({ name, type: "Changeling", folder: folder.id, items: [pw("Metamorphosis", "art", 3), pw("Primal", "art", 3), pw("Wayfare", "art", 2),
-        pw("Actor", "realms", 3), pw("Fae", "realms", 2), pw("Nature", "realms", 1)] });
+        rl("actor", 3), rl("fae", 2), rl("nature", 1)] });
     await a.update({ ...base, "system.seeming": "Wilder", "system.kith": "Pooka" });
     await a.setFlag(MOD, "daFae", { system: "c20" });
     if (a.getFlag(MOD, "c20") !== undefined) await a.unsetFlag(MOD, "c20");
