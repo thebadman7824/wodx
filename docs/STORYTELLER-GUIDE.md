@@ -98,7 +98,7 @@ The Clock's buttons:
 
 **Conditions and timed effects.** Blinded, Crippled limb, Dazed, Held, Completely immobilized, Staked, Knocked down, Incapacitated, Torpor, Frenzy, Rötschreck, Obfuscated and Sneaking show as token statuses. Combat reads them for dice and difficulty. A timed effect ends by round, scene, night (at dawn) or clock time, and takes back exactly what it added.
 
-**Safety.** The X-card (button, the Clock, or Ctrl+Shift+X) shows everyone the card, never says who pressed it, and pauses the game while that switch is on. NPCs never act while the game is paused, and every inner voice stops for the scene. Lines and veils go into the Session Zero journal without names.
+**Safety.** The X-card (button, the Clock, or Ctrl+Shift+X) shows everyone the card, never says who pressed it, and pauses the game while that switch is on. NPCs never act while the game is paused, and every inner voice stops for the scene. Lines and veils are the table's content limits: a line is something that never appears in the game, and a veil is something that may happen but off screen, with the scene cut away. Players add them from the Clock, and they go into the Session Zero journal without names.
 
 **Players' buttons.** **Player toolbar buttons** has a tick for each WoDX button and each player. **Find my character** takes a player to their token on any scene; if the player cannot view that scene, your client pulls them there.
 
