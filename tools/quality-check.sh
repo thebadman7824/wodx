@@ -4,22 +4,27 @@
 set -u
 cd "$(dirname "$0")/.."
 fail=0
+# Windows: the python3 on the PATH may be the Microsoft Store stub, and Python reads files in the ANSI code page
+PY=python3
+python3 -c "" 2>/dev/null || PY=python
+export PYTHONUTF8=1
+TMPD="${TMPDIR:-${TEMP:-/tmp}}"
 targets=("$@")
 [ ${#targets[@]} -eq 0 ] && targets=(modules/*)
 
 echo "== Parse check"
 for t in "${targets[@]}"; do
   while IFS= read -r f; do
-    node --check "$f" 2>/tmp/qc.err || { echo "FAIL parse: $f"; cat /tmp/qc.err; fail=1; }
+    node --check "$f" 2>"$TMPD/qc.err" || { echo "FAIL parse: $f"; cat "$TMPD/qc.err"; fail=1; }
   done < <(find "$t" -name '*.mjs' -o -name '*.js' | grep -v node_modules)
   while IFS= read -r f; do
-    python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$f" 2>/tmp/qc.err || { echo "FAIL json: $f"; cat /tmp/qc.err; fail=1; }
+    "$PY" -c "import json,sys; json.load(open(sys.argv[1]))" "$f" 2>"$TMPD/qc.err" || { echo "FAIL json: $f"; cat "$TMPD/qc.err"; fail=1; }
   done < <(find "$t" -name '*.json' | grep -v node_modules)
 done
 
 echo "== module.json"
 for m in modules/*/module.json; do
-  python3 - "$m" <<'PY' || fail=1
+  "$PY" - "$m" <<'PY' || fail=1
 import json, os, sys
 p = sys.argv[1]; d = json.load(open(p)); root = os.path.dirname(p); bad = []
 for k in ("id", "title", "version", "compatibility"):
@@ -40,11 +45,12 @@ for t in "${targets[@]}"; do
   while IFS= read -r f; do
     dir=$(dirname "$f")
     grep -oE "from \"\./[^\"]+\"|from \"\.\./[^\"]+\"" "$f" | sed -E 's/from "(.*)"/\1/' | while read -r imp; do
-      [ -f "$dir/$imp" ] || { echo "FAIL import in $f: $imp"; echo x >> /tmp/qc.fail; }
+      # Foundry's Data folder keeps systems/ beside modules/; in the repo the system fork is system/
+      [ -f "$dir/$imp" ] || [ -f "${dir}/${imp/..\/..\/..\/systems\//../../../system/}" ] || { echo "FAIL import in $f: $imp"; echo x >> "$TMPD/qc.fail"; }
     done
   done < <(find "$t" \( -name '*.mjs' -o -name '*.js' \) | grep -v node_modules)
 done
-[ -f /tmp/qc.fail ] && { fail=1; rm -f /tmp/qc.fail; }
+[ -f "$TMPD/qc.fail" ] && { fail=1; rm -f "$TMPD/qc.fail"; }
 
 echo "== Unit tests"
 for t in "${targets[@]}"; do
@@ -64,6 +70,8 @@ fi
 
 echo "== UI fit (rule B17)"
 FOUNDRY_CSS="${FOUNDRY_CSS:-/mnt/user-data/uploads/Foundry Virtual Tabletop/resources/app/public/css/foundry2.css}"
+# Ben's PC: Foundry is installed on G:
+[ -f "$FOUNDRY_CSS" ] || [ ! -f "/g/Foundry Virtual Tabletop/resources/app/public/css/foundry2.css" ] || FOUNDRY_CSS="/g/Foundry Virtual Tabletop/resources/app/public/css/foundry2.css"
 if [ -f "$FOUNDRY_CSS" ] && [ -d tools/harness/node_modules ]; then
   (cd tools/harness && node ui-fit.mjs "$FOUNDRY_CSS" 2>&1 | grep -E "^(FAIL|== UI)")
   (cd tools/harness && node ui-fit.mjs "$FOUNDRY_CSS" >/dev/null 2>&1) || { echo "FAIL ui-fit"; fail=1; }

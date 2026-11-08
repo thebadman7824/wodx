@@ -4,14 +4,20 @@
  *
  * Usage: node ui-fit.mjs <path to Foundry's foundry2.css> [outDir for screenshots]
  */
+import "./win-paths.mjs";
 import {createRequire} from "node:module";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 import {writeFileSync, mkdirSync, existsSync} from "node:fs";
+import {tmpdir} from "node:os";
 import {installMock} from "./foundry-mock.mjs";
 
 const require = createRequire(import.meta.url);
-const {chromium} = require("playwright");
+let chromium;
+try { ({chromium} = require("playwright")); } catch {
+  console.error("Playwright is not installed. On this machine run: npm install --no-save playwright (no browser download is needed; Edge or Chrome is used).");
+  process.exit(2);
+}
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const foundryCss = process.argv[2];
 const outDir = process.argv[3] ?? null;
@@ -458,7 +464,17 @@ const KIT = process.env.WODX_KIT ?? "dark-ages", SCALE = process.env.WODX_SCALE 
 const bodyAttrs = `class="vtt game system-worldofdarkness theme-dark${LOOK === "plain" ? "" : " wodx-look"}" data-wodx-kit="${KIT}" data-wodx-look="${LOOK}" data-wodx-tone="${toneFor(KIT, LOOK)}" style="--wx-scale:${SCALE}"`;
 console.log(`Look: ${LOOK}, kit ${KIT}, text ${SCALE}`);
 if ( outDir ) { mkdirSync(outDir, {recursive: true}); writeFileSync(join(outDir, "windows.json"), JSON.stringify(windows)); }
-const browser = await chromium.launch();
+// Playwright's own Chromium where it is installed; otherwise the Edge or Chrome on the machine (Windows has Edge)
+async function launchBrowser() {
+  const tries = [{}, {channel: "msedge"}, {channel: "chrome"}];
+  if ( process.env.WODX_BROWSER ) tries.unshift({executablePath: process.env.WODX_BROWSER});
+  let last;
+  for ( const t of tries ) {
+    try { return await chromium.launch(t); } catch ( err ) { last = err; }
+  }
+  throw last;
+}
+const browser = await launchBrowser();
 let failures = 0;
 if ( outDir ) mkdirSync(outDir, {recursive: true});
 
@@ -483,7 +499,7 @@ for ( const [vw, vh] of sizes ) {
         <header class="window-header"><h1 class="window-title">${w.name}</h1></header>
         <section class="window-content">${w.content}</section>
       </${w.tag}></body></html>`;
-    const file = join(outDir ?? "/tmp", `ui-fit-${vw}x${vh}-${w.name.replace(/[\s\/]+/g, "-")}.html`);
+    const file = join(outDir ?? tmpdir(), `ui-fit-${vw}x${vh}-${w.name.replace(/[\s\/]+/g, "-")}.html`);
     writeFileSync(file, html);
     await page.goto(pathToFileURL(file).href);
     // Foundry centers the window and clamps it to the screen (ApplicationV2#setPosition)

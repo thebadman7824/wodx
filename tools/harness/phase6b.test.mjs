@@ -1,3 +1,4 @@
+import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {fileURLToPath} from "node:url";

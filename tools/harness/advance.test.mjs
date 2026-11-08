@@ -2,6 +2,7 @@
  * Era advancement (B83): each line's advancer in Pass the Years. The pure rules first, then a skip from the Dark Ages
  * to the Victorian age through planSkip and applyPlan.
  */
+import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {fileURLToPath} from "node:url";
