@@ -10,11 +10,12 @@
 .wodx-sheet .wodx-dots { display: inline-flex; gap: 2px; cursor: pointer; }
 .wodx-sheet .wodx-dots.ro { cursor: default; }
 .wodx-sheet .wodx-dots.ten { flex-wrap: wrap; justify-content: center; }
-.wodx-sheet .wodx-dot { width: 11px; height: 11px; border-radius: 50%; border: 1px solid currentColor; display: inline-block; opacity: .8; }
-.wodx-sheet .wodx-dot.on { background: currentColor; opacity: 1; }
+.wodx-sheet .wodx-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #121212; display: inline-block; background: #ffffff; }
+.wodx-sheet .wodx-dot.on { background: #121212; }
+.wodx-sheet .wodx-dots[data-add-ability] .wodx-dot { opacity: .6; }
 .wodx-sheet .wodx-boxes { display: flex; gap: 2px; justify-content: center; margin: 2px 0 6px; cursor: pointer; }
-.wodx-sheet .wodx-box { width: 11px; height: 11px; border: 1px solid currentColor; display: inline-block; opacity: .8; }
-.wodx-sheet .wodx-box.on { background: currentColor; opacity: 1; }
+.wodx-sheet .wodx-box { width: 14px; height: 14px; border: 1px solid #121212; display: inline-block; background: #ffffff; }
+.wodx-sheet .wodx-box.on { background: #121212; }
 .wodx-sheet .wodx-track-title { text-align: center; font-variant: small-caps; font-weight: bold; margin-top: 4px; }
 .wodx-sheet .wodx-roll { cursor: pointer; }
 .wodx-sheet .wodx-roll:hover, .wodx-sheet .wodx-open:hover { text-decoration: underline; }

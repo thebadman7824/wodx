@@ -24,11 +24,11 @@ export async function run() {
     el = sheet.element[0];
   });
   await step("the book's sections in order, the Dark Ages: Fae Abilities, no Arts or Realms", async () => {
-    const t = el.textContent.replace(/\s+/g, " ");
-    const order = ["Court", "Origin", "Agenda", "Abilities", "Dominions", "Backgrounds", "Cantrips", "Other Traits", "Mists & Weaving", "Health"];
+    const t = el.querySelector(".tab.core").textContent.replace(/\s+/g, " ");
+    const order = ["Court", "Origin", "Agenda", "Attributes", "Abilities", "Advantages", "Dominions", "Backgrounds", "Cantrips", "Willpower", "Other Traits", "Mists & Weaving", "Health", "Experience"];
     const pos = order.map(w => t.indexOf(w));
     ok("the book's sections in order, the Dark Ages: Fae Abilities, no Arts or Realms", pos.every((p, k) => p >= 0 && (k === 0 || p > pos[k - 1])) && /Legerdemain/.test(t) && /Hearth Wisdom/.test(t) && /Seneschal/.test(t) && !/Computer/.test(t) && !el.querySelector(".tab.core [data-tab='realms']"),
-      { pos });
+      { pos, computer: /Computer/.test(t), legerdemain: /Legerdemain/.test(t) });
   });
   await step("a Dominion dot sets the rating", async () => {
     el.querySelector(".wodx-dots[data-flag='dominions.dusk'] .wodx-dot[data-i='3']").click();
