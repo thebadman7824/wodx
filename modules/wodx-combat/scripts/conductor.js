@@ -216,9 +216,15 @@ export async function stepIn(combat = game.combat, c) {
     const order = combat.turns.filter(t => t.id !== c.id);
     const at = order.findIndex(t => t.id === curC?.id);
     const next = order[at + 1] ?? null;
-    const init = CR.stepInInitiative(curC?.initiative ?? 0, next?.initiative ?? null);
+    const curInit = Number(curC?.initiative) || 0, nextInit = next ? Number(next.initiative) || 0 : null;
+    const ups = [];
+    // A tie with the next combatant leaves no room between them: the current combatant moves up a hair first
+    const base = nextInit !== null && nextInit >= curInit ? Math.round((nextInit + 0.002) * 10000) / 10000 : curInit;
+    if (curC && base !== curInit) ups.push({ _id: curC.id, initiative: base });
+    const init = CR.stepInInitiative(base, nextInit);
+    ups.push({ _id: c.id, initiative: init });
     await c.unsetFlag(MOD, "held");
-    await combat.updateEmbeddedDocuments("Combatant", [{ _id: c.id, initiative: init }]);
+    await combat.updateEmbeddedDocuments("Combatant", ups);
     // The re-sort can move the current combatant's index: keep the turn on them
     const idx = combat.turns.findIndex(t => t.id === curC?.id);
     if (idx >= 0 && idx !== combat.turn) await combat.update({ turn: idx });

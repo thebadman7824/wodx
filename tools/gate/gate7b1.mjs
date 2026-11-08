@@ -59,6 +59,7 @@ export async function run() {
     // Run on to the hero: the conductor stops there at this level
     const reachedHero = await waitFor(() => combat.combatant?.tokenId === T.hero.id || combat.round > (card?.getFlag(NPC, "plan")?.round ?? combat.round), 30000);
     await sleep(2000);
+    if ( combat.combatant?.tokenId === T.hero.id ) await waitFor(() => !!CD().state().why, 3000);
     const heroWaits = combat.combatant?.tokenId === T.hero.id ? /players'/.test(CD().state().why ?? "") : null;
     ok("NPC turns: an NPC acts on Auto and the turn moves on by itself; a player's turn waits for the player", moved && !!card?.getFlag(NPC, "plan")?.done && (heroWaits ?? true),
       {npc: firstNpc.name, moved, did: card?.getFlag(NPC, "plan")?.done?.text ?? null, nowTurn: curName(), why: CD().state().why ?? null, reachedHero,
