@@ -568,7 +568,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide && !x.o.hazard && !x.o.sacred).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide && !x.o.hazard && !x.o.sacred && !x.o.watch).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -1298,4 +1298,81 @@ test("sacred: a caern stone, a fetter or a node opens the WoDX actions menu with
     assert.equal(await api.attempt(tokPc, "altar1", "useSacred"), "menu");
     assert.equal(prayed.at(-1), "menu:pc1");
   } finally { tokPc.document.x = 400; tokPc.document.y = 300; altar.document.flags[MOD] = {sacred: true, sacredKind: "altar", rating: 3}; }
+});
+
+/* ---------------- watch points ---------------- */
+
+test("watch: a window or mirror is looked out of with Perception + Alertness; successes name, none counts, a botch shows nothing", () => {
+  const w = R.describeWatch({watch: true, watchKind: "window", target: "yard1"});
+  const op = R.optionsFor(w, ch())[0];
+  assert.deepEqual([op.id, op.roll.dice, op.roll.diff], ["watch", 5, 6]);
+  const people = [{name: "Sergeant Volker"}, {name: "Lucia", lasombra: true}];
+  assert.deepEqual(R.watchSees(w, people, {successes: 1}).names, ["Sergeant Volker", "Lucia"]);
+  assert.deepEqual(R.watchSees(w, people, {successes: 0}), {count: 2, names: [], unreflected: []});
+  assert.equal(R.watchSees(w, people, {successes: 3, botch: true}).count, 0);
+  const m = R.describeWatch({watchKind: "mirror"});
+  assert.deepEqual(R.watchSees(m, people, {successes: 2}), {count: 1, names: ["Sergeant Volker"], unreflected: ["Lucia"]}, "a mirror holds no Lasombra");
+});
+
+test("watch: a phone needs its era and another phone; anyone can call for help; a bell raises the alarm, loud", () => {
+  const p = R.describeWatch({watchKind: "phone", target: "phone2"});
+  assert.ok(R.optionsFor(p, ch({year: 1700}))[0].disabled);
+  assert.deepEqual(ids(R.optionsFor(p, ch({year: 1925}))), ["call", "callHelp"]);
+  assert.ok(R.optionsFor(R.describeWatch({watchKind: "radio"}), ch({year: 1940}))[0].disabled, "a radio tied to nothing");
+  assert.ok(R.optionsFor(R.describeWatch({watchKind: "radio"}), ch({year: 1920}))[0].disabled, "too early for a radio");
+  const b = R.optionsFor(R.describeWatch({watchKind: "bell"}), ch());
+  assert.deepEqual([b[0].id, b[0].noise.success], ["ringAlarm", "loud"]);
+  assert.equal(R.resolve(R.describeWatch({watchKind: "bell"}), b[0], []).raises, "alarm");
+  assert.deepEqual(R.cleanWatch({watch: true, watchKind: "x", target: "bad id!"}), {watch: true, watchKind: "window", target: ""});
+});
+
+const yard = tile("yard1", 2600, 1300, {}, {});
+yard.document.width = 300; yard.document.height = 300;
+const winTile = tile("win2", 2600, 1000, {watch: true, watchKind: "window", target: "yard1"});
+const bell = tile("bell1", 2800, 1000, {watch: true, watchKind: "bell"});
+canvas.tiles.placeables.push(yard, winTile, bell);
+
+test("runtime: looking out of a window whispers who is in the yard; Undo takes the whisper back; a wodxMapEvent goes out", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  tokNpc.document.x = 2700; tokNpc.document.y = 1400;
+  tokPc.document.x = 2600; tokPc.document.y = 900;
+  try {
+    faces = [9, 2, 2, 2, 2];
+    const msg = await api.attempt(tokPc, "win2", "watch", {fd: {}});
+    const d = msg.flags[MOD].done;
+    const w = game.messages.get(d.whisper);
+    assert.match(w.content, /Sergeant Volker/);
+    assert.ok(w.whisper.includes("gm"));
+    assert.ok(!/Sergeant Volker/.test(msg.content), "kept off the public card");
+    assert.equal(events.at(-1).kind, "watch");
+    assert.equal(events.at(-1).place, "win2");
+    await api.undoCard(msg);
+    assert.ok(!game.messages.has(d.whisper));
+    // Hidden: not seen
+    tokNpc.document.hidden = true;
+    faces = [9, 9, 2, 2, 2];
+    const m2 = await api.attempt(tokPc, "win2", "watch", {fd: {}});
+    assert.match(game.messages.get(m2.flags[MOD].done.whisper).content, /Nobody/);
+    tokNpc.document.hidden = false;
+  } finally { tokNpc.document.x = 400; tokNpc.document.y = 1500; tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: ringing a bell raises the alarm loudly and sends an alarm event", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  tokPc.document.x = 2800; tokPc.document.y = 900;
+  try {
+    const msg = await api.attempt(tokPc, "bell1", "ringAlarm");
+    assert.equal(msg.flags[MOD].done.noise, "loud");
+    assert.ok(msg.flags[MOD].done.lines.some(l => /alarm is raised/.test(l)));
+    assert.deepEqual([events.at(-1).kind, events.at(-1).noise, events.at(-1).object], ["alarm", "loud", "bell"]);
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the watch point's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {watch: true, watchKind: "radio", target: "Scene.a.Tile.b"}}});
+  assert.match(html, /name="flags.wodx-interactables.watch" checked/);
+  assert.match(html, /value="radio" selected/);
+  assert.match(html, /value="Scene.a.Tile.b"/);
 });

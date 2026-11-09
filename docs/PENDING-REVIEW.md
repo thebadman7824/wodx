@@ -45,3 +45,7 @@ Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It tak
 | 2026-11-09 | Responsive maps: how long does an alarm hold? | One hour of world time on alert, then wary until the next night (house figures). | Change the figures in the NPC rules once built. |
 | 2026-11-09 | Responsive maps: can an alarm reach another scene on its own? | Only by a carrier the era allows (runner on a travel route, bell, phone or radio), timed by the route. | Raise it by hand on the other place. |
 | 2026-11-09 | Responsive maps: map events while no Storyteller is connected? | Saved on the scene and replayed in order at the next Storyteller login. | Drop the replay and ignore such events. |
+| 2026-11-09 | What does a look out of a window show? | Perception + Alertness at 6: any success names who is in the tied area, none gives only a count, a botch shows nothing. Hidden or invisible tokens never show. | `watchSees` in interact-rules.mjs, `peopleIn` in main.mjs. |
+| 2026-11-09 | When do phones and radios appear? | Telephones from about 1890, radios from about 1930, by the Chronicle year. | `WATCHES[*].from` in interact-rules.mjs. |
+| 2026-11-09 | Do mirrors hide Lasombra? | Yes, by their clan weakness; the Storyteller is whispered who has no reflection. The page ref still needs pinning. | `watchSees` (the mirror flag). |
+| 2026-11-09 | Version 0.9.0? | Left to the responsive maps work, so watch points are 0.10.0. | Nothing to reverse. |

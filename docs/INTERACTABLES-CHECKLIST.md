@@ -77,8 +77,17 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Tile config: the Altar, relic or fetish section
 - [x] Harness tests (6 new) and UI fit
 - [x] 0.8.1: caern stones, fetters and nodes open the WoDX actions menu (1 test)
-- [ ] Gate step 20 in rothenstein-wodx
+- [x] Gate step 20 in rothenstein-wodx: 20/20 at 7f71eb0 (0.8.1)
+- [x] Deployed 2026-11-09 (backups Backups\wodx-interactables-0.7.0-2026-11-09, -0.8.0-2026-11-09)
+
+## 0.10.0: watch points (2026-11-09)
+- [x] Rules: windows and mirrors (Perception + Alertness, names or a count; no Lasombra in a mirror), phones and radios by era, bells (B153)
+- [x] Runtime: the tied tile, the whisper, calls and alarms, wodxMapEvent, Undo
+- [x] Tile config: the Watch point section
+- [x] Harness tests (5 new) and UI fit
+- [ ] Gate step 21 in rothenstein-wodx
 - [ ] Deployed
+- [ ] Lasombra reflection page ref to pin
 
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
@@ -86,7 +95,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Light sources (0.5.0, deployed)
 - [x] Hiding places (0.6.0, deployed)
 - [x] Fire and hazards (0.7.0, deployed)
-- [x] Altars, relics and fetishes (0.8.0, not deployed yet)
-- [ ] Watch points (mirrors, windows on the street, phones and radios)
+- [x] Altars, relics and fetishes (0.8.1, deployed)
+- [x] Watch points (0.10.0, not deployed yet)
 - [ ] Mounts and vehicles
 - [ ] Step 2: climbing, ledges and jumps

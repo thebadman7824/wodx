@@ -179,6 +179,19 @@ export const SACRED = {
   fetter: {label: "A wraith's fetter", ground: false, carry: false, use: "fetter", note: r => `A fetter of rating ${r}. A wraith tied to it works it from the WoDX Fetter window.`},
   node: {label: "Node", ground: false, carry: false, use: "menu", note: r => `A node of rating ${r}: Quintessence can be drawn here from the WoDX actions menu.`}
 };
+/**
+ * Watch points on tiles. A window on the street or a mirror shows who is in the area it is tied to (another tile):
+ * Perception + Alertness, difficulty 6; any success names them, none gives only a count, a botch shows nothing. A mirror
+ * holds no Lasombra (their clan weakness; page ref to pin). A telephone or a radio,
+ * in its era, calls the phone it is tied to or calls for help; a bell, horn or alarm raises the alarm, loud.
+ */
+export const WATCHES = {
+  window: {label: "Window on the street", verb: "Look out", sees: true},
+  mirror: {label: "Mirror", verb: "Look in it", sees: true, mirror: true},
+  phone: {label: "Telephone", calls: true, from: 1890},
+  radio: {label: "Radio or walkie-talkie", calls: true, from: 1930},
+  bell: {label: "Bell, horn or alarm", alarm: true}
+};
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
 export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
@@ -418,6 +431,26 @@ export function holyHarm(o, {kind = "", torment = 0} = {}) {
   return demonHoly(torment, o.rating, {ground: true});
 }
 
+/** A watch point on a tile. f: the tile's flags.wodx-interactables, with watch: true. target: the tile it is tied to. */
+export function describeWatch(f = {}) {
+  const kind = WATCHES[f.watchKind] ? f.watchKind : "window";
+  return {
+    watch: true, sacred: false, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
+    kind, target: String(f.target ?? "").trim().slice(0, 200), title: String(f.title ?? "").trim().slice(0, 80),
+    electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
+  };
+}
+/**
+ * What a look out of a window or into a mirror shows. people: [{name, lasombra}] in the watched area (the runtime
+ * leaves out the hidden). roll: {successes, botch}. Returns {count, names, unreflected}.
+ */
+export function watchSees(o, people = [], roll = {successes: 0, botch: false}) {
+  if ( roll.botch ) return {count: 0, names: [], unreflected: []};
+  const mirror = !!WATCHES[o.kind].mirror;
+  const shown = people.filter(p => !(mirror && p.lasombra));
+  return {count: shown.length, names: roll.successes > 0 ? shown.map(p => p.name) : [], unreflected: mirror ? people.filter(p => p.lasombra).map(p => p.name) : []};
+}
+
 /** The search successes it takes to find one person hiding. */
 export const hideNeed = (o, occ) => HIDES[o.kind].need + Math.floor(Math.max(0, Number(occ?.s) || 0) / 2);
 /** Who a search finds in a hiding place. bonus: a search of that very place counts one more success. */
@@ -438,6 +471,7 @@ export function parseItems(text) {
 
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
+  if ( o.watch ) return o.title || WATCHES[o.kind].label;
   if ( o.sacred ) {
     const S = SACRED[o.kind], t = o.title || S.label;
     if ( S.ground ) return `${t}${o.desecrated ? ", desecrated" : ""}`;
@@ -489,6 +523,7 @@ export function optionsFor(o, ch = {}) {
   if ( o.hide ) return hideOptions(o, ch);
   if ( o.hazard ) return hazardOptions(o, ch);
   if ( o.sacred ) return sacredOptions(o, ch);
+  if ( o.watch ) return watchOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -672,6 +707,27 @@ function sacredOptions(o) {
   return out;
 }
 
+/** A watch point: look out or in, call or call for help, raise the alarm. */
+function watchOptions(o, ch) {
+  const W = WATCHES[o.kind], out = [];
+  if ( W.sees ) {
+    const sk = bestOf(ch.abilities ?? {}, ["alertness"]);
+    const t = Number(o.tries?.[`${ch.actorId ?? ""}:watch`]) || 0;
+    out.push({id: "watch", label: W.verb, roll: {attr: "perception", attrLabel: "Perception", ability: sk.key, abilityLabel: cap(sk.key),
+      dice: (Number(ch.perception) || 0) + sk.value, diff: Math.min(10, 6 + t), need: null, retries: t}, seconds: TURN, noise: {success: "silent", fail: "silent", botch: "silent"},
+      note: o.target ? "Any success names who is there; none gives only how many." : "Not tied to an area: the Storyteller describes the view."});
+  }
+  if ( W.calls ) {
+    const year = Number(ch.year) || 0;
+    if ( year && year < W.from ) return [{id: "eraNote", label: `No ${W.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${W.from}.`}];
+    out.push(o.target ? {id: "call", label: o.kind === "radio" ? "Call on the radio" : "Make a call", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Reaches the one it is tied to; the Storyteller plays the other end."}
+      : {id: "callNote", label: "Not tied to another phone", roll: null, disabled: true, note: "The Storyteller ties it to another tile in its config."});
+    out.push({id: "callHelp", label: "Call for help", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "The police, the watch or the household: the Storyteller decides who comes."});
+  }
+  if ( W.alarm ) out.push({id: "ringAlarm", label: "Raise the alarm", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud: everyone in earshot hears it."});
+  return out;
+}
+
 /** A light source: light it or put it out; break it if it can break. */
 function lightOptions(o) {
   const L = LIGHTS[o.kind], out = [];
@@ -798,6 +854,9 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "putOut": flags.burning = false; return done("puts the fire out.");
       case "alight": flags.burning = true; return done("sets it alight.");
       case "sweep": flags.cleared = true; return done("sweeps a path clear.");
+      case "call": out.calls = true; return done("makes a call.");
+      case "callHelp": out.raises = "help"; return done("calls for help.");
+      case "ringAlarm": out.raises = "alarm"; return done("raises the alarm.");
       case "desecrate": flags.desecrated = true; return done("desecrates it.");
       case "powerOff": flags.live = false; return done("cuts the power.");
       case "powerOn": flags.live = true; return done("turns the power back on.");
@@ -827,6 +886,10 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       if ( got <= 0 ) flags.tries = {...o.tries, [`${actorId}:hide`]: (Number(o.tries?.[`${actorId}:hide`]) || 0) + 1};
       return Object.assign(out, {result: roll.botch ? "botch" : got > 0 ? "done" : "fail", hides: got, noise: roll.botch ? noise.botch : got > 0 ? noise.success : noise.fail,
         text: roll.botch ? "hides, knocking something over." : got > 0 ? "hides." : "hides, but not well."});
+    }
+    if ( id === "watch" ) {
+      return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: "silent", watch: roll,
+        text: roll.botch ? "looks, and is sure of something." : roll.successes > 0 ? "keeps watch." : "keeps watch, but makes out little."});
     }
     if ( id === "searchHide" ) {
       return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: noise.success, searchHide: roll,
@@ -1016,4 +1079,10 @@ export function cleanSacred(s = {}) {
   const top = kind === "fetish" ? 10 : 5;
   return {sacred: !!s.sacred, sacredKind: kind, rating: Math.max(1, Math.min(top, Math.round(Number(s.rating) || (kind === "fetish" ? 5 : 1)))),
     desecrated: !!s.desecrated, sacredItems: parseItems(s.sacredItems).join("\n")};
+}
+
+/** Clean a tile's watch point settings from the config form. target: the id of the tile it looks at or calls. */
+export function cleanWatch(s = {}) {
+  const target = String(s.target ?? "").trim();
+  return {watch: !!s.watch, watchKind: WATCHES[s.watchKind] ? s.watchKind : "window", target: /^[A-Za-z0-9.]{1,200}$/.test(target) ? target : ""};
 }
