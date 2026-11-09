@@ -35,7 +35,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Harness tests (9 new) and UI fit
 - [x] Gate steps 13 to 15 in rothenstein-wodx: 17/17 at 70673c3 (earlier runs missed step 14 because a plain token update did not reach the pit; the gate now jumps the token)
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.2.0-2026-11-09, MD5s checked)
-- [ ] V20 core falling page ref pinned on the PC
+- [x] V20 core falling page ref pinned (printed p. 296, pdf p. 304)
 
 ## 0.4.0: clues (2026-11-09)
 - [x] Rules: five kinds, four texts by successes, Intelligence or Perception + Investigation, best successes kept, noticing by its own number (B118)
@@ -119,6 +119,17 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Deployed 0.13.1 2026-11-09 (backup Backups\wodx-interactables-0.13.0-2026-11-09)
 - [x] Deployed 0.13.0 2026-11-09 (backup Backups\wodx-interactables-0.12.0-2026-11-09)
 
+## 0.14.0: targets on tiles (2026-11-09)
+Step 3 of the design note.
+- [x] Rules: four kinds, range bands from WoDX Combat, rings and points, bottles, a dummy, five builds of things to break, era name (B156, B157)
+- [x] Runtime: listed out of reach as far as the sheet's weapons carry; shots with each ranged weapon on the sheet; the scoreboard on the tile; Undo takes a new name off it
+- [x] Tile config: the Target section, the scoreboard, Clear the scoreboard
+- [x] Map: Broken shows for broken things and fallen rows, with a break event
+- [x] Harness tests (8 new) and UI fit
+- [ ] Gate step 25 in rothenstein-wodx
+- [ ] Deployed
+- [ ] Aiming page ref (V20 core) to pin
+
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
 - [x] Clues and documents (0.4.0, deployed)
@@ -129,3 +140,4 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Watch points (0.10.0, deployed)
 - [x] Mounts and vehicles (0.11.0, deployed; 0.13.0 fixes the cart following)
 - [x] Step 2: climbing, ledges and jumps (0.13.1, deployed)
+- [x] Step 3: targets on tiles (0.14.0, built)

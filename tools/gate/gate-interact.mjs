@@ -1,5 +1,5 @@
 /**
- * Interactables gate (WoDX Interactables 0.13.1), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Interactables gate (WoDX Interactables 0.14.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-interact.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Interact"), two characters of its own ("Gate Interact
  * burglar", a player's character, and "Gate Interact watchman", an NPC) and deletes them all at the end. It fixes the
@@ -26,6 +26,9 @@
  *      no picture gets a marker; Undo puts the picture back and sends the event again marked undone
  *  24. a rough wall tied to a ledge tile: climbing it (fixed dice) moves the burglar onto the ledge; Undo brings it back;
  *      a gap: a jump that falls short hangs, losing the grip falls through WoDX Combat; Undo
+ *  25. targets: a marksman out in the open with a pistol on the sheet sees a target with rings 10 yards off, out of
+ *      reach, in the list; a shot (fixed dice) hits the centre for 3 points on the scoreboard; Undo takes the name off;
+ *      a shot at a lamp shatters it and sends a break event; Undo mends it
  * Result: Data/wodx-gate/gate-interact-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -79,14 +82,14 @@ export async function run() {
   const {R, ok, step} = harness();
   const keep = {uniform: CONFIG.Dice.randomUniform, t0: game.time.worldTime, scene: canvas.scene?.id,
     approvals: foundry.utils.deepClone(game.settings.get("wodx-chronicle", "approvals")), messages: new Set(game.messages.map(m => m.id))};
-  let scene = null, burglar = null, watchman = null, ledger = null;
+  let scene = null, burglar = null, watchman = null, ledger = null, marksman = null;
   // Errors in the console while the gate runs (the Storyteller side of a card runs in a hook)
   const consoleError = console.error;
   console.error = (...a) => { R.notes.push(`console: ${a.map(x => x?.stack ?? x?.message ?? String(x)).join(" ").slice(0, 400)}`); consoleError(...a); };
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.13.1 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.13.1" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.14.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.14.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -543,6 +546,43 @@ export async function run() {
         {listed, up, down, hangs, fell, healed, tUp, p0, lines: m1?.flags?.[MOD]?.done?.lines ?? [], results: [m1, m2, m3].map(m => m?.flags?.[MOD]?.done?.result ?? null), tok: {x: tb.x, y: tb.y}, ledge: lc, at: {cx, cy}});
     });
 
+    await step("25. targets", async () => {
+      marksman = await Actor.create({name: "Gate Interact marksman", type: "Mortal", ownership: {default: 0, [game.user.id]: 3},
+        system: {attributes: {strength: {value: 2, total: 2}, dexterity: {value: 3, total: 3}, perception: {value: 3, total: 3}},
+          abilities: {firearms: {value: 2, isvisible: true}, athletics: {value: 1, isvisible: true}}}});
+      await marksman.createEmbeddedDocuments("Item", [{name: "Gate pistol", type: "Ranged Weapon",
+        system: {attack: {attribute: "dexterity", ability: "firearms", accuracy: 0}, range: 20, difficulty: 6}}]);
+      await scene.createEmbeddedDocuments("Token", [{...(await marksman.getTokenDocument({x: 1000, y: 200})).toObject(), actorLink: true}]);
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: 1600, y: 200, width: 100, height: 100, texture: {src: "icons/svg/target.svg"}, flags: {[MOD]: {isTarget: true, targetKind: "mark", gate: "mark"}}},
+        {x: 1300, y: 350, width: 50, height: 50, texture: {src: "icons/svg/light.svg"}, flags: {[MOD]: {isTarget: true, targetKind: "object", objBuild: "fragile", gate: "lamp"}}}]);
+      await sleep(600);
+      const tm = scene.tokens.find(t => t.actorId === marksman.id), mtok = canvas.tokens.get(tm?.id);
+      const mark = findTile("mark"), lamp = findTile("lamp");
+      const entry = ix().interactablesFor(mtok).find(x => x.doc.id === mark?.id);
+      const listed = !!entry && entry.distance > G;
+      const ch = ix().characterFor(marksman, mtok.center, mark);
+      const events = [];
+      const hook = Hooks.on("wodxMapEvent", e => events.push(e));
+      try {
+        await dice(9);
+        const m1 = await applied(await ix().attempt(mtok, mark.id, `shoot:${ch.weapons?.[0]?.id}`, {fd: {}}));
+        const d1 = m1?.flags?.[MOD]?.done;
+        const scored = d1?.result === "done" && mark.flags[MOD]?.scores?.[marksman.id]?.pts === 3;
+        await ix().undoCard(m1);
+        const cleared = !mark.flags[MOD]?.scores?.[marksman.id];
+        const m2 = await applied(await ix().attempt(mtok, lamp.id, `shoot:${ch.weapons?.[0]?.id}`, {fd: {}}));
+        const smashed = lamp.flags[MOD]?.smashed === true;
+        const broke = await until(() => events.some(e => e.kind === "break" && e.object === lamp.id && !e.undone), 3000);
+        await ix().undoCard(m2);
+        const mended = !lamp.flags[MOD]?.smashed;
+        ok("25. a target 10 yards off is listed out of reach; a centre shot scores 3 and Undo takes the name off; a shot shatters a lamp with a break event and Undo mends it",
+          listed && scored && cleared && smashed && broke && mended,
+          {listed, distance: entry?.distance ?? null, yards: ch.yards, weapons: ch.weapons, scored, cleared, smashed, broke, mended,
+            lines: d1?.lines ?? [], text: d1?.text ?? null, results: [m1, m2].map(m => m?.flags?.[MOD]?.done?.result ?? m?.flags?.[MOD]?.ask?.state ?? null), events: events.map(e => e.kind)});
+      } finally { Hooks.off("wodxMapEvent", hook); }
+    });
+
     await step("10. alongside", async () => {
       const c = game.modules.get("wodx-chronicle")?.api, a = game.wodxActions, cb = game.wodxCombat, n = game.modules.get("wodx-npc")?.api;
       ok("10. Chronicle, Actions, Combat and NPC answer", !!c?.propose && !!a?.rules && !!cb?.applyDamage && !!n?.routineRules, {});
@@ -558,7 +598,7 @@ export async function run() {
       if ( made.length ) await ChatMessage.deleteDocuments(made);
       if ( keep.scene ) await game.scenes.get(keep.scene)?.view();
       if ( scene ) await scene.delete();
-      for ( const a of [burglar, watchman] ) if ( a ) await a.delete();
+      for ( const a of [burglar, watchman, marksman] ) if ( a ) await a.delete();
       if ( ledger ) await ledger.delete();
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }

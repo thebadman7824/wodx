@@ -1,4 +1,4 @@
-/* WoDX Interactables 0.13.1: the Interact window, the roll dialog, the cards and the WoDX part of a wall's and a tile's config. Colours come from the WoDX look (wodx-theme.css). */
+/* WoDX Interactables 0.14.0: the Interact window, the roll dialog, the cards and the WoDX part of a wall's and a tile's config. Colours come from the WoDX look (wodx-theme.css). */
 .wix-dialog .window-content { overflow-y: auto; max-height: 80vh; }
 .wix-dialog .wix-list { list-style: none; margin: 0.3em 0; padding: 0; max-height: 55vh; overflow-y: auto; }
 .wix-dialog .wix-list > li { margin: 0 0 0.5em; padding-bottom: 0.3em; border-bottom: 1px solid var(--wx-rule, #8886); }

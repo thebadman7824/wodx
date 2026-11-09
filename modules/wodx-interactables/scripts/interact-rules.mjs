@@ -233,6 +233,40 @@ export const CLIMBS = {
 /** Bashing dice for a fall: one a 10 feet, at least one. */
 export const fallDice = feet => Math.max(1, Math.floor((Math.max(0, Number(feet) || 0)) / 10));
 
+/**
+ * Targets on tiles. Shooting is the weapon's own Attribute and Ability (Dexterity + Firearms, or Archery before guns) at
+ * the weapon's difficulty, with WoDX Combat's range bands: within the weapon's range +0, up to twice +1, up to three
+ * times +2, and no further (VtDA20 p. 347). Aiming adds a die a turn, up to Perception, through Bonus dice (V20 core,
+ * page to pin). Throwing something with no thrown weapon on the sheet is Dexterity + Athletics at 6 with a range of
+ * THROW_YARDS (house rule). Striking a dummy is Dexterity + Melee with a hand weapon on the sheet, or Brawl, at 6.
+ * A target with rings scores by successes (house rule): 1 the outer ring, 2 the inner ring, 3 or more the centre.
+ * Something to break: a fragile thing breaks on any hit; anything else breaks the way a door does, by the lifting chart
+ * or an extended Strength roll (V20 Dark Ages p. 335). shoot, throw, strike: what can be done to it.
+ */
+export const TARGETS = {
+  mark: {label: "Target with rings", rings: true},
+  bottles: {label: "Bottles or cans in a row", row: true},
+  dummy: {label: "Practice dummy, pell or quintain", strike: true},
+  object: {label: "Something to break", strike: true, breaks: true}
+};
+/** How hard something is to break: the lifting chart level that breaks it outright, and the extended roll short of it. */
+export const OBJECT_BUILDS = {
+  fragile: {label: "Fragile: glass, pottery, a lamp", feat: 1, need: 1, diff: 4, fragile: true},
+  light: {label: "Light wood: a crate, a chair", feat: 2, need: 1, diff: 6},
+  heavy: {label: "Heavy wood: a barrel, a cart wheel", feat: 4, need: 3, diff: 7},
+  stone: {label: "Stone: a statue, a gravestone", feat: 6, need: 5, diff: 8},
+  iron: {label: "Iron: a grille, a stove", feat: 10, need: 8, diff: 8}
+};
+export const THROW_YARDS = 10;
+/** The ring a shot hits on a target with rings, by successes, and its points. */
+export const RINGS = [null, {label: "outer ring", pts: 1}, {label: "inner ring", pts: 2}, {label: "centre", pts: 3}];
+export const ringFor = successes => (successes <= 0 ? null : RINGS[Math.min(3, successes)]);
+/** The range band for a distance and a weapon's range, in yards: 0, 1 or 2 more difficulty, or null when out of range. */
+export function rangeBand(yards, range) {
+  const y = Math.max(0, Number(yards) || 0), r = Math.max(1, Number(range) || 0);
+  return y <= r ? 0 : y <= r * 2 ? 1 : y <= r * 3 ? 2 : null;
+}
+
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
 export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
@@ -507,6 +541,29 @@ export function describeClimb(f = {}) {
 /** The successes a climb takes: its height in yards over the yards a success. */
 export const climbNeed = o => (CLIMBS[o.kind].per ? Math.max(1, Math.ceil(o.height / 3 / CLIMBS[o.kind].per)) : 0);
 
+/** A target on a tile. count: bottles in the row; left: still standing; scores: {actorId: {n, shots, hits, pts, best}}. */
+export function describeTarget(f = {}) {
+  const kind = TARGETS[f.targetKind] ? f.targetKind : "mark";
+  const count = Math.max(1, Math.min(24, Math.round(Number(f.bottles) || 6)));
+  const left = f.left === undefined || f.left === null || f.left === "" ? count : Math.max(0, Math.min(count, Math.round(Number(f.left) || 0)));
+  const scores = f.scores && typeof f.scores === "object" && !Array.isArray(f.scores) ? f.scores : {};
+  return {
+    isTarget: true, climb: false, mount: false, watch: false, sacred: false, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
+    kind, build: OBJECT_BUILDS[f.objBuild] ? f.objBuild : "light", count, left, broken: !!f.smashed, hits: Math.max(0, Math.round(Number(f.hits) || 0)), scores,
+    title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: f.progress ?? {}, tries: f.tries ?? {}
+  };
+}
+/** The scoreboard of a target, best first: [{a, n, shots, hits, pts, best}]. */
+export function standings(o) {
+  return Object.entries(o?.scores ?? {}).map(([a, x]) => ({a, n: String(x?.n ?? "Someone"), shots: Number(x?.shots) || 0, hits: Number(x?.hits) || 0, pts: Number(x?.pts) || 0, best: Number(x?.best) || 0}))
+    .sort((p, q) => q.pts - p.pts || q.hits - p.hits || p.shots - q.shots || p.n.localeCompare(q.n));
+}
+export function scoreLines(o) {
+  const st = standings(o);
+  if ( !st.length ) return ["Nobody has a score yet."];
+  return st.map((x, k) => `${k + 1}. ${x.n}: ${TARGETS[o.kind]?.rings ? `${x.pts} point${x.pts === 1 ? "" : "s"}, ` : ""}${x.hits} hit${x.hits === 1 ? "" : "s"} in ${x.shots} ${x.shots === 1 ? "try" : "tries"}`);
+}
+
 /** Everyone aboard a mount or vehicle, the one at the reins first. */
 export const aboard = o => [o.driver, ...o.riders].filter(Boolean);
 
@@ -540,7 +597,16 @@ export function parseItems(text) {
 }
 
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
-export function nameOf(o) {
+export function nameOf(o, era = {}) {
+  if ( o.isTarget ) {
+    const T = TARGETS[o.kind];
+    let t = o.title || T.label;
+    // In the early eras a target with rings is an archery butt
+    if ( !o.title && o.kind === "mark" && (isDarkAge(era) || ((Number(era.year) || 0) > 0 && era.year < 1600)) ) t = "Archery butt";
+    if ( o.kind === "bottles" ) return `${t}${o.left ? `, ${o.left} standing` : ", all knocked down"}`;
+    if ( o.kind === "object" ) return `${t}${o.broken ? ", broken" : ""}`;
+    return t;
+  }
   if ( o.climb ) {
     const C = CLIMBS[o.kind];
     return `${o.title || C.label}${C.jump ? ` (${o.gap} yard${o.gap === 1 ? "" : "s"} across)` : ` (${o.height} feet)`}`;
@@ -604,6 +670,7 @@ export function optionsFor(o, ch = {}) {
   if ( o.watch ) return watchOptions(o, ch);
   if ( o.mount ) return mountOptions(o, ch);
   if ( o.climb ) return climbOptions(o, ch);
+  if ( o.isTarget ) return targetOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -897,6 +964,50 @@ function climbOptions(o, ch) {
 }
 
 /**
+ * A target: shoot it with each ranged weapon on the sheet, throw something at it, strike or break it within reach.
+ * ch.yards: how far it is; ch.inReach: within reach; ch.weapons: [{id, name, ranged, attr, ability, range, diff, accuracy}].
+ */
+function targetOptions(o, ch) {
+  const T = TARGETS[o.kind], out = [], yards = Math.round(Number(ch.yards) || 0);
+  const ab = k => Number(ch.abilities?.[k]) || 0;
+  const down = (o.kind === "bottles" && !o.left) || (o.kind === "object" && o.broken);
+  if ( o.kind === "bottles" && !o.left ) out.push({id: "setUp", label: "Set them up again", roll: null, seconds: TURN * 10, noise: {success: "quiet"}, note: "Within reach.", disabled: !ch.inReach});
+  if ( o.kind === "object" && o.broken ) out.push({id: "brokenNote", label: "Already broken", roll: null, disabled: true, note: "Undo the card, or untick Broken in the tile's settings."});
+  if ( !down ) {
+    const bandWords = b => (b ? `, +${b} difficulty for the range` : "");
+    for ( const w of (ch.weapons ?? []).filter(x => x.ranged).slice(0, 4) ) {
+      const b = rangeBand(yards, w.range), key = String(w.ability || "firearms").toLowerCase(), dots = Number(ch[w.attr || "dexterity"]) || 0;
+      const label = `${key === "athletics" ? "Throw" : "Shoot"} it with the ${w.name}`;
+      if ( b === null ) { out.push({id: `shoot:${w.id}`, label, roll: null, disabled: true, note: `Out of range: ${yards} yards, and the ${w.name} reaches ${w.range * 3} at most.`}); continue; }
+      out.push({id: `shoot:${w.id}`, label, shot: key === "firearms" ? "gun" : key === "athletics" ? "throw" : "bow",
+        roll: {attr: w.attr || "dexterity", attrLabel: cap(w.attr || "dexterity"), ability: key, abilityLabel: cap(key), dice: dots + ab(key) + (Number(w.accuracy) || 0),
+          diff: Math.min(10, (Number(w.diff) || 6) + b), need: null, skill: key !== "athletics"},
+        seconds: TURN, noise: key === "firearms" ? {success: "loud", fail: "loud", botch: "loud"} : {success: "quiet", fail: "quiet", botch: "quiet"},
+        note: `${yards} yards: range ${w.range}${bandWords(b)}.${Number(w.accuracy) ? ` Accuracy ${w.accuracy > 0 ? "+" : ""}${w.accuracy}.` : ""} Aiming: a die a turn, up to Perception, as Bonus dice. A botch: ${key === "firearms" ? "it jams" : "a wild shot"}.`});
+    }
+    const tb = rangeBand(yards, THROW_YARDS);
+    if ( tb !== null ) out.push({id: "throw", label: "Throw something at it", shot: "throw",
+      roll: {attr: "dexterity", attrLabel: "Dexterity", ability: "athletics", abilityLabel: "Athletics", dice: (Number(ch.dexterity) || 0) + ab("athletics"), diff: 6 + tb, need: null},
+      seconds: TURN, noise: {success: "quiet", fail: "quiet", botch: "quiet"},
+      note: `A stone, a knife, a bottle: ${yards} yards, range ${THROW_YARDS}${bandWords(tb)}. A botch: a wild throw.`});
+    if ( ch.inReach && T.strike && o.kind === "dummy" ) {
+      const blade = (ch.weapons ?? []).find(x => !x.ranged), key = blade ? "melee" : "brawl";
+      out.push({id: "strike", label: blade ? `Strike it with the ${blade.name}` : "Strike it", shot: "strike",
+        roll: {attr: "dexterity", attrLabel: "Dexterity", ability: key, abilityLabel: cap(key), dice: (Number(ch.dexterity) || 0) + ab(key) + (blade ? Number(blade.accuracy) || 0 : 0),
+          diff: blade ? Number(blade.diff) || 6 : 6, need: null},
+        seconds: TURN, noise: {success: "quiet", fail: "quiet", botch: "quiet"}, note: "Each hit counts on the scoreboard. A botch: a stumble."});
+    }
+    if ( ch.inReach && T.breaks ) {
+      const B = OBJECT_BUILDS[o.build], strength = (Number(ch.strength) || 0) + (Number(ch.potence) || 0);
+      out.push(forceOption("breakIt", "Break it", strength, ch, B, o.progress.breakIt ?? 0, {note: B.fragile ? "Fragile: any hit from a shot or a throw breaks it too." : ""}));
+    }
+  }
+  if ( Object.keys(o.scores).length ) out.push({id: "scores", label: "Read the scoreboard", roll: null, seconds: 0, noise: {success: "silent"}});
+  if ( !out.length ) out.push({id: "rangeNote", label: "Too far away", roll: null, disabled: true, note: `${yards} yards: out of range of anything on the sheet.`});
+  return out;
+}
+
+/**
  * A mount or vehicle: get on at the reins or as a passenger, get off; at the reins, keep control or go flat out.
  * Not in its era: nothing but a note.
  */
@@ -965,7 +1076,7 @@ export function resolve(o, option, rolls = [], ctx = {}) {
   }
   return out;
 }
-function resolveCore(o, option, rolls, {actorId = ""} = {}) {
+function resolveCore(o, option, rolls, {actorId = "", actorName = ""} = {}) {
   const id = option.id, flags = {}, out = {patch: {flags}, hurt: 0, waits: !!option.waits, seconds: 0};
   const noise = option.noise ?? {};
   const done = (text, patch = {}) => Object.assign(out, {result: "done", noise: noise.success ?? "silent", text}, {patch: {...patch, flags}});
@@ -1004,6 +1115,9 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "smash": flags.broken = true; return done("breaks the pane.", {ds: "open"});
       case "force": flags.progress = {...o.progress, force: 0}; return done("forces it open.", {ds: "open"});
       case "breach": return done("breaks through the wall.");
+      case "breakIt": flags.smashed = true; flags.progress = {...o.progress, breakIt: 0}; return done("breaks it.");
+      case "setUp": flags.left = o.count; return done("sets them up again.");
+      case "scores": out.scores = true; return done("reads the scoreboard.");
       default: return done("");
     }
   }
@@ -1011,6 +1125,7 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
   if ( !option.extended ) {
     const roll = rolls[0] ?? {successes: 0, botch: false};
     out.seconds = option.seconds ?? 0;
+    if ( option.shot ) return Object.assign(out, shotOutcome(o, option, roll, flags, {actorId, actorName}));
     const key = `${actorId}:${id}`;
     if ( roll.botch || roll.successes <= 0 ) flags.tries = {...o.tries, [key]: (Number(o.tries?.[key]) || 0) + 1};
     if ( id === "examine" ) {
@@ -1105,7 +1220,7 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
     return Object.assign(out, {result: roll.successes > 0 ? "done" : "fail", noise: noise.success, text: ""});
   }
   // Extended: successes add up on the object until enough are in; a botch loses them all (V20 Dark Ages p. 324)
-  const slot = id === "pick" ? "pick" : id === "hack" ? "hack" : id === "breach" ? "breach" : id === "climb" ? `climb:${actorId}` : "force";
+  const slot = id === "pick" ? "pick" : id === "hack" ? "hack" : id === "breach" ? "breach" : id === "climb" ? `climb:${actorId}` : id === "breakIt" ? "breakIt" : "force";
   let have = Number(r.have) || 0, botched = false;
   for ( const roll of rolls ) {
     out.seconds += option.seconds ?? 0;
@@ -1137,6 +1252,7 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
     }
     else if ( slot === "breach" ) out.text = "breaks through the wall.";
     else if ( id === "climb" ) { out.text = "climbs it."; out.arrives = true; }
+    else if ( slot === "breakIt" ) { flags.smashed = true; out.text = "breaks it."; }
     else { out.text = "forces it open."; out.patch.ds = "open"; if ( o.barred ) flags.barred = false; if ( o.ds === "locked" && o.lock !== "none" ) flags.lockBroken = true; }
     return out;
   }
@@ -1144,6 +1260,42 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
   out.noise = (out.result === "progress" ? noise.success : noise.fail) ?? "silent";
   out.text = `${out.result === "progress" ? "makes headway" : "gets nowhere"}: ${have} of ${r.need} successes.`;
   return out;
+}
+
+/** A shot, a throw or a blow at a target: the result, the text and the scoreboard. */
+function shotOutcome(o, option, roll, flags, {actorId = "", actorName = ""} = {}) {
+  const noise = option.noise ?? {}, s = roll.botch ? 0 : Math.max(0, Number(roll.successes) || 0);
+  const prev = o.scores?.[actorId] ?? {};
+  const score = {n: actorName || prev.n || "Someone", shots: (Number(prev.shots) || 0) + 1, hits: Number(prev.hits) || 0, pts: Number(prev.pts) || 0, best: Number(prev.best) || 0};
+  const res = {noise: roll.botch ? noise.botch : s ? noise.success : noise.fail};
+  const verb = option.shot === "strike" ? "strikes at it" : option.shot === "throw" ? "throws" : "shoots";
+  if ( roll.botch ) {
+    res.result = "botch";
+    if ( option.shot === "gun" ) { res.text = "botches: the gun jams."; res.mishap = "jam"; }
+    else if ( option.shot === "strike" ) res.text = "botches, and stumbles.";
+    else { res.text = option.shot === "throw" ? "botches: a wild throw." : "botches: a wild shot."; res.wild = true; }
+  } else if ( !s ) { res.result = "fail"; res.text = `${verb}, and misses.`; }
+  else {
+    res.result = "done"; score.hits += 1;
+    if ( o.kind === "mark" ) {
+      const ring = ringFor(s);
+      score.pts += ring.pts; score.best = Math.max(score.best, ring.pts);
+      res.text = `${verb}, and hits the ${ring.label} (${ring.pts} point${ring.pts === 1 ? "" : "s"}).`;
+      res.ring = ring.label;
+    } else if ( o.kind === "bottles" ) {
+      flags.left = Math.max(0, o.left - 1);
+      res.text = flags.left ? `${verb}, and knocks one down: ${flags.left} left.` : `${verb}, and knocks the last one down.`;
+      if ( res.noise === "silent" ) res.noise = "quiet";
+    } else if ( o.kind === "object" ) {
+      if ( OBJECT_BUILDS[o.build]?.fragile && option.shot !== "strike" ) { flags.smashed = true; res.text = `${verb}, and it shatters.`; if ( res.noise === "silent" ) res.noise = "quiet"; }
+      else res.text = `${verb}, and hits it: it holds. Breaking it takes Break it, up close.`;
+    } else {
+      flags.hits = o.hits + 1;
+      res.text = option.shot === "strike" ? `lands a blow (${s} success${s === 1 ? "" : "es"}).` : `${verb}, and hits it.`;
+    }
+  }
+  flags.scores = {...o.scores, [actorId || "?"]: score};
+  return res;
 }
 
 /** What a listener at a door makes out. beyond: [{moving: bool}] the people within hearing on the far side. */
@@ -1271,4 +1423,11 @@ export function cleanClimb(s = {}) {
 export function cleanWatch(s = {}) {
   const target = String(s.target ?? "").trim();
   return {watch: !!s.watch, watchKind: WATCHES[s.watchKind] ? s.watchKind : "window", target: /^[A-Za-z0-9.]{1,200}$/.test(target) ? target : ""};
+}
+
+/** Clean a tile's target settings from the config form. */
+export function cleanTarget(s = {}) {
+  const o = describeTarget(s);
+  const blank = v => v === "" || v === null || v === undefined;
+  return {isTarget: !!s.isTarget, targetKind: o.kind, objBuild: o.build, bottles: blank(s.bottles) ? "" : o.count, smashed: o.broken};
 }
