@@ -435,7 +435,7 @@ game.world.id = worldId;
       const zm = mk("m20mage00000001", "Dr. Eleanor Vasquez-Albright, adept of House Tytalus", "Mage", {arete: {permanent: 4}, willpower: {permanent: 6, temporary: 6}}, [["av", {name: "Avatar", type: "Feature", system: {type: "wod.types.background", value: 3}}]]);
       zm.system.spheres = Object.fromEntries(["correspondence", "entropy", "forces", "life", "matter", "mind", "prime", "spirit", "time"].map((k, x) => [k, {value: (x % 4) + 1}]));
       zm.system.quintessence = {temporary: 5}; zm.system.paradox = {temporary: 3, permanent: 0};
-      tries.push(["Cast an Effect (Mage 20th)", () => ga.m20Cast({actor: A(zm)})], ["Paradox backlash", () => ga.m20Backlash({actor: A(zm)})], ["Countermagick", () => ga.m20Counter({actor: A(zm)})]);
+      tries.push(["Cast an Effect (Mage 20th)", () => ga.m20Cast({actor: A(zm)})], ["Paradox backlash", () => ga.m20Backlash({actor: A(zm)})], ["Countermagick", () => ga.m20Counter({actor: A(zm)})], ["Consensus here", () => ga.m20Place()]);
     }
     tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
@@ -635,7 +635,7 @@ game.world.id = worldId;
   for ( const [label, fn] of [["Out on your own", () => st.openOnYourOwn(people[1].id)], ["Convene", () => st.conveneDialog({actorIds: [people[0].id]})],
     ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
     ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()],
-    ["Upkeep", () => st.upkeep.open()], ["Ties that need tending", () => st.upkeep.ties(people[0].id)], ["Hunting grounds", () => st.upkeep.grounds()],
+    ["Upkeep", () => st.upkeep.open()], ["Ties that need tending", () => st.upkeep.ties(people[0].id)], ["Hunting grounds", () => st.upkeep.grounds()], ["Money by era", () => st.upkeep.money.dialog()],
     ["The Gauntlet over time", () => (game.modules.get("wodx-otherworlds").api?.drift?.dialog ?? (() => import(join(root, "modules/wodx-otherworlds/scripts/drift.mjs")).then(m => m.driftDialog())))()]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }

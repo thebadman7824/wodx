@@ -1000,3 +1000,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Actions 3.17.1: the Hunt shows a plague year's note.
 - Tests: upkeep.test.mjs (+5). UI fit: The Gauntlet over time.
 
+## 2026-11-09: money by era, Consensus by era (Storyteller 0.14.0, Actions 3.18.0, B328-B331)
+
+- Book checks on the PC first (notes in project files, notes/book-checks-consensus-money.md): V20 and V20 Dark Ages Resources give no sums; Sorcerers Crusade casual and vain, the Scourge and Fortune Dice; M20 Reality Zones optional; the Dark Ages Mage core has no coincidental or vulgar split.
+- Storyteller 0.14.0: money-rules.mjs (new, pure: LIFESTYLE, livingAs, nextDrop, RAISE, COINS, coinsFor), money.mjs (new: actor flag money {away, neglected}, resourcesOf, moneyOf, monthly card, Money window from the Upkeep chooser). Settings money, moneyRegion. api.upkeep.money.
+- Actions 3.18.0: consensus-rules.js (new, pure: AGES, ageFor, WORDS, CRUSADE_EUROPE, styleFits, suggestKind, fortuneDice, readFortune, fortuneSize, purifyDays). The M20 Cast reads the age, names the kinds in the age's words, takes the caster's style and suggests the kind; in the Crusade it rolls the Fortune Dice and weekly shedding stops. New: Purify the Scourge, Consensus here (scene flag wodx-actions.consensus {styles}). Settings consensusEra, realityZones. api.consensus, m20Purify, m20Place.
+- Tests: consensus-money.test.mjs (9). UI fit: Money by era, Consensus here. Gate: tools/gate/gateconsensus.mjs (7 steps).
+
