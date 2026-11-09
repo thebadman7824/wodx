@@ -10,7 +10,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -32,7 +32,13 @@ export async function installPack() {
   if ( !game.user.isGM ) return null;
   const data = await gear();
   const CC = foundry.documents?.collections?.CompendiumCollection ?? globalThis.CompendiumCollection;
-  const pack = game.packs.get(`world.${PACK_NAME}`) ?? await CC.createCompendium({type: "Item", label: PACK_LABEL, name: PACK_NAME});
+  // Made once: found by its name in the world's packs, so a second start never tries to make it again
+  const find = () => game.packs.get(`world.${PACK_NAME}`) ?? game.packs.find(p => p.metadata?.name === PACK_NAME && p.metadata?.packageType === "world");
+  let pack = find();
+  if ( !pack ) {
+    try { pack = await CC.createCompendium({type: "Item", label: PACK_LABEL, name: PACK_NAME}); }
+    catch (err) { pack = find(); if ( !pack ) throw err; }
+  }
   const docs = await pack.getDocuments();
   const keyOf = d => `${d.flags?.[MOD]?.source}|${d.name}`;
   const have = new Map(docs.map(d => [keyOf(d), d]));
@@ -137,7 +143,8 @@ Hooks.once("ready", async () => {
   game.modules.get(MOD).api = {version: VERSION, rules: G, gear, installPack, give, open: era => GearApp.open(era)};
   if ( game.user.isGM && game.users.activeGM?.isSelf ) {
     const data = await gear();
-    if ( game.settings.get(MOD, "installed") < data.version || !game.packs.get(`world.${PACK_NAME}`) ) {
+    const have = game.packs.get(`world.${PACK_NAME}`) ?? game.packs.find(p => p.metadata?.name === PACK_NAME && p.metadata?.packageType === "world");
+    if ( game.settings.get(MOD, "installed") < data.version || !have ) {
       try { await installPack(); } catch (err) { console.warn("WoDX Library | The gear compendium could not be made", err); }
     }
   }
