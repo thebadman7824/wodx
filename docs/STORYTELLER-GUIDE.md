@@ -302,6 +302,14 @@ Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, w
 - **The opening card** (WoDX Atmosphere). When a player's view moves to another scene, the place, the date and, out of doors, the weather show for a few seconds. Battle maps get none; turn it off for a scene in the Atmosphere window.
 - **Faces you have met** (WoDX NPC, world setting, off). Players see a short description under an NPC's token until their character is introduced. Press the handshake on the NPC's token HUD to tick who knows the name and write what strangers see. Chat and the combat tracker still show the name, so speak as the description there.
 
+## Between nights, ties and hunting grounds
+
+These three run on your machine only, when the clock moves. Each has a world setting under WoDX Storyteller to turn it off.
+
+- **Between nights.** When you skip a night or more, one entry goes into the approval queue. It shows what the nights cost each player character: a blood a night for vampires on rising, and Willpower back one a night when WoDX Actions is set to nightly recovery. Approve it and a card with Undo appears. Healing over the skip is already done by WoDX Actions. Pass the Years has its own plan and is left alone.
+- **Ties that need tending.** Each character's ties come from the sheet: a ghoul's domitor, Fetters, Passions, and backgrounds that are people or places (Herd, Domain, Retainers, Allies, Contacts, Kinfolk, Mentor). Once a game day, the ties that have gone untended come to you on one card, with what the books say happens and a Tended button. Nothing changes on the sheet by itself. Open the Upkeep button (hand and heart) to change how often a tie needs tending, mark it tended, turn it off, or add a tie of your own, such as a sister in Lübeck.
+- **Hunting grounds and heat.** In the Upkeep button's Hunting grounds window, give each place one of the Hunt's grounds, from slums to a heavily patrolled area. The Hunt then opens on it. Every hunt there adds heat, a botch or a feeding seen adds more, and a quiet week cools it. A place that is Uneasy is +1 to hunt in; Watched and Hunted are +2. When a place becomes Hunted, the era's answer goes into the approval queue: the Church and the Inquisition in the Dark Ages, constables in the 1800s, police and the press in the 1900s, cameras and the imbued after 1999. Approving it starts a rumour.
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.
