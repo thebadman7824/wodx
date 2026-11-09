@@ -276,7 +276,7 @@
   "summary": "The great rites of the Sabbat.",
   "claims": [
    {
-    "text": "The thirteen modern Auctoritas are the Binding, the Vaulderie, the Creation Rites, the Blood Feast and Blood Bath, the Fire Dance, Games of Instinct, Palla Grande, Festivo dello Estinto, Monomacy, the Sermons of Caine, the War Party and the Wild Hunt.",
+    "text": "Tonight the Auctoritas number thirteen: the Binding, the Vaulderie, the Creation Rites, the Blood Feast and Blood Bath, the Fire Dance, Games of Instinct, Palla Grande, Festivo dello Estinto, Monomacy, the Sermons of Caine, the War Party and the Wild Hunt.",
     "tier": "stated",
     "refs": [
      {
@@ -366,7 +366,7 @@
   "summary": "Blood magic of the Assassins.",
   "claims": [
    {
-    "text": "Its roots lie in the Second City, where the Clan Embraced mortal magicians; they served as interrogators and demon hunters against the Baali.",
+    "text": "Its roots lie in the Second City, where the Clan Embraced mortal magicians; they served as interrogators and demon hunters in the wars on the Baali.",
     "tier": "stated",
     "refs": [
      {
@@ -377,7 +377,7 @@
     ]
    },
    {
-    "text": "After the fall of the Second City the sorcerers kept the Clan in touch across distances and tended the herd's crops.",
+    "text": "Once the Second City fell, the sorcerers kept the Clan in touch across distances and tended the herd's crops.",
     "tier": "stated",
     "refs": [
      {
@@ -1040,7 +1040,7 @@
   "summary": "Hunters of the infernal in the Sword of Caine.",
   "claims": [
    {
-    "text": "Set up to root out infernalism and the Path of Evil Revelations in the Sect, it grew to rule on heresy and to oversee Sabbat thaumaturges.",
+    "text": "Set up to root out the Path of Evil Revelations and other infernalism in the Sect, it grew to rule on heresy and to oversee Sabbat thaumaturges.",
     "tier": "stated",
     "refs": [
      {
