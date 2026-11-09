@@ -1,0 +1,245 @@
+[
+ {
+  "id": "cbn-matriarch",
+  "title": "The Matriarch and the escaped childer",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "Nosferatu legends of the founder's first childer.",
+  "claims": [
+   {
+    "text": "A clan tale says Caine cursed Nosferatu and drove the Antediluvian from the First City, and that a woman Nosferatu had Embraced fled into the woods and became the mother of the clan.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "In the tale, the founder later sent the blood-bound Nictuku to destroy the Matriarch's line and offer its ashes to Caine in atonement; so, it says, the Nosferatu hide in fear of the Nictuku rather than of mortals.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Clan loremasters say the Nictuku are the founder's own Fourth Generation childer, their bond renewed again and again at the torpid founder's body.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Some myths say three childer escaped the bond: the unnamed Matriarch, Baba Yaga and a third, perhaps hidden by Obfuscate so deep that the world forgot them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotc-nictuku",
+   "nosferatu",
+   "cbn-baba-yaga"
+  ]
+ },
+ {
+  "id": "cbn-baba-yaga",
+  "title": "Baba Yaga",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance",
+   "victorian",
+   "great-war",
+   "modern"
+  ],
+  "summary": "The Hag of Russia, destroyed in 1998.",
+  "claims": [
+   {
+    "text": "Baba Yaga was a Nosferatu of the Fourth Generation, said to be one of the three who escaped their sire's bond. For centuries Baba Yaga ruled vampires across Russia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "The Hag's power in that land was so great that a spiritual Shadow Curtain closed the Soviet Union off from the rest of the world. Mastery of Thaumaturgy led many to take the Hag for a sorceress.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "In 1998 Lupines slew Baba Yaga. The Shadow Curtain fell, and Russian Nosferatu now hide as autarkis between the Camarilla to the west and Cathayans eager for the old domains to the east.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbn-matriarch",
+   "nosferatu",
+   "kote-kuei-jin"
+  ]
+ },
+ {
+  "id": "cbn-spawning-pools",
+  "title": "Spawning pools",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Nosferatu breeding grounds for blood-fed vermin.",
+  "claims": [
+   {
+    "text": "A Nosferatu taints food, water and filth in one spot with vitae. Creatures that feed there grow addicted and loyal, and one kind usually claims the pool and eats the rest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "A swarm fed this way does not become full ghouls, but each creature gains one dot each of Strength and Stamina, decays in body and grows vicious.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Unfed, the creatures sink into something like frenzy: when prey comes near, a creature must pass a Willpower roll at difficulty 9 or attack.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Nosferatu ghouls may also degenerate, often from the third stage of the blood bond on; those who do vile deeds for too long can become monstrous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nosferatu",
+   "cbn-information-trade"
+  ]
+ },
+ {
+  "id": "cbn-information-trade",
+  "title": "The Nosferatu trade in secrets",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the clan gathers, swaps and judges information.",
+  "claims": [
+   {
+    "text": "Broods barter what they learn for favours. Elders set neonates to watch the city's other vampires, and those caught are left to whoever caught them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Animalism lets Nosferatu use rats, cats, dogs and birds as spies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Among themselves the clan expects honesty: a trader should say how reliable a source is. Their best stories are told only to other Nosferatu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "The Scandals are the exception, trading in lurid gossip. Their tale of a winged Bat Child spread until a supermarket tabloid ran it for months.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbnosferatu",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nosferatu",
+   "gtcam-prestation"
+  ]
+ }
+]

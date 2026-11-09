@@ -337,6 +337,12 @@
    "title": "Clanbook: Malkavian (Revised)",
    "short": "Clanbook: Malkavian",
    "edition": "Revised"
+  },
+  {
+   "id": "cbnosferatu",
+   "title": "Clanbook: Nosferatu (Revised)",
+   "short": "Clanbook: Nosferatu",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -395,6 +401,7 @@
   "cbassamite.json",
   "cbbrujah.json",
   "cbgiovanni.json",
-  "cbmalkavian.json"
+  "cbmalkavian.json",
+  "cbnosferatu.json"
  ]
 }
