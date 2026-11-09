@@ -45,10 +45,18 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [ ] Gate step 16 in rothenstein-wodx
 - [ ] Deployed
 
+## 0.5.0: light sources (2026-11-09)
+- [x] Rules: five kinds; light, put out, break (B119)
+- [x] Runtime: the scene's lights by id or nearby, with the Otherworlds copies; Undo
+- [x] Tile config: the Light source section
+- [x] Harness tests (2 new) and UI fit
+- [ ] Gate step 17 in rothenstein-wodx
+- [ ] Deployed
+
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
 - [x] Clues and documents (0.4.0, not deployed yet)
-- [ ] Light sources
+- [x] Light sources (0.5.0, not deployed yet)
 - [ ] Hiding places
 - [ ] Fire and hazards
 - [ ] Altars, relics and fetishes

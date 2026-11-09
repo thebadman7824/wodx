@@ -640,5 +640,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Clues on tiles: a letter, ledger or document; a bloodstain or mark; writing or graffiti; tracks or a trail; something out of place. The tile config gains a Clue section: kind, the name players see, the successes it takes to notice a hidden one, and four texts (what anyone sees, then 1, 2, and 3 or more successes).
 - Reading (Intelligence + Investigation) or examining (Perception + Investigation), difficulty 6, a minute; no roll when only the first text is written. What is learned goes in a whisper to the player and the Storyteller; the public card only says it was examined. Each character's best successes are kept on the tile.
 - Search the area also notices hidden clue tiles by their own number of successes.
-- Tests: 4 new (1 rules, 3 runtime); UI fit adds a clue with a long name to the Interact window and shows the whole tile config. Gate step 16 (a letter read, the whisper checked, Undo). Not deployed yet.
+- Tests: 4 new (1 rules, 3 runtime); UI fit adds a clue with a long name to the Interact window and shows the whole tile config. Gate step 16 (a letter read, the whisper checked, Undo). Deployed 2026-11-09; gate 14/16. Step 16 failed because the gate's burglar has no Investigation, and an untrained Knowledge is not rolled, so nothing was rolled at all. Clues now offer Look at it (no roll, the first part) beside Examine closely (needs Investigation), and the gate gives the burglar a dot. Step 14 still failed with the pit set for NPCs; the gate now jumps the token with a displace move and records why, calling the move handler directly if the hook did not fire.
+
+### Interactables 0.5.0, 2026-11-09: light sources (B119)
+- Light sources on tiles: torch or brazier, candles, lantern, oil or gas lamp, electric light switch. The tile config gains a Light source section: the kind, the ids of the lights it works (blank: the lights on it or within a square), and Broken.
+- Light it, put it out, switch it on or off: a turn, no roll, silent. A lantern, lamp or electric light can be broken (loud; it stays dark). WoDX Otherworlds' copies of those lights on the twin levels go on and off with them. Undo puts each light back.
+- Tests: 2 new (1 rules, 1 runtime); UI fit adds a lamp. Gate step 17 (a lantern lights the light beside it; Undo). Not deployed yet.
 
