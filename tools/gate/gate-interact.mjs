@@ -29,6 +29,7 @@
  *  25. targets: a marksman out in the open with a pistol on the sheet sees a target with rings 10 yards off, out of
  *      reach, in the list; a shot (fixed dice) hits the centre for 3 points on the scoreboard; Undo takes the name off;
  *      a shot at a lamp shatters it and sends a break event; Undo mends it
+ *  26. a live wire: the marksman steps onto it and is held; Pull free (Strength at 9) lets go; Undo; cutting the power frees
  * Result: Data/wodx-gate/gate-interact-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -581,6 +582,30 @@ export async function run() {
           {listed, distance: entry?.distance ?? null, yards: ch.yards, weapons: ch.weapons, scored, cleared, smashed, broke, mended,
             lines: d1?.lines ?? [], text: d1?.text ?? null, results: [m1, m2].map(m => m?.flags?.[MOD]?.done?.result ?? m?.flags?.[MOD]?.ask?.state ?? null), events: events.map(e => e.kind)});
       } finally { Hooks.off("wodxMapEvent", hook); }
+    });
+
+    await step("26. live wire", async () => {
+      const tm = scene.tokens.find(t => t.actorId === marksman?.id);
+      if ( !tm ) throw new Error("step 25 made no marksman");
+      await scene.createEmbeddedDocuments("Tile", [{x: tm.x + 100, y: tm.y, width: 100, height: 100, texture: {src: "icons/svg/lightning.svg"},
+        flags: {[MOD]: {hazard: true, hazardKind: "shock", shock: "minor", gate: "wire"}}}]);
+      await sleep(400);
+      const wire = findTile("wire");
+      await tm.update({x: tm.x + 100}, {animate: false, teleport: true});
+      const caught = await until(() => wire.flags[MOD]?.caught?.[marksman.id] === true);
+      const mtok = canvas.tokens.get(tm.id);
+      const ops = ix().interactablesFor(mtok).find(x => x.doc.id === wire.id);
+      const pf = ix().rules.optionsFor(ops?.o ?? {}, ix().characterFor(marksman, mtok.center, wire)).find(x => x.id === "pullFree");
+      await dice(9);
+      const m1 = await applied(await ix().attempt(mtok, wire.id, "pullFree", {fd: {}}));
+      const freed = m1?.flags?.[MOD]?.done?.result === "done" && wire.flags[MOD]?.caught?.[marksman.id] === false;
+      await ix().undoCard(m1);
+      const heldAgain = wire.flags[MOD]?.caught?.[marksman.id] === true;
+      const m2 = await applied(await ix().attempt(mtok, wire.id, "powerOff"));
+      const cut = wire.flags[MOD]?.live === false && wire.flags[MOD]?.caught?.[marksman.id] === false;
+      await ix().undoCard(m2);
+      ok("26. walking onto a live wire holds the marksman; Pull free is Strength at 9 for a mortal and lets go; Undo holds again; cutting the power frees", caught && pf?.roll?.diff === 9 && freed && heldAgain && cut,
+        {caught, diff: pf?.roll?.diff ?? null, freed, heldAgain, cut, results: [m1, m2].map(m => m?.flags?.[MOD]?.done?.result ?? m?.flags?.[MOD]?.ask?.state ?? null), flags: wire.flags[MOD]});
     });
 
     await step("10. alongside", async () => {

@@ -59,7 +59,7 @@ import * as FillRules from "./fill-rules.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.17.2";
+const VERSION = "0.18.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -1028,7 +1028,7 @@ export async function hazardOn(tokDoc, actor, o) {
     if ( combat?.soakAndApply ) {
       try {
         const res = await combat.soakAndApply(tokDoc.object ?? actor, {mode: hit.mode, amount: hit.amount, type: hit.type, fireSun: hit.fireSun, soakDiff: hit.soakDiff,
-          soak: true, fortBlood: "auto", soakBonus: 0});
+          soak: true, fortBlood: "auto", soakBonus: 0, ...(hit.botchAggravated ? {botchAggravated: true} : {})});
         damageMsg = res?.message?.id ?? null;
         lines.push(`${cap(what)}: soak and the result are on the WoDX Combat card${res?.levels ? ` (${res.levels} ${res.levels === 1 ? "level" : "levels"} after soak)` : ""}.`);
       } catch (e) { console.error(`${MOD} |`, e); lines.push(`${cap(what)}: roll soak and apply it by hand.`); }
@@ -1048,6 +1048,11 @@ export async function hazardCard(tokDoc, actor, doc, o, why = "enters") {
     const snap = {ds: null, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), hidden: !!doc.hidden};
     const hz = await hazardOn(tokDoc, actor, o);
     const lines = [why === "turn" ? `${actor.name} starts the turn in it.` : `${actor.name} walks into it.`, ...hz.lines];
+    // A live wire holds whoever touches it until they pull free or the power is cut
+    if ( o.kind === "shock" && o.live ) {
+      if ( !o.caught?.[actor.id] ) await doc.update({[`flags.${MOD}.caught.${actor.id}`]: true});
+      lines.push(`${actor.name} is held by the current: Pull free (Strength) or cut the power.`);
+    }
     Hooks.callAll("wodxInteractablesHazard", {scene: scene.id, tile: doc.id, token: tokDoc.uuid, kind: o.kind, why});
     const done = {result: "done", text: hz.text, noise: "silent", snap, hurt: 0, advanced: 0, worldTime: game.time.worldTime, waiting: false, lines, given: [],
       damageMsg: hz.damageMsg, undone: false};

@@ -1075,3 +1075,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - v20c-utgard was not in the V20 Companion text. Ben approved its removal, and it is gone from v20comp.json (Library data only).
 - Still open: pinning the bare page refs from the PC report.
 - Tests: 919 harness pass.
+
+### Interactables 0.18.0 and Combat 3.8.2, 2026-11-09: a live wire holds you (B387)
+- Ben asked for the live wire to roll pulling free at the book's difficulties. Walking onto a live wire now holds the character (shown on the card). **Pull free of the current** is Strength at 5 for a vampire and 9 for anyone else; cutting the power frees everyone; Undo for each.
+- A vampire's soak against the current can botch, and a botch makes the damage aggravated: WoDX Combat 3.8.2 adds the botchAggravated option to soakAndApply (off unless a caller asks).
+- Tests: 3 new (rules, runtime, Combat soak); 914 harness pass. Gate step 26 (the marksman on a live wire).

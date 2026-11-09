@@ -141,3 +141,11 @@ Step 3 of the design note.
 - [x] Mounts and vehicles (0.11.0, deployed; 0.13.0 fixes the cart following)
 - [x] Step 2: climbing, ledges and jumps (0.13.1, deployed)
 - [x] Step 3: targets on tiles (0.14.0, deployed)
+
+## 0.18.0: a live wire holds you (2026-11-09)
+- [x] Rules: Pull free of the current (Strength 5 for a vampire, 9 otherwise); cutting the power frees everyone; a vampire's botched soak is aggravated (B387)
+- [x] Runtime: walking onto a live wire holds the character; Undo
+- [x] WoDX Combat 3.8.2: botchAggravated on soakAndApply
+- [x] Harness tests (3 new)
+- [ ] Gate step 26 in rothenstein-wodx
+- [ ] Deployed
