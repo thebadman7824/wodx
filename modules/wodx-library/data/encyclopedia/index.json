@@ -67,6 +67,18 @@
    "title": "Wraith: The Great War",
    "short": "W:GW",
    "edition": "Revised era"
+  },
+  {
+   "id": "demon",
+   "title": "Demon: The Fallen",
+   "short": "DtF",
+   "edition": "First edition"
+  },
+  {
+   "id": "kote",
+   "title": "Kindred of the East",
+   "short": "KotE",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -80,6 +92,8 @@
   "mummy2.json",
   "m20.json",
   "damage.json",
-  "greatwar.json"
+  "greatwar.json",
+  "demon.json",
+  "kote.json"
  ]
 }
