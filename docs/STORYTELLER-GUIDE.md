@@ -239,9 +239,9 @@ The **WoDX factions** window (rook) lists the factions, with a search box. Each 
 
 **Masquerade rumours.** A breach recorded in WoDX Actions, or one you enter with **Report a breach…**, spreads day by day through places and Contacts. It rises to the Prince and then to the era's hunters (the Inquisition before 1600, mortal hunters to 1998, the imbued after), and each rise is a proposal in the queue. Deal with every witness first and press **Contain**; a quiet week makes it fade, until the hunters hear of it. Each breach also has **Stop**, **Resume** and **Forget**.
 
-## WoDX Interactables: doors, locks, windows and containers
+## WoDX Interactables: doors, locks, windows, containers and traps
 
-*New module, installed and on in the testing world (rothenstein-wodx) only; enable WoDX Interactables in a world's modules to use it there. Containers (0.2.0) are not deployed yet.*
+*New module, installed and on in the testing world (rothenstein-wodx) only; enable WoDX Interactables in a world's modules to use it there. Traps (0.3.0) are not deployed yet.*
 
 **For players.** Select your token, then press the **door** on its HUD (or the I key). The Interact window lists every door, window and breakable wall within reach, nearest first, and the options for each. Before anything is rolled, each option says the pool, the difficulty, the successes needed, how long a roll takes and how much noise it makes. Clicking a locked door with your token selected opens the same window for that door.
 
@@ -255,7 +255,9 @@ What can be tried: open or close, open quietly (Dexterity + Stealth), lift a bar
 
 **Containers.** A chest, box, cabinet, desk, strongbox or safe is a tile. Open the tile's config window and fill in the **WoDX** part: tick Container, pick the kind, and set a lock, its state, a keypad, a key, and what is inside (one item a line: copy the item's UUID from the button in its sheet's title bar, or type its name as it appears in the Items directory). Players find it in the same Interact window as the doors, and can open it, pick or force the lock, and **take what is inside**: each item is copied onto their sheet at once, and the card's Undo takes the copies back. A hidden tile stays out of the players' list until you show it. Leave the list empty to say what is inside yourself.
 
-Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, whether long attempts move the clock, and whether NPCs hear noise. You can Shift-click a locked door yourself to use Interact for the selected token.
+**Traps.** A snare, pit, tripwire or spring blade is a tile too: tick Trap in the tile's **WoDX** part, pick the kind and grade (crude, good, excellent, masterwork), and hide the tile. Leave the damage blank for the kind's own (a pit 2 bashing dice, a spring blade 5 lethal; choose lethal for a spiked pit). When a player's character walks over it, it goes off: the character rolls Dexterity + Dodge or Athletics to get clear, the damage goes through WoDX Combat's soak, and the card has an **Undo** that puts the trap and the damage back. A snare holds its victim until a Strength roll (difficulty 7) breaks free or someone cuts it. Tick "NPCs set it off" if they should. Players find traps with **Search the area** at the top of the Interact window (Perception + Alertness or Investigation, a minute): a crude trap needs 1 success, a masterwork one 4, and you are whispered what they missed. A found trap shows to players; walking around it is safe, stopping on it is not. They can disarm it (Wits + Larceny, a botch sets it off), set it off from a safe distance, or set it again later.
+
+Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, whether long attempts move the clock, whether NPCs hear noise, and whether traps go off. You can Shift-click a locked door yourself to use Interact for the selected token.
 
 ## Approvals and Undo: the two safety nets
 

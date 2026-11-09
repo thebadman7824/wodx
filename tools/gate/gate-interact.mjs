@@ -70,7 +70,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.2.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.2.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.3.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.3.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -219,6 +219,58 @@ export async function run() {
       const text = part?.textContent ?? "";
       await app.close();
       ok("12. the tile config shows the WoDX container part", !!part && /Container/.test(text) && /Inside/.test(text), {sample: text.replace(/\s+/g, " ").slice(0, 160)});
+    });
+
+    // Traps: a hidden pit in the room's south-west corner, off the burglar's square; a found snare by the east wall
+    const findTile = tag => scene.tiles.find(t => t.flags?.[MOD]?.gate === tag);
+    await step("13. search", async () => {
+      await scene.createEmbeddedDocuments("Tile", [{x: 515, y: 735, width: 50, height: 50, hidden: true, texture: {src: "icons/svg/trap.svg"},
+        flags: {[MOD]: {trap: true, trapKind: "pit", grade: "good", gate: "pit"}}}]);
+      await sleep(500);
+      const pit = findTile("pit");
+      await dice(9);
+      const msg = await applied(await ix().attempt(tok, "_search", "search", {fd: {}}));
+      const found = pit.hidden === false && pit.flags[MOD]?.found === true;
+      await ix().undoCard(msg);
+      const back = pit.hidden === true && !pit.flags[MOD]?.found;
+      ok("13. searching (Perception + Alertness) finds the hidden pit and shows it; Undo hides it again", !!pit && found && back,
+        {result: msg?.flags?.[MOD]?.done?.result ?? null, found, back, lines: msg?.flags?.[MOD]?.done?.lines ?? null});
+    });
+
+    await step("14. spring", async () => {
+      const pit = findTile("pit");
+      const before = foundry.utils.deepClone(burglar.system.health?.damage ?? {});
+      const seen = new Set(game.messages.map(m => m.id));
+      await dice(2);                  // no success getting clear, and no damage gets through
+      await tb.update({x: 490, y: 710});  // the burglar's centre lands in the pit
+      let card = null;
+      for ( let k = 0; k < 60 && !card; k++ ) { await sleep(100); card = game.messages.find(m => !seen.has(m.id) && m.flags?.[MOD]?.ask?.op === "spring"); }
+      const done = card?.flags?.[MOD]?.done;
+      const sprung = pit.flags[MOD]?.sprung === true && pit.hidden === false;
+      const combatCard = !!done?.damageMsg && !!game.messages.get(done.damageMsg);
+      if ( card ) await ix().undoCard(card);
+      const back = pit.hidden === true && !pit.flags[MOD]?.sprung && !game.messages.get(done?.damageMsg ?? "");
+      const same = JSON.stringify(burglar.system.health?.damage ?? {}) === JSON.stringify(before);
+      // Off the pit again without setting it off: the trap goes first
+      await pit.delete();
+      await tb.update({x: 550, y: 650});
+      await sleep(400);
+      ok("14. walking into the pit springs it: a WoDX Combat damage card, the pit shown; Undo puts back the pit, the card and the health track",
+        !!card && /falls into the pit/.test(done?.text ?? "") && sprung && combatCard && back && same, {text: done?.text ?? null, lines: done?.lines ?? null, sprung, combatCard, back, same});
+    });
+
+    await step("15. disarm", async () => {
+      await scene.createEmbeddedDocuments("Tile", [{x: 640, y: 720, width: 50, height: 50, texture: {src: "icons/svg/trap.svg"},
+        flags: {[MOD]: {trap: true, trapKind: "snare", grade: "crude", found: true, gate: "snare"}}}]);
+      await sleep(500);
+      const snare = findTile("snare");
+      const listed = ix().interactablesFor(tok).some(x => x.doc.id === snare?.id);
+      await dice(9);
+      const msg = await applied(await ix().attempt(tok, snare.id, "disarm", {fd: {}}));
+      const safe = ix().describeTile(snare)?.armed === false;
+      await ix().undoCard(msg);
+      const armed = ix().describeTile(snare)?.armed === true;
+      ok("15. a found snare is listed and disarmed (Wits + Larceny); Undo arms it again", listed && safe && armed, {listed, safe, armed, result: msg?.flags?.[MOD]?.done?.result ?? null});
     });
 
     await step("10. alongside", async () => {
