@@ -1,0 +1,381 @@
+[
+ {
+  "id": "vav-gothic-victorian-age",
+  "title": "The Gothic Victorian Age",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The Kindred era from 1880 to 1897.",
+  "claims": [
+   {
+    "text": "Victoria has ruled the Empire's living subjects since 1837, so few alive remember any other reign.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "For the game the age runs almost two decades, from 1880 to 1897.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "It opens with secret masters guiding the founders of the Golden Dawn, and ends when a Transylvanian count reaches London.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Later vampires look back on it as the peak of their hidden civilisation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-gaslight-torchlight",
+   "vav-dracula",
+   "vav-golden-dawn"
+  ]
+ },
+ {
+  "id": "vav-golden-dawn",
+  "title": "The Kindred and the Occult Revival",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "How vampires spread through the secret societies.",
+  "claims": [
+   {
+    "text": "Mortals start the Golden Dawn in 1880, but Kindred soon infest it and use it to draw living initiates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "From there they spread fast through the secret societies of the age, and the revived occult arts bring both opportunity and terror.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-gothic-victorian-age"
+  ]
+ },
+ {
+  "id": "vav-gaslight-torchlight",
+  "title": "Gaslight and Torchlight",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The two halves of the Victorian world.",
+  "claims": [
+   {
+    "text": "The world splits into the civilised lands lit by gaslight and the barbarous lands lit by torchlight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "In the cities, marble and stone fronts are blackened by industrial soot by day and blood by night; in the barbarous lands vampires sink into humanity's worst nightmares and revel in the old ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Vampires of the age act as models of Victorian ideals, as tragic figures or as shameless villains; some seek redemption, others outdo the worst horror tales.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-gothic-victorian-age",
+   "vav-dracula"
+  ]
+ },
+ {
+  "id": "vav-dracula",
+  "title": "Dracula in London",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The count who breaks the line between East and West.",
+  "claims": [
+   {
+    "text": "In 1897 Vlad Dracula arrives in London and whispers a story to an Irish author that strains the Masquerade to its limits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Dracula tries to carry the strength of the barbarous lands into London, the heart of the civilised world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "By the end of the age the boundary between the two worlds lies broken, opening a century of madness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-gaslight-torchlight",
+   "masquerade"
+  ]
+ },
+ {
+  "id": "vav-sects",
+  "title": "The Sects in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "How the Camarilla and Sabbat look in this era.",
+  "claims": [
+   {
+    "text": "Two societies define Kindred conflict: the Camarilla and the Sabbat, at war for centuries over politics and philosophy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "To vampires made in this age the two sects stand for Good and Evil; whether that is a fiction of their elders is open to doubt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Camarilla elders blow up tales of Sabbat crimes, such as raising armies of fresh childer from graveyards or pacts with the Devil, to justify tyranny at home.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 21,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Some suspect the drama keeps rulers on both sides in power, and a few whisper of ancients moving both sects like chess pieces.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 22,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Camarilla is said to date from the 15th century, founded to shield vampires from human wrath.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "sabbat",
+   "vav-london"
+  ]
+ },
+ {
+  "id": "vav-london",
+  "title": "Mithras, Prince of London",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The long-reigning prince of the Empire's capital.",
+  "claims": [
+   {
+    "text": "Mithras has been Prince of London for centuries; the childe Valerius conducts much of the nightly business.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 23,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The excesses of this princedom set a tradition that lasts well into the next century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 23,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The Antediluvians have faded so far from view that most Kindred doubt they exist, though they live on in vampire legend.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 23,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects",
+   "antediluvians"
+  ]
+ },
+ {
+  "id": "vav-history-mystery",
+  "title": "History and Mystery",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "How closely to follow real Victorian history.",
+  "claims": [
+   {
+    "text": "A troupe may insist on Victorian accuracy or keep only the spirit of the age; both are valid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "This world is not ours but one in the shadow of our past; if events ran exactly as they did in real history, the mystery horror needs would be lost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The Storyteller should balance close detail against free invention.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-gothic-victorian-age"
+  ]
+ }
+]
