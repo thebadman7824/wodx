@@ -337,6 +337,14 @@ test("runtime: looking closer rolls Perception + Alertness blind; successes find
   assert.ok(pc.flags[MOD].memory);
 });
 
+test("runtime: a new wall changes the answer: the remembered closer look no longer carries over", async () => {
+  soundWalls.push(450);
+  const res = await api.answer({user: "pl", token: tokPc.uuid, sense: "sound", closer: false});
+  soundWalls.length = 0;
+  assert.equal(res.sections[0].repeat, false, "a wall between makes it a new answer");
+  assert.equal(res.sections[0].successes, 0, "the earlier successes are not reused behind the wall");
+});
+
 test("runtime: a sound wall between muffles the source; two walls stop it", async () => {
   soundWalls.push(500);
   const res = await api.answer({user: "pl", token: tokPc.uuid, sense: "smell", closer: false});
