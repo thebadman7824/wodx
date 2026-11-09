@@ -1346,7 +1346,7 @@ test("runtime: looking out of a window whispers who is in the yard; Undo takes t
     assert.ok(w.whisper.includes("gm"));
     assert.ok(!/Sergeant Volker/.test(msg.content), "kept off the public card");
     assert.equal(events.at(-1).kind, "watch");
-    assert.equal(events.at(-1).place, "win2");
+    assert.equal(events.at(-1).object, "win2");
     await api.undoCard(msg);
     assert.ok(!game.messages.has(d.whisper));
     // Hidden: not seen
@@ -1366,7 +1366,7 @@ test("runtime: ringing a bell raises the alarm loudly and sends an alarm event",
     const msg = await api.attempt(tokPc, "bell1", "ringAlarm");
     assert.equal(msg.flags[MOD].done.noise, "loud");
     assert.ok(msg.flags[MOD].done.lines.some(l => /alarm is raised/.test(l)));
-    assert.deepEqual([events.at(-1).kind, events.at(-1).noise, events.at(-1).object], ["alarm", "loud", "bell"]);
+    assert.deepEqual([events.at(-1).kind, events.at(-1).noise, events.at(-1).objectKind], ["alarm", "loud", "bell"]);
   } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
 });
 
@@ -1491,4 +1491,138 @@ test("runtime: the WoDX part of the tile config keeps the vehicle's choices and 
   assert.match(html, /value="carriage" selected/);
   assert.match(html, /name="flags.wodx-interactables.seats" value="3"/);
   assert.match(html, /Aboard now: Kaspar/);
+});
+
+/* ---------------- 0.12.0: pictures, markers and map events ---------------- */
+
+const S = await import(join(root, "modules/wodx-interactables/scripts/state-rules.mjs"));
+
+test("states: each kind reads its state from its flags, the usual one first", () => {
+  const box = f => R.describeContainer({container: true, ...f});
+  assert.equal(S.stateOf(box({}), {}), "closed");
+  assert.equal(S.stateOf(box({ds: "open"}), {}), "open");
+  assert.equal(S.stateOf(box({ds: "open"}), {lockBroken: true}), "forced");
+  assert.equal(S.stateOf(box({ds: "open", taken: true}), {}), "empty");
+  const door = (ds, f = {}) => R.describe({door: true, ds, flags: f});
+  assert.equal(S.groupOf(door("closed")), "door");
+  assert.equal(S.stateOf(door("open", {kind: "window", broken: true}), {}), "broken");
+  assert.equal(S.stateOf(R.describeTrap({trap: true}), {}), "hidden");
+  assert.equal(S.stateOf(R.describeTrap({trap: true, sprung: true}), {}), "sprung");
+  assert.equal(S.stateOf(R.describeTrap({trap: true, armed: false}), {}), "disarmed");
+  assert.equal(S.stateOf(R.describeHazard({hazard: true, hazardKind: "fire", burning: false}), {}), "out");
+  assert.equal(S.stateOf(R.describeHazard({hazard: true, hazardKind: "brazier"}), {}), "upright");
+  assert.equal(S.stateOf(R.describeSacred({sacred: true, desecrated: true}), {}), "desecrated");
+  // A clue or a hiding place never shows a state: it would give the secret away
+  assert.equal(S.groupOf(R.describeClue({clue: true})), "plain");
+  assert.equal(S.groupOf(R.describeHide({hide: true})), "plain");
+  for ( const g of Object.keys(S.STATES) ) assert.ok(S.usualState(g));
+});
+
+test("states: a picture set for the state wins; with none, a marker with the state's word, and the usual picture comes back", () => {
+  assert.deepEqual(S.lookFor("container", "open", {art: {open: "maps/chest-open.webp"}, current: "maps/chest.webp"}), {src: "maps/chest-open.webp", marker: ""});
+  assert.deepEqual(S.lookFor("container", "open", {art: {open: "maps/chest-open.webp"}, current: "maps/chest-open.webp"}), {src: null, marker: ""});
+  assert.deepEqual(S.lookFor("container", "forced", {art: {open: "x.webp"}, base: "maps/chest.webp", current: "x.webp"}), {src: "maps/chest.webp", marker: "Forced"});
+  assert.deepEqual(S.lookFor("container", "closed", {base: "maps/chest.webp", current: "maps/chest.webp"}), {src: null, marker: ""});
+  assert.equal(S.lookFor("sacred", "desecrated", {markers: false}).marker, "");
+  // Lamps and traps show themselves; no marker
+  assert.equal(S.lookFor("light", "broken", {}).marker, "");
+  assert.equal(S.lookFor("trap", "sprung", {}).marker, "");
+  assert.equal(S.cleanPath(' "maps/<x>.webp" '), "maps/x.webp");
+  assert.deepEqual(S.cleanArt("container", {open: " a.webp ", bogus: "b.webp", closed: ""}), {open: "a.webp"});
+});
+
+test("events: the kind follows the change, not just the option; failures only count when they make noise", () => {
+  assert.equal(S.eventKind("pick", "done", "closed", "closed"), null);
+  assert.equal(S.eventKind("open", "done", "closed", "open"), "open");
+  assert.equal(S.eventKind("force", "done", "closed", "forced"), "force");
+  assert.equal(S.eventKind("smash", "done", "closed", "broken"), "break");
+  assert.equal(S.eventKind("take", "done", "open", "empty"), "theft");
+  assert.equal(S.eventKind("desecrate", "done", "whole", "desecrated"), "desecrate");
+  assert.equal(S.eventKind("knockOver", "done", "upright", "burning"), "fire");
+  assert.equal(S.eventKind("putOut", "done", "burning", "out"), "fireOut");
+  assert.equal(S.eventKind("trigger", "done", "found", "sprung"), "trap");
+  assert.equal(S.eventKind("force", "fail", "closed", "closed", {noise: "loud"}), "noise");
+  assert.equal(S.eventKind("pick", "fail", "closed", "closed", {noise: "silent"}), null);
+  assert.equal(S.eventKind("pick", "botch", "closed", "closed", {alarm: true}), "alarm");
+  assert.equal(S.eventKind("breach", "done", "closed", "closed", {waiting: true}), "break");
+  assert.equal(S.eventKind("spring", "done", "hidden", "sprung"), "trap");
+  assert.equal(S.eventKind("search", "done", null, null, {found: 1}), "found");
+  assert.ok(S.isSupernatural("desecrate"));
+  assert.ok(!S.isSupernatural("theft"));
+  const ev = S.mapEvent({kind: "nonsense", noise: "deafening", heard: ["a", 2], x: "12.6"});
+  assert.equal(ev.kind, "use");
+  assert.equal(ev.noise, "silent");
+  assert.deepEqual(ev.heard, ["a", "2"]);
+  assert.equal(ev.x, 13);
+});
+
+test("feedback: words and flashes only where seen, sound as far as the noise carries, nothing when switched off", () => {
+  const ev = S.mapEvent({kind: "break", noise: "loud"});
+  assert.deepEqual(S.feedbackFor(ev, {src: "sounds/glass.ogg"}), {word: "Smashed", flash: true, sound: {src: "sounds/glass.ogg", yards: 30}});
+  assert.deepEqual(S.feedbackFor(ev, {effects: "light"}), {word: "Smashed", flash: false, sound: null});
+  assert.deepEqual(S.feedbackFor(ev, {sees: false, src: "s.ogg"}), {word: "", flash: false, sound: {src: "s.ogg", yards: 30}});
+  assert.deepEqual(S.feedbackFor(ev, {effects: "off", src: "s.ogg"}), {word: "", flash: false, sound: null});
+  assert.equal(S.feedbackFor({...ev, undone: true}).word, "");
+  assert.ok(S.soundOn("fire", "burning"));
+  assert.ok(!S.soundOn("fire", "out"));
+  assert.ok(S.soundOn("door", "closed", {alarm: true}));
+});
+
+test("runtime 0.12: forcing a chest swaps its picture for every client, Undo brings the old one back, and one map event goes out each way", async () => {
+  const box = tile("artbox", 250, 350, {container: true, kind: "chest", lock: "cheap", art: {forced: "maps/chest-forced.webp", empty: "maps/chest-empty.webp"}});
+  box.document.texture = {src: "maps/chest.webp"};
+  canvas.tiles.placeables.push(box);
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  faces = [9, 9, 9, 9, 9, 9];
+  me = player;
+  let msg;
+  try { msg = await api.attempt(tokPc, "artbox", "force", {fd: {}}); } finally { me = gm; }
+  assert.equal(msg.flags[MOD].done.result, "done");
+  assert.equal(box.document.flags[MOD].lockBroken, true);
+  await api.states.syncTile(box.document);
+  assert.equal(box.document.texture.src, "maps/chest-forced.webp");
+  assert.equal(box.document.flags[MOD].artBase, "maps/chest.webp");
+  const ev = api.states.onCard(msg);
+  assert.equal(ev.kind, "force");
+  assert.equal(ev.before, "closed");
+  assert.equal(ev.state, "forced");
+  assert.equal(ev.object, "artbox");
+  assert.equal(ev.objectType, "Tile");
+  assert.ok(Array.isArray(ev.heard));
+  assert.equal(events.at(-1).kind, "force");
+  // The same card twice sends nothing new
+  assert.equal(api.states.onCard(msg), null);
+  await api.undoCard(msg);
+  await api.states.syncTile(box.document);
+  assert.equal(box.document.texture.src, "maps/chest.webp");
+  const back = api.states.onCard(game.messages.get(msg.id));
+  assert.equal(back.undone, true);
+  assert.equal(events.at(-1).undone, true);
+});
+
+test("runtime 0.12: a tile with no picture for the state gets a marker; a tile following a door shows the door's state", async () => {
+  const box = tile("plainbox", 150, 350, {container: true, kind: "box", ds: "open", taken: true});
+  assert.equal(api.states.lookOf(box.document, {markers: true}).look.marker, "Emptied");
+  assert.equal(api.states.lookOf(box.document, {markers: false}).look.marker, "");
+  const pane = tile("panetile", 520, 250, {follows: "win1", art: {broken: "maps/window-broken.webp"}});
+  pane.document.texture = {src: "maps/window.webp"};
+  assert.equal(api.states.lookOf(pane.document).state, "closed");
+  await win.document.update({ds: 1, [`flags.${MOD}.broken`]: true});
+  assert.equal(api.states.lookOf(pane.document).state, "broken");
+  await api.states.syncTile(pane.document);
+  assert.equal(pane.document.texture.src, "maps/window-broken.webp");
+  await win.document.update({ds: 0, [`flags.${MOD}.broken`]: false});
+  await api.states.syncTile(pane.document);
+  assert.equal(pane.document.texture.src, "maps/window.webp");
+});
+
+test("runtime 0.12: the tile config's pictures part lists the states of what the tile is", () => {
+  const box = tile("cfgbox", 150, 150, {container: true, art: {open: "maps/o.webp"}});
+  const html = api.states.statesConfigHtml(box.document);
+  assert.match(html, /flags\.wodx-interactables\.art\.forced/);
+  assert.match(html, /value="maps\/o\.webp"/);
+  assert.match(html, /Closed \(usual\)/);
+  const bare = tile("cfgbare", 150, 150, {});
+  assert.match(api.states.statesConfigHtml(bare.document), /Pick what this tile is/);
 });

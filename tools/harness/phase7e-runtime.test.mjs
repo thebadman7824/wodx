@@ -279,3 +279,24 @@ test("only the active Storyteller writes", async () => {
   assert.equal(C.entries().length, n);
   game.user = users.get("gm");
 });
+
+test("map events (0.3.0): a player character's change goes in the log and fires a map beat; Undo takes the line out; NPCs stay out", async () => {
+  game.user = users.get("gm");
+  const tok = {actor: anna};
+  globalThis.fromUuidSync = u => (u === "Scene.keep.Token.ta" ? tok : u === "Scene.keep.Token.tn" ? {actor: npcA} : null);
+  await C.saveBeat({id: "bm", name: "Someone in the cellar", on: "map", place: "Scene.keep", value: "force"});
+  chat.length = 0;
+  const ev = {kind: "force", scene: "keep", place: "Scene.keep", at: time.worldTime, noise: "loud", who: "Scene.keep.Token.ta", whoName: "Anna",
+    object: "w1", objectName: "The cellar door", objectType: "Wall", state: "forced", heard: ["x"], message: "msg1", undone: false};
+  const e = await C.onMapEvent(ev);
+  assert.equal(e.actor, "anna");
+  assert.equal(e.user, "u1");
+  assert.equal(C.entries().find(x => x.id === "map:msg1").text, "Anna forced the cellar door (heard by 1).");
+  assert.equal(C.beats().find(b => b.id === "bm").fired, true);
+  assert.ok(chat.some(m => /Someone in the cellar/.test(m.content)));
+  await C.onMapEvent({...ev, undone: true});
+  assert.equal(C.entries().some(x => x.id === "map:msg1"), false, "Undo takes the line out");
+  assert.equal(await C.onMapEvent({...ev, message: "msg2", who: "Scene.keep.Token.tn", whoName: "The Bishop"}), null, "an NPC's doing is not a player's log line");
+  assert.equal(C.entries().some(x => x.id === "map:msg2"), false);
+  globalThis.fromUuidSync = () => null;
+});

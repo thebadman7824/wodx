@@ -14,7 +14,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.2.0";
+export const VERSION = "0.3.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -421,6 +421,27 @@ export async function saveBeat(beat) {
 export async function deleteBeat(id) {
   if ( !game.user.isGM ) return;
   await mutate("beats", cur => ({value: (cur ?? []).filter(x => x.id !== id)}));
+}
+
+/**
+ * A map event from WoDX Interactables (0.3.0): a line in the log for what a player character did, and any beat set on
+ * that change. Undo on the Interactables card takes the line back out (a beat that fired stays fired).
+ */
+export async function onMapEvent(ev) {
+  if ( !isActiveGM() || !ev ) return null;
+  const id = `map:${String(ev.message ?? "").slice(0, 40)}`;
+  if ( ev.undone ) {
+    if ( ev.message ) await mutate("log", cur => { const l = W.normLog(cur); if ( !l.entries.some(e => e.id === id) ) return null; return {value: {...l, entries: l.entries.filter(e => e.id !== id)}}; });
+    return null;
+  }
+  const tok = ev.who ? (() => { try { return fromUuidSync(ev.who); } catch (e) { return null; } })() : null;
+  const actor = tok?.actor ?? null;
+  const e = W.mapEntry(ev);
+  let entry = null;
+  if ( e && isPC(actor) ) entry = await log({...e, actor: actor.id, name: actor.name, user: ownerOf(actor)?.id ?? null});
+  const scene = ev.scene ? game.scenes.get(ev.scene) : null;
+  await checkBeats({type: "map", actor: isPC(actor) ? actor.id : null, place: scene?.uuid ?? ev.place, kind: ev.kind, state: ev.state});
+  return entry;
 }
 
 let checking = false;
