@@ -1,5 +1,5 @@
 /**
- * Interactables gate (WoDX Interactables 0.8.1), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Interactables gate (WoDX Interactables 0.11.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-interact.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Interact"), two characters of its own ("Gate Interact
  * burglar", a player's character, and "Gate Interact watchman", an NPC) and deletes them all at the end. It fixes the
@@ -19,6 +19,9 @@
  *  13-18. traps (search, spring, disarm), a clue, a lantern, hiding in a wardrobe
  *  19. walking into a fire burns the burglar through WoDX Combat at the fire's heat; putting it out; Undo for both
  *  20. an altar: listed, desecrated (loud) and Undo; a relic on a tile taken (the gate's world item) and Undo
+ *  21. a window tied to the watchman's corner: looking out whispers the watchman's name; a wodxMapEvent goes out; Undo
+ *  22. a cart: the burglar (no Ride: Dexterity alone) takes the reins; moving the token carries the cart; getting off
+ *      leaves it behind; Undo
  * Result: Data/wodx-gate/gate-interact-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -73,7 +76,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.8.1 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.8.1" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.11.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.11.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -401,6 +404,61 @@ export async function run() {
       const back = burglar.items.filter(i => i.name === ledger?.name).length === had && !relic.flags[MOD]?.taken;
       ok("20. an altar is holy ground, desecrated loudly and put back by Undo; a relic is taken and Undo takes it back", listed && holy && desecrated && holyAgain && taken && back,
         {listed, holy, desecrated, holyAgain, taken, back, near, ids: [altar?.id, relic?.id], tokCenter: tok.center, at: {cx, cy}});
+    });
+
+    await step("21. watch point", async () => {
+      const cx = tb.x + 50, cy = tb.y + 50;
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: tw.x - 10, y: tw.y - 10, width: 120, height: 120, texture: {src: "icons/svg/target.svg"}, flags: {[MOD]: {gate: "yard"}}}]);
+      await sleep(400);
+      const yard = findTile("yard");
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: cx + 110, y: cy - 25, width: 40, height: 40, texture: {src: "icons/svg/eye.svg"}, flags: {[MOD]: {watch: true, watchKind: "window", target: yard.id, gate: "window"}}}]);
+      await sleep(500);
+      const win = findTile("window");
+      const listed = ix().interactablesFor(tok).some(x => x.doc.id === win?.id);
+      const events = [];
+      const hid = Hooks.on("wodxMapEvent", e => events.push(e));
+      await dice(9);
+      const msg = await applied(await ix().attempt(tok, win.id, "watch", {fd: {}}));
+      Hooks.off("wodxMapEvent", hid);
+      const d = msg?.flags?.[MOD]?.done;
+      const w = game.messages.get(d?.whisper ?? "");
+      const told = !!w && w.content.includes(watchman.name) && !(msg?.content ?? "").includes(watchman.name);
+      const event = events.some(e => e.kind === "watch" && e.place === win?.id);
+      await ix().undoCard(msg);
+      const back = !game.messages.get(d?.whisper ?? "");
+      ok("21. looking out of a window names who is in the area it is tied to, in a whisper; a wodxMapEvent goes out; Undo takes it back", listed && told && event && back,
+        {listed, told, event, back, result: d?.result ?? null, watchman: {x: tw.x, y: tw.y}, at: {cx, cy}});
+    });
+
+    await step("22. vehicle", async () => {
+      const cx = tb.x + 50, cy = tb.y + 50;
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: cx + 110, y: cy + 30, width: 50, height: 50, texture: {src: "icons/svg/wing.svg"}, flags: {[MOD]: {mount: true, mountKind: "cart", gate: "cart"}}}]);
+      await sleep(500);
+      const cart = findTile("cart");
+      const listed = ix().interactablesFor(tok).some(x => x.doc.id === cart?.id);
+      const events = [];
+      const hid = Hooks.on("wodxMapEvent", e => events.push(e));
+      await dice(9);
+      const m1 = await applied(await ix().attempt(tok, cart.id, "mount", {fd: {}}));
+      Hooks.off("wodxMapEvent", hid);
+      const atReins = cart.flags[MOD]?.driver?.a === burglar.id && events.some(e => e.kind === "mount" && e.place === cart.id);
+      const x0 = cart.x;
+      await tb.update({x: tb.x + G});
+      await sleep(1200);
+      const carried = cart.x === x0 + G;
+      const m2 = await applied(await ix().attempt(canvas.tokens.get(tb.id), cart.id, "dismount"));
+      const off = !cart.flags[MOD]?.driver;
+      await tb.update({x: tb.x - G});
+      await sleep(1200);
+      const left = cart.x === x0 + G;
+      await ix().undoCard(m2);
+      await ix().undoCard(m1);
+      const back = !cart.flags[MOD]?.driver;
+      ok("22. taking the reins of a cart, the cart moves with the token, getting off leaves it behind, Undo puts it back", listed && atReins && carried && off && left && back,
+        {listed, atReins, carried, off, left, back, result: m1?.flags?.[MOD]?.done?.result ?? null, cartX: cart.x, x0, at: {cx, cy}});
     });
 
     await step("10. alongside", async () => {

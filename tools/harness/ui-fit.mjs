@@ -598,11 +598,17 @@ game.world.id = worldId;
       title: "The hayloft over the stables of the Golden Stag inn"}}}},
     // An altar, holy ground
     {document: {id: "tile8", documentName: "Tile", x: 160, y: 60, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {sacred: true, sacredKind: "altar", rating: 4,
-      title: "The high altar of the Church of St. Aegidius, under the rood screen"}}}}];
+      title: "The high altar of the Church of St. Aegidius, under the rood screen"}}}},
+    // A telephone tied to another
+    {document: {id: "tile9", documentName: "Tile", x: 60, y: 60, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {watch: true, watchKind: "phone", target: "tile8",
+      title: "The candlestick telephone in the rector's study"}}}},
+    // A coach nobody is driving yet
+    {document: {id: "tile10", documentName: "Tile", x: 60, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {mount: true, mountKind: "carriage",
+      title: "The black coach of the Graf von Rothenstein, with the family arms on its doors"}}}}];
   globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document])), lights: new Coll([["lampA", {id: "lampA", x: 300, y: 300, hidden: false, flags: {}}]])}, grid: {size: 100},
     walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
-  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")], ["Interact fire roll", () => ix.attempt(tok, "tile7", "putOut")]] ) {
+  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")], ["Interact fire roll", () => ix.attempt(tok, "tile7", "putOut")], ["Interact vehicle roll", () => ix.attempt(tok, "tile10", "mount")]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }

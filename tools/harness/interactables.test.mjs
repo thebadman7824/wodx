@@ -568,7 +568,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide && !x.o.hazard && !x.o.sacred).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide && !x.o.hazard && !x.o.sacred && !x.o.watch).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -1298,4 +1298,197 @@ test("sacred: a caern stone, a fetter or a node opens the WoDX actions menu with
     assert.equal(await api.attempt(tokPc, "altar1", "useSacred"), "menu");
     assert.equal(prayed.at(-1), "menu:pc1");
   } finally { tokPc.document.x = 400; tokPc.document.y = 300; altar.document.flags[MOD] = {sacred: true, sacredKind: "altar", rating: 3}; }
+});
+
+/* ---------------- watch points ---------------- */
+
+test("watch: a window or mirror is looked out of with Perception + Alertness; successes name, none counts, a botch shows nothing", () => {
+  const w = R.describeWatch({watch: true, watchKind: "window", target: "yard1"});
+  const op = R.optionsFor(w, ch())[0];
+  assert.deepEqual([op.id, op.roll.dice, op.roll.diff], ["watch", 5, 6]);
+  const people = [{name: "Sergeant Volker"}, {name: "Lucia", lasombra: true}];
+  assert.deepEqual(R.watchSees(w, people, {successes: 1}).names, ["Sergeant Volker", "Lucia"]);
+  assert.deepEqual(R.watchSees(w, people, {successes: 0}), {count: 2, names: [], unreflected: []});
+  assert.equal(R.watchSees(w, people, {successes: 3, botch: true}).count, 0);
+  const m = R.describeWatch({watchKind: "mirror"});
+  assert.deepEqual(R.watchSees(m, people, {successes: 2}), {count: 1, names: ["Sergeant Volker"], unreflected: ["Lucia"]}, "a mirror holds no Lasombra");
+});
+
+test("watch: a phone needs its era and another phone; anyone can call for help; a bell raises the alarm, loud", () => {
+  const p = R.describeWatch({watchKind: "phone", target: "phone2"});
+  assert.ok(R.optionsFor(p, ch({year: 1700}))[0].disabled);
+  assert.deepEqual(ids(R.optionsFor(p, ch({year: 1925}))), ["call", "callHelp"]);
+  assert.ok(R.optionsFor(R.describeWatch({watchKind: "radio"}), ch({year: 1940}))[0].disabled, "a radio tied to nothing");
+  assert.ok(R.optionsFor(R.describeWatch({watchKind: "radio"}), ch({year: 1920}))[0].disabled, "too early for a radio");
+  const b = R.optionsFor(R.describeWatch({watchKind: "bell"}), ch());
+  assert.deepEqual([b[0].id, b[0].noise.success], ["ringAlarm", "loud"]);
+  assert.equal(R.resolve(R.describeWatch({watchKind: "bell"}), b[0], []).raises, "alarm");
+  assert.deepEqual(R.cleanWatch({watch: true, watchKind: "x", target: "bad id!"}), {watch: true, watchKind: "window", target: ""});
+});
+
+const yard = tile("yard1", 2600, 1300, {}, {});
+yard.document.width = 300; yard.document.height = 300;
+const winTile = tile("win2", 2600, 1000, {watch: true, watchKind: "window", target: "yard1"});
+const bell = tile("bell1", 2800, 1000, {watch: true, watchKind: "bell"});
+canvas.tiles.placeables.push(yard, winTile, bell);
+
+test("runtime: looking out of a window whispers who is in the yard; Undo takes the whisper back; a wodxMapEvent goes out", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  tokNpc.document.x = 2700; tokNpc.document.y = 1400;
+  tokPc.document.x = 2600; tokPc.document.y = 900;
+  try {
+    faces = [9, 2, 2, 2, 2];
+    const msg = await api.attempt(tokPc, "win2", "watch", {fd: {}});
+    const d = msg.flags[MOD].done;
+    const w = game.messages.get(d.whisper);
+    assert.match(w.content, /Sergeant Volker/);
+    assert.ok(w.whisper.includes("gm"));
+    assert.ok(!/Sergeant Volker/.test(msg.content), "kept off the public card");
+    assert.equal(events.at(-1).kind, "watch");
+    assert.equal(events.at(-1).place, "win2");
+    await api.undoCard(msg);
+    assert.ok(!game.messages.has(d.whisper));
+    // Hidden: not seen
+    tokNpc.document.hidden = true;
+    faces = [9, 9, 2, 2, 2];
+    const m2 = await api.attempt(tokPc, "win2", "watch", {fd: {}});
+    assert.match(game.messages.get(m2.flags[MOD].done.whisper).content, /Nobody/);
+    tokNpc.document.hidden = false;
+  } finally { tokNpc.document.x = 400; tokNpc.document.y = 1500; tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: ringing a bell raises the alarm loudly and sends an alarm event", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  tokPc.document.x = 2800; tokPc.document.y = 900;
+  try {
+    const msg = await api.attempt(tokPc, "bell1", "ringAlarm");
+    assert.equal(msg.flags[MOD].done.noise, "loud");
+    assert.ok(msg.flags[MOD].done.lines.some(l => /alarm is raised/.test(l)));
+    assert.deepEqual([events.at(-1).kind, events.at(-1).noise, events.at(-1).object], ["alarm", "loud", "bell"]);
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the watch point's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {watch: true, watchKind: "radio", target: "Scene.a.Tile.b"}}});
+  assert.match(html, /name="flags.wodx-interactables.watch" checked/);
+  assert.match(html, /value="radio" selected/);
+  assert.match(html, /value="Scene.a.Tile.b"/);
+});
+
+/* ---------------- mounts and vehicles ---------------- */
+
+test("mounts: with a dot of Ride, getting on needs no roll; with none, Dexterity alone at +1; keeping control is Dex + Ride at 6, flat out +3", () => {
+  const o = R.describeMount({mount: true, mountKind: "horse"});
+  assert.equal(o.seats, 2);
+  const ops = R.optionsFor(o, ch({abilities: {ride: 2}}));
+  assert.deepEqual(ids(ops), ["mount", "board"]);
+  assert.equal(ops[0].roll, null);
+  const raw = R.optionsFor(o, ch({abilities: {}})).find(x => x.id === "mount");
+  assert.deepEqual([raw.roll.dice, raw.roll.diff, raw.roll.skill], [3, 6, true]);
+  assert.match(raw.note, /Dexterity alone, \+1 difficulty/);
+  const at = R.describeMount({mount: true, mountKind: "horse", driver: {a: "pc1", t: "T", n: "Anna"}});
+  const mine = R.optionsFor(at, ch({abilities: {ride: 2}}));
+  assert.deepEqual(ids(mine), ["control", "flatOut", "dismount"]);
+  assert.deepEqual([mine[0].roll.dice, mine[0].roll.diff, mine[1].roll.diff], [5, 6, 9]);
+  assert.equal(R.nameOf(at), "Riding horse, Anna in the saddle");
+  // Someone else at the reins: one seat left, as a passenger
+  assert.deepEqual(ids(R.optionsFor(at, ch({actorId: "pc2"}))), ["board"]);
+});
+
+test("mounts: a car drives on Drive and not before about 1900; a full one has no room; passengers only get off", () => {
+  const car = R.describeMount({mount: true, mountKind: "car", seats: 2});
+  assert.equal(R.optionsFor(car, ch({year: 1890}))[0].id, "eraNote");
+  const d = R.optionsFor(car, ch({year: 1925, abilities: {drive: 1}}));
+  assert.equal(d[0].label, "Drive it");
+  assert.equal(d[0].noise.success, "loud");
+  const full = R.describeMount({mount: true, mountKind: "car", seats: 2, driver: {a: "x", n: "X"}, riders: [{a: "y", n: "Y"}]});
+  assert.deepEqual(ids(R.optionsFor(full, ch({year: 1925}))), ["fullNote"]);
+  assert.deepEqual(ids(R.optionsFor(full, ch({year: 1925, actorId: "y"}))), ["dismount"]);
+  // Nobody at the reins: the last seat waits for a driver
+  const one = R.describeMount({mount: true, mountKind: "mule"});
+  assert.deepEqual(ids(R.optionsFor(one, ch({abilities: {ride: 1}}))), ["mount"]);
+});
+
+test("mounts: a failure starts to lose control; a botch throws a rider off a horse, crashes a car", () => {
+  const horse = R.describeMount({mount: true, mountKind: "horse", driver: {a: "pc1", n: "Anna"}});
+  const flat = R.optionsFor(horse, ch({abilities: {ride: 1}})).find(x => x.id === "flatOut");
+  const f = R.resolve(horse, flat, [{successes: 0, botch: false}]);
+  assert.equal(f.result, "fail"); assert.ok(f.slips); assert.equal(f.noise, "loud");
+  const b = R.resolve(horse, flat, [{successes: 0, botch: true}]);
+  assert.deepEqual([b.result, b.mishap, b.leaves], ["botch", "thrown", true]);
+  const car = R.describeMount({mount: true, mountKind: "car", driver: {a: "pc1", n: "Anna"}});
+  const c = R.resolve(car, R.optionsFor(car, ch({year: 1930, abilities: {drive: 2}}))[0], [{successes: 0, botch: true}]);
+  assert.deepEqual([c.mishap, c.leaves], ["crash", undefined]);
+  assert.deepEqual(R.cleanMount({mount: true, mountKind: "zeppelin", seats: "99"}), {mount: true, mountKind: "horse", seats: 40});
+});
+
+const cartTile = tile("cart1", 3200, 1000, {mount: true, mountKind: "cart"});
+canvas.tiles.placeables.push(cartTile);
+
+test("runtime: taking the reins of a cart, a passenger climbs on, moving the driver carries the cart and the passenger; Undo puts them off", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  pc.system.abilities.ride = {value: 2, type: "skill"};
+  tokPc.document.x = 3200; tokPc.document.y = 900;
+  tokNpc.document.x = 3300; tokNpc.document.y = 1000;
+  try {
+    await hooks.get("canvasReady")[0]();
+    const m1 = await api.attempt(tokPc, "cart1", "mount");
+    assert.equal(m1.flags[MOD].done.result, "done");
+    assert.equal(cartTile.document.flags[MOD].driver.a, "pc1");
+    assert.deepEqual([events.at(-1).kind, events.at(-1).atReins], ["mount", true]);
+    me = gm;
+    const m2 = await api.attempt(tokNpc, "cart1", "board");
+    assert.deepEqual(cartTile.document.flags[MOD].riders.map(r => r.a), ["npc1"]);
+    // The driver moves two squares east: the cart and the passenger go with it
+    tokPc.document.x = 3400;
+    await api.onTokenMoved(tokPc.document);
+    assert.equal(cartTile.document.x, 3400);
+    assert.equal(tokNpc.document.x, 3500);
+    // The passenger's own move hook sees it was carried, and stays aboard
+    assert.equal(await api.carryAboard(tokNpc.document, scene, {x: 3350, y: 1050}, {x: 3550, y: 1050}), "carried");
+    assert.equal(cartTile.document.flags[MOD].riders.length, 1);
+    // Undo the passenger's boarding
+    await api.undoCard(m2);
+    assert.equal(cartTile.document.flags[MOD].riders.length, 0);
+    await api.undoCard(m1);
+    assert.equal(cartTile.document.flags[MOD].driver, undefined);
+  } finally {
+    me = gm;
+    delete pc.system.abilities.ride;
+    cartTile.document.x = 3200;
+    Object.assign(cartTile.document.flags[MOD], {driver: null, riders: []});
+    tokNpc.document.x = 400; tokNpc.document.y = 1500; tokPc.document.x = 400; tokPc.document.y = 300;
+  }
+});
+
+test("runtime: a passenger who walks away gets off; a botched flat out throws the rider and sends a crash event", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  const horseTile = tile("horse1", 3200, 1300, {mount: true, mountKind: "horse", driver: {a: "pc1", t: tokPc.document.uuid, n: "Anna Weiss"}, riders: [{a: "npc1", t: tokNpc.document.uuid, n: "Sergeant Volker"}]});
+  canvas.tiles.placeables.push(horseTile);
+  tokPc.document.x = 3200; tokPc.document.y = 1200;
+  try {
+    assert.equal(await api.carryAboard(tokNpc.document, scene, {x: 3250, y: 1350}, {x: 3450, y: 1350}), "off");
+    assert.equal(horseTile.document.flags[MOD].riders.length, 0);
+    faces = [1, 2, 2, 2, 2];
+    const msg = await api.attempt(tokPc, "horse1", "flatOut", {fd: {}});
+    const d = msg.flags[MOD].done;
+    assert.equal(d.result, "botch");
+    assert.equal(horseTile.document.flags[MOD].driver, null);
+    assert.ok(d.lines.some(l => /rolls the fall/.test(l)));
+    assert.equal(events.at(-1).kind, "crash");
+    await api.undoCard(msg);
+    assert.equal(horseTile.document.flags[MOD].driver.a, "pc1");
+  } finally { scene.tiles.delete("horse1"); canvas.tiles.placeables.pop(); tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the vehicle's choices and lists who is aboard", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {mount: true, mountKind: "carriage", seats: 3, driver: {a: "x", n: "Kaspar"}}}});
+  assert.match(html, /name="flags.wodx-interactables.mount" checked/);
+  assert.match(html, /value="carriage" selected/);
+  assert.match(html, /name="flags.wodx-interactables.seats" value="3"/);
+  assert.match(html, /Aboard now: Kaspar/);
 });

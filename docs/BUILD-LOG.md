@@ -701,6 +701,24 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Holy ground: Pray here opens WoDX Actions' prayer window; Desecrate it (loud) and Undo. A demon stepping onto it, or starting a turn on it in combat, is seared by WoDX Actions' reading of Demon: The Fallen pp. 254-255, with a Willpower roll to stay and Undo.
 - A relic or fetish is taken like a container's contents (a copy of the item goes to the character, Undo takes it back); a fetish is then used from the WoDX actions menu.
 - Tests: 6 new (3 rules, 3 runtime), 565 in all; UI fit adds a high altar. Gate step 20 (an altar desecrated and put back; a relic taken and given back).
+- 0.8.1: caern stones, fetters and nodes. Use it opens the WoDX actions menu (a fetter opens the Fetter window), and the option names the rating. 1 more test, 566 in all.
+- Deployed 2026-11-09 from main 26721eb (backups Backups\wodx-interactables-0.7.0-2026-11-09 and -0.8.0-2026-11-09, MD5s match). gate-interact 20/20 after two gate fixes (PRs 37 and 39: the relic had been placed behind the scene's window wall).
+
+### Interactables 0.10.0, 2026-11-09: watch points (B153)
+- Windows on the street, mirrors, telephones, radios and walkie-talkies, bells, horns and alarms on tiles, each tied to another tile. The tile config gains a Watch point section: kind and what it is tied to.
+- Look out or Look in it (Perception + Alertness): who is in the tied area goes in a whisper, names on a success, a count on none; hidden and invisible tokens stay out, and a mirror holds no Lasombra. Make a call reaches the tied phone; Call for help; Raise the alarm (loud). Phones and radios wait for their era.
+- Each watch result is also a wodxMapEvent for the responsive maps work (0.9.0 is theirs).
+- Tests: 5 new (2 rules, 3 runtime), 571 in all; UI fit adds a telephone. Gate step 21 (a window on the watchman's corner).
+- Deployed 2026-11-09 from main 3d1153d (backup Backups\wodx-interactables-0.8.1-2026-11-09, 5 files, MD5s match). gate-interact 21/21.
+
+### Interactables 0.11.0, 2026-11-09: mounts and vehicles (B154)
+- Riding horses, mules, carts, carriages, rowing boats, motor cars, motorcycles and motorboats on tiles. The tile config gains a Mount or vehicle section: kind, seats, who is aboard, and Everyone off.
+- Mount it or Drive it (no roll with a dot of Ride or Drive; the Attribute alone at +1 without); Get on as a passenger; Get off. At the reins: Keep control (Dexterity + Ride or Drive at 6) and Go flat out (+3). A botch throws the rider or crashes the vehicle. Cars, motorcycles and motorboats wait for their era.
+- Moving the token at the reins carries the tile and the passengers' tokens; a passenger who walks away gets off. Undo puts everyone back as they were aboard.
+- Ride and Drive are now read from the sheet, and a roll on a Skill the sheet lacks counts as untrained (+1), as WoDX Actions does.
+- mount, dismount, crash and ride (flat out) go out as wodxMapEvents.
+- Page refs pinned from the PC's book check: V20 core opening and closing p. 261, intrusion p. 260, alarms p. 255, retrying p. 251, climbing p. 258, falling p. 296 (printed pages).
+- Tests: 6 new (3 rules, 3 runtime), 577 in all; UI fit adds a coach. Gate step 22 (the burglar drives a cart). Not deployed yet.
 - 0.8.1: caern stones, fetters and nodes. Use it opens the WoDX actions menu (a fetter opens the Fetter window), and the option names the rating. 1 more test, 566 in all. Not deployed yet.
 
 ### WoDX Senses 0.1.0, 2026-11-09: what the senses tell (B170 to B174)
