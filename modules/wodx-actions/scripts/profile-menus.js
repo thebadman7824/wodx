@@ -27,7 +27,7 @@ const WILL = ["uses:willpower", "Willpower", "fa-brain"];
 export const MENUS = {
     kindred: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
             ["Blood", [["api:feed", "Feed on target", "fa-tint"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
             ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:setRoad", "Road and Path", "fa-road"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"]]],
             ["The Beast", [["api:frenzy", "Frenzy", "fa-fire-alt"], ["api:rotschreck", "Rötschreck", "fa-running"], ["api:endFrenzy", "End frenzy", "fa-hand-paper"], ["api:sin", "Sin / degeneration", "fa-balance-scale"]]],
@@ -38,7 +38,7 @@ export const MENUS = {
     },
     ghoul: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction", "fa-heart"]]],
             ["Vitae", [["uses:blood", "Spend vitae", "fa-tint"], ["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["rules:ghoul", "Ghoul rules", "fa-book"], ["api:bloodOath", "Blood Oath / bond", "fa-link"], ["api:ghoulBlood", "Drink, withdrawal, day (V20)", "fa-wine-glass"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:frenzy", "Fear / frenzy check", "fa-fire-alt"], ["api:healing", "Healing", "fa-band-aid"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -46,7 +46,7 @@ export const MENUS = {
     },
     mortal: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
             ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -54,7 +54,7 @@ export const MENUS = {
     },
     hunter: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction", "fa-heart"]]],
             ["The hunter", [["api:hunterSheet", "Hunter traits", "fa-id-card"], ["api:hunterPower", "Blessing / Edge", "fa-hand-sparkles"], ["api:hunterVirtue", "Virtue roll / second sight", "fa-shield-alt"], ["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"]]],
             ["Faith and conviction", [["api:trueFaith", "True Faith", "fa-cross"], ["api:prayer", "Prayer", "fa-praying-hands"], ["api:sinGod", "A sin (Piety)", "fa-balance-scale"], ["api:relic", "Holy relic", "fa-gem"], ["api:bankConviction", "Bank Conviction", "fa-piggy-bank"], ["uses:conviction", "Conviction", "fa-fist-raised"]]],
             ["Numina", [["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"]]],
@@ -64,7 +64,7 @@ export const MENUS = {
     },
     lupine: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:primalurge", "Primal-Urge (senses)", "fa-nose"], ["preset:trackscent", "Track by scent", "fa-paw"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["preset:primalurge", "Primal-Urge (senses)", "fa-nose"], ["preset:trackscent", "Track by scent", "fa-paw"]]],
             ["Rage", [["api:rageRoll", "Rage roll (frenzy test)", "fa-fire-alt"], ["api:spendRage", "Spend or regain Rage", "fa-bolt"],
                 ["api:garouEndFrenzy", "End frenzy", "fa-hand-paper"], ["api:remainActive", "Rise on Rage (below Incapacitated)", "fa-heart-broken"]]],
             ["Gifts and Gnosis", [["api:useGift", "Use a Gift", "fa-star"], ["api:learnGift", "Learn a Gift", "fa-book-open"],
@@ -80,7 +80,7 @@ export const MENUS = {
     },
     mage: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
             ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"]]],
             ["Sorcery and Numina", [["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
@@ -90,7 +90,7 @@ export const MENUS = {
     /** Dark Ages: Mage (3.7.0): Foundation and Pillars instead of Arete and Spheres. */
     mageDA: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
             ["Magic", [["api:daCast", "Cast a spell (Foundation + Pillar)", "fa-hat-wizard"], ["api:daMage", "Fellowship and Pillars", "fa-scroll"],
                 ["api:daQuintessence", "Gather Quintessence (cray, Fount)", "fa-gem"], ["uses:quintessence", "Quintessence", "fa-coins"]]],
             ["Sorcery and Numina", [["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
@@ -101,7 +101,7 @@ export const MENUS = {
     /** Dark Ages: Fae (3.8.0): Mists, Weaving and the Dominions instead of Glamour and the Arts. */
     faeDA: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
             ["Dominions", [["api:daCantrip", "Cast a cantrip (Dominion + trait)", "fa-wand-magic-sparkles"], ["api:daUnleash", "Unleash a Dominion", "fa-bolt"],
                 ["api:daCounter", "Counter a cantrip or Unleashing", "fa-shield-alt"], ["api:daFae", "Origin and Court", "fa-scroll"]]],
             ["The Mists", [["api:daMists", "The Mists (hide, cloak, Kenning)", "fa-smog"], ["api:daMien", "Take or drop the mien", "fa-mask"],
@@ -112,7 +112,7 @@ export const MENUS = {
     },
     fae: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
             ["Glamour", [["cantrip", "Weave a cantrip", "fa-wand-magic-sparkles"], ["api:c20Unleash", "Unleash an Art", "fa-bolt"], ["api:c20Invoke", "Invoke the Wyrd or the Autumn", "fa-mask"],
                 ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["uses:glamour", "Glamour", "fa-coins"]]],
             ["Banality", [["api:c20Trigger", "A Banality trigger", "fa-cloud"], ["api:c20Mists", "The Mists (memory)", "fa-smog"], ["uses:banality", "Banality", "fa-cloud-rain"]]],
@@ -122,7 +122,7 @@ export const MENUS = {
     },
     wraith: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:useArcanos", "Use an Arcanos", "fa-ghost"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:useArcanos", "Use an Arcanos", "fa-ghost"]]],
             ["Passions and Fetters", [["api:passion", "Passion", "fa-heart"], ["api:fetter", "Fetter", "fa-link"], ["api:memoriam", "Memoriam", "fa-book-dead"], ["uses:pathos", "Pathos", "fa-fire-alt"]]],
             ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"]]],
             ["The Shadow", [["api:shadow", "The Shadow (Shadowguide)", "fa-mask"], ["api:shadowWhisper", "Whisper", "fa-comment-dots"], ["api:harrowing", "Harrowing", "fa-skull"], ["api:shadowguide", "Assign the Shadowguide (GM)", "fa-user-secret"]]],
@@ -132,14 +132,14 @@ export const MENUS = {
     },
     spirit: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"]]],
             ["Essence", [["uses:essence", "Essence", "fa-sparkles"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
     beast: {
         sections: [
-            ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["preset:trackscent", "Track by scent", "fa-paw"], ["preset:sneaking", "Sneak / stalk", "fa-user-secret"]]],
+            ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["preset:trackscent", "Track by scent", "fa-paw"], ["preset:sneaking", "Sneak / stalk", "fa-user-secret"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["rules:beast", "Creature rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -149,7 +149,7 @@ export const MENUS = {
 /** Demon: The Fallen (3.10.0, Phase 6i). */
 MENUS.demon = {
     sections: [
-        ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+        ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction", "fa-heart"]]],
         ["Faith", [["api:demonEvoke", "Evoke (a lore)", "fa-hand-sparkles"], ["api:demonForm", "The apocalyptic form", "fa-dragon"], ["api:demonRevelation", "Revelation (a witness)", "fa-eye"],
             ["api:demonReap", "Reap Faith", "fa-hand-holding"], ["api:demonThralls", "Thralls and pacts", "fa-users"], ["api:demonHeal", "Heal with Faith", "fa-band-aid"]]],
         ["Torment", [["api:demonSin", "A sin (Virtue at 8)", "fa-balance-scale"], ["api:demonKindness", "An act of kindness", "fa-dove"], ["uses:torment", "Torment", "fa-fire"]]],
@@ -162,7 +162,7 @@ MENUS.demon = {
 /** Kindred of the East (3.10.0, Phase 6j): the Kuei-jin, on the system's vampire sheet set to Kindred of the East. */
 MENUS.kote = {
     sections: [
-        ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
+        ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
         ["Chi", [["api:kotFeed", "Feed (flesh, blood, breath)", "fa-tint"], ["api:kotSpend", "Spend Chi / a Discipline", "fa-yin-yang"], ["api:kotHeal", "Heal with Chi", "fa-band-aid"],
             ["api:kotSight", "Ghostsight, Lifesight, Hun", "fa-eye"], ["api:kotSetup", "Dharma, direction, P'o", "fa-scroll"]]],
         ["The Demon", [["api:kotNature", "Fire, wave or shadow soul", "fa-fire-alt"], ["api:kotDemon", "Demon Chi and the rage", "fa-dragon"], ["api:kotDharma", "A Dharma roll", "fa-balance-scale"]]],
@@ -174,7 +174,7 @@ MENUS.kote = {
 /** Mummy: The Resurrection (3.10.0, Phase 6k). */
 MENUS.mummy = {
     sections: [
-        ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+        ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction", "fa-heart"]]],
         ["Hekau", [["api:mummyCast", "Work Hekau (spell or ritual)", "fa-ankh"], ["api:mummySekhem", "Regain Sekhem", "fa-sun"], ["uses:sekhem", "Sekhem", "fa-coins"], ["api:mummySetup", "Amenti and the Web", "fa-scroll"]]],
         ["Ma'at", [["api:mummyBalance", "Balance (conviction, counter, forbid)", "fa-balance-scale"], ["api:mummyOffense", "An offense against Ma'at", "fa-gavel"]]],
         ["Death and life", [["api:mummyResurrect", "The resurrection", "fa-redo"], ["api:mummyVeil", "The Veil (a witness)", "fa-eye-slash"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:mummy", "Mummy rules", "fa-book"]]],
@@ -185,7 +185,7 @@ MENUS.mummy = {
 /** Orpheus (3.10.0, Phase 6l): the crucible, on the system's mortal sheet set to Orpheus. */
 MENUS.orpheus = {
     sections: [
-        ["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"], ["api:seduction", "Seduction", "fa-heart"]]],
+        ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:seduction", "Seduction", "fa-heart"]]],
         ["The spook", [["api:orphHorror", "Use a Horror", "fa-ghost"], ["api:orphVitality", "Vitality (rest, share, tap)", "fa-heartbeat"], ["api:orphProject", "Projection (skimmers)", "fa-bed"], ["api:orphSetup", "Shade, Lament, Horrors", "fa-id-card"]]],
         ["Danger", [["api:orphHarm", "Harm to the spook", "fa-skull"], ["api:orphSpite", "Spite", "fa-angry"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:orpheus", "Orpheus rules", "fa-book"]]],
         ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -195,7 +195,7 @@ MENUS.orpheus = {
 // Generic menus for the profiles without a sourcebook in the library: roll, their own traits, scene.
 for (const [k, res] of [
     ["exalted", [["uses:essence", "Essence", "fa-sun"]]]]) {
-    MENUS[k] = { sections: [["Roll", [["action", "Action / Dramatic system", "fa-dice-d10"]]], ["Traits", res],
+    MENUS[k] = { sections: [["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"]]], ["Traits", res],
         ["Danger", [["api:hazard", "Fire / fall", "fa-burn"]]], ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]] };
 }
 

@@ -36,41 +36,41 @@ export const INTENTS = [
 /** Per line: each intent's buttons, most used first; "scene" is the strip at the foot of the menu. */
 export const MENU_PLAN = {
     kindred: {
-        act: ["action", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie"],
+        act: ["action", "api:quickCheck", "api:useDiscipline", "api:feed", "api:spendBlood", "api:hunt", "api:seduction", "api:bloodOath", "api:diablerie"],
         resist: ["api:frenzy", "api:rotschreck", "api:endFrenzy", "api:hazard", "api:daytime", "api:sin"],
         recover: ["uses:willpower", "api:torpor", "api:sunAndHaven", "api:downtime", "api:setRoad"],
         st: ["api:newNight", "api:boons", "api:masquerade", "api:skyAndSun", "api:endStory"],
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
     wraith: {
-        act: ["action", "api:useArcanos", "uses:pathos", "api:passion", "api:fetter", "api:memoriam", "api:caul"],
+        act: ["action", "api:quickCheck", "api:useArcanos", "uses:pathos", "api:passion", "api:fetter", "api:memoriam", "api:caul"],
         resist: ["api:shadow", "api:shadowWhisper", "api:harrowing", "api:hazard"],
         recover: ["api:healCorpus", "uses:willpower"],
         st: ["api:shadowguide", "api:hysteria", "api:maelstrom"],
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:wraith"]
     },
     hunter: {
-        act: ["action", "api:hunterPower", "api:hunterVirtue", "api:trueFaith", "api:prayer", "uses:conviction", "api:numina", "api:hedgeMagic", "api:relic", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:hunterPower", "api:hunterVirtue", "api:trueFaith", "api:prayer", "uses:conviction", "api:numina", "api:hedgeMagic", "api:relic", "api:seduction"],
         resist: ["api:sinGod", "api:hazard"],
         recover: ["api:healing", "uses:willpower", "api:bankConviction"],
         st: ["api:imbue"],
         scene: ["api:hunterSheet", "api:endScene", "api:innerVoice", "api:voices", "rules:mortal"]
     },
     ghoul: {
-        act: ["action", "api:useDiscipline", "uses:blood", "api:ghoulBlood", "api:seduction", "api:bloodOath"],
+        act: ["action", "api:quickCheck", "api:useDiscipline", "uses:blood", "api:ghoulBlood", "api:seduction", "api:bloodOath"],
         resist: ["api:frenzy", "api:hazard"],
         recover: ["api:healing", "uses:willpower"],
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:ghoul"]
     },
     mortal: {
-        act: ["action", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:kinfolk"],
+        act: ["action", "api:quickCheck", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:kinfolk"],
         resist: ["api:hazard"],
         recover: ["api:healing", "uses:willpower"],
         st: ["api:imbue"],
         scene: ["api:endScene", "api:voices", "rules:mortal"]
     },
     lupine: {
-        act: ["action", "api:useGift", "api:shiftForm", "api:spendRage", "preset:primalurge", "preset:trackscent", "api:useFetish", "api:performRite",
+        act: ["action", "api:quickCheck", "api:useGift", "api:shiftForm", "api:spendRage", "preset:primalurge", "preset:trackscent", "api:useFetish", "api:performRite",
             "api:summonSpirit", "api:curse", "api:learnGift", "api:chiminage", "api:accomplishment"],
         resist: ["api:rageRoll", "api:garouEndFrenzy", "api:hazard", "api:battleScar"],
         recover: ["regen", "api:healing", "api:remainActive", "api:meditate", "uses:willpower"],
@@ -78,7 +78,7 @@ export const MENU_PLAN = {
         scene: ["api:endScene", "api:innerVoice", "api:voices"]
     },
     mage: {
-        act: ["action", "cast", "uses:quintessence", "preset:researchmage", "api:hedgeMagic", "api:numina", "api:trueFaith"],
+        act: ["action", "api:quickCheck", "cast", "uses:quintessence", "preset:researchmage", "api:hedgeMagic", "api:numina", "api:trueFaith"],
         resist: ["api:m20Counter", "uses:paradox", "api:hazard"],
         st: ["api:m20Backlash"],
         recover: ["api:healing", "uses:willpower"],
@@ -86,30 +86,30 @@ export const MENU_PLAN = {
     },
     /** Dark Ages: Mage (3.7.0): the same bands, Foundation and Pillars in place of Arete. */
     mageDA: {
-        act: ["action", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "preset:researchmage", "api:numina", "api:trueFaith"],
+        act: ["action", "api:quickCheck", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "preset:researchmage", "api:numina", "api:trueFaith"],
         resist: ["api:hazard"],
         recover: ["api:healing", "uses:willpower"],
         scene: ["api:endScene", "api:voices", "rules:mage"]
     },
     /** Dark Ages: Fae (3.8.0): the Dominions, the Mists and Weaving in place of Glamour. */
     faeDA: {
-        act: ["action", "api:daCantrip", "api:daUnleash", "api:daCounter", "api:daMists", "api:daMien", "api:daFae", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:daCantrip", "api:daUnleash", "api:daCounter", "api:daMists", "api:daMien", "api:daFae", "api:seduction"],
         resist: ["api:daEcho", "api:daColdIron", "api:hazard"],
         recover: ["api:daOath", "api:daRest", "uses:willpower"],
         scene: ["api:endScene", "api:voices", "rules:faeDA"]
     },
     fae: {
-        act: ["action", "cantrip", "api:c20Unleash", "api:c20Invoke", "uses:glamour", "api:seduction"],
+        act: ["action", "api:quickCheck", "cantrip", "api:c20Unleash", "api:c20Invoke", "uses:glamour", "api:seduction"],
         resist: ["api:c20Trigger", "api:c20Bedlam", "api:c20ColdIron", "uses:banality", "api:hazard"],
         recover: ["api:c20Epiphany", "uses:willpower"],
         st: ["api:c20Mists"],
         scene: ["api:endScene", "api:voices", "rules:fae"]
     },
-    spirit: { act: ["action", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
-    beast: { act: ["action", "preset:trackscent", "preset:sneaking"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices", "rules:beast"] },
+    spirit: { act: ["action", "api:quickCheck", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
+    beast: { act: ["action", "api:quickCheck", "preset:trackscent", "preset:sneaking"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices", "rules:beast"] },
     /** Kindred of the East (3.10.0). */
     kote: {
-        act: ["action", "api:kotSpend", "api:kotFeed", "api:hunt", "api:kotSight", "api:seduction", "api:kotDemon"],
+        act: ["action", "api:quickCheck", "api:kotSpend", "api:kotFeed", "api:hunt", "api:kotSight", "api:seduction", "api:kotDemon"],
         resist: ["api:kotNature", "api:kotSun", "api:hazard"],
         recover: ["api:kotHeal", "api:kotRise", "api:kotDharma", "uses:willpower"],
         st: ["api:kotSetup"],
@@ -117,7 +117,7 @@ export const MENU_PLAN = {
     },
     /** Demon: The Fallen (3.10.0). */
     demon: {
-        act: ["action", "api:demonEvoke", "api:demonForm", "api:demonReap", "api:demonThralls", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:demonEvoke", "api:demonForm", "api:demonReap", "api:demonThralls", "api:seduction"],
         resist: ["api:demonSin", "api:demonHoly", "api:demonIllusion", "uses:torment", "api:hazard"],
         recover: ["api:demonHeal", "api:demonKindness", "uses:willpower"],
         st: ["api:demonRevelation", "api:demonName"],
@@ -125,7 +125,7 @@ export const MENU_PLAN = {
     },
     /** Orpheus (3.10.0). */
     orpheus: {
-        act: ["action", "api:orphHorror", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:orphHorror", "api:seduction"],
         resist: ["api:orphHarm", "api:orphSpite", "api:hazard"],
         recover: ["api:orphVitality", "api:orphProject", "uses:willpower"],
         st: ["api:orphSetup"],
@@ -133,18 +133,19 @@ export const MENU_PLAN = {
     },
     /** Mummy: The Resurrection (3.10.0). */
     mummy: {
-        act: ["action", "api:mummyCast", "uses:sekhem", "api:seduction"],
+        act: ["action", "api:quickCheck", "api:mummyCast", "uses:sekhem", "api:seduction"],
         resist: ["api:mummyBalance", "api:hazard"],
         recover: ["api:mummySekhem", "api:mummyResurrect", "uses:willpower"],
         st: ["api:mummyOffense", "api:mummyVeil", "api:mummySetup"],
         scene: ["api:endScene", "api:voices", "rules:mummy"]
     },
-    exalted: { act: ["action", "uses:essence"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] }
+    exalted: { act: ["action", "api:quickCheck", "uses:essence"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] }
 };
 
 /** What each button does, shown on hover, on keyboard focus and in the menu's hint line. Line overrides first. */
 export const DESC = {
-    "action": "Roll any Attribute + Ability, or a dramatic system from the presets",
+    "action": "Roll any Attribute + Ability or Trait at any difficulty, or pick a dramatic system: resisted, extended and teamwork rolls too",
+    "api:quickCheck": "The everyday rolls in one list: notice, sense the uncanny, read a person, keep going, resist, an Attribute alone",
     "api:seduction": "Seduce, charm or beguile: the social system, step by step",
     "api:hunt": "Hunt for a vessel in the domain: the hunting roll for the place and the method",
     "api:feed": "Drink from the targeted token: blood gained, harm to the vessel",
