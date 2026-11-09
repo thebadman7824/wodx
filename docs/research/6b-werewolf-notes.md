@@ -32,7 +32,7 @@ Page offsets for the library PDFs: DA:W book page = PDF page − 1 (OCR in the s
 - While frenzied: no Gifts, fetishes, stepping sideways, maneuvers or pack tactics; only bite or claw; Rage extra actions still allowed; wound penalties ignored.
 - Ending it: once the trigger is over, a Willpower roll at difficulty equal to permanent Rage, retried each turn.
 - W20 rank bonus: Rank 3 +1 to frenzy difficulty, Rank 4 +2, Rank 5 +2 and 5+ successes needed, Rank 6 +2 and 6+ (p. 144). DA:W rank effects are on pp. 96–97 (to read).
-- W20 Rage-roll difficulty by moon: new 8, crescent 7, half 6, gibbous 5, full 4. −1 if the moon matches the auspice, or −1 in Crinos (the two don't stack) (p. 262). DA:W to check.
+- W20 Rage-roll difficulty by moon: new 8, crescent 7, half 6, gibbous 5, full 4. −1 if the moon matches the auspice, or −1 in Crinos (the two don't stack) (p. 262). DA:W has no such table: its moon only sets how much Rage comes back (1 new, 3 half or waxing, 4 full or eclipse, the whole pool on the auspice moon; DA:W pdf 92, printed 91). Frenzy is 4+ successes (printed 94) and the Thrall 6+ (printed 95). Using the W20 table in the Dark Ages is a house rule.
 - Triggers (W20 p. 262 list): humiliation, strong emotion, hunger, confinement, helplessness, taunting, much silver, being wounded, a packmate wounded.
 
 ## Gnosis (DA:W pp. 91–93; W20 p. 146)

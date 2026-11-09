@@ -1,0 +1,9 @@
+/* WoDX Senses: the answer cards and the ask window. */
+.wsn .vta-body h4 { margin: 0.5em 0 0.2em; font-size: 0.95em; }
+.wsn .vta-body p { margin: 0.25em 0; }
+.wsn .vta-body ul { margin: 0.2em 0 0.4em 1.1em; padding: 0; }
+.wsn-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.wsn-buttons button { flex: 1 1 45%; font-size: 0.85em; line-height: 1.6; }
+button.wsn-offer { display: block; margin-top: 4px; font-size: 0.8em; line-height: 1.5; width: auto; }
+.wsn-dialog .wsn-own textarea { width: 100%; min-height: 3.5em; }
+.wsn-dialog .window-content { overflow-y: auto; max-height: 80vh; }

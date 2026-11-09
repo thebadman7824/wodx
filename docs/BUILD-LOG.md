@@ -719,6 +719,22 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - mount, dismount, crash and ride (flat out) go out as wodxMapEvents.
 - Page refs pinned from the PC's book check: V20 core opening and closing p. 261, intrusion p. 260, alarms p. 255, retrying p. 251, climbing p. 258, falling p. 296 (printed pages).
 - Tests: 6 new (3 rules, 3 runtime), 577 in all; UI fit adds a coach. Gate step 22 (the burglar drives a cart). Not deployed yet.
+- 0.8.1: caern stones, fetters and nodes. Use it opens the WoDX actions menu (a fetter opens the Fetter window), and the option names the rating. 1 more test, 566 in all. Not deployed yet.
+
+### WoDX Senses 0.1.0, 2026-11-09: what the senses tell (B170 to B174)
+- Ben's request (9 November 2026): answer "what do I see, hear, smell" in chat. Design study: https://claude.ai/artifact/6z5pwGb2XZMMsA8jHHGaq4. Built all four steps of it in one module.
+- scripts/senses-rules.mjs (pure): era bands, indoors by kind, parts of the day, light level, difficulty steps and powers, reach by sense, the place, hour and other-world layers, compose by successes, the seeded draw, remembered answers, commands and questions, Obfuscate. scripts/main.mjs: the ask window, commands, the question button, gathering sources (Interactables tiles read through its own rules, doors, NPC routine activities, noise from wodxInteractablesNoise, the wodxSensesGather hook), channels for powers, the cards and their buttons, Place senses, Describe this place, the arrival card.
+- Lines: data/places.json (316 lines, 12 kinds of place by 4 senses, five era bands) and data/world.json (159 lines: hour, sky, moon, feast and curfew; live sources; the Penumbra with resonance and the Shadowlands; 10 power channels). Made from tools/senses-data/places.py and rest.py; edit those and run them, or edit the JSON.
+- Tests: senses.test.mjs (25: 2 table checks, 11 rules, 12 runtime). 591 harness tests pass. UI fit adds the ask window (with Auspex) and Place senses with twelve long-named regions; in the cloud container every window, old and new, fails only the minimized controls-button check (Font Awesome is not beside the copy of foundry2.css there), so the full check is to run on the PC.
+- Gate: tools/gate/gatesenses.mjs (12 steps) in rothenstein-wodx.
+- Tests: 5 new (2 rules, 3 runtime), 571 in all; UI fit adds a telephone. Gate step 21 (a window on the watchman's corner). Not deployed yet.
+
+### Gear by era, 2026-11-09: WoDX Library 0.1.0, Combat 3.7.7 (B128)
+- Gap review item 7. New module wodx-library: gear-rules.mjs (table parsing, row to item, era filter), main.mjs (compendium install, Gear by era window, give), data/gear.json built by tools/library/build-gear.mjs from docs/research/gear-tables (read from the books on the PC). Combat armor() counts implants.
+- Tests: gear.test.mjs (5). 554 harness tests pass. UI fit: the Gear window passes (only the minimized-button check fails in the container, as for every window). Gate: tools/gate/gategear.mjs (6 steps).
+
+### Book checks, 2026-11-09: Targeting 0.1.1, Chronicle 0.5.3 (B129)
+- Gap review item 10. tags.json: 39 tags fixed. gifts-daw.json: chk taken off 19 Gifts, 7 effects and one difficulty corrected. garou.json: metis confirmed. languages: languagesFromMerits(). Notes kept in docs/research/book-checks/book-checks.md. 554 harness tests pass.
 
 ### Interactables 0.12.0, 2026-11-09: pictures, markers and map events (B160)
 - Step 1 of the design note "Responsive Maps for WoDX". scripts/state-rules.mjs (pure: states by kind, the look for a state, event kinds, the map event, feedback) and scripts/states.mjs (picture swaps on the active Storyteller's client from updateTile and updateWall, markers drawn on each client in the interface layer, tied ambient sounds, the event from each card's create or update, the socket that plays the moment on every client, the tile config's "pictures and sounds" part).

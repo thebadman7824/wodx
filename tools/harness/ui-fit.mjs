@@ -110,6 +110,8 @@ const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/
 const {EventsApp} = await import(join(root, "modules/wodx-chronicle/scripts/events.mjs"));
 const {ArchiveApp} = await import(join(root, "modules/wodx-creation/scripts/archive.mjs"));
 const {LanguagesApp} = await import(join(root, "modules/wodx-chronicle/scripts/languages.mjs"));
+const {GearApp, setGear} = await import(join(root, "modules/wodx-library/scripts/main.mjs"));
+setGear(JSON.parse((await import("node:fs")).readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8")));
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
 const {CreationApp, SpendApp, awardDialog} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
 const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
@@ -131,7 +133,7 @@ class PlannedPassYears extends PassYearsApp {
 
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
-  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
+  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["Gear by era", GearApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
   ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
   ["Pass the years", PlannedPassYears, {}], ["People", RolledPeople, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);
@@ -621,6 +623,32 @@ game.world.id = worldId;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;
 }
+// WoDX Senses 0.1.0: the ask window (a character with Auspex) and the Place senses window (a scene with twelve regions)
+{
+  game.modules.set("wodx-senses", {active: true});
+  await import(join(root, "modules/wodx-senses/scripts/main.mjs"));
+  await Hooks.callAll("init");
+  const sn = game.modules.get("wodx-senses").api ?? null;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const oldCanvas = globalThis.canvas;
+  const a = [...game.actors.values()].find(x => x.type === "Mortal");
+  const auspex = {id: "ausp", name: "Auspex", type: "Power", system: {value: 3, type: "wod.types.discipline"}};
+  a.items.set("ausp", auspex);
+  const regions = new Coll(Array.from({length: 12}, (_, k) => [`r${k}`, {id: `r${k}`, name: `The cellar under the Golden Stag inn, by the old well, part ${k}`, flags: {"wodx-npc": {place: {kind: "tavern"}}}}]));
+  const sc = {id: "s", name: "The Golden Stag inn and its yard, by the Bishop's Gate", navName: "", regions, flags: {}};
+  const tok = {id: "stok", name: a.name, actor: a, document: {uuid: "Scene.s.Token.stok", name: a.name, actor: a, parent: sc}};
+  globalThis.canvas = {...(oldCanvas ?? {}), scene: sc, tokens: {controlled: [tok], placeables: [tok]}};
+  if ( !sn ) { console.error("FAIL WoDX Senses did not load (its ready hook may not have run)"); process.exitCode = 1; }
+  for ( const [label, fn] of [["Senses ask", () => sn?.openAsk()], ["Place senses", () => sn?.openPlaceLines(sc)]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  a.items.delete("ausp");
+  globalThis.canvas = oldCanvas;
+  api.DialogV2.wait = wait;
+}
 // WoDX Targeting 0.1.0: the target panel in the Discipline window, for one foe, an area of twelve, a casting and a hand-set target
 {
   game.modules.set("wodx-targeting", {active: true});
@@ -684,7 +712,8 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-npc/styles/wodx-npc.css")).href,
   pathToFileURL(join(root, "modules/wodx-storyteller/styles/wodx-storyteller.css")).href,
   pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href,
-  pathToFileURL(join(root, "modules/wodx-targeting/styles/wodx-targeting.css")).href];
+  pathToFileURL(join(root, "modules/wodx-targeting/styles/wodx-targeting.css")).href,
+  pathToFileURL(join(root, "modules/wodx-senses/styles/wodx-senses.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));
