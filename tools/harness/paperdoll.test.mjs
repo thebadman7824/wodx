@@ -25,6 +25,7 @@ test("the face parts match Lorelei's own lists", () => {
   for ( const m of Object.values(D.MOODS) ) {
     if ( m.eyebrows ) assert.ok(D.PARTS.eyebrows.includes(m.eyebrows));
     if ( m.mouth ) assert.ok(D.PARTS.mouth.includes(m.mouth));
+    if ( m.eyes ) assert.ok(D.PARTS.eyes.includes(m.eyes));
   }
 });
 
@@ -61,8 +62,11 @@ test("moods follow the health track and frenzy, unless turned off", () => {
   assert.equal(D.moodFor(l, {level: 1}), "disgruntled");
   assert.equal(D.moodFor({...l, mood: "grim"}, {level: 2}), "grim");
   assert.equal(D.moodFor(l, {level: 4}), "upset");
-  assert.equal(D.moodFor(l, {level: 7}), "grim");
+  assert.equal(D.moodFor(l, {level: 6}), "grim");
+  assert.equal(D.moodFor(l, {level: 7}), "unconscious");
+  assert.deepEqual(D.loreleiOptions(l, "unconscious").eyes, ["variant19"]);
   assert.equal(D.moodFor(l, {level: 1, frenzy: true}), "snarling");
+  assert.equal(D.moodFor(l, {level: 7, frenzy: true}), "unconscious");
   assert.equal(D.moodFor({...l, followHealth: false}, {level: 5}), "own");
   assert.equal(D.moodFor(l, {level: 5, follow: false}), "own");
   const o = D.loreleiOptions(l, "upset");
