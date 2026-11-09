@@ -653,6 +653,7 @@ game.world.id = worldId;
     ["Havens", () => st.havens.open()], ["Haven", () => st.havens.edit()],
     ["Lasting changes", () => { const f = people[0].flags ??= {}; f["wodx-storyteller"] = {...(f["wodx-storyteller"] ?? {}), body: Array.from({length: 7}, (_, k) => ({id: `b${k}`, source: ["vicissitude", "metis", "visage", "scar"][k % 4], part: "face", what: `A long description of the change, the cheekbones drawn up and the jaw split along the old seam, number ${k}`, appearance: k % 2 ? -1 : 0, by: "Lord Vykos's own hand"}))}; return st.body.open(people[0]); }],
     ["A lasting change", () => st.body.newDialog(people[0])],
+    ["Hardship on the road", () => st.hardship.open()],
     ["The Gauntlet over time", () => (game.modules.get("wodx-otherworlds").api?.drift?.dialog ?? (() => import(join(root, "modules/wodx-otherworlds/scripts/drift.mjs")).then(m => m.driftDialog())))()]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
