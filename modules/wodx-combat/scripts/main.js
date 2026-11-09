@@ -14,6 +14,7 @@
  *   getKind(actor)                         actor profile: kindred | ghoul | mortal | hunter | lupine | mage | fae | wraith | spirit | beast | demon | mummy | exalted
  *   setKind(actor, key|"auto")             override the detected profile (flag world.wodx.profile)
  *   pickKind(actor)                        dialog to choose the profile
+ *   reload({actor, weaponId})             fill a ranged weapon and post the turns it takes (house rule "Count shots")
  *   menu / macros keep working from v1.x
  */
 
@@ -67,11 +68,15 @@ function registerSettings() {
     s("flavorText", "Flavor text on attack cards",
         "Add one short line of description under the dice of each attack card, picked to fit the outcome (miss, hit, heavy hit, soaked, botch). Edit the lines in scripts/flavor.js.",
         String, "all", { choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
+    game.settings.register(MOD, "countShots", { name: "Count shots and reloads (house rule)",
+        hint: "Each shot uses one round from a ranged weapon that has a capacity on its sheet; an empty weapon must be reloaded first (one turn for a firearm, V20 p. 278; a crossbow takes longer). Bows and slings are never counted.",
+        scope: "world", config: true, type: Boolean, default: false });
     s("movementLimit", "Movement in a fight",
         "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. Show the pace, or also stop a move past the running speed (the GM is never stopped).",
         String, "note", { choices: { note: "Show the pace", block: "Show it and stop moves past the running speed", off: "Off" } });
 }
 const setting = k => game.settings.get(MOD, k);
+const countShots = () => { try { return !!game.settings.get(MOD, "countShots"); } catch (e) { return false; } };
 
 /** post the flavor line: inside the card for everyone, or as a separate whisper to the GMs */
 async function addFlavor(content, key, names, opts = {}) {
@@ -223,6 +228,7 @@ function weaponList(actor) {
             piercing: num(s.piercing),
             range: num(s.range),
             equipped: !!s.isequipped,
+            shots: i.type === "Ranged Weapon" ? R.shotsOf(s.clip) : null, crossbow: R.isCrossbow(i.name),
             desc: String(s.description || "").replace(/<[^>]+>/g, " ")
         });
     }
@@ -621,6 +627,11 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         autoAtkNote = `Automatic attack: ${w.name} (expected health levels: ${shown})${out ? `. Not used: ${out}` : ""}`
             + (ignoredDistance ? `. Nothing reaches at the tokens' distance (${Math.round(distance)}): chosen as if in reach` : distance != null ? `. Distance ${Math.round(distance)}` : "") + ".";
     }
+    // ---- Shots (house rule): an empty weapon cannot fire
+    if (w?.ranged && w.shots?.empty && countShots()) {
+        const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(attacker) });
+        throw new Error(`${attacker.name}'s ${w.name} is empty. Reload it first (${t.turns} turn${t.turns === 1 ? "" : "s"}, ${t.ref}).`);
+    }
     // ---- Attack pool
     const { attrKey, ab, minStrDiff } = attackBasics(attacker, w);
     // ---- Profile boosts (blood, Rage extra actions, house Glamour/Pathos/... dice)
@@ -657,6 +668,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
 
     const atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
     if (atk.roll) rolls.push(atk.roll);
+    if (w?.ranged && w.shots?.counted && countShots()) {
+        const left = await spendShot(attacker, w);
+        if (left !== null) log.push(`${w.name}: ${left} of ${w.shots.max} round${w.shots.max === 1 ? "" : "s"} left.`);
+    }
 
     // ---- Defense
     let def = null, defNote = "";
@@ -828,6 +843,7 @@ function attackUsable(attacker, w, distance, reachD = distance) {
     if (w.id === "unarmed:bite" && !w.natural) return "a bite needs a hold first (clinch, hold or tackle)";
     if (w.id === "unarmed:claw" && !w.natural && !(discipline(attacker, "Protean") >= 2 || discipline(attacker, "Vicissitude") >= 1 || shifter))
         return "no claws (Protean 2 or Vicissitude)";
+    if (w.ranged && w.shots?.empty && countShots()) return "empty: reload first";
     const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
     if (distance != null) {
         if (!w.ranged && !AU.inReach(reachD ?? distance, unit)) return "out of reach";
@@ -1269,6 +1285,7 @@ const MACROS = [
     { name: "WoDX: Actor Type", img: "icons/svg/mystery-man.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.pickKind(a); else ui.notifications.warn('Select a token first.');" },
     { name: "WoDX: Initiative", img: "icons/svg/d20-highlight.svg", command: "game.wodxCombat.rollInitiative({ all: game.user.isGM && canvas.tokens.controlled.length === 0 });" },
     { name: "WoDX: Quick Attack", img: "icons/skills/melee/blade-tip-orange.webp", command: "game.wodxCombat.quickAttack();" },
+    { name: "WoDX: Reload", img: "icons/weapons/ammunition/bullets-cartridge-shell-gray.webp", command: "game.wodxCombat.reload();" },
     { name: "WoDX: Soak Policy", img: "icons/svg/shield.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.setSoakPolicy(a); else ui.notifications.warn('Select a token first.');" }
 ];
 
@@ -1294,7 +1311,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.7", movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.0", reload, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1550,6 +1567,50 @@ function bindHints(root, { attacker, target, attackerTok, targetTok }) {
     form.addEventListener("change", upd);
     form.addEventListener("input", upd);
     upd();
+}
+
+/* ---- Shots and reloading (3.8.0) ---- */
+
+function darkAgesNow() {
+    try { const y = Number(L.chronicle()?.eras?.currentYear?.()); return Number.isFinite(y) && y > 0 && y < 1450; } catch (e) { return false; }
+}
+function archeryOf(actor) {
+    try { return Math.max(num(ability(actor, "archery").value), num(secondaryAbility(actor, null, "Archery")?.value)); } catch (e) { return 0; }
+}
+
+/** One round used; returns the rounds left, or null when nothing was counted. */
+async function spendShot(actor, w) {
+    const item = actor.items.get(w.id);
+    if (!item || !(actor.isOwner || game.user.isGM)) return null;
+    const sh = R.shotsOf(item.system?.clip);
+    if (!sh.counted) return null;
+    const left = Math.max(0, sh.value - 1);
+    await item.update({ "system.clip.value": left });
+    return left;
+}
+
+/** Reload a ranged weapon: fill it to capacity and post how many turns it takes. */
+export async function reload({ actor: a = null, weaponId = null } = {}) {
+    const { attacker: actor } = resolveTokens(a, null);
+    if (!actor) return ui.notifications.warn("WoDX Combat: select your token (or assign a character) first.");
+    const guns = weaponList(actor).filter(w => w.ranged && w.shots?.counted);
+    if (!guns.length) return ui.notifications.info(`${actor.name} has no weapon that takes rounds.`);
+    let w = guns.find(x => x.id === weaponId) ?? (guns.length === 1 ? guns[0] : null);
+    if (!w) {
+        const r = await P.ask({ title: `Reload: ${actor.name}`, width: 420, classes: ["vtc-dialog"],
+            content: `<div class="form-group"><label>Weapon</label><select name="weapon" data-fixed>${guns.map(g => `<option value="${g.id}">${g.name} (${g.shots.value}/${g.shots.max})</option>`).join("")}</select></div>`,
+            buttons: [{ id: "reload", label: "Reload", default: true }, { id: "cancel", label: "Cancel" }] });
+        if (!r || r.id !== "reload") return null;
+        w = guns.find(x => x.id === r.data.weapon);
+    }
+    if (!w) return null;
+    const item = actor.items.get(w.id);
+    if (!item) return null;
+    const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(actor) });
+    await item.update({ "system.clip.value": w.shots.max });
+    const how = t.turns === 1 ? "one full turn, with concentration; it can be one of several actions" : `${t.turns} turns`;
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="vtc-card"><b>${actor.name} reloads ${w.name}</b> (${w.shots.max} round${w.shots.max === 1 ? "" : "s"}): ${how} (${t.ref}).</div>` });
+    return { weapon: w.id, turns: t.turns, rounds: w.shots.max };
 }
 
 /**

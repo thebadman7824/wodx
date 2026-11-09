@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.12.0: the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
+ * WoDX Storyteller 0.15.0: the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
  * night's draw and the story aids (night.mjs).
  *
  * Players roam the world on their own, between sessions or side by side within one: they travel from place to place
@@ -23,6 +23,10 @@ import * as Letters from "./letters.mjs";
 import * as Up from "./upkeep.mjs";
 import * as UpRules from "./upkeep-rules.mjs";
 import * as Money from "./money.mjs";
+import * as Tasks from "./tasks.mjs";
+import * as TaskRules from "./tasks-rules.mjs";
+import * as Havens from "./havens.mjs";
+import * as HavenRules from "./haven-rules.mjs";
 import * as MoneyRules from "./money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Prelude from "./prelude.mjs";
@@ -52,6 +56,8 @@ Hooks.once("init", () => {
   Up.registerUpkeepHooks();
   Money.registerMoneySettings();
   Money.registerMoneyHooks();
+  Tasks.registerTaskSettings();
+  Tasks.registerTaskHooks();
   Rumours.registerRumourHooks();
   Dash.registerDashboardHooks();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
@@ -87,6 +93,8 @@ Hooks.once("ready", () => {
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
       grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules,
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules}},
+    havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
+    tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     draw: Night.drawChooser, nightRules: Night.N
   };
@@ -148,6 +156,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => A.openOnYourOwn()};
   tokens.tools.wodxLetters = {name: "wodxLetters", title: "Send a letter or message (it travels as the era allows)", icon: "fa-solid fa-envelope", order: 108,
     button: true, visible: true, onChange: () => Letters.openLetters()};
+  tokens.tools.wodxTasks = {name: "wodxTasks", title: "Long tasks (work that takes days or weeks: making things, research, training)", icon: "fa-solid fa-hourglass-half", order: 109,
+    button: true, visible: true, onChange: () => Tasks.tasksDialog()};
   tokens.tools.wodxTracker = {name: "wodxTracker", title: "The Storyteller's tracker (every character, convening, beats)", icon: "fa-solid fa-binoculars", order: 113,
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
