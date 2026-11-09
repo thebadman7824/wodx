@@ -367,6 +367,12 @@
    "title": "Clanbook: Ventrue (Revised)",
    "short": "Clanbook: Ventrue",
    "edition": "Revised"
+  },
+  {
+   "id": "cbsetite",
+   "title": "Clanbook: Followers of Set (Revised)",
+   "short": "Clanbook: Followers of Set",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -430,6 +436,7 @@
   "cbtoreador.json",
   "cbtremere.json",
   "cbtzimisce.json",
-  "cbventrue.json"
+  "cbventrue.json",
+  "cbsetite.json"
  ]
 }
