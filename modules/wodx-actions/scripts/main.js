@@ -1023,9 +1023,15 @@ export async function hunt({ actor: a } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const b = blood(actor), v = virtues(actor);
+    // WoDX Storyteller (0.12.0) keeps a hunting ground and heat on each scene; without it, the market and no heat
+    const scene = actor.getActiveTokens?.()[0]?.scene ?? canvas?.scene ?? null;
+    let here = null;
+    try { here = game.modules.get("wodx-storyteller")?.api?.upkeep?.huntHere?.(scene) ?? null; } catch (e) { here = null; }
+    const area = here?.area && R.HUNTING_GROUNDS[here.area] ? here.area : "market";
     const content = `<form>
       <p>${esc(actor.name)}: blood ${b.value}/${b.max}; hungry below ${7 - v.selfcontrol.value} (7 – ${v.selfcontrol.label})</p>
-      <div class="form-group"><label>Hunting ground</label><select name="area" data-fixed>${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), "market")}</select></div>
+      <div class="form-group"><label>Hunting ground</label><select name="area" data-fixed>${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), area)}</select></div>
+      ${here?.extra ? `<div class="form-group"><label>Heat here (${esc(here.band.name)})</label><input type="number" name="heat" value="${here.extra}" min="0"/></div>` : ""}
       ${poolSelectors(actor, "", { attr: "wits", ability: findAbility(actor, "streetwise")?.id ?? findAbility(actor, "subterfuge")?.id ?? "" })}
       <div class="form-group"><label>Fame / Domain / Herd</label>
         <input type="number" name="fame" value="${background(actor, "Fame")}" style="width:3.5em"/> <input type="number" name="domain" value="${background(actor, "Domain")}" style="width:3.5em"/> <input type="number" name="herd" value="${background(actor, "Herd")}" style="width:3.5em"/></div>
@@ -1036,25 +1042,27 @@ export async function hunt({ actor: a } = {}) {
       <div class="form-group"><label><input type="checkbox" name="dieWorth"/> Storyteller option: prey yields one die's worth of blood</label></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
     </form>`;
-    return dialog("WoDX Hunt", content, "Hunt", fd => resolveHunt(actor, fd), { width: 500 });
+    return dialog("WoDX Hunt", content, "Hunt", fd => resolveHunt(actor, { ...fd, sceneId: scene?.id ?? null }), { width: 500 });
 }
 
 async function resolveHunt(actor, fd) {
     const pool = readPool(actor, fd.attr, fd.ability);
-    const hp = R.huntingPool({ area: fd.area, fame: fd.fame, domain: fd.domain, herd: fd.herd, inhuman: fd.inhuman });
+    const hp = R.huntingPool({ area: fd.area, fame: fd.fame, domain: fd.domain, herd: fd.herd, inhuman: (Number(fd.inhuman) || 0) + (Number(fd.heat) || 0) });
     const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel,
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: hp.bonusDice, baseDifficulty: hp.difficulty,
         woundPenalty: woundPenalty(actor) });
     const rolls = [];
-    let body = `<div class="vta-sub">${R.HUNTING_GROUNDS[fd.area].label}: difficulty ${hp.difficulty}${fd.fame || fd.domain ? ` (Fame/Domain –${fd.fame + fd.domain}, min 3)` : ""}${fd.herd ? `, Herd +${fd.herd} dice` : ""}</div>`;
-    let caught = false;
+    let body = `<div class="vta-sub">${R.HUNTING_GROUNDS[fd.area].label}: difficulty ${hp.difficulty}${fd.fame || fd.domain ? ` (Fame/Domain –${fd.fame + fd.domain}, min 3)` : ""}${fd.herd ? `, Herd +${fd.herd} dice` : ""}${Number(fd.heat) ? `, heat +${Number(fd.heat)}` : ""}</div>`;
+    let caught = false, botched = false;
     for (let h = 1; h <= Math.max(1, fd.hours); h++) {
         const r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty });
         rolls.push(r.roll);
         body += rollBlock(`Hour ${h}`, r, h === 1 ? built.parts : [], fd.specialty);
-        if (r.botch) { body += `<div class="vta-warn">Botch: a complication: witnesses, a rival's herd, the Watch, a hunter…</div>`; break; }
+        if (r.botch) { botched = true; body += `<div class="vta-warn">Botch: a complication: witnesses, a rival's herd, the Watch, a hunter…</div>`; break; }
         if (r.successes > 0) { caught = true; break; }
     }
+    // WoDX Storyteller adds heat to the place (a hunt, or more for a botch); the hook is all it hears
+    Hooks.callAll("wodxHunted", { actorId: actor.id, sceneId: fd.sceneId ?? null, caught, botch: botched });
     if (!caught) return post(actor, `${actor.name} hunts`, body + `<div class="vta-big">No prey this night${fd.hours > 1 ? " (time spent)" : ""}.</div>`, rolls);
     body += `<div class="vta-big good">Prey caught: ${R.VESSELS[fd.vessel].label}.</div>`;
     let take = fd.take;
@@ -2118,7 +2126,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.15.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.17.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

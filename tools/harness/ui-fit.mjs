@@ -634,7 +634,8 @@ game.world.id = worldId;
   }
   for ( const [label, fn] of [["Out on your own", () => st.openOnYourOwn(people[1].id)], ["Convene", () => st.conveneDialog({actorIds: [people[0].id]})],
     ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
-    ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()]] ) {
+    ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()],
+    ["Upkeep", () => st.upkeep.open()], ["Ties that need tending", () => st.upkeep.ties(people[0].id)], ["Hunting grounds", () => st.upkeep.grounds()]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }

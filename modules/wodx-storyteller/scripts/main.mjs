@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.8.0: the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
+ * WoDX Storyteller 0.12.0: the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
  * night's draw and the story aids (night.mjs).
  *
  * Players roam the world on their own, between sessions or side by side within one: they travel from place to place
@@ -20,6 +20,8 @@ import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
 import * as Letters from "./letters.mjs";
+import * as Up from "./upkeep.mjs";
+import * as UpRules from "./upkeep-rules.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Prelude from "./prelude.mjs";
 import * as Dash from "./dashboard.mjs";
@@ -44,6 +46,8 @@ Hooks.once("init", () => {
   Rumours.registerRumourSettings();
   Letters.registerLetterSettings();
   Letters.registerLetterHooks();
+  Up.registerUpkeepSettings();
+  Up.registerUpkeepHooks();
   Rumours.registerRumourHooks();
   Dash.registerDashboardHooks();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
@@ -51,7 +55,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -76,6 +80,8 @@ Hooks.once("ready", () => {
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
     letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
+    upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
+      grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     draw: Night.drawChooser, nightRules: Night.N
   };
@@ -141,6 +147,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
     button: true, visible: game.user.isGM, onChange: () => Led.LedgerApp.open()};
+  tokens.tools.wodxUpkeep = {name: "wodxUpkeep", title: "Upkeep (ties that need tending, hunting grounds and heat)", icon: "fa-solid fa-hand-holding-heart", order: 121,
+    button: true, visible: game.user.isGM, onChange: () => Up.upkeepChooser()};
   tokens.tools.wodxDashboard = {name: "wodxDashboard", title: "The Storyteller's dashboard (the party, clocks, open threads, consequences)", icon: "fa-solid fa-gauge", order: 117,
     button: true, visible: game.user.isGM, onChange: () => Dash.DashboardApp.open()};
   tokens.tools.wodxSetup = {name: "wodxSetup", title: "Start a chronicle (opening date, era, lines, the Storyteller screen)", icon: "fa-solid fa-book-open", order: 118,
@@ -163,6 +171,7 @@ async function onSocket(message) {
   }
   if ( !C.isActiveGM() ) return;
   if ( type === "req.letter" ) { await Letters.send(payload); return; }
+  if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own
   const user = game.users.get(payload.userId);
