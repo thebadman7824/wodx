@@ -753,7 +753,7 @@
   "summary": "The Iron Legion's main fighting force.",
   "claims": [
    {
-    "text": "The Iron Battalions are the Iron Legion's premier troops, rivalled perhaps only by the Legion of Fate's Cataphractoi and the troops of the Unlidded Eye.",
+    "text": "The Iron Battalions are the Iron Legion's premier troops, matched perhaps only by the Unlidded Eye's soldiers and the Cataphractoi who serve Fate.",
     "tier": "stated",
     "refs": [
      {
@@ -803,7 +803,7 @@
     ]
    },
    {
-    "text": "The Seat of Fate is a sprawling mansion on the Isle of Eurydice in the Tempest, given by Charon in thanks for help during that reign.",
+    "text": "The Lady's seat, a vast mansion, stands on the Isle of Eurydice out in the Tempest, given by Charon in thanks for help during that reign.",
     "tier": "stated",
     "refs": [
      {
@@ -881,7 +881,7 @@
   "summary": "Deathlord of the Paupers.",
   "claims": [
    {
-    "text": "During the Insurrection the Beggar Lord is the best-paid neutral party.",
+    "text": "No neutral in the Insurrection is paid better than the Beggar Lord.",
     "tier": "stated",
     "refs": [
      {
@@ -992,7 +992,7 @@
     ]
    },
    {
-    "text": "Judges and juries favour the Grim Legion, so many officers and leaders are condemned as murderers and sent to the forges after brief trials.",
+    "text": "Judges and juries favour the Grim Legion, so countless officers and leaders are branded killers and go to the forges after hasty hearings.",
     "tier": "stated",
     "refs": [
      {
