@@ -21,7 +21,8 @@ export const MOODS = {
   tension: "Tension: stalking, hiding, something wrong",
   combat: "Combat",
   sorrow: "Sorrow: loss, the Beast, the dead",
-  wonder: "Wonder: the Umbra, the Dreaming, true magic"
+  wonder: "Wonder: the Umbra, the Dreaming, true magic",
+  frenzy: "Frenzy: the Beast loose, Rötschreck (combat plays when the kit has none)"
 };
 
 /** The twelve kinds of place WoDX NPC tags, and the weather loops, in the order a scene looks for them. */

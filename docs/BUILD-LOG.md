@@ -950,3 +950,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 
 - dashboard-rules.mjs (new): whenLabel, partyRow, woundWords, sortParty, clocks, threads, consequences. dashboard.mjs (new): gather() and DashboardApp (id wodx-dashboard; four searchable lists, each with a button to its own window; redraws at most twice a second on actor, effect, token, clock and WoDX setting changes). Toolbar button wodxDashboard (order 117), a keybinding, api.dashboard {open, gather}. CSS caps each list so the window fits a 1280x720 screen.
 - UI fit: the dashboard. Tests: tools/harness/dashboard.test.mjs (6). Gate: tools/gate/gatedashboard.mjs, 7 steps.
+
+## 2026-11-09: adaptive sound (Atmosphere 0.8.0, B280)
+
+- adaptive-rules.mjs (new): TENSIONS, TENSION_LABELS, FRENZY_STATUSES, HUNT_STATUSES, tensionOf, moodFor, heartbeat, beatGap. kits-rules.mjs: a frenzy mood (music/frenzy in a kit folder). main.mjs: settings adaptive, tension (world) and heartbeat (client); tensionNow, adapt (acts only on a change), adaptSoon; combatStart and deleteCombat go through adapt when it is on, the old switch when off; effect hooks on players' characters; the heartbeat (Web Audio, two thumps a beat) follows the user's own character on updateActor and updateUser. api.adaptive {tension, adapt, heartbeat, update, playing, rules}.
+- Tests: tools/harness/adaptive.test.mjs (4). Gate: tools/gate/gateadaptive.mjs, 7 steps (music off while it runs).
