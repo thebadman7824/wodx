@@ -884,3 +884,4 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - npc-rules.mjs: latticeGrid(size), a square lattice with getOffset, getTopLeftPoint and getCenterPoint.
 - main.mjs: gridKind gives "lattice" on a gridless scene (unless the new world setting "Move NPCs on gridless scenes" is off); grid() returns the lattice there; the moving code and routines.mjs ask grid() for cells.
 - Tests: npc-gridless.test.mjs (3); phase 7 tests follow the version. Gate: tools/gate/gategridless.mjs, 5 steps, a gridless scene of its own with a wall.
+- 0.6.1: gategridless step 3 found a wall running through a lattice cell's centre (x 750 on 100 px cells): the step's wall test ended exactly on the wall and passed, while Foundry's move stopped there. On the lattice the test now runs 3 px past the cell's centre (NR.pastPoint).

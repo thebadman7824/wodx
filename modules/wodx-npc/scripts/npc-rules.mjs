@@ -307,3 +307,10 @@ export function latticeGrid(size = 100) {
     getCenterPoint: c => ({x: (c.j + 0.5) * s, y: (c.i + 0.5) * s})
   };
 }
+
+/** The point d pixels beyond b on the line from a through b (b itself when a and b are the same point). */
+export function pastPoint(a, b, d = 3) {
+  const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy);
+  if ( !len ) return {x: b.x, y: b.y};
+  return {x: b.x + dx / len * d, y: b.y + dy / len * d};
+}
