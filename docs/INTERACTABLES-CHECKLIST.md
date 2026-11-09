@@ -95,7 +95,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Ride and Drive read from the sheet; an untrained Skill the sheet lacks still costs +1
 - [x] Tile config: the Mount or vehicle section, with who is aboard and Everyone off
 - [x] Harness tests (6 new) and UI fit
-- [ ] Gate step 22 in rothenstein-wodx (21/22 at da913ca: the cart moved the wrong way; fixed in 0.13.0)
+- [x] Gate step 22 in rothenstein-wodx: passes in 0.13.1 (24/24)
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.10.0-2026-11-09)
 - [ ] Untrained Skill page ref to pin (V20 core)
 
@@ -129,4 +129,4 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Altars, relics and fetishes (0.8.1, deployed)
 - [x] Watch points (0.10.0, deployed)
 - [x] Mounts and vehicles (0.11.0, deployed; 0.13.0 fixes the cart following)
-- [x] Step 2: climbing, ledges and jumps (0.13.0, not deployed yet)
+- [x] Step 2: climbing, ledges and jumps (0.13.1, deployed)

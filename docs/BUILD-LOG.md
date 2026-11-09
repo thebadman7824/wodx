@@ -727,9 +727,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Falls: a bashing die a 10 feet through WoDX Combat's soak, with Undo. Arriving moves the token onto the tile the climb leads to, with Undo.
 - climb, jump and fall go out as wodxMapEvents.
 - Mounts: the vehicle follows the driver's token by offset (see 0.11.0).
-- Tests: 5 new (2 rules, 3 runtime), 582 in all; UI fit adds a crag. Gate step 22 fixed, step 23 (a wall to a ledge, a short jump). Not deployed yet.
+- Tests: 5 new (2 rules, 3 runtime), 582 in all; UI fit adds a crag. Gate step 22 fixed, step 24 (a wall to a ledge, a short jump).
 - Deployed 2026-11-09 from main 4ccb5d1 (backup Backups\wodx-interactables-0.12.0-2026-11-09, MD5s match). gate-interact 22/24: in Foundry 14 the move hook can see the token's old place, so the cart stayed put, and a climb's move to the ledge walked along a path and had not arrived when checked.
 - 0.13.1: the move hook reads the new place from the change itself; climbs, jumps and their Undo put the token straight there (no animation, walls ignored); the gate waits for moves to settle. 1 more test.
+- 0.13.1 deployed 2026-11-09 from main 296459b (backup Backups\wodx-interactables-0.13.0-2026-11-09, MD5s match). gate-interact 24/24.
 
 ### WoDX Senses 0.1.0, 2026-11-09: what the senses tell (B170 to B174)
 - Ben's request (9 November 2026): answer "what do I see, hear, smell" in chat. Design study: https://claude.ai/artifact/6z5pwGb2XZMMsA8jHHGaq4. Built all four steps of it in one module.
