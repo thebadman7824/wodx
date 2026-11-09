@@ -37,7 +37,7 @@
  *              aboard. Keeping control and going flat out roll Dexterity + Ride or Drive; cars appear in their era (0.11.0).
  *   Climbing   A tile marked as a climb (a ladder, a rope, a tree, a rough wall, a cliff) or a gap to jump: Dexterity +
  *              Athletics, extended, up the climb; Strength + Athletics across the gap, with a roll to catch the ledge;
- *              arriving moves the token to the tile it is tied to, and a fall does bashing dice by its height (0.12.0).
+ *              arriving moves the token to the tile it is tied to, and a fall does bashing dice by its height (0.13.0).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -49,7 +49,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.12.0";
+const VERSION = "0.13.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);

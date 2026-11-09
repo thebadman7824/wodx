@@ -95,11 +95,11 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Ride and Drive read from the sheet; an untrained Skill the sheet lacks still costs +1
 - [x] Tile config: the Mount or vehicle section, with who is aboard and Everyone off
 - [x] Harness tests (6 new) and UI fit
-- [ ] Gate step 22 in rothenstein-wodx (21/22 at da913ca: the cart moved the wrong way; fixed in 0.12.0)
+- [ ] Gate step 22 in rothenstein-wodx (21/22 at da913ca: the cart moved the wrong way; fixed in 0.13.0)
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.10.0-2026-11-09)
 - [ ] Untrained Skill page ref to pin (V20 core)
 
-## 0.12.0: climbing, ledges and jumps (2026-11-09)
+## 0.13.0: climbing, ledges and jumps (2026-11-09)
 - [x] Rules: five climbs by yards a success, gaps by yards, catching the ledge, falls by height (B155)
 - [x] Runtime: arriving moves the token to the tile the climb leads to; falls through WoDX Combat; Undo for both
 - [x] Mounts: the vehicle follows the driver's token by offset
@@ -116,5 +116,5 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Fire and hazards (0.7.0, deployed)
 - [x] Altars, relics and fetishes (0.8.1, deployed)
 - [x] Watch points (0.10.0, deployed)
-- [x] Mounts and vehicles (0.11.0, deployed; 0.12.0 fixes the cart following)
-- [x] Step 2: climbing, ledges and jumps (0.12.0, not deployed yet)
+- [x] Mounts and vehicles (0.11.0, deployed; 0.13.0 fixes the cart following)
+- [x] Step 2: climbing, ledges and jumps (0.13.0, not deployed yet)
