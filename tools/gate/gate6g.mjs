@@ -68,7 +68,7 @@ export async function run() {
         await step("versions and the era", async () => {
             ({ lord, wren } = await makePack());
             const era = game.modules.get("wodx-chronicle").api.eras.activeEra()?.profile?.id;
-            ok("versions and the era", /^3\.8\./.test(A().version) && !!A().daCantrip && era === "dark-ages" && A().getKind(lord) === "fae", { actions: A().version, era, kind: A().getKind(lord) });
+            ok("versions and the era", /^3\./.test(A().version) && !!A().daCantrip && era === "dark-ages" && A().getKind(lord) === "fae", { actions: A().version, era, kind: A().getKind(lord) });
         });
         await step("the menu offers the Dominions in the Dark Ages", async () => {
             let seen = null;

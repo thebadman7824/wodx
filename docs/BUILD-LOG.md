@@ -816,3 +816,12 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Atmosphere 0.2.0: token frames (kits-rules FRAMES, frameFor, framed, frameShapes; drawn on refreshToken), and the grade now joins the Shadowlands decay.
 - Decisions B207 to B212; choices in PENDING-REVIEW.md.
 - Tests: phase8b.test.mjs (10). UI fit takes the chooser, the night, the aid (both steps) and the journey (both steps). Gate: tools/gate/gate8b.mjs, 12 steps, rothenstein-wodx only.
+
+### Phase 6n, 2026-11-09: WoDX Actions 3.15.0 (the Dark Ages: Mage Grimoire, B240–B244)
+- The last item left open in Phase 6: Phase 6f had put off the Grimoire. Read on the PC from page renders (the OCR text was unusable); notes in docs/research/da-grimoire-notes.md, pages as pdf N / printed N − 2.
+- scripts/mage-da-grimoire.js (pure): 78 rote entries for all six fellowships, the seasons' first days and Sunday, the Moon's offering, specialties and experience for another fellowship's magic, countermagic by fellowship, the Using the Art table and the guide by Pillar level, the wonders, and Certámen (stances, the same-Pillar penalty, wills, the locus, strikes, the spoils).
+- mage-da-rules.js: the Grimoire's rotes join ROTES; castPlan takes the season (−3 or +3), Sunday (−1 for the Messianic Voices) and the Foundation specialty (+1 die).
+- mage-da.js: the cast window marks Grimoire rotes and reads the Chronicle clock for the season and Sunday; specialties on the Fellowship and Pillars window, with the Pillar specialty re-rolling 10s; an offering to the Moon at night in Gather Quintessence; new windows Countermagic, Using the Art (searchable) and Certámen (the Storyteller's, with Strike and Yield buttons on its card).
+- The mage menu gains Countermagic (Resist), Using the Art (Act) and Certámen (Storyteller). Its key is daCountermagic: UI fit showed the first name, daCounter, was already the fae's Counter, so the mage button opened the fae's window.
+- Tests: phase6n.test.mjs (9); 706 pass. UI fit captures the three new windows; in the cloud container every window, old and new, fails only the header-icon check because Font Awesome is not there, so the real UI fit runs on the PC. Gate 6n (tools/gate/gate6n.mjs, 8 steps).
+- Deployed to rothenstein-wodx (Backups/wodx-actions-3.14.1-2026-11-09 first; 58 files checked by MD5). Gate 6n 8/8; UI fit on the PC 654 ok. Gates 6f and 6g run alongside: every functional step passed, and each missed only its version check, still pinned to 3.7 and 3.8; both now accept any 3.x.

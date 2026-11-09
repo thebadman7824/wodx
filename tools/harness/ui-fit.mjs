@@ -317,8 +317,13 @@ game.world.id = worldId;
       const flags = {daMage: {fellowship: "hermes", foundation: 3, pillars: {anima: 2, corona: 1, primus: 3, vires: 3}, twilight: {temp: 4, perm: 2},
         brandings: [{level: 1, text: "a faint smell of brimstone"}, {level: 2, text: "eyes like polished brass"}]}};
       magus.getFlag = (sc, k) => sc === "wodx-actions" ? flags[k] : undefined;
+      const rival = mk("magus0000000002", "Thorgerd Ironbrow, Valdaerman of the Northern Fjords", "Mage", {quintessence: {temporary: 6, max: 20}}, []);
+      const rflags = {daMage: {fellowship: "valdaermen", foundation: 3, pillars: {fara: 2, forlog: 3, galdrar: 2, hjaldar: 4}}};
+      rival.getFlag = (sc, k) => sc === "wodx-actions" ? rflags[k] : undefined;
       tries.push(["Fellowship and Pillars", () => ga.daMage({actor: A(magus)})], ["Cast a spell (Dark Ages)", () => ga.daCast({actor: A(magus)})],
-        ["Gather Quintessence", () => ga.daQuintessence({actor: A(magus)})]);
+        ["Gather Quintessence", () => ga.daQuintessence({actor: A(magus)})],
+        ["Countermagic (Dark Ages)", () => ga.daCountermagic({actor: A(magus)})], ["Using the Art", () => ga.daGuide({actor: A(magus)})],
+        ["Certámen", () => ga.daCertamen({actor: A(magus)})]);
     }
     // Phase 6g: a Dark Ages firstborn of the Winter Court with every Dominion, many cantrips, oaths and Echoes
     {
