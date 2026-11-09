@@ -74,9 +74,10 @@ test("map log lines: what a character did, in a sentence; noise nobody heard and
   assert.equal(W.mapEntry(ev({kind: "open"})).attention, null);
   assert.equal(W.mapEntry(ev({kind: "noise", heard: []})), null);
   assert.ok(W.mapEntry(ev({kind: "noise"})));
-  for ( const kind of ["hazard", "holy", "light", "dark"] ) assert.equal(W.mapEntry(ev({kind})), null, kind);
+  for ( const kind of ["hazard", "holy", "light", "dark", "watch", "call", "mount", "dismount", "ride"] ) assert.equal(W.mapEntry(ev({kind})), null, kind);
+  assert.equal(W.mapEntry(ev({kind: "crash", objectName: "The cart", heard: []})).text, "Anna came to grief with the cart.");
   assert.equal(W.mapEntry(ev({undone: true})), null);
-  for ( const kind of ["noise", "open", "force", "break", "alarm", "theft", "fire", "fireOut", "desecrate", "trap", "disarm", "found", "use"] ) {
+  for ( const kind of ["noise", "open", "force", "break", "alarm", "theft", "fire", "fireOut", "desecrate", "trap", "disarm", "found", "use", "crash"] ) {
     const t = W.mapEntry(ev({kind})).text;
     assert.ok(!/—|\b(he|she|him|her|his)\b/i.test(t), t);
   }

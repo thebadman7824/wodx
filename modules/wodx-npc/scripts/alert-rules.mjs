@@ -68,7 +68,7 @@ export function sortHearers(hearers = []) {
 export function eventHead(ev, whoName) {
   const what = ev.objectName ? ev.objectName.toLowerCase() : "something";
   const did = {noise: "a noise at", open: "opening", force: "forcing", break: "breaking", alarm: "an alarm at", theft: "taking from",
-    fire: "setting fire to", desecrate: "desecrating", trap: "a trap going off at", use: "using"}[ev.kind] ?? "something at";
+    fire: "setting fire to", desecrate: "desecrating", trap: "a trap going off at", use: "using", call: "a call on", crash: "a crash with", ride: "racing"}[ev.kind] ?? "something at";
   return `${whoName ?? "Someone"}: ${did} ${what}`.replace(/\s+/g, " ").trim();
 }
 

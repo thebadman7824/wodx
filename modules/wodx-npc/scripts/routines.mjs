@@ -719,7 +719,7 @@ export function build(ctx) {
     if ( ev.message && heardBusy.has(ev.message) ) return [];
     if ( ev.message ) heardBusy.add(ev.message);
     const out = [];
-    if ( AR.RAISES.has(ev.kind) ) {
+    if ( AR.RAISES.has(ev.kind) && ev.how !== "help" ) {
       const prev = flag(scene, "alert") ?? null;
       await raiseAlarm(scene, ev.objectName ? `${ev.objectName}: the alarm` : "an alarm");
       out.push(await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {alarmCard: {scene: scene.uuid, prev}}},

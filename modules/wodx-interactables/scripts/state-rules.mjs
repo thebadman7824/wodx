@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.9.0: what an object looks like after a change, and what the change means to the world.
+ * WoDX Interactables 0.12.0: what an object looks like after a change, and what the change means to the world.
  * Pure rules, with no Foundry in them, so the harness can test every one.
  *
  *   States   Each kind of object has a short list of states read from its flags (open, broken, taken, burning ...).
@@ -104,7 +104,8 @@ export function cleanArt(g, art = {}) {
 export const EVENT_KINDS = {
   noise: "A noise", open: "Opened", force: "Forced", break: "Broken", alarm: "An alarm", theft: "Taken", fire: "Set alight",
   fireOut: "Put out", light: "A light lit", dark: "A light out", desecrate: "Desecrated", trap: "A trap sprung", disarm: "A trap disarmed",
-  hazard: "Hurt by a hazard", holy: "Holy ground", found: "Found", use: "Used"
+  hazard: "Hurt by a hazard", holy: "Holy ground", found: "Found", use: "Used",
+  watch: "A look out", call: "A call", mount: "Got on", dismount: "Got off", crash: "A crash or a fall", ride: "Flat out"
 };
 
 const OPEN_OPS = new Set(["open", "openQuiet", "pick", "key", "unlock", "unbar", "hack", "heave", "unstick"]);
@@ -158,7 +159,7 @@ export function mapEvent(e = {}) {
     objectType: e.objectType === "Wall" ? "Wall" : "Tile", state: str(e.state, 20), before: str(e.before, 20),
     x: Number.isFinite(Number(e.x)) ? Math.round(Number(e.x)) : null, y: Number.isFinite(Number(e.y)) ? Math.round(Number(e.y)) : null,
     owner: str(e.owner, 80), placeKind: str(e.placeKind, 40), heard: (Array.isArray(e.heard) ? e.heard : []).map(h => String(h).slice(0, 120)).slice(0, 40),
-    supernatural: !!e.supernatural, message: str(e.message, 40), undone: !!e.undone
+    supernatural: !!e.supernatural, message: str(e.message, 40), undone: !!e.undone, objectKind: str(e.objectKind, 40)
   };
 }
 
@@ -169,7 +170,8 @@ export function mapEvent(e = {}) {
 /** The word that floats over the object for each event; empty: none. Fixed list. */
 export const EVENT_WORDS = {
   open: "Opened", force: "Forced", break: "Smashed", alarm: "Alarm!", theft: "Taken", fire: "Alight", fireOut: "Put out",
-  light: "", dark: "", desecrate: "Desecrated", trap: "Sprung!", disarm: "Disarmed", hazard: "", holy: "", found: "Found", use: "", noise: ""
+  light: "", dark: "", desecrate: "Desecrated", trap: "Sprung!", disarm: "Disarmed", hazard: "", holy: "", found: "Found", use: "", noise: "",
+  watch: "", call: "", mount: "", dismount: "", crash: "Crash!", ride: ""
 };
 /** How far a one-shot sound carries, in yards, by the noise rating (the same earshot as hearing). */
 export const SOUND_YARDS = {silent: 3, quiet: 5, loud: 30};

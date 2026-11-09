@@ -77,10 +77,29 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Tile config: the Altar, relic or fetish section
 - [x] Harness tests (6 new) and UI fit
 - [x] 0.8.1: caern stones, fetters and nodes open the WoDX actions menu (1 test)
-- [ ] Gate step 20 in rothenstein-wodx
-- [ ] Deployed
+- [x] Gate step 20 in rothenstein-wodx: 20/20 at 7f71eb0 (0.8.1)
+- [x] Deployed 2026-11-09 (backups Backups\wodx-interactables-0.7.0-2026-11-09, -0.8.0-2026-11-09)
 
-## 0.9.0: pictures, markers and map events (2026-11-09)
+## 0.10.0: watch points (2026-11-09)
+- [x] Rules: windows and mirrors (Perception + Alertness, names or a count; no Lasombra in a mirror), phones and radios by era, bells (B153)
+- [x] Runtime: the tied tile, the whisper, calls and alarms, wodxMapEvent, Undo
+- [x] Tile config: the Watch point section
+- [x] Harness tests (5 new) and UI fit
+- [x] Gate step 21 in rothenstein-wodx: 21/21 at 3d1153d
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.8.1-2026-11-09)
+- [ ] Lasombra reflection page ref to pin
+
+## 0.11.0: mounts and vehicles (2026-11-09)
+- [x] Rules: eight kinds with seats and eras; getting on, Keep control, Go flat out, throws and crashes (B154)
+- [x] Runtime: at the reins and passengers, the tile and passengers carried with the driver's token, walking off, wodxMapEvent, Undo
+- [x] Ride and Drive read from the sheet; an untrained Skill the sheet lacks still costs +1
+- [x] Tile config: the Mount or vehicle section, with who is aboard and Everyone off
+- [x] Harness tests (6 new) and UI fit
+- [ ] Gate step 22 in rothenstein-wodx
+- [ ] Deployed
+- [ ] Untrained Skill page ref to pin (V20 core)
+
+## 0.12.0: pictures, markers and map events (2026-11-09)
 Step 1 of "Responsive Maps for WoDX".
 - [x] Rules: states by kind, the look for each, event kinds, the map event, feedback per player (B160)
 - [x] Runtime: picture swaps on the active Storyteller's client, Undo follows; markers on each client; tied ambient sounds; wodxMapEvent on every card and on Undo; floating word, flash and sound on each client by socket
@@ -96,7 +115,7 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Light sources (0.5.0, deployed)
 - [x] Hiding places (0.6.0, deployed)
 - [x] Fire and hazards (0.7.0, deployed)
-- [x] Altars, relics and fetishes (0.8.0, not deployed yet)
-- [ ] Watch points (mirrors, windows on the street, phones and radios)
-- [ ] Mounts and vehicles
+- [x] Altars, relics and fetishes (0.8.1, deployed)
+- [x] Watch points (0.10.0, deployed)
+- [x] Mounts and vehicles (0.11.0, not deployed yet)
 - [ ] Step 2: climbing, ledges and jumps

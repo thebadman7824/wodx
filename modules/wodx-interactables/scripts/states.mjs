@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.9.0: maps that show what changed, and the event that tells the world.
+ * WoDX Interactables 0.12.0: maps that show what changed, and the event that tells the world.
  *
  *   Pictures  A tile can carry a picture for each state of the object it is (a chest open, forced, emptied), or follow
  *             a door or window by its wall id. When the flags change, the active Storyteller's client swaps the tile's
@@ -175,6 +175,8 @@ export function eventFromCard(msg) {
   const ask = msg?.flags?.[MOD]?.ask, done = msg?.flags?.[MOD]?.done;
   if ( !ask || !done ) return null;
   const scene = game.scenes?.get?.(ask.scene), doc = ask.wall === "_search" ? null : api.objectIn(scene, ask.wall);
+  // A watch point or a mount sends its own event, with what it saw or who is aboard (publish below)
+  if ( doc && (flagsOf(doc).watch || flagsOf(doc).mount) ) return null;
   const found = (done.found?.length ?? 0) + (done.revealed?.length ?? 0);
   let before = null, after = null, g = "plain", name = null;
   if ( doc ) {
@@ -213,6 +215,26 @@ export function onCard(msg) {
     const payload = {type: "fx", ev, src: S.cleanPath(src)};
     try { game.socket?.emit?.(SOCKET, payload); } catch (e) { /* alone */ }
     play(payload);
+  }
+  return ev;
+}
+/**
+ * Active Storyteller: an event a result sends by itself (a look out of a window, a call, getting on a horse, a crash),
+ * in the same shape as a card's. extra: fields of its own (target, seen, how, atReins), which never replace the shape's.
+ */
+export function publish(kind, {scene, doc, tokDoc, noise = "silent", heard = [], supernatural = false, objectName = null, objectKind = null, message = null, extra = {}} = {}) {
+  const sc = scene ?? doc?.parent ?? null;
+  const p = doc ? centreOf(doc) : null, place = sc ? placeAt(sc, p ?? {x: 0, y: 0}) : {};
+  const ev = {...extra, ...S.mapEvent({kind, scene: sc?.id, place: place.id, at: game.time?.worldTime, noise, who: tokDoc?.uuid, whoName: tokDoc?.name ?? tokDoc?.actor?.name,
+    object: doc?.id ?? null, objectName, objectKind, objectType: doc?.documentName, x: p?.x, y: p?.y, owner: place.owner ?? null, placeKind: place.kind,
+    heard, supernatural: supernatural || S.isSupernatural(kind), message})};
+  recent.push(ev);
+  if ( recent.length > RECENT ) recent.shift();
+  Hooks.callAll("wodxMapEvent", ev);
+  if ( S.EVENT_WORDS[ev.kind] || ev.noise === "loud" ) {
+    const payload = {type: "fx", ev, src: S.cleanPath(flagsOf(doc).fxSound ?? "")};
+    try { game.socket?.emit?.(SOCKET, payload); } catch (e) { /* alone */ }
+    try { play(payload); } catch (e) { /* no canvas */ }
   }
   return ev;
 }

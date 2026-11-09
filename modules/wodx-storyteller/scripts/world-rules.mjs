@@ -292,15 +292,16 @@ export function beatFires(beat, ev) {
 /** A log line for a map event from WoDX Interactables, or null for one not worth the log (a noise nobody heard). */
 const MAP_WORDS = {noise: "made a noise at", open: "opened", force: "forced", break: "broke", alarm: "set off the alarm at", theft: "took what was in",
   fire: "set fire to", fireOut: "put out", light: "lit", dark: "put out", desecrate: "desecrated", trap: "set off", disarm: "disarmed", hazard: "was hurt by",
-  holy: "stood on", found: "found something at", use: "used"};
+  holy: "stood on", found: "found something at", use: "used", crash: "came off or crashed", ride: "raced", watch: "kept watch from", call: "made a call on", mount: "got on", dismount: "got off"};
 export function mapEntry(ev) {
   if ( !ev || ev.undone ) return null;
   if ( ev.kind === "noise" && !(ev.heard ?? []).length ) return null;
-  if ( ["hazard", "holy", "light", "dark"].includes(ev.kind) ) return null;
-  const big = ["force", "break", "alarm", "theft", "fire", "desecrate"].includes(ev.kind);
+  if ( ["hazard", "holy", "light", "dark", "watch", "call", "mount", "dismount", "ride"].includes(ev.kind) ) return null;
+  const big = ["force", "break", "alarm", "theft", "fire", "desecrate", "crash"].includes(ev.kind);
   const heard = (ev.heard ?? []).length;
   return {id: `map:${String(ev.message ?? "").slice(0, 40)}`, kind: "world", scene: ev.scene ?? null, place: ev.place ?? null,
-    text: `${ev.whoName ?? "Someone"} ${MAP_WORDS[ev.kind] ?? "used"} ${String(ev.objectName ?? "something").toLowerCase()}${heard ? ` (heard by ${heard})` : ""}.`,
+    text: ev.kind === "crash" ? `${ev.whoName ?? "Someone"} came to grief with ${String(ev.objectName ?? "a mount or vehicle").toLowerCase()}${heard ? ` (heard by ${heard})` : ""}.`
+      : `${ev.whoName ?? "Someone"} ${MAP_WORDS[ev.kind] ?? "used"} ${String(ev.objectName ?? "something").toLowerCase()}${heard ? ` (heard by ${heard})` : ""}.`,
     attention: big ? "A change on the map" : null};
 }
 
