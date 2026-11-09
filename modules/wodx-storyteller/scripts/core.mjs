@@ -238,7 +238,11 @@ export async function moveToScene(actor, scene, {from = null} = {}) {
   const data = td?.toObject ? td.toObject() : td;
   const [made] = await scene.createEmbeddedDocuments("Token", [data], {wodxTravel: true});
   if ( origin ) {
-    const old = all(origin.tokens).filter(t => t.actorId === actor.id && (t.actorLink ?? true)).map(t => t.id);
+    // A linked character leaves every linked token behind. An unlinked one (a retainer, a new character) leaves its
+    // token only when it is the actor's one token there, so other copies of the same actor stay put.
+    const mine = all(origin.tokens).filter(t => t.actorId === actor.id && t.id !== made?.id);
+    const linked = mine.filter(t => t.actorLink);
+    const old = (linked.length ? linked : (mine.length === 1 ? mine : [])).map(t => t.id);
     if ( old.length ) await origin.deleteEmbeddedDocuments("Token", old, {wodxTravel: true});
   }
   return made ?? null;
