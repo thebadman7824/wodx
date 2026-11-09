@@ -76,6 +76,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Runtime: Pray here opens WoDX Actions' prayer; stepping on or a turn in combat; take with Undo
 - [x] Tile config: the Altar, relic or fetish section
 - [x] Harness tests (6 new) and UI fit
+- [x] 0.8.1: caern stones, fetters and nodes open the WoDX actions menu (1 test)
 - [ ] Gate step 20 in rothenstein-wodx
 - [ ] Deployed
 
