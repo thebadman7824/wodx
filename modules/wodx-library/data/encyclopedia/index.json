@@ -139,6 +139,12 @@
    "title": "V20 Companion",
    "short": "V20 Comp",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "lotb",
+   "title": "Lore of the Bloodlines",
+   "short": "LotB",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -164,6 +170,7 @@
   "dafae.json",
   "gr.json",
   "lotc.json",
-  "v20comp.json"
+  "v20comp.json",
+  "lotb.json"
  ]
 }
