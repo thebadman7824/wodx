@@ -307,6 +307,12 @@
    "title": "Guide to the Sabbat",
    "short": "Guide to the Sabbat",
    "edition": "Revised"
+  },
+  {
+   "id": "gtanarch",
+   "title": "Guide to the Anarchs",
+   "short": "Guide to the Anarchs",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -360,6 +366,7 @@
   "nybn.json",
   "sfbn.json",
   "gtcam.json",
-  "gtsab.json"
+  "gtsab.json",
+  "gtanarch.json"
  ]
 }
