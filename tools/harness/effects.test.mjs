@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 import {readFileSync} from "node:fs";
 
-/* Scene video effects (WoDX Chronicle 0.5.3): each player can hide looping video tiles on a slow computer */
+/* Scene video effects (WoDX Chronicle 0.5.4): each player can hide looping video tiles on a slow computer */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const settings = new Map();

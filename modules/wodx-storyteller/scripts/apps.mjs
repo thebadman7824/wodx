@@ -219,10 +219,11 @@ export async function beatsDialog() {
   const list = C.beats();
   const desc = b => b.on === "time" ? `at ${C.timeLabel(b.time ?? 0)}${b.actor ? ` by ${game.actors.get(b.actor)?.name ?? "someone"}'s time` : ""}`
     : b.on === "place" ? `when ${b.actor ? game.actors.get(b.actor)?.name ?? "someone" : "anyone"} reaches ${C.sceneName(fromUuidSyncSafe(b.place)) }`
+    : b.on === "map" ? `when ${b.actor ? game.actors.get(b.actor)?.name ?? "someone" : "anyone"} changes something${b.place ? ` at ${C.sceneName(fromUuidSyncSafe(b.place))}` : ""}${b.value !== null ? ` (${b.value})` : ""}`
     : `when ${b.actor ? game.actors.get(b.actor)?.name ?? "someone" : "a character"} has the flag ${b.flag}${b.value !== null ? ` = ${b.value}` : ""}`;
   const rows = list.map(b => `<tr data-search-text="${esc(b.name)}"><td><b>${esc(b.name)}</b>${b.fired ? ' <span class="wodx-tag">fired</span>' : ""}<br><span class="wodx-quiet">${esc(desc(b))}</span></td></tr>`).join("");
   const pick = list.length ? `<div class="wodx-field"><label>Beat</label><span>${list.length > 5 ? searchBox("select[name=pick]", "Search beats…", "Search beats") : ""}<select name="pick"${list.length > 5 ? "" : " data-fixed"}>${opt(Object.fromEntries(list.map(b => [b.id, b.name])), list[0].id)}</select></span></div>` : "";
-  const content = `<form><p>A beat fires on a time, a place or a flag. One that calls characters to a scene waits in the approval queue; one that only reminds is a card for you.${C.setting("beatsOn") === false ? " <strong>Beats are switched off in the settings.</strong>" : ""}</p>
+  const content = `<form><p>A beat fires on a time, a place, a flag or a change on the map. One that calls characters to a scene waits in the approval queue; one that only reminds is a card for you.${C.setting("beatsOn") === false ? " <strong>Beats are switched off in the settings.</strong>" : ""}</p>
     ${rows ? `${searchBox("table.wstory-beats", "Search beats…", "Search beats")}<table class="wodx-table wstory-beats"><tbody>${rows}</tbody></table>${pick}` : `<p class="wodx-quiet">No beats yet.</p>`}</form>`;
   const act = name => ({action: name, label: {add: "New beat", edit: "Edit", del: "Delete", rearm: "Fire again later"}[name], callback: (ev, btn) => ({act: name, id: btn.form?.elements?.pick?.value ?? null})});
   const result = await wait({window: {title: "Beats", resizable: true}, position: {width: 620, height: "auto"}, content,
@@ -252,7 +253,7 @@ export async function editBeat(beat = {}) {
     <div class="wodx-field"><label>Time (hours from now)</label><input type="number" name="hours" step="0.25" value="${b.time === null ? 1 : Math.round(((b.time - game.time.worldTime) / 3600) * 4) / 4}"></div>
     <div class="wodx-field"><label>Place</label><span>${searchBox("select[name=place]", "Search scenes…", "Search scenes")}<select name="place">${sceneOptions(placeSel, {blank: "None"})}</select></span></div>
     <div class="wodx-field"><label>Flag (scope.key)</label><input type="text" name="flag" maxlength="120" value="${esc(b.flag ?? "")}" placeholder="world.metTheBishop"></div>
-    <div class="wodx-field"><label>Flag value (blank: any)</label><input type="text" name="value" maxlength="120" value="${esc(b.value ?? "")}"></div>
+    <div class="wodx-field"><label>Flag value, or for a change on the map its kind or state such as forced, theft or broken (blank: any)</label><input type="text" name="value" maxlength="120" value="${esc(b.value ?? "")}"></div>
     <div class="wodx-field"><label>Whose (blank: anyone)</label><span>${people.length > 5 ? searchBox("select[name=actor]", "Search…", "Search characters") : ""}<select name="actor"${people.length > 5 ? "" : " data-fixed"}><option value="">Anyone</option>${opt(who, b.actor)}</select></span></div>
     <fieldset><legend>Then call to a scene (optional)</legend>
       ${searchBox("ul.wstory-who", "Search characters…", "Search characters")}<ul class="wodx-list wstory-who">${people.map(a => `<li data-search-text="${esc(a.name)}"><label class="wstory-check"><input type="checkbox" name="c.${esc(a.id)}"${b.convene.includes(a.id) ? " checked" : ""}> ${esc(a.name)}</label></li>`).join("")}</ul>

@@ -130,7 +130,8 @@ export function discipline(actor, name) {
 export function armor(actor) {
     const out = { bashing: 0, lethal: 0, aggravated: 0, names: [] };
     for (const i of actor?.items ?? []) {
-        if (i.type !== "Armor" || !i.system?.isequipped) continue;
+        // Implants (WoDX Library cyberware) are always worn
+        if (i.type !== "Armor" || !(i.system?.isequipped || i.flags?.["wodx-library"]?.implant)) continue;
         out.bashing += num(i.system.soak?.bashing);
         out.lethal += num(i.system.soak?.lethal);
         out.aggravated += num(i.system.soak?.aggravated);
@@ -1293,7 +1294,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.6", movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.7", movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

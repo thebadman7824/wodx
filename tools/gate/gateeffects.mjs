@@ -1,5 +1,5 @@
 /**
- * Scene video effects (WoDX Chronicle 0.5.3) and the Garou test pack loaded on demand (WoDX Actions 3.14.1),
+ * Scene video effects (WoDX Chronicle 0.5.4) and the Garou test pack loaded on demand (WoDX Actions 3.14.1),
  * in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateeffects.mjs?${Date.now()}`)).run()
  * It makes one test scene with a video tile and an image tile, views it, and deletes it afterwards.
@@ -43,7 +43,7 @@ export async function run() {
   const viewed = canvas.scene;
   let scene;
   try {
-    ok("1. versions", newer(game.modules.get(A)?.version, "3.14.1") && newer(game.modules.get(CH)?.version, "0.5.3"),
+    ok("1. versions", newer(game.modules.get(A)?.version, "3.14.1") && newer(game.modules.get(CH)?.version, "0.5.4"),
       {actions: game.modules.get(A)?.version, chronicle: game.modules.get(CH)?.version});
     const cfg = game.settings.settings.get(`${CH}.sceneVideo`);
     if ( before !== "show" ) await game.settings.set(CH, "sceneVideo", "show");
