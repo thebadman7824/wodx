@@ -229,6 +229,12 @@
    "title": "Clanbook: Ravnos (Revised)",
    "short": "CB Ravnos (Rev)",
    "edition": "Revised"
+  },
+  {
+   "id": "archons",
+   "title": "Archons and Templars",
+   "short": "Archons & Templars",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -269,6 +275,7 @@
   "sthr.json",
   "cbgangrel.json",
   "cblasombra.json",
-  "cbravnos.json"
+  "cbravnos.json",
+  "archons.json"
  ]
 }
