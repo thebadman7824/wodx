@@ -78,13 +78,17 @@ export async function run() {
     await scene.view();
     await sleep(800);
     const W = CONST.WALL_DOOR_STATES;
-    const [door, win, barred, wattle, far] = await scene.createEmbeddedDocuments("Wall", [
-      {c: [520, 800, 680, 800], door: 1, ds: W.LOCKED, flags: {[MOD]: {lock: "good"}}},
-      {c: [700, 620, 700, 780], door: 1, ds: W.CLOSED, flags: {[MOD]: {kind: "window"}}},
-      {c: [500, 620, 500, 780], door: 1, ds: W.CLOSED, flags: {[MOD]: {material: "heavy", barSide: "b", barred: true}}},
-      {c: [520, 600, 680, 600], door: 0, flags: {[MOD]: {wall: "wattle"}}},
-      {c: [1500, 1500, 1700, 1500], door: 1, ds: W.LOCKED}
+    // Foundry does not promise the created walls come back in the order given, so each carries a gate tag and is found by it
+    await scene.createEmbeddedDocuments("Wall", [
+      {c: [520, 800, 680, 800], door: 1, ds: W.LOCKED, flags: {[MOD]: {lock: "good", gate: "door"}}},
+      {c: [700, 620, 700, 780], door: 1, ds: W.CLOSED, flags: {[MOD]: {kind: "window", gate: "win"}}},
+      {c: [500, 620, 500, 780], door: 1, ds: W.CLOSED, flags: {[MOD]: {material: "heavy", barSide: "b", barred: true, gate: "barred"}}},
+      {c: [520, 600, 680, 600], door: 0, flags: {[MOD]: {wall: "wattle", gate: "wattle"}}},
+      {c: [1500, 1500, 1700, 1500], door: 1, ds: W.LOCKED, flags: {[MOD]: {gate: "far"}}}
     ]);
+    const tagged = tag => scene.walls.find(w => w.flags?.[MOD]?.gate === tag);
+    const [door, win, barred, wattle, far] = ["door", "win", "barred", "wattle", "far"].map(tagged);
+    if ( [door, win, barred, wattle, far].some(w => !w) ) throw new Error("the gate's walls were not all created");
     const mk = (name, owner) => Actor.create({name, type: "Mortal", ownership: owner ? {default: 0, [game.user.id]: 3} : {default: 0},
       system: {attributes: {strength: {value: 2, total: 2}, dexterity: {value: 3, total: 3}, perception: {value: 3, total: 3}, intelligence: {value: 2, total: 2}},
         abilities: {larceny: {value: 2, isvisible: true}, alertness: {value: 2, isvisible: true}, stealth: {value: 1, isvisible: true}}}});
