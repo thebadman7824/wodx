@@ -993,3 +993,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Actions 3.17.0: the Hunt opens on the scene's ground and adds the heat's difficulty; fires wodxHunted {actorId, sceneId, caught, botch}; players' hunts reach the Storyteller by socket (req.hunted).
 - Tests: tools/harness/upkeep.test.mjs (12). Gate: tools/gate/gateupkeep.mjs, 9 steps. UI fit: Upkeep, Ties that need tending, Hunting grounds.
 
+## 2026-11-09: a Gauntlet that moves, Banality drift, plague years (Otherworlds 0.7.0, Storyteller 0.13.0, Actions 3.17.1, B324-B327)
+
+- Otherworlds: drift-rules.mjs (new, pure: DRIFT_KINDS, addDrift, undoDrift, withDrift, banalityWithDrift), drift.mjs (new: scene flag drift, stepDrift, undoStep, driftDialog, map events propose type wodx-otherworlds.drift). placeOf adds the drift to the Gauntlet and the Banality rating; scene ratings are copied, not changed in place. api.drift.
+- Storyteller: tie kind caern; OUTBREAKS and outbreakFor; huntHere returns the outbreak; world setting plague; the Upkeep chooser opens The Gauntlet over time when Otherworlds is on.
+- Actions 3.17.1: the Hunt shows a plague year's note.
+- Tests: upkeep.test.mjs (+5). UI fit: The Gauntlet over time.
+

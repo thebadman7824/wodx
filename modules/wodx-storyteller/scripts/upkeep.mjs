@@ -36,6 +36,8 @@ export function registerUpkeepSettings() {
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "heat", {name: "Hunting grounds and heat", hint: "Hunting in a place builds heat; a hot place makes hunting harder and calls the era's authorities.",
     scope: "world", config: true, type: Boolean, default: true});
+  game.settings.register(MOD, "plague", {name: "Plague years", hint: "In a year of plague, cholera or influenza, the Hunt says so.",
+    scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "tieDay", {scope: "world", config: false, type: Number, default: -1});
 }
 
@@ -234,9 +236,10 @@ export const huntOf = scene => U.normHunt(scene?.flags?.[MOD]?.hunt ?? {});
 
 /** What WoDX Actions' Hunt asks: the ground set for the scene and the heat's extra difficulty. */
 export function huntHere(scene = canvas?.scene) {
-  if ( !setting("heat") || !scene ) return {area: null, heat: 0, extra: 0, band: U.heatBand(0)};
+  const outbreak = setting("plague") ? U.outbreakFor(yearNow()) : null;
+  if ( !setting("heat") || !scene ) return {area: null, heat: 0, extra: 0, band: U.heatBand(0), outbreak};
   const h = huntOf(scene), heat = U.cooled(h.heat, h.since, now());
-  return {area: h.area, heat, extra: U.heatDifficulty(heat), band: U.heatBand(heat)};
+  return {area: h.area, heat, extra: U.heatDifficulty(heat), band: U.heatBand(heat), outbreak};
 }
 
 export async function addHeat(scene, kind, {who = null} = {}) {
@@ -291,7 +294,10 @@ export async function upkeepChooser() {
   if ( !game.user.isGM ) return;
   const pick = await foundry.applications.api.DialogV2.wait({rejectClose: false, window: {title: "Upkeep"}, classes: ["wodx-dialog"],
     content: "<p>Ties a character has to keep up, or the hunting grounds and how hot each one is.</p>",
-    buttons: [{action: "ties", label: "Ties that need tending"}, {action: "grounds", label: "Hunting grounds"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
+    buttons: [{action: "ties", label: "Ties that need tending"}, {action: "grounds", label: "Hunting grounds"},
+      ...(game.modules.get("wodx-otherworlds")?.api?.drift ? [{action: "drift", label: "The Gauntlet over time"}] : []),
+      {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
+  if ( pick === "drift" ) return game.modules.get("wodx-otherworlds")?.api?.drift?.dialog?.();
   if ( pick === "ties" ) return tiesDialog();
   if ( pick === "grounds" ) return groundsDialog();
   if ( pick === "check" ) { const n = await checkTies({force: true}); if ( !n.length ) ui.notifications.info("No ties have come due."); }
