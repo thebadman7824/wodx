@@ -61,3 +61,19 @@ test("a placed sound is stopped by walls and heard muffled through them, or let 
   assert.match(src, /Hooks\.on\("preCreateAmbientSound"/);
   assert.match(src, /data-action="muffle"/);
 });
+
+/* WoDX Atmosphere 0.5.0: personal themes. */
+test("a personal theme plays at most once a minute, unless the Storyteller presses Spotlight", () => {
+  const th = {src: "music/themes/anezka.ogg", volume: 0.8};
+  assert.deepEqual(K.themeToPlay(th, {last: 0, now: 100000}), {src: th.src, volume: 0.8});
+  assert.equal(K.themeToPlay(th, {last: 90000, now: 100000}), null);
+  assert.deepEqual(K.themeToPlay(th, {last: 90000, now: 100000, force: true}), {src: th.src, volume: 0.8});
+  assert.equal(K.themeToPlay({src: ""}), null);
+  assert.equal(K.themeToPlay({src: "notes.txt"}), null);
+  assert.equal(K.themeToPlay(null), null);
+  assert.equal(K.themeToPlay({src: "a.mp3"}, {now: 1e9}).volume, 0.6);
+  assert.equal(K.themeToPlay({src: "a.mp3", volume: 4}, {now: 1e9}).volume, 1);
+  const src = readFileSync(join(root, "modules/wodx-atmosphere/scripts/main.mjs"), "utf8");
+  assert.match(src, /Hooks\.on\("updateCombat"/);
+  assert.match(src, /searchBox\("table\.watmo-themes"/);
+});

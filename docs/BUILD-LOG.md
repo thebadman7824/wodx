@@ -886,3 +886,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Tests: npc-gridless.test.mjs (3); phase 7 tests follow the version. Gate: tools/gate/gategridless.mjs, 5 steps, a gridless scene of its own with a wall.
 - 0.6.1: gategridless step 3 found a wall running through a lattice cell's centre (x 750 on 100 px cells): the step's wall test ended exactly on the wall and passed, while Foundry's move stopped there. On the lattice the test now runs 3 px past the cell's centre (NR.pastPoint).
 - 0.6.2: the rerun still stopped at (5,7). The PC helper's diagnosis: the path slid up the wall line with the token's centre on it ((7,7), (6,7), (5,7) all at x 750); every single step passed Foundry's collision test, but a many-waypoint move stopped there. Now a lattice cell whose centre lies within 4 px of a wall that blocks movement (not an open door) is closed (NR.onWall, NR.segmentDistance).
+
+## 2026-11-09: personal themes (Atmosphere 0.5.0, B269)
+
+- kits-rules.mjs: THEME_GAP (60 s) and themeToPlay(theme, {last, now, force}).
+- main.mjs: world setting Personal themes; playTheme (broadcast from the Storyteller's client), setTheme (flags.wodx-atmosphere.theme); updateCombat plays the theme when a player character's turn starts; the Atmosphere window's Personal themes part (Choose, Spotlight, Clear, with search past five characters); api.themes.
+- Tests: one more in dawn-dread.test.mjs. Gate: tools/gate/gatethemes.mjs, 5 steps.

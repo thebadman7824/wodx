@@ -19,7 +19,7 @@ import * as K from "./kits-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.4.0";
+const VERSION = "0.5.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -61,6 +61,7 @@ function registerSettings() {
     hint: "In the last half hour before sunrise the edge of the screen pales, birds start up at twenty minutes and a cock crows at ten. Turn it off on this computer.",
     type: Boolean, default: true, onChange: () => applyDread()});
   world("muffleNew", {name: "Placed sounds are muffled by walls", hint: "A sound you place on a map is stopped by walls and heard muffled through them, like a sermon through the chapel door.", type: Boolean, default: true});
+  world("themes", {name: "Personal themes", hint: "Each player character's own short motif plays for everyone at the start of their turn in a fight, or when you press Spotlight in the Atmosphere window.", type: Boolean, default: true});
   world("dawnPressure", {name: "Rötschreck pressure before dawn", hint: "House rule: in the last ten minutes before sunrise, Rötschreck rolls are 1 harder.", type: Boolean, default: true});
   game.settings.register(MOD, "cueVolume", {scope: "client", config: true, name: "Cue volume", type: Number, default: 0.5, range: {min: 0, max: 1, step: 0.05}});
   world("frames", {name: "Token frames", hint: "A ring or a square in the era's material round each token (iron, gilt, brass, chrome, neon).",
@@ -317,6 +318,30 @@ function cuesForTime(time, delta) {
     if ( toDusk > 0 && toDusk <= delta ) playCue("dusk");
     if ( setting("dawnDread") ) for ( const c of K.dreadCuesCrossed(CAL.secondsToNextDawn(time, lat), delta) ) playCue(c);
   } catch (e) { /* no cue */ }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Personal themes                                                    */
+/* ------------------------------------------------------------------ */
+
+const themeLast = new Map();
+const pcs = () => all(game.actors).filter(a => a.hasPlayerOwner && a.type !== "npc").sort((a, b) => a.name.localeCompare(b.name));
+/** Play a character's theme for everyone (the Storyteller's client sends it). Returns what played, or null. */
+export function playTheme(actor, {force = false} = {}) {
+  if ( !actor || !game.user.isGM || setting("themes") === false ) return null;
+  const t = K.themeToPlay(actor.flags?.[MOD]?.theme, {last: themeLast.get(actor.id), force});
+  if ( !t ) return null;
+  themeLast.set(actor.id, Date.now());
+  try { foundry.audio.AudioHelper.play({src: t.src, volume: t.volume, autoplay: true, loop: false}, true); }
+  catch (e) { console.warn(`${MOD} | theme`, e); return null; }
+  return t;
+}
+/** Set or clear a character's theme. */
+export async function setTheme(actor, src, volume) {
+  if ( !actor ) return null;
+  const clean = String(src ?? "").trim();
+  if ( !clean ) return actor.unsetFlag(MOD, "theme");
+  return actor.update({[`flags.${MOD}.theme`]: {src: clean, volume: Number.isFinite(Number(volume)) ? Number(volume) : 0.6}});
 }
 
 /* ------------------------------------------------------------------ */
@@ -600,7 +625,14 @@ export function AtmosphereClass() {
         cue: (ev, t) => playCue(t.dataset.cue),
         ambience: () => applyAmbience(),
         muffle: async () => { await muffleScene(canvas?.scene, true); AtmosphereApp.refresh(); },
-        unmuffle: async () => { await muffleScene(canvas?.scene, false); AtmosphereApp.refresh(); }
+        unmuffle: async () => { await muffleScene(canvas?.scene, false); AtmosphereApp.refresh(); },
+        spotlight: (ev, t) => playTheme(game.actors.get(t.dataset.actor), {force: true}),
+        pickTheme: (ev, t) => {
+          const a = game.actors.get(t.dataset.actor);
+          const FP = foundry.applications.apps.FilePicker.implementation;
+          return new FP({type: "audio", current: a?.flags?.[MOD]?.theme?.src ?? "", callback: async path => { await setTheme(a, path); AtmosphereApp.refresh(); }}).render(true);
+        },
+        clearTheme: async (ev, t) => { await setTheme(game.actors.get(t.dataset.actor), ""); AtmosphereApp.refresh(); }
       }
     };
     async _renderHTML() {
@@ -649,6 +681,14 @@ export function AtmosphereClass() {
           <button type="button" data-action="build"><i class="fa-solid fa-folder-open"></i> Build playlists from the kit folder</button>
           <button type="button" data-action="credits"><i class="fa-solid fa-list"></i> Credits journal</button></div>
           <div class="watmo-row">${Object.entries(K.CUES).map(([c, l]) => `<button type="button" data-action="cue" data-cue="${c}" title="${esc(l)}">Hear ${esc(c)}</button>`).join("")}</div>
+        </section>
+        <section><h3>Personal themes</h3><p class="wodx-quiet">A short motif for each player character, heard by everyone at the start of their turn in a fight (once a minute at most) or when you press Spotlight.${setting("themes") === false ? " Turned off in Configure Settings." : ""}</p>
+          ${(() => { const list = pcs(); if ( !list.length ) return "<p>No player characters yet.</p>";
+            return `${list.length > 5 ? searchBox("table.watmo-themes", "Search characters…", "Search characters") : ""}<table class="watmo-fc watmo-themes"><tbody>${list.map(a => { const th = a.flags?.[MOD]?.theme;
+              return `<tr><td>${esc(a.name)}</td><td>${th?.src ? esc(String(th.src).split("/").pop()) : "<span class=\"wodx-quiet\">none</span>"}</td><td>`
+                + `<button type="button" data-action="pickTheme" data-actor="${a.id}">Choose</button>`
+                + (th?.src ? `<button type="button" data-action="spotlight" data-actor="${a.id}">Spotlight</button><button type="button" data-action="clearTheme" data-actor="${a.id}">Clear</button>` : "")
+                + `</td></tr>`; }).join("")}</tbody></table>`; })()}
         </section>
         <section><h3>Handouts</h3><p class="wodx-quiet">A journal page in the era's style, in the folder WoDX handouts.</p>
           <button type="button" data-action="handout"><i class="fa-solid fa-scroll"></i> New handout</button></section>`;
@@ -705,6 +745,7 @@ export async function prime() {
       moonHidden: () => !!now()?.moonHidden},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
+    themes: {play: playTheme, set: setTheme},
     dread: {now: dread, rotschreck: dreadRotschreck, apply: applyDread, tick: dreadTick},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
@@ -745,6 +786,12 @@ Hooks.on("updateScene", (scene, change) => {
   if ( change.active ) { const d = now(); applySceneEffect(scene, d).then(() => applyLight(scene, d)).then(() => ambienceSoon()).catch(e => console.warn(`${MOD} | scene`, e)); }
 });
 let fights = 0;
+// A player character's turn starts: their theme, for everyone
+Hooks.on("updateCombat", (combat, change) => {
+  if ( !active || !isActiveGM() || !combat?.started || !("turn" in (change ?? {}) || "round" in (change ?? {})) ) return;
+  const a = combat.combatant?.actor;
+  if ( a?.hasPlayerOwner ) playTheme(a);
+});
 Hooks.on("combatStart", () => {
   if ( !active || !isActiveGM() || !setting("music") || !playlistFor(currentKit(), "combat") ) return;
   fights++;
