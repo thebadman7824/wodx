@@ -1,0 +1,256 @@
+[
+ {
+  "id": "mtbn-montreal",
+  "title": "Montreal (Sabbat city)",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "victorian"
+  ],
+  "summary": "The City of Black Miracles, held by the Sabbat since its founding.",
+  "claims": [
+   {
+    "text": "In an 1838 letter to Prince Mithras of London, Archbishop Strathcona claimed that Montreal had always belonged to the Sabbat and warned the Camarilla off, calling it the City of Black Miracles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Religion and culture shaped the city more than politics did. Its many church spires now share the ground with Islam, Buddhism, Taoism, Shinto, Judaism and countless other faiths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "mtbn-archdiocese"
+  ]
+ },
+ {
+  "id": "mtbn-ville-marie",
+  "title": "The Sabbat of Ville-Marie",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How the Sabbat slipped into New France in the seventeenth century.",
+  "claims": [
+   {
+    "text": "The Sabbat first used the Societe de Notre-Dame de Montreal, the French investors behind the Ville-Marie colony, as cover for its flight west, then turned to the religious orders once that route grew risky.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "By the middle of the 1600s, tales of torture and of children shaped into living mounds of bone and flesh reached Camarilla ears in France. The Toreador investigated, found signs of unsanctioned emigration, and put pawns in key posts to take hold of the colony.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "toreador",
+   "tzimisce"
+  ]
+ },
+ {
+  "id": "mtbn-strathcona",
+  "title": "Archbishop Strathcona",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "A nineteenth-century Sabbat archbishop of Montreal.",
+  "claims": [
+   {
+    "text": "Strathcona wrote to Prince Mithras of London in April 1838, declaring that once-friends were now dead to each other and that Montreal would be defended against the Camarilla.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "In the years before the Rebellions of 1837 and 1838, Strathcona watched the city's cliquish ancillae, likened to an old boys' club, spend their nights on their wealth at the Beaver Club and the Exchange Coffee House, and judged it time for the Sabbat to act.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mtbn-montreal",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "mtbn-fishin",
+  "title": "Fishin'",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Montreal Sabbat sport of hunting a sewer beast.",
+  "claims": [
+   {
+    "text": "A pestilent, ratlike creature that the Sabbat take for a werewolf has been seen in the city's sewers since the 1960s. To lure it out, packs lower mortal bait on a rope into the sewers, and something below always kills it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Each sighting sends Sabbat patrols into the sewers. Eager hunters drop pipe bombs down manholes, sometimes hitting gas lines or other Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "mtbn-montreal"
+  ]
+ },
+ {
+  "id": "mtbn-snake-pit",
+  "title": "The Snake Pit",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ruins of a destroyed Setite temple in Montreal North.",
+  "claims": [
+   {
+    "text": "The Sabbat call the ruins of the Setite temple on Boyer Street the Snake Pit. Few dare go there, and the Shepherds keep watch over the site.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Some fear that survivors of the temple's cult have gone underground and now worship their fallen leader as a martyred god.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set",
+   "mtbn-archdiocese"
+  ]
+ },
+ {
+  "id": "mtbn-archdiocese",
+  "title": "The Montreal archdiocese",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sabbat seat of Montreal and the fight over it in the 1990s.",
+  "claims": [
+   {
+    "text": "When the archbishop Veronique vanished, Sangris stepped forward; with rivals too weak to contend and the Shepherds' backing, Sangris was named archbishop, and most Sabbat recall the rule that followed as prosperous and peaceful.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "After Sangris's apparent death, a cardinal hand-picked an outsider, Carolina Valez, as a neutral archbishop, but Valez has failed to satisfy the young Sabbat or keep the peace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "In 1994 Ezekiel, childe of Sangris, returned at the head of a Black Hand pack to claim the seat, and the Shepherds put forward the former inquisitor Alfred Benezri. Each of the city's covens has lined up behind one of the three.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtbn",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "true-black-hand",
+   "mtbn-montreal"
+  ]
+ }
+]
