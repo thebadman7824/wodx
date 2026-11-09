@@ -133,6 +133,12 @@
    "title": "Lore of the Clans",
    "short": "LotC",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "v20comp",
+   "title": "V20 Companion",
+   "short": "V20 Comp",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -157,6 +163,7 @@
   "vav.json",
   "dafae.json",
   "gr.json",
-  "lotc.json"
+  "lotc.json",
+  "v20comp.json"
  ]
 }
