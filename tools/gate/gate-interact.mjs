@@ -379,9 +379,12 @@ export async function run() {
     });
 
     await step("20. altar and relic", async () => {
+      // Right beside where the burglar stands now (step 19 moved it), so both are within reach
+      await sleep(800);
+      const cx = tb.x + 50, cy = tb.y + 50;
       await scene.createEmbeddedDocuments("Tile", [
-        {x: 700, y: 640, width: 60, height: 60, texture: {src: "icons/svg/temple.svg"}, flags: {[MOD]: {sacred: true, sacredKind: "altar", rating: 3, gate: "altar"}}},
-        {x: 600, y: 560, width: 40, height: 40, texture: {src: "icons/svg/holy-shield.svg"}, flags: {[MOD]: {sacred: true, sacredKind: "relic", rating: 2, sacredItems: ledger?.uuid ?? "", gate: "relic"}}}]);
+        {x: cx + 55, y: cy - 25, width: 50, height: 50, texture: {src: "icons/svg/temple.svg"}, flags: {[MOD]: {sacred: true, sacredKind: "altar", rating: 3, gate: "altar"}}},
+        {x: cx - 105, y: cy - 25, width: 50, height: 50, texture: {src: "icons/svg/holy-shield.svg"}, flags: {[MOD]: {sacred: true, sacredKind: "relic", rating: 2, sacredItems: ledger?.uuid ?? "", gate: "relic"}}}]);
       await sleep(500);
       const altar = findTile("altar"), relic = findTile("relic");
       const near = ix().interactablesFor(tok).map(x => x.doc.id);
@@ -397,7 +400,7 @@ export async function run() {
       await ix().undoCard(m2);
       const back = burglar.items.filter(i => i.name === ledger?.name).length === had && !relic.flags[MOD]?.taken;
       ok("20. an altar is holy ground, desecrated loudly and put back by Undo; a relic is taken and Undo takes it back", listed && holy && desecrated && holyAgain && taken && back,
-        {listed, holy, desecrated, holyAgain, taken, back, near});
+        {listed, holy, desecrated, holyAgain, taken, back, near, ids: [altar?.id, relic?.id], tokCenter: tok.center, at: {cx, cy}});
     });
 
     await step("10. alongside", async () => {
