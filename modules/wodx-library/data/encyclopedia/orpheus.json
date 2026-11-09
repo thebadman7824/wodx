@@ -1,0 +1,703 @@
+[
+ {
+  "id": "orph-orpheus-group",
+  "title": "The Orpheus Group",
+  "kind": "faction",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A company that sends agents among the dead.",
+  "claims": [
+   {
+    "text": "Project Echo is the Group's work on finding, making and using projectors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Its agents have their own slang; its researchers coin more technical words, and agent slang is far more common.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "A horror show is an illegal job in which a client pays Orpheus to frighten a target into madness or a possibly fatal accident.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "A beach is a break between missions, usually a week or more; a snow job is a mission that looks too easy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A fumigation is a mission to clear a place of spooks, usually by destroying them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-projectors",
+   "orph-crucible"
+  ]
+ },
+ {
+  "id": "orph-projectors",
+  "title": "Projectors",
+  "kind": "character",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Living people whose spirits can leave the body.",
+  "claims": [
+   {
+    "text": "A projector is a living human whose spirit can leave the body and travel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Skimmers project by yogic technique; going zero is leaving the body, and ripcording is snapping back at once, which harms the body and is kept for desperate escapes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Sleepers are agents who have been flatlined and kept in cryogenic suspension; their tubes are cradles, or coffins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The body a projector leaves behind is called the meat. Death merchants are freelance mercenary projectors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-ghosts",
+   "orph-laments"
+  ]
+ },
+ {
+  "id": "orph-ghosts",
+  "title": "Ghosts: Spirits and Hues",
+  "kind": "character",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The two kinds of ghost among the player Laments.",
+  "claims": [
+   {
+    "text": "Ghosts are spooks who do not project. Spirits are the common kind; hues used pigment in life and differ from spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Spook covers ghosts and projectors alike, anyone in gauze or without a body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Drones are ghosts with Vitality 1, called repeaters; blips have 2 or 3 and are near-functional, called reactives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Jasons are living people taken over by mad spooks or Spectres who then kill like serial killers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-projectors",
+   "orph-pigment",
+   "orph-vitality"
+  ]
+ },
+ {
+  "id": "orph-laments",
+  "title": "Laments",
+  "kind": "term",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A character's kind of ghost or projector.",
+  "claims": [
+   {
+    "text": "A Lament is a character's race: ghost or projector, each with two subsets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Laments decide much less of a character than Nature and role do; each character is meant to stay an individual.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-shades",
+   "orph-ghosts",
+   "orph-projectors"
+  ]
+ },
+ {
+  "id": "orph-shades",
+  "title": "Shades",
+  "kind": "term",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The five templates that shape a ghost's outlook.",
+  "claims": [
+   {
+    "text": "There are five Shades: Banshee, Haunter, Poltergeist, Skinrider and Will-o-the-Wisp.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Agent slang: a Banshee is a screamer, a Haunter a squatter, a Poltergeist a breaker, a Skinrider a control freak or puppetmaster, a Wisp a flicker.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Someone a Skinrider rides or controls is called a Malkovich.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-horrors",
+   "orph-laments"
+  ]
+ },
+ {
+  "id": "orph-vitality",
+  "title": "Vitality",
+  "kind": "mechanic",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A spook's life force and body at once.",
+  "claims": [
+   {
+    "text": "Vitality and Spite are the two central traits of every character.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "A spook's body is the projection of its soul's emotional state, so Vitality is both its energy and its body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Sharing Vitality within a crucible is called networking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-spite",
+   "orph-crucible"
+  ]
+ },
+ {
+  "id": "orph-spite",
+  "title": "Spite and Stains",
+  "kind": "mechanic",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The darkness that builds in a spook.",
+  "claims": [
+   {
+    "text": "Spite is the negative energy and feeling that gathers in a spook's soul.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 17,
+      "pdf": 18
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "When Spite rises above Vitality, the character starts slipping away from the person they think they are.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Stains are changes to the ghostly form when insecurity and fear warp the sense of self; each makes the character less human.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Stains come to those who often give way to rage or bitterness, but they often give some protection or advantage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-vitality",
+   "orph-horrors"
+  ]
+ },
+ {
+  "id": "orph-horrors",
+  "title": "Horrors",
+  "kind": "power",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The powers of ghosts and projectors.",
+  "claims": [
+   {
+    "text": "Horrors are the powers projectors and ghosts use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Thorns are a Spectre's innate powers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Special effects, or F/X, is agent code for any Horror or Stain in public.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Manifesting is appearing to and acting on the living.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-shades",
+   "spectres"
+  ]
+ },
+ {
+  "id": "orph-pigment",
+  "title": "Pigment",
+  "kind": "term",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A new street drug tied to the dead.",
+  "claims": [
+   {
+    "text": "Pigment, also called black heroin, is a cheap, addictive hallucinogen popular with casual users such as students and ravers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Pigment addicts are deadheads, and agents dislike them because they seem able to see spooks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-ghosts"
+  ]
+ },
+ {
+  "id": "orph-crucible",
+  "title": "Crucible",
+  "kind": "term",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A team of spooks working together.",
+  "claims": [
+   {
+    "text": "A crucible is a circle of ghosts and projectors whose different aims are made to work together.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Crucibles usually have high Vitality. A rave is a fight among several spooks; the Big Bad is a powerful spook leading others or controlling living people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-orpheus-group",
+   "orph-vitality"
+  ]
+ },
+ {
+  "id": "orph-beyond",
+  "title": "The Shroud and the Wastelands",
+  "kind": "place",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What lies beyond death, as the living understand it.",
+  "claims": [
+   {
+    "text": "The Shroud is the veil between this world and the one thought to lie past it; some call it the Stormwall.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The Wastelands are a rumoured land of the dead being torn apart by the Maelstrom on the far side of the Shroud.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The Maelstrom was a great event some years ago that swept many ghosts away; little is known of it but rumour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The Nothing is a ghost rumour of what follows a ghost's utter destruction; there is no evidence either way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Gauze, or plasm, is a spook's body; the Quick are the living.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "orpheus",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shroud",
+   "maelstroms"
+  ]
+ },
+ {
+  "id": "orph-series",
+  "title": "The Orpheus Series",
+  "kind": "lore",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A limited game told in a set run of books.",
+  "claims": [
+   {
+    "text": "The game is a limited run that builds like a suspense film, each supplement a new revelation toward a final climax.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The run goes Crusade of Ashes, Shades of Gray, Shadow Games, The Orphan-Grinders, and End Game.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "orpheus",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-orpheus-group"
+  ]
+ }
+]

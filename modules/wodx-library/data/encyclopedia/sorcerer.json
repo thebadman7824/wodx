@@ -1,0 +1,308 @@
+[
+ {
+  "id": "sorc-sorcerers",
+  "title": "Sorcerers",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortals who work magic along set paths without full Awakening.",
+  "claims": [
+   {
+    "text": "A sorcerer lives a half-Awakened life at the edge of the magical world, without the range and freedom of a full mage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Some revive old magic from legend and history; others push science or spirit so far that they surpass ordinary people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Mages forge new ways; sorcerers dare to walk the paths mages opened.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Sorcerers have no Avatar rating: a linear mage follows a fixed road instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "numina",
+   "hedge-magic",
+   "sorc-linear-magic"
+  ]
+ },
+ {
+  "id": "sorc-linear-magic",
+  "title": "Linear and Affinitive Magic",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two ways of naming static and dynamic magic.",
+  "claims": [
+   {
+    "text": "One Hermetic lecture proposes calling static, or hedge, magic linear, and the magic of true mages affinitive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Linear magic follows set paths: the same act gives the same effect every time, and power grows step by step, from spark to candle to bonfire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Different strengths of one effect are called Degrees.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hedge-magic",
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-paths",
+  "title": "Paths and Rituals",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The learned magic of sorcerers.",
+  "claims": [
+   {
+    "text": "Paths and rituals cover every kind of sorcerous art, from alchemy to techno-sorcery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "A sorcerer starts with five dots of Numina, spread across paths, rituals, psychic powers and foci.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Freebie costs: a Path dot is 7, a ritual 3 each, a Background or Willpower dot 1.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Starting Willpower is 5, and the Mana pool equals the Mana Background; each sorcerer also takes a Resonance trait: Dynamic, Entropic or Static.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "numina",
+   "sorc-psychics"
+  ]
+ },
+ {
+  "id": "sorc-psychics",
+  "title": "Psychic Phenomena",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The mental powers some numinous mortals are born with.",
+  "claims": [
+   {
+    "text": "Psychic Numina are strange mental powers held by a blessed, or cursed, few.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "On a psychic's botch the Storyteller sets the penalty, with the roll capped at Stamina plus Parapsychology dice, or Stamina alone without that Knowledge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "numina",
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-paradox",
+  "title": "Sorcerers and Paradox",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why linear magic draws less backlash.",
+  "claims": [
+   {
+    "text": "Linear mages coax the world along by its own nature instead of rewriting it, so they do not suffer Paradox the way affinitive mages do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "A botched spell or ritual can still bring dangerous trouble.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "As an option, Paradox might be seen as what forces vampires to drink, makes silver hurt werewolves and iron hurt changelings; a Storyteller may ignore this to keep things simple.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "sorc-linear-magic"
+  ]
+ },
+ {
+  "id": "sorc-style-sleeper",
+  "title": "Style Sleeper",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Merit for sorcerers who trust only one kind of magic.",
+  "claims": [
+   {
+    "text": "Style Sleeper is a 2-point Merit: for magic in the character's own style the character counts as Awakened, but for magic outside it, as a Sleeper.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "The disbelief partly shields against enemies' magic, though it can backfire, as when another mage tries to heal the character.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-sorcerers"
+  ]
+ }
+]
