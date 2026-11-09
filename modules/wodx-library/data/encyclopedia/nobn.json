@@ -1,0 +1,305 @@
+[
+ {
+  "id": "nobn-new-orleans",
+  "title": "New Orleans (Kindred city)",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "victorian"
+  ],
+  "summary": "A Ventrue city founded on the dream of a new Carthage.",
+  "claims": [
+   {
+    "text": "The dream began with Gaius Marcellus, a 23-year-old Roman tribune mortally wounded in the assault on Carthage and Embraced by a Ventrue elder to chronicle the war. Gaius came to think Rome's Kindred wrong to destroy the city, left Rome for Gaul, and there Embraced Doran, a young philosopher.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Louisiana holds an unusual number of caerns for its size, on especially potent ley lines, which has long drawn mages to the territory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Kindred influence over the state is slight and gathered in New Orleans and Baton Rouge; northern Louisiana slipped wholly out of the prince's reach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue",
+   "caern",
+   "nobn-doran"
+  ]
+ },
+ {
+  "id": "nobn-doran",
+  "title": "Doran",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "victorian",
+   "renaissance"
+  ],
+  "summary": "The Ventrue founder-prince of Kindred New Orleans.",
+  "claims": [
+   {
+    "text": "Doran crossed to North America and in the early 1700s went south rather than north to Canada, settling in the Louisiana territory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Early in a long war with the Brujah Simon de Cosa, Doran made the governor, Bienville, a ghoul. In 1743 Bienville broke free with a mage's help and returned to Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "nobn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Doran was murdered by a Gangrel whose jealousy of the prince had grown into hatred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue",
+   "prince",
+   "nobn-simon-de-cosa"
+  ]
+ },
+ {
+  "id": "nobn-simon-de-cosa",
+  "title": "Simon de Cosa",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A Spanish Brujah who fought Doran for Louisiana.",
+  "claims": [
+   {
+    "text": "Cosa attacked Doran in 1713, and for years their mortal followers clashed. Cosa had Bienville removed from office and a servant of Cosa's own, Antoine Cadillac, made governor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Many of Cosa's attacks came through native allies, and tribal raids menaced the colony for decades.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Idealist elders in Spain who hoped to settle in Louisiana had France cede the territory to Spain in 1763. Doran's servants lost their offices, and Cosa rose again and drove the Ventrue from the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah",
+   "nobn-doran"
+  ]
+ },
+ {
+  "id": "nobn-bayou-treaty",
+  "title": "The bayou treaty",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "renaissance"
+  ],
+  "summary": "The old land pact between New Orleans' Kindred and the Uktena.",
+  "claims": [
+   {
+    "text": "Werewolves followed their Cajun kinfolk to the bayous after 1755 and fought the Uktena already there over a caern. In the end the vampires and the Uktena together pushed Cosa into the western swamps.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 19,
+      "pdf": 20
+     },
+     {
+      "book": "nobn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Under the treaty that followed, the bayous and swamps went to the Lupines and the city and its mortals to the Kindred; within a few decades its vague terms proved a problem.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "After Doran's death, Uktena and Black Spiral Dancers came out of the bayous to take the new prince's measure. The Uktena want the treaty kept, but Prince Marcel keeps putting them off, and a caern remains in vampire hands, a sacrilege to the Lupines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "black-spiral-dancers",
+   "lupines",
+   "caern"
+  ]
+ },
+ {
+  "id": "nobn-marcel",
+  "title": "Prince Marcel",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The prince who followed Doran in New Orleans.",
+  "claims": [
+   {
+    "text": "Marcel kept the city's power and social order much as Doran left them, but held firmly to the Masquerade and so won over many elders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Some say the elders declared the Blood Hunt on Doran's Gangrel killer before Marcel was crowned; others say Marcel called it, to avenge Doran or to hide a hand in the murder.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "prince",
+   "nobn-doran"
+  ]
+ },
+ {
+  "id": "nobn-technomancers",
+  "title": "The Louisiana Technomancers",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mages who hold much of Louisiana outside New Orleans.",
+  "claims": [
+   {
+    "text": "Mages Doran called Technomancers took control of much of the state, plundering caerns and other sites to fuel their creations, and still run its political and financial institutions in those places.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "In the 1920s and 1930s Doran learned of a Syndicate of mages in southern Louisiana. Huey Long worked with other Technomancers in the north of the state and was killed by yet another group of mages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nobn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "syndicate",
+   "caern"
+  ]
+ }
+]

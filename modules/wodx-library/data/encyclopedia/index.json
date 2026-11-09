@@ -277,6 +277,12 @@
    "title": "Montreal by Night",
    "short": "Montreal by Night",
    "edition": "2nd"
+  },
+  {
+   "id": "nobn",
+   "title": "New Orleans by Night",
+   "short": "New Orleans by Night",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -325,6 +331,7 @@
   "cbn2.json",
   "labn.json",
   "mcbn.json",
-  "mtbn.json"
+  "mtbn.json",
+  "nobn.json"
  ]
 }
