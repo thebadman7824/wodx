@@ -1,0 +1,739 @@
+[
+ {
+  "id": "dam-mages",
+  "title": "Mages of the Dark Medieval",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Those born with the Gift to weave spells from the Tapestry, in the year 1230.",
+  "claims": [
+   {
+    "text": "Only a few are born with or come to the Gift, the knack of weaving spells from the Tapestry of the world; no willpower can grant it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Whether the Gift is inborn or a grace of angels is argued, but a person either has it fully or not at all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Mages who use the Gift for others are often remembered later as saints or gods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "In 1230 common superstition supports belief in magic, which helps mages cast with impunity; only in later ages does belief turn against them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-fellowships",
+   "dam-foundations-and-pillars",
+   "mages"
+  ]
+ },
+ {
+  "id": "dam-foundations-and-pillars",
+  "title": "Foundations and Pillars",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Dark Ages magic is built.",
+  "claims": [
+   {
+    "text": "A Pillar is one aspect of a Fellowship's practice, the form its magic takes, and it draws its power from a Foundation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "A Fellowship usually has four Pillars; most mages specialise in one or two.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "A new mage starts with Foundation 1 and three dots spread among Pillars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "A spell can do whatever the mage imagines, so long as the mage has enough Pillar and Foundation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-quintessence",
+   "dam-fellowships"
+  ]
+ },
+ {
+  "id": "dam-quintessence",
+  "title": "Quintessence and Tass",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Fifth Essence, stored and spent to power spells.",
+  "claims": [
+   {
+    "text": "Quintessence is the raw stuff of the universe, the Fifth Essence behind the other elements.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Mages can hold Quintessence within themselves and spend it on spells.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Tass is Quintessence made solid, in potions, vapours, sacred land or minerals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Starting Quintessence equals the Cray plus Fount Backgrounds, or 5.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-foundations-and-pillars",
+   "dam-backlash",
+   "quintessence"
+  ]
+ },
+ {
+  "id": "dam-backlash",
+  "title": "Backlash",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "What befalls a mage whose spell fails badly.",
+  "claims": [
+   {
+    "text": "A badly failed incantation, summoning or prayer brings Backlash, which almost always harms the caster and often those nearby.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "People of the age see Backlash as meddling spirits, divine retribution or one misspoken word of power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "Every point of Quintessence spent on the spell is added to the Backlash.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "Branding Backlash leaves marks such as a witch's mark or glassy nails; many small Brandings grow into worse ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   },
+   {
+    "text": "Manifestation Backlash takes the form of an otherworldly being fitting the caster's tradition, or the local one if far from home.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-quintessence",
+   "paradox"
+  ]
+ },
+ {
+  "id": "dam-dynamic-magic",
+  "title": "Magic Before the Consensus",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why magic in 1230 is dynamic.",
+  "claims": [
+   {
+    "text": "Dark Ages magic is dynamic within a few fixed frameworks, held by convention rather than nature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "A world-wide consensus reality is still centuries away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-mages",
+   "consensus"
+  ]
+ },
+ {
+  "id": "dam-fellowships",
+  "title": "The Mystic Fellowships",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The magical orders of the Dark Medieval.",
+  "claims": [
+   {
+    "text": "Most mages, even solitary ones, are heirs to a Fellowship whose world view shapes how they cast and what they think magic is.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Multi-Fellowship cabals are growing less rare in this age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Fellowships differ in how organised they are; the Hermetics and the Batini are among the most ordered.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Mages drift toward a Fellowship by inclination, unlike vampires who have no say in their clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-ahl-i-batin",
+   "dam-messianic-voices",
+   "dam-order-of-hermes",
+   "dam-old-faith",
+   "dam-spirit-talkers",
+   "dam-valdaermen"
+  ]
+ },
+ {
+  "id": "dam-ahl-i-batin",
+  "title": "Ahl-i-Batin",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Subtle Ones: Muslim philosopher-naturalists seeking the hidden Unity.",
+  "claims": [
+   {
+    "text": "The Ahl-i-Batin, the Subtle Ones, seek the hidden Unity beneath all things.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "They serve their lands as scientists, explorers, diplomats and, when needed, assassins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "They are shunned and distrusted, sometimes even by their own peoples.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Batini tradition claims a history of untold thousands of years, without proof.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Their ranks run Mutasawwif, Murid, Murshid and Qutb.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-fellowships"
+  ]
+ },
+ {
+  "id": "dam-messianic-voices",
+  "title": "Messianic Voices",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mages of the faith in Christ, who hold the age in their hands.",
+  "claims": [
+   {
+    "text": "The Messianic Voices began in the Holy Land among Jewish and Greek converts of the Apostles' time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Once a small part of a larger chorus, their zeal helped win an empire for Christ.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They teach that God grants free will, so a mage chooses to act with God's help, or with the help of angels and saints as conduits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "A healer who asks Saint Luke's aid acts in a way God has ordained, rather than compelling the saint.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-fellowships",
+   "celestial-chorus"
+  ]
+ },
+ {
+  "id": "dam-order-of-hermes",
+  "title": "Order of Hermes",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Hermetic magi, masters of Words.",
+  "claims": [
+   {
+    "text": "Hermetic magic rises through goetia and theurgia to magia, true magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Theurgia teaches a mage to impose will on spirits rather than plead for their favours.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Magia sets aside foci and works through mastery of Words; a rare master may work by will alone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Hermetics believe no one but themselves practises true magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Hermetics scorn other mages, Spirit-Talkers among them, as hedge magicians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-fellowships",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "dam-old-faith",
+  "title": "The Old Faith",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Pagan mages who mourn a more magical world.",
+  "claims": [
+   {
+    "text": "The Old Faith sees the world as less magical than it once was, and looks back with longing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Its magic has sunk from forging witch-swords in dragon fire to love potions and fertility charms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Its many traditions share a respect for the primacy of life, worked through fertility rites and dances.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-fellowships",
+   "verbena"
+  ]
+ },
+ {
+  "id": "dam-spirit-talkers",
+  "title": "Spirit-Talkers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mages who bargain with spirits rather than bind them.",
+  "claims": [
+   {
+    "text": "Spirit-Talkers hold that magic comes from speaking and bargaining with spirits for their knowledge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "They abhor binding a spirit against its will, calling it hubris that threatens the balance between worlds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Summoning is a central part of their magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-fellowships",
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "dam-valdaermen",
+  "title": "Valdaermen",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Men of Power: mages of the Norse, sworn to Odin.",
+  "claims": [
+   {
+    "text": "The Valdaermen came with the Vikings and are devoted to Odin, Lord of the Gallows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Outsiders call their magic dark; to them it is part of their faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "With Christianity rising and Viking ways fading, they are a dying breed, though still strong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Even members know their history mostly through oral records and sagas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-fellowships"
+  ]
+ }
+]

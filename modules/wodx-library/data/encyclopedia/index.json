@@ -49,6 +49,18 @@
    "title": "Mummy (Second Edition)",
    "short": "Mummy 2e",
    "edition": "Second"
+  },
+  {
+   "id": "m20",
+   "title": "Mage: The Ascension 20th Anniversary Edition",
+   "short": "M20",
+   "edition": "20th Anniversary"
+  },
+  {
+   "id": "damage",
+   "title": "Dark Ages: Mage",
+   "short": "DA:M",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -59,6 +71,8 @@
   "wtda.json",
   "wr20.json",
   "hh2.json",
-  "mummy2.json"
+  "mummy2.json",
+  "m20.json",
+  "damage.json"
  ]
 }
