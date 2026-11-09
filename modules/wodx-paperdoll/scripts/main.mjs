@@ -1,5 +1,5 @@
 import * as D from "./doll-rules.mjs";
-import {measure, SIZE} from "./fit-rules.mjs";
+import {measure, findEyes, SIZE} from "./fit-rules.mjs";
 
 /**
  * WoDX Paperdoll 0.1.0: a player builds the character's look (face parts, colours, era clothes) in a window on the
@@ -9,7 +9,7 @@ import {measure, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.1.4";
+export const VERSION = "0.3.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -47,14 +47,26 @@ const FITS = new Map();
 export async function anchorsFor(look) {
   const key = D.fitKey(look);
   if ( FITS.has(key) ) return FITS.get(key);
-  const c = await toCanvas(await avatar(D.loreleiOptions(look, "own", {key: true})), SIZE);
-  const A = measure(c.getContext("2d").getImageData(0, 0, SIZE, SIZE));
+  const c = await toCanvas(D.keySvg(look, await avatar(D.loreleiOptions(look, "own", {key: true}))), SIZE);
+  const A = measure(c.getContext("2d").getImageData(0, 0, SIZE, SIZE), D.buildOf(look));
   if ( !A ) throw new Error("The head could not be measured.");
   FITS.set(key, A);
   return A;
 }
 
+const EYESEEN = new Map();
+/** Where the eyes and pupils are for this look's eyes: drawn once with magenta eyes and found, then kept. */
+export async function eyesFor(look, mood = "own") {
+  const o = D.loreleiOptions(look, mood, {pupils: true}), key = o.eyes[0];
+  if ( EYESEEN.has(key) ) return EYESEEN.get(key);
+  const c = await toCanvas(await avatar(o), SIZE);
+  const e = findEyes(c.getContext("2d").getImageData(0, 0, SIZE, SIZE));
+  EYESEEN.set(key, e);
+  return e;
+}
+
 /* ---- What a character shows now ---- */
+const whoOf = actor => ({type: actor?.type ?? "", variant: actor?.system?.settings?.variant ?? ""});
 const lookOf = actor => actor?.flags?.[MOD]?.look ? D.normalize(actor.flags[MOD].look) : null;
 function atmosphere() { const m = game.modules.get("wodx-atmosphere"); return m?.active ? m : null; }
 /** The ring: the era kit's frame. When WoDX Atmosphere draws frames round this token, the picture leaves it out. */
@@ -75,13 +87,13 @@ export function stateOf(actor, look = lookOf(actor)) {
   const level = follow ? D.healthLevel(actor?.system?.health) : 0;
   const frenzy = !!actor?.system?.conditions?.isfrenzy;
   const mood = D.moodFor(look, {level, frenzy, follow});
-  return {look, level, mood, ...ringFor(actor)};
+  return {look, level, mood, style: D.styleFor(look, whoOf(actor)), ...ringFor(actor)};
 }
 /** The picture as SVG, for a look in a state. */
-export async function draw(look, {level = 0, mood = "own", frame = D.DEFAULT_FRAME, ring = true} = {}) {
-  const A = await anchorsFor(look);
-  const head = D.innerSvg(await avatar(D.loreleiOptions(look, mood)));
-  return D.compose({look, head, anchors: A, frame, ring, level});
+export async function draw(look, {level = 0, mood = "own", frame = D.DEFAULT_FRAME, ring = true, style = null} = {}) {
+  const A = await anchorsFor(look), eyes = await eyesFor(look, mood);
+  const head = D.headLayers({look, eyes, mood, head: D.innerSvg(await avatar(D.loreleiOptions(look, mood))), mask: D.innerSvg(await avatar(D.loreleiOptions(look, mood, {mask: true})))});
+  return D.compose({look, head, anchors: A, frame, ring, level, style});
 }
 
 /* ---- Baking: on the Storyteller's computer ---- */
@@ -127,7 +139,7 @@ export async function bake(actor, {force = false} = {}) {
   };
   try { for ( const t of actor.getDependentTokens?.({linked: true}) ?? [] ) add(t); } catch (e) { /* older API */ }
   for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) if ( t.actorId === actor.id ) add(t);
-  const log = {actor: actor.id, path, found: [], updated: [], errors: [], recheck: []};
+  const log = {actor: actor.id, path, found: [], updated: [], errors: [], recheck: [], reset: []};
   // diff: false sends the picture even when this computer's copy already shows it, so every copy ends the same
   const put = async (sceneId, ids) => {
     const scene = game.scenes.get(sceneId);
@@ -138,12 +150,22 @@ export async function bake(actor, {force = false} = {}) {
     } catch (e) { log.errors.push(e.message); console.warn(`${MOD} | token picture on ${scene.name}`, e); }
   };
   for ( const [sid, {ids}] of byScene ) { log.found.push(...[...ids].map(id => `${sid}.${id}`)); await put(sid, [...ids]); }
+  // Foundry 14 can keep showing a new token's old picture on this computer after the server has the new one:
+  // the stored data is right, the prepared copy is not. Prepare it again and redraw the token.
+  const fresh = async (sid, id) => {
+    const t = game.scenes.get(sid)?.tokens?.get(id);
+    if ( !t || t._source?.texture?.src !== path || t.texture?.src === path ) return;
+    try { t.reset(); log.reset.push(`${sid}.${id}`); if ( t.object && !t.object.destroyed ) await t.object.draw?.(); }
+    catch (e) { log.errors.push(`redraw: ${e.message}`); }
+  };
+  for ( const [sid, {ids}] of byScene ) for ( const id of ids ) await fresh(sid, id);
   lastBake = log;
   // Look again a moment later: a placed token that went back to its old picture gets the new one again
   if ( byScene.size ) setTimeout(async () => {
     for ( const [sid, {ids}] of byScene ) {
-      const back = [...ids].filter(id => game.scenes.get(sid)?.tokens?.get(id)?.texture?.src !== path);
+      const back = [...ids].filter(id => game.scenes.get(sid)?.tokens?.get(id)?._source?.texture?.src !== path);
       if ( back.length ) { log.recheck.push(...back.map(id => `${sid}.${id}`)); await put(sid, back); }
+      for ( const id of ids ) await fresh(sid, id);
     }
   }, 800);
   return path;
@@ -174,8 +196,8 @@ export async function saveLook(actor, look) {
 }
 
 /* ---- The window ---- */
-const opt = (table, cur) => Object.entries(table).map(([k, v]) => `<option value="${esc(k)}"${k === cur ? " selected" : ""}>${esc(typeof v === "string" ? v : v.label)}</option>`).join("");
-const swatch = (table, cur) => opt(Object.fromEntries(Object.entries(table).map(([k, v]) => [k, v])), cur);
+const opt = (table, cur, order = null) => (order ? order.map(k => [k, table[k]]) : Object.entries(table)).map(([k, v]) => `<option value="${esc(k)}"${k === cur ? " selected" : ""}>${esc(typeof v === "string" ? v : v.label)}</option>`).join("");
+const swatch = (table, cur) => opt(table, cur, table === D.SKIN ? D.FACE.SKIN_ORDER : table === D.EYES ? D.EYES_ORDER : null);
 
 export class PaperdollApp extends ApplicationV2 {
   static DEFAULT_OPTIONS = {
@@ -199,10 +221,10 @@ export class PaperdollApp extends ApplicationV2 {
   get title() { return `Paperdoll: ${this.actor?.name ?? ""}`; }
 
   async _renderHTML() {
-    const L = this.look, f = L.face, cl = L.clothes;
+    const L = this.look, f = L.face, cl = L.clothes, fits = D.themeFor(whoOf(this.actor));
     const stepper = part => {
-      const list = D.PARTS[part], i = list.indexOf(f[part]);
-      const shown = f[part] ? `${i + (list[0] === "" ? 0 : 1)} of ${list.length - (list[0] === "" ? 1 : 0)}` : "None";
+      const list = D.PARTS[part], i = list.indexOf(f[part]), named = D.PART_NAMES[part]?.[f[part]];
+      const shown = named ?? (f[part] ? `${i + (list[0] === "" ? 0 : 1)} of ${list.length - (list[0] === "" ? 1 : 0)}` : "None");
       return `<div class="form-group wodx-step"><label>${esc(D.PART_LABELS[part])}</label><div class="form-fields">
         <button type="button" data-action="step" data-part="${part}" data-by="-1" aria-label="${esc(D.PART_LABELS[part])}: back"><i class="fa-solid fa-chevron-left"></i></button>
         <span class="wodx-step-val">${esc(shown)}</span>
@@ -218,15 +240,18 @@ export class PaperdollApp extends ApplicationV2 {
         ${sel("preview", "Show it as", levels, String(this.preview))}
         <p class="hint">Head, shoulders and chest, inside the era's ring. Carried things are not drawn.</p></div>
       <div class="wodx-scroll wodx-paperdoll-form">
-        <h3>Face</h3>${["head", "eyes", "eyebrows", "nose", "mouth", "hair", "beard", "glasses", "earrings"].map(stepper).join("")}
+        <h3>Face</h3>${D.FACE_ORDER.map(stepper).join("")}
         ${chk("freckles", "Freckles", f.freckles)}
-        ${sel("skin", "Skin", D.SKIN, L.colors.skin)}${sel("hairColor", "Hair colour", D.HAIR, L.colors.hair)}
+        ${sel("skin", "Skin", D.SKIN, L.colors.skin)}${sel("hairColor", "Hair colour", D.HAIR, L.colors.hair)}${sel("eyeColor", "Eyes", D.EYES, L.colors.eyes)}
         <h3>Clothes</h3>
         ${sel("gown", "Gown", D.DYES, cl.gown)}
         ${chk("mantle", "A mantle over the shoulders", cl.mantle)}
         ${cl.mantle ? sel("mantleColor", "Mantle", D.DYES, cl.mantleColor) + sel("lining", "Lining", D.DYES, cl.lining) + sel("brooch", "Brooch", D.METALS, cl.brooch) : ""}
         ${sel("headwear", "On the head", D.HEADWEAR, cl.headwear)}
         ${cl.headwear !== "none" ? sel("veil", "Veil", D.DYES, cl.veil) : ""}
+        <h3>The picture</h3>
+        ${sel("ground", "Background", Object.fromEntries(Object.entries(D.GROUNDS).map(([k, v]) => [k, k ? v.label : `${v.label} (${D.GROUNDS[fits.ground].label})`])), L.style.ground)}
+        ${sel("ring", "Inner ring", Object.fromEntries(Object.entries(D.RINGS).map(([k, v]) => [k, k ? v.label : `${v.label} (${D.RINGS[fits.ring].label})`])), L.style.ring)}
         <h3>Mood</h3>
         ${sel("mood", "Face", D.MOODS, L.mood)}
         ${chk("followHealth", "The face shows the health track", L.followHealth)}
@@ -246,7 +271,7 @@ export class PaperdollApp extends ApplicationV2 {
     try {
       const lvl = this.preview, follow = lvl > 0;
       const mood = D.moodFor(this.look, {level: lvl, follow});
-      const {svg} = await draw(this.look, {level: lvl, mood, ...ringFor(this.actor), ring: true});
+      const {svg} = await draw(this.look, {level: lvl, mood, ...ringFor(this.actor), ring: true, style: D.styleFor(this.look, whoOf(this.actor))});
       return `<img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}" alt="${esc(this.actor?.name ?? "")}">`;
     } catch (e) {
       console.warn(`${MOD} | preview`, e);
@@ -259,13 +284,15 @@ export class PaperdollApp extends ApplicationV2 {
     else if ( n === "freckles" ) L.face.freckles = v;
     else if ( n === "skin" ) L.colors.skin = v;
     else if ( n === "hairColor" ) L.colors.hair = v;
+    else if ( n === "eyeColor" ) L.colors.eyes = v;
+    else if ( n === "ground" || n === "ring" ) L.style = {...L.style, [n]: v};
     else if ( ["gown", "mantle", "mantleColor", "lining", "brooch", "headwear", "veil"].includes(n) ) L.clothes[n] = v;
     else if ( ["mood", "followHealth", "portrait"].includes(n) ) L[n] = v;
     this.look = D.normalize(L);
     this.render();
   }
   static #onStep(ev, target) { this.look = D.step(this.look, target.dataset.part, Number(target.dataset.by)); this.render(); }
-  static #onRandom() { this.look = {...D.randomLook(`${this.actor?.name ?? ""} ${Date.now()}`), clothes: this.look.clothes, mood: this.look.mood, followHealth: this.look.followHealth, portrait: this.look.portrait}; this.render(); }
+  static #onRandom() { this.look = {...D.randomLook(`${this.actor?.name ?? ""} ${Date.now()}`), clothes: this.look.clothes, style: this.look.style, mood: this.look.mood, followHealth: this.look.followHealth, portrait: this.look.portrait}; this.render(); }
   static #onReset() { this.look = lookOf(this.actor) ?? D.randomLook(this.actor?.name ?? ""); this.render(); }
   static async #onSave() {
     await saveLook(this.actor, this.look);

@@ -4,20 +4,67 @@
  * so clothes always sit on the character. Carried things are never drawn. Pure functions: no Foundry here.
  */
 
+import * as FR from "./face-rules.mjs";
+export * as FACE from "./face-rules.mjs";
 export const MOD = "wodx-paperdoll";
-export const LOOK_VERSION = 1;
+export const LOOK_VERSION = 2;
 
 /* ---- The face parts Lorelei offers ---- */
 const run = (prefix, n) => Array.from({length: n}, (_, i) => `${prefix}${String(i + 1).padStart(2, "0")}`);
 export const PARTS = {
   head: run("variant", 4), eyes: run("variant", 24), eyebrows: run("variant", 13), nose: run("variant", 6),
-  mouth: [...run("happy", 18), ...run("sad", 9)], hair: run("variant", 48), beard: ["", ...run("variant", 2)],
-  glasses: ["", ...run("variant", 5)], earrings: ["", ...run("variant", 3)]
+  mouth: [...run("happy", 18), ...run("sad", 9)], hair: run("variant", 48), beard: ["", ...run("variant", 2), ...Object.keys(FR.WHISKERS)],
+  glasses: ["", ...run("variant", 5)], earrings: ["", ...run("variant", 3)],
+  build: Object.keys(FR.BUILD), age: Object.keys(FR.AGES), cheeks: Object.keys(FR.CHEEKS), marks: Object.keys(FR.MARKS), scar: Object.keys(FR.SCARS), affliction: Object.keys(FR.AFFLICTIONS)
 };
-export const PART_LABELS = {head: "Face shape", eyes: "Eyes", eyebrows: "Brows", nose: "Nose", mouth: "Mouth", hair: "Hair", beard: "Beard", glasses: "Spectacles", earrings: "Earrings"};
+export const PART_LABELS = {head: "Face shape", build: "Build of the face", eyes: "Eyes", eyebrows: "Brows", nose: "Nose", mouth: "Mouth", hair: "Hair", beard: "Facial hair",
+  age: "Age", cheeks: "Complexion", marks: "Marks", scar: "Scar", affliction: "Marked by", glasses: "Spectacles", earrings: "Earrings"};
+/** Names for the choices that have them; the others are numbered. */
+export const PART_NAMES = {build: Object.fromEntries(Object.entries(FR.BUILD).map(([k, v]) => [k, v.label])), age: FR.AGES, cheeks: FR.CHEEKS, marks: FR.MARKS, scar: FR.SCARS, affliction: FR.AFFLICTIONS,
+  beard: {"": "None", variant01: "Full beard", variant02: "Long beard", ...FR.WHISKERS}};
+/** The order the steppers come in. */
+export const FACE_ORDER = ["head", "build", "eyes", "eyebrows", "nose", "mouth", "hair", "beard", "age", "cheeks", "marks", "scar", "affliction", "glasses", "earrings"];
 
-export const SKIN = {"f0d6bf": "Fair", "f2d3b1": "Light", "e0b590": "Warm", "c99a6e": "Olive", "a8754f": "Tan", "8d5a3b": "Brown", "6b4129": "Deep brown", "4a2c1d": "Dark", "d7d2c8": "Deathly pale"};
-export const HAIR = {"1f1a17": "Black", "3b2a20": "Dark brown", "5a3a28": "Brown", "8a5a34": "Chestnut", "b5762f": "Auburn", "c9a15b": "Fair", "e2cf9a": "Flaxen", "9c9a96": "Grey", "efece6": "White"};
+export const SKIN = FR.SKIN;
+export const HAIR = FR.HAIR;
+/** Eye colours: the natural ones, then the strange ones. */
+export const EYES = Object.fromEntries(Object.entries(FR.EYES).map(([k, v]) => [k, v.label]));
+export const EYES_ORDER = Object.keys(FR.EYES);
+
+/* ---- The picture's ground and ring, in the manner of an illuminated page ---- */
+/** "" lets the character's kind choose (see themeFor). bg and star: the starred grounds. */
+export const GROUNDS = {"": {label: "What fits the character"}, gold: {label: "Gold leaf"}, lapis: {label: "Lapis with gold stars", bg: "1f2f6e"},
+  red: {label: "Vermilion with gold stars", bg: "8e1d1d"}, green: {label: "Verdigris with gold stars", bg: "1f4a32"},
+  violet: {label: "Purple with gold stars", bg: "4a2a62"}, night: {label: "Night with silver stars", bg: "14161f", star: "c8ccd8", line: "8a90a0"},
+  ember: {label: "Smoke with embers", bg: "2a0e0a", star: "e0642a", line: "8a3a20"}, parchment: {label: "Bare parchment"}};
+/** The coloured ring inside the gilt one. */
+export const RINGS = {"": {label: "What fits the character"}, mortal: {label: "Blue, for the living", c: "2b4a9a"}, kindred: {label: "Red, for the Kindred", c: "9a1f1f"},
+  sworn: {label: "Carmine, for the blood-bound and sworn", c: "b0244a"}, creature: {label: "Green, for spirits and beasts", c: "2f6b3a"}};
+/**
+ * The ground and ring that fit a kind of character: type is the actor type of the system, variant its sub-kind.
+ * Storyteller characters get this; players choose their own in the window.
+ */
+export function themeFor({type = "", variant = ""} = {}) {
+  const v = String(variant).toLowerCase();
+  switch ( type ) {
+    case "Vampire": return {ground: "red", ring: "kindred"};
+    case "Mortal": return /ghoul|revenant|retainer/.test(v) ? {ground: "gold", ring: "sworn"} : /sorcer|psychic|faith/.test(v) ? {ground: "lapis", ring: "mortal"} : {ground: "gold", ring: "mortal"};
+    case "Mage": return {ground: "lapis", ring: "mortal"};
+    case "Hunter": return {ground: "parchment", ring: "mortal"};
+    case "Werewolf": case "Changing Breed": return {ground: "green", ring: "creature"};
+    case "Changeling": return {ground: "violet", ring: "creature"};
+    case "Wraith": return {ground: "night", ring: "creature"};
+    case "Demon": return {ground: "ember", ring: "creature"};
+    case "Mummy": case "Exalted": return {ground: "gold", ring: "creature"};
+    case "Creature": return /spirit|shadow/.test(v) ? {ground: "night", ring: "creature"} : {ground: "green", ring: "creature"};
+    default: return {ground: "gold", ring: "mortal"};
+  }
+}
+/** The ground and ring this look shows: its own choice, else what fits the character. */
+export function styleFor(look, who = {}) {
+  const t = themeFor(who), st = look?.style ?? {};
+  return {ground: GROUNDS[st.ground] && st.ground ? st.ground : t.ground, ring: RINGS[st.ring] && st.ring ? st.ring : t.ring};
+}
 export const DYES = {"3f6b4c": "Green", "34558c": "Woad blue", "9c3b30": "Madder red", "b8463c": "Red", "c9a640": "Weld yellow", "cbbd9b": "Undyed wool", "6b4a32": "Brown", "2a2a2e": "Black", "5b3f6b": "Violet", "f3efe4": "White linen"};
 export const METALS = {"d9b04c": "Gilt", "b8bcc2": "Silver", "8a6a3a": "Bronze", "4f4943": "Iron"};
 export const HEADWEAR = {none: "Nothing", veil: "Veil and wimple", fillet: "Veil, wimple and fillet"};
@@ -64,8 +111,9 @@ export function moodFor(look, {level = 0, frenzy = false, follow = true} = {}) {
 /* ---- A look ---- */
 export function defaultLook(seed = "") {
   return {v: LOOK_VERSION, seed: String(seed),
-    face: {head: "variant01", eyes: "variant05", eyebrows: "variant07", nose: "variant01", mouth: "happy05", hair: "variant02", beard: "", glasses: "", earrings: "", freckles: false},
-    colors: {skin: "f0d6bf", hair: "5a3a28"},
+    face: {head: "variant01", eyes: "variant05", eyebrows: "variant07", nose: "variant01", mouth: "happy05", hair: "variant02", beard: "", glasses: "", earrings: "", freckles: false,
+      build: "", age: "", cheeks: "", marks: "", scar: "", affliction: ""},
+    colors: {skin: "f0d6bf", hair: "5a3a28", eyes: "5a3a22"}, style: {ground: "", ring: ""},
     clothes: {gown: "3f6b4c", mantle: true, mantleColor: "34558c", lining: "b8463c", brooch: "d9b04c", headwear: "none", veil: "f3efe4"},
     mood: "own", followHealth: true, portrait: false};
 }
@@ -80,7 +128,8 @@ export function normalize(raw) {
   face.freckles = !!f.freckles;
   const hex = (v, table, dv) => (typeof v === "string" && /^[0-9a-f]{6}$/i.test(v)) ? v.toLowerCase() : (Object.hasOwn(table, v) ? v : dv);
   return {v: LOOK_VERSION, seed: String(raw?.seed ?? ""), face,
-    colors: {skin: hex(c.skin, SKIN, d.colors.skin), hair: hex(c.hair, HAIR, d.colors.hair)},
+    colors: {skin: hex(c.skin, SKIN, d.colors.skin), hair: hex(c.hair, HAIR, d.colors.hair), eyes: pickKey(c.eyes, FR.EYES, d.colors.eyes)},
+    style: {ground: pickKey(raw?.style?.ground, GROUNDS, ""), ring: pickKey(raw?.style?.ring, RINGS, "")},
     clothes: {gown: hex(cl.gown, DYES, d.clothes.gown), mantle: cl.mantle !== false, mantleColor: hex(cl.mantleColor, DYES, d.clothes.mantleColor),
       lining: hex(cl.lining, DYES, d.clothes.lining), brooch: pickKey(cl.brooch, METALS, d.clothes.brooch),
       headwear: pickKey(cl.headwear, HEADWEAR, "none"), veil: hex(cl.veil, DYES, d.clothes.veil)},
@@ -97,13 +146,27 @@ export function randomLook(seed) {
   let h = hash32(String(seed), 0x9e3779b9);
   const next = n => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h % n; };
   const l = defaultLook(seed);
-  for ( const k of ["head", "eyes", "eyebrows", "nose", "hair"] ) l.face[k] = PARTS[k][next(PARTS[k].length)];
+  for ( const k of ["head", "build", "eyes", "eyebrows", "nose", "hair"] ) l.face[k] = PARTS[k][next(PARTS[k].length)];
   l.face.mouth = PARTS.mouth[next(18)];
-  l.colors.skin = Object.keys(SKIN)[next(8)];
-  l.colors.hair = Object.keys(HAIR)[next(Object.keys(HAIR).length)];
+  // Most faces are grown; the rarer parts come up now and then
+  const weighted = list => { let n = next(list.reduce((s, [, w]) => s + w, 0)); for ( const [v, w] of list ) { if ( n < w ) return v; n -= w; } return list[0][0]; };
+  l.face.age = weighted([["youth", 3], ["", 8], ["seasoned", 5], ["middle", 4], ["old", 2], ["aged", 1]]);
+  l.face.cheeks = next(100) < 45 ? "" : PARTS.cheeks[1 + next(PARTS.cheeks.length - 1)];
+  l.face.marks = next(100) < 70 ? "" : PARTS.marks[1 + next(PARTS.marks.length - 1)];
+  l.face.scar = next(100) < 82 ? "" : PARTS.scar[1 + next(PARTS.scar.length - 1)];
+  l.face.beard = next(100) < 62 ? "" : PARTS.beard[1 + next(PARTS.beard.length - 1)];
+  l.face.freckles = next(100) < 8;
+  l.colors.skin = FR.SKIN_HUMAN[next(FR.SKIN_HUMAN.length)];
+  const natural = Object.keys(HAIR).filter(k => !FR.HAIR_GREY.includes(k));
+  const grey = {old: 60, aged: 90, middle: 25}[l.face.age] ?? 0;
+  l.colors.hair = next(100) < grey ? FR.HAIR_GREY[next(FR.HAIR_GREY.length)] : natural[next(natural.length)];
   const dyes = Object.keys(DYES).filter(k => k !== "f3efe4");
   l.clothes.gown = dyes[next(dyes.length)];
   l.clothes.mantleColor = dyes[next(dyes.length)];
+  // Drawn last, so the earlier draws stay as they were: natural eyes, and now and then the marks of a hard life
+  l.colors.eyes = FR.EYES_NATURAL[next(FR.EYES_NATURAL.length)];
+  const hard = ["poxScars", "poxScars", "warts", "lostEye", "eyepatch", "burned", "mangled", "leprous"];
+  l.face.affliction = next(100) < 6 ? hard[next(hard.length)] : "";
   return l;
 }
 
@@ -112,20 +175,51 @@ export const CLOSE_HAIR = "variant02";
 export const hairFor = look => look.clothes?.headwear && look.clothes.headwear !== "none" ? CLOSE_HAIR : look.face.hair;
 
 /** The options DiceBear's Lorelei takes for this look and mood. key: draw it in key colours for measuring. */
-export function loreleiOptions(look, mood = "own", {key = false} = {}) {
+export function loreleiOptions(look, mood = "own", {key = false, mask = false, pupils = false} = {}) {
   const f = look.face, m = MOODS[mood] ?? MOODS.own;
   const o = {seed: look.seed || "wodx", head: [f.head], eyes: [m.eyes ?? f.eyes], eyebrows: [m.eyebrows ?? f.eyebrows], nose: [f.nose], mouth: [m.mouth ?? f.mouth], hair: [hairFor(look)],
     skinColor: [key ? "00ff00" : look.colors.skin], hairColor: [key ? "ff0000" : look.colors.hair],
-    beardProbability: f.beard ? 100 : 0, glassesProbability: f.glasses ? 100 : 0, earringsProbability: f.earrings ? 100 : 0,
+    beardProbability: loreleiBeard(f.beard) ? 100 : 0, glassesProbability: f.glasses ? 100 : 0, earringsProbability: f.earrings ? 100 : 0,
     frecklesProbability: f.freckles ? 100 : 0, hairAccessoriesProbability: 0};
-  if ( f.beard ) o.beard = [f.beard];
+  if ( loreleiBeard(f.beard) ) o.beard = [f.beard];
   if ( f.glasses ) o.glasses = [f.glasses];
   if ( f.earrings ) o.earrings = [f.earrings];
   if ( key ) { o.mouth = ["happy05"]; o.eyebrows = ["variant07"]; o.frecklesProbability = 0; o.glassesProbability = 0; o.earringsProbability = 0; }
+  if ( pupils ) {
+    Object.assign(o, {eyesColor: ["ff00ff"], skinColor: ["00ff00"], hairColor: ["00ff00"], mouthColor: ["00ff00"], eyebrowsColor: ["00ff00"], noseColor: ["00ff00"]});
+    o.frecklesProbability = 0; o.glassesProbability = 0; o.earringsProbability = 0;
+  } else if ( !key && !mask ) {
+    // Inked in sepia, with lips, brows and nose in the colours of the face, as on an illuminated page
+    Object.assign(o, {eyesColor: ["2a1a10"], mouthColor: ["9a3a34"], eyebrowsColor: [FR.mix(look.colors.hair, "2a1a10", 0.45)], noseColor: [FR.mix(look.colors.skin, "5a2a14", 0.55)]});
+  }
+  if ( mask ) { o.skinColor = ["ffffff"]; o.hairColor = ["000000"]; o.frecklesProbability = 0; o.glassesProbability = 0; o.earringsProbability = 0; }
   return o;
 }
+const loreleiBeard = b => /^variant0[12]$/.test(b ?? "");
 /** What the measurement depends on: the same key means the same anchors. */
-export const fitKey = look => [look.face.head, hairFor(look), look.face.beard].join("|");
+export const fitKey = look => [look.face.head, hairFor(look), loreleiBeard(look.face.beard) ? look.face.beard : "", look.face.build ?? ""].join("|");
+/** The build's scale, for measuring. */
+export const buildOf = look => { const b = FR.buildOf(look?.face?.build); return {sx: b.sx, sy: b.sy}; };
+/** Lorelei's key drawing (the whole SVG), set in the build of the face, ready to be measured. */
+export function keySvg(look, key) {
+  const t = FR.buildTransform(look.face.build);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980" width="980" height="980"><g${t ? ` transform="${t}"` : ""}>${innerSvg(key)}</g></svg>`;
+}
+/**
+ * The head for the picture: Lorelei's drawing (inner part) in the build of the face, with age, complexion, marks,
+ * scar and facial hair on the skin. mask: Lorelei's drawing of the same face in mask colours (inner part), so
+ * those parts show only on visible skin.
+ */
+export function headLayers({look, head, mask, eyes = null, mood = "own"}) {
+  const t = FR.buildTransform(look.face.build);
+  const {skin: on, defs} = FR.skinLayers(look.face, look.colors);
+  const af = FR.affliction(look.face.affliction, look.colors.skin, eyes), skin = on + af.head;
+  // In the mask, black is nudged off pure black, so the sepia inking of the picture leaves the mask alone
+  const m = skin ? `<mask id="wpd-skin" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="1200">${String(mask ?? "").replaceAll("viewboxMask", "wpd-vbm")
+    .replace(/(<path\b[^>]*?)fill="#fff"/gi, '$1fill="#000"').replace(/(fill|stroke)="#000(000)?"/gi, '$1="#010101"')}</mask>` : "";
+  const iris = mood === "unconscious" ? "" : FR.irises(eyes, look.colors.eyes, {skip: /^(lostEye|eyepatch)$/.test(look.face.affliction) ? [0] : []});
+  return `<defs>${defs}${m}</defs><g${t ? ` transform="${t}"` : ""}>${head}${iris}${skin ? `<g mask="url(#wpd-skin)">${skin}</g>` : ""}${af.over}</g>`;
+}
 
 /* ---- Hashing (file names for baked pictures) ---- */
 export function hash32(s, seed = 0x811c9dc5) {
@@ -222,7 +316,7 @@ export function filletBox(A) {
 export function headwear(A, cl) {
   if ( !cl.headwear || cl.headwear === "none" ) return {svg: "", tops: []};
   const {mirror, nr, neckL, neckR, shL} = frameOf(A);
-  const F = A.face, TEMPLE = 470;
+  const F = A.face, TEMPLE = 815 + (470 - 815) * (A.build?.sy ?? 1);
   const lowerIdx = F.map((p, i) => i).filter(i => F[i][1] >= TEMPLE);
   const lower = lowerIdx.map(i => F[i]);
   const iL = lowerIdx[lowerIdx.length - 1], iR = lowerIdx[0];
@@ -309,7 +403,7 @@ const V = 1360;
 /** Where the picture sits: centred on the face, lowered when headwear would cross the ring. */
 export function cropFor(A, frame, tops = [], margin = 30) {
   const lw = V * (frame.width ?? 0.045), r = V / 2, x0 = f0(A.neckMid + 42 - r);
-  const inner = r - lw * (frame.double ? 1.6 : 1) - lw / 6 - margin;
+  const inner = r - lw * 1.9 - margin;
   const clearance = y0 => {
     let worst = Infinity;
     for ( const [x, y] of tops ) {
@@ -323,37 +417,72 @@ export function cropFor(A, frame, tops = [], margin = 30) {
   return {x0, y0, lw, r, clearance: tops.length ? clearance(y0) : Infinity};
 }
 const hexColor = n => typeof n === "number" ? `#${n.toString(16).padStart(6, "0")}` : String(n);
-const GROUND = {"dark-ages": "#2b2f36", "victorian": "#2e2a33", "modern": "#2a2e33"};
+const INK = "#2a1a10";
+/** The filters and patterns of the illuminated finish. cx, cy: the centre, for the turn of the starred lattice. */
+function finishDefs(ground, cx, cy) {
+  const g = GROUNDS[ground] ?? GROUNDS.gold;
+  return `<filter id="wpd-gold" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.009" numOctaves="5" seed="7"/><feComponentTransfer><feFuncR type="gamma" exponent="1.8"/><feFuncG type="gamma" exponent="1.8"/></feComponentTransfer><feColorMatrix values="1.45 0.2 0 0 0.16  1.05 0.15 0 0 0.06  0.2 0.05 0 0 -0.06  0 0 0 0 1"/></filter>`
+    + `<filter id="wpd-leaf" x="0" y="0" width="1" height="1"><feTurbulence type="turbulence" baseFrequency="0.035" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 0.93  0 0 0 0 0.6  1.6 0 0 0 -0.55"/></filter>`
+    + `<filter id="wpd-paper" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="5"/><feColorMatrix values="0 0 0 0 0.3  0 0 0 0 0.22  0 0 0 0 0.12  0 0 0 -1.1 0.75"/></filter>`
+    + `<filter id="wpd-fibre" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.5" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 0.97  0 0 0 0 0.9  0 0 -1.2 0 0.62"/></filter>`
+    + `<filter id="wpd-cloth" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.06 0.9" numOctaves="2" seed="3" result="n"/><feColorMatrix in="n" values="0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0 0.12  0 0 -1.4 0 1.05" result="w"/><feComposite in="w" in2="SourceGraphic" operator="in" result="wt"/><feBlend in="wt" in2="SourceGraphic" mode="multiply"/></filter>`
+    + (g.bg ? `<pattern id="wpd-stars" patternUnits="userSpaceOnUse" width="70" height="70" patternTransform="rotate(45 ${cx} ${cy})"><rect width="70" height="70" fill="#${g.bg}"/><path d="M0 0H70M0 0V70" stroke="#${g.line ?? "d9b04c"}" stroke-opacity=".35" stroke-width="2"/><circle cx="35" cy="35" r="4.5" fill="#${g.star ?? "e6c25a"}"/></pattern>` : "")
+    + `<linearGradient id="wpd-gilt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2d27a"/><stop offset=".45" stop-color="#b98a2e"/><stop offset=".7" stop-color="#e8c463"/><stop offset="1" stop-color="#8f6620"/></linearGradient>`;
+}
+function groundSvg(ground, x0, y0) {
+  const g = GROUNDS[ground] ?? GROUNDS.gold, box = `x="${x0}" y="${y0}" width="${V}" height="${V}"`;
+  if ( g.bg ) return `<rect ${box} fill="url(#wpd-stars)"/><rect ${box} filter="url(#wpd-paper)" opacity=".5"/>`;
+  if ( ground === "parchment" ) return `<rect ${box} fill="#e2cfa4"/><rect ${box} filter="url(#wpd-paper)" opacity=".9"/><rect ${box} filter="url(#wpd-fibre)" opacity=".5"/>`;
+  return `<rect ${box} fill="#8f6418"/><rect ${box} filter="url(#wpd-gold)"/><rect ${box} filter="url(#wpd-leaf)" opacity=".3"/>`;
+}
+/** The gilt trim along the neckline, with red beads. */
+function trim(A) {
+  const sh = A.shoulder;
+  if ( !sh?.l || !sh?.r || !sh?.dip ) return "";
+  const d = `M${f0(sh.l[0])} ${f0(sh.l[1])} C${f0(sh.l[0] + 50)} ${f0(sh.dip[1] - 6)} ${f0(sh.dip[0] - 70)} ${f0(sh.dip[1])} ${f0(sh.dip[0])} ${f0(sh.dip[1])} C${f0(sh.dip[0] + 70)} ${f0(sh.dip[1])} ${f0(sh.r[0] - 50)} ${f0(sh.dip[1] - 6)} ${f0(sh.r[0])} ${f0(sh.r[1])}`;
+  return `<g transform="translate(0 16)"><path d="${d}" fill="none" stroke="${INK}" stroke-width="30" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#d9b04c" stroke-width="20" stroke-linecap="round"/></g>`
+    + [0.15, 0.3, 0.45, 0.55, 0.7, 0.85].map(t => `<circle cx="${f0(sh.l[0] + (sh.r[0] - sh.l[0]) * t)}" cy="${f0(sh.dip[1] + 16 - 40 * Math.pow(Math.abs(t - 0.5) * 2, 2))}" r="5" fill="#9a1f1f"/>`).join("");
+}
 
 /**
- * The whole picture as SVG. head: Lorelei's drawing (the inner part of its SVG). ring: draw the ring in (when
- * the token frames of WoDX Atmosphere are not drawing it). Returns {svg, crop}.
+ * The whole picture as SVG, finished as an illuminated page: a gilt or starred ground, sepia ink, paper grain and
+ * a gilt ring with a coloured ring inside it. head: from headLayers. style: {ground, ring} (see styleFor). ring:
+ * draw the ring in (when the token frames of WoDX Atmosphere are not drawing it). Returns {svg, crop}.
  */
-export function compose({look, head, anchors: A, frame = DEFAULT_FRAME, ring = true, level = 0}) {
+export function compose({look, head, anchors: A, frame = DEFAULT_FRAME, ring = true, level = 0, style = null}) {
+  const st = style ?? styleFor(look);
   const hw = headwear(A, look.clothes);
   const crop = cropFor(A, frame, hw.tops);
-  const {x0, y0, lw, r} = crop;
-  const clip = frame.shape === "round" ? `<circle cx="${x0 + r}" cy="${y0 + r}" r="${r - lw}"/>`
-    : `<rect x="${x0 + lw}" y="${y0 + lw}" width="${V - 2 * lw}" height="${V - 2 * lw}" rx="${V * 0.08}"/>`;
-  const col = hexColor(frame.color);
+  const {x0, y0, lw, r} = crop, cx = x0 + r, cy = y0 + r, round = frame.shape !== "square";
+  // A circle (or the rounded square of a square frame) set in from the edge
+  const at = (inset, attrs) => round ? `<circle cx="${cx}" cy="${cy}" r="${r - inset}" ${attrs}/>`
+    : `<rect x="${x0 + inset}" y="${y0 + inset}" width="${V - 2 * inset}" height="${V - 2 * inset}" rx="${Math.max(0, V * 0.08 - inset * 0.3)}" ${attrs}/>`;
+  const inner = ring ? lw * 1.9 : lw;
   let ringSvg = "";
   if ( ring ) {
-    ringSvg = frame.shape === "round" ? `<circle cx="${x0 + r}" cy="${y0 + r}" r="${r - lw / 2}" fill="none" stroke="${col}" stroke-width="${lw}"/>`
-      : `<rect x="${x0 + lw / 2}" y="${y0 + lw / 2}" width="${V - lw}" height="${V - lw}" rx="${V * 0.08}" fill="none" stroke="${col}" stroke-width="${lw}"/>`;
-    if ( frame.double ) ringSvg += frame.shape === "round" ? `<circle cx="${x0 + r}" cy="${y0 + r}" r="${r - lw * 1.6}" fill="none" stroke="${col}" stroke-opacity=".7" stroke-width="${lw / 4}"/>`
-      : `<rect x="${x0 + lw * 1.6}" y="${y0 + lw * 1.6}" width="${V - lw * 3.2}" height="${V - lw * 3.2}" rx="${V * 0.07}" fill="none" stroke="${col}" stroke-opacity=".7" stroke-width="${lw / 4}"/>`;
+    const line = "#3a2a12";
+    ringSvg = at(lw * 0.55, `fill="none" stroke="url(#wpd-gilt)" stroke-width="${lw * 1.1}"`)
+      + at(lw * 0.05, `fill="none" stroke="${line}" stroke-width="3"`) + at(lw * 1.1, `fill="none" stroke="${line}" stroke-width="3"`)
+      + at(lw * 1.5, `fill="none" stroke="#${(RINGS[st.ring] ?? RINGS.mortal).c}" stroke-width="${lw * 0.75}"`)
+      + at(lw * 1.88, `fill="none" stroke="${line}" stroke-width="3"`)
+      + at(lw * 0.55, `fill="none" stroke="#fff7d0" stroke-opacity=".5" stroke-width="2" stroke-dasharray="2 18"`);
   }
+  const box = `x="${x0}" y="${y0}" width="${V}" height="${V}"`;
+  const grain = `<rect ${box} filter="url(#wpd-paper)" opacity=".6" style="mix-blend-mode:multiply"/><rect ${box} filter="url(#wpd-fibre)" opacity=".3"/>`;
+  const hasVeil = look.clothes.headwear && look.clothes.headwear !== "none";
+  let figure = `<g>${head}</g>${damageMarks(A, level)}<g filter="url(#wpd-cloth)">${gown(A, look.clothes)}</g>${hw.svg ? `<g filter="url(#wpd-cloth)">${hw.svg}</g>` : ""}${hasVeil ? "" : trim(A)}`;
+  // Lorelei's black and the garment lines become a warm sepia ink
+  figure = figure.replace(/(fill|stroke)="#000(000)?"/g, `$1="${INK}"`);
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${y0} ${V} ${V}" width="512" height="512">`
-    + `<defs><clipPath id="wpd-clip">${clip}</clipPath></defs><g clip-path="url(#wpd-clip)">`
-    + `<rect x="${x0}" y="${y0}" width="${V}" height="${V}" fill="${GROUND[frame.kit] ?? GROUND["dark-ages"]}"/>`
-    + `<g>${head}</g>${damageMarks(A, level)}${gown(A, look.clothes)}${hw.svg}</g>${ringSvg}</svg>`;
+    + `<defs>${finishDefs(st.ground, cx, cy)}<clipPath id="wpd-clip">${at(inner, "")}</clipPath></defs><g clip-path="url(#wpd-clip)">`
+    + groundSvg(st.ground, x0, y0) + figure + grain + `</g>${ringSvg}</svg>`;
   return {svg, crop};
 }
 /** Lorelei's SVG without its outer tag and metadata, to place inside the picture. */
 export const innerSvg = s => String(s).replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "").replace(/<metadata>[\s\S]*?<\/metadata>/, "");
 
 /** The key for one baked picture: everything that changes what is drawn. */
-export function bakeKey({look, mood, level, frame, ring}) {
-  const l = normalize(look);
-  return hashOf(JSON.stringify([LOOK_VERSION, l.seed, l.face, l.colors, l.clothes, mood, level, frame?.kit, frame?.shape, frame?.color, !!ring]));
+export function bakeKey({look, mood, level, frame, ring, style}) {
+  const l = normalize(look), st = style ?? styleFor(l);
+  return hashOf(JSON.stringify([LOOK_VERSION, l.seed, l.face, l.colors, l.clothes, mood, level, frame?.kit, frame?.shape, frame?.color, !!ring, st.ground, st.ring]));
 }

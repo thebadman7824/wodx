@@ -1,0 +1,1288 @@
+[
+ {
+  "id": "rotb-tremere-offices",
+  "title": "Tremere in Camarilla Offices",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where the Warlocks sit in a domain.",
+  "claims": [
+   {
+    "text": "Few Tremere chase the title of Prince, since ruling costs time away from study; a Warlock who does take praxis, backed by the local chantry, is hard to remove because rivals cannot guess what the Prince can do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Seneschal is a favoured post: it shelters the practice of blood magic while giving real sway over how the domain is run.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Sheriffs lately like to keep a neonate Tremere as a deputy for occult problems, and chantries encourage it as training for apprentices.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A Tremere Scourge may quietly pass captured Caitiff or Anarchs to the chantry as test subjects; officers seldom ask how the bodies are handled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Tremere Harpies use rituals such as Blood Contract to hold rivals to the exact terms of boons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere",
+   "rotb-teaching-thaumaturgy"
+  ]
+ },
+ {
+  "id": "rotb-teaching-thaumaturgy",
+  "title": "Teaching Thaumaturgy to Outsiders",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The price the Pyramid sets.",
+  "claims": [
+   {
+    "text": "The Pyramid may allow an outsider to learn the first two levels of Thaumaturgy after a great service, such as destroying a wanted enemy, earning a life boon from a senior Tremere, or recovering lost artifacts or notes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The Regent asks the supervising Lord, who vets the candidate; the Regent is judged too if the candidate turns out badly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The student gives five blood points to the chantry, three of them sent on to the Lord, and signs a blood contract never to turn Thaumaturgy on a Tremere in good standing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Artifacts handed to outsiders carry a resonance link that another blood magician can use to strike back at the maker.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere"
+  ]
+ },
+ {
+  "id": "rotb-sabbat-scripture",
+  "title": "Sabbat Scripture",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The canon of the Sword of Caine.",
+  "claims": [
+   {
+    "text": "The ancient Book of Nod is the most sacred text and known in part to every member in good standing; scholars also read the Codex of the Damned, the Gospels of Irad and Adah, the Ubar Chronicles, the Erciyes Fragments and the poem Wounds of the Night's Sword.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Heretical texts include the Canticle of Japheth, which holds that Caine is dead, and the Revelations of the Dark Mother.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat"
+  ]
+ },
+ {
+  "id": "rotb-sabbat-sorcery",
+  "title": "Sorcery in the Sabbat",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Blood magic in the Sword of Caine.",
+  "claims": [
+   {
+    "text": "Sabbat sorcerers practise Koldunism, Thaumaturgy, Necromancy, Abyss Mysticism and the ritae; because most versions of Noddist scripture say Thaumaturgy did not come from Caine, some members distrust it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The Sect keeps no chantries or shared libraries, so each sorcerer works alone from fragments; books taken from burning Tremere chantries are prized.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The Inquisition can declare a ritual or path heretical at any time and seize years of research.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "rotb-sabbat-inquisition"
+  ]
+ },
+ {
+  "id": "rotb-synods",
+  "title": "Ecumenical Councils and Synods",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Sabbat priests meet.",
+  "claims": [
+   {
+    "text": "Ecumenical Councils bring packs together several times a year to argue theology, philosophy and ritual outside the great rites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "A synod is rarer and can change doctrine: alter the Auctoritas Ritae, grant Blood Baths to the Consistory or found a Black Cathedral.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "rotb-auctoritas"
+  ]
+ },
+ {
+  "id": "rotb-auctoritas",
+  "title": "The Thirteen Auctoritas Ritae",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great rites of the Sabbat.",
+  "claims": [
+   {
+    "text": "Tonight the Auctoritas number thirteen: the Binding, the Vaulderie, the Creation Rites, the Blood Feast and Blood Bath, the Fire Dance, Games of Instinct, Palla Grande, Festivo dello Estinto, Monomacy, the Wild Hunt, the War Party and the Sermons of Caine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "There have never been more than thirteen at once; conservatives oppose raising a new rite unless another is demoted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "To raise an Ignoblis rite, many pack priests petition the Grand Inquisitor, who checks it for heresy and infernal ties and fixes its wording before a synod of the Consistory decides.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat"
+  ]
+ },
+ {
+  "id": "rotb-four-waves",
+  "title": "The Four Waves of Anarch Magic",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Schools of Anarch blood sorcery.",
+  "claims": [
+   {
+    "text": "The Anarchs have no academies or chantries; occultists hunt down reluctant tutors or risky texts, and loosely group themselves as Old Skool, New Age, Punk and Hacktivist.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "In the early Revolt a few Tzimisce and Assamite Anarchs taught their hereditary arts; after the Convention of Thorns the Kolduns went to the Sabbat, many Assamite sorcerers went home, and the Tremere quietly hunted any Anarch showing Thaumaturgy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs",
+   "rotb-blood-magic-principles"
+  ]
+ },
+ {
+  "id": "rotb-assamite-sorcery",
+  "title": "Assamite Sorcery",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Blood magic of the Assassins.",
+  "claims": [
+   {
+    "text": "Its roots lie in the Second City, where the Clan Embraced mortal magicians; they served as interrogators and demon hunters in the wars on the Baali.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Once the Second City fell, the sorcerers kept the Clan in touch across distances and tended the herd's crops.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Since the curse laid after the Convention of Thorns, the sorcerers seek to lift it, lately through Dur-An-Ki and covenants with spirits once worshipped as gods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites",
+   "rotb-dur-an-ki"
+  ]
+ },
+ {
+  "id": "rotb-dur-an-ki",
+  "title": "Dur-An-Ki",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mesopotamian spirit sorcery.",
+  "claims": [
+   {
+    "text": "The name is Sumerian for master of heaven and earth; the art binds covenants between spirits and sorcerers called ashipu, and has gathered myths from across the Middle East.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "A botch leaves the ashipu briefly lost to the spirits, with the Fugue Derangement; Assamite Sorcerers are spared, other ashipu are not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "The Hunter's Winds path boosts stealth; unlike Obfuscate, higher Auspex does not pierce it automatically.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-assamite-sorcery"
+  ]
+ },
+ {
+  "id": "rotb-blade-smoke",
+  "title": "Blade of Smoke and Shadow",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Assamite ritual against demons.",
+  "claims": [
+   {
+    "text": "Cast in total darkness on an obsidian dagger with an iron hilt, before water and a block of clay, while calling on Marduk; the caster takes one lethal level from the bloodletting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "The blade turns to smoke for one sunrise per success, passes through flesh and strikes demons, ghosts and spirits, even inside a possessed host; anyone may wield it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-assamite-sorcery"
+  ]
+ },
+ {
+  "id": "rotb-bound-by-oath",
+  "title": "Bound by Oath",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Assamite ritual of the hunt.",
+  "claims": [
+   {
+    "text": "Two to seven participants sacrifice a bull in an underground chamber in Mithra's name and swear to kill one target.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "When they attack that target together, up to one participant per success acts a round ahead of it, and all gain the successes as a bonus to Alertness until sunrise or the end of the fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-assamite-sorcery"
+  ]
+ },
+ {
+  "id": "rotb-setite-sorcery",
+  "title": "Setite Sorcery",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The many sorceries of the Followers of Set.",
+  "claims": [
+   {
+    "text": "Setite Sorcery is really several religious, ritual practices from Setites around the world, all aimed at one shared goal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "A botch brings intense fear of bright light: the sorcerer rolls for Rötschreck at difficulty 4 plus the Akhu rating. Setite lector-priests are spared.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set"
+  ]
+ },
+ {
+  "id": "rotb-giovanni-necromancy",
+  "title": "Giovanni Necromancy",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Death magic and the family.",
+  "claims": [
+   {
+    "text": "Necromancy began as honouring ancestors; the Giovanni say a family spirit, Dis Pater, has watched over them since Rome and blessed them with wealth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "The idea of the Endless Night turned the art from a source of money into a road to godhood; the Clan gathers the hundred million souls it needs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Every necromantic ritual uses three things: a sign of the caster's authority, a sign of death imprisoned, and an item tied to the wraith, usually a Fetter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Rites framed in a faith other than the wraith's own afterlife beliefs are at +1 difficulty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni",
+   "necromancy"
+  ]
+ },
+ {
+  "id": "rotb-inconnu-schools",
+  "title": "Seekers and Purifiers",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two schools among the Inconnu.",
+  "claims": [
+   {
+    "text": "The Inconnu are too few to be a sect: a scholarly society of outsiders who stay out of the Jyhad and seek Golconda.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Seekers pursue Golconda by faith, penance and devotion to Humanity; Purifiers treat the curse as a disease to study with modern science and anatomy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Younger members may even explain the Curse of Caine as spirit possession.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inconnu"
+  ]
+ },
+ {
+  "id": "rotb-warding-technology",
+  "title": "Warding Circle versus Technology",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Inconnu ritual against modern weapons.",
+  "claims": [
+   {
+    "text": "A Level Five ritual that rings the caster with a circle any machine more complex than a crossbow cannot cross unharmed; it needs three points of blood from mortals of Intelligence 3 or more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Radius starts at 10 feet (3 m), costing a blood point per 10 feet; a night's casting makes it last a year and a day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Whoever carries technology in must beat the caster's successes on Willpower at difficulty Thaumaturgy + 3, or the devices are destroyed past recovery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-inconnu-schools"
+  ]
+ },
+ {
+  "id": "rotb-tal-mahe-ra",
+  "title": "Tal'Mahe'Ra Sorcery",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The True Black Hand and its liches.",
+  "claims": [
+   {
+    "text": "Part death cult, part keeper of hidden history, the society seeks vampiric supremacy while keeping mortals ignorant of the supernatural.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "From Enoch in the Shadowlands it hides dangerous secrets in vaults outside time, and fights an unseen mind that enslaves souls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Its sorcerer-liches blend vampiric blood magic with mortal magic and have explored the Shadowlands, the Astral and the Umbra, at a cost of thousands of lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Beneath the shadow city sleep the Aralu, named only on their tombs as Loz, Nergal, Al-Marhi and Ninmug.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "true-black-hand"
+  ]
+ },
+ {
+  "id": "rotb-mirror-of-blood",
+  "title": "Mirror of Blood",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ritual that makes Blood Brothers.",
+  "claims": [
+   {
+    "text": "A Level Five Thaumaturgy or Koldunic ritual made jointly by the Tzimisce and the Tremere antitribu; it forges a pack of Blood Brothers from ten young children over three months, without the Embrace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "It costs 3 blood per child; on the last night the caster rolls Intelligence + Occult at difficulty 9 for each, and the rite fails entirely unless at least three survive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "Each attempt costs a Humanity point; the Blood Brothers made are sterile and cannot Embrace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat"
+  ]
+ },
+ {
+  "id": "rotb-homunculi",
+  "title": "Homunculi",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Tremere servants of blood and flesh.",
+  "claims": [
+   {
+    "text": "Homunculi, imps and Rutor's Hands escaped the ban of the Montmartre Pacts; reviled but not illegal, they are accepted by the Pyramid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "A homunculus is shaped from the caster's blood and tissue to spy or serve; it has 2 health levels and rates 2 in every Physical Attribute, must drink a blood point a week, and its death deals its maker one unsoakable aggravated level.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere"
+  ]
+ },
+ {
+  "id": "rotb-infernalists",
+  "title": "Kinds of Infernalist",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Demonologist, thrall and diabolist.",
+  "claims": [
+   {
+    "text": "A demonologist studies demons but has made no bargain; a thrall has made any pact at all; a diabolist chooses to summon demons to control or worship them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "Every demonic bargain is permanent; a thrall's master can contact them, sense where they are and look through their senses at will.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 112,
+      "pdf": 113
+     },
+     {
+      "book": "rotb",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "A thrall's aura looks normal until an infernal power is used, when mystic senses show dark forces at work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-dark-thaumaturgy"
+  ]
+ },
+ {
+  "id": "rotb-dark-thaumaturgy",
+  "title": "Dark Thaumaturgy",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sorcery taught by demons.",
+  "claims": [
+   {
+    "text": "Dark Thaumaturgy, like the Baali's Daimoinon, corrupts the soul: the first use costs a point of morality, and each later use tests Conscience, unless the user follows the Path of Evil Revelations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "The new Expert Knowledge Demonology is needed to know demonic secrets or how to summon; Occult and Theology cover only the theory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-infernalists"
+  ]
+ },
+ {
+  "id": "rotb-chorazin",
+  "title": "Chorazin",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The basalt city of the Baali.",
+  "claims": [
+   {
+    "text": "The great black gate of Chorazin bears the carved faces of Azaneal and Namtaru; Azaneal was once a Baali who seized a demon's power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "The oldest Baali sleep there in iron caskets on ground so defiled it steams.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "The Veneficti, remnants of the infernalist mage Circle of Red enslaved by the Baali, guard its libraries and live on will the way ghouls live on vitae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-baali"
+  ]
+ },
+ {
+  "id": "rotb-sabbat-inquisition",
+  "title": "The Sabbat Inquisition",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hunters of the infernal in the Sword of Caine.",
+  "claims": [
+   {
+    "text": "Set up to root out the Path of Evil Revelations and other infernalism in the Sect, it grew to rule on heresy and to oversee Sabbat thaumaturges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "The Sabbat set up its Inquisition only in the nineteenth century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "rotb-josians"
+  ]
+ },
+ {
+  "id": "rotb-josians",
+  "title": "The Josians",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "victorian"
+  ],
+  "summary": "Camarilla archons against the infernal.",
+  "claims": [
+   {
+    "text": "Named for the biblical king Josiah, these archons root out Gehenna cults and infernalists in the Camarilla and seize their texts for study.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   },
+   {
+    "text": "Their roots lie in the fall of Carthage, when the seer Tryphosa warned Rome of Baali rot; Ventrue, Malkavian and Toreador elders have hunted diabolists ever since, led first by Lysander, Adanaya and Tryphosa.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   },
+   {
+    "text": "The Inner Circle founded the order at its 1764 gathering, when the Hellfire Clubs were in fashion; rumour credits Meerlinda with the name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "rotb-sabbat-inquisition"
+  ]
+ },
+ {
+  "id": "rotb-blood-magic-principles",
+  "title": "Principles of Blood Magic",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rules shared by every school.",
+  "claims": [
+   {
+    "text": "Blood: only Kindred vitae works the art; ghouls may learn the simplest paths after years, mortals never, and every path power spends at least one blood point.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Will: path powers are rolled on Willpower and need no faith; a blood magician cannot set off an effect by accident, even in frenzy, and a botch can cost temporary or even permanent Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Knowledge: blood magic is learned only by study, so ritual rolls are Intelligence + Occult, and no secondary path can outrank the primary until the primary is mastered.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 131,
+      "pdf": 132
+     },
+     {
+      "book": "rotb",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Identity: a path effect needs the target in sight, or nearer; a live broadcast is not enough.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Sacrifice: the strongest rituals cost the caster something, up to acts that would call for a Degradation roll at Humanity 4 or higher.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   }
+  ],
+  "see": [
+   "thaumaturgy"
+  ]
+ },
+ {
+  "id": "rotb-sorcery-botches",
+  "title": "Sorcery Botches by School",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Backlash for each school of sorcery.",
+  "claims": [
+   {
+    "text": "A botched Sorcery path roll brings a defect for the rest of the night, fitting the school; members of the school's own Clan are usually spared.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Koldunic: every dice pool halved for the night. New Age: a Paranoia-like belief in a conspiracy hiding the truth. Punk: Hysteria. Spirit Thaumaturgy: real or imagined possession, played as Multiple Personality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Old Skool: an aversion to holy symbols, resisting Rötschreck at difficulty 4 plus the Old Skool rating.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-blood-magic-principles"
+  ]
+ },
+ {
+  "id": "rotb-shackles-of-blood",
+  "title": "Shackles of Blood",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A wanga potion of false bonds.",
+  "claims": [
+   {
+    "text": "A Level Five wanga ritual: a potion brewed with three of the caster's blood points and a fresh heart, fed to the target, makes a false blood bond lasting one night per success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "If a mortal drinks it, a vampire drinking from that mortal in the next 24 hours is caught too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rotb",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-sabbat-sorcery"
+  ]
+ }
+]

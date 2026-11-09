@@ -1,0 +1,734 @@
+[
+ {
+  "id": "lotb-baali",
+  "title": "Baali in Modern Nights",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The demon-worshipping line.",
+  "claims": [
+   {
+    "text": "Baali say they have long been cast as bogeymen who steal children and summon demons; the Greeks named them creatures of Hades and later faiths called them servants of the Devil.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Baali hold that the world was sliding toward death long before they drank their first blood, and that Gehenna is only one theory of its end.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "lotb-daughters",
+  "title": "Daughters of Cacophony",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The singing bloodline.",
+  "claims": [
+   {
+    "text": "Big stadium shows risk fame enough to expose them, so most Daughters play small, late-night shows in exclusive venues; many find a home among the Toreador.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The Quiet Celebrities handle media manipulation and can build a whole new identity for a singer grown too famous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "lotb-gargoyles",
+  "title": "Gargoyles",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Tremere's stone servants.",
+  "claims": [
+   {
+    "text": "Gargoyles are made both by the original ritual and, more often, by the Embrace; ritual-made ones usually come from Kindred tied to the bloodlines the ritual needs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Chantries traded Sentinel Gargoyles to settle debts and to guard new havens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Every Gargoyle stays open to mind control from any source; for the variant types Visceratika counts as out of clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "lotb-gargoyle-scout",
+  "title": "Scout Gargoyles",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Gargoyle variant.",
+  "claims": [
+   {
+    "text": "Disciplines: Auspex, Obfuscate, Flight. All wound penalties double as the body turns back to stone, lasting until the Gargoyle wakes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-gargoyles"
+  ]
+ },
+ {
+  "id": "lotb-gargoyle-sentinel",
+  "title": "Sentinel Gargoyles",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Gargoyle variant.",
+  "claims": [
+   {
+    "text": "Disciplines: Flight, Potence, Fortitude. A Sentinel left truly alone, with no master, mate, ally or friend, has every dice pool halved until it finds someone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-gargoyles"
+  ]
+ },
+ {
+  "id": "lotb-gargoyle-warrior",
+  "title": "Warrior Gargoyles",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Gargoyle variant.",
+  "claims": [
+   {
+    "text": "Disciplines: Flight, Fortitude, Protean. Each frenzy turns a chosen body part to stone, harming the matching Attribute.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-gargoyles"
+  ]
+ },
+ {
+  "id": "lotb-harbingers",
+  "title": "Harbingers of Skulls",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Masked heirs of the Cappadocians.",
+  "claims": [
+   {
+    "text": "Harbinger elders insist they are not slaves; the servile role was a ruse kept up for generations and now dropped.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "One Harbinger elder claims never to have been Cappadocian and to have seen no sign that Lazarus has anything to do with the line.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Harbingers arrange Elysiums for the Camarilla and esbats for the Sabbat, hiding in plain sight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "lotb-kiasyd",
+  "title": "Kiasyd",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The line of Marconius.",
+  "claims": [
+   {
+    "text": "The Lasombra tried to bury knowledge of Marconius; the Kiasyd hold that the line of Marconius is the only one still in existence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 53,
+      "pdf": 54
+     },
+     {
+      "book": "lotb",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Kiasyd scholars studied the Abyss, the fae and blood magic, and many fell to mortal inquisitors because of their looks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Isanwayen taught the line to drink from flayed bodies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "lotb-nagaraja",
+  "title": "Nagaraja",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Eaters of flesh.",
+  "claims": [
+   {
+    "text": "The Nagaraja crave flesh rather than blood, which made them easy to spot; the Camarilla hired assassins, many of them Assamites, to wipe them out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Survivors hid in societies where eating human flesh was already accepted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "lotb-enoch",
+  "title": "Enoch",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A sanctuary of the Nagaraja.",
+  "claims": [
+   {
+    "text": "Enoch sheltered Nagaraja lucky enough to be invited; those who go seldom return, and some suspect each newcomer is indoctrinated to obey.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 66,
+      "pdf": 67
+     },
+     {
+      "book": "lotb",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-nagaraja"
+  ]
+ },
+ {
+  "id": "lotb-salubri",
+  "title": "Salubri after the Usurpation",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunted healers.",
+  "claims": [
+   {
+    "text": "Clients valued the Usurpers for magic used on their behalf, while the Salubri scolded them; with the Salubri gone, disease spread among herds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "Most Salubri hid; only the al-Amin, who embraced Islam, lived openly, treasured by the Ashirra of the Levant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "Mokur, childe and companion of Saulot, is named among the Salubri who survived.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "lotb-samedi",
+  "title": "Samedi",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The corpse-like line of the islands.",
+  "claims": [
+   {
+    "text": "Born in the islands, the Samedi now live worldwide, mostly alone or in pairs, far from the nights when one Samedi claimed several plantations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "lotb-true-brujah",
+  "title": "True Brujah",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Masters of time.",
+  "claims": [
+   {
+    "text": "The True Brujah are bound up with the Tal'Mahe'Ra but have their own agendas after centuries of compromise with its other leaders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines",
+   "true-black-hand"
+  ]
+ },
+ {
+  "id": "lotb-baali-swarm",
+  "title": "Baali Vermin Swarm",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Baali combination power.",
+  "claims": [
+   {
+    "text": "The vermin and insects that gather round the Baali become loyal servants; the Baali can speak with them as with Feral Whispers without eye contact and use them as spies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-baali"
+  ]
+ },
+ {
+  "id": "lotb-mosh-pit",
+  "title": "Mosh Pit",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Melpominee power of the Daughters.",
+  "claims": [
+   {
+    "text": "For a blood point and a Manipulation + Performance roll at a difficulty the singer picks, a target prone to frenzy must resist frenzy at that difficulty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-daughters"
+  ]
+ },
+ {
+  "id": "lotb-typhon-hades",
+  "title": "Childer of Typhon, Kin of Hades",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A shared Harbinger and Setite power.",
+  "claims": [
+   {
+    "text": "In ancient Greece the Harbingers called the Setites Childer of Typhon and the Setites called the Harbingers kin of Hades; they made a joint power to keep the souls of slain kin serving their Clans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "The necromancer must fix the target with The Eyes of the Serpent no more than a week before that vampire's Final Death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-harbingers",
+   "followers-of-set"
+  ]
+ },
+ {
+  "id": "lotb-kiasyd-dream",
+  "title": "Kiasyd Dream-Shaping",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Mytherceria power.",
+  "claims": [
+   {
+    "text": "With Manipulation + Expression against the sleeper's current Willpower, the Kiasyd narrates a dream; on waking the victim's extended actions are at +2 difficulty and the dream colours the victim's reactions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-kiasyd"
+  ]
+ },
+ {
+  "id": "lotb-nagaraja-soul",
+  "title": "Devouring the Soul",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Nagaraja power.",
+  "claims": [
+   {
+    "text": "The Nagaraja draws out a victim's soul and eats it like any spirit; the player spends Willpower and rolls Manipulation + Empathy at difficulty 7 against the target's Willpower at 6.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-nagaraja"
+  ]
+ },
+ {
+  "id": "lotb-salubri-augury",
+  "title": "Augury of Illness",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Salubri third eye power.",
+  "claims": [
+   {
+    "text": "The third eye shows the patient's diseased tissue as light; each success on Perception + Medicine at difficulty 7 reveals one fact about the illness, its course or treatment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-salubri"
+  ]
+ },
+ {
+  "id": "lotb-samedi-gris-gris",
+  "title": "Samedi Gris-Gris",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Fortitude and Thanatosis power.",
+  "claims": [
+   {
+    "text": "The Samedi spends a blood point and gives the target a piece of hair, nail or skin to swallow; the target's next soak roll gains extra dice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-samedi"
+  ]
+ },
+ {
+  "id": "lotb-old-friend",
+  "title": "The Old Friend",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Presence and Temporis power.",
+  "claims": [
+   {
+    "text": "The True Brujah finds a timeline where the two are old, trusted friends and imprints it on the target, a tool for infiltrating other Sects and Clans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotb",
+      "page": 100,
+      "pdf": 101
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-true-brujah"
+  ]
+ }
+]

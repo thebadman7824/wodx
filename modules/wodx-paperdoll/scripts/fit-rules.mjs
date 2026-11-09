@@ -37,12 +37,14 @@ export function smoothPath(pts, closed = true) {
  * Measure the head. px: {width, height, data} with RGBA bytes, 980 square. Returns the anchors, or null when the
  * picture has no neck to measure (a broken render).
  */
-export function measure(px) {
+export function measure(px, {sx = 1, sy = 1} = {}) {
   const W = px.width, H = px.height;
   const k = (x, y) => kindAt(px, x, y);
+  // The build of the face scales the head from the middle of the neck base; the fixed lines below follow it
+  const TX = x => 490 + (x - 490) * sx, TY = y => 815 + (y - 815) * sy, R = Math.max(sx, sy);
   // The neck: the skin span on each row below the chin, and the wide base where it meets the shoulders
   const rows = new Map();
-  for ( let y = 700; y < H; y++ ) {
+  for ( let y = Math.round(TY(700)); y < H; y++ ) {
     let a = -1, b = -1;
     for ( let x = 0; x < W; x++ ) if ( k(x, y) === "s" ) { if ( a < 0 ) a = x; b = x; }
     if ( a >= 0 ) rows.set(y, [a, b]);
@@ -50,22 +52,22 @@ export function measure(px) {
   if ( !rows.size ) return null;
   const neckBottom = Math.max(...rows.keys());
   let blobTop = null;
-  for ( const [y, [a, b]] of [...rows].sort((p, q) => p[0] - q[0]) ) if ( y > 780 && b - a > 330 ) { blobTop = y; break; }
+  for ( const [y, [a, b]] of [...rows].sort((p, q) => p[0] - q[0]) ) if ( y > TY(780) && b - a > 330 * sx ) { blobTop = y; break; }
   if ( blobTop === null ) return null;
   let bl = Infinity, br = -Infinity;
   for ( const [y, [a, b]] of rows ) if ( y >= blobTop ) { bl = Math.min(bl, a); br = Math.max(br, b); }
 
   // The face, by rays from a point between the eyes and the mouth; the jaw is the lowest line in each column
-  const cx = 510, cy = 480;
+  const cx = Math.round(TX(510)), cy = Math.round(TY(480)), jawTop = Math.round(TY(789)), jawLow = Math.round(TY(600));
   const jaw = new Map();
-  for ( let x = 0; x < W; x++ ) for ( let y = 789; y >= 600; y-- ) if ( k(x, y) === "k" ) { jaw.set(x, y); break; }
+  for ( let x = 0; x < W; x++ ) for ( let y = jawTop; y >= jawLow; y-- ) if ( k(x, y) === "k" ) { jaw.set(x, y); break; }
   const ray = t => {
     let last = 0;
-    for ( let r = 0; r < 420; r += 2 ) {
+    for ( let r = 0; r < 420 * R; r += 2 ) {
       const x = Math.trunc(cx + r * Math.cos(t)), y = Math.trunc(cy + r * Math.sin(t)), kk = k(x, y);
       if ( kk === "." || kk === "h" ) break;
-      if ( y >= (jaw.get(x) ?? 790) - 3 ) break;
-      if ( x < 305 || y > 768 ) break;
+      if ( y >= (jaw.get(x) ?? jawTop + 1) - 3 ) break;
+      if ( x < TX(305) || y > TY(768) ) break;
       last = r;
     }
     return last;
@@ -74,13 +76,13 @@ export function measure(px) {
   let rad = angs.map(ray);
   for ( let p = 0; p < 3; p++ ) rad = rad.map((_, i) => [-2, -1, 0, 1, 2].reduce((s, j) => s + rad[(i + j + N) % N], 0) / 5);
   const INSET = 16;
-  const faceAll = rad.map((r, i) => [cx + (r - INSET) * Math.cos(angs[i]), Math.max(300, cy + (r - INSET) * Math.sin(angs[i]))]);
+  const faceAll = rad.map((r, i) => [cx + (r - INSET) * Math.cos(angs[i]), Math.max(TY(300), cy + (r - INSET) * Math.sin(angs[i]))]);
   const face = faceAll.filter((_, i) => i % 3 === 0);
 
   // The outline of head and hair, upper part only, for the veil and anything worn on the head
   const outer = t => {
     let far = 0;
-    for ( let r = 0; r < 520; r += 2 ) if ( k(Math.trunc(cx + r * Math.cos(t)), Math.trunc(cy + r * Math.sin(t))) !== "." ) far = r;
+    for ( let r = 0; r < 520 * R; r += 2 ) if ( k(Math.trunc(cx + r * Math.cos(t)), Math.trunc(cy + r * Math.sin(t))) !== "." ) far = r;
     return far;
   };
   let top = angs.filter(t => Math.sin(t) < -0.25).map(t => [t, outer(t)]);
@@ -94,9 +96,31 @@ export function measure(px) {
   const nl = bl + 6, nr = br - 6, neckMid = (nl + nr) / 2;
   const xs = face.map(p => p[0]), ys = face.map(p => p[1]);
   return {
-    neckBottom, blobTop, blob: [bl, br], neckMid,
+    build: {sx, sy}, neckBottom, blobTop, blob: [bl, br], neckMid,
     shoulder: {l: [nl, blobTop + 8], r: [nr, blobTop + 8], dip: [neckMid, blobTop + 46]},
     face, facePath: smoothPath(face), faceBox: {x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys)},
     headTop, crown: Math.min(...headTop.map(p => p[1]))
   };
+}
+
+/**
+ * Find the eyes on a head drawn with magenta eyes and everything else green (see loreleiOptions pupils). px as for
+ * measure. Returns {pupils: [{side, x, y, r}], eyes: [{side, x0, y0, x1, y1}]}, side 0 the near eye: a pupil is the magenta with
+ * no green within 10 pixels (the outline of the eye always has skin close by).
+ */
+export function findEyes(px) {
+  const W = px.width, H = px.height, d = px.data;
+  const mag = i => d[i] > 200 && d[i + 1] < 80 && d[i + 2] > 200, green = (x, y) => { if ( x < 0 || y < 0 || x >= W || y >= H ) return false; const i = (y * W + x) * 4; return d[i + 1] > 200 && d[i] < 80; };
+  const P = [[0, 0, 0], [0, 0, 0]], B = [[1e9, 1e9, -1, -1], [1e9, 1e9, -1, -1]];
+  for ( let y = 330; y < Math.min(H, 620); y++ ) for ( let x = 300; x < Math.min(W, 800); x++ ) {
+    if ( !mag((y * W + x) * 4) ) continue;
+    const side = x < 565 ? 0 : 1, b = B[side];
+    b[0] = Math.min(b[0], x); b[1] = Math.min(b[1], y); b[2] = Math.max(b[2], x); b[3] = Math.max(b[3], y);
+    let near = false;
+    for ( let dy = -10; dy <= 10 && !near; dy += 2 ) for ( let dx = -10; dx <= 10; dx += 2 ) if ( dx * dx + dy * dy <= 100 && green(x + dx, y + dy) ) { near = true; break; }
+    if ( near ) continue;
+    P[side][0] += x; P[side][1] += y; P[side][2]++;
+  }
+  return {pupils: P.map(([sx, sy, n], side) => n > 30 ? {side, x: +(sx / n).toFixed(1), y: +(sy / n).toFixed(1), r: +(Math.sqrt(n / Math.PI) + 6).toFixed(1)} : null).filter(Boolean),
+    eyes: B.map(([x0, y0, x1, y1], side) => x1 > 0 ? {side, x0, y0, x1, y1} : null).filter(Boolean)};
 }

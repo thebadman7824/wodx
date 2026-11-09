@@ -1,0 +1,897 @@
+[
+ {
+  "id": "lotc-silsila",
+  "title": "The Silsila's Price",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Assamite contracts are paid.",
+  "claims": [
+   {
+    "text": "The Silsila weighs how hard a kill is against an amount and quality of vitae as the fee; the blood goes to a sorcerer who stores it for the Clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "An assassin gives a tenth of every fee to the sire and a further tenth to the Clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites"
+  ]
+ },
+ {
+  "id": "lotc-brujah-approaches",
+  "title": "Iconoclast, Idealist, Individualist",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Three Brujah outlooks.",
+  "claims": [
+   {
+    "text": "Brujah sort themselves by three loose outlooks, Iconoclast, Idealist and Individualist, which are neither political groups nor fixed; surviving Iconoclasts often become Individualists or Idealists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 41,
+      "pdf": 42
+     },
+     {
+      "book": "lotc",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah"
+  ]
+ },
+ {
+  "id": "lotc-sekhmet-cult",
+  "title": "The Lionesses of Sekhmet",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Setite Gehenna cult inside the Camarilla.",
+  "claims": [
+   {
+    "text": "Early in the twentieth century a coterie of female Setites played on Camarilla women's anger at mostly male Princes, taking the mask of Sekhmet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "They dressed the Revelations of the Void as a path to an inner Lioness Power and run a Gehenna cult that eats at the Camarilla from inside.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set"
+  ]
+ },
+ {
+  "id": "lotc-coyotes",
+  "title": "The Coyotes",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The rising Gangrel line.",
+  "claims": [
+   {
+    "text": "The Lycaon line of Gangrel is dying out, and the Coyotes are the new blood; once mostly Sabbat, they have grown more common in recent decades and a few have sought the Camarilla.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gangrel"
+  ]
+ },
+ {
+  "id": "lotc-giovanni-households",
+  "title": "Giovanni Households",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Morbid families of the Clan.",
+  "claims": [
+   {
+    "text": "Even an ordinary, mostly ignorant Giovanni household honours its ancestors and makes offerings to spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni"
+  ]
+ },
+ {
+  "id": "lotc-friends-of-the-night",
+  "title": "Friends of the Night",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hidden council of the Lasombra.",
+  "claims": [
+   {
+    "text": "A self-appointed group at the heart of the Lasombra, called in other ages the Amici Noctis or Amies Noires, steers the Clan from the shadows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "It wants the Clan to advance and adapt, but only in the way it chooses, and has the power to enforce that.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra"
+  ]
+ },
+ {
+  "id": "lotc-nictuku",
+  "title": "The Nictuku",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunters of the Nosferatu.",
+  "claims": [
+   {
+    "text": "Most Nosferatu believe a band of ancient, powerful elders hunts their Clan to destroy every member.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "Accounts differ: some call the Nictuku mindless monsters, others patient killers picking off Nosferatu one by one, but all agree they are deadly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nosferatu"
+  ]
+ },
+ {
+  "id": "lotc-svadharma",
+  "title": "Svadharma",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Ravnos's sacred duty.",
+  "claims": [
+   {
+    "text": "Svadharma is a Ravnos's own duty to better the self and the world, known by a revelation of purpose; it is rarely finished in one lifetime.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 177,
+      "pdf": 178
+     }
+    ]
+   },
+   {
+    "text": "After the Embrace, returning to mortal life or posing as mortal is forbidden, as that is no longer the Ravnos's duty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 186,
+      "pdf": 187
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ravnos"
+  ]
+ },
+ {
+  "id": "lotc-toreador-mortals",
+  "title": "Toreador and Mortals",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the Clan stays among the living.",
+  "claims": [
+   {
+    "text": "Most Toreador keep a steady presence in mortal society and find mortals more genuine and surprising than Kindred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 195,
+      "pdf": 196
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador"
+  ]
+ },
+ {
+  "id": "lotc-tremere-pyramid",
+  "title": "The Tremere Pyramid",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ranks of the Clan.",
+  "claims": [
+   {
+    "text": "Its seven titles run from Acolyte and Apprentice through Magister and Regent to Pontifex, Lord and, highest, Councilor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 212,
+      "pdf": 213
+     }
+    ]
+   },
+   {
+    "text": "A Regent masters a whole chantry and often leads the city's Tremere; Lords oversee several chantries over a region the size of a US state, and Pontifices rule countries, usually seven Lords to each of the seven Pontifices.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 213,
+      "pdf": 214
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere"
+  ]
+ },
+ {
+  "id": "lotc-tzimisce-dragon",
+  "title": "The Dragon",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the Tzimisce seek.",
+  "claims": [
+   {
+    "text": "The Fiends aspire to what the dragon stands for, transformation, and seek the transcendent along the coils of Azi Dahaka.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 232,
+      "pdf": 233
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tzimisce"
+  ]
+ },
+ {
+  "id": "lotc-ventrue-feeding",
+  "title": "Changing a Ventrue's Prey",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "When feeding restrictions shift.",
+  "claims": [
+   {
+    "text": "A Ventrue's feeding restriction changes only through a great act of will after a hunger frenzy or torpor, most often after torpor from lack of vitae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 252,
+      "pdf": 253
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue"
+  ]
+ },
+ {
+  "id": "lotc-caitiff",
+  "title": "Caitiff Strengths",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Power in seeming weakness.",
+  "claims": [
+   {
+    "text": "Caitiff can turn others' contempt into surprise, and learning many abilities free of Clan limits makes them versatile, above all in a fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 268,
+      "pdf": 269
+     }
+    ]
+   },
+   {
+    "text": "Groups of Caitiff tend to be scattered, a coterie for safety or a loose political movement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 267,
+      "pdf": 268
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caitiff"
+  ]
+ },
+ {
+  "id": "lotc-pander",
+  "title": "The Pander",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sabbat's Clanless.",
+  "claims": [
+   {
+    "text": "The Pander stand beside the two founding Clans as one of the few Sabbat groups not defined by opposing others, and resent being taken for ordinary Caitiff.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 279,
+      "pdf": 280
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caitiff",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "lotc-serpents-of-the-light",
+  "title": "Serpents of the Light",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Setite antitribu of the Sabbat.",
+  "claims": [
+   {
+    "text": "The Followers of Set have worshipped the serpent for thousands of years; the Serpents of the Light are their Sabbat antitribu.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 281,
+      "pdf": 282
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set",
+   "antitribu"
+  ]
+ },
+ {
+  "id": "lotc-badr-al-budur",
+  "title": "Badr al-Budur",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Princess of Death.",
+  "claims": [
+   {
+    "text": "An Assamite of the Ninth Generation, Embraced in 1867 by Ma'aruf, and of the same lineage as the notorious Fatima.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 285,
+      "pdf": 286
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites"
+  ]
+ },
+ {
+  "id": "lotc-lula-birch",
+  "title": "Lula Birch",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The wild child.",
+  "claims": [
+   {
+    "text": "A Gangrel antitribu of the Twelfth Generation, Embraced in 1991 by Pedro Diaz, raised in Arkansas farm country.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 286,
+      "pdf": 287
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gangrel",
+   "antitribu"
+  ]
+ },
+ {
+  "id": "lotc-critias",
+  "title": "Critias",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Primogen of Chicago.",
+  "claims": [
+   {
+    "text": "A Brujah of the Fifth Generation, Embraced in 423 BCE by Menele, one of the Camarilla's oldest elders, now pushing the Sect to be more assertive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 286,
+      "pdf": 287
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah"
+  ]
+ },
+ {
+  "id": "lotc-salvatore-giovanni",
+  "title": "Salvatore Giovanni",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The man in charge.",
+  "claims": [
+   {
+    "text": "A Giovanni of the Tenth Generation, Embraced in 1887 by Rosario Giovanni.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 287,
+      "pdf": 288
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni"
+  ]
+ },
+ {
+  "id": "lotc-catherine-maidstone",
+  "title": "Catherine Maidstone",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Prince of Maidstone.",
+  "claims": [
+   {
+    "text": "A Toreador of the Ninth Generation, Embraced in 1229 by Maiselle of Rochester, born in the village of Strood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 288,
+      "pdf": 289
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador"
+  ]
+ },
+ {
+  "id": "lotc-douglas-netchurch",
+  "title": "Dr. Douglas Netchurch",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Expert on ghouls.",
+  "claims": [
+   {
+    "text": "A Malkavian of the Seventh Generation, Embraced in 1915 by Trimeggian, born into wealth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 289,
+      "pdf": 290
+     }
+    ]
+   }
+  ],
+  "see": [
+   "malkavian",
+   "ghouls"
+  ]
+ },
+ {
+  "id": "lotc-parovich",
+  "title": "Parovich",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Primogen of Milwaukee.",
+  "claims": [
+   {
+    "text": "A Nosferatu antitribu of the Seventh Generation, Embraced in 1467 by Boronisk, once an officer in the army of Ivan the Great.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 290,
+      "pdf": 291
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nosferatu",
+   "antitribu"
+  ]
+ },
+ {
+  "id": "lotc-vermundo-de-sancha",
+  "title": "Dr. Vermundo de Sancha",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Doctor of pain.",
+  "claims": [
+   {
+    "text": "A Tzimisce of the Tenth Generation, Embraced in 1943 by Efrain Sortano, once a medical professor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 290,
+      "pdf": 291
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tzimisce"
+  ]
+ },
+ {
+  "id": "lotc-sarrasine",
+  "title": "Sarrasine",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Prince of Sydney.",
+  "claims": [
+   {
+    "text": "A Follower of Set of the Sixth Generation, Embraced in 532 by Khay'tall, founder of the cult called the Children of Judas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 291,
+      "pdf": 292
+     }
+    ]
+   },
+   {
+    "text": "Sarrasine flattered the Ventrue Prince Abram into the hubris of claiming all Australia, saw Abram overthrown and took the throne.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 291,
+      "pdf": 292
+     }
+    ]
+   },
+   {
+    "text": "Sydney has long been a free city open to any vampire, but the court has grown decadent, and advisers such as the childe Ella Littleton question the lax rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 292,
+      "pdf": 293
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set"
+  ]
+ },
+ {
+  "id": "lotc-tatiana-stepanova",
+  "title": "Tatiana Stepanova",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Undercover Alastor.",
+  "claims": [
+   {
+    "text": "A Ravnos of the Eighth Generation, Embraced in 1764 by Vasily Vasilevich, born to a noble family.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 292,
+      "pdf": 293
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ravnos"
+  ]
+ },
+ {
+  "id": "lotc-carolina-valez",
+  "title": "Carolina Valez",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Archbishop of Montreal.",
+  "claims": [
+   {
+    "text": "A Lasombra of the Eighth Generation, Embraced in 1957 by Tobias Smith as part of a Sabbat campaign.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 292,
+      "pdf": 293
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "lotc-victor",
+  "title": "Victor the Assassin",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Tremere killer.",
+  "claims": [
+   {
+    "text": "A Tremere of the Ninth Generation, Embraced in 1950 by Duke Traska; a decorated Second World War soldier who later worked for an unnamed intelligence agency.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 293,
+      "pdf": 294
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere"
+  ]
+ },
+ {
+  "id": "lotc-vincent-day",
+  "title": "Vincent Day",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Paragon.",
+  "claims": [
+   {
+    "text": "A Ventrue antitribu of the Ninth Generation, Embraced in 1327 by Leander Phipps, once a Templar in the Crusades.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lotc",
+      "page": 294,
+      "pdf": 295
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue",
+   "antitribu"
+  ]
+ }
+]

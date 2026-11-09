@@ -195,7 +195,10 @@
   "see": [
    "ishmaelites",
    "set",
-   "maat"
+   "maat",
+   "mum-code-of-horus",
+   "mum-osirian-league",
+   "mum-viziers"
   ]
  },
  {
@@ -623,7 +626,13 @@
   ],
   "see": [
    "sekhem",
-   "names"
+   "names",
+   "mum-hekau-paths",
+   "mum-alchemy",
+   "mum-amulets",
+   "mum-celestial",
+   "mum-necromancy",
+   "mum-ushabti"
   ]
  },
  {
@@ -675,6 +684,848 @@
   "see": [
    "mummies",
    "wraiths"
+  ]
+ },
+ {
+  "id": "mum-great-rite",
+  "title": "The Rite of Rebirth",
+  "kind": "lore",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the first Reborn were made.",
+  "claims": [
+   {
+    "text": "Anubis shared secrets with Osiris, and to save Horus the prince first had to die so the ka could leave the body; the great rites let the ba and ka return to the dead body and give lasting life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Osiris passed the knowledge on to the sisters of Osiris, and with it the makers built the Rite of Rebirth, then sought proof that it worked.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spell-of-life",
+   "soul-of-khem"
+  ]
+ },
+ {
+  "id": "mum-osirian-league",
+  "title": "The Osirian League",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Horus's gathering of allies.",
+  "claims": [
+   {
+    "text": "A thousand years passed between the making of Horus and the next group of immortals, and what is known of it comes mostly by oral tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "In that time Set tightened a grip on the land while Horus began gathering men and women, mortal and otherwise, into what came to be called the Osirian League.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shemsu-heru",
+   "set"
+  ]
+ },
+ {
+  "id": "mum-diaspora",
+  "title": "The Egyptian Diaspora",
+  "kind": "event",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Horus wakes to a Roman world.",
+  "claims": [
+   {
+    "text": "Horus woke from a long stay in Amenti to find Egypt a vassal of Roman rulers, who were themselves unknowing subjects of the Accursed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The Roman Ventrue had become enemies too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shemsu-heru",
+   "amenti-and-duat"
+  ]
+ },
+ {
+  "id": "mum-cabiri",
+  "title": "The Cabiri",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mummies made outside Horus's cause.",
+  "claims": [
+   {
+    "text": "The Cabiri come from a corrupted version of the Spell of Life and gained immortality with no knowledge of the Jyhad or Horus's crusade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "They share an origin, but whether they share aims is unknown; they do share an interest in the occult and keep loose ties with mortal societies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spell-of-life",
+   "shemsu-heru"
+  ]
+ },
+ {
+  "id": "mum-code-of-horus",
+  "title": "The Code of Horus",
+  "kind": "lore",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Commandments given on leaving Egypt.",
+  "claims": [
+   {
+    "text": "As a last duty before leaving Egypt, Horus issued commandments now called the Code of Horus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "The code is barely two thousand years old but rests on some three thousand more years of Horus's experience.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shemsu-heru"
+  ]
+ },
+ {
+  "id": "mum-cult-of-isis",
+  "title": "The Cult of Isis",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortal allies five thousand years old.",
+  "claims": [
+   {
+    "text": "The cult was founded by Horus and Isis and has lasted five thousand years, rising and falling over the centuries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Its political height came in the Middle Kingdom and its cultural height under the Ptolemies and Romans, when it spread the worship of Osiris, the dying and rising god.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shemsu-heru"
+  ]
+ },
+ {
+  "id": "mum-mortal-societies",
+  "title": "Mortal Societies and the Reborn",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Arcanum, the Society of Leopold and the Orphic Circle.",
+  "claims": [
+   {
+    "text": "The Arcanum knows the Reborn exist through one unnamed mummy who rejects Horus's code; from that mummy an Englishman learned the secret and became immortal, and stays neutral.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The Society of Leopold's armed zealots are not so different from Horus, which may be why Horus avoids them; each side is too bound by its creed to become allies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The Orphic Circle are scholars of the afterlife who often go down into the Underworld, and they know more of the Reborn than the Arcanum does.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shemsu-heru"
+  ]
+ },
+ {
+  "id": "mum-viziers",
+  "title": "Viziers and the Scattered Reborn",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where the Shemsu-heru live.",
+  "claims": [
+   {
+    "text": "Outside Egypt the Shemsu-heru are spread across Europe: some keep moving from country to country, while others settle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "England, France and the other great European nations each hold one or, rarely, more, usually in major cities for their economic, political and cultural pull.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shemsu-heru"
+  ]
+ },
+ {
+  "id": "mum-virtues",
+  "title": "Memory and Integrity",
+  "kind": "mechanic",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The two Virtues of the Reborn.",
+  "claims": [
+   {
+    "text": "Memory matters greatly to mummies: after centuries of lives and rebirths, past lives can feel no more solid than dreams.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Players roll Memory to recall a past life in a crisis, such as meeting a face that is strangely familiar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Integrity measures how well the character keeps to personal values; it is rolled at crises of conscience and deep moral dilemmas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 65,
+      "pdf": 66
+     },
+     {
+      "book": "mummy2",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Botching a Virtue roll leaves a Derangement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum-humanity",
+   "soul-of-khem"
+  ]
+ },
+ {
+  "id": "mum-humanity",
+  "title": "Humanity of the Reborn",
+  "kind": "mechanic",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How much of mortal nature remains.",
+  "claims": [
+   {
+    "text": "Humanity measures how much mortal nature survives the long run of lives and rebirths; keeping it is a mummy's greatest challenge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "It cannot be bought with experience; the Storyteller may award a point to a character who has shown deeper Humanity than the rating, steadily and sincerely.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "A mummy with no Humanity left becomes a twisted, hollow khaibit in the Underworld, which replaces the ba on death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum-virtues",
+   "mum-ba"
+  ]
+ },
+ {
+  "id": "mum-sekhem-trait",
+  "title": "Sekhem as a Trait",
+  "kind": "mechanic",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The store of magical power.",
+  "claims": [
+   {
+    "text": "Sekhem measures a mummy's reserve of magic; base Sekhem is 3 and it can never pass 10.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "It is the vital energy in everything; Hekau shapes it, and stronger effects are likelier to cost some.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "A caster can always spend Sekhem to add successes to a spell roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sekhem",
+   "hekau"
+  ]
+ },
+ {
+  "id": "mum-death-and-rebirth",
+  "title": "Death and Rebirth",
+  "kind": "mechanic",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mummies can die, but do not stay dead.",
+  "claims": [
+   {
+    "text": "Mummies are immortal but not invulnerable: what kills mortals or supernatural beings kills them too, though they do not age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "True Death is rare; some seek Transcendence in the Underworld or even Oblivion to escape the cycle, but no one knows if either works.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "A few rare magics can destroy a mummy's soul outright, such as Hekau that wipes out the True Name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spell-of-life",
+   "amenti-and-duat"
+  ]
+ },
+ {
+  "id": "mum-hekau-paths",
+  "title": "The Paths of Hekau",
+  "kind": "power",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The six schools of Egyptian magic.",
+  "claims": [
+   {
+    "text": "The six paths are Amulets, Alchemy, Celestial, Necromancy, Ren-hekau and Ushabti, each with spells from small cantrips to potent sorcery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "No spell may be learned above the character's rating in its path.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hekau",
+   "mum-sekhem-trait"
+  ]
+ },
+ {
+  "id": "mum-alchemy",
+  "title": "Alchemy",
+  "kind": "power",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Potions, drugs and poisons.",
+  "claims": [
+   {
+    "text": "Later alchemy traces back to Egypt, whose alchemists cared less for turning lead to gold than for a wide store of drugs, potions and poisons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Some preparations are truly magical, some plain herbal, and some a blend of both.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum-hekau-paths"
+  ]
+ },
+ {
+  "id": "mum-amulets",
+  "title": "Amulets",
+  "kind": "power",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Protective charms and wards.",
+  "claims": [
+   {
+    "text": "The Amulets path makes magical items; its spells include wards of wood, metal and nature, talismans, the scarab and the Buckle of Isis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 79,
+      "pdf": 80
+     },
+     {
+      "book": "mummy2",
+      "page": 91,
+      "pdf": 92
+     },
+     {
+      "book": "mummy2",
+      "page": 92,
+      "pdf": 93
+     },
+     {
+      "book": "mummy2",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum-hekau-paths"
+  ]
+ },
+ {
+  "id": "mum-celestial",
+  "title": "Celestial",
+  "kind": "power",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Weather by the stars.",
+  "claims": [
+   {
+    "text": "Celestial magic controls weather and other natural forces, drawing on the alignment of stars and planets to work over wide areas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "It is not for the impatient; effect, area and duration each raise the difficulty, up to effects the size of a hemisphere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 93,
+      "pdf": 94
+     },
+     {
+      "book": "mummy2",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum-hekau-paths"
+  ]
+ },
+ {
+  "id": "mum-necromancy",
+  "title": "Necromancy of Hekau",
+  "kind": "power",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Power over the Restless Dead.",
+  "claims": [
+   {
+    "text": "Egyptians did not fear death, so their Necromancy lacked the stigma others give it; it is not the Giovanni Discipline of that name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "It grants power over the Restless Dead and the kas of the dead, with spells from body preservation and summoning to calling the khaibit and trapping a ba.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 96,
+      "pdf": 97
+     },
+     {
+      "book": "mummy2",
+      "page": 97,
+      "pdf": 98
+     },
+     {
+      "book": "mummy2",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum-hekau-paths",
+   "amenti-and-duat"
+  ]
+ },
+ {
+  "id": "mum-ushabti",
+  "title": "Ushabti",
+  "kind": "power",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sympathy, relics and servants.",
+  "claims": [
+   {
+    "text": "Ushabti covers sympathetic magic, relics to aid the ba in the Underworld, and magical servants in this world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Words of power carved on or spoken over a model or picture can bind it to what it shows, so that what befalls one befalls both, or give it a kind of life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum-hekau-paths"
+  ]
+ },
+ {
+  "id": "mum-ba",
+  "title": "Ba in the Underworld",
+  "kind": "mechanic",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The spirit energy only mummies can hold.",
+  "claims": [
+   {
+    "text": "The ba is a mummy's wraith form and also the spiritual energy that renews the dead body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "Ba energy is found only in the Underworld; other wraiths cannot store or use it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "soul-of-khem",
+   "amenti-and-duat"
   ]
  }
 ]

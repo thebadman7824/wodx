@@ -121,6 +121,54 @@
    "title": "Dark Ages: Fae",
    "short": "DA:F",
    "edition": "Revised era"
+  },
+  {
+   "id": "gr",
+   "title": "Ghouls and Revenants",
+   "short": "G&R",
+   "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "lotc",
+   "title": "Lore of the Clans",
+   "short": "LotC",
+   "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "v20comp",
+   "title": "V20 Companion",
+   "short": "V20 Comp",
+   "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "lotb",
+   "title": "Lore of the Bloodlines",
+   "short": "LotB",
+   "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "rotb",
+   "title": "Rites of the Blood",
+   "short": "RotB",
+   "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "blackhand",
+   "title": "The Black Hand: A Guide to the Tal'Mahe'Ra",
+   "short": "Black Hand",
+   "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "anarchs",
+   "title": "Anarchs Unbound",
+   "short": "Anarchs Unbound",
+   "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "redlist",
+   "title": "Dread Names, Red List",
+   "short": "Red List",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -143,6 +191,14 @@
   "sorcerer.json",
   "sc.json",
   "vav.json",
-  "dafae.json"
+  "dafae.json",
+  "gr.json",
+  "lotc.json",
+  "v20comp.json",
+  "lotb.json",
+  "rotb.json",
+  "blackhand.json",
+  "anarchs.json",
+  "redlist.json"
  ]
 }
