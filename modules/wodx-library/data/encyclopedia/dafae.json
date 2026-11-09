@@ -1,0 +1,419 @@
+[
+ {
+  "id": "daf-origins",
+  "title": "The Three Origins",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Firstborn, changelings and inanimae.",
+  "claims": [
+   {
+    "text": "An origin is one of the three races of fae: inanimae, changelings and firstborn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The firstborn are true fae who rose from the Mists of Creation long ago; new ones are born to firstborn or are sprites changed by strong cantrips.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Changelings are part fae, part human: made when a firstborn infant is swapped for a human one, which yields two changelings, or when humans stay long in fae realms and learn the Dominions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Inanimae are fae of the natural world, usually springing from something tied to one of five elements: air, earth, fire, water or wood. They can breed with their own element, though most find the idea repulsive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-courts",
+   "changeling",
+   "daf-sprites"
+  ]
+ },
+ {
+  "id": "daf-courts",
+  "title": "The Four Courts",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The seasonal factions of the fae.",
+  "claims": [
+   {
+    "text": "A Court is one of four seasonal factions; it shapes a fae's ideas, upbringing, magic and mien.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The Saining brings a fae into a Court in three steps: the Cleansing, three seasons living by the Court's ideals; the Naming, receiving a Courtly name; and the Acceptance, finishing training and formal entry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Solstice fae, or Disgraced fae, never Sained, refused, were exiled, or had their Naming botched; they are scorned outcasts who find work as couriers and mercenaries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-oath-truce",
+   "daf-agendas"
+  ]
+ },
+ {
+  "id": "daf-oath-truce",
+  "title": "The Oath-Truce",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The hundred-year peace between the Four Courts.",
+  "claims": [
+   {
+    "text": "The Oath-Truce is a pact among the Four Courts to halt hostilities for a hundred years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "It began in AD 1130 and so will end around 1230.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-courts",
+   "daf-agendas"
+  ]
+ },
+ {
+  "id": "daf-agendas",
+  "title": "Agendas and the Patrons",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The political aims that cut across the Courts.",
+  "claims": [
+   {
+    "text": "An agenda is a fae's broad political or social aim. The common ones are Constantinian, Humanist, Militant and Truce-Bearer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The Patrons count as an agenda but are really an organised faction, not a loose philosophy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The Patrons want seasonal rule back: each Court ruling in its own season, then handing power on.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-courts",
+   "daf-oath-truce"
+  ]
+ },
+ {
+  "id": "daf-dominions",
+  "title": "Dominions and Cantrips",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The four spheres of fae magic.",
+  "claims": [
+   {
+    "text": "A Dominion is one of four spheres of magic, each ruling a set of associations: Dawn, Day, Dusk and Night.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A cantrip is one specific magical use of a Dominion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Unleashing lets Dominion magic loose without shaping it into a cantrip, steering it toward a hoped-for end; it is always obvious, and dangerous if it runs wild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-weaving-mists"
+  ]
+ },
+ {
+  "id": "daf-weaving-mists",
+  "title": "Weaving and the Mists",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The balance of order and chaos in fae magic.",
+  "claims": [
+   {
+    "text": "The Mists are the magical energy of Creation; fae use them both for magic and to hide from mortals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Weaving is the force of order that lets fae channel Dominions into cantrips.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A fae whose Weaving grows too strong becomes Locked: unable to Unleash, and obsessed with order and routine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A fae whose Mists grow too strong becomes Lost: unable to cast cantrips, and obsessed with chaos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-dominions"
+  ]
+ },
+ {
+  "id": "daf-mien",
+  "title": "Mien and Features",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A fae's true form.",
+  "claims": [
+   {
+    "text": "The mien is a fae's true faerie form, in which its Features show.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Lesser Features are only for looks; Greater Features also have effects in play.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-origins"
+  ]
+ },
+ {
+  "id": "daf-sprites",
+  "title": "Sprites, Fostering and Oathcircles",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Other words of fae life.",
+  "claims": [
+   {
+    "text": "A sprite is a minor fae spirit, usually bound to serve a stronger fae; one might be a cloud of butterflies, another a small blue flame. Sprites can grow into firstborn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Fostering is the time before the Saining when a young fae learns fae society, history and the Dominions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Every fae learns the Fostering tongue early, but most use it only when no Courtly language will serve.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "An oathcircle is a band of fae bound by a shared purpose, whether war, exploring or company.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-origins",
+   "daf-courts"
+  ]
+ }
+]
