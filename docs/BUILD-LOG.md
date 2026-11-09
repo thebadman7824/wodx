@@ -1065,3 +1065,12 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - quiet-rules.mjs / quiet.mjs: client setting quiet (off), keybinding quietToggle (Alt+Q), body class wsn-quiet hides #sidebar, #hotbar, #players; roll cards' "Difficulty: n" in words on this screen only; the state strip names the health level.
 - sight-rules.mjs / sight.mjs: actor flag wodx-senses.sight; token tool My sight (order 122) cycles the character's sights; client setting sightMap (on); board CSS filter and token rings on a PIXI layer, redrawn on control, canvas, token and actor changes.
 - Tests: senses.test.mjs +6. Gate: tools/gate/gatequiet.mjs (9 steps), queued for the PC. Built in the cloud while the PC was off.
+
+## 2026-11-09: fixes from the book checks of the hallucination audit (Actions 3.19.1, Chronicle 0.9.1)
+
+- The PC ran tools/audit/ref-audit.mjs (3,655 refs scored, 426 to read by hand; results in project files notes/ref-audit-2026-11-09-pc.md).
+- wodx-actions/data/fera.json: Ajaba Renown is Ferocity, Cunning and Obligation, and they start with Willpower 3 (W20 Changing Breeds printed pp. 49, 217). Ratkin can't take more than 2 dots of Resources. Rokea start with Willpower 4. The Camazotz Renown is a house rule, because the book gives none. The six breeds the book confirms no longer carry chk.
+- gifts-daw.json: Dolorous Stroke says that onlookers lose a die against the character for the scene. The chk mark is removed.
+- wodx-chronicle/data/events.mjs: Doissetep, the Week of Nightmares and the Avatar Storm have dateNotes, because M20 gives no days.
+- Still open: v20c-utgard (not found in the V20 Companion text; waiting for Ben), and pinning the bare page refs from the PC report.
+- Tests: 919 harness pass.
