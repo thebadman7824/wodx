@@ -1014,3 +1014,4 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Settings: on, followHealth (world).
 - Library 0.3.2: a manual page "Your token's look" and a What's new line.
 - Tests: paperdoll.test.mjs (9, uses @resvg/resvg-js, now a harness dependency), paperdoll-app.test.mjs (3). UI fit: Paperdoll. Gate: tools/gate/gatepaperdoll.mjs.
+- Paperdoll 0.1.1: placed tokens are found through the actor's own list as well as by searching the scenes. gatepaperdoll: the ring step flips the frames setting to a value that changes the answer; the bake step records more detail. encyclopedia.test.mjs builds the check script's path with fileURLToPath (Windows).

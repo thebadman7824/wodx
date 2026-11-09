@@ -9,7 +9,7 @@ import {measure, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -117,10 +117,12 @@ export async function bake(actor, {force = false} = {}) {
   if ( actor.prototypeToken?.texture?.src !== path ) upd["prototypeToken.texture.src"] = path;
   if ( look.portrait && actor.img !== path ) upd.img = path;
   if ( actor.flags?.[MOD]?.baked !== key || Object.keys(upd).length > 1 ) await actor.update(upd);
-  for ( const scene of game.scenes ?? [] ) {
-    const tokens = scene.tokens.filter(t => t.actorLink && t.actorId === actor.id && t.texture?.src !== path);
-    if ( tokens.length ) await scene.updateEmbeddedDocuments("Token", tokens.map(t => ({_id: t.id, "texture.src": path})));
-  }
+  // Placed tokens of this character, on every scene: found by the actor's own list and by a search of the scenes
+  const byScene = new Map();
+  const add = t => { const sc = t?.parent; if ( !sc || !t.actorLink || t.texture?.src === path ) return; if ( !byScene.has(sc) ) byScene.set(sc, new Map()); byScene.get(sc).set(t.id, t); };
+  try { for ( const t of actor.getDependentTokens?.({linked: true}) ?? [] ) add(t); } catch (e) { /* older API */ }
+  for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) if ( t.actorId === actor.id ) add(t);
+  for ( const [scene, tokens] of byScene ) await scene.updateEmbeddedDocuments("Token", [...tokens.keys()].map(_id => ({_id, "texture.src": path})));
   return path;
 }
 const timers = new Map();
