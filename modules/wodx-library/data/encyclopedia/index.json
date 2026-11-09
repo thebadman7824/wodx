@@ -259,6 +259,12 @@
    "title": "Chicago by Night, Second Edition",
    "short": "Chicago by Night",
    "edition": "2nd"
+  },
+  {
+   "id": "labn",
+   "title": "Los Angeles by Night",
+   "short": "Los Angeles by Night",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -304,6 +310,7 @@
   "warages.json",
   "bloodyhearts.json",
   "cotn.json",
-  "cbn2.json"
+  "cbn2.json",
+  "labn.json"
  ]
 }
