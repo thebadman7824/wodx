@@ -1,0 +1,340 @@
+[
+ {
+  "id": "labn-anarch-free-states",
+  "title": "Anarch Free States (California)",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The anarch domain founded in Los Angeles in 1944.",
+  "claims": [
+   {
+    "text": "By the end of the Revolt's second night every Los Angeles elder had been destroyed, driven off or forced into hiding, and just before dawn on 22 December 1944 Jeremy MacNeil proclaimed the Anarch Free States.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Revolts followed in San Diego and Fresno. San Francisco's prince sealed the city and held it with the backing of most local Kindred, and MacNeil called the agents home rather than start a long war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 26,
+      "pdf": 27
+     },
+     {
+      "book": "labn",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "By the end of February 1945 the Free States ran from the Mexican border north to San Jose, and from the Pacific to within 50 miles of Nevada.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The Inner Circle weighed an economic blockade, then dropped it when the anarchs threatened to open trade with the Japanese Gaki.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-free-states",
+   "anarchs",
+   "labn-status-perfectus"
+  ]
+ },
+ {
+  "id": "labn-status-perfectus",
+  "title": "Status Perfectus",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The founding charter of the Anarch Free States.",
+  "claims": [
+   {
+    "text": "The Revolutionary Council, the leaders of the 1944 Revolt, wrote the Status Perfectus, the 'Perfect State', setting out how the Free States would govern themselves rather than be ruled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Copies spread quickly among anarch communities, and the document remains a goal of anarch struggles everywhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The Council dissolved itself when the Status was published, leaving Los Angeles with no nominal leaders at all. With no prince to set hunting grounds, individual Kindred carved out huge territories and barred others from them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-free-states",
+   "labn-anarch-free-states"
+  ]
+ },
+ {
+  "id": "labn-don-sebastian",
+  "title": "Don Sebastian",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "victorian",
+   "wild-west"
+  ],
+  "summary": "The last Camarilla prince of Los Angeles, destroyed in the 1944 Revolt.",
+  "claims": [
+   {
+    "text": "Don Sebastian was a Californio landowner who sheltered the survivors of the brig Danube, wrecked in San Pedro Bay on Christmas Day 1828.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "From 25 December 1870 Don Sebastian governed Los Angeles as prince, a stern but fair ruler to the refugees who came south from San Francisco, caring nothing for their pasts so long as they kept the rules of the domain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "labn",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Anarch legend says Salvador Garcia slew Don Sebastian in single combat at the Don's rancho on the night of the Revolt.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "prince",
+   "camarilla",
+   "labn-anarch-free-states"
+  ]
+ },
+ {
+  "id": "labn-zoot-suit-riots",
+  "title": "The Zoot-Suit Riots (1943)",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Five nights of rioting that hardened anarch hatred of the Los Angeles elders.",
+  "claims": [
+   {
+    "text": "In June 1943 ghouls of Don Sebastian drove into Venice and beat up anarchs who had fled the Mexican Sabbat; the police arrested the victims. The anarchs struck back at the Don's thugs the next night.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "In the riots that followed, thousands of servicemen roamed downtown beating Hispanics while the police did nothing, for five nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "labn-don-sebastian",
+   "anarchs"
+  ]
+ },
+ {
+  "id": "labn-malibu",
+  "title": "Malibu and the Santa Monica Mountains",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Lupine country that Los Angeles Kindred avoid.",
+  "claims": [
+   {
+    "text": "On the night of the Revolt werewolves fell on Malibu and left no vampire alive there. They also rooted out a Temple of Set the anarchs had not known about.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Kindred are not welcome in Malibu or the Santa Monica Mountains, least of all around Topanga Canyon. Street wisdom holds that whatever the Lupines guard up there, they can keep it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lupines",
+   "followers-of-set"
+  ]
+ },
+ {
+  "id": "labn-watts-siege",
+  "title": "The Sabbat siege of Los Angeles (1965)",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sabbat assault on the Free States under cover of the Watts riots.",
+  "claims": [
+   {
+    "text": "Sabbat war parties used the chaos of the Watts riots to strike, killing the former Revolutionary Council member Jacqueline Fairmonte near Venice Beach; the other leaders escaped.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "On the third night the anarch gangs, rivals until then, poured out of the Hollywood Hills, the sewers and the warehouses together. Salvador, Crispus and Jeremy MacNeil, swinging a two-handed greatsword, led the counterattack.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "labn-anarch-free-states"
+  ]
+ },
+ {
+  "id": "labn-crypts-sons",
+  "title": "The Crypt's Sons",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Kindred-led street gang of south Los Angeles.",
+  "claims": [
+   {
+    "text": "Mohammed al-Muthlim, unknown in the city before the Sabbat siege, became a hero of that fight. A coterie grew around this vampire, who slept in a crypt in an Inglewood cemetery, and took the name the Sons of the Crypt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "The gang holds Inglewood, Watts, Compton and a dozen nearby communities. Mohammed drew in young mortal men without breaking the Masquerade, and the gang deals in guns and drugs with reach into most major American cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "labn",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "labn-watts-siege",
+   "anarchs"
+  ]
+ }
+]
