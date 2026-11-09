@@ -247,6 +247,12 @@
    "title": "Bloody Hearts: Diablerie Britain",
    "short": "Bloody Hearts",
    "edition": "1st"
+  },
+  {
+   "id": "cotn",
+   "title": "Children of the Night (Revised)",
+   "short": "Children of the Night",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -290,6 +296,7 @@
   "cbravnos.json",
   "archons.json",
   "warages.json",
-  "bloodyhearts.json"
+  "bloodyhearts.json",
+  "cotn.json"
  ]
 }
