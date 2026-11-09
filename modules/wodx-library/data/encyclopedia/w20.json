@@ -128,7 +128,7 @@
     ]
    },
    {
-    "text": "Few of the Fera now count the Garou as allies; their memories of the War of Rage are long.",
+    "text": "Few Fera still trust the Garou, and shapeshifters remember the War of Rage for a very long time.",
     "tier": "stated",
     "refs": [
      {
@@ -220,7 +220,7 @@
     ]
    },
    {
-    "text": "In full the Litany is as much an epic poem as a code of law, and chanting all of it can take hours.",
+    "text": "The full Litany reads like a long poem as well as a body of law, and reciting it whole takes hours.",
     "tier": "stated",
     "refs": [
      {
@@ -282,7 +282,7 @@
     ]
    },
    {
-    "text": "A moot is a sept or tribal gathering held at a caern; a Moon Bridge is a gate between two caerns.",
+    "text": "Moots meet at caerns, and a Moon Bridge links one caern to another.",
     "tier": "stated",
     "refs": [
      {
@@ -317,7 +317,7 @@
   "summary": "The Garou who hold and guard a caern, and their gatherings.",
   "claims": [
    {
-    "text": "A moot is a sept or tribal conclave that takes place at a caern.",
+    "text": "Moots are gatherings of a sept or a tribe, held at a caern.",
     "tier": "stated",
     "refs": [
      {
@@ -488,7 +488,7 @@
   "summary": "The child of two werewolves, born deformed into the bottom of Garou society.",
   "claims": [
    {
-    "text": "A metis is born to two werewolves who broke the Litany.",
+    "text": "Metis come from two Garou parents, a union that breaks the Litany.",
     "tier": "stated",
     "refs": [
      {
@@ -966,7 +966,7 @@
   "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
-    "text": "The Silent Striders roam from caern to caern as the Garou Nation's messengers and scouts.",
+    "text": "The Silent Striders wander between caerns, carrying news and scouting for the Garou Nation.",
     "tier": "stated",
     "refs": [
      {
@@ -1981,7 +1981,7 @@
     ]
    },
    {
-    "text": "The Fera were once true allies, but few count the Garou as allies now.",
+    "text": "Long ago the Fera stood with the Garou as allies.",
     "tier": "stated",
     "refs": [
      {
