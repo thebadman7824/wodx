@@ -9,7 +9,7 @@ import {measure, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.1.4";
+export const VERSION = "0.2.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -47,8 +47,8 @@ const FITS = new Map();
 export async function anchorsFor(look) {
   const key = D.fitKey(look);
   if ( FITS.has(key) ) return FITS.get(key);
-  const c = await toCanvas(await avatar(D.loreleiOptions(look, "own", {key: true})), SIZE);
-  const A = measure(c.getContext("2d").getImageData(0, 0, SIZE, SIZE));
+  const c = await toCanvas(D.keySvg(look, await avatar(D.loreleiOptions(look, "own", {key: true}))), SIZE);
+  const A = measure(c.getContext("2d").getImageData(0, 0, SIZE, SIZE), D.buildOf(look));
   if ( !A ) throw new Error("The head could not be measured.");
   FITS.set(key, A);
   return A;
@@ -80,7 +80,7 @@ export function stateOf(actor, look = lookOf(actor)) {
 /** The picture as SVG, for a look in a state. */
 export async function draw(look, {level = 0, mood = "own", frame = D.DEFAULT_FRAME, ring = true} = {}) {
   const A = await anchorsFor(look);
-  const head = D.innerSvg(await avatar(D.loreleiOptions(look, mood)));
+  const head = D.headLayers({look, head: D.innerSvg(await avatar(D.loreleiOptions(look, mood))), mask: D.innerSvg(await avatar(D.loreleiOptions(look, mood, {mask: true})))});
   return D.compose({look, head, anchors: A, frame, ring, level});
 }
 
@@ -127,7 +127,7 @@ export async function bake(actor, {force = false} = {}) {
   };
   try { for ( const t of actor.getDependentTokens?.({linked: true}) ?? [] ) add(t); } catch (e) { /* older API */ }
   for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) if ( t.actorId === actor.id ) add(t);
-  const log = {actor: actor.id, path, found: [], updated: [], errors: [], recheck: []};
+  const log = {actor: actor.id, path, found: [], updated: [], errors: [], recheck: [], reset: []};
   // diff: false sends the picture even when this computer's copy already shows it, so every copy ends the same
   const put = async (sceneId, ids) => {
     const scene = game.scenes.get(sceneId);
@@ -138,12 +138,22 @@ export async function bake(actor, {force = false} = {}) {
     } catch (e) { log.errors.push(e.message); console.warn(`${MOD} | token picture on ${scene.name}`, e); }
   };
   for ( const [sid, {ids}] of byScene ) { log.found.push(...[...ids].map(id => `${sid}.${id}`)); await put(sid, [...ids]); }
+  // Foundry 14 can keep showing a new token's old picture on this computer after the server has the new one:
+  // the stored data is right, the prepared copy is not. Prepare it again and redraw the token.
+  const fresh = async (sid, id) => {
+    const t = game.scenes.get(sid)?.tokens?.get(id);
+    if ( !t || t._source?.texture?.src !== path || t.texture?.src === path ) return;
+    try { t.reset(); log.reset.push(`${sid}.${id}`); if ( t.object && !t.object.destroyed ) await t.object.draw?.(); }
+    catch (e) { log.errors.push(`redraw: ${e.message}`); }
+  };
+  for ( const [sid, {ids}] of byScene ) for ( const id of ids ) await fresh(sid, id);
   lastBake = log;
   // Look again a moment later: a placed token that went back to its old picture gets the new one again
   if ( byScene.size ) setTimeout(async () => {
     for ( const [sid, {ids}] of byScene ) {
-      const back = [...ids].filter(id => game.scenes.get(sid)?.tokens?.get(id)?.texture?.src !== path);
+      const back = [...ids].filter(id => game.scenes.get(sid)?.tokens?.get(id)?._source?.texture?.src !== path);
       if ( back.length ) { log.recheck.push(...back.map(id => `${sid}.${id}`)); await put(sid, back); }
+      for ( const id of ids ) await fresh(sid, id);
     }
   }, 800);
   return path;
@@ -174,8 +184,8 @@ export async function saveLook(actor, look) {
 }
 
 /* ---- The window ---- */
-const opt = (table, cur) => Object.entries(table).map(([k, v]) => `<option value="${esc(k)}"${k === cur ? " selected" : ""}>${esc(typeof v === "string" ? v : v.label)}</option>`).join("");
-const swatch = (table, cur) => opt(Object.fromEntries(Object.entries(table).map(([k, v]) => [k, v])), cur);
+const opt = (table, cur, order = null) => (order ? order.map(k => [k, table[k]]) : Object.entries(table)).map(([k, v]) => `<option value="${esc(k)}"${k === cur ? " selected" : ""}>${esc(typeof v === "string" ? v : v.label)}</option>`).join("");
+const swatch = (table, cur) => opt(table, cur, table === D.SKIN ? D.FACE.SKIN_ORDER : null);
 
 export class PaperdollApp extends ApplicationV2 {
   static DEFAULT_OPTIONS = {
@@ -201,8 +211,8 @@ export class PaperdollApp extends ApplicationV2 {
   async _renderHTML() {
     const L = this.look, f = L.face, cl = L.clothes;
     const stepper = part => {
-      const list = D.PARTS[part], i = list.indexOf(f[part]);
-      const shown = f[part] ? `${i + (list[0] === "" ? 0 : 1)} of ${list.length - (list[0] === "" ? 1 : 0)}` : "None";
+      const list = D.PARTS[part], i = list.indexOf(f[part]), named = D.PART_NAMES[part]?.[f[part]];
+      const shown = named ?? (f[part] ? `${i + (list[0] === "" ? 0 : 1)} of ${list.length - (list[0] === "" ? 1 : 0)}` : "None");
       return `<div class="form-group wodx-step"><label>${esc(D.PART_LABELS[part])}</label><div class="form-fields">
         <button type="button" data-action="step" data-part="${part}" data-by="-1" aria-label="${esc(D.PART_LABELS[part])}: back"><i class="fa-solid fa-chevron-left"></i></button>
         <span class="wodx-step-val">${esc(shown)}</span>
@@ -218,7 +228,7 @@ export class PaperdollApp extends ApplicationV2 {
         ${sel("preview", "Show it as", levels, String(this.preview))}
         <p class="hint">Head, shoulders and chest, inside the era's ring. Carried things are not drawn.</p></div>
       <div class="wodx-scroll wodx-paperdoll-form">
-        <h3>Face</h3>${["head", "eyes", "eyebrows", "nose", "mouth", "hair", "beard", "glasses", "earrings"].map(stepper).join("")}
+        <h3>Face</h3>${D.FACE_ORDER.map(stepper).join("")}
         ${chk("freckles", "Freckles", f.freckles)}
         ${sel("skin", "Skin", D.SKIN, L.colors.skin)}${sel("hairColor", "Hair colour", D.HAIR, L.colors.hair)}
         <h3>Clothes</h3>
