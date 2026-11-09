@@ -37,10 +37,11 @@ import * as R from "./interact-rules.mjs";
 import {countSuccesses, clampDifficulty} from "../../wodx-actions/scripts/core-rules.js";
 import {actionPool} from "../../wodx-actions/scripts/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {registerStateSettings, setupStates} from "./states.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.8.1";
+const VERSION = "0.9.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -547,6 +548,7 @@ export async function applyAsk(msg) {
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given,
+      heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,
       damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed, undone: false};
     const verdict = waiting ? "Waiting for the Storyteller" : {done: "Done", progress: "Headway", fail: "No luck", botch: "Botch"}[out.result] ?? "";
     await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
@@ -636,7 +638,8 @@ export async function undoCard(msg) {
       if ( l && !!l.hidden !== s0.hidden ) await l.update({hidden: s0.hidden});
     }
     const now = doc.flags?.[MOD] ?? {};
-    for ( const k of Object.keys(now) ) if ( !(k in done.snap.flags) ) Object.assign(update, unsetKey(`flags.${MOD}.${k}`));
+    // The tile's own picture from before any state picture (artBase) stays: the picture is put back from it
+    for ( const k of Object.keys(now) ) if ( !(k in done.snap.flags) && k !== "artBase" ) Object.assign(update, unsetKey(`flags.${MOD}.${k}`));
     for ( const [k, v] of Object.entries(done.snap.flags) ) update[`flags.${MOD}.${k}`] = v;
     await doc.update(update, isTile(doc) ? {} : {sound: false});
   }
@@ -887,7 +890,7 @@ async function springCard(tokDoc, actor, doc, o) {
   Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: sp.noise, heard: heard.map(h => h.uuid)});
   Hooks.callAll("wodxInteractablesTrap", {scene: scene.id, tile: doc.id, token: tokDoc.uuid, kind: o.kind, caught: sp.caught, dice: sp.dice});
   const done = {result: "done", text: sp.text, noise: sp.noise, snap, hurt: 0, advanced: 0, worldTime: game.time.worldTime, waiting: false, lines, given: [],
-    damageMsg: sp.damageMsg, undone: false};
+    damageMsg: sp.damageMsg, heard: heard.map(h => h.uuid), undone: false};
   const ask = {v: 1, scene: scene.id, wall: doc.id, token: tokDoc.uuid, op: "spring", label: "A trap", user: game.user.id, state: "done"};
   const title = `${esc(actor.name)}: ${esc(R.TRAPS[o.kind].label)}`;
   const faces = sp.reflex?.faces ?? [];
@@ -1231,12 +1234,14 @@ function installDoorClick() {
 
 Hooks.once("init", () => {
   registerSettings();
+  registerStateSettings();
   game.keybindings?.register?.(MOD, "interact", {
     name: "Interact", hint: "The Interact window for the selected token: doors, windows and walls within reach.",
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
   game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

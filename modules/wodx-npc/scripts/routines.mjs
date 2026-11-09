@@ -13,13 +13,19 @@
  *              walks back to where the routine says. A dead or missing NPC is reported, never dropped quietly.
  *   Reactions  The region behaviour "WoDX: Reaction": who watches, on entering, leaving or staying, under which
  *              conditions; the noticing roll and the response from the watcher's profile (routine-rules.mjs).
+ *   Map events (0.4.0) NPCs who heard something on the map (the hook wodxMapEvent from WoDX Interactables) react by
+ *              their profile through the same card; one asleep wakes. Raising the alarm puts the place on alarm for
+ *              an hour, then wary until the next dusk (alert-rules.mjs): watchers there notice more easily, and the
+ *              lights and sounds of its "WoDX: Alert zone" regions come on while the alarm holds.
  * Player characters are never moved, placed or removed.
  */
 import * as R from "./routine-rules.mjs";
 import * as NR from "./npc-rules.mjs";
+import * as AR from "./alert-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
+export const ALERT_ZONE = "alertZone";
 const VOICE_YARDS = 30; // B84
 const SIGHT_YARDS = {day: 60, night: 20}; // WoDX reading: how far a watcher sees a person in the open
 const PAUSE_MINUTES = 30;
@@ -48,6 +54,10 @@ export function build(ctx) {
     game.settings.register(MOD, "curfewStart", {
       name: "Curfew starts at", hint: "The hour the curfew begins; it ends at dawn (about 21:00, Rothenstein's late bell).",
       scope: "world", config: true, type: Number, default: 21, range: {min: 17, max: 24, step: 1}
+    });
+    game.settings.register(MOD, "mapReactions", {
+      name: "NPCs answer what they hear", hint: "When a player's action on the map makes a noise or raises an alarm (WoDX Interactables), the NPCs who heard it react by their profile, through the same card as a WoDX: Reaction region.",
+      scope: "world", config: true, type: Boolean, default: true
     });
     game.settings.register(MOD, "feasts", {
       name: "The chronicle's own feast days", hint: "One a line, month-day and name, such as 09-01 St Giles. The great feasts of the church are known already.",
@@ -324,6 +334,10 @@ export function build(ctx) {
       if ( a ) await a.update(p.prev ? {[`flags.${MOD}.paused`]: p.prev} : unsetKey(`flags.${MOD}.paused`));
     }
     if ( snap?.combat ) await game.combats.get(snap.combat)?.delete();
+    if ( snap?.alert ) {
+      const sc = await fromUuid(snap.alert.scene);
+      if ( sc ) { await sc.update(snap.alert.prev ? {[`flags.${MOD}.alert`]: snap.alert.prev} : unsetKey(`flags.${MOD}.alert`)); await syncZones(sc); }
+    }
   }
 
   /* ------------------------------------------------------------------ */
@@ -458,6 +472,7 @@ export function build(ctx) {
       const how = pendingDelta > 2 * 3600 ? "jump" : "walk";
       pendingDelta = 0;
       track(tick(how)).catch(e => console.error(`${MOD} |`, e));
+      track(checkAlerts()).catch(e => console.error(`${MOD} |`, e));
     }, 400);
   }
 
@@ -514,6 +529,20 @@ export function build(ctx) {
         [E.TOKEN_EXIT]: async function (event) { await onRegionEvent(this, event, "leave"); }
       };
     }
+    class AlertZoneBehavior extends Base {
+      static defineSchema() {
+        return {
+          lights: new f.StringField({required: false, blank: true, initial: "", label: "Lights that come on", hint: "Ambient light ids, separated by commas: lamps lit while the place is on alarm."}),
+          sounds: new f.StringField({required: false, blank: true, initial: "", label: "Sounds that play", hint: "Ambient sound ids, separated by commas: a bell or dogs while the place is on alarm."})
+        };
+      }
+      static events = {};
+    }
+    const ZONE = `${MOD}.${ALERT_ZONE}`;
+    CONFIG.RegionBehavior.dataModels[ZONE] = AlertZoneBehavior;
+    CONFIG.RegionBehavior.typeLabels[ZONE] = "WoDX: Alert zone";
+    if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[ZONE] = "While this place is on alarm, the lights and sounds named here come on. They go off when the alarm dies down.";
+    if ( CONFIG.RegionBehavior.typeIcons ) CONFIG.RegionBehavior.typeIcons[ZONE] = "fa-solid fa-bell";
     const TYPE = `${MOD}.${REACTION}`;
     CONFIG.RegionBehavior.dataModels[TYPE] = ReactionBehavior;
     CONFIG.RegionBehavior.typeLabels[TYPE] = "WoDX: Reaction";
@@ -594,7 +623,7 @@ export function build(ctx) {
       const yards = ctx.yardsBetween(w, tokNow);
       const inSight = (yards === null || yards <= range) && !sightBlocked(w.center, tokNow.center);
       const res = R.notice({perception: at(w.actor, "perception"), alertness: ab(w.actor, "alertness"), awareness: ab(w.actor, "awareness"),
-        auspex: disc(w.actor, "auspex") || (profileFor(w.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight}, iStats, {book});
+        auspex: disc(w.actor, "auspex") || (profileFor(w.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight}, iStats, {book, diff: AR.NOTICE_DIFF[alertLevel(scene)]});
       return {tok: w, actor: wa, yards, ...res};
     });
     const seen = looks.filter(l => l.noticed).sort((a, b) => (a.yards ?? 0) - (b.yards ?? 0));
@@ -609,15 +638,21 @@ export function build(ctx) {
     const w = seen[0];
     const near = seen.slice(1).concat(looks.filter(l => !l.noticed)).filter(l => (ctx.yardsBetween(w.tok, l.tok) ?? 999) <= VOICE_YARDS).length;
     const home = Object.entries(routineOf(w.actor)?.roles ?? {}).some(([, v]) => placeIds.includes(v));
-    let options = R.pickReaction(profileFor(w.tok.actor), {...sit, alliesNear: near, homeGround: home});
-    if ( system.response && system.response !== "profile" ) {
-      const forced = options.find(o => o.action === system.response) ?? {action: system.response, score: 99, why: "set on this region"};
-      options = [{...forced, why: `set on this region; ${forced.why}`}, ...options.filter(o => o !== forced)];
+    return reactionCard({wTok: w.tok, wActor: w.actor, sit, near, home, forced: system.response, forcedWhy: "set on this region", head, why, lines: lineList,
+      scene, intruder: doc.uuid, region: region.uuid, trigger});
+  }
+
+  /** The reaction card for one watcher, in the NPC's mode: a suggestion, or done at once in Auto with Undo. */
+  async function reactionCard({wTok, wActor, sit, near = 0, home = false, forced = null, forcedWhy = "", head, why = "", lines = [], scene, intruder, region = null, trigger, event = null}) {
+    let options = R.pickReaction(profileFor(wTok.actor), {...sit, alliesNear: near, homeGround: home});
+    if ( forced && forced !== "profile" ) {
+      const f0 = options.find(o => o.action === forced) ?? {action: forced, score: 99, why: forcedWhy};
+      options = [{...f0, why: `${forcedWhy}; ${f0.why}`}, ...options.filter(o => o !== f0)];
     }
     options = options.slice(0, 4).map(o => ({...o, label: R.RESPONSES[o.action]}));
-    const mode = modeOf(w.actor, scene);
+    const mode = modeOf(wActor, scene);
     if ( mode === "off" ) return null;
-    const data = {watcher: w.tok.document.uuid, intruder: doc.uuid, region: region.uuid, scene: scene.uuid, options, head, why, lines: lineList, mode, trigger};
+    const data = {watcher: wTok.document.uuid, intruder, region, scene: scene.uuid, options, head, why, lines, mode, trigger, ...(event ? {event} : {})};
     if ( mode === "auto" ) {
       const pick = R.autoReaction(options);
       if ( pick.act ) {
@@ -626,7 +661,169 @@ export function build(ctx) {
         data.done = {k, text: r.text, snap: r.snap};
       } else data.waiting = pick.needsStoryteller;
     }
-    return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: w.tok.document}), whisper: gmIds(), content: reactCardHtml(data), flags: {[MOD]: {reaction: data}}});
+    return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: wTok.document}), whisper: gmIds(), content: reactCardHtml(data), flags: {[MOD]: {reaction: data}}});
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Alarms on places, and what NPCs hear on the map                     */
+  /* ------------------------------------------------------------------ */
+
+  const alertOf = scene => AR.normAlert(flag(scene, "alert"));
+  const alertLevel = scene => AR.levelAt(alertOf(scene), game.time.worldTime);
+  const toDusk = t => { try { return cal.secondsToNextDusk(t, (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })()); } catch (e) { return 12 * 3600; } };
+  const idList = v => String(v ?? "").split(/[\s,]+/).map(x => x.replace(/[^A-Za-z0-9]/g, "")).filter(Boolean);
+  /** Lights and sounds of a scene's Alert zones: on while the alarm holds. */
+  async function syncZones(scene) {
+    const on = alertLevel(scene) === "alarm", type = `${MOD}.${ALERT_ZONE}`;
+    for ( const region of scene?.regions ?? [] ) for ( const b of region.behaviors ?? [] ) {
+      if ( b.type !== type || b.disabled ) continue;
+      for ( const id of idList(b.system?.lights) ) { const l = scene.lights?.get?.(id); if ( l && !!l.hidden === on ) await l.update({hidden: !on}); }
+      for ( const id of idList(b.system?.sounds) ) { const sd = scene.sounds?.get?.(id); if ( sd && !!sd.hidden === on ) await sd.update({hidden: !on}); }
+    }
+  }
+  /** Put a place on alarm for an hour, then wary until the next dusk. Returns the alert. */
+  async function raiseAlarm(scene = canvas.scene, cause = "") {
+    if ( !scene ) return null;
+    await loadCalendar();
+    const a = AR.raise(flag(scene, "alert"), {now: game.time.worldTime, cause, toDusk});
+    await scene.update({[`flags.${MOD}.alert`]: a});
+    await syncZones(scene);
+    Hooks.callAll("wodxPlaceAlarm", {scene: scene.id, level: "alarm", cause, until: a.until});
+    return a;
+  }
+  /** The clock moved: alarms die down and wary places calm, with a note to the Storyteller. */
+  async function checkAlerts() {
+    if ( !isActiveGM() ) return;
+    for ( const scene of game.scenes ?? [] ) if ( (flag(scene, "marks") ?? []).length ) await repairMarks(scene);
+    for ( const scene of game.scenes ?? [] ) {
+      const a = alertOf(scene);
+      if ( !a ) continue;
+      const f = AR.fade(a, game.time.worldTime, scene.name);
+      if ( !f.changed ) continue;
+      await scene.update(f.level === "calm" ? unsetKey(`flags.${MOD}.alert`) : {[`flags.${MOD}.alert.shown`]: f.level});
+      await syncZones(scene);
+      Hooks.callAll("wodxPlaceAlarm", {scene: scene.id, level: f.level, cause: a.cause});
+      if ( f.text ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(f.text)}</p></div></div>`});
+    }
+  }
+  const heardBusy = new Set();
+  /** Active Storyteller: a map event from WoDX Interactables. The NPCs who heard it react; one asleep wakes. */
+  async function onMapEvent(ev) {
+    if ( !isActiveGM() || !ev ) return [];
+    // Marks: what is put right later. An undone card takes its mark away.
+    try { await noteMark(ev); } catch (e) { console.error(`${MOD} |`, e); }
+    if ( skipping() || ev.undone || setting("mapReactions") === false ) return [];
+    const scene = game.scenes.get(ev.scene);
+    if ( !scene || scene.id !== canvas.scene?.id ) return [];
+    if ( NR.modeOf({scene: flag(scene, "routineMode"), world: setting("routineMode")}) === "off" ) return [];
+    if ( ev.message && heardBusy.has(ev.message) ) return [];
+    if ( ev.message ) heardBusy.add(ev.message);
+    const out = [];
+    if ( AR.RAISES.has(ev.kind) ) {
+      const prev = flag(scene, "alert") ?? null;
+      await raiseAlarm(scene, ev.objectName ? `${ev.objectName}: the alarm` : "an alarm");
+      out.push(await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {alarmCard: {scene: scene.uuid, prev}}},
+        content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(scene.name)} is on alarm</h3><span class="vta-verdict">Alarm</span></header><div class="vta-body"><p>${esc(ev.objectName ?? "An alarm")} went off. The place is on alarm for an hour of world time, then wary until the next dusk.</p><div class="wnpc-done"><button type="button" class="wnpc-a-undo">Undo</button></div></div></div>`}));
+    }
+    const intr = ev.who ? await fromUuid(ev.who) : null;
+    const tokNow = intr ? canvas.tokens.get(intr.id) : null;
+    const hearers = (ev.heard ?? []).map(u => canvas.tokens.placeables.find(t => t.document.uuid === u)).filter(t => t?.actor && !t.actor.hasPlayerOwner);
+    const base = a => a?.isToken ? (a.baseActor ?? game.actors.get(a.id)) : a;
+    const sorted = AR.sortHearers(hearers.map(t => ({uuid: t.document.uuid, asleep: whereOf(base(t.actor))?.activity === "sleep" && !!routineOf(base(t.actor))?.on && !flag(base(t.actor), "paused"), down: !!downState(t.actor)})));
+    // The sleepers wake: their routine pauses, so the next noise finds them awake
+    const woke = hearers.filter(t => sorted.wake.includes(t.document.uuid));
+    if ( woke.length ) {
+      const until = game.time.worldTime + PAUSE_MINUTES * 60;
+      for ( const t of woke ) { const a = base(t.actor); if ( a ) await a.update({[`flags.${MOD}.paused`]: {reason: "woken", until}}); }
+    }
+    const awake = hearers.filter(t => sorted.react.includes(t.document.uuid)).sort((a, b) => (ctx.yardsBetween(a, tokNow ?? a) ?? 0) - (ctx.yardsBetween(b, tokNow ?? b) ?? 0));
+    if ( !awake.length ) {
+      if ( woke.length ) out.push(await ChatMessage.create({speaker: {alias: "WoDX reaction"}, whisper: gmIds(), content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(woke.map(t => t.name).join(", "))} ${woke.length === 1 ? "wakes" : "wake"} at the noise.</p></div></div>`}));
+      return out.filter(Boolean);
+    }
+    await loadCalendar();
+    const d = describer()(game.time.worldTime);
+    const sit = AR.eventSituation(ev, {night: d.isNight, curfew: R.isCurfew(d, num(setting("curfewStart")) || 21), weapon: intr?.actor ? weaponOut(intr.actor) : false});
+    const w = awake[0];
+    const near = awake.length - 1;
+    const placeIds = [ev.place, scene.uuid].filter(Boolean);
+    const home = Object.entries(routineOf(base(w.actor))?.roles ?? {}).some(([, v]) => placeIds.includes(v));
+    const lines = [`Heard by ${awake.map(t => t.name).join(", ")}.`, ...(woke.length ? [`${woke.map(t => t.name).join(", ")} ${woke.length === 1 ? "wakes" : "wake"} at it.`] : [])];
+    out.push(await reactionCard({wTok: w, wActor: base(w.actor), sit, near, home, head: AR.eventHead(ev, ev.whoName), why: ev.noise === "loud" ? "a loud noise" : ev.noise === "quiet" ? "a quiet noise" : "",
+      lines, scene, intruder: ev.who, region: null, trigger: "heard", event: {kind: ev.kind, object: ev.object, message: ev.message}}));
+    if ( ev.message ) setTimeout(() => heardBusy.delete(ev.message), 5000);
+    return out.filter(Boolean);
+  }
+  /* Marks and repairs */
+  const toDawn = t => { try { return cal.secondsToNextDawn(t, (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })()); } catch (e) { return 6 * 3600; } };
+  async function noteMark(ev) {
+    const scene = game.scenes.get(ev.scene);
+    if ( !scene ) return null;
+    const marks = flag(scene, "marks") ?? [];
+    if ( ev.undone ) {
+      if ( ev.message && marks.some(m => m.id === ev.message) ) await scene.update({[`flags.${MOD}.marks`]: marks.filter(m => m.id !== ev.message)});
+      return null;
+    }
+    await loadCalendar();
+    const placeIds = [ev.place, scene.uuid].filter(Boolean);
+    const placeFlags = [scene, ...(scene.regions ?? [])].find(d => placeIds.includes(d.uuid))?.flags?.[MOD]?.place ?? flag(scene, "place");
+    const owned = !!placeFlags?.owner || residentsOf(placeIds).length > 0;
+    const m = AR.markFor(ev, {owned, toDawn});
+    if ( !m ) return null;
+    await scene.update({[`flags.${MOD}.marks`]: [...marks.filter(x => x.id !== m.id), m].slice(-60)});
+    return m;
+  }
+  /** The clock passed a repair: the owner puts a forced door or a broken pane right, in one card with Undo. */
+  async function repairMarks(scene) {
+    const marks = flag(scene, "marks") ?? [];
+    const due = AR.dueMarks(marks, game.time.worldTime);
+    if ( !due.length ) return null;
+    const IX = "wodx-interactables", snap = [], lines = [];
+    const DS = CONST.WALL_DOOR_STATES ?? {CLOSED: 0, OPEN: 1, LOCKED: 2};
+    for ( const m of due ) {
+      const doc = m.objectType === "Wall" ? scene.walls?.get?.(m.object) : scene.tiles?.get?.(m.object);
+      if ( !doc ) continue;
+      const f = doc.flags?.[IX] ?? {};
+      snap.push({type: m.objectType, id: doc.id, ds: doc.ds ?? null, flags: foundry.utils.deepClone(f)});
+      const locked = (!!f.lock && f.lock !== "none") || !!f.lockBroken;
+      const up = {[`flags.${IX}.broken`]: false, [`flags.${IX}.progress`]: {pick: 0, force: 0, hack: 0}, ...unsetKey(`flags.${IX}.lockBroken`)};
+      if ( m.objectType === "Wall" ) up.ds = locked ? DS.LOCKED : DS.CLOSED; else up[`flags.${IX}.ds`] = locked ? "locked" : "closed";
+      await doc.update(up);
+      lines.push(`${m.objectName || "It"} is ${AR.REPAIRS[m.kind]}.`);
+    }
+    await scene.update({[`flags.${MOD}.marks`]: marks.filter(m => !due.includes(m))});
+    if ( !lines.length ) return null;
+    return ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {repairCard: {scene: scene.uuid, snap, marks: due, undone: false}}},
+      content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(scene.name)}: put right</h3><span class="vta-verdict">Auto</span></header><div class="vta-body"><ul>${lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul><p class="wodx-quiet">Whoever lives or works there saw to it.</p><div class="wnpc-done"><button type="button" class="wnpc-m-undo">Undo</button></div></div></div>`});
+  }
+  async function undoRepairCard(msg) {
+    const d = msg?.flags?.[MOD]?.repairCard;
+    if ( !d || d.undone || !game.user.isGM ) return null;
+    const scene = await fromUuid(d.scene), IX = "wodx-interactables";
+    if ( scene ) {
+      for ( const s0 of d.snap ) {
+        const doc = s0.type === "Wall" ? scene.walls?.get?.(s0.id) : scene.tiles?.get?.(s0.id);
+        if ( !doc ) continue;
+        const up = {};
+        for ( const k of Object.keys(doc.flags?.[IX] ?? {}) ) if ( !(k in s0.flags) ) Object.assign(up, unsetKey(`flags.${IX}.${k}`));
+        for ( const [k, v] of Object.entries(s0.flags) ) up[`flags.${IX}.${k}`] = v;
+        if ( s0.type === "Wall" && s0.ds !== null ) up.ds = s0.ds;
+        await doc.update(up);
+      }
+      // The marks come back, without a repair time, so the clock does not repair them again
+      const marks = flag(scene, "marks") ?? [];
+      await scene.update({[`flags.${MOD}.marks`]: [...marks, ...d.marks.map(m => ({...m, repairAt: null}))]});
+    }
+    await msg.update({[`flags.${MOD}.repairCard.undone`]: true, content: String(msg.content).replace(/<button[^>]*wnpc-m-undo[^>]*>Undo<\/button>/, "<b>Undone.</b>")});
+    return true;
+  }
+  async function undoAlarmCard(msg) {
+    const d = msg?.flags?.[MOD]?.alarmCard;
+    if ( !d || d.undone || !game.user.isGM ) return null;
+    const sc = await fromUuid(d.scene);
+    if ( sc ) { await sc.update(d.prev ? {[`flags.${MOD}.alert`]: d.prev} : unsetKey(`flags.${MOD}.alert`)); await syncZones(sc); }
+    await msg.update({[`flags.${MOD}.alarmCard.undone`]: true, content: String(msg.content).replace(/<button[^>]*wnpc-a-undo[^>]*>Undo<\/button>/, "<b>Undone.</b>")});
+    return true;
   }
 
   function reactCardHtml(data) {
@@ -669,7 +866,10 @@ export function build(ctx) {
       case "alarm": {
         const heard = canvas.tokens.placeables.filter(t2 => t2.id !== w.id && t2.actor && !t2.actor.hasPlayerOwner && (ctx.yardsBetween(w, t2) ?? 999) <= VOICE_YARDS);
         await pause([w.actor, ...heard.map(h => h.actor)]);
-        return {text: `${w.name} raises the alarm.${heard.length ? ` ${heard.map(h => h.name).join(", ")} hear it.` : " Nobody is within call."}`, snap};
+        const sc = canvas.scene;
+        snap.alert = {scene: sc.uuid, prev: flag(sc, "alert") ?? null};
+        await raiseAlarm(sc, `${w.name} raised it`);
+        return {text: `${w.name} raises the alarm.${heard.length ? ` ${heard.map(h => h.name).join(", ")} hear it.` : " Nobody is within call."} ${sc.name} is on alarm for an hour.`, snap};
       }
       case "send": {
         const scene = canvas.scene, places = listPlaces();
@@ -914,7 +1114,8 @@ export function build(ctx) {
 
   function hooks() {
     Hooks.on("updateWorldTime", onWorldTime);
-    Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() && setting("routineMode") !== "off" ) track(tick("skip")).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("wodxMapEvent", ev => { track(onMapEvent(ev)).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() && setting("routineMode") !== "off" ) track(tick("skip")).catch(e => console.error(`${MOD} |`, e)); if ( isActiveGM() ) track(checkAlerts()).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("canvasReady", () => {
       if ( !isActiveGM() || setting("routineMode") === "off" ) return;
       const p = new Promise(r => setTimeout(r, 600)).then(() => tick("open"));
@@ -925,7 +1126,15 @@ export function build(ctx) {
     Hooks.on("deleteCombat", combat => { track(onCombatEnd(combat)).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const fl = msg.flags?.[MOD];
-      if ( !fl?.routine && !fl?.reaction ) return;
+      if ( !fl?.routine && !fl?.reaction && !fl?.alarmCard && !fl?.repairCard ) return;
+      el.querySelectorAll("button.wnpc-m-undo").forEach(b => {
+        if ( !game.user.isGM ) { b.remove(); return; }
+        b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoRepairCard(msg).catch(e => console.error(`${MOD} |`, e)); });
+      });
+      el.querySelectorAll("button.wnpc-a-undo").forEach(b => {
+        if ( !game.user.isGM ) { b.remove(); return; }
+        b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoAlarmCard(msg).catch(e => console.error(`${MOD} |`, e)); });
+      });
       el.querySelectorAll("button.wnpc-r-go, button.wnpc-r-undo, button.wnpc-x-go, button.wnpc-x-undo").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
         b.addEventListener("click", ev => {
@@ -939,7 +1148,7 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, routineNpcs, describer, loadCalendar,
+  return {noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, routineNpcs, describer, loadCalendar,
     applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow};
 }

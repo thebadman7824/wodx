@@ -335,3 +335,27 @@ test("a world with no places tagged in 7c still has places: every scene but a ba
     queue.length = 0;
   }
 });
+
+test("map events: a theft at a faction's place is a wrong against it, Undo takes it back; a desecration offers a rumour on a button", async () => {
+  setMode("suggest");
+  const court = fac("The Voivode");
+  const ev = {kind: "theft", scene: "keep", place: "Scene.keep", at: 5000, who: "Scene.keep.Token.ilse", whoName: "Ilse", objectName: "The treasury chest", message: "mT", undone: false};
+  const r = await Fx.onMapEvent(ev);
+  assert.equal(r.wrong.faction, court.id);
+  assert.equal(r.card, null);
+  assert.equal(Fx.state().wrongs.filter(w => w.id === "mT").length, 1);
+  await Fx.onMapEvent(ev);
+  assert.equal(Fx.state().wrongs.filter(w => w.id === "mT").length, 1, "the same card twice is one wrong");
+  assert.deepEqual(await Fx.onMapEvent({...ev, undone: true}), {removed: "mT"});
+  assert.equal(Fx.state().wrongs.some(w => w.id === "mT"), false);
+  assert.equal((await Fx.onMapEvent({...ev, kind: "open", message: "mO"})).wrong, null, "opening a door is no wrong");
+  const n = Fx.state().breaches.length;
+  const d = await Fx.onMapEvent({...ev, kind: "desecrate", supernatural: true, place: "Scene.church", objectName: "The altar", message: "mD"});
+  assert.ok(d.card.flags[MOD].mapBreach);
+  assert.equal(Fx.state().breaches.length, n, "no rumour until the Storyteller says");
+  assert.ok(!/—|\b(he|she|him|her|his)\b/i.test(d.card.content.replace(/<[^>]+>/g, " ")));
+  await Fx.startMapBreach(d.card);
+  assert.equal(Fx.state().breaches.length, n + 1);
+  assert.match(d.card.content, /Rumour started/);
+  assert.equal(await Fx.startMapBreach(d.card), null, "once");
+});

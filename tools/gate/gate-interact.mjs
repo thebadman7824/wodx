@@ -1,5 +1,5 @@
 /**
- * Interactables gate (WoDX Interactables 0.8.1), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Interactables gate (WoDX Interactables 0.9.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-interact.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Interact"), two characters of its own ("Gate Interact
  * burglar", a player's character, and "Gate Interact watchman", an NPC) and deletes them all at the end. It fixes the
@@ -19,6 +19,8 @@
  *  13-18. traps (search, spring, disarm), a clue, a lantern, hiding in a wardrobe
  *  19. walking into a fire burns the burglar through WoDX Combat at the fire's heat; putting it out; Undo for both
  *  20. an altar: listed, desecrated (loud) and Undo; a relic on a tile taken (the gate's world item) and Undo
+ *  21. pictures and events: a chest forced swaps to its "forced" picture, one wodxMapEvent goes out; an emptied box with
+ *      no picture gets a marker; Undo puts the picture back and sends the event again marked undone
  * Result: Data/wodx-gate/gate-interact-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -73,7 +75,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.8.1 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.8.1" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.9.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.9.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -401,6 +403,39 @@ export async function run() {
       const back = burglar.items.filter(i => i.name === ledger?.name).length === had && !relic.flags[MOD]?.taken;
       ok("20. an altar is holy ground, desecrated loudly and put back by Undo; a relic is taken and Undo takes it back", listed && holy && desecrated && holyAgain && taken && back,
         {listed, holy, desecrated, holyAgain, taken, back, near, ids: [altar?.id, relic?.id], tokCenter: tok.center, at: {cx, cy}});
+    });
+
+    await step("21. pictures and events", async () => {
+      await sleep(500);
+      const cx = tb.x + 50, cy = tb.y + 50;
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: cx - 105, y: cy - 25, width: 50, height: 50, texture: {src: "icons/svg/chest.svg"}, flags: {[MOD]: {container: true, kind: "chest", lock: "cheap", ds: "locked", art: {forced: "icons/svg/explosion.svg"}, gate: "artchest"}}},
+        {x: cx - 105, y: cy + 30, width: 50, height: 50, texture: {src: "icons/svg/chest.svg"}, flags: {[MOD]: {container: true, kind: "box", ds: "open", gate: "plainbox"}}}]);
+      await sleep(500);
+      const chest = findTile("artchest"), box = findTile("plainbox");
+      const events = [];
+      const hook = Hooks.on("wodxMapEvent", e => events.push(e));
+      try {
+        await dice(9);
+        let m = null;
+        for ( let k = 0; k < 4 && !chest.flags[MOD]?.lockBroken; k++ ) m = await applied(await ix().attempt(tok, chest.id, "force", {fd: {}}));
+        for ( let k = 0; k < 30 && chest.texture.src !== "icons/svg/explosion.svg"; k++ ) await sleep(100);
+        const swapped = chest.texture.src === "icons/svg/explosion.svg" && chest.flags[MOD]?.artBase === "icons/svg/chest.svg";
+        const ev = events.find(e => e.object === chest.id && e.kind === "force" && !e.undone);
+        await box.update({[`flags.${MOD}.taken`]: true});
+        await sleep(400);
+        const look = ix().states.lookOf(box);
+        const layer = canvas.interface.children.find(c => c.name === "wodxStateMarkers");
+        const marker = look?.look?.marker === "Emptied" && (layer?.children?.length ?? 0) >= 1;
+        await ix().undoCard(m);
+        for ( let k = 0; k < 30 && chest.texture.src !== "icons/svg/chest.svg"; k++ ) await sleep(100);
+        const back = chest.texture.src === "icons/svg/chest.svg" && !chest.flags[MOD]?.lockBroken;
+        const undoneEv = events.some(e => e.object === chest.id && e.undone);
+        const effects = game.settings.get(MOD, "effects");
+        ok("21. a forced chest shows its forced picture, one map event goes out; an emptied box gets a marker; Undo puts the picture back and says so",
+          swapped && !!ev && marker && back && undoneEv && !!effects,
+          {swapped, ev, marker, markerCount: layer?.children?.length ?? null, back, undoneEv, effects, src: chest.texture.src, result: m?.flags?.[MOD]?.done?.result ?? null});
+      } finally { Hooks.off("wodxMapEvent", hook); }
     });
 
     await step("10. alongside", async () => {

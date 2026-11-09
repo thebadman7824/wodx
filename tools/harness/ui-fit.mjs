@@ -610,7 +610,7 @@ game.world.id = worldId;
   windows.push({name: "Wall config · WoDX part", tag: "form", classes: "application sheet wall-config", width: 480, height: "auto",
     content: `<div class="standard-form">${ix.configHtml(walls[0].document)}</div><footer class="form-footer"><button type="submit">Update Wall</button></footer>`});
   windows.push({name: "Tile config · WoDX part", tag: "form", classes: "application sheet tile-config", width: 560, height: "auto",
-    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[6].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
+    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[6].document)}${ix.states.statesConfigHtml(tiles[6].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
   globalThis.canvas = oldCanvas;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;

@@ -51,6 +51,7 @@ function scene(name, place = null) {
   uuids.set(s.uuid, s);
   s.createEmbeddedDocuments = async (type, list, opts = {}) => list.map(d => makeToken(s, d, opts.keepId));
   s.updateEmbeddedDocuments = async (type, ups) => ups.map(u => { const r = s.regions.get(u._id); applyUpdate(r, u); return r; });
+  s.update = async d => { applyUpdate(s, d); return s; };
   game.scenes.set(s.id, s);
   return s;
 }
@@ -316,8 +317,8 @@ test("a Reaction region: the guard notices a player character after curfew and c
 test("the module: manifest declares the Reaction behaviour; in-game text is gender-neutral and writes no NPC dialogue", async () => {
   const {readFileSync} = await import("node:fs");
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
-  assert.equal(m.version, "0.3.0");
-  assert.deepEqual(m.documentTypes, {RegionBehavior: {reaction: {}}});
+  assert.equal(m.version, "0.4.0");
+  assert.deepEqual(m.documentTypes, {RegionBehavior: {reaction: {}, alertZone: {}}});
   for ( const f of ["routines.mjs", "routine-rules.mjs"] ) {
     const src = readFileSync(join(root, "modules/wodx-npc/scripts", f), "utf8");
     const strings = (src.match(/`[^`]*`|"[^"\n]*"/g) ?? []).join(" ").replace(/<[^>]+>/g, " ");
@@ -325,4 +326,125 @@ test("the module: manifest declares the Reaction behaviour; in-game text is gend
     // Rule 11: no words put in an NPC's mouth (no quoted speech in cards)
     assert.ok(!/(says|shouts|cries|calls out)[,:]\s*[“"']/i.test(src), `${f}: no NPC dialogue`);
   }
+});
+
+/* ---- 0.4.0: alarms on places, and NPCs who hear the map ---- */
+const AR = await import(join(root, "modules/wodx-npc/scripts/alert-rules.mjs"));
+
+test("alarms: an hour on alarm, wary until the next dusk, then calm; raising it again starts the hour over", () => {
+  const a = AR.raise(null, {now: 1000, cause: "a bell", toDusk: () => 5000});
+  assert.equal(a.until, 1000 + 3600);
+  assert.equal(a.waryUntil, 1000 + 3600 + 5000);
+  assert.equal(AR.levelAt(a, 1000), "alarm");
+  assert.equal(AR.levelAt(a, 4700), "wary");
+  assert.equal(AR.levelAt(a, 9700), "calm");
+  assert.equal(AR.levelAt(null, 0), "calm");
+  const again = AR.raise(a, {now: 3000, toDusk: () => 100});
+  assert.equal(again.since, 1000);
+  assert.equal(again.until, 6600);
+  assert.equal(again.waryUntil, 9600);
+  assert.deepEqual(AR.fade(a, 2000, "X"), {level: "alarm", changed: false, text: ""});
+  assert.match(AR.fade(a, 5000, "The square").text, /dies down/);
+  assert.match(AR.fade({...a, shown: "wary"}, 99999, "The square").text, /calm again/);
+  assert.deepEqual(AR.NOTICE_DIFF, {calm: 6, wary: 5, alarm: 4});
+  assert.deepEqual(AR.sortHearers([{uuid: "a"}, {uuid: "b", asleep: true}, {uuid: "c", down: true}]), {react: ["a"], wake: ["b"]});
+  assert.equal(AR.eventSituation({kind: "force"}).trespass, true);
+  assert.equal(AR.eventSituation({kind: "noise"}).trespass, false);
+  assert.equal(AR.eventHead({kind: "force", objectName: "Locked iron-bound door"}, "Ilse"), "Ilse: forcing locked iron-bound door");
+});
+
+test("map events: the NPC who heard a door forced reacts by profile on the same card; a sleeper wakes instead", async () => {
+  const yardScene = scene("Upper Town · The Merchant's Yard", {kind: "home", owner: "Ludwig"});
+  yardScene.update = async d => { applyUpdate(yardScene, d); return yardScene; };
+  const guard = actor("Watchman Kunz", {template: "guard"});
+  const sleeper = actor("Old Berthold", {template: "civilian", routine: {on: true, preset: "labourer", roles: {}}});
+  sleeper.flags[MOD].where = {place: yardScene.uuid, activity: "sleep"};
+  const pcA = actor("Ilse the burglar", {template: "neonate", pc: true});
+  const [tg, ts, tp] = await yardScene.createEmbeddedDocuments("Token", [{actorId: guard.id, x: 500, y: 500}, {actorId: sleeper.id, x: 800, y: 500}, {actorId: pcA.id, x: 300, y: 500}]);
+  view(yardScene);
+  game.time.worldTime = at(4, 16, 23);
+  const before = chat.length;
+  const ev = {kind: "force", scene: yardScene.id, place: yardScene.uuid, noise: "loud", who: tp.uuid, whoName: "Ilse the burglar", object: "door1", objectName: "Locked door",
+    heard: [tg.uuid, ts.uuid], supernatural: false, message: "msgA", undone: false};
+  const cards = await RT.onMapEvent(ev);
+  assert.equal(cards.length, 1);
+  const data = cards[0].flags[MOD].reaction;
+  assert.equal(data.trigger, "heard");
+  assert.equal(data.watcher, tg.uuid);
+  assert.equal(data.intruder, tp.uuid);
+  assert.equal(data.event.kind, "force");
+  assert.ok(data.options.length >= 1);
+  assert.equal(data.mode, "suggest");
+  assert.ok(data.lines.some(l => /Old Berthold wakes/.test(l)));
+  assert.equal(sleeper.flags[MOD].paused.reason, "woken");
+  assert.match(cards[0].content, /Ilse the burglar: forcing locked door/);
+  // An undone event, an off switch, or another scene: nothing
+  assert.deepEqual(await RT.onMapEvent({...ev, message: "msgB", undone: true}), []);
+  settings.set("wodx-npc.mapReactions", false);
+  assert.deepEqual(await RT.onMapEvent({...ev, message: "msgC"}), []);
+  settings.delete("wodx-npc.mapReactions");
+  assert.deepEqual(await RT.onMapEvent({...ev, message: "msgD", scene: square.id}), []);
+  assert.equal(chat.length, before + 1);
+});
+
+test("map events: a tripped alarm puts the place on alarm; the clock fades it with a note; Undo on the card takes it back", async () => {
+  const shop = scene("Lower Town · The Goldsmith", {kind: "workplace"});
+  shop.update = async d => { applyUpdate(shop, d); return shop; };
+  view(shop);
+  game.time.worldTime = at(4, 17, 2);
+  const t0 = game.time.worldTime;
+  const [card] = await RT.onMapEvent({kind: "alarm", scene: shop.id, noise: "loud", objectName: "Strongbox", heard: [], message: "msgE"});
+  assert.ok(card.flags[MOD].alarmCard);
+  assert.equal(RT.alertLevel(shop), "alarm");
+  assert.equal(RT.alertOf(shop).until, t0 + 3600);
+  await RT.undoAlarmCard(card);
+  assert.equal(RT.alertOf(shop), null);
+  await RT.raiseAlarm(shop, "the Storyteller");
+  game.time.worldTime = t0 + 3700;
+  const n = chat.length;
+  await RT.checkAlerts();
+  assert.equal(shop.flags[MOD].alert.shown, "wary");
+  assert.match(chat.at(-1).content, /dies down/);
+  assert.equal(chat.length, n + 1);
+  await RT.checkAlerts();
+  assert.equal(chat.length, n + 1, "said once");
+  game.time.worldTime = RT.alertOf(shop).waryUntil + 1;
+  await RT.checkAlerts();
+  assert.equal(shop.flags[MOD].alert, undefined);
+  assert.match(chat.at(-1).content, /calm again/);
+});
+
+test("marks: a door forced in an owned place is put right at the next dawn, on one card; Undo puts it back as it was and it stays", async () => {
+  const yard = scene("Upper Town · The Saddler", {kind: "home", owner: "Margit"});
+  yard.update = async d => { applyUpdate(yard, d); return yard; };
+  const wall = {id: "wallX", ds: 1, flags: {"wodx-interactables": {lock: "good", lockBroken: true, progress: {pick: 0, force: 3, hack: 0}}}};
+  wall.update = async d => { applyUpdate(wall, d); return wall; };
+  yard.walls = new Coll([[wall.id, wall]]);
+  yard.tiles = new Coll();
+  globalThis.CONST.WALL_DOOR_STATES = {CLOSED: 0, OPEN: 1, LOCKED: 2};
+  game.time.worldTime = at(4, 18, 23);
+  const ev = {kind: "force", scene: yard.id, place: yard.uuid, at: game.time.worldTime, noise: "loud", object: wall.id, objectName: "Back door", objectType: "Wall", state: "forced", heard: [], message: "msgM", undone: false};
+  const m = await RT.noteMark(ev);
+  assert.ok(m.repairAt > ev.at, "repaired later");
+  assert.equal(yard.flags[MOD].marks.length, 1);
+  assert.equal(await RT.repairMarks(yard), null, "not yet");
+  game.time.worldTime = m.repairAt + 1;
+  const card = await RT.repairMarks(yard);
+  assert.match(card.content, /Back door is relocked/);
+  assert.equal(wall.ds, 2, "locked again");
+  assert.equal(wall.flags["wodx-interactables"].lockBroken, undefined);
+  assert.equal(wall.flags["wodx-interactables"].progress.force, 0);
+  assert.equal(yard.flags[MOD].marks.length, 0);
+  card.update = async d => { applyUpdate(card, d); return card; };
+  await RT.undoRepairCard(card);
+  assert.equal(wall.ds, 1);
+  assert.equal(wall.flags["wodx-interactables"].lockBroken, true);
+  assert.equal(yard.flags[MOD].marks[0].repairAt, null, "the mark is back, and not repaired again");
+  assert.equal(await RT.repairMarks(yard), null);
+  // An undone event takes its mark away; a place nobody owns keeps the damage
+  await RT.noteMark({...ev, undone: true});
+  assert.equal(yard.flags[MOD].marks.length, 0);
+  const ruin = scene("Outskirts · The Old Mill");
+  ruin.update = async d => { applyUpdate(ruin, d); return ruin; };
+  assert.equal((await RT.noteMark({...ev, scene: ruin.id, place: ruin.uuid})).repairAt, null);
 });
