@@ -693,3 +693,6 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Gear by era, 2026-11-09: WoDX Library 0.1.0, Combat 3.7.6 (B128)
 - Gap review item 7. New module wodx-library: gear-rules.mjs (table parsing, row to item, era filter), main.mjs (compendium install, Gear by era window, give), data/gear.json built by tools/library/build-gear.mjs from docs/research/gear-tables (read from the books on the PC). Combat armor() counts implants.
 - Tests: gear.test.mjs (5). 554 harness tests pass. UI fit: the Gear window passes (only the minimized-button check fails in the container, as for every window). Gate: tools/gate/gategear.mjs (6 steps).
+
+### Book checks, 2026-11-09: Targeting 0.1.1, Chronicle 0.5.3 (B129)
+- Gap review item 10. tags.json: 39 tags fixed. gifts-daw.json: chk taken off 19 Gifts, 7 effects and one difficulty corrected. garou.json: metis confirmed. languages: languagesFromMerits(). Notes kept in docs/research/book-checks/book-checks.md. 554 harness tests pass.
