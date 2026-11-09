@@ -62,9 +62,9 @@ export async function run() {
       scene = await Scene.create({name: "WoDX gate: Senses tavern", width: 1600, height: 1200, grid: {size: 100}, environment: {darknessLevel: 1},
         flags: {"wodx-npc": {place: {kind: "tavern"}}}});
       made.scene = scene;
-      const [listener, drinker] = await Actor.createDocuments([
-        {name: "WoDX gate: Listener", type: "Mortal", system: {attributes: {perception: {value: 3}}, abilities: {alertness: {value: 2}}}},
-        {name: "WoDX gate: Drinker", type: "Mortal", flags: {"wodx-npc": {where: {activity: "drink"}}}}]);
+      // One at a time, so neither can be taken for the other
+      const listener = await Actor.create({name: "WoDX gate: Listener", type: "Mortal", system: {attributes: {perception: {value: 3}}, abilities: {alertness: {value: 2}}}});
+      const drinker = await Actor.create({name: "WoDX gate: Drinker", type: "Mortal", flags: {"wodx-npc": {where: {activity: "drink"}}}});
       made.actors.push(listener, drinker);
       const td1 = (await listener.getTokenDocument({x: 400, y: 400})).toObject();
       const td2 = (await drinker.getTokenDocument({x: 700, y: 400})).toObject();
@@ -77,7 +77,8 @@ export async function run() {
       await scene.view();
       await sleep(1500);
       const ctx = api.answer ? await api.answer({user: game.user.id, token: tokListener.uuid, sense: "touch", closer: false}) : null;
-      ok("2 scene", ctx?.ctx?.place?.kind === "tavern" && ctx?.ctx?.light === "pitch", {place: ctx?.ctx?.place, light: ctx?.ctx?.light});
+      ok("2 scene", ctx?.ctx?.place?.kind === "tavern" && ctx?.ctx?.light === "pitch" && ctx?.actorName === listener.name && tokDrinker?.actor?.name === drinker.name,
+        {place: ctx?.ctx?.place, light: ctx?.ctx?.light, answeredAs: ctx?.actorName, drinkerToken: tokDrinker?.actor?.name});
     });
     let free = null;
     await step("3 free look", async () => {
@@ -85,7 +86,7 @@ export async function run() {
       free = await api.answer({user: game.user.id, token: tokListener.uuid, sense: "sound", closer: false});
       const s = free.sections[0];
       const st = [...game.messages].slice(n).find(m => m.flags?.[MOD]?.st);
-      ok("3 free look", s.lines.some(l => /cups/i.test(l)) && s.lines.some(l => /fire/i.test(l)) && /Held back: .*Wardrobe/i.test(text(st)) && st?.blind,
+      ok("3 free look", s.lines.some(l => /knock of cups/i.test(l)) && s.lines.some(l => /fire/i.test(l)) && /Held back: .*Wardrobe/i.test(text(st)) && st?.blind,
         {lines: s.lines, st: text(st).slice(0, 400)});
     });
     await step("4 closer", async () => {
@@ -110,7 +111,7 @@ export async function run() {
       await sleep(800);
       const res = await api.answer({user: "gate-fresh", token: tokListener.uuid, sense: "sound", closer: false, focus: ""});
       const s = res.sections[0];
-      ok("6 sound wall", !s.lines.some(l => /cups/i.test(l)), {lines: s.lines});
+      ok("6 sound wall", !s.lines.some(l => /knock of cups/i.test(l)), {lines: s.lines});
       const w = scene.walls.find(x => x.flags?.["wodx-gate"]?.senses);
       if ( w ) await w.delete();
       await sleep(500);
