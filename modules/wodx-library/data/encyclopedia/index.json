@@ -97,6 +97,12 @@
    "title": "Dark Ages: Inquisitor",
    "short": "DA:I",
    "edition": "Revised era"
+  },
+  {
+   "id": "sorcerer",
+   "title": "Sorcerer (Revised)",
+   "short": "Sorc",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -115,6 +121,7 @@
   "kote.json",
   "orpheus.json",
   "htr.json",
-  "inquisitor.json"
+  "inquisitor.json",
+  "sorcerer.json"
  ]
 }
