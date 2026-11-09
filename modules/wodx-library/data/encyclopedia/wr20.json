@@ -1,0 +1,1190 @@
+[
+ {
+  "id": "wraiths",
+  "title": "Wraiths",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Restless Dead: souls held back from what lies beyond by unfinished business.",
+  "claims": [
+   {
+    "text": "Everyone dies with something left undone; for a few it is enough to hold them near the world instead of moving on.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 19,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Some wraiths stay near the living and haunt them; others go deeper into the Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 19,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Wraiths call themselves the Restless.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 21,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadowlands",
+   "the-shadow",
+   "passions-and-fetters"
+  ]
+ },
+ {
+  "id": "shadowlands",
+  "title": "The Shadowlands and the Skinlands",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The lands of the dead lying over the world of the living.",
+  "claims": [
+   {
+    "text": "The Shadowlands lie over the living Skinlands like a sheer blanket, full of memories and echoes such as fallen buildings and old roads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 20,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Ghosts with strong Fetters often dwell there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 20,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shroud",
+   "wraiths"
+  ]
+ },
+ {
+  "id": "the-shroud",
+  "title": "The Shroud",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The barrier between the living and the dead.",
+  "claims": [
+   {
+    "text": "The Shroud is a membrane of fear and disbelief between the Shadowlands and the living world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 20,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Through it the dead can see the living, but it keeps them from touching that world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 26,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "A great convulsion in the distant past tore the realms apart and raised the Shroud.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 27,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadowlands",
+   "wraith-sundering"
+  ]
+ },
+ {
+  "id": "wraith-sundering",
+  "title": "The Sundering",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ancient rift that split the living from the dead.",
+  "claims": [
+   {
+    "text": "Long ago, for reasons no one knows, a great upheaval split the land of the dead from the land of the living.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 27,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shroud",
+   "charon"
+  ]
+ },
+ {
+  "id": "oblivion",
+  "title": "Oblivion",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The void that waits to swallow the dead.",
+  "claims": [
+   {
+    "text": "Oblivion is the eternal void, one of the fates that may follow death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 19,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "The Shadow seeks to edge its wraith toward Oblivion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 21,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shadow",
+   "spectres",
+   "transcendence"
+  ]
+ },
+ {
+  "id": "transcendence",
+  "title": "Transcendence",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hope of rising to a higher state beyond the Underworld.",
+  "claims": [
+   {
+    "text": "Some of the Restless hope for Transcendence, an ascent to a higher state, and strive for it without end.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 21,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "They disagree among themselves about how it is won.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 21,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "oblivion",
+   "heretics"
+  ]
+ },
+ {
+  "id": "the-shadow",
+  "title": "The Shadow",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The dark half of every wraith, bent on its destruction.",
+  "claims": [
+   {
+    "text": "The Shadow is the part of a wraith bent on self-destruction, with a malign life of its own inside the wraith's mind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 21,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "It bribes, coaxes, threatens and sometimes seizes control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 21,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Angst is the dark mental energy the Shadow and Spectres feed on; the Psyche is the brighter side that looks past self-destruction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 103,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "catharsis",
+   "oblivion",
+   "spectres"
+  ]
+ },
+ {
+  "id": "catharsis",
+  "title": "Catharsis",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "When the Shadow takes the wraith's body.",
+  "claims": [
+   {
+    "text": "When the Psyche weakens, the Shadow can take temporary control of the Corpus; the dead call this Catharsis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 49,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "A Catharsis may last seconds and seldom lasts longer than a few hours.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 49,
+      "pdf": 114
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shadow",
+   "corpus"
+  ]
+ },
+ {
+  "id": "passions-and-fetters",
+  "title": "Passions and Fetters",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What a wraith feels most, and what holds it to the world.",
+  "claims": [
+   {
+    "text": "Passions are the strong feelings and purposes that drive a wraith; acting on them yields Pathos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 48,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "Fetters are what a wraith feels most strongly about: loved ones, treasured places, tools of satisfying work, or hated reminders of old losses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 49,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "A Fetter can be ruined by chance as well as by enemies; even a tower is lost if an earthquake fells it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 49,
+      "pdf": 114
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pathos",
+   "wraiths"
+  ]
+ },
+ {
+  "id": "pathos",
+  "title": "Pathos",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The energy of raw emotion that sustains the dead.",
+  "claims": [
+   {
+    "text": "Pathos is pure emotional energy that wraiths feed on and use to sustain themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 103,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "A wraith gains Pathos by following its Passions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 103,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "passions-and-fetters",
+   "arcanoi"
+  ]
+ },
+ {
+  "id": "corpus",
+  "title": "Corpus",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A wraith's body in the Underworld.",
+  "claims": [
+   {
+    "text": "The Corpus is made of plasm, the raw stuff of the afterlife, rather than living tissue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 46,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "In skilled hands, such as a Masquer's, plasm can be reshaped endlessly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 46,
+      "pdf": 111
+     }
+    ]
+   }
+  ],
+  "see": [
+   "soulforging",
+   "deathmarks"
+  ]
+ },
+ {
+  "id": "the-caul",
+  "title": "The Caul",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The sheath that wraps a newly dead soul.",
+  "claims": [
+   {
+    "text": "A new wraith wakes wrapped in an ectoplasmic Caul that blurs the senses and binds movement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 46,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "Some never escape the Caul and linger on lost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 48,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "reaping",
+   "wraiths"
+  ]
+ },
+ {
+  "id": "reaping",
+  "title": "Reaping",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunt for newly dead souls.",
+  "claims": [
+   {
+    "text": "Older wraiths call the search for new souls Reaping.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 47,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "Some reapers want Thralls, souls bound as slaves or prisoners; others want raw material for the soulforges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 47,
+      "pdf": 112
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-caul",
+   "soulforging"
+  ]
+ },
+ {
+  "id": "deathmarks",
+  "title": "Deathmarks",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The marks of death and afterlife carried on every Corpus.",
+  "claims": [
+   {
+    "text": "Every Corpus bears marks of the wraith's life and death, caused by trauma and some Arcanoi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 48,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "Vain or subversive wraiths try to sculpt them away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 48,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "corpus",
+   "masks"
+  ]
+ },
+ {
+  "id": "masks",
+  "title": "Masks",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The masks of office worn in the Hierarchy.",
+  "claims": [
+   {
+    "text": "Masks are optional in the Hierarchy, yet any wraith with ambition there wears one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 47,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "Masks can be symbols of office, expressions of self, or items of power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 47,
+      "pdf": 112
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "deathmarks"
+  ]
+ },
+ {
+  "id": "soulforging",
+  "title": "Soulforging",
+  "kind": "power",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Melting souls into objects.",
+  "claims": [
+   {
+    "text": "A subject's Corpus is heated over soulfire crystals until it softens, then hammered into shape.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 42,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Soulfire crystals are shards a master Usurer has charged with Pathos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 42,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "oboli",
+   "corpus",
+   "reaping"
+  ]
+ },
+ {
+  "id": "oboli",
+  "title": "Oboli",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The coin of Stygia.",
+  "claims": [
+   {
+    "text": "Oboli are the only coinage accepted everywhere in Stygia, though some Necropoli take other relic money.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 44,
+      "pdf": 109
+     }
+    ]
+   },
+   {
+    "text": "The coins are heavy for their size.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 44,
+      "pdf": 109
+     }
+    ]
+   }
+  ],
+  "see": [
+   "soulforging",
+   "stygia"
+  ]
+ },
+ {
+  "id": "charon",
+  "title": "Charon",
+  "kind": "character",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ferryman of Mycenae who became the first ruler of the dead.",
+  "claims": [
+   {
+    "text": "The Lady of Fate foretold a leader who would come down the River of Death and guide the souls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 28,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "That leader, Charon, rose from among the dead of Mycenae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 28,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "Charon founded the Republic of Stygia on the model of the Roman Republic, with a Senate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 30,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lady-of-fate",
+   "stygia",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "lady-of-fate",
+  "title": "The Lady of Fate",
+  "kind": "character",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The prophet who foresaw Charon and still watches over Stygia.",
+  "claims": [
+   {
+    "text": "In the chaos of the Underworld the Lady of Fate foretold a great leader.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 28,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "While others faded over the centuries, the Lady endures and watches over the order helped into being.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 28,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "The Lady urged Charon down into the Labyrinth to face Oblivion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 29,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "charon"
+  ]
+ },
+ {
+  "id": "stygia",
+  "title": "Stygia",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great city and empire of the dead.",
+  "claims": [
+   {
+    "text": "Charon set up the first government of the dead as the Republic of Stygia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 30,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "The Midnight Express, a ghostly train, calls at many Necropoli on its way down into the deep Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 69,
+      "pdf": 134
+     }
+    ]
+   }
+  ],
+  "see": [
+   "charon",
+   "hierarchy",
+   "oboli"
+  ]
+ },
+ {
+  "id": "maelstroms",
+  "title": "The Great Maelstroms",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The storms of the Underworld that shake the realm of the dead.",
+  "claims": [
+   {
+    "text": "The First Great Maelstrom came with a roar from the Labyrinth, and Charon's sentries rang gongs to warn the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 32,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "The Fifth Great Maelstrom shook the Labyrinth loose and freed the Malfean Gorool.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 40,
+      "pdf": 105
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stygia",
+   "spectres"
+  ]
+ },
+ {
+  "id": "hierarchy",
+  "title": "The Hierarchy and the Legions",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Stygia's ruling order, built on eight Legions.",
+  "claims": [
+   {
+    "text": "The Legions are the framework of the Hierarchy, as Rome's legions were for Republic and Empire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 70,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "Every wraith belongs, in principle, to one of eight Legions, assigned on arrival.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 70,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "Each Legion answers to a Deathlord, with ranks like those of the Roman legions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 70,
+      "pdf": 135
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stygia",
+   "renegades",
+   "heretics",
+   "masks"
+  ]
+ },
+ {
+  "id": "renegades",
+  "title": "Renegades",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wraiths who oppose Stygia for worldly reasons.",
+  "claims": [
+   {
+    "text": "Opponents of Stygia with political aims are called Renegades; religious ones, Heretics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 65,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Both are many small groups that may share as little with each other as with Stygia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 65,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "heretics",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "heretics",
+  "title": "Heretics",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The cults and creeds of the dead.",
+  "claims": [
+   {
+    "text": "A real afterlife did not end arguments over religion among the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 67,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "The Legions crack down hard on Heretic cults that recruit among Stygia's poor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 67,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "transcendence"
+  ]
+ },
+ {
+  "id": "ferrymen",
+  "title": "The Ferrymen",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wraiths who cut out their own Shadows.",
+  "claims": [
+   {
+    "text": "In the Severance a Ferryman's Shadow is cut from the Corpus and lives on as a separate Spectre, a Pasiphae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 68,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "After the Severance a Ferryman cannot suffer Catharsis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 68,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shadow",
+   "spectres"
+  ]
+ },
+ {
+  "id": "guilds",
+  "title": "The Guilds",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Part trade cartel, part secret society, each built around an Arcanos.",
+  "claims": [
+   {
+    "text": "The Guilds formed around the practice of particular Arcanoi, modelled on living trade guilds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 34,
+      "pdf": 99
+     },
+     {
+      "book": "wr20",
+      "page": 86,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "Guild members are the masters of their arts and guard the path to advanced study.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 86,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "The Mnemoi, who work on memory, are the most reviled Guild, once Stygia's trusted judges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 93,
+      "pdf": 158
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcanoi",
+   "stygia"
+  ]
+ },
+ {
+  "id": "arcanoi",
+  "title": "Arcanoi",
+  "kind": "power",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The powers of the dead.",
+  "claims": [
+   {
+    "text": "An Arcanos lets a wraith affect the living and the dead; the plural is Arcanoi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 103,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds",
+   "pathos"
+  ]
+ },
+ {
+  "id": "spectres",
+  "title": "Spectres",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wraiths whose Shadows have won.",
+  "claims": [
+   {
+    "text": "Spectres feed on Angst as the Shadow does; in a Spectre the Psyche takes the place a Shadow holds in a wraith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20",
+      "page": 103,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shadow",
+   "oblivion",
+   "maelstroms"
+  ]
+ }
+]
