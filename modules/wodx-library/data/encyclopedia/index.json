@@ -31,6 +31,12 @@
    "title": "Dark Ages: Werewolf",
    "short": "DA:W",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "wr20",
+   "title": "Wraith: The Oblivion 20th Anniversary Edition",
+   "short": "Wr20",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -38,6 +44,7 @@
   "v20.json",
   "v20da.json",
   "w20.json",
-  "wtda.json"
+  "wtda.json",
+  "wr20.json"
  ]
 }
