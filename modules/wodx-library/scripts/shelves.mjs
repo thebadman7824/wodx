@@ -35,8 +35,14 @@ const findPack = name => game.packs?.get?.(`world.${name}`) ?? [...(game.packs ?
 const hash = S.hashOf;
 
 /** Make the shelves, or bring them up to date: new entries added, changed ones remade, the Storyteller's own entries never touched. */
-export async function installShelves() {
-  if ( !game.user.isGM ) return null;
+let RUNNING = null;
+/** One install at a time: the world's ready hook and a click (or a gate) can ask at once. */
+export function installShelves() {
+  if ( !game.user.isGM ) return Promise.resolve(null);
+  RUNNING ??= doInstall().finally(() => { RUNNING = null; });
+  return RUNNING;
+}
+async function doInstall() {
   const entries = S.buildShelves(await sources());
   const out = {created: 0, remade: 0, kept: 0, packs: []};
   for ( const key of S.SHELF_ORDER ) {
@@ -61,7 +67,9 @@ export async function installShelves() {
       else if ( old.flags[MOD].hash !== d.flags[MOD].hash ) { remove.push(old.id); create.push(d); out.remade++; }
       else out.kept++;
     }
-    if ( remove.length ) await JournalEntry.deleteDocuments(remove, {pack: pack.collection});
+    const still = new Set((await pack.getIndex()).map(e => e._id));
+    const gone = remove.filter(id => still.has(id));
+    if ( gone.length ) await JournalEntry.deleteDocuments(gone, {pack: pack.collection});
     if ( create.length ) await JournalEntry.createDocuments(create, {pack: pack.collection, keepId: create.some(d => d._id)});
     out.created += create.length - remove.length;
   }
