@@ -172,7 +172,13 @@
   ],
   "see": [
    "numina",
-   "sorc-psychics"
+   "sorc-psychics",
+   "sorc-aspects",
+   "sorc-casting",
+   "sorc-rituals",
+   "sorc-path-alchemy",
+   "sorc-path-hellfire",
+   "sorc-dark-paths"
   ]
  },
  {
@@ -212,7 +218,9 @@
   ],
   "see": [
    "numina",
-   "sorc-paths"
+   "sorc-paths",
+   "sorc-psychic-phenomena",
+   "sorc-psychic-groups"
   ]
  },
  {
@@ -303,6 +311,1387 @@
   ],
   "see": [
    "sorc-sorcerers"
+  ]
+ },
+ {
+  "id": "sorc-aspects",
+  "title": "Aspects",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a sorcerer shapes a spell.",
+  "claims": [
+   {
+    "text": "Many spells have aspects, such as targets, duration, area or strength, that the player sets before casting by sharing out successes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "A basic success covers one target for the Path's usual duration; each aspect level past the first costs one more success, so many Paths need two or three successes to affect others for long.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "The Path rating caps the aspect level, and the highest aspect chosen sets the difficulty; doubling the needed successes may let one aspect rise a level beyond the usual limit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Storytellers may skip aspects and set every aspect to the Path rating; then one success manages a simple effect and three make most spells work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-casting",
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-casting",
+  "title": "Casting Spells",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rolls, difficulty, time and extended casting.",
+  "claims": [
+   {
+    "text": "Most spells roll an Attribute plus an Ability, often Intelligence + Occult, or Science or Technology for extraordinary science and techno-sorcery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Base difficulty is 4 plus the level used, or plus the highest aspect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "A spell takes a turn per level of the effect; rituals take at least ten minutes and usually far longer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "In an extended casting each further roll takes as long as all the time spent so far; a botch on any roll ruins the spell.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Spending a Willpower point gives one automatic success; raw Quintessence is of little use to a sorcerer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-aspects",
+   "sorc-botches"
+  ]
+ },
+ {
+  "id": "sorc-botches",
+  "title": "Failure and Botches",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What goes wrong when sorcery fails.",
+  "claims": [
+   {
+    "text": "Sorcerers do not suffer the burning backlash of Paradox, but a botch still brings a misfire or ugly backlash suited to the Path, the aim and the style.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "A machine meant to harness metaphysical power is far likelier to explode than a flying carpet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Most simple failures just waste the effort, with small side effects at worst.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "A sorcerer who tries a plainly impossible feat in public and fails is treated as having botched.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paradox",
+   "sorc-casting"
+  ]
+ },
+ {
+  "id": "sorc-rituals",
+  "title": "Rituals",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Longer, formal castings.",
+  "claims": [
+   {
+    "text": "Rituals are exact formulas that take time, effort and usually some small cost; some Paths, such as Enchantment and Alchemy, work only as rituals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Sorcerers can invent rituals, for example by finding a new alchemical formula or by repeating an extended casting until the process becomes fixed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Spells and rituals have six levels; only five are open at creation, and Storytellers are advised to hold new sorcerers to level three in any Path.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths",
+   "sorc-casting"
+  ]
+ },
+ {
+  "id": "sorc-advanced-techniques",
+  "title": "Advanced Techniques",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fast casting, cheaper spells, teamwork and countermagic.",
+  "claims": [
+   {
+    "text": "Fast casting trades a harder roll for speed: corners are cut, and the spell becomes much tougher to control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "A sorcerer with two dots more than an effect needs may cast it at the higher level to cut or remove its Willpower cost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Spells from different Paths cannot be merged; to work together, sorcerers must share the same Path.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Any serious sorcerer learns some countermagic, if only to undo the messes made while learning.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-casting"
+  ]
+ },
+ {
+  "id": "sorc-dark-paths",
+  "title": "Dark Paths and Retribution",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Knowledge that costs the soul, and what comes back.",
+  "claims": [
+   {
+    "text": "Most sorcerer societies deem some Paths dark knowledge whose study brings madness, corruption or damnation; which ones varies by society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Many societies hold that whatever magic is used for returns to the user, sometimes threefold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-path-hellfire",
+   "sorc-path-shadowcasting"
+  ]
+ },
+ {
+  "id": "sorc-path-alchemy",
+  "title": "Alchemy",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Turning the base into the pure.",
+  "claims": [
+   {
+    "text": "Alchemy studies the change of the base and profane into the pure and sacred; a sorcerer may practise it as alchemy, herbalism or advanced chemistry, or a mix.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "The roll is Intelligence plus Alchemy, Herbalism or Science; it has no aspects, so a basic success makes the elixir, though weak rolls may weaken it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 64,
+      "pdf": 65
+     },
+     {
+      "book": "sorcerer",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Failure means ruined glassware and a foul mess; a botch can yield a substance that looks fine but is not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-conjuration",
+  "title": "Conjuration",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Moving objects through space.",
+  "claims": [
+   {
+    "text": "A conjurer moves objects, though not the conjurer's own body; scientists call it apportation or telekinesis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "The roll is Dexterity + Occult, harder against an object someone is holding; weight is an aspect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Many Templars learn Sword Summoning so they are never unarmed, though shotguns are called more often these days.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Failure can leave the object still, lost for good, or dropped at a bad moment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-conveyance",
+  "title": "Conveyance",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Travel by magic.",
+  "claims": [
+   {
+    "text": "The Path covers legendary travel: seven-league boots, flying carpets, brooms and gateways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "The roll is Stamina + Occult; going somewhere unseen adds a success and teleporting two more, and speed must still be rated.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Even a novice can ward a room or building against teleporting intruders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-divination",
+  "title": "Divination",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Seeing what is to come.",
+  "claims": [
+   {
+    "text": "The roll is Perception + Fortune Telling; the time span reached is an aspect, from a week to a year.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Most diviners settle on one set of tools, and a few choose tools to suit the case.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "A failure may give a cloudy or false reading; a botch gives an omen that is dangerously wrong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-enchantment",
+  "title": "Enchantment",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Making minor talismans.",
+  "claims": [
+   {
+    "text": "Enchantment works only by ritual: the enchanter puts a little of their own essence into each talisman and spends long hours at the workbench.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "The roll is Intelligence + Occult, or Science for techno-sorcerers, who give the Path many other names.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 72,
+      "pdf": 73
+     },
+     {
+      "book": "sorcerer",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "Eldritch Mark writes a sign into an object or onto a forehead that then fades from view.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "At best a failure wastes time; more often the result is a cursed item or a blast in the workshop.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-fascination",
+  "title": "Fascination",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Bewitching others.",
+  "claims": [
+   {
+    "text": "Fascination is the craft of love philters, glamours and presence: making a subject listen and obey.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Its lowest level makes people find the sorcerer interesting, adding one die to Social pools.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "A botch can backfire, leaving the caster as dull and unappealing as the spell meant to make the caster striking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-fortune",
+  "title": "Fortune",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Bending luck.",
+  "claims": [
+   {
+    "text": "The sorcerer shifts probability and changes a target's future; the target may be a person or group known without a name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "The roll is Manipulation + Intimidation, or Mathematics for techno-sorcerers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "For a Death Curse the magician spends all permanent Willpower, adding it to the Path dots to shape the curse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "A failure does nothing, and the caster may not even know whether a curse took hold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths",
+   "sorc-path-divination"
+  ]
+ },
+ {
+  "id": "sorc-path-healing",
+  "title": "Healing",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mending body and mind.",
+  "claims": [
+   {
+    "text": "The roll is Manipulation + Intuition, at one Willpower per injury or illness; healing speeds up the body's own work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "Bashing damage drops one level per two successes; two successes stabilise even a dying patient.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "At least four successes can correct defects from birth or later, but lost limbs cannot be regrown.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "A botch can be ghastly, with stories of flesh around a wound going wrong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-hellfire",
+  "title": "Hellfire",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The most destructive of Paths.",
+  "claims": [
+   {
+    "text": "Many think the Path tainted, if not evil in origin; legend traces it to pacts with infernal realms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "The roll is Manipulation + Occult for one Willpower, dealing two dice of lethal damage for each success spent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Fire's Weal guards against natural flame and gives some protection against magical fire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "A botch usually turns the blast back on the caster.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths",
+   "sorc-dark-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-mana",
+  "title": "Mana Manipulation",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Handling magical energy.",
+  "claims": [
+   {
+    "text": "Most sorcerers sense some flow of power, named mana, sekhem, chi or the like, while casting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "The roll is Manipulation + Occult for one Willpower; its rituals spread that control over wide areas or long spans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 81,
+      "pdf": 82
+     },
+     {
+      "book": "sorcerer",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "Infusion puts some of the sorcerer's Mana into a potion or other consumable.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-oneiromancy",
+  "title": "Oneiromancy",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Working through dreams.",
+  "claims": [
+   {
+    "text": "The Path draws on tales of omens, messages and meetings in dreams; the roll is Wits + Occult.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "The dreamer must be reached somehow: touch works best, but sympathy and contagion also serve.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-shadowcasting",
+  "title": "Shadowcasting",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Commanding darkness.",
+  "claims": [
+   {
+    "text": "Shadows become tools; some claim the Path is infernal or at least tainted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "The roll is Manipulation + Occult for one Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "A botch can confuse the caster more than the foe or draw the shadows the wrong way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths",
+   "sorc-dark-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-shapeshifting",
+  "title": "Shapeshifting",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Changing form.",
+  "claims": [
+   {
+    "text": "The roll is Stamina + Animal Ken for mythic sorcery or Intelligence + Science for extraordinary science, at one Willpower per use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Change runs from small touches, like eye colour or hair, upward.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "A botch may trap the sorcerer in an animal body or swap the caster's wits for an animal's.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-summoning",
+  "title": "Summoning, Binding and Warding",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Calling, holding and keeping out creatures.",
+  "claims": [
+   {
+    "text": "This ritual-only Path may be the most common sorcery in legend; the roll is Intelligence + Occult for one Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "A summoned creature must come before the sorcerer, so spirits can be called and vampires forced out of hiding; a bound one does the task it is ordered to.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "Failure is its own warning: a creature may only pretend to be held, or a circle may let it through.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-path-weather",
+  "title": "Weather Control",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Commanding the elements.",
+  "claims": [
+   {
+    "text": "Weather witches have long been honoured and feared; once one could doom a village by holding back rain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "The Path has no rituals; the roll is Manipulation + Willpower, and the Willpower cost climbs with intensity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "Scale runs from about 50 square feet up past a mile; extreme changes need a large area.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Even plain failure brings odd local weather, and a botch can wreck the weather far beyond the target.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-psychic-phenomena",
+  "title": "Psychic Phenomena",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The inborn mental powers.",
+  "claims": [
+   {
+    "text": "A few are born with a sense of something strange and deeper, instead of studying for it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "Whether psychics are separate from sorcerers or a branch of them is disputed; their powers are too unreliable to classify.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "The phenomena include Animal Psychics, Astral Projection, Biocontrol, Channeling, Clairvoyance, Cyberkinesis, Cyberpathy, Ectoplasmic Generation, Mind Shields, Precognition, Psychic Healing, Hypnosis, Invisibility and Vampirism, Psychokinesis, Psychometry, Psychoportation, Pyrokinesis, Synergy and Telepathy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 90,
+      "pdf": 91
+     },
+     {
+      "book": "sorcerer",
+      "page": 92,
+      "pdf": 93
+     },
+     {
+      "book": "sorcerer",
+      "page": 93,
+      "pdf": 94
+     },
+     {
+      "book": "sorcerer",
+      "page": 94,
+      "pdf": 95
+     },
+     {
+      "book": "sorcerer",
+      "page": 95,
+      "pdf": 96
+     },
+     {
+      "book": "sorcerer",
+      "page": 96,
+      "pdf": 97
+     },
+     {
+      "book": "sorcerer",
+      "page": 98,
+      "pdf": 99
+     },
+     {
+      "book": "sorcerer",
+      "page": 99,
+      "pdf": 100
+     },
+     {
+      "book": "sorcerer",
+      "page": 101,
+      "pdf": 102
+     },
+     {
+      "book": "sorcerer",
+      "page": 102,
+      "pdf": 103
+     },
+     {
+      "book": "sorcerer",
+      "page": 103,
+      "pdf": 104
+     },
+     {
+      "book": "sorcerer",
+      "page": 104,
+      "pdf": 105
+     },
+     {
+      "book": "sorcerer",
+      "page": 105,
+      "pdf": 106
+     },
+     {
+      "book": "sorcerer",
+      "page": 106,
+      "pdf": 107
+     },
+     {
+      "book": "sorcerer",
+      "page": 107,
+      "pdf": 108
+     },
+     {
+      "book": "sorcerer",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   },
+   {
+    "text": "Psychic invisibility is not true invisibility: cameras and night-vision goggles still see the psychic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "A telepath's difficulty is usually the subject's Willpower, and Mind Shields defend against it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   },
+   {
+    "text": "Psychics do not use aspects; they are simpler effects.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-psychics",
+   "sorc-psychic-groups"
+  ]
+ },
+ {
+  "id": "sorc-psychic-groups",
+  "title": "Psychic Groups",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The rare gatherings of psychics.",
+  "claims": [
+   {
+    "text": "Unlike sorcerer societies, psychics seldom band together.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "The Friends of Foster gather around a stage magician known for exposing fake psychics, who is quietly a friend to real ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "Insight Investments is a fast-growing Chicago investment house; the Marsh Institute goes back to a telepathic financier who made a fortune in 1920s real estate and was warned of the crash by a precognitive rival.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-psychic-phenomena"
   ]
  }
 ]
