@@ -229,7 +229,7 @@ game.world.id = worldId;
   game.user.character = actor;
   const tries = [["Attack", () => game.wodxCombat.attack({attacker: actor, target})], ["Soak & Apply", () => game.wodxCombat.soakDialog()],
     ["Actor type", () => game.wodxCombat.pickKind(actor)], ["Actions menu", () => game.wodxActions.menu({actor})],
-    ["Action", () => game.wodxActions.action({actor})], ["Hunt", () => game.wodxActions.hunt({actor})], ["Spend blood", () => game.wodxActions.spendBlood({actor})],
+    ["Action", () => game.wodxActions.action({actor})], ["Common checks", () => game.wodxActions.quickCheck({actor})], ["Action: a common check", () => game.wodxActions.action({actor, preset: "check-notice"})], ["Hunt", () => game.wodxActions.hunt({actor})], ["Spend blood", () => game.wodxActions.spendBlood({actor})],
     ["Frenzy", () => game.wodxActions.frenzy({actor})], ["Rötschreck", () => game.wodxActions.rotschreck({actor})],
     ["Blood Oath", () => game.wodxActions.bloodOath({actor})], ["Torpor", () => game.wodxActions.torpor({actor})], ["Hazard", () => game.wodxActions.hazard({actor})],
     ["Sin", () => game.wodxActions.sin({actor})], ["Willpower uses", () => game.wodxActions.uses({actor, resource: "willpower"})],
