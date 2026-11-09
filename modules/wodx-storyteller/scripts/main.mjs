@@ -1,5 +1,6 @@
 /**
- * WoDX Storyteller 0.4.0: the open world, the ledger, and starting a chronicle on the world template (setup.mjs).
+ * WoDX Storyteller 0.5.0: the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
+ * night's draw and the story aids (night.mjs).
  *
  * Players roam the world on their own, between sessions or side by side within one: they travel from place to place
  * and act alone (hunting, downtime, research, influence, talking to people), each on their own time in the night. The
@@ -15,6 +16,7 @@ import * as A from "./apps.mjs";
 import * as W from "./world-rules.mjs";
 import * as Led from "./ledger.mjs";
 import * as Setup from "./setup.mjs";
+import * as Night from "./night.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -28,11 +30,12 @@ Hooks.once("init", () => {
   Led.registerLedgerSettings();
   Led.registerLedgerHooks();
   Setup.registerSetupSettings();
+  Night.registerNightSettings();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -49,7 +52,10 @@ Hooks.once("ready", () => {
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
-    setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules}
+    setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
+    night: {draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
+    aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
+    draw: Night.drawChooser, nightRules: Night.N
   };
   const mod = game.modules.get(C.MOD);
   if ( mod ) mod.api = api;
@@ -70,7 +76,7 @@ Hooks.on("updateSetting", s => {
   if ( !active ) return;
   if ( s.key === "wodx-chronicle.approvals" ) safe(C.onQueue());
 });
-Hooks.on("updateWorldTime", () => { if ( active && !skipping() ) safe(C.onClock()); });
+Hooks.on("updateWorldTime", () => { if ( active && !skipping() ) { safe(C.onClock()); safe(Night.maybeDrawNight()); } });
 Hooks.on("wodxSkipEnd", () => { if ( active ) safe(C.onClock()); });
 Hooks.on("wodxEndScene", () => { if ( active ) safe(C.release()); });
 Hooks.on("wodxMapEvent", ev => { if ( active ) safe(C.onMapEvent(ev)); });
@@ -113,6 +119,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Led.LedgerApp.open()};
   tokens.tools.wodxSetup = {name: "wodxSetup", title: "Start a chronicle (opening date, era, lines, the Storyteller screen)", icon: "fa-solid fa-book-open", order: 118,
     button: true, visible: game.user.isGM, onChange: () => Setup.openSetup()};
+  tokens.tools.wodxDraw = {name: "wodxDraw", title: "Draw for the story (tonight, a story aid, an Otherworld journey)", icon: "fa-solid fa-dice-d20", order: 119,
+    button: true, visible: game.user.isGM, onChange: () => Night.drawChooser()};
 });
 
 /* ---- The socket ---- */
