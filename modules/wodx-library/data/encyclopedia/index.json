@@ -103,6 +103,12 @@
    "title": "Sorcerer (Revised)",
    "short": "Sorc",
    "edition": "Revised"
+  },
+  {
+   "id": "sc",
+   "title": "Mage: The Sorcerers Crusade",
+   "short": "SC",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -122,6 +128,7 @@
   "orpheus.json",
   "htr.json",
   "inquisitor.json",
-  "sorcerer.json"
+  "sorcerer.json",
+  "sc.json"
  ]
 }

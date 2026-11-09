@@ -1,0 +1,576 @@
+[
+ {
+  "id": "sc-dark-fantastic",
+  "title": "The Dark Fantastic",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The world of the Sorcerers Crusade.",
+  "claims": [
+   {
+    "text": "History here bends on purpose: with history itself changing, exact dates matter less; if Joan of Arc escapes the fire, the date of her death stops mattering.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "It is also a secret history, much of it forgotten, hidden or destroyed in the five centuries that follow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Each magickal culture has its own words; the glossary gives only the terms magi share across the known world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-casual-vain",
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-council",
+  "title": "The Council of the Nine Mystick Traditions",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The new fellowship of mystick magi.",
+  "claims": [
+   {
+    "text": "The Council, or the Traditions, is a fellowship just forming among mysticks who want to keep the old ways of magick and follow the Path of Gold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Disparate is an insult for magi who will not take sides, and the name of groups that came to the Council but never joined.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Horizon is the border of God's Earth and Heaven, and the name of a vast Realm where the Traditions meet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Mysticks is a general name for magi who work open magick rather than science-magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "traditions",
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-order-of-reason",
+  "title": "The Order of Reason",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The philosopher-scientists who reject magick.",
+  "claims": [
+   {
+    "text": "The Order of Reason is an international league of philosopher-scientists who reject magick for science and reason and seek Enlightenment for all humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Daedalean is a catch-all word for its members, after the Greek inventor Daedalus, one of the Order's patron saints.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A philosopher-scientist weaves effects from formulae and science and seldom calls it magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Artisans, capitalised, are magi who work through machines or sacred geometry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-paths",
+  "title": "The Paths of Gold, Thorns and Screams",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The three roads a sorcerer may walk.",
+  "claims": [
+   {
+    "text": "The Path of Gold is the road to Ascension, a state beyond power and limit, admired by many and walked by few.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     },
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Path of Thorns is the wizard's lot: a winding climb through temptation and blindness, in hope of the Zenith or the Path of Gold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Path of Screams is the road of Infernalists and Marauds, toward a debased or demented state.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Hubris is the fatal pride that drives most sorcerers to ruin; the Fall is the loss of ideals, usually through Infernalism or Hubris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-casual-vain",
+  "title": "Casual and Vain Magick",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How belief decides what magick the age allows.",
+  "claims": [
+   {
+    "text": "Casual magick is the subtle kind and vain, or vulgar, magick the open kind; the Scourge is the price of magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     },
+     {
+      "book": "sc",
+      "page": 224,
+      "pdf": 241
+     }
+    ]
+   },
+   {
+    "text": "Magick is believable if it comes through accepted practice: a magus whose rites fit local belief can fly or change shape without offence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 224,
+      "pdf": 241
+     }
+    ]
+   },
+   {
+    "text": "The line moves by time and by place: new ideas shift it fast, and a stranger's magick is vain, so a European's Arts may be vain in distant lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 224,
+      "pdf": 241
+     },
+     {
+      "book": "sc",
+      "page": 225,
+      "pdf": 242
+     }
+    ]
+   },
+   {
+    "text": "Casual magick calls on divine or demonic favour, looks like an accident, uses prepared tools or takes time to prepare; anything inside medieval folklore should be casual.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 225,
+      "pdf": 242
+     }
+    ]
+   },
+   {
+    "text": "Difficulty is the highest Sphere plus 3 for casual, plus 4 for vain with no Sleeper present, plus 5 for vain with witnesses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 227,
+      "pdf": 244
+     },
+     {
+      "book": "sc",
+      "page": 228,
+      "pdf": 245
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-scourge",
+   "sc-dark-fantastic"
+  ]
+ },
+ {
+  "id": "sc-scourge",
+  "title": "The Scourge",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Fortune that rises to strike or bless a sorcerer.",
+  "claims": [
+   {
+    "text": "The Scourge is fortune, good or bad, that surrounds every sorcerer and at times rises to strike; some see it as God's punishment for altering Creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Any vain Effect earns a point of Scourge, even when it works.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 228,
+      "pdf": 245
+     }
+    ]
+   },
+   {
+    "text": "Each Arete roll adds a Fortune Die: a 1 on it is a Bane, a 10 a Boon, and either one spends the whole Scourge pool. One more Fortune Die is added per 5 points in the pool.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 232,
+      "pdf": 249
+     }
+    ]
+   },
+   {
+    "text": "To clear it, a magus meditates alone at least one day for each point in the pool.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 232,
+      "pdf": 249
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "sc-casual-vain"
+  ]
+ },
+ {
+  "id": "sc-otherworlds",
+  "title": "Otherworlds of the Age",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The spirit lands as magi of the Renaissance name them.",
+  "claims": [
+   {
+    "text": "Otherworlds are the spirit lands beyond the Common World: Heavens, Hells, elemental courts and stranger Realms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Contrarium is Heaven's dark mirror below the Earth's crust, holding Purgatory, the true Hells and the Shadowlands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Aethyrs are realms of higher awareness around the Earth; the Void, or Abyss, is the endless space around Creation, later the Deep Umbra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     },
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Gauntlet is the cold threshold between Matter and Spirit; the Penumbra lies just beyond it. Umbra is an uncommon word here.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     },
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Mist is the blindness most mortals live in, and the fog around the spirit worlds; Moonpaths are bridges through it guarded by moon spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "A Shallowing is a time or place where worlds overlap and a normal person could cross. Fragmenti and Vada are realms later called Shard and Shade Realms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     },
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "gauntlet"
+  ]
+ },
+ {
+  "id": "sc-terms",
+  "title": "Words of the Magi",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Shared terms from the Renaissance.",
+  "claims": [
+   {
+    "text": "The Daemon is the mystick self that wakes at Awakening, later called the Avatar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A consor is an unawakened associate with some rare talent; grog is a slighting word for a servant; an acolyte serves a magus from religious duty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A covenant is a Hermetic stronghold, or any settled magickal community. A cray is a wellspring where Creation's power pools.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Quintessence is the fifth essence through all Creation, also called Prima, Vis or Earth's Blood; tass is Quintessence in solid form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Trinity is change, order and decay together keeping Creation in motion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Fate, Fortune or Free Will is a great debate of the age, and all three play a part in magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "sc-council"
+  ]
+ }
+]
