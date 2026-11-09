@@ -1,5 +1,5 @@
 /**
- * Responsive maps gate (WoDX Interactables 0.12.0 or later with WoDX NPC 0.4.0 and WoDX Storyteller 0.3.0), in Foundry, in rothenstein-wodx only, as
+ * Responsive maps gate (WoDX Interactables 0.12.0 or later with WoDX NPC 0.5.0 and WoDX Storyteller 0.3.0), in Foundry, in rothenstein-wodx only, as
  * Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-maps.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Maps"), a player's character ("Gate Maps burglar") and an
@@ -12,6 +12,8 @@
  *   5. an hour and a bit later the alarm dies down: the place is wary, the lamp goes out, the Storyteller gets a note
  *   6. every other WoDX module still answers (Chronicle, Actions, Combat, Storyteller)
  *   7. the forced door left a mark on the scene for later repair; the Storyteller module (when on) is at 0.3.0 with map beats
+ *   8. an Alert zone with a bell carries a new alarm to a second scene ("Gate Maps watch house") at once; Undo takes it back
+ *   9. a WoDX: Trigger region (anyone, once) fires when the burglar walks in: one map event of kind trigger, and a note
  * Result: Data/wodx-gate/gate-maps-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -46,13 +48,13 @@ export async function run() {
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
   const keep = {uniform: CONFIG.Dice.randomUniform, t0: game.time.worldTime, scene: canvas.scene?.id, messages: new Set(game.messages.map(m => m.id))};
-  let scene = null, burglar = null, watchman = null;
+  let scene = null, burglar = null, watchman = null, watchHouse = null;
   const events = [];
   const hook = Hooks.on("wodxMapEvent", e => events.push(e));
   try {
     await step("1. modules", async () => {
       const i = game.modules.get(MOD), n = game.modules.get(NPC);
-      ok("1. Interactables 0.12.0 or later and NPC 0.4.0 are on, with the Alert zone behaviour", i?.active && !foundry.utils.isNewerVersion("0.12.0", i.version) && n?.active && n.version === "0.4.0"
+      ok("1. Interactables 0.12.0 or later and NPC 0.5.0 or later are on, with the Alert zone and Trigger behaviours", i?.active && !foundry.utils.isNewerVersion("0.12.0", i.version) && n?.active && !foundry.utils.isNewerVersion("0.5.0", n.version) && !!game.model?.RegionBehavior?.[`${NPC}.trigger`]
         && !!game.model?.RegionBehavior?.[`${NPC}.alertZone`] && typeof rt()?.raiseAlarm === "function", {i: i?.version, n: n?.version});
     });
     scene = await Scene.create({name: "Gate Maps", width: 2000, height: 2000, grid: {size: G, type: 1, distance: 5, units: "ft"}, tokenVision: false, padding: 0});
@@ -123,7 +125,35 @@ export async function run() {
       const marks = scene.flags?.[NPC]?.marks ?? [];
       const st = game.modules.get("wodx-storyteller");
       ok("7. the forced door left a mark for repair, and the Storyteller module (if on) is 0.3.0", marks.some(m => m.object === door.id && m.kind === "force")
-        && (!st?.active || st.version === "0.3.0"), {marks, st: st?.active ? st.version : "off"});
+        && (!st?.active || !foundry.utils.isNewerVersion("0.3.0", st.version)), {marks, st: st?.active ? st.version : "off"});
+    });
+
+    await step("8. carriers", async () => {
+      watchHouse = await Scene.create({name: "Gate Maps watch house", width: 1000, height: 1000, grid: {size: G, type: 1, distance: 5, units: "ft"}, padding: 0});
+      await scene.createEmbeddedDocuments("Region", [{name: "Gate bell zone", shapes: [{type: "rectangle", x: 0, y: 0, width: 200, height: 200, rotation: 0}],
+        behaviors: [{type: `${NPC}.alertZone`, name: "Bell", system: {lights: "", sounds: "", carryTo: "Gate Maps watch house", carrier: "bell", minutes: 0}}]}]);
+      await sleep(300);
+      const before = rt().alertLevel(scene);
+      const ev0 = {kind: "alarm", scene: scene.id, noise: "loud", objectName: "Gate bell", heard: [], message: `gate-${Date.now()}`};
+      const [card] = await rt().onMapEvent(ev0);
+      const reached = rt().alertLevel(watchHouse) === "alarm";
+      await rt().undoAlarmCard(card);
+      const back = rt().alertLevel(watchHouse) === "calm";
+      ok("8. a bell in an Alert zone carries the alarm to the watch house at once; Undo takes it back", !!card && reached && back, {before, reached, back, alert: watchHouse.flags?.[NPC]?.alert ?? null});
+    });
+
+    await step("9. trigger", async () => {
+      await scene.createEmbeddedDocuments("Region", [{name: "Gate trigger", shapes: [{type: "rectangle", x: 1200, y: 1200, width: 300, height: 300, rotation: 0}],
+        behaviors: [{type: `${NPC}.trigger`, name: "Trigger", system: {label: "the gate trigger", does: "note", who: "anyone", once: true, fired: false}}]}]);
+      await sleep(400);
+      const n = events.length;
+      await tb.update({x: 1300, y: 1300}, {animate: false});
+      const ev = await until(() => events.slice(n).find(e => e.kind === "trigger"), 5000);
+      await sleep(500);
+      const note = game.messages.contents.slice(-6).some(m => /reached the gate trigger/.test(m.content));
+      const beh = scene.regions.find(r => r.name === "Gate trigger")?.behaviors?.contents?.[0] ?? null;
+      ok("9. walking into a WoDX: Trigger region sends one trigger event and a note, and marks it set off", !!ev && note && beh?.system?.fired === true,
+        {ev, note, fired: beh?.system?.fired ?? null, count: events.slice(n).filter(e => e.kind === "trigger").length});
     });
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   finally {
@@ -135,6 +165,7 @@ export async function run() {
       if ( made.length ) await ChatMessage.deleteDocuments(made);
       if ( keep.scene ) await game.scenes.get(keep.scene)?.view();
       if ( scene ) await scene.delete();
+      if ( watchHouse ) await watchHouse.delete();
       for ( const a of [burglar, watchman] ) if ( a ) await a.delete();
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }

@@ -287,6 +287,8 @@ Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, w
 
 **Repairs and grudges.** A forced lock or a broken pane in a place someone owns or lives in is put right at the next dawn, on one card with Undo. A fire, a theft, a desecration or a wall broken through stays until you change it. A break-in, theft, fire or desecration at a faction's place is a wrong against it, so it looks to its defences at its next turn. A desecration by something supernatural gives you a **Start a rumour** button; nothing spreads unless you press it.
 
+**Trigger regions and carried alarms.** Draw a region with the **WoDX: Trigger** behaviour and give it a few words ("the cellar stairs"). When a player's character walks in, it tells you, raises the alarm, or only passes it on to the log and beats; tick Only once for a one-time surprise (untick Already set off to reset it). In an Alert zone, **Carries the alarm to** names other places: a bell, horn or shout reaches them at once, a telephone from about 1890 and a radio from about 1930 too, and a runner arrives after the trip's minutes. Undo on the alarm takes it back everywhere, and turns back a runner still on the road.
+
 **The log and beats.** What a player's character does on the map goes into the tracker's log, the serious ones marked for your attention. A beat can fire on **A change on the map**: pick a scene (or none for anywhere), and type a kind or state such as forced, theft or broken (blank for any change).
 
 ## Approvals and Undo: the two safety nets

@@ -82,3 +82,35 @@ test("map log lines: what a character did, in a sentence; noise nobody heard and
     assert.ok(!/—|\b(he|she|him|her|his)\b/i.test(t), t);
   }
 });
+
+test("alarm carriers: a bell or a phone at once, a runner on the trip's minutes; no phone before its era", () => {
+  assert.deepEqual(AR.carryPlan("bell"), {ok: true, why: "", seconds: 0});
+  assert.equal(AR.carryPlan("phone", {year: 1897}).seconds, 0);
+  const old = AR.carryPlan("phone", {year: 1197});
+  assert.equal(old.ok, false);
+  assert.match(old.why, /telephone before about 1890/);
+  assert.equal(AR.carryPlan("radio", {year: 1920}).ok, false);
+  assert.equal(AR.carryPlan("radio", {year: 0}).ok, true, "no year known: allowed");
+  assert.equal(AR.carryPlan("runner", {tripMinutes: 20}).seconds, 1200);
+  assert.equal(AR.carryPlan("runner", {minutes: 5, tripMinutes: 20}).seconds, 300, "the zone's own figure wins");
+  assert.equal(AR.carryPlan("bell", {minutes: 2}).seconds, 120);
+  const scenes = [{id: "a", uuid: "Scene.a", name: "Upper Town · The Keep"}, {id: "b", uuid: "Scene.b", name: "The Watch House"}, {id: "c", uuid: "Scene.c", name: "The Mill"}];
+  assert.deepEqual(AR.carryTargets("watch house, Scene.c, nowhere, The Keep", scenes, "a").map(s => s.id), ["b", "c"], "never the place itself");
+  const list = [AR.normCarry({to: "Scene.b", at: 100}), AR.normCarry({to: "Scene.c", at: 500}), {at: 1}];
+  assert.deepEqual(AR.dueCarries(list, 200).map(c => c.to), ["Scene.b"]);
+});
+
+test("trigger regions: player characters only by default, once if asked; the event has the map event shape and fires beats", () => {
+  assert.equal(AR.triggerFires({}, {pc: true}), true);
+  assert.equal(AR.triggerFires({}, {pc: false}), false);
+  assert.equal(AR.triggerFires({who: "anyone"}, {pc: false}), true);
+  assert.equal(AR.triggerFires({once: true, fired: true}, {pc: true}), false);
+  const ev = AR.triggerEvent({does: "event", label: "The Cellar Stairs", scene: "keep", place: "Scene.keep", region: "r1", who: "Scene.keep.Token.t", whoName: "Anna", at: 50});
+  assert.deepEqual([ev.kind, ev.objectName, ev.state, ev.objectType, ev.noise], ["trigger", "The Cellar Stairs", "the cellar stairs", "Region", "silent"]);
+  assert.equal(AR.triggerEvent({does: "alarm"}).kind, "alarm");
+  assert.equal(AR.triggerEvent({regionName: "Gate"}).objectName, "Gate");
+  const b = W.normBeat({id: "b", name: "x", on: "map", place: "Scene.keep", value: "The CELLAR stairs"});
+  assert.equal(W.beatFires(b, {type: "map", place: "Scene.keep", kind: ev.kind, state: ev.state}), true, "the value matches whatever the case");
+  assert.equal(W.mapEntry(ev).text, "Anna reached the cellar stairs.");
+  for ( const k of Object.keys(AR.CARRIERS) ) assert.ok(!/—/.test(AR.CARRIERS[k].label));
+});
