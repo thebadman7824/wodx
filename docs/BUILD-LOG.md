@@ -843,3 +843,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Open items, 2026-11-09: per-character senses (Senses 0.3.0; B254, B255)
 - perception-rules.mjs (pure): screenFor, addStep, trailStrength, smellYards, stepsInReach, showsTo, seenAfter. perception.mjs: client settings "Frenzy and Rötschreck on my screen" and "Scent trails for a wolf's nose", world setting "The unseen show only to those who find them"; the screen overlay (CSS in wodx-senses.css); trails recorded from token moves on each client and drawn on the interface layer; Token.isVisible wrapped for the unseen; Who sees through it? and Forget on the token HUD. api.perception.
 - Tests: perception.test.mjs (5); 723 pass. Gate: tools/gate/gateperception.mjs, 8 steps, a scene of its own.
+
+### Open items, 2026-11-09: four more changes of state (Creation 0.9.0; B256-B259)
+- states-rules.mjs (pure): FAMILIES (the twelve revenant families), revenantStart; SEEMINGS, chrysalisStart; HOUSES, fallenStart, fallenWillpower, HOST_TARGETS, possession; secondBreathStart. Mechanics from research/book-checks/state-changes.md.
+- states.mjs: revenantBirth (same sheet, ghoul set-up), chrysalis, fallenHost, possess, secondBreath, each with a dialog (search boxes over the mortals, families and demons). The Creation window gains five buttons; the api gains the ten functions.
+- Tests: states2.test.mjs (6); 729 pass. Gate: tools/gate/gatestates2.mjs, 8 steps, rothenstein-wodx only. gate-interact step 1 now accepts 0.14.0 or later.

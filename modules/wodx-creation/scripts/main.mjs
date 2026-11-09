@@ -56,6 +56,9 @@ function start() {
     writeLineageJournal: lineage.writeLineageJournal,
     groups,
     deathToWraith: states.deathToWraith, deathDialog: states.deathDialog, awaken: states.awaken, awakenDialog: states.awakenDialog,
+    revenantBirth: states.revenantBirth, revenantDialog: states.revenantDialog, chrysalis: states.chrysalis, chrysalisDialog: states.chrysalisDialog,
+    fallenHost: states.fallenHost, fallenDialog: states.fallenDialog, possess: states.possess, possessDialog: states.possessDialog,
+    secondBreath: states.secondBreath, secondBreathDialog: states.secondBreathDialog,
     totals, check: actor => CreationCheckApp.open(actor),
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs},
     people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople}
