@@ -85,6 +85,12 @@
    "title": "Orpheus",
    "short": "Orpheus",
    "edition": "First edition"
+  },
+  {
+   "id": "htr",
+   "title": "Hunter: The Reckoning",
+   "short": "HtR",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -101,6 +107,7 @@
   "greatwar.json",
   "demon.json",
   "kote.json",
-  "orpheus.json"
+  "orpheus.json",
+  "htr.json"
  ]
 }
