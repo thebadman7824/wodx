@@ -214,6 +214,25 @@ export const MOUNTS = {
 };
 export const FLAT_OUT = 3;
 
+/**
+ * Climbing and jumping on tiles. Climbing is Dexterity + Athletics at 6, extended: each success climbs 5 yards of an
+ * easy climb (a rope, a tree), 3 of an average one (a rough wall, rocks), 2 of a hard one (a cliff); a ladder or stairs
+ * need no roll. A botch slips and falls from as high as the climber got (V20 Dark Ages p. 332; V20 core printed p. 258).
+ * Jumping a gap is Strength + Athletics at 3 with a run-up, a yard across a success; short of it, Dexterity +
+ * Athletics at 6 catches the ledge (V20 Dark Ages p. 333). Falling is one die of bashing a 10 feet, soakable, at
+ * least one die (V20 core printed p. 296). per: yards a success; jump: a gap rather than a climb.
+ */
+export const CLIMBS = {
+  ladder: {label: "Ladder or stairs", per: 0},
+  rope: {label: "Rope or knotted sheets", per: 5},
+  tree: {label: "Tree, trellis or drainpipe", per: 5},
+  wall: {label: "Rough wall or rocks", per: 3},
+  cliff: {label: "Cliff or sheer wall", per: 2},
+  gap: {label: "Gap or ledge to jump", jump: true}
+};
+/** Bashing dice for a fall: one a 10 feet, at least one. */
+export const fallDice = feet => Math.max(1, Math.floor((Math.max(0, Number(feet) || 0)) / 10));
+
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
 export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
@@ -473,6 +492,21 @@ export function describeMount(f = {}) {
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
+/** A climb or a gap on a tile. height and depth in feet, gap in yards; climbTo: the tile at the top or the far side. */
+export function describeClimb(f = {}) {
+  const kind = CLIMBS[f.climbKind] ? f.climbKind : "wall";
+  const n = (v, d, lo, hi) => Math.max(lo, Math.min(hi, Math.round(Number(v) || d)));
+  return {
+    climb: true, mount: false, watch: false, sacred: false, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
+    kind, height: n(f.height, 10, 1, 1000), gap: n(f.gap, 2, 1, 20), depth: n(f.depth, 10, 0, 1000),
+    climbTo: /^[A-Za-z0-9.]{1,200}$/.test(String(f.climbTo ?? "").trim()) ? String(f.climbTo).trim() : "",
+    hanging: f.hanging && typeof f.hanging === "object" ? f.hanging : {}, title: String(f.title ?? "").trim().slice(0, 80),
+    electronic: "none", lock: "none", items: [], progress: f.progress ?? {}, tries: f.tries ?? {}
+  };
+}
+/** The successes a climb takes: its height in yards over the yards a success. */
+export const climbNeed = o => (CLIMBS[o.kind].per ? Math.max(1, Math.ceil(o.height / 3 / CLIMBS[o.kind].per)) : 0);
+
 /** Everyone aboard a mount or vehicle, the one at the reins first. */
 export const aboard = o => [o.driver, ...o.riders].filter(Boolean);
 
@@ -507,6 +541,10 @@ export function parseItems(text) {
 
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
+  if ( o.climb ) {
+    const C = CLIMBS[o.kind];
+    return `${o.title || C.label}${C.jump ? ` (${o.gap} yard${o.gap === 1 ? "" : "s"} across)` : ` (${o.height} feet)`}`;
+  }
   if ( o.mount ) {
     const M = MOUNTS[o.kind], n = aboard(o).length;
     return `${o.title || M.label}${o.driver ? `, ${o.driver.n} ${M.reins}` : ""}${n > (o.driver ? 1 : 0) ? `, ${n} aboard` : ""}`;
@@ -565,6 +603,7 @@ export function optionsFor(o, ch = {}) {
   if ( o.sacred ) return sacredOptions(o, ch);
   if ( o.watch ) return watchOptions(o, ch);
   if ( o.mount ) return mountOptions(o, ch);
+  if ( o.climb ) return climbOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -838,6 +877,25 @@ export function springTrap(o, reflex = null, actorId = "") {
   return {flags, dice, type: o.type, noise: T.noise, text, caught};
 }
 
+/** A climb: up (or down) it; a gap: jump it, and catch the ledge or let go if the jump falls short. */
+function climbOptions(o, ch) {
+  const C = CLIMBS[o.kind], me = ch.actorId ?? "", ath = bestOf(ch.abilities ?? {}, ["athletics"]);
+  const dex = Number(ch.dexterity) || 0, str = Number(ch.strength) || 0;
+  const pool = (attr, dots, diff, extra = {}) => ({attr, attrLabel: cap(attr), ability: "athletics", abilityLabel: "Athletics", dice: dots + ath.value, diff, need: null, ...extra});
+  if ( C.jump ) {
+    if ( o.hanging[me] ) return [
+      {id: "catchLedge", label: "Catch the ledge", roll: pool("dexterity", dex, 6), seconds: TURN, noise: {success: "quiet", fail: "loud", botch: "loud"},
+        note: `Hanging from the edge. A failure: a fall of ${o.depth} feet (${fallDice(o.depth)} bashing ${fallDice(o.depth) === 1 ? "die" : "dice"}).`},
+      {id: "letGo", label: "Let go", roll: null, seconds: TURN, noise: {success: "loud"}, note: `A fall of ${o.depth} feet.`}];
+    return [{id: "jump", label: "Jump it", roll: pool("strength", str, 3), seconds: TURN, noise: {success: "quiet", fail: "quiet", botch: "loud"},
+      note: `With a run-up: ${o.gap} success${o.gap === 1 ? "" : "es"} to clear ${o.gap} yard${o.gap === 1 ? "" : "s"}. Short of it: Dexterity + Athletics to catch the ledge. A botch: straight down, ${o.depth} feet.`}];
+  }
+  if ( !C.per ) return [{id: "climbEasy", label: "Climb it", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "No roll."}];
+  const need = climbNeed(o), have = Number(o.progress?.[`climb:${me}`]) || 0;
+  return [{id: "climb", label: "Climb it", extended: true, roll: pool("dexterity", dex, 6, {need, have}), seconds: TURN, noise: {success: "quiet", fail: "quiet", botch: "loud"},
+    note: `${C.per} yards a success: ${need} in all for ${o.height} feet. Claws or bone spurs: the Storyteller may take 2 off the difficulty. A botch: a fall from as high as the climb got.`}];
+}
+
 /**
  * A mount or vehicle: get on at the reins or as a passenger, get off; at the reins, keep control or go flat out.
  * Not in its era: nothing but a note.
@@ -937,6 +995,8 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "mount": out.boards = "driver"; return done(o.mount && MOUNTS[o.kind].skill === "drive" ? "gets in and starts it." : "gets on.");
       case "board": out.boards = "rider"; return done("climbs aboard.");
       case "dismount": out.leaves = true; return done("gets off.");
+      case "climbEasy": out.arrives = true; return done("climbs it.");
+      case "letGo": out.falls = o.depth; flags.hanging = {...o.hanging, [actorId]: false}; return done("lets go, and falls.");
       case "desecrate": flags.desecrated = true; return done("desecrates it.");
       case "powerOff": flags.live = false; return done("cuts the power.");
       case "powerOn": flags.live = true; return done("turns the power back on.");
@@ -987,6 +1047,17 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       return Object.assign(out, {result: "fail", noise: noise.fail, slips: true,
         text: id === "flatOut" ? "goes flat out, and starts to lose control: roll Keep control." : "starts to lose control: roll again."});
     }
+    if ( id === "jump" ) {
+      if ( roll.botch ) return Object.assign(out, {result: "botch", noise: noise.botch, falls: o.depth, text: "jumps, and goes straight down."});
+      if ( roll.successes >= o.gap ) return Object.assign(out, {result: "done", noise: noise.success, arrives: true, text: "jumps it, and lands on the far side."});
+      flags.hanging = {...o.hanging, [actorId]: true};
+      return Object.assign(out, {result: "fail", noise: noise.fail, text: `falls short (${Math.max(0, roll.successes)} of ${o.gap}) and grabs for the edge: roll Catch the ledge.`});
+    }
+    if ( id === "catchLedge" ) {
+      flags.hanging = {...o.hanging, [actorId]: false};
+      if ( roll.successes > 0 && !roll.botch ) return Object.assign(out, {result: "done", noise: noise.success, arrives: true, text: "catches the ledge and pulls up."});
+      return Object.assign(out, {result: roll.botch ? "botch" : "fail", noise: noise.fail, falls: o.depth, text: "loses the grip, and falls."});
+    }
     if ( id === "searchHide" ) {
       return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: noise.success, searchHide: roll,
         text: roll.successes > 0 && !roll.botch ? "searches it." : "searches it, and finds nobody."});
@@ -1034,11 +1105,11 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
     return Object.assign(out, {result: roll.successes > 0 ? "done" : "fail", noise: noise.success, text: ""});
   }
   // Extended: successes add up on the object until enough are in; a botch loses them all (V20 Dark Ages p. 324)
-  const slot = id === "pick" ? "pick" : id === "hack" ? "hack" : id === "breach" ? "breach" : "force";
+  const slot = id === "pick" ? "pick" : id === "hack" ? "hack" : id === "breach" ? "breach" : id === "climb" ? `climb:${actorId}` : "force";
   let have = Number(r.have) || 0, botched = false;
   for ( const roll of rolls ) {
     out.seconds += option.seconds ?? 0;
-    if ( roll.botch ) { have = 0; botched = true; break; }
+    if ( roll.botch ) { out.climbed = have; have = 0; botched = true; break; }
     have += Math.max(0, roll.successes);
     if ( have >= r.need ) break;
   }
@@ -1048,6 +1119,11 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
     out.result = "botch"; out.noise = noise.botch ?? "silent";
     if ( slot === "pick" ) { flags.jammed = true; out.text = "botches: the pick snaps in the lock and jams it."; }
     else if ( slot === "hack" ) { flags.alarm = true; out.text = "botches: the alarm goes off."; }
+    else if ( id === "climb" ) {
+      const per = CLIMBS[o.kind]?.per ?? 3;
+      out.falls = Math.min(o.height, Math.max(3, Math.round(out.climbed * per * 3)));
+      out.text = `slips, and falls ${out.falls} feet.`;
+    }
     else { out.hurt = option.botchHurts ? 1 : 0; out.text = "botches, and is hurt (one lethal level)."; }
     return out;
   }
@@ -1060,6 +1136,7 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       if ( opens ) out.patch.ds = "closed";
     }
     else if ( slot === "breach" ) out.text = "breaks through the wall.";
+    else if ( id === "climb" ) { out.text = "climbs it."; out.arrives = true; }
     else { out.text = "forces it open."; out.patch.ds = "open"; if ( o.barred ) flags.barred = false; if ( o.ds === "locked" && o.lock !== "none" ) flags.lockBroken = true; }
     return out;
   }
@@ -1181,6 +1258,13 @@ export function cleanSacred(s = {}) {
 export function cleanMount(s = {}) {
   const seats = s.seats === "" || s.seats === null || s.seats === undefined ? "" : Math.max(1, Math.min(40, Math.round(Number(s.seats) || 1)));
   return {mount: !!s.mount, mountKind: MOUNTS[s.mountKind] ? s.mountKind : "horse", seats};
+}
+
+/** Clean a tile's climb or gap settings from the config form. */
+export function cleanClimb(s = {}) {
+  const o = describeClimb({...s, climbKind: s.climbKind});
+  const blank = v => v === "" || v === null || v === undefined;
+  return {climb: !!s.climb, climbKind: o.kind, height: blank(s.height) ? "" : o.height, gap: blank(s.gap) ? "" : o.gap, depth: blank(s.depth) ? "" : o.depth, climbTo: o.climbTo};
 }
 
 /** Clean a tile's watch point settings from the config form. target: the id of the tile it looks at or calls. */

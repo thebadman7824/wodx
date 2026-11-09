@@ -337,6 +337,14 @@ test("runtime: looking closer rolls Perception + Alertness blind; successes find
   assert.ok(pc.flags[MOD].memory);
 });
 
+test("runtime: a new wall changes the answer: the remembered closer look no longer carries over", async () => {
+  soundWalls.push(450);
+  const res = await api.answer({user: "pl", token: tokPc.uuid, sense: "sound", closer: false});
+  soundWalls.length = 0;
+  assert.equal(res.sections[0].repeat, false, "a wall between makes it a new answer");
+  assert.equal(res.sections[0].successes, 0, "the earlier successes are not reused behind the wall");
+});
+
 test("runtime: a sound wall between muffles the source; two walls stop it", async () => {
   soundWalls.push(500);
   const res = await api.answer({user: "pl", token: tokPc.uuid, sense: "smell", closer: false});
@@ -437,4 +445,21 @@ test("runtime: the chat commands ask; Describe this place posts the free lines f
   assert.equal(chat.length, 1);
   assert.equal(chat[0].whisper, undefined);
   canvas.tokens.controlled = [];
+});
+
+test("memory keys carry no dots, so Foundry keeps each entry whole", () => {
+  const key = R.memoryKey({scene: "abc", place: "s.P7mB", hour: "1197-3-4-22", sense: "sound"});
+  assert.ok(!key.includes("."), key);
+  assert.ok(key.endsWith("|sound"));
+  // what Foundry does with a dotted key on update: expand it into a path
+  const expand = o => { const out = {}; for ( const [k, v] of Object.entries(o) ) { const parts = k.split("."); let t = out; parts.slice(0, -1).forEach(p => { t = t[p] ??= {}; }); t[parts.at(-1)] = v; } return out; };
+  const saved = expand({[key]: {fp: "x"}});
+  assert.equal(saved[key]?.fp, "x");
+});
+
+test("a scene made fully dark stays pitch indoors at dawn and dusk", () => {
+  assert.equal(R.lightLevel({indoor: true, part: "dusk", darkness: 1}), "pitch");
+  assert.equal(R.lightLevel({indoor: true, part: "dawn", darkness: 0.2}), "dark");
+  assert.equal(R.lightLevel({indoor: false, part: "dusk", darkness: 1, moon: 0}), "pitch");
+  assert.equal(R.lightLevel({indoor: true, part: "dusk", darkness: 1, lit: true}), "bright");
 });

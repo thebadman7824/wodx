@@ -1493,6 +1493,102 @@ test("runtime: the WoDX part of the tile config keeps the vehicle's choices and 
   assert.match(html, /Aboard now: Kaspar/);
 });
 
+/* ---------------- climbing and jumping ---------------- */
+
+test("climbing: Dexterity + Athletics at 6, extended, by yards a success; a ladder needs no roll; a slip falls from as high as the climb got", () => {
+  const wall = R.describeClimb({climb: true, climbKind: "wall", height: 30});
+  assert.equal(R.climbNeed(wall), 4);
+  const op = R.optionsFor(wall, ch({abilities: {athletics: 2}}))[0];
+  assert.deepEqual([op.id, op.extended, op.roll.dice, op.roll.diff, op.roll.need, op.roll.have], ["climb", true, 5, 6, 4, 0]);
+  assert.equal(R.climbNeed(R.describeClimb({climbKind: "cliff", height: 30})), 5);
+  assert.equal(R.climbNeed(R.describeClimb({climbKind: "rope", height: 30})), 2);
+  assert.deepEqual(ids(R.optionsFor(R.describeClimb({climbKind: "ladder"}), ch())), ["climbEasy"]);
+  // Two successes in, then a botch: a fall from 18 feet, and the progress is lost
+  const part = R.describeClimb({climb: true, climbKind: "wall", height: 30, progress: {"climb:pc1": 2}});
+  const p2 = R.optionsFor(part, ch())[0];
+  assert.equal(p2.roll.have, 2);
+  const b = R.resolve(part, p2, [{successes: 0, botch: true}], {actorId: "pc1"});
+  assert.deepEqual([b.result, b.falls, b.patch.flags.progress["climb:pc1"]], ["botch", 18, 0]);
+  const up = R.resolve(part, p2, [{successes: 2, botch: false}], {actorId: "pc1"});
+  assert.deepEqual([up.result, up.arrives], ["done", true]);
+  assert.deepEqual([R.fallDice(5), R.fallDice(18), R.fallDice(40)], [1, 1, 4]);
+});
+
+test("jumping: Strength + Athletics at 3, a yard a success; short of it, hang and catch the ledge at 6 or fall; a botch falls", () => {
+  const gap = R.describeClimb({climb: true, climbKind: "gap", gap: 3, depth: 30});
+  const j = R.optionsFor(gap, ch({strength: 3, abilities: {athletics: 1}}))[0];
+  assert.deepEqual([j.id, j.roll.dice, j.roll.diff], ["jump", 4, 3]);
+  assert.ok(R.resolve(gap, j, [{successes: 3, botch: false}], {actorId: "pc1"}).arrives);
+  const short = R.resolve(gap, j, [{successes: 1, botch: false}], {actorId: "pc1"});
+  assert.deepEqual([short.result, short.patch.flags.hanging], ["fail", {pc1: true}]);
+  const hanging = R.describeClimb({climb: true, climbKind: "gap", gap: 3, depth: 30, hanging: {pc1: true}});
+  const hold = R.optionsFor(hanging, ch());
+  assert.deepEqual(ids(hold), ["catchLedge", "letGo"]);
+  assert.equal(hold[0].roll.diff, 6);
+  assert.ok(R.resolve(hanging, hold[0], [{successes: 1, botch: false}], {actorId: "pc1"}).arrives);
+  assert.equal(R.resolve(hanging, hold[0], [{successes: 0, botch: false}], {actorId: "pc1"}).falls, 30);
+  assert.equal(R.resolve(gap, j, [{successes: 0, botch: true}], {actorId: "pc1"}).falls, 30);
+  assert.equal(R.nameOf(gap), "Gap or ledge to jump (3 yards across)");
+  assert.deepEqual(R.cleanClimb({climb: true, climbKind: "x", height: "5000", gap: "", climbTo: "bad id!"}), {climb: true, climbKind: "wall", height: 1000, gap: "", depth: "", climbTo: ""});
+});
+
+const wallUp = tile("climb1", 3600, 1100, {climb: true, climbKind: "wall", height: 18, climbTo: "roof1"});
+const roof = tile("roof1", 3600, 1600, {});
+const gapT = tile("gap1", 3800, 1100, {climb: true, climbKind: "gap", gap: 2, depth: 20, climbTo: "far1t"});
+const farSide = tile("far1t", 4100, 1100, {});
+canvas.tiles.placeables.push(wallUp, roof, gapT, farSide);
+
+test("runtime: climbing a wall to the top moves the token onto the tile it leads to; Undo brings it back down", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  tokPc.document.x = 3600; tokPc.document.y = 1000;
+  try {
+    faces = [9, 9, 2];
+    const msg = await api.attempt(tokPc, "climb1", "climb", {fd: {}});
+    const d = msg.flags[MOD].done;
+    assert.equal(d.result, "done");
+    assert.deepEqual([tokPc.document.x, tokPc.document.y], [3600, 1600]);
+    assert.equal(events.at(-1).kind, "climb");
+    await api.undoCard(msg);
+    assert.deepEqual([tokPc.document.x, tokPc.document.y], [3600, 1000]);
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: a jump that falls short hangs from the edge; losing the grip falls 20 feet through WoDX Combat; Undo takes the damage back", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  tokPc.document.x = 3800; tokPc.document.y = 1000;
+  try {
+    faces = [4, 2, 2];
+    const m1 = await api.attempt(tokPc, "gap1", "jump", {fd: {}});
+    assert.equal(m1.flags[MOD].done.result, "fail");
+    assert.equal(gapT.document.flags[MOD].hanging.pc1, true);
+    faces = [2, 2, 2];
+    const m2 = await api.attempt(tokPc, "gap1", "catchLedge", {fd: {}});
+    const d = m2.flags[MOD].done;
+    assert.deepEqual(damage.at(-1).slice(0, 2), ["pc1", "bashing"]);
+    assert.deepEqual([soaks.at(-1).mode, soaks.at(-1).amount], ["pool", 2]);
+    assert.equal(events.at(-1).kind, "fall");
+    assert.equal(gapT.document.flags[MOD].hanging.pc1, false);
+    await api.undoCard(m2);
+    assert.ok(!game.messages.has(d.damageMsg));
+    assert.equal(gapT.document.flags[MOD].hanging.pc1, true);
+    // Another go at the ledge: caught, and on the far side
+    faces = [8, 2, 2];
+    const m3 = await api.attempt(tokPc, "gap1", "catchLedge", {fd: {}});
+    assert.equal(m3.flags[MOD].done.result, "done");
+    assert.equal(tokPc.document.x, 4100);
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; gapT.document.flags[MOD].hanging = {}; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the climb's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {climb: true, climbKind: "cliff", height: 40, climbTo: "roof1"}}});
+  assert.match(html, /name="flags.wodx-interactables.climb" checked/);
+  assert.match(html, /value="cliff" selected/);
+  assert.match(html, /name="flags.wodx-interactables.height" value="40"/);
+  assert.match(html, /value="roof1"/);
+});
+
 /* ---------------- 0.12.0: pictures, markers and map events ---------------- */
 
 const S = await import(join(root, "modules/wodx-interactables/scripts/state-rules.mjs"));
@@ -1625,4 +1721,15 @@ test("runtime 0.12: the tile config's pictures part lists the states of what the
   assert.match(html, /Closed \(usual\)/);
   const bare = tile("cfgbare", 150, 150, {});
   assert.match(api.states.statesConfigHtml(bare.document), /Pick what this tile is/);
+});
+
+test("runtime: a vehicle follows the move the hook reports, even when the token's document still shows the old place", async () => {
+  const van = tile("van1", 4400, 1000, {mount: true, mountKind: "car", driver: {a: "pc1", t: tokPc.document.uuid, n: "Anna Weiss", dx: 0, dy: 100}});
+  canvas.tiles.placeables.push(van);
+  tokPc.document.x = 4400; tokPc.document.y = 900;
+  try {
+    await hooks.get("canvasReady")[0]();
+    await api.onTokenMoved(tokPc.document, {x: 4600});
+    assert.deepEqual([van.document.x, van.document.y], [4600, 1000]);
+  } finally { scene.tiles.delete("van1"); canvas.tiles.placeables.pop(); tokPc.document.x = 400; tokPc.document.y = 300; }
 });

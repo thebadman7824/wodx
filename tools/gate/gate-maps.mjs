@@ -1,5 +1,5 @@
 /**
- * Responsive maps gate (WoDX Interactables 0.12.0 with WoDX NPC 0.4.0 and WoDX Storyteller 0.3.0), in Foundry, in rothenstein-wodx only, as
+ * Responsive maps gate (WoDX Interactables 0.12.0 or later with WoDX NPC 0.4.0 and WoDX Storyteller 0.3.0), in Foundry, in rothenstein-wodx only, as
  * Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-maps.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Maps"), a player's character ("Gate Maps burglar") and an
@@ -52,7 +52,7 @@ export async function run() {
   try {
     await step("1. modules", async () => {
       const i = game.modules.get(MOD), n = game.modules.get(NPC);
-      ok("1. Interactables 0.12.0 and NPC 0.4.0 are on, with the Alert zone behaviour", i?.active && i.version === "0.12.0" && n?.active && n.version === "0.4.0"
+      ok("1. Interactables 0.12.0 or later and NPC 0.4.0 are on, with the Alert zone behaviour", i?.active && !foundry.utils.isNewerVersion("0.12.0", i.version) && n?.active && n.version === "0.4.0"
         && !!game.model?.RegionBehavior?.[`${NPC}.alertZone`] && typeof rt()?.raiseAlarm === "function", {i: i?.version, n: n?.version});
     });
     scene = await Scene.create({name: "Gate Maps", width: 2000, height: 2000, grid: {size: G, type: 1, distance: 5, units: "ft"}, tokenVision: false, padding: 0});

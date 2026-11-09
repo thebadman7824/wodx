@@ -718,8 +718,18 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Ride and Drive are now read from the sheet, and a roll on a Skill the sheet lacks counts as untrained (+1), as WoDX Actions does.
 - mount, dismount, crash and ride (flat out) go out as wodxMapEvents.
 - Page refs pinned from the PC's book check: V20 core opening and closing p. 261, intrusion p. 260, alarms p. 255, retrying p. 251, climbing p. 258, falling p. 296 (printed pages).
-- Tests: 6 new (3 rules, 3 runtime), 577 in all; UI fit adds a coach. Gate step 22 (the burglar drives a cart). Not deployed yet.
-- 0.8.1: caern stones, fetters and nodes. Use it opens the WoDX actions menu (a fetter opens the Fetter window), and the option names the rating. 1 more test, 566 in all. Not deployed yet.
+- Tests: 6 new (3 rules, 3 runtime), 577 in all; UI fit adds a coach. Gate step 22 (the burglar drives a cart).
+- Deployed 2026-11-09 from main da913ca (backup Backups\wodx-interactables-0.10.0-2026-11-09, MD5s match). gate-interact 21/22: in Foundry the cart moved the wrong way, because the step from the last known token position was off once Foundry snapped the token. Fixed in 0.13.0: the vehicle keeps each person's offset and goes to the driver's token; the gate compares against where the token really went.
+
+### Interactables 0.13.0, 2026-11-09: climbing, ledges and jumps (B155)
+- Ladders and stairs (no roll), ropes, trees, rough walls and cliffs on tiles, with a height in feet; gaps to jump, with a width in yards and a drop in feet. The tile config gains a Climb or gap section, with the tile it leads to.
+- Climb it: Dexterity + Athletics at 6, extended, 5, 3 or 2 yards a success; a botch falls from as high as the climb got. Jump it: Strength + Athletics at 3, a yard a success; short, the character hangs: Catch the ledge (Dexterity + Athletics at 6) or Let go.
+- Falls: a bashing die a 10 feet through WoDX Combat's soak, with Undo. Arriving moves the token onto the tile the climb leads to, with Undo.
+- climb, jump and fall go out as wodxMapEvents.
+- Mounts: the vehicle follows the driver's token by offset (see 0.11.0).
+- Tests: 5 new (2 rules, 3 runtime), 582 in all; UI fit adds a crag. Gate step 22 fixed, step 23 (a wall to a ledge, a short jump). Not deployed yet.
+- Deployed 2026-11-09 from main 4ccb5d1 (backup Backups\wodx-interactables-0.12.0-2026-11-09, MD5s match). gate-interact 22/24: in Foundry 14 the move hook can see the token's old place, so the cart stayed put, and a climb's move to the ledge walked along a path and had not arrived when checked.
+- 0.13.1: the move hook reads the new place from the change itself; climbs, jumps and their Undo put the token straight there (no animation, walls ignored); the gate waits for moves to settle. 1 more test.
 
 ### WoDX Senses 0.1.0, 2026-11-09: what the senses tell (B170 to B174)
 - Ben's request (9 November 2026): answer "what do I see, hear, smell" in chat. Design study: https://claude.ai/artifact/6z5pwGb2XZMMsA8jHHGaq4. Built all four steps of it in one module.
@@ -736,6 +746,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Book checks, 2026-11-09: Targeting 0.1.1, Chronicle 0.5.3 (B129)
 - Gap review item 10. tags.json: 39 tags fixed. gifts-daw.json: chk taken off 19 Gifts, 7 effects and one difficulty corrected. garou.json: metis confirmed. languages: languagesFromMerits(). Notes kept in docs/research/book-checks/book-checks.md. 554 harness tests pass.
 
+### WoDX Senses 0.1.1, 2026-11-09: two fixes from the first gate
+- The first run of gatesenses in rothenstein-wodx scored 9/12. Two causes.
+- Remembered answers were never kept: the memory key held the place id (`s.<scene id>`), and Foundry reads a dot in a flag key as a path, so each entry was split apart on save. memoryKey() now swaps dots for underscores. A new test expands dotted keys the way Foundry does.
+- At dawn and dusk the light ignored the scene's darkness level, so a fully dark room read "dark" instead of pitch. lightLevel() now takes the scene darkness, and at 0.75 or more dawn and dusk count as night. Sight answers also count the light level in their fingerprint, so a new light lets the character look again.
+- 609 harness tests pass.
 ### Interactables 0.12.0, 2026-11-09: pictures, markers and map events (B160)
 - Step 1 of the design note "Responsive Maps for WoDX". scripts/state-rules.mjs (pure: states by kind, the look for a state, event kinds, the map event, feedback) and scripts/states.mjs (picture swaps on the active Storyteller's client from updateTile and updateWall, markers drawn on each client in the interface layer, tied ambient sounds, the event from each card's create or update, the socket that plays the moment on every client, the tile config's "pictures and sounds" part).
 - Watch points and mounts (0.10.0, 0.11.0) now send their events through states.publish, in the same shape as a card's: object is the tile id, objectKind the kind (window, bell, cart), place the NPC place. New event kinds: watch, call, mount, dismount, crash, ride. A card on a watch point or mount sends no second event.
@@ -745,6 +760,13 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### NPC 0.4.0 and Storyteller 0.3.0, 2026-11-09: the world answers the map (B161, B162)
 - Steps 2 and 3 of "Responsive Maps for WoDX". NPC: scripts/alert-rules.mjs (pure: alarm, wary, calm; notice difficulty by level; hearers; marks and repairs); routines.mjs listens for wodxMapEvent (hearers react on a reaction card, sleepers wake, alarms on scenes with an Undo card, the clock fades them, the WoDX: Alert zone region behaviour, repairs at dawn with Undo); faction-rules.mjs and factions.mjs keep wrongs against factions (+3 to Defend at the next turn) and post a rumour button for a supernatural desecration.
 - Storyteller: world-rules.mjs gets map beats (BEAT_ON.map) and mapEntry; core.mjs onMapEvent writes the log line, takes it out on Undo and checks beats; the beat window says "A change on the map".
+- Tests: responsive-maps.test.mjs (4 rules tests) and runtime tests in phase7c-runtime (2 map events, marks), phase7d-runtime (wrongs and the rumour button) and phase7e-runtime (log and beats); 583 in all. Gate: tools/gate/gate-maps.mjs, 7 steps.
+- Deployed 2026-11-09 from main f637e8f with Interactables 0.12.0 (backups from NPC 0.3.0, Storyteller 0.2.0, Interactables 0.11.0; MD5s match). gate-maps 7/7, gate-interact 22/23 (step 23 passes; step 22, the cart, is fixed in 0.13.0), gate7e 10/10, gatechecks 9/9.
+- Page refs pinned on the PC (docs/research/senses-refs.md): V20 Heightened Senses pdf 142-143 / printed 134-135 (difficulty drops by the Auspex rating, which Senses does); difficulty chart and degrees of success pdf 257 / printed 249; Lifesight and Deathsight are Wraith 20 (pdf 191 / printed 126), not W20; HtR second sight pdf 133-134 / printed 132-133. UI fit on the PC with real fonts: 591 windows, none fail, Place senses included.
+
+### WoDX Senses 0.1.2, 2026-11-09: a new wall makes a new answer
+- Second gate run, 11/12: step 6 failed once memory worked. A wall raises a sound's need, but the answer's fingerprint held only which sources were there, so the earlier closer look's successes carried over and the muffled drinker was still heard. The fingerprint now holds each source's need as well. The new test fails on 0.1.1 and passes on 0.1.2. 632 harness tests pass.
+- Deployed 0.1.2 to rothenstein-wodx only (backups of 0.1.0 and 0.1.1 in Backups). gatesenses 12/12, UI fit 591/591 on the PC. Bundle wodx-2026-11-09c.bundle.
 - Tests: responsive-maps.test.mjs (4 rules tests) and runtime tests in phase7c-runtime (2 map events, marks), phase7d-runtime (wrongs and the rumour button) and phase7e-runtime (log and beats); 583 in all. Gate: tools/gate/gate-maps.mjs, 7 steps. Not deployed yet.
 
 ### Chronicle 0.5.4 and Actions 3.14.1, 2026-11-09: lighter on slow computers
