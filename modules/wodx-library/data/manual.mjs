@@ -1,0 +1,26 @@
+/**
+ * The in-world manual (WoDX Library 0.2.0): short pages for players and the Storyteller on the tools at the table,
+ * and the newest changes. Plain words; the Storyteller's full guide is kept outside the game.
+ */
+export const MANUAL = [
+  {name: "Getting started", who: "all", html: `<p>WoDX adds buttons to the token toolbar on the left of the map. Hover a button to see its name. The ones you will use most are the Chronicle Clock (the moon), Find my character, the X-card, What do I notice? and Out on your own.</p><p>The Library button opens this manual, the shelves of powers, rules and eras, and gear by era.</p>`},
+  {name: "Time and the night", who: "all", html: `<p>The Chronicle Clock shows the date, the hour, the moon and how long until dawn. In the open world each character can be on their own time: Out on your own lets you travel or act alone, and your own clock moves on while the others wait.</p><p>Before sunrise the edge of the screen pales and the birds start; a vampire who is still out should hurry.</p>`},
+  {name: "Safety", who: "all", html: `<p>The X-card button, or Ctrl+Shift+X, shows the X-card to everyone without saying who pressed it. The scene moves on from whatever was happening. Lines and veils agreed at Session Zero are in their own journal.</p>`},
+  {name: "Your character", who: "all", html: `<p>Spend experience opens the costs for your character, and for the ghouls, retainers and allies you may spend on. Your sheet follows the era: a Dark Ages Cainite has a Road, a modern Kindred has Humanity, and so on.</p><p>Find my character takes the map to your token, on whatever scene it is.</p>`},
+  {name: "Rolling", who: "all", html: `<p>Rolls are made from the sheet. Powers that affect others ask whom you mean; target tokens first, or pick from the list that opens. Common checks (noticing, keeping your nerve, climbing and the like) are on the sheet too. The card in chat shows the result; the Storyteller may change the difficulty to fit the moment.</p>`},
+  {name: "The senses", who: "all", html: `<p>Ask what your character notices with /look, /listen, /smell, /touch, or /sense for all four. A word after it puts that first: /look door. The answer comes as a whisper with what your character can make out from where they stand, in this light, at this hour. Look closer rolls Perception and Alertness for more.</p>`},
+  {name: "Doors, locks and things on the map", who: "all", html: `<p>Select your token and press I (or click a door) to open the Interact window: doors, windows, locks, containers, traps you have found, lights and hiding places within reach. Each choice says what it takes before you try it.</p>`},
+  {name: "Languages", who: "all", html: `<p>Speak in a language your character knows and only those who know it read the words; the others see that something was said. Handouts can hold passages that only the right reader, or the right power, can make out.</p>`},
+  {name: "Sound and screen", who: "all", html: `<p>In Configure Settings, under WoDX Atmosphere, each player can turn off the era's colour on the map, token frames, sound cues, dawn dread and the heartbeat that a vampire's own player hears as the blood runs low.</p>`},
+  {name: "For the Storyteller", who: "gm", html: `<p>The approval queue (the inbox button) holds everything WoDX proposes: encounters, rumours, faction turns, results that change the world. Nothing reaches the players until it is approved. The tracker follows every character; the dashboard shows the party, the clocks, open threads and debts coming due at a glance; Draw for the story makes the night's draw, story aids, dreams, rumours and preludes; the Ledger keeps oaths, debts and the Veil.</p><p>Handouts and maps print from their right-click menus.</p>`}
+];
+
+/** The newest changes, newest first. Add a line when a release changes what players or the Storyteller see. */
+export const CHANGES = [
+  {date: "9 November 2026", what: "The Library: shelves of powers, roads, Arcanoi, conditions, house rules and eras, sorted by line and filtered to the era; this manual."},
+  {date: "9 November 2026", what: "Handouts, journals and maps print, or save as a PDF, for nights at the table."},
+  {date: "9 November 2026", what: "The era's music follows the tension: the hunt, combat and frenzy. A heartbeat for a vampire's player as the blood runs low."},
+  {date: "9 November 2026", what: "For the Storyteller: the dashboard, preludes for one-on-one sessions, the rumour mill, dreams written ahead, and a codex for each player."},
+  {date: "9 November 2026", what: "Faces that age with the years for mortals and ghouls cut off from the blood; places that change their look by year."},
+  {date: "9 November 2026", what: "Letters and books with passages only some characters can read."}
+];
