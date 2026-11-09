@@ -27,8 +27,7 @@
 "d": 7,
 "t": "scene",
 "e": "Hides weakness from reading; guards against Soulsight. A roll per encounter.",
-"id": "aura-of-confidence",
-"chk": true
+"id": "aura-of-confidence"
 },
 {
 "n": "Beast Speech",
@@ -42,8 +41,7 @@
 "d": 6,
 "t": "scene",
 "e": "Speaks with animals; a roll per encounter and kind of animal.",
-"id": "beast-speech",
-"chk": true
+"id": "beast-speech"
 },
 {
 "n": "Blur of the Milky Eye",
@@ -82,8 +80,7 @@
 "d": 6,
 "t": "instant",
 "e": "A howl heard far by successes, stirring those who hear it.",
-"id": "call-of-the-wyld",
-"chk": true
+"id": "call-of-the-wyld"
 },
 {
 "n": "Cookery",
@@ -544,11 +541,10 @@
 ],
 "p": 132,
 "r": "charisma+intimidation",
-"d": "var",
+"d": 6,
 "t": "scene",
-"e": "Foes flinch (−1 initiative); allies are awed.",
-"id": "visage-of-fenris",
-"chk": true
+"e": "Foes of equal or lower rank flinch (−1 initiative) and allies are heartened (−1 difficulty on Social rolls with them) for the scene; a higher-ranked foe needs twice the rank difference in successes.",
+"id": "visage-of-fenris"
 },
 {
 "n": "Waking Dream",
@@ -575,8 +571,7 @@
 "d": "tWp",
 "t": "var",
 "e": "Eye contact fills a human with dread of the wild.",
-"id": "wolf-at-the-door",
-"chk": true
+"id": "wolf-at-the-door"
 },
 {
 "n": "Beastmind",
@@ -694,9 +689,8 @@
 "r": "manipulation+expression",
 "d": "tWp",
 "t": "instant",
-"e": "The foe loses two Willpower (more in the book).",
-"id": "curse-of-hatred",
-"chk": true
+"e": "Once per scene on the same foe: they lose two Willpower and two Rage.",
+"id": "curse-of-hatred"
 },
 {
 "n": "Distractions",
@@ -818,8 +812,7 @@
 "d": 6,
 "t": "scene",
 "e": "Appears to carry a dread disease of their choosing.",
-"id": "plague-visage",
-"chk": true
+"id": "plague-visage"
 },
 {
 "n": "Scent of Sight",
@@ -986,9 +979,8 @@
 "p": 134,
 "c": "g1",
 "t": "day",
-"e": "A brew, potent for a day, that drives the drinker into a strengthened berserk frenzy.",
-"id": "warriors-draught",
-"chk": true
+"e": "A brew, potent for a day: the drinker goes into berserk frenzy with +1 Strength and +1 Stamina while it lasts.",
+"id": "warriors-draught"
 },
 {
 "n": "Call the Rust",
@@ -1204,9 +1196,8 @@
 "r": "charisma+empathy",
 "d": 8,
 "t": "var",
-"e": "Speaks mind to mind with someone known or with a token of theirs, at any distance.",
-"id": "mental-speech",
-"chk": true
+"e": "Speaks mind to mind with someone known or with a token of theirs, up to 10 miles per success; only what each side chooses to share.",
+"id": "mental-speech"
 },
 {
 "n": "Might of Thor",
@@ -1219,9 +1210,8 @@
 "r": "willpower",
 "d": 8,
 "t": "turns",
-"e": "Strength doubles for a turn per success, at a cost afterwards.",
-"id": "might-of-thor",
-"chk": true
+"e": "Strength doubles for a turn per success; for an hour afterwards Physical Attributes fall to 1 and Willpower is halved.",
+"id": "might-of-thor"
 },
 {
 "n": "Name the Spirit",
@@ -1274,8 +1264,7 @@
 "d": 7,
 "t": "var",
 "e": "A touch curses the target; successes set how long.",
-"id": "ravens-curse",
-"chk": true
+"id": "ravens-curse"
 },
 {
 "n": "Redirect Pain",
@@ -1395,8 +1384,7 @@
 "t": "instant",
 "e": "A spirit that saw an event retells it; Gaian spirits can't refuse.",
 "d": "var",
-"id": "spirit-witness",
-"chk": true
+"id": "spirit-witness"
 },
 {
 "n": "Tongues",
@@ -1504,9 +1492,8 @@
 "r": "perception+occult",
 "d": 8,
 "t": "scene",
-"e": "Foes meeting their gaze roll Willpower (8) against their successes or suffer.",
-"id": "balors-gaze",
-"chk": true
+"e": "For the scene, a foe who meets the gaze rolls Willpower (difficulty 8) and needs at least the user's successes, or loses five dice as if Crippled; frenzy and Resist Pain don't help.",
+"id": "balors-gaze"
 },
 {
 "n": "Beast Life",
@@ -1602,9 +1589,8 @@
 "p": 130,
 "c": "g1",
 "t": "scene",
-"e": "Claws snap off as glass shards in the wound, adding aggravated damage.",
-"id": "claws-of-the-glassblower",
-"chk": true
+"e": "After a claw hit the claws snap off; the glass does one aggravated level each round until it is dug out.",
+"id": "claws-of-the-glassblower"
 },
 {
 "n": "Dam the Heartflood",
@@ -1629,7 +1615,7 @@
 "p": 138,
 "c": "g1",
 "t": "instant",
-"e": "An all-turn attack; on a hit, two extra damage dice and a lasting wound.",
+"e": "An all-turn attack; on a hit, two extra damage dice, and three or more levels after soak dismay those watching.",
 "id": "dolorous-stroke",
 "chk": true
 },
@@ -2021,8 +2007,7 @@
 "d": 8,
 "t": "var",
 "e": "Elementals shake the earth for 25 yards; others must keep their feet (Dexterity + Athletics).",
-"id": "earthfriends-pact",
-"chk": true
+"id": "earthfriends-pact"
 },
 {
 "n": "Elemental Gift",
@@ -2118,8 +2103,7 @@
 "d": "tWp",
 "t": "var",
 "e": "Binds a target to a task until it is done.",
-"id": "geas",
-"chk": true
+"id": "geas"
 },
 {
 "n": "Gift of the Spriggan",
@@ -2132,9 +2116,8 @@
 "r": "stamina+primalurge",
 "d": 8,
 "t": "hours",
-"e": "Grows or shrinks for an hour per success, gaining or losing traits.",
-"id": "gift-of-the-spriggan",
-"chk": true
+"e": "Grows or shrinks for an hour per success and can return at will; growing gives +1 Strength and +1 Stamina for each doubling of size, shrinking costs nothing.",
+"id": "gift-of-the-spriggan"
 },
 {
 "n": "Halo of the Sun",
@@ -2224,8 +2207,7 @@
 "d": 8,
 "t": "var",
 "e": "Swallows a being or object whole; the target dodges with Dexterity + Dodge.",
-"id": "maw-of-the-whale",
-"chk": true
+"id": "maw-of-the-whale"
 },
 {
 "n": "Nightmare Possession",
@@ -2375,8 +2357,7 @@
 "d": 7,
 "t": "instant",
 "e": "Calls on the totem for aid; more successes, a greater intervention.",
-"id": "totem-gift",
-"chk": true
+"id": "totem-gift"
 },
 {
 "n": "Wyld Warp",

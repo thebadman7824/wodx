@@ -19,6 +19,16 @@ export function linguisticsAllows(dots) {
   return n ? 2 ** (n - 1) : 0;
 }
 
+/**
+ * V20 has no Linguistics Ability: each Language Merit (1 point) gives one language, and Natural Linguist (2 points)
+ * makes each give two (V20 pdf 492 to 493, printed 484 to 485). From the names of a character's Merits.
+ */
+export function languagesFromMerits(names = []) {
+  const list = names.map(n => String(n ?? ""));
+  const count = list.filter(n => /^language\b/i.test(n.trim())).length;
+  return list.some(n => /natural linguist/i.test(n)) ? count * 2 : count;
+}
+
 export const norm = s => String(s ?? "").trim().toLowerCase().replace(/\s+/g, " ");
 
 /** Does any of these language lists include the language? */

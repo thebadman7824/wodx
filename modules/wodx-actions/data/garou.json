@@ -2,7 +2,7 @@
 "source": "Dark Ages: Werewolf (2003) pp. 79–107; W20 pp. 144–146, 251, 255–263, 285–287.",
 "breeds": {
   "homid": {"label":"Homid","gnosis":1,"breedForm":"homid","gifts":["Master of Fire","Persuasion","Smell of Man"],"page":"DA:W p. 80"},
-  "metis": {"label":"Metis","gnosis":3,"breedForm":"crinos","gifts":["Create Element","Sense Wyrm","Shed"],"page":"DA:W p. 80","chk":true},
+  "metis": {"label":"Metis","gnosis":3,"breedForm":"crinos","gifts":["Create Element","Sense Wyrm","Shed"],"page":"DA:W p. 80"},
   "lupus": {"label":"Lupus","gnosis":5,"breedForm":"lupus","gifts":["Hare's Leap","Heightened Senses","Ley Lines"],"page":"DA:W p. 80"}
 },
 "auspices": {
