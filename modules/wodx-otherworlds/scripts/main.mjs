@@ -45,7 +45,7 @@ Hooks.once("ready", () => {
     crossShroud, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
     readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses,
     journey: {draw: journey.drawJourney, propose: journey.proposeJourney, approve: journey.approveJourney, rules: journey.J},
-    journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, applyDecay: journey.applyDecay,
+    journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, lookCss: journey.lookCss, applyDecay: journey.applyDecay, swaying: journey.swaying,
     realms: {rules: realmsRules, storm: realms.storm, shreddingWinds: realms.shreddingWinds, addDreamingLevel: realms.addDreamingLevel, makeTrod: realms.makeTrod,
       dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,
       netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow}
@@ -66,6 +66,10 @@ const decaySoon = (() => { let t = null; return () => { clearTimeout(t); t = set
 Hooks.on("controlToken", () => { if ( active ) decaySoon(); });
 Hooks.on("canvasReady", () => { if ( active ) decaySoon(); });
 Hooks.on("updateToken", (doc, change) => { if ( active && ("level" in change || "x" in change || "y" in change) && doc.object?.controlled ) decaySoon(); });
+// Jacking into the Net or out of it changes the look
+const netChange = e => { if ( active && e?.statuses?.has?.(STATUS.net.id) ) decaySoon(); };
+Hooks.on("createActiveEffect", netChange);
+Hooks.on("deleteActiveEffect", netChange);
 
 const skipping = () => !!game.modules.get("wodx-chronicle")?.api?.isSkipping?.();
 Hooks.on("updateWorldTime", () => {

@@ -84,3 +84,30 @@ export function decayCss(shroud, {on = true} = {}) {
   const f = n => Math.round(n * 100) / 100;
   return `grayscale(${f(0.35 + 0.45 * k)}) sepia(${f(0.25 * k)}) contrast(${f(1 + 0.15 * k)}) brightness(${f(1 - 0.15 * k)})`;
 }
+
+/* ---- the looks of the other worlds ---- */
+
+/**
+ * The map as seen from each other world, on the viewer's own client: the Penumbra and the Shadowlands already have their
+ * silvered and drained twin art (and the Shadowlands its decay); the Near Dreaming shimmers, its colours swaying slowly
+ * through a hue; one jacked into the Net sees the world as glowing lines.
+ */
+export const LOOKS = {dreaming: {label: "Near Dreaming: an iridescent shimmer", sway: 28, period: 7000}, net: {label: "The Net: the world in glowing lines"}};
+export const NET_FILTER_ID = "wodx-net-look";
+/** The CSS filter for a viewer's layer. phase runs from -1 to 1 (the Dreaming's sway). "" for none. */
+export function layerLookCss({layer = "physical", inNet = false, shroud = null, phase = 0, looks = true, decay = true} = {}) {
+  if ( inNet ) return looks ? `url(#${NET_FILTER_ID})` : "";
+  if ( layer === "shadowlands" ) return decayCss(shroud, {on: decay});
+  if ( layer === "dreaming" && looks ) {
+    const p = Math.max(-1, Math.min(1, Number(phase) || 0));
+    return `saturate(1.45) hue-rotate(${Math.round(LOOKS.dreaming.sway * p)}deg) brightness(1.06) contrast(1.04)`;
+  }
+  return "";
+}
+/** The Net's filter: grey, then the edges only (a Laplacian), lit green and cyan on black. */
+export const NET_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute;width:0;height:0" aria-hidden="true" focusable="false">`
+  + `<filter id="${NET_FILTER_ID}" color-interpolation-filters="sRGB">`
+  + `<feColorMatrix type="matrix" values="0.3 0.59 0.11 0 0 0.3 0.59 0.11 0 0 0.3 0.59 0.11 0 0 0 0 0 1 0"/>`
+  + `<feConvolveMatrix order="3" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1" preserveAlpha="true"/>`
+  + `<feComponentTransfer><feFuncR type="linear" slope="0.25"/><feFuncG type="linear" slope="3"/><feFuncB type="linear" slope="2.4" intercept="0.04"/></feComponentTransfer>`
+  + `</filter></svg>`;
