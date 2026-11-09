@@ -29,7 +29,6 @@ import * as L from "./legacy.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as MIG from "./migrate.js";
 import * as GX from "./garou.js";
-import { makeTestPack } from "./garou-testpack.js";
 import * as KR from "./kindred-rules.js";
 import * as KX from "./kindred.js";
 import * as SR from "./sunlight-rules.js";
@@ -2113,7 +2112,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.13.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.14.1",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2153,7 +2152,9 @@ const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, fren
     chiminage: withActor(a => gx().chiminage(a)),
     awardRenown: () => gx().awardRenown(), delirium: (o = {}) => gx().deliriumCheck(o), moonRise: (o = {}) => gx().moonRise(o),
     applyRenown: (actors, deltas, reason) => gx().applyRenown(actors, deltas, reason), garouInfo: a => GX.info(a),
-    garouRules: GX, gifts: () => GX.gifts(), giftItem: g => GX.giftItem(g), makeTestPack,
+    garouRules: GX, gifts: () => GX.gifts(), giftItem: g => GX.giftItem(g),
+    // Test code: fetched only when a gate asks for it, so players never download it
+    makeTestPack: (...args) => import("./garou-testpack.js").then(m => m.makeTestPack(...args)),
     // Kindred additions and automatic prompts (3.2.0)
     useDiscipline: withActor(a => kx().useDiscipline(a)), setRoad: withActor(a => kx().setRoad(a)), downtime: withActor(a => kx().downtime(a)),
     healing: withActor(a => kx().healing(a)), boons: (o = {}) => kx().boons(o.actor ? resolveActor(o.actor) : resolveActor()),

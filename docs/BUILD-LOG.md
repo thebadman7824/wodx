@@ -719,3 +719,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - mount, dismount, crash and ride (flat out) go out as wodxMapEvents.
 - Page refs pinned from the PC's book check: V20 core opening and closing p. 261, intrusion p. 260, alarms p. 255, retrying p. 251, climbing p. 258, falling p. 296 (printed pages).
 - Tests: 6 new (3 rules, 3 runtime), 577 in all; UI fit adds a coach. Gate step 22 (the burglar drives a cart). Not deployed yet.
+
+### Chronicle 0.5.3 and Actions 3.14.1, 2026-11-09: lighter on slow computers
+- From the Live performance study (doc "Live performance for slower machines"): the live world has 3,234 animated lights, three full-size map layers on 23 outdoor scenes and 51 looping video tiles. Player browsers already skip the heavy WoDX work.
+- Chronicle: a client setting, Scene video effects (Show or Hide). Hide pauses every video tile and stops drawing it for that player only; image tiles and the scene are untouched. It holds through tile updates (refreshTile).
+- Actions: the Garou test pack is fetched only when makeTestPack is called, so players no longer download it.
+- Lazy loading of each line's code is logged in PENDING-REVIEW.md as not done yet (every line file is also used at start-up). World changes from the study wait for Ben.
+- Tests: 9 new, 586 in all. Gate: gateeffects (8 steps).

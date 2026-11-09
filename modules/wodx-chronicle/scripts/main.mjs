@@ -19,6 +19,7 @@ import * as events from "./events.mjs";
 import * as migrations from "./migrations.mjs";
 import * as languages from "./languages.mjs";
 import * as tours from "./tours.mjs";
+import * as effects from "./effects.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -51,6 +52,8 @@ Hooks.once("init", () => {
   // The WoDX look (6e): each player's own look, text size and motion
   theme.registerThemeSettings();
   theme.applyLook();
+  // Each player can hide looping video tiles on a slow computer
+  effects.registerEffectSettings();
   // B60: the WoDX buttons each player sees
   playerTools.registerPlayerToolSettings();
   // Phase 7a: the generator core
@@ -136,6 +139,7 @@ Hooks.once("ready", async () => {
     applyTimed: timed.applyTimed,
     endScene: timed.endScene,
     theme,
+    effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
     tours: {start: tours.startTour},
