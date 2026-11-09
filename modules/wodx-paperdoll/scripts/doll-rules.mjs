@@ -35,17 +35,17 @@ export const NEAREST = {
 for ( const k of Object.keys(NEAREST) ) for ( const [a, b] of Object.entries(NEAREST[k]) ) if ( !SERIOUS[k].includes(b) ) NEAREST[k][a] = SERIOUS[k][0];
 export const PARTS = {
   head: run("variant", 4), eyes: SERIOUS.eyes, eyebrows: SERIOUS.eyebrows, nose: run("variant", 6),
-  mouth: SERIOUS.mouth, hair: SERIOUS.hair, beard: ["", ...run("variant", 2), ...Object.keys(FR.WHISKERS)],
+  mouth: SERIOUS.mouth, lips: Object.keys(MR.LIP_SHAPES), hair: SERIOUS.hair, beard: ["", ...run("variant", 2), ...Object.keys(FR.WHISKERS)],
   glasses: ["", ...run("variant", 5)], earrings: ["", ...run("variant", 3)],
   build: Object.keys(FR.BUILD), age: Object.keys(FR.AGES), cheeks: Object.keys(FR.CHEEKS), marks: Object.keys(FR.MARKS), scar: Object.keys(FR.SCARS), affliction: Object.keys(FR.AFFLICTIONS)
 };
-export const PART_LABELS = {head: "Face shape", build: "Build of the face", eyes: "Eyes", eyebrows: "Brows", nose: "Nose", mouth: "Mouth", hair: "Hair", beard: "Facial hair",
+export const PART_LABELS = {head: "Face shape", build: "Build of the face", eyes: "Eyes", eyebrows: "Brows", nose: "Nose", mouth: "Mouth", lips: "Lips", hair: "Hair", beard: "Facial hair",
   age: "Age", cheeks: "Complexion", marks: "Marks", scar: "Scar", affliction: "Marked by", glasses: "Spectacles", earrings: "Earrings"};
 /** Names for the choices that have them; the others are numbered. */
-export const PART_NAMES = {build: Object.fromEntries(Object.entries(FR.BUILD).map(([k, v]) => [k, v.label])), age: FR.AGES, cheeks: FR.CHEEKS, marks: FR.MARKS, scar: FR.SCARS, affliction: FR.AFFLICTIONS,
+export const PART_NAMES = {lips: Object.fromEntries(Object.entries(MR.LIP_SHAPES).map(([k, v]) => [k, v.label])), build: Object.fromEntries(Object.entries(FR.BUILD).map(([k, v]) => [k, v.label])), age: FR.AGES, cheeks: FR.CHEEKS, marks: FR.MARKS, scar: FR.SCARS, affliction: FR.AFFLICTIONS,
   beard: {"": "None", variant01: "Full beard", variant02: "Long beard", ...FR.WHISKERS}};
 /** The order the steppers come in. */
-export const FACE_ORDER = ["head", "build", "eyes", "eyebrows", "nose", "mouth", "hair", "beard", "age", "cheeks", "marks", "scar", "affliction", "glasses", "earrings"];
+export const FACE_ORDER = ["head", "build", "eyes", "eyebrows", "nose", "mouth", "lips", "hair", "beard", "age", "cheeks", "marks", "scar", "affliction", "glasses", "earrings"];
 
 export const SKIN = FR.SKIN;
 export const HAIR = FR.HAIR;
@@ -161,7 +161,7 @@ export function moodFor(look, {level = 0, frenzy = false, follow = true} = {}) {
 export function defaultLook(seed = "") {
   return {v: LOOK_VERSION, seed: String(seed),
     face: {head: "variant01", eyes: "variant04", eyebrows: "variant07", nose: "variant01", mouth: "happy02", hair: "variant02", beard: "", glasses: "", earrings: "", freckles: false,
-      build: "", age: "", cheeks: "", marks: "", scar: "", affliction: ""},
+      lips: "", build: "", age: "", cheeks: "", marks: "", scar: "", affliction: ""},
     colors: {skin: "f0d6bf", hair: "5a3a28", eyes: "5a3a22", lips: ""}, style: {ground: "", ring: ""},
     clothes: {gown: "3f6b4c", mantle: true, mantleColor: "34558c", lining: "b8463c", brooch: "d9b04c", headwear: "none", veil: "f3efe4"},
     mood: "own", followHealth: true, portrait: false};
@@ -226,6 +226,7 @@ export function randomLook(seed, who = {}) {
   l.colors.eyes = FR.EYES_NATURAL[next(FR.EYES_NATURAL.length)];
   const hard = ["poxScars", "poxScars", "warts", "lostEye", "eyepatch", "burned", "mangled", "leprous"];
   l.face.affliction = next(100) < 6 ? hard[next(hard.length)] : "";
+  l.face.lips = PARTS.lips[next(PARTS.lips.length)];
   return l;
 }
 
@@ -285,7 +286,21 @@ export function keySvg(look, key) {
  * Fuller lips and brows that show: the mouth (found by its colour) gets a stroke of its own colour round it and a
  * soft wash of lip colour behind it; on very dark skin the brows get a lighter rim under them.
  */
-export function inkHead(head, look, eyes = null, mood = "own") {
+/**
+ * The lips this face draws: the character's own (MR.lipsOf), made a little smaller, step by step, if the mouth
+ * would come too near the edge of this face (a narrow face with wide, full lips). anchors: the measured head.
+ */
+export function lipsFor(look, mood = "own", eyes = null, anchors = null) {
+  const L = MR.lipsOf(look);
+  if ( !anchors?.face?.length || !eyes?.pupils?.length ) return L;
+  const ex = expressionFor(look, mood), at = MR.mouthPlace(eyes), b = buildOf(look);
+  for ( let k = 1; k >= 0.6; k -= 0.04 ) {
+    const l = {...L, w: L.w * k, full: L.full * k, thin: L.thin * Math.max(k, 0.8)};
+    if ( MR.mouthFits(MR.mouthShape(ex, at, l), anchors.face, b) ) return l;
+  }
+  return {...L, w: L.w * 0.6, full: L.full * 0.6};
+}
+export function inkHead(head, look, eyes = null, mood = "own", lips = null) {
   const k = inksOf(look);
   const at = hex => new RegExp(`<path([^>]*?) d="([^"]+)"([^>]*?) fill="#${hex}"\\/>`, "g");
   // Lips: Lorelei's mouth gives way to WoDX's own, drawn to fit under the nose and between the eyes (mouth-rules)
@@ -293,21 +308,22 @@ export function inkHead(head, look, eyes = null, mood = "own") {
   let s = String(head).replace(at(k.lips), () => {
     if ( done ) return "";
     done = true;
-    return MR.mouthSvg(expressionFor(look, mood), MR.mouthPlace(eyes), {lips: k.lips, skin: look.colors.skin});
+    return MR.mouthSvg(expressionFor(look, mood), MR.mouthPlace(eyes), {lips: k.lips, skin: look.colors.skin, shape: lips ?? MR.lipsOf(look)});
   });
   if ( k.rim ) s = s.replace(at(k.brows), (m, d) => `<path d="${d}" fill="none" stroke="#${k.rim}" stroke-width="5" stroke-linejoin="round"/>${m}`);
   return s;
 }
-export function headLayers({look, head, mask, eyes = null, mood = "own"}) {
-  head = inkHead(head, look, eyes, mood);
+export function headLayers({look, head, mask, eyes = null, mood = "own", anchors = null}) {
+  const lips = lipsFor(look, mood, eyes, anchors);
+  head = inkHead(head, look, eyes, mood, lips);
   const t = FR.buildTransform(look.face.build);
   const {skin: on, defs} = FR.skinLayers(look.face, look.colors);
   const af = FR.affliction(look.face.affliction, look.colors.skin, eyes), skin = on + af.head;
   // In the mask, black is nudged off pure black, so the sepia inking of the picture leaves the mask alone
   const m = skin ? `<mask id="wpd-skin" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="1200">${String(mask ?? "").replaceAll("viewboxMask", "wpd-vbm")
     .replace(/(<path\b[^>]*?)fill="#fff"/gi, '$1fill="#000"').replace(/(fill|stroke)="#000(000)?"/gi, '$1="#010101"')
-    // Lorelei's mouth counts as skin; WoDX's own mouth is cut out of it
-    .replace(/<path([^>]*?) d="([^"]+)"([^>]*?) fill="#fdfdfd"\/>/i, (all, pre, d, post) => `<path${pre} d="${d}"${post} fill="#ffffff"/>${MR.mouthSilhouette(expressionFor(look, mood), MR.mouthPlace(eyes))}`)}</mask>` : "";
+    // Lorelei's mouth counts as skin; WoDX's own mouth is cut out of it, unless a moustache is to lie over it
+    .replace(/<path([^>]*?) d="([^"]+)"([^>]*?) fill="#fdfdfd"\/>/i, (all, pre, d, post) => `<path${pre} d="${d}"${post} fill="#ffffff"/>${FR.WHISKERS[look.face.beard] ? "" : MR.mouthSilhouette(expressionFor(look, mood), MR.mouthPlace(eyes), "#010101", lips)}`)}</mask>` : "";
   const iris = mood === "unconscious" ? "" : FR.irises(eyes, look.colors.eyes, {skip: /^(lostEye|eyepatch)$/.test(look.face.affliction) ? [0] : []});
   return `<defs>${defs}${m}</defs><g${t ? ` transform="${t}"` : ""}>${head}${iris}${skin ? `<g mask="url(#wpd-skin)">${skin}</g>` : ""}${af.over}</g>`;
 }
@@ -333,7 +349,7 @@ export function stagesOf({look, anchors: A, features, eyes, crop, mood = "own"})
   const bad = features ? Object.entries(features.parts).filter(([, p]) => !p.ok).map(([k]) => k) : ["features not drawn"];
   add("features", features?.ok, `off the face: ${bad.join(", ")}`);
   const k = inksOf(look), dim = ["lips", "nose"].filter(p => k.ratio[p] < FR.NEED[p]).concat(k.ratio.brows < FR.NEED.brows && !k.rim ? ["brows"] : []);
-  const mouth = eyes?.pupils?.length ? MR.mouthShape(expressionFor(look, mood), MR.mouthPlace(eyes)) : null;
+  const mouth = eyes?.pupils?.length ? MR.mouthShape(expressionFor(look, mood), MR.mouthPlace(eyes), lipsFor(look, mood, eyes, A)) : null;
   add("mouth", !eyes?.pupils?.length || mouth && MR.mouthFits(mouth, A?.face, buildOf(look)), "the mouth runs off the face");
   add("colours", !dim.length, `blends into the skin: ${dim.join(", ")}`);
   add("skin", true);

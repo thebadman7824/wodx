@@ -104,7 +104,7 @@ export function stateOf(actor, look = lookOf(actor)) {
 export async function draw(look, {level = 0, mood = "own", frame = D.DEFAULT_FRAME, ring = true, style = null, changes = []} = {}) {
   const A = await anchorsFor(look);
   const {eyes, features} = await featuresFor(look, mood);
-  const head = D.headLayers({look, eyes, mood, head: D.innerSvg(await avatar(D.loreleiOptions(look, mood))), mask: D.innerSvg(await avatar(D.loreleiOptions(look, mood, {mask: true})))});
+  const head = D.headLayers({look, eyes, mood, anchors: A, head: D.innerSvg(await avatar(D.loreleiOptions(look, mood))), mask: D.innerSvg(await avatar(D.loreleiOptions(look, mood, {mask: true})))});
   const out = D.compose({look, head, anchors: A, frame, ring, level, style, changes});
   out.stages = D.stagesOf({look, anchors: A, features, eyes, crop: out.crop, mood});
   const failed = out.stages.filter(s => !s.ok);
