@@ -54,10 +54,11 @@ export function moonWord(index) {
  * How much light there is where the character stands: bright, dim, dark or pitch.
  * daylight: the scene's own darkness is low; lit: inside one of the scene's lights; moon: illumination 0 to 1.
  */
-export function lightLevel({daylight = false, lit = false, indoor = false, moon = 0, part = "night", sky = "clear"} = {}) {
+export function lightLevel({daylight = false, lit = false, indoor = false, moon = 0, part = "night", sky = "clear", darkness = 0} = {}) {
   if ( lit ) return "bright";
   if ( daylight ) return indoor ? "dim" : (sky === "storm" ? "dim" : "bright");
-  if ( part === "dawn" || part === "dusk" ) return indoor ? "dark" : "dim";
+  // A scene the Storyteller made fully dark stays dark at dawn and dusk too
+  if ( (part === "dawn" || part === "dusk") && !(Number(darkness) >= 0.75) ) return indoor ? "dark" : "dim";
   if ( indoor ) return "pitch";
   const veiled = sky === "overcast" || sky === "storm";
   const m = veiled ? moon * 0.25 : moon;
@@ -251,7 +252,8 @@ export function seedFor(seed, {scene = "", place = "", hour = 0, sense = "", act
 
 /** The key an answer is remembered under, and a fingerprint of what was there. */
 export function memoryKey({scene = "", place = "", hour = 0, sense = ""} = {}) {
-  return `${scene}|${place}|${hour}|${sense}`;
+  // No dots: Foundry reads a dot in a flag key as a path and would split the entry apart
+  return [scene, place, hour, sense].map(x => String(x).replace(/\./g, "_")).join("|");
 }
 export function fingerprint(sourceIds = []) {
   return [...new Set(sourceIds.map(String))].sort().join(",");

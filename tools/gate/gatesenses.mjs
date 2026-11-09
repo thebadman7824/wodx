@@ -1,5 +1,5 @@
 /**
- * WoDX Senses gate (0.1.0), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * WoDX Senses gate (0.1.1), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesenses.mjs?${Date.now()}`)).run()
  * Back the world up first.
  *
@@ -7,7 +7,7 @@
  * Perception 3, Alertness 2; "WoDX gate: Drinker", drinking by its routine flag), a hiding place with someone in it and a
  * fire on tiles, views the scene, asks, and deletes all of it and its chat cards at the end, then views the scene that was
  * on view before. Rothenstein's own scenes and actors are not touched; the clock never moves.
- *   1. the module: WoDX Senses 0.1.0 or later, its api, the line tables (12 kinds of place)
+ *   1. the module: WoDX Senses 0.1.1 or later, its api, the line tables (12 kinds of place)
  *   2. the scene: the place reads as a tavern, indoors, and the light at the token as pitch
  *   3. a free look at hearing: the drinker and the fire are heard; the hidden one is held back on the Storyteller's copy
  *   4. looking closer rolls (blind, the Storyteller's copy carries the roll); the hidden one shows only if the successes reach it
@@ -55,7 +55,7 @@ export async function run() {
   try {
     await step("1 module", async () => {
       const m = game.modules.get(MOD);
-      ok("1 module", m?.active && newer(m.version, "0.1.0") && !!api?.answer && Object.keys(api.tables?.places?.kinds ?? {}).length === 12,
+      ok("1 module", m?.active && newer(m.version, "0.1.1") && !!api?.answer && Object.keys(api.tables?.places?.kinds ?? {}).length === 12,
         {version: m?.version, kinds: Object.keys(api?.tables?.places?.kinds ?? {}).length});
     });
     await step("2 scene", async () => {
@@ -103,7 +103,7 @@ export async function run() {
     await step("5 repeat", async () => {
       const again = await api.answer({user: game.user.id, token: tokListener.uuid, sense: "sound", closer: true});
       const s = again.sections[0];
-      ok("5 repeat", !s.rolled && s.repeat && JSON.stringify(s.lines) === JSON.stringify(R.closer.lines), {lines: s.lines});
+      ok("5 repeat", !s.rolled && s.repeat && JSON.stringify(s.lines) === JSON.stringify(R.closer.lines), {rolled: s.rolled, repeat: s.repeat, lines: s.lines});
     });
     await step("6 sound wall", async () => {
       await scene.createEmbeddedDocuments("Wall", [{c: [600, 0, 600, 1200], flags: {"wodx-gate": {senses: true}}}]);

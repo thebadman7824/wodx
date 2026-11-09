@@ -736,6 +736,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Book checks, 2026-11-09: Targeting 0.1.1, Chronicle 0.5.3 (B129)
 - Gap review item 10. tags.json: 39 tags fixed. gifts-daw.json: chk taken off 19 Gifts, 7 effects and one difficulty corrected. garou.json: metis confirmed. languages: languagesFromMerits(). Notes kept in docs/research/book-checks/book-checks.md. 554 harness tests pass.
 
+### WoDX Senses 0.1.1, 2026-11-09: two fixes from the first gate
+- The first run of gatesenses in rothenstein-wodx scored 9/12. Two causes.
+- Remembered answers were never kept: the memory key held the place id (`s.<scene id>`), and Foundry reads a dot in a flag key as a path, so each entry was split apart on save. memoryKey() now swaps dots for underscores. A new test expands dotted keys the way Foundry does.
+- At dawn and dusk the light ignored the scene's darkness level, so a fully dark room read "dark" instead of pitch. lightLevel() now takes the scene darkness, and at 0.75 or more dawn and dusk count as night. Sight answers also count the light level in their fingerprint, so a new light lets the character look again.
+- 609 harness tests pass.
 ### Interactables 0.12.0, 2026-11-09: pictures, markers and map events (B160)
 - Step 1 of the design note "Responsive Maps for WoDX". scripts/state-rules.mjs (pure: states by kind, the look for a state, event kinds, the map event, feedback) and scripts/states.mjs (picture swaps on the active Storyteller's client from updateTile and updateWall, markers drawn on each client in the interface layer, tied ambient sounds, the event from each card's create or update, the socket that plays the moment on every client, the tile config's "pictures and sounds" part).
 - Watch points and mounts (0.10.0, 0.11.0) now send their events through states.publish, in the same shape as a card's: object is the tile id, objectKind the kind (window, bell, cart), place the NPC place. New event kinds: watch, call, mount, dismount, crash, ride. A card on a watch point or mount sends no second event.

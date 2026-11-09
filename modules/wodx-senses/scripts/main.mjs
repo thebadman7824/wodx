@@ -23,7 +23,7 @@ import * as R from "./senses-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-senses";
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -149,7 +149,7 @@ function moment(scene, p) {
   const year = num(t?.year) || num(chron()?.eras?.currentYear?.());
   const darkness = num(scene?.environment?.darknessLevel ?? scene?.darkness);
   const lit = litAt(p, scene);
-  const light = R.lightLevel({daylight: darkness < 0.5 && part !== "night", lit, indoor, moon: num(t?.moon?.illumination), part, sky});
+  const light = R.lightLevel({daylight: darkness < 0.5 && part !== "night", lit, indoor, moon: num(t?.moon?.illumination), part, sky, darkness});
   let feast = null, curfew = false;
   try {
     const RR = game.modules.get("wodx-npc")?.api?.routineRules;
@@ -429,7 +429,7 @@ export async function answer(req) {
     const crowd = gathered.sources.some(s => s.key === "activity.drink") || ["tavern", "market"].includes(ctx.place.kind) && ctx.part !== "night";
     const masked = gathered.sources.some(s => (s.key === "fire" || s.key === "brazier") && yardsBetween(me, s.at, scene) <= 10);
     const D = R.difficulty(sense, {light: ctx.light, crowd, sky: ctx.sky, indoor: ctx.indoor, masked}, pw);
-    const fp = R.fingerprint(live.map(l => l.id));
+    const fp = R.fingerprint([...live.map(l => l.id), ...(sense === "sight" ? [`light:${ctx.light}`] : [])]);
     const key = R.memoryKey({scene: scene.id, place: ctx.place.id, hour: `${ctx.t?.year ?? 0}-${ctx.t?.month ?? 0}-${ctx.t?.day ?? 0}-${ctx.hour}`, sense});
     const memo = memory[key];
     let successes = 0, botch = false, roll = null, rolled = false;
