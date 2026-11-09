@@ -17,7 +17,7 @@ const get = (m, k) => { try { return game.settings.get(m, k); } catch (e) { retu
 
 async function save(R) {
   R.finished = new Date().toISOString();
-  R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed`;
+  R.summary = `${R.steps.filter(s => s.pass).length}/7 passed${R.errors.length ? `, ${R.errors.length} error(s)` : ""}`;
   const file = new File([JSON.stringify(R, null, 1)], "gatelooks-result.json", {type: "application/json"});
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
@@ -33,7 +33,7 @@ export async function run() {
   let scene = null, actor = null;
   const board = () => document.getElementById("board")?.style?.filter ?? "";
   try {
-    ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.5.0", M.version) && typeof O?.lookCss === "function" && game.settings.settings.has(`${MOD}.looks`), {version: M?.version});
+    ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.5.1", M.version) && typeof O?.lookCss === "function" && game.settings.settings.has(`${MOD}.looks`), {version: M?.version});
     await game.settings.set(MOD, "looks", true);
     scene = await Scene.create({name: "WoDX gate: Looks", width: 1200, height: 900, grid: {size: 100}, padding: 0, tokenVision: false});
     await sleep(400);
@@ -43,7 +43,9 @@ export async function run() {
     const S = game.scenes.get(scene.id);
     await S.createEmbeddedDocuments("Token", [{...actor.prototypeToken.toObject(), actorId: actor.id, actorLink: true, name: "Looker", x: 300, y: 300, level: L.physical.id}]);
     await S.view(); await sleep(1500);
-    const tok = () => canvas.tokens.placeables.find(t => t.name === "Looker");
+    // Keep the placeable: on a level the canvas is not showing, the token leaves canvas.tokens.placeables
+    const first = canvas.tokens.placeables.find(t => t.name === "Looker");
+    const tok = () => S.tokens.find(t => t.name === "Looker")?.object ?? first;
     tok().control({releaseOthers: true}); await sleep(500);
     O.applyDecay();
     ok("2. physical", O.lookCss() === "" && !O.swaying(), {look: O.lookCss()});
