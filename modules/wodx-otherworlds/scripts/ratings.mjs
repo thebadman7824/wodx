@@ -1,4 +1,5 @@
 import {SETTLEMENTS, gauntletFor, DEFAULT_CHART} from "./rules.mjs";
+import {normDrift, withDrift, banalityWithDrift} from "./drift-rules.mjs";
 
 export const MODULE_ID = "wodx-otherworlds";
 /** Foundry names a module's sub-type "<module id>.<type>"; read the real key from the game model when it is there. */
@@ -70,11 +71,18 @@ export function activeChartId() {
 export function placeOf(tokenDoc) {
   const scene = tokenDoc.parent;
   const hit = regionRatingsFor(tokenDoc);
-  const ratings = hit ? toPlain(hit.ratings) : (sceneRatings(scene) ?? {});
+  const ratings = hit ? toPlain(hit.ratings) : {...(sceneRatings(scene) ?? {})};
   const where = hit ? `${scene.name}, ${hit.region.name}` : scene.name;
   const chartId = activeChartId();
   const g = gauntletFor(chartId, ratings);
-  return {ratings, where, regionId: hit?.region.id ?? null, sceneId: scene.id, chartId, ...g};
+  // A Gauntlet that moves: the scene's drift (taint, rites, neglect) on top of the chart and the modifier
+  const dr = normDrift(scene?.flags?.[MODULE_ID]?.drift ?? {}), drift = dr.value;
+  if ( dr.banality && ratings.banality !== null && ratings.banality !== undefined ) ratings.banality = banalityWithDrift(ratings.banality, dr.banality);
+  if ( drift && g.gauntlet !== null && g.gauntlet !== 0 ) {
+    g.notes = [...(g.notes ?? []), `Drift over time ${drift > 0 ? "+" : ""}${drift} (house rule)`];
+    g.gauntlet = withDrift(g.gauntlet, drift);
+  }
+  return {ratings, where, regionId: hit?.region.id ?? null, sceneId: scene.id, chartId, drift, ...g};
 }
 
 function toPlain(system) {

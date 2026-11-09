@@ -9,6 +9,8 @@ import * as rules from "./rules.mjs";
 import * as journey from "./journey.mjs";
 import * as realms from "./realms.mjs";
 import * as ways from "./ways.mjs";
+import * as drift from "./drift.mjs";
+import * as driftRules from "./drift-rules.mjs";
 import * as waysRules from "./ways-rules.mjs";
 import * as realmsRules from "./realms-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
@@ -51,6 +53,7 @@ Hooks.once("ready", () => {
     realms: {rules: realmsRules, storm: realms.storm, shreddingWinds: realms.shreddingWinds, addDreamingLevel: realms.addDreamingLevel, makeTrod: realms.makeTrod,
       dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,
       netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
+    drift: {of: drift.driftOf, step: drift.stepDrift, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules}
   };
   game.modules.get(MODULE_ID).api = api;
@@ -58,8 +61,8 @@ Hooks.once("ready", () => {
   // Record the charts in Chronicle Rules once WoDX Chronicle has written that journal
   if ( game.users.activeGM?.isSelf ) setTimeout(() => writeChartsPage().catch(err => console.error("WoDX |", err)), 3000);
   // The year-and-a-day proposals go to WoDX Chronicle's approval queue
-  if ( game.modules.get("wodx-chronicle")?.api ) registerYearHandler();
-  else Hooks.once("wodxChronicleReady", () => registerYearHandler());
+  if ( game.modules.get("wodx-chronicle")?.api ) { registerYearHandler(); drift.registerDriftHandler(); }
+  else Hooks.once("wodxChronicleReady", () => { registerYearHandler(); drift.registerDriftHandler(); });
   journey.registerJourneys();
   journey.applyDecay();
 });
@@ -81,6 +84,8 @@ Hooks.on("updateWorldTime", () => {
 Hooks.on("wodxSkipEnd", () => {
   if ( active ) checkYearAndDay().catch(err => console.error("WoDX |", err));
 });
+
+Hooks.on("wodxMapEvent", ev => { if ( active ) drift.onMapEvent(ev).catch(err => console.error("WoDX |", err)); });
 
 Hooks.on("wodxEraApplied", () => {
   if ( active && game.users.activeGM?.isSelf ) writeChartsPage().catch(err => console.error("WoDX |", err));

@@ -141,3 +141,55 @@ test("wiring: hooks, handlers, socket and the Hunt dialog", () => {
   // Other modules' flags are read straight from the document
   assert.doesNotMatch(u, /getFlag\("wodx-creation"/);
 });
+
+const D = await imp("modules/wodx-otherworlds/scripts/drift-rules.mjs");
+
+test("a Gauntlet that moves: steps, limits, undo", () => {
+  let d = D.normDrift({});
+  d = D.addDrift(d, "taint", {at: 5, why: "a desecration"});
+  assert.equal(d.value, 1);
+  assert.equal(d.changed, true);
+  d = D.addDrift(D.addDrift(d, "taint"), "weaver");
+  assert.equal(d.value, 3);
+  const capped = D.addDrift(d, "taint");
+  assert.equal(capped.value, 3);
+  assert.equal(capped.changed, false);
+  assert.equal(D.undoDrift(d).value, 2);
+  assert.equal(D.addDrift(D.normDrift({value: -3}), "rite").value, -3);
+});
+
+test("drift on top of the chart keeps 0 and the 1 to 10 range", () => {
+  assert.equal(D.withDrift(0, 3), 0);
+  assert.equal(D.withDrift(9, 3), 10);
+  assert.equal(D.withDrift(2, -3), 1);
+  assert.equal(D.withDrift(null, 2), null);
+  assert.equal(D.withDrift(6, -1), 5);
+});
+
+test("drift wiring: placeOf adds it, map events propose it, a caern is a tie", () => {
+  const r = src("modules/wodx-otherworlds/scripts/ratings.mjs"), m = src("modules/wodx-otherworlds/scripts/main.mjs");
+  assert.match(r, /withDrift\(g\.gauntlet, drift\)/);
+  assert.match(m, /wodxMapEvent/);
+  assert.match(m, /registerDriftHandler/);
+  assert.ok(U.TIE_KINDS.caern);
+});
+
+test("Banality drifts on its own track, only for a rated place", () => {
+  let d = D.addDrift(D.normDrift({}), "disbelief");
+  assert.equal(d.banality, 1);
+  assert.equal(d.value, 0);
+  d = D.addDrift(D.addDrift(d, "dreaming"), "dreaming");
+  assert.equal(d.banality, -1);
+  assert.equal(D.undoDrift(d).banality, 0);
+  assert.equal(D.banalityWithDrift(null, 2), null);
+  assert.equal(D.banalityWithDrift(9, 3), 10);
+  assert.equal(D.banalityWithDrift(1, -3), 0);
+});
+
+test("plague years by history", () => {
+  assert.equal(U.outbreakFor(1348).name, "The Black Death");
+  assert.equal(U.outbreakFor(1919).name, "Influenza");
+  assert.equal(U.outbreakFor(1197), null);
+  assert.equal(U.outbreakFor(1700), null);
+  for ( const o of U.OUTBREAKS ) assert.ok(o.from <= o.to);
+});
