@@ -102,3 +102,25 @@ export function measure(px, {sx = 1, sy = 1} = {}) {
     headTop, crown: Math.min(...headTop.map(p => p[1]))
   };
 }
+
+/**
+ * Find the eyes on a head drawn with magenta eyes and everything else green (see loreleiOptions pupils). px as for
+ * measure. Returns {pupils: [{side, x, y, r}], eyes: [{side, x0, y0, x1, y1}]}, side 0 the near eye: a pupil is the magenta with
+ * no green within 10 pixels (the outline of the eye always has skin close by).
+ */
+export function findEyes(px) {
+  const W = px.width, H = px.height, d = px.data;
+  const mag = i => d[i] > 200 && d[i + 1] < 80 && d[i + 2] > 200, green = (x, y) => { if ( x < 0 || y < 0 || x >= W || y >= H ) return false; const i = (y * W + x) * 4; return d[i + 1] > 200 && d[i] < 80; };
+  const P = [[0, 0, 0], [0, 0, 0]], B = [[1e9, 1e9, -1, -1], [1e9, 1e9, -1, -1]];
+  for ( let y = 330; y < Math.min(H, 620); y++ ) for ( let x = 300; x < Math.min(W, 800); x++ ) {
+    if ( !mag((y * W + x) * 4) ) continue;
+    const side = x < 565 ? 0 : 1, b = B[side];
+    b[0] = Math.min(b[0], x); b[1] = Math.min(b[1], y); b[2] = Math.max(b[2], x); b[3] = Math.max(b[3], y);
+    let near = false;
+    for ( let dy = -10; dy <= 10 && !near; dy += 2 ) for ( let dx = -10; dx <= 10; dx += 2 ) if ( dx * dx + dy * dy <= 100 && green(x + dx, y + dy) ) { near = true; break; }
+    if ( near ) continue;
+    P[side][0] += x; P[side][1] += y; P[side][2]++;
+  }
+  return {pupils: P.map(([sx, sy, n], side) => n > 30 ? {side, x: +(sx / n).toFixed(1), y: +(sy / n).toFixed(1), r: +(Math.sqrt(n / Math.PI) + 6).toFixed(1)} : null).filter(Boolean),
+    eyes: B.map(([x0, y0, x1, y1], side) => x1 > 0 ? {side, x0, y0, x1, y1} : null).filter(Boolean)};
+}
