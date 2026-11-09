@@ -193,6 +193,12 @@
    "title": "The Wild West (V20)",
    "short": "Wild West",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "beckett",
+   "title": "Beckett's Jyhad Diary",
+   "short": "Beckett",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -227,6 +233,7 @@
   "cotr.json",
   "v20dacomp.json",
   "tome.json",
-  "wildwest.json"
+  "wildwest.json",
+  "beckett.json"
  ]
 }
