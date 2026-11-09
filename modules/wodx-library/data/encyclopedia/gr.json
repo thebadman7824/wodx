@@ -1,0 +1,1093 @@
+[
+ {
+  "id": "gr-ghouls",
+  "title": "Ghouls",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortals fed vampire blood.",
+  "claims": [
+   {
+    "text": "A ghoul must drink vitae regularly, one blood point a month, to stay a ghoul; a master can make as many as the master has blood to spare.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Ghouls fall into two broad kinds: those Bound to a domitor and independents who have broken free.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 14,
+      "pdf": 15
+     },
+     {
+      "book": "gr",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-bound-ghouls",
+   "gr-independent-ghouls",
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-domitor",
+  "title": "Domitor",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A ghoul's master.",
+  "claims": [
+   {
+    "text": "A domitor is the vampire who keeps a ghoul; some are close to their ghouls, others treat them as servants or even slaves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-ghouls"
+  ]
+ },
+ {
+  "id": "gr-bound-ghouls",
+  "title": "Bound Ghouls",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ghouls held by the blood bond.",
+  "claims": [
+   {
+    "text": "The bond warps a ghoul's feelings: some believe they love their masters enough to die for them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "When a Bound ghoul strikes at another vampire, the victim usually blames the master, who must then punish the ghoul.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 15,
+      "pdf": 16
+     },
+     {
+      "book": "gr",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "A fully Bound ghoul with Willpower 4 finds the bond weakening after eight months with no contact or feeding from the regnant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "A ghoul who feeds from one master finds the bond harder to resist than one who drinks from several vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "To keep the bond strong a Bound ghoul must drink from the same master, which keeps such ghouls close to their domitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "A Bound ghoul keeps more free will and drive than a mortal conditioned with Dominate, which makes such ghouls valuable.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-ghouls"
+  ]
+ },
+ {
+  "id": "gr-independent-ghouls",
+  "title": "Independent Ghouls",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ghouls without a master.",
+  "claims": [
+   {
+    "text": "Most vampires frown on independent ghouls as unpredictable and ready to do anything to feed their addiction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Camarilla treats every independent ghoul as a future hunter or a Masquerade breach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "They still need vitae every month, so the Blood and freedom are the two needs that drive nearly all of them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 39,
+      "pdf": 40
+     },
+     {
+      "book": "gr",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Many know little of vampire society and may not tell a Clan from a bloodline.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Lacking steady access to vitae, they are at high risk of withdrawal, and many hunt vampires for their blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 44,
+      "pdf": 45
+     },
+     {
+      "book": "gr",
+      "page": 154,
+      "pdf": 155
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-ghouls",
+   "gr-unmastered"
+  ]
+ },
+ {
+  "id": "gr-ghoul-ageing",
+  "title": "Ghouls and Age",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What happens when old ghouls go without blood.",
+  "claims": [
+   {
+    "text": "A ghoul kept young by vitae begins to age when the Blood runs out; a 150-year-old Bound ghoul feels the body failing and craves vitae to stop it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-ghouls"
+  ]
+ },
+ {
+  "id": "gr-animal-ghouls",
+  "title": "Animal Ghouls",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Beasts fed vampire blood.",
+  "claims": [
+   {
+    "text": "Animal ghouls can be Bound, use a few Disciplines and defend their masters to the death, but cannot speak.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 169,
+      "pdf": 170
+     }
+    ]
+   },
+   {
+    "text": "A human-sized or larger animal ghoul holds up to 10 blood points; smaller animals hold far less.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 170,
+      "pdf": 171
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-ghouls"
+  ]
+ },
+ {
+  "id": "gr-unmastered",
+  "title": "The Unmastered",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A network for freed ghouls.",
+  "claims": [
+   {
+    "text": "Founded in the 1950s by Gregory Winter, Ginerva Salamanca, Enrico Sagunto and Philip Marshall, it helps ghouls who escaped or were abandoned by their domitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "It aims to gather enough vitae for its members quietly and to free ghouls from cruel masters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Newly freed ghouls may stay ghouls or go back to their old lives, and the group finds them new identities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "It works as tight cells and has lately begun to splinter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-independent-ghouls"
+  ]
+ },
+ {
+  "id": "gr-sacrament-of-caine",
+  "title": "The Sacrament of Caine",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Noddist ghoul cult.",
+  "claims": [
+   {
+    "text": "The cult claims a near complete copy of the Noddist scripture of Caine, given by the Anathema Ayisha Jocastian.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "It sees most modern vampires as sinners against Caine's teaching and wants a return to the First City, with few vampires, many ghouls and willing blood slaves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Mortals take it for a doomsday cult, and independent ghouls avoid it after clashes with the Unmastered.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-independent-ghouls"
+  ]
+ },
+ {
+  "id": "gr-revenant-families",
+  "title": "Revenant Families",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Bloodlines of born ghouls.",
+  "claims": [
+   {
+    "text": "Revenant families are lineages of hereditary ghouls; how a family began is left to the Storyteller.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Feuds between families run long, and the rivalry of the Grimaldi and Zantosa is known across the Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-bratovich",
+   "gr-dhabi",
+   "gr-ducheski",
+   "gr-enrathi",
+   "gr-grimaldi",
+   "gr-kairouan",
+   "gr-obertus",
+   "gr-oprichniki",
+   "gr-rafastio",
+   "gr-rossellini",
+   "gr-anushin-rawan",
+   "gr-zantosa"
+  ]
+ },
+ {
+  "id": "gr-bratovich",
+  "title": "Bratovich",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The penniless, depraved hunters.",
+  "claims": [
+   {
+    "text": "Once noble warriors of the Tzimisce, the Bratovich fell to begging after their families were jailed for dark arts and died in prison.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Animalism, Fortitude, Vicissitude. They resist frenzy at +2 difficulty and cannot spend Willpower to avoid it, only to end it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-dhabi",
+  "title": "D'Habi",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The eternal sufferers.",
+  "claims": [
+   {
+    "text": "The D'Habi claim a line older than the First City, as warrior-priests of the Baali Methuselah Nergal, worshipped as an underworld god in Mashkan-Shapir.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Presence, Obfuscate, Daimonion. Broken by centuries of servitude, they take +2 difficulty on all Willpower rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-ducheski",
+  "title": "Ducheski",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The obsessed tinkerers.",
+  "claims": [
+   {
+    "text": "The Ducheski were not first related by blood; the family began with a Tzimisce elder named Krevcheski.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Auspex, Dominate, Thaumaturgy. Centuries under the Tremere left them cut off from people, so no Ducheski may have a Social Ability above 2.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-enrathi",
+  "title": "Enrathi",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The vile slavers.",
+  "claims": [
+   {
+    "text": "The family is said to have begun in sixth century Italy and turned to owning and trading slaves, also selling services such as moving vampires through enemy ground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Dominate, Obfuscate, Potence. No Enrathi may have Humanity above 3 or Conscience above 2.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Sabbat ghoul candidates are often taken young by Enrathi slavers and trained by the Black Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-grimaldi",
+  "title": "Grimaldi",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The secretive rebels.",
+  "claims": [
+   {
+    "text": "A wealthy Italian family, the Grimaldi held power before the Tzimisce took them in the late Middle Ages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Celerity, Dominate, Fortitude. Raised to think the family superior, a Grimaldi must make a Willpower roll at difficulty 7 to hold back scorn when given a chance to boast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-kairouan",
+  "title": "Kairouan Brotherhood",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The fractured family.",
+  "claims": [
+   {
+    "text": "The family grew from a twelfth century split between the Warrior and Sorcerer castes of the Assamites, early in the Ashirra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Auspex, Celerity, Obfuscate. Careful breeding left every member with the Slow Healing Flaw.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 100,
+      "pdf": 101
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-obertus",
+  "title": "Obertus",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The reclusive scholars.",
+  "claims": [
+   {
+    "text": "The Obertus began as scholars, monks and clerics serving the Tzimisce Symeon and Gesu in Byzantine Constantinople.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "Their costly research into the paranormal may be why the Tzimisce know so much of other supernatural beings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Auspex, Obfuscate, Vicissitude, with Dominate for Obertus who show the Narov line. Most suffer Obsessive-Compulsive Derangement, and the Narov line Megalomania.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-oprichniki",
+  "title": "Oprichniki",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The greedy mercenaries.",
+  "claims": [
+   {
+    "text": "The family descends from the secret police of Ivan the Terrible and serves the Russian Tzimisce as bodyguards, assassins and couriers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 103,
+      "pdf": 104
+     }
+    ]
+   },
+   {
+    "text": "Some now guard the Russian Organizatsiya; the family numbers under a few hundred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 103,
+      "pdf": 104
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Animalism, Obfuscate, Potence. Each member is haunted by at least one ghost as the Haunted Flaw, and a banished ghost is always replaced.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-rafastio",
+  "title": "Rafastio",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The proud witches.",
+  "claims": [
+   {
+    "text": "The matriarchal Rafastio arose along the Po River before Rome and claim, likely wrongly, to be the first revenant family.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 105,
+      "pdf": 106
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Animalism, Auspex, Thaumaturgy. Discipline difficulty is +2 at the new moon, +1 while waxing or waning and -1 at the full moon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Rafastio blood rejects the Embrace: attempts have always failed, usually killing the revenant and leaving a bloodless corpse that rots at once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-rossellini",
+  "title": "Rossellini",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The little brothers.",
+  "claims": [
+   {
+    "text": "The Giovanni long passed the Rossellini off as a minor family that crossed Claudius Giovanni; in truth Augustus caught them trying to summon an ancient being from the lands of the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Dominate, Fortitude, Necromancy. All have the Deathsight Flaw, with +1 difficulty on Social rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-anushin-rawan",
+  "title": "Servants of Anushin-Rawan",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The chosen of Yiaros.",
+  "claims": [
+   {
+    "text": "The Ventrue elder Anushin-Rawan made the Aegean island of Yiaros an island-wide Elysium, served by humans living there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "Disciplines: Auspex, Obfuscate, Presence. Near any vampire of the elder's line they serve as if blood bound, to one such vampire at a time, for 10 nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-zantosa",
+  "title": "Zantosa",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The petty hedonists.",
+  "claims": [
+   {
+    "text": "Once powerful, the Zantosa withdrew into short-term pleasures and legendary vices, and now court other families and marry into criminal groups such as the Yakuza's Yamaguchi clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "A Zantosa cannot spend Willpower to resist a supernatural power that tempts toward a new pleasure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-ghoul-disciplines",
+  "title": "Ghoul Disciplines",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Which powers ghouls learn and at what cost.",
+  "claims": [
+   {
+    "text": "Every ghoul learns Potence, whoever the domitor or sponsor is.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "A ghoul gets a cost break on the Disciplines of the sponsor's Clan, a revenant on those of the family; independent ghouls find Disciplines hardest to learn and pay more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 140,
+      "pdf": 141
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-ghouls"
+  ]
+ },
+ {
+  "id": "gr-revenant-blood",
+  "title": "Revenant Blood",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Born ghouls make their own vitae.",
+  "claims": [
+   {
+    "text": "A revenant's blood pool can hold 10, and unlike a ghoul's it refills naturally over time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 140,
+      "pdf": 141
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-revenant-families"
+  ]
+ },
+ {
+  "id": "gr-setite-ghouls",
+  "title": "Setite Ghouls",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ghouls of the Followers of Set.",
+  "claims": [
+   {
+    "text": "Setites lean more on their cults than on ghouls and make Bound ghouls mainly to reward cult leaders and keep followers in line.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Their blood carries the Clan weakness, so in time all Setite ghouls grow sensitive to light.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gr",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-ghouls"
+  ]
+ }
+]

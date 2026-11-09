@@ -121,6 +121,12 @@
    "title": "Dark Ages: Fae",
    "short": "DA:F",
    "edition": "Revised era"
+  },
+  {
+   "id": "gr",
+   "title": "Ghouls and Revenants",
+   "short": "G&R",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -143,6 +149,7 @@
   "sorcerer.json",
   "sc.json",
   "vav.json",
-  "dafae.json"
+  "dafae.json",
+  "gr.json"
  ]
 }
