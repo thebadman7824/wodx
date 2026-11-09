@@ -95,7 +95,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Ride and Drive read from the sheet; an untrained Skill the sheet lacks still costs +1
 - [x] Tile config: the Mount or vehicle section, with who is aboard and Everyone off
 - [x] Harness tests (6 new) and UI fit
-- [ ] Gate step 22 in rothenstein-wodx (21/22 at da913ca: the cart moved the wrong way; fixed in 0.13.0)
+- [x] Gate step 22 in rothenstein-wodx: passes in 0.13.1 (24/24)
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.10.0-2026-11-09)
 - [ ] Untrained Skill page ref to pin (V20 core)
 
@@ -106,8 +106,8 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Tile config: pictures and sounds (a picture per state, follow a door or window, no marker, change sound, tied sounds)
 - [x] Settings: Map effects (each player), State markers (world)
 - [x] Harness tests (7 new) and UI fit
-- [ ] Gate step 21 in rothenstein-wodx
-- [ ] Deployed
+- [x] Gate step 23 (pictures and events) in rothenstein-wodx: passes in the 24/24 run at 296459b
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.11.0-2026-11-09)
 
 ## 0.13.0: climbing, ledges and jumps (2026-11-09)
 - [x] Rules: five climbs by yards a success, gaps by yards, catching the ledge, falls by height (B155)
@@ -115,9 +115,9 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Mounts: the vehicle follows the driver's token by offset
 - [x] Tile config: the Climb or gap section
 - [x] Harness tests (5 new) and UI fit
-- [ ] Gate steps 22 and 24 in rothenstein-wodx (22/24 at 4ccb5d1; fixed in 0.13.1)
+- [x] Gate steps 22 and 24 in rothenstein-wodx: 24/24 at 296459b (0.13.1)
+- [x] Deployed 0.13.1 2026-11-09 (backup Backups\wodx-interactables-0.13.0-2026-11-09)
 - [x] Deployed 0.13.0 2026-11-09 (backup Backups\wodx-interactables-0.12.0-2026-11-09)
-- [ ] Deployed
 
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
@@ -128,4 +128,4 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Altars, relics and fetishes (0.8.1, deployed)
 - [x] Watch points (0.10.0, deployed)
 - [x] Mounts and vehicles (0.11.0, deployed; 0.13.0 fixes the cart following)
-- [x] Step 2: climbing, ledges and jumps (0.13.0, not deployed yet)
+- [x] Step 2: climbing, ledges and jumps (0.13.1, deployed)

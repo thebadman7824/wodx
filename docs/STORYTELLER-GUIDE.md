@@ -241,7 +241,7 @@ The **WoDX factions** window (rook) lists the factions, with a search box. Each 
 
 ## WoDX Interactables: doors, locks, windows, containers, traps, clues, lights, hiding places, hazards, holy places, watch points, vehicles and climbs
 
-*New module, installed and on in the testing world (rothenstein-wodx) only; enable WoDX Interactables in a world's modules to use it there. Climbing and jumping (0.13.0) are not deployed yet.*
+*New module, installed and on in the testing world (rothenstein-wodx) only; enable WoDX Interactables in a world's modules to use it there. Everything here through climbing and jumping (0.13.1) is deployed there.*
 
 **For players.** Select your token, then press the **door** on its HUD (or the I key). The Interact window lists every door, window and breakable wall within reach, nearest first, and the options for each. Before anything is rolled, each option says the pool, the difficulty, the successes needed, how long a roll takes and how much noise it makes. Clicking a locked door with your token selected opens the same window for that door.
 
