@@ -275,7 +275,8 @@ export function beatFires(beat, ev) {
   if ( b.on === "place" ) return !!b.place && (ev.place === b.place || String(ev.place ?? "").endsWith(`.${b.place}`) || String(b.place).endsWith(`.${ev.place}`));
   if ( b.on === "map" ) {
     if ( b.place && !(ev.place === b.place || String(ev.place ?? "").startsWith(`${b.place}.`)) ) return false;
-    return b.value === null || b.value === ev.kind || b.value === ev.state;
+    const low = v => String(v ?? "").trim().toLowerCase();
+    return b.value === null || low(b.value) === low(ev.kind) || low(b.value) === low(ev.state);
   }
   if ( b.on === "flag" ) {
     if ( !b.flag ) return false;
@@ -292,7 +293,7 @@ export function beatFires(beat, ev) {
 /** A log line for a map event from WoDX Interactables, or null for one not worth the log (a noise nobody heard). */
 const MAP_WORDS = {noise: "made a noise at", open: "opened", force: "forced", break: "broke", alarm: "set off the alarm at", theft: "took what was in",
   fire: "set fire to", fireOut: "put out", light: "lit", dark: "put out", desecrate: "desecrated", trap: "set off", disarm: "disarmed", hazard: "was hurt by",
-  holy: "stood on", found: "found something at", use: "used", crash: "came off or crashed", ride: "raced", watch: "kept watch from", call: "made a call on", mount: "got on", dismount: "got off"};
+  holy: "stood on", found: "found something at", use: "used", crash: "came off or crashed", ride: "raced", watch: "kept watch from", call: "made a call on", mount: "got on", dismount: "got off", trigger: "reached"};
 export function mapEntry(ev) {
   if ( !ev || ev.undone ) return null;
   if ( ev.kind === "noise" && !(ev.heard ?? []).length ) return null;

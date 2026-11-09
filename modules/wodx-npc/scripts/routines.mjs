@@ -26,6 +26,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
 export const ALERT_ZONE = "alertZone";
+export const TRIGGER = "trigger";
 const VOICE_YARDS = 30; // B84
 const SIGHT_YARDS = {day: 60, night: 20}; // WoDX reading: how far a watcher sees a person in the open
 const PAUSE_MINUTES = 30;
@@ -337,6 +338,7 @@ export function build(ctx) {
     if ( snap?.alert ) {
       const sc = await fromUuid(snap.alert.scene);
       if ( sc ) { await sc.update(snap.alert.prev ? {[`flags.${MOD}.alert`]: snap.alert.prev} : unsetKey(`flags.${MOD}.alert`)); await syncZones(sc); }
+      await undoCarry(snap.alert.carry);
     }
   }
 
@@ -533,11 +535,32 @@ export function build(ctx) {
       static defineSchema() {
         return {
           lights: new f.StringField({required: false, blank: true, initial: "", label: "Lights that come on", hint: "Ambient light ids, separated by commas: lamps lit while the place is on alarm."}),
-          sounds: new f.StringField({required: false, blank: true, initial: "", label: "Sounds that play", hint: "Ambient sound ids, separated by commas: a bell or dogs while the place is on alarm."})
+          sounds: new f.StringField({required: false, blank: true, initial: "", label: "Sounds that play", hint: "Ambient sound ids, separated by commas: a bell or dogs while the place is on alarm."}),
+          carryTo: new f.StringField({required: false, blank: true, initial: "", label: "Carries the alarm to", hint: "Other places (scene names, separated by commas) that hear of the alarm. Leave blank to keep it here."}),
+          carrier: new f.StringField({required: true, initial: "runner", choices: Object.fromEntries(Object.entries(AR.CARRIERS).map(([k, v]) => [k, v.label])), label: "How it gets there",
+            hint: "A runner takes the trip's minutes; a telephone or radio only in its era. An alarm that was carried is not carried on again."}),
+          minutes: new f.NumberField({required: true, integer: true, min: 0, max: 1440, initial: 0, label: "Minutes on the way", hint: "0: a runner takes the trip's minutes (WoDX Storyteller's, else 30); a bell, phone or radio is at once."})
         };
       }
       static events = {};
     }
+    class TriggerBehavior extends Base {
+      static defineSchema() {
+        return {
+          label: new f.StringField({required: false, blank: true, initial: "", label: "What it is", hint: "A few words for the log and for beats, such as \"the cellar stairs\". Blank: the region's name."}),
+          does: new f.StringField({required: true, initial: "note", choices: AR.TRIGGER_DOES, label: "What happens"}),
+          who: new f.StringField({required: true, initial: "pcs", choices: {pcs: "Player characters only", anyone: "Anyone"}, label: "Whom it fires for"}),
+          once: new f.BooleanField({initial: false, label: "Only once", hint: "After the first time, it stays quiet until you untick Already set off."}),
+          fired: new f.BooleanField({initial: false, label: "Already set off"})
+        };
+      }
+      static events = {[E.TOKEN_ENTER]: async function (event) { await onTrigger(this, event); }};
+    }
+    const TRIG = `${MOD}.${TRIGGER}`;
+    CONFIG.RegionBehavior.dataModels[TRIG] = TriggerBehavior;
+    CONFIG.RegionBehavior.typeLabels[TRIG] = "WoDX: Trigger";
+    if ( CONFIG.RegionBehavior.typeHints ) CONFIG.RegionBehavior.typeHints[TRIG] = "When someone walks in: tell the Storyteller, raise the alarm, or only pass it on to the log and beats.";
+    if ( CONFIG.RegionBehavior.typeIcons ) CONFIG.RegionBehavior.typeIcons[TRIG] = "fa-solid fa-bolt";
     const ZONE = `${MOD}.${ALERT_ZONE}`;
     CONFIG.RegionBehavior.dataModels[ZONE] = AlertZoneBehavior;
     CONFIG.RegionBehavior.typeLabels[ZONE] = "WoDX: Alert zone";
@@ -682,19 +705,111 @@ export function build(ctx) {
     }
   }
   /** Put a place on alarm for an hour, then wary until the next dusk. Returns the alert. */
-  async function raiseAlarm(scene = canvas.scene, cause = "") {
+  async function raiseAlarm(scene = canvas.scene, cause = "", opts = {}) {
+    return (await raiseAlarmFull(scene, cause, opts))?.alert ?? null;
+  }
+  /**
+   * Raise the alarm, and send it on through the place's Alert zones: at once by bell, telephone or radio, or by a
+   * runner who arrives when the trip's minutes have passed. Returns {alert, carry} where carry is what Undo needs.
+   */
+  async function raiseAlarmFull(scene = canvas.scene, cause = "", {carried = false} = {}) {
     if ( !scene ) return null;
     await loadCalendar();
-    const a = AR.raise(flag(scene, "alert"), {now: game.time.worldTime, cause, toDusk});
+    const now = game.time.worldTime;
+    const a = AR.raise(flag(scene, "alert"), {now, cause, toDusk});
     await scene.update({[`flags.${MOD}.alert`]: a});
     await syncZones(scene);
     Hooks.callAll("wodxPlaceAlarm", {scene: scene.id, level: "alarm", cause, until: a.until});
-    return a;
+    const carry = {from: scene.uuid, at: now, reached: [], sent: 0};
+    if ( !carried ) {
+      try { await carryAlarm(scene, carry); } catch (e) { console.error(`${MOD} |`, e); }
+    }
+    return {alert: a, carry};
+  }
+  const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
+  const tripMinutes = sc => {
+    const own = Number(sc?.flags?.["wodx-storyteller"]?.travel?.minutes);
+    if ( own > 0 ) return own;
+    try { return Number(game.settings.get("wodx-storyteller", "travelMinutes")) || 30; } catch (e) { return 30; }
+  };
+  async function carryAlarm(scene, carry) {
+    const type = `${MOD}.${ALERT_ZONE}`, now = game.time.worldTime, lines = [];
+    const pending = [...(flag(scene, "carrying") ?? [])];
+    for ( const region of scene?.regions ?? [] ) for ( const b of region.behaviors ?? [] ) {
+      if ( b.type !== type || b.disabled || !b.system?.carryTo ) continue;
+      for ( const to of AR.carryTargets(b.system.carryTo, game.scenes?.contents ?? [...(game.scenes ?? [])], scene.id) ) {
+        const plan = AR.carryPlan(b.system.carrier, {year: yearNow(), minutes: b.system.minutes, tripMinutes: tripMinutes(to)});
+        if ( !plan.ok ) { lines.push(`No word reaches ${to.name}: ${plan.why}.`); continue; }
+        if ( plan.seconds <= 0 ) {
+          carry.reached.push({scene: to.uuid, prev: flag(to, "alert") ?? null});
+          await raiseAlarmFull(to, `word from ${scene.name}`, {carried: true});
+          lines.push(`Word reaches ${to.name} at once: it is on alarm too.`);
+        } else {
+          pending.push(AR.normCarry({to: to.uuid, from: scene.uuid, fromName: scene.name, carrier: b.system.carrier, at: now + plan.seconds, raisedAt: now}));
+          carry.sent++;
+          lines.push(`A runner sets off for ${to.name}: about ${Math.round(plan.seconds / 60)} minutes.`);
+        }
+      }
+    }
+    if ( carry.sent ) await scene.update({[`flags.${MOD}.carrying`]: pending.slice(-30)});
+    if ( lines.length ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><strong>${esc(scene.name)}: the alarm spreads</strong></p><ul>${lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div></div>`});
+    return lines;
+  }
+  /** Undo of a raised alarm: the places it reached at once go back, and runners still on the road turn back. */
+  async function undoCarry(carry) {
+    if ( !carry ) return;
+    for ( const r of carry.reached ?? [] ) {
+      const sc = await fromUuid(r.scene);
+      if ( sc ) { await sc.update(r.prev ? {[`flags.${MOD}.alert`]: r.prev} : unsetKey(`flags.${MOD}.alert`)); await syncZones(sc); }
+    }
+    if ( carry.sent ) {
+      const sc = await fromUuid(carry.from);
+      const list = flag(sc, "carrying") ?? [];
+      if ( sc && list.length ) await sc.update({[`flags.${MOD}.carrying`]: list.filter(c => c.raisedAt !== carry.at)});
+    }
+  }
+  /** The clock moved: runners who have arrived raise the alarm where they were sent. */
+  async function deliverCarries() {
+    for ( const scene of game.scenes ?? [] ) {
+      const list = flag(scene, "carrying") ?? [];
+      if ( !list.length ) continue;
+      const due = AR.dueCarries(list, game.time.worldTime);
+      if ( !due.length ) continue;
+      await scene.update({[`flags.${MOD}.carrying`]: list.filter(c => !due.some(d => d.to === c.to && d.at === c.at))});
+      for ( const c of due ) {
+        const to = await fromUuid(c.to);
+        if ( !to ) continue;
+        await raiseAlarmFull(to, `a runner from ${c.fromName ?? "elsewhere"}`, {carried: true});
+        await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>A runner from ${esc(c.fromName ?? "elsewhere")} reaches ${esc(to.name)}: it is on alarm.</p></div></div>`});
+      }
+    }
+  }
+  /** A WoDX: Trigger region: someone walked in. */
+  const firedNow = new Map();
+  async function onTrigger(system, event) {
+    if ( !isActiveGM() || skipping() ) return null;
+    const doc = event?.data?.token, behavior = system.parent, region = behavior?.parent ?? event?.region;
+    if ( !doc || !region || behavior?.disabled ) return null;
+    const actor = doc.actor;
+    if ( !AR.triggerFires(system, {pc: !!actor?.hasPlayerOwner}) ) return null;
+    const k = `${behavior.id ?? region.id}:${doc.id}`, t = Date.now();
+    if ( firedNow.get(k) > t - 5000 ) return null;
+    firedNow.set(k, t);
+    const scene = region.parent ?? doc.parent;
+    const placeUuid = region.flags?.[MOD]?.place?.kind ? region.uuid : scene?.uuid;
+    const ev = AR.triggerEvent({does: system.does, label: system.label, scene: scene?.id, place: placeUuid, region: region.id, regionName: region.name,
+      who: doc.uuid, whoName: doc.name ?? actor?.name, at: game.time.worldTime, x: doc.x, y: doc.y});
+    if ( system.once ) await behavior.update?.({"system.fired": true});
+    Hooks.callAll("wodxMapEvent", ev);
+    if ( system.does === "note" ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(),
+      content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(ev.whoName ?? "Someone")} reached ${esc(ev.objectName)}.</p></div></div>`});
+    return ev;
   }
   /** The clock moved: alarms die down and wary places calm, with a note to the Storyteller. */
   async function checkAlerts() {
     if ( !isActiveGM() ) return;
     for ( const scene of game.scenes ?? [] ) if ( (flag(scene, "marks") ?? []).length ) await repairMarks(scene);
+    await deliverCarries();
     for ( const scene of game.scenes ?? [] ) {
       const a = alertOf(scene);
       if ( !a ) continue;
@@ -721,8 +836,8 @@ export function build(ctx) {
     const out = [];
     if ( AR.RAISES.has(ev.kind) && ev.how !== "help" ) {
       const prev = flag(scene, "alert") ?? null;
-      await raiseAlarm(scene, ev.objectName ? `${ev.objectName}: the alarm` : "an alarm");
-      out.push(await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {alarmCard: {scene: scene.uuid, prev}}},
+      const full = await raiseAlarmFull(scene, ev.objectName ? `${ev.objectName}: the alarm` : "an alarm");
+      out.push(await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {alarmCard: {scene: scene.uuid, prev, carry: full?.carry ?? null}}},
         content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(scene.name)} is on alarm</h3><span class="vta-verdict">Alarm</span></header><div class="vta-body"><p>${esc(ev.objectName ?? "An alarm")} went off. The place is on alarm for an hour of world time, then wary until the next dusk.</p><div class="wnpc-done"><button type="button" class="wnpc-a-undo">Undo</button></div></div></div>`}));
     }
     const intr = ev.who ? await fromUuid(ev.who) : null;
@@ -822,6 +937,7 @@ export function build(ctx) {
     if ( !d || d.undone || !game.user.isGM ) return null;
     const sc = await fromUuid(d.scene);
     if ( sc ) { await sc.update(d.prev ? {[`flags.${MOD}.alert`]: d.prev} : unsetKey(`flags.${MOD}.alert`)); await syncZones(sc); }
+    await undoCarry(d.carry);
     await msg.update({[`flags.${MOD}.alarmCard.undone`]: true, content: String(msg.content).replace(/<button[^>]*wnpc-a-undo[^>]*>Undo<\/button>/, "<b>Undone.</b>")});
     return true;
   }
@@ -868,7 +984,7 @@ export function build(ctx) {
         await pause([w.actor, ...heard.map(h => h.actor)]);
         const sc = canvas.scene;
         snap.alert = {scene: sc.uuid, prev: flag(sc, "alert") ?? null};
-        await raiseAlarm(sc, `${w.name} raised it`);
+        snap.alert.carry = (await raiseAlarmFull(sc, `${w.name} raised it`))?.carry ?? null;
         return {text: `${w.name} raises the alarm.${heard.length ? ` ${heard.map(h => h.name).join(", ")} hear it.` : " Nobody is within call."} ${sc.name} is on alarm for an hour.`, snap};
       }
       case "send": {
@@ -1148,7 +1264,7 @@ export function build(ctx) {
     });
   }
 
-  return {noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, routineNpcs, describer, loadCalendar,
+  return {onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, routineNpcs, describer, loadCalendar,
     applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow};
 }

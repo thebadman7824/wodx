@@ -96,3 +96,72 @@ export function markFor(ev, {owned = false, toDawn = () => 6 * 3600} = {}) {
 }
 /** The marks that are due for repair at a time. */
 export const dueMarks = (marks = [], now = 0) => (marks ?? []).filter(m => m && m.repairAt !== null && m.repairAt !== undefined && m.repairAt <= now);
+
+/* ------------------------------------------------------------------ */
+/*  Alarm carriers and trigger regions                                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * How an alarm reaches another place. A bell or a shout carries at once to a place within earshot; a telephone from
+ * about 1890 and a radio from about 1930 (the same dates as WoDX Interactables' watch points); a runner takes the
+ * trip's minutes (the route's, else the setting's). House figures.
+ */
+export const CARRIERS = {
+  bell: {label: "A bell, horn or shout (at once)", from: null, runner: false},
+  phone: {label: "A telephone (from about 1890)", from: 1890, runner: false},
+  radio: {label: "A radio (from about 1930)", from: 1930, runner: false},
+  runner: {label: "A runner (the trip's minutes)", from: null, runner: true}
+};
+
+/**
+ * Can a carrier take an alarm, and when does it arrive? year: the chronicle's year (0: unknown, allowed).
+ * minutes: the zone's own figure (0: the trip's). tripMinutes: the route's or the setting's.
+ * Returns {ok, why, seconds}.
+ */
+export function carryPlan(carrier, {year = 0, minutes = 0, tripMinutes = 30} = {}) {
+  const c = CARRIERS[carrier] ?? CARRIERS.bell;
+  if ( c.from && year && year < c.from ) return {ok: false, why: `there is no ${carrier === "phone" ? "telephone" : "radio"} before about ${c.from}`, seconds: 0};
+  const m = Math.max(0, Number(minutes) || 0);
+  const seconds = c.runner ? Math.max(60, (m || Math.max(1, Number(tripMinutes) || 30)) * 60) : m * 60;
+  return {ok: true, why: "", seconds};
+}
+
+/** A carried alarm waiting on the road, cleaned. */
+export function normCarry(c = {}) {
+  const str = (v, n = 120) => (v === undefined || v === null || v === "" ? null : String(v).slice(0, n));
+  return {to: str(c.to), from: str(c.from), fromName: str(c.fromName, 80), carrier: CARRIERS[c.carrier] ? c.carrier : "runner", at: Number(c.at) || 0, raisedAt: Number(c.raisedAt) || 0};
+}
+export const dueCarries = (list = [], now = 0) => (list ?? []).map(normCarry).filter(c => c.to && c.at <= now);
+
+/** The scenes an Alert zone sends its alarm to: names, ids or UUIDs separated by commas, never the place itself. */
+export function carryTargets(text, scenes = [], selfId = null) {
+  const want = String(text ?? "").split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+  const out = [];
+  for ( const w of want ) {
+    const lw = w.toLowerCase();
+    const s = scenes.find(x => x.uuid === w || x.id === w) ?? scenes.find(x => String(x.name ?? "").toLowerCase() === lw)
+      ?? scenes.find(x => String(x.name ?? "").toLowerCase().includes(lw));
+    if ( s && s.id !== selfId && !out.includes(s) ) out.push(s);
+  }
+  return out;
+}
+
+/** What a WoDX: Trigger region does when someone walks in. Fixed list. */
+export const TRIGGER_DOES = {note: "Tell the Storyteller", alarm: "Raise the alarm", event: "Only pass it on (for beats and the log)"};
+
+/** Does a trigger region fire for this token? r: the behaviour's settings; t: {pc, npc, hidden}. */
+export function triggerFires(r = {}, t = {}) {
+  if ( r.once && r.fired ) return false;
+  if ( (r.who ?? "pcs") === "pcs" && !t.pc ) return false;
+  return true;
+}
+
+/** The map event for a trigger region, in the same shape as WoDX Interactables' events. */
+export function triggerEvent({does = "note", label = "", scene = null, place = null, region = null, regionName = "", who = null, whoName = null, at = 0, x = null, y = null} = {}) {
+  const str = (v, n = 120) => (v === undefined || v === null || v === "" ? null : String(v).slice(0, n));
+  const name = str(label, 80) ?? str(regionName, 80) ?? "a marked spot";
+  return {v: 1, kind: does === "alarm" ? "alarm" : "trigger", scene: str(scene, 40), place: str(place), at: Number(at) || 0, noise: does === "alarm" ? "loud" : "silent",
+    who: str(who), whoName: str(whoName, 80), object: str(region, 40), objectName: name, objectType: "Region", objectKind: "trigger", state: name.toLowerCase().slice(0, 60),
+    before: null, x: Number.isFinite(Number(x)) ? Math.round(Number(x)) : null, y: Number.isFinite(Number(y)) ? Math.round(Number(y)) : null,
+    owner: null, placeKind: null, heard: [], supernatural: false, message: null, undone: false};
+}
