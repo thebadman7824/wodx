@@ -1,0 +1,757 @@
+[
+ {
+  "id": "gtcam-inner-circle",
+  "title": "The Inner Circle",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hidden council of the Camarilla's eldest, who name the justicars.",
+  "claims": [
+   {
+    "text": "The Inner Circle sits at the hub of the sect. Its members appoint and dismiss justicars, and nobody outside it knows for certain who sits there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 25,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Every 13 years the oldest elders of the Camarilla clans gather. Only those elders vote for their clans; lesser clans and bloodlines get no seat, and anyone else speaks only by leave.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 25,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "At these meetings the Circle names justicars, sets the sect's course for the next 13 years and rules on matters touching the whole Camarilla.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 25,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The harshest sentence the Circle can pass is a place on the Red List, a blood hunt that runs across the whole sect with no end date.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 25,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Each clan is thought to hold one seat, but whether the members have changed over the centuries is argued. The Tremere suspect one of their Council of Seven sits there.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 25,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "After Justicar Petrodon was assassinated, the members took their own safety more seriously than ever.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 25,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "rl-red-list",
+   "gtcam-justicars"
+  ]
+ },
+ {
+  "id": "gtcam-justicars",
+  "title": "Justicars",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The six judges the Inner Circle sets over the Camarilla.",
+  "claims": [
+   {
+    "text": "Six justicars serve as the Inner Circle's eyes and hands. Each clan fights to place a strong candidate, and the winner is often a compromise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 25,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Justicars rule on the Traditions across the whole sect, and only another justicar may challenge one. A justicar may call a conclave at any time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 25,
+      "pdf": 27
+     },
+     {
+      "book": "gtcam",
+      "page": 26,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "They also host conclaves so Kindred can meet, and they can see a mad or tyrannical prince removed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 26,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Since the Gangrel left the sect, there has been no Gangrel justicar; Xaviar was the last. By the 1998 meeting most of the justicars were new appointees.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 26,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Archons, the justicars' agents, are usually picked from promising ancillae and young elders. They existed long before the title, which came into use in the late 1600s, probably from the Brujah.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 26,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "A new justicar may keep or dismiss the old staff. Not every archon arrives openly; many work quietly inside a city's affairs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 27,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtcam-inner-circle",
+   "arc-archons",
+   "gtcam-conclave"
+  ]
+ },
+ {
+  "id": "gtcam-princedom",
+  "title": "Holding a princedom",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Camarilla's princes rise, rule and fall.",
+  "claims": [
+   {
+    "text": "In theory a prince is more magistrate than monarch, keeping the peace and making whatever laws hold the city together. The office took its modern shape in the Renaissance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 27,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "A vampire takes the throne by deposing the old prince, by forcing a failing one to abdicate, or by serving as seneschal and waiting. In small towns even a young vampire may claim the title.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 27,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "A prince rules only while able to keep order, inspire fear and keep the elders' support. A prince may sire freely, while others need leave, and may call the blood hunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 27,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Common punishments include a year and a day of servitude, menial work, the stocks in Elysium, exile, loss of boons or retainers, forced drinks of the prince's blood, blood given to the Tremere, and final death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 130,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "prince",
+   "gtcam-primogen",
+   "gtcam-seneschal",
+   "sixth-tradition"
+  ]
+ },
+ {
+  "id": "gtcam-primogen",
+  "title": "Primogen",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The council of clan elders that backs or binds a prince.",
+  "claims": [
+   {
+    "text": "The primogen is the gathering of a city's elders, usually one or more speaking for each clan. The word serves for one member or many.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 27,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "It is meant to voice the clans' views on rule, but in many cities it acts more like an old vampires' club.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 27,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Primogen support confirms a prince; their votes of no confidence can drive one out. Under a strong or mad prince the council may be only for show.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 28,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "A whip is no formal Camarilla office. Some clans, mostly in Britain and the United States, use one to keep members informed and to round them up for votes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 28,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "A whip may stand in for an absent primogen or watch the room during meetings. A whip who outshines the primogen is soon replaced.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 28,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtcam-princedom",
+   "cbn2-chicago-primogen"
+  ]
+ },
+ {
+  "id": "gtcam-seneschal",
+  "title": "Seneschal",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The prince's right hand, who takes the throne when it falls empty.",
+  "claims": [
+   {
+    "text": "The seneschal is the prince's assistant and the one who knows what is going on, and steps in when the prince travels, abdicates or dies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 28,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Princes claim the choice is theirs, but primogen councils often fight to seat their own pick, and few let the seneschal share the prince's clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 28,
+      "pdf": 30
+     },
+     {
+      "book": "gtcam",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Princes cite the Nuremberg affair of 1836, when a Sabbat spy became seneschal and passed what was learned to the sect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 28,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "A seneschal may serve as secretary, envoy, first contact for newcomers and gatekeeper of what the prince hears.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtcam-princedom"
+  ]
+ },
+ {
+  "id": "gtcam-harpies",
+  "title": "Harpies",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The gossips of Elysium, who make and break standing.",
+  "claims": [
+   {
+    "text": "Harpies trade in rumour and status. Most are elders, some are skilled ancillae, and neonates who rise too fast are torn down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Few are appointed; most were society figures in life and carried on. A great city may have six chief harpies and twenty or more helpers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "They guard etiquette, help broker and record prestation, and assist princes with visiting dignitaries. Most come from the Toreador and Ventrue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Their weapons are the insult and the snub. Since violence in Elysium is forbidden, a target cannot strike back without angering the prince and the sheriff.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "elysium",
+   "gtcam-prestation"
+  ]
+ },
+ {
+  "id": "gtcam-keeper",
+  "title": "Keeper of Elysium",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The officer who answers for all that happens in Elysium.",
+  "claims": [
+   {
+    "text": "Anyone wishing to hold an event in Elysium speaks first with the keeper, who may cancel it at any moment on grounds of security or the Masquerade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 29,
+      "pdf": 31
+     },
+     {
+      "book": "gtcam",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Keepers may be of any clan and are usually at least ancillae. Most are not Toreador, who tend to be distracted by the setting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "The post passes back and forth between prince and primogen and changes hands more often than any other office.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Keeper and sheriff can be close allies or rivals; some cities give both posts to one tight pair.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "elysium",
+   "gtcam-sheriff"
+  ]
+ },
+ {
+  "id": "gtcam-sheriff",
+  "title": "Sheriff",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The prince's enforcer.",
+  "claims": [
+   {
+    "text": "The sheriff hauls offenders to court, keeps order in the streets and may lead the fighting in wartime. Deputies may be named, usually with the prince's approval.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Most sheriffs are Brujah or Gangrel, but the post also asks for wits, since it includes watching for Masquerade breaches.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "prince",
+   "gtcam-keeper",
+   "gtcam-scourge"
+  ]
+ },
+ {
+  "id": "gtcam-scourge",
+  "title": "Scourge",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunter of unsanctioned childer and thin-blooded in a Camarilla city.",
+  "claims": [
+   {
+    "text": "Some trace the office to medieval times and others say it is barely a decade old. Scourges sweep the city's fringes for fledglings made without leave and the thin-blooded of the 14th and 15th generations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Some princes grant the right of destruction; others make the scourge bring captives to Elysium for judgment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "In Milwaukee a Gangrel scourge killed three recognised Tremere neonates. The united clan's anger forced the prince to remove the scourge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Many princes and sheriffs distrust the office. Most scourges are loners who drift away from Kindred society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 32,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "third-tradition",
+   "gtcam-sheriff"
+  ]
+ },
+ {
+  "id": "gtcam-conclave",
+  "title": "Conclave",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The sect's great assembly, called by a justicar.",
+  "claims": [
+   {
+    "text": "Only a justicar may call a conclave, and they come rarely and at no fixed time. The former Gangrel justicar's septennial New Orleans party was a known exception.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 130,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Conclaves meet for grave matters, trials of mighty Kindred or the removal of corrupt princes, and they often rule on the Traditions. The 1994 conclave took up the Internet and the Masquerade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 130,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "The Minneapolis conclave of 1887 tried Prince Cyril Ximenes for tyranny over the Masquerade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 130,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Any Kindred who hears the call may attend, and young vampires may speak. In 1957 a switch of venue from Rotterdam to Brussels left visiting American elders to walk into the Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 130,
+      "pdf": 132
+     },
+     {
+      "book": "gtcam",
+      "page": 131,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "A justicar usually names the place a month ahead. A chosen chief of security may detain troublemakers and is often allowed deadly force against the sect's foes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 130,
+      "pdf": 132
+     },
+     {
+      "book": "gtcam",
+      "page": 131,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtcam-justicars",
+   "traditions"
+  ]
+ },
+ {
+  "id": "gtcam-prestation",
+  "title": "Prestation",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The trade in favours and boons among the Kindred.",
+  "claims": [
+   {
+    "text": "Prestation is the giving, owing and repaying of favours, and it drives the vampires' economy. Debts may be called in at any time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Elders often push younger Kindred into needing help, then grant it to bind them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "A known debt lowers the debtor's standing and raises the creditor's, the more so the longer it stands. Once it is paid, revenge on a harsh creditor is socially allowed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Most debts are left vague, and asking too much for a small one is poor form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtcam",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-favors",
+   "gtcam-harpies"
+  ]
+ }
+]

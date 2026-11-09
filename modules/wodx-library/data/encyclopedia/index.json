@@ -295,6 +295,12 @@
    "title": "San Francisco by Night",
    "short": "San Francisco by Night",
    "edition": "Revised"
+  },
+  {
+   "id": "gtcam",
+   "title": "Guide to the Camarilla",
+   "short": "Guide to the Camarilla",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -346,6 +352,7 @@
   "mtbn.json",
   "nobn.json",
   "nybn.json",
-  "sfbn.json"
+  "sfbn.json",
+  "gtcam.json"
  ]
 }
