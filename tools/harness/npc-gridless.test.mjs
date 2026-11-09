@@ -37,3 +37,11 @@ test("main.mjs walks gridless scenes on the lattice unless the setting says no, 
   const r = readFileSync(join(root, "modules/wodx-npc/scripts/routines.mjs"), "utf8");
   assert.doesNotMatch(r.replace("ctx.grid?.() ?? canvas.grid", ""), /canvas\.grid\.(getOffset|getTopLeftPoint|getCenterPoint|size)\b/);
 });
+
+test("a step that ends on a wall through a lattice cell's centre is tested a little past it", () => {
+  assert.deepEqual(NR.pastPoint({x: 650, y: 550}, {x: 750, y: 550}, 3), {x: 753, y: 550});
+  assert.deepEqual(NR.pastPoint({x: 0, y: 0}, {x: 0, y: 0}), {x: 0, y: 0});
+  const p = NR.pastPoint({x: 0, y: 0}, {x: 30, y: 40}, 5);
+  assert.ok(Math.abs(p.x - 33) < 1e-9 && Math.abs(p.y - 44) < 1e-9);
+  assert.match(readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8"), /if \( gridKind\(\) === "lattice" \) pb = NR\.pastPoint\(pa, pb, 3\)/);
+});
