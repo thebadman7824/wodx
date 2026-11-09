@@ -235,6 +235,12 @@
    "title": "Archons and Templars",
    "short": "Archons & Templars",
    "edition": "Revised"
+  },
+  {
+   "id": "warages",
+   "title": "Elysium: The Elder Wars (War of Ages)",
+   "short": "War of Ages",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -276,6 +282,7 @@
   "cbgangrel.json",
   "cblasombra.json",
   "cbravnos.json",
-  "archons.json"
+  "archons.json",
+  "warages.json"
  ]
 }
