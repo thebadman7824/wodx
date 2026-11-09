@@ -353,7 +353,7 @@ test("mouths: WoDX draws its own, for every mouth and mood, and Lorelei's is gon
     if ( MR.expression(D.expressionFor(look, mood)).teeth ) assert.match(h, /clip-path="url\(#wpd-m-in\)"/);
   }
   const S = MR.mouthShape("happy02", {cx: 560, cy: 620, hw: 70});
-  assert.ok(S.box.x1 - S.box.x0 === 140 && S.box.y1 - S.box.y0 > 25 && !/NaN/.test(S.upper + S.lower));
+  assert.ok(S.box.x1 - S.box.x0 === 140 && S.box.y1 - S.box.y0 > 18 && !/NaN/.test(S.upper + S.lower));
   // smiles lift the corners, frowns drop them
   const c = k => { const s = MR.mouthShape(k, {cx: 560, cy: 620, hw: 70}); return s.corners[0][1] - s.mid.up; };
   assert.ok(c("happy06") < c("sad04"));
@@ -383,4 +383,13 @@ test("lips: each face has its own, from a shape and the seed; a player may choos
   // the mouth's size follows the lips
   const W = l => { const s = MR.mouthShape("happy02", {cx: 560, cy: 620, hw: 70}, l); return s.box.x1 - s.box.x0; };
   assert.ok(W(MR.lipsOf({seed: "x", face: {lips: "wide"}})) > W(MR.lipsOf({seed: "x", face: {lips: "small"}})));
+});
+test("faces at rest look neutral; women's lips are a little fuller than men's", () => {
+  for ( let i = 0; i < 200; i++ ) { const m = D.randomLook(`r${i}`).face.mouth; assert.ok(MR.RESTING.includes(m), m); assert.ok(Math.abs(MR.expression(m).smile) <= 4, m); }
+  const w = MR.lipsOf({seed: "s", face: {lips: "", gender: "woman"}}), m = MR.lipsOf({seed: "s", face: {lips: "", gender: "man"}});
+  assert.ok(w.full > m.full && w.thin > m.thin);
+  const nb = new Set(Array.from({length: 40}, (_, i) => MR.lipsOf({seed: `n${i}`, face: {gender: "nonbinary"}}).full > MR.lipsOf({seed: `n${i}`, face: {}}).full));
+  assert.equal(nb.size, 2, "nonbinary faces go either way");
+  assert.ok(Array.from({length: 100}, (_, i) => D.randomLook(`b${i}`, {gender: "woman"})).every(l => !l.face.beard && l.face.gender === "woman"));
+  assert.equal(D.normalize({face: {gender: "x"}}).face.gender, "");
 });

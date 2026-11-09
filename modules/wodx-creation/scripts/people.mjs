@@ -48,7 +48,7 @@ export async function createPeople({people = [], domitorId = null} = {}) {
   const made = [];
   for ( const p of people ) {
     const actor = await Actor.create({name: p.name, type: "Mortal", folder: folder.id,
-      flags: {[MODULE_ID]: {people: {batch: p.batch, row: p.row, nonce: p.nonce, seed: chron()?.gen?.seed?.()}}}});
+      flags: {[MODULE_ID]: {people: {batch: p.batch, row: p.row, nonce: p.nonce, seed: chron()?.gen?.seed?.(), sex: p.sex}}}});
     const up = {
       "system.nature": p.nature, "system.demeanor": p.demeanor, "system.concept": p.trade, "system.notes": noteOf(p),
       // The system's create helper resets Willpower, so it is written after the sheet exists
