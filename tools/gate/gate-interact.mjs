@@ -70,7 +70,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.4.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.4.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.5.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.5.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -243,9 +243,20 @@ export async function run() {
       const before = foundry.utils.deepClone(burglar.system.health?.damage ?? {});
       const seen = new Set(game.messages.map(m => m.id));
       await dice(2);                  // no success getting clear, and no damage gets through
-      await tb.update({x: 490, y: 710});  // the burglar's centre lands in the pit
+      const from = {x: tb.x, y: tb.y};
+      // The burglar's centre lands in the pit (a jump, so Foundry's movement rules do not stop it short)
+      if ( typeof tb.move === "function" ) await tb.move([{x: 490, y: 710, action: "displace"}]);
+      else await tb.update({x: 490, y: 710});
+      await sleep(300);
+      const findCard = () => game.messages.find(m => !seen.has(m.id) && m.flags?.[MOD]?.ask?.op === "spring");
       let card = null;
-      for ( let k = 0; k < 60 && !card; k++ ) { await sleep(100); card = game.messages.find(m => !seen.has(m.id) && m.flags?.[MOD]?.ask?.op === "spring"); }
+      for ( let k = 0; k < 40 && !card; k++ ) { await sleep(100); card = findCard(); }
+      const hookFired = !!card;
+      const diag = {from, to: {x: tb.x, y: tb.y}, pitRect: [pit.x, pit.y, pit.width, pit.height], pit: ix().describeTile(pit),
+        onPath: ix().trapsOnPath(scene, {x: from.x + 50, y: from.y + 50}, {x: tb.x + 50, y: tb.y + 50}, {npc: !burglar.hasPlayerOwner}).length,
+        activeGM: game.users.activeGM?.id === game.user.id, setting: game.settings.get(MOD, "traps")};
+      // Not set off by the move hook: call the same handler directly, to tell a hook problem from a trap problem
+      if ( !card ) { await ix().onTokenMoved(tb); for ( let k = 0; k < 20 && !card; k++ ) { await sleep(100); card = findCard(); } }
       const done = card?.flags?.[MOD]?.done;
       const sprung = pit.flags[MOD]?.sprung === true && pit.hidden === false;
       const combatCard = !!done?.damageMsg && !!game.messages.get(done.damageMsg);
@@ -257,7 +268,7 @@ export async function run() {
       await tb.update({x: 550, y: 650});
       await sleep(400);
       ok("14. walking into the pit springs it: a WoDX Combat damage card, the pit shown; Undo puts back the pit, the card and the health track",
-        !!card && /falls into the pit/.test(done?.text ?? "") && sprung && combatCard && back && same, {text: done?.text ?? null, lines: done?.lines ?? null, sprung, combatCard, back, same});
+        hookFired && /falls into the pit/.test(done?.text ?? "") && sprung && combatCard && back && same, {hookFired, direct: !hookFired && !!card, text: done?.text ?? null, lines: done?.lines ?? null, sprung, combatCard, back, same, diag});
     });
 
     await step("15. disarm", async () => {
@@ -280,6 +291,8 @@ export async function run() {
       await sleep(500);
       const clue = findTile("clue");
       const listed = ix().interactablesFor(tok).some(x => x.doc.id === clue?.id);
+      // Investigation is a Knowledge: without it there is only a look, so the burglar gets one dot for the step
+      await burglar.update({"system.abilities.investigation.value": 1});
       await dice(9);
       const msg = await applied(await ix().attempt(tok, clue.id, "examine", {fd: {}}));
       const d = msg?.flags?.[MOD]?.done;
@@ -288,8 +301,23 @@ export async function run() {
       const quiet = !/Gate text/.test(msg?.content ?? "");
       await ix().undoCard(msg);
       const back = !game.messages.get(d?.whisper ?? "") && !clue.flags[MOD]?.seen;
+      await burglar.update({"system.abilities.investigation.value": 0});
       ok("16. a clue: listed, read (Intelligence + Investigation), its text whispered and kept off the public card; Undo takes it back", listed && told && quiet && back,
         {listed, told, quiet, back, result: d?.result ?? null});
+    });
+
+    await step("17. light", async () => {
+      await scene.createEmbeddedDocuments("AmbientLight", [{x: 650, y: 620, hidden: true, config: {bright: 1, dim: 2}, flags: {[MOD]: {gate: "lamp"}}}]);
+      await scene.createEmbeddedDocuments("Tile", [{x: 630, y: 600, width: 40, height: 40, texture: {src: "icons/svg/light.svg"},
+        flags: {[MOD]: {light: true, lightKind: "lantern", gate: "lantern"}}}]);
+      await sleep(500);
+      const lamp = scene.lights.find(l => l.flags?.[MOD]?.gate === "lamp"), lantern = findTile("lantern");
+      const tied = ix().lightsOf(lantern).some(l => l.id === lamp?.id);
+      const msg = await applied(await ix().attempt(tok, lantern.id, "lightOn"));
+      const lit = lamp.hidden === false;
+      await ix().undoCard(msg);
+      const dark = lamp.hidden === true;
+      ok("17. a lantern tied to the light beside it lights it, and Undo puts it out again", tied && lit && dark, {tied, lit, dark, result: msg?.flags?.[MOD]?.done?.result ?? null});
     });
 
     await step("10. alongside", async () => {

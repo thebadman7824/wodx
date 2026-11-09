@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.4.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps and clues on tiles.
+ * WoDX Interactables 0.4.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues and light sources on tiles.
  *
  *   Interact   A player selects a token and presses Interact on the token HUD (or the I key). A window lists every door,
  *              window and breakable wall within reach of that token, nearest first, with the options for each: the
@@ -20,6 +20,8 @@
  *              disarmed (Wits + Larceny) or set off from a distance, and is safe to walk around (0.3.0).
  *   Clues      A tile marked as a clue (a letter, a bloodstain, writing, a trail) holds the Storyteller's own text in up
  *              to four parts; examining it shows more with more successes, in a whisper to that player (0.4.0).
+ *   Lights     A tile marked as a light source (torch, candles, lantern, lamp, switch) lights or puts out the scene's
+ *              own lights it is tied to, with no roll; a lantern, lamp or bulb can be broken (0.5.0).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -31,7 +33,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.4.0";
+const VERSION = "0.5.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -97,16 +99,35 @@ export function describeWall(doc) {
 /** A container on a tile, or null. */
 export function describeTile(doc) {
   const f = doc?.flags?.[MOD] ?? {};
-  if ( !doc || !(f.container || f.trap || f.clue) ) return null;
-  return f.container ? R.describeContainer(f) : f.trap ? R.describeTrap(f) : R.describeClue(f);
+  if ( !doc || !(f.container || f.trap || f.clue || f.light) ) return null;
+  if ( f.container ) return R.describeContainer(f);
+  if ( f.trap ) return R.describeTrap(f);
+  if ( f.clue ) return R.describeClue(f);
+  const lights = lightsOf(doc);
+  return R.describeLight(f, {on: lights.some(l => !l.hidden), count: lights.length});
 }
-const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && (doc.flags?.[MOD]?.container === true || doc.flags?.[MOD]?.trap === true || doc.flags?.[MOD]?.clue === true));
+const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light"].some(k => doc.flags?.[MOD]?.[k] === true));
 /** Whatever interactable a wall or tile is. */
 export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
 /** A wall or a tile on a scene, by id. */
 const objectIn = (scene, id) => scene?.walls?.get?.(id) ?? scene?.tiles?.get?.(id) ?? null;
 /** The tiles of a scene, as an array. */
 const tilesOf = scene => scene?.tiles?.contents ?? [...(scene?.tiles?.values?.() ?? [])];
+/**
+ * The scene lights a light-source tile works: the ids set on it, or else every light inside the tile or within a
+ * square of it; with the copies WoDX Otherworlds makes of them on the Penumbra and Shadowlands levels.
+ */
+export function lightsOf(doc) {
+  const scene = doc?.parent ?? canvas?.scene;
+  const all = scene?.lights?.contents ?? [...(scene?.lights?.values?.() ?? [])];
+  const twinOf = l => l.flags?.["wodx-otherworlds"]?.twinOf ?? null;
+  const set = String(doc?.flags?.[MOD]?.lightIds ?? "").split(/[\s,;]+/).filter(Boolean);
+  const g = scene?.grid?.size ?? 100, r = rectOf(doc);
+  const near = l => l.x >= r.x - g && l.x <= r.x + r.w + g && l.y >= r.y - g && l.y <= r.y + r.h + g;
+  const base = all.filter(l => !twinOf(l) && (set.length ? set.includes(l.id) : near(l)));
+  const ids = new Set(base.map(l => l.id));
+  return [...base, ...all.filter(l => ids.has(twinOf(l)))];
+}
 /** A tile's rectangle and centre. */
 const rectOf = doc => ({x: num(doc.x), y: num(doc.y), w: num(doc.width), h: num(doc.height)});
 const tileCenter = doc => { const r = rectOf(doc); return {x: r.x + r.w / 2, y: r.y + r.h / 2}; };
@@ -416,6 +437,12 @@ export async function applyAsk(msg) {
         detail: `On ${scene.name}. Approve to open the wall (the whole segment; split it first for a smaller hole).`, data: {scene: scene.id, wall: doc.id, actor: actor.name}});
       lines.push("The wall gives way: the Storyteller decides what the hole looks like (approval queue).");
     }
+    // A light source: the scene's lights go on or off
+    if ( out.lights !== undefined && tile ) {
+      const ls = lightsOf(doc);
+      snap.lights = ls.map(l => ({id: l.id, hidden: !!l.hidden}));
+      for ( const l of ls ) if ( !!l.hidden === out.lights ) await l.update({hidden: !out.lights});
+    }
     const update = {};
     if ( out.patch.ds && !waiting ) { if ( tile ) update[`flags.${MOD}.ds`] = out.patch.ds; else update.ds = dsNum(out.patch.ds); }
     for ( const [k, v] of Object.entries(out.patch.flags ?? {}) ) update[`flags.${MOD}.${k}`] = v;
@@ -440,7 +467,7 @@ export async function applyAsk(msg) {
     }
     // Examining a clue: what the character learns goes to that player and the Storyteller only
     let whisper = null;
-    if ( op.id === "examine" && o.clue ) whisper = await clueReport(o, out, author, actor);
+    if ( (op.id === "examine" || op.id === "look") && o.clue ) whisper = await clueReport(o, out, author, actor);
     if ( whisper ) lines.push("What was learned is in a whisper to the player and the Storyteller.");
     // A botch on forcing: one lethal level
     let hurt = 0;
@@ -549,6 +576,10 @@ export async function undoCard(msg) {
   if ( doc ) {
     const update = isTile(doc) || done.snap.ds === null ? {} : {ds: done.snap.ds};
     if ( isTile(doc) && typeof done.snap.hidden === "boolean" ) update.hidden = done.snap.hidden;
+    for ( const s0 of done.snap.lights ?? [] ) {
+      const l = doc.parent?.lights?.get?.(s0.id);
+      if ( l && !!l.hidden !== s0.hidden ) await l.update({hidden: s0.hidden});
+    }
     const now = doc.flags?.[MOD] ?? {};
     for ( const k of Object.keys(now) ) if ( !(k in done.snap.flags) ) Object.assign(update, unsetKey(`flags.${MOD}.${k}`));
     for ( const [k, v] of Object.entries(done.snap.flags) ) update[`flags.${MOD}.${k}`] = v;
@@ -801,6 +832,7 @@ export function tileConfigHtml(doc) {
   const st = R.describeContainer(doc?.flags?.[MOD] ?? {}).ds;
   const t = R.cleanTrap(doc?.flags?.[MOD] ?? {});
   const c = R.cleanClue(doc?.flags?.[MOD] ?? {});
+  const l = R.cleanLight(doc?.flags?.[MOD] ?? {});
   return `<fieldset class="wix-config wix-tile"><legend>WoDX</legend>
     <h4 class="wix-sub">Container</h4>
     <p class="hint">A chest, cabinet, strongbox or safe that characters can open, pick, force and take things from. Hide the tile to keep it from players until found.</p>
@@ -832,6 +864,12 @@ export function tileConfigHtml(doc) {
     ${field("With 1 success", `<textarea name="${p}.text1" rows="2">${esc(c.text1)}</textarea>`)}
     ${field("With 2 successes", `<textarea name="${p}.text2" rows="2">${esc(c.text2)}</textarea>`)}
     ${field("With 3 or more", `<textarea name="${p}.text3" rows="2">${esc(c.text3)}</textarea>`, "Leave the last three empty and looking at it needs no roll.")}
+    <h4 class="wix-sub">Light source</h4>
+    <p class="hint">A torch, candles, a lantern, a lamp or a light switch that characters can light and put out. It works the scene's own lights: the ones named here, or else every light on the tile or within a square of it.</p>
+    ${field("Light source", `<input type="checkbox" name="${p}.light"${l.light ? " checked" : ""}>`, "A container, trap or clue on the same tile wins.")}
+    ${field("Kind of light", `<select name="${p}.lightKind" data-fixed>${opt(R.LIGHTS, l.lightKind)}</select>`)}
+    ${field("Lights it works", `<input type="text" name="${p}.lightIds" value="${esc(l.lightIds)}" placeholder="Light ids, or blank for those nearby">`, "Copy a light's id from its config window's title bar.")}
+    ${field("Broken", `<input type="checkbox" name="${p}.broken"${l.broken ? " checked" : ""}>`, "Untick to mend a broken one.")}
   </fieldset>`;
 }
 function onRenderTileConfig(app, html) {
@@ -855,6 +893,7 @@ function onPreUpdateTile(doc, changes) {
   if ( "dice" in f && (f.dice === "" || f.dice === null) ) f.dice = null;
   if ( f.damageType === "" ) f.damageType = null;
   for ( const k of ["text0", "text1", "text2", "text3"] ) if ( typeof f[k] === "string" ) f[k] = f[k].slice(0, 4000);
+  if ( "lightIds" in f ) f.lightIds = R.cleanLight(f).lightIds;
   // Arming a trap again by hand clears what it did last time
   if ( f.armed === true && doc.flags?.[MOD]?.sprung ) { f.sprung = false; f.holding = null; }
 }
@@ -901,7 +940,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
@@ -928,7 +967,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !tok?.actor || !col || !tok.document.isOwner ) return;
   const b = document.createElement("div");
   b.className = "control-icon wix-hud";
-  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps and clues within reach, and searching";
+  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues and lights within reach, and searching";
   b.innerHTML = '<i class="fa-solid fa-door-open"></i>';
   b.addEventListener("click", () => openInteract(tok).catch(e => console.error(`${MOD} |`, e)));
   col.appendChild(b);

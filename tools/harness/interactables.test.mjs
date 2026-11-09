@@ -358,12 +358,15 @@ test("traps: a search finds those its successes reach; getting clear takes dice 
 test("clues: the Storyteller's text in four parts; more successes show more; a plain one needs no roll", () => {
   const o = R.describeClue({clue: true, clueKind: "document", title: "A letter to the bishop", text0: "Sealed in red wax.", text1: "The hand is shaky.", text3: "It names the miller."});
   assert.equal(R.nameOf(o), "A letter to the bishop");
-  const [op] = R.optionsFor(o, ch({intelligence: 3, abilities: {investigation: 2}}));
-  assert.equal(op.id, "examine"); assert.equal(op.label, "Read it");
+  const [look, op] = R.optionsFor(o, ch({intelligence: 3, abilities: {investigation: 2}}));
+  assert.equal(look.id, "look"); assert.equal(look.roll, null);
+  assert.equal(op.id, "examine"); assert.equal(op.label, "Read it closely");
+  const untrained = R.optionsFor(o, ch({intelligence: 3, abilities: {}}));
+  assert.deepEqual(ids(untrained), ["look", "examineNote"]); assert.equal(untrained[1].disabled, true);
   assert.equal(op.roll.attrLabel, "Intelligence"); assert.equal(op.roll.dice, 5); assert.equal(op.roll.diff, 6);
-  const mark = R.optionsFor(R.describeClue({clueKind: "mark", text0: "x", text1: "y"}), ch({abilities: {}}))[0];
-  assert.equal(mark.roll.attrLabel, "Perception"); assert.equal(mark.roll.abilityLabel, "Investigation"); assert.equal(mark.roll.dice, 3);
-  assert.equal(R.optionsFor(R.describeClue({text0: "Only this."}), ch())[0].roll, null);
+  const mark = R.optionsFor(R.describeClue({clueKind: "mark", text0: "x", text1: "y"}), ch({abilities: {investigation: 1}}))[1];
+  assert.equal(mark.roll.attrLabel, "Perception"); assert.equal(mark.roll.abilityLabel, "Investigation"); assert.equal(mark.roll.dice, 4);
+  assert.deepEqual(R.optionsFor(R.describeClue({text0: "Only this."}), ch()).map(x => [x.id, x.label, x.roll]), [["look", "Read it", null]]);
   const two = R.resolve(o, op, [{successes: 2, botch: false}], {actorId: "pc1"});
   assert.equal(two.examine, 2); assert.equal(two.patch.flags.seen.pc1, 2);
   assert.deepEqual(R.clueTexts(o, 2), ["Sealed in red wax.", "The hand is shaky."]);
@@ -375,6 +378,22 @@ test("clues: the Storyteller's text in four parts; more successes show more; a p
   assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 2}).length, 0);
   assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 3}).length, 1);
   assert.deepEqual(R.cleanClue({clue: 1, clueKind: "rune", need: 9, title: "  T  "}), {clue: true, clueKind: "document", title: "T", need: 5, found: false, text0: "", text1: "", text2: "", text3: ""});
+});
+
+test("light sources: light or put out with no roll; a lantern can be broken; one tied to no light says so", () => {
+  const dark = R.describeLight({light: true, lightKind: "lantern"}, {on: false, count: 1});
+  assert.equal(R.nameOf(dark), "Lantern, dark");
+  assert.deepEqual(ids(R.optionsFor(dark, ch())), ["lightOn", "breakLight"]);
+  const on = R.resolve(dark, R.optionsFor(dark, ch())[0], []);
+  assert.equal(on.lights, true); assert.equal(on.noise, "silent");
+  const br = R.resolve(dark, R.optionsFor(dark, ch())[1], []);
+  assert.equal(br.lights, false); assert.equal(br.patch.flags.broken, true); assert.equal(br.noise, "loud");
+  const torch = R.describeLight({lightKind: "torch"}, {on: true, count: 2});
+  assert.deepEqual(ids(R.optionsFor(torch, ch())), ["lightOff"]);
+  assert.equal(R.optionsFor(R.describeLight({lightKind: "switch"}, {on: true, count: 1}), ch())[0].label, "Switch it off");
+  assert.equal(R.optionsFor(R.describeLight({}, {count: 0}), ch())[0].disabled, true);
+  assert.deepEqual(R.optionsFor(R.describeLight({broken: true}, {on: true, count: 1}), ch()), []);
+  assert.equal(R.cleanLight({light: 1, lightIds: "abc123, x y;<bad>"}).lightIds, "abc123, x, y");
 });
 
 /* ---------------- the runtime, on a stand-in for Foundry ---------------- */
@@ -402,7 +421,7 @@ const gm = {id: "gm", isGM: true, active: true}, player = {id: "pl", isGM: false
 users.set("gm", gm); users.set("pl", player);
 Object.defineProperty(users, "activeGM", {get: () => gm});
 let me = gm;
-const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll(), tokens: new Coll()};
+const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll(), tokens: new Coll(), lights: new Coll()};
 const uuids = new Map();
 const damage = [];
 
@@ -522,7 +541,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -850,8 +869,10 @@ test("runtime: examining a clue whispers what the successes reach to the player 
   try {
     assert.ok(api.interactablesFor(tokPc).some(x => x.doc.id === "clue1"));
     assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "clue2"), "a hidden clue waits for a search");
-    faces = [9, 9, 2, 2, 2];        // Intelligence 2, no Investigation: two dice, two successes
+    pc.system.abilities.investigation = {value: 1, type: "knowledge", isvisible: true};
+    faces = [9, 9, 2];               // Intelligence 2 + Investigation 1: two successes
     const msg = await api.attempt(tokPc, "clue1", "examine", {fd: {}});
+    delete pc.system.abilities.investigation;
     const d = msg.flags[MOD].done;
     assert.equal(d.result, "done");
     const w = game.messages.get(d.whisper);
@@ -889,4 +910,40 @@ test("runtime: the WoDX part of the tile config keeps the clue's text", () => {
   assert.match(html, /value="trail" selected/);
   assert.match(html, /name="flags.wodx-interactables.need" value="3"/);
   assert.match(html, />Two people &lt;and&gt; a dog<\/textarea>/);
+});
+
+/* ---------------- light sources ---------------- */
+
+function light(id, x, y, hidden, flags = {}) {
+  const doc = {id, x, y, hidden, flags, parent: scene, async update(d) { for ( const [k, v] of Object.entries(d) ) setPath(doc, k, v); return doc; }};
+  scene.lights.set(id, doc);
+  return doc;
+}
+const lamp1 = light("light1", 760, 220, true);
+const lampTwin = light("light1p", 760, 220, true, {"wodx-otherworlds": {twinOf: "light1", layer: "penumbra"}});
+const farLight = light("light9", 2000, 2000, true);
+const lantern = tile("lamp1", 700, 200, {light: true, lightKind: "lantern"});
+canvas.tiles.placeables.push(lantern);
+
+test("runtime: a lantern works the lights on or beside it and their Otherworlds copies; Undo puts them back", async () => {
+  assert.deepEqual(api.lightsOf(lantern.document).map(l => l.id), ["light1", "light1p"]);
+  tokPc.document.x = 700; tokPc.document.y = 300;
+  me = player;
+  try {
+    assert.equal(R.nameOf(api.describeTile(lantern.document)), "Lantern, dark");
+    const on = await api.attempt(tokPc, "lamp1", "lightOn");
+    assert.equal(on.flags[MOD].done.result, "done");
+    assert.equal(lamp1.hidden, false); assert.equal(lampTwin.hidden, false); assert.equal(farLight.hidden, true);
+    assert.equal(R.nameOf(api.describeTile(lantern.document)), "Lantern, lit");
+    const br = await api.attempt(tokPc, "lamp1", "breakLight");
+    assert.equal(lamp1.hidden, true); assert.equal(lantern.document.flags[MOD].broken, true);
+    me = gm;
+    await api.undoCard(br);
+    assert.equal(lamp1.hidden, false); assert.equal(lantern.document.flags[MOD].broken, undefined);
+    await api.undoCard(on);
+    assert.equal(lamp1.hidden, true); assert.equal(lampTwin.hidden, true);
+  } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; }
+  lantern.document.flags[MOD].lightIds = "light9";
+  assert.deepEqual(api.lightsOf(lantern.document).map(l => l.id), ["light9"], "named lights win over nearby ones");
+  delete lantern.document.flags[MOD].lightIds;
 });

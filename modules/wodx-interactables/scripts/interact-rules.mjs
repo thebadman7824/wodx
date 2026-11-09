@@ -107,6 +107,18 @@ export const CLUES = {
   object: {label: "Something out of place", attr: "perception", verb: "Examine"}
 };
 export const CLUE_TIERS = 3;
+
+/**
+ * Light sources on tiles, each tied to one or more of the scene's own lights. Lighting or putting one out takes a
+ * turn and no roll; a lantern, lamp or electric light can be broken (loud, and it stays dark).
+ */
+export const LIGHTS = {
+  torch: {label: "Torch or brazier", on: "Light it", off: "Put it out", breaks: false},
+  candle: {label: "Candles", on: "Light them", off: "Put them out", breaks: false},
+  lantern: {label: "Lantern", on: "Light it", off: "Put it out", breaks: true},
+  lamp: {label: "Oil or gas lamp", on: "Light it", off: "Turn it down", breaks: true},
+  switch: {label: "Electric light switch", on: "Switch it on", off: "Switch it off", breaks: true}
+};
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
 export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
@@ -249,6 +261,18 @@ export function describeClue(f = {}) {
     electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
+/**
+ * A light source on a tile. f: the tile's flags.wodx-interactables, with light: true. on: whether its lights are lit now
+ * (read from the scene's lights by the runtime); count: how many lights it is tied to.
+ */
+export function describeLight(f = {}, {on = false, count = 0} = {}) {
+  const kind = LIGHTS[f.lightKind] ? f.lightKind : "torch";
+  return {
+    light: true, clue: false, trap: false, container: false, door: false, secret: false, ds: "closed", kind,
+    title: String(f.title ?? "").trim().slice(0, 80), on: !!on && !f.broken, count: Number(count) || 0, broken: !!f.broken,
+    electronic: "none", lock: "none", items: [], progress: {}, tries: {}
+  };
+}
 /** The texts a character has learned from a clue, by their best successes (a botch or none: only the first). */
 export function clueTexts(o, successes = 0) {
   const n = Math.max(0, Math.min(CLUE_TIERS, Number(successes) || 0));
@@ -263,6 +287,7 @@ export function parseItems(text) {
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
   if ( o.clue ) return o.title || CLUES[o.kind].label;
+  if ( o.light ) return `${o.title || LIGHTS[o.kind].label}${o.broken ? ", broken" : o.on ? ", lit" : ", dark"}`;
   if ( o.trap ) {
     const T = TRAPS[o.kind], g = TRAP_GRADES[o.grade].label.toLowerCase();
     if ( o.holding ) return `${T.label}, holding someone`;
@@ -295,6 +320,7 @@ export function optionsFor(o, ch = {}) {
   if ( o.container ) return containerOptions(o, ch);
   if ( o.trap ) return trapOptions(o, ch);
   if ( o.clue ) return clueOptions(o, ch);
+  if ( o.light ) return lightOptions(o);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -412,16 +438,30 @@ function trapOptions(o, ch) {
   return out;
 }
 
+/** A light source: light it or put it out; break it if it can break. */
+function lightOptions(o) {
+  const L = LIGHTS[o.kind], out = [];
+  if ( o.broken ) return out;
+  if ( !o.count ) return [{id: "noLight", label: "Not tied to any light", roll: null, disabled: true, note: "The Storyteller has not tied this to a light on the scene."}];
+  out.push(o.on ? {id: "lightOff", label: L.off, roll: null, seconds: TURN, noise: {success: "silent"}}
+    : {id: "lightOn", label: L.on, roll: null, seconds: TURN, noise: {success: "silent"}});
+  if ( L.breaks ) out.push({id: "breakLight", label: "Break it", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud, and it stays dark until the Storyteller mends it."});
+  return out;
+}
+
 /** A clue: look at it (no roll, when there is nothing deeper to find), or examine it for what successes add. */
 function clueOptions(o, ch) {
   const C = CLUES[o.kind];
   const deeper = o.texts.slice(1).some(Boolean);
   const best = Number(o.seen?.[ch.actorId ?? ""]);
   const label = `${C.verb} it`;
-  if ( !deeper ) return [{id: "examine", label, roll: null, seconds: TURN, noise: {success: "silent"}}];
+  const look = {id: "look", label: deeper ? "Look at it" : label, roll: null, seconds: TURN, noise: {success: "silent"}};
+  if ( !deeper ) return [look];
   const sk = bestOf(ch.abilities ?? {}, ["investigation"]);
   const t = Number(o.tries?.[`${ch.actorId ?? ""}:examine`]) || 0;
-  return [{id: "examine", label, roll: {attr: C.attr, attrLabel: cap(C.attr), ability: sk.key, abilityLabel: cap(sk.key),
+  // Investigation is a Knowledge, and an untrained Knowledge is not rolled (as in WoDX Actions): with none, only a look
+  if ( !(sk.value > 0) ) return [look, {id: "examineNote", label: `${label} closely`, roll: null, disabled: true, note: "Needs Investigation: without it there is only a look."}];
+  return [look, {id: "examine", label: `${label} closely`, roll: {attr: C.attr, attrLabel: cap(C.attr), ability: sk.key, abilityLabel: cap(sk.key),
     dice: (Number(ch[C.attr]) || 0) + sk.value, diff: Math.min(10, 6 + t), need: null, retries: t}, seconds: MINUTE,
     noise: {success: "silent", fail: "silent", botch: "silent"},
     note: `More successes show more.${best > 0 ? ` Seen before with ${best} success${best === 1 ? "" : "es"}: a new roll only adds.` : ""}${t ? ` Tried before: +${t} difficulty.` : ""}`}];
@@ -515,7 +555,10 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "knock": return done("knocks.");
       case "take": flags.taken = true; return done("takes what is inside.");
       case "trigger": Object.assign(flags, {armed: false, sprung: true}); return done("sets it off from a safe distance.");
-      case "examine": return done("looks it over.");
+      case "look": return done("looks it over.");
+      case "lightOn": out.lights = true; return done(o.kind === "switch" ? "switches the light on." : "lights it.");
+      case "lightOff": out.lights = false; return done(o.kind === "switch" ? "switches the light off." : "puts it out.");
+      case "breakLight": out.lights = false; flags.broken = true; return done("breaks it, and it goes dark.");
       case "cutFree": flags.holding = null; return done("cuts the snare and frees whoever it held.");
       case "smash": flags.broken = true; return done("breaks the pane.", {ds: "open"});
       case "force": flags.progress = {...o.progress, force: 0}; return done("forces it open.", {ds: "open"});
@@ -687,4 +730,10 @@ export function cleanClue(s = {}) {
   const t = k => String(s[k] ?? "").slice(0, 4000);
   return {clue: !!s.clue, clueKind: CLUES[s.clueKind] ? s.clueKind : "document", title: String(s.title ?? "").slice(0, 80).trim(),
     need: Math.max(1, Math.min(5, Math.round(Number(s.need) || 1))), found: !!s.found, text0: t("text0"), text1: t("text1"), text2: t("text2"), text3: t("text3")};
+}
+
+/** Clean a tile's light settings from the config form. lightIds: the ids of the scene lights it works, comma separated. */
+export function cleanLight(s = {}) {
+  const ids = String(s.lightIds ?? "").split(/[\s,;]+/).map(x => x.trim()).filter(x => /^[A-Za-z0-9]{1,32}$/.test(x)).slice(0, 20);
+  return {light: !!s.light, lightKind: LIGHTS[s.lightKind] ? s.lightKind : "torch", lightIds: ids.join(", "), broken: !!s.broken};
 }
