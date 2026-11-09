@@ -52,6 +52,7 @@ export async function run() {
   // World time for a date, through the WoDX calendar's own engine
   const {getEngine} = await import(`/modules/${M}/scripts/calendar.mjs`);
   const at = (y, m, d) => getEngine().dateToTime({year: y, month: m, day: d, hour: 21});
+  const keyOf = t => { const d = getEngine().timeToDate(t); return d.year * 10000 + d.month * 100 + d.day; };
   const cards = () => game.messages.filter(m => !msgsBefore.has(m.id) && /wodx-events/.test(m.content ?? ""));
   try {
     const mod = game.modules.get(M);
@@ -107,8 +108,12 @@ export async function run() {
     await api?.hold?.(saved.held);
     await sleep(300);
     await api?.eras?.refreshRulesJournal();
-    ok("9. put back", game.time.worldTime === t0 && !!api?.isHeld?.() === saved.held
-      && JSON.stringify(game.settings.get(M, "eventsFired")) === JSON.stringify(saved.fired), {removedCards: mine.length});
+    // Releasing the hold catches the events up to the clock, so the list after is what the date gives
+    const after = game.settings.get(M, "eventsFired");
+    const same = (a, b) => JSON.stringify([...(a ?? [])].sort()) === JSON.stringify([...(b ?? [])].sort());
+    const byDate = api?.events?.list().filter(e => e.live && e.key <= keyOf(t0)).map(e => e.id);
+    ok("9. put back", game.time.worldTime === t0 && !!api?.isHeld?.() === saved.held && (same(after, saved.fired) || same(after, byDate)),
+      {removedCards: mine.length, time: game.time.worldTime === t0, held: !!api?.isHeld?.(), saved: saved.fired, after, byDate});
   }
   try {
     const st = api?.migrations?.status() ?? [];

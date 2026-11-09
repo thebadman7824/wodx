@@ -32,12 +32,16 @@ export async function run() {
   const msgsBefore = new Set(game.messages.map(m => m.id));
   await chron().hold(true);
   const made = [];
-  let folder, plan, vamp, mortal;
+  let folder, plan, vamp, mortal, startRules = null;
   try {
     await step("1. House rules: the five Passing the years switches, with B83's defaults", async () => {
+      // The world may have its own choices: the gate runs on B83's defaults and step 7 puts the world's back
       const want = {yearsThickBlood: false, yearsMortalDecline: true, yearsMoralityDrift: false, yearsExperience: true, yearsConvertAbilities: true};
+      startRules = Object.fromEntries(Object.keys(want).map(k => [k, game.settings.get(CH, `rule.${k}`)]));
+      const defaults = Object.fromEntries(Object.keys(want).map(k => [k, game.settings.settings.get(`${CH}.rule.${k}`)?.default]));
+      for ( const [k, v] of Object.entries(want) ) if ( startRules[k] !== v ) await game.settings.set(CH, `rule.${k}`, v);
       const seen = Object.fromEntries(Object.keys(want).map(k => [k, game.settings.get(CH, `rule.${k}`)]));
-      ok("1. House rules: the five Passing the years switches, with B83's defaults", JSON.stringify(seen) === JSON.stringify(want), {seen});
+      ok("1. House rules: the five Passing the years switches, with B83's defaults", JSON.stringify(defaults) === JSON.stringify(want) && JSON.stringify(seen) === JSON.stringify(want), {world: startRules, defaults});
     });
 
     await step("2. Test characters made, in the Dark Ages", async () => {
@@ -113,6 +117,7 @@ export async function run() {
       if ( snapFolder && !game.actors.some(a => a.folder?.id === snapFolder.id) ) await snapFolder.delete();
       if ( R.journal && R.page ) await game.journal.get(R.journal)?.pages.get(R.page)?.delete();
       if ( game.settings.get(CH, "eraLock") !== startLock ) await game.settings.set(CH, "eraLock", startLock);
+      for ( const [k, v] of Object.entries(startRules ?? {}) ) if ( game.settings.get(CH, `rule.${k}`) !== v ) await game.settings.set(CH, `rule.${k}`, v);
       await new Promise(r => setTimeout(r, 500));
       const mine = game.messages.filter(m => !msgsBefore.has(m.id)).map(m => m.id);
       if ( mine.length ) await ChatMessage.deleteDocuments(mine);
