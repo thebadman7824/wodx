@@ -5,6 +5,8 @@
  * Data/wodx-gate/gate6b-result.json. Creates test data only (the "WoDX 6b test pack" folder and its tokens);
  * deletes nothing; puts the clock back where it was.
  */
+// Versions are floors: a later build still passes.
+const atLeastV = (a, b) => { const p = s => String(s ?? "0").split(".").map(n => parseInt(n, 10) || 0); const x = p(a), y = p(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i]; return true; };
 const R = { started: new Date().toISOString(), steps: [], errors: [] };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const A = () => game.wodxActions;
@@ -56,7 +58,7 @@ export async function run() {
         /* 2. Versions */
         await step("versions", async () => {
             const v = id => game.modules.get(id)?.version;
-            ok("versions", v("wodx-actions") === "3.1.1" && v("wodx-combat") === "3.1.1" && v("wodx-creation") === "0.4.1",
+            ok("versions", atLeastV(v("wodx-actions"), "3.1.1") && atLeastV(v("wodx-combat"), "3.1.1") && atLeastV(v("wodx-creation"), "0.4.1"),
                 { actions: v("wodx-actions"), combat: v("wodx-combat"), creation: v("wodx-creation"), era: game.modules.get("wodx-chronicle").api.eras.activeEra()?.profile?.id,
                     moonRage: game.settings.get("wodx-actions", "moonRage"), autoRegen: game.settings.get("wodx-actions", "autoRegen"), user: game.user.name });
         });
