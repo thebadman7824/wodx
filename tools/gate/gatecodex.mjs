@@ -50,9 +50,10 @@ export async function run() {
 
     const sheet = game.journal.get(source.id).sheet;
     await sheet.render({force: true}); await sleep(800);
+    // Foundry 14's _getHeaderControls gives the built-in list; the hooks add to the frame's copy, so run them on one
     let controls = [];
-    try { controls = sheet._getHeaderControls?.() ?? []; } catch (e) { R.notes.push(`header controls: ${e.message}`); }
-    const inMenu = controls.some(x => x.action === "wodxRevealCodex") || !!sheet.element?.querySelector?.("[data-action=wodxRevealCodex]");
+    try { controls = [...(sheet._getHeaderControls?.() ?? [])]; Hooks.callAll("getHeaderControlsJournalEntrySheet", sheet, controls); } catch (e) { R.notes.push(`header controls: ${e.message}`); }
+    const inMenu = controls.some(x => x.action === "wodxRevealCodex") && typeof sheet.options?.actions?.wodxRevealCodex === "function";
     ok("5. header", inMenu, {actions: controls.map(x => x.action)});
     await sheet.close();
   } catch (err) {
