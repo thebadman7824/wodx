@@ -1,0 +1,8 @@
+# Live server Caddyfile with a one-day browser cache for map, token, sound and font files.
+# Script and style files keep Foundry's own headers, so module updates reach players at once.
+wodx.online {
+	encode zstd gzip
+	@media path_regexp media (?i)\.(webp|png|jpe?g|gif|svg|webm|mp4|m4v|ogg|oga|mp3|m4a|wav|flac|woff2?|ttf|otf)$
+	header @media >Cache-Control "public, max-age=86400"
+	reverse_proxy localhost:30000
+}
