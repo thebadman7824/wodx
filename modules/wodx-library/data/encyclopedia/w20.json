@@ -1,0 +1,2000 @@
+[
+ {
+  "id": "garou",
+  "title": "The Garou",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Werewolves: wolf, human and spirit in one body, sworn to defend Gaia.",
+  "claims": [
+   {
+    "text": "A werewolf is a blend of wolf, human and spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 73,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "The Garou were set to be the protectors of the world, while other shapeshifters got other tasks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The First Change is a terrible shock, and comes later in life for homid Garou than for lupus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 41,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "breeds",
+   "auspices",
+   "tribes",
+   "lupines"
+  ]
+ },
+ {
+  "id": "impergium",
+  "title": "The Impergium",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An ancient age when werewolves culled humanity and taught it to fear the wild.",
+  "claims": [
+   {
+    "text": "In the Impergium humans came to dread the wilderness, and wolves above all; the fear lingers today.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Humans banded into settlements for safety at night, and those grew into farming villages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The Red Talons hold that ending the Impergium was the one mistake.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "war-of-rage",
+   "delirium",
+   "red-talons"
+  ]
+ },
+ {
+  "id": "war-of-rage",
+  "title": "The War of Rage",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ancient war in which the Garou turned on the other shapeshifters.",
+  "claims": [
+   {
+    "text": "Gaia gave the shapeshifting gift to many animals, each with its own task.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Few Fera still trust the Garou, and shapeshifters remember the War of Rage for a very long time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 397,
+      "pdf": 399
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera",
+   "impergium"
+  ]
+ },
+ {
+  "id": "delirium",
+  "title": "The Delirium",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The madness and lost memory that strike humans who see a werewolf in war form.",
+  "claims": [
+   {
+    "text": "Humans who look on a Garou in Crinos form suffer madness and memory loss.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Some part of the human collective unconscious remembers thousands of years of being preyed on by werewolves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 262,
+      "pdf": 264
+     }
+    ]
+   },
+   {
+    "text": "Kinfolk are not prone to the Delirium.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kinfolk",
+   "five-forms",
+   "impergium"
+  ]
+ },
+ {
+  "id": "litany",
+  "title": "The Litany",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The code of law every Garou must keep, whatever tribe.",
+  "claims": [
+   {
+    "text": "Traditions differ by tribe, but all Garou are held to the Litany.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "The full Litany reads like a long poem as well as a body of law, and reciting it whole takes hours.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "No Garou disputes the tenet against violating a caern, since losing one to ruin or taint kills part of the Earth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 52,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caern",
+   "sept"
+  ]
+ },
+ {
+  "id": "caern",
+  "title": "Caerns",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sacred places where the Garou reach the spirit world.",
+  "claims": [
+   {
+    "text": "A caern is a sacred meeting place for contact with the spirit world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "The Gauntlet is weakest around caerns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Moots meet at caerns, and a Moon Bridge links one caern to another.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     },
+     {
+      "book": "w20",
+      "page": 70,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sept",
+   "gauntlet",
+   "litany"
+  ]
+ },
+ {
+  "id": "sept",
+  "title": "Septs and Moots",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Garou who hold and guard a caern, and their gatherings.",
+  "claims": [
+   {
+    "text": "Moots are gatherings of a sept or a tribe, held at a caern.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 70,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "The bawn is the guarded border land that rings a caern.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caern",
+   "pack"
+  ]
+ },
+ {
+  "id": "pack",
+  "title": "Packs",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A small band of Garou bound by friendship and a shared task.",
+  "claims": [
+   {
+    "text": "Packs run from two to ten werewolves, ideally with each auspice present.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Garou from rival tribes can grow closer than blood kin after running together long enough.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "A totem spirit is the binding force that holds a pack together, and the pack chooses the totem that suits it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 371,
+      "pdf": 373
+     }
+    ]
+   }
+  ],
+  "see": [
+   "totems",
+   "sept",
+   "auspices"
+  ]
+ },
+ {
+  "id": "breeds",
+  "title": "Breeds",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A werewolf's breed comes from the mother's natural form.",
+  "claims": [
+   {
+    "text": "Each Garou's breed follows the natural form of the mother.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 73,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Homids may buy any Ability during character creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Homids start with 1 Gnosis; metis start with 3.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Metis are the sterile offspring of two Garou, usually scorned, and each has at least one deformity chosen at creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     },
+     {
+      "book": "w20",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Abstract thought comes newer to lupus than to homids.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "garou",
+   "auspices",
+   "metis"
+  ]
+ },
+ {
+  "id": "metis",
+  "title": "Metis",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The child of two werewolves, born deformed into the bottom of Garou society.",
+  "claims": [
+   {
+    "text": "Metis come from two Garou parents, a union that breaks the Litany.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Every metis has at least one deformity, chosen at character creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Mule is slang for metis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 70,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "breeds",
+   "litany"
+  ]
+ },
+ {
+  "id": "auspices",
+  "title": "Auspices",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The moon phase at birth, which shapes a werewolf's role.",
+  "claims": [
+   {
+    "text": "The auspice is the phase of the moon at a Garou's birth, thought to set personality and leanings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Ragabash, the New Moon trickster, starts with 1 Rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 77,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "Theurge, the Crescent Moon seer and mystic, starts with 2 Rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 77,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "Philodox, the Half Moon judge, starts with 3 Rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 78,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Galliard, the passionate counterpart to the stoic Philodox, starts with 4 Rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 78,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Ahroun, the Full Moon warrior, starts with 5 Rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 79,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "breeds",
+   "rage",
+   "renown"
+  ]
+ },
+ {
+  "id": "black-furies",
+  "title": "Black Furies",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Black Furies are daughters of Luna as Artemis, tracing their origins to Greece and Asia Minor as defenders of the Wyld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 80,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "A Black Furies character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 81,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Pegasus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 81,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "bone-gnawers",
+  "title": "Bone Gnawers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Bone Gnawers, Children of Rat, hunt territory and breed with Kin that no other tribe wants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "A Bone Gnawers character starts with 4 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 83,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "children-of-gaia",
+  "title": "Children of Gaia",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Children of Gaia are Gaia's warriors who want peace above all, and work hardest for cooperation between the tribes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 84,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "A Children of Gaia character starts with 4 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 85,
+      "pdf": 87
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "fianna",
+  "title": "Fianna",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Fianna, Tribe of Stag, delight in the pleasures of the flesh, song and battle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 86,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "A Fianna character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 87,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "They have no Background restrictions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 87,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "get-of-fenris",
+  "title": "Get of Fenris",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Get of Fenris, or Fenrir, are the most warlike tribe and prize a glorious death over peaceful old age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 88,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "A Get of Fenris character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 89,
+      "pdf": 91
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "glass-walkers",
+  "title": "Glass Walkers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Glass Walkers blend technology and shamanism, prefer the city to the wild, and defend urban places.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 90,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "A Glass Walkers character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 91,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "red-talons",
+  "title": "Red Talons",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Red Talons hold that humanity is a pestilence and the Impergium should never have ended.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "A Red Talons character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "shadow-lords",
+  "title": "Shadow Lords",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Shadow Lords keep a rigid internal hierarchy, and other tribes distrust their manipulative ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 94,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "A Shadow Lords character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "silent-striders",
+  "title": "Silent Striders",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Silent Striders wander between caerns, carrying news and scouting for the Garou Nation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "A Silent Striders character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 97,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "silver-fangs",
+  "title": "Silver Fangs",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Silver Fangs, tribe of Falcon, claim to lead the Garou Nation by a bloodline traced to the Progenitor Wolf.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 98,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "A Silver Fangs character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 99,
+      "pdf": 101
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "stargazers",
+  "title": "Stargazers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Stargazers are the smallest tribe, following meditation, philosophy and lucid dreaming to master the self.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 100,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "A Stargazers character starts with 4 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 101,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "uktena",
+  "title": "Uktena",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Uktena were the wise Older Brother of the three Pure Ones and gathered mystical lore, settling across the Americas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 102,
+      "pdf": 104
+     }
+    ]
+   },
+   {
+    "text": "A Uktena character starts with 3 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 103,
+      "pdf": 105
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "wendigo",
+  "title": "Wendigo",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
+  "claims": [
+   {
+    "text": "The Wendigo have long memories of the Europeans who came to the Americas and the tribes who came with them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 104,
+      "pdf": 106
+     }
+    ]
+   },
+   {
+    "text": "A Wendigo character starts with 4 Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 105,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tribes",
+   "garou"
+  ]
+ },
+ {
+  "id": "tribes",
+  "title": "The Thirteen Tribes",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The tribes of the Garou Nation, the largest social unit among werewolves.",
+  "claims": [
+   {
+    "text": "A tribe is the largest social unit of Garou, often bound by bloodline, similar totems and ways of life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 70,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Each tribe sets a starting Willpower and a list of beginning Gifts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 81,
+      "pdf": 83
+     },
+     {
+      "book": "w20",
+      "page": 83,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-furies",
+   "bone-gnawers",
+   "children-of-gaia",
+   "fianna",
+   "get-of-fenris",
+   "glass-walkers",
+   "red-talons",
+   "shadow-lords",
+   "silent-striders",
+   "silver-fangs",
+   "stargazers",
+   "uktena",
+   "wendigo"
+  ]
+ },
+ {
+  "id": "lost-tribes",
+  "title": "The Lost Tribes",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Three tribes the Garou Nation no longer counts: the Bunyip, the Croatan and the White Howlers.",
+  "claims": [
+   {
+    "text": "The Bunyip guarded Australia, a land with no wolves, and some doubted they were werewolves at all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 388,
+      "pdf": 390
+     }
+    ]
+   },
+   {
+    "text": "The Croatan, Middle Brother of the Pure Ones, gave their lives to banish a great evil.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 390,
+      "pdf": 392
+     }
+    ]
+   },
+   {
+    "text": "The White Howlers were feared warriors whose corruption made them the Black Spiral Dancers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 392,
+      "pdf": 394
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-spiral-dancers",
+   "uktena",
+   "wendigo"
+  ]
+ },
+ {
+  "id": "black-spiral-dancers",
+  "title": "Black Spiral Dancers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The one werewolf tribe wholly given over to the Wyrm.",
+  "claims": [
+   {
+    "text": "The Black Spiral Dancers alone among werewolf tribes have turned entirely to the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 424,
+      "pdf": 426
+     }
+    ]
+   },
+   {
+    "text": "A petitioner must betray former allies, forsake former beliefs and descend into madness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 425,
+      "pdf": 427
+     }
+    ]
+   },
+   {
+    "text": "They carry a wide range of mental disorders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 425,
+      "pdf": 427
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wyrm",
+   "lost-tribes",
+   "fomori"
+  ]
+ },
+ {
+  "id": "fomori",
+  "title": "Fomori",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Humans corrupted by the Wyrm in mind, body and spirit.",
+  "claims": [
+   {
+    "text": "A fomor is usually made by a Bane possessing the whole body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 428,
+      "pdf": 430
+     }
+    ]
+   },
+   {
+    "text": "Each fomor gets supernatural power from the Wyrm and is always marked or deformed in some way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 428,
+      "pdf": 430
+     }
+    ]
+   }
+  ],
+  "see": [
+   "banes",
+   "wyrm",
+   "pentex"
+  ]
+ },
+ {
+  "id": "pentex",
+  "title": "Pentex",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A multinational holding company, Wyrm-tainted, behind a web of corrupt firms.",
+  "claims": [
+   {
+    "text": "Pentex has lasted for decades and spreads its taint through a vast number of subsidiaries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 460,
+      "pdf": 462
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fomori",
+   "wyrm"
+  ]
+ },
+ {
+  "id": "triat",
+  "title": "The Triat",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Three cosmic forces: Wyld, Weaver and Wyrm.",
+  "claims": [
+   {
+    "text": "The Triat is the trinity of primal cosmic forces: Weaver, Wyld and Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 70,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "The Garou hold that the three shape and rule eternity while working against each other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 321,
+      "pdf": 323
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wyrm",
+   "gaia",
+   "umbra"
+  ]
+ },
+ {
+  "id": "wyrm",
+  "title": "The Wyrm",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The corrupting force of the Triat that the Garou war against.",
+  "claims": [
+   {
+    "text": "Banes are evil spirits that follow the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "The Apocalypse is the time of the last battle with the Wyrm, and many believe it is now.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Rage is Gaia's anger at the plunder of the world by the Weaver and the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 144,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "triat",
+   "banes",
+   "black-spiral-dancers"
+  ]
+ },
+ {
+  "id": "banes",
+  "title": "Banes",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Evil spirits in the Wyrm's service.",
+  "claims": [
+   {
+    "text": "There are many kinds of Banes, Scrags and Kali among them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wyrm",
+   "fomori"
+  ]
+ },
+ {
+  "id": "gaia",
+  "title": "Gaia",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Mother of the Garou, the living world.",
+  "claims": [
+   {
+    "text": "Gaia's form is ultimately unknowable, yet it surrounds the Garou as the living essence of creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 321,
+      "pdf": 323
+     }
+    ]
+   },
+   {
+    "text": "Celestines are the greatest spirits, the nearest the Garou have to gods, such as Luna and Helios.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "triat",
+   "auspices"
+  ]
+ },
+ {
+  "id": "umbra",
+  "title": "The Umbra",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The spirit world around and beyond the physical world.",
+  "claims": [
+   {
+    "text": "The Near Umbra is the spirit world around the Gaian Realm; the Deep Umbra lies outside the Membrane and grows more broken the farther one goes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     },
+     {
+      "book": "w20",
+      "page": 70,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "The Penumbra is the closest part of the Umbra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 306,
+      "pdf": 308
+     }
+    ]
+   },
+   {
+    "text": "Near Umbral Realms circle the Earth, separated from the physical world by a barrier.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 308,
+      "pdf": 310
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gauntlet",
+   "triat"
+  ]
+ },
+ {
+  "id": "gauntlet",
+  "title": "The Gauntlet",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The barrier between the physical world and the Umbra.",
+  "claims": [
+   {
+    "text": "The Gauntlet runs thickest where the Weaver's technology rules and thinnest at caerns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Gnosis is a Garou's link to the spirit world.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "caern",
+   "gnosis"
+  ]
+ },
+ {
+  "id": "rage",
+  "title": "Rage",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gaia's anger burning in every werewolf.",
+  "claims": [
+   {
+    "text": "Rage points are spent at the start of a turn, during declaration, and only in times of stress.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 144,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Rank raises frenzy difficulties: +1 at Rank 3, +2 at Ranks 4 and 5.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 144,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "auspices",
+   "gnosis",
+   "rank"
+  ]
+ },
+ {
+  "id": "gnosis",
+  "title": "Gnosis",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Garou's spiritual link to Gaia and the spirit world.",
+  "claims": [
+   {
+    "text": "Gnosis is Gaia's other gift to the Garou, linking them to the spirit world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Like Rage and Willpower, Gnosis has a permanent rating and a pool of points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rage",
+   "umbra",
+   "breeds"
+  ]
+ },
+ {
+  "id": "renown",
+  "title": "Renown",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How well a werewolf lives up to the role expected in Garou society.",
+  "claims": [
+   {
+    "text": "Renown measures how well a character fills the expected role, and so is closely tied to auspice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 142,
+      "pdf": 144
+     }
+    ]
+   },
+   {
+    "text": "Unlike experience, Renown reflects standing among the Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 142,
+      "pdf": 144
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rank",
+   "auspices"
+  ]
+ },
+ {
+  "id": "rank",
+  "title": "Rank",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The strict ladder of status among the Garou.",
+  "claims": [
+   {
+    "text": "Among the Garou, rank sets status and how much respect a character is owed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 143,
+      "pdf": 145
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renown",
+   "rage"
+  ]
+ },
+ {
+  "id": "five-forms",
+  "title": "The Five Forms",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Homid, Glabro, Crinos, Hispo and Lupus.",
+  "claims": [
+   {
+    "text": "Each step between forms takes one success, so human to wolf takes four.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 285,
+      "pdf": 287
+     }
+    ]
+   },
+   {
+    "text": "Shifting from Homid is difficulty 6; from Hispo it is difficulty 7.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 285,
+      "pdf": 287
+     }
+    ]
+   },
+   {
+    "text": "Spending a Rage point changes form at once with no roll, and any Garou can return to breed form instantly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 285,
+      "pdf": 287
+     }
+    ]
+   },
+   {
+    "text": "Crinos, the war form, adds Strength +4, Dexterity +1 and Stamina +3, and stands eight to ten feet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 286,
+      "pdf": 288
+     }
+    ]
+   },
+   {
+    "text": "Glabro, the near-human, adds Strength +2 and Stamina +2 with Manipulation -2 and Appearance -1.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 286,
+      "pdf": 288
+     }
+    ]
+   },
+   {
+    "text": "Hispo, the dire wolf, adds Strength +3, Dexterity +2 and Stamina +3.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 286,
+      "pdf": 288
+     }
+    ]
+   },
+   {
+    "text": "Lupus, the wolf, adds Strength +1, Dexterity +2 and Stamina +2.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 287,
+      "pdf": 289
+     }
+    ]
+   }
+  ],
+  "see": [
+   "delirium",
+   "garou"
+  ]
+ },
+ {
+  "id": "kinfolk",
+  "title": "Kinfolk",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Humans and wolves related to the Garou who are not werewolves.",
+  "claims": [
+   {
+    "text": "Kinfolk are human or wolf relatives of the Garou who do not suffer the Delirium.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Kinfolk are not only families but the Garou Nation's support, from guards to bankers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 377,
+      "pdf": 379
+     }
+    ]
+   }
+  ],
+  "see": [
+   "garou",
+   "delirium"
+  ]
+ },
+ {
+  "id": "totems",
+  "title": "Totems",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The spirits that bind packs together.",
+  "claims": [
+   {
+    "text": "A totem spirit holds a pack together; the pack picks it, though finding it can mean a quest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 371,
+      "pdf": 373
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pack",
+   "umbra"
+  ]
+ },
+ {
+  "id": "fera",
+  "title": "The Fera",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shapeshifters other than werewolves.",
+  "claims": [
+   {
+    "text": "Fera is the Garou word for other shapeshifters, most of whom are thought extinct.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 69,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Long ago the Fera stood with the Garou as allies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20",
+      "page": 397,
+      "pdf": 399
+     }
+    ]
+   }
+  ],
+  "see": [
+   "war-of-rage",
+   "garou"
+  ]
+ }
+]
