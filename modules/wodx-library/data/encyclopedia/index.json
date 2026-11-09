@@ -271,6 +271,12 @@
    "title": "Mexico City by Night",
    "short": "Mexico City by Night",
    "edition": "Revised"
+  },
+  {
+   "id": "mtbn",
+   "title": "Montreal by Night",
+   "short": "Montreal by Night",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -318,6 +324,7 @@
   "cotn.json",
   "cbn2.json",
   "labn.json",
-  "mcbn.json"
+  "mcbn.json",
+  "mtbn.json"
  ]
 }
