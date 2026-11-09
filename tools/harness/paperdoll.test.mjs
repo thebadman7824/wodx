@@ -371,3 +371,16 @@ test("grounds: every one draws, no paper grain lies over the figure, injured fac
   assert.ok(m && D.FACE.lum(m[1]) < 0.25, "the pallor of a dark face stays dark");
   assert.ok(!/d9d7cf/.test(dark));
 });
+test("lips: each face has its own, from a shape and the seed; a player may choose the shape", () => {
+  assert.ok(D.PARTS.lips.length >= 10 && D.FACE_ORDER.includes("lips"));
+  const a = MR.lipsOf({seed: "a", face: {lips: ""}}), b = MR.lipsOf({seed: "b", face: {lips: ""}});
+  assert.notDeepEqual(a, b);
+  assert.deepEqual(MR.lipsOf({seed: "a", face: {lips: ""}}), a);
+  assert.ok(MR.lipsOf({seed: "a", face: {lips: "full"}}).full > a.full && MR.lipsOf({seed: "a", face: {lips: "thin"}}).thin < a.thin);
+  const shapes = new Set(Array.from({length: 120}, (_, i) => D.randomLook(`l${i}`).face.lips));
+  assert.ok(shapes.size >= 10, String(shapes.size));
+  assert.equal(D.normalize({face: {lips: "<b>"}}).face.lips, "");
+  // the mouth's size follows the lips
+  const W = l => { const s = MR.mouthShape("happy02", {cx: 560, cy: 620, hw: 70}, l); return s.box.x1 - s.box.x0; };
+  assert.ok(W(MR.lipsOf({seed: "x", face: {lips: "wide"}})) > W(MR.lipsOf({seed: "x", face: {lips: "small"}})));
+});

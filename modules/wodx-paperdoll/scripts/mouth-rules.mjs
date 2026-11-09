@@ -33,7 +33,25 @@ export const EXPRESSIONS = {
   snarl: {label: "Snarl", smile: -4, open: 20, teeth: "both", w: 1.1, lift: 10, thin: 0.85},
   slack: {label: "Slack", smile: -3, open: 6, w: 0.82}
 };
-const BASE = {smile: 0, tilt: 0, open: 0, teeth: "", w: 1, full: 1, thin: 1, lift: 0};
+const BASE = {smile: 0, tilt: 0, open: 0, teeth: "", w: 1, full: 1, thin: 1, lift: 0, bow: 1};
+/**
+ * Lip shapes, the character's own, laid over the expression: w the width, thin the upper lip, full the lower,
+ * bow the depth of the dip in the upper lip, size the whole mouth.
+ */
+export const LIP_SHAPES = {
+  "": {label: "Even"}, thin: {label: "Thin", thin: 0.6, full: 0.65}, full: {label: "Full", thin: 1.3, full: 1.35},
+  wide: {label: "Wide", w: 1.2, thin: 0.9, full: 0.9}, small: {label: "Small", w: 0.76, size: 0.9, full: 1.1}, bowed: {label: "Bowed", bow: 1.9, thin: 1.15},
+  pouting: {label: "Full lower lip", thin: 0.8, full: 1.5}, heavy: {label: "Full upper lip", thin: 1.45, full: 0.9}, straight: {label: "Straight", bow: 0.15, thin: 0.85, full: 0.85},
+  broad: {label: "Wide and full", w: 1.16, thin: 1.25, full: 1.3}, narrow: {label: "Narrow and full", w: 0.82, thin: 1.2, full: 1.35}, firm: {label: "Firm", thin: 0.7, full: 0.95, bow: 0.6}
+};
+const h32 = str => { let h = 0x811c9dc5; for ( let i = 0; i < str.length; i++ ) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h >>> 0; };
+/** The character's lips: the chosen shape, nudged a little by the seed so no two mouths are quite alike. */
+export function lipsOf(look) {
+  const L = {w: 1, thin: 1, full: 1, bow: 1, size: 1, ...(LIP_SHAPES[look?.face?.lips] ?? {})};
+  let h = h32(`lips ${look?.seed ?? ""}`);
+  const j = amt => { h = Math.imul(h ^ (h >>> 15), 0x2c1b3c6d) >>> 0; return 1 + ((h % 2001) / 1000 - 1) * amt; };
+  return {w: L.w * j(0.09), thin: L.thin * j(0.14), full: L.full * j(0.14), bow: L.bow * j(0.3), size: L.size * j(0.05)};
+}
 export const expression = key => ({...BASE, ...(EXPRESSIONS[key] ?? EXPRESSIONS.happy02)});
 
 const f1 = n => +n.toFixed(1);
@@ -62,15 +80,19 @@ export function mouthPlace(eyes) {
 }
 
 /** The outlines of a mouth, in the picture's space (build out), from an expression and a place. */
-export function mouthShape(expr, place) {
-  const e = typeof expr === "string" ? expression(expr) : {...BASE, ...expr}, {cx, cy} = place, hw = place.hw * e.w;
+export function mouthShape(expr, place, lips = null) {
+  const e0 = typeof expr === "string" ? expression(expr) : {...BASE, ...expr}, l = lips ?? {};
+  // Shape and expression together are held to what fits the narrowest face (checked by the mouth stage)
+  const cap = (v, hi) => Math.min(hi, v);
+  const e = {...e0, w: cap(e0.w * (l.w ?? 1) * (l.size ?? 1), 1.28), thin: cap(e0.thin * (l.thin ?? 1) * (l.size ?? 1), 1.6), full: cap(e0.full * (l.full ?? 1) * (l.size ?? 1), 1.65), bow: e0.bow * (l.bow ?? 1)};
+  const {cx, cy} = place, hw = place.hw * e.w;
   const n = 14, T = Array.from({length: 2 * n + 1}, (_, i) => -1 + i / n);
   const L = e.smile - e.tilt, R = e.smile + e.tilt;
   // The parting: corners lifted by the smile, the middle sagging under it
   const part = t => cy - ((1 - t) / 2 * L + (1 + t) / 2 * R) + e.smile * 0.92 * (1 - Math.pow(Math.abs(t), 2.6));
   const gap = t => e.open * Math.pow(1 - t * t, 0.9);
   const tU = 14 * e.thin, tL = 21 * e.full;
-  const bow = t => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(t), 2.2)), 0.7) * (1 - 0.3 * Math.exp(-((t / 0.13) ** 2)));
+  const bow = t => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(t), 2.2)), 0.7) * (1 - Math.min(0.6, 0.3 * e.bow) * Math.exp(-((t / 0.13) ** 2)));
   const swell = t => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(t), 2.4)), 0.8);
   const X = t => cx + hw * t;
   // The upper lip's inner edge lifts by a third of the opening; the lower drops by the rest
@@ -84,64 +106,63 @@ export function mouthShape(expr, place) {
   return {e, hw, cx, cy, part: smooth(pts(part)), upper: smooth(upper, true), lower: smooth(lower, true), inside: inside ? smooth(inside, true) : null,
     upIn: smooth(pts(upIn)), loIn: smooth(pts(loIn)), corners: [[X(-1), part(-1)], [X(1), part(1)]],
     lowY: cy + Math.max(...T.map(t => loOut(t) - cy)), box: {x0: cx - hw, x1: cx + hw, y0: Math.min(...ys), y1: Math.max(...ys)},
-    X, upInF: upIn, loInF: loIn, mid: {up: upIn(0), lo: loIn(0)}};
+    X, T, upInF: upIn, loInF: loIn, loOutF: loOut, partF: part, mid: {up: upIn(0), lo: loIn(0)}};
 }
 
+/** A tapered ink line along points: full width in the middle, thin at the ends, as the eyes and nose are drawn. */
+function taper(pts, wd, end = 0.25) {
+  const n = pts.length - 1, L = [], R = [];
+  for ( let i = 0; i <= n; i++ ) {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1;
+    const t = i / n * 2 - 1, w = wd * (end + (1 - end) * Math.pow(1 - Math.abs(t), 0.6)) / 2;
+    L.push([pts[i][0] - dy / len * w, pts[i][1] + dx / len * w]); R.push([pts[i][0] + dy / len * w, pts[i][1] - dx / len * w]);
+  }
+  return smooth([...L, ...R.reverse()], true);
+}
 /**
  * The mouth as SVG for Lorelei's inner drawing (its paths sit in translate(10 -60), so the place is moved into it).
- * lips: the lip colour (as inksOf chose it), skin: the skin. id: a prefix for the gradients.
+ * Drawn in the manner of the rest of the face: flat colour, a darker upper lip, one small flat light, and the
+ * parting as a tapered sepia ink line like the eyes. lips: the lip colour, skin: the skin, shape: lipsOf(look).
  */
-export function mouthSvg(expr, place, {lips, skin, id = "wpd-m"}) {
-  const S = mouthShape(expr, {...place, cx: place.cx - 10, cy: place.cy + 60}), e = S.e;
-  const dark = FR.mix(lips, "1a0608", 0.22), deep = FR.mix(lips, "1a0608", 0.55), lite = FR.mix(lips, "ffffff", 0.28);
-  const shadow = FR.mix(skin, "1a0c06", 0.4), crease = FR.mix(skin, "1a0c06", 0.55);
-  const top = S.mid.up - 12, bot = S.lowY;
-  let s = `<defs><linearGradient id="${id}-lo" gradientUnits="userSpaceOnUse" x1="0" y1="${f1(S.mid.lo)}" x2="0" y2="${f1(bot)}">`
-    + `<stop offset="0" stop-color="#${dark}"/><stop offset=".45" stop-color="#${lips}"/><stop offset="1" stop-color="#${FR.mix(lips, "1a0608", 0.12)}"/></linearGradient>`
-    + `<linearGradient id="${id}-up" gradientUnits="userSpaceOnUse" x1="0" y1="${f1(top)}" x2="0" y2="${f1(S.mid.up)}">`
-    + `<stop offset="0" stop-color="#${FR.mix(lips, "1a0608", 0.08)}"/><stop offset="1" stop-color="#${FR.mix(lips, "1a0608", 0.32)}"/></linearGradient>`
-    + `<radialGradient id="${id}-hi" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#${lite}" stop-opacity=".75"/><stop offset="1" stop-color="#${lite}" stop-opacity="0"/></radialGradient>`
-    + `<radialGradient id="${id}-sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#${shadow}" stop-opacity=".38"/><stop offset="1" stop-color="#${shadow}" stop-opacity="0"/></radialGradient>`
-    + (S.inside ? `<clipPath id="${id}-in"><path d="${S.inside}"/></clipPath>` : "") + `</defs>`;
-  // Shadow under the lower lip, and a faint one above the bow
-  s += `<ellipse cx="${f1(S.cx)}" cy="${f1(bot + 7)}" rx="${f1(S.hw * 0.55)}" ry="9" fill="url(#${id}-sh)"/>`;
-  s += `<ellipse cx="${f1(S.cx)}" cy="${f1(top - 4)}" rx="${f1(S.hw * 0.16)}" ry="9" fill="url(#${id}-sh)" opacity=".5"/>`;
+export function mouthSvg(expr, place, {lips, skin, shape = null, id = "wpd-m"}) {
+  const S = mouthShape(expr, {...place, cx: place.cx - 10, cy: place.cy + 60}, shape), e = S.e;
+  const upper = FR.mix(lips, "1a0608", 0.2), ink = "2a1a10", lite = FR.mix(lips, "ffffff", 0.3), under = FR.mix(skin, "2a1408", 0.32);
+  let s = S.inside ? `<defs><clipPath id="${id}-in"><path d="${S.inside}"/></clipPath></defs>` : "";
+  // a short stroke of shade under the lower lip, as the nose is drawn
+  const sh = [-0.32, -0.12, 0.12, 0.32].map(t => [S.X(t), S.loOutF(t) + 7 - 3 * (1 - Math.abs(t) * 2.5) * 0]);
+  s += `<path d="${taper(sh, 5, 0.1)}" fill="#${under}" fill-opacity=".55"/>`;
   if ( S.inside ) {
-    s += `<path d="${S.inside}" fill="#${FR.mix(lips, "12040a", 0.72)}"/>`;
+    s += `<path d="${S.inside}" fill="#${FR.mix(lips, "12040a", 0.75)}"/>`;
     if ( e.teeth ) {
-      // Teeth hang from the upper lip and follow its curve; a lower row shows in a snarl. Faint lines part them.
-      const h = Math.min(14, e.open * 0.62), tooth = FR.mix("efe6d6", lips, 0.1), ts = [];
+      const h = Math.min(14, e.open * 0.62), tooth = "f2ead8", ts = [];
       const row = (edge, sign, span, hh) => { const top = [], bot = [];
         for ( let i = 0; i <= 12; i++ ) { const t = -span + 2 * span * i / 12, y = edge(t), k = Math.sqrt(Math.max(0, 1 - (t / span) ** 2));
           top.push([S.X(t), y - sign * 4]); bot.push([S.X(t), y + sign * hh * (0.55 + 0.45 * k)]); }
-        return {d: smooth([...top, ...bot.reverse()], true), at: t => [S.X(t), edge(t)]}; };
-      const up = row(S.upInF, 1, 0.78, h);
-      ts.push(`<path d="${up.d}" fill="#${tooth}"/>`);
-      if ( e.teeth === "both" ) ts.push(`<path d="${row(S.loInF, -1, 0.7, h * 0.75).d}" fill="#${FR.mix(tooth, "1a0608", 0.08)}"/>`);
-      for ( const t of [-0.5, -0.24, 0, 0.24, 0.5] ) { const [x, y] = up.at(t); ts.push(`<path d="M${f1(x)} ${f1(y)} L${f1(x)} ${f1(y + h * 0.8)}" stroke="#${FR.mix(tooth, "5a3a30", 0.5)}" stroke-width="1.2" stroke-opacity=".35"/>`); }
-      // the shade the upper lip casts on the teeth
-      ts.push(`<path d="${S.upIn}" fill="none" stroke="#${FR.mix(lips, "12040a", 0.72)}" stroke-width="6" stroke-opacity=".4"/>`);
+        return smooth([...top, ...bot.reverse()], true); };
+      ts.push(`<path d="${row(S.upInF, 1, 0.78, h)}" fill="#${tooth}"/>`);
+      if ( e.teeth === "both" ) ts.push(`<path d="${row(S.loInF, -1, 0.7, h * 0.75)}" fill="#${FR.mix(tooth, "1a0608", 0.08)}"/>`);
       s += `<g clip-path="url(#${id}-in)">${ts.join("")}</g>`;
     }
   }
-  const rim = ` stroke="#${deep}" stroke-width="1.6" stroke-opacity=".45" stroke-linejoin="round"`;
-  s += `<path d="${S.lower}" fill="url(#${id}-lo)"${rim}/>`;
-  s += `<ellipse cx="${f1(S.cx + S.hw * 0.08)}" cy="${f1((S.mid.lo + bot) / 2 + 1)}" rx="${f1(S.hw * 0.32)}" ry="${f1(Math.max(2.5, (bot - S.mid.lo) * 0.22))}" fill="url(#${id}-hi)"/>`;
-  s += `<path d="${S.upper}" fill="url(#${id}-up)"${rim}/>`;
-  // The lines that hold the shape: the parting (or the inner edges), darkest at the middle, and the corners
-  if ( S.inside ) s += `<path d="${S.upIn}" fill="none" stroke="#${deep}" stroke-width="2.6" stroke-linecap="round"/><path d="${S.loIn}" fill="none" stroke="#${deep}" stroke-width="1.6" stroke-opacity=".7" stroke-linecap="round"/>`;
-  else s += `<path d="${S.part}" fill="none" stroke="#${deep}" stroke-width="3" stroke-linecap="round"/>`;
-  // A small soft crease at each corner, curling up in a smile and down in a frown
+  s += `<path d="${S.lower}" fill="#${lips}"/>`;
+  // one flat light on the lower lip
+  const hl = [-0.3, -0.1, 0.1, 0.25].map(t => [S.X(t + 0.05), (S.loInF(t) + S.loOutF(t)) / 2 + 1]);
+  s += `<path d="${taper(hl, Math.max(3, (S.lowY - S.mid.lo) * 0.28), 0.2)}" fill="#${lite}" fill-opacity=".7"/>`;
+  s += `<path d="${S.upper}" fill="#${upper}"/>`;
+  // the ink: the parting (or the edges of an open mouth), tapered, with the corners tucked in
+  const along = f => S.T.map(t => [S.X(t), f(t)]);
+  if ( S.inside ) s += `<path d="${taper(along(S.upInF), 5.5, 0.35)}" fill="#${ink}"/><path d="${taper(along(S.loInF), 3, 0.3)}" fill="#${ink}" fill-opacity=".8"/>`;
+  else s += `<path d="${taper(along(S.partF), 6, 0.3)}" fill="#${ink}"/>`;
   for ( const [i, [x, y]] of S.corners.entries() ) {
     const dx = i ? 1 : -1, c = i ? e.smile + e.tilt : e.smile - e.tilt, lift = c > 3 ? -1 : c < -3 ? 1 : 0;
-    s += `<path d="M${f1(x - dx * 1)} ${f1(y)} Q${f1(x + dx * 3.5)} ${f1(y)} ${f1(x + dx * 4.5)} ${f1(y + lift * 4 - (lift ? 0 : 1.5))}" fill="none" stroke="#${crease}" stroke-width="2" stroke-opacity=".35" stroke-linecap="round"/>`;
+    s += `<path d="${taper([[x - dx * 2, y], [x + dx * 3, y + lift * 1.5], [x + dx * 6, y + lift * 5]], 3.5, 0.2)}" fill="#${ink}"/>`;
   }
   return `<g class="wpd-mouth">${s}</g>`;
 }
 
 /** The mouth's outline alone, for the mask of visible skin (inner drawing, like mouthSvg). */
-export function mouthSilhouette(expr, place, fill = "#010101") {
-  const S = mouthShape(expr, {...place, cx: place.cx - 10, cy: place.cy + 60});
+export function mouthSilhouette(expr, place, fill = "#010101", shape = null) {
+  const S = mouthShape(expr, {...place, cx: place.cx - 10, cy: place.cy + 60}, shape);
   return `<path d="${S.upper}" fill="${fill}"/><path d="${S.lower}" fill="${fill}"/>${S.inside ? `<path d="${S.inside}" fill="${fill}"/>` : ""}`;
 }
 /** Is a point inside a polygon of [x, y] points? */
