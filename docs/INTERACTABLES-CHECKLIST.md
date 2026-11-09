@@ -115,7 +115,8 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Mounts: the vehicle follows the driver's token by offset
 - [x] Tile config: the Climb or gap section
 - [x] Harness tests (5 new) and UI fit
-- [ ] Gate steps 22 and 24 in rothenstein-wodx (22/24 at 4ccb5d1; fixed in 0.13.1)
+- [x] Gate steps 22 and 24 in rothenstein-wodx: 24/24 at 296459b (0.13.1)
+- [x] Deployed 0.13.1 2026-11-09 (backup Backups\wodx-interactables-0.13.0-2026-11-09)
 - [x] Deployed 0.13.0 2026-11-09 (backup Backups\wodx-interactables-0.12.0-2026-11-09)
 - [ ] Deployed
 
