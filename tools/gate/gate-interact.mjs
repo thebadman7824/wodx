@@ -46,10 +46,10 @@ async function applied(msg, ms = 8000) {
 }
 /** Fix every d10 to one face. Foundry's mapping from randomUniform to a face has changed between versions, so the
  * gate tries both readings and keeps the one that gives the wanted face. */
-const dice = face => {
+const dice = async face => {
   for ( const u of [(face - 0.5) / 10, 1 - (face - 0.5) / 10] ) {
     CONFIG.Dice.randomUniform = () => u;
-    if ( new Roll("1d10").evaluateSync().dice[0].results[0].result === face ) return;
+    if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === face ) return;
   }
   throw new Error(`could not fix the dice to ${face}`);
 };
@@ -101,7 +101,7 @@ export async function run() {
     });
 
     await step("3. pick", async () => {
-      dice(9);
+      await dice(9);
       const msg = await applied(await ix().attempt(tok, door.id, "pick", {fd: {}}));
       const opened = door.ds === W.CLOSED;
       await ix().undoCard(msg);
@@ -110,7 +110,7 @@ export async function run() {
 
     await step("4. masterwork", async () => {
       await door.update({[`flags.${MOD}.lock`]: "masterwork"});
-      dice(10);
+      await dice(10);
       const t = game.time.worldTime;
       // Three dice, all 10s: one roll is not enough for 8 successes
       await attrs(burglar, {dexterity: 1});
@@ -123,7 +123,7 @@ export async function run() {
     });
 
     await step("5. force", async () => {
-      dice(1);
+      await dice(1);
       const before = burglar.system.health?.damage?.lethal ?? 0;
       const msg = await applied(await ix().attempt(tok, door.id, "force", {fd: {}}));
       const d = msg.flags[MOD]?.done;
@@ -136,9 +136,11 @@ export async function run() {
 
     await step("6. window", async () => {
       const msg = await applied(await ix().attempt(tok, win.id, "smash", {fd: {}}));
-      const broke = win.ds === W.OPEN && win.flags[MOD]?.broken === true;
+      const after = {ds: win.ds, broken: win.flags[MOD]?.broken ?? null, result: msg?.flags?.[MOD]?.done?.result ?? null, lines: msg?.flags?.[MOD]?.done?.lines ?? null};
+      const broke = after.ds === W.OPEN && after.broken === true;
       await ix().undoCard(msg);
-      ok("6. the pane breaks at once; Undo mends it", broke && win.ds === W.CLOSED && !win.flags[MOD]?.broken);
+      ok("6. the pane breaks at once; Undo mends it", broke && win.ds === W.CLOSED && !win.flags[MOD]?.broken,
+        {after, undone: {ds: win.ds, broken: win.flags[MOD]?.broken ?? null}, options: ix().interactablesFor(tok).find(x => x.doc.id === win.id) ? "in reach" : "not in reach"});
     });
 
     await step("7. wall", async () => {
@@ -150,7 +152,7 @@ export async function run() {
     });
 
     await step("8. listen", async () => {
-      dice(9);
+      await dice(9);
       const n = game.messages.size;
       await applied(await ix().attempt(tok, door.id, "listen", {fd: {}}));
       await sleep(500);
