@@ -441,7 +441,7 @@
   "summary": "The metal that wounds the fae.",
   "claims": [
    {
-    "text": "Only pure, cold-wrought iron harms the fae; steel and other alloys do not, and no one knows why, though some think an oath lies behind it.",
+    "text": "Iron hurts the fae only when pure and cold-wrought, never as steel or another alloy, and no one knows why, though some think an oath lies behind it.",
     "tier": "stated",
     "refs": [
      {
@@ -503,7 +503,7 @@
     ]
    },
    {
-    "text": "The greatest source of Echoes is the Church: many fae shrink from a cross or a church bell.",
+    "text": "Above all, Echoes come from the Church: a cross or a church bell drives many fae back.",
     "tier": "stated",
     "refs": [
      {
@@ -532,7 +532,7 @@
   "summary": "The long war among the Four Courts.",
   "claims": [
    {
-    "text": "The Courts fought for many years, ending in the dreadful Battle of Stone in the fourth century AD.",
+    "text": "The Courts fought for many years, ending at the dreadful Battle of Stone, fought in the 300s AD.",
     "tier": "stated",
     "refs": [
      {
@@ -584,7 +584,7 @@
   "summary": "A battle fought without firstborn.",
   "claims": [
    {
-    "text": "It was fought on a field near the Crystal Fortress, where neither side could gain enough edge to take the fortress from the Winter fae.",
+    "text": "It was fought on a field near the Crystal Fortress, where neither side was strong enough to wrest the fortress away from Winter.",
     "tier": "stated",
     "refs": [
      {
@@ -624,7 +624,7 @@
   "summary": "The battle all four Courts lost.",
   "claims": [
    {
-    "text": "It came about three mortal centuries after the Battle of Ice, around the time Constantine I turned Christian.",
+    "text": "It followed the Battle of Ice by some 300 years, around the time Constantine I turned Christian.",
     "tier": "stated",
     "refs": [
      {
@@ -782,7 +782,7 @@
     ]
    },
    {
-    "text": "Stone Oaths come from between the Battle of Stone and the Oath-Truce and are rare, since the fae kept away from people then.",
+    "text": "Stone Oaths date from the years after the Battle of Stone, before the Oath-Truce, and are rare, since the fae kept away from people then.",
     "tier": "stated",
     "refs": [
      {
@@ -1194,7 +1194,7 @@
     ]
    },
    {
-    "text": "Few fae reach its highest level; those who do are among the most dangerous, and legends speak of drying a foe away.",
+    "text": "Few fae reach its highest level, and the ones that do rank with the most dangerous, and legends speak of drying a foe away.",
     "tier": "stated",
     "refs": [
      {
@@ -1361,7 +1361,7 @@
     ]
    },
    {
-    "text": "Between the Battle of Stone and the Oath-Truce, the people of Glastonbury lost their ties to the old ways.",
+    "text": "In the years after the Battle of Stone, before the Oath-Truce, the people of Glastonbury lost their ties to the old ways.",
     "tier": "stated",
     "refs": [
      {
