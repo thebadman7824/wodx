@@ -9,7 +9,7 @@ import {measure, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.1.2";
+export const VERSION = "0.1.3";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -127,12 +127,18 @@ export async function bake(actor, {force = false} = {}) {
   };
   try { for ( const t of actor.getDependentTokens?.({linked: true}) ?? [] ) add(t); } catch (e) { /* older API */ }
   for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) if ( t.actorId === actor.id ) add(t);
+  const log = {actor: actor.id, path, found: [], updated: [], errors: []};
   for ( const {scene, ids} of byScene.values() ) {
-    try { await scene.updateEmbeddedDocuments("Token", [...ids].map(_id => ({_id, "texture.src": path}))); }
-    catch (e) { console.warn(`${MOD} | token picture on ${scene.name}`, e); }
+    log.found.push(...[...ids].map(id => `${scene.id}.${id}`));
+    try {
+      const res = await scene.updateEmbeddedDocuments("Token", [...ids].map(_id => ({_id, "texture.src": path})));
+      log.updated.push(...(res ?? []).map(t => `${scene.id}.${t.id}=${t.texture?.src}`));
+    } catch (e) { log.errors.push(e.message); console.warn(`${MOD} | token picture on ${scene.name}`, e); }
   }
+  lastBake = log;
   return path;
 }
+let lastBake = null;
 const timers = new Map();
 let chain = Promise.resolve();
 /** Bake soon, once, after a burst of changes. */
@@ -288,6 +294,6 @@ Hooks.once("init", () => {
 });
 Hooks.once("ready", () => {
   if ( !active ) return;
-  game.modules.get(MOD).api = {version: VERSION, open: a => PaperdollApp.open(a), bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D};
+  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D};
   if ( enabled() && isBaker() ) setTimeout(bakeAll, 1500);
 });
