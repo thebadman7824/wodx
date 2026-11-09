@@ -284,7 +284,7 @@
     ]
    },
    {
-    "text": "Its four official sub-orders are the Condotierri, Gladius Dei, the Office of the Censor and the Order of Saint Joan; other groups count only as sects.",
+    "text": "It recognises four sub-orders (Condotierri, Gladius Dei, the Censor's Office and the Order of Saint Joan); other groups count only as sects.",
     "tier": "stated",
     "refs": [
      {
@@ -351,7 +351,7 @@
     ]
    },
    {
-    "text": "Chapter Houses support Lodges, one for a small House and up to five for a large one.",
+    "text": "Each Arcanum House funds its Lodges: a small House can keep one, a large House up to five.",
     "tier": "stated",
     "refs": [
      {
@@ -542,7 +542,7 @@
     ]
    },
    {
-    "text": "It gives no protection against passive or indirect uses of powers.",
+    "text": "Powers used passively or indirectly get past that shield.",
     "tier": "stated",
     "refs": [
      {
