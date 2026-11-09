@@ -16,5 +16,5 @@
 - [x] Otherworld journeys and the Shadowlands' decay (Otherworlds 0.3.0)
 - [x] Token frames (Atmosphere 0.2.0)
 - [x] Harness tests for the second half (10 new)
-- [ ] Deployed to rothenstein-wodx, gate8b 12/12
+- [x] Deployed to rothenstein-wodx 2026-11-09, gate8b 12/12, gate8 14/14, UI fit 645 ok on the PC
 - [ ] Ben reads the night, aid and journey tables (PENDING-REVIEW)
