@@ -37,6 +37,12 @@
    "title": "Wraith: The Oblivion 20th Anniversary Edition",
    "short": "Wr20",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "hh2",
+   "title": "The Hunters Hunted II",
+   "short": "HH2",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -45,6 +51,7 @@
   "v20da.json",
   "w20.json",
   "wtda.json",
-  "wr20.json"
+  "wr20.json",
+  "hh2.json"
  ]
 }
