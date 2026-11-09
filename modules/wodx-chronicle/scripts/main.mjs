@@ -20,6 +20,7 @@ import * as migrations from "./migrations.mjs";
 import * as languages from "./languages.mjs";
 import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
+import * as church from "./church.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -56,6 +57,8 @@ Hooks.once("init", () => {
   effects.registerEffectSettings();
   // B60: the WoDX buttons each player sees
   playerTools.registerPlayerToolSettings();
+  // Feast and fast days: the chronicle's own feasts
+  church.registerChurchSettings();
   // Phase 7a: the generator core
   gen.registerGenSettings();
   // Dated events
@@ -140,6 +143,7 @@ Hooks.once("ready", async () => {
     endScene: timed.endScene,
     theme,
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
+    church: {on: church.on, today: church.today, at: church.at, extra: church.extra, rules: church.rules},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
     tours: {start: tours.startTour},

@@ -14,7 +14,6 @@
  * "describe" is a function of world time that returns {hour, minute, dayOfWeek, isNight, feast, jdn}: the Chronicle's
  * describeTime plus feastOn below. Tests build it from WoDX Chronicle's date engine.
  */
-import {julianToJDN, gregorianToJDN} from "../../wodx-chronicle/scripts/calendar-math.mjs";
 
 export const ACTIVITIES = {
   sleep: "Sleeping", rest: "At rest", work: "At work", pray: "At prayer", drink: "Drinking", patrol: "On watch",
@@ -236,44 +235,8 @@ export function ownerMatches(owner, actorName) {
 /*  Feast days and the curfew                                          */
 /* ------------------------------------------------------------------ */
 
-/** Easter Sunday's JDN for a year, by the Julian or the Gregorian reckoning. */
-export function easterJDN(year, calendar = "julian") {
-  if ( calendar === "julian" ) {
-    const a = year % 4, b = year % 7, c = year % 19, d = (19 * c + 15) % 30, e = (2 * a + 4 * b - d + 34) % 7;
-    const m = Math.floor((d + e + 114) / 31), day = ((d + e + 114) % 31) + 1;
-    return julianToJDN(year, m, day);
-  }
-  const a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4;
-  const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
-  const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
-  const month = Math.floor((h + l - 7 * m + 114) / 31), day = ((h + l - 7 * m + 114) % 31) + 1;
-  return gregorianToJDN(year, month, day);
-}
-
-/** The great feasts of the Western church: fixed by date (month, day) and movable by days from Easter. */
-export const FIXED_FEASTS = [[1, 1, "The Circumcision"], [1, 6, "Epiphany"], [2, 2, "Candlemas"], [3, 25, "The Annunciation"],
-  [6, 24, "St John the Baptist"], [6, 29, "Sts Peter and Paul"], [8, 15, "The Assumption"], [9, 8, "The Nativity of Mary"],
-  [9, 29, "Michaelmas"], [11, 1, "All Saints"], [11, 11, "Martinmas"], [12, 25, "Christmas"], [12, 26, "St Stephen"]];
-export const MOVABLE_FEASTS = [[-2, "Good Friday"], [0, "Easter"], [1, "Easter Monday"], [39, "Ascension"], [49, "Pentecost"],
-  [50, "Whit Monday"], [60, "Corpus Christi", 1264]];
-
-/** Parse the Storyteller's own feasts, one per line: "09-01 St Giles". */
-export function parseFeasts(text) {
-  const out = [];
-  for ( const line of String(text ?? "").split(/\r?\n/) ) {
-    const m = /^\s*(\d{1,2})-(\d{1,2})\s+(.+?)\s*$/.exec(line);
-    if ( m && +m[1] >= 1 && +m[1] <= 12 && +m[2] >= 1 && +m[2] <= 31 ) out.push([+m[1], +m[2], m[3]]);
-  }
-  return out;
-}
-
-/** The feast on a date, or null. date: {year, month, day, calendar, jdn}; extra: parseFeasts() output. */
-export function feastOn(date, extra = []) {
-  for ( const [m, d, name] of [...extra, ...FIXED_FEASTS] ) if ( date.month === m && date.day === d ) return name;
-  const off = date.jdn - easterJDN(date.year, date.calendar);
-  for ( const [days, name, since] of MOVABLE_FEASTS ) if ( off === days && (!since || date.year >= since) ) return name;
-  return null;
-}
+/* The church calendar lives in WoDX Chronicle (feast and fast days); the routines read the same feasts. */
+export {easterJDN, FIXED_FEASTS, MOVABLE_FEASTS, parseFeasts, feastOn} from "../../wodx-chronicle/scripts/church-rules.mjs";
 
 /** Curfew: from the start hour until dawn (decision B85: about 21:00 to dawn). */
 export function isCurfew({hour, minute = 0, isNight}, start = 21) {

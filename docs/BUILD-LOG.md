@@ -825,3 +825,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - The mage menu gains Countermagic (Resist), Using the Art (Act) and Certámen (Storyteller). Its key is daCountermagic: UI fit showed the first name, daCounter, was already the fae's Counter, so the mage button opened the fae's window.
 - Tests: phase6n.test.mjs (9); 706 pass. UI fit captures the three new windows; in the cloud container every window, old and new, fails only the header-icon check because Font Awesome is not there, so the real UI fit runs on the PC. Gate 6n (tools/gate/gate6n.mjs, 8 steps).
 - Deployed to rothenstein-wodx (Backups/wodx-actions-3.14.1-2026-11-09 first; 58 files checked by MD5). Gate 6n 8/8; UI fit on the PC 654 ok. Gates 6f and 6g run alongside: every functional step passed, and each missed only its version check, still pinned to 3.7 and 3.8; both now accept any 3.x.
+
+### Open items, 2026-11-09: feast and fast days (Chronicle 0.6.0, NPC 0.5.1, Senses 0.2.1; B250, B251)
+- wodx-chronicle/scripts/church-rules.mjs (pure): Easter by both reckonings, the great feasts, the movable days, vigils, Ember days, Advent, the seasons, observance by year, and churchDay() with the crowd, the curfew hour and the hunting step. church.mjs: the setting "The chronicle's own feast days" and api.church (on, today, at, extra, rules). The Chronicle Clock gains a "Church year" row, with the night's effect for the Storyteller. House rule "Feast and fast days" (on).
+- WoDX NPC: routine-rules re-exports the feasts from Chronicle (one list); the curfew starts at midnight on a night of revel; huntingAt takes the church step (town only) and the hunting card names it.
+- WoDX Senses: the feast check had no day number, so feasts counted from Easter were never found; it now passes the whole date, reads the Chronicle's feasts and the curfew hour.
+- Tests: church.test.mjs (9); 715 pass. Gate: tools/gate/gatechurch.mjs, 8 steps, rothenstein-wodx only.
