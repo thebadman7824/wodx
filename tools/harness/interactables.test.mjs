@@ -518,7 +518,7 @@ globalThis.game = {
   keybindings: {register: () => {}},
   modules: new Coll([[MOD, {}], ["wodx-chronicle", {api: {propose: async p => proposals.push(p), registerApprovalHandler: () => {}, eras: {activeEra: () => ({profile: {id: "victorian"}}), currentYear: () => 1890}}}]]),
   wodxActions: {getKind: a => a?.kindForTest ?? "mortal", demonInfo: a => ({torment: {perm: a?.tormentForTest ?? 0}, willpower: {perm: 4}}),
-    prayer: async a => { prayed.push(a.id); return "prayer window"; }},
+    prayer: async a => { prayed.push(a.id); return "prayer window"; }, menu: async ({actor: a}) => { prayed.push(`menu:${a.id}`); return "menu"; }},
   wodxCombat: {applyDamage: async (a, t, n) => damage.push([a.id, t, n]), healDamage: async (a, t, n) => damage.push([a.id, t, -n]),
     soakAndApply: async (tok, fd) => {
       const a = tok.actor ?? tok, levels = Math.max(0, fd.amount - 1);
@@ -1282,4 +1282,20 @@ test("runtime: the WoDX part of the tile config keeps the altar's choices", () =
   assert.match(html, /name="flags.wodx-interactables.rating" value="8"/);
   assert.match(html, /name="flags.wodx-interactables.desecrated" checked/);
   assert.match(html, />Item.klaive<\/textarea>/);
+});
+
+test("sacred: a caern stone, a fetter or a node opens the WoDX actions menu with its rating named", async () => {
+  const c = R.describeSacred({sacredKind: "caern", rating: 4});
+  const ops = R.optionsFor(c, ch());
+  assert.deepEqual(ids(ops), ["useSacred"]);
+  assert.equal(ops[0].opens, "menu");
+  assert.match(ops[0].note, /level 4/);
+  assert.equal(R.optionsFor(R.describeSacred({sacredKind: "fetter", rating: 2}), ch())[0].opens, "fetter");
+  assert.ok(!R.holyGround(c));
+  altar.document.flags[MOD] = {sacred: true, sacredKind: "node", rating: 3};
+  tokPc.document.x = 2000; tokPc.document.y = 1000;
+  try {
+    assert.equal(await api.attempt(tokPc, "altar1", "useSacred"), "menu");
+    assert.equal(prayed.at(-1), "menu:pc1");
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; altar.document.flags[MOD] = {sacred: true, sacredKind: "altar", rating: 3}; }
 });

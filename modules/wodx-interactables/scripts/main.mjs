@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.8.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
+ * WoDX Interactables 0.8.1: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
  *
  *   Interact   A player selects a token and presses Interact on the token HUD (or the I key). A window lists every door,
  *              window and breakable wall within reach of that token, nearest first, with the options for each: the
@@ -28,7 +28,7 @@
  *              into it, and in combat whoever starts a turn in it, through WoDX Combat, with Undo; a fire can be put
  *              out or set alight, glass swept aside, the power cut (0.7.0).
  *   Sacred     A tile marked as an altar or shrine is holy ground: pray there with WoDX Actions, desecrate it; a demon
- *              who walks onto it is seared. A relic or fetish on a tile can be taken (0.8.0).
+ *              who walks onto it is seared. A relic or fetish on a tile can be taken (0.8.0); a caern stone, fetter or node opens the WoDX actions menu (0.8.1).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -40,7 +40,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.8.0";
+const VERSION = "0.8.1";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -330,7 +330,7 @@ export async function attempt(tok, wallId, opId, {fd = null} = {}) {
     const fn = game.wodxActions?.[op.opens];
     if ( typeof fn !== "function" ) { ui.notifications.warn("WoDX Actions is off, so there is no window for that."); return null; }
     if ( op.note ) ui.notifications.info(op.note);
-    return fn(actor);
+    return op.opens === "menu" ? fn({actor}) : fn(actor);
   }
   if ( !game.users.activeGM ) ui.notifications.warn("No Storyteller is connected: the card is posted, but nothing changes until one is.");
   const ask = {v: 1, scene: canvas.scene.id, wall: searching ? SEARCH : doc.id, token: tok.document.uuid, op: op.id, label: op.label, user: game.user.id};
@@ -1156,10 +1156,10 @@ export function tileConfigHtml(doc) {
     ${field("Damage type", `<select name="${p}.hazType" data-fixed>${opt({"": "As the kind suggests", ...R.DAMAGE_TYPES}, z.hazType)}</select>`, "Fire: lethal to mortals and ghouls, aggravated to everyone else; glass and current lethal. A vampire always takes fire as aggravated.")}
     ${field("Only player characters", `<input type="checkbox" name="${p}.pcsOnly"${z.pcsOnly ? " checked" : ""}>`, "Off: NPCs are hurt too.")}
     <h4 class="wix-sub">Altar, relic or fetish</h4>
-    <p class="hint">An altar or shrine is holy ground: characters pray there, it can be desecrated, and a demon who walks onto it is seared. A relic or a fetish rests on the tile until someone takes it.</p>
+    <p class="hint">An altar or shrine is holy ground: characters pray there, it can be desecrated, and a demon who walks onto it is seared. A relic or a fetish rests on the tile until someone takes it. A caern stone, a fetter or a node opens the WoDX actions menu.</p>
     ${field("Altar, relic or fetish", `<input type="checkbox" name="${p}.sacred"${a.sacred ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
     ${field("Kind", `<select name="${p}.sacredKind" data-fixed>${opt(R.SACRED, a.sacredKind)}</select>`)}
-    ${field("Rating", `<input type="number" name="${p}.rating" value="${a.rating}" min="1" max="10">`, "Holy ground's rating or a relic's Faith potential, 1 to 5; a fetish's Gnosis, 1 to 10.")}
+    ${field("Rating", `<input type="number" name="${p}.rating" value="${a.rating}" min="1" max="10">`, "Holy ground's rating, a relic's Faith potential, a caern's level, a fetter's or a node's rating: 1 to 5. A fetish's Gnosis: 1 to 10.")}
     ${field("Desecrated", `<input type="checkbox" name="${p}.desecrated"${a.desecrated ? " checked" : ""}>`, "Untick to consecrate it again.")}
     ${field("The relic or fetish", `<textarea name="${p}.sacredItems" rows="2" placeholder="Its UUID, or its name in the Items directory">${esc(a.sacredItems)}</textarea>`, "Taking it gives the character a copy.")}
   </fieldset>`;

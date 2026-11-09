@@ -700,4 +700,5 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Altars and chapels, wayside shrines and holy wells, holy relics, fetishes and talens on tiles. The tile config gains an Altar, relic or fetish section: kind, rating, desecrated, the item.
 - Holy ground: Pray here opens WoDX Actions' prayer window; Desecrate it (loud) and Undo. A demon stepping onto it, or starting a turn on it in combat, is seared by WoDX Actions' reading of Demon: The Fallen pp. 254-255, with a Willpower roll to stay and Undo.
 - A relic or fetish is taken like a container's contents (a copy of the item goes to the character, Undo takes it back); a fetish is then used from the WoDX actions menu.
-- Tests: 6 new (3 rules, 3 runtime), 565 in all; UI fit adds a high altar. Gate step 20 (an altar desecrated and put back; a relic taken and given back). Not deployed yet.
+- Tests: 6 new (3 rules, 3 runtime), 565 in all; UI fit adds a high altar. Gate step 20 (an altar desecrated and put back; a relic taken and given back).
+- 0.8.1: caern stones, fetters and nodes. Use it opens the WoDX actions menu (a fetter opens the Fetter window), and the option names the rating. 1 more test, 566 in all. Not deployed yet.

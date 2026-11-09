@@ -1,5 +1,5 @@
 /**
- * Interactables gate (WoDX Interactables 0.8.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Interactables gate (WoDX Interactables 0.8.1), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-interact.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Interact"), two characters of its own ("Gate Interact
  * burglar", a player's character, and "Gate Interact watchman", an NPC) and deletes them all at the end. It fixes the
@@ -73,7 +73,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.8.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.8.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.8.1 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.8.1" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 

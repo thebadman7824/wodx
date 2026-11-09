@@ -167,13 +167,17 @@ export const SHOCKS = {
  * Altars, relics and fetishes on tiles. An altar or shrine is holy ground with a rating (1 to 5): praying there uses
  * WoDX Actions' prayer, and a demon who walks onto it is seared as WoDX Actions' "The holy" reads Demon: The Fallen
  * (pp. 254-255), until it is desecrated. A relic or a fetish rests on its tile until someone takes it; a fetish is then
- * attuned and used from the WoDX actions menu (W20 p. 221; DA:W p. 92).
+ * attuned and used from the WoDX actions menu (W20 p. 221; DA:W p. 92). A caern stone, a wraith's fetter or a node is
+ * marked with its rating, and using it opens the WoDX actions menu, where that line's own rolls live.
  */
 export const SACRED = {
   altar: {label: "Church altar or chapel", ground: true, carry: false},
   shrine: {label: "Wayside shrine or holy well", ground: true, carry: false},
   relic: {label: "Holy relic", ground: false, carry: true},
-  fetish: {label: "Fetish or talen in its resting place", ground: false, carry: true}
+  fetish: {label: "Fetish or talen in its resting place", ground: false, carry: true},
+  caern: {label: "Caern stone", ground: false, carry: false, use: "menu", note: r => `A caern of level ${r}: the Gauntlet is low here. Step sideways, meditate or hold a rite from the WoDX actions menu.`},
+  fetter: {label: "A wraith's fetter", ground: false, carry: false, use: "fetter", note: r => `A fetter of rating ${r}. A wraith tied to it works it from the WoDX Fetter window.`},
+  node: {label: "Node", ground: false, carry: false, use: "menu", note: r => `A node of rating ${r}: Quintessence can be drawn here from the WoDX actions menu.`}
 };
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
@@ -659,6 +663,7 @@ function sacredOptions(o) {
       note: `Holy ground, rating ${o.rating}: in the prayer window, pick Holy Ground and set the rating to ${o.rating}.`});
     out.push({id: "desecrate", label: "Desecrate it", roll: null, seconds: MINUTE, noise: {success: "loud"}, note: "It stops being holy ground until it is consecrated again."});
   }
+  if ( S.use ) out.push({id: "useSacred", label: "Use it", roll: null, opens: S.use, seconds: TURN, noise: {success: "silent"}, note: S.note(o.rating)});
   if ( S.carry ) {
     if ( o.items.length && !o.taken ) out.push({id: "take", label: "Take it", roll: null, seconds: TURN, noise: {success: "silent"},
       note: o.kind === "fetish" ? `Gnosis ${o.rating}. Attune and use it from the WoDX actions menu (Fetish or talen).` : `Faith potential ${o.rating}.`});
