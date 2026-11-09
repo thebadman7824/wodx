@@ -64,3 +64,18 @@ export function secondsLeft(endsAt, now = Date.now()) {
 
 /** How many actions a character has this turn: one, plus extra actions bought (Rage) or declared (Celerity). */
 export const actionsAllowed = ({ extra = 0 } = {}) => 1 + Math.max(0, Number(extra) || 0);
+
+export const TURN_MOVES = { off: "Off (anyone moves at any time)", block: "Only the character whose turn it is" };
+
+/**
+ * May this move of a token go ahead? Out of turn, a player's token stays put: in the round each character acts (and so
+ * moves) on its own turn, and one who delays acts at the later point it steps in (VtDA20 pdf p. 344). The Storyteller is
+ * never stopped, so a dodge, a shove or a fall is moved by the Storyteller's hand or by an approved card.
+ *   s: {mode, isGM, inFight, isCurrent, held}
+ * Returns {ok, why}.
+ */
+export function turnMove(s = {}) {
+    if (s.mode !== "block" || s.isGM || !s.inFight || s.isCurrent) return { ok: true, why: "" };
+    if (s.held) return { ok: false, why: "holding the action: press Act next to step in, then move" };
+    return { ok: false, why: "it is not this character's turn" };
+}

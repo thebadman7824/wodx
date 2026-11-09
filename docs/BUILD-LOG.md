@@ -1035,3 +1035,7 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Actions 3.19.0, tainted vessels: Hunt and Feed ask what is in the vessel's blood. Drink, stimulants, hallucinogens and opiates add their V20 effect (p. 301-302); a blood-borne disease is spotted (Intelligence + Medicine, 7), resisted (Stamina, 6) or carried (flag wodx-actions.carrier), V20 p. 295. A plague year starts the choice on disease.
 - Tests: tasks, shots, orders, havens, vessels (.test.mjs). UI fit: Long tasks, New and Change a long task, Havens, Haven, Give an order. Gate: tools/gate/gatesurvival.mjs (7 steps).
 - Not built yet: bodies that change (priority 6), fill a container by place and era (priority 7). Hardship on the road waits: V20, V20 Dark Ages and Hunter have no exposure rules.
+## 2026-11-09: moves out of turn (Combat 3.8.1, B351)
+
+- conductor-rules.js: TURN_MOVES and turnMove() (pure). main.js: setting turnMoves (world, default Off) and a preUpdateToken hook ahead of the movement count; a refused move warns the player and snaps back.
+- Tests: phase7b1.test.mjs (version 3.8.0, turnMove cases, hook order). Gate: tools/gate/gateturns.mjs (9 steps).
