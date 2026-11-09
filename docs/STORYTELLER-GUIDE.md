@@ -281,7 +281,7 @@ Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, w
 
 ## Responsive maps: the map shows what happened, and the world answers
 
-*Interactables 0.12.0, NPC 0.4.0 and Storyteller 0.3.0, on in the testing world (rothenstein-wodx) only. Not deployed yet.*
+*Interactables 0.12.0, NPC 0.4.0 and Storyteller 0.3.0 onward, on in the testing world (rothenstein-wodx) only. Deployed there 2026-11-09 (gate-maps 9/9).*
 
 **What players see.** When something on the map changes, everyone sees it and it stays: a door opens, a chest shows as forced or emptied, a fire burns out. Give a tile a picture for each state in the **WoDX: pictures and sounds** part of its config window, or tell it to follow a door by the wall's id. With no picture for a state, a small marker with the state's word sits on the tile (world setting "State markers"); clues and hiding places never show one. Each change also floats a word over the spot, a short flash for a loud one, and the tile's own sound, for everyone who can see or hear it. A player with a slow machine can set "Map effects" to Light or Off in their own settings; the lasting change still shows. Undo puts the picture back too.
 
