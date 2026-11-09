@@ -36,6 +36,7 @@ export function checkEntry(e, books = {}) {
   if ( !Array.isArray(e.claims) || !e.claims.length ) out.push(`${who}: no claims`);
   for ( const [i, c] of (e.claims ?? []).entries() ) {
     if ( !str(c?.text) ) out.push(`${who}: claim ${i + 1} has no text`);
+    if ( /\b(the book|book's|chapter|section|sidebar)\b/i.test(c?.text ?? "") ) out.push(`${who}: claim ${i + 1} describes the book, not the world; the page reference already says where`);
     if ( !TIERS[c?.tier] ) out.push(`${who}: claim ${i + 1} has no tier`);
     if ( !Array.isArray(c?.refs) || !c.refs.length ) out.push(`${who}: claim ${i + 1} has no source`);
     for ( const r of c?.refs ?? [] ) {

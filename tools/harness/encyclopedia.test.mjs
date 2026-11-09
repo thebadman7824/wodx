@@ -52,3 +52,7 @@ test("one shelf install at a time, and no delete of a document already gone", as
   assert.match(src, /RUNNING \?\?= doInstall\(\)/);
   assert.match(src, /remove\.filter\(id => still\.has\(id\)\)/);
 });
+test("a claim says something about the world, not where the book puts it", () => {
+  const e = {...other, claims: [{text: "It has its own section in Chapter Two.", tier: "stated", refs: [{book: "v20", page: 13}]}]};
+  assert.match(E.checkEntry(e, {v20: books[0]}).join(), /describes the book/);
+});
