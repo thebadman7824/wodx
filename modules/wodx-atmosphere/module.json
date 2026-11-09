@@ -2,7 +2,7 @@
   "id": "wodx-atmosphere",
   "title": "WoDX Atmosphere",
   "description": "World of Darkness Expanded: the weather and the era kits. Each night's weather comes from the chronicle's seed, the climate and the date, with the era's climate (the Little Ice Age, 1816, a warmer future): it sets the sky for sunlight, puts rain, snow or fog on outdoor scenes, tells the Storyteller what it does to rolls, and feeds WoDX Senses. Scenes can take their darkness from the sun and moon. Each era kit adds music moods as playlists, ambience for the kind of place and the weather, short cues at dawn and sunset, dawn dread (a paling screen edge, birdsong and cock-crow, and Rötschreck pressure before sunrise), placed sounds stopped by walls and heard muffled through them, a personal theme for each player character at their spotlight moments, maps that change with the year (places that age), portraits and token art that age with the years for mortals and for ghouls cut off from the blood (faces that age), a light colour grade on the map, and handouts in the era's style. Token frames in the era's material (iron, gilt, brass, chrome, neon) go round the players' characters. The music follows the tension (quiet, the hunt, combat, frenzy), and a vampire's player hears a heartbeat as the blood runs low. Handouts, journals and night maps print, or save as PDF, for nights at the table. Private use only; not for distribution or sale.",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "authors": [{"name": "WoDX Project (private)"}],
   "compatibility": {"minimum": "14", "verified": "14.369"},
   "relationships": {

@@ -962,6 +962,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Tests: tools/harness/print.test.mjs (4). Gate: tools/gate/gateprint.mjs, 7 steps (never opens the print window).
 - Fix in the same PR (Atmosphere 0.9.0): the frenzy tension never fired in Foundry, since WoDX Chronicle's conditions are wodx-frenzy and wodx-rotschreck; tensionOf now drops the wodx- prefix, and gateadaptive toggles wodx-frenzy. rothenstein-wodx holds 11 started combats left by older gates, so gateadaptive's hunt step reads combat there (noted, not failed).
 
+## 2026-11-09: player immersion (B310-B315)
+
+- From the Player Immersion Study (approved by Ben 2026-11-09). Interactables 0.16.0 (carry-rules.mjs, carry.mjs), Senses 0.4.0 (stateEdges, stateOf), Chronicle 0.9.0 (reckoning-rules.mjs, house rule eraReckoning, the player clock), Storyteller 0.11.0 (letters-rules.mjs, letters.mjs, player button wodxLetters, socket req.letter), Atmosphere 0.10.0 (opening-rules.mjs, client setting openingCard, scene choice noCard, api.opening), NPC 0.7.0 (faces-rules.mjs, faces.mjs, world setting faces).
+- Tests: tools/harness/immersion.test.mjs (12); version pins moved in perception, phase7b, phase7c-runtime and phase7d tests. Full suite 801 pass. Gate: tools/gate/gateimmersion.mjs, 9 steps.
+
 ## 2026-11-09: the Library's shelves, the manual and What's new (Library 0.2.0, B282)
 
 - shelf-rules.mjs (new): SHELVES, LINE_LABELS, ALL_ERAS, fromDisciplines, fromRoads, fromGifts, fromArcanoi, fromThorns, fromConditions, fromHouseRules, fromEras, buildShelves, fits, hashOf. shelves.mjs (new): sources, installShelves (made at ready when the shelf version rises; remade by hash), catalogue, LibraryApp (id wodx-library; line list, era filter, search), ensureManual, ensureChangelog. data/manual.mjs (new): MANUAL pages and CHANGES. Toolbar button wodxLibrary (order 116). api.library, api.manual, api.changelog.

@@ -1,8 +1,9 @@
 /**
- * WoDX Senses 0.3.0: the screen in frenzy and Rötschreck, scent trails for a wolf's nose, and hidden tokens that
+ * WoDX Senses 0.4.0: the screen in frenzy and Rötschreck, the character's state on screen, scent trails for a wolf's nose, and hidden tokens that
  * show only to whoever found them. The rules are in perception-rules.mjs; main.mjs passes its helpers in build().
  */
 import * as P from "./perception-rules.mjs";
+import {resource, detectProfile} from "../../wodx-actions/scripts/profiles.js";
 
 const MOD = "wodx-senses";
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
@@ -10,6 +11,10 @@ const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { ret
 export function registerPerceptionSettings() {
   game.settings.register(MOD, "screen", {
     name: "Frenzy and Rötschreck on my screen", hint: "A red edge round the screen while my character is in frenzy, and the colour drained from the map in Rötschreck.",
+    scope: "client", config: true, type: Boolean, default: true, onChange: () => refreshScreen()
+  });
+  game.settings.register(MOD, "state", {
+    name: "My character's state on my screen", hint: "A quiet edge round the screen and a few words at the top for wounds, the hunger line, high Rage, the Shadow pressing, Paradox, Banality or no Willpower left.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => refreshScreen()
   });
   game.settings.register(MOD, "trails", {
@@ -36,20 +41,44 @@ function myCharacter() {
 const inFrenzy = a => !!a?.system?.conditions?.isfrenzy || !!a?.statuses?.has?.("wodx-frenzy");
 const inRotschreck = a => !!a?.statuses?.has?.("wodx-rotschreck");
 
+/** What the sheet says the character feels, for stateEdges(). */
+export function stateOf(a) {
+  if ( !a ) return {};
+  const n = v => Number(v) || 0;
+  let prof = "mortal";
+  try { prof = detectProfile(a); } catch (e) { prof = "mortal"; }
+  const r = id => { try { return resource(a, id); } catch (e) { return {value: 0, max: 0, perm: 0, ok: false}; } };
+  const dmg = a.system?.health?.damage ?? {}, wp = r("willpower"), rage = r("rage");
+  return {kindred: prof === "kindred", garou: prof === "lupine", wraith: prof === "wraith", mage: prof === "mage", changeling: prof === "fae",
+    blood: r("blood").value, selfcontrol: n(a.system?.advantages?.virtues?.selfcontrol?.permanent),
+    woundPenalty: n(dmg.woundpenalty), incapacitated: /incap/i.test(String(dmg.woundlevel ?? "")),
+    rage: rage.value, ragePerm: rage.perm || rage.max, angst: r("angst").value, paradox: r("paradox").value, banality: r("banality").value,
+    willpower: wp.value, willpowerPerm: wp.perm || n(a.system?.advantages?.willpower?.permanent)};
+}
+
 export function refreshScreen() {
   const a = myCharacter();
   const which = setting("screen") === false ? null : P.screenFor({frenzy: inFrenzy(a), rotschreck: inRotschreck(a)});
-  let el = document.getElementById("wodx-senses-screen");
-  if ( !which ) { el?.remove(); document.body.classList.remove("wsn-drained"); return null; }
+  const edges = setting("state") === false ? [] : P.stateEdges(stateOf(a));
+  let el = document.getElementById("wodx-senses-screen"), words = document.getElementById("wodx-senses-state");
+  document.body.classList.toggle("wsn-drained", which === "rotschreck");
+  if ( !which && !edges.length ) { el?.remove(); words?.remove(); return null; }
   if ( !el ) {
     el = document.createElement("div");
     el.id = "wodx-senses-screen";
     el.setAttribute("aria-hidden", "true");
     document.body.appendChild(el);
   }
-  el.className = `wsn-screen wsn-${which}`;
-  document.body.classList.toggle("wsn-drained", which === "rotschreck");
-  return which;
+  el.className = which ? `wsn-screen wsn-${which}` : `wsn-screen wsn-state-${edges[0].id}`;
+  if ( edges.length ) {
+    if ( !words ) {
+      words = document.createElement("div");
+      words.id = "wodx-senses-state";
+      document.body.appendChild(words);
+    }
+    words.textContent = edges.map(e => e.words).join(" · ");
+  } else words?.remove();
+  return which ?? edges[0].id;
 }
 
 /* ------------------------------------------------------------------ */
@@ -204,7 +233,7 @@ function onTokenHUD(hud, html) {
 export function setupPerception(helpers) {
   H = helpers;
   Hooks.once("ready", () => { try { installVisibility(); refreshScreen(); } catch (e) { console.warn(`${MOD} | perception`, e); } });
-  for ( const h of ["updateActor", "createActiveEffect", "deleteActiveEffect", "updateActiveEffect", "controlToken", "canvasReady"] )
+  for ( const h of ["updateActor", "updateItem", "createActiveEffect", "deleteActiveEffect", "updateActiveEffect", "controlToken", "canvasReady"] )
     Hooks.on(h, () => { refreshScreen(); if ( h === "controlToken" || h === "canvasReady" ) drawTrails(); });
   Hooks.on("updateToken", (doc, changes) => {
     record(doc, changes);
@@ -215,5 +244,5 @@ export function setupPerception(helpers) {
   Hooks.on("canvasReady", () => { layer = null; drawTrails(); });
   for ( const h of ["createActiveEffect", "deleteActiveEffect"] ) Hooks.on(h, () => refreshVisibility());
   Hooks.on("renderTokenHUD", onTokenHUD);
-  return {refreshScreen, drawTrails, trailSteps, trails, whoSees, forget, concealed, refreshVisibility, rules: P};
+  return {refreshScreen, stateOf, drawTrails, trailSteps, trails, whoSees, forget, concealed, refreshVisibility, rules: P};
 }

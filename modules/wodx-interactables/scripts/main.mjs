@@ -53,10 +53,11 @@ import {actionPool} from "../../wodx-actions/scripts/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerStateSettings, setupStates, publish} from "./states.mjs";
 import {setupLiving} from "./living.mjs";
+import {setupCarry} from "./carry.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.15.0";
+const VERSION = "0.16.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -1542,6 +1543,7 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
+  game.modules.get(MOD).api.carry = setupCarry();
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

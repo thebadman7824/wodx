@@ -73,6 +73,14 @@ export default {
       "source": "Era table: Time of Judgment"
     },
     {
+      "id": "eraReckoning",
+      "group": "timeline",
+      "name": "Players see time as the era tells it",
+      "hint": "A player's clock gives the church's hours before 1350, a striking clock's quarter hours until 1840, a 12-hour clock after that, and a 24-hour readout in Future Darkness. The Storyteller's clock keeps the exact minute.",
+      "default": true,
+      "source": "House rule: era timekeeping"
+    },
+    {
       "id": "futureBranch",
       "group": "timeline",
       "name": "Future Darkness branch",

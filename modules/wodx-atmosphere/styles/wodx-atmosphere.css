@@ -52,3 +52,10 @@ body.wodx-dawn-dread::after { content: ""; position: fixed; inset: 0; pointer-ev
   box-shadow: inset 0 0 calc(40px + 160px * var(--wodx-dread, 0)) calc(8px * var(--wodx-dread, 0)) rgba(246, 236, 214, calc(0.15 + 0.5 * var(--wodx-dread, 0))); }
 .watmo-chip { display: inline-block; margin: 0.1em 0.2em 0 0; padding: 0 0.3em; border: 1px solid rgba(127, 127, 127, 0.4); border-radius: 3px; font-size: 0.9em; }
 .watmo-chip button { min-width: 0; width: auto; padding: 0 0.3em; line-height: 1.2; }
+
+/* 0.10.0: a scene's opening card (one fade, no animation loop) */
+#watmo-opening { position: fixed; top: 18vh; left: 50%; transform: translateX(-50%); z-index: 62; pointer-events: none; text-align: center; padding: 10px 28px; background: rgba(0, 0, 0, 0.55); color: #efe6d4; border-radius: 6px; opacity: 0; transition: opacity 1.2s ease; max-width: 80vw; }
+#watmo-opening.shown { opacity: 1; }
+#watmo-opening .watmo-opening-place { font-size: 1.8rem; letter-spacing: 0.04em; }
+#watmo-opening .watmo-opening-when { font-size: 1rem; margin-top: 4px; }
+#watmo-opening .watmo-opening-weather { font-size: 0.9rem; margin-top: 2px; opacity: 0.85; font-style: italic; }
