@@ -91,5 +91,64 @@ test("a place that ages shows the latest picture whose year has come, else its o
     [{from: 1348, img: "a"}, {from: 1890, img: "c"}]);
   const src = readFileSync(join(root, "modules/wodx-atmosphere/scripts/main.mjs"), "utf8");
   assert.match(src, /data-action="addAge"/);
-  assert.match(src, /Hooks\.on\("wodxSkipEnd".*applyAges/);
+  assert.match(src, /Hooks\.on\("wodxSkipEnd".*ageEverything/);
+  assert.match(src, /const ageEverything = .*applyAges\(\)/);
+});
+
+/* WoDX Atmosphere 0.7.0: faces that age. */
+test("who ages: mortals and the living lines do, the undead do not, ghouls by the blood", () => {
+  assert.equal(K.faceKind("Mortal", "ghoul"), "ghoul");
+  assert.equal(K.faceKind("Mortal", "mortal"), "ages");
+  assert.equal(K.faceKind("Hunter"), "ages");
+  assert.equal(K.faceKind("Vampire"), "never");
+  assert.equal(K.faceKind("Wraith"), "never");
+  assert.equal(K.faceKind("Mummy"), "never");
+  assert.equal(K.faceKind("Vampire", null, "ages"), "ages");
+  assert.equal(K.faceKind("Mortal", null, "nonsense"), "ages");
+});
+test("the age a face shows: the true age, a ghoul's stilled age until cut off from the blood", () => {
+  assert.equal(K.apparentAge({born: 1170, kind: "ages"}, 1197), 27);
+  assert.equal(K.apparentAge({born: 1170, kind: "never"}, 1300), null);
+  assert.equal(K.apparentAge({kind: "ages"}, 1300), null);
+  assert.equal(K.apparentAge({born: 1170, kind: "ages"}, null), null);
+  assert.equal(K.apparentAge({born: 1100, kind: "ghoul", still: 35}, 1300), 35);
+  assert.equal(K.apparentAge({born: 1100, kind: "ghoul", still: 35, lost: true}, 1300), 200);
+  assert.equal(K.apparentAge({born: 1180, kind: "ghoul", still: 35}, 1200), 20, "never older than the true age");
+  assert.equal(K.apparentAge({born: 1100, kind: "ghoul"}, 1150), 50, "no stilled age yet: the true age");
+  assert.equal(K.apparentAge({born: 1300, kind: "ages"}, 1250), 0);
+});
+test("the filter steps once a decade from forty, and a hand-made picture wins", () => {
+  assert.deepEqual([20, 39, 40, 49, 55, 68, 79, 80, 140].map(K.faceStage), [0, 0, 1, 1, 2, 3, 4, 5, 5]);
+  assert.equal(K.faceStage(null), 0);
+  assert.equal(K.STAGE_WORDS.length, 6);
+  const face = {born: 1150, kind: "ages", variants: [{from: 60, img: "old.webp"}]};
+  assert.deepEqual(K.faceFor(face, 1200), {age: 50, stage: 2, img: null});
+  assert.deepEqual(K.faceFor(face, 1215), {age: 65, stage: 3, img: "old.webp"});
+  assert.deepEqual(K.faceFor({born: 1150, kind: "never"}, 1400), {age: null, stage: 0, img: null});
+});
+test("the aging filter drains colour and softens contrast, more with each step, and leaves alpha alone", () => {
+  const px = () => new Uint8ClampedArray([220, 40, 40, 200, 0, 0, 0, 255, 255, 255, 255, 255]);
+  assert.deepEqual([...K.agePixels(px(), 0)], [...px()]);
+  const spread = d => Math.max(d[0], d[1], d[2]) - Math.min(d[0], d[1], d[2]);
+  let last = spread(px());
+  for ( let k = 1; k <= 5; k++ ) {
+    const d = K.agePixels(px(), k);
+    assert.ok(spread(d) < last, `step ${k} has less colour`);
+    last = spread(d);
+    assert.equal(d[3], 200);
+    assert.ok(d[4] > 0, "black lifts");
+    assert.ok(d[8] < 255 || d[10] < 255, "white fades");
+  }
+  assert.equal(K.agePixels(px(), 9)[0], K.agePixels(px(), 5)[0], "capped at five");
+});
+test("aged pictures get names tied to the picture they came from", () => {
+  const a = K.agedName("abc", "img", 2, "faces/a.webp"), b = K.agedName("abc", "img", 2, "faces/b.webp");
+  assert.match(a, /^abc-portrait-age2-[0-9a-z]+\.webp$/);
+  assert.notEqual(a, b);
+  assert.match(K.agedName("a/b", "token", 3, "x"), /^ab-token-age3-/);
+  const src = readFileSync(join(root, "modules/wodx-atmosphere/scripts/main.mjs"), "utf8");
+  assert.match(src, /data-action="setFace"/);
+  assert.match(src, /searchBox\("table\.watmo-faces"/);
+  assert.match(src, /searchBox\("select\[name=faceActor\]"/);
+  assert.match(src, /faces: \{set: setFace/);
 });

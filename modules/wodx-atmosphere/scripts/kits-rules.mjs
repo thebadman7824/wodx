@@ -95,6 +95,67 @@ export function cleanAges(variants = []) {
   return [...byYear.values()].sort((a, b) => a.from - b.from);
 }
 
+/**
+ * Faces that age. Mortals age with the chronicle's year; a ghoul keeps the age at which the blood was first drunk and
+ * only catches up to the true age once cut off from it (V20 Dark Ages, Ghouls); the undead, spirits and the Reborn never do.
+ * A face is {born, kind, still, lost, variants: [{from: age, img}]}: kind "auto" follows the character's line.
+ */
+export const FACE_KINDS = {auto: "Follow the character's line", ages: "Ages with the years", ghoul: "A ghoul: ages only when cut off from the blood", never: "Does not age"};
+const NEVER_AGE = ["Vampire", "Wraith", "Mummy", "Creature", "Group", "Exalted"];
+/** "ages", "ghoul" or "never" for an actor's type and sheet variant, unless the face says otherwise. */
+export function faceKind(type, variant, set = "auto") {
+  if ( set && set !== "auto" && FACE_KINDS[set] ) return set;
+  if ( type === "Mortal" && variant === "ghoul" ) return "ghoul";
+  return NEVER_AGE.includes(type) ? "never" : "ages";
+}
+/** The age the face shows in a year: null when unknown or the character does not age. */
+export function apparentAge({born, kind = "ages", still = null, lost = false} = {}, year) {
+  const b = Number(born), y = Number(year);
+  const blank = v => v === null || v === undefined || v === "";
+  if ( blank(born) || blank(year) || !Number.isFinite(b) || !Number.isFinite(y) || kind === "never" ) return null;
+  const real = Math.max(0, Math.trunc(y - b));
+  if ( kind !== "ghoul" || lost ) return real;
+  const s = Number(still);
+  return Number.isFinite(s) && still !== null && still !== "" ? Math.min(real, Math.max(0, Math.trunc(s))) : real;
+}
+/** The filter's step for an age: 0 under 40, then one a decade, 5 from 80 on. */
+export const faceStage = age => !Number.isFinite(Number(age)) || age === null ? 0 : Math.max(0, Math.min(5, Math.floor((Number(age) - 30) / 10)));
+export const STAGE_WORDS = ["as painted", "forty", "fifty", "sixty", "seventy", "eighty and past"];
+/** What a face shows in a year: {age, stage, img: the hand-made picture for that age or null}. */
+export function faceFor(face = {}, year) {
+  const age = apparentAge(face, year);
+  if ( age === null ) return {age: null, stage: 0, img: null};
+  return {age, stage: faceStage(age), img: ageFor({base: null, variants: face.variants ?? []}, age)};
+}
+/**
+ * The aging filter on RGBA pixels (in place): colour drains toward grey and a warm, faded tone and the contrast softens,
+ * more with each step. Returns the same array.
+ */
+export function agePixels(data, stage) {
+  const k = Math.max(0, Math.min(5, Math.trunc(Number(stage) || 0)));
+  if ( !k ) return data;
+  const grey = 0.1 * k, warm = 0.05 * k, soft = 1 - 0.04 * k, lift = 3 * k;
+  for ( let i = 0; i + 3 < data.length; i += 4 ) {
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const L = 0.299 * r + 0.587 * g + 0.114 * b;
+    let nr = r + (L - r) * grey, ng = g + (L - g) * grey, nb = b + (L - b) * grey;
+    nr += (Math.min(255, L * 1.08) - nr) * warm; ng += (L * 0.96 - ng) * warm; nb += (L * 0.8 - nb) * warm;
+    data[i] = clamp255((nr - 128) * soft + 128 + lift);
+    data[i + 1] = clamp255((ng - 128) * soft + 128 + lift);
+    data[i + 2] = clamp255((nb - 128) * soft + 128 + lift);
+  }
+  return data;
+}
+const clamp255 = v => Math.max(0, Math.min(255, Math.round(v)));
+/** The file name of an aged picture: the actor, which picture, the step, a tag of the picture it was made from. */
+export const agedName = (actorId, which, stage, base = "") => `${String(actorId).replace(/[^A-Za-z0-9_-]/g, "")}-${which === "token" ? "token" : "portrait"}-age${Math.trunc(stage)}-${shortHash(base)}.webp`;
+/** A short tag for a picture's path, so a new portrait never reuses an old aged copy the browser has kept. */
+export function shortHash(s) {
+  let h = 5381;
+  for ( const ch of String(s ?? "") ) h = ((h * 33) ^ ch.charCodeAt(0)) >>> 0;
+  return h.toString(36);
+}
+
 /** The cues a clock move of delta seconds crosses, ending toDawn seconds before sunrise. */
 export function dreadCuesCrossed(toDawnAfter, delta) {
   const before = Number(toDawnAfter) + Number(delta);

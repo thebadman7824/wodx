@@ -898,3 +898,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - kits-rules.mjs: ageFor({base, variants}, year) and cleanAges(variants).
 - main.mjs: flags.wodx-atmosphere.ages {base, variants}; setAge, applyAges (the map's own level, else the scene background); runs at ready, on a year change (after the clock settles, not during a skip), at the end of a skip and when an era is applied; the This scene part lists the years with Remove and adds one by year and file picker; api.ages.
 - Tests: one more in dawn-dread.test.mjs. Gate: tools/gate/gateages.mjs, 6 steps, a scene of its own; years are passed in, the clock never moves.
+
+## 2026-11-09: faces that age (Atmosphere 0.7.0, B271)
+
+- kits-rules.mjs: FACE_KINDS, faceKind(type, variant, set), apparentAge(face, year), faceStage(age), STAGE_WORDS, faceFor(face, year), agePixels(rgba, stage), agedName(actorId, which, stage, base), shortHash.
+- main.mjs: flags.wodx-atmosphere.face {born, kind, still, lost, variants, base {img, token}, made {img, token}, shown}; agedCopy (canvas pixels, webp, upload to worlds/<world>/wodx-faces), applyFace (a picture changed by hand becomes the new base; placed tokens follow), applyFaces, setFace (null stops and restores), setFaceAge; ageEverything runs places and faces together at ready, on a year change, after a skip and when an era is applied. A Faces that age part in the window with search boxes; api.faces.
+- Tests: five more in dawn-dread.test.mjs (757 pass). Gate: tools/gate/gatefaces.mjs, 8 steps, a character and scene of its own; years are passed in.

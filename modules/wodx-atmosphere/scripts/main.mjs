@@ -19,7 +19,7 @@ import * as K from "./kits-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.6.0";
+const VERSION = "0.7.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -362,6 +362,138 @@ export async function applyAges({scenes = null, year = yearNow()} = {}) {
 let agedYear = null;
 
 /* ------------------------------------------------------------------ */
+/*  Faces that age                                                     */
+/* ------------------------------------------------------------------ */
+
+const FACE_DIR = () => `worlds/${game.world.id}/wodx-faces`;
+const faceKindOf = (actor, face) => K.faceKind(actor?.type, actor?.system?.settings?.variant, face?.kind ?? "auto");
+const wild = src => !src || String(src).includes("*");
+function loadPicture(src) {
+  return new Promise((res, rej) => {
+    const i = new Image();
+    i.crossOrigin = "anonymous";
+    i.onload = () => res(i);
+    i.onerror = () => rej(new Error(`No picture could be read at ${src}`));
+    i.src = src;
+  });
+}
+/** An aged copy of a picture, written to the world's wodx-faces folder. Returns its path. */
+async function agedCopy(actor, which, src, stage) {
+  const img = await loadPicture(src);
+  const w = img.naturalWidth, h = img.naturalHeight;
+  if ( !w || !h ) throw new Error(`The picture at ${src} is empty`);
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d", {willReadFrequently: true});
+  ctx.drawImage(img, 0, 0);
+  const px = ctx.getImageData(0, 0, w, h);
+  K.agePixels(px.data, stage);
+  ctx.putImageData(px, 0, 0);
+  const blob = await new Promise(r => c.toBlob(r, "image/webp", 0.9));
+  if ( !blob ) throw new Error("The aged picture could not be made");
+  const FP = foundry.applications.apps.FilePicker.implementation;
+  for ( const dir of [`worlds/${game.world.id}`, FACE_DIR()] ) {
+    try { await FP.createDirectory("data", dir, {notify: false}); }
+    catch (err) { if ( !/exists/i.test(String(err?.message ?? err)) ) throw err; }
+  }
+  const name = K.agedName(actor.id, which, stage, src);
+  const result = await FP.upload("data", FACE_DIR(), new File([blob], name, {type: "image/webp"}), {}, {notify: false});
+  if ( result === false || result?.status === "error" ) throw new Error("The aged picture could not be written");
+  return result?.path ?? `${FACE_DIR()}/${name}`;
+}
+/** One character's portrait and token art for the chronicle's year. Returns {age, stage, img, token}, or null. */
+export async function applyFace(actor, year = yearNow()) {
+  const face = actor?.flags?.[MOD]?.face;
+  if ( !face || !active || !game.user.isGM || !Number.isFinite(year) ) return null;
+  const f = foundry.utils.deepClone(face);
+  const kind = faceKindOf(actor, f);
+  f.base ??= {};
+  f.made ??= {};
+  f.made.img ??= {};
+  f.made.token ??= {};
+  // A ghoul's age stands still from the day it is first counted, unless the Storyteller gave it
+  if ( kind === "ghoul" && (f.still === null || f.still === undefined || f.still === "") && !f.lost ) {
+    const a = K.apparentAge({...f, kind: "ages"}, year);
+    if ( a !== null ) f.still = a;
+  }
+  // A picture changed by hand becomes the new one to age from
+  const tok = actor.prototypeToken?.texture?.src ?? null;
+  const knownImg = [f.base.img, ...Object.values(f.made.img), ...(f.variants ?? []).map(v => v.img)].filter(Boolean);
+  if ( actor.img && (!f.base.img || !knownImg.includes(actor.img)) ) { f.base.img = actor.img; f.made.img = {}; }
+  const knownTok = [f.base.token, ...Object.values(f.made.token)].filter(Boolean);
+  if ( !wild(tok) && (!f.base.token || !knownTok.includes(tok)) ) { f.base.token = tok; f.made.token = {}; }
+  const {age, stage, img} = K.faceFor({...f, kind}, year);
+  let wantImg = img ?? f.base.img ?? actor.img, wantTok = f.base.token ?? tok;
+  if ( stage > 0 && f.filter !== false ) {
+    if ( !img && f.base.img ) wantImg = f.made.img[stage] ??= await agedCopy(actor, "img", f.base.img, stage);
+    if ( !wild(f.base.token) ) wantTok = f.made.token[stage] ??= await agedCopy(actor, "token", f.base.token, stage);
+  }
+  f.shown = {age, stage};
+  const up = {};
+  if ( wantImg && actor.img !== wantImg ) up.img = wantImg;
+  if ( !wild(wantTok) && tok !== wantTok ) up["prototypeToken.texture.src"] = wantTok;
+  if ( !foundry.utils.objectsEqual(f, face) ) up[`flags.${MOD}.face`] = f;
+  if ( Object.keys(up).length ) await actor.update(up);
+  // Placed tokens that show one of the character's pictures follow
+  const tokens = [f.base.token, ...Object.values(f.made.token)].filter(Boolean);
+  if ( !wild(wantTok) ) for ( const sc of all(game.scenes) ) {
+    const ups = [...(sc.tokens ?? [])].filter(t => t.actorId === actor.id && tokens.includes(t.texture?.src) && t.texture?.src !== wantTok)
+      .map(t => ({_id: t.id, "texture.src": wantTok}));
+    if ( ups.length ) await sc.updateEmbeddedDocuments("Token", ups);
+  }
+  return {age, stage, img: wantImg, token: wantTok};
+}
+/** Every character with a face that ages. Returns the ids changed. */
+export async function applyFaces({year = yearNow()} = {}) {
+  if ( !active || !isActiveGM() || !Number.isFinite(year) ) return [];
+  const changed = [];
+  for ( const a of all(game.actors) ) {
+    if ( !a.flags?.[MOD]?.face ) continue;
+    const before = [a.img, a.prototypeToken?.texture?.src].join("|");
+    try { await applyFace(a, year); } catch (e) { console.warn(`${MOD} | face of ${a.name}`, e); continue; }
+    if ( [a.img, a.prototypeToken?.texture?.src].join("|") !== before ) changed.push(a.id);
+  }
+  return changed;
+}
+/** Start, change or stop a character's aging. data null stops it and puts the pictures back. */
+export async function setFace(actor, data) {
+  if ( !actor || !game.user.isGM ) return null;
+  const face = actor.flags?.[MOD]?.face;
+  if ( data === null ) {
+    if ( !face ) return null;
+    const up = {};
+    if ( face.base?.img && actor.img !== face.base.img ) up.img = face.base.img;
+    const tok = actor.prototypeToken?.texture?.src;
+    if ( face.base?.token && tok !== face.base.token ) up["prototypeToken.texture.src"] = face.base.token;
+    const made = [...Object.values(face.made?.token ?? {})];
+    if ( Object.keys(up).length ) await actor.update(up);
+    await actor.unsetFlag(MOD, "face");
+    if ( face.base?.token ) for ( const sc of all(game.scenes) ) {
+      const ups = [...(sc.tokens ?? [])].filter(t => t.actorId === actor.id && made.includes(t.texture?.src)).map(t => ({_id: t.id, "texture.src": face.base.token}));
+      if ( ups.length ) await sc.updateEmbeddedDocuments("Token", ups);
+    }
+    return null;
+  }
+  const f = foundry.utils.deepClone(face ?? {});
+  for ( const k of ["born", "still"] ) if ( k in data ) { const v = Math.trunc(Number(data[k])); f[k] = data[k] === "" || data[k] === null || !Number.isFinite(v) ? null : v; }
+  if ( "kind" in data ) f.kind = K.FACE_KINDS[data.kind] ? data.kind : "auto";
+  if ( "lost" in data ) f.lost = !!data.lost;
+  if ( "filter" in data ) f.filter = data.filter !== false;
+  await actor.update({[`flags.${MOD}.face`]: f});
+  return applyFace(actor);
+}
+/** A hand-made picture of the character from an age on (img empty removes that age). */
+export async function setFaceAge(actor, age, img) {
+  const face = actor?.flags?.[MOD]?.face;
+  if ( !face || !game.user.isGM ) return null;
+  const rest = (face.variants ?? []).filter(v => Math.trunc(Number(v.from)) !== Math.trunc(Number(age)));
+  const variants = K.cleanAges(img ? [...rest, {from: age, img}] : rest);
+  await actor.update({[`flags.${MOD}.face.variants`]: variants});
+  return applyFace(actor);
+}
+const ageEverything = () => Promise.all([applyAges(), applyFaces()]).catch(e => console.warn(`${MOD} | ages`, e));
+
+/* ------------------------------------------------------------------ */
 /*  Personal themes                                                    */
 /* ------------------------------------------------------------------ */
 
@@ -680,6 +812,31 @@ export function AtmosphereClass() {
           return new FP({type: "image", current: mapSrc(sc) ?? "", callback: async path => { await setAge(sc, from, path); AtmosphereApp.refresh(); }}).render(true);
         },
         dropAge: async (ev, t) => { await setAge(canvas?.scene, Number(t.dataset.from), ""); AtmosphereApp.refresh(); },
+        setFace: async () => {
+          const el = document.querySelector("#wodx-atmosphere");
+          const a = game.actors.get(el?.querySelector("select[name=faceActor]")?.value);
+          const born = el?.querySelector("input[name=faceBorn]")?.value;
+          if ( !a || !Number.isFinite(Number(born)) || born === "" ) return ui.notifications.warn("Choose a character and give the year of birth.");
+          try { await setFace(a, {born, kind: el.querySelector("select[name=faceKind]")?.value ?? "auto", still: el.querySelector("input[name=faceStill]")?.value ?? ""}); }
+          catch (e) { ui.notifications.warn(`The face could not be aged: ${e.message}`); }
+          AtmosphereApp.refresh();
+        },
+        faceLost: async (ev, t) => {
+          const a = game.actors.get(t.dataset.actor);
+          try { await setFace(a, {lost: !a?.flags?.[MOD]?.face?.lost}); } catch (e) { ui.notifications.warn(`The face could not be aged: ${e.message}`); }
+          AtmosphereApp.refresh();
+        },
+        faceStop: async (ev, t) => { await setFace(game.actors.get(t.dataset.actor), null); AtmosphereApp.refresh(); },
+        faceAt: async (ev, t) => {
+          const a = game.actors.get(t.dataset.actor);
+          const age = await foundry.applications.api.DialogV2.prompt({window: {title: `A picture of ${a?.name ?? "the character"} from an age`},
+            content: `<div class="form-group"><label>From the age of</label><input type="number" name="age" min="0" step="1" autofocus></div>`,
+            ok: {label: "Choose the picture", callback: (e, b) => b.form.elements.age.value}, rejectClose: false});
+          if ( age === null || age === undefined || age === "" || !Number.isFinite(Number(age)) ) return;
+          const FP = foundry.applications.apps.FilePicker.implementation;
+          return new FP({type: "image", current: a?.img ?? "", callback: async path => { await setFaceAge(a, Math.trunc(Number(age)), path); AtmosphereApp.refresh(); }}).render(true);
+        },
+        faceDropAt: async (ev, t) => { await setFaceAge(game.actors.get(t.dataset.actor), Number(t.dataset.age), ""); AtmosphereApp.refresh(); },
         clearTheme: async (ev, t) => { await setTheme(game.actors.get(t.dataset.actor), ""); AtmosphereApp.refresh(); }
       }
     };
@@ -742,6 +899,23 @@ export function AtmosphereClass() {
                 + (th?.src ? `<button type="button" data-action="spotlight" data-actor="${a.id}">Spotlight</button><button type="button" data-action="clearTheme" data-actor="${a.id}">Clear</button>` : "")
                 + `</td></tr>`; }).join("")}</tbody></table>`; })()}
         </section>
+        <section><h3>Faces that age</h3><p class="wodx-quiet">Portraits and token art age with the chronicle's year: from forty on, one step a decade, the colour fades. A ghoul keeps the age at which the blood was first drunk until cut off from it, then the years catch up. The undead, the Reborn and spirits do not age. A picture you choose for an age is used in place of the filter.</p>
+          ${(() => { const y = yearNow(), list = all(game.actors).filter(a => a.flags?.[MOD]?.face).sort((a, b) => a.name.localeCompare(b.name));
+            const everyone = all(game.actors).filter(a => a.type !== "Group").sort((a, b) => a.name.localeCompare(b.name));
+            const rows = list.map(a => { const fc = a.flags[MOD].face, kind = faceKindOf(a, fc), sh = K.faceFor({...fc, kind}, y);
+              const vs = (fc.variants ?? []).map(v => `<span class="watmo-chip">from ${v.from}: ${esc(String(v.img).split("/").pop())} <button type="button" data-action="faceDropAt" data-actor="${a.id}" data-age="${v.from}" aria-label="Remove">×</button></span>`).join(" ");
+              return `<tr><td>${esc(a.name)}</td><td>born ${fc.born ?? "?"}</td><td>${kind === "never" ? "does not age" : sh.age === null ? "?" : `looks ${sh.age}${kind === "ghoul" && !fc.lost ? " (the blood)" : ""}; ${esc(K.STAGE_WORDS[sh.stage])}`}${vs ? `<br>${vs}` : ""}</td><td>`
+                + (kind === "ghoul" ? `<button type="button" data-action="faceLost" data-actor="${a.id}">${fc.lost ? "Fed again" : "Cut off from the blood"}</button>` : "")
+                + `<button type="button" data-action="faceAt" data-actor="${a.id}">Picture at an age…</button><button type="button" data-action="faceStop" data-actor="${a.id}">Stop</button></td></tr>`; }).join("");
+            return (list.length > 5 ? searchBox("table.watmo-faces", "Search faces…", "Search faces") : "")
+              + (rows ? `<table class="watmo-fc watmo-faces"><tbody>${rows}</tbody></table>` : "")
+              + (everyone.length > 5 ? searchBox("select[name=faceActor]", "Search characters…", "Search characters") : "")
+              + `<div class="form-group"><label>Character</label><select name="faceActor"${everyone.length > 5 ? "" : " data-fixed"}>${everyone.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join("")}</select></div>
+              <div class="form-group"><label>Born in the year</label><input type="number" name="faceBorn" step="1"></div>
+              <div class="form-group"><label>Ages</label><select name="faceKind" data-fixed>${opt(K.FACE_KINDS, "auto")}</select></div>
+              <div class="form-group"><label>A ghoul's age when first fed (blank: the age now)</label><input type="number" name="faceStill" min="0" step="1"></div>
+              <div class="watmo-row"><button type="button" data-action="setFace"${everyone.length ? "" : " disabled"}><i class="fa-solid fa-hourglass-half"></i> Age this face</button></div>`; })()}
+        </section>
         <section><h3>Handouts</h3><p class="wodx-quiet">A journal page in the era's style, in the folder WoDX handouts.</p>
           <button type="button" data-action="handout"><i class="fa-solid fa-scroll"></i> New handout</button></section>`;
       return div;
@@ -799,6 +973,7 @@ export async function prime() {
     walls: {muffle: muffleScene, changes: K.muffleChanges},
     themes: {play: playTheme, set: setTheme},
     ages: {set: setAge, apply: applyAges, picture: (scene, year) => K.ageFor(scene?.flags?.[MOD]?.ages ?? {}, year)},
+    faces: {set: setFace, at: setFaceAge, apply: applyFace, applyAll: applyFaces, year: () => yearNow(), show: (actor, year = yearNow()) => K.faceFor({...(actor?.flags?.[MOD]?.face ?? {}), kind: faceKindOf(actor, actor?.flags?.[MOD]?.face)}, year)},
     dread: {now: dread, rotschreck: dreadRotschreck, apply: applyDread, tick: dreadTick},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
@@ -814,7 +989,7 @@ Hooks.once("ready", async () => {
     if ( !setting("lastKit") ) await setSetting("lastKit", currentKit());
     await applyWeather({quiet: false});
     agedYear = yearNow();
-    await applyAges().catch(e => console.warn(`${MOD} | ages`, e));
+    await ageEverything();
   }
   Hooks.callAll("wodxAtmosphereReady", api);
 });
@@ -828,12 +1003,12 @@ Hooks.on("updateWorldTime", (time, delta) => {
   timeTimer = setTimeout(() => {
     applyWeather().catch?.(() => null);
     const y = yearNow();
-    if ( Number.isFinite(y) && y !== agedYear && !chron()?.isSkipping?.() ) { agedYear = y; applyAges({year: y}).catch(e => console.warn(`${MOD} | ages`, e)); }
+    if ( Number.isFinite(y) && y !== agedYear && !chron()?.isSkipping?.() ) { agedYear = y; ageEverything(); }
   }, 250);
 });
 let timeTimer = null;
-Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); applyAges().catch(e => console.warn(`${MOD} | ages`, e)); } });
-Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); applyAges().catch(e => console.warn(`${MOD} | ages`, e)); } });
+Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); ageEverything(); } });
+Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); ageEverything(); } });
 Hooks.on("refreshToken", token => { if ( active ) { try { drawFrame(token); } catch (e) { console.warn(`${MOD} | frame`, e); } } });
 Hooks.on("canvasReady", () => {
   if ( !active ) return;
