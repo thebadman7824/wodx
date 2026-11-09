@@ -126,7 +126,7 @@ export const LIGHTS = {
 /**
  * Hiding places on tiles. need: the search successes it takes to find someone hidden there, before their own Stealth;
  * room: how many fit unless the Storyteller says otherwise. Hiding is Dexterity + Stealth, difficulty 6 (the Stealth
- * contest, read as a roll now and a search later: a house rule; V20 page ref to pin, rule 5); every two successes add one to the
+ * contest, Dexterity + Stealth against Perception + Alertness at 6, V20 core printed p. 262 (pdf 270), read as a roll now and a search later: a house rule); every two successes add one to the
  * successes a searcher needs.
  */
 export const HIDES = {
@@ -143,7 +143,7 @@ export const HIDES = {
  * turn, its heat the soak difficulty; it is lethal to mortals and ghouls and aggravated to everyone else, and a vampire
  * soaks it only with Fortitude. A brazier,
  * lamp or candle stand is harmless until knocked over, and then burns where it falls. Electricity follows the core
- * electrocution levels (page ref to pin). Broken glass, caltrops and thorns are a house rule: dice of lethal damage,
+ * electrocution rules: lethal each turn in contact, by the strength of the current; a vampire soaks it, and a botched soak makes it aggravated (V20 core printed p. 295, pdf 303). Broken glass, caltrops and thorns are a house rule: dice of lethal damage,
  * less a die for each success on stepping carefully.
  */
 export const HAZARDS = {
@@ -184,7 +184,7 @@ export const SACRED = {
 /**
  * Watch points on tiles. A window on the street or a mirror shows who is in the area it is tied to (another tile):
  * Perception + Alertness, difficulty 6; any success names them, none gives only a count, a botch shows nothing. A mirror
- * holds no Lasombra (their clan weakness; page ref to pin). A telephone or a radio,
+ * holds no Lasombra (their clan weakness, V20 core printed p. 59, pdf 67; the Cast No Reflection Flaw, printed p. 494, pdf 502). A telephone or a radio,
  * in its era, calls the phone it is tied to or calls for help; a bell, horn or alarm raises the alarm, loud.
  */
 export const WATCHES = {
@@ -197,7 +197,7 @@ export const WATCHES = {
 /**
  * Mounts and vehicles on tiles. Getting on and riding or driving at an ordinary pace needs no roll with a dot in the
  * skill (V20 p. 258 for driving); with none, the Attribute alone at +1 difficulty, as for any untrained Skill (WoDX
- * Actions' pool adds it when the card is rolled; page ref to pin). Keeping control is Dexterity + the skill at 6; flat out is +3, as the riding and driving presets in
+ * Actions' pool adds it when the card is rolled; V20 core printed p. 257, pdf 265; a Talent has no penalty). Keeping control is Dexterity + the skill at 6; flat out is +3, as the riding and driving presets in
  * WoDX Actions have it. A botch throws a rider or crashes a vehicle: the Storyteller rolls the damage.
  * skill: the Ability; attr: the Attribute for keeping control; seats: with the one at the reins; from: the year it
  * appears (the Chronicle year); thrown: a botch puts the one at the reins on the ground.
@@ -236,8 +236,8 @@ export const fallDice = feet => Math.max(1, Math.floor((Math.max(0, Number(feet)
 /**
  * Targets on tiles. Shooting is the weapon's own Attribute and Ability (Dexterity + Firearms, or Archery before guns) at
  * the weapon's difficulty, with WoDX Combat's range bands: within the weapon's range +0, up to twice +1, up to three
- * times +2, and no further (VtDA20 p. 347). Aiming adds a die a turn, up to Perception, through Bonus dice (V20 core,
- * page to pin). Throwing something with no thrown weapon on the sheet is Dexterity + Athletics at 6 with a range of
+ * times +2, and no further (VtDA20 p. 347). Aiming adds a die a turn, up to Perception, through Bonus dice: one shot,
+ * Firearms 1 or more, a scope +2 on the first turn, not at a target moving faster than a walk (V20 core printed p. 277, pdf 285). Throwing something with no thrown weapon on the sheet is Dexterity + Athletics at 6 with a range of
  * THROW_YARDS (house rule). Striking a dummy is Dexterity + Melee with a hand weapon on the sheet, or Brawl, at 6.
  * A target with rings scores by successes (house rule): 1 the outer ring, 2 the inner ring, 3 or more the centre.
  * Something to break: a fragile thing breaks on any hit; anything else breaks the way a door does, by the lifting chart
@@ -983,7 +983,7 @@ function targetOptions(o, ch) {
         roll: {attr: w.attr || "dexterity", attrLabel: cap(w.attr || "dexterity"), ability: key, abilityLabel: cap(key), dice: dots + ab(key) + (Number(w.accuracy) || 0),
           diff: Math.min(10, (Number(w.diff) || 6) + b), need: null, skill: key !== "athletics"},
         seconds: TURN, noise: key === "firearms" ? {success: "loud", fail: "loud", botch: "loud"} : {success: "quiet", fail: "quiet", botch: "quiet"},
-        note: `${yards} yards: range ${w.range}${bandWords(b)}.${Number(w.accuracy) ? ` Accuracy ${w.accuracy > 0 ? "+" : ""}${w.accuracy}.` : ""} Aiming: a die a turn, up to Perception, as Bonus dice. A botch: ${key === "firearms" ? "it jams" : "a wild shot"}.`});
+        note: `${yards} yards: range ${w.range}${bandWords(b)}.${Number(w.accuracy) ? ` Accuracy ${w.accuracy > 0 ? "+" : ""}${w.accuracy}.` : ""} ${key === "firearms" ? "Aiming (Firearms 1 or more, one shot): a die a turn, up to Perception, as Bonus dice; a scope adds 2 the first turn. " : ""}A botch: ${key === "firearms" ? "it jams" : "a wild shot"}.`});
     }
     const tb = rangeBand(yards, THROW_YARDS);
     if ( tb !== null ) out.push({id: "throw", label: "Throw something at it", shot: "throw",

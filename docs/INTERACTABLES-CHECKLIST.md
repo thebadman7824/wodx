@@ -14,7 +14,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Gender-neutral text; no NPC dialogue
 - [x] Harness tests (interactables.test.mjs): rules and runtime on a stand-in for Foundry
 - [x] UI fit at three sizes with Foundry 14's own foundry2.css (in the cloud, with the PC's stylesheet)
-- [ ] V20 core page refs pinned from the book texts on the PC (marked TODO in interact-rules.mjs; the V20 Dark Ages refs are in)
+- [x] V20 core page refs pinned from the book texts on the PC (2026-11-09; the V20 Dark Ages refs are in)
 - [x] Gate in rothenstein-wodx (tools/gate/gate-interact.mjs): 10/10 on 2026-11-09, at commit e69ea48. The first runs failed on the gate script itself (dice mapping, reach, stored totals, creation order of walls and tokens), fixed in PRs 14 to 19; the module did not change
 - [x] Deployed 2026-11-09 (Interactables 0.1.0, MD5s checked), on in rothenstein-wodx only
 
@@ -69,7 +69,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Harness tests (10 new) and UI fit
 - [x] Gate step 19 in rothenstein-wodx: 19/19 at fe68eef
 - [x] Deployed 2026-11-09 (backups Backups\wodx-interactables-0.6.0-2026-11-09, Backups\wodx-combat-3.7.5-2026-11-09)
-- [ ] Electrocution page ref (V20 core) to pin
+- [x] Electrocution page ref pinned (V20 core printed p. 295, pdf 303)
 
 ## 0.8.0: altars, relics and fetishes (2026-11-09)
 - [x] Rules: holy ground with a rating, desecration, a demon seared (WoDX Actions' reading of Demon pp. 254-255); relics and fetishes to take (B152)
@@ -87,7 +87,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Harness tests (5 new) and UI fit
 - [x] Gate step 21 in rothenstein-wodx: 21/21 at 3d1153d
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.8.1-2026-11-09)
-- [ ] Lasombra reflection page ref to pin
+- [x] Lasombra reflection page ref pinned (V20 core printed p. 59, pdf 67; Flaw printed p. 494, pdf 502)
 
 ## 0.11.0: mounts and vehicles (2026-11-09)
 - [x] Rules: eight kinds with seats and eras; getting on, Keep control, Go flat out, throws and crashes (B154)
@@ -97,7 +97,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Harness tests (6 new) and UI fit
 - [x] Gate step 22 in rothenstein-wodx: passes in 0.13.1 (24/24)
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.10.0-2026-11-09)
-- [ ] Untrained Skill page ref to pin (V20 core)
+- [x] Untrained Skill page ref pinned (V20 core printed p. 257, pdf 265; Knowledges printed p. 107, pdf 115)
 
 ## 0.12.0: pictures, markers and map events (2026-11-09)
 Step 1 of "Responsive Maps for WoDX".
@@ -128,7 +128,7 @@ Step 3 of the design note.
 - [x] Harness tests (8 new) and UI fit
 - [x] Gate step 25 in rothenstein-wodx: 25/25 at f232f99
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.13.1-2026-11-09, MD5s checked)
-- [ ] Aiming page ref (V20 core) to pin
+- [x] Aiming page ref pinned (V20 core printed p. 277, pdf 285); the shot note gives the Firearms limits
 
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
