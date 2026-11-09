@@ -144,17 +144,6 @@
       "pdf": 55
      }
     ]
-   },
-   {
-    "text": "Its nature, its regions and the beings that live there are what changelings must learn to travel it safely.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "c20",
-      "page": 299,
-      "pdf": 300
-     }
-    ]
    }
   ],
   "see": [
@@ -349,8 +338,8 @@
     ]
    },
    {
-    "text": "A changeling can call on the Autumn on purpose, drawing on Banality to weaken the chimerical.",
-    "tier": "implied",
+    "text": "By invoking the Autumn, a changeling denies chimerical reality any effect on the changeling's own self, chimerical harm included.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -389,14 +378,9 @@
     ]
    },
    {
-    "text": "Glamour is spent on cantrips and other faerie effects and must be won back through contact with mortal creativity and dreams.",
-    "tier": "implied",
+    "text": "Changelings regain Glamour through the five paths to epiphany; Revelry, for one, means acting on the changeling's own nature, which differs by kith.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "c20",
-      "page": 172,
-      "pdf": 173
-     },
      {
       "book": "c20",
       "page": 173,
@@ -452,34 +436,19 @@
     ]
    },
    {
-    "text": "Banality is gained through mundane life and contact with disbelief, and can be shed only slowly, through quests and Glamour.",
-    "tier": "implied",
+    "text": "A changeling's human side is a poor shield: a moment of apathy lets Banality in, and a roll decides how much.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "c20",
-      "page": 173,
-      "pdf": 174
-     },
      {
       "book": "c20",
       "page": 174,
       "pdf": 175
-     },
-     {
-      "book": "c20",
-      "page": 267,
-      "pdf": 268
-     },
-     {
-      "book": "c20",
-      "page": 271,
-      "pdf": 272
      }
     ]
    },
    {
     "text": "Too much Banality can make a changeling forget their faerie nature and live as an ordinary mortal.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -520,8 +489,8 @@
     ]
    },
    {
-    "text": "Bedlam deepens in stages, and a changeling lost far enough in it may never find the way back to waking life.",
-    "tier": "implied",
+    "text": "The deeper the Bedlam, the more chaos and chimera gather round, and in deep Bedlam nearby chimera unravel into dreamstuff.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -671,18 +640,13 @@
     ]
    },
    {
-    "text": "Chimerical things can wound or aid the fae, while mortals pass through them unaware.",
-    "tier": "implied",
+    "text": "Many objects, people and places have a second, chimerical look or use, seen only with faerie sight.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
       "page": 32,
       "pdf": 33
-     },
-     {
-      "book": "c20",
-      "page": 33,
-      "pdf": 34
      }
     ]
    }
@@ -705,14 +669,20 @@
   "summary": "The forgetfulness that hides chimerical events from mortals and from changelings caught by Banality.",
   "claims": [
    {
-    "text": "The Mists cloud the memory of mortals who witness the fae, and the more Banality a mortal carries, the more is forgotten.",
-    "tier": "implied",
+    "text": "The fae first raised the Mists to hide the chimerical world from mortals; merged with Banality, they became a wall between Kithain and humans.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
       "page": 45,
       "pdf": 46
-     },
+     }
+    ]
+   },
+   {
+    "text": "When the Mists rise memory fades, which hides faerie magic even from Banality.",
+    "tier": "stated",
+    "refs": [
      {
       "book": "c20",
       "page": 269,
@@ -751,7 +721,7 @@
    },
    {
     "text": "A changeling has both at once rather than switching between them.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -790,34 +760,19 @@
     ]
    },
    {
-    "text": "A changeling moves from childling to wilder to grump as the mortal body grows older.",
+    "text": "A changeling's seeming follows the changeling's outlook on the world, not the body's age.",
     "tier": "stated",
     "refs": [
      {
       "book": "c20",
       "page": 83,
       "pdf": 84
-     },
-     {
-      "book": "c20",
-      "page": 84,
-      "pdf": 85
-     },
-     {
-      "book": "c20",
-      "page": 85,
-      "pdf": 86
-     },
-     {
-      "book": "c20",
-      "page": 86,
-      "pdf": 87
      }
     ]
    },
    {
-    "text": "The fae self ages along with the mortal one, which shapes how each seeming feels to the changeling.",
-    "tier": "implied",
+    "text": "A changeling's life follows the mortal body: birth, Chrysalis, age and death, then rebirth.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -845,8 +800,8 @@
   "summary": "The time after the Chrysalis when an older changeling teaches a new one how to live as fae.",
   "claims": [
    {
-    "text": "After the Chrysalis an older changeling usually takes the newcomer in and teaches the ways of the Kithain.",
-    "tier": "implied",
+    "text": "After the Dream Dance, the Kithain who found the newcomer, now a fledgling, usually bring the new fae to a large gathering or a freehold.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -884,18 +839,13 @@
     ]
    },
    {
-    "text": "The balance between the Courts has shifted over the ages, and every changeling claims one of them.",
-    "tier": "implied",
+    "text": "The Courts are older than any Kithain record and appear even in legends of the Mythic Age.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
       "page": 56,
       "pdf": 57
-     },
-     {
-      "book": "c20",
-      "page": 58,
-      "pdf": 59
      }
     ]
    }
@@ -923,11 +873,6 @@
     "text": "The Seelie Code holds that death is better than dishonour, that love conquers all, that beauty is life, and that a debt must never be forgotten.",
     "tier": "stated",
     "refs": [
-     {
-      "book": "c20",
-      "page": 58,
-      "pdf": 59
-     },
      {
       "book": "c20",
       "page": 59,
@@ -1008,8 +953,8 @@
   "summary": "A secret, darker body behind the Unseelie Court, linked in rumour to House Ailil.",
   "claims": [
    {
-    "text": "The Shadow Court works in secret and is strongest at Samhain.",
-    "tier": "implied",
+    "text": "Disgruntled Unseelie founded the Shadow Court during the Interregnum to mock the Seelie refusal to give up rule in the autumn and winter months.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -1095,27 +1040,6 @@
       "book": "c20",
       "page": 137,
       "pdf": 138
-     }
-    ]
-   },
-   {
-    "text": "Each house entry gives a boon and a flaw for its members.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "c20",
-      "page": 128,
-      "pdf": 129
-     },
-     {
-      "book": "c20",
-      "page": 132,
-      "pdf": 133
-     },
-     {
-      "book": "c20",
-      "page": 136,
-      "pdf": 137
      }
     ]
    }
@@ -1234,8 +1158,8 @@
     ]
    },
    {
-    "text": "Witnesses find a Balor hard to forget, which makes them easier to trace.",
-    "tier": "implied",
+    "text": "Witnesses recall a Balor easily: investigators get -2 difficulty to have them remember or identify one.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -1475,7 +1399,7 @@
    },
    {
     "text": "Fiona demanded a hearing and punishment after the Beltaine Massacre, and no one listened.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -1772,17 +1696,6 @@
       "pdf": 64
      }
     ]
-   },
-   {
-    "text": "An oath of fealty binds a vassal to serve and a liege to protect.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "c20",
-      "page": 265,
-      "pdf": 266
-     }
-    ]
    }
   ],
   "see": [
@@ -1850,8 +1763,8 @@
   "summary": "Wild places rich in Glamour, out in nature rather than tied to a court.",
   "claims": [
    {
-    "text": "Glades are wild places where Glamour gathers by itself, away from any court.",
-    "tier": "implied",
+    "text": "Glades are natural wellsprings of Glamour, wild beauty spots from tiny thickets to whole mountains.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -1879,8 +1792,8 @@
   "summary": "Faerie roads that link freeholds and places of Glamour.",
   "claims": [
    {
-    "text": "Trods are faerie paths that join one freehold or glade to another.",
-    "tier": "implied",
+    "text": "Trods are a web of old magical paths across the mundane world and the Dreaming, some branches now lost.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -2014,11 +1927,11 @@
    "classical",
    "dark-ages"
   ],
-  "summary": "The ancient time when fae and mortals shared the world freely and Glamour was everywhere.",
+  "summary": "The first age of Kithain history, which began under the dark Fomorians.",
   "claims": [
    {
-    "text": "The Mythic Age is the first age of Kithain history, when fae and mortals lived side by side.",
-    "tier": "implied",
+    "text": "In the beginning the Fomorians, dark fae born of the primal dreams of humanity's first ancestors, ruled the world.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -2046,8 +1959,8 @@
   "summary": "The first great break between the fae and the mortal world, as Banality grew.",
   "claims": [
    {
-    "text": "The Sundering came after the Mythic Age, as the bond between fae and mortals began to fail.",
-    "tier": "implied",
+    "text": "No one knows for sure what began the Sundering, mortals finding cold iron or some fae crime the Dreaming punished, and it lasted nearly a thousand years.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -2162,7 +2075,7 @@
    },
    {
     "text": "Changelings who fought in the world wars often came home Undone.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -2296,7 +2209,7 @@
    },
    {
     "text": "The war ran alongside the mortal Vietnam war.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -2602,17 +2515,6 @@
       "pdf": 29
      }
     ]
-   },
-   {
-    "text": "Thallain are fae of nightmare, kin to the Kithain but bent toward cruelty.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "c20",
-      "page": 28,
-      "pdf": 29
-     }
-    ]
    }
   ],
   "see": [
@@ -2674,8 +2576,8 @@
     ]
    },
    {
-    "text": "Kinain are mortals with faerie blood in the family line.",
-    "tier": "implied",
+    "text": "Kinain are children of changelings who carry some of their parents' magic.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -2710,22 +2612,6 @@
       "book": "c20",
       "page": 28,
       "pdf": 29
-     }
-    ]
-   },
-   {
-    "text": "The Nunnehi of the Americas and the Inanimae, fae of objects and places, are among them.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "c20",
-      "page": 28,
-      "pdf": 29
-     },
-     {
-      "book": "c20",
-      "page": 114,
-      "pdf": 115
      }
     ]
    }
@@ -3349,17 +3235,6 @@
       "pdf": 231
      }
     ]
-   },
-   {
-    "text": "Scathach who are not Arcadian sidhe may not use Sovereign under an old pact.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "c20",
-      "page": 136,
-      "pdf": 137
-     }
-    ]
    }
   ],
   "see": [
@@ -3437,8 +3312,8 @@
     ]
    },
    {
-    "text": "A cantrip is rolled with the Art and Realm together, and its difficulty rises with the Banality around it.",
-    "tier": "implied",
+    "text": "A cantrip channels Glamour through an Art to rework the chimerical or physical world, and mastery of the Art sets what can be done.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -3501,8 +3376,8 @@
   "summary": "Letting raw Glamour loose without a cantrip's shape, with unpredictable results.",
   "claims": [
    {
-    "text": "Unleashing lets Glamour burst out through an Art without a cantrip's shape, with wilder and riskier results.",
-    "tier": "implied",
+    "text": "Unleashing is the riskier way: a desperate changeling forces open the door into the Dreaming that an Art unlocks.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -3530,14 +3405,9 @@
   "summary": "A changeling's three pools: Glamour, Willpower and Banality.",
   "claims": [
    {
-    "text": "Points can move between Tempers only in limited ways.",
-    "tier": "implied",
+    "text": "Temporary Glamour and Willpower can never exceed their permanent ratings, but the Banality pool can rise as high as 10.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "c20",
-      "page": 257,
-      "pdf": 258
-     },
      {
       "book": "c20",
       "page": 258,
@@ -3576,8 +3446,8 @@
   "summary": "Making chimerical effects real in the mortal world, at a cost.",
   "claims": [
    {
-    "text": "Invoking the Wyrd makes chimerical effects bite in the mortal world.",
-    "tier": "implied",
+    "text": "In great need a changeling can call up all of the changeling's magic, and the Dreaming lends its power and protection.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -3607,22 +3477,6 @@
    {
     "text": "Epiphany takes five forms: Rapture, Ravaging, Rhapsody, Revelry and Reverie.",
     "tier": "stated",
-    "refs": [
-     {
-      "book": "c20",
-      "page": 28,
-      "pdf": 29
-     },
-     {
-      "book": "c20",
-      "page": 260,
-      "pdf": 261
-     }
-    ]
-   },
-   {
-    "text": "Ravaging is the cruel way, taking Glamour by force from mortals.",
-    "tier": "implied",
     "refs": [
      {
       "book": "c20",
@@ -3667,7 +3521,7 @@
    },
    {
     "text": "Leanhaun look for jobs that bring many Dreamers within reach.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -3696,24 +3550,19 @@
   "summary": "Binding promises sworn under the Dreaming, with penalties for breaking them.",
   "claims": [
    {
-    "text": "A sworn oath is backed by the Dreaming; breaking it brings harm until the oath breaker atones.",
-    "tier": "implied",
+    "text": "An oath can be an elaborate ceremony or a simple promise between two changelings; its structure takes only a few steps.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
       "page": 264,
       "pdf": 265
-     },
-     {
-      "book": "c20",
-      "page": 265,
-      "pdf": 266
      }
     ]
    },
    {
     "text": "Trolls suffer especially when they break an oath.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -3742,8 +3591,8 @@
   "summary": "The bane of the fae: wounds from cold iron are especially dangerous to changelings.",
   "claims": [
    {
-    "text": "Wounds from cold iron are especially hard for changelings to survive.",
-    "tier": "implied",
+    "text": "Cold iron is the opposite of Glamour: its presence can sicken a changeling and its touch burns.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -3781,8 +3630,8 @@
   "summary": "A measure of how far a changeling's Glamour has turned dark.",
   "claims": [
    {
-    "text": "Nightmare tracks how far a changeling's magic has soured toward the dark side of the Dreaming.",
-    "tier": "implied",
+    "text": "Nightmare tracks the Dreaming pulling a changeling toward inhuman madness, a warning on the road to Bedlam.",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
@@ -3935,7 +3784,7 @@
   "claims": [
    {
     "text": "Threshold and Antithesis are step eight of character creation.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "c20",
