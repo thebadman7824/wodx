@@ -623,6 +623,17 @@ game.world.id = worldId;
       content: lb.element.querySelector("section.window-content").innerHTML});
     game.packs = oldPacks;
   }
+  // The Paperdoll window, with a veil chosen so the longest form shows
+  {
+    const PD = await import(join(root, "modules/wodx-paperdoll/scripts/main.mjs"));
+    const actor = {id: "pd1", name: "Ada Brandt, a name long enough to wrap the title", isOwner: true, flags: {"wodx-paperdoll": {look: {seed: "Ada", clothes: {headwear: "fillet"}}}},
+      system: {health: {damage: {}}}, update: async () => {}};
+    const pa = new PD.PaperdollApp({id: "wodx-paperdoll-pd1", actor});
+    await pa.render({force: true});
+    const pop = PD.PaperdollApp.DEFAULT_OPTIONS;
+    windows.push({name: "Paperdoll", tag: pop.tag ?? "div", classes: ["application", ...(pop.classes ?? [])].join(" "), width: pop.position.width, height: pop.position.height,
+      content: pa.element.querySelector("section.window-content").innerHTML});
+  }
   // The Storyteller's dashboard: with the ledger, rumours and dreams above filled in
   {
     const BApp = (await import(join(root, "modules/wodx-storyteller/scripts/dashboard.mjs"))).DashboardApp;
@@ -864,6 +875,7 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href,
   pathToFileURL(join(root, "modules/wodx-targeting/styles/wodx-targeting.css")).href,
   pathToFileURL(join(root, "modules/wodx-senses/styles/wodx-senses.css")).href,
+  pathToFileURL(join(root, "modules/wodx-paperdoll/styles/wodx-paperdoll.css")).href,
   pathToFileURL(join(root, "modules/wodx-atmosphere/styles/wodx-atmosphere.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
