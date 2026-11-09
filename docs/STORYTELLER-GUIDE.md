@@ -167,7 +167,7 @@ Each token's **WoDX Actions** button opens its line's menu. The line comes from 
 
 **Sunlight.** Sun comes from a "WoDX: Sunlight" region, a region named sunlit (shade, shelter or indoors protects), or a scene marked outdoors in Sky and sun. The sun's height comes from the clock; walls cast shadows on outdoor scenes. The Sky setting caps it (clear, cloudy, heavy cloud, storm). You get warnings 30 and 10 minutes before sunrise, saying whether each Cainite is in their haven. Damage is a card with a button by default.
 
-**The inner voice.** Players can voice each other's Beast, Shadow, Rage or Impulse in a private channel. It needs the world switch, each player's own opt-in for their character, and stops for the scene on the X-card. Proposals come to you through the queue.
+**The inner voice.** Players can voice each other's Beast, Shadow, Rage or Impulse in a private channel. It needs the world switch, each player's own opt-in for their character, and stops for the scene on the X-card. Proposals come to you through the queue. To assign a voice: select the character's token, open its WoDX Actions menu and press **The inner voice** in the scene strip (Kindred, ghouls, Garou, wraiths, hunters), or press **Voices I play** on any menu and pick the character. In the panel, **Assign who voices it** picks a player or you. The assignment is per character. The character's own player then opts in from the same panel; with the house rule "The Storyteller can opt a character in" on, you can opt them in yourself, and the player is told.
 
 ## WoDX Combat: attacks and the turn conductor
 
