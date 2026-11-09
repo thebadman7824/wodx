@@ -766,3 +766,4 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 
 ### WoDX Senses 0.1.2, 2026-11-09: a new wall makes a new answer
 - Second gate run, 11/12: step 6 failed once memory worked. A wall raises a sound's need, but the answer's fingerprint held only which sources were there, so the earlier closer look's successes carried over and the muffled drinker was still heard. The fingerprint now holds each source's need as well. The new test fails on 0.1.1 and passes on 0.1.2. 632 harness tests pass.
+- Deployed 0.1.2 to rothenstein-wodx only (backups of 0.1.0 and 0.1.1 in Backups). gatesenses 12/12, UI fit 591/591 on the PC. Bundle wodx-2026-11-09c.bundle.
