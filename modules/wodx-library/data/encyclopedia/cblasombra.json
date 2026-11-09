@@ -1,0 +1,194 @@
+[
+ {
+  "id": "cbl-black-eagle",
+  "title": "Black Eagle Consulting",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Sabbat pack that hides behind a computer firm.",
+  "claims": [
+   {
+    "text": "The pack meets in person only a few times a year, at great rites or when needed, and otherwise keeps in touch by e-mail, chat and phone several times a week.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 91,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "It began in 1877 amid Sabbat raids on Midwestern telegraph stations, when a templar saw that fast communication could offset the Camarilla's social reach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 91,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Its members frame targets with sparse planted clues; since vampires leave prints only in oily matter, one may keep a target's computer clean with maintenance oils and gather prints over time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 92,
+      "pdf": 87
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "lasombra"
+  ]
+ },
+ {
+  "id": "cbl-lucita-after",
+  "title": "Lucita After the Cardinal",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The best-known independent Lasombra, after the sire's end.",
+  "claims": [
+   {
+    "text": "Lucita joined the Assamite strike that destroyed the Cardinal, Lucita's sire, expecting peace at last; it did not come.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 97,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "The sire's presence in Lucita's mind is gone, and mediums and necromancers find no trace of the soul, but the ideas and challenges remain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 97,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Undoing the sire's aims was never Lucita's only motive, but with the Cardinal gone the other motives sit together in unfamiliar ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 97,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra",
+   "bjd-washington"
+  ]
+ },
+ {
+  "id": "cbl-adoula",
+  "title": "Demba Makemba Adoula, called Conrad",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Lasombra shaped by the Belgian Congo.",
+  "claims": [
+   {
+    "text": "Adoula grew up during the Belgian occupation of the Congo under King Leopold, when soldiers and fortune hunters stripped the land and disease emptied whole villages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 98,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "Adoula thinks talk of Gehenna absurd, since some world is always ending.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 99,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Adoula watches where persecution falls, and teaches recruits Lasombra history and powers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 99,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "cbl-baloh",
+  "title": "Baloh",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Lasombra from a farm outside Nanking.",
+  "claims": [
+   {
+    "text": "Baloh's father and three brothers died in a failed revolt against the Qing, while Baloh stayed on the family farm outside Nanking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 100,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Sunk in despair, Baloh became an opium user who fell into rages rather than stupor, which drew the notice of Nanking's Lasombra brood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblasombra",
+      "page": 100,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra"
+  ]
+ }
+]
