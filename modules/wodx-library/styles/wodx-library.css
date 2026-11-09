@@ -3,3 +3,9 @@
 .wodx-gear .wodx-gear-row .wodx-quiet { grid-column: 1 / -1; font-size: 0.8em; }
 .wodx-gear .wodx-gear-kind { opacity: 0.75; }
 .wodx-gear .window-content { overflow-y: auto; }
+
+/* The Encyclopaedia: tiers, books that differ, edition by edition */
+.wodx-ency-tier { font-size: 0.8em; padding: 0 0.3em; border-radius: 3px; border: 1px solid currentColor; opacity: 0.8; }
+.wodx-ency-rumour, .wodx-ency-open { font-style: italic; }
+.wodx-ency-versions { margin: 0.2em 0 0.4em 1.2em; list-style: circle; }
+.wodx-ency-editions { margin: 0.2em 0 0.6em 1.2em; }

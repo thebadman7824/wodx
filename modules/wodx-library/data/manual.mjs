@@ -18,6 +18,7 @@ export const MANUAL = [
 
 /** The newest changes, newest first. Add a line when a release changes what players or the Storyteller see. */
 export const CHANGES = [
+  {date: "9 November 2026", what: "The Library has a Shelf choice, so you can look through the Encyclopaedia alone or one line's shelf. Encyclopaedia entries can now mark a claim as might be true or unknown, show both versions where books disagree, and trace a rule from edition to edition with how WoDX plays it."},
   {date: "9 November 2026", what: "Paperdoll faces are more serious: the googly eyes, winks, wide grins and tongues are gone, faces are shaded, and every face is checked in stages so its features sit cleanly on it at every width and length. Lips are fuller, with nine colours to choose from, and lips, brows and nose are always set to show against the skin. A look saved with a part that was taken out moves to the nearest one kept."},
   {date: "9 November 2026", what: "Paperdoll pictures now look like an illuminated page: gold leaf or a starred ground you can choose, a gilt ring, sepia ink. Eyes have colour, including strange ones that glow or have slit pupils, and faces can carry pox, boils, burns, a lost eye or an eyepatch, scales or a third eye."},
   {date: "9 November 2026", what: "Paperdoll faces: dozens of skin tones and hair colours, wider and narrower faces, age from youth to old age, freckles, flushed or gaunt cheeks, moles, birthmarks, scars, and moustaches, stubble and beards."},
