@@ -910,3 +910,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - journey-rules.mjs: LOOKS, NET_FILTER_ID, layerLookCss({layer, inNet, shroud, phase, looks, decay}), NET_SVG (grey, a Laplacian edge kernel, green and cyan).
 - journey.mjs: decayCss() (also lookCss) now gives the viewer's layer look; the Net's SVG filter is put in the page once; keepSway() eases the Dreaming's hue with a CSS transition while the viewer stands there; client setting "looks". main.mjs: jacking in or out redraws the look; api.lookCss, api.swaying.
 - Tests: one more in realms.test.mjs (758 pass). Gate: tools/gate/gatelooks.mjs, 7 steps, a scene and actor of its own.
+
+## 2026-11-09: queue relief (Chronicle 0.7.0, B273)
+
+- approvals-rules.mjs (new): NEVER_AUTO, isNpcType, routeProposal(type, {auto, cap, used}), bulkIds, cleanAuto.
+- approvals.mjs: addToQueue routes each proposal (auto, hold, queue) and returns which; decide takes {auto}; decideMany, releaseHeld, held, setAuto, types, npcCount, resetSession. The window: a tick box per entry, Approve the ticked, Reject the ticked, Tick all or none, the held-back note, and Approve on its own (a search box past eight kinds).
+- settings.mjs: autoApprove (world, hidden), npcCap (world, 0 to 100). main.mjs: a Storyteller session start resets the count.
+- Tests: two more in chronicle.test.mjs (760 pass). Gate: tools/gate/gatequeue.mjs, 7 steps; it puts back the queue, rules and cap.
+- (approvals-rules.mjs went into PR 84 by mistake ahead of the rest; nothing used it there.)
