@@ -1722,3 +1722,14 @@ test("runtime 0.12: the tile config's pictures part lists the states of what the
   const bare = tile("cfgbare", 150, 150, {});
   assert.match(api.states.statesConfigHtml(bare.document), /Pick what this tile is/);
 });
+
+test("runtime: a vehicle follows the move the hook reports, even when the token's document still shows the old place", async () => {
+  const van = tile("van1", 4400, 1000, {mount: true, mountKind: "car", driver: {a: "pc1", t: tokPc.document.uuid, n: "Anna Weiss", dx: 0, dy: 100}});
+  canvas.tiles.placeables.push(van);
+  tokPc.document.x = 4400; tokPc.document.y = 900;
+  try {
+    await hooks.get("canvasReady")[0]();
+    await api.onTokenMoved(tokPc.document, {x: 4600});
+    assert.deepEqual([van.document.x, van.document.y], [4600, 1000]);
+  } finally { scene.tiles.delete("van1"); canvas.tiles.placeables.pop(); tokPc.document.x = 400; tokPc.document.y = 300; }
+});

@@ -52,7 +52,7 @@ import {registerStateSettings, setupStates, publish} from "./states.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.13.0";
+const VERSION = "0.13.1";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -675,7 +675,7 @@ export async function undoCard(msg) {
   // A climb or a jump: the token goes back to where it started
   if ( done.moved ) {
     const td = await fromUuid(done.moved.t);
-    if ( td ) { lastSeen.set(td.uuid, centerAt(td, done.moved)); await td.update({x: done.moved.x, y: done.moved.y}); }
+    if ( td ) { lastSeen.set(td.uuid, centerAt(td, done.moved)); await td.update({x: done.moved.x, y: done.moved.y}, STRAIGHT(td)); }
   }
   // Hiding or coming out: the token goes back as it was
   if ( ["hide", "comeOut"].includes(ask.op) && done.snap?.flags?.hide ) {
@@ -872,12 +872,14 @@ export function trapsOnPath(scene, a, b, {npc = false} = {}) {
 }
 const springing = new Set();
 /** Active GM: a token moved. Any trap on its way goes off, with a card and an Undo. */
-export async function onTokenMoved(tokDoc) {
+export async function onTokenMoved(tokDoc, changes = {}) {
   const scene = tokDoc.parent, actor = tokDoc.actor;
-  const to = centerOf(tokDoc, scene), from = lastSeen.get(tokDoc.uuid) ?? to;
+  // Where the move ends: Foundry 14 can call the hook before the document shows the new place, so the change wins
+  const pos = {x: num(changes?.x ?? tokDoc.x), y: num(changes?.y ?? tokDoc.y)};
+  const to = centerAt(tokDoc, pos), from = lastSeen.get(tokDoc.uuid) ?? to;
   lastSeen.set(tokDoc.uuid, to);
   if ( !actor || !scene || !isActiveGM() ) return [];
-  await carryAboard(tokDoc, scene, from, to);
+  await carryAboard(tokDoc, scene, from, to, pos);
   // Walking out of a hiding place ends the hiding
   for ( const doc of tilesOf(scene) ) {
     const occ = doc.flags?.[MOD]?.hide ? (doc.flags[MOD].occupants ?? []) : [];
@@ -1143,6 +1145,8 @@ async function mountReport(o, doc, out, op, actor, tokDoc) {
 /*  Climbing and jumping                                               */
 /* ------------------------------------------------------------------ */
 
+/** Update options for a token put straight somewhere (a climb, a jump, an Undo): no walk along a path, walls ignored. */
+const STRAIGHT = td => ({animate: false, teleport: true, movement: {[td.id]: {method: "api", constrainOptions: {ignoreWalls: true, ignoreCost: true}}}});
 /** Where a token's centre would be with its corner at {x, y}. */
 const centerAt = (td, {x, y}) => { const g = td.parent?.grid?.size ?? canvas?.grid?.size ?? 100; return {x: num(x) + num(td.width || 1) * g / 2, y: num(y) + num(td.height || 1) * g / 2}; };
 /** Active GM: a fall of so many feet, through WoDX Combat's soak. Returns {lines, damageMsg}. */
@@ -1171,7 +1175,7 @@ async function climbReport(o, doc, out, actor, tokDoc) {
       moved = {t: tokDoc.uuid, x: num(tokDoc.x), y: num(tokDoc.y)};
       // Straight there: nothing on the line between is walked over
       lastSeen.set(tokDoc.uuid, centerAt(tokDoc, at));
-      await tokDoc.update(at);
+      await tokDoc.update(at, STRAIGHT(tokDoc));
     } else lines.push(R.CLIMBS[o.kind].jump ? "Move the token to the far side." : "Move the token to the top (or the bottom).");
     mapEvent(R.CLIMBS[o.kind].jump ? "jump" : "climb", {doc, tokDoc, noise: out.noise ?? "quiet", object: o.kind});
   }
@@ -1190,7 +1194,7 @@ const carrying = new Map();
  * Active GM: a token moved. At the reins: the mount or vehicle and everyone aboard move with it. A passenger who
  * moves on their own gets off. Returns what happened: "carried", "drove", "off" or null.
  */
-export async function carryAboard(tokDoc, scene, from, to) {
+export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.x), y: num(tokDoc.y)}) {
   // Our own move of a passenger (Foundry may snap it to the grid, so where it lands is not checked)
   if ( carrying.delete(tokDoc.uuid) ) return "carried";
   const dx = to.x - from.x, dy = to.y - from.y, moved = !!(dx || dy);
@@ -1203,7 +1207,7 @@ export async function carryAboard(tokDoc, scene, from, to) {
     if ( f.driver?.t === tokDoc.uuid ) {
       // The vehicle goes where the driver's token now is, at the offset set when they took the reins (a step from the
       // last known place for older data); the same for each passenger, from the vehicle
-      const at = fixed(f.driver) ? {x: num(tokDoc.x) + f.driver.dx, y: num(tokDoc.y) + f.driver.dy} : {x: num(doc.x) + dx, y: num(doc.y) + dy};
+      const at = fixed(f.driver) ? {x: pos.x + f.driver.dx, y: pos.y + f.driver.dy} : {x: num(doc.x) + dx, y: num(doc.y) + dy};
       const step = {x: at.x - num(doc.x), y: at.y - num(doc.y)};
       if ( !step.x && !step.y ) continue;
       await doc.update(at);
@@ -1472,7 +1476,7 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
     b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoCard(msg).catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
   });
 });
-Hooks.on("updateToken", (doc, changes) => { if ( ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc).catch(e => console.error(`${MOD} |`, e)); });
+Hooks.on("updateToken", (doc, changes) => { if ( ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("updateCombat", (combat, changes) => { if ( ("turn" in (changes ?? {}) || "round" in (changes ?? {})) && combat?.started && isActiveGM() ) onTurnStart(combat).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("canvasReady", () => { lastSeen.clear(); for ( const t of canvas.scene?.tokens?.contents ?? [] ) lastSeen.set(t.uuid, centerOf(t, canvas.scene)); });
 Hooks.on("createToken", doc => lastSeen.set(doc.uuid, centerOf(doc, doc.parent)));
