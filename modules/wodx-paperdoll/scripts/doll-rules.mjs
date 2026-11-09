@@ -28,7 +28,8 @@ export const MOODS = {
   disgruntled: {label: "Disgruntled", eyebrows: "variant13", mouth: "sad04"},
   upset: {label: "Upset", eyebrows: "variant01", mouth: "sad01"},
   grim: {label: "Grim", eyebrows: "variant12", mouth: "sad05"},
-  snarling: {label: "Snarling", eyebrows: "variant13", mouth: "sad06"}
+  snarling: {label: "Snarling", eyebrows: "variant13", mouth: "sad06"},
+  unconscious: {label: "Eyes closed", eyes: "variant19", eyebrows: "variant12", mouth: "sad09"}
 };
 
 /* ---- The health track ---- */
@@ -48,8 +49,9 @@ export function healthLevel(health) {
   }
   return lvl;
 }
-/** The mood the face shows: frenzy snarls; then the health track, when the face follows it. */
+/** The mood the face shows: Incapacitated closes the eyes; frenzy snarls; then the health track, when the face follows it. */
 export function moodFor(look, {level = 0, frenzy = false, follow = true} = {}) {
+  if ( follow && look?.followHealth !== false && level >= 7 ) return "unconscious";
   if ( frenzy && follow ) return "snarling";
   if ( follow && look?.followHealth !== false ) {
     if ( level >= 6 ) return "grim";
@@ -112,7 +114,7 @@ export const hairFor = look => look.clothes?.headwear && look.clothes.headwear !
 /** The options DiceBear's Lorelei takes for this look and mood. key: draw it in key colours for measuring. */
 export function loreleiOptions(look, mood = "own", {key = false} = {}) {
   const f = look.face, m = MOODS[mood] ?? MOODS.own;
-  const o = {seed: look.seed || "wodx", head: [f.head], eyes: [f.eyes], eyebrows: [m.eyebrows ?? f.eyebrows], nose: [f.nose], mouth: [m.mouth ?? f.mouth], hair: [hairFor(look)],
+  const o = {seed: look.seed || "wodx", head: [f.head], eyes: [m.eyes ?? f.eyes], eyebrows: [m.eyebrows ?? f.eyebrows], nose: [f.nose], mouth: [m.mouth ?? f.mouth], hair: [hairFor(look)],
     skinColor: [key ? "00ff00" : look.colors.skin], hairColor: [key ? "ff0000" : look.colors.hair],
     beardProbability: f.beard ? 100 : 0, glassesProbability: f.glasses ? 100 : 0, earringsProbability: f.earrings ? 100 : 0,
     frecklesProbability: f.freckles ? 100 : 0, hairAccessoriesProbability: 0};

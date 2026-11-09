@@ -42,14 +42,29 @@ export async function run() {
 
     const scene = game.scenes.viewed ?? game.scenes.active;
     if ( scene ) [token] = await scene.createEmbeddedDocuments("Token", [{name: actor.name, actorId: actor.id, actorLink: true, x: 0, y: 0, hidden: true}]);
+    // Who changes this token's picture: every texture change, with the caller's stack and the user
+    const texLog = [];
+    const pre = Hooks.on("preUpdateToken", (doc, ch, opts, userId) => { if ( doc.actorId === actor.id && ch?.texture ) texLog.push({at: Date.now(), phase: "pre", src: ch.texture.src, user: userId, stack: String(new Error().stack).split("\n").slice(2, 9).join(" | ")}); });
+    const post = Hooks.on("updateToken", (doc, ch, opts, userId) => { if ( doc.actorId === actor.id && ch?.texture ) texLog.push({at: Date.now(), phase: "done", src: ch.texture.src, user: userId}); });
+    R.texLog = texLog;
+    R.cleanupHooks = () => { Hooks.off("preUpdateToken", pre); Hooks.off("updateToken", post); };
     const p1 = await api.save(actor, look);
-    await api.settled();
+    const firstBake = structuredClone(api.last?.() ?? null);
+    await api.settled(); await sleep(1500);
     const tex = () => actor.prototypeToken.texture.src, live = () => token ? scene.tokens.get(token.id)?.texture?.src : tex();
     const head = await fetch(`/${p1}`, {method: "HEAD"});
     const tk = token ? scene.tokens.get(token.id) : null;
     ok("3. bake", !!p1 && p1.endsWith(".webp") && head.ok && tex() === p1 && live() === p1 && actor.flags[MOD]?.baked,
-      {path: p1, proto: tex(), token: live(), head: head.status, scene: scene?.id ?? null, tokenId: token?.id ?? null, link: tk?.actorLink ?? null, tokenActor: tk?.actorId ?? null, actor: actor.id, baked: actor.flags[MOD]?.baked ?? null});
+      {path: p1, proto: tex(), token: live(), head: head.status, scene: scene?.id ?? null, tokenId: token?.id ?? null, link: tk?.actorLink ?? null, tokenActor: tk?.actorId ?? null, actor: actor.id, baked: actor.flags[MOD]?.baked ?? null, firstBake, lastBake: api.last?.() ?? null, sceneTokens: scene ? scene.tokens.filter(t => t.actorId === actor.id).map(t => `${t.id}:${t.actorLink}:${t.texture?.src}`) : null});
 
+    if ( scene ) {
+      const plain = await Actor.create({name: "WoDX gate: plain token", type: "Mortal"});
+      const [pt] = await scene.createEmbeddedDocuments("Token", [{name: plain.name, actorId: plain.id, actorLink: true, x: 0, y: 0, hidden: true}]);
+      await pt.update({"texture.src": p1});
+      const t0 = scene.tokens.get(pt.id)?.texture?.src; await sleep(1500);
+      R.plainToken = {right_after: t0, after_1500ms: scene.tokens.get(pt.id)?.texture?.src};
+      await pt.delete(); await plain.delete();
+    }
     const files1 = (await foundry.applications.apps.FilePicker.implementation.browse("data", `worlds/${game.world.id}/paperdoll`)).files.length;
     const p2 = await api.bake(actor);
     const files2 = (await foundry.applications.apps.FilePicker.implementation.browse("data", `worlds/${game.world.id}/paperdoll`)).files.length;
@@ -91,6 +106,7 @@ export async function run() {
     ok("8. the ring", at?.active ? (ringNow === !drawn(frames) && flipped.ring === !drawn(flipped.to)) : ringNow === true, {frames, ringNow, flipped});
   } catch (err) { R.errors.push(`${err.message} | ${String(err.stack).split("\n").slice(0, 3).join(" | ")}`); }
   finally {
+    try { R.cleanupHooks?.(); delete R.cleanupHooks; } catch (e) { /* gone */ }
     try { await game.settings.set(MOD, "followHealth", follow); } catch (e) { /* kept */ }
     try { if ( token ) await token.delete(); } catch (e) { R.notes.push(`token: ${e.message}`); }
     try { if ( actor ) await actor.delete(); } catch (e) { R.notes.push(`actor: ${e.message}`); }

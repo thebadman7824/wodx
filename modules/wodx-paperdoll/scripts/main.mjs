@@ -9,7 +9,7 @@ import {measure, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.1.2";
+export const VERSION = "0.1.4";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -127,12 +127,28 @@ export async function bake(actor, {force = false} = {}) {
   };
   try { for ( const t of actor.getDependentTokens?.({linked: true}) ?? [] ) add(t); } catch (e) { /* older API */ }
   for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) if ( t.actorId === actor.id ) add(t);
-  for ( const {scene, ids} of byScene.values() ) {
-    try { await scene.updateEmbeddedDocuments("Token", [...ids].map(_id => ({_id, "texture.src": path}))); }
-    catch (e) { console.warn(`${MOD} | token picture on ${scene.name}`, e); }
-  }
+  const log = {actor: actor.id, path, found: [], updated: [], errors: [], recheck: []};
+  // diff: false sends the picture even when this computer's copy already shows it, so every copy ends the same
+  const put = async (sceneId, ids) => {
+    const scene = game.scenes.get(sceneId);
+    if ( !scene || !ids.length ) return;
+    try {
+      const res = await scene.updateEmbeddedDocuments("Token", ids.map(_id => ({_id, "texture.src": path})), {diff: false});
+      log.updated.push(...(res ?? []).map(t => `${scene.id}.${t.id}=${t.texture?.src}`));
+    } catch (e) { log.errors.push(e.message); console.warn(`${MOD} | token picture on ${scene.name}`, e); }
+  };
+  for ( const [sid, {ids}] of byScene ) { log.found.push(...[...ids].map(id => `${sid}.${id}`)); await put(sid, [...ids]); }
+  lastBake = log;
+  // Look again a moment later: a placed token that went back to its old picture gets the new one again
+  if ( byScene.size ) setTimeout(async () => {
+    for ( const [sid, {ids}] of byScene ) {
+      const back = [...ids].filter(id => game.scenes.get(sid)?.tokens?.get(id)?.texture?.src !== path);
+      if ( back.length ) { log.recheck.push(...back.map(id => `${sid}.${id}`)); await put(sid, back); }
+    }
+  }, 800);
   return path;
 }
+let lastBake = null;
 const timers = new Map();
 let chain = Promise.resolve();
 /** Bake soon, once, after a burst of changes. */
@@ -288,6 +304,6 @@ Hooks.once("init", () => {
 });
 Hooks.once("ready", () => {
   if ( !active ) return;
-  game.modules.get(MOD).api = {version: VERSION, open: a => PaperdollApp.open(a), bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D};
+  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D};
   if ( enabled() && isBaker() ) setTimeout(bakeAll, 1500);
 });
