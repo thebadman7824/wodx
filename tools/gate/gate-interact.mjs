@@ -89,7 +89,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.14.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.14.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.14.0 or later is on, with its API, and the door control is the WoDX one", m?.active && !foundry.utils.isNewerVersion("0.14.0", m.version) && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 

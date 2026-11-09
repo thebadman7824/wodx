@@ -2,7 +2,7 @@ import {MODULE_ID, esc, lineOf, xpTotals, purchaseOptions, newDisciplineOption, 
   clanNameOf, domitorOf, allyOf, patronOf, payerOf, canSpendFor, spendableFor} from "./actor-data.mjs";
 import {embraceDialog, vitaeDialog} from "./change-of-state.mjs";
 import {firstChangeDialog} from "./first-change.mjs";
-import {deathDialog, awakenDialog} from "./states.mjs";
+import {deathDialog, awakenDialog, revenantDialog, chrysalisDialog, fallenDialog, possessDialog, secondBreathDialog} from "./states.mjs";
 import {CreationCheckApp} from "./totals-check.mjs";
 import {award, requestSpend, writeLogPage} from "./xp.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
@@ -39,6 +39,11 @@ export class CreationApp extends ApplicationV2 {
       firstChange: () => firstChangeDialog().then(() => CreationApp.refresh()),
       death: () => deathDialog().then(() => CreationApp.refresh()),
       awaken: () => awakenDialog().then(() => CreationApp.refresh()),
+      revenant: () => revenantDialog().then(() => CreationApp.refresh()),
+      chrysalis: () => chrysalisDialog().then(() => CreationApp.refresh()),
+      fallen: () => fallenDialog().then(() => CreationApp.refresh()),
+      possess: () => possessDialog().then(() => CreationApp.refresh()),
+      secondBreath: () => secondBreathDialog().then(() => CreationApp.refresh()),
       check: () => CreationCheckApp.open(),
       award: () => awardDialog(),
       spend: CreationApp.#onSpend,
@@ -99,6 +104,11 @@ export class CreationApp extends ApplicationV2 {
           ${game.wodxActions?.garouRules ? `<button type="button" data-action="firstChange"><i class="fa-solid fa-moon"></i> The First Change</button>` : ""}
           <button type="button" data-action="death"><i class="fa-solid fa-ghost"></i> Death into a wraith</button>
           <button type="button" data-action="awaken"><i class="fa-solid fa-wand-sparkles"></i> The Awakening</button>
+          <button type="button" data-action="revenant"><i class="fa-solid fa-people-roof"></i> A revenant</button>
+          <button type="button" data-action="chrysalis"><i class="fa-solid fa-feather"></i> The Chrysalis</button>
+          <button type="button" data-action="fallen"><i class="fa-solid fa-fire"></i> A Fallen takes a host</button>
+          <button type="button" data-action="possess"><i class="fa-solid fa-person-rays"></i> A new host</button>
+          <button type="button" data-action="secondBreath"><i class="fa-solid fa-wind"></i> The Second Breath</button>
           <button type="button" data-action="check"><i class="fa-solid fa-list-check"></i> Creation check</button>
           <button type="button" data-action="award"><i class="fa-solid fa-star"></i> Award experience</button>
           <button type="button" data-action="log"><i class="fa-solid fa-book"></i> Experience log</button>
