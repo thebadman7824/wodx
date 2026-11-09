@@ -68,8 +68,10 @@ export async function run() {
     scene = await Scene.create({name: "WoDX gate: the yard", width: 1400, height: 1000, grid: {size: 100}});
     npc = await Actor.create({name: "WoDX gate: the apprentice", type: "Mortal", ownership: {default: 0}, flags: {"wodx-npc": {serves: [pc.id]}}});
     R.notes.push({npcOwnership: game.actors.get(npc.id)?.ownership, npcHasPlayerOwner: game.actors.get(npc.id)?.hasPlayerOwner});
-    const [tp, tn] = await scene.createEmbeddedDocuments("Token", [
+    const made = await scene.createEmbeddedDocuments("Token", [
       {name: pc.name, actorId: pc.id, x: 200, y: 200, actorLink: true}, {name: npc.name, actorId: npc.id, x: 800, y: 600, actorLink: true}]);
+    // Find each token by its actor, not by its place in the answer
+    const tp = made.find(k => k.actorId === pc.id), tn = made.find(k => k.actorId === npc.id);
     const g = await NPC.orders.give({sceneId: scene.id, tokenId: tn.id, kind: "wait", leader: pc.id});
     await sleep(300);
     const held = NPC.orders.orderOf(game.actors.get(npc.id));
