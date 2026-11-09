@@ -253,6 +253,12 @@
    "title": "Children of the Night (Revised)",
    "short": "Children of the Night",
    "edition": "Revised"
+  },
+  {
+   "id": "cbn2",
+   "title": "Chicago by Night, Second Edition",
+   "short": "Chicago by Night",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -297,6 +303,7 @@
   "archons.json",
   "warages.json",
   "bloodyhearts.json",
-  "cotn.json"
+  "cotn.json",
+  "cbn2.json"
  ]
 }

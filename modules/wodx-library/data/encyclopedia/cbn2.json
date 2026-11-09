@@ -1,0 +1,475 @@
+[
+ {
+  "id": "cbn2-chicago",
+  "title": "Chicago (Kindred city)",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The largest American city under Camarilla control, long crowded with Kindred and now without a prince.",
+  "claims": [
+   {
+    "text": "The seven million mortals of the metropolitan area have at times supported as many as 140 vampires; after a third of them were destroyed or vanished, the count is about two-thirds of that and climbing again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The city has no prince. The primogen is too divided to keep newcomers out, and the would-be princes have no wish to tidy the city before one of them holds the throne.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "As the largest Camarilla city in the United States, Chicago became the center of the War of Ages against the anarchs in the 1960s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "prince",
+   "anarchs"
+  ]
+ },
+ {
+  "id": "cbn2-maxwell",
+  "title": "Maxwell",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The first prince of Chicago, a Brujah driven out in 1871.",
+  "claims": [
+   {
+    "text": "Maxwell first came to Chicago as a fur trader. Sired by an ancient Spanish Brujah, Maxwell was shut out of the upper reaches of mortal society because of race and found the Kindred less prejudiced.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Word that a black prince ruled Chicago first drew the Gangrel Inyanga to the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "After the great fire, Lodin and a small band of Ventrue and Toreador attacked Maxwell's East Side mansion. Maxwell's saber took many heads before a Toreador tore off one of the prince's arms; Maxwell fled through a window and has not been seen in the city since.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah",
+   "cbn2-lodin"
+  ]
+ },
+ {
+  "id": "cbn2-devils-night",
+  "title": "Devil's Night (1871)",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Kindred name for the Great Chicago Fire.",
+  "claims": [
+   {
+    "text": "A suicidal Malkavian lit the flames that swept the city in 1871. Few mortals died, but some 18,000 buildings burned and Maxwell's supporters were nearly all destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The rebuilding that followed made the city richer than before, and under Lodin it grew into an industrial power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbn2-maxwell",
+   "cbn2-lodin"
+  ]
+ },
+ {
+  "id": "cbn2-lodin",
+  "title": "Lodin",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Ventrue prince who ruled Chicago from 1871 until the werewolf war of 1993.",
+  "claims": [
+   {
+    "text": "Lodin arrived among the newcomers after the Civil War and seized the city on a night when Inyanga was away. Wanting no rivals of the same clan, Lodin then destroyed the few Ventrue who had survived the attack on Maxwell.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Lodin ruled through money and force, using police and private guards to keep the workers in line, until strikes and Modius's rebellion shook that rule in the 1880s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "After the anarchs were crushed in 1968, Lodin outlawed the Embrace across the metropolitan area, and for the most part the ban was obeyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "In 1986, in return for Annabelle's support against the anarch leader Maldavis, Lodin had to let Annabelle make two childer and to attend the primogen in Elysium on the first Monday of every month.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue",
+   "prince",
+   "cbn2-chicago-primogen"
+  ]
+ },
+ {
+  "id": "cbn2-chicago-primogen",
+  "title": "Chicago primogen",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The council of elders whose agreement outweighs the prince.",
+  "claims": [
+   {
+    "text": "The council began among elders who felt Lodin had overreached in taking the city, Inyanga, Khalid and the Brujah Procet among them. After the First World War they invited the city's greatest elders to meet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Borrowing an old Toreador custom that kept places of culture free of violence, they named their meeting place Elysium and gathered in the halls of the Chicago Symphony Orchestra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "So long as its members reached a consensus, the primogen held more power than the prince.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Procet, a member of the council, vanished in the Thanksgiving Massacre of 1986, when Lodin's mortal servants staked anarchs in their havens by day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 24,
+      "pdf": 25
+     },
+     {
+      "book": "cbn2",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "elysium",
+   "prince",
+   "toreador"
+  ]
+ },
+ {
+  "id": "cbn2-gary-interdiction",
+  "title": "The Gary Interdiction",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Ventrue blockade of the rebel Toreador Modius in Gary, Indiana.",
+  "claims": [
+   {
+    "text": "Modius, the Toreador who led the workers' rising against Lodin, held out in Gary, then a center of union strength, when Lodin's purge before the First World War destroyed most of the rebels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Chicago's Ventrue have worked together ever since to keep Gary from growing, building a decent airport or thriving at all, and Modius has never broken the Interdiction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "cbn2",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue",
+   "cbn2-lodin"
+  ]
+ },
+ {
+  "id": "cbn2-night-of-rage",
+  "title": "The Night of Rage",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The anarch uprising that made Chicago the front line of the War of Ages.",
+  "claims": [
+   {
+    "text": "Searching Lincoln Park for a newly arrived Brujah, the prince's enforcer Balthazar came on a gathering of Brujah and attacked it. They were members of the band Urban Sprawl, popular anarchs who had preached nonviolence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "cbn2",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The anarchs answered with a week of fighting over the rooftops and through the sewers, in which more than a dozen on each side were destroyed or sent into torpor; not even Elysium was safe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The war ended at the 1968 Democratic convention. With the Ventrue justicar's leave, Lodin sent police and elders against the protesters, and archons and elders fell on the anarchs out of sight of the cameras. More than 100 vampires vanished that night.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 22,
+      "pdf": 23
+     },
+     {
+      "book": "cbn2",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs",
+   "brujah",
+   "cbn2-lodin"
+  ]
+ },
+ {
+  "id": "cbn2-lupine-war",
+  "title": "The werewolf war of 1993",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Lupine attacks that cost Chicago a third of its Kindred.",
+  "claims": [
+   {
+    "text": "On a moonlit night in 1993, werewolves struck the heart of the city, aiming at the Succubus Club. Lodin called a Blood Hunt on the Lupines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Lupines struck back at every seat of Kindred power, from the train stations and O'Hare Airport to the Tremere chantry. About a third of the city's vampires died before the primogen arranged a truce, and the werewolves remain strong in the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lupines",
+   "cbn2-chicago-primogen"
+  ]
+ },
+ {
+  "id": "cbn2-menele-and-helena",
+  "title": "Menele and Helena",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "victorian"
+  ],
+  "summary": "Two Methuselahs whose ancient feud shaped Chicago from its founding.",
+  "claims": [
+   {
+    "text": "Menele, once named Meneleus, lived among the northern tribes as the Pale Wolf and backed Black Hawk against the American settlers. Helena, Menele's age-old enemy, held the commander of Fort Dearborn under Domination.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The two met in a riverside battle. Helena tore into Menele's ribs and Menele drove a skull into Helena's forehead; a ghoul then staked Menele with a burning stake, and both Methuselahs fell into torpor in the care of their mortal allies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "From torpor, both called on their followers around the world to come to the growing city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbn2",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "jyhad",
+   "cbn2-chicago"
+  ]
+ }
+]
