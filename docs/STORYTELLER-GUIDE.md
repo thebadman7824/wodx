@@ -239,9 +239,9 @@ The **WoDX factions** window (rook) lists the factions, with a search box. Each 
 
 **Masquerade rumours.** A breach recorded in WoDX Actions, or one you enter with **Report a breach…**, spreads day by day through places and Contacts. It rises to the Prince and then to the era's hunters (the Inquisition before 1600, mortal hunters to 1998, the imbued after), and each rise is a proposal in the queue. Deal with every witness first and press **Contain**; a quiet week makes it fade, until the hunters hear of it. Each breach also has **Stop**, **Resume** and **Forget**.
 
-## WoDX Interactables: doors, locks and windows
+## WoDX Interactables: doors, locks, windows and containers
 
-*New module, not deployed yet: enable WoDX Interactables in the world's modules once it is installed.*
+*New module, installed and on in the testing world (rothenstein-wodx) only; enable WoDX Interactables in a world's modules to use it there. Containers (0.2.0) are not deployed yet.*
 
 **For players.** Select your token, then press the **door** on its HUD (or the I key). The Interact window lists every door, window and breakable wall within reach, nearest first, and the options for each. Before anything is rolled, each option says the pool, the difficulty, the successes needed, how long a roll takes and how much noise it makes. Clicking a locked door with your token selected opens the same window for that door.
 
@@ -252,6 +252,8 @@ What can be tried: open or close, open quietly (Dexterity + Stealth), lift a bar
 **What happens.** The result applies at once and the card gets an **Undo** for you: the door opens, the lock jams, the pane breaks, the bar lifts. Picking and forcing add up successes on the door, so someone can stop and come back or a friend can take over. A botched pick jams the lock; a botched force is one lethal level. Knocking a wall through is the one thing that waits: it goes to the approval queue, and approving it opens that whole wall segment (split the wall first for a smaller hole).
 
 **Noise and time.** Each attempt is silent, quiet or loud. NPCs within earshot roll to hear it (loud carries 30 yards, 10 through a wall; quiet 5 yards and not through walls), and your copy of the card names who heard and what each would likely do. Nobody moves by themselves: you decide. Attempts that take a minute or more move the clock outside combat.
+
+**Containers.** A chest, box, cabinet, desk, strongbox or safe is a tile. Open the tile's config window and fill in the **WoDX** part: tick Container, pick the kind, and set a lock, its state, a keypad, a key, and what is inside (one item a line: copy the item's UUID from the button in its sheet's title bar, or type its name as it appears in the Items directory). Players find it in the same Interact window as the doors, and can open it, pick or force the lock, and **take what is inside**: each item is copied onto their sheet at once, and the card's Undo takes the copies back. A hidden tile stays out of the players' list until you show it. Leave the list empty to say what is inside yourself.
 
 Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, whether long attempts move the clock, and whether NPCs hear noise. You can Shift-click a locked door yourself to use Interact for the selected token.
 

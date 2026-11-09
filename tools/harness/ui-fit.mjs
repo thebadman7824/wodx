@@ -546,7 +546,7 @@ game.world.id = worldId;
   }
   api.DialogV2.wait = wait;
 }
-// Interactables: the Interact window (eight doors, windows and walls in reach, long names), the roll dialog, the WoDX part of a wall's config
+// Interactables: the Interact window (eight doors, windows and walls and two containers in reach, long names), the roll dialog, the WoDX part of a wall's and a tile's config
 {
   const ix = game.modules.get("wodx-interactables").api;
   const wait = api.DialogV2.wait;
@@ -560,7 +560,12 @@ game.world.id = worldId;
       lock: ["masterwork", "", "good", "", "", "excellent", "cheap"][k], barSide: k === 2 ? "a" : "", barred: k === 2, keyName: k === 0 ? "Key to the crypt of St. Aegidius" : "", electronic: k === 5 ? "excellent" : "none"}}}}));
   const tok = {id: "itok", name: a.name, actor: a, document: {uuid: "Scene.s.Token.itok", isOwner: true}, w: 100, h: 100, center: {x: 150, y: 250}};
   const oldCanvas = globalThis.canvas, oldConfigCanvas = CONFIG.Canvas;
-  globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document]))}, grid: {size: 100}, walls: {placeables: walls}, tokens: {placeables: [tok], controlled: [tok]}};
+  // Two containers on tiles: a locked safe with a long list inside, an open chest with things still in it
+  const tiles = [{document: {id: "tile0", documentName: "Tile", x: 160, y: 160, width: 100, height: 100, hidden: false, levels: new Set(),
+      flags: {[M]: {container: true, kind: "safe", lock: "masterwork", electronic: "excellent", keyName: "Key to the bishop's strongroom", items: Array.from({length: 12}, (_, k) => `Item.thing${k}`).join("\n")}}}},
+    {document: {id: "tile1", documentName: "Tile", x: 60, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {container: true, kind: "drawers", ds: "open", items: "Item.ledger"}}}}];
+  globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document]))}, grid: {size: 100},
+    walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
   for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")]] ) {
     const n = captured.length;
@@ -569,6 +574,8 @@ game.world.id = worldId;
   }
   windows.push({name: "Wall config · WoDX part", tag: "form", classes: "application sheet wall-config", width: 480, height: "auto",
     content: `<div class="standard-form">${ix.configHtml(walls[0].document)}</div><footer class="form-footer"><button type="submit">Update Wall</button></footer>`});
+  windows.push({name: "Tile config · WoDX part", tag: "form", classes: "application sheet tile-config", width: 560, height: "auto",
+    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[0].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
   globalThis.canvas = oldCanvas;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;

@@ -250,6 +250,53 @@ test("the config form is cleaned: unknown values dropped, the key name trimmed",
   assert.equal(s.stuck, true);
 });
 
+test("containers: the kind sets the material and build; a lock with no state set means locked", () => {
+  const safe = R.describeContainer({container: true, kind: "safe", lock: "excellent"});
+  assert.equal(safe.material, "steel");
+  assert.equal(safe.build, "vault");
+  assert.equal(safe.ds, "locked");
+  assert.equal(R.nameOf(safe), "Locked safe");
+  const chest = R.describeContainer({container: true, items: "Item.abc\n\n  Ledger of debts  \n"});
+  assert.equal(chest.ds, "closed");
+  assert.deepEqual(chest.items, ["Item.abc", "Ledger of debts"]);
+  assert.equal(R.nameOf(R.describeContainer({kind: "strongbox", ds: "open"})), "Open strongbox, empty");
+  // Glass is no material for a container
+  assert.equal(R.describeContainer({material: "glass"}).material, "wood");
+  assert.equal(R.parseItems(Array.from({length: 80}, (_, k) => `i${k}`)).length, R.MAX_ITEMS);
+});
+
+test("containers: a locked one is picked or forced; an open one is emptied and closed", () => {
+  const safe = R.describeContainer({kind: "safe", lock: "excellent"});
+  const ops = R.optionsFor(safe, ch());
+  assert.deepEqual(ids(ops), ["pick", "force"]);
+  assert.equal(ops[0].roll.diff, 8);
+  assert.equal(ops[1].roll.need, 10);
+  const open = R.describeContainer({kind: "chest", ds: "open", items: "Item.a\nItem.b"});
+  const o2 = R.optionsFor(open, ch());
+  assert.deepEqual(ids(o2), ["take", "close"]);
+  assert.match(o2[0].label, /2 things/);
+  const took = R.resolve(open, o2[0], []);
+  assert.equal(took.result, "done");
+  assert.equal(took.patch.flags.taken, true);
+  assert.equal(took.noise, "silent");
+  assert.deepEqual(ids(R.optionsFor(R.describeContainer({ds: "open", items: "x", taken: true}), ch())), ["close"]);
+  // A keypad on a modern safe, and a key
+  const modern = R.optionsFor(R.describeContainer({kind: "safe", lock: "good", electronic: "good", keyName: "Safe key"}), ch({eraId: "modern", year: 1995, hasKey: true}));
+  assert.deepEqual(ids(modern), ["unlock", "pick", "hack", "force"]);
+  // A cheap box is forced open with no roll
+  const box = R.optionsFor(R.describeContainer({kind: "box", lock: "cheap"}), ch({strength: 3}));
+  assert.equal(box.find(o => o.id === "force").auto, true);
+});
+
+test("containers: the config form is cleaned", () => {
+  const c = R.cleanContainer({container: "on", kind: "nonsense", material: "glass", lock: "masterwork", items: " a \n\n b "});
+  assert.equal(c.container, true);
+  assert.equal(c.kind, "chest");
+  assert.equal(c.material, "");
+  assert.equal(c.lock, "masterwork");
+  assert.equal(c.items, "a\nb");
+});
+
 /* ---------------- the runtime, on a stand-in for Foundry ---------------- */
 
 const G = 100;
@@ -275,7 +322,7 @@ const gm = {id: "gm", isGM: true, active: true}, player = {id: "pl", isGM: false
 users.set("gm", gm); users.set("pl", player);
 Object.defineProperty(users, "activeGM", {get: () => gm});
 let me = gm;
-const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll()};
+const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll()};
 const uuids = new Map();
 const damage = [];
 
@@ -285,8 +332,18 @@ function wall(id, c, door, ds, flags = {}) {
   scene.walls.set(id, doc);
   return {id, document: doc};
 }
+function tile(id, x, y, flags = {}, {hidden = false} = {}) {
+  const doc = {id, documentName: "Tile", x, y, width: G, height: G, hidden, levels: new Set(), flags: {[MOD]: flags}, parent: scene,
+    async update(data) { for ( const [k, v] of Object.entries(data) ) setPath(doc, k, v); return doc; }};
+  scene.tiles.set(id, doc);
+  return {id, document: doc};
+}
+let itemSeq = 0;
 function actor(id, name, {str = 2, dex = 3, per = 3, larceny = 2, player: pc = true, items = []} = {}) {
+  items.get = itemId => items.find(i => i.id === itemId);
   return {id, name, hasPlayerOwner: pc, items, flags: {},
+    async createEmbeddedDocuments(type, data) { const made = data.map(d => ({...structuredClone(d), id: `it${++itemSeq}`})); items.push(...made); return made; },
+    async deleteEmbeddedDocuments(type, idsToGo) { for ( const x of idsToGo ) { const k = items.findIndex(i => i.id === x); if ( k >= 0 ) items.splice(k, 1); } return idsToGo; },
     system: {attributes: {strength: {value: str}, dexterity: {value: dex}, perception: {value: per}, intelligence: {value: 2}},
       abilities: {larceny: {value: larceny, type: "skill", isvisible: true}, stealth: {value: 1, type: "skill"}, alertness: {value: 2, type: "talent"}},
       advantages: {willpower: {temporary: 3}}, health: {damage: {woundpenalty: 0}}},
@@ -337,8 +394,11 @@ globalThis.game = {
   modules: new Coll([[MOD, {}], ["wodx-chronicle", {api: {propose: async p => proposals.push(p), registerApprovalHandler: () => {}, eras: {activeEra: () => ({profile: {id: "victorian"}}), currentYear: () => 1890}}}]]),
   wodxActions: {getKind: () => "mortal"},
   wodxCombat: {applyDamage: async (a, t, n) => damage.push([a.id, t, n]), healDamage: async (a, t, n) => damage.push([a.id, t, -n])},
-  messages: new Coll()
+  messages: new Coll(),
+  items: {getName: n => worldItems.find(i => i.name === n) ?? null}
 };
+const worldItems = [{name: "Ledger of debts", documentName: "Item", toObject() { return {name: this.name, type: "Feature", system: {}}; }}];
+uuids.set("Item.dagger", {name: "Silver dagger", documentName: "Item", toObject() { return {_id: "dagger", name: this.name, type: "Melee", system: {}}; }});
 globalThis.ChatMessage = {
   getSpeaker: ({token: t}) => ({alias: t?.object?.name ?? t?.actor?.name ?? "?"}),
   create: async data => {
@@ -361,15 +421,18 @@ const door = wall("door1", [300, 450, 600, 450], 1, 2, {lock: "good"});
 const win = wall("win1", [560, 250, 560, 380], 1, 0, {kind: "window"});
 const far = wall("far1", [3000, 3000, 3300, 3000], 1, 2, {});
 const brk = wall("brk1", [300, 200, 300, 400], 0, 0, {wall: "wattle"});
+const chest = tile("chest1", 250, 250, {container: true, kind: "chest", lock: "good", items: "Item.dagger\nLedger of debts\nA thing nobody made"});
+const hiddenBox = tile("box1", 450, 250, {container: true, kind: "box"}, {hidden: true});
+const farSafe = tile("safe1", 2500, 2500, {container: true, kind: "safe", lock: "masterwork"});
 globalThis.canvas = {scene, grid: {size: G, measurePath: ([a, b]) => ({distance: Math.hypot(a.x - b.x, a.y - b.y) / G * 5})},
-  walls: {placeables: [door, win, far, brk]}, tokens: {placeables: [tokPc, tokNpc], controlled: [tokPc], get: id => [tokPc, tokNpc].find(t => t.id === id)}};
+  walls: {placeables: [door, win, far, brk]}, tiles: {placeables: [chest, hiddenBox, farSafe]}, tokens: {placeables: [tokPc, tokNpc], controlled: [tokPc], get: id => [tokPc, tokNpc].find(t => t.id === id)}};
 await import(join(root, "modules/wodx-interactables/scripts/main.mjs"));
 for ( const f of hooks.get("init") ?? [] ) f();
 const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -514,4 +577,49 @@ test("runtime: the summary before a roll names pool, difficulty, successes, time
   assert.match(s, /3 successes needed/);
   assert.match(s, /a turn a roll/);
   assert.match(s, /quiet/);
+});
+
+test("runtime: containers on tiles are in the Interact list; a hidden one only for the Storyteller; a far one not at all", () => {
+  me = player;
+  try {
+    const list = api.interactablesFor(tokPc).map(x => x.doc.id);
+    assert.ok(list.includes("chest1"));
+    assert.ok(!list.includes("box1"));
+    assert.ok(!list.includes("safe1"));
+  } finally { me = gm; }
+  assert.ok(api.interactablesFor(tokPc).map(x => x.doc.id).includes("box1"));
+});
+
+test("runtime: a chest is picked, opened and emptied; the items go to the character, and Undo takes them back", async () => {
+  faces = [9, 9, 9, 9, 9];
+  me = player;
+  try {
+    const pick = await api.attempt(tokPc, "chest1", "pick", {fd: {}});
+    assert.equal(pick.flags[MOD].done.result, "done");
+    assert.equal(chest.document.flags[MOD].ds, "closed");
+    await api.attempt(tokPc, "chest1", "open");
+    assert.equal(chest.document.flags[MOD].ds, "open");
+    const before = pc.items.length;
+    const take = await api.attempt(tokPc, "chest1", "take");
+    const d = take.flags[MOD].done;
+    assert.equal(d.given.length, 2);
+    assert.equal(pc.items.length, before + 2);
+    assert.ok(pc.items.some(i => i.name === "Silver dagger" && i.flags[MOD].from === "Item.dagger" && !i._id));
+    assert.ok(d.lines.some(l => /Silver dagger and Ledger of debts/.test(l)));
+    assert.ok(d.lines.some(l => /A thing nobody made/.test(l)));
+    assert.equal(chest.document.flags[MOD].taken, true);
+    me = gm;
+    await api.undoCard(take);
+    assert.equal(pc.items.length, before);
+    assert.equal(chest.document.flags[MOD].taken, undefined);
+  } finally { me = gm; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the container's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {container: true, kind: "safe", lock: "good", items: "Item.x"}}});
+  assert.match(html, /value="safe" selected/);
+  assert.match(html, /value="good" selected/);
+  assert.match(html, /value="locked" selected/);
+  assert.match(html, />Item.x<\/textarea>/);
+  assert.match(html, /data-fixed/);
 });

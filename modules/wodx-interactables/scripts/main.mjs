@@ -12,7 +12,10 @@
  *   Noise      Each result makes a noise (silent, quiet, loud). NPCs in earshot roll to hear it; the Storyteller's card
  *              names who heard and what each would likely do, and the hook wodxInteractablesNoise passes it on.
  *   Time       Rolls that take minutes move the Chronicle clock, outside combat.
- * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window.
+ *   Containers A tile marked as a container (chest, cabinet, strongbox, safe) is listed the same way: open it, pick
+ *              or force its lock, and take what is inside, which hands the items to the character (0.2.0).
+ * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
+ * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
  */
 import * as R from "./interact-rules.mjs";
@@ -21,7 +24,7 @@ import {actionPool} from "../../wodx-actions/scripts/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -80,6 +83,31 @@ export function describeWall(doc) {
   return R.describe({door: doc.door > 0, secret: isSecret(doc), ds: dsName(doc.ds), flags: f});
 }
 
+/** A container on a tile, or null. */
+export function describeTile(doc) {
+  const f = doc?.flags?.[MOD] ?? {};
+  if ( !doc || !f.container ) return null;
+  return R.describeContainer(f);
+}
+const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && doc.flags?.[MOD]?.container === true);
+/** Whatever interactable a wall or tile is. */
+export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
+/** A wall or a tile on a scene, by id. */
+const objectIn = (scene, id) => scene?.walls?.get?.(id) ?? scene?.tiles?.get?.(id) ?? null;
+/** A tile's rectangle and centre. */
+const rectOf = doc => ({x: num(doc.x), y: num(doc.y), w: num(doc.width), h: num(doc.height)});
+const tileCenter = doc => { const r = rectOf(doc); return {x: r.x + r.w / 2, y: r.y + r.h / 2}; };
+/** The point of a tile nearest to p, pulled a little toward the tile's centre. */
+function nearOnTile(doc, p, by = 4) {
+  const r = rectOf(doc), c = tileCenter(doc);
+  const q = {x: Math.max(r.x, Math.min(r.x + r.w, p.x)), y: Math.max(r.y, Math.min(r.y + r.h, p.y))};
+  const d = Math.hypot(c.x - q.x, c.y - q.y) || 1;
+  return {x: q.x + (c.x - q.x) / d * Math.min(by, d), y: q.y + (c.y - q.y) / d * Math.min(by, d)};
+}
+const distanceToTile = (doc, p) => { const r = rectOf(doc); return Math.hypot(Math.max(r.x - p.x, 0, p.x - r.x - r.w), Math.max(r.y - p.y, 0, p.y - r.y - r.h)); };
+/** Where a noise at an object starts, as heard from a point. */
+const noiseFrom = (doc, p) => (Array.isArray(doc?.c) ? R.besideWall(doc.c, R.sideOf(doc.c, p) ?? "a", 4) : nearOnTile(doc, p));
+
 const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness"];
 const TOOLS = /lock ?picks?|picklock|thieves'? tools|skeleton key|bump key|pick gun|lock gun|tension wrench/i;
 const POWERS = /^(potence|celerity|protean|obtenebration|matter|forces|correspondence|inhabit|outrage|puppetry|argos|moliate)/i;
@@ -122,7 +150,7 @@ export function characterFor(actor, center, doc) {
     actorId: actor?.id ?? "", kind: game.wodxActions?.getKind?.(actor) ?? "mortal", ...eraNow(),
     strength: attrOf(actor, "strength"), dexterity: attrOf(actor, "dexterity"), perception: attrOf(actor, "perception"), intelligence: attrOf(actor, "intelligence"),
     potence: powerDots(actor, "potence"), abilities, meta,
-    side: center && doc ? R.sideOf(doc.c, center) : null,
+    side: center && Array.isArray(doc?.c) ? R.sideOf(doc.c, center) : null,
     hasKey: !!key && (actor?.items ?? []).some(i => String(i.name ?? "").toLowerCase().includes(key)),
     hasTools: (actor?.items ?? []).some(i => TOOLS.test(i.name ?? "")),
     powers: [...new Set((actor?.items ?? []).filter(i => i.type === "Power" && POWERS.test(i.name ?? "")).map(i => i.name.trim()))].slice(0, 6),
@@ -156,6 +184,18 @@ export function interactablesFor(tok) {
     if ( blocked("move", tok.center, near) ) continue;
     if ( !game.user.isGM && blocked("sight", tok.center, near) ) continue;
     out.push({wall, doc, o, distance: d});
+  }
+  // Containers on tiles
+  for ( const tile of canvas.tiles?.placeables ?? [] ) {
+    const doc = tile.document, o = describeTile(doc);
+    if ( !o || !levelOk(tok, doc) ) continue;
+    if ( !game.user.isGM && doc.hidden ) continue;
+    const d = distanceToTile(doc, tok.center);
+    if ( d > reach ) continue;
+    const near = nearOnTile(doc, tok.center);
+    if ( blocked("move", tok.center, near) ) continue;
+    if ( !game.user.isGM && blocked("sight", tok.center, near) ) continue;
+    out.push({wall: tile, doc, o, distance: d});
   }
   return out.sort((a, b) => a.distance - b.distance);
 }
@@ -205,7 +245,7 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
   const rows = list.map(({doc, o}) => {
     const ch = characterFor(tok.actor, tok.center, doc);
     const ops = R.optionsFor(o, ch);
-    const bar = o.barred && o.barSide ? ` (barred on the ${R.sideLabel(doc.c, o.barSide)} side)` : "";
+    const bar = o.barred && o.barSide && Array.isArray(doc.c) ? ` (barred on the ${R.sideLabel(doc.c, o.barSide)} side)` : "";
     const opsHtml = ops.map(op => `<li class="wix-op${op.disabled ? " disabled" : ""}">`
       + (op.disabled ? `<b>${esc(op.label)}</b>` : `<button type="button" data-wall="${doc.id}" data-op="${op.id}">${esc(op.label)}</button>`)
       + `<div class="wodx-quiet">${esc(optionSummary(op))}</div></li>`).join("");
@@ -227,7 +267,7 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
 
 /** Try one option on one wall, from the acting player's client. Returns the card's message, or null. */
 export async function attempt(tok, wallId, opId, {fd = null} = {}) {
-  const doc = canvas.scene?.walls?.get(wallId), o = describeWall(doc);
+  const doc = objectIn(canvas.scene, wallId), o = describeObj(doc);
   if ( !doc || !o ) return null;
   const actor = tok.actor, ch = characterFor(actor, tok.center, doc);
   const op = R.optionsFor(o, ch).find(x => x.id === opId);
@@ -303,6 +343,23 @@ function cardHtml({title, line = "", dice = "", body = "", verdict = ""}) {
 /*  The Storyteller's side: applying, noise, Undo                      */
 /* ------------------------------------------------------------------ */
 
+const listWords = a => (a.length <= 1 ? a.join("") : `${a.slice(0, -1).join(", ")} and ${a.at(-1)}`);
+/** Hand a container's items to a character: copies of each item named (a UUID, or a world item's name). */
+async function giveItems(actor, refs) {
+  const data = [], names = [], missing = [];
+  for ( const ref of refs ) {
+    let it = null;
+    try { it = /^(Compendium|Item|Actor|Scene)\./.test(ref) ? await fromUuid(ref) : game.items?.getName?.(ref) ?? null; } catch (e) { it = null; }
+    if ( !it || it.documentName && it.documentName !== "Item" ) { missing.push(ref); continue; }
+    const o = typeof it.toObject === "function" ? it.toObject() : foundry.utils.deepClone(it);
+    delete o._id;
+    o.flags = {...(o.flags ?? {}), [MOD]: {...(o.flags?.[MOD] ?? {}), from: ref}};
+    data.push(o); names.push(it.name);
+  }
+  const made = data.length ? await actor.createEmbeddedDocuments("Item", data) : [];
+  return {ids: (made ?? []).map(d => d.id), names, missing};
+}
+
 const busy = new Set();
 /** Active GM: work out and apply the result of a card. Returns the result, or null. */
 export async function applyAsk(msg) {
@@ -312,12 +369,12 @@ export async function applyAsk(msg) {
   try {
     const author = msg.author ?? game.users.get(msg.user ?? ask.user);
     const tokDoc = await fromUuid(ask.token);
-    const scene = game.scenes.get(ask.scene), doc = scene?.walls?.get(ask.wall);
+    const scene = game.scenes.get(ask.scene), doc = objectIn(scene, ask.wall);
     const fail = async why => { await msg.update({[`flags.${MOD}.ask.state`]: "refused", content: cardHtml({title: titleOf(msg), body: `<p>${esc(why)}</p>`, verdict: "Nothing changes"})}); return null; };
     if ( !tokDoc?.actor || !doc ) return fail("The door or the character is gone.");
     if ( !author?.isGM && !tokDoc.testUserPermission?.(author, "OWNER") ) return fail("Only a character's own player can act for it.");
     const tok = tokDoc.object, actor = tokDoc.actor;
-    const o = describeWall(doc), ch = characterFor(actor, centerOf(tokDoc, scene), doc);
+    const o = describeObj(doc), ch = characterFor(actor, centerOf(tokDoc, scene), doc);
     const op = R.optionsFor(o, ch).find(x => x.id === ask.op);
     if ( !op || op.disabled ) return fail("That can't be done any more: the door has changed since.");
     const rolls = (msg.rolls ?? []).map((roll, k) => {
@@ -326,7 +383,8 @@ export async function applyAsk(msg) {
     });
     if ( op.roll && !rolls.length ) return fail("The card has no roll.");
     const out = R.resolve(o, op, rolls, {actorId: actor.id, ...eraNow()});
-    const snap = {ds: doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {})};
+    const tile = isTile(doc);
+    const snap = {ds: tile ? null : doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {})};
     const lines = [];
     let waiting = false;
     // Only a wall knocked through waits; everything else applies now
@@ -337,10 +395,18 @@ export async function applyAsk(msg) {
       lines.push("The wall gives way: the Storyteller decides what the hole looks like (approval queue).");
     }
     const update = {};
-    if ( out.patch.ds && !waiting ) update.ds = dsNum(out.patch.ds);
+    if ( out.patch.ds && !waiting ) { if ( tile ) update[`flags.${MOD}.ds`] = out.patch.ds; else update.ds = dsNum(out.patch.ds); }
     for ( const [k, v] of Object.entries(out.patch.flags ?? {}) ) update[`flags.${MOD}.${k}`] = v;
     if ( out.patch.flags?.jammed || out.patch.flags?.broken ) update[`flags.${MOD}.found`] = true;
-    if ( Object.keys(update).length ) await doc.update(update, {sound: true});
+    if ( Object.keys(update).length ) await doc.update(update, tile ? {} : {sound: true});
+    // Taking what is inside a container: the items go to the character
+    let given = [];
+    if ( op.id === "take" && out.result === "done" ) {
+      const got = await giveItems(actor, o.items);
+      given = got.ids;
+      lines.push(got.names.length ? `${actor.name} takes ${listWords(got.names)}.` : "There is nothing there that WoDX could hand over: the Storyteller says what was inside.");
+      if ( got.missing.length ) lines.push(`Not found, so not handed over: ${got.missing.join(", ")}.`);
+    }
     // A botch on forcing: one lethal level
     let hurt = 0;
     if ( out.hurt ) {
@@ -356,14 +422,14 @@ export async function applyAsk(msg) {
     } else if ( out.seconds >= R.MINUTE ) lines.push(`It takes ${timeWords(out.seconds)}.`);
     // Listening: what is on the far side
     const here = !!tok && canvas.scene?.id === scene.id;
-    if ( op.id === "listen" ) await listenReport(here ? tok : null, doc, out, author, actor);
+    if ( op.id === "listen" && !tile ) await listenReport(here ? tok : null, doc, out, author, actor);
     // Noise
     const loudish = out.noise && out.noise !== "silent" && setting("noise") !== false;
     const heard = loudish && here ? hearersOf(tok, doc, out.noise) : [];
     if ( loudish && !here ) lines.push("Nobody's hearing was checked: the Storyteller is viewing another scene.");
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
-    const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, undone: false};
+    const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given, undone: false};
     const verdict = waiting ? "Waiting for the Storyteller" : {done: "Done", progress: "Headway", fail: "No luck", botch: "Botch"}[out.result] ?? "";
     await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
     return done;
@@ -402,13 +468,13 @@ const asleepNow = actor => {
 /** NPCs who hear a noise at a door: [{name, uuid, likely}]. */
 export function hearersOf(tok, doc, noise) {
   const out = [];
-  const mySide = R.sideOf(doc.c, tok.center) ?? "a";
+  const wallish = Array.isArray(doc.c);
+  const mySide = wallish ? R.sideOf(doc.c, tok.center) ?? "a" : "a";
   const npc = game.modules.get("wodx-npc")?.api;
   for ( const t of canvas.tokens?.placeables ?? [] ) {
     if ( !t.actor || t.id === tok.id || t.actor.hasPlayerOwner || t.document.hidden ) continue;
-    const side = R.sideOf(doc.c, t.center) ?? mySide;
-    // The noise is at the door: heard from the listener's own side of it
-    const from = R.besideWall(doc.c, side, 4);
+    // The noise is at the door: heard from the listener's own side of it (a container: from the container)
+    const from = wallish ? R.besideWall(doc.c, R.sideOf(doc.c, t.center) ?? mySide, 4) : nearOnTile(doc, t.center);
     const yards = yardsBetween(from, t.center);
     const h = R.hears(noise, {yards, walls: soundWalls(from, t.center), asleep: asleepNow(t.actor),
       perception: attrOf(t.actor, "perception"), alertness: num(t.actor.system?.abilities?.alertness?.value)});
@@ -443,15 +509,20 @@ export async function undoCard(msg) {
   msg = typeof msg === "string" ? game.messages.get(msg) : msg;
   const done = foundry.utils.deepClone(msg?.flags?.[MOD]?.done);
   if ( !done || done.undone || !game.user.isGM ) return null;
-  const ask = msg.flags[MOD].ask, doc = game.scenes.get(ask.scene)?.walls?.get(ask.wall);
+  const ask = msg.flags[MOD].ask, doc = objectIn(game.scenes.get(ask.scene), ask.wall);
   if ( doc ) {
-    const update = {ds: done.snap.ds};
+    const update = isTile(doc) || done.snap.ds === null ? {} : {ds: done.snap.ds};
     const now = doc.flags?.[MOD] ?? {};
     for ( const k of Object.keys(now) ) if ( !(k in done.snap.flags) ) Object.assign(update, unsetKey(`flags.${MOD}.${k}`));
     for ( const [k, v] of Object.entries(done.snap.flags) ) update[`flags.${MOD}.${k}`] = v;
-    await doc.update(update, {sound: false});
+    await doc.update(update, isTile(doc) ? {} : {sound: false});
   }
   const actor = (await fromUuid(ask.token))?.actor;
+  // Items handed over from a container go back
+  if ( done.given?.length && actor ) {
+    const ids = done.given.filter(id => actor.items?.get?.(id));
+    if ( ids.length ) { try { await actor.deleteEmbeddedDocuments("Item", ids); } catch (e) { /* by hand */ } }
+  }
   if ( done.hurt && actor ) { try { await game.wodxCombat?.healDamage?.(actor, "lethal", done.hurt); } catch (e) { /* by hand */ } }
   // The clock goes back only if nothing else has moved it since
   if ( done.advanced && game.time.worldTime === done.worldTime ) await game.time.advance(-done.advanced);
@@ -517,6 +588,45 @@ function onRenderWallConfig(app, html) {
   if ( footer ) footer.before(wrap.firstElementChild); else form.appendChild(wrap.firstElementChild);
   app.setPosition?.({height: "auto"});
 }
+/** The WoDX part of a tile's config window: a container. */
+export function tileConfigHtml(doc) {
+  const f = R.cleanContainer(doc?.flags?.[MOD] ?? {});
+  const p = `flags.${MOD}`;
+  const field = (label, inner, hint = "") => `<div class="form-group"><label>${esc(label)}</label><div class="form-fields">${inner}</div>${hint ? `<p class="hint">${esc(hint)}</p>` : ""}</div>`;
+  const mats = Object.fromEntries(Object.entries(R.MATERIALS).filter(([k]) => !["glass", "horn"].includes(k)));
+  const st = R.describeContainer(doc?.flags?.[MOD] ?? {}).ds;
+  return `<fieldset class="wix-config wix-tile"><legend>WoDX</legend>
+    <p class="hint">A chest, cabinet, strongbox or safe that characters can open, pick, force and take things from. Hide the tile to keep it from players until found.</p>
+    ${field("Container", `<input type="checkbox" name="${p}.container"${f.container ? " checked" : ""}>`)}
+    ${field("Kind", `<select name="${p}.kind" data-fixed>${opt(R.CONTAINERS, f.kind)}</select>`)}
+    ${field("Material", `<select name="${p}.material" data-fixed>${opt({"": "As the kind suggests", ...mats}, f.material)}</select>`, "How hard it is to force.")}
+    ${field("Lock", `<select name="${p}.lock" data-fixed>${opt({"": "No lock", ...Object.fromEntries(Object.entries(R.LOCKS).filter(([k]) => k !== "none"))}, f.lock)}</select>`)}
+    ${field("State", `<select name="${p}.ds" data-fixed>${opt({closed: "Closed", locked: "Locked", open: "Open"}, st)}</select>`)}
+    ${field("Keypad or alarm", `<select name="${p}.electronic" data-fixed>${opt(R.ELECTRONIC, f.electronic)}</select>`, "Only in the modern eras.")}
+    ${field("Key", `<input type="text" name="${p}.keyName" value="${esc(f.keyName)}" placeholder="Name of the key item">`)}
+    ${field("Inside", `<textarea name="${p}.items" rows="4" placeholder="One item a line: its UUID, or its name in the Items directory">${esc(f.items)}</textarea>`, "Taking them gives the character a copy of each. Leave it empty and say what is inside yourself.")}
+  </fieldset>`;
+}
+function onRenderTileConfig(app, html) {
+  if ( !game.user.isGM ) return;
+  const root = html instanceof HTMLElement ? html : html?.[0];
+  const form = root?.tagName === "FORM" ? root : root?.querySelector("form") ?? app.form;
+  if ( !form || form.querySelector(".wix-tile") ) return;
+  const wrap = document.createElement("div");
+  wrap.innerHTML = tileConfigHtml(app.document ?? app.object);
+  const footer = form.querySelector("footer, .form-footer, .sheet-footer");
+  if ( footer ) footer.before(wrap.firstElementChild); else form.appendChild(wrap.firstElementChild);
+  app.setPosition?.({height: "auto"});
+}
+function onPreUpdateTile(doc, changes) {
+  const f = changes?.flags?.[MOD];
+  if ( !f || typeof f !== "object" ) return;
+  for ( const k of ["material", "lock", "keyName"] ) if ( f[k] === "" ) f[k] = null;
+  if ( "items" in f ) f.items = R.parseItems(f.items).join("\n");
+  // A lock set on a closed container locks it
+  if ( f.lock && !f.ds && !doc.flags?.[MOD]?.ds ) f.ds = "locked";
+}
+
 /** Tidy what the form sends: blank choices are dropped so the defaults apply. */
 function onPreUpdateWall(doc, changes) {
   const f = changes?.flags?.[MOD];
@@ -559,7 +669,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, describeObj, tileConfigHtml, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
@@ -575,13 +685,15 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
 });
 Hooks.on("renderWallConfig", onRenderWallConfig);
 Hooks.on("preUpdateWall", onPreUpdateWall);
+Hooks.on("renderTileConfig", onRenderTileConfig);
+Hooks.on("preUpdateTile", onPreUpdateTile);
 Hooks.on("renderTokenHUD", (hud, html) => {
   const root = html instanceof HTMLElement ? html : html?.[0];
   const tok = hud.object, col = root?.querySelector(".col.right");
   if ( !tok?.actor || !col || !tok.document.isOwner ) return;
   const b = document.createElement("div");
   b.className = "control-icon wix-hud";
-  b.dataset.tooltip = "Interact: doors, windows and walls within reach";
+  b.dataset.tooltip = "Interact: doors, windows, walls and containers within reach";
   b.innerHTML = '<i class="fa-solid fa-door-open"></i>';
   b.addEventListener("click", () => openInteract(tok).catch(e => console.error(`${MOD} |`, e)));
   col.appendChild(b);
