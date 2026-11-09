@@ -139,6 +139,8 @@ export function build(ctx) {
   /* ------------------------------------------------------------------ */
 
   const onGrid = () => ctx.gridKind() !== "none";
+  // The grid WoDX walks: Foundry's, or on a gridless scene the lattice main.mjs lays over it
+  const G = () => ctx.grid?.() ?? canvas.grid;
   /**
    * Move a token straight to a spot, through walls: Foundry 14 holds a plain position update at a wall, so a jump is
    * made as a displacement (a move that ignores walls), then checked; a plain update is the fallback.
@@ -177,22 +179,22 @@ export function build(ctx) {
   function freeCellsIn(region, tokLike, near, busy) {
     const b = regionBounds(region);
     if ( !b ) return [];
-    const size = canvas.grid.size, out = [];
+    const size = G().size, out = [];
     for ( let y = b.y + size / 2; y < b.y + b.h; y += size ) for ( let x = b.x + size / 2; x < b.x + b.w; x += size ) {
-      const c = canvas.grid.getOffset({x, y});
+      const c = G().getOffset({x, y});
       const cells = ctx.cellsAt(tokLike, c);
-      if ( cells.every(k => !busy.has(`${k.i},${k.j}`) && inRegion(region, canvas.grid.getCenterPoint(k))) ) out.push(c);
+      if ( cells.every(k => !busy.has(`${k.i},${k.j}`) && inRegion(region, G().getCenterPoint(k))) ) out.push(c);
     }
-    const at = near ? canvas.grid.getCenterPoint(near) : {x: b.x + b.w / 2, y: b.y + b.h / 2};
-    const dist = c => { const p = canvas.grid.getCenterPoint(c); return Math.hypot(p.x - at.x, p.y - at.y); };
+    const at = near ? G().getCenterPoint(near) : {x: b.x + b.w / 2, y: b.y + b.h / 2};
+    const dist = c => { const p = G().getCenterPoint(c); return Math.hypot(p.x - at.x, p.y - at.y); };
     return out.sort((a, c) => dist(a) - dist(c));
   }
   /** A free cell near a point, searched outward in rings. */
   function freeCellNear(point, tokLike, busy) {
-    const c0 = canvas.grid.getOffset(point), d = canvas.dimensions;
+    const c0 = G().getOffset(point), d = canvas.dimensions;
     for ( let ring = 0; ring < 30; ring++ ) for ( let di = -ring; di <= ring; di++ ) for ( let dj = -ring; dj <= ring; dj++ ) {
       if ( Math.max(Math.abs(di), Math.abs(dj)) !== ring ) continue;
-      const c = {i: c0.i + di, j: c0.j + dj}, p = canvas.grid.getCenterPoint(c);
+      const c = {i: c0.i + di, j: c0.j + dj}, p = G().getCenterPoint(c);
       if ( p.x < d.sceneX || p.y < d.sceneY || p.x >= d.sceneX + d.sceneWidth || p.y >= d.sceneY + d.sceneHeight ) continue;
       if ( ctx.cellsAt(tokLike, c).every(k => !busy.has(`${k.i},${k.j}`)) ) return c;
     }
@@ -206,7 +208,7 @@ export function build(ctx) {
   function shapeOf(actor) {
     const p = actor.prototypeToken ?? {};
     const w = Math.max(1, Math.round(p.width ?? 1)), h = Math.max(1, Math.round(p.height ?? 1));
-    return {document: {width: w, height: h}, w: w * canvas.grid.size, h: h * canvas.grid.size};
+    return {document: {width: w, height: h}, w: w * G().size, h: h * G().size};
   }
   /** Where to put an arriving NPC on this scene: {cell, entry (cell of the way in, when walking in)}. */
   function arrivalFor(scene, actor, place, busy, {walkIn}) {

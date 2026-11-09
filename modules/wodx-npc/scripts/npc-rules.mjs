@@ -293,3 +293,17 @@ export function aimPower(opt, ranked) {
   if ( opt?.action !== "power" || !ranked?.pick || ranked.pick.self ) return opt;
   return {...opt, target: ranked.pick.id, label: `${opt.label} on ${ranked.pick.name}`, why: `${opt.why}; aimed at ${ranked.pick.name} (${ranked.pick.why})`};
 }
+
+/**
+ * A square lattice laid over a gridless scene, so NPCs can walk it like a square grid (NPC 0.6.0). size: the scene's
+ * grid size in pixels. Same calls as Foundry's grid for what WoDX uses: getOffset, getTopLeftPoint, getCenterPoint.
+ */
+export function latticeGrid(size = 100) {
+  const s = Math.max(1, Number(size) || 100);
+  return {
+    size: s, lattice: true,
+    getOffset: p => ({i: Math.floor(Number(p?.y ?? 0) / s), j: Math.floor(Number(p?.x ?? 0) / s)}),
+    getTopLeftPoint: c => ({x: c.j * s, y: c.i * s}),
+    getCenterPoint: c => ({x: (c.j + 0.5) * s, y: (c.i + 0.5) * s})
+  };
+}
