@@ -58,13 +58,14 @@ export async function removeEntry(id) {
 /* ---- Due dates ---- */
 
 let checking = Promise.resolve();
-export function checkDue({label = ""} = {}) {
-  checking = checking.then(() => _checkDue(label)).catch(e => console.error(`${MOD} |`, e));
+export function checkDue({label = "", force = false} = {}) {
+  checking = checking.then(() => _checkDue(label, force)).catch(e => console.error(`${MOD} |`, e));
   return checking;
 }
 
-async function _checkDue(label) {
-  if ( !isActiveGM() || skipping() ) return {due: []};
+async function _checkDue(label, force = false) {
+  // `force` checks even while the world is held (the gate uses it)
+  if ( !isActiveGM() || (skipping() && !force) ) return {due: []};
   const t = now();
   const cur = ledger();
   const due = L.comingDue(cur, t);
