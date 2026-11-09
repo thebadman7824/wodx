@@ -23,8 +23,8 @@
     ]
    },
    {
-    "text": "Kindred society runs on territories and domains, much like a medieval patchwork of fiefs.",
-    "tier": "implied",
+    "text": "To Kindred, cities are patchworks of territories and domains, almost medieval in outlook.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -240,8 +240,8 @@
     ]
    },
    {
-    "text": "Belief in Caine divides Kindred much as a faith divides mortals.",
-    "tier": "implied",
+    "text": "Belief in Caine is a religion among vampires, with all the zeal and intolerance of any faith.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -620,22 +620,6 @@
       "pdf": 31
      }
     ]
-   },
-   {
-    "text": "Diablerie breaks this law at its worst.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "v20",
-      "page": 23,
-      "pdf": 31
-     },
-     {
-      "book": "v20",
-      "page": 28,
-      "pdf": 36
-     }
-    ]
    }
   ],
   "see": [
@@ -778,18 +762,13 @@
   "summary": "The enslaving love that comes from drinking the same vampire's blood on three nights.",
   "claims": [
    {
-    "text": "Drinking a vampire's blood binds the drinker in a growing devotion, also called the blood oath.",
-    "tier": "implied",
+    "text": "Drinking one vampire's blood on three occasions creates a blood bond, and taking a vampire's blood acknowledges that vampire's mastery.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
-      "page": 34,
-      "pdf": 42
-     },
-     {
-      "book": "v20",
-      "page": 287,
-      "pdf": 295
+      "page": 32,
+      "pdf": 40
      }
     ]
    },
@@ -945,8 +924,8 @@
     ]
    },
    {
-    "text": "Rebels call it the Ivory Tower.",
-    "tier": "implied",
+    "text": "Brujah call it the Ivory Tower.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -1040,17 +1019,6 @@
     ]
    },
    {
-    "text": "It began as a faction within the Camarilla.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "v20",
-      "page": 44,
-      "pdf": 52
-     }
-    ]
-   },
-   {
     "text": "The spirit of the old Anarch Revolt is flaring up again in the modern nights.",
     "tier": "stated",
     "refs": [
@@ -1089,22 +1057,6 @@
       "book": "v20",
       "page": 45,
       "pdf": 53
-     }
-    ]
-   },
-   {
-    "text": "The revolt is remembered across the Clans' histories, among them the Lasombra's.",
-    "tier": "implied",
-    "refs": [
-     {
-      "book": "v20",
-      "page": 45,
-      "pdf": 53
-     },
-     {
-      "book": "v20",
-      "page": 436,
-      "pdf": 444
      }
     ]
    }
@@ -1284,17 +1236,12 @@
    },
    {
     "text": "Vampires with no Clan are called Caitiff.",
-    "tier": "implied",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
       "page": 32,
       "pdf": 40
-     },
-     {
-      "book": "v20",
-      "page": 33,
-      "pdf": 41
      }
     ]
    }
@@ -1354,6 +1301,17 @@
       "pdf": 57
      }
     ]
+   },
+   {
+    "text": "Drinking another vampire's blood wounds an Assamite, a lethal level per point, because of a Tremere blood curse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 49,
+      "pdf": 57
+     }
+    ]
    }
   ],
   "see": [
@@ -1401,14 +1359,9 @@
     ]
    },
    {
-    "text": "A Brujah's rage makes resisting frenzy harder.",
-    "tier": "implied",
+    "text": "Rolls to resist or guide frenzy are two harder for a Brujah.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 50,
-      "pdf": 58
-     },
      {
       "book": "v20",
       "page": 51,
@@ -1462,14 +1415,9 @@
     ]
    },
    {
-    "text": "Bright light hurts them more than other vampires.",
-    "tier": "implied",
+    "text": "Sunlight does two extra health levels to a Setite, and bright light costs a die on actions.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 52,
-      "pdf": 60
-     },
      {
       "book": "v20",
       "page": 53,
@@ -1528,14 +1476,9 @@
     ]
    },
    {
-    "text": "Each frenzy can leave a Gangrel with a new animal feature.",
-    "tier": "implied",
+    "text": "Each frenzy leaves a Gangrel with a temporary animal trait.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 54,
-      "pdf": 62
-     },
      {
       "book": "v20",
       "page": 55,
@@ -1598,6 +1541,17 @@
       "pdf": 65
      }
     ]
+   },
+   {
+    "text": "A Giovanni's Kiss brings mortals agony instead of pleasure, and can kill from shock.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 57,
+      "pdf": 65
+     }
+    ]
    }
   ],
   "see": [
@@ -1645,14 +1599,9 @@
     ]
    },
    {
-    "text": "A Lasombra casts no reflection.",
-    "tier": "implied",
+    "text": "A Lasombra casts no reflection in mirror, water or glass.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 58,
-      "pdf": 66
-     },
      {
       "book": "v20",
       "page": 59,
@@ -1706,14 +1655,9 @@
     ]
    },
    {
-    "text": "Each carries at least one derangement that can never be cured.",
-    "tier": "implied",
+    "text": "Every Malkavian has one derangement that can never be cured, though Willpower can hold it off for a scene.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 60,
-      "pdf": 68
-     },
      {
       "book": "v20",
       "page": 61,
@@ -1776,6 +1720,17 @@
       "pdf": 71
      }
     ]
+   },
+   {
+    "text": "A Nosferatu's Appearance is zero and can never be raised.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 63,
+      "pdf": 71
+     }
+    ]
    }
   ],
   "see": [
@@ -1823,14 +1778,9 @@
     ]
    },
    {
-    "text": "Each Ravnos is driven by a vice that is hard to resist.",
-    "tier": "implied",
+    "text": "Each Ravnos has a vice, such as lying, cruelty or theft, that must be indulged when the chance comes unless resisted.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 64,
-      "pdf": 72
-     },
      {
       "book": "v20",
       "page": 65,
@@ -1884,14 +1834,9 @@
     ]
    },
    {
-    "text": "Beauty can hold a Toreador spellbound.",
-    "tier": "implied",
+    "text": "When something truly remarkable is before a Toreador, a Self-Control or Instincts roll at difficulty 6 is needed to avoid being held spellbound.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 66,
-      "pdf": 74
-     },
      {
       "book": "v20",
       "page": 67,
@@ -1954,6 +1899,17 @@
       "pdf": 77
      }
     ]
+   },
+   {
+    "text": "A Tremere becomes blood bound after only two drinks of another vampire's blood instead of three.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 69,
+      "pdf": 77
+     }
+    ]
    }
   ],
   "see": [
@@ -2001,14 +1957,9 @@
     ]
    },
    {
-    "text": "A Tzimisce must rest near earth from a place important to the vampire in life.",
-    "tier": "implied",
+    "text": "A Tzimisce must rest near two handfuls of earth from a place important in mortal life.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 70,
-      "pdf": 78
-     },
      {
       "book": "v20",
       "page": 71,
@@ -2073,14 +2024,9 @@
     ]
    },
    {
-    "text": "A Ventrue can feed only on one kind of mortal.",
-    "tier": "implied",
+    "text": "A Ventrue can feed on only one particular kind of mortal, chosen when the character is made.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 72,
-      "pdf": 80
-     },
      {
       "book": "v20",
       "page": 73,
@@ -2107,18 +2053,13 @@
   "summary": "Vampires with no Clan, scorned by Kindred society.",
   "claims": [
    {
-    "text": "Caitiff carry no Clan's lineage that others recognise.",
-    "tier": "implied",
+    "text": "A Caitiff is a vampire of no Clan or none that is known, usually of high Generation, where the blood is too thin to pass on Clan traits.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
       "page": 32,
       "pdf": 40
-     },
-     {
-      "book": "v20",
-      "page": 33,
-      "pdf": 41
      }
     ]
    }
@@ -2168,21 +2109,38 @@
   "eras": [
    "modern"
   ],
-  "summary": "Smaller lineages outside the thirteen Clans, such as the Baali, Kiasyd, Salubri and Samedi.",
+  "summary": "Smaller lineages outside the thirteen Clans, such as the Baali, the Daughters of Cacophony and the Gargoyles.",
   "claims": [
    {
-    "text": "Lesser bloodlines include the Baali, Daughters of Cacophony, Gargoyles, Kiasyd, Salubri and Samedi.",
-    "tier": "implied",
+    "text": "Legend says the Baali began with the childe of an Antediluvian who made a pact with dark powers to war on the Clans.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
-      "page": 393,
-      "pdf": 401
-     },
+      "page": 394,
+      "pdf": 402
+     }
+    ]
+   },
+   {
+    "text": "Song is the centre of every Daughter of Cacophony's existence.",
+    "tier": "stated",
+    "refs": [
      {
       "book": "v20",
-      "page": 478,
-      "pdf": 486
+      "page": 398,
+      "pdf": 406
+     }
+    ]
+   },
+   {
+    "text": "The Tremere revealed the Gargoyle bloodline in 1167.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 400,
+      "pdf": 408
      }
     ]
    }
@@ -2351,8 +2309,8 @@
   "summary": "How a vampire loses Humanity or Path rating by committing sins against it.",
   "claims": [
    {
-    "text": "Committing a sin at or below one's rating calls for a roll that can lower the rating.",
-    "tier": "implied",
+    "text": "Sooner or later every vampire commits an atrocity, often in frenzy, and risks losing moral ground.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2396,8 +2354,8 @@
     ]
    },
    {
-    "text": "Courage is what lets a vampire face fire and sunlight without fleeing in terror.",
-    "tier": "implied",
+    "text": "Every character has Courage, whatever Path the character follows.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2426,8 +2384,8 @@
   "summary": "A vampire's drive and self-control, spent for automatic successes and to resist impulses.",
   "claims": [
    {
-    "text": "Willpower is one of a vampire's core traits.",
-    "tier": "implied",
+    "text": "Willpower measures a character's inner drive and ability to beat unfavourable odds.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2523,14 +2481,9 @@
     ]
    },
    {
-    "text": "Most Sabbat vampires follow a Path rather than Humanity.",
-    "tier": "implied",
+    "text": "Following a Path takes discipline and spiritual strength of an inhuman kind; not just anyone can do it.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 309,
-      "pdf": 317
-     },
      {
       "book": "v20",
       "page": 313,
@@ -2586,14 +2539,9 @@
   "summary": "The two great banes of vampires, both causing aggravated damage.",
   "claims": [
    {
-    "text": "Sunlight's effects on vampires have their own rules among the systems of play.",
-    "tier": "implied",
+    "text": "Even sunlight through a heavy curtain burns, and direct sun turns all but the mightiest vampires to ash; only Fortitude lets a vampire soak it.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 301,
-      "pdf": 309
-     },
      {
       "book": "v20",
       "page": 302,
@@ -2620,14 +2568,9 @@
   "summary": "Deathlike sleep that takes vampires who are badly hurt or very old.",
   "claims": [
    {
-    "text": "Torpor can follow grievous wounds, and elders may sink into it for ages.",
-    "tier": "implied",
+    "text": "A vampire in torpor lies in a deathlike trance and can do nothing, not even spend blood, until enough time has passed.",
+    "tier": "stated",
     "refs": [
-     {
-      "book": "v20",
-      "page": 121,
-      "pdf": 129
-     },
      {
       "book": "v20",
       "page": 122,
@@ -2739,8 +2682,8 @@
   "summary": "Command and kinship with beasts, and in time the Beast itself.",
   "claims": [
    {
-    "text": "Command and kinship with beasts, and in time the Beast itself.",
-    "tier": "implied",
+    "text": "Animalism draws on the Beast in all creatures, from rats to elders, and amplifies the vampire's primal nature.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2767,8 +2710,8 @@
   "summary": "Heightened senses, auras and reading minds.",
   "claims": [
    {
-    "text": "Heightened senses, auras and reading minds.",
-    "tier": "implied",
+    "text": "Auspex heightens the senses and, with power, reveals auras and reads thoughts.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2795,8 +2738,8 @@
   "summary": "Supernatural speed.",
   "claims": [
    {
-    "text": "Supernatural speed.",
-    "tier": "implied",
+    "text": "Celerity lets Assamites, Brujah and Toreador move so fast they blur.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2823,8 +2766,8 @@
   "summary": "The Ravnos art of illusion.",
   "claims": [
    {
-    "text": "The Ravnos art of illusion.",
-    "tier": "implied",
+    "text": "The Ravnos are masters of illusion, though how they came by it is lost.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2851,8 +2794,8 @@
   "summary": "The Malkavian power to spread madness.",
   "claims": [
    {
-    "text": "The Malkavian power to spread madness.",
-    "tier": "implied",
+    "text": "Dementation channels madness into the minds of others; its users need not be mad themselves.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2879,8 +2822,8 @@
   "summary": "Commanding and rewriting minds through eye contact.",
   "claims": [
    {
-    "text": "Commanding and rewriting minds through eye contact.",
-    "tier": "implied",
+    "text": "Dominate bends another's thoughts and actions by force of will, and needs eye contact.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2907,8 +2850,8 @@
   "summary": "Supernatural toughness, even against fire and sunlight.",
   "claims": [
    {
-    "text": "Supernatural toughness, even against fire and sunlight.",
-    "tier": "implied",
+    "text": "Fortitude gives a toughness beyond the already sturdy undead body.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2935,8 +2878,8 @@
   "summary": "Power over the dead and the souls of the dead, practised by the Giovanni.",
   "claims": [
    {
-    "text": "Power over the dead and the souls of the dead, practised by the Giovanni.",
-    "tier": "implied",
+    "text": "Necromancy commands the souls of the dead and, like Thaumaturgy, works through paths and rituals.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2963,8 +2906,8 @@
   "summary": "Hiding from notice and wearing false faces.",
   "claims": [
    {
-    "text": "Hiding from notice and wearing false faces.",
-    "tier": "implied",
+    "text": "An Obfuscated vampire is not invisible but clouds the minds of watchers so they do not notice.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -2991,8 +2934,8 @@
   "summary": "The Lasombra mastery of living shadow.",
   "claims": [
    {
-    "text": "The Lasombra mastery of living shadow.",
-    "tier": "implied",
+    "text": "Obtenebration, the Lasombra's signature, grants power over darkness itself.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -3019,8 +2962,8 @@
   "summary": "Supernatural strength.",
   "claims": [
    {
-    "text": "Supernatural strength.",
-    "tier": "implied",
+    "text": "Potence grants strength for great leaps, lifting and brutal blows.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -3047,8 +2990,8 @@
   "summary": "Supernatural charisma, awe and dread.",
   "claims": [
    {
-    "text": "Supernatural charisma, awe and dread.",
-    "tier": "implied",
+    "text": "Presence manipulates emotions, stirring fervour or terror in mortals and Kindred.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -3075,8 +3018,8 @@
   "summary": "Changing shape, from claws to wolf to mist.",
   "claims": [
    {
-    "text": "Changing shape, from claws to wolf to mist.",
-    "tier": "implied",
+    "text": "Protean lets a vampire change shape.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -3103,8 +3046,8 @@
   "summary": "The Assamite art of silent killing and poisonous blood.",
   "claims": [
    {
-    "text": "The Assamite art of silent killing and poisonous blood.",
-    "tier": "implied",
+    "text": "Quietus, the Assamite art of silent death, works through blood, poison and pestilence.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -3131,8 +3074,8 @@
   "summary": "The Setite gifts of the serpent.",
   "claims": [
    {
-    "text": "The Setite gifts of the serpent.",
-    "tier": "implied",
+    "text": "Serpentis is held to be the legacy of Set, taught only to those the Setites judge worthy.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -3159,8 +3102,8 @@
   "summary": "Blood magic of paths and rituals, kept by the Tremere.",
   "claims": [
    {
-    "text": "Blood magic of paths and rituals, kept by the Tremere.",
-    "tier": "implied",
+    "text": "Thaumaturgy splits into paths, used at will, and rituals, more like formal spells.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
@@ -3187,8 +3130,8 @@
   "summary": "The Tzimisce art of shaping flesh and bone.",
   "claims": [
    {
-    "text": "The Tzimisce art of shaping flesh and bone.",
-    "tier": "implied",
+    "text": "Vicissitude, the Tzimisce's signature, shapes flesh and bone and is rarely taught outside the Clan.",
+    "tier": "stated",
     "refs": [
      {
       "book": "v20",
