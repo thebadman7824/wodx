@@ -157,3 +157,23 @@ export function hashOf(o) {
   for ( let i = 0; i < str.length; i++ ) h = (h * 31 + str.charCodeAt(i)) | 0;
   return (h >>> 0).toString(36);
 }
+
+/**
+ * What one shelf needs, given the entries it should hold (`mine`) and the documents it has (`docs`), both carrying
+ * flags[mod].shelf and flags[mod].hash. New keys are created, changed ones remade (old id removed, new doc created),
+ * and module-made documents whose key is no longer in the source are removed. Documents without a shelf key are left alone.
+ */
+export function syncPlan(mine, docs, mod) {
+  const have = new Map(docs.filter(d => d.flags?.[mod]?.shelf).map(d => [d.flags[mod].shelf, d]));
+  const create = [], remove = [];
+  let remade = 0, kept = 0, stale = 0;
+  for ( const d of mine ) {
+    const old = have.get(d.flags[mod].shelf);
+    have.delete(d.flags[mod].shelf);
+    if ( !old ) create.push(d);
+    else if ( old.flags[mod].hash !== d.flags[mod].hash ) { remove.push(old.id ?? old._id); create.push(d); remade++; }
+    else kept++;
+  }
+  for ( const old of have.values() ) { remove.push(old.id ?? old._id); stale++; }
+  return {create, remove, remade, kept, stale};
+}

@@ -59,3 +59,15 @@ test("the Library is wired: toolbar, api, ready install, searchable list, fixed 
   assert.match(ui, /searchBox\("ul\.wodx-shelf-list"/);
   assert.match(ui, /name="line" data-fixed/);
 });
+
+test("shelf sync removes entries that left the source, remakes changed ones, keeps the rest", () => {
+  const M = "wodx-library";
+  const doc = (shelf, hash, id) => ({...(id ? {id} : {}), flags: {[M]: {shelf, hash}}});
+  const mine = [doc("a", "1"), doc("b", "2"), doc("d", "4")];
+  const docs = [doc("a", "1", "A"), doc("b", "old", "B"), doc("c", "3", "C"), {id: "X", flags: {}}];
+  const p = S.syncPlan(mine, docs, M);
+  assert.deepEqual(p.remove.sort(), ["B", "C"]);
+  assert.deepEqual(p.create.map(d => d.flags[M].shelf).sort(), ["b", "d"]);
+  assert.equal(p.kept, 1); assert.equal(p.remade, 1); assert.equal(p.stale, 1);
+  assert.ok(!p.remove.includes("X"), "documents the module did not make are left alone");
+});
