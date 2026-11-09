@@ -1,0 +1,553 @@
+[
+ {
+  "id": "htr-imbued",
+  "title": "The Imbued",
+  "kind": "character",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ordinary people woken to the monsters around them.",
+  "claims": [
+   {
+    "text": "The imbued are hunters: people made to see the world as it truly is, monsters and all, and given strange powers, it seems to oppose them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Some call themselves the chosen, in relation to the Heralds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "They know very little about themselves, why they were woken or what they face, so they argue and guess; the shared terms come from those talks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     },
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The common words were coined on the hidden hunter-net mailing list; isolated hunters do not know them and likely have their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-messengers",
+   "htr-edges",
+   "htr-creeds",
+   "hunters"
+  ]
+ },
+ {
+  "id": "htr-messengers",
+  "title": "The Messengers and the Heralds",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Whatever imbues the hunters.",
+  "claims": [
+   {
+    "text": "Messengers is a name for the forces thought to cause the imbuing; hunters of different cultures see them differently, but most think them good, or at least not evil.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Heralds is another name for the mysterious beings, likely many, thought to have empowered hunters; they are usually taken as agents of a higher power, often God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "To be touched is to be affected by the Messengers, whether hunter or bystander.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-imbuing-witnesses"
+  ]
+ },
+ {
+  "id": "htr-imbuing-witnesses",
+  "title": "Bystanders and Other Witnesses",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The people at an imbuing who do not become hunters.",
+  "claims": [
+   {
+    "text": "A bystander sees the supernatural at an imbuing but lacks the will to act; they remember the monsters afterward but have no edges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A pylon is a person at the scene who does not notice or respond to the monster; the term is unkind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A gawker sees edges or monstrous powers at work but cannot understand them. The defenseless, or the blind, are people with no idea of the truth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued"
+  ]
+ },
+ {
+  "id": "htr-creeds",
+  "title": "Creeds",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The approaches to the hunt that hunters see among themselves.",
+  "claims": [
+   {
+    "text": "Early hunter groups think the imbued share certain ways of hunting that could be set down as separate creeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Avengers above all want the supernatural wiped out; Defenders protect chosen people, places or things as much as they kill monsters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Innocents come to the hunt with open, unjaded minds; Judges weigh how best to do the most good, by their own lights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Martyrs will give themselves up for the cause; Redeemers look for worth among monsters instead of destroying them outright.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Visionaries take a thoughtful view of the hunt and assume little about the Heralds, monsters or what the chosen are for.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-conviction"
+  ]
+ },
+ {
+  "id": "htr-edges",
+  "title": "Edges",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The powers of the imbued.",
+  "claims": [
+   {
+    "text": "An edge is any of the strange powers of the imbued, also called the stuff, or juice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Second sight, or the sight, is seeing monsters through force of will, even those that hide or disguise themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-conviction"
+  ]
+ },
+ {
+  "id": "htr-the-word",
+  "title": "The Word",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunters' code of signs.",
+  "claims": [
+   {
+    "text": "The imbued gain a language of symbols they read and write as if they always knew it; many call it the Word.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Each sign carries a short message, such as a safe house, a vampire's turf, or a neighbourhood under a hunter's guard; one to three signs make a message.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The signs appear mostly as graffiti, as directions and warnings, and new hunters use them to find others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "No one has catalogued them, and so far neither monsters nor their human pawns seem to notice them; if the code were broken, hunters would be badly exposed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued"
+  ]
+ },
+ {
+  "id": "htr-monsters",
+  "title": "What Hunters Call Monsters",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunters' words for their enemy.",
+  "claims": [
+   {
+    "text": "Monster covers every inhuman creature that preys on people: rots, invisibles, bloodsuckers, skinchangers, ghosts, walking dead, witches and more; together they are the enemy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The Most Dangerous Game is the hunt itself, and also the enemy, prey able to fight back.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A puppet, or traitor, is a human pawn of the supernatural, knowing or not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The soulless are people who admire the supernatural or help it by doubtful behaviour; the word depends wholly on the speaker's morals, and some hunters call other hunters soulless.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "hunters"
+  ]
+ },
+ {
+  "id": "htr-hunter-slang",
+  "title": "Hunter Slang",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Words for kinds of hunter and ways of hunting.",
+  "claims": [
+   {
+    "text": "The hunt, or the mission, is the hunter's life: pursuing, tracking, studying and finally facing the supernatural.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Bait use themselves as lures; lurkers research online but stay out of the hunt, and are sneered at as wannabes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Gone fishing is said of hunters who flee the city for quiet countryside. A wacko takes the mission to extremes of sacrifice or loss.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "htr",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "A yokel trusts folk tales about monsters, often without testing them. The burden is humanity, above all those who would keep society's evils rather than risk change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "htr",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-creeds"
+  ]
+ },
+ {
+  "id": "htr-conviction",
+  "title": "Conviction and the Virtues",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A hunter's staying power, and the three aims of the hunt.",
+  "claims": [
+   {
+    "text": "Conviction measures a hunter's endurance for the hunt and is the store of energy spent on edges; the starting amount depends on the creed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Spending a point of Conviction lets the second sight find monsters hidden nearby, such as one using powers to disguise itself; anyone can see monsters that are not hiding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Second sight also marks every supernatural being as not human or not living; spirits in the material world look solid to the hunter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "The three Virtues are Mercy, Vision and Zeal. Mercy goes with Innocents, Martyrs and Redeemers; Vision with Visionaries; Zeal with Defenders, Judges and Avengers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "A creed is not a club or class a hunter joins but how that hunter sees and carries out the mission; the main Virtue shows what the hunter holds as the war's goal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-edges",
+   "htr-creeds"
+  ]
+ }
+]
