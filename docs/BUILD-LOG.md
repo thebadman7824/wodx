@@ -1007,3 +1007,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Actions 3.18.0: consensus-rules.js (new, pure: AGES, ageFor, WORDS, CRUSADE_EUROPE, styleFits, suggestKind, fortuneDice, readFortune, fortuneSize, purifyDays). The M20 Cast reads the age, names the kinds in the age's words, takes the caster's style and suggests the kind; in the Crusade it rolls the Fortune Dice and weekly shedding stops. New: Purify the Scourge, Consensus here (scene flag wodx-actions.consensus {styles}). Settings consensusEra, realityZones. api.consensus, m20Purify, m20Place.
 - Tests: consensus-money.test.mjs (9). UI fit: Money by era, Consensus here. Gate: tools/gate/gateconsensus.mjs (7 steps).
 
+## 2026-11-09: paperdoll tokens (WoDX Paperdoll 0.1.0, B340-B344)
+
+- New module wodx-paperdoll 0.1.0: vendor/dicebear-lorelei.mjs (DiceBear core 9.4.3 + Lorelei 9.4.2, bundled with esbuild, licence beside it), fit-rules.mjs (pure: measure() reads a key-coloured head, gives anchors), doll-rules.mjs (pure: PARTS, MOODS, healthLevel, moodFor, normalize, step, randomLook, loreleiOptions, hairFor, gown, headwear, filletBox, damageMarks, cropFor, compose, bakeKey), main.mjs (Paperdoll window from the sheet header, actor context menu; bake on the active GM's computer; updateActor hook rebakes on look, health or frenzy changes; api open, bake, bakeAll, schedule, settled, save, draw, anchorsFor, state, rules).
+- Flags: actor flags wodx-paperdoll.look (the look) and .baked (key of the picture on the token). Files: worlds/<world>/paperdoll/<key>.webp.
+- Settings: on, followHealth (world).
+- Library 0.3.2: a manual page "Your token's look" and a What's new line.
+- Tests: paperdoll.test.mjs (9, uses @resvg/resvg-js, now a harness dependency), paperdoll-app.test.mjs (3). UI fit: Paperdoll. Gate: tools/gate/gatepaperdoll.mjs.

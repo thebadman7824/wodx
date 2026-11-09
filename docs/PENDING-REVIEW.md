@@ -198,3 +198,6 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-09 | Paperdoll: the marks for each health level | Bruised a cheek bruise and a graze, Hurt a split lip, Injured a black eye, Wounded a bleeding cut, Mauled a second cut and pallor, Crippled a bandage, Incapacitated paler (B343). Only Bruised was shown to Ben. | Edit damageMarks in wodx-paperdoll/scripts/doll-rules.mjs. |
+| 2026-11-09 | Paperdoll: which mood each health level shows | Disgruntled at Bruised and Hurt, upset from Injured, grim from Crippled, snarling in frenzy (B343). | Edit moodFor in doll-rules.mjs, or untick "The face shows the health track". |
+| 2026-11-09 | Paperdoll: other eras | Every era shows the Dark Ages clothes until its own kit is drawn (B344). | Draw the next era kit. |
