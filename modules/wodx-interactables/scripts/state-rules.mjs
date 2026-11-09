@@ -105,7 +105,8 @@ export const EVENT_KINDS = {
   noise: "A noise", open: "Opened", force: "Forced", break: "Broken", alarm: "An alarm", theft: "Taken", fire: "Set alight",
   fireOut: "Put out", light: "A light lit", dark: "A light out", desecrate: "Desecrated", trap: "A trap sprung", disarm: "A trap disarmed",
   hazard: "Hurt by a hazard", holy: "Holy ground", found: "Found", use: "Used",
-  watch: "A look out", call: "A call", mount: "Got on", dismount: "Got off", crash: "A crash or a fall", ride: "Flat out"
+  watch: "A look out", call: "A call", mount: "Got on", dismount: "Got off", crash: "A crash or a fall", ride: "Flat out",
+  climb: "Climbed", jump: "Jumped", fall: "A fall"
 };
 
 const OPEN_OPS = new Set(["open", "openQuiet", "pick", "key", "unlock", "unbar", "hack", "heave", "unstick"]);

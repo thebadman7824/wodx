@@ -175,8 +175,8 @@ export function eventFromCard(msg) {
   const ask = msg?.flags?.[MOD]?.ask, done = msg?.flags?.[MOD]?.done;
   if ( !ask || !done ) return null;
   const scene = game.scenes?.get?.(ask.scene), doc = ask.wall === "_search" ? null : api.objectIn(scene, ask.wall);
-  // A watch point or a mount sends its own event, with what it saw or who is aboard (publish below)
-  if ( doc && (flagsOf(doc).watch || flagsOf(doc).mount) ) return null;
+  // A watch point, a mount or a climb sends its own event, with what it saw, who is aboard or how far a fall was
+  if ( doc && (flagsOf(doc).watch || flagsOf(doc).mount || flagsOf(doc).climb) ) return null;
   const found = (done.found?.length ?? 0) + (done.revealed?.length ?? 0);
   let before = null, after = null, g = "plain", name = null;
   if ( doc ) {

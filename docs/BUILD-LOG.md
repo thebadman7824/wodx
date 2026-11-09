@@ -718,8 +718,16 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Ride and Drive are now read from the sheet, and a roll on a Skill the sheet lacks counts as untrained (+1), as WoDX Actions does.
 - mount, dismount, crash and ride (flat out) go out as wodxMapEvents.
 - Page refs pinned from the PC's book check: V20 core opening and closing p. 261, intrusion p. 260, alarms p. 255, retrying p. 251, climbing p. 258, falling p. 296 (printed pages).
-- Tests: 6 new (3 rules, 3 runtime), 577 in all; UI fit adds a coach. Gate step 22 (the burglar drives a cart). Not deployed yet.
-- 0.8.1: caern stones, fetters and nodes. Use it opens the WoDX actions menu (a fetter opens the Fetter window), and the option names the rating. 1 more test, 566 in all. Not deployed yet.
+- Tests: 6 new (3 rules, 3 runtime), 577 in all; UI fit adds a coach. Gate step 22 (the burglar drives a cart).
+- Deployed 2026-11-09 from main da913ca (backup Backups\wodx-interactables-0.10.0-2026-11-09, MD5s match). gate-interact 21/22: in Foundry the cart moved the wrong way, because the step from the last known token position was off once Foundry snapped the token. Fixed in 0.13.0: the vehicle keeps each person's offset and goes to the driver's token; the gate compares against where the token really went.
+
+### Interactables 0.13.0, 2026-11-09: climbing, ledges and jumps (B155)
+- Ladders and stairs (no roll), ropes, trees, rough walls and cliffs on tiles, with a height in feet; gaps to jump, with a width in yards and a drop in feet. The tile config gains a Climb or gap section, with the tile it leads to.
+- Climb it: Dexterity + Athletics at 6, extended, 5, 3 or 2 yards a success; a botch falls from as high as the climb got. Jump it: Strength + Athletics at 3, a yard a success; short, the character hangs: Catch the ledge (Dexterity + Athletics at 6) or Let go.
+- Falls: a bashing die a 10 feet through WoDX Combat's soak, with Undo. Arriving moves the token onto the tile the climb leads to, with Undo.
+- climb, jump and fall go out as wodxMapEvents.
+- Mounts: the vehicle follows the driver's token by offset (see 0.11.0).
+- Tests: 5 new (2 rules, 3 runtime), 582 in all; UI fit adds a crag. Gate step 22 fixed, step 23 (a wall to a ledge, a short jump). Not deployed yet.
 
 ### WoDX Senses 0.1.0, 2026-11-09: what the senses tell (B170 to B174)
 - Ben's request (9 November 2026): answer "what do I see, hear, smell" in chat. Design study: https://claude.ai/artifact/6z5pwGb2XZMMsA8jHHGaq4. Built all four steps of it in one module.
