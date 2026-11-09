@@ -675,3 +675,7 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Menu search, tours and check flavor, 2026-11-09: WoDX Actions 3.14.0, Chronicle 0.5.2 (B126)
 - Gap review item 4. profile-menus.js: the "Also found" group (checks and presets, shown only while searching; a new "check:<key>" spec). flavor.js: CHECK_POOLS and CHECK_GROUP_POOLS, read from the card's title. tours.mjs: two tours with a fallback for missing buttons; a Tour button on the Clock.
 - Tests: flavor-checks.test.mjs (2), tours.test.mjs (2). 540 harness tests pass.
+
+### Sheets past the first page, 2026-11-09: WoDX Sheets 0.6.0 (B127)
+- Gap review item 12. sheet-rules.mjs: page2 filled for all sheets but faeDA and wr20 (already had theirs). main.mjs: new blocks combat, gear, fetishes, rotes, description, with weaponLine() and armorLine(). block.hbs: an items block can carry a note.
+- Tests: sheets3.test.mjs (4). 544 harness tests pass. Gate: tools/gate/gatesheet5.mjs (13 steps).
