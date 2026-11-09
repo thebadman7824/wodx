@@ -56,6 +56,7 @@ import * as OXD from "./orpheus.js";
 import * as ORR from "./orpheus-rules.js";
 import * as ZXD from "./m20.js";
 import * as ZR from "./m20-rules.js";
+import * as CK from "./checks-rules.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -139,6 +140,8 @@ function findAbility(actor, keyOrName) {
 function abilityById(actor, id) {
     if (!id) return null;
     if (id.startsWith("flat:")) return findAbility(actor, id.slice(5));
+    // An Ability the sheet does not have: rolled untrained, by its kind (common checks, 3.13.0)
+    if (id.startsWith("missing:")) { const k = id.slice(8); return findAbility(actor, k) ?? { id, key: k, name: cap(k), value: 0, type: CK.abilityKind(k), specialty: "" }; }
     return abilityList(actor).find(a => a.id === id) ?? null;
 }
 
@@ -490,6 +493,9 @@ const PRESETS = {
     climbing: { label: "Climbing (Dex + Athletics, extended)", attr: "dexterity", ability: "athletics", diff: 6, mode: "extended", target: 5, note: "3 yards/meters per success on an average climb (5 easy, 2 hard). Protean claws or bone spurs: –2 difficulty. Botch: slip, stuck or fall." },
     riding: { label: "Riding (Dex + Ride)", attr: "dexterity", ability: "ride", diff: 6, note: "Rough terrain +1, at speed +3. Failure: roll again to keep control. Botch: thrown and hurt." },
     driving: { label: "Driving a cart (Dex + Ride)", attr: "dexterity", ability: "ride", diff: 6, note: "Rain or crowds +1; fast while losing pursuers +3. Botch: lose control of the team." },
+    drive: { label: "Driving a car (Dex + Drive)", attr: "dexterity", ability: "drive", diff: 6, alts: [["dexterity", "drive"], ["wits", "drive"]], note: "No roll for ordinary driving with a dot of Drive. Heavy rain +1; fast while losing pursuers +3; the vehicle chart sets the maneuver rating (V20 p. 258-259)." },
+    computer: { label: "Computer use (Int + Computer)", attr: "intelligence", ability: "computer", diff: 6, alts: [["intelligence", "computer"], ["wits", "computer"]], note: "Find, copy or break into data. Wits + Computer under time pressure (V20 p. 263)." },
+    carrying: { label: "Carrying capacity (Strength, no roll)", attr: "strength", ability: "", diff: 6, note: "25 lbs / 10 kg per dot of Strength without penalty; over that, every physical action is +1 difficulty. A single heave uses the lifting chart (V20 p. 259)." },
     intrusion: { label: "Intrusion / lockpicking (Dex + Larceny)", attr: "dexterity", ability: "larceny", diff: 7, note: "5 for standard locks up to 9 for the Tower of London. Most attempts need tools." },
     jumping: { label: "Jumping (Str + Athletics, running)", attr: "strength", ability: "athletics", diff: 3, note: "Each success: 20 in/50 cm up or 1 yard/meter across. Failure: Dex + Athletics (6) to catch a ledge." },
     jumpstand: { label: "Jumping (Strength, standing)", attr: "strength", ability: "", diff: 3, note: "Each success: 20 in/50 cm up or 1 yard/meter across." },
@@ -504,7 +510,7 @@ const PRESETS = {
     creation: { label: "Creation (Per + Expression/Craft)", attr: "perception", ability: "craft", diff: 6, alts: [["perception", "expression"], ["perception", "craft"], ["perception", "crafts"]], note: "1 success mediocre … 5 a masterpiece." },
     investigation: { label: "Investigation (Per + Investigation)", attr: "perception", ability: "investigation", diff: 6 },
     repair: { label: "Repair (Dex + Craft, extended)", attr: "dexterity", ability: "craft", diff: 6, mode: "extended", target: 3, note: "Simple 4 to rebuilding a carriage 9; 10 minutes per success needed." },
-    research: { label: "Research (Int + Academics/Occult/Theology)", attr: "intelligence", ability: "academics", diff: 6, alts: [["intelligence", "academics"], ["intelligence", "occult"], ["intelligence", "theology"], ["intelligence", "enigmas"], ["intelligence", "investigation"]] },
+    research: { label: "Research (Int + Academics/Occult/Science/Theology)", attr: "intelligence", ability: "academics", diff: 6, alts: [["intelligence", "academics"], ["intelligence", "occult"], ["intelligence", "science"], ["intelligence", "theology"], ["intelligence", "enigmas"], ["intelligence", "investigation"]] },
     tracking: { label: "Tracking (Per + Survival)", attr: "perception", ability: "survival", diff: 6, note: "Each success on the quarry's Wits + Survival to cover tracks adds +1 difficulty." },
     carousing: { label: "Carousing (Cha + Empathy)", attr: "charisma", ability: "empathy", diff: 6, aura: true },
     credibility: { label: "Credibility / a scam (Man + Subterfuge vs Per + Subterfuge)", attr: "manipulation", ability: "subterfuge", diff: 7, mode: "resisted", opp: { attr: "perception", ability: "subterfuge", diff: 7, needMore: true }, aura: true },
@@ -519,7 +525,16 @@ const PRESETS = {
     seduction: { label: "Seduction → use the Seduction action", redirect: "seduction" }
 };
 
-Object.assign(PRESETS, PM.EXTRA_PRESETS);
+Object.assign(PRESETS, PM.EXTRA_PRESETS, CK.asPresets());
+
+/** The pool a list of [attribute, ability] pairs gives this character (common checks and preset alternatives). */
+function pickPool(actor, pools) {
+    const shown = new Set(abilityList(actor).map(a => a.key));
+    const c = CK.choosePool(pools, k => { const ab = findAbility(actor, k); return ab ? { value: ab.value, shown: shown.has(ab.key) } : null; });
+    if (!c) return null;
+    const ab = c.ability ? findAbility(actor, c.ability) : null;
+    return { ...c, abilityId: c.ability ? (ab?.id ?? `missing:${c.ability}`) : "", abilityName: ab?.name ?? (c.ability ? cap(c.ability) : "") };
+}
 
 /* ================================================================== */
 /*  General action                                                     */
@@ -573,10 +588,14 @@ export async function action({ actor: a, preset = "" } = {}) {
             const p = PRESETS[f.preset.value];
             if (!p) return;
             if (p.redirect) { ui.notifications.info(`Use the ${cap(p.redirect)} action for this.`); return; }
-            if (p.attr !== undefined) f.attr.value = p.attr;
-            const ab = p.ability ? findAbility(actor, p.ability) : null;
-            f.ability.value = ab ? ab.id : "";
-            if (p.ability && !ab) ui.notifications.info(`${actor.name} has no ${cap(p.ability)} ability on the sheet.`);
+            const pick = p.alts ? pickPool(actor, p.alts) : null;
+            if (pick && pick.how !== "untrained") { f.attr.value = pick.attr; f.ability.value = pick.abilityId.startsWith("missing:") ? "" : pick.abilityId; }
+            else {
+                if (p.attr !== undefined) f.attr.value = p.attr;
+                const ab = p.ability ? findAbility(actor, p.ability) : null;
+                f.ability.value = ab ? ab.id : "";
+                if (p.ability && !ab) ui.notifications.info(`${actor.name} has no ${cap(p.ability)} ability on the sheet.`);
+            }
             if (p.diff) f.diff.value = p.diff;
             f.mode.value = p.mode || "simple";
             if (p.target) f.goal.value = p.target;
@@ -603,6 +622,65 @@ export async function action({ actor: a, preset = "" } = {}) {
         sync();
     };
     return dialog("WoDX Action", content, "Roll", fd => resolveAction(actor, target, fd), { render, width: 500 });
+}
+
+/* ================================================================== */
+/*  Common checks (3.13.0): the everyday rolls, one pick and roll       */
+/* ================================================================== */
+
+/** Describe the pool a common check gives this character, for the dialog's note line. */
+function checkPoolText(actor, c) {
+    const pick = pickPool(actor, c.pools);
+    if (!pick) return { pick: null, text: "" };
+    const a = pick.attr.startsWith("special:") ? specialValue(actor, pick.attr.slice(8)) : { value: attr(actor, pick.attr), label: cap(pick.attr) };
+    const how = pick.how === "untrained" || pick.how === "shown" ? ` (no dots in ${pick.abilityName}: rolled untrained)` : "";
+    const ab = pick.ability ? findAbility(actor, pick.ability) : null;
+    return { pick, text: `${a.label} ${a.value}${pick.ability ? ` + ${pick.abilityName} ${ab?.value ?? 0}` : ""}${how}` };
+}
+
+export async function quickCheck({ actor: a, check = "notice" } = {}) {
+    const actor = needActor(a);
+    if (!actor) return;
+    const target = targetActor();
+    const day = !!flag(actor, "daytime");
+    const first = CK.byKey(check) ?? CK.CHECKS[0];
+    const groups = CK.GROUPS.map(([g, label]) => `<optgroup label="${esc(label)}">${opts(CK.CHECKS.filter(c => c.group === g).map(c => [c.key, c.label]), first.key)}</optgroup>`).join("");
+    const content = `<form>
+      <div class="form-group"><label>Check</label>${searchBox("select[name=check]", "Search checks…", "Search checks")}<select name="check">${groups}</select></div>
+      <p class="vta-note vta-check-pool"></p>
+      <p class="vta-note vta-check-note"></p>
+      <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="${first.diff}" min="2" max="10"/></div>
+      <div class="form-group"><label>Bonus dice / extra difficulty</label><input type="number" name="bonus" value="0" style="width:4em"/> <input type="number" name="extraDiff" value="0" style="width:4em"/></div>
+      <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
+      <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
+      ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
+      <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
+      <p class="vta-note">For a roll against someone, an extended roll or teamwork, use Any roll. Wound penalties apply.</p>
+    </form>`;
+    const render = root => {
+        const form = root.querySelector("form");
+        const sel = form.querySelector("[name=check]");
+        const show = (setDiff = true) => {
+            const c = CK.byKey(sel.value);
+            if (!c) return;
+            root.querySelector(".vta-check-pool").textContent = `Pool: ${checkPoolText(actor, c).text}`;
+            root.querySelector(".vta-check-note").textContent = `${c.note} (${c.ref})`;
+            if (setDiff) form.querySelector("[name=diff]").value = c.diff;
+        };
+        sel.addEventListener("change", () => show(true));
+        show(false);
+    };
+    return dialog("Common checks", content, "Roll", fd => {
+        const c = CK.byKey(fd.check);
+        if (!c) return null;
+        const { pick } = checkPoolText(actor, c);
+        if (!pick) return null;
+        return resolveAction(actor, target, {
+            preset: `check-${c.key}`, attr: pick.attr, ability: pick.abilityId, diff: num(fd.diff) || c.diff, mode: "simple",
+            bonus: num(fd.bonus), extraDiff: num(fd.extraDiff), multi: 0, retries: 0, specialty: !!fd.specialty, wp: !!fd.wp,
+            ignoreWounds: false, aura: false, daytime: !!fd.daytime, auto: false, desc: fd.desc || c.label.split(" (")[0]
+        });
+    }, { render, width: 460 });
 }
 
 function opponentPool(target, spec, fd, actor = null) {
@@ -665,7 +743,7 @@ async function resolveAction(actor, target, fd) {
     if (wpCost && !(await spendWillpower(actor, wpCost))) return null;
     if (fd.ignoreWounds) await updateActor(actor, { "system.conditions.isignoringpain": true });
 
-    const title = `${actor.name}: ${esc(fd.desc || (preset.label ? preset.label.split(" (")[0] : "Action"))}`;
+    const title = `${actor.name}: ${esc(fd.desc || (preset.label ? preset.label.split(" (")[0].replace(/^Common: /, "") : "Action"))}`;
     const label = [pool.attributeLabel, pool.abilityLabel].filter(Boolean).join(" + ");
     if (fd.auto && built.autoSuccessAllowed && fd.mode === "simple") {
         return post(actor, title, `<div class="vta-sec"><b>${label}</b> (${built.dice} dice vs ${built.difficulty}): automatic success (p. 323).</div>${preset.note ? `<div class="vta-note">${preset.note}</div>` : ""}`);
@@ -1701,7 +1779,7 @@ export async function seduction({ actor: a, target: t } = {}) {
 /* ================================================================== */
 
 const MENU = [
-    ["action", "fa-dice-d10", "Action / Dramatic system"], ["hunt", "fa-paw", "Hunt"], ["feed", "fa-tint", "Feed on target"],
+    ["action", "fa-dice-d10", "Any roll / dramatic system"], ["quickCheck", "fa-search", "Common checks"], ["hunt", "fa-paw", "Hunt"], ["feed", "fa-tint", "Feed on target"],
     ["spendBlood", "fa-heartbeat", "Spend blood"], ["frenzy", "fa-fire-alt", "Frenzy"], ["rotschreck", "fa-running", "Rötschreck"],
     ["endFrenzy", "fa-hand-paper", "End frenzy"], ["sin", "fa-balance-scale", "Sin / degeneration"], ["seduction", "fa-heart", "Seduction"],
     ["bloodOath", "fa-link", "Blood Oath"], ["daytime", "fa-sun", "Awaken by day"], ["hazard", "fa-burn", "Sun / fire / fall"],
@@ -2026,9 +2104,9 @@ async function createMacros() {
     }
 }
 
-const API = { menu, action, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
+const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.12.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.13.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

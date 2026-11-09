@@ -19,7 +19,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Deployed 2026-11-09 (Interactables 0.1.0, MD5s checked), on in rothenstein-wodx only
 
 ## 0.2.0: containers (2026-11-09)
-- [x] Rules: container kinds, materials and builds, state on the tile, contents list, options (open, close, take, key, pick, keypad, force) (B115)
+- [x] Rules: container kinds, materials and builds, state on the tile, contents list, options (open, close, take, key, pick, keypad, force) (B116)
 - [x] Runtime: containers on tiles in the Interact list (hidden ones for the Storyteller only), cards, items handed over, Undo takes them back
 - [x] Tile config: the WoDX container part
 - [x] Harness tests (6 new) and UI fit

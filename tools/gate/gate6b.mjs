@@ -91,7 +91,7 @@ export async function run() {
             const unlinked = sc.tokens.filter(t => [W, T, M, F, H].some(a => a.id === t.actorId) && !t.actorLink).map(t => ({ _id: t.id, actorLink: true }));
             if (unlinked.length) await sc.updateEmbeddedDocuments("Token", unlinked);
             for (const a of [W, T, M, F, H]) tok[a.name] = sc.tokens.find(t => t.actorId === a.id);
-            await W.update({ "system.advantages.rage.temporary": 5, "system.health.damage.lethal": 0, "system.health.damage.bashing": 0, "system.settings.isupdated": false });
+            await W.update({ "system.advantages.rage.temporary": 5, "system.health.damage.lethal": 0, "system.health.damage.bashing": 0, "system.health.damage.aggravated": 0, "system.settings.isupdated": false });
             await T.update({ "system.health.damage.bashing": 0, "system.settings.isupdated": false });
             if (form(W) !== "homid") { answer(r => { set(r, "how", "breed"); }); await A().shiftForm({ actor: { actor: W } }); await sleep(1500); }
             ok("tokens", Object.values(tok).every(Boolean) && Object.values(tok).every(t => t.actorLink), { scene: sc.name, str: tot(W, "strength") });
@@ -191,7 +191,9 @@ export async function run() {
                 system: { damage: { attribute: "strength", bonus: 1, type: "lethal" }, attack: { attribute: "dexterity", ability: "melee" }, difficulty: 6, isequipped: true } }]);
             const res = {};
             for (const f of ["crinos", "homid"]) {
-                await W.update({ "system.advantages.rage.temporary": 5, "system.advantages.willpower.temporary": 4 });
+                // Each run starts unhurt: the silver hit of an earlier run stays as aggravated damage
+                await W.update({ "system.advantages.rage.temporary": 5, "system.advantages.willpower.temporary": 4,
+                    "system.health.damage.bashing": 0, "system.health.damage.lethal": 0, "system.health.damage.aggravated": 0, "system.settings.isupdated": false });
                 answer(r => { set(r, "form", f); set(r, "how", f === "homid" ? "breed" : "rage"); });
                 await A().shiftForm({ actor: { actor: W } }); await sleep(1500);
                 let m = null;
@@ -200,9 +202,12 @@ export async function run() {
                     const n = game.messages.size; await game.wodxCombat.attack({ attacker: M, target: W, weaponId: knife.id }); m = await untilMsg(n, 6000);
                     if (/Soak/.test(text(m))) break;
                 }
-                res[f] = { form: form(W), card: text(m).slice(0, 600) };
+                res[f] = { form: form(W), full: text(m) };
             }
-            ok("silver by form", /can.t be soaked and is aggravated/i.test(res.crinos.card) && /breed form: soaked at 6/i.test(res.homid.card), res);
+            const pass = /can.t be soaked and is aggravated/i.test(res.crinos.full) && /breed form: soaked at 6/i.test(res.homid.full);
+            for (const f of Object.keys(res)) { res[f].card = res[f].full.slice(0, 900); delete res[f].full; }
+            ok("silver by form", pass, res);
+            await W.update({ "system.health.damage.bashing": 0, "system.health.damage.lethal": 0, "system.health.damage.aggravated": 0, "system.settings.isupdated": false });
             // Teeth and claws by form (Glabro)
             await W.update({ "system.advantages.rage.temporary": 5 });
             answer(r => { set(r, "form", "glabro"); set(r, "how", "rage"); });
@@ -219,6 +224,8 @@ export async function run() {
         await step("talen", async () => {
             const tal = T.items.find(i => i.system?.type === "wod.types.talen");
             await T.update({ "system.advantages.gnosis.temporary": 3 });
+            // A spent talen stays on the sheet, so a talen spent by an earlier run is made whole again first
+            if (tal.getFlag("wodx-actions", "spent")) await tal.update({ "flags.wodx-actions.spent": false });
             answer(r => { set(r, "item", tal.id); set(r, "how", "spend"); });
             await A().useFetish({ actor: { actor: T } }); await sleep(800);
             ok("talen spent, kept", !!T.items.get(tal.id)?.getFlag("wodx-actions", "spent") && T.system.advantages.gnosis.temporary === 2, { gnosis: T.system.advantages.gnosis.temporary });

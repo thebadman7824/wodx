@@ -1,9 +1,9 @@
 /**
- * Sheets gate 1 (WoDX Sheets 0.1, the Dark Ages: Fae sheet), in Foundry (rothenstein-wodx) as a Gamemaster:
+ * Sheets gate 1 (the Dark Ages: Fae sheet; markup as of WoDX Sheets 0.3 and later), in Foundry (rothenstein-wodx) as a Gamemaster:
  *   await (await import(`/wodx-gate/gatesheet1.mjs?${Date.now()}`)).run()
  * Opens the 6g test changeling's sheet, checks the book's sections, clicks a Dominion dot, a Mists dot and box, and a
- * missing Ability's dot, then puts the traits back. Leaves the sheet open for a look. Deletes only the test Ability
- * it adds. Result: Data/wodx-gate/gatesheet1-result.json.
+ * missing Ability's dot, then puts the traits back. Opens the sheet unlocked (permanent dots move only then) and
+ * puts the lock back after. Leaves the sheet open for a look. Deletes only the test Ability it adds. Result: Data/wodx-gate/gatesheet1-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const ACT = "wodx-actions";
@@ -13,37 +13,40 @@ async function step(name, fn) { try { await fn(); } catch (e) { ok(name, false, 
 const until = async (test, ms = 5000) => { const t = Date.now(); while (Date.now() - t < ms) { if (await test()) return true; await sleep(100); } return false; };
 
 export async function run() {
-  let a, sheet, el, keep;
+  let a, sheet, el, keep, wasLocked;
   await step("the module, and the sheet class for a Dark Ages changeling", async () => {
     a = game.actors.find(x => x.name === "Wren (6g, changeling of Spring)");
     keep = foundry.utils.deepClone(a.getFlag(ACT, "daFae"));
     sheet = a.sheet;
-    ok("the module, and the sheet class for a Dark Ages changeling", game.modules.get("wodx-sheets")?.active && sheet?.constructor?.name === "WodxChangelingSheet" && sheet.isDA,
-      { active: game.modules.get("wodx-sheets")?.active, cls: sheet?.constructor?.name });
-    await sheet.render(true); await until(() => sheet.rendered && sheet.element?.[0]?.querySelector(".wodx-fae-da"));
+    ok("the module, and the sheet class for a Dark Ages changeling", game.modules.get("wodx-sheets")?.active && sheet?.constructor?.name === "WodxChangelingSheet" && sheet.wodxId === "faeDA",
+      { active: game.modules.get("wodx-sheets")?.active, cls: sheet?.constructor?.name, sheet: sheet?.wodxId });
+    wasLocked = sheet.locked; sheet.locked = false;
+    await sheet.render(true); await until(() => sheet.rendered && sheet.element?.[0]?.querySelector(".wodx-book[data-sheet='faeDA']"));
     el = sheet.element[0];
   });
   await step("the book's sections in order, the Dark Ages: Fae Abilities, no Arts or Realms", async () => {
     const t = el.querySelector(".tab.core").textContent.replace(/\s+/g, " ");
-    const order = ["Court", "Origin", "Agenda", "Attributes", "Abilities", "Advantages", "Dominions", "Backgrounds", "Cantrips", "Willpower", "Other Traits", "Mists & Weaving", "Health", "Experience"];
-    const pos = order.map(w => t.indexOf(w));
-    ok("the book's sections in order, the Dark Ages: Fae Abilities, no Arts or Realms", pos.every((p, k) => p >= 0 && (k === 0 || p > pos[k - 1])) && /Legerdemain/.test(t) && /Hearth Wisdom/.test(t) && /Seneschal/.test(t) && !/Computer/.test(t) && !el.querySelector(".tab.core [data-tab='realms']"),
+    // Mists and Weaving are two tracks side by side, as on the printed sheet
+    const order = ["Court", "Origin", "Agenda", "Attributes", "Abilities", "Advantages", "Dominions", "Backgrounds", "Cantrips", "Willpower", "Other Traits", "Mists", "Weaving", "Health", "Experience"];
+    const pos = []; let from = 0;
+    for (const w of order) { const p = t.indexOf(w, from); pos.push(p); if (p >= 0) from = p + w.length; }
+    ok("the book's sections in order, the Dark Ages: Fae Abilities, no Arts or Realms", pos.every(p => p >= 0) && /Legerdemain/.test(t) && /Hearth Wisdom/.test(t) && /Seneschal/.test(t) && !/Computer/.test(t) && !el.querySelector(".tab.core [data-tab='realms']"),
       { pos, computer: /Computer/.test(t), legerdemain: /Legerdemain/.test(t) });
   });
   await step("a Dominion dot sets the rating", async () => {
-    el.querySelector(".wodx-dots[data-flag='dominions.dusk'] .wodx-dot[data-i='3']").click();
+    el.querySelector(".wodx-dots[data-set='flag:wodx-actions.daFae.dominions.dusk'] .wodx-dot[data-i='3']").click();
     const done = await until(() => a.getFlag(ACT, "daFae")?.dominions?.dusk === 3);
     ok("a Dominion dot sets the rating", done, { dusk: a.getFlag(ACT, "daFae")?.dominions?.dusk });
   });
   await step("Mists: a dot sets the rating, a box the points (never above the rating)", async () => {
     el = sheet.element[0];
-    el.querySelector(".wodx-track[data-flag='mists'] .wodx-dots .wodx-dot[data-i='5']").click();
+    el.querySelector(".wodx-track[data-perm='flag:wodx-actions.daFae.mists.perm'] .wodx-dots .wodx-dot[data-i='5']").click();
     await until(() => a.getFlag(ACT, "daFae")?.mists?.perm === 5);
     el = sheet.element[0];
-    el.querySelector(".wodx-track[data-flag='mists'] .wodx-boxes .wodx-box[data-i='4']").click();
+    el.querySelector(".wodx-track[data-perm='flag:wodx-actions.daFae.mists.perm'] .wodx-boxes .wodx-box[data-i='4']").click();
     const done = await until(() => a.getFlag(ACT, "daFae")?.mists?.temp === 4);
     el = sheet.element[0];
-    el.querySelector(".wodx-track[data-flag='mists'] .wodx-boxes .wodx-box[data-i='9']").click();
+    el.querySelector(".wodx-track[data-perm='flag:wodx-actions.daFae.mists.perm'] .wodx-boxes .wodx-box[data-i='9']").click();
     await sleep(800);
     const m = a.getFlag(ACT, "daFae")?.mists;
     ok("Mists: a dot sets the rating, a box the points (never above the rating)", done && m.perm === 5 && m.temp === 5, { mists: m, imbalanceShown: /imbalance/.test(sheet.element[0].textContent) });
@@ -62,11 +65,12 @@ export async function run() {
     el = sheet.element[0];
     ok("the system's own tabs are still there (combat, gear, notes)", ["combat", "gear", "note", "dreaming"].every(t => el.querySelector(`.tab[data-tab='${t}']`)), {});
   });
-  await step("a modern changeling keeps the system's Changeling 20th layout", async () => {
+  await step("a modern changeling gets the Changeling 20th sheet, not the Dark Ages one", async () => {
     const pk = game.actors.find(x => x.name === "Jamilah (6h, pooka wilder)");
-    ok("a modern changeling keeps the system's Changeling 20th layout", pk && !pk.sheet.isDA && /changeling-sheet\.html$/.test(pk.sheet.template), { template: pk?.sheet?.template });
+    ok("a modern changeling gets the Changeling 20th sheet, not the Dark Ages one", pk && pk.sheet.wodxId === "c20", { sheet: pk?.sheet?.wodxId });
   });
   await a.setFlag(ACT, "daFae", keep);
+  if (wasLocked !== undefined) { sheet.locked = wasLocked; if (sheet.rendered) await sheet.render(false); }
   R.finished = new Date().toISOString();
   R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed`;
   const file = new File([JSON.stringify(R, null, 1)], "gatesheet1-result.json", { type: "application/json" });

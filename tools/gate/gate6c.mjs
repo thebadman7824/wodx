@@ -90,6 +90,9 @@ export async function run() {
     console.error = (...a) => { R.errors.push(a.map(x => x?.message ?? String(x)).join(" ").slice(0, 300)); origErr(...a); };
     const hook = Hooks.on("renderDialogV2", onRender);
     const time0 = game.time.worldTime;
+    // The inner voices post their own cards when Conviction, Angst or Pathos move; they are off while this gate runs
+    const voices = game.settings.get("wodx-actions", "voicesOn");
+    if (voices) await game.settings.set("wodx-actions", "voicesOn", false);
     try {
         await step("versions", async () => {
             const v = id => game.modules.get(id)?.version;
@@ -168,7 +171,8 @@ export async function run() {
             const n2 = game.messages.size;
             answer(root => { set(root, "other", "Second Sight"); set(root, "sv", "wisdom"); set(root, "attr", "perception"); set(root, "cost", 0); set(root, "risk", 2); });
             A().blessing(actorOf(anselm));
-            const m = await untilMsg(n2);
+            await untilMsg(n2); await sleep(500);
+            const m = game.messages.contents.slice(n2).find(x => /Risked/.test(x.content)) ?? lastMsg();
             const f = anselm.getFlag("wodx-actions", "inquisitor");
             ok("inquisitor traits and a Blessing (Dark Ages)", f?.wisdom === 2 && !!m && /Risked 2/.test(text(m)), { flag: f, conviction: anselm.system.advantages.conviction, card: text(m).slice(0, 220) });
         });
@@ -259,6 +263,7 @@ export async function run() {
         });
     } finally {
         Hooks.off("renderDialogV2", hook);
+        try { if (voices) await game.settings.set("wodx-actions", "voicesOn", true); } catch (e) { R.errors.push(`voices: ${e.message}`); }
         console.error = origErr;
         try { if (game.time.worldTime !== time0) { R.clockMoved = game.time.worldTime - time0; await game.time.set(time0); } } catch (e) { R.errors.push(`clock: ${e.message}`); }
         R.finished = new Date().toISOString();
