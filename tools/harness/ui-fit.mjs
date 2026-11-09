@@ -651,12 +651,31 @@ game.world.id = worldId;
     ["Change a long task", () => { const f = people[0].flags ??= {}; f["wodx-storyteller"] = {...(f["wodx-storyteller"] ?? {}), tasks: {t1: {kind: "craft", name: "A silver reliquary", started: 0}}}; return st.tasks.edit(people[0].id, "t1"); }],
     ["New long task", () => st.tasks.edit(people[0].id)], ["Long tasks", () => st.tasks.open()],
     ["Havens", () => st.havens.open()], ["Haven", () => st.havens.edit()],
+    ["Lasting changes", () => { const f = people[0].flags ??= {}; f["wodx-storyteller"] = {...(f["wodx-storyteller"] ?? {}), body: Array.from({length: 7}, (_, k) => ({id: `b${k}`, source: ["vicissitude", "metis", "visage", "scar"][k % 4], part: "face", what: `A long description of the change, the cheekbones drawn up and the jaw split along the old seam, number ${k}`, appearance: k % 2 ? -1 : 0, by: "Lord Vykos's own hand"}))}; return st.body.open(people[0]); }],
+    ["A lasting change", () => st.body.newDialog(people[0])],
     ["The Gauntlet over time", () => (game.modules.get("wodx-otherworlds").api?.drift?.dialog ?? (() => import(join(root, "modules/wodx-otherworlds/scripts/drift.mjs")).then(m => m.driftDialog())))()]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
   }
   api.DialogV2.wait = wait;
+}
+// Interactables: fill a container by place and era (the place picker, then the draw to review)
+{
+  const ix = game.modules.get("wodx-interactables").api;
+  const wait = api.DialogV2.wait, oldPacks = game.packs;
+  const gearItems = JSON.parse((await import("node:fs")).readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8")).items;
+  const idx = gearItems.map((g, k) => ({_id: `g${k}`, uuid: `Compendium.world.wodx-gear.Item.g${k}`, name: g.name, type: g.type, flags: g.flags, system: {conceal: g.system?.conceal}}));
+  game.packs = new Map([["world.wodx-gear", {collection: "world.wodx-gear", metadata: {name: "wodx-gear", packageType: "world"}, getIndex: async () => idx}]]);
+  let step = 0;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); step++; return step === 1 ? {place: "armory", count: "8"} : null; };
+  for ( const [label, fn] of [["Fill by place and era", () => ix.fill.open({flags: {"wodx-interactables": {kind: "chest"}}, update: async () => {}})]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length < n + 2 ) { console.error(`FAIL the ${label} windows were not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2.wait = wait;
+  game.packs = oldPacks;
 }
 // Interactables: the Interact window (eight doors, windows and walls, two containers, two traps, a clue, a lamp and a hiding place in reach, long names, the search button), the roll dialog, the WoDX part of a wall's and a tile's config
 {
