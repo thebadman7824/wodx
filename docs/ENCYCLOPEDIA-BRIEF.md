@@ -18,6 +18,7 @@ About 40 to 80 entries a book: the sects, clans or tribes or traditions, the mai
 - Every claim has a tier: `stated` (the book says it), `implied` (the book points to it), `reading` (WoDX's reading where the book is silent; use sparingly).
 - Every claim has at least one ref: `{"book", "page", "pdf"}`. `page` is the printed page; add `pdf` when the pdf page differs.
 - They/them unless the character's gender is known from the book; then set `"gender"` on the entry.
+- Each claim says something about the world or the rules, never where the book puts it ("covered in Chapter Six"); the page reference already says where. The check refuses "the book", "chapter", "section" and "sidebar" in claims.
 - No em-dashes. No decision numbers, phase names or notes about the project in the text.
 - `lines`: e.g. `["vampire"]`; `eras`: era ids from wodx-chronicle/data/eras.json.
 - `see`: ids of other entries that exist. Shared ideas (the Umbra, the Shroud) get one entry, cited from each book.
