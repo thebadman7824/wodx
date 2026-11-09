@@ -66,7 +66,7 @@
   "summary": "The changelings as a people, the faerie souls of the Dreaming who now live in mortal flesh, sorted into kith.",
   "claims": [
    {
-    "text": "The core book describes thirteen kith in all: boggans, clurichaun, eshu, nockers, piskies, pooka, redcaps, satyrs, selkies, two kinds of sidhe, sluagh and trolls.",
+    "text": "There are thirteen kith in all: boggans, clurichaun, eshu, nockers, piskies, pooka, redcaps, satyrs, selkies, two kinds of sidhe, sluagh and trolls.",
     "tier": "stated",
     "refs": [
      {
@@ -114,7 +114,7 @@
   "summary": "A world built out of human imagination and dreams, reached by changelings for adventure and for the dreamstuff of chimera.",
   "claims": [
    {
-    "text": "The book defines the Dreaming as a realm made from the dreams and imagination of humankind.",
+    "text": "The Dreaming is a realm made from the dreams and imagination of humankind.",
     "tier": "stated",
     "refs": [
      {
@@ -146,8 +146,8 @@
     ]
    },
    {
-    "text": "Book Three of the core book is given over to the Dreaming and what lives there.",
-    "tier": "stated",
+    "text": "Its nature, its regions and the beings that live there are what changelings must learn to travel it safely.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
@@ -333,7 +333,7 @@
   "summary": "The changelings' name for the mundane mortal world, grown cold with Banality.",
   "claims": [
    {
-    "text": "The book calls the mortal world the Autumn world throughout its history of the fae.",
+    "text": "Changelings call the mortal world the Autumn world.",
     "tier": "stated",
     "refs": [
      {
@@ -349,13 +349,13 @@
     ]
    },
    {
-    "text": "Invoking the Autumn is a rule for calling on Banality's power on purpose.",
+    "text": "A changeling can call on the Autumn on purpose, drawing on Banality to weaken the chimerical.",
     "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 272,
-      "pdf": 273
+      "page": 271,
+      "pdf": 272
      }
     ]
    }
@@ -378,7 +378,7 @@
   "summary": "The stuff of dreams and wonder that feeds the fae and fuels their magic; one of a changeling's Tempers.",
   "claims": [
    {
-    "text": "Mortals are named as the main source of Glamour in the world, even as they are also the source of Banality.",
+    "text": "Mortals are the main source of Glamour in the world, and also of Banality.",
     "tier": "stated",
     "refs": [
      {
@@ -389,18 +389,18 @@
     ]
    },
    {
-    "text": "Glamour is spent on cantrips and other faerie effects, and its uses and how it is regained are set out with the other traits.",
-    "tier": "stated",
+    "text": "Glamour is spent on cantrips and other faerie effects and must be won back through contact with mortal creativity and dreams.",
+    "tier": "implied",
     "refs": [
+     {
+      "book": "c20",
+      "page": 172,
+      "pdf": 173
+     },
      {
       "book": "c20",
       "page": 173,
       "pdf": 174
-     },
-     {
-      "book": "c20",
-      "page": 174,
-      "pdf": 175
      }
     ]
    },
@@ -415,8 +415,8 @@
      },
      {
       "book": "c20",
-      "page": 261,
-      "pdf": 262
+      "page": 260,
+      "pdf": 261
      }
     ]
    }
@@ -452,9 +452,14 @@
     ]
    },
    {
-    "text": "The core book gives rules for its effects, for gaining it and for shedding it.",
-    "tier": "stated",
+    "text": "Banality is gained through mundane life and contact with disbelief, and can be shed only slowly, through quests and Glamour.",
+    "tier": "implied",
     "refs": [
+     {
+      "book": "c20",
+      "page": 173,
+      "pdf": 174
+     },
      {
       "book": "c20",
       "page": 174,
@@ -462,18 +467,13 @@
      },
      {
       "book": "c20",
-      "page": 175,
-      "pdf": 176
+      "page": 267,
+      "pdf": 268
      },
      {
       "book": "c20",
-      "page": 269,
-      "pdf": 270
-     },
-     {
-      "book": "c20",
-      "page": 272,
-      "pdf": 273
+      "page": 271,
+      "pdf": 272
      }
     ]
    },
@@ -520,13 +520,13 @@
     ]
    },
    {
-    "text": "Its rules, and the road toward the endless dream, come at the close of the systems chapter.",
-    "tier": "stated",
+    "text": "Bedlam deepens in stages, and a changeling lost far enough in it may never find the way back to waking life.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 295,
-      "pdf": 296
+      "page": 294,
+      "pdf": 295
      }
     ]
    }
@@ -560,8 +560,8 @@
      },
      {
       "book": "c20",
-      "page": 43,
-      "pdf": 44
+      "page": 42,
+      "pdf": 43
      }
     ]
    },
@@ -571,8 +571,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 43,
-      "pdf": 44
+      "page": 42,
+      "pdf": 43
      }
     ]
    },
@@ -624,8 +624,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 43,
-      "pdf": 44
+      "page": 42,
+      "pdf": 43
      }
     ]
    },
@@ -635,8 +635,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 43,
-      "pdf": 44
+      "page": 42,
+      "pdf": 43
      }
     ]
    }
@@ -671,18 +671,18 @@
     ]
    },
    {
-    "text": "The chimerical quality of the world is explained early in Chapter One.",
-    "tier": "stated",
+    "text": "Chimerical things can wound or aid the fae, while mortals pass through them unaware.",
+    "tier": "implied",
     "refs": [
+     {
+      "book": "c20",
+      "page": 32,
+      "pdf": 33
+     },
      {
       "book": "c20",
       "page": 33,
       "pdf": 34
-     },
-     {
-      "book": "c20",
-      "page": 34,
-      "pdf": 35
      }
     ]
    }
@@ -705,18 +705,18 @@
   "summary": "The forgetfulness that hides chimerical events from mortals and from changelings caught by Banality.",
   "claims": [
    {
-    "text": "The Mists are introduced as part of the nature of the fae and treated in more depth with the Banality rules.",
-    "tier": "stated",
+    "text": "The Mists cloud the memory of mortals who witness the fae, and the more Banality a mortal carries, the more is forgotten.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 46,
-      "pdf": 47
+      "page": 45,
+      "pdf": 46
      },
      {
       "book": "c20",
-      "page": 270,
-      "pdf": 271
+      "page": 269,
+      "pdf": 270
      }
     ]
    }
@@ -746,17 +746,6 @@
       "book": "c20",
       "page": 28,
       "pdf": 29
-     }
-    ]
-   },
-   {
-    "text": "Mortal seeming and fae mien are covered together in Chapter One.",
-    "tier": "stated",
-    "refs": [
-     {
-      "book": "c20",
-      "page": 48,
-      "pdf": 49
      }
     ]
    },
@@ -801,9 +790,14 @@
     ]
    },
    {
-    "text": "The three seemings, childling, wilder and grump, each get their own write-up in Chapter Two.",
+    "text": "A changeling moves from childling to wilder to grump as the mortal body grows older.",
     "tier": "stated",
     "refs": [
+     {
+      "book": "c20",
+      "page": 83,
+      "pdf": 84
+     },
      {
       "book": "c20",
       "page": 84,
@@ -818,22 +812,17 @@
       "book": "c20",
       "page": 86,
       "pdf": 87
-     },
-     {
-      "book": "c20",
-      "page": 87,
-      "pdf": 88
      }
     ]
    },
    {
-    "text": "How changelings age is set out in Chapter One.",
+    "text": "The fae self ages along with the mortal one, which shapes how each seeming feels to the changeling.",
     "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 47,
-      "pdf": 48
+      "page": 46,
+      "pdf": 47
      }
     ]
    }
@@ -856,13 +845,13 @@
   "summary": "The time after the Chrysalis when an older changeling teaches a new one how to live as fae.",
   "claims": [
    {
-    "text": "Fosterage follows the Chrysalis in the book's account of the nature of the fae.",
-    "tier": "stated",
+    "text": "After the Chrysalis an older changeling usually takes the newcomer in and teaches the ways of the Kithain.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 43,
-      "pdf": 44
+      "page": 42,
+      "pdf": 43
      }
     ]
    }
@@ -884,7 +873,7 @@
   "summary": "Kithain politics turns on two rival Courts, Seelie and Unseelie, with a hidden Shadow Court beside them.",
   "claims": [
    {
-    "text": "The Seelie and Unseelie Courts are named as the two largest governing bodies of the Kithain.",
+    "text": "The Seelie and Unseelie Courts are the two largest governing bodies of the Kithain.",
     "tier": "stated",
     "refs": [
      {
@@ -895,18 +884,18 @@
     ]
    },
    {
-    "text": "Chapter One follows the Courts through the ages, then covers attitudes, membership and each Court in turn.",
-    "tier": "stated",
+    "text": "The balance between the Courts has shifted over the ages, and every changeling claims one of them.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 57,
-      "pdf": 58
+      "page": 56,
+      "pdf": 57
      },
      {
       "book": "c20",
-      "page": 59,
-      "pdf": 60
+      "page": 58,
+      "pdf": 59
      }
     ]
    }
@@ -931,18 +920,18 @@
   "summary": "The Court of tradition, honour and chivalry, which led Concordia through most of modern history.",
   "claims": [
    {
-    "text": "The Seelie Court and its Code are described in Chapter One.",
+    "text": "The Seelie Code holds that death is better than dishonour, that love conquers all, that beauty is life, and that a debt must never be forgotten.",
     "tier": "stated",
     "refs": [
      {
       "book": "c20",
-      "page": 59,
-      "pdf": 60
+      "page": 58,
+      "pdf": 59
      },
      {
       "book": "c20",
-      "page": 60,
-      "pdf": 61
+      "page": 59,
+      "pdf": 60
      }
     ]
    },
@@ -977,13 +966,13 @@
   "summary": "The Court of change, passion and freedom, which keeps its own Code against the Seelie one.",
   "claims": [
    {
-    "text": "The Unseelie Court and its Code are described in Chapter One.",
+    "text": "The Unseelie Code holds that change is good, that Glamour should run free, that passion comes before duty, and that honour is a lie.",
     "tier": "stated",
     "refs": [
      {
       "book": "c20",
-      "page": 61,
-      "pdf": 62
+      "page": 60,
+      "pdf": 61
      }
     ]
    },
@@ -1019,18 +1008,18 @@
   "summary": "A secret, darker body behind the Unseelie Court, linked in rumour to House Ailil.",
   "claims": [
    {
-    "text": "The Shadow Court has its own section after the two open Courts.",
-    "tier": "stated",
+    "text": "The Shadow Court works in secret and is strongest at Samhain.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 62,
-      "pdf": 63
+      "page": 61,
+      "pdf": 62
      }
     ]
    },
    {
-    "text": "Many fae believe every Ailil has a hand in it, though the book says the belief goes too far.",
+    "text": "Many fae believe every Ailil has a hand in it, though that belief goes too far.",
     "tier": "implied",
     "refs": [
      {
@@ -1070,8 +1059,8 @@
      },
      {
       "book": "c20",
-      "page": 65,
-      "pdf": 66
+      "page": 64,
+      "pdf": 65
      }
     ]
    }
@@ -1094,13 +1083,13 @@
   "summary": "The great sidhe houses that rule Kithain society, each with its own court, gift and flaw.",
   "claims": [
    {
-    "text": "Chapter Two gives fourteen houses: Aesin, Ailil, Balor, Beaumayn, Danaan, Daireann, Dougal, Eiluned, Fiona, Gwydion, Leanhaun, Liam, Scathach and Varich.",
+    "text": "There are fourteen noble houses: Aesin, Ailil, Balor, Beaumayn, Danaan, Daireann, Dougal, Eiluned, Fiona, Gwydion, Leanhaun, Liam, Scathach and Varich.",
     "tier": "stated",
     "refs": [
      {
       "book": "c20",
-      "page": 120,
-      "pdf": 121
+      "page": 119,
+      "pdf": 120
      },
      {
       "book": "c20",
@@ -1740,18 +1729,18 @@
   "summary": "The small groups changelings live in: households under one roof, and motleys bound by shared purpose.",
   "claims": [
    {
-    "text": "Changeling society is described through households, motleys, and the bond of liege and vassal.",
+    "text": "Changelings gather in households that share a home and in motleys bound by a shared purpose.",
     "tier": "stated",
     "refs": [
      {
       "book": "c20",
-      "page": 63,
-      "pdf": 64
+      "page": 62,
+      "pdf": 63
      },
      {
       "book": "c20",
-      "page": 64,
-      "pdf": 65
+      "page": 63,
+      "pdf": 64
      }
     ]
    }
@@ -1774,24 +1763,24 @@
   "summary": "The feudal oaths that tie commoners and nobles together in Kithain society.",
   "claims": [
    {
-    "text": "Liege and vassal ties are set out as part of changeling society.",
+    "text": "Commoners and nobles are bound to one another by ties of liege and vassal.",
     "tier": "stated",
     "refs": [
      {
       "book": "c20",
-      "page": 64,
-      "pdf": 65
+      "page": 63,
+      "pdf": 64
      }
     ]
    },
    {
-    "text": "The book's sample oaths include oaths of fealty.",
+    "text": "An oath of fealty binds a vassal to serve and a liege to protect.",
     "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 266,
-      "pdf": 267
+      "page": 265,
+      "pdf": 266
      }
     ]
    }
@@ -1825,8 +1814,8 @@
      },
      {
       "book": "c20",
-      "page": 52,
-      "pdf": 53
+      "page": 51,
+      "pdf": 52
      }
     ]
    },
@@ -1861,13 +1850,13 @@
   "summary": "Wild places rich in Glamour, out in nature rather than tied to a court.",
   "claims": [
    {
-    "text": "Glades are listed first among the places of Glamour.",
-    "tier": "stated",
+    "text": "Glades are wild places where Glamour gathers by itself, away from any court.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 52,
-      "pdf": 53
+      "page": 51,
+      "pdf": 52
      }
     ]
    }
@@ -1890,13 +1879,13 @@
   "summary": "Faerie roads that link freeholds and places of Glamour.",
   "claims": [
    {
-    "text": "Trods are described with glades and freeholds among the places of Glamour.",
-    "tier": "stated",
+    "text": "Trods are faerie paths that join one freehold or glade to another.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 53,
-      "pdf": 54
+      "page": 52,
+      "pdf": 53
      }
     ]
    }
@@ -1919,13 +1908,13 @@
   "summary": "The great changeling realm of North America, ruled by a High King from Tara-Nar.",
   "claims": [
    {
-    "text": "Concordia is split into kingdoms such as Apples, Willows, Grass, the Burning Sun and Pacifica, each given a short write-up.",
+    "text": "Concordia is split into kingdoms such as Apples, Willows, Grass, the Burning Sun and Pacifica.",
     "tier": "stated",
     "refs": [
      {
       "book": "c20",
-      "page": 65,
-      "pdf": 66
+      "page": 64,
+      "pdf": 65
      },
      {
       "book": "c20",
@@ -1965,7 +1954,7 @@
   "summary": "The capital of Concordia, the High King's seat.",
   "claims": [
    {
-    "text": "Tara-Nar is named the capital of the western world.",
+    "text": "Tara-Nar is the capital of the western changeling world.",
     "tier": "stated",
     "refs": [
      {
@@ -1994,7 +1983,7 @@
   "summary": "The changeling kingdoms of Europe and the wider world, from Albion and Hibernia to the Empire of the Firebird.",
   "claims": [
    {
-    "text": "Chapter One sketches realms across the world, among them Albion, Hibernia, Caledonia, Cymru, Neustria, Iberia, the Hellenic Empire and the Empire of the Firebird.",
+    "text": "Changeling realms span the world, among them Albion, Hibernia, Caledonia, Cymru, Neustria, Iberia, the Hellenic Empire and the Empire of the Firebird.",
     "tier": "stated",
     "refs": [
      {
@@ -2028,13 +2017,13 @@
   "summary": "The ancient time when fae and mortals shared the world freely and Glamour was everywhere.",
   "claims": [
    {
-    "text": "Kithain history opens with the Mythic Age.",
-    "tier": "stated",
+    "text": "The Mythic Age is the first age of Kithain history, when fae and mortals lived side by side.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 34,
-      "pdf": 35
+      "page": 33,
+      "pdf": 34
      }
     ]
    }
@@ -2057,13 +2046,13 @@
   "summary": "The first great break between the fae and the mortal world, as Banality grew.",
   "claims": [
    {
-    "text": "The Sundering follows the Mythic Age in the book's history.",
-    "tier": "stated",
+    "text": "The Sundering came after the Mythic Age, as the bond between fae and mortals began to fail.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 36,
-      "pdf": 37
+      "page": 35,
+      "pdf": 36
      }
     ]
    },
@@ -2615,18 +2604,13 @@
     ]
    },
    {
-    "text": "Thallain are named across the book among the darker beings of the Dreaming.",
+    "text": "Thallain are fae of nightmare, kin to the Kithain but bent toward cruelty.",
     "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 56,
-      "pdf": 57
-     },
-     {
-      "book": "c20",
-      "page": 62,
-      "pdf": 63
+      "page": 28,
+      "pdf": 29
      }
     ]
    }
@@ -2690,18 +2674,13 @@
     ]
    },
    {
-    "text": "Kinain, kin of the fae, appear throughout the book as mortals tied to changeling families.",
+    "text": "Kinain are mortals with faerie blood in the family line.",
     "tier": "implied",
     "refs": [
      {
       "book": "c20",
       "page": 28,
       "pdf": 29
-     },
-     {
-      "book": "c20",
-      "page": 67,
-      "pdf": 68
      }
     ]
    }
@@ -3302,6 +3281,11 @@
     "refs": [
      {
       "book": "c20",
+      "page": 114,
+      "pdf": 115
+     },
+     {
+      "book": "c20",
       "page": 115,
       "pdf": 116
      },
@@ -3314,11 +3298,6 @@
       "book": "c20",
       "page": 117,
       "pdf": 118
-     },
-     {
-      "book": "c20",
-      "page": 118,
-      "pdf": 119
      }
     ]
    },
@@ -3356,18 +3335,18 @@
   "summary": "The schools of faerie magic, from Chicanery and Primal to Sovereign and Wayfare.",
   "claims": [
    {
-    "text": "Chapter Four lists eighteen Arts: Autumn, Chicanery, Chronos, Contract, Dragon's Ire, Legerdemain, Metamorphosis, Naming, Oneiromancy, Primal, Pyretics, Skycraft, Soothsay, Sovereign, Spring, Summer, Wayfare and Winter.",
+    "text": "There are eighteen Arts: Autumn, Chicanery, Chronos, Contract, Dragon's Ire, Legerdemain, Metamorphosis, Naming, Oneiromancy, Primal, Pyretics, Skycraft, Soothsay, Sovereign, Spring, Summer, Wayfare and Winter.",
     "tier": "stated",
     "refs": [
      {
       "book": "c20",
-      "page": 198,
-      "pdf": 199
+      "page": 197,
+      "pdf": 198
      },
      {
       "book": "c20",
-      "page": 231,
-      "pdf": 232
+      "page": 230,
+      "pdf": 231
      }
     ]
    },
@@ -3407,13 +3386,13 @@
     "refs": [
      {
       "book": "c20",
-      "page": 233,
-      "pdf": 234
+      "page": 232,
+      "pdf": 233
      },
      {
       "book": "c20",
-      "page": 236,
-      "pdf": 237
+      "page": 235,
+      "pdf": 236
      }
     ]
    },
@@ -3458,13 +3437,13 @@
     ]
    },
    {
-    "text": "Cantrip casting is explained at the start of Chapter Four.",
-    "tier": "stated",
+    "text": "A cantrip is rolled with the Art and Realm together, and its difficulty rises with the Banality around it.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 194,
-      "pdf": 195
+      "page": 193,
+      "pdf": 194
      }
     ]
    }
@@ -3499,8 +3478,8 @@
      },
      {
       "book": "c20",
-      "page": 195,
-      "pdf": 196
+      "page": 194,
+      "pdf": 195
      }
     ]
    }
@@ -3522,13 +3501,13 @@
   "summary": "Letting raw Glamour loose without a cantrip's shape, with unpredictable results.",
   "claims": [
    {
-    "text": "Unleashing is treated after cantrips and bunks in Chapter Four.",
-    "tier": "stated",
+    "text": "Unleashing lets Glamour burst out through an Art without a cantrip's shape, with wilder and riskier results.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 197,
-      "pdf": 198
+      "page": 196,
+      "pdf": 197
      }
     ]
    }
@@ -3551,23 +3530,18 @@
   "summary": "A changeling's three pools: Glamour, Willpower and Banality.",
   "claims": [
    {
-    "text": "Tempers, converting points between them, Willpower and Glamour each get a section in Chapter Six.",
-    "tier": "stated",
+    "text": "Points can move between Tempers only in limited ways.",
+    "tier": "implied",
     "refs": [
+     {
+      "book": "c20",
+      "page": 257,
+      "pdf": 258
+     },
      {
       "book": "c20",
       "page": 258,
       "pdf": 259
-     },
-     {
-      "book": "c20",
-      "page": 259,
-      "pdf": 260
-     },
-     {
-      "book": "c20",
-      "page": 260,
-      "pdf": 261
      }
     ]
    },
@@ -3577,8 +3551,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 145,
-      "pdf": 146
+      "page": 144,
+      "pdf": 145
      }
     ]
    }
@@ -3602,13 +3576,13 @@
   "summary": "Making chimerical effects real in the mortal world, at a cost.",
   "claims": [
    {
-    "text": "Invoking the Wyrd is covered in the Tempers section.",
-    "tier": "stated",
+    "text": "Invoking the Wyrd makes chimerical effects bite in the mortal world.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 260,
-      "pdf": 261
+      "page": 259,
+      "pdf": 260
      }
     ]
    }
@@ -3641,8 +3615,8 @@
      },
      {
       "book": "c20",
-      "page": 261,
-      "pdf": 262
+      "page": 260,
+      "pdf": 261
      }
     ]
    },
@@ -3657,8 +3631,8 @@
      },
      {
       "book": "c20",
-      "page": 261,
-      "pdf": 262
+      "page": 260,
+      "pdf": 261
      }
     ]
    }
@@ -3686,8 +3660,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 170,
-      "pdf": 171
+      "page": 169,
+      "pdf": 170
      }
     ]
    },
@@ -3722,18 +3696,18 @@
   "summary": "Binding promises sworn under the Dreaming, with penalties for breaking them.",
   "claims": [
    {
-    "text": "Chapter Six covers swearing an oath, restoration and atonement, and gives sample oaths.",
-    "tier": "stated",
+    "text": "A sworn oath is backed by the Dreaming; breaking it brings harm until the oath breaker atones.",
+    "tier": "implied",
     "refs": [
+     {
+      "book": "c20",
+      "page": 264,
+      "pdf": 265
+     },
      {
       "book": "c20",
       "page": 265,
       "pdf": 266
-     },
-     {
-      "book": "c20",
-      "page": 266,
-      "pdf": 267
      }
     ]
    },
@@ -3768,13 +3742,13 @@
   "summary": "The bane of the fae: wounds from cold iron are especially dangerous to changelings.",
   "claims": [
    {
-    "text": "Cold iron has its own rules in the Health section.",
-    "tier": "stated",
+    "text": "Wounds from cold iron are especially hard for changelings to survive.",
+    "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 291,
-      "pdf": 292
+      "page": 290,
+      "pdf": 291
      }
     ]
    },
@@ -3807,13 +3781,13 @@
   "summary": "A measure of how far a changeling's Glamour has turned dark.",
   "claims": [
    {
-    "text": "Nightmare has its own section in Chapter Six, before combat.",
+    "text": "Nightmare tracks how far a changeling's magic has soured toward the dark side of the Dreaming.",
     "tier": "implied",
     "refs": [
      {
       "book": "c20",
-      "page": 275,
-      "pdf": 276
+      "page": 274,
+      "pdf": 275
      }
     ]
    }
@@ -3841,13 +3815,13 @@
     "refs": [
      {
       "book": "c20",
-      "page": 164,
-      "pdf": 165
+      "page": 163,
+      "pdf": 164
      },
      {
       "book": "c20",
-      "page": 168,
-      "pdf": 169
+      "page": 167,
+      "pdf": 168
      }
     ]
    },
@@ -3885,13 +3859,13 @@
     "refs": [
      {
       "book": "c20",
-      "page": 169,
-      "pdf": 170
+      "page": 168,
+      "pdf": 169
      },
      {
       "book": "c20",
-      "page": 172,
-      "pdf": 173
+      "page": 171,
+      "pdf": 172
      }
     ]
    }
@@ -3920,8 +3894,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 157,
-      "pdf": 158
+      "page": 156,
+      "pdf": 157
      }
     ]
    },
@@ -3931,8 +3905,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 157,
-      "pdf": 158
+      "page": 156,
+      "pdf": 157
      },
      {
       "book": "c20",
@@ -3965,8 +3939,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 146,
-      "pdf": 147
+      "page": 145,
+      "pdf": 146
      }
     ]
    }
