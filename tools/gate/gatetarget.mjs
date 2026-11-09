@@ -1,6 +1,7 @@
 /**
  * WoDX Targeting gate (0.1.0), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatetarget.mjs?${Date.now()}`)).run()
+ * run({look: true}) holds the area list open for 20 seconds so the ticked boxes can be checked by eye.
  * Back the world up first.
  *
  * It makes a scene of its own ("WoDX gate: targeting") with five actors of its own, views it, and deletes all of it
@@ -9,9 +10,9 @@
  *   1. the modules: WoDX Targeting 0.1.0, WoDX Actions 3.12.0, WoDX Combat 3.7.5; the power tags loaded
  *   2. the scene: a Cainite, two ghouls (one in reach), a hurt ally, a neutral villager, a foe hidden by the Storyteller
  *   3. the ranking: a hostile power picks the ghoul in reach; healing picks the hurt ally; never the hidden foe or the villager
- *   4. Suggest: the Discipline window names the ghoul in reach and sets nothing; another power changes the panel
+ *   4. Suggest: with Dominate chosen, the Discipline window names the ghoul in reach and sets nothing; another power changes the panel
  *      (Celerity: the user; Awe: everyone in the area); using the window makes the choice the user's target
- *   5. Automatic (the Storyteller): the window sets the target as it opens
+ *   5. Automatic (the Storyteller): nothing is set for Celerity (the user), then Dominate sets the target at once
  *   6. a target set by hand is kept and named
  *   7. the attack window opens on the ghoul in reach, with the others to switch to
  *   8. Off: no panel
@@ -59,7 +60,7 @@ async function closeAll() {
 }
 const setMode = m => game.settings.set(MOD, "mode", m);
 
-export async function run() {
+export async function run({look = false} = {}) {
   const {R, ok, step} = harness();
   if ( game.world.id !== "rothenstein-wodx" ) return `Run this gate in rothenstein-wodx only (this is ${game.world.id}).`;
   const keep = {mode: game.settings.get(MOD, "mode"), mine: game.settings.get(MOD, "mine"), targets: [...game.user.targets].map(t => t.id), scene: canvas.scene?.id};
@@ -108,18 +109,22 @@ export async function run() {
       const box = await panel();
       const app = box?.closest(".application");
       const sel = app?.querySelector("[name=power]");
-      const first = box?.textContent ?? "";
-      const nothingSet = game.user.targets.size === 0;
       const choose = async v => { const o = [...sel.options].find(x => x.value.startsWith(v)); sel.value = o?.value; sel.dispatchEvent(new Event("change", {bubbles: true})); await sleep(200); return box.textContent; };
+      // The window opens on the first power in the list (Celerity here), so each power is chosen before it is read.
+      const first = await choose("dominate-command");
+      const nothingSet = game.user.targets.size === 0;
       const onSelf = await choose("celerity");
       const area = await choose("presence-awe");
-      const areaRows = box.querySelectorAll("ul.wodx-aim-area li").length;
+      const boxes = [...box.querySelectorAll("ul.wodx-aim-area input[type=checkbox]")];
+      const areaRows = boxes.length;
+      const ticks = boxes.map(b => ({checked: b.checked, ...Object.fromEntries(["appearance", "accent-color", "background-color", "opacity", "visibility", "width"].map(k => [k, getComputedStyle(b).getPropertyValue(k)]))}));
+      if ( look ) { ui.notifications.info("Look at the ticked boxes in the area list now (20 seconds)."); await sleep(20000); }
       await choose("dominate-command");
       app.querySelector("button[data-action=ok]")?.click();
       await sleep(800);
       await closeAll();
       ok("4 suggest", /Suggested: Ghoul B/.test(first) && nothingSet && /Anezka/.test(onSelf) && /In the area/.test(area) && areaRows >= 3 && ids().length === 1 && game.user.targets.first()?.name === "Ghoul B",
-        {first: first.slice(0, 160), onSelf: onSelf.slice(0, 100), area: area.slice(0, 100), areaRows, after: [...game.user.targets].map(t => t.name)});
+        {first: first.slice(0, 160), onSelf: onSelf.slice(0, 100), area: area.slice(0, 100), areaRows, ticks, after: [...game.user.targets].map(t => t.name)});
     });
 
     await step("5 automatic", async () => {
@@ -127,11 +132,17 @@ export async function run() {
       canvas.tokens.setTargets([], {mode: "replace"});
       game.wodxActions.useDiscipline({actor: hero()});
       const box = await panel();
+      const sel = box?.closest(".application")?.querySelector("[name=power]");
+      await sleep(300);
+      const onOpen = [...game.user.targets].map(t => t.name);
+      const o = [...sel.options].find(x => x.value.startsWith("dominate-command"));
+      sel.value = o?.value; sel.dispatchEvent(new Event("change", {bubbles: true}));
       await sleep(300);
       const set = [...game.user.targets].map(t => t.name);
       const text = box?.textContent ?? "";
       await closeAll();
-      ok("5 automatic", set.length === 1 && set[0] === "Ghoul B" && /Targeted/.test(text), {set, text: text.slice(0, 120)});
+      // Celerity (the first power) works on its user, so nothing is set on open; Dominate then targets Ghoul B at once.
+      ok("5 automatic", onOpen.length === 0 && set.length === 1 && set[0] === "Ghoul B" && /Targeted/.test(text), {onOpen, set, text: text.slice(0, 120)});
     });
 
     await step("6 hand-set", async () => {
