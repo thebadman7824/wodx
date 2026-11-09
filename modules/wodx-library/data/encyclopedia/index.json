@@ -61,6 +61,12 @@
    "title": "Dark Ages: Mage",
    "short": "DA:M",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "greatwar",
+   "title": "Wraith: The Great War",
+   "short": "W:GW",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -73,6 +79,7 @@
   "hh2.json",
   "mummy2.json",
   "m20.json",
-  "damage.json"
+  "damage.json",
+  "greatwar.json"
  ]
 }

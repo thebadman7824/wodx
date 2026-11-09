@@ -1,0 +1,550 @@
+[
+ {
+  "id": "gw-twilight-era",
+  "title": "The Underworld after the Armistice",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The dead from November 1918 to the eve of the 1929 crash.",
+  "claims": [
+   {
+    "text": "The setting runs from Armistice Day, 11 November 1918, until the eve of the 1929 stock market crash.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Charon still rules the Empire in theory, though no one has seen Charon in years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Stygia has fallen to treachery, and the Dark Kingdom of Iron is close to collapse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Shadowlands and the heart of the Empire are all but cut off; each Necropolis is an island among enemies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-fourth-maelstrom",
+   "gw-insurrection",
+   "stygia"
+  ]
+ },
+ {
+  "id": "gw-fourth-maelstrom",
+  "title": "The Fourth Great Maelstrom",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The psychic storm born of the Somme.",
+  "claims": [
+   {
+    "text": "The carnage of the Somme spawned the Fourth Great Maelstrom, which still rages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The storm lasts until the Shadow-eaten who make it up are beaten and the Nihils sealed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "A Maelstrom is a violent venting from the Tempest or Labyrinth into the Shadowlands, usually with Spectres.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "maelstroms",
+   "gw-twilight-era",
+   "spectres"
+  ]
+ },
+ {
+  "id": "gw-war-of-the-dead",
+  "title": "The War of the Dead",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "What wraiths mean by the Great War.",
+  "claims": [
+   {
+    "text": "Among wraiths the Great War means the Underworld conflict that follows the living one; the living war they call the War to End All Wars, or just the war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     },
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Ghosts of tanks, zeppelins and planes, drones re-running doomed charges and drifting clouds of poison gas fill the Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-fourth-maelstrom",
+   "gw-twilight-era"
+  ]
+ },
+ {
+  "id": "gw-insurrection",
+  "title": "The Insurrection",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The Grim Legion's grab for the Dark Empire.",
+  "claims": [
+   {
+    "text": "The Insurrection is the Grim Legion's attempt to take the Dark Empire of Iron.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Its supporters call themselves Imperialists of the New Stygian regime; opponents call them Insurrectionists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "A Loyalist is a wraith who opposes the Smiling Lord's forces in the Insurrection.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Grim Legion traitors may already be inside a Citadel's walls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "gw-twilight-era"
+  ]
+ },
+ {
+  "id": "gw-black-mask",
+  "title": "Black Mask and the Ministry of Intelligence",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The spy services of the Legions.",
+  "claims": [
+   {
+    "text": "The Black Mask is the Grim Legion's espionage order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Ministry of Intelligence is the Iron Legion's espionage order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Magisterium Veritatis is Stygia's secret police.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-insurrection",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "gw-legion-orders",
+  "title": "Orders of the Legions",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Some named orders and branches of the 1920s Legions.",
+  "claims": [
+   {
+    "text": "The Bleak Legion is no true Legion but a Russian branch of the Silent Legion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Cataphractoi are the heavy cavalry of the Legion of Fate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Penitent Legion's Flesh Corps fights with moliated Leviathans, as the Beast Corps uses barghests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "gw-black-mask"
+  ]
+ },
+ {
+  "id": "gw-breathless-dead",
+  "title": "The Breathless Dead",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Stygia's name for the dead of the Spanish Flu.",
+  "claims": [
+   {
+    "text": "Stygians call victims of the Spanish Flu the Breathless Dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-twilight-era"
+  ]
+ },
+ {
+  "id": "gw-other-deadlands",
+  "title": "Other Deadlands",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The afterlives beyond Stygia drawn into the war.",
+  "claims": [
+   {
+    "text": "Souls of the Jade Empire, the Bush of Ghosts and the Indian afterlife are all caught up in the age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Bush of Ghosts is the African Deadlands, called the Dark Kingdom of Ivory in Stygia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Jade Kingdom is the Asian Deadlands; Yellow Springs is its term for China's Deadlands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     },
+     {
+      "book": "greatwar",
+      "page": 17,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Some travellers brave the Maelstrom to go home, or find themselves captive in afterlives not their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-jade-kingdom-terms",
+   "gw-twilight-era"
+  ]
+ },
+ {
+  "id": "gw-jade-kingdom-terms",
+  "title": "Words of the Far Deadlands",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Terms from the Jade Kingdom, the Bush of Ghosts and Swar.",
+  "claims": [
+   {
+    "text": "In the Jade Kingdom, hun is the half of a wraith's soul that is intellect and spirit, the Psyche; a kuei is a malevolent spirit ruled by its p'o.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "In the Bush of Ghosts an ibambo is an African wraith, and a moriman is a spirit doctor who practises the Behest Arcanos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Stygians call the Arcanos practised by the Tvashtriya Displace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Yama is held to be lord of the Dead and judge of souls in the Indian afterlife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 17,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-other-deadlands"
+  ]
+ },
+ {
+  "id": "gw-generals-of-oblivion",
+  "title": "Generals of Oblivion",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Nephwracks in Oblivion's direct service.",
+  "claims": [
+   {
+    "text": "The Generals of Oblivion are a select group of Nephwracks who serve Oblivion directly and side with or against Malfeans as they choose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Mutile is a common Spectre, called a Mortwight in the European Deadlands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spectres",
+   "oblivion"
+  ]
+ },
+ {
+  "id": "gw-johnny-songbirds",
+  "title": "Johnny Songbirds",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Wandering Chanteurs of the age.",
+  "claims": [
+   {
+    "text": "Johnny Songbirds are itinerant Chanteurs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds"
+  ]
+ }
+]
