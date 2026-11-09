@@ -21,6 +21,7 @@ import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Prelude from "./prelude.mjs";
+import * as Dash from "./dashboard.mjs";
 import * as PreludeRules from "./prelude-rules.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -41,7 +42,9 @@ Hooks.once("init", () => {
   Codex.registerCodexHooks();
   Rumours.registerRumourSettings();
   Rumours.registerRumourHooks();
+  Dash.registerDashboardHooks();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
+  game.keybindings?.register?.(C.MOD, "dashboard", {name: "The Storyteller's dashboard", editable: [], onDown: () => { Dash.DashboardApp.open(); return true; }, restricted: true});
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
@@ -67,6 +70,7 @@ Hooks.once("ready", () => {
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
     rumours: {open: () => Rumours.RumoursApp.open(), list: Rumours.rumours, start: Rumours.startRumour, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
+    dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     draw: Night.drawChooser, nightRules: Night.N
@@ -131,6 +135,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
     button: true, visible: game.user.isGM, onChange: () => Led.LedgerApp.open()};
+  tokens.tools.wodxDashboard = {name: "wodxDashboard", title: "The Storyteller's dashboard (the party, clocks, open threads, consequences)", icon: "fa-solid fa-gauge", order: 117,
+    button: true, visible: game.user.isGM, onChange: () => Dash.DashboardApp.open()};
   tokens.tools.wodxSetup = {name: "wodxSetup", title: "Start a chronicle (opening date, era, lines, the Storyteller screen)", icon: "fa-solid fa-book-open", order: 118,
     button: true, visible: game.user.isGM, onChange: () => Setup.openSetup()};
   tokens.tools.wodxDraw = {name: "wodxDraw", title: "Draw for the story (tonight, a story aid, an Otherworld journey)", icon: "fa-solid fa-dice-d20", order: 119,

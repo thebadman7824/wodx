@@ -31,3 +31,9 @@
 .wstory-setup .wstory-lines label { display: flex; align-items: center; gap: 0.35em; }
 .wstory-setup .form-group > label { flex: 0 0 14em; }
 .wstory-setup details { margin-top: 0.4em; }
+/* The Storyteller's dashboard: each list scrolls on its own so the window fits a small screen */
+.wodx-dashboard-app .window-content { overflow-y: auto; max-height: 85vh; }
+.wodx-dashboard-app .wstory-dash-list { max-height: 22vh; overflow-y: auto; }
+.wodx-dashboard-app .wstory-dash-row { padding: 2px 0; border-bottom: 1px solid rgba(127, 127, 127, 0.2); }
+.wodx-dashboard-app .wstory-dash-overdue strong { color: #b43c3c; }
+.wodx-dashboard-app .wstory-dash-name { display: inline; width: auto; padding: 0 4px; font-weight: bold; }

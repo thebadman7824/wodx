@@ -609,6 +609,15 @@ game.world.id = worldId;
     windows.push({name: "Dreams and visions", tag: dop.tag ?? "div", classes: ["application", ...(dop.classes ?? [])].join(" "), width: dop.position.width, height: dop.position.height,
       content: da.element.querySelector("section.window-content").innerHTML});
   }
+  // The Storyteller's dashboard: with the ledger, rumours and dreams above filled in
+  {
+    const BApp = (await import(join(root, "modules/wodx-storyteller/scripts/dashboard.mjs"))).DashboardApp;
+    const ba = new BApp({});
+    await ba.render({force: true});
+    const bop = BApp.DEFAULT_OPTIONS;
+    windows.push({name: "The Storyteller's dashboard", tag: bop.tag ?? "div", classes: ["application", ...(bop.classes ?? [])].join(" "), width: bop.position.width, height: bop.position.height,
+      content: ba.element.querySelector("section.window-content").innerHTML});
+  }
   for ( const [label, fn] of [["Out on your own", () => st.openOnYourOwn(people[1].id)], ["Convene", () => st.conveneDialog({actorIds: [people[0].id]})],
     ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
     ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()]] ) {
