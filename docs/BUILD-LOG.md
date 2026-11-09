@@ -904,3 +904,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - kits-rules.mjs: FACE_KINDS, faceKind(type, variant, set), apparentAge(face, year), faceStage(age), STAGE_WORDS, faceFor(face, year), agePixels(rgba, stage), agedName(actorId, which, stage, base), shortHash.
 - main.mjs: flags.wodx-atmosphere.face {born, kind, still, lost, variants, base {img, token}, made {img, token}, shown}; agedCopy (canvas pixels, webp, upload to worlds/<world>/wodx-faces), applyFace (a picture changed by hand becomes the new base; placed tokens follow), applyFaces, setFace (null stops and restores), setFaceAge; ageEverything runs places and faces together at ready, on a year change, after a skip and when an era is applied. A Faces that age part in the window with search boxes; api.faces.
 - Tests: five more in dawn-dread.test.mjs (757 pass). Gate: tools/gate/gatefaces.mjs, 8 steps, a character and scene of its own; years are passed in.
+
+## 2026-11-09: the looks of the other worlds (Otherworlds 0.5.0, B272)
+
+- journey-rules.mjs: LOOKS, NET_FILTER_ID, layerLookCss({layer, inNet, shroud, phase, looks, decay}), NET_SVG (grey, a Laplacian edge kernel, green and cyan).
+- journey.mjs: decayCss() (also lookCss) now gives the viewer's layer look; the Net's SVG filter is put in the page once; keepSway() eases the Dreaming's hue with a CSS transition while the viewer stands there; client setting "looks". main.mjs: jacking in or out redraws the look; api.lookCss, api.swaying.
+- Tests: one more in realms.test.mjs (758 pass). Gate: tools/gate/gatelooks.mjs, 7 steps, a scene and actor of its own.
