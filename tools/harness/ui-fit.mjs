@@ -592,11 +592,14 @@ game.world.id = worldId;
     {document: {id: "tile5", documentName: "Tile", x: 260, y: 260, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {light: true, lightKind: "lamp", title: "The gas lamp over the chancery door", lightIds: "lampA"}}}},
     // A hiding place with two people in it already
     {document: {id: "tile6", documentName: "Tile", x: 360, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {hide: true, hideKind: "priesthole",
-      title: "The priest hole behind the chapel panelling", occupants: [{a: "x1", n: "Brother Anselm of the Cistercian grange", s: 2}, {a: "x2", n: "A frightened novice", s: 0}]}}}}];
+      title: "The priest hole behind the chapel panelling", occupants: [{a: "x1", n: "Brother Anselm of the Cistercian grange", s: 2}, {a: "x2", n: "A frightened novice", s: 0}]}}}},
+    // A bonfire, which takes a roll to beat out
+    {document: {id: "tile7", documentName: "Tile", x: 160, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {hazard: true, hazardKind: "fire", size: "large", heat: "forge",
+      title: "The hayloft over the stables of the Golden Stag inn"}}}}];
   globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document])), lights: new Coll([["lampA", {id: "lampA", x: 300, y: 300, hidden: false, flags: {}}]])}, grid: {size: 100},
     walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
-  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")]] ) {
+  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")], ["Interact fire roll", () => ix.attempt(tok, "tile7", "putOut")]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }

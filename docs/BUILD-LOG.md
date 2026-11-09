@@ -650,9 +650,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Interactables 0.6.0, 2026-11-09: hiding places (B150)
 - Hiding places on tiles: wardrobe or cupboard, under a bed or table, behind a curtain or tapestry, deep shadows, crawlspace or loft, priest hole. The tile config gains a Hiding place section: kind, room, and who is in it now.
 - Hide here (Dexterity + Stealth): in and out of sight at once (the Invisible status, so the player still sees the token); successes make the hider harder to find. Search it (one success better) or Search the area finds them by successes, and the Storyteller is whispered who stays hidden. Come out, or walk out, to end it. Undo on every result.
-- Tests: 3 new (1 rules, 2 runtime); UI fit adds a full priest hole. Gate step 18 (the burglar hides in a wardrobe; Undo). Not deployed yet.
-
-- Gate: tools/gate/gate-interact.mjs gains steps 11 (a chest picked, opened and emptied; Undo) and 12 (the tile config part). Not deployed yet.
+- Tests: 3 new (1 rules, 2 runtime); UI fit adds a full priest hole. Gate step 18 (the burglar hides in a wardrobe; Undo).
+- Deployed 2026-11-09 from main 414877e (backup Backups\wodx-interactables-0.5.0-2026-11-09, five files, MD5s match). gate-interact 18/18. Step 18 used the token's hidden switch (no Invisible status in that world).
 
 ### Dated events and the long time skip, 2026-11-09: WoDX Chronicle 0.5.0 (B120, B121)
 - From the gap review in the Master Plan (items 1 and 2), which Ben asked to have built in full.
@@ -689,3 +688,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Sheets past the first page, 2026-11-09: WoDX Sheets 0.6.0 (B127)
 - Gap review item 12. sheet-rules.mjs: page2 filled for all sheets but faeDA and wr20 (already had theirs). main.mjs: new blocks combat, gear, fetishes, rotes, description, with weaponLine() and armorLine(). block.hbs: an items block can carry a note.
 - Tests: sheets3.test.mjs (4). 544 harness tests pass. Gate: tools/gate/gatesheet5.mjs (13 steps).
+### Interactables 0.7.0, Combat 3.7.6, 2026-11-09: fire and hazards (B151)
+- Hazards on tiles: fire, a brazier, lamp or candle stand to knock over, broken glass or caltrops, a live wire. The tile config gains a Hazard section: kind, the fire's size and heat, burning, knocked over, the glass's dice, swept aside, the current, power on, damage type, players only.
+- A live hazard hurts whoever walks into it, and in combat whoever starts a turn in a fire or on a live wire (the updateCombat hook). Damage goes through WoDX Combat's soak, with Undo. Fire follows WoDX Actions' fire table (V20 Dark Ages pp. 355-360). Glass gets a careful-step roll first.
+- Interact options: knock over, put out (no roll, Dexterity + Athletics at 7, or not by hand), set alight, sweep a path, cut the power, turn it back on. A fire tied to scene lights turns them on and off with it.
+- WoDX Combat 3.7.6: soakAndApply takes a soak difficulty (fd.soakDiff), shown on its card.
+- Tests: 10 new (4 rules, 6 runtime), 507 in all; UI fit adds a burning hayloft and its put-out roll. Gate step 19 (the burglar walks into a fire, it is put out; Undo). Not deployed yet.

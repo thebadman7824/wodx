@@ -58,15 +58,25 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Runtime: the Invisible status, Search it, Search the area, walking out, Undo; the Storyteller is whispered who stays hidden
 - [x] Tile config: the Hiding place section
 - [x] Harness tests (3 new) and UI fit
-- [ ] Gate step 18 in rothenstein-wodx
+- [x] Gate step 18 in rothenstein-wodx: 18/18 at 414877e
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.5.0-2026-11-09)
+
+## 0.7.0: fire and hazards (2026-11-09)
+- [x] Rules: fire (size, heat, by kind of character), brazier, glass, live wire; putting out, alight, sweep, power (B151)
+- [x] Runtime: walking in, a turn in combat, WoDX Combat soak at the heat, lights tied to a fire, Undo
+- [x] WoDX Combat 3.7.6: a soak difficulty from the caller
+- [x] Tile config: the Hazard section
+- [x] Harness tests (10 new) and UI fit
+- [ ] Gate step 19 in rothenstein-wodx
 - [ ] Deployed
+- [ ] Electrocution page ref (V20 core) to pin
 
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
 - [x] Clues and documents (0.4.0, deployed)
 - [x] Light sources (0.5.0, deployed)
-- [x] Hiding places (0.6.0, not deployed yet)
-- [ ] Fire and hazards
+- [x] Hiding places (0.6.0, deployed)
+- [x] Fire and hazards (0.7.0, not deployed yet)
 - [ ] Altars, relics and fetishes
 - [ ] Watch points (mirrors, windows on the street, phones and radios)
 - [ ] Mounts and vehicles
