@@ -872,10 +872,10 @@
   "eras": [
    "modern"
   ],
-  "summary": "The great factions of the Kindred: the Camarilla, the Sabbat and the Anarch Movement, with others beside.",
+  "summary": "The great factions of the Kindred: the Anarch Movement, the Camarilla and the Sabbat, with others beside.",
   "claims": [
    {
-    "text": "The three best-known Sects are the Camarilla, the Sabbat and the Anarch Movement.",
+    "text": "Of all the Sects, three are best known: the Anarch Movement, the Camarilla and the Sabbat.",
     "tier": "stated",
     "refs": [
      {
