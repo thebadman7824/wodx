@@ -23,7 +23,7 @@
     ]
    },
    {
-    "text": "An assassin tithes ten percent of every payment to the sire and another ten percent to the Clan.",
+    "text": "An assassin gives a tenth of every fee to the sire and a further tenth to the Clan.",
     "tier": "stated",
     "refs": [
      {
@@ -324,7 +324,7 @@
   "summary": "Ranks of the Clan.",
   "claims": [
    {
-    "text": "The Clan has seven titles: Acolyte, Apprentice, Magister, Regent, Pontifex, Lord and Councilor.",
+    "text": "Its seven titles run from Acolyte and Apprentice through Magister and Regent to Pontifex, Lord and, highest, Councilor.",
     "tier": "stated",
     "refs": [
      {
