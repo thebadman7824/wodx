@@ -79,6 +79,12 @@
    "title": "Kindred of the East",
    "short": "KotE",
    "edition": "Revised era"
+  },
+  {
+   "id": "orpheus",
+   "title": "Orpheus",
+   "short": "Orpheus",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -94,6 +100,7 @@
   "damage.json",
   "greatwar.json",
   "demon.json",
-  "kote.json"
+  "kote.json",
+  "orpheus.json"
  ]
 }
