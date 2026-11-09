@@ -23,6 +23,7 @@ export const TIE_KINDS = {
   people: {label: "Allies, contacts, retainers", days: 30, lapse: "People who are not seen to drift away: a scene with them, or the Storyteller lowers the background a dot.", act: "A scene or a message"},
   kinfolk: {label: "Kinfolk", days: 30, lapse: "Kin who are not visited forget, or fall to the Wyrm's servants.", act: "A visit"},
   mentor: {label: "Mentor", days: 60, lapse: "A mentor who is not visited stops answering.", act: "A visit"},
+  caern: {label: "A caern", days: 30, lapse: "A caern whose rites are not kept weakens: the Gauntlet there thickens (The Gauntlet over time, +1).", act: "A rite at the caern"},
   custom: {label: "Other", days: 30, lapse: "The Storyteller decides.", act: ""}
 };
 
@@ -205,3 +206,27 @@ export function responseFor(year) {
 
 /** Hunting difficulty in a place: the ground's own, plus the heat's. */
 export function heatDifficulty(heat) { return heatBand(heat).diff; }
+
+/* ---------------- Disease and plague ---------------- */
+
+/**
+ * Outbreaks by year, from history. While one runs, the Hunt shows it: the sick are everywhere and badly kept, and
+ * blood taken from them can carry the sickness on (a vampire is not harmed, but the next vessel may be). No numbers
+ * change; the Storyteller decides what it means for the night.
+ */
+export const OUTBREAKS = [
+  {from: 1347, to: 1351, name: "The Black Death", note: "Bodies in the streets, pits outside the walls, flagellants on the roads."},
+  {from: 1360, to: 1363, name: "The plague returns", note: "The second coming of the pestilence takes the young."},
+  {from: 1634, to: 1635, name: "Plague in the war years", note: "Armies carry it from town to town."},
+  {from: 1665, to: 1666, name: "The Great Plague", note: "Doors marked with red crosses; watchmen keep the sick inside."},
+  {from: 1831, to: 1832, name: "Cholera", note: "The blue death follows the rivers and the poor quarters."},
+  {from: 1848, to: 1849, name: "Cholera", note: "It comes back with the revolutions."},
+  {from: 1866, to: 1866, name: "Cholera", note: "Soldiers bring it home from the war."},
+  {from: 1892, to: 1892, name: "Cholera in Hamburg", note: "Bad water in the port city; quarantine on the railways."},
+  {from: 1918, to: 1920, name: "Influenza", note: "Masks, closed theatres, hospitals past full."}
+];
+
+export function outbreakFor(year) {
+  const y = num(year);
+  return OUTBREAKS.find(o => y >= o.from && y <= o.to) ?? null;
+}
