@@ -1,5 +1,5 @@
 /**
- * WoDX Senses 0.2.1: what a character sees, hears, smells and feels, answered in chat.
+ * WoDX Senses 0.3.0: what a character sees, hears, smells and feels, answered in chat.
  *
  *   Asking     /look, /listen, /smell, /touch, or /sense for all four (a word after it puts lines about that first:
  *              "/look door"). The player toolbar button "What do I notice?" opens the same choice. A plain question in
@@ -21,9 +21,11 @@
  */
 import * as R from "./senses-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {registerPerceptionSettings, setupPerception} from "./perception.mjs";
+
 
 const MOD = "wodx-senses";
-const VERSION = "0.2.1";
+const VERSION = "0.3.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -681,7 +683,9 @@ export async function openPlaceLines(scene = canvas?.scene) {
 
 Hooks.once("init", () => {
   registerSettings();
-  const api = {version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
+  registerPerceptionSettings();
+  const perception = setupPerception({attrOf, abilityOf, powerDots, formOf, sightBlocked, esc, gmIds});
+  const api = {perception, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
   game.modules.get(MOD).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {senses: api});
 });

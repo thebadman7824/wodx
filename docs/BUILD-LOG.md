@@ -839,3 +839,7 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Open items, 2026-11-09: living maps (Interactables 0.15.0; B253)
 - living-rules.mjs (pure): CONDITIONS, MODES, cleanRule, holds, changeFor, ruleWords, momentKey. living.mjs: context() from the Chronicle clock, its church day and fired events and Atmosphere's weather tags; sync() over every living tile on every scene (skipped while the world is held or skipping; force for gates); the "WoDX: living map" section in the tile config (event list with a search box). api.living.
 - Tests: interactables.test.mjs gains two (718 in all). Gate: tools/gate/gateliving.mjs, 8 steps, a scene of its own in rothenstein-wodx.
+
+### Open items, 2026-11-09: per-character senses (Senses 0.3.0; B254, B255)
+- perception-rules.mjs (pure): screenFor, addStep, trailStrength, smellYards, stepsInReach, showsTo, seenAfter. perception.mjs: client settings "Frenzy and Rötschreck on my screen" and "Scent trails for a wolf's nose", world setting "The unseen show only to those who find them"; the screen overlay (CSS in wodx-senses.css); trails recorded from token moves on each client and drawn on the interface layer; Token.isVisible wrapped for the unseen; Who sees through it? and Forget on the token HUD. api.perception.
+- Tests: perception.test.mjs (5); 723 pass. Gate: tools/gate/gateperception.mjs, 8 steps, a scene of its own.
