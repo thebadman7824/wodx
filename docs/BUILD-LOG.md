@@ -1072,5 +1072,6 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - wodx-actions/data/fera.json: Ajaba Renown is Ferocity, Cunning and Obligation, and they start with Willpower 3 (W20 Changing Breeds printed pp. 49, 217). Ratkin can't take more than 2 dots of Resources. Rokea start with Willpower 4. The Camazotz Renown is a house rule, because the book gives none. The six breeds the book confirms no longer carry chk.
 - gifts-daw.json: Dolorous Stroke says that onlookers lose a die against the character for the scene. The chk mark is removed.
 - wodx-chronicle/data/events.mjs: Doissetep, the Week of Nightmares and the Avatar Storm have dateNotes, because M20 gives no days.
-- Still open: v20c-utgard (not found in the V20 Companion text; waiting for Ben), and pinning the bare page refs from the PC report.
+- v20c-utgard was not in the V20 Companion text. Ben approved its removal, and it is gone from v20comp.json (Library data only).
+- Still open: pinning the bare page refs from the PC report.
 - Tests: 919 harness pass.
