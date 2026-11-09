@@ -114,6 +114,7 @@ const {GearApp, setGear} = await import(join(root, "modules/wodx-library/scripts
 setGear(JSON.parse((await import("node:fs")).readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8")));
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
 const {CreationApp, SpendApp, awardDialog} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
+const {CreationCheckApp} = await import(join(root, "modules/wodx-creation/scripts/totals-check.mjs"));
 const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
 const {PassYearsApp} = await import(join(root, "modules/wodx-creation/scripts/pass-years.mjs"));
 // 7a: the People window with a batch rolled (twelve rows)
@@ -134,7 +135,7 @@ class PlannedPassYears extends PassYearsApp {
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
   ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["Gear by era", GearApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
-  ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
+  ["Creation and experience", CreationApp, {}], ["Creation check", CreationCheckApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
   ["Pass the years", PlannedPassYears, {}], ["People", RolledPeople, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);
   await app.render({force: true});
@@ -197,6 +198,9 @@ await buildPenumbraPrototype(scene);
 const change = await import(join(root, "modules/wodx-creation/scripts/change-of-state.mjs"));
 await change.embraceDialog();
 await change.vitaeDialog();
+const states = await import(join(root, "modules/wodx-creation/scripts/states.mjs"));
+await states.deathDialog();
+await states.awakenDialog();
 // The First Change needs WoDX Actions' rules: load them on their own here (game.wodxActions comes later)
 {
   const GX = await import(join(root, "modules/wodx-actions/scripts/garou.js"));
