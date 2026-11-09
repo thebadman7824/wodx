@@ -773,6 +773,7 @@ game.world.id = worldId;
   const Night = await import(join(root, "modules/wodx-storyteller/scripts/night.mjs"));
   const Jy = await import(join(root, "modules/wodx-otherworlds/scripts/journey.mjs"));
   const Pre = await import(join(root, "modules/wodx-storyteller/scripts/prelude.mjs"));
+  const Ways = await import(join(root, "modules/wodx-otherworlds/scripts/ways.mjs"));
   try { Night.registerNightSettings(); } catch (e) { /* registered */ }
   try { Jy.registerJourneySettings(); } catch (e) { /* registered */ }
   const owMod = game.modules.get("wodx-otherworlds") ?? {active: true};
@@ -784,7 +785,7 @@ game.world.id = worldId;
   let answer = null;
   api.DialogV2.wait = async cfg => { captured.push(cfg); const a = answer; answer = null; return a; };
   const runs = [["Draw for the story", () => Night.drawChooser(), null], ["The night's draw", () => Night.nightDialog(), null],
-    ["A story aid", () => Night.aidDialog(), null], ["A prelude", () => Pre.preludeDialog(), null], ["A story aid: the draw", () => Night.aidDialog(), {kind: "dream", actorId: null}],
+    ["A story aid", () => Night.aidDialog(), null], ["A prelude", () => Pre.preludeDialog(), null], ["Ways and realms", () => Ways.waysDialog(), null], ["A story aid: the draw", () => Night.aidDialog(), {kind: "dream", actorId: null}],
     ["An Otherworld journey", () => Jy.journeyDialog(), null], ["An Otherworld journey: the draw", () => Jy.journeyDialog(), {realm: "tempest", hours: 6, storm: true, tell: false}]];
   for ( const [label, fn, first] of runs ) {
     const n = captured.length;

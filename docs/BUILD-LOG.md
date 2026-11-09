@@ -966,3 +966,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 
 - shelf-rules.mjs (new): SHELVES, LINE_LABELS, ALL_ERAS, fromDisciplines, fromRoads, fromGifts, fromArcanoi, fromThorns, fromConditions, fromHouseRules, fromEras, buildShelves, fits, hashOf. shelves.mjs (new): sources, installShelves (made at ready when the shelf version rises; remade by hash), catalogue, LibraryApp (id wodx-library; line list, era filter, search), ensureManual, ensureChangelog. data/manual.mjs (new): MANUAL pages and CHANGES. Toolbar button wodxLibrary (order 116). api.library, api.manual, api.changelog.
 - Tests: tools/harness/library.test.mjs (5). Gate: tools/gate/gatelibrary.mjs, 6 steps.
+
+## 2026-11-09: ways and realms (Otherworlds 0.6.0, B283)
+
+- ways-rules.mjs (new): DEEP_REALMS, REALM_ORDER, WAY_KINDS, WAY_ORDER, endLayer, wayRegion, realmScene. ways.mjs (new): makeRealm, makeWay (refuses when a layer is missing), waysDialog. Toolbar button wodxWays (Storyteller, order 132); api.ways {make, realm, dialog, isRealm, rules}.
+- Tests: tools/harness/ways.test.mjs (3). Gate: tools/gate/gateways.mjs, 7 steps. UI fit: the Ways and realms dialog.
