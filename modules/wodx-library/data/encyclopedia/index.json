@@ -319,6 +319,12 @@
    "title": "Clanbook: Assamite (Revised)",
    "short": "Clanbook: Assamite",
    "edition": "Revised"
+  },
+  {
+   "id": "cbbrujah",
+   "title": "Clanbook: Brujah (Revised)",
+   "short": "Clanbook: Brujah",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -374,6 +380,7 @@
   "gtcam.json",
   "gtsab.json",
   "gtanarch.json",
-  "cbassamite.json"
+  "cbassamite.json",
+  "cbbrujah.json"
  ]
 }

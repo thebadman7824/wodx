@@ -1,0 +1,265 @@
+[
+ {
+  "id": "cbb-brujah-and-troile",
+  "title": "Brujah and Troile",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "The clan's Antediluvian and the childe who took the line.",
+  "claims": [
+   {
+    "text": "Tales of the Antediluvian Brujah disagree. In one, Brujah kills a wine seller in the Second City and leaves double the price for the widow; in another, Brujah pays a poor stonemason's legal costs with three coins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "A few Brujah hold that their founder was calm, logical and conservative, reading the same parables as acts of order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Most Brujah trace their line to Troile, who drank the blood and soul of Brujah, an act often blamed for starting the kinslayer wars that ended the Second City.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Accounts differ even on Troile's gender; Meneleus, Troile's childe, speaks of a sire who was male. Nodist scripture names the Brujah the Learned Clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Some suspect Brujah and Troile were one vampire, who faked a diablerie to take a new identity.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah",
+   "cbb-carthage"
+  ]
+ },
+ {
+  "id": "cbb-carthage",
+  "title": "Carthage",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient",
+   "classical"
+  ],
+  "summary": "The lost Brujah city of the ancient world.",
+  "claims": [
+   {
+    "text": "Brujah who knew Carthage call it a utopia where Kindred and mortals lived together; most accounts instead describe child sacrifice, demonic rites and orgies around a twisted Baalism.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Brujah ruled its nights, with Phoenician Assamites a distant second. Meneleus, Altamira, Critias and Xenophon all had ties to the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Greedy nobles and Kindred left Carthage unable to pay its armies. Meneleus left to seek help, and Rome, steered by Ventrue, Malkavians and some Toreador, sacked the city in 146 BC and salted its earth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Nearly every Brujah blames the Ventrue for the fall, and many dream of building Carthage again; every attempt so far has failed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah",
+   "v20c-pyre-of-moloch",
+   "cbb-brujah-and-troile"
+  ]
+ },
+ {
+  "id": "cbb-outlooks",
+  "title": "Iconoclasts and idealists",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Brujah describe their own camps.",
+  "claims": [
+   {
+    "text": "Iconoclasts are mostly young and rage against the Camarilla, yet in some way need it as the order they push against.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Idealists, mostly ancillae and elders, study the past and prefer debate to riot. Anarchs and iconoclasts call them the city's biggest sellouts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Idealists hold up Carthage as proof the clan can unite; iconoclasts reject this as elders manipulating the young. Brujah primogen often show the idealist spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "European Brujah lean more toward the idealist type than American ones, even as neonates. A Brujah prince has ruled Luxembourg for over a century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah",
+   "cbb-carthage",
+   "cbb-rants"
+  ]
+ },
+ {
+  "id": "cbb-rants",
+  "title": "Brujah rants",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The clan's open gatherings for speeches, policy and debate.",
+  "claims": [
+   {
+    "text": "At a rant anyone may speak, if able to push to the front. Some nihilists come only to break it up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Policy rants rally the clan to a shared goal. In the 19th century London's Brujah swore to destroy anyone who took a second Ventrue primogen seat Prince Mithras planned, and the seat stayed empty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Debate rants, mostly for elders, argue an issue for its own sake and can run for nights or weeks. They seldom end in violence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "A Brujah primogen often has few duties and acts as the other primogens' devil's advocate and the prince's questioner; young Brujah who dislike one may petition the prince.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbbrujah",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-london",
+   "gtanarch-gatherings",
+   "gtcam-primogen"
+  ]
+ }
+]
