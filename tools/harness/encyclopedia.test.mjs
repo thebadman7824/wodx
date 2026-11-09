@@ -1,4 +1,5 @@
 import test from "node:test";
+import {fileURLToPath} from "node:url";
 import assert from "node:assert/strict";
 import {execFileSync} from "node:child_process";
 import * as E from "../../modules/wodx-library/scripts/ency-rules.mjs";
@@ -43,7 +44,7 @@ test("an entry becomes a journal with a fixed id, its tiers, pages and links", (
   assert.equal(j[0].shelf, "encyclopedia");
 });
 test("the check script passes on the shipped data", () => {
-  const out = execFileSync("node", [new URL("../encyclopedia-check.mjs", import.meta.url).pathname], {encoding: "utf8"});
+  const out = execFileSync("node", [fileURLToPath(new URL("../encyclopedia-check.mjs", import.meta.url))], {encoding: "utf8"});
   assert.match(out, /0 problem\(s\)/);
 });
 test("one shelf install at a time, and no delete of a document already gone", async () => {

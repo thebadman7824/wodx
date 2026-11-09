@@ -46,7 +46,9 @@ export async function run() {
     await api.settled();
     const tex = () => actor.prototypeToken.texture.src, live = () => token ? scene.tokens.get(token.id)?.texture?.src : tex();
     const head = await fetch(`/${p1}`, {method: "HEAD"});
-    ok("3. bake", !!p1 && p1.endsWith(".webp") && head.ok && tex() === p1 && live() === p1 && actor.flags[MOD]?.baked, {path: p1, token: live()});
+    const tk = token ? scene.tokens.get(token.id) : null;
+    ok("3. bake", !!p1 && p1.endsWith(".webp") && head.ok && tex() === p1 && live() === p1 && actor.flags[MOD]?.baked,
+      {path: p1, proto: tex(), token: live(), head: head.status, scene: scene?.id ?? null, tokenId: token?.id ?? null, link: tk?.actorLink ?? null, tokenActor: tk?.actorId ?? null, actor: actor.id, baked: actor.flags[MOD]?.baked ?? null});
 
     const files1 = (await foundry.applications.apps.FilePicker.implementation.browse("data", `worlds/${game.world.id}/paperdoll`)).files.length;
     const p2 = await api.bake(actor);
@@ -80,12 +82,13 @@ export async function run() {
     const ringNow = api.state(actor).ring;
     let flipped = null;
     if ( at?.active ) {
-      await game.settings.set("wodx-atmosphere", "frames", frames === "off" ? "all" : "off");
-      flipped = api.state(actor).ring;
+      const other = frames === "all" ? "off" : "all";
+      await game.settings.set("wodx-atmosphere", "frames", other);
+      flipped = {to: other, ring: api.state(actor).ring};
       await game.settings.set("wodx-atmosphere", "frames", frames);
     }
-    const drawn = frames === "all" || (frames === "characters" && actor.hasPlayerOwner);
-    ok("8. the ring", at?.active ? (ringNow === !drawn && flipped === drawn) : ringNow === true, {frames, ringNow, flipped});
+    const drawn = v => v === "all" || (v === "characters" && actor.hasPlayerOwner);
+    ok("8. the ring", at?.active ? (ringNow === !drawn(frames) && flipped.ring === !drawn(flipped.to)) : ringNow === true, {frames, ringNow, flipped});
   } catch (err) { R.errors.push(`${err.message} | ${String(err.stack).split("\n").slice(0, 3).join(" | ")}`); }
   finally {
     try { await game.settings.set(MOD, "followHealth", follow); } catch (e) { /* kept */ }
