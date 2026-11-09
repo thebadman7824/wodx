@@ -2,6 +2,8 @@ import {MODULE_ID, esc, lineOf, xpTotals, purchaseOptions, newDisciplineOption, 
   clanNameOf, domitorOf, allyOf, patronOf, payerOf, canSpendFor, spendableFor} from "./actor-data.mjs";
 import {embraceDialog, vitaeDialog} from "./change-of-state.mjs";
 import {firstChangeDialog} from "./first-change.mjs";
+import {deathDialog, awakenDialog} from "./states.mjs";
+import {CreationCheckApp} from "./totals-check.mjs";
 import {award, requestSpend, writeLogPage} from "./xp.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
 import {XP} from "../data/vampire.mjs";
@@ -35,6 +37,9 @@ export class CreationApp extends ApplicationV2 {
       embrace: () => embraceDialog().then(() => CreationApp.refresh()),
       vitae: () => vitaeDialog().then(() => CreationApp.refresh()),
       firstChange: () => firstChangeDialog().then(() => CreationApp.refresh()),
+      death: () => deathDialog().then(() => CreationApp.refresh()),
+      awaken: () => awakenDialog().then(() => CreationApp.refresh()),
+      check: () => CreationCheckApp.open(),
       award: () => awardDialog(),
       spend: CreationApp.#onSpend,
       ally: CreationApp.#onAlly,
@@ -92,6 +97,9 @@ export class CreationApp extends ApplicationV2 {
           <button type="button" data-action="embrace"><i class="fa-solid fa-skull"></i> Embrace a mortal</button>
           <button type="button" data-action="vitae"><i class="fa-solid fa-droplet"></i> Give vitae</button>
           ${game.wodxActions?.garouRules ? `<button type="button" data-action="firstChange"><i class="fa-solid fa-moon"></i> The First Change</button>` : ""}
+          <button type="button" data-action="death"><i class="fa-solid fa-ghost"></i> Death into a wraith</button>
+          <button type="button" data-action="awaken"><i class="fa-solid fa-wand-sparkles"></i> The Awakening</button>
+          <button type="button" data-action="check"><i class="fa-solid fa-list-check"></i> Creation check</button>
           <button type="button" data-action="award"><i class="fa-solid fa-star"></i> Award experience</button>
           <button type="button" data-action="log"><i class="fa-solid fa-book"></i> Experience log</button>
           <button type="button" data-action="lineage"><i class="fa-solid fa-sitemap"></i> Lineage journal</button>

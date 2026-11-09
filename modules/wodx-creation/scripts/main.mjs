@@ -13,6 +13,9 @@ import * as groups from "./group-sheet.mjs";
 import * as firstChange from "./first-change.mjs";
 import * as people from "./people.mjs";
 import * as archive from "./archive.mjs";
+import * as states from "./states.mjs";
+import * as totals from "./totals-rules.mjs";
+import {CreationCheckApp} from "./totals-check.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -52,6 +55,8 @@ function start() {
     embrace: change.embrace, giveVitae: change.giveVitae, firstChange: firstChange.firstChange, firstChangeDialog: firstChange.firstChangeDialog, award: xp.award, awardDialog,
     writeLineageJournal: lineage.writeLineageJournal,
     groups,
+    deathToWraith: states.deathToWraith, deathDialog: states.deathDialog, awaken: states.awaken, awakenDialog: states.awakenDialog,
+    totals, check: actor => CreationCheckApp.open(actor),
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs},
     people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople}
   };

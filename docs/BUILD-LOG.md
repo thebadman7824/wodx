@@ -792,3 +792,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Actions: the Garou test pack is fetched only when makeTestPack is called, so players no longer download it.
 - Lazy loading of each line's code is logged in PENDING-REVIEW.md as not done yet (every line file is also used at start-up). World changes from the study wait for Ben.
 - Tests: 9 new, 633 in all after merging main. Gate: gateeffects (8 steps).
+
+### Creation 0.8.0, 2026-11-09: death into a wraith, the Awakening and the creation check
+- Gap review item 3. data/creation-totals.mjs holds 17 books' creation totals with page refs (research in docs/research/creation-totals). totals-rules.mjs: assign, checkCreation, angstFrom, pathosStart, wraithStart, caul, awakenStart. totals-check.mjs: the Creation check window (character and book pickers with search boxes; reads only). states.mjs: deathToWraith, awaken and their dialogs; both make the new sheet bare so the system builds it, carry the old sheet over, link the two and file the old one, as the First Change does.
+- The Creation window gains Death into a wraith, The Awakening and Creation check. api: deathToWraith, deathDialog, awaken, awakenDialog, totals, check.
+- Choices on what carries over and the ghoul blood figure: B131 to B133 and PENDING-REVIEW.md.
+- Tests: creation-totals.test.mjs (10), 664 in all. UI fit takes the check window and both dialogs. Gate: tools/gate/gatestates.mjs, 7 steps.
+- 0.8.1: the PC gate (6/7) found the check opening an Awakened mage on DA:M in the Dark Ages testbed. lineFor now starts such sheets on M20, and risen wraiths on Wraith 20.
