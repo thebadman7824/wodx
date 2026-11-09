@@ -46,3 +46,9 @@ test("the check script passes on the shipped data", () => {
   const out = execFileSync("node", [new URL("../encyclopedia-check.mjs", import.meta.url).pathname], {encoding: "utf8"});
   assert.match(out, /0 problem\(s\)/);
 });
+test("one shelf install at a time, and no delete of a document already gone", async () => {
+  const {readFileSync} = await import("node:fs");
+  const src = readFileSync(new URL("../../modules/wodx-library/scripts/shelves.mjs", import.meta.url), "utf8");
+  assert.match(src, /RUNNING \?\?= doInstall\(\)/);
+  assert.match(src, /remove\.filter\(id => still\.has\(id\)\)/);
+});
