@@ -1,0 +1,199 @@
+[
+ {
+  "id": "arc-archons",
+  "title": "Archons",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The agents who carry out the justicars' will.",
+  "claims": [
+   {
+    "text": "Archons serve the Camarilla in large numbers under six different masters, and no single archon has met all the others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Each justicar keeps a separate agenda, allies and team, so archon coteries sometimes work against each other without knowing it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Most princes and elders do not want archons in their cities, and the mere threat of one arriving can spur a slow prince to act.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 7,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "Some justicars make their archons swear an oath on entering service, though the Traditions do not require it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "rl-alastors"
+  ]
+ },
+ {
+  "id": "arc-seventh-justicar",
+  "title": "The Seventh Justicar",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Who might fill the seat the Gangrel left empty.",
+  "claims": [
+   {
+    "text": "When the Gangrel justicar left the Camarilla with most of the clan, one of the six seats fell empty and several campaigns began to fill it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "One campaign wants a justicar for the smaller bloodlines and the Caitiff, though few expect it to happen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "The likelier campaign seeks an Assamite justicar, pushed by the Gangrel loss and Sabbat moves in the East, though it is still many nights from serious debate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "arc-archons"
+  ]
+ },
+ {
+  "id": "arc-templars",
+  "title": "Templars",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sabbat bodyguards named after the crusading knights.",
+  "claims": [
+   {
+    "text": "The Sabbat took the name from the knightly order that guarded pilgrims, to give its bishops escorts, and the post soon grew beyond simple guard duty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat"
+  ]
+ },
+ {
+  "id": "arc-paladins",
+  "title": "Paladins and the Table",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A cardinal's senior templars and council.",
+  "claims": [
+   {
+    "text": "Paladins are often former templars but hold a separate rank; a cardinal's Table of Twelve meets as often as needed to debate policy and advise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 52,
+      "pdf": 53
+     },
+     {
+      "book": "archons",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Lesser Sabbat officials have lately started naming their own senior templars paladins, which a cardinal's paladin may resent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "A paladin receives a gilded, ermine-trimmed tabard; turning up to Table without it signals disapproval, and a dishonourable discharge strips it off in public.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "archons",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "arc-templars"
+  ]
+ }
+]
