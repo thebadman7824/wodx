@@ -609,6 +609,20 @@ game.world.id = worldId;
     windows.push({name: "Dreams and visions", tag: dop.tag ?? "div", classes: ["application", ...(dop.classes ?? [])].join(" "), width: dop.position.width, height: dop.position.height,
       content: da.element.querySelector("section.window-content").innerHTML});
   }
+  // The Library window (no shelves in the mock: the empty state and its buttons)
+  {
+    const LibApp = (await import(join(root, "modules/wodx-library/scripts/shelves.mjs"))).LibraryApp;
+    const idx = Array.from({length: 40}, (_, i) => ({_id: `sh${i}`, uuid: `Compendium.world.wodx-shelf-vampire.JournalEntry.sh${i}`, name: `A Discipline with a long name to wrap, number ${i} (Dark Ages)`,
+      flags: {"wodx-library": {shelf: `k${i}`, book: "V20 Dark Ages", lines: ["vampire"], eras: ["dark-ages"]}}}));
+    const oldPacks = game.packs;
+    game.packs = new Map([["world.wodx-shelf-vampire", {collection: "world.wodx-shelf-vampire", metadata: {name: "wodx-shelf-vampire", packageType: "world"}, getIndex: async () => idx}]]);
+    const lb = new LibApp({});
+    await lb.render({force: true});
+    const lop = LibApp.DEFAULT_OPTIONS;
+    windows.push({name: "The Library", tag: lop.tag ?? "div", classes: ["application", ...(lop.classes ?? [])].join(" "), width: lop.position.width, height: lop.position.height,
+      content: lb.element.querySelector("section.window-content").innerHTML});
+    game.packs = oldPacks;
+  }
   // The Storyteller's dashboard: with the ledger, rumours and dreams above filled in
   {
     const BApp = (await import(join(root, "modules/wodx-storyteller/scripts/dashboard.mjs"))).DashboardApp;

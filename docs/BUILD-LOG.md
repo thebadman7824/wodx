@@ -961,3 +961,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - print-rules.mjs (new): PRINT_CSS, landscape, journalDoc, mapDoc, absoluteUrls. main.mjs: journalPrintHtml (text pages enriched with secrets off, image pages as pictures, the era fonts' @font-face rules copied in with absolute urls), scenePrintHtml, printHtml (a hidden frame, then the print window; dry builds only), printJournal, printScene; a header control on journal sheets and entries in the journal and scene directory menus, Storyteller only. api.print {journal, scene, journalHtml, sceneHtml, html}.
 - Tests: tools/harness/print.test.mjs (4). Gate: tools/gate/gateprint.mjs, 7 steps (never opens the print window).
 - Fix in the same PR (Atmosphere 0.9.0): the frenzy tension never fired in Foundry, since WoDX Chronicle's conditions are wodx-frenzy and wodx-rotschreck; tensionOf now drops the wodx- prefix, and gateadaptive toggles wodx-frenzy. rothenstein-wodx holds 11 started combats left by older gates, so gateadaptive's hunt step reads combat there (noted, not failed).
+
+## 2026-11-09: the Library's shelves, the manual and What's new (Library 0.2.0, B282)
+
+- shelf-rules.mjs (new): SHELVES, LINE_LABELS, ALL_ERAS, fromDisciplines, fromRoads, fromGifts, fromArcanoi, fromThorns, fromConditions, fromHouseRules, fromEras, buildShelves, fits, hashOf. shelves.mjs (new): sources, installShelves (made at ready when the shelf version rises; remade by hash), catalogue, LibraryApp (id wodx-library; line list, era filter, search), ensureManual, ensureChangelog. data/manual.mjs (new): MANUAL pages and CHANGES. Toolbar button wodxLibrary (order 116). api.library, api.manual, api.changelog.
+- Tests: tools/harness/library.test.mjs (5). Gate: tools/gate/gatelibrary.mjs, 6 steps.

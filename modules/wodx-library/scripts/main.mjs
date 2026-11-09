@@ -1,4 +1,6 @@
 import * as G from "./gear-rules.mjs";
+import * as Sh from "./shelves.mjs";
+import * as SR from "./shelf-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**
@@ -10,7 +12,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.1.1";
+export const VERSION = "0.2.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -132,6 +134,7 @@ export class GearApp extends ApplicationV2 {
 
 Hooks.once("init", () => {
   game.settings.register(MOD, "installed", {scope: "world", config: false, type: Number, default: 0});
+  game.settings.register(MOD, "shelves", {scope: "world", config: false, type: Number, default: 0});
   game.settings.registerMenu(MOD, "gearMenu", {
     name: "Gear by era", label: "Open gear by era",
     hint: "Weapons, armor and cyberware from each era's books, with their pages. Give them to characters, or browse the compendium.",
@@ -140,18 +143,25 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
-  game.modules.get(MOD).api = {version: VERSION, rules: G, gear, installPack, give, open: era => GearApp.open(era)};
+  game.modules.get(MOD).api = {version: VERSION, rules: G, gear, installPack, give, open: era => GearApp.open(era),
+    library: {open: () => Sh.LibraryApp.open(), install: Sh.installShelves, catalogue: Sh.catalogue, rules: SR},
+    manual: {open: Sh.openManual, ensure: Sh.ensureManual}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
   if ( game.user.isGM && game.users.activeGM?.isSelf ) {
     const data = await gear();
     const have = game.packs.get(`world.${PACK_NAME}`) ?? game.packs.find(p => p.metadata?.name === PACK_NAME && p.metadata?.packageType === "world");
     if ( game.settings.get(MOD, "installed") < data.version || !have ) {
       try { await installPack(); } catch (err) { console.warn("WoDX Library | The gear compendium could not be made", err); }
     }
+    if ( game.settings.get(MOD, "shelves") < Sh.SHELF_VERSION ) {
+      try { await Sh.installShelves(); } catch (err) { console.warn("WoDX Library | The shelves could not be made", err); }
+    }
+    try { await Sh.ensureManual(); await Sh.ensureChangelog(); } catch (err) { console.warn("WoDX Library | The manual could not be made", err); }
   }
 });
 
 Hooks.on("getSceneControlButtons", controls => {
   const tokens = controls.tokens ?? controls.find?.(c => c.name === "token");
   if ( !tokens?.tools ) return;
+  tokens.tools.wodxLibrary = {name: "wodxLibrary", title: "The Library (how to use WoDX, what's new, powers, rules and eras)", icon: "fa-solid fa-book-atlas", order: 116, button: true, visible: true, onChange: () => Sh.LibraryApp.open()};
   tokens.tools.wodxGear = {name: "wodxGear", title: "Gear by era", icon: "fa-solid fa-khanda", order: 115, button: true, visible: true, onChange: () => GearApp.open()};
 });
