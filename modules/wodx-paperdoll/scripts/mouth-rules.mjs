@@ -17,22 +17,24 @@ import * as FR from "./face-rules.mjs";
  * The keys are Lorelei's mouth names, so a saved look keeps its mouth; snarl and slack belong to moods.
  */
 export const EXPRESSIONS = {
-  happy01: {label: "Half smile", smile: 12, tilt: 8},
-  happy02: {label: "Soft smile", smile: 14},
-  happy03: {label: "Smile, lips parted", smile: 16, open: 9},
-  happy04: {label: "Content", smile: 7, w: 1.05},
-  happy06: {label: "Broad smile", smile: 20, open: 20, teeth: "up", w: 1.2},
-  happy10: {label: "Wry", smile: 2, tilt: -10, w: 1.05},
-  happy13: {label: "Small and round", smile: 4, open: 14, w: 0.6, full: 1.1},
-  happy14: {label: "Small smirk", smile: 8, tilt: 7, w: 0.82},
-  happy18: {label: "Full and parted", smile: 3, open: 10, w: 0.9, full: 1.3, thin: 1.15},
-  sad03: {label: "Small frown", smile: -11, w: 0.68},
-  sad04: {label: "Frown", smile: -16, w: 0.95},
-  sad05: {label: "Set and grim", smile: -5, w: 1.12, full: 0.75, thin: 0.7},
-  sad09: {label: "Slack", smile: -3, open: 5, w: 0.84},
-  snarl: {label: "Snarl", smile: -4, open: 20, teeth: "both", w: 1.1, lift: 10, thin: 0.85},
-  slack: {label: "Slack", smile: -3, open: 6, w: 0.82}
+  happy01: {label: "Half smile", smile: 4, tilt: 4},
+  happy02: {label: "At rest", smile: 1},
+  happy03: {label: "Lips parted", smile: 1, open: 5},
+  happy04: {label: "Content", smile: 3, w: 1.04},
+  happy06: {label: "Broad smile", smile: 16, open: 16, teeth: "up", w: 1.18},
+  happy10: {label: "Wry", smile: 0, tilt: -5, w: 1.04},
+  happy13: {label: "Small and round", smile: 0, open: 8, w: 0.66},
+  happy14: {label: "Small smirk", smile: 3, tilt: 4, w: 0.84},
+  happy18: {label: "Pouting", smile: -1, open: 4, w: 0.9, full: 1.15},
+  sad03: {label: "Small frown", smile: -9, w: 0.7},
+  sad04: {label: "Frown", smile: -13, w: 0.95},
+  sad05: {label: "Set and grim", smile: -4, w: 1.1, full: 0.8, thin: 0.75},
+  sad09: {label: "Slack", smile: -2, open: 4, w: 0.86},
+  snarl: {label: "Snarl", smile: -4, open: 18, teeth: "both", w: 1.1, lift: 9, thin: 0.85},
+  slack: {label: "Slack", smile: -3, open: 5, w: 0.84}
 };
+/** The mouths a random face is given: at rest, with no broad smile and no frown. */
+export const RESTING = ["happy01", "happy02", "happy02", "happy03", "happy04", "happy10", "happy13", "happy14", "happy18", "sad05"];
 const BASE = {smile: 0, tilt: 0, open: 0, teeth: "", w: 1, full: 1, thin: 1, lift: 0, bow: 1};
 /**
  * Lip shapes, the character's own, laid over the expression: w the width, thin the upper lip, full the lower,
@@ -50,7 +52,10 @@ export function lipsOf(look) {
   const L = {w: 1, thin: 1, full: 1, bow: 1, size: 1, ...(LIP_SHAPES[look?.face?.lips] ?? {})};
   let h = h32(`lips ${look?.seed ?? ""}`);
   const j = amt => { h = Math.imul(h ^ (h >>> 15), 0x2c1b3c6d) >>> 0; return 1 + ((h % 2001) / 1000 - 1) * amt; };
-  return {w: L.w * j(0.09), thin: L.thin * j(0.14), full: L.full * j(0.14), bow: L.bow * j(0.3), size: L.size * j(0.05)};
+  // Women's lips a little fuller, men's a little thinner; a nonbinary face goes either way by its seed
+  const g = look?.face?.gender, side = g === "nonbinary" ? (h32(`side ${look?.seed ?? ""}`) % 2 ? "woman" : "man") : g;
+  const by = {woman: 1.16, man: 0.88}[side] ?? 1;
+  return {w: L.w * j(0.09), thin: L.thin * by * j(0.14), full: L.full * by * j(0.14), bow: L.bow * j(0.3), size: L.size * j(0.05)};
 }
 export const expression = key => ({...BASE, ...(EXPRESSIONS[key] ?? EXPRESSIONS.happy02)});
 
@@ -91,7 +96,7 @@ export function mouthShape(expr, place, lips = null) {
   // The parting: corners lifted by the smile, the middle sagging under it
   const part = t => cy - ((1 - t) / 2 * L + (1 + t) / 2 * R) + e.smile * 0.92 * (1 - Math.pow(Math.abs(t), 2.6));
   const gap = t => e.open * Math.pow(1 - t * t, 0.9);
-  const tU = 14 * e.thin, tL = 21 * e.full;
+  const tU = 10 * e.thin, tL = 14.5 * e.full;
   const bow = t => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(t), 2.2)), 0.7) * (1 - Math.min(0.6, 0.3 * e.bow) * Math.exp(-((t / 0.13) ** 2)));
   const swell = t => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(t), 2.4)), 0.8);
   const X = t => cx + hw * t;
@@ -126,7 +131,8 @@ function taper(pts, wd, end = 0.25) {
  */
 export function mouthSvg(expr, place, {lips, skin, shape = null, id = "wpd-m"}) {
   const S = mouthShape(expr, {...place, cx: place.cx - 10, cy: place.cy + 60}, shape), e = S.e;
-  const upper = FR.mix(lips, "1a0608", 0.2), ink = "2a1a10", lite = FR.mix(lips, "ffffff", 0.3), under = FR.mix(skin, "2a1408", 0.32);
+  // The lip colour leans toward the skin, so lips read as lips and not as paint; the ink line does the defining
+  const lip = FR.mix(lips, skin, 0.35), upper = FR.mix(lip, "1a0608", 0.16), ink = "2a1a10", lite = FR.mix(lip, "ffffff", 0.22), under = FR.mix(skin, "2a1408", 0.32);
   let s = S.inside ? `<defs><clipPath id="${id}-in"><path d="${S.inside}"/></clipPath></defs>` : "";
   // a short stroke of shade under the lower lip, as the nose is drawn
   const sh = [-0.32, -0.12, 0.12, 0.32].map(t => [S.X(t), S.loOutF(t) + 7 - 3 * (1 - Math.abs(t) * 2.5) * 0]);
@@ -144,10 +150,10 @@ export function mouthSvg(expr, place, {lips, skin, shape = null, id = "wpd-m"}) 
       s += `<g clip-path="url(#${id}-in)">${ts.join("")}</g>`;
     }
   }
-  s += `<path d="${S.lower}" fill="#${lips}"/>`;
+  s += `<path d="${S.lower}" fill="#${lip}"/>`;
   // one flat light on the lower lip
   const hl = [-0.3, -0.1, 0.1, 0.25].map(t => [S.X(t + 0.05), (S.loInF(t) + S.loOutF(t)) / 2 + 1]);
-  s += `<path d="${taper(hl, Math.max(3, (S.lowY - S.mid.lo) * 0.28), 0.2)}" fill="#${lite}" fill-opacity=".7"/>`;
+  s += `<path d="${taper(hl, Math.max(3, (S.lowY - S.mid.lo) * 0.28), 0.2)}" fill="#${lite}" fill-opacity=".5"/>`;
   s += `<path d="${S.upper}" fill="#${upper}"/>`;
   // the ink: the parting (or the edges of an open mouth), tapered, with the corners tucked in
   const along = f => S.T.map(t => [S.X(t), f(t)]);

@@ -39,7 +39,7 @@ export const PARTS = {
   glasses: ["", ...run("variant", 5)], earrings: ["", ...run("variant", 3)],
   build: Object.keys(FR.BUILD), age: Object.keys(FR.AGES), cheeks: Object.keys(FR.CHEEKS), marks: Object.keys(FR.MARKS), scar: Object.keys(FR.SCARS), affliction: Object.keys(FR.AFFLICTIONS)
 };
-export const PART_LABELS = {head: "Face shape", build: "Build of the face", eyes: "Eyes", eyebrows: "Brows", nose: "Nose", mouth: "Mouth", lips: "Lips", hair: "Hair", beard: "Facial hair",
+export const PART_LABELS = {head: "Face shape", build: "Build of the face", eyes: "Eyes", eyebrows: "Brows", nose: "Nose", mouth: "Mouth", lips: "Lip shape", hair: "Hair", beard: "Facial hair",
   age: "Age", cheeks: "Complexion", marks: "Marks", scar: "Scar", affliction: "Marked by", glasses: "Spectacles", earrings: "Earrings"};
 /** Names for the choices that have them; the others are numbered. */
 export const PART_NAMES = {lips: Object.fromEntries(Object.entries(MR.LIP_SHAPES).map(([k, v]) => [k, v.label])), build: Object.fromEntries(Object.entries(FR.BUILD).map(([k, v]) => [k, v.label])), age: FR.AGES, cheeks: FR.CHEEKS, marks: FR.MARKS, scar: FR.SCARS, affliction: FR.AFFLICTIONS,
@@ -128,6 +128,9 @@ export const MOODS = {
 /** The expression the mouth shows: the mood's, else the character's own mouth. */
 export const expressionFor = (look, mood = "own") => { const m = MOODS[mood] ?? MOODS.own; return m.expr ?? m.mouth ?? look?.face?.mouth ?? "happy02"; };
 
+/** How the face is drawn: only the lips and facial hair heed it. "" when the character's gender is not known. */
+export const GENDERS = {"": "Not stated", woman: "A woman", man: "A man", nonbinary: "Nonbinary"};
+
 /* ---- The health track ---- */
 export const LEVELS = ["bruised", "hurt", "injured", "wounded", "mauled", "crippled", "incapacitated"];
 export const LEVEL_LABELS = ["Unhurt", "Bruised", "Hurt", "Injured", "Wounded", "Mauled", "Crippled", "Incapacitated"];
@@ -161,7 +164,7 @@ export function moodFor(look, {level = 0, frenzy = false, follow = true} = {}) {
 export function defaultLook(seed = "") {
   return {v: LOOK_VERSION, seed: String(seed),
     face: {head: "variant01", eyes: "variant04", eyebrows: "variant07", nose: "variant01", mouth: "happy02", hair: "variant02", beard: "", glasses: "", earrings: "", freckles: false,
-      lips: "", build: "", age: "", cheeks: "", marks: "", scar: "", affliction: ""},
+      lips: "", gender: "", build: "", age: "", cheeks: "", marks: "", scar: "", affliction: ""},
     colors: {skin: "f0d6bf", hair: "5a3a28", eyes: "5a3a22", lips: ""}, style: {ground: "", ring: ""},
     clothes: {gown: "3f6b4c", mantle: true, mantleColor: "34558c", lining: "b8463c", brooch: "d9b04c", headwear: "none", veil: "f3efe4"},
     mood: "own", followHealth: true, portrait: false};
@@ -175,6 +178,7 @@ export function normalize(raw) {
   const face = {};
   for ( const k of Object.keys(PARTS) ) face[k] = pick(NEAREST[k]?.[f[k]] ?? f[k] ?? d.face[k], PARTS[k], d.face[k]);
   face.freckles = !!f.freckles;
+  face.gender = pickKey(f.gender, GENDERS, "");
   const hex = (v, table, dv) => (typeof v === "string" && /^[0-9a-f]{6}$/i.test(v)) ? v.toLowerCase() : (Object.hasOwn(table, v) ? v : dv);
   return {v: LOOK_VERSION, seed: String(raw?.seed ?? ""), face,
     colors: {skin: hex(c.skin, SKIN, d.colors.skin), hair: hex(c.hair, HAIR, d.colors.hair), eyes: pickKey(c.eyes, FR.EYES, d.colors.eyes), lips: pickKey(c.lips, FR.LIPS, "")},
@@ -204,7 +208,8 @@ export function randomLook(seed, who = {}) {
   const next = n => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h % n; };
   const l = defaultLook(seed);
   for ( const k of ["head", "build", "eyes", "eyebrows", "nose", "hair"] ) l.face[k] = PARTS[k][next(PARTS[k].length)];
-  l.face.mouth = PARTS.mouth[next(PARTS.mouth.length - 4)];
+  // A face at rest: the quiet mouths, not the broad smile or the frowns (moods bring those)
+  l.face.mouth = MR.RESTING[next(MR.RESTING.length)];
   // Most faces are grown; the rarer parts come up now and then
   const weighted = list => { let n = next(list.reduce((s, [, w]) => s + w, 0)); for ( const [v, w] of list ) { if ( n < w ) return v; n -= w; } return list[0][0]; };
   l.face.age = weighted([["youth", 3], ["", 8], ["seasoned", 5], ["middle", 4], ["old", 2], ["aged", 1]]);
@@ -227,6 +232,9 @@ export function randomLook(seed, who = {}) {
   const hard = ["poxScars", "poxScars", "warts", "lostEye", "eyepatch", "burned", "mangled", "leprous"];
   l.face.affliction = next(100) < 6 ? hard[next(hard.length)] : "";
   l.face.lips = PARTS.lips[next(PARTS.lips.length)];
+  l.face.gender = pickKey(who.gender, GENDERS, "");
+  // Facial hair is rolled for men and for faces of no stated gender, as before; never for women
+  if ( l.face.gender === "woman" ) l.face.beard = "";
   return l;
 }
 

@@ -75,7 +75,9 @@ export async function featuresFor(look, mood = "own") {
 }
 
 /* ---- What a character shows now ---- */
-const whoOf = actor => ({type: actor?.type ?? "", variant: actor?.system?.settings?.variant ?? ""});
+// The sex WoDX Creation rolled for a person it made, read straight from the flags (the module may be off)
+const whoOf = actor => ({type: actor?.type ?? "", variant: actor?.system?.settings?.variant ?? "",
+  gender: {female: "woman", male: "man"}[actor?.flags?.["wodx-creation"]?.people?.sex] ?? ""});
 const lookOf = actor => actor?.flags?.[MOD]?.look ? D.normalize(actor.flags[MOD].look) : null;
 function atmosphere() { const m = game.modules.get("wodx-atmosphere"); return m?.active ? m : null; }
 /** The ring: the era kit's frame. When WoDX Atmosphere draws frames round this token, the picture leaves it out. */
@@ -260,7 +262,7 @@ export class PaperdollApp extends ApplicationV2 {
       <div class="wodx-scroll wodx-paperdoll-form">
         <h3>Face</h3>${D.FACE_ORDER.map(stepper).join("")}
         ${chk("freckles", "Freckles", f.freckles)}
-        ${sel("skin", "Skin", D.SKIN, L.colors.skin)}${sel("hairColor", "Hair colour", D.HAIR, L.colors.hair)}${sel("eyeColor", "Eyes", D.EYES, L.colors.eyes)}${sel("lips", "Lips", D.LIPS, L.colors.lips)}
+        ${sel("skin", "Skin", D.SKIN, L.colors.skin)}${sel("hairColor", "Hair colour", D.HAIR, L.colors.hair)}${sel("eyeColor", "Eyes", D.EYES, L.colors.eyes)}${sel("lips", "Lip colour", D.LIPS, L.colors.lips)}${sel("gender", "Face drawn as", D.GENDERS, f.gender)}
         <h3>Clothes</h3>
         ${sel("gown", "Gown", D.DYES, cl.gown)}
         ${chk("mantle", "A mantle over the shoulders", cl.mantle)}
@@ -306,6 +308,7 @@ export class PaperdollApp extends ApplicationV2 {
     else if ( n === "hairColor" ) L.colors.hair = v;
     else if ( n === "eyeColor" ) L.colors.eyes = v;
     else if ( n === "lips" ) L.colors.lips = v;
+    else if ( n === "gender" ) L.face.gender = v;
     else if ( n === "ground" || n === "ring" ) L.style = {...L.style, [n]: v};
     else if ( ["gown", "mantle", "mantleColor", "lining", "brooch", "headwear", "veil"].includes(n) ) L.clothes[n] = v;
     else if ( ["mood", "followHealth", "portrait"].includes(n) ) L[n] = v;
