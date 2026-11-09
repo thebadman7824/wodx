@@ -626,9 +626,25 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Containers on tiles: chest, box, cabinet, desk or filing drawers, strongbox, safe. The WoDX part of the tile's config window sets the kind, material, lock, state, keypad, key and what is inside (one item a line: a UUID or a world item's name). They are listed in the Interact window with the doors, and a hidden tile only for the Storyteller.
 - Options: open, close, take what is inside, unlock with a key, pick the lock, beat a keypad (modern eras), force it. Taking gives the character a copy of each item; Undo takes them back. Same cards, noise and Undo as the doors.
 - Tests: 6 new in interactables.test.mjs (3 rules, 3 runtime); 479 harness tests pass with main merged. UI fit adds two containers to the Interact window and the tile config part; every window passes.
+- Gate: tools/gate/gate-interact.mjs gains steps 11 (a chest picked, opened and emptied; Undo) and 12 (the tile config part). Deployed 2026-11-09 (backup Backups\wodx-interactables-0.1.0-2026-11-09, 5 files, MD5s match); gate 12/12 in rothenstein-wodx at 4a6a04b.
+
+### Interactables 0.3.0, 2026-11-09: traps (B117)
+- Traps on tiles: snare, pit, tripwire, spring blade, in four grades. The WoDX part of the tile's config window gains a Trap section: kind, grade, damage dice and type (blank for the kind's own), armed, found, and whether NPCs set it off.
+- Springing: the Storyteller's client watches token moves. An armed trap goes off on a hidden path through it, or when a move ends on a found one. A Dexterity roll to get clear, then the damage through WoDX Combat's soak and apply; a snare holds its victim. The card names who heard the noise and has an Undo that puts back the trap, the tile's hidden state and the damage, and removes the combat card. A new world setting, Traps go off, turns it off.
+- Searching: the Interact window gains Search the area (Perception + Alertness or Investigation, a minute). Each hidden trap within three squares is found when the successes reach its grade, and the tile is shown to players; the Storyteller is whispered what was missed. Undo hides them again. The window now opens even with nothing in reach, so the search is always there.
+- A found trap: disarm it (Wits + the lock Ability, a botch sets it off), set it off from a safe distance, set it again once spent. A snare's victim breaks free with Strength; anyone else cuts them free.
+- Tests: 9 new in interactables.test.mjs (3 rules, 6 runtime); 488 harness tests pass with main merged. UI fit adds two traps and the search roll window.
+- Gate: steps 13 (search finds a hidden pit; Undo), 14 (walking into it springs it, a WoDX Combat card; Undo puts it all back) and 15 (a found snare disarmed; Undo). Deployed 2026-11-09 (backup Backups\wodx-interactables-0.2.0-2026-11-09); the first run scored 14/15. Step 14 failed because the gate's burglar belongs to the Storyteller, so the pit, set for players' characters only, let it pass; the gate's pit now goes off for NPCs too.
+
+### Interactables 0.4.0, 2026-11-09: clues (B118)
+- Clues on tiles: a letter, ledger or document; a bloodstain or mark; writing or graffiti; tracks or a trail; something out of place. The tile config gains a Clue section: kind, the name players see, the successes it takes to notice a hidden one, and four texts (what anyone sees, then 1, 2, and 3 or more successes).
+- Reading (Intelligence + Investigation) or examining (Perception + Investigation), difficulty 6, a minute; no roll when only the first text is written. What is learned goes in a whisper to the player and the Storyteller; the public card only says it was examined. Each character's best successes are kept on the tile.
+- Search the area also notices hidden clue tiles by their own number of successes.
+- Tests: 4 new (1 rules, 3 runtime); UI fit adds a clue with a long name to the Interact window and shows the whole tile config. Gate step 16 (a letter read, the whisper checked, Undo). Not deployed yet.
+
 - Gate: tools/gate/gate-interact.mjs gains steps 11 (a chest picked, opened and emptied; Undo) and 12 (the tile config part). Not deployed yet.
 
-### Dated events and the long time skip, 2026-11-09: WoDX Chronicle 0.5.0 (B117, B118)
+### Dated events and the long time skip, 2026-11-09: WoDX Chronicle 0.5.0 (B120, B121)
 - From the gap review in the Master Plan (items 1 and 2), which Ben asked to have built in full.
 - Dated events: 25 events with their book dates and pages, fired once as the clock passes them, undone when it goes back, one card per time skip, a Chronicle Rules page, and a Dated events window (search box, a switch, date and journal link per event). Metaplot events start off. The Future Darkness branch switch picks the timeline.
 - Hold the world: a Clock button that lets the clock move with nothing reacting; every module's per-tick work already checks isSkipping(), which now covers the hold. Releasing catches up once.
@@ -636,8 +652,13 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - UI fit: run in the cloud without Foundry's Font Awesome beside foundry2.css, every window (old and new alike) fails only the minimized header button check, which needs the icon font; to be rerun on the PC with the full public folder.
 - Gates: tools/gate/gateevents.mjs (9 steps) is new, and gateera.mjs is ported to rothenstein-wodx (it holds the world and deletes its cards). Not deployed yet.
 
-### Data versions and the nightly copy, 2026-11-09: still WoDX Chronicle 0.5.0 (B119)
+### Data versions and the nightly copy, 2026-11-09: still WoDX Chronicle 0.5.0 (B122)
 - Gap review item 6. scripts/migrations-rules.mjs (pure: the plan, which documents to back up, file names) and scripts/migrations.mjs (the run, the backup through FilePicker, the card, a log of the last 50 runs). API: game.wodx.chronicle.migrations.status(), run(), register(), backup().
 - No module needs a step yet, so every module is at data version 1; the first load of 0.5.0 stamps them.
 - tools/backup: nightly-backup.ps1 and register-nightly-backup.ps1 (PowerShell, below-normal priority, robocopy so a running Foundry is fine).
 - Tests: migrations.test.mjs (7: the plan, missing steps, newer data, the backup comes first and holds only the module's documents, the card, a failing step). 505 harness tests pass. gateevents gains step 10 (every WoDX module on has a data version).
+
+### The archive of the dead and a large world, 2026-11-09: WoDX Creation 0.7.0 (B123)
+- Gap review item 5. scripts/archive.mjs: candidates(), archive(), restore(), whereIs(), the index journal, and the Archive of the dead window (Configure Settings; two lists, each with a search box).
+- Tests: archive.test.mjs (5). Who may go and who stays (a player character, a linked token), the compendium first with the same id, an actor the compendium refused stays, bring back. A large world of 3000 characters and 400 journals in the stand-in: the Pass the Years plan 52 ms for 2002 rows, the archive list 6 ms, the events check under 1 ms, archiving 1003 in 313 ms. 523 harness tests pass with main merged.
+- Gate: tools/gate/gatearchive.mjs times the same things in Foundry with 500 test characters of its own, archives only those and deletes them after.

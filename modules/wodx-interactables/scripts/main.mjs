@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.1.0: doors, locks, windows and walls that can be broken through, on core Foundry walls.
+ * WoDX Interactables 0.4.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps and clues on tiles.
  *
  *   Interact   A player selects a token and presses Interact on the token HUD (or the I key). A window lists every door,
  *              window and breakable wall within reach of that token, nearest first, with the options for each: the
@@ -14,6 +14,12 @@
  *   Time       Rolls that take minutes move the Chronicle clock, outside combat.
  *   Containers A tile marked as a container (chest, cabinet, strongbox, safe) is listed the same way: open it, pick
  *              or force its lock, and take what is inside, which hands the items to the character (0.2.0).
+ *   Traps      A tile marked as a trap (snare, pit, tripwire, spring blade) goes off when a character walks over it:
+ *              a Dexterity roll to get clear, then damage through WoDX Combat, with Undo. Searching the area
+ *              (Perception + Alertness or Investigation) finds the traps its successes reach; a found trap can be
+ *              disarmed (Wits + Larceny) or set off from a distance, and is safe to walk around (0.3.0).
+ *   Clues      A tile marked as a clue (a letter, a bloodstain, writing, a trail) holds the Storyteller's own text in up
+ *              to four parts; examining it shows more with more successes, in a whisper to that player (0.4.0).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -24,7 +30,8 @@ import {actionPool} from "../../wodx-actions/scripts/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
-const VERSION = "0.2.0";
+const SEARCH = "_search";
+const VERSION = "0.4.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -54,6 +61,10 @@ function registerSettings() {
   });
   game.settings.register(MOD, "advanceClock", {
     name: "Long attempts move the clock", hint: "Outside combat, picking a lock for ten minutes moves the Chronicle clock on ten minutes.",
+    scope: "world", config: true, type: Boolean, default: true
+  });
+  game.settings.register(MOD, "traps", {
+    name: "Traps go off", hint: "An armed trap tile goes off when a character walks over it. Off: traps can still be found and disarmed, but never spring by themselves.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "noise", {
@@ -86,14 +97,16 @@ export function describeWall(doc) {
 /** A container on a tile, or null. */
 export function describeTile(doc) {
   const f = doc?.flags?.[MOD] ?? {};
-  if ( !doc || !f.container ) return null;
-  return R.describeContainer(f);
+  if ( !doc || !(f.container || f.trap || f.clue) ) return null;
+  return f.container ? R.describeContainer(f) : f.trap ? R.describeTrap(f) : R.describeClue(f);
 }
-const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && doc.flags?.[MOD]?.container === true);
+const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && (doc.flags?.[MOD]?.container === true || doc.flags?.[MOD]?.trap === true || doc.flags?.[MOD]?.clue === true));
 /** Whatever interactable a wall or tile is. */
 export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
 /** A wall or a tile on a scene, by id. */
 const objectIn = (scene, id) => scene?.walls?.get?.(id) ?? scene?.tiles?.get?.(id) ?? null;
+/** The tiles of a scene, as an array. */
+const tilesOf = scene => scene?.tiles?.contents ?? [...(scene?.tiles?.values?.() ?? [])];
 /** A tile's rectangle and centre. */
 const rectOf = doc => ({x: num(doc.x), y: num(doc.y), w: num(doc.width), h: num(doc.height)});
 const tileCenter = doc => { const r = rectOf(doc); return {x: r.x + r.w / 2, y: r.y + r.h / 2}; };
@@ -108,7 +121,7 @@ const distanceToTile = (doc, p) => { const r = rectOf(doc); return Math.hypot(Ma
 /** Where a noise at an object starts, as heard from a point. */
 const noiseFrom = (doc, p) => (Array.isArray(doc?.c) ? R.besideWall(doc.c, R.sideOf(doc.c, p) ?? "a", 4) : nearOnTile(doc, p));
 
-const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness"];
+const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness", "investigation", "athletics", "dodge"];
 const TOOLS = /lock ?picks?|picklock|thieves'? tools|skeleton key|bump key|pick gun|lock gun|tension wrench/i;
 const POWERS = /^(potence|celerity|protean|obtenebration|matter|forces|correspondence|inhabit|outrage|puppetry|argos|moliate)/i;
 
@@ -148,7 +161,7 @@ export function characterFor(actor, center, doc) {
   const key = String(o.keyName ?? "").trim().toLowerCase();
   return {
     actorId: actor?.id ?? "", kind: game.wodxActions?.getKind?.(actor) ?? "mortal", ...eraNow(),
-    strength: attrOf(actor, "strength"), dexterity: attrOf(actor, "dexterity"), perception: attrOf(actor, "perception"), intelligence: attrOf(actor, "intelligence"),
+    strength: attrOf(actor, "strength"), dexterity: attrOf(actor, "dexterity"), perception: attrOf(actor, "perception"), intelligence: attrOf(actor, "intelligence"), wits: attrOf(actor, "wits"),
     potence: powerDots(actor, "potence"), abilities, meta,
     side: center && Array.isArray(doc?.c) ? R.sideOf(doc.c, center) : null,
     hasKey: !!key && (actor?.items ?? []).some(i => String(i.name ?? "").toLowerCase().includes(key)),
@@ -189,7 +202,8 @@ export function interactablesFor(tok) {
   for ( const tile of canvas.tiles?.placeables ?? [] ) {
     const doc = tile.document, o = describeTile(doc);
     if ( !o || !levelOk(tok, doc) ) continue;
-    if ( !game.user.isGM && doc.hidden ) continue;
+    // A trap shows only once found (or to the Storyteller); anything else hidden stays hidden from players
+    if ( !game.user.isGM && (o.trap ? !o.found : o.clue ? doc.hidden && !o.found : doc.hidden) ) continue;
     const d = distanceToTile(doc, tok.center);
     if ( d > reach ) continue;
     const near = nearOnTile(doc, tok.center);
@@ -238,8 +252,8 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
   if ( !tok?.actor ) { ui.notifications.warn("Select your token first."); return null; }
   let list = interactablesFor(tok);
   if ( onlyWall ) list = list.filter(x => x.doc.id === onlyWall);
-  if ( !list.length ) {
-    ui.notifications.info(onlyWall ? `${tok.name} is too far from that door to reach it.` : `Nothing within reach of ${tok.name}.`);
+  if ( !list.length && onlyWall ) {
+    ui.notifications.info(`${tok.name} is too far from that door to reach it.`);
     return null;
   }
   const rows = list.map(({doc, o}) => {
@@ -251,8 +265,10 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
       + `<div class="wodx-quiet">${esc(optionSummary(op))}</div></li>`).join("");
     return `<li data-search-text="${esc(R.nameOf(o))}"><h4>${esc(R.nameOf(o))}${esc(bar)}</h4><ul class="wix-ops" data-fixed>${opsHtml || `<li class="wodx-quiet">Nothing to do here.</li>`}</ul></li>`;
   }).join("");
+  const search = onlyWall ? null : R.searchOption(characterFor(tok.actor, tok.center, null));
+  const searchHtml = search ? `<div class="wix-search wix-op"><button type="button" data-wall="${SEARCH}" data-op="search">${esc(search.label)}</button><div class="wodx-quiet">${esc(optionSummary(search))}</div></div>` : "";
   const content = `<p class="wodx-quiet">${esc(tok.name)}: what is within reach, nearest first. The roll, the difficulty and the time each takes are shown before anything is rolled.</p>
-    ${list.length > 3 ? searchBox("ul.wix-list", "Search…", "Search what is within reach") : ""}<ul class="wix-list">${rows}</ul>`;
+    ${searchHtml}${list.length > 3 ? searchBox("ul.wix-list", "Search…", "Search what is within reach") : ""}${list.length ? `<ul class="wix-list">${rows}</ul>` : `<p class="wodx-quiet">Nothing else within reach.</p>`}`;
   let picked = null;
   await foundry.applications.api.DialogV2.wait({
     window: {title: `Interact: ${tok.name}`, resizable: true}, classes: ["wodx-dialog", "wix-dialog"], position: {width: 500, height: "auto"}, content,
@@ -267,14 +283,15 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
 
 /** Try one option on one wall, from the acting player's client. Returns the card's message, or null. */
 export async function attempt(tok, wallId, opId, {fd = null} = {}) {
-  const doc = objectIn(canvas.scene, wallId), o = describeObj(doc);
-  if ( !doc || !o ) return null;
+  const searching = wallId === SEARCH && opId === "search";
+  const doc = searching ? null : objectIn(canvas.scene, wallId), o = searching ? null : describeObj(doc);
+  if ( !searching && (!doc || !o) ) return null;
   const actor = tok.actor, ch = characterFor(actor, tok.center, doc);
-  const op = R.optionsFor(o, ch).find(x => x.id === opId);
+  const op = searching ? R.searchOption(ch) : R.optionsFor(o, ch).find(x => x.id === opId);
   if ( !op || op.disabled ) return null;
   if ( op.power ) return game.wodxActions?.menu?.({actor});
   if ( !game.users.activeGM ) ui.notifications.warn("No Storyteller is connected: the card is posted, but nothing changes until one is.");
-  const ask = {v: 1, scene: canvas.scene.id, wall: doc.id, token: tok.document.uuid, op: op.id, label: op.label, user: game.user.id};
+  const ask = {v: 1, scene: canvas.scene.id, wall: searching ? SEARCH : doc.id, token: tok.document.uuid, op: op.id, label: op.label, user: game.user.id};
   if ( !op.roll ) return postAsk(tok, ask, [], `${esc(tok.name)}: ${esc(op.label)}`, optionSummary(op));
   fd ??= await rollDialog(tok, op, ch);
   if ( !fd ) return null;
@@ -371,6 +388,11 @@ export async function applyAsk(msg) {
     const tokDoc = await fromUuid(ask.token);
     const scene = game.scenes.get(ask.scene), doc = objectIn(scene, ask.wall);
     const fail = async why => { await msg.update({[`flags.${MOD}.ask.state`]: "refused", content: cardHtml({title: titleOf(msg), body: `<p>${esc(why)}</p>`, verdict: "Nothing changes"})}); return null; };
+    if ( ask.wall === SEARCH && ask.op === "search" ) {
+      if ( !tokDoc?.actor || !scene ) return fail("The character is gone.");
+      if ( !author?.isGM && !tokDoc.testUserPermission?.(author, "OWNER") ) return fail("Only a character's own player can act for it.");
+      return applySearch(msg, ask, tokDoc, scene);
+    }
     if ( !tokDoc?.actor || !doc ) return fail("The door or the character is gone.");
     if ( !author?.isGM && !tokDoc.testUserPermission?.(author, "OWNER") ) return fail("Only a character's own player can act for it.");
     const tok = tokDoc.object, actor = tokDoc.actor;
@@ -384,7 +406,7 @@ export async function applyAsk(msg) {
     if ( op.roll && !rolls.length ) return fail("The card has no roll.");
     const out = R.resolve(o, op, rolls, {actorId: actor.id, ...eraNow()});
     const tile = isTile(doc);
-    const snap = {ds: tile ? null : doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {})};
+    const snap = {ds: tile ? null : doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), ...(tile ? {hidden: !!doc.hidden} : {})};
     const lines = [];
     let waiting = false;
     // Only a wall knocked through waits; everything else applies now
@@ -398,6 +420,15 @@ export async function applyAsk(msg) {
     if ( out.patch.ds && !waiting ) { if ( tile ) update[`flags.${MOD}.ds`] = out.patch.ds; else update.ds = dsNum(out.patch.ds); }
     for ( const [k, v] of Object.entries(out.patch.flags ?? {}) ) update[`flags.${MOD}.${k}`] = v;
     if ( out.patch.flags?.jammed || out.patch.flags?.broken ) update[`flags.${MOD}.found`] = true;
+    // A botched disarm or reset: the trap goes off on the one working at it
+    let sprung = null;
+    if ( out.springs && o.trap ) {
+      sprung = await springOn(tokDoc, actor, o);
+      for ( const [k, v] of Object.entries(sprung.flags) ) update[`flags.${MOD}.${k}`] = v;
+      update.hidden = false;
+      out.noise = sprung.noise;
+      lines.push(`${actor.name} ${sprung.text}`, ...sprung.lines);
+    }
     if ( Object.keys(update).length ) await doc.update(update, tile ? {} : {sound: true});
     // Taking what is inside a container: the items go to the character
     let given = [];
@@ -407,6 +438,10 @@ export async function applyAsk(msg) {
       lines.push(got.names.length ? `${actor.name} takes ${listWords(got.names)}.` : "There is nothing there that WoDX could hand over: the Storyteller says what was inside.");
       if ( got.missing.length ) lines.push(`Not found, so not handed over: ${got.missing.join(", ")}.`);
     }
+    // Examining a clue: what the character learns goes to that player and the Storyteller only
+    let whisper = null;
+    if ( op.id === "examine" && o.clue ) whisper = await clueReport(o, out, author, actor);
+    if ( whisper ) lines.push("What was learned is in a whisper to the player and the Storyteller.");
     // A botch on forcing: one lethal level
     let hurt = 0;
     if ( out.hurt ) {
@@ -429,7 +464,8 @@ export async function applyAsk(msg) {
     if ( loudish && !here ) lines.push("Nobody's hearing was checked: the Storyteller is viewing another scene.");
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
-    const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given, undone: false};
+    const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given,
+      damageMsg: sprung?.damageMsg ?? null, whisper: whisper?.id ?? null, undone: false};
     const verdict = waiting ? "Waiting for the Storyteller" : {done: "Done", progress: "Headway", fail: "No luck", botch: "Botch"}[out.result] ?? "";
     await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
     return done;
@@ -512,12 +548,20 @@ export async function undoCard(msg) {
   const ask = msg.flags[MOD].ask, doc = objectIn(game.scenes.get(ask.scene), ask.wall);
   if ( doc ) {
     const update = isTile(doc) || done.snap.ds === null ? {} : {ds: done.snap.ds};
+    if ( isTile(doc) && typeof done.snap.hidden === "boolean" ) update.hidden = done.snap.hidden;
     const now = doc.flags?.[MOD] ?? {};
     for ( const k of Object.keys(now) ) if ( !(k in done.snap.flags) ) Object.assign(update, unsetKey(`flags.${MOD}.${k}`));
     for ( const [k, v] of Object.entries(done.snap.flags) ) update[`flags.${MOD}.${k}`] = v;
     await doc.update(update, isTile(doc) ? {} : {sound: false});
   }
+  // Traps a search found go back to hidden
+  for ( const f of done.found ?? [] ) {
+    const t = game.scenes.get(ask.scene)?.tiles?.get?.(f.id);
+    if ( t ) await t.update({hidden: f.hidden, [`flags.${MOD}.found`]: f.found});
+  }
   const actor = (await fromUuid(ask.token))?.actor;
+  if ( done.damageMsg ) await undoDamage(actor, done.damageMsg);
+  if ( done.whisper ) { try { await game.messages?.get?.(done.whisper)?.delete?.(); } catch (e) { /* already gone */ } }
   // Items handed over from a container go back
   if ( done.given?.length && actor ) {
     const ids = done.given.filter(id => actor.items?.get?.(id));
@@ -534,6 +578,166 @@ export async function undoCard(msg) {
   done.undone = true;
   await msg.update({[`flags.${MOD}.done`]: done, content: resultHtml(msg, done, "Undone")});
   return done;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Traps: searching, springing                                         */
+/* ------------------------------------------------------------------ */
+
+const SEARCH_SQUARES = 3;
+/** The hidden traps and clues a token could find by searching: within three squares, not behind a wall. */
+export function searchableTraps(tokCenter, scene = canvas.scene) {
+  const grid = scene?.grid?.size ?? canvas?.grid?.size ?? 100;
+  const out = [];
+  for ( const doc of tilesOf(scene) ) {
+    const o = describeTile(doc);
+    if ( !(o?.trap || (o?.clue && doc.hidden)) || o.found ) continue;
+    if ( distanceToTile(doc, tokCenter) > grid * SEARCH_SQUARES ) continue;
+    if ( scene.id === canvas?.scene?.id && blocked("move", tokCenter, nearOnTile(doc, tokCenter)) ) continue;
+    out.push({doc, o});
+  }
+  return out;
+}
+async function applySearch(msg, ask, tokDoc, scene) {
+  const actor = tokDoc.actor, center = centerOf(tokDoc, scene);
+  const roll = (msg.rolls ?? []).slice(0, 1).map(r => countSuccesses(r.dice?.[0]?.results?.map(x => x.result) ?? [], clampDifficulty(num(ask.diff) || 6),
+    {specialty: !!ask.specialty, willpower: !!ask.willpower}))[0] ?? {successes: 0, botch: false};
+  const op = R.searchOption(characterFor(actor, center, null));
+  const out = R.resolve({}, op, [roll], {actorId: actor.id});
+  const near = searchableTraps(center, scene);
+  const finds = new Set(R.searchFinds(near.map(n => n.o), roll));
+  const hit = near.filter(n => finds.has(n.o));
+  const found = [], lines = [];
+  for ( const {doc, o} of hit ) {
+    found.push({id: doc.id, hidden: !!doc.hidden, found: !!doc.flags?.[MOD]?.found});
+    await doc.update({hidden: false, [`flags.${MOD}.found`]: true});
+    lines.push(o.clue ? `${actor.name} notices something: ${R.nameOf(o).toLowerCase()}.` : `${actor.name} finds a ${R.TRAPS[o.kind].label.toLowerCase()}.`);
+  }
+  if ( roll.successes > 0 && !roll.botch && !hit.length ) lines.push("Nothing hidden turns up.");
+  const missed = near.filter(n => !finds.has(n.o));
+  if ( missed.length ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: cardHtml({title: `${esc(actor.name)} searches`,
+    body: `<p>Missed, still hidden: ${esc(listWords(missed.map(n => R.nameOf(n.o))))}.</p>`})});
+  let advanced = 0;
+  if ( setting("advanceClock") && !game.combat?.started ) { await game.time.advance(op.seconds); advanced = op.seconds; lines.push(`The clock moves on ${timeWords(op.seconds)}.`); }
+  const done = {result: out.result, text: out.text, noise: "silent", snap: null, hurt: 0, advanced, worldTime: game.time.worldTime, waiting: false, lines, given: [], found, undone: false};
+  const verdict = hit.length ? "Found" : out.result === "botch" ? "Botch" : "Nothing found";
+  await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
+  return done;
+}
+
+/**
+ * Active GM: a trap goes off on a character. Rolls to get clear, then the damage through WoDX Combat (soak and all).
+ * Returns {flags, text, lines, noise, damageMsg, dice, type, reflex}; the caller writes the flags to the tile.
+ */
+export async function springOn(tokDoc, actor, o) {
+  const ch = characterFor(actor, null, null);
+  const rr = R.reflexRoll(o, ch);
+  let reflex = null, lines = [];
+  if ( rr ) {
+    const roll = new Roll(`${Math.max(1, rr.dice)}d10`);
+    await roll.evaluate();
+    reflex = countSuccesses(roll.dice[0]?.results?.map(x => x.result) ?? [], rr.diff, {});
+    reflex.faces = roll.dice[0]?.results?.map(x => x.result) ?? [];
+    lines.push(`Getting clear: Dexterity${rr.ability ? ` + ${cap(rr.ability)}` : ""}, ${Math.max(1, rr.dice)} dice at ${rr.diff}: ${reflex.botch ? "a botch" : `${reflex.successes} success${reflex.successes === 1 ? "" : "es"}`}.`);
+  }
+  const out = R.springTrap(o, reflex, actor.id);
+  let damageMsg = null;
+  if ( out.dice > 0 ) {
+    const combat = game.wodxCombat;
+    if ( combat?.soakAndApply ) {
+      try {
+        const res = await combat.soakAndApply(tokDoc.object ?? actor, {mode: "pool", amount: out.dice, type: out.type, soak: true, fortBlood: "auto", soakBonus: 0});
+        damageMsg = res?.message?.id ?? null;
+        lines.push(`${out.dice} ${out.type} dice of damage: soak and the result are on the WoDX Combat card${res?.levels ? ` (${res.levels} ${out.type})` : ""}.`);
+      } catch (e) { console.error(`${MOD} |`, e); lines.push(`${out.dice} dice of ${out.type} damage: roll and apply it by hand.`); }
+    } else lines.push(`${out.dice} dice of ${out.type} damage: WoDX Combat is off, so roll and apply it by hand.`);
+  }
+  if ( out.caught ) lines.push(`${actor.name} is held until breaking free (Strength, difficulty 7) or someone cuts the snare.`);
+  return {...out, lines, damageMsg, reflex};
+}
+/** Whisper what a character learns from a clue: the texts its successes reach (all it has learned so far). */
+async function clueReport(o, out, author, actor) {
+  const best = out.examine === undefined ? 0 : Math.max(0, out.examine);
+  const texts = R.clueTexts(o, best);
+  const whisper = [...new Set([author?.id, ...gmIds()].filter(Boolean))];
+  const para = t => `<p>${esc(t).replace(/\r?\n/g, "<br>")}</p>`;
+  const body = (texts.length ? texts.map(para).join("") : "<p>Nothing the Storyteller has written down.</p>")
+    + (out.examine < 0 ? `<p class="wodx-quiet">A botch: the Storyteller may add something misleading.</p>` : "");
+  return ChatMessage.create({speaker: {alias: actor.name}, whisper, content: cardHtml({title: `${esc(actor.name)}: ${esc(R.nameOf(o))}`, body})});
+}
+/** Take back trap damage: the WoDX Combat card's damage, if applied, and the card itself. */
+async function undoDamage(actor, msgId) {
+  const m = game.messages?.get?.(msgId);
+  const data = m?.flags?.["wodx-combat"]?.data;
+  try {
+    if ( data?.applied && data.undo?.damage && actor && game.wodxCombat?.setDamage ) await game.wodxCombat.setDamage(actor, data.undo.damage);
+    else if ( data?.applied && actor ) await game.wodxCombat?.healDamage?.(actor, data.type, data.levels);
+  } catch (e) { console.error(`${MOD} |`, e); }
+  try { await m?.delete?.(); } catch (e) { /* already gone */ }
+}
+
+/** Where each token stood last, so a move's whole path can be checked for traps. */
+const lastSeen = new Map();
+const segHitsRect = (a, b, r) => {
+  // Liang-Barsky clip of the segment a-b against the rectangle
+  let t0 = 0, t1 = 1;
+  const dx = b.x - a.x, dy = b.y - a.y;
+  for ( const [p, q] of [[-dx, a.x - r.x], [dx, r.x + r.w - a.x], [-dy, a.y - r.y], [dy, r.y + r.h - a.y]] ) {
+    if ( p === 0 ) { if ( q < 0 ) return false; continue; }
+    const t = q / p;
+    if ( p < 0 ) { if ( t > t1 ) return false; if ( t > t0 ) t0 = t; }
+    else { if ( t < t0 ) return false; if ( t < t1 ) t1 = t; }
+  }
+  return true;
+};
+const inRect = (p, r) => p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h;
+/** The armed traps a move from a to b sets off: a hidden one anywhere on the path, a found one only where the move ends. */
+export function trapsOnPath(scene, a, b, {npc = false} = {}) {
+  const out = [];
+  for ( const doc of tilesOf(scene) ) {
+    const o = describeTile(doc);
+    if ( !o?.trap || !o.armed || (npc && !o.npcs) ) continue;
+    const r = rectOf(doc);
+    if ( o.found ? inRect(b, r) : segHitsRect(a, b, r) ) out.push({doc, o});
+  }
+  return out;
+}
+const springing = new Set();
+/** Active GM: a token moved. Any trap on its way goes off, with a card and an Undo. */
+export async function onTokenMoved(tokDoc) {
+  const scene = tokDoc.parent, actor = tokDoc.actor;
+  const to = centerOf(tokDoc, scene), from = lastSeen.get(tokDoc.uuid) ?? to;
+  lastSeen.set(tokDoc.uuid, to);
+  if ( !actor || !scene || !isActiveGM() || setting("traps") === false ) return [];
+  const cards = [];
+  for ( const {doc, o} of trapsOnPath(scene, from, to, {npc: !actor.hasPlayerOwner}) ) {
+    if ( springing.has(doc.id) ) continue;
+    springing.add(doc.id);
+    try { cards.push(await springCard(tokDoc, actor, doc, o)); } finally { springing.delete(doc.id); }
+  }
+  return cards;
+}
+async function springCard(tokDoc, actor, doc, o) {
+  const scene = doc.parent;
+  const snap = {ds: null, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), hidden: !!doc.hidden};
+  const sp = await springOn(tokDoc, actor, o);
+  const update = {hidden: false};
+  for ( const [k, v] of Object.entries(sp.flags) ) update[`flags.${MOD}.${k}`] = v;
+  await doc.update(update);
+  const lines = [...sp.lines];
+  const tok = tokDoc.object, here = !!tok && canvas.scene?.id === scene.id;
+  const heard = here && setting("noise") !== false && sp.noise !== "silent" ? hearersOf(tok, doc, sp.noise) : [];
+  if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
+  Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: sp.noise, heard: heard.map(h => h.uuid)});
+  Hooks.callAll("wodxInteractablesTrap", {scene: scene.id, tile: doc.id, token: tokDoc.uuid, kind: o.kind, caught: sp.caught, dice: sp.dice});
+  const done = {result: "done", text: sp.text, noise: sp.noise, snap, hurt: 0, advanced: 0, worldTime: game.time.worldTime, waiting: false, lines, given: [],
+    damageMsg: sp.damageMsg, undone: false};
+  const ask = {v: 1, scene: scene.id, wall: doc.id, token: tokDoc.uuid, op: "spring", label: "A trap", user: game.user.id, state: "done"};
+  const title = `${esc(actor.name)}: ${esc(R.TRAPS[o.kind].label)}`;
+  const faces = sp.reflex?.faces ?? [];
+  const dice = faces.length ? `<div class="vta-dice">${faces.map(f => `<span class="vta-die ${f === 1 ? "one" : f >= R.TRAP_GRADES[o.grade].diff ? "hit" : "miss"}">${f}</span>`).join("")}</div>` : "";
+  const stub = {content: cardHtml({title, dice}), speaker: {alias: actor.name}};
+  return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tokDoc}), content: resultHtml(stub, done, "A trap"), flags: {[MOD]: {ask, done}}});
 }
 
 /** The approval queue: a wall knocked through. */
@@ -595,7 +799,10 @@ export function tileConfigHtml(doc) {
   const field = (label, inner, hint = "") => `<div class="form-group"><label>${esc(label)}</label><div class="form-fields">${inner}</div>${hint ? `<p class="hint">${esc(hint)}</p>` : ""}</div>`;
   const mats = Object.fromEntries(Object.entries(R.MATERIALS).filter(([k]) => !["glass", "horn"].includes(k)));
   const st = R.describeContainer(doc?.flags?.[MOD] ?? {}).ds;
+  const t = R.cleanTrap(doc?.flags?.[MOD] ?? {});
+  const c = R.cleanClue(doc?.flags?.[MOD] ?? {});
   return `<fieldset class="wix-config wix-tile"><legend>WoDX</legend>
+    <h4 class="wix-sub">Container</h4>
     <p class="hint">A chest, cabinet, strongbox or safe that characters can open, pick, force and take things from. Hide the tile to keep it from players until found.</p>
     ${field("Container", `<input type="checkbox" name="${p}.container"${f.container ? " checked" : ""}>`)}
     ${field("Kind", `<select name="${p}.kind" data-fixed>${opt(R.CONTAINERS, f.kind)}</select>`)}
@@ -605,6 +812,26 @@ export function tileConfigHtml(doc) {
     ${field("Keypad or alarm", `<select name="${p}.electronic" data-fixed>${opt(R.ELECTRONIC, f.electronic)}</select>`, "Only in the modern eras.")}
     ${field("Key", `<input type="text" name="${p}.keyName" value="${esc(f.keyName)}" placeholder="Name of the key item">`)}
     ${field("Inside", `<textarea name="${p}.items" rows="4" placeholder="One item a line: its UUID, or its name in the Items directory">${esc(f.items)}</textarea>`, "Taking them gives the character a copy of each. Leave it empty and say what is inside yourself.")}
+    <h4 class="wix-sub">Trap</h4>
+    <p class="hint">A snare, pit, tripwire or spring blade. Hide the tile: it goes off when a character walks over it, and players see it once a search finds it.</p>
+    ${field("Trap", `<input type="checkbox" name="${p}.trap"${t.trap ? " checked" : ""}>`, "A tile is a container or a trap; a container wins if both are ticked.")}
+    ${field("Kind of trap", `<select name="${p}.trapKind" data-fixed>${opt(R.TRAPS, t.trapKind)}</select>`)}
+    ${field("Grade", `<select name="${p}.grade" data-fixed>${opt(R.TRAP_GRADES, t.grade)}</select>`, "How well hidden, and how hard to disarm or get clear of.")}
+    ${field("Damage dice", `<input type="number" name="${p}.dice" value="${esc(t.dice)}" min="0" max="20" placeholder="${R.TRAPS[t.trapKind].dice}">`, "Blank: the kind's own (pit 2, spring blade 5, the others none).")}
+    ${field("Damage type", `<select name="${p}.damageType" data-fixed>${opt({"": "As the kind suggests", ...R.DAMAGE_TYPES}, t.damageType)}</select>`, "Spikes in a pit: lethal.")}
+    ${field("Armed", `<input type="checkbox" name="${p}.armed"${t.armed ? " checked" : ""}>`)}
+    ${field("Found", `<input type="checkbox" name="${p}.found"${t.found ? " checked" : ""}>`, "Players see a found trap and can disarm it; walking around it is safe, stopping on it is not.")}
+    ${field("NPCs set it off", `<input type="checkbox" name="${p}.npcs"${t.npcs ? " checked" : ""}>`, "Off: only the players' characters set it off.")}
+    <h4 class="wix-sub">Clue</h4>
+    <p class="hint">A letter, ledger, bloodstain, writing on a wall or a trail. Write what it shows; examining it reveals more with more successes, in a whisper to that player. Hide the tile to make it something to search for.</p>
+    ${field("Clue", `<input type="checkbox" name="${p}.clue"${c.clue ? " checked" : ""}>`, "A container or a trap on the same tile wins.")}
+    ${field("Kind of clue", `<select name="${p}.clueKind" data-fixed>${opt(R.CLUES, c.clueKind)}</select>`, "Documents and writing are read with Intelligence, the rest examined with Perception; both with Investigation.")}
+    ${field("Name", `<input type="text" name="${p}.title" value="${esc(c.title)}" placeholder="What players see it called">`)}
+    ${field("Successes to notice", `<input type="number" name="${p}.need" value="${c.need}" min="1" max="5">`, "For a hidden one, on Search the area.")}
+    ${field("Anyone sees", `<textarea name="${p}.text0" rows="2">${esc(c.text0)}</textarea>`)}
+    ${field("With 1 success", `<textarea name="${p}.text1" rows="2">${esc(c.text1)}</textarea>`)}
+    ${field("With 2 successes", `<textarea name="${p}.text2" rows="2">${esc(c.text2)}</textarea>`)}
+    ${field("With 3 or more", `<textarea name="${p}.text3" rows="2">${esc(c.text3)}</textarea>`, "Leave the last three empty and looking at it needs no roll.")}
   </fieldset>`;
 }
 function onRenderTileConfig(app, html) {
@@ -625,6 +852,11 @@ function onPreUpdateTile(doc, changes) {
   if ( "items" in f ) f.items = R.parseItems(f.items).join("\n");
   // A lock set on a closed container locks it
   if ( f.lock && !f.ds && !doc.flags?.[MOD]?.ds ) f.ds = "locked";
+  if ( "dice" in f && (f.dice === "" || f.dice === null) ) f.dice = null;
+  if ( f.damageType === "" ) f.damageType = null;
+  for ( const k of ["text0", "text1", "text2", "text3"] ) if ( typeof f[k] === "string" ) f[k] = f[k].slice(0, 4000);
+  // Arming a trap again by hand clears what it did last time
+  if ( f.armed === true && doc.flags?.[MOD]?.sprung ) { f.sprung = false; f.holding = null; }
 }
 
 /** Tidy what the form sends: blank choices are dropped so the defaults apply. */
@@ -669,7 +901,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, describeObj, tileConfigHtml, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
@@ -683,6 +915,9 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
     b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoCard(msg).catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
   });
 });
+Hooks.on("updateToken", (doc, changes) => { if ( ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc).catch(e => console.error(`${MOD} |`, e)); });
+Hooks.on("canvasReady", () => { lastSeen.clear(); for ( const t of canvas.scene?.tokens?.contents ?? [] ) lastSeen.set(t.uuid, centerOf(t, canvas.scene)); });
+Hooks.on("createToken", doc => lastSeen.set(doc.uuid, centerOf(doc, doc.parent)));
 Hooks.on("renderWallConfig", onRenderWallConfig);
 Hooks.on("preUpdateWall", onPreUpdateWall);
 Hooks.on("renderTileConfig", onRenderTileConfig);
@@ -693,7 +928,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !tok?.actor || !col || !tok.document.isOwner ) return;
   const b = document.createElement("div");
   b.className = "control-icon wix-hud";
-  b.dataset.tooltip = "Interact: doors, windows, walls and containers within reach";
+  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps and clues within reach, and searching";
   b.innerHTML = '<i class="fa-solid fa-door-open"></i>';
   b.addEventListener("click", () => openInteract(tok).catch(e => console.error(`${MOD} |`, e)));
   col.appendChild(b);

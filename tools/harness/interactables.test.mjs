@@ -297,6 +297,86 @@ test("containers: the config form is cleaned", () => {
   assert.equal(c.items, "a\nb");
 });
 
+test("traps: four kinds and four grades; a blade does 5 lethal dice, a pit 2 bashing, unless the Storyteller sets others", () => {
+  assert.deepEqual(Object.keys(R.TRAPS), ["snare", "pit", "tripwire", "blade"]);
+  assert.deepEqual(Object.keys(R.TRAP_GRADES), ["crude", "good", "excellent", "masterwork"]);
+  const b = R.describeTrap({trap: true, trapKind: "blade"});
+  assert.equal(b.dice, 5); assert.equal(b.type, "lethal"); assert.equal(b.grade, "good"); assert.equal(b.armed, true);
+  const p = R.describeTrap({trap: true, trapKind: "pit", dice: 4, damageType: "lethal", sprung: true});
+  assert.equal(p.dice, 4); assert.equal(p.type, "lethal"); assert.equal(p.armed, false);
+  assert.equal(R.nameOf(p), "Open pit (good)");
+  assert.equal(R.nameOf(R.describeTrap({trapKind: "snare", holding: "pc1", sprung: true})), "Snare, holding someone");
+  assert.equal(R.nameOf(R.describeTrap({trapKind: "tripwire", armed: false})), "Disarmed tripwire (good)");
+});
+
+test("traps: an armed one is disarmed with Wits + Larceny at its grade, or set off from a distance; a snare's victim breaks free", () => {
+  const o = R.describeTrap({trapKind: "blade", grade: "excellent", found: true});
+  const ops = R.optionsFor(o, ch({wits: 3}));
+  assert.deepEqual(ids(ops), ["disarm", "trigger"]);
+  assert.equal(ops[0].roll.dice, 5); assert.equal(ops[0].roll.diff, 7); assert.equal(ops[0].roll.abilityLabel, "Larceny");
+  assert.equal(ops[0].seconds, R.MINUTE);
+  const da = R.optionsFor(o, ch({wits: 3, eraId: "dark-ages", year: 1197, abilities: {legerdemain: 3}}));
+  assert.equal(da[0].roll.abilityLabel, "Legerdemain");
+  assert.equal(R.resolve(o, ops[0], [{successes: 1, botch: false}], {actorId: "pc1"}).patch.flags.armed, false);
+  const botch = R.resolve(o, ops[0], [{successes: 0, botch: true}], {actorId: "pc1"});
+  assert.equal(botch.springs, true); assert.equal(botch.result, "botch");
+  const fail = R.resolve(o, ops[0], [{successes: 0, botch: false}], {actorId: "pc1"});
+  assert.equal(fail.patch.flags.tries["pc1:disarm"], 1);
+  assert.equal(R.resolve(o, ops[1], []).patch.flags.sprung, true);
+  // Disarmed: set it again; an open pit: nothing to do
+  assert.deepEqual(ids(R.optionsFor(R.describeTrap({trapKind: "snare", armed: false}), ch())), ["rearm"]);
+  assert.deepEqual(ids(R.optionsFor(R.describeTrap({trapKind: "pit", sprung: true}), ch())), []);
+  const held = R.describeTrap({trapKind: "snare", sprung: true, holding: "pc1"});
+  const bf = R.optionsFor(held, ch({potence: 1}));
+  assert.deepEqual(ids(bf), ["breakFree"]); assert.equal(bf[0].roll.dice, 3); assert.equal(bf[0].roll.diff, 7);
+  assert.equal(R.resolve(held, bf[0], [{successes: 1, botch: false}]).patch.flags.holding, null);
+  assert.deepEqual(ids(R.optionsFor(held, ch({actorId: "pc2"}))), ["cutFree"]);
+});
+
+test("traps: a search finds those its successes reach; getting clear takes dice off a blade, clears a snare or a pit", () => {
+  const t = g => R.describeTrap({trapKind: "pit", grade: g});
+  const s = R.searchOption(ch({abilities: {alertness: 1, investigation: 3}}));
+  assert.equal(s.roll.dice, 6); assert.equal(s.roll.abilityLabel, "Investigation"); assert.equal(s.roll.diff, 6);
+  const all = [t("crude"), t("good"), t("excellent"), t("masterwork")];
+  assert.equal(R.searchFinds(all, {successes: 2}).length, 2);
+  assert.equal(R.searchFinds(all, {successes: 5}).length, 4);
+  assert.equal(R.searchFinds(all, {successes: 5, botch: true}).length, 0);
+  const blade = R.describeTrap({trapKind: "blade", grade: "good"});
+  assert.deepEqual(R.reflexRoll(blade, {dexterity: 3, abilities: {athletics: 1, dodge: 2}}), {attr: "dexterity", ability: "dodge", dice: 5, diff: 6});
+  assert.equal(R.reflexRoll(R.describeTrap({trapKind: "tripwire"}), {}), null);
+  assert.equal(R.springTrap(blade, {successes: 2}).dice, 3);
+  assert.equal(R.springTrap(blade, {successes: 2, botch: true}).dice, 5);
+  const sn = R.springTrap(R.describeTrap({trapKind: "snare"}), {successes: 0}, "pc1");
+  assert.equal(sn.flags.holding, "pc1"); assert.equal(sn.caught, true);
+  assert.equal(R.springTrap(R.describeTrap({trapKind: "snare"}), {successes: 1}, "pc1").flags.holding, undefined);
+  assert.equal(R.springTrap(R.describeTrap({trapKind: "pit"}), {successes: 1}).dice, 0);
+  assert.equal(R.springTrap(R.describeTrap({trapKind: "tripwire"})).noise, "loud");
+  assert.deepEqual(R.cleanTrap({trap: "on", trapKind: "bear", grade: "x", dice: "33", damageType: "fire"}),
+    {trap: true, trapKind: "snare", grade: "good", dice: 20, damageType: "", armed: true, found: false, npcs: false});
+});
+
+test("clues: the Storyteller's text in four parts; more successes show more; a plain one needs no roll", () => {
+  const o = R.describeClue({clue: true, clueKind: "document", title: "A letter to the bishop", text0: "Sealed in red wax.", text1: "The hand is shaky.", text3: "It names the miller."});
+  assert.equal(R.nameOf(o), "A letter to the bishop");
+  const [op] = R.optionsFor(o, ch({intelligence: 3, abilities: {investigation: 2}}));
+  assert.equal(op.id, "examine"); assert.equal(op.label, "Read it");
+  assert.equal(op.roll.attrLabel, "Intelligence"); assert.equal(op.roll.dice, 5); assert.equal(op.roll.diff, 6);
+  const mark = R.optionsFor(R.describeClue({clueKind: "mark", text0: "x", text1: "y"}), ch({abilities: {}}))[0];
+  assert.equal(mark.roll.attrLabel, "Perception"); assert.equal(mark.roll.abilityLabel, "Investigation"); assert.equal(mark.roll.dice, 3);
+  assert.equal(R.optionsFor(R.describeClue({text0: "Only this."}), ch())[0].roll, null);
+  const two = R.resolve(o, op, [{successes: 2, botch: false}], {actorId: "pc1"});
+  assert.equal(two.examine, 2); assert.equal(two.patch.flags.seen.pc1, 2);
+  assert.deepEqual(R.clueTexts(o, 2), ["Sealed in red wax.", "The hand is shaky."]);
+  assert.deepEqual(R.clueTexts(o, 9), ["Sealed in red wax.", "The hand is shaky.", "It names the miller."]);
+  // A new, worse roll keeps the best seen; a botch shows only the first part
+  const seen = R.describeClue({...o, clueKind: "document", text0: o.texts[0], text1: o.texts[1], text3: o.texts[3], seen: {pc1: 3}});
+  assert.equal(R.resolve(seen, op, [{successes: 1, botch: false}], {actorId: "pc1"}).examine, 3);
+  assert.equal(R.resolve(o, op, [{successes: 0, botch: true}], {actorId: "pc1"}).examine, -1);
+  assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 2}).length, 0);
+  assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 3}).length, 1);
+  assert.deepEqual(R.cleanClue({clue: 1, clueKind: "rune", need: 9, title: "  T  "}), {clue: true, clueKind: "document", title: "T", need: 5, found: false, text0: "", text1: "", text2: "", text3: ""});
+});
+
 /* ---------------- the runtime, on a stand-in for Foundry ---------------- */
 
 const G = 100;
@@ -322,7 +402,7 @@ const gm = {id: "gm", isGM: true, active: true}, player = {id: "pl", isGM: false
 users.set("gm", gm); users.set("pl", player);
 Object.defineProperty(users, "activeGM", {get: () => gm});
 let me = gm;
-const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll()};
+const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll(), tokens: new Coll()};
 const uuids = new Map();
 const damage = [];
 
@@ -350,10 +430,11 @@ function actor(id, name, {str = 2, dex = 3, per = 3, larceny = 2, player: pc = t
     async update(data) { for ( const [k, v] of Object.entries(data) ) setPath(this, k, v); return this; }};
 }
 function token(id, a, x, y, owner = "pl") {
-  const doc = {id, x, y, width: 1, height: 1, actor: a, hidden: false, uuid: `Scene.scn1.Token.${id}`, testUserPermission: u => u.isGM || u.id === owner, get isOwner() { return me.isGM || me.id === owner; }};
+  const doc = {id, x, y, width: 1, height: 1, actor: a, hidden: false, parent: scene, uuid: `Scene.scn1.Token.${id}`, testUserPermission: u => u.isGM || u.id === owner, get isOwner() { return me.isGM || me.id === owner; }};
   const t = {id, name: a.name, actor: a, document: doc, w: G, h: G, get center() { return {x: doc.x + G / 2, y: doc.y + G / 2}; }};
   doc.object = t;
   uuids.set(doc.uuid, doc);
+  scene.tokens.set(id, doc);
   return t;
 }
 class FakeRoll {
@@ -393,7 +474,15 @@ globalThis.game = {
   keybindings: {register: () => {}},
   modules: new Coll([[MOD, {}], ["wodx-chronicle", {api: {propose: async p => proposals.push(p), registerApprovalHandler: () => {}, eras: {activeEra: () => ({profile: {id: "victorian"}}), currentYear: () => 1890}}}]]),
   wodxActions: {getKind: () => "mortal"},
-  wodxCombat: {applyDamage: async (a, t, n) => damage.push([a.id, t, n]), healDamage: async (a, t, n) => damage.push([a.id, t, -n])},
+  wodxCombat: {applyDamage: async (a, t, n) => damage.push([a.id, t, n]), healDamage: async (a, t, n) => damage.push([a.id, t, -n]),
+    soakAndApply: async (tok, fd) => {
+      const a = tok.actor ?? tok, levels = Math.max(0, fd.amount - 1);
+      damage.push([a.id, fd.type, levels, "soaked"]);
+      const msg = {id: `c${chat.length}`, flags: {"wodx-combat": {data: {type: fd.type, levels, applied: true, undo: {uuid: a.id, damage: {lethal: 0}}}}}, async delete() { game.messages.delete(this.id); this.deleted = true; }};
+      game.messages.set(msg.id, msg);
+      return {levels, message: msg};
+    },
+    setDamage: async (a, d) => damage.push([a.id, "set", d])},
   messages: new Coll(),
   items: {getName: n => worldItems.find(i => i.name === n) ?? null}
 };
@@ -403,7 +492,8 @@ globalThis.ChatMessage = {
   getSpeaker: ({token: t}) => ({alias: t?.object?.name ?? t?.actor?.name ?? "?"}),
   create: async data => {
     const msg = {id: `m${chat.length}`, ...structuredClone({...data, rolls: undefined}), rolls: data.rolls ?? [], author: me,
-      async update(d) { for ( const [k, v] of Object.entries(d) ) setPath(msg, k, v); return msg; }};
+      async update(d) { for ( const [k, v] of Object.entries(d) ) setPath(msg, k, v); return msg; },
+      async delete() { game.messages.delete(msg.id); return msg; }};
     chat.push(msg);
     game.messages.set(msg.id, msg);
     // The Storyteller's client picks the card up
@@ -432,7 +522,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -622,4 +712,181 @@ test("runtime: the WoDX part of the tile config keeps the container's choices", 
   assert.match(html, /value="locked" selected/);
   assert.match(html, />Item.x<\/textarea>/);
   assert.match(html, /data-fixed/);
+});
+
+/* ---------------- traps ---------------- */
+
+const pit = tile("pit1", 400, 700, {trap: true, trapKind: "pit", grade: "good", dice: 3}, {hidden: true});
+const snare = tile("snare1", 900, 300, {trap: true, trapKind: "snare", grade: "crude", found: true});
+canvas.tiles.placeables.push(pit, snare);
+
+test("runtime: a hidden trap is not in a player's Interact list until found; a found one is", () => {
+  me = player;
+  try {
+    tokPc.document.x = 800; tokPc.document.y = 300;
+    const list = api.interactablesFor(tokPc).map(x => x.doc.id);
+    assert.ok(list.includes("snare1"));
+    tokPc.document.x = 400; tokPc.document.y = 600;
+    assert.ok(!api.interactablesFor(tokPc).map(x => x.doc.id).includes("pit1"));
+  } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; }
+  tokPc.document.x = 400; tokPc.document.y = 600;
+  assert.ok(api.interactablesFor(tokPc).map(x => x.doc.id).includes("pit1"), "the Storyteller sees it");
+  tokPc.document.x = 400; tokPc.document.y = 300;
+});
+
+test("runtime: searching finds a trap the successes reach, shows it to players, tells the Storyteller what was missed; Undo hides it again", async () => {
+  tokPc.document.x = 400; tokPc.document.y = 550;
+  me = player;
+  try {
+    faces = [3, 4, 9, 2, 2];        // one success: not enough for a good trap
+    const m1 = await api.attempt(tokPc, "_search", "search", {fd: {}});
+    assert.equal(pit.document.hidden, true);
+    assert.ok(chat.some(c => c.whisper?.includes("gm") && /Missed, still hidden: Pit \(good\)/.test(c.content)));
+    assert.ok(!m1.content.includes("Pit"), "the player's card names nothing missed");
+    faces = [9, 9, 2, 2, 2];
+    const m2 = await api.attempt(tokPc, "_search", "search", {fd: {}});
+    assert.equal(m2.flags[MOD].done.result, "done");
+    assert.equal(pit.document.hidden, false);
+    assert.equal(pit.document.flags[MOD].found, true);
+    assert.ok(m2.flags[MOD].done.lines.some(l => /finds a pit/.test(l)));
+    me = gm;
+    await api.undoCard(m2);
+    assert.equal(pit.document.hidden, true);
+    assert.equal(pit.document.flags[MOD].found, false);
+  } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: walking over a hidden trap springs it; damage goes through WoDX Combat; Undo puts back the trap, the damage and the card", async () => {
+  me = gm;
+  await hooks.get("canvasReady")[0]();
+  faces = [2, 2, 2, 2, 2];          // no successes getting clear
+  tokPc.document.y = 900;            // from (450,350) to (450,950): straight through the pit at y 700-800
+  const cards = await api.onTokenMoved(tokPc.document);
+  assert.equal(cards.length, 1);
+  const done = cards[0].flags[MOD].done;
+  assert.match(done.text, /falls into the pit/);
+  assert.deepEqual(damage.at(-1), ["pc1", "bashing", 2, "soaked"]);
+  assert.equal(pit.document.flags[MOD].sprung, true);
+  assert.equal(pit.document.hidden, false);
+  assert.equal(api.describeTile(pit.document).armed, false);
+  // Moving on: a sprung trap does not go off again
+  tokPc.document.y = 1000;
+  assert.equal((await api.onTokenMoved(tokPc.document)).length, 0);
+  await api.undoCard(cards[0]);
+  assert.equal(pit.document.hidden, true);
+  assert.equal(pit.document.flags[MOD].sprung, undefined);
+  assert.deepEqual(damage.at(-1), ["pc1", "set", {lethal: 0}]);
+  assert.ok(!game.messages.has(done.damageMsg), "the combat card is gone");
+  tokPc.document.y = 300;
+  await api.onTokenMoved(tokPc.document);
+});
+
+test("runtime: a found trap is safe to walk past but not to stop on; NPCs set it off only when the Storyteller says so", async () => {
+  tokPc.document.x = 900; tokPc.document.y = 100;
+  await hooks.get("canvasReady")[0]();
+  tokPc.document.y = 500;            // past the snare at 900-1000 x 300-400, ending below it
+  assert.equal((await api.onTokenMoved(tokPc.document)).length, 0);
+  faces = [2, 2, 2];
+  tokPc.document.y = 300;            // stops on it
+  const cards = await api.onTokenMoved(tokPc.document);
+  assert.equal(cards.length, 1);
+  assert.equal(snare.document.flags[MOD].holding, "pc1");
+  assert.ok(cards[0].flags[MOD].done.lines.some(l => /held until breaking free/.test(l)));
+  // Held: the only option is to break free
+  const ops = R.optionsFor(api.describeTile(snare.document), api.characterFor(pc, tokPc.center, snare.document));
+  assert.deepEqual(ops.map(o => o.id), ["breakFree"]);
+  await api.undoCard(cards[0]);
+  assert.equal(snare.document.flags[MOD].holding, undefined);
+  assert.equal(snare.document.flags[MOD].armed, undefined);
+  tokNpc.document.x = 900; tokNpc.document.y = 100;
+  await hooks.get("canvasReady")[0]();
+  tokNpc.document.y = 300;
+  assert.equal((await api.onTokenMoved(tokNpc.document)).length, 0, "NPCs pass unless ticked");
+  tokPc.document.x = 400; tokPc.document.y = 300; tokNpc.document.x = 400; tokNpc.document.y = 1500;
+});
+
+test("runtime: a botched disarm sets the trap off on the one disarming it; Undo puts it all back", async () => {
+  tokPc.document.x = 800; tokPc.document.y = 300;
+  me = player;
+  try {
+    faces = [1, 2, 3, 4, 2];        // a botch at 5
+    const msg = await api.attempt(tokPc, "snare1", "disarm", {fd: {}});
+    const d = msg.flags[MOD].done;
+    assert.equal(d.result, "botch");
+    assert.equal(snare.document.flags[MOD].sprung, true);
+    assert.equal(snare.document.flags[MOD].holding, "pc1");
+    assert.ok(d.lines.some(l => /caught in the snare/.test(l)));
+    me = gm;
+    await api.undoCard(msg);
+    assert.equal(snare.document.flags[MOD].sprung, undefined);
+    faces = [9, 2, 2, 2, 2];
+    me = player;
+    const ok = await api.attempt(tokPc, "snare1", "disarm", {fd: {}});
+    assert.equal(ok.flags[MOD].done.result, "done");
+    assert.equal(api.describeTile(snare.document).armed, false);
+    me = gm;
+    await api.undoCard(ok);
+    assert.equal(api.describeTile(snare.document).armed, true);
+  } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the trap's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {trap: true, trapKind: "blade", grade: "masterwork", dice: 7, npcs: true}}});
+  assert.match(html, /value="blade" selected/);
+  assert.match(html, /value="masterwork" selected/);
+  assert.match(html, /name="flags.wodx-interactables.dice" value="7"/);
+  assert.match(html, /name="flags.wodx-interactables.npcs" checked/);
+  assert.match(html, /name="flags.wodx-interactables.armed" checked/);
+});
+
+/* ---------------- clues ---------------- */
+
+const letter = tile("clue1", 300, 150, {clue: true, clueKind: "document", title: "A torn letter", text0: "Half a page, torn.", text1: "A woman's name: Greta.", text2: "Written in haste.", text3: "The seal is the bishop's."});
+const stain = tile("clue2", 500, 150, {clue: true, clueKind: "mark", need: 2, text0: "A dark stain.", text1: "Blood, a day old."}, {hidden: true});
+canvas.tiles.placeables.push(letter, stain);
+
+test("runtime: examining a clue whispers what the successes reach to the player and the Storyteller; Undo takes it back", async () => {
+  me = player;
+  try {
+    assert.ok(api.interactablesFor(tokPc).some(x => x.doc.id === "clue1"));
+    assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "clue2"), "a hidden clue waits for a search");
+    faces = [9, 9, 2, 2, 2];        // Intelligence 2, no Investigation: two dice, two successes
+    const msg = await api.attempt(tokPc, "clue1", "examine", {fd: {}});
+    const d = msg.flags[MOD].done;
+    assert.equal(d.result, "done");
+    const w = game.messages.get(d.whisper);
+    assert.deepEqual(w.whisper.sort(), ["gm", "pl"]);
+    assert.match(w.content, /Half a page/); assert.match(w.content, /Greta/); assert.match(w.content, /in haste/);
+    assert.ok(!/bishop/.test(w.content), "three successes' worth stays hidden");
+    assert.ok(!/Greta/.test(msg.content), "the public card says nothing of it");
+    assert.equal(letter.document.flags[MOD].seen.pc1, 2);
+    me = gm;
+    await api.undoCard(msg);
+    assert.equal(game.messages.has(d.whisper), false);
+    assert.equal(letter.document.flags[MOD].seen, undefined);
+  } finally { me = gm; }
+});
+
+test("runtime: a search notices a hidden clue when the successes reach it, and shows it", async () => {
+  me = player;
+  try {
+    faces = [9, 2, 2, 2, 2];
+    await api.attempt(tokPc, "_search", "search", {fd: {}});
+    assert.equal(stain.document.hidden, true, "one success is not enough");
+    faces = [9, 9, 2, 2, 2];
+    const m = await api.attempt(tokPc, "_search", "search", {fd: {}});
+    assert.equal(stain.document.hidden, false);
+    assert.ok(m.flags[MOD].done.lines.some(l => /notices something: bloodstain or mark/.test(l)), m.flags[MOD].done.lines.join(" | "));
+    assert.ok(api.interactablesFor(tokPc).some(x => x.doc.id === "clue2"));
+    me = gm;
+    await api.undoCard(m);
+    assert.equal(stain.document.hidden, true);
+  } finally { me = gm; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the clue's text", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {clue: true, clueKind: "trail", title: "Prints", need: 3, text2: "Two people <and> a dog"}}});
+  assert.match(html, /value="trail" selected/);
+  assert.match(html, /name="flags.wodx-interactables.need" value="3"/);
+  assert.match(html, />Two people &lt;and&gt; a dog<\/textarea>/);
 });

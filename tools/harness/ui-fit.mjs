@@ -548,7 +548,7 @@ game.world.id = worldId;
   }
   api.DialogV2.wait = wait;
 }
-// Interactables: the Interact window (eight doors, windows and walls and two containers in reach, long names), the roll dialog, the WoDX part of a wall's and a tile's config
+// Interactables: the Interact window (eight doors, windows and walls, two containers, two traps and a clue in reach, long names, the search button), the roll dialog, the WoDX part of a wall's and a tile's config
 {
   const ix = game.modules.get("wodx-interactables").api;
   const wait = api.DialogV2.wait;
@@ -565,11 +565,17 @@ game.world.id = worldId;
   // Two containers on tiles: a locked safe with a long list inside, an open chest with things still in it
   const tiles = [{document: {id: "tile0", documentName: "Tile", x: 160, y: 160, width: 100, height: 100, hidden: false, levels: new Set(),
       flags: {[M]: {container: true, kind: "safe", lock: "masterwork", electronic: "excellent", keyName: "Key to the bishop's strongroom", items: Array.from({length: 12}, (_, k) => `Item.thing${k}`).join("\n")}}}},
-    {document: {id: "tile1", documentName: "Tile", x: 60, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {container: true, kind: "drawers", ds: "open", items: "Item.ledger"}}}}];
+    {document: {id: "tile1", documentName: "Tile", x: 60, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {container: true, kind: "drawers", ds: "open", items: "Item.ledger"}}}},
+    // Two found traps: an armed spring blade and a snare holding someone else
+    {document: {id: "tile2", documentName: "Tile", x: 160, y: 260, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {trap: true, trapKind: "blade", grade: "masterwork", found: true}}}},
+    {document: {id: "tile3", documentName: "Tile", x: 60, y: 260, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {trap: true, trapKind: "snare", grade: "crude", found: true, sprung: true, holding: "someone"}}}},
+    // A clue with a long name and text in every part
+    {document: {id: "tile4", documentName: "Tile", x: 260, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {clue: true, clueKind: "document",
+      title: "A water-stained letter from the Abbess of St. Walburga to the Prince's seneschal", text0: "Torn.", text1: "A name.", text2: "A date.", text3: "A seal."}}}}];
   globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document]))}, grid: {size: 100},
     walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
-  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")]] ) {
+  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
@@ -577,7 +583,7 @@ game.world.id = worldId;
   windows.push({name: "Wall config · WoDX part", tag: "form", classes: "application sheet wall-config", width: 480, height: "auto",
     content: `<div class="standard-form">${ix.configHtml(walls[0].document)}</div><footer class="form-footer"><button type="submit">Update Wall</button></footer>`});
   windows.push({name: "Tile config · WoDX part", tag: "form", classes: "application sheet tile-config", width: 560, height: "auto",
-    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[0].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
+    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[4].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
   globalThis.canvas = oldCanvas;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;

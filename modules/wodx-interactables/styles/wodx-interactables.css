@@ -1,4 +1,4 @@
-/* WoDX Interactables 0.2.0: the Interact window, the roll dialog, the cards and the WoDX part of a wall's config. Colours come from the WoDX look (wodx-theme.css). */
+/* WoDX Interactables 0.4.0: the Interact window, the roll dialog, the cards and the WoDX part of a wall's and a tile's config. Colours come from the WoDX look (wodx-theme.css). */
 .wix-dialog .window-content { overflow-y: auto; max-height: 80vh; }
 .wix-dialog .wix-list { list-style: none; margin: 0.3em 0; padding: 0; max-height: 55vh; overflow-y: auto; }
 .wix-dialog .wix-list > li { margin: 0 0 0.5em; padding-bottom: 0.3em; border-bottom: 1px solid var(--wx-rule, #8886); }
@@ -21,3 +21,6 @@
 .application.wall-config .window-content, .application.tile-config .window-content { overflow-y: auto; min-height: 0; }
 .wall-config .wix-config, .tile-config .wix-config { max-height: 40vh; overflow-y: auto; }
 .tile-config .wix-config textarea { width: 100%; min-height: 4em; }
+.wix-dialog .wix-search { margin: 0.2em 0 0.5em; padding-bottom: 0.3em; border-bottom: 1px solid var(--wx-rule, #8886); }
+.tile-config .wix-config .wix-sub { margin: 0.6em 0 0.2em; border: 0; font-size: 1em; }
+.tile-config .wix-config textarea[name$="text0"], .tile-config .wix-config textarea[name$="text1"], .tile-config .wix-config textarea[name$="text2"], .tile-config .wix-config textarea[name$="text3"] { min-height: 3em; }

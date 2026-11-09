@@ -23,12 +23,31 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Runtime: containers on tiles in the Interact list (hidden ones for the Storyteller only), cards, items handed over, Undo takes them back
 - [x] Tile config: the WoDX container part
 - [x] Harness tests (6 new) and UI fit
-- [ ] Gate steps 11 and 12 in rothenstein-wodx
+- [x] Gate steps 11 and 12 in rothenstein-wodx: 12/12 on 2026-11-09, at commit 4a6a04b
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.1.0-2026-11-09, MD5s checked), on in rothenstein-wodx only
+
+## 0.3.0: traps (2026-11-09)
+- [x] Rules: four kinds, four grades, damage by kind or set by hand, getting clear, a snare holding its victim, searching by grade (B117)
+- [x] Runtime: springing on token moves (hidden on the path, found only where the move ends; NPCs when ticked), damage through WoDX Combat, noise, Undo with the damage
+- [x] Search the area in the Interact window; the Storyteller is whispered what was missed
+- [x] Disarm, set off from a distance, set again, break free, cut free
+- [x] Tile config: the Trap section; world setting "Traps go off"
+- [x] Harness tests (9 new) and UI fit
+- [ ] Gate steps 13 to 15 in rothenstein-wodx (first run 14/15: the gate's pit skipped the Storyteller-owned burglar; gate fixed)
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.2.0-2026-11-09, MD5s checked)
+- [ ] V20 core falling page ref pinned on the PC
+
+## 0.4.0: clues (2026-11-09)
+- [x] Rules: five kinds, four texts by successes, Intelligence or Perception + Investigation, best successes kept, noticing by its own number (B118)
+- [x] Runtime: examine or read; the text whispered to the player and the Storyteller; Search the area notices hidden clues; Undo deletes the whisper
+- [x] Tile config: the Clue section
+- [x] Harness tests (4 new) and UI fit
+- [ ] Gate step 16 in rothenstein-wodx
 - [ ] Deployed
 
 ## Still to build (Ben, 2026-11-09), in order
-- [ ] Traps
-- [ ] Clues and documents
+- [x] Traps (0.3.0, deployed)
+- [x] Clues and documents (0.4.0, not deployed yet)
 - [ ] Light sources
 - [ ] Hiding places
 - [ ] Fire and hazards
