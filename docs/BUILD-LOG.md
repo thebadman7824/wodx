@@ -961,3 +961,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - print-rules.mjs (new): PRINT_CSS, landscape, journalDoc, mapDoc, absoluteUrls. main.mjs: journalPrintHtml (text pages enriched with secrets off, image pages as pictures, the era fonts' @font-face rules copied in with absolute urls), scenePrintHtml, printHtml (a hidden frame, then the print window; dry builds only), printJournal, printScene; a header control on journal sheets and entries in the journal and scene directory menus, Storyteller only. api.print {journal, scene, journalHtml, sceneHtml, html}.
 - Tests: tools/harness/print.test.mjs (4). Gate: tools/gate/gateprint.mjs, 7 steps (never opens the print window).
 - Fix in the same PR (Atmosphere 0.9.0): the frenzy tension never fired in Foundry, since WoDX Chronicle's conditions are wodx-frenzy and wodx-rotschreck; tensionOf now drops the wodx- prefix, and gateadaptive toggles wodx-frenzy. rothenstein-wodx holds 11 started combats left by older gates, so gateadaptive's hunt step reads combat there (noted, not failed).
+
+## 2026-11-09: player immersion (B310-B315)
+
+- From the Player Immersion Study (approved by Ben 2026-11-09). Interactables 0.16.0 (carry-rules.mjs, carry.mjs), Senses 0.4.0 (stateEdges, stateOf), Chronicle 0.9.0 (reckoning-rules.mjs, house rule eraReckoning, the player clock), Storyteller 0.11.0 (letters-rules.mjs, letters.mjs, player button wodxLetters, socket req.letter), Atmosphere 0.10.0 (opening-rules.mjs, client setting openingCard, scene choice noCard, api.opening), NPC 0.7.0 (faces-rules.mjs, faces.mjs, world setting faces).
+- Tests: tools/harness/immersion.test.mjs (12); version pins moved in perception, phase7b, phase7c-runtime and phase7d tests. Full suite 801 pass. Gate: tools/gate/gateimmersion.mjs, 9 steps.
+

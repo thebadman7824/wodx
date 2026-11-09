@@ -293,6 +293,15 @@ Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, w
 
 **The log and beats.** What a player's character does on the map goes into the tracker's log, the serious ones marked for your attention. A beat can fire on **A change on the map**: pick a scene (or none for anywhere), and type a kind or state such as forced, theft or broken (blank for any change).
 
+## Player immersion: what each player feels, sees and sends
+
+- **Carried light** (WoDX Interactables). The flame button on a token's HUD: light a candle, a torch, an oil lantern or (from 1899) an electric torch. It lights the token and burns down on the clock: a torch about an hour, a candle four, a lantern's oil eight. Out of doors, wind puts out a candle and a downpour or a storm puts out a torch. The player is told when it burns low and when it goes out, and the token's own light comes back.
+- **The character's state on screen** (WoDX Senses). Each player sees a quiet edge round the screen and a few words at the top for their own character: wounds, the hunger line, Rage at its full rating, the Shadow pressing, Paradox, Banality, no Willpower left. Each player can turn it off in their own settings.
+- **Time as the era tells it** (WoDX Chronicle, house rule, on). A player's clock reads the church's hours before 1350, a striking clock's quarter hours until 1840, a 12-hour clock after that and a 24-hour readout in Future Darkness. Your clock keeps the exact minute.
+- **Letters** (WoDX Storyteller). Players press **Send a letter** and pick the way (messenger, post, telegram, telephone, e-mail, the Net, as the year allows) and how far. You get a card for each with **Hold it back** and **Let it go**. It arrives on the clock; one for someone you play is whispered to you to answer.
+- **The opening card** (WoDX Atmosphere). When a player's view moves to another scene, the place, the date and, out of doors, the weather show for a few seconds. Battle maps get none; turn it off for a scene in the Atmosphere window.
+- **Faces you have met** (WoDX NPC, world setting, off). Players see a short description under an NPC's token until their character is introduced. Press the handshake on the NPC's token HUD to tick who knows the name and write what strangers see. Chat and the combat tracker still show the name, so speak as the description there.
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.

@@ -19,6 +19,7 @@ import * as Setup from "./setup.mjs";
 import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
+import * as Letters from "./letters.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Prelude from "./prelude.mjs";
 import * as Dash from "./dashboard.mjs";
@@ -41,6 +42,8 @@ Hooks.once("init", () => {
   Dreams.registerDreamHooks();
   Codex.registerCodexHooks();
   Rumours.registerRumourSettings();
+  Letters.registerLetterSettings();
+  Letters.registerLetterHooks();
   Rumours.registerRumourHooks();
   Dash.registerDashboardHooks();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
@@ -72,6 +75,7 @@ Hooks.once("ready", () => {
     rumours: {open: () => Rumours.RumoursApp.open(), list: Rumours.rumours, start: Rumours.startRumour, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
+    letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     draw: Night.drawChooser, nightRules: Night.N
   };
@@ -131,6 +135,8 @@ Hooks.on("getSceneControlButtons", controls => {
   if ( !tokens?.tools ) return;
   tokens.tools.wodxOnYourOwn = {name: "wodxOnYourOwn", title: "Out on your own (travel, or act alone)", icon: "fa-solid fa-person-walking-luggage", order: 106,
     button: true, visible: true, onChange: () => A.openOnYourOwn()};
+  tokens.tools.wodxLetters = {name: "wodxLetters", title: "Send a letter or message (it travels as the era allows)", icon: "fa-solid fa-envelope", order: 108,
+    button: true, visible: true, onChange: () => Letters.openLetters()};
   tokens.tools.wodxTracker = {name: "wodxTracker", title: "The Storyteller's tracker (every character, convening, beats)", icon: "fa-solid fa-binoculars", order: 113,
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
@@ -156,6 +162,7 @@ async function onSocket(message) {
     return;
   }
   if ( !C.isActiveGM() ) return;
+  if ( type === "req.letter" ) { await Letters.send(payload); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own
   const user = game.users.get(payload.userId);

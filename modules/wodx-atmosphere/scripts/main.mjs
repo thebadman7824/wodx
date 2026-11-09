@@ -18,10 +18,13 @@ import * as W from "./weather-rules.mjs";
 import * as K from "./kits-rules.mjs";
 import * as AR from "./adaptive-rules.mjs";
 import * as PR from "./print-rules.mjs";
+import * as OR from "./opening-rules.mjs";
+import {reckon} from "../../wodx-chronicle/scripts/reckoning-rules.mjs";
+import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.9.0";
+const VERSION = "0.10.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -65,6 +68,8 @@ function registerSettings() {
   world("muffleNew", {name: "Placed sounds are muffled by walls", hint: "A sound you place on a map is stopped by walls and heard muffled through them, like a sermon through the chapel door.", type: Boolean, default: true});
   world("themes", {name: "Personal themes", hint: "Each player character's own short motif plays for everyone at the start of their turn in a fight, or when you press Spotlight in the Atmosphere window.", type: Boolean, default: true});
   world("dawnPressure", {name: "Rötschreck pressure before dawn", hint: "House rule: in the last ten minutes before sunrise, Rötschreck rolls are 1 harder.", type: Boolean, default: true});
+  game.settings.register(MOD, "openingCard", {scope: "client", config: true, name: "A card when the scene changes",
+    hint: "The place, the date as the era tells it and, out of doors, the weather, for a few seconds when your view moves to another scene.", type: Boolean, default: true});
   game.settings.register(MOD, "cueVolume", {scope: "client", config: true, name: "Cue volume", type: Number, default: 0.5, range: {min: 0, max: 1, step: 0.05}});
   world("frames", {name: "Token frames", hint: "A ring or a square in the era's material round each token (iron, gilt, brass, chrome, neon).",
     type: String, default: "characters", choices: K.FRAME_WHO, onChange: () => redrawFrames()});
@@ -1023,6 +1028,7 @@ export function AtmosphereClass() {
         </section>
         <section><h3>This scene${sc ? `: ${esc(sc.navName || sc.name)}` : ""}</h3>
           ${sc ? `<div class="form-group"><label>Weather here</label><select name="outdoors" data-fixed>${opt({auto: `Decide for me (now ${isOutdoor(sc) ? "out of doors" : "indoors"})`, on: "Out of doors: weather shows", off: "Indoors: no weather"}, f.outdoors ?? "auto")}</select></div>
+          <div class="form-group"><label>Opening card</label><select name="noCard" data-fixed>${opt({show: "Show the place's card to players", hide: "No card for this scene"}, f.noCard ? "hide" : "show")}</select></div>
           <div class="form-group"><label>Follow the clock's light</label><input type="checkbox" name="followClock"${f.followClock ? " checked" : ""}></div>
           <div class="form-group"><label>Darkness at night (0 to 1)</label><input type="number" name="night" min="0" max="1" step="0.05" value="${Number.isFinite(Number(f.night)) && f.night !== undefined ? f.night : 0.9}"></div>
           ${(() => { const all = [...(sc.sounds ?? [])]; const n = all.filter(x => K.isMuffled(x)).length;
@@ -1087,6 +1093,7 @@ export function AtmosphereClass() {
       if ( !sc ) return;
       const save = async (key, value) => { await sc.update({[`flags.${MOD}.${key}`]: value}); if ( isActiveGM() ) await applyWeather({force: true, quiet: true}); this.render(); };
       el.querySelector("select[name=outdoors]")?.addEventListener("change", ev => save("outdoors", ev.target.value));
+      el.querySelector("select[name=noCard]")?.addEventListener("change", ev => save("noCard", ev.target.value === "hide"));
       el.querySelector("input[name=followClock]")?.addEventListener("change", ev => save("followClock", ev.target.checked));
       el.querySelector("input[name=night]")?.addEventListener("change", ev => save("night", Math.max(0, Math.min(1, Number(ev.target.value) || 0))));
     }
@@ -1118,7 +1125,7 @@ Hooks.once("init", () => {
 /** Load the calendar and publish the API (at ready; the harness calls it by itself). */
 export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
-  const api = {version: VERSION, open: () => AtmosphereApp.open(),
+  const api = {version: VERSION, open: () => AtmosphereApp.open(), opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
       moonHidden: () => !!now()?.moonHidden},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
@@ -1163,12 +1170,51 @@ Hooks.on("updateWorldTime", (time, delta) => {
   }, 250);
 });
 let timeTimer = null;
+let lastCard = null;
+/** A scene's opening card, on this computer only; it fades by itself. */
+function openingCard(scene) {
+  let on = true;
+  try { on = game.settings.get(MOD, "openingCard") !== false; } catch (e) { on = true; }
+  if ( !OR.wantsCard(scene, {last: lastCard, on}) ) return;
+  lastCard = scene.id;
+  let told = null, dateLabel = "", lat = 50;
+  try { lat = game.settings.get("wodx-chronicle", "latitude"); } catch (e) { lat = 50; }
+  const t = describeTime(game.time.worldTime, lat);
+  dateLabel = `${t.dateLabel}, ${t.timeLabel}`;
+  let reck = true;
+  try { reck = game.settings.get("wodx-chronicle", "rule.eraReckoning") !== false; } catch (e) { reck = true; }
+  if ( reck ) {
+    let church = null, eraId = "";
+    try { church = chron()?.church?.on?.(t) ?? null; } catch (e) { church = null; }
+    try { eraId = chron()?.eras?.activeEra?.()?.profile?.id ?? ""; } catch (e) { eraId = ""; }
+    told = reckon(t, {church, eraId});
+  }
+  let weather = "";
+  try { weather = now()?.label ?? ""; } catch (e) { weather = ""; }
+  const lines = OR.cardLines(scene, {told, dateLabel, weather, outdoors: isOutdoor(scene)});
+  document.getElementById("watmo-opening")?.remove();
+  const el = document.createElement("div");
+  el.id = "watmo-opening";
+  el.setAttribute("aria-live", "polite");
+  for ( const [cls, text] of [["place", lines.place], ["when", lines.when], ["weather", lines.weather]] ) {
+    if ( !text ) continue;
+    const d = document.createElement("div");
+    d.className = `watmo-opening-${cls}`;
+    d.textContent = text;
+    el.appendChild(d);
+  }
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("shown"));
+  setTimeout(() => el.classList.remove("shown"), 5000);
+  setTimeout(() => el.remove(), 6500);
+}
 Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); ageEverything(); } });
 Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); ageEverything(); } });
 Hooks.on("refreshToken", token => { if ( active ) { try { drawFrame(token); } catch (e) { console.warn(`${MOD} | frame`, e); } } });
 Hooks.on("canvasReady", () => {
   if ( !active ) return;
   applyGrade();
+  try { openingCard(canvas.scene); } catch (e) { console.warn(`${MOD} | opening card`, e); }
   if ( isActiveGM() && canvas.scene ) { const d = now(); applySceneEffect(canvas.scene, d).then(() => applyLight(canvas.scene, d)).catch(e => console.warn(`${MOD} | scene`, e)); }
 });
 Hooks.on("updateScene", (scene, change) => {
