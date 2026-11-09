@@ -151,6 +151,12 @@
    "title": "Rites of the Blood",
    "short": "RotB",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "blackhand",
+   "title": "The Black Hand: A Guide to the Tal'Mahe'Ra",
+   "short": "Black Hand",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -178,6 +184,7 @@
   "lotc.json",
   "v20comp.json",
   "lotb.json",
-  "rotb.json"
+  "rotb.json",
+  "blackhand.json"
  ]
 }
