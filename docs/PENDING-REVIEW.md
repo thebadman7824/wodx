@@ -2,6 +2,12 @@
 
 Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It takes the option it recommends, keeps working, and logs each such choice here so Ben can review it later. Deletions and changes to the Live world still wait for Ben.
 
+New entries go at the end of the "Waiting for review" table, which is last in this file.
+
+## Approved by Ben, 9 November 2026
+
+Ben read the digest of the entries below and approved all of them at 17:05 UTC, with the drafts (sense lines, weather lines, era primers, the night's tables, the cues) and the WoDX figures that were still to be checked against the books (the live wire, Lasombra and mirrors, the V20 difficulty chart, the C20 Mists chart, the Craftmasons' Pillar). Each still lists how to reverse it.
+
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-09 | Do NPCs set off traps? | Only when the trap tile has "NPCs set it off" ticked. Tokens owned by the Storyteller count as NPCs. | Tick the box on each trap. To change the default, flip the `npc` test in `trapsOnPath` (wodx-interactables/scripts/main.mjs). |
@@ -149,9 +155,14 @@ Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It tak
 | 2026-11-09 | Sound through walls: should every sound placed on a map be muffled by walls, and how strongly? | Yes, a low-pass at intensity 5 (Foundry's scale 1 to 10), for sounds placed after this; older sounds change only with the window's button (B267). | Configure Settings, WoDX Atmosphere, "Placed sounds are muffled by walls" off; or change MUFFLE in kits-rules.mjs. |
 | 2026-11-09 | NPC movement on gridless scenes: how should WoDX walk a map with no grid? | A square lattice of the scene's grid size, walked like a square grid round walls; a token WoDX moves snaps to it (B268). | Configure Settings, WoDX NPC, "Move NPCs on gridless scenes" off. |
 | 2026-11-09 | Personal themes: when is a spotlight moment? | The start of the character's turn in a fight (at most once a minute) and the Storyteller's Spotlight button; nothing else plays it on its own (B269). | Configure Settings, WoDX Atmosphere, "Personal themes" off; or change THEME_GAP in kits-rules.mjs. |
-| 2026-11-09 | Places that age: when does a map change to its later picture? | On the first of the year it is set from, by the chronicle's year, checked when the clock settles, after a time skip and when an era is applied; only the map's own level changes, not its Otherworld twins (B270). | Remove the years in the Atmosphere window; the scene's own map comes back. |
 | 2026-11-09 | Delete the legacy world "Dark Ages: Vampire Chronicle What Sleeps Beneath Rothenstein"? | **Ben approved the deletion** (9 November, 12:33 UTC), zipped into Backups first. Nothing in WoDX depends on it. | Unzip the Backups copy into Data\worlds. |
 | 2026-11-09 | The Windows firewall rule still lets anyone reach PC Foundry on port 30000. | Ben will remove it himself this evening (it needs admin rights); `wodx-repo\vps\lock-foundry-lan.ps1` does it. | Run the script again with `-Undo`. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-09 | Places that age: when does a map change to its later picture? | On the first of the year it is set from, by the chronicle's year, checked when the clock settles, after a time skip and when an era is applied; only the map's own level changes, not its Otherworld twins (B270). | Remove the years in the Atmosphere window; the scene's own map comes back. |
 | 2026-11-09 | Faces that age: when does a face change, who ages, and what of ghouls? | One filter step a decade from forty (five steps); mortals and the living lines age, the undead and the Reborn do not; a ghoul's age stands still until the Storyteller marks it cut off from the blood, then the true age shows at once (B271). The ghoul page in V20 Dark Ages is still to pin. | Set the character to "Does not age" or press Stop in the Atmosphere window; give a picture for an age to replace the filter. |
 | 2026-11-09 | Layer looks: how should the Near Dreaming and the Net look on the map? | The Dreaming shimmers (richer colour, the hue swaying 28 degrees every seven seconds); the Net shows the map as glowing green and cyan lines; the Penumbra and Shadowlands keep their twin art (B272). | Configure Settings, WoDX Otherworlds, "Looks of the other worlds" off (per player); or change LOOKS in journey-rules.mjs. |
 | 2026-11-09 | Queue relief: what is an NPC card for the cap, and when does a session start? | Proposals from WoDX NPC (types starting wodx-npc, such as faction moves) count; chat cards whispered by NPC routines are not proposals and are not capped. A session starts when Foundry starts or a session is begun in WoDX Storyteller. Cap 0 (none) and no standing rules by default (B273). | Configure Settings, WoDX Chronicle, "NPC proposals a session"; untick kinds under Approve on its own in the queue window. |
