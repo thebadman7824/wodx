@@ -110,7 +110,7 @@ export async function journeyDialog() {
 
 /** The look for this client now: the controlled token's layer (the Shadowlands' decay, the Dreaming's shimmer, the Net's lines). */
 const flag = key => { try { return game.settings.get(MODULE_ID, key) !== false; } catch (e) { return true; } };
-const viewer = () => canvas?.tokens?.controlled?.[0]?.document ?? null;
+const viewer = () => globalThis.canvas?.tokens?.controlled?.[0]?.document ?? null;
 const viewerLayer = t => t ? {layer: tokenLayer(t), inNet: !!t.actor?.statuses?.has?.(STATUS.net.id)} : {layer: "physical", inNet: false};
 let phase = 1;
 export function decayCss() {
@@ -136,7 +136,7 @@ let sway = null;
 function keepSway() {
   const {layer, inNet} = viewerLayer(viewer());
   const want = layer === "dreaming" && !inNet && flag("looks");
-  const board = document.getElementById("board");
+  const board = globalThis.document?.getElementById?.("board");
   if ( want && !sway ) {
     const half = J.LOOKS.dreaming.period / 2;
     if ( board ) board.style.transition = `filter ${half}ms ease-in-out`;
