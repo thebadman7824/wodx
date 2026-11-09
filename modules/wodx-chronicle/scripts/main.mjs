@@ -18,6 +18,7 @@ import * as gen from "./gen.mjs";
 import * as events from "./events.mjs";
 import * as migrations from "./migrations.mjs";
 import * as languages from "./languages.mjs";
+import * as tours from "./tours.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -137,6 +138,7 @@ Hooks.once("ready", async () => {
     theme,
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
+    tours: {start: tours.startTour},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
@@ -144,6 +146,8 @@ Hooks.once("ready", async () => {
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});
+  // Foundry tours for players and the Storyteller
+  tours.registerTours();
   // Bring every WoDX module's stored data up to date before the others start on it
   if ( isActiveGM() ) {
     try { await migrations.runMigrations(); }

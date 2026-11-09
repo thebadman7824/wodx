@@ -38,3 +38,7 @@
 
 /* 3.2.0: the Road's hierarchy shows the character's own rating */
 .vta-dialog .vta-table tr.vta-here td { font-weight: bold; background: rgba(140, 20, 20, 0.15); }
+
+/* The menu's search also finds common checks and dramatic systems; they show only while searching */
+.wodx-menu2:not(.is-searching) .vta-elsewhere { display: none; }
+.wodx-menu2 .vta-elsewhere .vta-grp-btns { max-height: 220px; overflow-y: auto; }

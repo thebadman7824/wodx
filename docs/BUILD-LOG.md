@@ -671,3 +671,7 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Gap review item 8. scripts/ledger-rules.mjs (pure) and scripts/ledger.mjs (due dates, the Veil, heirs and succession through the approval queue, the Ledger window with a search box on each list, a toolbar button for the Storyteller).
 - Tests: ledger.test.mjs (8). 536 harness tests pass. UI fit adds the Ledger with forty entries.
 - The archive gate ran 9/9 in rothenstein-wodx with 500 characters (Creation 0.7.0, deployed 2026-11-09).
+
+### Menu search, tours and check flavor, 2026-11-09: WoDX Actions 3.14.0, Chronicle 0.5.2 (B126)
+- Gap review item 4. profile-menus.js: the "Also found" group (checks and presets, shown only while searching; a new "check:<key>" spec). flavor.js: CHECK_POOLS and CHECK_GROUP_POOLS, read from the card's title. tours.mjs: two tours with a fallback for missing buttons; a Tour button on the Clock.
+- Tests: flavor-checks.test.mjs (2), tours.test.mjs (2). 540 harness tests pass.

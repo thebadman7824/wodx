@@ -4,6 +4,8 @@
  * A line may start with tags in square brackets that say who {name} must be: kindred, living (mortals, ghouls, Garou...),
  * beast or spirit; flesh = living, kindred or beast; person = living or kindred. Untagged lines fit everyone.
  * Edit freely: add lines to a pool, or empty a pool to silence it. */
+import { CHECKS } from "./checks-rules.js";
+const CHECK_BY_TITLE = new Map(CHECKS.map(c => [c.label.toLowerCase().split(" (")[0].trim(), c]));
 
 export const POOLS = {
     general: {
@@ -235,9 +237,125 @@ const rand = a => a[Math.floor(Math.random() * a.length)];
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 /** sort a finished card into a theme from its title and body */
+
+/* Common checks: lines for the checks players roll most, then one pool per group of checks. A check card's title is
+ * the check's name ("Notice something"), so the theme is read from that. */
+export const CHECK_POOLS = {
+    notice: {
+        success: ["{name} catches it: a scrape of boot on stone, a shape where no shape should be.", "There. {name} sees what the others walked past.",
+            "A smell under the woodsmoke, wrong for this street. {name} marks it.", "{name}'s eyes find the one thing out of place."],
+        failure: ["Nothing stands out. If something is there, it is better at hiding than {name} is at looking.", "The street looks as it always does. That may be the problem.",
+            "{name} sees shadows, and only shadows."],
+        botch: ["{name} is sure of what was there, and is wrong about it.", "{name} stares hard at the wrong corner while the real thing passes behind."]
+    },
+    react: {
+        success: ["{name} moves before thinking, and it is the right move.", "A hand comes up in time.", "{name} is already out of the way when it lands."],
+        failure: ["{name} sees it a breath too late.", "Too slow, by the width of a hand."],
+        botch: ["{name} flinches the wrong way, straight into it."]
+    },
+    uncanny: {
+        success: ["The hair on {name}'s arms rises. Something is here that should not be.", "{name} feels it like a draught from a door nobody opened.",
+            "The air has a weight to it. {name} knows better than to call it nothing."],
+        failure: ["If something walks here, it leaves no mark on {name}.", "{name} feels only the cold, and the ordinary cold at that."],
+        botch: ["{name} is certain of a presence. There is none, and the certainty will not go away."]
+    },
+    search: {
+        success: ["Under the loose board, behind the sacking: {name} finds it.", "{name} goes over the room a second time and the second look pays.",
+            "A thread caught on a nail, a mark in the dust. Enough to go on."],
+        failure: ["{name} turns the place over and finds the place, nothing more.", "Whatever was here has been taken, or was never here."],
+        botch: ["{name} finds something, and it is the wrong thing, and it points the wrong way.", "In the searching, {name} scuffs away the one mark that mattered."]
+    },
+    readperson: {
+        success: ["{target} says one thing; the hands say another. {name} believes the hands.", "{name} reads {target} like a shop sign.",
+            "There is fear under {target}'s calm, and {name} sees where it sits."],
+        failure: ["{target}'s face gives {name} nothing to hold.", "{name} cannot tell whether {target} is tired, frightened or simply bored."],
+        botch: ["{name} reads {target} with great confidence and gets it backwards."]
+    },
+    lie: {
+        success: ["The story is smooth. Too smooth. {name} hears the seam.", "{target} looks away at the wrong word, and {name} sees it.",
+            "{name} lets {target} finish, and does not believe a line."],
+        failure: ["It sounds true to {name}. It may even be true.", "{name} cannot find the crack in it."],
+        botch: ["{name} trusts {target} completely. That trust will be expensive."]
+    },
+    security: {
+        success: ["A bell on a string behind the door, a second bolt low down. {name} sees both.", "{name} counts the watchman's steps and learns the round.",
+            "The lock is good. {name} knows exactly how good."],
+        failure: ["The door looks like a door. {name} cannot say what guards it.", "{name} sees no alarm, and is not sure that means there is none."],
+        botch: ["{name} is sure the way is clear. It is not."]
+    },
+    agility: {
+        success: ["{name} lands light, as if the gap were half as wide.", "A step, a turn, and {name} is across.", "The beam takes {name}'s weight without a sound."],
+        failure: ["{name} hesitates at the edge and the moment goes.", "A foot slips; {name} catches it, and stays where they were."],
+        botch: ["{name} goes down hard, and loudly."]
+    },
+    hide: {
+        success: ["{name} folds into the dark under the stair and stops being there.", "A gap behind the barrels, just big enough. {name} takes it."],
+        failure: ["Every corner is lit or watched. {name} finds nowhere good.", "The best place {name} finds is not very good."],
+        botch: ["{name} picks the one spot where everyone will look first."]
+    },
+    holdstill: {
+        success: ["{name} does not move. After a while, the searchers stop looking.", "Breath held, muscles locked. They pass within arm's reach."],
+        failure: ["A cramp, a shift of weight, a creak. Heads turn.", "{name} holds as long as {name} can, which is not quite long enough."],
+        botch: ["{name} sneezes."]
+    },
+    endurance: {
+        success: ["{name} keeps going after the others would have stopped.", "Another mile, then another. {name} does not think about the next one."],
+        failure: ["{name}'s legs give out before the road does.", "{name} has to stop, and stopping costs time."],
+        botch: ["{name} pushes too far and pays for it with something torn."]
+    },
+    recall: {
+        success: ["{name} has read of this, years ago, and the page comes back whole.", "A name, a date, a story told by an old teacher. {name} remembers.",
+            "{name} knows what this is, and wishes otherwise."],
+        failure: ["It is on the edge of memory and will not come closer.", "{name} has never heard of it, or has forgotten that they did."],
+        botch: ["{name} remembers it clearly. The memory is wrong."]
+    },
+    firstaid: {
+        success: ["The bleeding slows under {name}'s hands.", "{name} sees what the wound is and what it is not.", "Clean cloth, steady pressure. It will hold."],
+        failure: ["{name} does what can be done. It is not enough yet.", "The cause hides from {name}."],
+        botch: ["{name}'s help makes it worse."]
+    },
+    willpower: {
+        success: ["{name} sets their jaw and does not give way.", "It pulls at {name}. {name} pulls harder.", "{name} decides, and the deciding holds."],
+        failure: ["{name} wants to hold firm, and wanting is not enough.", "The will bends."],
+        botch: ["Something in {name} gives, and it will be a while before it mends."]
+    },
+    courage: {
+        success: ["{name}'s heart hammers, and {name} stays where they are.", "Fear comes, and {name} lets it pass through and out."],
+        failure: ["{name} takes a step back without meaning to.", "The fear is bigger than {name} tonight."],
+        botch: ["{name} runs, and does not remember deciding to."]
+    }
+};
+
+export const CHECK_GROUP_POOLS = {
+    body: {
+        success: ["{name}'s body does what it was asked.", "Strength enough, and a little to spare."],
+        failure: ["{name}'s body has other ideas.", "Not tonight. Not like this."],
+        botch: ["Something wrenches, and {name} feels it all the way down."]
+    },
+    mind: {
+        success: ["It falls into place for {name}.", "{name} works it through and the answer is there."],
+        failure: ["{name} turns it over and finds no handle on it.", "The answer stays out of reach."],
+        botch: ["{name} reaches a firm conclusion, and it is wrong."]
+    },
+    social: {
+        success: ["{target} goes along with {name}.", "{name} has the room, for now."],
+        failure: ["{target} is not moved.", "It falls flat."],
+        botch: ["{name} has made an enemy of {target}, or something close to it."]
+    },
+    resist: {
+        success: ["{name} holds.", "It washes over {name} and leaves them standing."],
+        failure: ["{name} gives a little ground.", "It gets through."],
+        botch: ["{name} breaks, for a moment, in front of everyone."]
+    }
+};
+
 export function theme(title, body) {
     const t = String(title).toLowerCase();
     const b = String(body).toLowerCase();
+    // Card titles read "<name>: <what>"; a check's <what> is its name
+    const what = t.includes(": ") ? t.slice(t.lastIndexOf(": ") + 2) : t;
+    const ck = CHECK_BY_TITLE.get(what.replace(/^common:\s*/, "").split(" (")[0].trim());
+    if (ck) return CHECK_POOLS[ck.key] ? `check:${ck.key}` : CHECK_GROUP_POOLS[ck.group] ? `checkgroup:${ck.group}` : "general";
     if (/r(ö|o)tschreck|faces the flame|sunlight|\bfire\b/.test(t)) return /takes damage|sunlight|fire|falling/.test(t) && !/check|faces/.test(t) ? "harm" : "fear";
     if (/frenzy|instinct|regains control/.test(t)) return "frenzy";
     if (/diablerie|drinks cainite blood/.test(t)) return "diablerie";
@@ -291,13 +409,14 @@ export function fits(raw, group) {
 }
 
 export function line(themeKey, outcomeKey, names = {}, { group = null } = {}) {
-    const pool = POOLS[themeKey]?.[outcomeKey] ?? POOLS.general[outcomeKey] ?? [];
+    const pool = (themeKey.startsWith("check:") ? CHECK_POOLS[themeKey.slice(6)]?.[outcomeKey]
+        : themeKey.startsWith("checkgroup:") ? CHECK_GROUP_POOLS[themeKey.slice(11)]?.[outcomeKey] : POOLS[themeKey]?.[outcomeKey]) ?? POOLS.general[outcomeKey] ?? [];
     let fit = pool.filter(l => fits(l, group));
     if (!fit.length) fit = (POOLS.general[outcomeKey] ?? []).filter(l => fits(l, group));
     if (!fit.length) return "";
     let t = parse(rand(fit)).text;
     for (const [k, v] of Object.entries(names)) t = t.replaceAll(`{${k}}`, esc(v));
-    const fallback = { social: "the listener", diablerie: "the victim" }[themeKey] ?? "the other";
+    const fallback = { social: "the listener", diablerie: "the victim", "check:readperson": "the other person", "check:lie": "the speaker", "checkgroup:social": "the other person" }[themeKey] ?? "the other";
     t = t.replace(/\{target\}/g, fallback).replace(/\{\w+\}/g, "someone");
     return t.charAt(0).toUpperCase() + t.slice(1);
 }

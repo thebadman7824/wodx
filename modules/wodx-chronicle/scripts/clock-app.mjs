@@ -35,7 +35,8 @@ export class ClockApp extends ApplicationV2 {
       houseRules: () => HouseRulesApp.open(),
       eraTest: () => runEraTest(),
       hold: ClockApp.#onHold,
-      languages: () => game.modules.get("wodx-chronicle")?.api?.languages?.open()
+      languages: () => game.modules.get("wodx-chronicle")?.api?.languages?.open(),
+      tour: () => game.modules.get("wodx-chronicle")?.api?.tours?.start()
     }
   };
 
@@ -112,6 +113,7 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="sessionZero"><i class="fa-solid fa-list-check"></i> Session Zero</button>
           <button type="button" data-action="rules"><i class="fa-solid fa-book"></i> Chronicle Rules</button>
           <button type="button" data-action="languages"><i class="fa-solid fa-language"></i> Languages</button>
+          <button type="button" data-action="tour" title="A short guided tour of the WoDX tools"><i class="fa-solid fa-circle-question"></i> Tour</button>
           ${gm ? `
           <button type="button" data-action="approvals"><i class="fa-solid fa-inbox"></i> Approvals${waiting ? ` (${waiting})` : ""}</button>
           <button type="button" data-action="houseRules"><i class="fa-solid fa-scale-balanced"></i> House rules</button>
