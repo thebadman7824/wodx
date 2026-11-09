@@ -325,6 +325,12 @@
    "title": "Clanbook: Brujah (Revised)",
    "short": "Clanbook: Brujah",
    "edition": "Revised"
+  },
+  {
+   "id": "cbgiovanni",
+   "title": "Clanbook: Giovanni (Revised)",
+   "short": "Clanbook: Giovanni",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -381,6 +387,7 @@
   "gtsab.json",
   "gtanarch.json",
   "cbassamite.json",
-  "cbbrujah.json"
+  "cbbrujah.json",
+  "cbgiovanni.json"
  ]
 }
