@@ -155,7 +155,7 @@ test("every era profile has a kit, and every kit chain ends in a kit with shippe
     const chain = K.kitChain(kit);
     assert.ok(chain.some(k => shipped.includes(k)), `${p.id} ${chain}`);
   }
-  for ( const k of shipped ) for ( const cue of Object.keys(K.CUES) ) assert.ok(existsSync(join(root, `modules/wodx-atmosphere/sounds/${k}/${cue}.ogg`)), `${k}/${cue}`);
+  for ( const k of shipped ) for ( const cue of Object.keys(K.CUES).filter(c => !K.COMMON_CUES.includes(c)) ) assert.ok(existsSync(join(root, `modules/wodx-atmosphere/sounds/${k}/${cue}.ogg`)), `${k}/${cue}`);
   assert.deepEqual(K.kitChain("long-night"), ["long-night", "dark-ages"]);
 });
 

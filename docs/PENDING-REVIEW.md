@@ -145,3 +145,5 @@ Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It tak
 | 2026-11-09 | Disembodiment: does anything happen by itself? | No: one approval card after three phases of the moon beyond the Penumbra; the Storyteller decides. | `checkDisembodiment` in realms.mjs. |
 | 2026-11-09 | The Net: from when, and what of the body? | From 1990; the body lies still and senses nothing. Disciplines and damage to the user inside the Net are the Storyteller's call (the article is silent). | `NET_FROM` in realms-rules.mjs; the text in `jack`. |
 | 2026-11-09 | Layer sound files. | None ship: put penumbra.ogg, shadowlands.ogg, dreaming.ogg and net.ogg in Data/wodx-kits/layers (or the folder in the setting). | World setting Folder of the other worlds' loops. |
+
+| 2026-11-09 | Dawn dread: how hard should the hour before sunrise press on a Kindred? The books give no modifier. | +1 difficulty on Rötschreck in the last ten minutes, shown in the window and on one Storyteller card a night (B266). | Configure Settings, WoDX Atmosphere, turn off "Rötschreck pressure before dawn"; or change DREAD.cock in kits-rules.mjs. |

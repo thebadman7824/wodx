@@ -1,4 +1,5 @@
-"""Make WoDX Atmosphere's interface cues: short procedural sounds, three per era kit (dawn, dusk, notice).
+"""Make WoDX Atmosphere's interface cues: short procedural sounds, three per era kit (dawn, dusk, notice), and two
+shared by every era in sounds/common (birdsong and cock-crow before dawn). Pass a kit name, or common, to make only those.
 Pure synthesis with NumPy (additive partials with decay envelopes), encoded to Ogg Vorbis by ffmpeg.
 Run from the repo root:  python3 tools/atmosphere/make-cues.py
 They are the project's own, with no outside source; the credits journal lists them as such."""
@@ -109,6 +110,36 @@ CUES = {
                         "notice": lambda: blip([880, 1320], 0.07, 0.4)},
 }
 
+def chirp(f0, f1, dur=0.09, wobble=0.0):
+    n = int(SR * dur); t = np.arange(n) / SR
+    f = f0 + (f1 - f0) * (t / dur) + wobble * np.sin(2 * np.pi * 38 * t)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    a = np.sin(np.pi * t / dur) ** 2
+    return (np.sin(ph) + 0.2 * np.sin(2 * ph)) * a
+
+def birdsong(dur=5.0):
+    rng = np.random.default_rng(11); items = []; t = 0.2
+    while t < dur - 0.6:
+        k = rng.integers(2, 6); base = rng.uniform(2600, 4200)
+        for j in range(k):
+            items.append((t + j * 0.11, 0.6 * chirp(base * rng.uniform(0.95, 1.1), base * rng.uniform(1.15, 1.5), rng.uniform(0.06, 0.1), 120)))
+        t += k * 0.11 + rng.uniform(0.35, 0.9)
+    far = mixat(dur, [(t0 + 0.05, 0.25 * x) for t0, x in items[::2]])
+    return mixat(dur, items) + far
+
+def cockcrow():
+    # Four notes, a rasping harmonic voice: short, short, the long rise, the fall
+    def voice(f0, f1, dur):
+        n = int(SR * dur); t = np.arange(n) / SR
+        f = f0 + (f1 - f0) * np.sin(0.5 * np.pi * t / dur) + 6 * np.sin(2 * np.pi * 31 * t)
+        ph = 2 * np.pi * np.cumsum(f) / SR
+        a = np.clip(t / 0.03, 0, 1) * np.clip((dur - t) / 0.08, 0, 1)
+        out = sum((1 / k ** 0.9) * np.sin(k * ph) for k in range(1, 10))
+        return out * a * (1 + 0.15 * np.random.default_rng(3).standard_normal(n))
+    return mixat(2.4, [(0, voice(520, 600, 0.18)), (0.24, voice(560, 640, 0.18)), (0.5, voice(600, 760, 0.8)), (1.35, voice(740, 480, 0.7))])
+
+COMMON = {"birds": birdsong, "cock": cockcrow}
+
 def write(path, x):
     x = x / (np.max(np.abs(x)) + 1e-9) * 0.5  # about -6 dBFS peak
     fade = int(0.02 * SR); x[-fade:] *= np.linspace(1, 0, fade)
@@ -116,7 +147,9 @@ def write(path, x):
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "s16le", "-ar", str(SR), "-ac", "1", "-i", "pipe:0",
                     "-c:a", "libvorbis", "-q:a", "3", path], input=pcm, check=True)
 
-for kit, cues in CUES.items():
+only = sys.argv[1] if len(sys.argv) > 1 else None
+for kit, cues in {**CUES, "common": COMMON}.items():
+    if only and kit != only: continue
     os.makedirs(os.path.join(OUT, kit), exist_ok=True)
     for cue, fn in cues.items():
         write(os.path.join(OUT, kit, f"{cue}.ogg"), fn())

@@ -19,7 +19,7 @@ import * as K from "./kits-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.2.0";
+const VERSION = "0.3.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -57,6 +57,10 @@ function registerSettings() {
   game.settings.register(MOD, "grade", {scope: "client", config: true, name: "Era colour on the map", hint: "A light colour grade for the era (sepia gaslight, drained plague years). Turn it off on a slow computer.",
     type: String, default: "full", choices: {full: "Full", light: "Light", off: "Off"}, onChange: () => applyGrade()});
   game.settings.register(MOD, "cues", {scope: "client", config: true, name: "Era sound cues", hint: "A short sound at dawn, at sunset and (for the Storyteller) when something waits in the approval queue.", type: Boolean, default: true});
+  game.settings.register(MOD, "dawnDread", {scope: "client", config: true, name: "Dawn dread",
+    hint: "In the last half hour before sunrise the edge of the screen pales, birds start up at twenty minutes and a cock crows at ten. Turn it off on this computer.",
+    type: Boolean, default: true, onChange: () => applyDread()});
+  world("dawnPressure", {name: "Rötschreck pressure before dawn", hint: "House rule: in the last ten minutes before sunrise, Rötschreck rolls are 1 harder.", type: Boolean, default: true});
   game.settings.register(MOD, "cueVolume", {scope: "client", config: true, name: "Cue volume", type: Number, default: 0.5, range: {min: 0, max: 1, step: 0.05}});
   world("frames", {name: "Token frames", hint: "A ring or a square in the era's material round each token (iron, gilt, brass, chrome, neon).",
     type: String, default: "characters", choices: K.FRAME_WHO, onChange: () => redrawFrames()});
@@ -294,6 +298,7 @@ function cueSrc(cue) {
   const idx = setting("index") ?? {};
   for ( const k of K.kitChain(currentKit()) ) if ( idx[k]?.cues?.[cue] ) return idx[k].cues[cue];
   const shipped = K.kitChain(currentKit()).find(k => SHIPPED.includes(k)) ?? (currentKit() === "time-of-judgment" ? "modern" : "dark-ages");
+  if ( K.COMMON_CUES.includes(cue) ) return `modules/${MOD}/sounds/common/${cue}.ogg`;
   return `modules/${MOD}/sounds/${shipped}/${cue}.ogg`;
 }
 export function playCue(cue) {
@@ -309,7 +314,48 @@ function cuesForTime(time, delta) {
     if ( toDawn > 0 && toDawn <= delta ) playCue("dawn");
     const toDusk = CAL.secondsToNextDusk(prev, lat);
     if ( toDusk > 0 && toDusk <= delta ) playCue("dusk");
+    if ( setting("dawnDread") ) for ( const c of K.dreadCuesCrossed(CAL.secondsToNextDawn(time, lat), delta) ) playCue(c);
   } catch (e) { /* no cue */ }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Dawn dread                                                         */
+/* ------------------------------------------------------------------ */
+
+/** The dread now: {strength, minutes, birds, cock, rotschreck} in the last half hour before sunrise, else null. */
+export function dread(time = game.time.worldTime) {
+  if ( !active || !CAL ) return null;
+  try { return K.dawnDread(CAL.secondsToNextDawn(time, latitude())); } catch (e) { return null; }
+}
+/** The Rötschreck difficulty step dawn adds now (0 or 1); WoDX Actions reads it for its Rötschreck window. */
+export function dreadRotschreck(time) { return setting("dawnPressure") === false ? 0 : (dread(time)?.rotschreck ?? 0); }
+/** The pale edge on this client's screen, as a CSS variable on the body. */
+export function applyDread(time) {
+  const d = setting("dawnDread") === false ? null : dread(time);
+  const body = document.body;
+  if ( !body ) return d;
+  body.classList.toggle("wodx-dawn-dread", !!d);
+  if ( d ) body.style.setProperty("--wodx-dread", String(d.strength));
+  else body.style.removeProperty("--wodx-dread");
+  return d;
+}
+/** One clock move: the cues it crosses, the screen edge, the Storyteller's card. Returns the card's promise. */
+export function dreadTick(time, delta) {
+  cuesForTime(time, delta);
+  applyDread(time);
+  return dreadCard(time, delta).catch(e => console.warn(`${MOD} | dread`, e));
+}
+/** The Storyteller's card when the pressure starts, once a night. */
+let dreadCarded = null;
+async function dreadCard(time, delta) {
+  if ( !isActiveGM() || setting("dawnPressure") === false || !CAL || chron()?.isSkipping?.() ) return;
+  const toDawn = CAL.secondsToNextDawn(time, latitude());
+  if ( !K.dreadCuesCrossed(toDawn, delta).includes("cock") ) return;
+  const night = Math.floor((time + toDawn) / 86400);
+  if ( dreadCarded === night ) return;
+  dreadCarded = night;
+  await ChatMessage.create({speaker: {alias: "The dawn"}, whisper: game.users.filter(u => u.isGM).map(u => u.id),
+    content: `<div class="wodx-card"><p><strong>Ten minutes to sunrise.</strong> Until the sun is up, Rötschreck rolls are 1 harder (house rule); the Rötschreck window adds it by itself.</p></div>`});
 }
 
 /** The map colour grade, on this client's board. */
@@ -433,7 +479,7 @@ export async function writeCredits() {
   }
   const html = `<p>Every sound and picture an era kit uses, with where it came from. Add a credits.json to a kit folder to fill in a row.</p>
     <table><thead><tr><th>Kit</th><th>Playlist</th><th>File</th><th>Source</th><th>Licence</th><th>Credit</th></tr></thead><tbody>${rows.join("") || `<tr><td colspan="6">No kit playlists yet.</td></tr>`}</tbody></table>
-    <h3>Made for WoDX</h3><p>The dawn, sunset and notice cues in the module's sounds folder were made for this project by sound synthesis, with no outside source.</p>
+    <h3>Made for WoDX</h3><p>The dawn, sunset and notice cues, the birdsong and the cock-crow in the module's sounds folder were made for this project by sound synthesis, with no outside source.</p>
     <p>The fonts and their licences are listed in WoDX Chronicle's fonts/licenses folder.</p>`;
   let j = all(game.journal).find(x => x.flags?.[MOD]?.credits);
   j ??= await JournalEntry.create({name: "WoDX · Asset credits", flags: {[MOD]: {credits: true}}});
@@ -505,7 +551,7 @@ async function buildDialog() {
       content: `<p>There is no folder <code>${esc(r.folder)}</code> in the Data folder yet.</p>
         <p>Make it, with <code>music/calm</code>, <code>music/tension</code>, <code>music/combat</code>, <code>music/sorrow</code> and <code>music/wonder</code>
         for the moods, <code>ambience</code> for loops named after a kind of place or weather (tavern.ogg, street.ogg, rain.ogg), and
-        <code>sounds</code> for dawn.ogg, dusk.ogg and notice.ogg. A credits.json there records each file's source and licence.</p>
+        <code>sounds</code> for dawn.ogg, dusk.ogg, notice.ogg, birds.ogg and cock.ogg. A credits.json there records each file's source and licence.</p>
         <p class="wodx-quiet">Or pick the world's own playlists for each mood in the Atmosphere window. The folder setting is "${esc(root)}".</p>`,
       buttons: [{action: "ok", label: "Close", default: true}]});
   }
@@ -639,6 +685,7 @@ export async function prime() {
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
       moonHidden: () => !!now()?.moonHidden},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
+    dread: {now: dread, rotschreck: dreadRotschreck, apply: applyDread, tick: dreadTick},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
   return api;
@@ -648,6 +695,7 @@ Hooks.once("ready", async () => {
   if ( !active ) return;
   const api = await prime();
   applyGrade();
+  applyDread();
   if ( isActiveGM() ) {
     if ( !setting("lastKit") ) await setSetting("lastKit", currentKit());
     await applyWeather({quiet: false});
@@ -657,7 +705,7 @@ Hooks.once("ready", async () => {
 
 Hooks.on("updateWorldTime", (time, delta) => {
   if ( !active ) return;
-  cuesForTime(time, delta);
+  dreadTick(time, delta);
   if ( !isActiveGM() ) return;
   clearTimeout(timeTimer);
   // The clock can tick many times in a row; work once it settles

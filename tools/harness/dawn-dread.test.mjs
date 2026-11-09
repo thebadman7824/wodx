@@ -1,0 +1,48 @@
+import "./win-paths.mjs";
+import assert from "node:assert/strict";
+import {test} from "node:test";
+import {fileURLToPath} from "node:url";
+import {dirname, join} from "node:path";
+import {readFileSync, existsSync} from "node:fs";
+
+/* WoDX Atmosphere 0.3.0: dawn dread, the mirror of the Sunset cue. */
+const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const K = await import(join(root, "modules/wodx-atmosphere/scripts/kits-rules.mjs"));
+
+test("dawn dread runs the last half hour before sunrise and grows toward it", () => {
+  assert.equal(K.dawnDread(1801), null);
+  assert.equal(K.dawnDread(0), null);
+  assert.equal(K.dawnDread(NaN), null);
+  const a = K.dawnDread(1800), b = K.dawnDread(900), c = K.dawnDread(60);
+  assert.equal(a.strength, 0); assert.equal(b.strength, 0.5); assert.ok(c.strength > 0.95);
+  assert.equal(a.birds, false); assert.equal(K.dawnDread(1200).birds, true);
+  assert.equal(K.dawnDread(601).cock, false); assert.equal(K.dawnDread(600).cock, true);
+  assert.equal(K.dawnDread(601).rotschreck, 0); assert.equal(K.dawnDread(300).rotschreck, 1);
+  assert.equal(b.minutes, 15);
+});
+
+test("birdsong and cock-crow sound once, when the clock crosses their mark", () => {
+  assert.deepEqual(K.dreadCuesCrossed(1190, 20), ["birds"]);
+  assert.deepEqual(K.dreadCuesCrossed(1190, 5), []);
+  assert.deepEqual(K.dreadCuesCrossed(500, 3600), ["birds", "cock"]);
+  assert.deepEqual(K.dreadCuesCrossed(590, 30), ["cock"]);
+  assert.deepEqual(K.dreadCuesCrossed(590, 0), []);
+  assert.deepEqual(K.dreadCuesCrossed(0, 100), []);
+});
+
+test("the two dawn cues ship once for every era, and the kit window can play them", () => {
+  for ( const c of K.COMMON_CUES ) {
+    assert.ok(K.CUES[c], c);
+    assert.ok(existsSync(join(root, `modules/wodx-atmosphere/sounds/common/${c}.ogg`)), c);
+  }
+  const src = readFileSync(join(root, "modules/wodx-atmosphere/scripts/main.mjs"), "utf8");
+  assert.match(src, /sounds\/common\/\$\{cue\}\.ogg/);
+  assert.match(src, /dread: \{now: dread, rotschreck: dreadRotschreck/);
+  assert.match(readFileSync(join(root, "modules/wodx-atmosphere/styles/wodx-atmosphere.css"), "utf8"), /body\.wodx-dawn-dread::after/);
+});
+
+test("the Rötschreck window takes dawn's step only while WoDX Atmosphere is on", () => {
+  const src = readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8");
+  assert.match(src, /at\?\.active \? Number\(at\.api\?\.dread\?\.rotschreck\?\.\(\)\) \|\| 0 : 0/);
+  assert.match(src, /name="mod" value="\$\{dawn\}"/);
+});
