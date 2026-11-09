@@ -62,7 +62,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "The inner god that guides a mage.",
+  "summary": "A mage's guiding spirit within.",
   "claims": [
    {
     "text": "An Awakened Avatar is the inner god that guides a mage and lets the mage rework reality.",
@@ -321,7 +321,7 @@
     ]
    },
    {
-    "text": "Nodes are knots of primal energy where Quintessence wells up and Tass forms, often at places of strong emotion, harmony or corruption.",
+    "text": "Nodes are places where primal energy gathers, Quintessence rises and Tass forms; strong emotion, harmony or corruption often marks them.",
     "tier": "stated",
     "refs": [
      {
@@ -488,7 +488,7 @@
     ]
    },
    {
-    "text": "Choristers teach that the Song has many harmonies, reached through many creeds.",
+    "text": "In Chorister teaching the Song holds many harmonies, and many creeds lead to it.",
     "tier": "stated",
     "refs": [
      {
@@ -594,7 +594,7 @@
   "summary": "One of the Nine Mystic Traditions.",
   "claims": [
    {
-    "text": "The Euthanatoi see themselves as keepers of the Wheel.",
+    "text": "The Euthanatoi count themselves guardians of the Wheel.",
     "tier": "stated",
     "refs": [
      {
