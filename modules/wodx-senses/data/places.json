@@ -1,0 +1,1615 @@
+{
+ "version": 1,
+ "kinds": {
+  "home": {
+   "sight": [
+    {
+     "t": "A low room, its corners lost past the reach of the light."
+    },
+    {
+     "t": "Everything here has been used for years and mended more than once."
+    },
+    {
+     "t": "A bed under a heap of blankets, a stool, a chest with an iron hasp.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Rushes on the floor, trodden flat along the path from door to hearth.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "The hearth is banked; a red line of embers shows under the ash.",
+     "e": [
+      "medieval",
+      "early"
+     ],
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "Wallpaper lifting at the seams, a clock on the mantel, a cold grate.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "A couch, a television's dark screen, shoes kicked off by the door.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "A wall screen showing nothing but the time, and a cleaning drone parked in its cradle.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "A cup left half full, as if someone got up in a hurry.",
+     "n": 1
+    },
+    {
+     "t": "A path worn in the floor, from the bed to the window.",
+     "n": 1
+    },
+    {
+     "t": "The bedding has been slept in tonight; the dent is still there.",
+     "n": 2
+    },
+    {
+     "t": "Scratches around the latch, fresh and bright against the old wood.",
+     "n": 2
+    },
+    {
+     "t": "Something was hidden in the wall here once: the plaster is a shade newer in one place.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "The small noises of a house settling."
+    },
+    {
+     "t": "A draught finds a gap somewhere and whistles through it."
+    },
+    {
+     "t": "The fire ticks and shifts in the hearth.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Mice in the thatch.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A clock, loud in the quiet.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "The hum of a refrigerator, and a tap that drips.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "The building's air system, a low breath that never stops.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "Someone in the next room turns over in bed.",
+     "n": 1
+    },
+    {
+     "t": "Water drips into a bucket set under a leak.",
+     "n": 1
+    },
+    {
+     "t": "A board creaks overhead, then nothing.",
+     "n": 2
+    },
+    {
+     "t": "Breathing, slow and even, where nobody should be.",
+     "n": 3
+    }
+   ],
+   "smell": [
+    {
+     "t": "Old smoke, worked into everything."
+    },
+    {
+     "t": "Damp wool and boiled food."
+    },
+    {
+     "t": "Tallow, and the animal fat it was made from.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "The cowshed on the other side of the wall.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Coal dust and carbolic soap.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Cooking oil, laundry soap and stale cigarettes.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "Filtered air, too clean, with a trace of plastic.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "Bread baked this morning.",
+     "n": 1
+    },
+    {
+     "t": "A chamber pot that wants emptying.",
+     "n": 1
+    },
+    {
+     "t": "Herbs hung to dry above the bed: lavender, rue, something bitter.",
+     "n": 2
+    },
+    {
+     "t": "Under the smoke, a trace of old blood that was scrubbed and scrubbed.",
+     "n": 3
+    }
+   ],
+   "touch": [
+    {
+     "t": "The floor is gritty underfoot."
+    },
+    {
+     "t": "The air is close and warm near the hearth, cold by the walls."
+    },
+    {
+     "t": "The walls are wattle and daub, rough and dry to the touch.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "The radiator is warm and ticks as it cools.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "The table's edge is sticky with something spilled.",
+     "n": 1
+    },
+    {
+     "t": "The latch is still warm from a hand.",
+     "n": 2
+    }
+   ]
+  },
+  "workplace": {
+   "sight": [
+    {
+     "t": "Tools hang on pegs, each in its own outline of dust."
+    },
+    {
+     "t": "A workbench scarred by years of use."
+    },
+    {
+     "t": "Shavings, offcuts and a half-finished piece clamped to the bench.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A forge, its coals grey, the anvil scaled with black.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Bolts of cloth stacked to the ceiling, and a counting board by the door.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "Belts and pulleys run along the ceiling to the machines.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Fluorescent tubes, a time clock, a calendar from a supplier.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Fabrication units behind safety glass, status lights blinking amber.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "One tool is missing from its place on the wall.",
+     "n": 1
+    },
+    {
+     "t": "Work stopped in the middle: a measure drawn but not cut.",
+     "n": 1
+    },
+    {
+     "t": "A ledger left open on the bench, the last entry blotted.",
+     "n": 2
+    },
+    {
+     "t": "Marks on the floor where something heavy was dragged to the back.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "The building creaks as it cools."
+    },
+    {
+     "t": "Water drips into the quenching trough.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Hammering, steady, from somewhere close.",
+     "e": [
+      "medieval",
+      "early"
+     ],
+     "p": [
+      "day"
+     ]
+    },
+    {
+     "t": "A machine idles somewhere, ticking.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "A radio playing low, tuned between two stations.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "The hum of servers and the click of a relay.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "A cat moves among the stock.",
+     "n": 1
+    },
+    {
+     "t": "Someone counting under their breath in the back room.",
+     "n": 2
+    }
+   ],
+   "smell": [
+    {
+     "t": "Sawdust, sweat and lamp oil."
+    },
+    {
+     "t": "Coal smoke and hot iron.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Tanning: lime, dung and rot.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Dye vats, sour and sharp.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "Machine oil and steam.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Solvent, coffee, burnt dust from a heater.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Ozone and the sweet smell of hot polymer.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "Glue, freshly cooked.",
+     "n": 1
+    },
+    {
+     "t": "Fresh blood under the sawdust, somebody's cut hand.",
+     "n": 2
+    }
+   ],
+   "touch": [
+    {
+     "t": "Grit and shavings underfoot."
+    },
+    {
+     "t": "The forge still gives off a little heat.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "The floor shakes faintly with a machine somewhere.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "The bench is still warm where someone was leaning.",
+     "n": 1
+    }
+   ]
+  },
+  "church": {
+   "sight": [
+    {
+     "t": "Columns go up into a dark the light can't reach."
+    },
+    {
+     "t": "An altar under a white cloth, a cross above it."
+    },
+    {
+     "t": "Saints in paint and stone, their faces worn smooth by hands."
+    },
+    {
+     "t": "Rushlights by the altar; the nave beyond is black.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A single lamp burns before the sacrament.",
+     "e": [
+      "medieval",
+      "early"
+     ],
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "Box pews with their little doors, and a high pulpit.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "Gaslight in the side chapels, and plaques to the dead of the parish.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Electric candles in a rack, a coin box beside them.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "Wax has dripped and hardened on the floor before one of the saints.",
+     "n": 1
+    },
+    {
+     "t": "A prayer book left open on a bench.",
+     "n": 1
+    },
+    {
+     "t": "A side door, not quite shut.",
+     "n": 2
+    },
+    {
+     "t": "Dust lies thick everywhere except one path, to the crypt stair.",
+     "n": 2
+    },
+    {
+     "t": "One of the floor slabs has been lifted and set back, the mortar broken.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "Every footstep comes back off the stone."
+    },
+    {
+     "t": "The building is so quiet the ears ring."
+    },
+    {
+     "t": "Monks at the night office, far off, a low chant.",
+     "e": [
+      "medieval",
+      "early"
+     ],
+     "p": [
+      "night",
+      "dawn"
+     ]
+    },
+    {
+     "t": "A murmured prayer from one of the side chapels.",
+     "p": [
+      "day"
+     ]
+    },
+    {
+     "t": "A pigeon shifts in the roof beams.",
+     "n": 1
+    },
+    {
+     "t": "Someone breathing in the confessional.",
+     "n": 2
+    },
+    {
+     "t": "A scrape of stone, under the floor.",
+     "n": 3
+    }
+   ],
+   "smell": [
+    {
+     "t": "Cold stone and old incense."
+    },
+    {
+     "t": "Beeswax and dust."
+    },
+    {
+     "t": "Damp, and the smell of the graves under the floor.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Floor polish and lilies a few days old.",
+     "e": [
+      "modern",
+      "future"
+     ]
+    },
+    {
+     "t": "Smoke from a candle just snuffed.",
+     "n": 1
+    },
+    {
+     "t": "Wet earth, carried in on someone's boots.",
+     "n": 2
+    },
+    {
+     "t": "Under the incense, something dead and not long buried.",
+     "n": 3
+    }
+   ],
+   "touch": [
+    {
+     "t": "The cold comes up from the stone floor."
+    },
+    {
+     "t": "The air moves very slowly, in long draughts."
+    },
+    {
+     "t": "The holy water stoup is dry.",
+     "n": 1
+    },
+    {
+     "t": "The altar rail is worn smooth, and warm in one place.",
+     "n": 2
+    }
+   ]
+  },
+  "tavern": {
+   "sight": [
+    {
+     "t": "Low beams, smoke, and tables crowded too close."
+    },
+    {
+     "t": "A fire in a wide hearth, and the regulars sitting nearest it."
+    },
+    {
+     "t": "Trestles and benches, ale in leather jacks and wooden cups.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "The keeper's wife and daughter carry jugs between the tables.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Pewter tankards on hooks, a slate of what each drinker owes.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "A long bar, a brass rail, gas mantles yellow with smoke.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "A jukebox, a dartboard, a television over the bar showing the game.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Holographic menus over each table, and a bartender who never blinks.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "Only a few tables still taken; the rest have their stools upturned.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "Someone in the corner keeps their back to the wall and their eyes on the door.",
+     "n": 1
+    },
+    {
+     "t": "A game of dice at the back, with more money on the table than it should have.",
+     "n": 1
+    },
+    {
+     "t": "The keeper glances at the cellar door every so often.",
+     "n": 2
+    },
+    {
+     "t": "One drinker hasn't touched the cup in front of them all night.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "Voices over each other, and somebody laughing too loud."
+    },
+    {
+     "t": "Cups set down hard, a bench scraping back."
+    },
+    {
+     "t": "A fiddle, badly tuned, and a few voices with it.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A piano, a song half the room knows.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Music from the jukebox, and the clack of pool balls.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "A synth beat from the walls, and a dozen private calls at once.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "The talk has dropped low; people lean in to speak.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "Dice rattle at the back table and someone curses the throw.",
+     "n": 1
+    },
+    {
+     "t": "Two people at the bar argue in whispers about money.",
+     "n": 2
+    },
+    {
+     "t": "Upstairs, a floorboard creaks twice and stops.",
+     "n": 2
+    },
+    {
+     "t": "A name, said very quietly, at the table by the door.",
+     "n": 3
+    }
+   ],
+   "smell": [
+    {
+     "t": "Spilled ale, smoke and wet clothes drying by the fire."
+    },
+    {
+     "t": "Too many people in a small room."
+    },
+    {
+     "t": "Tallow, onions, a pot of something that has stewed since noon.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "The rushes on the floor need changing.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Tobacco, gin and sawdust.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "Beer, pipe smoke and paraffin.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Cigarettes, fryer oil, bleach in the toilets.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Synthetic tobacco, flavored vapour, and the sharp edge of a stimulant someone is smoking.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "Someone has been sick out the back.",
+     "n": 1
+    },
+    {
+     "t": "One of the drinkers smells of horse and the road; they have come a long way today.",
+     "n": 2
+    },
+    {
+     "t": "Under the smoke, blood: a little, fresh.",
+     "n": 3
+    }
+   ],
+   "touch": [
+    {
+     "t": "The heat of the fire on one side, the draught from the door on the other."
+    },
+    {
+     "t": "The floor is sticky."
+    },
+    {
+     "t": "The table is still wet from a spilled cup.",
+     "n": 1
+    }
+   ]
+  },
+  "haven": {
+   "sight": [
+    {
+     "t": "A room that nobody lives in, by the look of it."
+    },
+    {
+     "t": "The windows have been covered, every one."
+    },
+    {
+     "t": "A crypt, or a cellar made into one: a long box on trestles.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Heavy curtains nailed at the edges, and dust on every surface.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Blackout blinds, a steel door, a mattress on the floor.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Nothing to eat or drink anywhere, and no sign there ever was.",
+     "n": 1
+    },
+    {
+     "t": "The lock on the inside of the door is better than the one outside.",
+     "n": 2
+    },
+    {
+     "t": "The dust has been disturbed only on one path, from the door to the resting place.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "Silence, close and heavy."
+    },
+    {
+     "t": "The door, when it moves, makes no sound at all: oiled hinges."
+    },
+    {
+     "t": "Rats, and then the rats go still.",
+     "n": 1
+    },
+    {
+     "t": "Water dripping behind the walls.",
+     "n": 2
+    }
+   ],
+   "smell": [
+    {
+     "t": "Cold, dry air, like a cellar in winter."
+    },
+    {
+     "t": "Dust, old wood, and nothing living."
+    },
+    {
+     "t": "Earth, as if the floor were bare ground under the boards.",
+     "n": 1
+    },
+    {
+     "t": "Old blood, dried brown, faint but certain.",
+     "n": 2
+    },
+    {
+     "t": "A trace of something sweet, like grave flowers left too long.",
+     "n": 3
+    }
+   ],
+   "touch": [
+    {
+     "t": "The room is colder than it should be."
+    },
+    {
+     "t": "The air hasn't moved in a long time."
+    },
+    {
+     "t": "The resting place is cold, colder than the room.",
+     "n": 2
+    }
+   ]
+  },
+  "gate": {
+   "sight": [
+    {
+     "t": "A heavy gate, and a smaller door cut into it for night traffic."
+    },
+    {
+     "t": "Arrow slits, and a brazier where the watch warm their hands."
+    },
+    {
+     "t": "Pikes in a rack, and a bench for the men off duty.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A watch-house lantern, and a table where papers are checked.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "A sentry box, a barrier pole painted in stripes.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "A checkpoint booth, floodlights, a barrier arm.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Scanning arches, a drone overhead, guards in visored helmets.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "The gate is shut and barred; only the wicket opens.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "One of the watch is asleep on their feet.",
+     "n": 1
+    },
+    {
+     "t": "A notice nailed up by the door, with a description of someone wanted.",
+     "n": 1
+    },
+    {
+     "t": "The bar on the gate is not seated all the way.",
+     "n": 2
+    }
+   ],
+   "sound": [
+    {
+     "t": "A guard's boots on the walk above."
+    },
+    {
+     "t": "The watch talking about pay and the cold."
+    },
+    {
+     "t": "A watchman calls the hour.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "A radio crackles in the booth.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Dice in the guardroom.",
+     "n": 1
+    },
+    {
+     "t": "Someone outside the gate, waiting, shuffling their feet.",
+     "n": 2
+    }
+   ],
+   "smell": [
+    {
+     "t": "Wood smoke from the brazier, wet leather, unwashed bodies."
+    },
+    {
+     "t": "Horse dung from the gate road.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Diesel exhaust and coffee.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Ale on a guard's breath.",
+     "n": 1
+    }
+   ],
+   "touch": [
+    {
+     "t": "Wind funnels through the gate arch."
+    },
+    {
+     "t": "The stone of the gate is cold and wet."
+    }
+   ]
+  },
+  "market": {
+   "sight": [
+    {
+     "t": "An open square, its paving uneven, a well or fountain at its heart."
+    },
+    {
+     "t": "Stalls, awnings, and people pushing between them.",
+     "p": [
+      "day"
+     ]
+    },
+    {
+     "t": "The stalls are bare frames now; scraps blow across the stones.",
+     "p": [
+      "night",
+      "dusk"
+     ]
+    },
+    {
+     "t": "A market cross, a pillory, the church tower over the roofs.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A weigh house with the town's scales, and a pump with a chained cup.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "Gas lamps around the edge, carts with their shafts down.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Parked cars, a bus shelter, shop signs lit up.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Advertising screens on every surface, some flickering with dead pixels.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "A cutpurse working the edges of the crowd.",
+     "n": 1
+    },
+    {
+     "t": "A notice of a hanging, a few days old.",
+     "n": 1
+    },
+    {
+     "t": "Someone watching the square from a window above the baker's.",
+     "n": 2
+    }
+   ],
+   "sound": [
+    {
+     "t": "The square throws noise back from every side."
+    },
+    {
+     "t": "Traders crying their goods, a cart wheel squealing.",
+     "p": [
+      "day"
+     ]
+    },
+    {
+     "t": "A dog barks, and another answers it from across the town.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "Geese, a pig squealing, a bell for the market's opening.",
+     "e": [
+      "medieval",
+      "early"
+     ],
+     "p": [
+      "day"
+     ]
+    },
+    {
+     "t": "Traffic, a busker, a car alarm somewhere.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Water running in the fountain, or the well chain swinging.",
+     "n": 1
+    },
+    {
+     "t": "Footsteps, behind and to one side, keeping pace.",
+     "n": 2
+    }
+   ],
+   "smell": [
+    {
+     "t": "Trampled vegetables, horse dung, wet stone."
+    },
+    {
+     "t": "Bread, fish, spices and a hundred people.",
+     "p": [
+      "day"
+     ]
+    },
+    {
+     "t": "The tannery downwind, and the butchers' shambles.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Coal smoke, horses and roasting chestnuts.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Exhaust fumes, hot fat from a food stall.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Rotting fruit in the gutter.",
+     "n": 1
+    },
+    {
+     "t": "Smoke from a fire someone shouldn't have lit.",
+     "n": 2
+    }
+   ],
+   "touch": [
+    {
+     "t": "The wind has room to move here."
+    },
+    {
+     "t": "The cobbles are slick."
+    }
+   ]
+  },
+  "street": {
+   "sight": [
+    {
+     "t": "A narrow way between houses that lean toward each other overhead."
+    },
+    {
+     "t": "Doors shut, shutters closed, a gutter down the middle."
+    },
+    {
+     "t": "The upper floors jut out, nearly touching across the lane.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A lamp in a niche, a street sign painted on the wall.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "Gas lamps at long intervals, pools of light and the dark between.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Streetlights, parked cars, a phone box.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Neon in a dozen scripts, and a security camera on every corner.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "One window still lit, high up.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "A gap between two houses, wide enough for one person.",
+     "n": 1
+    },
+    {
+     "t": "Something has been dragged through the gutter here.",
+     "n": 1
+    },
+    {
+     "t": "Someone standing in a doorway, keeping still.",
+     "n": 2
+    },
+    {
+     "t": "Fresh chalk marks on a doorpost, a sign meant for someone.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "The echo of footsteps."
+    },
+    {
+     "t": "Water running in the gutter."
+    },
+    {
+     "t": "A shutter bangs somewhere in the wind.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "The watch, far off, calling the hour.",
+     "e": [
+      "medieval",
+      "early"
+     ],
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "A carriage passes in the next street.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "A car goes by slowly, its radio up.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "The whine of an aircar passing low.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "Voices behind a shutter, a quarrel.",
+     "n": 1
+    },
+    {
+     "t": "Footsteps behind, stopping when you stop.",
+     "n": 2
+    }
+   ],
+   "smell": [
+    {
+     "t": "The gutter, and what has been thrown in it."
+    },
+    {
+     "t": "Wet stone and chimney smoke."
+    },
+    {
+     "t": "Night soil, pigs, and somebody's bread oven.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Coal smoke, horses, the river.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Exhaust, wet tarmac, a takeaway.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Hot wiring, rain on concrete, cheap noodle broth.",
+     "e": [
+      "future"
+     ]
+    },
+    {
+     "t": "Cat piss in the doorways.",
+     "n": 1
+    },
+    {
+     "t": "Lamp oil from a lamp just put out.",
+     "n": 2
+    }
+   ],
+   "touch": [
+    {
+     "t": "The way underfoot is uneven and slick."
+    },
+    {
+     "t": "A cold wind down the length of the street."
+    }
+   ]
+  },
+  "castle": {
+   "sight": [
+    {
+     "t": "Thick walls, deep windows, tapestries against the cold."
+    },
+    {
+     "t": "A great hall with a high table at one end."
+    },
+    {
+     "t": "A hearth in the middle of the hall, its smoke going up to a hole in the roof.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Banners, shields on the walls, the lord's arms over the high seat.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Portraits in gilt frames, a long gallery, a staircase of oak.",
+     "e": [
+      "early"
+     ]
+    },
+    {
+     "t": "Gas brackets on old stone, hunting trophies, a billiard table.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Velvet ropes and a sign for the gift shop; this part is a museum now.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "The hall is dark; servants sleep on the benches along the walls.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "A guard at the stair who looks at everyone who passes.",
+     "n": 1
+    },
+    {
+     "t": "One tapestry hangs a little out from the wall.",
+     "n": 2
+    },
+    {
+     "t": "Scuffs on the floor lead to a panel that isn't flush.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "Voices carry up the stair from the hall."
+    },
+    {
+     "t": "Dogs in the hall, scratching and settling."
+    },
+    {
+     "t": "A sentry on the wall walk, pacing.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "A servant sweeping the rushes.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A door shuts somewhere above.",
+     "n": 1
+    },
+    {
+     "t": "Someone talking low in the window seat.",
+     "n": 2
+    }
+   ],
+   "smell": [
+    {
+     "t": "Wood smoke, dogs and roasting meat."
+    },
+    {
+     "t": "Cold stone and beeswax."
+    },
+    {
+     "t": "Rushes strewn with herbs to sweeten them.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "Coal fires and furniture polish.",
+     "e": [
+      "industrial"
+     ]
+    },
+    {
+     "t": "Wine, spilled and soaked into the boards.",
+     "n": 1
+    },
+    {
+     "t": "The garderobe, at the end of the passage.",
+     "n": 2
+    }
+   ],
+   "touch": [
+    {
+     "t": "The cold of the stone walls comes right through."
+    },
+    {
+     "t": "A draught from every arrow slit."
+    }
+   ]
+  },
+  "wilds": {
+   "sight": [
+    {
+     "t": "Trees, close and dark, and the path between them."
+    },
+    {
+     "t": "Open fields, a hedge line, the black edge of a wood."
+    },
+    {
+     "t": "Nothing past a few yards but shapes.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "Birds in the hedges, a hawk over the field.",
+     "p": [
+      "day"
+     ]
+    },
+    {
+     "t": "A shrine at the crossroads, its offerings rotted.",
+     "e": [
+      "medieval",
+      "early"
+     ]
+    },
+    {
+     "t": "A fence with a rusted sign, power lines on the hill.",
+     "e": [
+      "modern"
+     ]
+    },
+    {
+     "t": "Tracks in the mud, a few hours old.",
+     "n": 1
+    },
+    {
+     "t": "Broken branches at shoulder height.",
+     "n": 1
+    },
+    {
+     "t": "A trail heading off the path, used by something.",
+     "n": 2
+    },
+    {
+     "t": "Bones scattered under a tree, too clean, too many.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "The wind in the trees."
+    },
+    {
+     "t": "A stream, somewhere below."
+    },
+    {
+     "t": "An owl, then quiet.",
+     "p": [
+      "night"
+     ]
+    },
+    {
+     "t": "Birdsong starting, one bird and then dozens.",
+     "p": [
+      "dawn"
+     ]
+    },
+    {
+     "t": "Something heavy moves in the undergrowth.",
+     "n": 1
+    },
+    {
+     "t": "The woods go silent all at once.",
+     "n": 2
+    },
+    {
+     "t": "A howl, far off, answered nearer.",
+     "n": 3
+    }
+   ],
+   "smell": [
+    {
+     "t": "Leaf mould, wet earth, pine."
+    },
+    {
+     "t": "Grass and cattle."
+    },
+    {
+     "t": "Wood smoke from a fire somewhere ahead.",
+     "n": 1
+    },
+    {
+     "t": "Carrion, faint, on the wind.",
+     "n": 2
+    },
+    {
+     "t": "Wet fur, and the musk of a large animal.",
+     "n": 3
+    }
+   ],
+   "touch": [
+    {
+     "t": "Wet grass soaks through to the ankles."
+    },
+    {
+     "t": "The wind comes across the open ground."
+    },
+    {
+     "t": "The ground is soft here; it gives underfoot.",
+     "n": 1
+    }
+   ]
+  },
+  "caern": {
+   "sight": [
+    {
+     "t": "Standing stones, or a ring of old trees, at the centre of the place."
+    },
+    {
+     "t": "The grass grows differently here."
+    },
+    {
+     "t": "Small offerings in a hollow: feathers, teeth, a bit of bone.",
+     "n": 1
+    },
+    {
+     "t": "Claw marks scored into the bark, higher than anyone could reach.",
+     "n": 2
+    },
+    {
+     "t": "The moonlight falls more brightly here than it should.",
+     "n": 3
+    }
+   ],
+   "sound": [
+    {
+     "t": "The air is quiet, as if waiting."
+    },
+    {
+     "t": "Water underground, running.",
+     "n": 1
+    },
+    {
+     "t": "Wolves, somewhere close, and not hiding it.",
+     "n": 2
+    }
+   ],
+   "smell": [
+    {
+     "t": "Earth, stone and growing things, very strong."
+    },
+    {
+     "t": "Wolf, all around.",
+     "n": 1
+    },
+    {
+     "t": "Old ash from a great fire.",
+     "n": 2
+    }
+   ],
+   "touch": [
+    {
+     "t": "The hairs on the arms stand up."
+    },
+    {
+     "t": "The ground hums, very faintly, or seems to."
+    }
+   ]
+  },
+  "other": {
+   "sight": [
+    {
+     "t": "Nothing here stands out at first look."
+    },
+    {
+     "t": "Something has been moved recently; the dust shows it.",
+     "n": 1
+    },
+    {
+     "t": "A detail that doesn't fit: a door where none should be, a mark on a wall.",
+     "n": 2
+    }
+   ],
+   "sound": [
+    {
+     "t": "The usual noises of the place, and nothing more."
+    },
+    {
+     "t": "A sound from somewhere nearby, too faint to place.",
+     "n": 1
+    }
+   ],
+   "smell": [
+    {
+     "t": "Dust, damp and people."
+    },
+    {
+     "t": "A trace of smoke.",
+     "n": 1
+    }
+   ],
+   "touch": [
+    {
+     "t": "The air is still."
+    },
+    {
+     "t": "A draught from somewhere.",
+     "n": 1
+    }
+   ]
+  }
+ }
+}
