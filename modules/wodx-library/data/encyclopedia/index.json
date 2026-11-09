@@ -217,6 +217,12 @@
    "title": "Clanbook: Gangrel (Revised)",
    "short": "CB Gangrel (Rev)",
    "edition": "Revised"
+  },
+  {
+   "id": "cblasombra",
+   "title": "Clanbook: Lasombra (Revised)",
+   "short": "CB Lasombra (Rev)",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -255,6 +261,7 @@
   "beckett.json",
   "dust.json",
   "sthr.json",
-  "cbgangrel.json"
+  "cbgangrel.json",
+  "cblasombra.json"
  ]
 }
