@@ -66,7 +66,8 @@ export async function run() {
 
     // 4. Orders
     scene = await Scene.create({name: "WoDX gate: the yard", width: 1400, height: 1000, grid: {size: 100}});
-    npc = await Actor.create({name: "WoDX gate: the apprentice", type: "Mortal", flags: {"wodx-npc": {serves: [pc.id]}}});
+    npc = await Actor.create({name: "WoDX gate: the apprentice", type: "Mortal", ownership: {default: 0}, flags: {"wodx-npc": {serves: [pc.id]}}});
+    R.notes.push({npcOwnership: game.actors.get(npc.id)?.ownership, npcHasPlayerOwner: game.actors.get(npc.id)?.hasPlayerOwner});
     const [tp, tn] = await scene.createEmbeddedDocuments("Token", [
       {name: pc.name, actorId: pc.id, x: 200, y: 200, actorLink: true}, {name: npc.name, actorId: npc.id, x: 800, y: 600, actorLink: true}]);
     const g = await NPC.orders.give({sceneId: scene.id, tokenId: tn.id, kind: "wait", leader: pc.id});
