@@ -265,6 +265,12 @@
    "title": "Los Angeles by Night",
    "short": "Los Angeles by Night",
    "edition": "2nd"
+  },
+  {
+   "id": "mcbn",
+   "title": "Mexico City by Night",
+   "short": "Mexico City by Night",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -311,6 +317,7 @@
   "bloodyhearts.json",
   "cotn.json",
   "cbn2.json",
-  "labn.json"
+  "labn.json",
+  "mcbn.json"
  ]
 }
