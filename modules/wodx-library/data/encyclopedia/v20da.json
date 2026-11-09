@@ -1,0 +1,1927 @@
+[
+ {
+  "id": "da-the-embrace",
+  "title": "The Embrace in the Dark Medieval",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "In the nights of 1242, becoming Cainite begins with being murdered by a vampire.",
+  "claims": [
+   {
+    "text": "A childe is told plainly that a vampire murdered the childe's mortal self.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The new Cainite keeps a human mind, memories and attachments, and still feels guilt over the first kill.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "embrace",
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-war-of-princes",
+  "title": "The War of Princes",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The age of the Dark Medieval in which Cainite lords war over cities while faith rules the mortal world.",
+  "claims": [
+   {
+    "text": "The present nights are named the War of Princes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-prince",
+   "da-high-and-low-clans"
+  ]
+ },
+ {
+  "id": "da-ages-of-cainites",
+  "title": "Fledglings to Methuselahs",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The ranks of age among Cainites in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "Methuselahs are of the Fifth and Sixth Generations, the oldest active vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Methuselahs are a thousand years old or more and barely human in their thinking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "An ancilla is usually of the Tenth or Eleventh Generation, between 100 and 200 years old and hungry for power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "A neonate is a vampire under a hundred years old.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-generations",
+   "antediluvians"
+  ]
+ },
+ {
+  "id": "da-high-and-low-clans",
+  "title": "High and Low Clans",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Cainites rank the clans in 1242: some rule, some beg, depending on city and history.",
+  "claims": [
+   {
+    "text": "Clans are counted High or Low depending on who rules the city, the clan's history and its deeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "A Cainite dies into a clan and takes on its centuries of weight and sin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans",
+   "da-prince"
+  ]
+ },
+ {
+  "id": "da-clans",
+  "title": "The Clans of Caine in 1242",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The clans as they stand in the Dark Medieval, where what makes a clan is no longer clear.",
+  "claims": [
+   {
+    "text": "The Salubri trace their line to the Antediluvian Saulot, yet most no longer count them a clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "In 1133 Tremere sorcerers raided Saulot's tomb and committed Amaranth, and their eldest became Third Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Most Cainites now accept the Tremere as a clan despite how they rose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-tremere",
+   "da-salubri",
+   "da-high-and-low-clans",
+   "clans"
+  ]
+ },
+ {
+  "id": "da-traditions",
+  "title": "The Traditions in the Dark Medieval",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Caine's six commandments as Cainites of 1242 know them, each with its own wording.",
+  "claims": [
+   {
+    "text": "The six are the Covenant, the Domain, the Progeny, the Accounting, Destruction and the Silence of the Blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 27,
+      "pdf": 28
+     },
+     {
+      "book": "v20da",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The First Tradition, the Covenant, binds all Cainites as Caine's brood under the Traditions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "By the Second Tradition a domain is its master's concern, visitors must present themselves, and the master may hunt within it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The Fifth Tradition forbids spilling the blood of an elder of one's kind; that right belongs to those closest to Caine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The Sixth Tradition, the Silence of the Blood, forbids revealing one's nature to those not of the blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "traditions",
+   "da-prince"
+  ]
+ },
+ {
+  "id": "da-prince",
+  "title": "Prince, Sheriff and Court",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The offices of a Dark Medieval city's Cainite court.",
+  "claims": [
+   {
+    "text": "A Prince is a traditional city ruler who claims authority over the Traditions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "A Prince's Sheriff in a city like London needs a full grasp of the domain's laws.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Hunters of the Church are nearly everywhere, whatever Traditions a city keeps.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-traditions",
+   "da-war-of-princes"
+  ]
+ },
+ {
+  "id": "da-generations",
+  "title": "Generations in the Dark Medieval",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Distance from Caine, and what the thin-blooded of the age can do.",
+  "claims": [
+   {
+    "text": "The youngest vampires can rarely Embrace: without the strength the victim simply dies, and without political standing an elder may kill both.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "generation",
+   "da-ages-of-cainites"
+  ]
+ },
+ {
+  "id": "da-amaranth",
+  "title": "The Amaranth",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Drinking another Cainite's heart's blood or soul for a sudden rise in power.",
+  "claims": [
+   {
+    "text": "The Amaranth is drinking the heart's blood or soul of another Cainite, an ethically doubtful but very effective way to gain power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "diablerie",
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-ghouls",
+  "title": "Ghouls and Revenants",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mortals fed vitae, and the families bred from them.",
+  "claims": [
+   {
+    "text": "Vitae binds a servant more surely than money or fear, and most ghouls are tied by blood oath to their master.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 399,
+      "pdf": 400
+     }
+    ]
+   },
+   {
+    "text": "A regnant is a vampire who keeps a ghoul; a revenant is born of a ghoul family.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ghouls",
+   "blood-bond"
+  ]
+ },
+ {
+  "id": "da-hunters",
+  "title": "Hunters of the Dark Medieval",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mortals who hunt the Damned, made bolder in this age by the Church's wars.",
+  "claims": [
+   {
+    "text": "Cainites blame the Cathars for how dangerous these violent nights have become.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Hunters of the Church are almost everywhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-true-faith",
+   "da-prince"
+  ]
+ },
+ {
+  "id": "da-lupines",
+  "title": "Lupines",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Wild shapeshifters of the woods, feared by Cainites of every clan.",
+  "claims": [
+   {
+    "text": "Lupines are described as packs of wild men who turn into wolves and can tear a vampire to ashes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Cainites are advised not to enter the woods unprepared.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lupines",
+   "da-gangrel"
+  ]
+ },
+ {
+  "id": "da-witches",
+  "title": "Witches and Warlocks",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Humans with magical power, once revered, now feared like the Damned.",
+  "claims": [
+   {
+    "text": "Mortals with magic were once worshipped as servants of gods, and are now feared.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-hunters"
+  ]
+ },
+ {
+  "id": "da-shining-ones",
+  "title": "The Shining Ones",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The fae of the Dark Medieval, wild beings whose name is best not spoken.",
+  "claims": [
+   {
+    "text": "The Others, called the Shining Ones, live both in and outside this world, and their name should not be spoken aloud.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-ghosts"
+  ]
+ },
+ {
+  "id": "da-ghosts",
+  "title": "Ghosts",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Souls of the dead who linger instead of crossing to judgment.",
+  "claims": [
+   {
+    "text": "Some souls of those a vampire kills linger, to torment the killer, finish their work or guard loved ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-shining-ones",
+   "ghosts"
+  ]
+ },
+ {
+  "id": "da-true-faith",
+  "title": "True Faith",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The rare holy power of mortals whose belief goes far beyond lip service.",
+  "claims": [
+   {
+    "text": "Most people give faith only lip service, but a rare few believe far more deeply.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 392,
+      "pdf": 393
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-hunters"
+  ]
+ },
+ {
+  "id": "da-roads",
+  "title": "The Roads",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The moral codes of the Dark Medieval Cainites, each with its own ethics and paths.",
+  "claims": [
+   {
+    "text": "Most Damned spiral down, but the Roads offer a way to hold on without going mad.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Changing Road is risky, pushing the Cainite close to the Beast, and needs a mentor on the new Road.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "The major Roads are Beast, Heaven, Humanity, Kings, Lilith, Metamorphosis and Sin; Bones and Yasa are minor Roads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 115,
+      "pdf": 116
+     },
+     {
+      "book": "v20da",
+      "page": 140,
+      "pdf": 141
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-golconda",
+   "paths-of-enlightenment"
+  ]
+ },
+ {
+  "id": "da-road-of-the-beast",
+  "title": "The Road of the Beast",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Via Bestiae: the Road that sees human society as the judge of who lives and dies, and rejects it.",
+  "claims": [
+   {
+    "text": "Followers see society as the force that decides who lives, starves or is called a murderer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 115,
+      "pdf": 116
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-road-of-heaven",
+  "title": "The Road of Heaven",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Via Caeli: the Road of those who believe divine purpose guides even the Damned.",
+  "claims": [
+   {
+    "text": "Followers believe divine purpose guides fate, so that even great evil may serve a greater end.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-road-of-humanity",
+  "title": "The Road of Humanity",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Via Humanitas: holding on to the person one was before death.",
+  "claims": [
+   {
+    "text": "Followers hold that a Cainite should remain who the Cainite was before dying, and that reinvention is a lie or a folly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-road-of-kings",
+  "title": "The Road of Kings",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Via Regalis: the Road of rulers, who trace their right to rule back to Caine.",
+  "claims": [
+   {
+    "text": "Followers trace the Road to Caine's oath that ruling in darkness beats false humility in the light; some think God mandates their rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-road-of-lilith",
+  "title": "The Road of Lilith",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Derech Lilit: the Road that reveres Lilith as mother, survivor and catalyst.",
+  "claims": [
+   {
+    "text": "By some Noddist accounts, Lilith may be older than Judaism, Christianity, Noddist scripture and even Caine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-road-of-metamorphosis",
+  "title": "The Road of Metamorphosis",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Via Mutationis: the Road that asks what vampires become next.",
+  "claims": [
+   {
+    "text": "Most who walk it are Tzimisce.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-road-of-sin",
+  "title": "The Road of Sin",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Via Peccati: the Road of Sinners, who acknowledge no power above themselves.",
+  "claims": [
+   {
+    "text": "Sinners say their rebellion began with Caine's rejection of God's authority.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-road-of-bones",
+  "title": "The Road of Bones",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Via Ossium: a minor Road concerned with remembrance and death.",
+  "claims": [
+   {
+    "text": "Few true records of Cainite history exist, and the eldest drift into torpor and incoherence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-road-of-yasa",
+  "title": "The Road of Yasa",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Via Yasaq: the Anda's Road, drawn from the Mongol code of Chinghis Khan.",
+  "claims": [
+   {
+    "text": "The Anda's code stresses honour, respect and loyalty to family and sworn kin, and most Anda walk it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 140,
+      "pdf": 141
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-golconda",
+  "title": "Golconda",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A myth, a goal or a purpose: the state where a Cainite lives in balance with the Beast.",
+  "claims": [
+   {
+    "text": "Many Roads speak of Golconda, a state where the paragon coexists with the Beast and becomes a more perfect vampire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 115,
+      "pdf": 116
+     }
+    ]
+   },
+   {
+    "text": "To most Cainites it is a myth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 115,
+      "pdf": 116
+     }
+    ]
+   }
+  ],
+  "see": [
+   "golconda",
+   "da-roads"
+  ]
+ },
+ {
+  "id": "da-assamites",
+  "title": "Assamites (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Judges and scholars of Alamut; traditional Assamites follow the Road of Blood.",
+  "claims": [
+   {
+    "text": "Assamite viziers have Auspex, Presence and Quietus (Hematus).",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Each Assamite vizier is obsessed with the highest intellectual or creative Ability, which acts as a derangement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-brujah",
+  "title": "Brujah (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Passionate idealists whose fire can turn to rage.",
+  "claims": [
+   {
+    "text": "Brujah have Celerity, Potence and Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Rolls to resist or guide frenzy are two higher for a Brujah.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-cappadocians",
+  "title": "Cappadocians (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Clan of Death: lorekeepers who study death as a mystery to be solved.",
+  "claims": [
+   {
+    "text": "Cappadocians have Auspex, Fortitude and Necromancy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Cappadocians look ashen and corpselike and cannot spend vitae to seem alive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Cappadocians are the lorekeepers and historians of the Cainites, studying death through dissection, the dead and the Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-gangrel",
+  "title": "Gangrel (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Wild wanderers close to the Beast.",
+  "claims": [
+   {
+    "text": "Gangrel have Animalism, Fortitude and Protean.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "When a Gangrel frenzies, the Beast may leave a small physical or mental animal trait.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-lasombra",
+  "title": "Lasombra (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Clan of Shadows.",
+  "claims": [
+   {
+    "text": "Lasombra have Dominate, Obtenebration and Potence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Lasombra do not show in reflections and cannot abide bright light.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-malkavians",
+  "title": "Malkavians (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Malkav's mad and prophetic children.",
+  "claims": [
+   {
+    "text": "Malkavians have Auspex, Dementation and Obfuscate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Each Malkavian has a derangement, an imbalance of the humours, that can never be cured.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-nosferatu",
+  "title": "Nosferatu (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Cainites who wear the blood's corruption on their faces.",
+  "claims": [
+   {
+    "text": "Nosferatu have Animalism, Obfuscate and Potence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Nosferatu have Appearance zero, which cannot be raised, and they fail first-impression rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-ravnos",
+  "title": "Ravnos (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Masters of illusion who cannot change their own nature.",
+  "claims": [
+   {
+    "text": "Ravnos have Animalism, Chimerstry and Fortitude.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Every Ravnos has a key personality trait, chosen at creation, that the Ravnos cannot change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-setites",
+  "title": "Followers of Set (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Children of Set, enemies of Horus.",
+  "claims": [
+   {
+    "text": "Setites have Obfuscate, Presence and Serpentis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Setites carry Horus' curse and take twice the aggravated damage from sunlight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-toreador",
+  "title": "Toreador (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Lovers of beauty with the shortest attention of all Cainites.",
+  "claims": [
+   {
+    "text": "Toreador have Auspex, Celerity and Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Struck by beauty, a Toreador is held as if by Cupid's dart.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-tremere",
+  "title": "Tremere (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Upstart sorcerers who became a clan through the Amaranth.",
+  "claims": [
+   {
+    "text": "Tremere have Auspex, Dominate and Thaumaturgy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Tremere are especially open to blood bonds when they drink other Cainites' blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "The Tremere raided Saulot's tomb in 1133 and committed Amaranth on Saulot.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-tzimisce",
+  "title": "Tzimisce (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Lords who take their right to rule from the land itself.",
+  "claims": [
+   {
+    "text": "Tzimisce have Animalism, Auspex and Vicissitude.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "A Tzimisce must rest with two handfuls of soil from a place important to the Tzimisce.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The Tzimisce share their blood with the earth and claim kingship from the land, not from heaven.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 274,
+      "pdf": 275
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-ventrue",
+  "title": "Ventrue (Dark Ages)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Kings and lords of the Cainites.",
+  "claims": [
+   {
+    "text": "Ventrue have Dominate, Fortitude and Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Each Ventrue can feed only on one kind of mortal, such as merchants, the French or Catholics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans"
+  ]
+ },
+ {
+  "id": "da-salubri",
+  "title": "Salubri",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Saulot's line, no longer counted a clan after the Tremere's crime.",
+  "claims": [
+   {
+    "text": "Noddist tales call Saulot Caine's most loved grandchilde, the only one Caine did not curse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 100,
+      "pdf": 101
+     }
+    ]
+   },
+   {
+    "text": "The Salubri hold themselves outside Cainite society and work to keep vampires and humans in balance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 100,
+      "pdf": 101
+     }
+    ]
+   },
+   {
+    "text": "Valeren, their own Discipline, has three paths: Healer, Warrior and Watcher.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 260,
+      "pdf": 261
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-clans",
+   "da-tremere"
+  ]
+ },
+ {
+  "id": "da-bloodlines",
+  "title": "Bloodlines of the Dark Medieval",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Lines outside the clans across Africa, Europe and Asia, such as the Anda, Baali, Kiasyd, Lhiannan and Salubri.",
+  "claims": [
+   {
+    "text": "Many bloodlines spread through Africa, Europe and Asia, some branched so far from their clan that they are no longer counted part of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "The Gargoyles are built from the corpses of other vampires, most often Nosferatu, Gangrel and Tzimisce.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 221,
+      "pdf": 222
+     }
+    ]
+   },
+   {
+    "text": "The Kiasyd's blood mixes fae magic with vitae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 222,
+      "pdf": 223
+     }
+    ]
+   },
+   {
+    "text": "The Lhiannan carry a shard of a great dark spirit of the land.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 231,
+      "pdf": 232
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bloodlines",
+   "da-salubri"
+  ]
+ },
+ {
+  "id": "da-abombwe",
+  "title": "Abombwe",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Bonsam's Discipline of primal darkness and predatory prowess.",
+  "claims": [
+   {
+    "text": "The Bonsam claim descent from a hunter possessed by an ancient darkness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 189,
+      "pdf": 190
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-bardo",
+  "title": "Bardo",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Discipline said to come from Osiris, tied to the Road of Humanity.",
+  "claims": [
+   {
+    "text": "Bardo works by denying what the vampire is, where Golconda accepts and transcends it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 200,
+      "pdf": 201
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-daimonion",
+  "title": "Daimonion",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Baali's Discipline, an echo from the Abyss.",
+  "claims": [
+   {
+    "text": "Daimonion calls out across Creation to a forsaken place, and power returns with the echo.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 208,
+      "pdf": 209
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-mytherceria",
+  "title": "Mytherceria",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Kiasyd's Discipline that both hides and reveals truth.",
+  "claims": [
+   {
+    "text": "Mytherceria is rarely taught outside the Kiasyd.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 222,
+      "pdf": 223
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-ogham",
+  "title": "Ogham",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Lhiannan's variant of Koldunic Sorcery, named for the old script.",
+  "claims": [
+   {
+    "text": "Ogham is a form of Koldunic Sorcery named for the script needed to use it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 231,
+      "pdf": 232
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-spiritus",
+  "title": "Spiritus",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Ahrimanes' gift of speaking to spirits.",
+  "claims": [
+   {
+    "text": "The first Ahrimane learned to speak with animals from the goddess Freyja, and after death the gift reached the spirits of animals and objects.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 254,
+      "pdf": 255
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-temporis",
+  "title": "Temporis",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The True Brujah's mastery of time.",
+  "claims": [
+   {
+    "text": "True Brujah say Temporis goes back to their Antediluvian and that Celerity is a poor copy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 256,
+      "pdf": 257
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-koldunic-sorcery",
+  "title": "Koldunic Sorcery",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Tzimisce blood magic of the land and its spirits.",
+  "claims": [
+   {
+    "text": "The Tzimisce have mingled their blood and spirits with the earth of their lands since the First Days.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 274,
+      "pdf": 275
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-blood-sorcery",
+  "title": "Blood Sorcery",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Abyss Mysticism, Koldunic Sorcery, Necromancy and Thaumaturgy: blood magic of paths and rituals.",
+  "claims": [
+   {
+    "text": "Blood Sorcery comes as paths, rituals or both, and each tradition has its own system.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 271,
+      "pdf": 272
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "da-italy",
+  "title": "Dark Medieval Italy",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "By the 1240s Italy is a patchwork of growing cities where kine and Cainite thrive.",
+  "claims": [
+   {
+    "text": "By the middle of the 13th century Italy is a geographic name only; loyalty comes from the cities, swollen by migrants from the countryside.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20da",
+      "page": 406,
+      "pdf": 407
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-war-of-princes"
+  ]
+ }
+]
