@@ -621,7 +621,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Black Furies are daughters of Luna as Artemis, tracing their origins to Greece and Asia Minor as defenders of the Wyld.",
@@ -672,7 +672,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Bone Gnawers, Children of Rat, hunt territory and breed with Kin that no other tribe wants.",
@@ -712,7 +712,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Children of Gaia are Gaia's warriors who want peace above all, and work hardest for cooperation between the tribes.",
@@ -752,7 +752,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Fianna, Tribe of Stag, delight in the pleasures of the flesh, song and battle.",
@@ -803,7 +803,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Get of Fenris, or Fenrir, are the most warlike tribe and prize a glorious death over peaceful old age.",
@@ -843,7 +843,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Glass Walkers blend technology and shamanism, prefer the city to the wild, and defend urban places.",
@@ -883,7 +883,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Red Talons hold that humanity is a pestilence and the Impergium should never have ended.",
@@ -923,7 +923,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Shadow Lords keep a rigid internal hierarchy, and other tribes distrust their manipulative ways.",
@@ -963,7 +963,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Silent Striders roam from caern to caern as the Garou Nation's messengers and scouts.",
@@ -1003,7 +1003,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Silver Fangs, tribe of Falcon, claim to lead the Garou Nation by a bloodline traced to the Progenitor Wolf.",
@@ -1043,7 +1043,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Stargazers are the smallest tribe, following meditation, philosophy and lucid dreaming to master the self.",
@@ -1083,7 +1083,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Uktena were the wise Older Brother of the three Pure Ones and gathered mystical lore, settling across the Americas.",
@@ -1123,7 +1123,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "One of the Thirteen Tribes of the Garou Nation.",
+  "summary": "A tribe of the Garou Nation, one of thirteen.",
   "claims": [
    {
     "text": "The Wendigo have long memories of the Europeans who came to the Americas and the tribes who came with them.",
@@ -1393,7 +1393,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "The Weaver, the Wyld and the Wyrm, the three cosmic forces.",
+  "summary": "Three cosmic forces: Wyld, Weaver and Wyrm.",
   "claims": [
    {
     "text": "The Triat is the trinity of primal cosmic forces: Weaver, Wyld and Wyrm.",
@@ -1614,7 +1614,7 @@
   "summary": "The barrier between the physical world and the Umbra.",
   "claims": [
    {
-    "text": "The Gauntlet is strongest around technological, Weaver places and weakest around caerns.",
+    "text": "The Gauntlet runs thickest where the Weaver's technology rules and thinnest at caerns.",
     "tier": "stated",
     "refs": [
      {
