@@ -650,9 +650,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Interactables 0.6.0, 2026-11-09: hiding places (B150)
 - Hiding places on tiles: wardrobe or cupboard, under a bed or table, behind a curtain or tapestry, deep shadows, crawlspace or loft, priest hole. The tile config gains a Hiding place section: kind, room, and who is in it now.
 - Hide here (Dexterity + Stealth): in and out of sight at once (the Invisible status, so the player still sees the token); successes make the hider harder to find. Search it (one success better) or Search the area finds them by successes, and the Storyteller is whispered who stays hidden. Come out, or walk out, to end it. Undo on every result.
-- Tests: 3 new (1 rules, 2 runtime); UI fit adds a full priest hole. Gate step 18 (the burglar hides in a wardrobe; Undo). Not deployed yet.
-
-- Gate: tools/gate/gate-interact.mjs gains steps 11 (a chest picked, opened and emptied; Undo) and 12 (the tile config part). Not deployed yet.
+- Tests: 3 new (1 rules, 2 runtime); UI fit adds a full priest hole. Gate step 18 (the burglar hides in a wardrobe; Undo).
+- Deployed 2026-11-09 from main 414877e (backup Backups\wodx-interactables-0.5.0-2026-11-09, five files, MD5s match). gate-interact 18/18. Step 18 used the token's hidden switch (no Invisible status in that world).
 
 ### Dated events and the long time skip, 2026-11-09: WoDX Chronicle 0.5.0 (B120, B121)
 - From the gap review in the Master Plan (items 1 and 2), which Ben asked to have built in full.
@@ -689,8 +688,29 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Sheets past the first page, 2026-11-09: WoDX Sheets 0.6.0 (B127)
 - Gap review item 12. sheet-rules.mjs: page2 filled for all sheets but faeDA and wr20 (already had theirs). main.mjs: new blocks combat, gear, fetishes, rotes, description, with weaponLine() and armorLine(). block.hbs: an items block can carry a note.
 - Tests: sheets3.test.mjs (4). 544 harness tests pass. Gate: tools/gate/gatesheet5.mjs (13 steps).
+### Interactables 0.7.0, Combat 3.7.6, 2026-11-09: fire and hazards (B151)
+- Hazards on tiles: fire, a brazier, lamp or candle stand to knock over, broken glass or caltrops, a live wire. The tile config gains a Hazard section: kind, the fire's size and heat, burning, knocked over, the glass's dice, swept aside, the current, power on, damage type, players only.
+- A live hazard hurts whoever walks into it, and in combat whoever starts a turn in a fire or on a live wire (the updateCombat hook). Damage goes through WoDX Combat's soak, with Undo. Fire follows WoDX Actions' fire table (V20 Dark Ages pp. 355-360). Glass gets a careful-step roll first.
+- Interact options: knock over, put out (no roll, Dexterity + Athletics at 7, or not by hand), set alight, sweep a path, cut the power, turn it back on. A fire tied to scene lights turns them on and off with it.
+- WoDX Combat 3.7.6: soakAndApply takes a soak difficulty (fd.soakDiff), shown on its card.
+- Tests: 10 new (4 rules, 6 runtime), 507 in all; UI fit adds a burning hayloft and its put-out roll. Gate step 19 (the burglar walks into a fire, it is put out; Undo).
+- Deployed 2026-11-09 from main fe68eef (backups Backups\wodx-interactables-0.6.0-2026-11-09 and Backups\wodx-combat-3.7.5-2026-11-09, MD5s match). gate-interact 19/19; step 19: hook fired, "is burned (1 level, soaked at 7)".
 
-### Gear by era, 2026-11-09: WoDX Library 0.1.0, Combat 3.7.6 (B128)
+### Interactables 0.8.0, 2026-11-09: altars, relics and fetishes (B152)
+- Altars and chapels, wayside shrines and holy wells, holy relics, fetishes and talens on tiles. The tile config gains an Altar, relic or fetish section: kind, rating, desecrated, the item.
+- Holy ground: Pray here opens WoDX Actions' prayer window; Desecrate it (loud) and Undo. A demon stepping onto it, or starting a turn on it in combat, is seared by WoDX Actions' reading of Demon: The Fallen pp. 254-255, with a Willpower roll to stay and Undo.
+- A relic or fetish is taken like a container's contents (a copy of the item goes to the character, Undo takes it back); a fetish is then used from the WoDX actions menu.
+- Tests: 6 new (3 rules, 3 runtime), 565 in all; UI fit adds a high altar. Gate step 20 (an altar desecrated and put back; a relic taken and given back).
+- 0.8.1: caern stones, fetters and nodes. Use it opens the WoDX actions menu (a fetter opens the Fetter window), and the option names the rating. 1 more test, 566 in all.
+- Deployed 2026-11-09 from main 26721eb (backups Backups\wodx-interactables-0.7.0-2026-11-09 and -0.8.0-2026-11-09, MD5s match). gate-interact 20/20 after two gate fixes (PRs 37 and 39: the relic had been placed behind the scene's window wall).
+
+### Interactables 0.10.0, 2026-11-09: watch points (B153)
+- Windows on the street, mirrors, telephones, radios and walkie-talkies, bells, horns and alarms on tiles, each tied to another tile. The tile config gains a Watch point section: kind and what it is tied to.
+- Look out or Look in it (Perception + Alertness): who is in the tied area goes in a whisper, names on a success, a count on none; hidden and invisible tokens stay out, and a mirror holds no Lasombra. Make a call reaches the tied phone; Call for help; Raise the alarm (loud). Phones and radios wait for their era.
+- Each watch result is also a wodxMapEvent for the responsive maps work (0.9.0 is theirs).
+- Tests: 5 new (2 rules, 3 runtime), 571 in all; UI fit adds a telephone. Gate step 21 (a window on the watchman's corner). Not deployed yet.
+
+### Gear by era, 2026-11-09: WoDX Library 0.1.0, Combat 3.7.7 (B128)
 - Gap review item 7. New module wodx-library: gear-rules.mjs (table parsing, row to item, era filter), main.mjs (compendium install, Gear by era window, give), data/gear.json built by tools/library/build-gear.mjs from docs/research/gear-tables (read from the books on the PC). Combat armor() counts implants.
 - Tests: gear.test.mjs (5). 554 harness tests pass. UI fit: the Gear window passes (only the minimized-button check fails in the container, as for every window). Gate: tools/gate/gategear.mjs (6 steps).
 

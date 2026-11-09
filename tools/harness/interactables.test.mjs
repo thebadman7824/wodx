@@ -446,6 +446,8 @@ let me = gm;
 const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll(), tokens: new Coll(), lights: new Coll()};
 const uuids = new Map();
 const damage = [];
+const soaks = [];
+const prayed = [];
 
 function wall(id, c, door, ds, flags = {}) {
   const doc = {id, c, door, ds, levels: new Set(), flags: {[MOD]: flags}, parent: scene,
@@ -515,11 +517,13 @@ globalThis.game = {
   settings: {register: (m, k, cfg) => settings.set(`${m}.${k}`, cfg.default), get: (m, k) => settings.get(`${m}.${k}`)},
   keybindings: {register: () => {}},
   modules: new Coll([[MOD, {}], ["wodx-chronicle", {api: {propose: async p => proposals.push(p), registerApprovalHandler: () => {}, eras: {activeEra: () => ({profile: {id: "victorian"}}), currentYear: () => 1890}}}]]),
-  wodxActions: {getKind: () => "mortal"},
+  wodxActions: {getKind: a => a?.kindForTest ?? "mortal", demonInfo: a => ({torment: {perm: a?.tormentForTest ?? 0}, willpower: {perm: 4}}),
+    prayer: async a => { prayed.push(a.id); return "prayer window"; }, menu: async ({actor: a}) => { prayed.push(`menu:${a.id}`); return "menu"; }},
   wodxCombat: {applyDamage: async (a, t, n) => damage.push([a.id, t, n]), healDamage: async (a, t, n) => damage.push([a.id, t, -n]),
     soakAndApply: async (tok, fd) => {
       const a = tok.actor ?? tok, levels = Math.max(0, fd.amount - 1);
       damage.push([a.id, fd.type, levels, "soaked"]);
+      soaks.push(fd);
       const msg = {id: `c${chat.length}`, flags: {"wodx-combat": {data: {type: fd.type, levels, applied: true, undo: {uuid: a.id, damage: {lethal: 0}}}}}, async delete() { game.messages.delete(this.id); this.deleted = true; }};
       game.messages.set(msg.id, msg);
       return {levels, message: msg};
@@ -564,7 +568,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide && !x.o.hazard && !x.o.sacred && !x.o.watch).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -1027,4 +1031,348 @@ test("runtime: Search the area finds someone hidden nearby when the successes re
     assert.equal(tokNpc.document.hidden, true);
     assert.equal(cupboard.document.flags[MOD].occupants.length, 1);
   } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; tokNpc.document.hidden = false; cupboard.document.flags[MOD].occupants = []; }
+});
+
+/* ---------------- fire and hazards ---------------- */
+
+test("hazards: fire does its size in levels a turn, soaked at its heat; lethal to mortals, aggravated to the rest, and a vampire soaks it only as fire", () => {
+  const f = R.describeHazard({hazard: true, hazardKind: "fire", size: "large", heat: "forge"});
+  assert.equal(f.live, true);
+  const m = R.hazardHit(f, {profile: "mortal"});
+  assert.deepEqual([m.mode, m.amount, m.type, m.fireSun, m.soakDiff], ["levels", 2, "lethal", false, 9]);
+  assert.equal(R.hazardHit(f, {profile: "lupine"}).type, "aggravated");
+  const v = R.hazardHit(f, {profile: "vampire"});
+  assert.equal(v.fireSun, true);
+  assert.ok(v.notes.some(n => /Courage/.test(n)));
+  assert.equal(R.hazardHit(R.describeHazard({hazardKind: "fire", burning: false}), {}), null, "a fire that is out does nothing");
+  assert.equal(R.nameOf(f), "Fire, burning (bonfire)");
+  assert.deepEqual(Object.values(R.FIRE_SIZES).map(x => x.levels), [1, 2, 3]);
+  assert.deepEqual(Object.values(R.FIRE_HEAT).map(x => x.diff), [3, 5, 7, 8, 9, 10], "the same heat table as WoDX Actions");
+});
+
+test("hazards: a brazier is harmless until knocked over; then it burns, and can be put out", () => {
+  const b = R.describeHazard({hazardKind: "brazier"});
+  assert.equal(b.live, false);
+  const ops = R.optionsFor(b, ch());
+  assert.deepEqual(ids(ops), ["knockOver"]);
+  assert.equal(ops[0].noise.success, "loud");
+  const out = R.resolve(b, ops[0], []);
+  assert.deepEqual(out.patch.flags, {spilled: true, burning: true});
+  const down = R.describeHazard({hazardKind: "brazier", spilled: true});
+  assert.equal(down.live, true);
+  assert.deepEqual(ids(R.optionsFor(down, ch())), ["putOut"]);
+  assert.match(R.nameOf(down), /knocked over and burning/);
+});
+
+test("hazards: a small fire goes out with no roll, a bonfire takes Dexterity + Athletics at 7, an inferno not by hand", () => {
+  const small = R.optionsFor(R.describeHazard({hazardKind: "fire", size: "small"}), ch());
+  assert.equal(small[0].roll, null);
+  const big = R.optionsFor(R.describeHazard({hazardKind: "fire", size: "large"}), ch({abilities: {athletics: 2}}));
+  assert.equal(big[0].roll.dice, 5);
+  assert.equal(big[0].roll.diff, 7);
+  const o = R.describeHazard({hazardKind: "fire", size: "large"});
+  assert.equal(R.resolve(o, big[0], [{successes: 1, botch: false}]).patch.flags.burning, false);
+  const fail = R.resolve(o, big[0], [{successes: 0, botch: false}]);
+  assert.equal(fail.patch.flags.burning, undefined);
+  assert.equal(fail.patch.flags.tries["pc1:putOut"], undefined, "no actor id passed: the key is ':putOut'");
+  assert.equal(R.resolve(o, big[0], [{successes: 0, botch: true}]).burns, true);
+  const inferno = R.optionsFor(R.describeHazard({hazardKind: "fire", size: "inferno"}), ch());
+  assert.ok(inferno[0].disabled);
+  assert.deepEqual(ids(R.optionsFor(R.describeHazard({hazardKind: "fire", burning: false}), ch())), ["alight"]);
+});
+
+test("hazards: glass costs dice, less one a success stepping carefully; a live wire its current in levels; both can be made safe", () => {
+  const g = R.describeHazard({hazardKind: "sharp", hazDice: 3});
+  assert.equal(R.carefulRoll(g, ch({abilities: {athletics: 1}})).dice, 4);
+  assert.deepEqual([R.hazardHit(g, {}, {successes: 1, botch: false}).amount, R.hazardHit(g, {}, null).type], [2, "lethal"]);
+  assert.equal(R.hazardHit(g, {}, {successes: 5, botch: false}).amount, 0);
+  assert.deepEqual(ids(R.optionsFor(g, ch())), ["sweep"]);
+  assert.equal(R.describeHazard({hazardKind: "sharp", cleared: true}).live, false);
+  const w = R.describeHazard({hazardKind: "shock", shock: "major"});
+  assert.deepEqual([R.hazardHit(w, {}).amount, R.hazardHit(w, {}).mode], [4, "levels"]);
+  assert.deepEqual(ids(R.optionsFor(w, ch())), ["powerOff"]);
+  assert.equal(R.describeHazard({hazardKind: "shock", live: false}).live, false);
+  assert.deepEqual(Object.values(R.SHOCKS).map(x => x.levels), [2, 4, 6, 8]);
+  assert.deepEqual(R.cleanHazard({hazard: true, hazardKind: "nope", hazDice: "40", hazType: "x"}),
+    {hazard: true, hazardKind: "fire", size: "small", heat: "torch", shock: "minor", hazDice: 20, hazType: "", burning: true, spilled: false, cleared: false, live: true, pcsOnly: false});
+});
+
+const fire = tile("fire1", 1500, 1000, {hazard: true, hazardKind: "fire", size: "large", heat: "forge", lightIds: "flame1"});
+const glass = tile("glass1", 1500, 1300, {hazard: true, hazardKind: "sharp", hazDice: 3});
+const brazier = tile("braz1", 1800, 1000, {hazard: true, hazardKind: "brazier", size: "small"});
+const flame = light("flame1", 1550, 1050, false);
+canvas.tiles.placeables.push(fire, glass, brazier);
+
+test("runtime: walking into a fire burns through WoDX Combat at its heat; moving within it does not burn again; Undo takes it back", async () => {
+  tokPc.document.x = 1500; tokPc.document.y = 800;
+  await hooks.get("canvasReady")[0]();
+  tokPc.document.y = 1000;
+  const cards = await api.onTokenMoved(tokPc.document);
+  assert.equal(cards.length, 1);
+  const done = cards[0].flags[MOD].done;
+  assert.match(done.text, /is burned/);
+  assert.deepEqual(damage.at(-1), ["pc1", "lethal", 1, "soaked"]);
+  assert.deepEqual([soaks.at(-1).mode, soaks.at(-1).amount, soaks.at(-1).soakDiff, soaks.at(-1).fireSun], ["levels", 2, 9, false]);
+  tokPc.document.x = 1510;
+  assert.equal((await api.onTokenMoved(tokPc.document)).length, 0, "already in it");
+  await api.undoCard(cards[0]);
+  assert.deepEqual(damage.at(-1), ["pc1", "set", {lethal: 0}]);
+  assert.ok(!game.messages.has(done.damageMsg));
+});
+
+test("runtime: in combat, a turn that starts in a fire burns again; NPCs too unless the tile says players only", async () => {
+  const cards = await api.onTurnStart({started: true, combatant: {token: tokPc.document}});
+  assert.equal(cards.length, 1);
+  assert.ok(cards[0].flags[MOD].done.lines.some(l => /starts the turn in it/.test(l)));
+  tokNpc.document.x = 1500; tokNpc.document.y = 1000;
+  assert.equal((await api.onTurnStart({started: true, combatant: {token: tokNpc.document}})).length, 1);
+  fire.document.flags[MOD].pcsOnly = true;
+  assert.equal((await api.onTurnStart({started: true, combatant: {token: tokNpc.document}})).length, 0);
+  delete fire.document.flags[MOD].pcsOnly;
+  tokNpc.document.x = 400; tokNpc.document.y = 1500;
+});
+
+test("runtime: beating out the fire puts out its lights too; Undo lights it all again", async () => {
+  faces = [9, 2, 2, 2, 2];
+  pc.system.abilities.athletics = {value: 2, type: "talent"};
+  try {
+    const msg = await api.attempt(tokPc, "fire1", "putOut", {fd: {}});
+    assert.equal(msg.flags[MOD].done.result, "done");
+    assert.equal(fire.document.flags[MOD].burning, false);
+    assert.equal(flame.hidden, true);
+    assert.equal((await api.onTurnStart({started: true, combatant: {token: tokPc.document}})).length, 0, "out: no harm");
+    await api.undoCard(msg);
+    assert.equal(fire.document.flags[MOD].burning, undefined);
+    assert.equal(flame.hidden, false);
+    // A botch burns the one fighting it
+    faces = [1, 2, 2, 2, 2];
+    const b = await api.attempt(tokPc, "fire1", "putOut", {fd: {}});
+    assert.equal(b.flags[MOD].done.result, "botch");
+    assert.ok(b.flags[MOD].done.damageMsg);
+    await api.undoCard(b);
+  } finally { delete pc.system.abilities.athletics; }
+});
+
+test("runtime: stepping through glass rolls Dexterity + Athletics first, a die fewer each success", async () => {
+  tokPc.document.x = 1500; tokPc.document.y = 1150;
+  await hooks.get("canvasReady")[0]();
+  faces = [9, 2, 2];                // 1 success: 3 dice become 2
+  tokPc.document.y = 1300;
+  const cards = await api.onTokenMoved(tokPc.document);
+  assert.equal(cards.length, 1);
+  assert.ok(cards[0].flags[MOD].done.lines.some(l => /Stepping carefully/.test(l)));
+  assert.deepEqual([soaks.at(-1).mode, soaks.at(-1).amount, soaks.at(-1).type], ["pool", 2, "lethal"]);
+  await api.undoCard(cards[0]);
+});
+
+test("runtime: knocking a brazier over starts a fire there; Undo stands it up again", async () => {
+  tokPc.document.x = 1700; tokPc.document.y = 1000;
+  const msg = await api.attempt(tokPc, "braz1", "knockOver");
+  assert.equal(brazier.document.flags[MOD].spilled, true);
+  assert.equal(api.describeTile(brazier.document).live, true);
+  await api.undoCard(msg);
+  assert.equal(brazier.document.flags[MOD].spilled, undefined);
+  tokPc.document.x = 400; tokPc.document.y = 300;
+  await hooks.get("canvasReady")[0]();
+});
+
+test("runtime: the WoDX part of the tile config keeps the hazard's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {hazard: true, hazardKind: "shock", shock: "severe", heat: "molten", hazDice: 4, pcsOnly: true}}});
+  assert.match(html, /name="flags.wodx-interactables.hazard" checked/);
+  assert.match(html, /value="shock" selected/);
+  assert.match(html, /value="severe" selected/);
+  assert.match(html, /value="molten" selected/);
+  assert.match(html, /name="flags.wodx-interactables.hazDice" value="4"/);
+  assert.match(html, /name="flags.wodx-interactables.pcsOnly" checked/);
+});
+
+/* ---------------- altars, relics and fetishes ---------------- */
+
+test("sacred: an altar is holy ground with a rating; pray there or desecrate it; desecrated, it is not holy", () => {
+  const o = R.describeSacred({sacred: true, sacredKind: "altar", rating: 3});
+  assert.ok(R.holyGround(o));
+  const ops = R.optionsFor(o, ch());
+  assert.deepEqual(ids(ops), ["pray", "desecrate"]);
+  assert.equal(ops[0].opens, "prayer");
+  assert.match(ops[0].note, /rating to 3/);
+  assert.equal(ops[1].noise.success, "loud");
+  assert.equal(R.resolve(o, ops[1], []).patch.flags.desecrated, true);
+  const d = R.describeSacred({sacredKind: "altar", desecrated: true});
+  assert.ok(!R.holyGround(d));
+  assert.ok(R.optionsFor(d, ch())[0].disabled);
+  assert.equal(R.nameOf(d), "Church altar or chapel, desecrated");
+});
+
+test("sacred: holy ground sears a demon past Torment 3, lethal by its rating, with a roll to stay; nobody else", () => {
+  const o = R.describeSacred({sacredKind: "shrine", rating: 2});
+  assert.deepEqual([R.holyHarm(o, {kind: "demon", torment: 6}).lethal, R.holyHarm(o, {kind: "demon", torment: 6}).stayRoll], [2, true]);
+  assert.equal(R.holyHarm(o, {kind: "demon", torment: 3}).harmed, false);
+  assert.equal(R.holyHarm(o, {kind: "vampire", torment: 9}), null);
+  assert.equal(R.holyHarm(R.describeSacred({sacredKind: "relic", rating: 5}), {kind: "demon", torment: 9}), null, "a relic on a tile is not holy ground");
+});
+
+test("sacred: a relic or fetish can be taken once; a fetish's rating is its Gnosis, up to 10", () => {
+  const f = R.describeSacred({sacredKind: "fetish", rating: 7, sacredItems: "Item.dagger"});
+  assert.equal(f.rating, 7);
+  const ops = R.optionsFor(f, ch());
+  assert.deepEqual(ids(ops), ["take"]);
+  assert.match(ops[0].note, /Gnosis 7/);
+  assert.ok(R.optionsFor(R.describeSacred({sacredKind: "fetish", sacredItems: "x", taken: true}), ch())[0].disabled);
+  assert.equal(R.describeSacred({sacredKind: "relic", rating: 9}).rating, 5);
+  assert.deepEqual(R.cleanSacred({sacred: true, sacredKind: "fetish", rating: "12", sacredItems: " a \n\n b "}), {sacred: true, sacredKind: "fetish", rating: 10, desecrated: false, sacredItems: "a\nb"});
+});
+
+const altar = tile("altar1", 2000, 1000, {sacred: true, sacredKind: "altar", rating: 3});
+const reliquary = tile("relic1", 2200, 1000, {sacred: true, sacredKind: "relic", rating: 2, sacredItems: "Item.dagger"});
+canvas.tiles.placeables.push(altar, reliquary);
+
+test("runtime: a demon stepping onto holy ground is seared and rolls to stay; Undo heals it; anyone else walks on", async () => {
+  npc.kindForTest = "demon"; npc.tormentForTest = 6;
+  try {
+    tokNpc.document.x = 2000; tokNpc.document.y = 800;
+    await hooks.get("canvasReady")[0]();
+    faces = [9, 2, 2, 2];
+    tokNpc.document.y = 1000;
+    const cards = await api.onTokenMoved(tokNpc.document);
+    assert.equal(cards.length, 1);
+    const done = cards[0].flags[MOD].done;
+    assert.deepEqual(damage.at(-1), ["npc1", "lethal", 3]);
+    assert.ok(done.lines.some(l => /It endures the turn/.test(l)), done.lines.join(" | "));
+    assert.equal((await api.onTurnStart({started: true, combatant: {token: tokNpc.document}})).length, 1, "again at the start of its turn");
+    await api.undoCard(cards[0]);
+    assert.deepEqual(damage.at(-1), ["npc1", "lethal", -3]);
+    // Desecrated: nothing
+    altar.document.flags[MOD].desecrated = true;
+    assert.equal((await api.onTurnStart({started: true, combatant: {token: tokNpc.document}})).length, 0);
+    delete altar.document.flags[MOD].desecrated;
+  } finally { delete npc.kindForTest; delete npc.tormentForTest; }
+  // A mortal: nothing at all
+  tokNpc.document.y = 800; await hooks.get("canvasReady")[0]();
+  tokNpc.document.y = 1000;
+  assert.equal((await api.onTokenMoved(tokNpc.document)).length, 0);
+  tokNpc.document.x = 400; tokNpc.document.y = 1500;
+  await hooks.get("canvasReady")[0]();
+});
+
+test("runtime: praying at an altar opens WoDX Actions' prayer; desecrating it is loud and undone; a relic is taken and Undo takes it back", async () => {
+  tokPc.document.x = 2000; tokPc.document.y = 1000;
+  try {
+    const r = await api.attempt(tokPc, "altar1", "pray");
+    assert.equal(r, "prayer window");
+    assert.deepEqual(prayed, ["pc1"]);
+    const m = await api.attempt(tokPc, "altar1", "desecrate");
+    assert.equal(altar.document.flags[MOD].desecrated, true);
+    assert.equal(m.flags[MOD].done.noise, "loud");
+    await api.undoCard(m);
+    assert.equal(altar.document.flags[MOD].desecrated, undefined);
+    tokPc.document.x = 2200;
+    const before = pc.items.length;
+    const t = await api.attempt(tokPc, "relic1", "take");
+    assert.equal(pc.items.length, before + 1);
+    assert.equal(reliquary.document.flags[MOD].taken, true);
+    await api.undoCard(t);
+    assert.equal(pc.items.length, before);
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the altar's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {sacred: true, sacredKind: "fetish", rating: 8, desecrated: true, sacredItems: "Item.klaive"}}});
+  assert.match(html, /name="flags.wodx-interactables.sacred" checked/);
+  assert.match(html, /value="fetish" selected/);
+  assert.match(html, /name="flags.wodx-interactables.rating" value="8"/);
+  assert.match(html, /name="flags.wodx-interactables.desecrated" checked/);
+  assert.match(html, />Item.klaive<\/textarea>/);
+});
+
+test("sacred: a caern stone, a fetter or a node opens the WoDX actions menu with its rating named", async () => {
+  const c = R.describeSacred({sacredKind: "caern", rating: 4});
+  const ops = R.optionsFor(c, ch());
+  assert.deepEqual(ids(ops), ["useSacred"]);
+  assert.equal(ops[0].opens, "menu");
+  assert.match(ops[0].note, /level 4/);
+  assert.equal(R.optionsFor(R.describeSacred({sacredKind: "fetter", rating: 2}), ch())[0].opens, "fetter");
+  assert.ok(!R.holyGround(c));
+  altar.document.flags[MOD] = {sacred: true, sacredKind: "node", rating: 3};
+  tokPc.document.x = 2000; tokPc.document.y = 1000;
+  try {
+    assert.equal(await api.attempt(tokPc, "altar1", "useSacred"), "menu");
+    assert.equal(prayed.at(-1), "menu:pc1");
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; altar.document.flags[MOD] = {sacred: true, sacredKind: "altar", rating: 3}; }
+});
+
+/* ---------------- watch points ---------------- */
+
+test("watch: a window or mirror is looked out of with Perception + Alertness; successes name, none counts, a botch shows nothing", () => {
+  const w = R.describeWatch({watch: true, watchKind: "window", target: "yard1"});
+  const op = R.optionsFor(w, ch())[0];
+  assert.deepEqual([op.id, op.roll.dice, op.roll.diff], ["watch", 5, 6]);
+  const people = [{name: "Sergeant Volker"}, {name: "Lucia", lasombra: true}];
+  assert.deepEqual(R.watchSees(w, people, {successes: 1}).names, ["Sergeant Volker", "Lucia"]);
+  assert.deepEqual(R.watchSees(w, people, {successes: 0}), {count: 2, names: [], unreflected: []});
+  assert.equal(R.watchSees(w, people, {successes: 3, botch: true}).count, 0);
+  const m = R.describeWatch({watchKind: "mirror"});
+  assert.deepEqual(R.watchSees(m, people, {successes: 2}), {count: 1, names: ["Sergeant Volker"], unreflected: ["Lucia"]}, "a mirror holds no Lasombra");
+});
+
+test("watch: a phone needs its era and another phone; anyone can call for help; a bell raises the alarm, loud", () => {
+  const p = R.describeWatch({watchKind: "phone", target: "phone2"});
+  assert.ok(R.optionsFor(p, ch({year: 1700}))[0].disabled);
+  assert.deepEqual(ids(R.optionsFor(p, ch({year: 1925}))), ["call", "callHelp"]);
+  assert.ok(R.optionsFor(R.describeWatch({watchKind: "radio"}), ch({year: 1940}))[0].disabled, "a radio tied to nothing");
+  assert.ok(R.optionsFor(R.describeWatch({watchKind: "radio"}), ch({year: 1920}))[0].disabled, "too early for a radio");
+  const b = R.optionsFor(R.describeWatch({watchKind: "bell"}), ch());
+  assert.deepEqual([b[0].id, b[0].noise.success], ["ringAlarm", "loud"]);
+  assert.equal(R.resolve(R.describeWatch({watchKind: "bell"}), b[0], []).raises, "alarm");
+  assert.deepEqual(R.cleanWatch({watch: true, watchKind: "x", target: "bad id!"}), {watch: true, watchKind: "window", target: ""});
+});
+
+const yard = tile("yard1", 2600, 1300, {}, {});
+yard.document.width = 300; yard.document.height = 300;
+const winTile = tile("win2", 2600, 1000, {watch: true, watchKind: "window", target: "yard1"});
+const bell = tile("bell1", 2800, 1000, {watch: true, watchKind: "bell"});
+canvas.tiles.placeables.push(yard, winTile, bell);
+
+test("runtime: looking out of a window whispers who is in the yard; Undo takes the whisper back; a wodxMapEvent goes out", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  tokNpc.document.x = 2700; tokNpc.document.y = 1400;
+  tokPc.document.x = 2600; tokPc.document.y = 900;
+  try {
+    faces = [9, 2, 2, 2, 2];
+    const msg = await api.attempt(tokPc, "win2", "watch", {fd: {}});
+    const d = msg.flags[MOD].done;
+    const w = game.messages.get(d.whisper);
+    assert.match(w.content, /Sergeant Volker/);
+    assert.ok(w.whisper.includes("gm"));
+    assert.ok(!/Sergeant Volker/.test(msg.content), "kept off the public card");
+    assert.equal(events.at(-1).kind, "watch");
+    assert.equal(events.at(-1).place, "win2");
+    await api.undoCard(msg);
+    assert.ok(!game.messages.has(d.whisper));
+    // Hidden: not seen
+    tokNpc.document.hidden = true;
+    faces = [9, 9, 2, 2, 2];
+    const m2 = await api.attempt(tokPc, "win2", "watch", {fd: {}});
+    assert.match(game.messages.get(m2.flags[MOD].done.whisper).content, /Nobody/);
+    tokNpc.document.hidden = false;
+  } finally { tokNpc.document.x = 400; tokNpc.document.y = 1500; tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: ringing a bell raises the alarm loudly and sends an alarm event", async () => {
+  const events = [];
+  Hooks.on("wodxMapEvent", e => events.push(e));
+  tokPc.document.x = 2800; tokPc.document.y = 900;
+  try {
+    const msg = await api.attempt(tokPc, "bell1", "ringAlarm");
+    assert.equal(msg.flags[MOD].done.noise, "loud");
+    assert.ok(msg.flags[MOD].done.lines.some(l => /alarm is raised/.test(l)));
+    assert.deepEqual([events.at(-1).kind, events.at(-1).noise, events.at(-1).object], ["alarm", "loud", "bell"]);
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the watch point's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {watch: true, watchKind: "radio", target: "Scene.a.Tile.b"}}});
+  assert.match(html, /name="flags.wodx-interactables.watch" checked/);
+  assert.match(html, /value="radio" selected/);
+  assert.match(html, /value="Scene.a.Tile.b"/);
 });

@@ -1186,7 +1186,8 @@ export async function soakAndApply(tok, fd) {
     let soak = null, sp = null, left = { levels: dmgLevels, halved: false };
     // A shapechanger and silver: by era, breed and form (DA:W p. 102; W20 p. 255)
     const sb = fd.bane ? shifterBane(actor, { name: "silver" }, fd) : null;
-    let type = type0, bane = !!fd.bane, soakDiff = 6;
+    // A soak difficulty set by the caller: the heat of a fire (core fire rules)
+    let type = type0, bane = !!fd.bane, soakDiff = Math.max(2, Math.min(10, Math.round(Number(fd.soakDiff) || 6)));
     if (sb) { bane = sb.bane && !sb.soak; if (sb.bane) { type = sb.type ?? type; soakDiff = sb.soakDiff ?? 6; } }
     fd = { ...fd, fortBlood: resolveFortitude(actor, fd.fortBlood, { dmgType: type }, fd) };
     if (fd.soak) {
@@ -1207,7 +1208,7 @@ export async function soakAndApply(tok, fd) {
     let html = `<div class="vtc-card"><h3>${actor.name} takes damage</h3>`;
     if (dmgRoll) html += `<div class="vtc-sec"><b>Damage</b> ${fd.amount} dice, diff 6${diceHtml(dmgRoll.faces, 6)}<div class="vtc-res">${dmgLevels} levels</div></div>`;
     else html += `<div class="vtc-sec"><b>Damage</b> ${dmgLevels} ${type} levels</div>`;
-    if (soak) html += `<div class="vtc-sec"><b>Soak</b> (${profileLabel(profile)}): ${sp.dice} dice${sp.autoSoak ? ` + ${sp.autoSoak} automatic` : ""}<div class="vtc-parts">${sp.notes.join(" · ")}</div>${diceHtml(soak.faces, 6)}<div class="vtc-res">${soak.successes} soaked${left.halved ? " · bashing halved" : ""}</div></div>`;
+    if (soak) html += `<div class="vtc-sec"><b>Soak</b> (${profileLabel(profile)}): ${sp.dice} dice${sp.autoSoak ? ` + ${sp.autoSoak} automatic` : ""}${soakDiff !== 6 ? `, diff ${soakDiff}` : ""}<div class="vtc-parts">${sp.notes.join(" · ")}</div>${diceHtml(soak.faces, soakDiff)}<div class="vtc-res">${soak.successes} soaked${left.halved ? " · bashing halved" : ""}</div></div>`;
     html += `<div class="vtc-big ${left.levels ? "hit" : ""}">${left.levels ? `${left.levels} ${type}` : "No damage"}</div>`;
     if (dazed) html += `<div class="vtc-note"><b>Dazed:</b> ${left.levels} levels after soak is more than ${dz.label} (${dz.threshold}): ${esc(actor.name)} spends the next turn shaking it off (V20 Dark Ages p. 348).</div>`;
     if (fd.chimerical) html += `<div class="vtc-note">Chimerical damage: only changelings and chimerical beings are hurt; the body of a mortal or other supernatural is unharmed${kind === "fae" ? "" : "; apply nothing to " + actor.name + " unless the Storyteller rules otherwise"}.</div>`;
@@ -1293,7 +1294,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.6", movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.7", movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

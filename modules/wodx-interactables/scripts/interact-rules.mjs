@@ -7,6 +7,8 @@
  * Lock grades, the successes each needs, the time per roll and how far noise carries are house readings of those
  * systems; docs/DECISIONS.md records them.
  */
+import {FIRE_HEAT as ACTIONS_FIRE_HEAT} from "../../wodx-actions/scripts/rules.js";
+import {holy as demonHoly} from "../../wodx-actions/scripts/demon-rules.js";
 
 export const TURN = 3; // seconds in a turn (V20 Dark Ages p. 322)
 export const MINUTE = 60;
@@ -132,6 +134,63 @@ export const HIDES = {
   shadows: {label: "Deep shadows or a dark corner", need: 2, room: 3},
   crawl: {label: "Crawlspace or loft", need: 2, room: 2},
   priesthole: {label: "Priest hole or hidden room", need: 3, room: 4}
+};
+/**
+ * Fire and other hazards on tiles. A live hazard hurts whoever walks into it, and (in combat) whoever starts a turn in it.
+ * Fire follows the fire rules WoDX Actions uses (V20 Dark Ages pp. 355-360): its size sets the health levels it does each
+ * turn, its heat the soak difficulty; it is lethal to mortals and ghouls and aggravated to everyone else, and a vampire
+ * soaks it only with Fortitude. A brazier,
+ * lamp or candle stand is harmless until knocked over, and then burns where it falls. Electricity follows the core
+ * electrocution levels (page ref to pin). Broken glass, caltrops and thorns are a house rule: dice of lethal damage,
+ * less a die for each success on stepping carefully.
+ */
+export const HAZARDS = {
+  fire: {label: "Fire", hurtsInTurn: true},
+  brazier: {label: "Brazier, lamp or candle stand", hurtsInTurn: true},
+  sharp: {label: "Broken glass, caltrops or thorns", hurtsInTurn: false},
+  shock: {label: "Live wire or electrified metal", hurtsInTurn: true}
+};
+export const FIRE_SIZES = {
+  small: {label: "Torch-sized: part of the body", levels: 1},
+  large: {label: "Bonfire: half the body", levels: 2},
+  inferno: {label: "Inferno: the whole body", levels: 3}
+};
+/** The heat of a fire and its soak difficulty: the same table as WoDX Actions' fire check. */
+export const FIRE_HEAT = Object.fromEntries(Object.entries(ACTIONS_FIRE_HEAT).map(([k, v]) => [k, {label: v.label, diff: v.diff}]));
+export const SHOCKS = {
+  minor: {label: "Wall socket", levels: 2},
+  major: {label: "Fuse box", levels: 4},
+  severe: {label: "Industrial line", levels: 6},
+  fatal: {label: "Main line or third rail", levels: 8}
+};
+/**
+ * Altars, relics and fetishes on tiles. An altar or shrine is holy ground with a rating (1 to 5): praying there uses
+ * WoDX Actions' prayer, and a demon who walks onto it is seared as WoDX Actions' "The holy" reads Demon: The Fallen
+ * (pp. 254-255), until it is desecrated. A relic or a fetish rests on its tile until someone takes it; a fetish is then
+ * attuned and used from the WoDX actions menu (W20 p. 221; DA:W p. 92). A caern stone, a wraith's fetter or a node is
+ * marked with its rating, and using it opens the WoDX actions menu, where that line's own rolls live.
+ */
+export const SACRED = {
+  altar: {label: "Church altar or chapel", ground: true, carry: false},
+  shrine: {label: "Wayside shrine or holy well", ground: true, carry: false},
+  relic: {label: "Holy relic", ground: false, carry: true},
+  fetish: {label: "Fetish or talen in its resting place", ground: false, carry: true},
+  caern: {label: "Caern stone", ground: false, carry: false, use: "menu", note: r => `A caern of level ${r}: the Gauntlet is low here. Step sideways, meditate or hold a rite from the WoDX actions menu.`},
+  fetter: {label: "A wraith's fetter", ground: false, carry: false, use: "fetter", note: r => `A fetter of rating ${r}. A wraith tied to it works it from the WoDX Fetter window.`},
+  node: {label: "Node", ground: false, carry: false, use: "menu", note: r => `A node of rating ${r}: Quintessence can be drawn here from the WoDX actions menu.`}
+};
+/**
+ * Watch points on tiles. A window on the street or a mirror shows who is in the area it is tied to (another tile):
+ * Perception + Alertness, difficulty 6; any success names them, none gives only a count, a botch shows nothing. A mirror
+ * holds no Lasombra (their clan weakness; page ref to pin). A telephone or a radio,
+ * in its era, calls the phone it is tied to or calls for help; a bell, horn or alarm raises the alarm, loud.
+ */
+export const WATCHES = {
+  window: {label: "Window on the street", verb: "Look out", sees: true},
+  mirror: {label: "Mirror", verb: "Look in it", sees: true, mirror: true},
+  phone: {label: "Telephone", calls: true, from: 1890},
+  radio: {label: "Radio or walkie-talkie", calls: true, from: 1930},
+  bell: {label: "Bell, horn or alarm", alarm: true}
 };
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
@@ -300,6 +359,98 @@ export function describeHide(f = {}) {
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
+/**
+ * A hazard on a tile. f: the tile's flags.wodx-interactables, with hazard: true.
+ * live: it hurts now (a fire burning, a brazier knocked over and burning, glass not cleared, power on).
+ */
+export function describeHazard(f = {}) {
+  const kind = HAZARDS[f.hazardKind] ? f.hazardKind : "fire";
+  const size = FIRE_SIZES[f.size] ? f.size : "small", heat = FIRE_HEAT[f.heat] ? f.heat : "torch", shock = SHOCKS[f.shock] ? f.shock : "minor";
+  const dice = f.hazDice === null || f.hazDice === undefined || f.hazDice === "" ? 2 : Math.max(0, Math.min(20, Math.round(Number(f.hazDice) || 0)));
+  const spilled = kind === "brazier" ? !!f.spilled : false;
+  const burning = kind === "fire" ? f.burning !== false : kind === "brazier" ? spilled && f.burning !== false : false;
+  const live = kind === "sharp" ? !f.cleared : kind === "shock" ? f.live !== false : burning;
+  return {
+    hazard: true, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "closed",
+    kind, size, heat, shock, dice, spilled, burning, live, cleared: !!f.cleared, pcsOnly: !!f.pcsOnly,
+    type: DAMAGE_TYPES[f.hazType] ? f.hazType : kind === "sharp" || kind === "shock" ? "lethal" : null,
+    title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
+  };
+}
+/**
+ * What a live hazard does to one character. ch.profile: the WoDX Combat soak profile ("vampire", "mortal" ...).
+ * careful: {successes, botch} on stepping through glass carefully, or null.
+ * Returns {mode: "levels"|"pool", amount, type, fireSun, soakDiff, text, notes} or null when it does nothing.
+ */
+export function hazardHit(o, ch = {}, careful = null) {
+  if ( !o?.live ) return null;
+  if ( o.kind === "fire" || o.kind === "brazier" ) {
+    const vampire = ch.profile === "vampire";
+    const notes = vampire ? ["Fire: the Storyteller may call for a Courage roll to resist the Red Fear."] : [];
+    const type = vampire ? "aggravated" : o.type ?? (["mortal", "ghoul"].includes(ch.profile) ? "lethal" : "aggravated");
+    return {mode: "levels", amount: FIRE_SIZES[o.size].levels, type, fireSun: vampire, soakDiff: FIRE_HEAT[o.heat].diff,
+      text: `is burned (${FIRE_SIZES[o.size].levels} level${FIRE_SIZES[o.size].levels === 1 ? "" : "s"}, soaked at ${FIRE_HEAT[o.heat].diff}).`, notes};
+  }
+  if ( o.kind === "shock" ) {
+    const L = SHOCKS[o.shock].levels;
+    return {mode: "levels", amount: L, type: o.type, fireSun: false, soakDiff: 6, text: `is jolted by the current (${L} levels).`, notes: []};
+  }
+  const hits = careful && !careful.botch ? Math.max(0, Number(careful.successes) || 0) : 0;
+  const dice = Math.max(0, o.dice - hits);
+  if ( !dice ) return {mode: "pool", amount: 0, type: o.type, fireSun: false, soakDiff: 6, text: "picks a way through without a cut.", notes: []};
+  return {mode: "pool", amount: dice, type: o.type, fireSun: false, soakDiff: 6, text: `is cut on the way through${hits ? ` (${hits} ${hits === 1 ? "die" : "dice"} fewer for care)` : ""}.`, notes: []};
+}
+/** The roll to step through sharp ground carefully: Dexterity + Athletics, difficulty 6. Null for other hazards. */
+export function carefulRoll(o, ch = {}) {
+  if ( o?.kind !== "sharp" ) return null;
+  const sk = bestOf(ch.abilities ?? {}, ["athletics"]);
+  return {attr: "dexterity", ability: sk.key, dice: (Number(ch.dexterity) || 0) + sk.value, diff: 6};
+}
+/**
+ * An altar, shrine, relic or fetish on a tile. f: the tile's flags.wodx-interactables, with sacred: true.
+ * rating: holy ground's rating or a relic's Faith potential (1 to 5); a fetish's Gnosis (1 to 10).
+ */
+export function describeSacred(f = {}) {
+  const kind = SACRED[f.sacredKind] ? f.sacredKind : "altar";
+  const top = kind === "fetish" ? 10 : 5;
+  const rating = Math.max(1, Math.min(top, Math.round(Number(f.rating) || (kind === "fetish" ? 5 : 1))));
+  return {
+    sacred: true, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
+    kind, rating, desecrated: !!f.desecrated, items: parseItems(f.sacredItems), taken: !!f.taken,
+    title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", progress: {}, tries: f.tries ?? {}
+  };
+}
+/** Whether a sacred tile is holy ground now. */
+export const holyGround = o => !!o?.sacred && SACRED[o.kind].ground && !o.desecrated;
+/**
+ * What holy ground does to a demon (WoDX Actions' reading of Demon: The Fallen pp. 254-255): torment 3 or less, nothing;
+ * otherwise lethal levels equal to the rating, and a Willpower roll each turn to stay. Null for anyone else.
+ */
+export function holyHarm(o, {kind = "", torment = 0} = {}) {
+  if ( !holyGround(o) || kind !== "demon" ) return null;
+  return demonHoly(torment, o.rating, {ground: true});
+}
+
+/** A watch point on a tile. f: the tile's flags.wodx-interactables, with watch: true. target: the tile it is tied to. */
+export function describeWatch(f = {}) {
+  const kind = WATCHES[f.watchKind] ? f.watchKind : "window";
+  return {
+    watch: true, sacred: false, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
+    kind, target: String(f.target ?? "").trim().slice(0, 200), title: String(f.title ?? "").trim().slice(0, 80),
+    electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
+  };
+}
+/**
+ * What a look out of a window or into a mirror shows. people: [{name, lasombra}] in the watched area (the runtime
+ * leaves out the hidden). roll: {successes, botch}. Returns {count, names, unreflected}.
+ */
+export function watchSees(o, people = [], roll = {successes: 0, botch: false}) {
+  if ( roll.botch ) return {count: 0, names: [], unreflected: []};
+  const mirror = !!WATCHES[o.kind].mirror;
+  const shown = people.filter(p => !(mirror && p.lasombra));
+  return {count: shown.length, names: roll.successes > 0 ? shown.map(p => p.name) : [], unreflected: mirror ? people.filter(p => p.lasombra).map(p => p.name) : []};
+}
+
 /** The search successes it takes to find one person hiding. */
 export const hideNeed = (o, occ) => HIDES[o.kind].need + Math.floor(Math.max(0, Number(occ?.s) || 0) / 2);
 /** Who a search finds in a hiding place. bonus: a search of that very place counts one more success. */
@@ -320,6 +471,19 @@ export function parseItems(text) {
 
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
+  if ( o.watch ) return o.title || WATCHES[o.kind].label;
+  if ( o.sacred ) {
+    const S = SACRED[o.kind], t = o.title || S.label;
+    if ( S.ground ) return `${t}${o.desecrated ? ", desecrated" : ""}`;
+    return `${t}${o.taken || !o.items.length ? ", taken" : ""}`;
+  }
+  if ( o.hazard ) {
+    const H = HAZARDS[o.kind], t = o.title || H.label;
+    if ( o.kind === "fire" ) return `${t}${o.burning ? `, burning (${FIRE_SIZES[o.size].label.split(":")[0].toLowerCase()})` : ", out"}`;
+    if ( o.kind === "brazier" ) return `${t}${o.spilled ? (o.burning ? ", knocked over and burning" : ", knocked over") : ""}`;
+    if ( o.kind === "shock" ) return `${t}${o.live ? ", live" : ", power off"}`;
+    return `${t}${o.cleared ? ", swept aside" : ""}`;
+  }
   if ( o.clue ) return o.title || CLUES[o.kind].label;
   if ( o.hide ) return `${o.title || HIDES[o.kind].label}${o.occupants.length >= o.room ? ", full" : ""}`;
   if ( o.light ) return `${o.title || LIGHTS[o.kind].label}${o.broken ? ", broken" : o.on ? ", lit" : ", dark"}`;
@@ -357,6 +521,9 @@ export function optionsFor(o, ch = {}) {
   if ( o.clue ) return clueOptions(o, ch);
   if ( o.light ) return lightOptions(o);
   if ( o.hide ) return hideOptions(o, ch);
+  if ( o.hazard ) return hazardOptions(o, ch);
+  if ( o.sacred ) return sacredOptions(o, ch);
+  if ( o.watch ) return watchOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -494,6 +661,73 @@ function hideOptions(o, ch) {
   return out;
 }
 
+/**
+ * A hazard: put a fire out (a small one with no roll, a bonfire with Dexterity + Athletics at 7, an inferno not by hand),
+ * set something alight, knock a brazier over, sweep glass aside, cut the power or turn it back on.
+ */
+function hazardOptions(o, ch) {
+  const out = [];
+  if ( o.kind === "fire" || o.kind === "brazier" ) {
+    if ( o.kind === "brazier" && !o.spilled ) out.push({id: "knockOver", label: "Knock it over", roll: null, seconds: TURN, noise: {success: "loud"},
+      note: "Starts a fire where it falls."});
+    if ( o.burning ) {
+      if ( o.size === "small" ) out.push({id: "putOut", label: "Put it out", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Smothered or stamped out."});
+      else if ( o.size === "large" ) {
+        const sk = bestOf(ch.abilities ?? {}, ["athletics"]);
+        const t = Number(o.tries?.[`${ch.actorId ?? ""}:putOut`]) || 0;
+        out.push({id: "putOut", label: "Beat the fire out", roll: {attr: "dexterity", attrLabel: "Dexterity", ability: sk.key, abilityLabel: cap(sk.key),
+          dice: (Number(ch.dexterity) || 0) + sk.value, diff: Math.min(10, 7 + t), need: null, retries: t}, seconds: TURN,
+          noise: {success: "quiet", fail: "quiet", botch: "quiet"}, note: `With a blanket, sand or water.${t ? ` Tried before: +${t} difficulty.` : ""} A botch: the one fighting it is burned.`});
+      } else out.push({id: "noPutOut", label: "Too big to put out by hand", roll: null, disabled: true, note: "It needs a bucket chain, a fire crew, or time."});
+    } else if ( o.kind === "fire" ) out.push({id: "alight", label: "Set it alight", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "With a torch, a lamp, a match or a lighter."});
+  } else if ( o.kind === "sharp" ) {
+    if ( !o.cleared ) out.push({id: "sweep", label: "Sweep a path clear", roll: null, seconds: MINUTE, noise: {success: "quiet"}, note: "Takes a minute; after that it is safe to cross."});
+  } else if ( o.kind === "shock" ) {
+    out.push(o.live ? {id: "powerOff", label: "Cut the power", roll: null, seconds: TURN, noise: {success: "silent"}, note: "At the switch, the fuse box or the breaker."}
+      : {id: "powerOn", label: "Turn the power back on", roll: null, seconds: TURN, noise: {success: "silent"}});
+  }
+  return out;
+}
+
+/** An altar or shrine: pray there, or desecrate it. A relic or fetish: take it. */
+function sacredOptions(o) {
+  const S = SACRED[o.kind], out = [];
+  if ( S.ground ) {
+    if ( o.desecrated ) return [{id: "desecratedNote", label: "Desecrated", roll: null, disabled: true, note: "It is not holy ground until the Storyteller consecrates it again."}];
+    out.push({id: "pray", label: "Pray here", roll: null, opens: "prayer", seconds: 3600, noise: {success: "quiet"},
+      note: `Holy ground, rating ${o.rating}: in the prayer window, pick Holy Ground and set the rating to ${o.rating}.`});
+    out.push({id: "desecrate", label: "Desecrate it", roll: null, seconds: MINUTE, noise: {success: "loud"}, note: "It stops being holy ground until it is consecrated again."});
+  }
+  if ( S.use ) out.push({id: "useSacred", label: "Use it", roll: null, opens: S.use, seconds: TURN, noise: {success: "silent"}, note: S.note(o.rating)});
+  if ( S.carry ) {
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: "Take it", roll: null, seconds: TURN, noise: {success: "silent"},
+      note: o.kind === "fetish" ? `Gnosis ${o.rating}. Attune and use it from the WoDX actions menu (Fetish or talen).` : `Faith potential ${o.rating}.`});
+    else out.push({id: "goneNote", label: "Nothing left to take", roll: null, disabled: true, note: o.items.length ? "Someone has taken it." : "The Storyteller has not named the item on the tile."});
+  }
+  return out;
+}
+
+/** A watch point: look out or in, call or call for help, raise the alarm. */
+function watchOptions(o, ch) {
+  const W = WATCHES[o.kind], out = [];
+  if ( W.sees ) {
+    const sk = bestOf(ch.abilities ?? {}, ["alertness"]);
+    const t = Number(o.tries?.[`${ch.actorId ?? ""}:watch`]) || 0;
+    out.push({id: "watch", label: W.verb, roll: {attr: "perception", attrLabel: "Perception", ability: sk.key, abilityLabel: cap(sk.key),
+      dice: (Number(ch.perception) || 0) + sk.value, diff: Math.min(10, 6 + t), need: null, retries: t}, seconds: TURN, noise: {success: "silent", fail: "silent", botch: "silent"},
+      note: o.target ? "Any success names who is there; none gives only how many." : "Not tied to an area: the Storyteller describes the view."});
+  }
+  if ( W.calls ) {
+    const year = Number(ch.year) || 0;
+    if ( year && year < W.from ) return [{id: "eraNote", label: `No ${W.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${W.from}.`}];
+    out.push(o.target ? {id: "call", label: o.kind === "radio" ? "Call on the radio" : "Make a call", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Reaches the one it is tied to; the Storyteller plays the other end."}
+      : {id: "callNote", label: "Not tied to another phone", roll: null, disabled: true, note: "The Storyteller ties it to another tile in its config."});
+    out.push({id: "callHelp", label: "Call for help", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "The police, the watch or the household: the Storyteller decides who comes."});
+  }
+  if ( W.alarm ) out.push({id: "ringAlarm", label: "Raise the alarm", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud: everyone in earshot hears it."});
+  return out;
+}
+
 /** A light source: light it or put it out; break it if it can break. */
 function lightOptions(o) {
   const L = LIGHTS[o.kind], out = [];
@@ -616,6 +850,16 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "lightOn": out.lights = true; return done(o.kind === "switch" ? "switches the light on." : "lights it.");
       case "lightOff": out.lights = false; return done(o.kind === "switch" ? "switches the light off." : "puts it out.");
       case "breakLight": out.lights = false; flags.broken = true; return done("breaks it, and it goes dark.");
+      case "knockOver": Object.assign(flags, {spilled: true, burning: true}); return done("knocks it over, and the fire spreads where it falls.");
+      case "putOut": flags.burning = false; return done("puts the fire out.");
+      case "alight": flags.burning = true; return done("sets it alight.");
+      case "sweep": flags.cleared = true; return done("sweeps a path clear.");
+      case "call": out.calls = true; return done("makes a call.");
+      case "callHelp": out.raises = "help"; return done("calls for help.");
+      case "ringAlarm": out.raises = "alarm"; return done("raises the alarm.");
+      case "desecrate": flags.desecrated = true; return done("desecrates it.");
+      case "powerOff": flags.live = false; return done("cuts the power.");
+      case "powerOn": flags.live = true; return done("turns the power back on.");
       case "cutFree": flags.holding = null; return done("cuts the snare and frees whoever it held.");
       case "smash": flags.broken = true; return done("breaks the pane.", {ds: "open"});
       case "force": flags.progress = {...o.progress, force: 0}; return done("forces it open.", {ds: "open"});
@@ -643,6 +887,10 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       return Object.assign(out, {result: roll.botch ? "botch" : got > 0 ? "done" : "fail", hides: got, noise: roll.botch ? noise.botch : got > 0 ? noise.success : noise.fail,
         text: roll.botch ? "hides, knocking something over." : got > 0 ? "hides." : "hides, but not well."});
     }
+    if ( id === "watch" ) {
+      return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: "silent", watch: roll,
+        text: roll.botch ? "looks, and is sure of something." : roll.successes > 0 ? "keeps watch." : "keeps watch, but makes out little."});
+    }
     if ( id === "searchHide" ) {
       return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: noise.success, searchHide: roll,
         text: roll.successes > 0 && !roll.botch ? "searches it." : "searches it, and finds nobody."});
@@ -658,6 +906,11 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
         return Object.assign(out, {result: "done", noise: "silent", text: id === "disarm" ? "disarms it." : "sets it again."});
       }
       return Object.assign(out, {result: "fail", noise: "silent", text: id === "disarm" ? "can't work out how to make it safe." : "can't get it to set."});
+    }
+    if ( id === "putOut" ) {
+      if ( roll.botch ) return Object.assign(out, {result: "botch", noise: noise.botch, burns: true, text: "fights the fire, and is burned."});
+      if ( roll.successes > 0 ) { flags.burning = false; return Object.assign(out, {result: "done", noise: noise.success, text: "beats the fire out."}); }
+      return Object.assign(out, {result: "fail", noise: noise.fail, text: "fights the fire, and it keeps burning."});
     }
     if ( id === "breakFree" ) {
       if ( roll.successes > 0 && !roll.botch ) { flags.holding = null; return Object.assign(out, {result: "done", noise: noise.success, text: "breaks free of the snare."}); }
@@ -810,4 +1063,26 @@ export function cleanHide(s = {}) {
   const kind = HIDES[s.hideKind] ? s.hideKind : "wardrobe";
   const room = s.room === "" || s.room === null || s.room === undefined ? "" : Math.max(1, Math.min(12, Math.round(Number(s.room) || 1)));
   return {hide: !!s.hide, hideKind: kind, room};
+}
+
+/** Clean a tile's hazard settings from the config form. */
+export function cleanHazard(s = {}) {
+  const dice = s.hazDice === "" || s.hazDice === null || s.hazDice === undefined ? "" : Math.max(0, Math.min(20, Math.round(Number(s.hazDice) || 0)));
+  return {hazard: !!s.hazard, hazardKind: HAZARDS[s.hazardKind] ? s.hazardKind : "fire", size: FIRE_SIZES[s.size] ? s.size : "small",
+    heat: FIRE_HEAT[s.heat] ? s.heat : "torch", shock: SHOCKS[s.shock] ? s.shock : "minor", hazDice: dice, hazType: DAMAGE_TYPES[s.hazType] ? s.hazType : "",
+    burning: s.burning !== false, spilled: !!s.spilled, cleared: !!s.cleared, live: s.live !== false, pcsOnly: !!s.pcsOnly};
+}
+
+/** Clean a tile's altar, relic or fetish settings from the config form. */
+export function cleanSacred(s = {}) {
+  const kind = SACRED[s.sacredKind] ? s.sacredKind : "altar";
+  const top = kind === "fetish" ? 10 : 5;
+  return {sacred: !!s.sacred, sacredKind: kind, rating: Math.max(1, Math.min(top, Math.round(Number(s.rating) || (kind === "fetish" ? 5 : 1)))),
+    desecrated: !!s.desecrated, sacredItems: parseItems(s.sacredItems).join("\n")};
+}
+
+/** Clean a tile's watch point settings from the config form. target: the id of the tile it looks at or calls. */
+export function cleanWatch(s = {}) {
+  const target = String(s.target ?? "").trim();
+  return {watch: !!s.watch, watchKind: WATCHES[s.watchKind] ? s.watchKind : "window", target: /^[A-Za-z0-9.]{1,200}$/.test(target) ? target : ""};
 }

@@ -1,5 +1,5 @@
 /**
- * Gear by era (WoDX Library 0.1.0, Combat 3.7.6), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
+ * Gear by era (WoDX Library 0.1.0, Combat 3.7.7), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gategear.mjs?${Date.now()}`)).run()
  * It makes one test mortal and deletes it. The compendium "WoDX · Gear by era" is the module's own and stays.
  *   1. versions, and the compendium holds every item of the data
@@ -34,7 +34,7 @@ export async function run() {
     let pack = game.packs.get("world.wodx-gear");
     if ( !pack ) { await api.installPack(); pack = game.packs.get("world.wodx-gear"); }
     const index = await pack?.getIndex();
-    ok("1. versions and compendium", newer(game.modules.get(L)?.version, "0.1.0") && newer(game.modules.get(CB)?.version, "3.7.6") && index?.size >= data.items.length,
+    ok("1. versions and compendium", newer(game.modules.get(L)?.version, "0.1.0") && newer(game.modules.get(CB)?.version, "3.7.7") && index?.size >= data.items.length,
       {library: game.modules.get(L)?.version, combat: game.modules.get(CB)?.version, inPack: index?.size, inData: data.items.length});
 
     await api.open("dark-ages"); await sleep(700);
