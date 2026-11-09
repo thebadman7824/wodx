@@ -355,6 +355,12 @@
    "title": "Clanbook: Tremere (Revised)",
    "short": "Clanbook: Tremere",
    "edition": "Revised"
+  },
+  {
+   "id": "cbtzimisce",
+   "title": "Clanbook: Tzimisce (Revised)",
+   "short": "Clanbook: Tzimisce",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -416,6 +422,7 @@
   "cbmalkavian.json",
   "cbnosferatu.json",
   "cbtoreador.json",
-  "cbtremere.json"
+  "cbtremere.json",
+  "cbtzimisce.json"
  ]
 }

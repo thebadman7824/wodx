@@ -1,0 +1,203 @@
+[
+ {
+  "id": "cbtz-kupalas-eve",
+  "title": "Kupala's Eve and the Tzimisce revolt",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the young Fiends broke their elders' blood oaths.",
+  "claims": [
+   {
+    "text": "Clan legend says the Eldest freed the land spirit Kupala from the Carpathians, where Lupine shamans had trapped it, in return for lost magic and alliance; Kupala stayed bound to the soil and the region's Lupines never recovered.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "The Mongol invasion of 1241 broke Tzimisce holdings in the east and nearly destroyed the elder known as the Butcher of Rus. Elders tightened their grip on their thralls in response.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Lugoj Blood-breaker, of the line of Noriz the Corrupter of Legions, and Velya the Flayer found Kupala's sacred fire flower and on Kupala's Eve broke the blood oaths binding the young.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Lambach Ruthven, a Methuselah of Carpathian nobility, took part, and many say the oaths could not have been broken without Lambach's blood. Once free, the young Tzimisce scattered in disorder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "One elder claims the Eldest itself guided Lugoj to the flower, which was part of its new form, so that it could break its progeny's other bonds and seed itself in them, and through the Vaulderie in the whole Sabbat.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-kupala",
+   "lotc-tzimisce-dragon",
+   "tzimisce",
+   "gtanarch-convention-of-thorns"
+  ]
+ },
+ {
+  "id": "cbtz-voivode-and-factions",
+  "title": "Voivodes, zhupans and the Tzimisce factions",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the modern Fiends are led and divided.",
+  "claims": [
+   {
+    "text": "Most Tzimisce regard the clan Voivode much as lapsed Catholics regard the Pope. The present Voivode, little known and heard only in Mexico City, may be the last.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The zhupans, the clan's wisest in its lore, carry the duties once expected of the Voivode; a Fiend must master the old forms to earn the title.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Some Tzimisce still name themselves voivode of a stretch of mortals, such as a neighbourhood or small town, with no rite of recognition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Old Clan rejects Vicissitude for Dominate, keeps medieval domains in Eastern Europe, practises koldunism and the old coronation rites, and scorns the Sabbat's ritae while sometimes aiding it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Children of the Dracon, who trace their roots to Constantinople, believe the clan made a grave error and seek to atone. They reject Koldunic Sorcery, oppose almost every clan decision, field many templars and are barred from the Black Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tzimisce",
+   "tome-koldunism",
+   "gtsab-pack-ranks"
+  ]
+ },
+ {
+  "id": "cbtz-metamorphosists",
+  "title": "Metamorphosists",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Tzimisce who seek transcendence through the flesh.",
+  "claims": [
+   {
+    "text": "Most Metamorphosists hold that bodily change comes before spiritual change, and they lean on fleshcrafting to reshape themselves. Informal schools across the world each teach a slightly different version of the Path.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Their struggle is less keeping the Path's tenets than discovering what those tenets are.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Tzimisce have fewer followers of Humanity than any other clan, and may have been among the first to walk the Paths of Enlightenment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtzimisce",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-metamorphosis",
+   "paths-of-enlightenment",
+   "tzimisce"
+  ]
+ }
+]
