@@ -7,9 +7,16 @@
       "title": "Changeling: The Dreaming 20th Anniversary Edition",
       "short": "C20",
       "edition": "20th Anniversary"
+    },
+    {
+      "id": "v20",
+      "title": "Vampire: The Masquerade 20th Anniversary Edition",
+      "short": "V20",
+      "edition": "20th Anniversary"
     }
   ],
   "files": [
-    "c20.json"
+    "c20.json",
+    "v20.json"
   ]
 }
