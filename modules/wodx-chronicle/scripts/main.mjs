@@ -242,3 +242,6 @@ async function onSocket(message) {
       break;
   }
 }
+
+// A new session begun in WoDX Storyteller starts the count of NPC proposals again
+Hooks.on("updateSetting", s => { if ( s?.key === "wodx-storyteller.session" ) approvals.resetSession(); });
