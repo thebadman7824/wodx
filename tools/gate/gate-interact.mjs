@@ -1,5 +1,5 @@
 /**
- * Interactables gate (WoDX Interactables 0.11.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Interactables gate (WoDX Interactables 0.12.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-interact.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Interact"), two characters of its own ("Gate Interact
  * burglar", a player's character, and "Gate Interact watchman", an NPC) and deletes them all at the end. It fixes the
@@ -22,6 +22,8 @@
  *  21. a window tied to the watchman's corner: looking out whispers the watchman's name; a wodxMapEvent goes out; Undo
  *  22. a cart: the burglar (no Ride: Dexterity alone) takes the reins; moving the token carries the cart; getting off
  *      leaves it behind; Undo
+ *  23. a rough wall tied to a ledge tile: climbing it (fixed dice) moves the burglar onto the ledge; Undo brings it back;
+ *      a gap: a jump that falls short hangs, losing the grip falls through WoDX Combat; Undo
  * Result: Data/wodx-gate/gate-interact-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -76,7 +78,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.11.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.11.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.12.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.12.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -445,20 +447,57 @@ export async function run() {
       const m1 = await applied(await ix().attempt(tok, cart.id, "mount", {fd: {}}));
       Hooks.off("wodxMapEvent", hid);
       const atReins = cart.flags[MOD]?.driver?.a === burglar.id && events.some(e => e.kind === "mount" && e.place === cart.id);
-      const x0 = cart.x;
+      // Foundry may snap the token to the grid, so the cart is checked against where the token really went
+      const x0 = cart.x, t0 = tb.x, driver = foundry.utils.deepClone(cart.flags[MOD]?.driver ?? null);
       await tb.update({x: tb.x + G});
       await sleep(1200);
-      const carried = cart.x === x0 + G;
+      const t1 = tb.x, x1 = cart.x;
+      const carried = t1 !== t0 && x1 === x0 + (t1 - t0);
       const m2 = await applied(await ix().attempt(canvas.tokens.get(tb.id), cart.id, "dismount"));
       const off = !cart.flags[MOD]?.driver;
       await tb.update({x: tb.x - G});
       await sleep(1200);
-      const left = cart.x === x0 + G;
+      const t2 = tb.x, left = cart.x === x1;
       await ix().undoCard(m2);
       await ix().undoCard(m1);
       const back = !cart.flags[MOD]?.driver;
       ok("22. taking the reins of a cart, the cart moves with the token, getting off leaves it behind, Undo puts it back", listed && atReins && carried && off && left && back,
-        {listed, atReins, carried, off, left, back, result: m1?.flags?.[MOD]?.done?.result ?? null, cartX: cart.x, x0, at: {cx, cy}});
+        {listed, atReins, carried, off, left, back, result: m1?.flags?.[MOD]?.done?.result ?? null, cartX: cart.x, x0, x1, t0, t1, t2, driver, at: {cx, cy}});
+    });
+
+    await step("23. climbing", async () => {
+      const cx = tb.x + 50, cy = tb.y + 50;
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: 1100, y: 1200, width: 100, height: 100, texture: {src: "icons/svg/target.svg"}, flags: {[MOD]: {gate: "ledge"}}}]);
+      await sleep(400);
+      const ledge = findTile("ledge");
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: cx + 55, y: cy - 90, width: 50, height: 50, texture: {src: "icons/svg/stoned.svg"}, flags: {[MOD]: {climb: true, climbKind: "wall", height: 9, climbTo: ledge.id, gate: "wallclimb"}}},
+        {x: cx + 110, y: cy - 90, width: 50, height: 50, texture: {src: "icons/svg/falling.svg"}, flags: {[MOD]: {climb: true, climbKind: "gap", gap: 3, depth: 20, gate: "gap"}}}]);
+      await sleep(500);
+      const wallT = findTile("wallclimb"), gap = findTile("gap");
+      const near = ix().interactablesFor(tok).map(x => x.doc.id);
+      const listed = near.includes(wallT?.id) && near.includes(gap?.id);
+      const p0 = {x: tb.x, y: tb.y};
+      await dice(9);
+      const m1 = await applied(await ix().attempt(tok, wallT.id, "climb", {fd: {}}));
+      await sleep(800);
+      const lc = {x: ledge.x + 50, y: ledge.y + 50}, tc = {x: tb.x + 50, y: tb.y + 50};
+      const up = m1?.flags?.[MOD]?.done?.result === "done" && Math.abs(tc.x - lc.x) < 2 && Math.abs(tc.y - lc.y) < 2;
+      await ix().undoCard(m1);
+      await sleep(800);
+      const down = tb.x === p0.x && tb.y === p0.y;
+      await dice(2);
+      const m2 = await applied(await ix().attempt(canvas.tokens.get(tb.id), gap.id, "jump", {fd: {}}));
+      const hangs = gap.flags[MOD]?.hanging?.[burglar.id] === true;
+      const m3 = await applied(await ix().attempt(canvas.tokens.get(tb.id), gap.id, "letGo"));
+      const d3 = m3?.flags?.[MOD]?.done;
+      const fell = !!d3?.damageMsg && !!game.messages.get(d3.damageMsg);
+      await ix().undoCard(m3);
+      const healed = !game.messages.get(d3?.damageMsg ?? "") && gap.flags[MOD]?.hanging?.[burglar.id] === true;
+      await ix().undoCard(m2);
+      ok("23. climbing a wall moves the burglar onto the ledge and Undo brings it back; a short jump hangs, letting go falls through WoDX Combat, Undo takes it back", listed && up && down && hangs && fell && healed,
+        {listed, up, down, hangs, fell, healed, results: [m1, m2, m3].map(m => m?.flags?.[MOD]?.done?.result ?? null), tok: {x: tb.x, y: tb.y}, ledge: lc, at: {cx, cy}});
     });
 
     await step("10. alongside", async () => {

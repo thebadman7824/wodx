@@ -35,6 +35,9 @@
  *   Mounts     A tile marked as a mount or vehicle (a horse, a cart, a carriage, a boat, a car, a motorcycle) takes one
  *              character at the reins and passengers; moving the token at the reins carries the tile and everyone
  *              aboard. Keeping control and going flat out roll Dexterity + Ride or Drive; cars appear in their era (0.11.0).
+ *   Climbing   A tile marked as a climb (a ladder, a rope, a tree, a rough wall, a cliff) or a gap to jump: Dexterity +
+ *              Athletics, extended, up the climb; Strength + Athletics across the gap, with a roll to catch the ledge;
+ *              arriving moves the token to the tile it is tied to, and a fall does bashing dice by its height (0.12.0).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -46,7 +49,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.11.0";
+const VERSION = "0.12.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -116,7 +119,7 @@ export function describeWall(doc) {
 /** A container on a tile, or null. */
 export function describeTile(doc) {
   const f = doc?.flags?.[MOD] ?? {};
-  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch || f.mount) ) return null;
+  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch || f.mount || f.climb) ) return null;
   if ( f.container ) return R.describeContainer(f);
   if ( f.trap ) return R.describeTrap(f);
   if ( f.clue ) return R.describeClue(f);
@@ -125,9 +128,10 @@ export function describeTile(doc) {
   if ( f.hazard ) return R.describeHazard(f);
   if ( f.sacred ) return R.describeSacred(f);
   if ( f.watch ) return R.describeWatch(f);
-  return R.describeMount(f);
+  if ( f.mount ) return R.describeMount(f);
+  return R.describeClimb(f);
 }
-const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount"].some(k => doc.flags?.[MOD]?.[k] === true));
+const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb"].some(k => doc.flags?.[MOD]?.[k] === true));
 /** Whatever interactable a wall or tile is. */
 export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
 /** A wall or a tile on a scene, by id. */
@@ -537,6 +541,8 @@ export async function applyAsk(msg) {
       lines.push(...w.lines);
     }
     if ( o.mount ) lines.push(...await mountReport(o, doc, out, op, actor, tokDoc));
+    let climbed = null;
+    if ( o.climb ) { climbed = await climbReport(o, doc, out, actor, tokDoc); lines.push(...climbed.lines); }
     if ( whisper ) lines.push("What was learned is in a whisper to the player and the Storyteller.");
     // A botch on forcing: one lethal level
     let hurt = 0;
@@ -561,7 +567,7 @@ export async function applyAsk(msg) {
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given,
-      damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed, undone: false};
+      damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? climbed?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed, moved: climbed?.moved ?? null, undone: false};
     const verdict = waiting ? "Waiting for the Storyteller" : {done: "Done", progress: "Headway", fail: "No luck", botch: "Botch"}[out.result] ?? "";
     await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
     return done;
@@ -660,6 +666,11 @@ export async function undoCard(msg) {
     if ( t && r.tile !== ask.wall ) await t.update({[`flags.${MOD}.occupants`]: [...(t.flags?.[MOD]?.occupants ?? []).filter(x => x.a !== r.occ.a), r.occ]});
     const td = await fromUuid(r.occ.t);
     if ( td ) await setConcealed(td, true);
+  }
+  // A climb or a jump: the token goes back to where it started
+  if ( done.moved ) {
+    const td = await fromUuid(done.moved.t);
+    if ( td ) { lastSeen.set(td.uuid, centerAt(td, done.moved)); await td.update({x: done.moved.x, y: done.moved.y}); }
   }
   // Hiding or coming out: the token goes back as it was
   if ( ["hide", "comeOut"].includes(ask.op) && done.snap?.flags?.hide ) {
@@ -1109,8 +1120,9 @@ async function mountReport(o, doc, out, op, actor, tokDoc) {
   const f = doc.flags?.[MOD] ?? {};
   let driver = f.driver?.a ? f.driver : null;
   const riders = (Array.isArray(f.riders) ? f.riders : []).filter(r => r?.a && r.a !== actor.id);
-  if ( out.boards === "driver" ) { driver = me; lines.push(`${actor.name} is ${M.reins}: moving that token moves it and everyone aboard.`); }
-  else if ( out.boards === "rider" ) riders.push(me);
+  // Where each one sits, kept as an offset: the driver's from the vehicle, a passenger's from the vehicle
+  if ( out.boards === "driver" ) { driver = {...me, dx: num(doc.x) - num(tokDoc.x), dy: num(doc.y) - num(tokDoc.y)}; lines.push(`${actor.name} is ${M.reins}: moving that token moves it and everyone aboard.`); }
+  else if ( out.boards === "rider" ) riders.push({...me, dx: num(tokDoc.x) - num(doc.x), dy: num(tokDoc.y) - num(doc.y)});
   if ( out.leaves && driver?.a === actor.id ) driver = null;
   if ( out.boards || out.leaves ) {
     await doc.update({[`flags.${MOD}.driver`]: driver, [`flags.${MOD}.riders`]: riders});
@@ -1123,6 +1135,51 @@ async function mountReport(o, doc, out, op, actor, tokDoc) {
   else if ( op.id === "flatOut" ) mapEvent("ride", {doc, tokDoc, noise: "loud", object: o.kind, extra: {flatOut: true}});
   return lines;
 }
+/* ------------------------------------------------------------------ */
+/*  Climbing and jumping                                               */
+/* ------------------------------------------------------------------ */
+
+/** Where a token's centre would be with its corner at {x, y}. */
+const centerAt = (td, {x, y}) => { const g = td.parent?.grid?.size ?? canvas?.grid?.size ?? 100; return {x: num(x) + num(td.width || 1) * g / 2, y: num(y) + num(td.height || 1) * g / 2}; };
+/** Active GM: a fall of so many feet, through WoDX Combat's soak. Returns {lines, damageMsg}. */
+export async function fallOn(tokDoc, actor, feet) {
+  const dice = R.fallDice(feet), lines = [];
+  let damageMsg = null;
+  const what = `${dice} bashing ${dice === 1 ? "die" : "dice"} for ${feet} feet`;
+  if ( game.wodxCombat?.soakAndApply ) {
+    try {
+      const res = await game.wodxCombat.soakAndApply(tokDoc.object ?? actor, {mode: "pool", amount: dice, type: "bashing", fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0});
+      damageMsg = res?.message?.id ?? null;
+      lines.push(`The fall: ${what}; soak and the result are on the WoDX Combat card.`);
+    } catch (e) { console.error(`${MOD} |`, e); lines.push(`The fall: ${what}; roll soak and apply it by hand.`); }
+  } else lines.push(`The fall: ${what}; WoDX Combat is off, so roll soak and apply it by hand.`);
+  return {lines, damageMsg};
+}
+/** Active GM: arriving at the top or the far side moves the token there; a fall hurts. */
+async function climbReport(o, doc, out, actor, tokDoc) {
+  const lines = [];
+  let moved = null, damageMsg = null;
+  if ( out.arrives ) {
+    const to = o.climbTo ? (o.climbTo.includes(".") ? await fromUuid(o.climbTo).catch(() => null) : doc.parent?.tiles?.get?.(o.climbTo)) : null;
+    if ( to && to.parent?.id === tokDoc.parent?.id ) {
+      const g = tokDoc.parent?.grid?.size ?? 100, c = tileCenter(to);
+      const at = {x: Math.round(c.x - num(tokDoc.width || 1) * g / 2), y: Math.round(c.y - num(tokDoc.height || 1) * g / 2)};
+      moved = {t: tokDoc.uuid, x: num(tokDoc.x), y: num(tokDoc.y)};
+      // Straight there: nothing on the line between is walked over
+      lastSeen.set(tokDoc.uuid, centerAt(tokDoc, at));
+      await tokDoc.update(at);
+    } else lines.push(R.CLIMBS[o.kind].jump ? "Move the token to the far side." : "Move the token to the top (or the bottom).");
+    mapEvent(R.CLIMBS[o.kind].jump ? "jump" : "climb", {doc, tokDoc, noise: out.noise ?? "quiet", object: o.kind});
+  }
+  if ( out.falls !== undefined ) {
+    const f = await fallOn(tokDoc, actor, out.falls);
+    lines.push(...f.lines, "Move the token to where it lands.");
+    damageMsg = f.damageMsg;
+    mapEvent("fall", {doc, tokDoc, noise: "loud", object: o.kind, extra: {feet: out.falls}});
+  }
+  return {lines, moved, damageMsg};
+}
+
 /** Tokens being carried, with where they are being put: their own move hook then knows not to get them off. */
 const carrying = new Map();
 /**
@@ -1130,29 +1187,31 @@ const carrying = new Map();
  * moves on their own gets off. Returns what happened: "carried", "drove", "off" or null.
  */
 export async function carryAboard(tokDoc, scene, from, to) {
-  const was = carrying.get(tokDoc.uuid);
-  if ( was ) {
-    carrying.delete(tokDoc.uuid);
-    if ( num(tokDoc.x) === was.x && num(tokDoc.y) === was.y ) return "carried";
-  }
-  const dx = to.x - from.x, dy = to.y - from.y;
-  if ( !dx && !dy ) return null;
+  // Our own move of a passenger (Foundry may snap it to the grid, so where it lands is not checked)
+  if ( carrying.delete(tokDoc.uuid) ) return "carried";
+  const dx = to.x - from.x, dy = to.y - from.y, moved = !!(dx || dy);
+  const fixed = p => Number.isFinite(p?.dx) && Number.isFinite(p?.dy);
   let what = null;
   for ( const doc of tilesOf(scene) ) {
     const f = doc.flags?.[MOD];
     if ( !f?.mount ) continue;
     const riders = Array.isArray(f.riders) ? f.riders : [];
     if ( f.driver?.t === tokDoc.uuid ) {
-      await doc.update({x: num(doc.x) + dx, y: num(doc.y) + dy});
+      // The vehicle goes where the driver's token now is, at the offset set when they took the reins (a step from the
+      // last known place for older data); the same for each passenger, from the vehicle
+      const at = fixed(f.driver) ? {x: num(tokDoc.x) + f.driver.dx, y: num(tokDoc.y) + f.driver.dy} : {x: num(doc.x) + dx, y: num(doc.y) + dy};
+      const step = {x: at.x - num(doc.x), y: at.y - num(doc.y)};
+      if ( !step.x && !step.y ) continue;
+      await doc.update(at);
       for ( const r of riders ) {
         const td = await fromUuid(r.t).catch(() => null);
         if ( !td || td.parent?.id !== scene.id ) continue;
-        const at = {x: num(td.x) + dx, y: num(td.y) + dy};
-        carrying.set(td.uuid, at);
-        try { await td.update(at); } catch (e) { carrying.delete(td.uuid); }
+        const go = fixed(r) ? {x: at.x + r.dx, y: at.y + r.dy} : {x: num(td.x) + step.x, y: num(td.y) + step.y};
+        carrying.set(td.uuid, go);
+        try { await td.update(go); } catch (e) { carrying.delete(td.uuid); }
       }
       what = "drove";
-    } else if ( riders.some(r => r.t === tokDoc.uuid) ) {
+    } else if ( moved && riders.some(r => r.t === tokDoc.uuid) ) {
       await doc.update({[`flags.${MOD}.riders`]: riders.filter(r => r.t !== tokDoc.uuid)});
       what = what ?? "off";
     }
@@ -1229,6 +1288,7 @@ export function tileConfigHtml(doc) {
   const wch = R.cleanWatch(doc?.flags?.[MOD] ?? {});
   const mnt = R.cleanMount(doc?.flags?.[MOD] ?? {});
   const onNow = R.aboard(R.describeMount(doc?.flags?.[MOD] ?? {}));
+  const clb = R.cleanClimb(doc?.flags?.[MOD] ?? {});
   return `<fieldset class="wix-config wix-tile"><legend>WoDX</legend>
     <h4 class="wix-sub">Container</h4>
     <p class="hint">A chest, cabinet, strongbox or safe that characters can open, pick, force and take things from. Hide the tile to keep it from players until found.</p>
@@ -1305,6 +1365,14 @@ export function tileConfigHtml(doc) {
     ${field("Seats", `<input type="number" name="${p}.seats" value="${esc(mnt.seats)}" min="1" max="40" placeholder="${R.MOUNTS[mnt.mountKind].seats}">`, "With the one at the reins. Blank: as the kind suggests.")}
     ${onNow.length ? `<p class="hint">Aboard now: ${esc(listWords(onNow.map(x => x.n)))}.</p>` : ""}
     ${field("Everyone off", `<input type="checkbox" name="${p}.clearAboard">`, "Tick and save to empty it.")}
+    <h4 class="wix-sub">Climb or gap</h4>
+    <p class="hint">A ladder, a rope, a tree, a rough wall or a cliff to climb, or a gap to jump. Tie it to a tile at the top or on the far side, and a character who makes it is moved there.</p>
+    ${field("Climb or gap", `<input type="checkbox" name="${p}.climb"${clb.climb ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
+    ${field("Kind of climb", `<select name="${p}.climbKind" data-fixed>${opt(R.CLIMBS, clb.climbKind)}</select>`, "Yards a success: 5 for a rope or tree, 3 for a rough wall, 2 for a cliff; a ladder needs no roll.")}
+    ${field("Height in feet", `<input type="number" name="${p}.height" value="${esc(clb.height)}" min="1" max="1000" placeholder="10">`, "A climb only. A slip falls from as high as the climber got.")}
+    ${field("Gap in yards", `<input type="number" name="${p}.gap" value="${esc(clb.gap)}" min="1" max="20" placeholder="2">`, "A gap only: a success a yard.")}
+    ${field("Drop in feet", `<input type="number" name="${p}.depth" value="${esc(clb.depth)}" min="0" max="1000" placeholder="10">`, "A gap only: how far a character falls who misses.")}
+    ${field("Leads to", `<input type="text" name="${p}.climbTo" value="${esc(clb.climbTo)}" placeholder="A tile's id at the top or the far side">`, "Blank: you move the token yourself.")}
   </fieldset>`;
 }
 function onRenderTileConfig(app, html) {
@@ -1334,6 +1402,8 @@ function onPreUpdateTile(doc, changes) {
   if ( "hazDice" in f && (f.hazDice === "" || f.hazDice === null) ) f.hazDice = null;
   if ( f.hazType === "" ) f.hazType = null;
   if ( "seats" in f && (f.seats === "" || f.seats === null) ) f.seats = null;
+  for ( const k of ["height", "gap", "depth"] ) if ( k in f && (f[k] === "" || f[k] === null) ) f[k] = null;
+  if ( typeof f.climbTo === "string" ) f.climbTo = R.cleanClimb({climbTo: f.climbTo}).climbTo;
   // Everyone off, by the Storyteller's hand
   if ( "clearAboard" in f ) { if ( f.clearAboard ) { f.driver = null; f.riders = []; } delete f.clearAboard; }
   // Arming a trap again by hand clears what it did last time
@@ -1382,7 +1452,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
@@ -1410,7 +1480,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !tok?.actor || !col || !tok.document.isOwner ) return;
   const b = document.createElement("div");
   b.className = "control-icon wix-hud";
-  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues, lights, hiding places, hazards, altars, relics, fetishes, watch points, mounts and vehicles within reach, and searching";
+  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues, lights, hiding places, hazards, altars, relics, fetishes, watch points, mounts, vehicles, climbs and gaps within reach, and searching";
   b.innerHTML = '<i class="fa-solid fa-door-open"></i>';
   b.addEventListener("click", () => openInteract(tok).catch(e => console.error(`${MOD} |`, e)));
   col.appendChild(b);

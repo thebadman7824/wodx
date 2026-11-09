@@ -55,3 +55,7 @@ Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It tak
 | 2026-11-09 | How is a rowing boat handled? | Stamina + Athletics to keep control or row flat out, no untrained penalty (Athletics is a Talent). | `MOUNTS.boat`. |
 | 2026-11-09 | Can a car be locked or hot-wired? | Not yet: any character can take the wheel. Keys and hot-wiring can come with the vehicle chart from the gear-by-era book check. | Ask for it. |
 | 2026-11-09 | How do passengers move? | Their tokens are moved by the same step as the one at the reins; walls are only checked for the driver's own move. A passenger who moves on their own gets off. | `carryAboard` in main.mjs. |
+| 2026-11-09 | How far does a climber fall on a botch? | From as high as the successes so far reach (yards a success times successes), at least 3 feet and no more than the climb's height; the progress is lost, as with any extended botch. | The `climb` botch in `resolveCore`. |
+| 2026-11-09 | What happens after a short jump? | The character hangs from the edge and rolls Dexterity + Athletics at 6 as its next action (catch the ledge or fall), or lets go. | `climbOptions` in interact-rules.mjs. |
+| 2026-11-09 | Where does a falling character end up? | WoDX applies the damage but leaves the token where it is: the Storyteller moves it to where it lands. | `climbReport` in main.mjs. |
+| 2026-11-09 | Do claws make climbing easier? | Noted on the option (2 off the difficulty, the Storyteller's call), not applied by itself, since the sheet doesn't say whether claws are out. | `climbOptions`. |
