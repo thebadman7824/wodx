@@ -379,6 +379,12 @@
    "title": "Dark Ages: Europe",
    "short": "DA Europe",
    "edition": "Revised"
+  },
+  {
+   "id": "dav",
+   "title": "Dark Ages: Vampire",
+   "short": "DA:V",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -444,6 +450,7 @@
   "cbtzimisce.json",
   "cbventrue.json",
   "cbsetite.json",
-  "daeu.json"
+  "daeu.json",
+  "dav.json"
  ]
 }
