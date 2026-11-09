@@ -187,6 +187,12 @@
    "title": "V20 Dark Ages: Tome of Secrets",
    "short": "Tome of Secrets",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "wildwest",
+   "title": "The Wild West (V20)",
+   "short": "Wild West",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -220,6 +226,7 @@
   "redlist.json",
   "cotr.json",
   "v20dacomp.json",
-  "tome.json"
+  "tome.json",
+  "wildwest.json"
  ]
 }
