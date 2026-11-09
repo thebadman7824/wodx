@@ -243,9 +243,17 @@ test("the ground and ring: a player's choice wins, else what fits the character"
   const l = D.defaultLook("x");
   assert.deepEqual(D.styleFor(l, {type: "Vampire"}), {ground: "red", ring: "kindred"});
   assert.deepEqual(D.styleFor(l, {type: "Werewolf"}), {ground: "green", ring: "creature"});
-  assert.deepEqual(D.styleFor(l, {type: "Mortal", variant: "ghoul"}), {ground: "gold", ring: "sworn"});
+  assert.deepEqual(D.styleFor(l, {type: "Mortal", variant: "ghoul"}), {ground: "rose", ring: "sworn"});
   assert.deepEqual(D.styleFor(l, {}), {ground: "gold", ring: "mortal"});
   assert.deepEqual(D.styleFor({...l, style: {ground: "night", ring: ""}}, {type: "Vampire"}), {ground: "night", ring: "kindred"});
+  // the newer grounds go to the kinds they suit; a player's choice still wins
+  assert.equal(D.themeFor({type: "Wraith"}).ground, "chequer");
+  assert.equal(D.themeFor({type: "Mummy"}).ground, "punched");
+  assert.equal(D.themeFor({type: "Changeling"}).ground, "vine");
+  assert.equal(D.themeFor({type: "Mortal", variant: "Ghoul"}).ground, "rose");
+  assert.equal(D.themeFor({type: "Mortal", variant: "Faith"}).ground, "diaper");
+  assert.equal(D.themeFor({type: "Mortal", variant: "Sorcerer"}).ground, "lily");
+  assert.equal(D.styleFor({...l, style: {ground: "gold", ring: ""}}, {type: "Wraith"}).ground, "gold");
   for ( const t of ["PC", "Changeling", "Changing Breed", "Creature", "Demon", "Exalted", "Hunter", "Mage", "Mortal", "Mummy", "Vampire", "Wraith", "Werewolf"] ) {
     const s = D.themeFor({type: t});
     assert.ok(D.GROUNDS[s.ground] && s.ground && D.RINGS[s.ring] && s.ring, t);
