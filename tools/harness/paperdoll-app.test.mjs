@@ -37,7 +37,7 @@ test("the window: steppers, choices, and a player's save", async () => {
   const app = new M.PaperdollApp({id: "wodx-paperdoll-a1", actor: a});
   await app.render({force: true});
   const el = app.element;
-  assert.equal(el.querySelectorAll(".wodx-step").length, 14);
+  assert.equal(el.querySelectorAll(".wodx-step").length, 15);
   assert.ok([...el.querySelectorAll("select")].every(s => s.hasAttribute("data-fixed")));
   assert.ok(el.querySelector("button[data-action=save]"));
   const before = app.look.face.eyes;

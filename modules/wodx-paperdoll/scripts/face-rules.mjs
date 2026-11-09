@@ -252,7 +252,109 @@ function softDefs(svg) {
  * hair, in that order (the beard over the scar). Returns {skin, defs}: wrap skin in the build and the skin mask.
  */
 export function skinLayers(face, colors) {
-  const raw = ageLines(face.age) + cheeks(face.cheeks, colors.skin) + marks(face.marks, colors.skin) + scars(face.scar, colors.skin) + whiskers(face.beard, colors.hair, colors.skin);
+  const raw = ageLines(face.age) + cheeks(face.cheeks, colors.skin) + marks(face.marks, colors.skin) + scars(face.scar, colors.skin) + whiskers(face.beard, colors.hair, colors.skin)
+    + affliction(face.affliction, colors.skin, null).skin;
   const s = softDefs(raw);
-  return {skin: s.svg, defs: defs(colors.hair) + s.defs};
+  return {skin: s.svg, defs: defs(colors.hair) + s.defs + EYE_DEFS};
+}
+
+/* ---- Eyes: the colour of the iris, and the strange ones ---- */
+/** iris colour, pupil shape (round, slit, none), and a glow round the eye for the ones that shine. Natural ones first. */
+export const EYES = {
+  "3a2414": {label: "Dark brown"}, "5a3a22": {label: "Brown"}, "7a5232": {label: "Light brown"}, "a8742a": {label: "Amber"},
+  "7a6a3a": {label: "Hazel"}, "4f7a4a": {label: "Green"}, "6e8070": {label: "Grey green"}, "7a8a9a": {label: "Grey"},
+  "3b6aa8": {label: "Blue"}, "7aa2c8": {label: "Pale blue"}, "2a4a8a": {label: "Deep blue"},
+  "b01818": {label: "Blood red", strange: true}, "e02020": {label: "Burning red", glow: "ff3020", strange: true},
+  "d9a520": {label: "Cat's gold", pupil: "slit", strange: true}, "c8c020": {label: "Serpent yellow", pupil: "slit", glow: "e8e040", strange: true},
+  "c87a10": {label: "Wolf amber", pupil: "slit", strange: true}, "7a3aa8": {label: "Violet", strange: true},
+  "c8ccd0": {label: "Silver", strange: true}, "e8e6e0": {label: "Milky and blind", pupil: "none", strange: true},
+  "0e0a08": {label: "Black", pupil: "none", strange: true}, "f4f6ff": {label: "White fire", pupil: "none", glow: "c8d8ff", strange: true},
+  "40d060": {label: "Witch green", glow: "60ff80", strange: true}, "20a8c8": {label: "Drowned blue", glow: "60e0ff", strange: true}
+};
+export const EYES_NATURAL = Object.keys(EYES).filter(k => !EYES[k].strange);
+/** The irises for the pupils found on the head (see fit-rules findEyes). Drawn in Lorelei's space. */
+export function irises(found, key, {skip = []} = {}) {
+  const e = EYES[key] ?? EYES["5a3a22"];
+  if ( !found?.pupils?.length ) return "";
+  return found.pupils.filter(p => !skip.includes(p.side)).map(({x, y, r}, i) => {
+    const R = r * 0.82, f = v => v.toFixed(1);
+    let s = "";
+    if ( e.glow ) s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 1.9)}" fill="#${e.glow}" fill-opacity=".45" filter="url(#wpd-glowblur)"/>`;
+    s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(R)}" fill="#${key in EYES ? key : "5a3a22"}"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(R)}" fill="url(#wpd-irisshade)"/>`;
+    if ( (e.pupil ?? "round") === "round" ) s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 0.38)}" fill="#120a06"/>`;
+    else if ( e.pupil === "slit" ) s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 0.13)}" ry="${f(r * 0.66)}" fill="#120a06"/>`;
+    if ( key !== "0e0a08" ) s += `<circle cx="${f(x - r * 0.3)}" cy="${f(y - r * 0.32)}" r="${f(r * 0.17)}" fill="#fff" fill-opacity=".9"/>`;
+    return s;
+  }).join("");
+}
+export const EYE_DEFS = `<radialGradient id="wpd-irisshade"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient><filter id="wpd-glowblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>`;
+
+/* ---- Afflictions: faces marked by sickness, violence or something worse ---- */
+export const AFFLICTIONS = {"": "None", pox: "Pox, the pustules", poxScars: "Pox scars", leprous: "Leprous nodules", boils: "Boils", sores: "Weeping sores",
+  burned: "Burned down one side", mangled: "Mangled", lostEye: "An eye lost and sewn shut", eyepatch: "An eyepatch", warts: "Warts and growths",
+  scaled: "Scales", thirdEye: "A third eye", veins: "Dark veins", mottled: "Mottled skin"};
+/** What an affliction draws: skin (masked to the skin, found eyes not needed), head (masked to the skin, needs the
+ * eyes found) and over (over everything on the head: the lost eye, the patch). */
+export function affliction(kind, skin, found) {
+  const out = {skin: "", over: "", head: ""};
+  if ( !kind ) return out;
+  const f = v => v.toFixed(0), dk = mix(skin, "2a1008", 0.5), lt = mix(skin, "ffffff", 0.45);
+  const bump = (x, y, r, c, hl = true) => `<circle cx="${f(x)}" cy="${f(y)}" r="${r.toFixed(1)}" fill="#${c}"/><circle cx="${f(x)}" cy="${f(y)}" r="${r.toFixed(1)}" fill="none" stroke="#${dk}" stroke-opacity=".5" stroke-width="2"/>` + (hl ? `<circle cx="${f(x - r * 0.3)}" cy="${f(y - r * 0.3)}" r="${(r * 0.3).toFixed(1)}" fill="#fff" fill-opacity=".55"/>` : "");
+  const all = [...scatter(30, 450, 560, 110, 90, 61), ...scatter(14, 670, 540, 50, 70, 62), ...scatter(12, 560, 300, 110, 40, 63), ...scatter(10, 570, 700, 80, 40, 64)];
+  const near = found?.eyes?.find(e => e.side === 0) ?? {x0: 405, y0: 420, x1: 540, y1: 500};
+  switch ( kind ) {
+    case "pox": out.skin = all.map(([x, y, k]) => bump(x, y, 5 + 5 * k, mix(skin, "e8d8a0", 0.35))).join("") + all.filter((_, i) => i % 2).map(([x, y]) => `<circle cx="${f(x + 9)}" cy="${f(y + 7)}" r="9" fill="#c04040" fill-opacity=".25"/>`).join(""); break;
+    case "poxScars": out.skin = [...all, ...scatter(24, 440, 520, 90, 70, 65)].map(([x, y, k]) => `<circle cx="${f(x)}" cy="${f(y)}" r="${(4 + 5 * k).toFixed(1)}" fill="#${dk}" fill-opacity=".35"/><path d="M${f(x - 4)} ${f(y + 4)} Q${f(x)} ${f(y + 8)} ${f(x + 4)} ${f(y + 4)}" stroke="#${lt}" stroke-width="2" fill="none"/>`).join(""); break;
+    case "leprous": out.skin = [[470, 300, 26], [560, 290, 30], [640, 310, 22], [420, 560, 30], [470, 610, 18], [690, 560, 22], [600, 545, 16], [530, 720, 24]]
+      .map(([x, y, r]) => `<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * 0.8}" fill="#${mix(skin, "a87060", 0.35)}"/><ellipse cx="${x - r * 0.25}" cy="${y - r * 0.3}" rx="${r * 0.45}" ry="${r * 0.3}" fill="#fff" fill-opacity=".3"/><ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * 0.8}" fill="none" stroke="#${dk}" stroke-opacity=".45" stroke-width="3"/>`).join("")
+      + `<g filter="url(#wpd-soft)">${blob("M380 400 C420 380 470 400 470 440 C470 470 430 480 400 470 C370 460 360 420 380 400 Z", lt, 0.5)}${blob("M640 620 C670 600 700 620 700 650 C700 680 660 690 640 670 Z", lt, 0.45)}</g>`; break;
+    case "boils": out.skin = [[430, 590, 20], [612, 690, 16], [470, 320, 14], [690, 540, 13]]
+      .map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r * 1.9}" fill="#c04030" fill-opacity=".25" filter="url(#wpd-soft)"/>` + bump(x, y, r, mix(skin, "d04a30", 0.45)) + `<circle cx="${x}" cy="${y}" r="${r * 0.35}" fill="#e8d070"/>`).join(""); break;
+    case "sores": out.skin = [[420, 600, 22, 14], [600, 700, 18, 11], [690, 520, 12, 16], [500, 300, 20, 10]]
+      .map(([x, y, rx, ry]) => `<ellipse cx="${x}" cy="${y}" rx="${rx * 1.5}" ry="${ry * 1.6}" fill="#8a2a20" fill-opacity=".3" filter="url(#wpd-soft)"/><ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#7a1a14"/><ellipse cx="${x - 3}" cy="${y - 2}" rx="${rx * 0.6}" ry="${ry * 0.5}" fill="#c8a040" fill-opacity=".7"/><path d="M${x} ${y + ry} q3 14 0 26" stroke="#c8b060" stroke-opacity=".6" stroke-width="4" fill="none" stroke-linecap="round"/>`).join(""); break;
+    case "burned": out.skin = `<g filter="url(#wpd-soft)">${blob("M300 380 C360 340 470 350 520 400 C560 450 540 520 520 580 C500 650 520 720 470 770 C420 800 340 760 310 700 C280 620 270 460 300 380 Z", mix(skin, "b85a50", 0.45), 0.9)}`
+      + `${blob("M340 430 C380 410 430 420 450 460 C470 500 440 540 400 540 C360 540 330 500 340 430 Z", mix(skin, "f0c8c0", 0.6), 0.8)}${blob("M360 600 C390 580 440 590 450 630 C460 670 420 700 390 690 C360 680 340 640 360 600 Z", mix(skin, "f0c8c0", 0.6), 0.75)}</g>`
+      + ["M330 470 C360 490 400 492 440 480", "M340 560 C370 580 410 590 450 580", "M350 660 C380 676 420 680 460 670", "M470 420 C490 460 500 500 496 540"].map(d => ln(d, {c: dk, o: 0.45, sw: 4})).join(""); break;
+    case "mangled": {
+      const sc = d => ln(d, {c: dk, o: 0.4, sw: 18}) + ln(d, {c: mix(skin, "f0c8c0", 0.55), o: 1, sw: 11}) + ln(d, {o: 0.5, sw: 4});
+      out.skin = `<g filter="url(#wpd-soft)">${blob("M360 520 C400 500 470 520 480 580 C490 640 440 680 400 670 C360 660 340 580 360 520 Z", mix(skin, "a84a50", 0.3), 0.6)}</g>`
+        + sc("M350 470 L380 510 L366 540 L402 580 L392 610 L430 650") + sc("M456 618 C440 640 420 660 396 690") + sc("M520 300 L560 340 L548 360 L600 400") + sc("M640 520 L670 560 L660 590")
+        + [0.2, 0.4, 0.6, 0.8].map(t => { const x = 456 - 60 * t, y = 618 + 72 * t; return ln(`M${f(x - 12)} ${f(y - 10)} L${f(x + 12)} ${f(y + 10)}`, {o: 0.75, sw: 4}); }).join("");
+      break;
+    }
+    case "lostEye": {
+      const cx = (near.x0 + near.x1) / 2, cy = (near.y0 + near.y1) / 2, rx = (near.x1 - near.x0) / 2 + 12, ry = (near.y1 - near.y0) / 2 + 12;
+      out.over = `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="#${skin}"/><ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="#${mix(skin, "6a2a2a", 0.3)}" fill-opacity=".5" filter="url(#wpd-soft)"/>`
+        + ln(`M${f(cx - rx * 0.85)} ${f(cy + 4)} C${f(cx - rx * 0.3)} ${f(cy + 14)} ${f(cx + rx * 0.3)} ${f(cy + 14)} ${f(cx + rx * 0.85)} ${f(cy + 2)}`, {o: 0.8, sw: 6})
+        + [-0.55, -0.2, 0.15, 0.5].map(t => ln(`M${f(cx + rx * t)} ${f(cy - 4)} L${f(cx + rx * t + 6)} ${f(cy + 24)}`, {o: 0.7, sw: 4})).join("")
+        + ln(`M${f(cx - rx * 0.4)} ${f(cy - ry - 30)} L${f(cx + rx * 0.2)} ${f(cy + ry + 30)}`, {c: mix(skin, "f0c8c0", 0.55), o: 1, sw: 9});
+      break;
+    }
+    case "eyepatch": {
+      const cx = (near.x0 + near.x1) / 2, cy = (near.y0 + near.y1) / 2, rx = (near.x1 - near.x0) / 2 + 18, ry = (near.y1 - near.y0) / 2 + 20;
+      // The strap runs under the skin mask, so it goes from sight under the hair and past the edge of the face
+      const strap = d => `<path d="${d}" stroke="#2a1a10" stroke-width="16" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#4a3022" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+      out.head = strap(`M${f(cx - rx * 0.9)} ${f(cy - 4)} L${f(cx - rx - 200)} ${f(cy + 50)}`) + strap(`M${f(cx + rx * 0.5)} ${f(cy - ry * 0.85)} L${f(cx + rx + 160)} ${f(cy - 420)}`);
+      out.over = `<path d="M${f(cx - rx)} ${f(cy - ry * 0.6)} C${f(cx - rx * 0.4)} ${f(cy - ry * 1.1)} ${f(cx + rx * 0.6)} ${f(cy - ry * 1.1)} ${f(cx + rx)} ${f(cy - ry * 0.5)} C${f(cx + rx * 1.05)} ${f(cy + ry * 0.6)} ${f(cx + rx * 0.2)} ${f(cy + ry * 1.2)} ${f(cx - rx * 0.4)} ${f(cy + ry * 0.9)} C${f(cx - rx * 0.9)} ${f(cy + ry * 0.6)} ${f(cx - rx * 1.05)} ${f(cy)} ${f(cx - rx)} ${f(cy - ry * 0.6)} Z" fill="#2e2018" stroke="#120a06" stroke-width="6"/>`
+        + `<path d="M${f(cx - rx * 0.6)} ${f(cy - ry * 0.4)} C${f(cx - rx * 0.2)} ${f(cy - ry * 0.7)} ${f(cx + rx * 0.3)} ${f(cy - ry * 0.7)} ${f(cx + rx * 0.6)} ${f(cy - ry * 0.4)}" stroke="#6a5040" stroke-width="4" fill="none"/>`;
+      break;
+    }
+    case "warts": out.skin = [[600, 520, 11], [612, 534, 6], [440, 640, 14], [700, 500, 10], [560, 730, 12], [380, 470, 9], [520, 300, 13]].map(([x, y, r]) => bump(x, y, r, mix(skin, "6a5030", 0.4))).join("")
+      + `<path d="M440 640 l-6 -18 M444 636 l4 -20" stroke="#2a1a10" stroke-width="2"/>`; break;
+    case "scaled": {
+      let s = "";
+      for ( let row = 0; row < 7; row++ ) for ( let col = 0; col < 6; col++ ) {
+        const x = 340 + col * 26 + (row % 2) * 13, y = 420 + row * 22;
+        if ( (x - 400) ** 2 / 90 ** 2 + (y - 490) ** 2 / 90 ** 2 > 1 ) continue;
+        s += `<path d="M${x - 13} ${y} Q${x} ${y + 22} ${x + 13} ${y}" fill="#${mix(skin, "4a7050", 0.5)}" stroke="#${mix(skin, "1a2a18", 0.7)}" stroke-opacity=".75" stroke-width="2.5"/>`;
+      }
+      for ( let row = 0; row < 4; row++ ) for ( let col = 0; col < 4; col++ ) { const x = 640 + col * 22 + (row % 2) * 11, y = 600 + row * 20; s += `<path d="M${x - 11} ${y} Q${x} ${y + 19} ${x + 11} ${y}" fill="#${mix(skin, "4a7050", 0.5)}" stroke="#${mix(skin, "1a2a18", 0.7)}" stroke-opacity=".75" stroke-width="2.5"/>`; }
+      out.skin = s; break;
+    }
+    case "thirdEye": out.skin = `<path d="M560 268 C540 300 540 340 560 372 C580 340 580 300 560 268 Z" fill="#fff" stroke="#2a1a10" stroke-width="7"/><ellipse cx="560" cy="322" rx="11" ry="24" fill="#b01818"/><ellipse cx="560" cy="322" rx="4" ry="16" fill="#120a06"/>`; break;
+    case "veins": out.skin = ["M330 420 C360 450 352 490 380 520 C392 540 410 548 420 580", "M352 490 C330 500 322 520 330 548", "M600 260 C590 290 610 310 600 340", "M600 300 C620 310 640 300 650 320",
+      "M700 470 C690 500 700 530 690 560", "M520 690 C540 720 530 750 550 780", "M540 720 C520 735 500 740 486 760"].map(d => ln(d, {c: "3a1a4a", o: 0.55, sw: 5}) + ln(d, {c: "5a2a6a", o: 0.35, sw: 11})).join(""); break;
+    case "mottled": out.skin = `<g filter="url(#wpd-soft)">${scatter(16, 520, 520, 220, 260, 77).map(([x, y, k]) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(20 + 30 * k)}" ry="${f(16 + 22 * k)}" fill="#${k > 0.5 ? mix(skin, "6a4a70", 0.35) : mix(skin, "ffffff", 0.35)}" fill-opacity=".55"/>`).join("")}</g>`; break;
+  }
+  return out;
 }
