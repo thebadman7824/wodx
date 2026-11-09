@@ -930,3 +930,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - dreams-rules.mjs (new): DEFAULT_HOUR, normDream, normDreams, dueDreams, sortDreams, dreamHtml. dreams.mjs (new): the dreams world setting, saveDream, removeDream, releaseDream (journal in WoDX dreams, owners as observers, whispered card), checkDreams on the clock and after a skip, the Dreams and visions window (search boxes on every list). Reached from Draw for the story; api.dreams.
 - UI fit: the Dreams and visions window with 24 dreams. Tests: tools/harness/dreams.test.mjs (3). Gate: tools/gate/gatedreams.mjs, 6 steps.
 - Chronicle 0.8.1: traitsOf no longer spreads the Language Merits' count (a number, not names); the gate's step 3 threw on it.
+
+## 2026-11-09: a player codex (Storyteller 0.7.0, B276)
+
+- codex-rules.mjs (new): CODEX_FOLDER, codexName, codexPage (text dated, images kept, others linked), planReveal (add or change by source). codex.mjs (new): codexOf, reveal, revealDialog, a header control on journal sheets and an entry in the journal list's menu; api.codex.
+- Tests: tools/harness/codex.test.mjs (2). Gate: tools/gate/gatecodex.mjs, 6 steps.

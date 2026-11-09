@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.6.0: the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
+ * WoDX Storyteller 0.7.0: the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
  * night's draw and the story aids (night.mjs).
  *
  * Players roam the world on their own, between sessions or side by side within one: they travel from place to place
@@ -18,6 +18,7 @@ import * as Led from "./ledger.mjs";
 import * as Setup from "./setup.mjs";
 import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
+import * as Codex from "./codex.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -34,6 +35,7 @@ Hooks.once("init", () => {
   Night.registerNightSettings();
   Dreams.registerDreamSettings();
   Dreams.registerDreamHooks();
+  Codex.registerCodexHooks();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
@@ -59,6 +61,7 @@ Hooks.once("ready", () => {
     night: {draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
+    codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     draw: Night.drawChooser, nightRules: Night.N
   };
   const mod = game.modules.get(C.MOD);
