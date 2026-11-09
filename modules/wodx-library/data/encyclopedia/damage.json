@@ -184,7 +184,8 @@
   "see": [
    "dam-foundations-and-pillars",
    "dam-backlash",
-   "quintessence"
+   "quintessence",
+   "dam-familiars"
   ]
  },
  {
@@ -435,7 +436,9 @@
    }
   ],
   "see": [
-   "dam-fellowships"
+   "dam-fellowships",
+   "dam-devil-kings",
+   "dam-carceri-piranesi"
   ]
  },
  {
@@ -570,7 +573,11 @@
   ],
   "see": [
    "dam-fellowships",
-   "order-of-hermes"
+   "order-of-hermes",
+   "dam-corpus-hermeticum",
+   "dam-mistridge",
+   "dam-enochian",
+   "dam-carceri-piranesi"
   ]
  },
  {
@@ -621,7 +628,9 @@
   ],
   "see": [
    "dam-fellowships",
-   "verbena"
+   "verbena",
+   "dam-wyck",
+   "dam-stonehenge"
   ]
  },
  {
@@ -734,6 +743,555 @@
   ],
   "see": [
    "dam-fellowships"
+  ]
+ },
+ {
+  "id": "dam-corpus-hermeticum",
+  "title": "Corpus Hermeticum",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The founding scrolls of the Hermetic cult.",
+  "claims": [
+   {
+    "text": "The Corpus runs to 17 scrolls, is credited to Hermes Trismegistus, and passed among the cult's cells around the Mediterranean.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Once it spread, followers leaned on it in place of seeking new knowledge, so it marked the cult's high point.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-order-of-hermes"
+  ]
+ },
+ {
+  "id": "dam-mistridge",
+  "title": "Fall of Mistridge",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Hermetic chantry destroyed in 1210.",
+  "claims": [
+   {
+    "text": "The Hermetic sanctum at Mistridge fell in 1210, brought down by mortals led by a group calling itself the Craftmasons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Though renegades from the Order led the attack, ordinary peasants and hired soldiers with plain weapons and tools did most of the destruction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-craftmasons",
+   "dam-order-of-hermes"
+  ]
+ },
+ {
+  "id": "dam-craftmasons",
+  "title": "Craftmasons",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mortal builders who turned on mages.",
+  "claims": [
+   {
+    "text": "The Order of Hermes believes the Craftmasons are tools of the Tremere, finding it hard to credit that mortals acted alone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-mistridge"
+  ]
+ },
+ {
+  "id": "dam-enochian",
+  "title": "Enochian",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Order's secret tongue.",
+  "claims": [
+   {
+    "text": "Enochian, the Order's secret language, is said to come from spirit creatures who taught it to certain Hermetic mages, Hypatia among them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Enochian chants, recitations or texts serve as a magical tool.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-order-of-hermes"
+  ]
+ },
+ {
+  "id": "dam-house-coalition",
+  "title": "Taking of the Necromancer's Hold",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "An early joint act of the Houses.",
+  "claims": [
+   {
+    "text": "In 876 a coalition of Houses destroyed the lair of a powerful necromancer in Turkey and seized the stronghold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-order-of-hermes"
+  ]
+ },
+ {
+  "id": "dam-familiars",
+  "title": "Familiars",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Companions that feed on Quintessence.",
+  "claims": [
+   {
+    "text": "Familiars feed on Quintessence and must eat a number of points each week equal to their rating, or weaken and in time die.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-quintessence"
+  ]
+ },
+ {
+  "id": "dam-devil-kings",
+  "title": "The Devil Kings",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Infernalist mages of Arabia and Persia.",
+  "claims": [
+   {
+    "text": "Around A.D. 100 a Batini named Ishaq worked with the Nifuren'Daah, an Infernalist sect, then took up their ways, took the name Ishaq al-Iblis and became the first Devil King, turning on the Subtle Ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "From A.D. 100 to 756 a dynasty of Infernalist mages ruled in Arabia and Persia, building decadent cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-ahl-i-batin"
+  ]
+ },
+ {
+  "id": "dam-wyck",
+  "title": "The Wyck",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The legendary forebears of the druids.",
+  "claims": [
+   {
+    "text": "The Wyck were a tribe of hugely powerful beings, called godlike by some, whose lore passed to a gifted few and then to the druids.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 146,
+      "pdf": 147
+     }
+    ]
+   },
+   {
+    "text": "The Old Faith credits the Wyck with building Stonehenge, though where that belief comes from is long lost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 146,
+      "pdf": 147
+     }
+    ]
+   },
+   {
+    "text": "The immortal Wyck may not all be gone from the hills of England and Ireland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 146,
+      "pdf": 147
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-old-faith",
+   "dam-stonehenge"
+  ]
+ },
+ {
+  "id": "dam-stonehenge",
+  "title": "Stonehenge",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The great stone circle on Salisbury Plain.",
+  "claims": [
+   {
+    "text": "The stones track cosmic time; Wyck masters, or great mages of the Old Faith, could stand at the centre and read the universe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 148,
+      "pdf": 149
+     }
+    ]
+   },
+   {
+    "text": "Druids used it to foretell the coming year's weather and to warn of ill omens in the skies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 148,
+      "pdf": 149
+     }
+    ]
+   },
+   {
+    "text": "Even damaged, it channels far more power to the learned than can be had elsewhere, so local willworkers guard it jealously.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-wyck"
+  ]
+ },
+ {
+  "id": "dam-carceri-piranesi",
+  "title": "Carceri Piranesi",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Wizard Gaol of the Church.",
+  "claims": [
+   {
+    "text": "The Carceri Piranesi shows the Church's growing fear and hatred of the pagan faiths it is trying to replace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "Its builder used geomantic formulae to block magic, set it far from ley lines and similar sites, and shaped every angle and material to hinder magic inside.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "Piranesi designed it and also became its first inmate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   },
+   {
+    "text": "All magic rolls inside are at +3 difficulty, and the Gauntlet around it is fairly thick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   },
+   {
+    "text": "Batini who practise Al-Hajj suffer little from its strange architecture.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-gladius-dei",
+   "dam-order-of-hermes"
+  ]
+ },
+ {
+  "id": "dam-gladius-dei",
+  "title": "Gladius Dei",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Pope's mage-catching soldiers.",
+  "claims": [
+   {
+    "text": "Once the prison stood, Pope Nicholas had to raise a force of devout soldiers and guards to capture, question and hold its prisoners.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "The Gladius Dei can work their own kinds of miracle inside the Carceri.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-carceri-piranesi"
+  ]
+ },
+ {
+  "id": "dam-kupala",
+  "title": "Kupala",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A demon sleeping under the Carpathians.",
+  "claims": [
+   {
+    "text": "The essence of a major demon named Kupala lies under the Carpathians, known to perhaps a handful of mages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "In later centuries Kupala's presence will grow and lead to the birth of Tezghul the Insane.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-devil-kings"
+  ]
+ },
+ {
+  "id": "dam-gold",
+  "title": "Gold",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The metal of the sun.",
+  "claims": [
+   {
+    "text": "Gold is the sun's metal, seen as purest and most valuable; it holds few powers of its own, being the sum of the others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-foundations-and-pillars"
+  ]
+ },
+ {
+  "id": "dam-holy-symbols",
+  "title": "Crosses and Faith",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why a cross alone does not turn the dead.",
+  "claims": [
+   {
+    "text": "A cross by itself does not turn the undead unless its holder uses it as a focus for magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "damage",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-messianic-voices"
   ]
  }
 ]
