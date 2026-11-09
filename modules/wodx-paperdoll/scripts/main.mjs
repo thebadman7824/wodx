@@ -9,7 +9,7 @@ import {measure, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.1.1";
+export const VERSION = "0.1.2";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -119,10 +119,18 @@ export async function bake(actor, {force = false} = {}) {
   if ( actor.flags?.[MOD]?.baked !== key || Object.keys(upd).length > 1 ) await actor.update(upd);
   // Placed tokens of this character, on every scene: found by the actor's own list and by a search of the scenes
   const byScene = new Map();
-  const add = t => { const sc = t?.parent; if ( !sc || !t.actorLink || t.texture?.src === path ) return; if ( !byScene.has(sc) ) byScene.set(sc, new Map()); byScene.get(sc).set(t.id, t); };
+  const add = raw => {
+    const t = raw?.document ?? raw, sc = t?.parent;
+    if ( t?.documentName !== "Token" || !t.id || sc?.documentName !== "Scene" || !t.actorLink || t.texture?.src === path ) return;
+    if ( !byScene.has(sc.id) ) byScene.set(sc.id, {scene: sc, ids: new Set()});
+    byScene.get(sc.id).ids.add(t.id);
+  };
   try { for ( const t of actor.getDependentTokens?.({linked: true}) ?? [] ) add(t); } catch (e) { /* older API */ }
   for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) if ( t.actorId === actor.id ) add(t);
-  for ( const [scene, tokens] of byScene ) await scene.updateEmbeddedDocuments("Token", [...tokens.keys()].map(_id => ({_id, "texture.src": path})));
+  for ( const {scene, ids} of byScene.values() ) {
+    try { await scene.updateEmbeddedDocuments("Token", [...ids].map(_id => ({_id, "texture.src": path}))); }
+    catch (e) { console.warn(`${MOD} | token picture on ${scene.name}`, e); }
+  }
   return path;
 }
 const timers = new Map();
