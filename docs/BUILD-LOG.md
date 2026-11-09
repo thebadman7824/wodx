@@ -592,7 +592,7 @@ Ben approved the four gate people in the queue; gate 7a part 2 passed 4/4: the s
 - The player's client rolls with WoDX Actions' pool rules and posts a card. The active Storyteller's client reads the dice from that card, checks the player owns the character, works the result out from the door as it is now, and applies it with an Undo. A wall knocked through goes to the approval queue instead (B111).
 - Lock grades, forcing, bars, the lock skill by line and era, keypads and alarms (B109, B110). Noise, hearing, listening, retries and the clock (B112). A botch on forcing is one lethal through WoDX Combat, and Undo heals it.
 - Tests: interactables.test.mjs (33: rules and the runtime on a stand-in for Foundry); 444 harness tests pass, with 7e merged. UI fit covers the Interact window, the roll dialog and the wall config part.
-- Gate: tools/gate/gate-interact.mjs, for rothenstein-wodx, through the PC helper thread once Ben clears a deploy. Not deployed: the Live Version world was in play.
+- Gate: tools/gate/gate-interact.mjs passed 10/10 in rothenstein-wodx on 2026-11-09 (commit e69ea48), after the module was deployed and turned on there. Five runs before it failed on the gate script alone: Foundry 14 maps randomUniform to faces the other way round and refuses evaluateSync on dice, the room sat outside the default reach, the gate set attribute values without their stored totals, and created walls and tokens do not always come back in the order given. PRs 14 to 19.
 - V20 core page refs are still TODO; the V20 Dark Ages refs are in.
 
 ### WoDX Targeting, 2026-11-08: WoDX Targeting 0.1.0, WoDX Actions 3.12.0, WoDX Combat 3.7.5 (B84, B113, B114)
