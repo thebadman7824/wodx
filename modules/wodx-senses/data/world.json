@@ -194,7 +194,10 @@
       "p": [
        "night"
       ],
-      "io": "out"
+      "io": "out",
+      "wx": [
+       "cold"
+      ]
      }
     ]
    },
@@ -216,39 +219,63 @@
     "sight": [
      {
       "t": "Rain, steady and grey, blurring everything past a few yards.",
-      "io": "out"
+      "io": "out",
+      "wx": [
+       "rain"
+      ]
      },
      {
       "t": "Rain runs down the window.",
-      "io": "in"
+      "io": "in",
+      "wx": [
+       "rain"
+      ]
      }
     ],
     "sound": [
      {
-      "t": "Rain on the roof, steady."
+      "t": "Rain on the roof, steady.",
+      "wx": [
+       "rain"
+      ]
      },
      {
       "t": "Rain on the shutters.",
-      "io": "in"
+      "io": "in",
+      "wx": [
+       "rain"
+      ]
      },
      {
       "t": "Water rushing in the gutters.",
-      "io": "out"
+      "io": "out",
+      "wx": [
+       "rain"
+      ]
      }
     ],
     "smell": [
      {
-      "t": "Wet earth and rain."
+      "t": "Wet earth and rain.",
+      "wx": [
+       "rain"
+      ]
      }
     ],
     "touch": [
      {
       "t": "Rain, cold, getting in at the collar.",
-      "io": "out"
+      "io": "out",
+      "wx": [
+       "rain"
+      ]
      },
      {
       "t": "The damp of the rain has come indoors.",
-      "io": "in"
+      "io": "in",
+      "wx": [
+       "rain"
+      ]
      }
     ]
    },
@@ -256,34 +283,289 @@
     "sight": [
      {
       "t": "Fog, or rain so heavy it might as well be.",
-      "io": "out"
+      "io": "out",
+      "wx": [
+       "downpour",
+       "fog"
+      ]
      },
      {
       "t": "Lightning, and for an instant everything shows.",
-      "io": "out"
+      "io": "out",
+      "wx": [
+       "thunder"
+      ]
      }
     ],
     "sound": [
      {
-      "t": "Wind howling, things banging loose."
+      "t": "Wind howling, things banging loose.",
+      "wx": [
+       "gale",
+       "wind"
+      ]
      },
      {
-      "t": "Thunder, close."
+      "t": "Thunder, close.",
+      "wx": [
+       "thunder"
+      ]
      }
     ],
     "smell": [
      {
-      "t": "Ozone and wet stone."
+      "t": "Ozone and wet stone.",
+      "wx": [
+       "thunder"
+      ]
      }
     ],
     "touch": [
      {
       "t": "The wind shoves and pulls; rain stings the face.",
-      "io": "out"
+      "io": "out",
+      "wx": [
+       "gale"
+      ]
      },
      {
       "t": "The walls shake in the gusts.",
+      "io": "in",
+      "wx": [
+       "gale"
+      ]
+     }
+    ]
+   }
+  },
+  "weather": {
+   "snow": {
+    "sight": [
+     {
+      "t": "Snow falling, soft and steady, filling the air.",
+      "io": "out"
+     },
+     {
+      "t": "Snow coming down out of the dark, white where the light catches it.",
+      "p": [
+       "night"
+      ],
+      "io": "out"
+     },
+     {
+      "t": "Snow piling against the window.",
       "io": "in"
+     }
+    ],
+    "sound": [
+     {
+      "t": "The snow swallows sound; footsteps go quiet.",
+      "io": "out"
+     },
+     {
+      "t": "Now and then snow slides off the roof.",
+      "io": "in"
+     }
+    ],
+    "smell": [
+     {
+      "t": "Cold, clean air with almost no smell at all.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "Snowflakes melting on the face and hands.",
+      "io": "out"
+     }
+    ]
+   },
+   "sleet": {
+    "sight": [
+     {
+      "t": "Sleet driving in grey slants.",
+      "io": "out"
+     }
+    ],
+    "sound": [
+     {
+      "t": "Sleet hissing on stone and ticking on wood.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "Sleet, half ice, stinging and soaking at once.",
+      "io": "out"
+     }
+    ]
+   },
+   "hail": {
+    "sight": [
+     {
+      "t": "Hail bouncing white off the ground.",
+      "io": "out"
+     }
+    ],
+    "sound": [
+     {
+      "t": "Hail rattling hard on the roof."
+     }
+    ],
+    "touch": [
+     {
+      "t": "Hailstones striking hard enough to hurt.",
+      "io": "out"
+     }
+    ]
+   },
+   "fog": {
+    "sight": [
+     {
+      "t": "Fog so thick that a lantern three yards off is only a glow.",
+      "io": "out"
+     },
+     {
+      "t": "Shapes come out of the fog and are gone again.",
+      "io": "out"
+     },
+     {
+      "t": "Fog presses grey against the window.",
+      "io": "in"
+     }
+    ],
+    "sound": [
+     {
+      "t": "The fog muffles everything; sounds seem to come from nowhere.",
+      "io": "out"
+     }
+    ],
+    "smell": [
+     {
+      "t": "The fog smells of wet stone and smoke.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "The fog leaves a cold wet film on everything.",
+      "io": "out"
+     }
+    ]
+   },
+   "mist": {
+    "sight": [
+     {
+      "t": "A low mist hangs over the ground.",
+      "io": "out"
+     },
+     {
+      "t": "Mist haloes every light.",
+      "p": [
+       "night"
+      ],
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "Damp hangs in the air.",
+      "io": "out"
+     }
+    ]
+   },
+   "wind": {
+    "sight": [
+     {
+      "t": "The wind tugs at coats and sends rubbish skittering.",
+      "io": "out"
+     }
+    ],
+    "sound": [
+     {
+      "t": "The wind moans round the corners.",
+      "io": "out"
+     },
+     {
+      "t": "A draught whistles under the door.",
+      "io": "in"
+     }
+    ],
+    "touch": [
+     {
+      "t": "The wind cuts through clothes.",
+      "io": "out"
+     }
+    ]
+   },
+   "snow-lying": {
+    "sight": [
+     {
+      "t": "Snow lies over everything, and every footprint shows.",
+      "io": "out"
+     },
+     {
+      "t": "The snow on the ground gives back what light there is.",
+      "p": [
+       "night"
+      ],
+      "io": "out"
+     }
+    ],
+    "sound": [
+     {
+      "t": "Snow creaks underfoot.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "Snow underfoot, packed to ice in the ruts.",
+      "io": "out"
+     }
+    ]
+   },
+   "cold": {
+    "sight": [
+     {
+      "t": "Breath smokes in the cold.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "A cold that gets into the fingers and the joints.",
+      "io": "out"
+     },
+     {
+      "t": "Cold seeps up through the floor.",
+      "io": "in"
+     }
+    ]
+   },
+   "hot": {
+    "smell": [
+     {
+      "t": "The heat brings every smell up strong."
+     }
+    ],
+    "touch": [
+     {
+      "t": "Heavy, close heat, even now."
+     }
+    ]
+   },
+   "leaves": {
+    "sight": [
+     {
+      "t": "Dead leaves blow along the ground.",
+      "io": "out"
+     }
+    ],
+    "sound": [
+     {
+      "t": "Dry leaves scrape over stone.",
+      "io": "out"
      }
     ]
    }

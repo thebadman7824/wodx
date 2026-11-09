@@ -64,7 +64,7 @@ io=out | Supper smoke from every chimney.
 io=out p=day | The sky is clear and hard.
 io=out p=night | A clear night; every star is out.
 """, touch="""
-io=out p=night | A clear sky, and a frost coming.
+io=out p=night wx=cold | A clear sky, and a frost coming.
 """),
   "cloudy": S(sight="""
 io=out | Cloud, low and moving.
@@ -72,29 +72,106 @@ io=out | Cloud, low and moving.
 io=out | A fitful wind under the cloud.
 """),
   "overcast": S(sight="""
-io=out | Rain, steady and grey, blurring everything past a few yards.
-io=in | Rain runs down the window.
+io=out wx=rain | Rain, steady and grey, blurring everything past a few yards.
+io=in wx=rain | Rain runs down the window.
 """, sound="""
-| Rain on the roof, steady.
-io=in | Rain on the shutters.
-io=out | Water rushing in the gutters.
+wx=rain | Rain on the roof, steady.
+io=in wx=rain | Rain on the shutters.
+io=out wx=rain | Water rushing in the gutters.
 """, smell="""
-| Wet earth and rain.
+wx=rain | Wet earth and rain.
 """, touch="""
-io=out | Rain, cold, getting in at the collar.
-io=in | The damp of the rain has come indoors.
+io=out wx=rain | Rain, cold, getting in at the collar.
+io=in wx=rain | The damp of the rain has come indoors.
 """),
   "storm": S(sight="""
-io=out | Fog, or rain so heavy it might as well be.
-io=out | Lightning, and for an instant everything shows.
+io=out wx=downpour,fog | Fog, or rain so heavy it might as well be.
+io=out wx=thunder | Lightning, and for an instant everything shows.
 """, sound="""
-| Wind howling, things banging loose.
-| Thunder, close.
+wx=gale,wind | Wind howling, things banging loose.
+wx=thunder | Thunder, close.
 """, smell="""
-| Ozone and wet stone.
+wx=thunder | Ozone and wet stone.
 """, touch="""
-io=out | The wind shoves and pulls; rain stings the face.
-io=in | The walls shake in the gusts.
+io=out wx=gale | The wind shoves and pulls; rain stings the face.
+io=in wx=gale | The walls shake in the gusts.
+"""),
+ },
+ "weather": {
+  "snow": S(sight="""
+io=out | Snow falling, soft and steady, filling the air.
+io=out p=night | Snow coming down out of the dark, white where the light catches it.
+io=in | Snow piling against the window.
+""", sound="""
+io=out | The snow swallows sound; footsteps go quiet.
+io=in | Now and then snow slides off the roof.
+""", smell="""
+io=out | Cold, clean air with almost no smell at all.
+""", touch="""
+io=out | Snowflakes melting on the face and hands.
+"""),
+  "sleet": S(sight="""
+io=out | Sleet driving in grey slants.
+""", sound="""
+io=out | Sleet hissing on stone and ticking on wood.
+""", touch="""
+io=out | Sleet, half ice, stinging and soaking at once.
+"""),
+  "hail": S(sight="""
+io=out | Hail bouncing white off the ground.
+""", sound="""
+| Hail rattling hard on the roof.
+""", touch="""
+io=out | Hailstones striking hard enough to hurt.
+"""),
+  "fog": S(sight="""
+io=out | Fog so thick that a lantern three yards off is only a glow.
+io=out | Shapes come out of the fog and are gone again.
+io=in | Fog presses grey against the window.
+""", sound="""
+io=out | The fog muffles everything; sounds seem to come from nowhere.
+""", smell="""
+io=out | The fog smells of wet stone and smoke.
+""", touch="""
+io=out | The fog leaves a cold wet film on everything.
+"""),
+  "mist": S(sight="""
+io=out | A low mist hangs over the ground.
+io=out p=night | Mist haloes every light.
+""", touch="""
+io=out | Damp hangs in the air.
+"""),
+  "wind": S(sight="""
+io=out | The wind tugs at coats and sends rubbish skittering.
+""", sound="""
+io=out | The wind moans round the corners.
+io=in | A draught whistles under the door.
+""", touch="""
+io=out | The wind cuts through clothes.
+"""),
+  "snow-lying": S(sight="""
+io=out | Snow lies over everything, and every footprint shows.
+io=out p=night | The snow on the ground gives back what light there is.
+""", sound="""
+io=out | Snow creaks underfoot.
+""", touch="""
+io=out | Snow underfoot, packed to ice in the ruts.
+"""),
+  "cold": S(sight="""
+io=out | Breath smokes in the cold.
+""", touch="""
+io=out | A cold that gets into the fingers and the joints.
+io=in | Cold seeps up through the floor.
+"""),
+  "hot": S(smell="""
+| The heat brings every smell up strong.
+""", touch="""
+| Heavy, close heat, even now.
+"""),
+  "leaves": S(sight="""
+io=out | Dead leaves blow along the ground.
+""", sound="""
+io=out | Dry leaves scrape over stone.
 """),
  },
  "moon": {

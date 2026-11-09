@@ -67,13 +67,13 @@ export function lightLevel({daylight = false, lit = false, indoor = false, moon 
 
 /** Difficulty steps (house rules, shown on the card and changeable there). */
 export const STEPS = {
-  dim: 1, dark: 2, crowd: 1, storm: 1, door: 1, wind: 1, masked: 1
+  dim: 1, dark: 2, crowd: 1, storm: 1, door: 1, wind: 1, masked: 1, fog: 2, mist: 1
 };
 export const BASE_DIFFICULTY = 6;
 export const FLOOR = 3;
 
 /**
- * The difficulty for one sense, and why. ctx: {light, crowd, sky, indoor, door, masked}. powers: see powersFor().
+ * The difficulty for one sense, and why. ctx: {light, crowd, sky, indoor, door, masked, wx (weather tags), heavy}. powers: see powersFor().
  * blind: true when nothing can be seen at all (pitch dark with no power that sees in it).
  */
 export function difficulty(sense, ctx = {}, powers = {}) {
@@ -81,18 +81,27 @@ export function difficulty(sense, ctx = {}, powers = {}) {
   const parts = [];
   const add = (label, n) => { if ( n ) { diff += n; parts.push(`${label} ${n > 0 ? "+" : ""}${n}`); } };
   let blind = false;
+  const wx = Array.isArray(ctx.wx) ? ctx.wx : null;
+  const out = !ctx.indoor;
   if ( sense === "sight" ) {
     if ( powers.darkSight ) { if ( ctx.light !== "bright" ) parts.push(`${powers.darkSight}: no darkness step`); }
     else if ( ctx.light === "pitch" ) blind = true;
     else if ( ctx.light === "dark" ) add("Darkness", STEPS.dark);
     else if ( ctx.light === "dim" ) add("Dim light", STEPS.dim);
+    if ( wx && out ) {
+      if ( wx.includes("fog") ) add("Thick fog", STEPS.fog);
+      else if ( wx.includes("mist") ) add("Mist", STEPS.mist);
+      else if ( wx.includes("downpour") || (wx.includes("snow") && ctx.heavy) ) add("Heavy rain or snow", STEPS.storm);
+    }
   }
   if ( sense === "sound" ) {
     if ( ctx.crowd ) add("A noisy place", STEPS.crowd);
-    if ( !ctx.indoor && (ctx.sky === "storm" || ctx.sky === "overcast") ) add("Rain or storm", STEPS.storm);
+    if ( wx ) { if ( out && (wx.includes("gale") || wx.includes("thunder") || wx.includes("downpour") || wx.includes("hail")) ) add("Storm noise", STEPS.storm); }
+    else if ( out && (ctx.sky === "storm" || ctx.sky === "overcast") ) add("Rain or storm", STEPS.storm);
   }
   if ( sense === "smell" ) {
-    if ( !ctx.indoor && ctx.sky === "storm" ) add("Wind and rain", STEPS.wind);
+    if ( wx ) { if ( out && wx.includes("rain") ) add(wx.includes("downpour") ? "Heavy rain washes scent away" : "Rain masks scent", wx.includes("downpour") ? STEPS.wind + 1 : STEPS.wind); }
+    else if ( out && ctx.sky === "storm" ) add("Wind and rain", STEPS.wind);
     if ( ctx.masked ) add("A stronger smell", STEPS.masked);
   }
   for ( const m of powers.mods ?? [] ) if ( !m.senses || m.senses.includes(sense) ) add(m.label, -Math.abs(m.n));
@@ -127,7 +136,7 @@ export function powersFor(t = {}) {
   return {mods, darkSight, channels: [...new Set(channels)], smellFirst, reach};
 }
 
-/** Does a line fit the moment? ctx: {era, part, sky, indoor, moon} */
+/** Does a line fit the moment? ctx: {era, part, sky, indoor, moon, wx (the weather's tags, when WoDX Atmosphere is on)} */
 export function fits(line, ctx = {}) {
   if ( !line || !line.t ) return false;
   if ( line.e && !line.e.includes(ctx.era) ) return false;
@@ -136,6 +145,8 @@ export function fits(line, ctx = {}) {
   if ( line.io === "in" && !ctx.indoor ) return false;
   if ( line.io === "out" && ctx.indoor ) return false;
   if ( line.moon && !line.moon.includes(ctx.moon) ) return false;
+  // Weather tags (WoDX Atmosphere): a line that names weather shows only when that weather is here
+  if ( line.wx && Array.isArray(ctx.wx) && !line.wx.some(t => ctx.wx.includes(t)) ) return false;
   return true;
 }
 
@@ -164,6 +175,7 @@ export function conditionLines(tables, sense, ctx, cal = {}) {
   const c = tables?.conditions ?? {};
   const pick = node => (node?.[sense] ?? []).filter(l => fits(l, ctx));
   const out = [...pick(c.part?.[ctx.part]), ...pick(c.sky?.[ctx.sky])];
+  for ( const tag of Array.isArray(ctx.wx) ? ctx.wx : [] ) out.push(...pick(c.weather?.[tag]));
   if ( !ctx.indoor && ctx.part === "night" ) out.push(...pick(c.moon?.[ctx.moon]));
   if ( cal.feast ) out.push(...pick(c.feast).map(l => ({...l, vars: {feast: cal.feast}})));
   if ( cal.curfew ) out.push(...pick(c.curfew));
