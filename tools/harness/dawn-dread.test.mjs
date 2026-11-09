@@ -77,3 +77,19 @@ test("a personal theme plays at most once a minute, unless the Storyteller press
   assert.match(src, /Hooks\.on\("updateCombat"/);
   assert.match(src, /searchBox\("table\.watmo-themes"/);
 });
+
+/* WoDX Atmosphere 0.6.0: places that age. */
+test("a place that ages shows the latest picture whose year has come, else its own map", () => {
+  const ages = {base: "maps/town.webp", variants: [{from: 1348, img: "maps/town-plague.webp"}, {from: 1620, img: "maps/town-1620.webp"}, {from: 1890, img: "maps/town-1890.webp"}]};
+  assert.equal(K.ageFor(ages, 1200), "maps/town.webp");
+  assert.equal(K.ageFor(ages, 1348), "maps/town-plague.webp");
+  assert.equal(K.ageFor(ages, 1700), "maps/town-1620.webp");
+  assert.equal(K.ageFor(ages, 2020), "maps/town-1890.webp");
+  assert.equal(K.ageFor(ages, null), "maps/town.webp");
+  assert.equal(K.ageFor({variants: [{from: 1500, img: "a.webp"}]}, 1400), null);
+  assert.deepEqual(K.cleanAges([{from: 1890, img: "b"}, {from: "1348.7", img: "a"}, {from: 1890, img: "c"}, {from: 1500}, {img: "x"}]),
+    [{from: 1348, img: "a"}, {from: 1890, img: "c"}]);
+  const src = readFileSync(join(root, "modules/wodx-atmosphere/scripts/main.mjs"), "utf8");
+  assert.match(src, /data-action="addAge"/);
+  assert.match(src, /Hooks\.on\("wodxSkipEnd".*applyAges/);
+});

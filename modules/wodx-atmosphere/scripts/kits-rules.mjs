@@ -73,6 +73,28 @@ export function themeToPlay(theme, {last = 0, now = Date.now(), force = false} =
   return {src, volume: Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0.6};
 }
 
+/**
+ * Places that age: the same map in other years (Rothenstein in 1200, 1348, 1620, 1890, 2020). variants: [{from, img}],
+ * each shown from its year on; before the first, the map's own picture (base). Returns the picture for the year.
+ */
+export function ageFor({base = null, variants = []} = {}, year) {
+  const y = Number(year);
+  if ( !Number.isFinite(y) ) return base;
+  let best = null;
+  for ( const v of variants ?? [] ) {
+    const f = Number(v?.from);
+    if ( !v?.img || !Number.isFinite(f) || f > y ) continue;
+    if ( !best || f >= Number(best.from) ) best = v;
+  }
+  return best ? best.img : base;
+}
+/** The variants kept in year order, one per year (the later entry wins), without blanks. */
+export function cleanAges(variants = []) {
+  const byYear = new Map();
+  for ( const v of variants ?? [] ) { const f = Math.trunc(Number(v?.from)); if ( v?.img && Number.isFinite(f) ) byYear.set(f, {from: f, img: String(v.img)}); }
+  return [...byYear.values()].sort((a, b) => a.from - b.from);
+}
+
 /** The cues a clock move of delta seconds crosses, ending toDawn seconds before sunrise. */
 export function dreadCuesCrossed(toDawnAfter, delta) {
   const before = Number(toDawnAfter) + Number(delta);

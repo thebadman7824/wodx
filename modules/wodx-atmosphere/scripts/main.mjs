@@ -19,7 +19,7 @@ import * as K from "./kits-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.5.0";
+const VERSION = "0.6.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -319,6 +319,47 @@ function cuesForTime(time, delta) {
     if ( setting("dawnDread") ) for ( const c of K.dreadCuesCrossed(CAL.secondsToNextDawn(time, lat), delta) ) playCue(c);
   } catch (e) { /* no cue */ }
 }
+
+/* ------------------------------------------------------------------ */
+/*  Places that age                                                    */
+/* ------------------------------------------------------------------ */
+
+/** The level that holds the map's own picture: the lowest that is not an Otherworld layer (Foundry 14 keeps the map on levels). */
+function mapLevel(scene) {
+  const levels = all(scene?.levels).filter(l => !l.flags?.["wodx-otherworlds"]?.layer);
+  return levels.sort((a, b) => (a.elevation?.bottom ?? 0) - (b.elevation?.bottom ?? 0))[0] ?? null;
+}
+const mapSrc = scene => { const l = mapLevel(scene); return l ? (l.background?.src ?? null) : (scene?.background?.src ?? null); };
+async function setMapSrc(scene, src) {
+  const l = mapLevel(scene);
+  if ( l ) { if ( l.background?.src !== src ) await l.update({"background.src": src}); }
+  else if ( scene.background?.src !== src ) await scene.update({"background.src": src});
+}
+/** Add, replace or remove one year's picture for a scene. img empty removes that year. */
+export async function setAge(scene, from, img) {
+  if ( !scene || !game.user.isGM ) return null;
+  const ages = foundry.utils.deepClone(scene.flags?.[MOD]?.ages ?? {});
+  ages.base ??= mapSrc(scene);
+  const rest = (ages.variants ?? []).filter(v => Math.trunc(Number(v.from)) !== Math.trunc(Number(from)));
+  ages.variants = K.cleanAges(img ? [...rest, {from, img}] : rest);
+  if ( !ages.variants.length ) { await setMapSrc(scene, ages.base); await scene.unsetFlag(MOD, "ages"); return null; }
+  await scene.setFlag(MOD, "ages", ages);
+  await applyAges({scenes: [scene]});
+  return ages;
+}
+/** Every scene with years of its own shows the picture for the chronicle's year. Returns the scenes changed. */
+export async function applyAges({scenes = null, year = yearNow()} = {}) {
+  if ( !active || !isActiveGM() || !Number.isFinite(year) ) return [];
+  const changed = [];
+  for ( const sc of scenes ?? all(game.scenes) ) {
+    const ages = sc.flags?.[MOD]?.ages;
+    if ( !ages?.variants?.length ) continue;
+    const want = K.ageFor(ages, year);
+    if ( want && mapSrc(sc) !== want ) { await setMapSrc(sc, want); changed.push(sc.id); }
+  }
+  return changed;
+}
+let agedYear = null;
 
 /* ------------------------------------------------------------------ */
 /*  Personal themes                                                    */
@@ -632,6 +673,13 @@ export function AtmosphereClass() {
           const FP = foundry.applications.apps.FilePicker.implementation;
           return new FP({type: "audio", current: a?.flags?.[MOD]?.theme?.src ?? "", callback: async path => { await setTheme(a, path); AtmosphereApp.refresh(); }}).render(true);
         },
+        addAge: () => {
+          const sc = canvas?.scene, from = Math.trunc(Number(document.querySelector("#wodx-atmosphere input[name=ageFrom]")?.value));
+          if ( !sc || !Number.isFinite(from) ) return ui.notifications.warn("Give the year the picture starts.");
+          const FP = foundry.applications.apps.FilePicker.implementation;
+          return new FP({type: "image", current: mapSrc(sc) ?? "", callback: async path => { await setAge(sc, from, path); AtmosphereApp.refresh(); }}).render(true);
+        },
+        dropAge: async (ev, t) => { await setAge(canvas?.scene, Number(t.dataset.from), ""); AtmosphereApp.refresh(); },
         clearTheme: async (ev, t) => { await setTheme(game.actors.get(t.dataset.actor), ""); AtmosphereApp.refresh(); }
       }
     };
@@ -671,7 +719,11 @@ export function AtmosphereClass() {
           ${(() => { const all = [...(sc.sounds ?? [])]; const n = all.filter(x => K.isMuffled(x)).length;
             return `<div class="form-group"><label>Sounds through walls</label><span>${n} of ${all.length} placed sounds are stopped by walls and heard muffled through them.</span></div>
           <div class="watmo-row"><button type="button" data-action="muffle"${all.length && n < all.length ? "" : " disabled"}><i class="fa-solid fa-door-closed"></i> Muffle them all behind walls</button>
-          <button type="button" data-action="unmuffle"${n ? "" : " disabled"}><i class="fa-solid fa-door-open"></i> Let them all through walls</button></div>`; })()}` : "<p>No scene is being viewed.</p>"}
+          <button type="button" data-action="unmuffle"${n ? "" : " disabled"}><i class="fa-solid fa-door-open"></i> Let them all through walls</button></div>`; })()}
+          ${(() => { const ag = sc.flags?.[MOD]?.ages, vs = ag?.variants ?? [], y = yearNow();
+            return `<div class="form-group"><label>Places that age</label><span>${vs.length ? `${vs.length} other year${vs.length === 1 ? "" : "s"} of this map; ${Number.isFinite(y) ? `in ${y} it shows ${esc(String(K.ageFor(ag, y) ?? "").split("/").pop())}` : "the year is not known"}.` : "The same map in other years: from the year you give, the picture you choose."}</span></div>`
+              + (vs.length ? `<table class="watmo-fc watmo-ages" data-fixed><tbody>${ag.base ? `<tr><td>before ${vs[0].from}</td><td>${esc(String(ag.base).split("/").pop())}</td><td></td></tr>` : ""}${vs.map(v => `<tr><td>from ${v.from}</td><td>${esc(String(v.img).split("/").pop())}</td><td><button type="button" data-action="dropAge" data-from="${v.from}">Remove</button></td></tr>`).join("")}</tbody></table>` : "")
+              + `<div class="watmo-row"><input type="number" name="ageFrom" step="1" placeholder="Year" aria-label="The year the picture starts" style="width:7em"><button type="button" data-action="addAge"><i class="fa-solid fa-hourglass-half"></i> Picture from that year…</button></div>`; })()}` : "<p>No scene is being viewed.</p>"}
         </section>
         <section><h3>Era kit: ${esc(K0?.name ?? kit)}</h3>
           <p class="wodx-quiet">${esc(K0?.palette ?? "")}</p>
@@ -746,6 +798,7 @@ export async function prime() {
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
     themes: {play: playTheme, set: setTheme},
+    ages: {set: setAge, apply: applyAges, picture: (scene, year) => K.ageFor(scene?.flags?.[MOD]?.ages ?? {}, year)},
     dread: {now: dread, rotschreck: dreadRotschreck, apply: applyDread, tick: dreadTick},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
@@ -760,6 +813,8 @@ Hooks.once("ready", async () => {
   if ( isActiveGM() ) {
     if ( !setting("lastKit") ) await setSetting("lastKit", currentKit());
     await applyWeather({quiet: false});
+    agedYear = yearNow();
+    await applyAges().catch(e => console.warn(`${MOD} | ages`, e));
   }
   Hooks.callAll("wodxAtmosphereReady", api);
 });
@@ -770,11 +825,15 @@ Hooks.on("updateWorldTime", (time, delta) => {
   if ( !isActiveGM() ) return;
   clearTimeout(timeTimer);
   // The clock can tick many times in a row; work once it settles
-  timeTimer = setTimeout(() => applyWeather().catch?.(() => null), 250);
+  timeTimer = setTimeout(() => {
+    applyWeather().catch?.(() => null);
+    const y = yearNow();
+    if ( Number.isFinite(y) && y !== agedYear && !chron()?.isSkipping?.() ) { agedYear = y; applyAges({year: y}).catch(e => console.warn(`${MOD} | ages`, e)); }
+  }, 250);
 });
 let timeTimer = null;
-Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) applyWeather({force: true}); });
-Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); } });
+Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); applyAges().catch(e => console.warn(`${MOD} | ages`, e)); } });
+Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); applyAges().catch(e => console.warn(`${MOD} | ages`, e)); } });
 Hooks.on("refreshToken", token => { if ( active ) { try { drawFrame(token); } catch (e) { console.warn(`${MOD} | frame`, e); } } });
 Hooks.on("canvasReady", () => {
   if ( !active ) return;
