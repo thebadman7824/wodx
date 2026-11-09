@@ -373,6 +373,12 @@
    "title": "Clanbook: Followers of Set (Revised)",
    "short": "Clanbook: Followers of Set",
    "edition": "Revised"
+  },
+  {
+   "id": "daeu",
+   "title": "Dark Ages: Europe",
+   "short": "DA Europe",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -437,6 +443,7 @@
   "cbtremere.json",
   "cbtzimisce.json",
   "cbventrue.json",
-  "cbsetite.json"
+  "cbsetite.json",
+  "daeu.json"
  ]
 }
