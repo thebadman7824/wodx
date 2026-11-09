@@ -7,6 +7,7 @@ import {findJournal} from "./journals.mjs";
 import {HouseRulesApp} from "./house-rules-app.mjs";
 import {runEraTest} from "./era-test.mjs";
 import {searchBox} from "./search.mjs";
+import * as church from "./church.mjs";
 
 const {ApplicationV2, DialogV2} = foundry.applications.api;
 
@@ -66,6 +67,7 @@ export class ClockApp extends ApplicationV2 {
       .join("");
 
     const moon = now.moon;
+    const ch = church.on(now);
     const night = now.isNight ? "Night" : "Day";
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
@@ -80,7 +82,9 @@ export class ClockApp extends ApplicationV2 {
           <dt>Dark hours</dt><dd>${now.darkHours.toFixed(1)}</dd>
           <dt>Moon</dt><dd>${esc(moon.name)}, ${Math.round(moon.illumination * 100)}% lit</dd>
           <dt>Auspice moon</dt><dd>${esc(moon.auspice)}</dd>
+          <dt>Church year</dt><dd>${esc(ch.label)}</dd>
         </dl>
+        ${gm && ch.active && ch.lines.length ? `<p class="wodx-quiet wodx-church">${ch.lines.map(esc).join(" ")}</p>` : ""}
       </section>
       <section class="wodx-era">
         <h3>${esc(p?.name ?? "No era")} ${a.interlude ? `<span class="wodx-tag">between eras</span>` : ""} ${lockId ? `<span class="wodx-tag">locked</span>` : ""}</h3>

@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.5.0: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
+ * WoDX NPC 0.5.1: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
@@ -18,7 +18,7 @@ import {build as buildFactions} from "./factions.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.5.0";
+const VERSION = "0.5.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -358,9 +358,13 @@ async function execute(tok, opt) {
       if ( C().getKind(actor) === "lupine" ) await A()?.rageRoll?.({actor});
       else await A()?.frenzy?.({actor});
       return {done: true, text: `Frenzy check for ${tok.name}.`};
-    case "power":
+    case "power": {
+      // The target WoDX Targeting picked goes up first, so the power window's own panel starts on it
+      const aim = target ?? canvas.tokens.get(rankPower(tok)?.pick?.id ?? "") ?? null;
+      if ( aim ) game.modules.get("wodx-targeting")?.api?.setTargets?.([aim.id]);
       await A()?.menu?.({actor});
-      return {done: true, text: `The actions menu is open for ${tok.name}: choose the power.`};
+      return {done: true, text: `The actions menu is open for ${tok.name}: choose the power${aim ? ` (aimed at ${aim.name}; the target panel can change it)` : ""}.`};
+    }
     case "call": {
       const {offstage} = readFight(tok);
       const near = offstage.sort((a, b) => (yardsBetween(tok, a) ?? 1e9) - (yardsBetween(tok, b) ?? 1e9)).slice(0, 2);
@@ -397,8 +401,15 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 /** Tell WoDX Combat's turn conductor (3.7) how this NPC's turn went. */
 const report = (combatId, combatantId, r) => { if ( combatId && combatantId ) Hooks.callAll("wodxNpcTurnDone", {combatId, combatantId, ...r}); };
 const phaseKey = combat => { const f = combat?.getFlag?.("wodx-combat", "conductor"); return f?.phase === "extra" && f?.round === combat.round ? "extra" : "main"; };
+/** WoDX Targeting's pick for a power plan, when that module is on and not switched off on this computer. */
+function rankPower(tok) {
+  const TG = game.modules.get("wodx-targeting");
+  if ( !TG?.active || !TG.api?.rules || TG.api.mode?.() === "off" ) return null;
+  try { return TG.api.rules.rank(NR.POWER_AIM, TG.api.stateFor(tok.actor, tok)); } catch (e) { return null; }
+}
 async function postPlan(tok, combat, {profile, options}, mode) {
-  const shown = options.slice(0, setting("options"));
+  let ranked;
+  const shown = options.slice(0, setting("options")).map(o => (o.action === "power" ? NR.aimPower(o, ranked ??= rankPower(tok)) : o));
   const flags = {plan: {token: tok.document.uuid, combatId: combat?.id ?? null, round: combat?.round ?? 0, combatant: combat?.combatant?.id ?? null, options: shown, mode}};
   let result = null, chosen = null, waiting = null;
   if ( mode === "auto" ) {

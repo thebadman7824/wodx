@@ -15,6 +15,7 @@
  *   5. Automatic (the Storyteller): nothing is set for Celerity (the user), then Dominate sets the target at once
  *   6. a target set by hand is kept and named
  *   7. the attack window opens on the ghoul in reach, with the others to switch to
+ *   8b. WoDX NPC 0.5.1: an NPC's "Use a power" plan is aimed by the same ranking (the ghoul names the Cainite beside it)
  *   8. Off: no panel
  *   9. clean up
  * Result: Data/wodx-gate/gatetarget-result.json.
@@ -165,6 +166,19 @@ export async function run({look = false} = {}) {
       const alts = [...(box?.querySelectorAll("button[data-aim]") ?? [])].map(b => b.textContent);
       await closeAll();
       ok("7 attack", /Ghoul B/.test(text) && alts.includes("Ghoul A") && alts.includes("No target") && !alts.includes("Hidden one"), {text: text.slice(0, 120), alts});
+    });
+
+    await step("8b npc power plan", async () => {
+      // WoDX NPC 0.5.1: a "Use a power" plan is aimed by the same ranking; the ghoul in reach sees the Cainite beside it
+      const npc = game.modules.get("wodx-npc");
+      if ( !npc?.active || !newer(npc.version, "0.5.1") ) return ok("8b npc power plan", false, {error: "needs WoDX NPC 0.5.1", npc: npc?.version});
+      await setMode("suggest");
+      const g = tok["Ghoul B"];
+      const msg = await npc.api.postPlan(g, null, {profile: npc.api.profileFor(g.actor), options: [{action: "power", label: "Use a power", why: "the gate's plan", score: 3}]}, "suggest");
+      const text = msg?.content ?? "";
+      const plan = msg?.getFlag("wodx-npc", "plan")?.options?.[0];
+      ok("8b npc power plan", /Use a power on Anezka/.test(text) && plan?.target === tok.Anezka.id, {plan, text: text.replace(/<[^>]+>/g, " ").slice(0, 200)});
+      await msg?.delete();
     });
 
     await step("8 off", async () => {

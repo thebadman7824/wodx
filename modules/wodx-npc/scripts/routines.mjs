@@ -76,7 +76,7 @@ export function build(ctx) {
   /** describe(time) for the rules: the Chronicle's own reading of the clock, with the feast of the day. */
   function describer() {
     const lat = (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })();
-    const extra = R.parseFeasts(setting("feasts"));
+    const extra = [...R.parseFeasts(setting("feasts")), ...(chron()?.church?.extra?.() ?? [])];
     const memo = new Map();
     return time => {
       if ( memo.has(time) ) return memo.get(time);
@@ -85,6 +85,11 @@ export function build(ctx) {
       memo.set(time, out);
       return out;
     };
+  }
+  /** The curfew's hour on a day: the setting, or midnight on a night of revel (WoDX Chronicle's feast and fast days). */
+  function curfewStartOn(d) {
+    const base = num(setting("curfewStart")) || 21;
+    try { const c = chron()?.church?.on?.(d); return c?.active && c.curfewStart ? Math.max(base, c.curfewStart) : base; } catch (e) { return base; }
   }
   const bookNow = () => { try { return chron()?.eras?.activeEra?.()?.profile?.id === "dark-ages" ? "v20da" : "v20"; } catch (e) { return "v20da"; } };
 
@@ -627,7 +632,7 @@ export function build(ctx) {
     const placeIds = [region.uuid, scene.uuid];
     const allowed = names(system.allowed);
     const trespass = !!system.private && !residentsOf(placeIds).some(a => a.id === intruder.id || a.id === intruder.baseActor?.id) && !nameIn(allowed, intruder);
-    const sit = {night: d.isNight, curfew: R.isCurfew(d, num(setting("curfewStart")) || 21), trespass, weapon: weaponOut(intruder), supernatural: !!ctx.obvious(intruder)};
+    const sit = {night: d.isNight, curfew: R.isCurfew(d, curfewStartOn(d)), trespass, weapon: weaponOut(intruder), supernatural: !!ctx.obvious(intruder)};
     const cond = R.conditionsMet(listOf(system.conditions), sit, system.match);
     if ( !cond.met ) return null;
     // The watchers in view
@@ -858,7 +863,7 @@ export function build(ctx) {
     }
     await loadCalendar();
     const d = describer()(game.time.worldTime);
-    const sit = AR.eventSituation(ev, {night: d.isNight, curfew: R.isCurfew(d, num(setting("curfewStart")) || 21), weapon: intr?.actor ? weaponOut(intr.actor) : false});
+    const sit = AR.eventSituation(ev, {night: d.isNight, curfew: R.isCurfew(d, curfewStartOn(d)), weapon: intr?.actor ? weaponOut(intr.actor) : false});
     const w = awake[0];
     const near = awake.length - 1;
     const placeIds = [ev.place, scene.uuid].filter(Boolean);

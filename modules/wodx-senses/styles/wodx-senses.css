@@ -7,3 +7,9 @@
 button.wsn-offer { display: block; margin-top: 4px; font-size: 0.8em; line-height: 1.5; width: auto; }
 .wsn-dialog .wsn-own textarea { width: 100%; min-height: 3.5em; }
 .wsn-dialog .window-content { overflow-y: auto; max-height: 80vh; }
+
+/* 0.3.0: the screen in frenzy and Rötschreck (each player can turn it off) */
+#wodx-senses-screen { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
+#wodx-senses-screen.wsn-frenzy { box-shadow: inset 0 0 14vmin 3vmin rgba(150, 0, 0, 0.55); }
+#wodx-senses-screen.wsn-rotschreck { box-shadow: inset 0 0 18vmin 4vmin rgba(225, 225, 215, 0.35); }
+body.wsn-drained #board { filter: saturate(0.15) brightness(0.92); }

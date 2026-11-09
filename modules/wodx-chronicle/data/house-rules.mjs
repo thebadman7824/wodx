@@ -106,6 +106,14 @@ export default {
       "source": "House rule"
     },
     {
+      "id": "feastFast",
+      "group": "rules",
+      "name": "Feast and fast days",
+      "hint": "The church year shapes the night: on a night of revel the curfew starts at midnight and hunting in town is 1 easier; on a fast kept strictly (before 1600) hunting in town is 1 harder. The Chronicle Clock always shows the day.",
+      "default": true,
+      "source": "House rule"
+    },
+    {
       "id": "yearsMoralityDrift",
       "group": "years",
       "name": "Morality drift",

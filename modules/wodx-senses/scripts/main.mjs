@@ -1,5 +1,5 @@
 /**
- * WoDX Senses 0.2.0: what a character sees, hears, smells and feels, answered in chat.
+ * WoDX Senses 0.3.0: what a character sees, hears, smells and feels, answered in chat.
  *
  *   Asking     /look, /listen, /smell, /touch, or /sense for all four (a word after it puts lines about that first:
  *              "/look door"). The player toolbar button "What do I notice?" opens the same choice. A plain question in
@@ -21,9 +21,11 @@
  */
 import * as R from "./senses-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {registerPerceptionSettings, setupPerception} from "./perception.mjs";
+
 
 const MOD = "wodx-senses";
-const VERSION = "0.2.0";
+const VERSION = "0.3.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -157,10 +159,16 @@ function moment(scene, p) {
   let feast = null, curfew = false;
   try {
     const RR = game.modules.get("wodx-npc")?.api?.routineRules;
+    const CH = game.modules.get("wodx-chronicle")?.api?.church;
     if ( RR && t ) {
-      const extra = RR.parseFeasts?.(game.settings.get("wodx-npc", "feasts") ?? "") ?? [];
-      feast = RR.feastOn?.({year: t.year, month: t.month, day: t.day, calendar: t.calendar}, extra) ?? null;
-      curfew = !!RR.isCurfew?.({hour: t.hour, minute: t.minute, isNight: t.isNight});
+      // The whole date (with its day number), so the feasts counted from Easter are found too
+      const extra = [...(RR.parseFeasts?.(game.settings.get("wodx-npc", "feasts") ?? "") ?? []), ...(CH?.extra?.() ?? [])];
+      feast = RR.feastOn?.({year: t.year, month: t.month, day: t.day, calendar: t.calendar, jdn: t.jdn}, extra) ?? null;
+      const c = CH?.on?.(t);
+      let start = 21;
+      try { start = Number(game.settings.get("wodx-npc", "curfewStart")) || 21; } catch (e) { start = 21; }
+      if ( c?.active && c.curfewStart ) start = Math.max(start, c.curfewStart);
+      curfew = !!RR.isCurfew?.({hour: t.hour, minute: t.minute, isNight: t.isNight}, start);
     }
   } catch (e) { /* no calendar extras */ }
   return {t, hours, hour: Math.floor(hours), part, place, indoor, sky, moon, era: R.eraBand(year), year, light, feast, curfew, viewing: onCanvas(scene),
@@ -675,7 +683,9 @@ export async function openPlaceLines(scene = canvas?.scene) {
 
 Hooks.once("init", () => {
   registerSettings();
-  const api = {version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
+  registerPerceptionSettings();
+  const perception = setupPerception({attrOf, abilityOf, powerDots, formOf, sightBlocked, esc, gmIds});
+  const api = {perception, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
   game.modules.get(MOD).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {senses: api});
 });

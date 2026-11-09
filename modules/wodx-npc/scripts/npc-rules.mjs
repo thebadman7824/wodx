@@ -282,3 +282,14 @@ export function autoChoice(options) {
   if ( SELF_ACTING.includes(top.action) ) return {act: top};
   return {act: null, needsStoryteller: top};
 }
+
+/**
+ * Aim a "Use a power" option with WoDX Targeting's ranking (the same picker the power windows use): a hostile power
+ * at line of sight, the tag WoDX gives an NPC's attack powers until the Storyteller picks the real one.
+ *   ranked: target-rules rank() output, or null when WoDX Targeting is off. Returns a new option.
+ */
+export const POWER_AIM = "h.s";
+export function aimPower(opt, ranked) {
+  if ( opt?.action !== "power" || !ranked?.pick || ranked.pick.self ) return opt;
+  return {...opt, target: ranked.pick.id, label: `${opt.label} on ${ranked.pick.name}`, why: `${opt.why}; aimed at ${ranked.pick.name} (${ranked.pick.why})`};
+}
