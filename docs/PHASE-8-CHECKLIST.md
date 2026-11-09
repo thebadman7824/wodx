@@ -8,7 +8,7 @@
 - [x] WoDX Senses 0.2.0 reads the weather
 - [x] Start a chronicle wizard (Storyteller 0.4.0) and the template world flag
 - [x] Harness tests (22 new, 687 in all), text cleanup
-- [ ] UI fit on the PC with Foundry's own fonts
-- [ ] Deployed to rothenstein-wodx, gate8 14/14
+- [x] UI fit on the PC with Foundry's own fonts (621 ok, 2026-11-09)
+- [x] Deployed to rothenstein-wodx 2026-11-09; gate8 13/14, the cue step hung headless (fixed in the gate: steps time out, the cue is not awaited); gatesenses 12/12
 - [ ] Ben listens to the cues and reads the primers and weather lines (PENDING-REVIEW)
 - [ ] Encounter and rumour tables by era, Otherworld travel, story aids, token frames (not built yet)

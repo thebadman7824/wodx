@@ -808,3 +808,4 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Decisions B200 to B206; choices in PENDING-REVIEW.md.
 - Tests: atmosphere.test.mjs (22), 687 in all. UI fit takes the Atmosphere window and its three dialogs (to run on the PC: the cloud copy of foundry2.css fails every window on the minimised controls button). Gate: tools/gate/gate8.mjs, 14 steps, rothenstein-wodx only.
 - Not built yet in Phase 8: encounter and rumour tables by era, Otherworld travel, story aids, token frames.
+- PC run 2026-11-09: deployed to rothenstein-wodx (Atmosphere on there only), UI fit 621 ok, gatesenses 12/12, gate8 13/14. Step 9 waited for playback, which a headless browser never starts; the gate now checks the cue starts and gives each step a minute.

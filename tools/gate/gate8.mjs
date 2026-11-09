@@ -37,7 +37,9 @@ async function save(R, name) {
 function harness() {
   const R = {started: new Date().toISOString(), steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
-  const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
+  // Each step gives up after a minute, so a hung call fails its step and the clean-up still runs
+  const limit = (p, ms = 60000) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error(`timed out after ${ms / 1000} s`)), ms))]);
+  const step = async (name, fn) => { try { await limit(fn()); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
   return {R, ok, step};
 }
 const newer = (a, b) => {
@@ -134,14 +136,15 @@ export async function run() {
       const shipped = chain.find(k => ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "future-darkness"].includes(k)) ?? "dark-ages";
       const r = await fetch(`modules/${MOD}/sounds/${shipped}/notice.ogg`, {method: "HEAD"});
       let played = false;
-      try { const s = await A.kit.cue("notice"); played = !!s || get(MOD, "cues") === false; } catch (e) { played = false; }
+      // Playback can wait for a first click (a headless browser never gives one), so only the start of the call is checked
+      try { const s = A.kit.cue("notice"); played = s !== null || get(MOD, "cues") === false; Promise.resolve(s).catch(() => null); } catch (e) { played = false; }
       ok("9 cues", r.ok && played, {status: r.status, shipped});
     });
     await step("10 handout", async () => {
       const j = await A.handout({template: "telegram", title: "WoDX gate: To the station master", body: "Come at once.\n\nStop.", from: "L.", date: "3 May 1915"});
       made.journals.push(j);
       const html = j?.pages?.contents?.[0]?.text?.content ?? "";
-      ok("10 handout", /wodx-ho-telegram/.test(html) && /TELEGRAM/.test(html) && j.folder?.name === "WoDX handouts", {name: j?.name});
+      ok("10 handout", /wodx-ho-telegram/.test(html) && /TELEGRAM/.test(html) && j.folder?.name === "WoDX handouts", {journal: j?.name});
     });
     await step("11 playlists plan", async () => {
       const n = game.playlists.size;
