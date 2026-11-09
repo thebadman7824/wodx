@@ -106,8 +106,8 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Tile config: pictures and sounds (a picture per state, follow a door or window, no marker, change sound, tied sounds)
 - [x] Settings: Map effects (each player), State markers (world)
 - [x] Harness tests (7 new) and UI fit
-- [ ] Gate step 21 in rothenstein-wodx
-- [ ] Deployed
+- [x] Gate step 23 (pictures and events) in rothenstein-wodx: passes in the 24/24 run at 296459b
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.11.0-2026-11-09)
 
 ## 0.13.0: climbing, ledges and jumps (2026-11-09)
 - [x] Rules: five climbs by yards a success, gaps by yards, catching the ledge, falls by height (B155)
@@ -118,7 +118,6 @@ Step 1 of "Responsive Maps for WoDX".
 - [x] Gate steps 22 and 24 in rothenstein-wodx: 24/24 at 296459b (0.13.1)
 - [x] Deployed 0.13.1 2026-11-09 (backup Backups\wodx-interactables-0.13.0-2026-11-09)
 - [x] Deployed 0.13.0 2026-11-09 (backup Backups\wodx-interactables-0.12.0-2026-11-09)
-- [ ] Deployed
 
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
