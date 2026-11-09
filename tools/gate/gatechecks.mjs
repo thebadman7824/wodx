@@ -87,7 +87,7 @@ export async function run() {
     });
 
     actor = await Actor.create({name: "WoDX gate: Watcher", type: "Mortal"});
-    await actor.update({"system.attributes.perception.value": 3, "system.abilities.alertness.value": 2, "system.abilities.medicine.value": 0,
+    await actor.update({"system.attributes.perception.value": 3, "system.attributes.perception.total": 3, "system.abilities.alertness.value": 2, "system.abilities.medicine.value": 0,
       "system.abilities.awareness.value": 0, "system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 6});
     R.notes.push(`Watcher: Perception ${actor.system.attributes.perception.total ?? actor.system.attributes.perception.value}, Alertness ${actor.system.abilities.alertness?.value}`);
 
