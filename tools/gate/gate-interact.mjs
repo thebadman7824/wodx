@@ -1,5 +1,5 @@
 /**
- * Interactables gate (WoDX Interactables 0.13.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Interactables gate (WoDX Interactables 0.13.1), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-interact.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Interact"), two characters of its own ("Gate Interact
  * burglar", a player's character, and "Gate Interact watchman", an NPC) and deletes them all at the end. It fixes the
@@ -46,6 +46,12 @@ function harness() {
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
   return {R, ok, step};
 }
+/** Wait until a test holds, up to ms (Foundry 14 can take a moment to settle a token move). */
+async function until(fn, ms = 5000) {
+  const t = Date.now();
+  while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); }
+  return !!fn();
+}
 /** Wait for the Storyteller's side to apply a card. */
 async function applied(msg, ms = 8000) {
   const t = Date.now();
@@ -80,7 +86,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.13.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.13.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.13.1 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.13.1" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -452,12 +458,14 @@ export async function run() {
       // Foundry may snap the token to the grid, so the cart is checked against where the token really went
       const x0 = cart.x, t0 = tb.x, driver = foundry.utils.deepClone(cart.flags[MOD]?.driver ?? null);
       await tb.update({x: tb.x + G});
-      await sleep(1200);
+      await until(() => cart.x !== x0);
+      await sleep(300);
       const t1 = tb.x, x1 = cart.x;
       const carried = t1 !== t0 && x1 === x0 + (t1 - t0);
       const m2 = await applied(await ix().attempt(canvas.tokens.get(tb.id), cart.id, "dismount"));
       const off = !cart.flags[MOD]?.driver;
       await tb.update({x: tb.x - G});
+      await until(() => tb.x !== t1);
       await sleep(1200);
       const t2 = tb.x, left = cart.x === x1;
       await ix().undoCard(m2);
@@ -516,12 +524,12 @@ export async function run() {
       const p0 = {x: tb.x, y: tb.y};
       await dice(9);
       const m1 = await applied(await ix().attempt(tok, wallT.id, "climb", {fd: {}}));
-      await sleep(800);
-      const lc = {x: ledge.x + 50, y: ledge.y + 50}, tc = {x: tb.x + 50, y: tb.y + 50};
-      const up = m1?.flags?.[MOD]?.done?.result === "done" && Math.abs(tc.x - lc.x) < 2 && Math.abs(tc.y - lc.y) < 2;
+      const lc = {x: ledge.x + 50, y: ledge.y + 50};
+      const onLedge = () => Math.abs(tb.x + 50 - lc.x) < 2 && Math.abs(tb.y + 50 - lc.y) < 2;
+      const up = m1?.flags?.[MOD]?.done?.result === "done" && await until(onLedge);
+      const tUp = {x: tb.x, y: tb.y};
       await ix().undoCard(m1);
-      await sleep(800);
-      const down = tb.x === p0.x && tb.y === p0.y;
+      const down = await until(() => tb.x === p0.x && tb.y === p0.y);
       await dice(2);
       const m2 = await applied(await ix().attempt(canvas.tokens.get(tb.id), gap.id, "jump", {fd: {}}));
       const hangs = gap.flags[MOD]?.hanging?.[burglar.id] === true;
@@ -532,7 +540,7 @@ export async function run() {
       const healed = !game.messages.get(d3?.damageMsg ?? "") && gap.flags[MOD]?.hanging?.[burglar.id] === true;
       await ix().undoCard(m2);
       ok("24. climbing a wall moves the burglar onto the ledge and Undo brings it back; a short jump hangs, letting go falls through WoDX Combat, Undo takes it back", listed && up && down && hangs && fell && healed,
-        {listed, up, down, hangs, fell, healed, results: [m1, m2, m3].map(m => m?.flags?.[MOD]?.done?.result ?? null), tok: {x: tb.x, y: tb.y}, ledge: lc, at: {cx, cy}});
+        {listed, up, down, hangs, fell, healed, tUp, p0, lines: m1?.flags?.[MOD]?.done?.lines ?? [], results: [m1, m2, m3].map(m => m?.flags?.[MOD]?.done?.result ?? null), tok: {x: tb.x, y: tb.y}, ledge: lc, at: {cx, cy}});
     });
 
     await step("10. alongside", async () => {
