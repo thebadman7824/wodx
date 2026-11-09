@@ -9,6 +9,8 @@
 - [x] Gender-neutral text; no NPC dialogue; no decision numbers or phase names in game text
 - [x] Harness tests (phase7e.test.mjs, phase7e-runtime.test.mjs); 411 pass; quality check passes
 - [x] Gate script (tools/gate/gate7e.mjs), for rothenstein-wodx
-- [ ] UI fit at three sizes on the PC with Foundry 14's own foundry2.css
-- [ ] Deployed (Storyteller 0.1.0, Chronicle 0.4.3), backups first, every file checked by MD5, Foundry restarted, with Ben's OK while the Live Version world is in use
-- [ ] Gate 7e in rothenstein-wodx
+- [x] UI fit at three sizes on the PC with Foundry 14's own foundry2.css (549 ok, 0 fail, 2026-11-09)
+- [x] Deployed (Storyteller 0.1.0, Chronicle 0.4.3), backups first, every file checked by MD5, Foundry restarted (2026-11-09)
+- [x] Gate 7e in rothenstein-wodx: 10 of 10 (2026-11-09), after the travel fix below
+
+Found by the gate: the first two runs scored 9 of 10 because a trip left an unlinked character's old token on the scene it left (moveToScene only removed linked tokens). Fixed: a linked character leaves every linked token behind; an unlinked one leaves its token only when it is that actor's one token there, so other copies of an NPC stay put.
