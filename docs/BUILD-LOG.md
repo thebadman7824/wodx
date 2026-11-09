@@ -892,3 +892,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - kits-rules.mjs: THEME_GAP (60 s) and themeToPlay(theme, {last, now, force}).
 - main.mjs: world setting Personal themes; playTheme (broadcast from the Storyteller's client), setTheme (flags.wodx-atmosphere.theme); updateCombat plays the theme when a player character's turn starts; the Atmosphere window's Personal themes part (Choose, Spotlight, Clear, with search past five characters); api.themes.
 - Tests: one more in dawn-dread.test.mjs. Gate: tools/gate/gatethemes.mjs, 5 steps.
+
+## 2026-11-09: places that age (Atmosphere 0.6.0, B270)
+
+- kits-rules.mjs: ageFor({base, variants}, year) and cleanAges(variants).
+- main.mjs: flags.wodx-atmosphere.ages {base, variants}; setAge, applyAges (the map's own level, else the scene background); runs at ready, on a year change (after the clock settles, not during a skip), at the end of a skip and when an era is applied; the This scene part lists the years with Remove and adds one by year and file picker; api.ages.
+- Tests: one more in dawn-dread.test.mjs. Gate: tools/gate/gateages.mjs, 6 steps, a scene of its own; years are passed in, the clock never moves.
