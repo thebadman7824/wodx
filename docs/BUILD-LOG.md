@@ -619,3 +619,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Sheets gate 1 (2/7): written for Sheets 0.1. Since 0.3 the sheet's page is .wodx-book with data-set paths, Mists and Weaving are two tracks, sheets open locked, and a modern changeling has the WoDX Changeling 20th sheet. The gate now uses the current markup, opens the sheet unlocked and puts the lock back.
 - 473 harness tests pass (with Actions 3.13.0 merged) and the quality check passes.
 - Rerun on main 5a5eba2 in rothenstein-wodx, 2026-11-09: 6b 18/18, 6c 18/18, Sheets 1 7/7. The gate scripts were deployed through a fresh folder with matching MD5s, and no module versions changed. The results are in the project's gates folder (the 2026-11-09b files).
+
+### Interactables 0.2.0, 2026-11-09: containers (B116)
+- Ben asked for every suggested kind of interactable, containers, traps and clues first. All nine are on the Master Plan's Interactables list.
+- Containers on tiles: chest, box, cabinet, desk or filing drawers, strongbox, safe. The WoDX part of the tile's config window sets the kind, material, lock, state, keypad, key and what is inside (one item a line: a UUID or a world item's name). They are listed in the Interact window with the doors, and a hidden tile only for the Storyteller.
+- Options: open, close, take what is inside, unlock with a key, pick the lock, beat a keypad (modern eras), force it. Taking gives the character a copy of each item; Undo takes them back. Same cards, noise and Undo as the doors.
+- Tests: 6 new in interactables.test.mjs (3 rules, 3 runtime); 479 harness tests pass with main merged. UI fit adds two containers to the Interact window and the tile config part; every window passes.
+- Gate: tools/gate/gate-interact.mjs gains steps 11 (a chest picked, opened and emptied; Undo) and 12 (the tile config part). Not deployed yet.

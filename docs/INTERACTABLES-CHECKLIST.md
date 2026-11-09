@@ -17,3 +17,22 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [ ] V20 core page refs pinned from the book texts on the PC (marked TODO in interact-rules.mjs; the V20 Dark Ages refs are in)
 - [x] Gate in rothenstein-wodx (tools/gate/gate-interact.mjs): 10/10 on 2026-11-09, at commit e69ea48. The first runs failed on the gate script itself (dice mapping, reach, stored totals, creation order of walls and tokens), fixed in PRs 14 to 19; the module did not change
 - [x] Deployed 2026-11-09 (Interactables 0.1.0, MD5s checked), on in rothenstein-wodx only
+
+## 0.2.0: containers (2026-11-09)
+- [x] Rules: container kinds, materials and builds, state on the tile, contents list, options (open, close, take, key, pick, keypad, force) (B116)
+- [x] Runtime: containers on tiles in the Interact list (hidden ones for the Storyteller only), cards, items handed over, Undo takes them back
+- [x] Tile config: the WoDX container part
+- [x] Harness tests (6 new) and UI fit
+- [ ] Gate steps 11 and 12 in rothenstein-wodx
+- [ ] Deployed
+
+## Still to build (Ben, 2026-11-09), in order
+- [ ] Traps
+- [ ] Clues and documents
+- [ ] Light sources
+- [ ] Hiding places
+- [ ] Fire and hazards
+- [ ] Altars, relics and fetishes
+- [ ] Watch points (mirrors, windows on the street, phones and radios)
+- [ ] Mounts and vehicles
+- [ ] Step 2: climbing, ledges and jumps

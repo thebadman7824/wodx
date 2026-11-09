@@ -1,5 +1,5 @@
 /**
- * Interactables gate (WoDX Interactables 0.1.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Interactables gate (WoDX Interactables 0.2.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-interact.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Interact"), two characters of its own ("Gate Interact
  * burglar", a player's character, and "Gate Interact watchman", an NPC) and deletes them all at the end. It fixes the
@@ -14,6 +14,8 @@
  *   8. listening: a whispered card to the player and the Storyteller
  *   9. the wall config window shows the WoDX part, with the bar sides by compass
  *  10. every other WoDX module still loads and answers (Chronicle, Actions, Combat, NPC)
+ *  11. a chest on a tile: picked, opened, emptied (a world item of the gate's own goes to the burglar); Undo takes it back
+ *  12. the tile config window shows the WoDX container part
  * Result: Data/wodx-gate/gate-interact-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -61,14 +63,14 @@ export async function run() {
   const {R, ok, step} = harness();
   const keep = {uniform: CONFIG.Dice.randomUniform, t0: game.time.worldTime, scene: canvas.scene?.id,
     approvals: foundry.utils.deepClone(game.settings.get("wodx-chronicle", "approvals")), messages: new Set(game.messages.map(m => m.id))};
-  let scene = null, burglar = null, watchman = null;
+  let scene = null, burglar = null, watchman = null, ledger = null;
   // Errors in the console while the gate runs (the Storyteller side of a card runs in a hook)
   const consoleError = console.error;
   console.error = (...a) => { R.notes.push(`console: ${a.map(x => x?.stack ?? x?.message ?? String(x)).join(" ").slice(0, 400)}`); consoleError(...a); };
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.1.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.1.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.2.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.2.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -187,6 +189,38 @@ export async function run() {
       ok("9. the wall config shows the WoDX part with the bar sides by compass", !!part && /On the (west|east) side/.test(text), {sample: text.replace(/\s+/g, " ").slice(0, 160)});
     });
 
+    await step("11. chest", async () => {
+      ledger = await Item.create({name: "Gate Interact ledger", type: "Feature", system: {}});
+      const [made] = await scene.createEmbeddedDocuments("Tile", [{x: 620, y: 640, width: 60, height: 60, texture: {src: "icons/svg/chest.svg"},
+        flags: {[MOD]: {container: true, kind: "chest", lock: "good", ds: "locked", items: ledger.uuid, gate: "chest"}}}]);
+      const chest = scene.tiles.find(t => t.flags?.[MOD]?.gate === "chest") ?? made;
+      await sleep(500);
+      const listed = ix().interactablesFor(tok).some(x => x.doc.id === chest.id);
+      await dice(9);
+      const pick = await applied(await ix().attempt(tok, chest.id, "pick", {fd: {}}));
+      const afterPick = chest.flags[MOD]?.ds;
+      await applied(await ix().attempt(tok, chest.id, "open"));
+      const afterOpen = chest.flags[MOD]?.ds;
+      const take = await applied(await ix().attempt(tok, chest.id, "take"));
+      const got = burglar.items.some(i => i.name === "Gate Interact ledger");
+      await ix().undoCard(take);
+      const back = !burglar.items.some(i => i.name === "Gate Interact ledger") && !chest.flags[MOD]?.taken;
+      ok("11. a chest: listed, picked, opened, emptied into the burglar's sheet; Undo takes the ledger back",
+        listed && pick?.flags?.[MOD]?.done?.result === "done" && afterPick === "closed" && afterOpen === "open" && got && back,
+        {listed, pick: pick?.flags?.[MOD]?.done?.result ?? null, afterPick, afterOpen, got, back, lines: take?.flags?.[MOD]?.done?.lines ?? null});
+    });
+
+    await step("12. tile config", async () => {
+      const chest = scene.tiles.find(t => t.flags?.[MOD]?.gate === "chest");
+      const app = chest.sheet;
+      await app.render({force: true});
+      await sleep(600);
+      const part = app.element?.querySelector(".wix-tile");
+      const text = part?.textContent ?? "";
+      await app.close();
+      ok("12. the tile config shows the WoDX container part", !!part && /Container/.test(text) && /Inside/.test(text), {sample: text.replace(/\s+/g, " ").slice(0, 160)});
+    });
+
     await step("10. alongside", async () => {
       const c = game.modules.get("wodx-chronicle")?.api, a = game.wodxActions, cb = game.wodxCombat, n = game.modules.get("wodx-npc")?.api;
       ok("10. Chronicle, Actions, Combat and NPC answer", !!c?.propose && !!a?.rules && !!cb?.applyDamage && !!n?.routineRules, {});
@@ -203,6 +237,7 @@ export async function run() {
       if ( keep.scene ) await game.scenes.get(keep.scene)?.view();
       if ( scene ) await scene.delete();
       for ( const a of [burglar, watchman] ) if ( a ) await a.delete();
+      if ( ledger ) await ledger.delete();
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }
   return save(R, "gate-interact-result.json");

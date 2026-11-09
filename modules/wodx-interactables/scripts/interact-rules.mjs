@@ -63,6 +63,18 @@ export const WALLS = {
   stone: {label: "Stone", feat: 9, need: 10, diff: 8}
 };
 
+/** Containers on tiles: what each is, and what it is made of unless the Storyteller says otherwise. */
+export const CONTAINERS = {
+  chest: {label: "Chest", material: "wood"},
+  box: {label: "Box or casket", material: "wood"},
+  cabinet: {label: "Cabinet or wardrobe", material: "wood"},
+  drawers: {label: "Desk or filing drawers", material: "wood"},
+  strongbox: {label: "Strongbox", material: "ironbound"},
+  safe: {label: "Safe", material: "steel"}
+};
+/** At most this many things in one container. */
+export const MAX_ITEMS = 50;
+
 export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
 /** How far a sound carries, in yards: in the open, and through one wall that stops sound. */
 export const EARSHOT = {silent: {open: 0, wall: 0}, quiet: {open: 5, wall: 0}, loud: {open: 30, wall: 10}};
@@ -153,9 +165,40 @@ export function describe(w) {
     progress: {pick: 0, force: 0, hack: 0, ...(f.progress ?? {})}, tries: f.tries ?? {}
   };
 }
+/**
+ * A container on a tile, read from its WoDX settings. f: the tile's flags.wodx-interactables, with container: true.
+ * Its state lives in f.ds ("open", "closed", "locked"); a container with a lock set and no state is locked.
+ */
+export function describeContainer(f = {}) {
+  const kind = CONTAINERS[f.kind] ? f.kind : "chest";
+  const material = MATERIALS[f.material] && !["glass", "horn"].includes(f.material) ? f.material : CONTAINERS[kind].material;
+  const build = BUILDS[f.build] && f.build !== "pane" ? f.build : MATERIALS[material].build;
+  const lock = LOCKS[f.lock] ? f.lock : "none";
+  const ds = ["open", "closed", "locked"].includes(f.ds) ? f.ds : lock !== "none" ? "locked" : "closed";
+  const items = parseItems(f.items);
+  return {
+    container: true, door: false, secret: false, found: true, ds, kind, material, build, lock,
+    electronic: ELECTRONIC[f.electronic] ? f.electronic : "none",
+    barSide: null, barred: false, stuck: false, broken: false, jammed: !!f.jammed, alarm: !!f.alarm, beaten: !!f.beaten,
+    keyName: String(f.keyName ?? "").trim(), breakable: null, breached: false,
+    items, taken: !!f.taken,
+    progress: {pick: 0, force: 0, hack: 0, ...(f.progress ?? {})}, tries: f.tries ?? {}
+  };
+}
+/** What a container holds: one item a line (a UUID, or the name of an item in the world), at most MAX_ITEMS. */
+export function parseItems(text) {
+  const lines = Array.isArray(text) ? text : String(text ?? "").split(/\r?\n/);
+  return lines.map(l => String(l ?? "").trim()).filter(Boolean).slice(0, MAX_ITEMS);
+}
+
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
   if ( o.breakable && !o.door ) return `${WALLS[o.breakable].label} wall`;
+  if ( o.container ) {
+    const st = o.ds === "open" ? (o.items.length && !o.taken ? "Open" : "Open, empty") : o.ds === "locked" ? "Locked" : "Closed";
+    const m = ["wood", "steel"].includes(o.material) || (o.kind === "strongbox" && o.material === "ironbound") ? "" : ` ${MATERIALS[o.material].label.toLowerCase()}`;
+    return `${st}${m} ${CONTAINERS[o.kind].label.toLowerCase()}`.replace(/^Open, empty (.*)$/, "Open $1, empty");
+  }
   const state = o.broken ? "Broken" : o.ds === "open" ? "Open" : o.ds === "locked" ? "Locked" : o.stuck ? "Stuck" : "Closed";
   const mat = o.material === "wood" || o.material === "glass" ? "" : ` ${MATERIALS[o.material].label.toLowerCase()}`;
   return `${state}${mat} ${KINDS[o.kind].toLowerCase()}`;
@@ -173,6 +216,7 @@ export function nameOf(o) {
  *               seconds, noise: {success, fail, botch}, note, waits (true: the Storyteller decides)}
  */
 export function optionsFor(o, ch = {}) {
+  if ( o.container ) return containerOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -211,23 +255,11 @@ export function optionsFor(o, ch = {}) {
   if ( ch.hasKey && o.keyName && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: locked ? "Unlock it with the key" : "Lock it with the key", roll: null, seconds: TURN, noise: {success: "quiet"}});
 
   if ( locked && o.lock !== "none" ) {
-    if ( o.jammed ) out.push({id: "jammed", label: "The lock is jammed", roll: null, disabled: true, note: "Nobody can pick it now; force it, or ask the Storyteller."});
+    if ( o.jammed ) out.push(jammedNote());
     else if ( barredAgainst ) out.push({id: "barredNote", label: "Barred from the other side", roll: null, disabled: true, note: "Picking the lock will not lift the bar."});
-    else {
-      const L = LOCKS[o.lock], sk = lockSkill(ch.abilities, ch);
-      const diff = Math.min(10, L.diff + (ch.hasTools ? 0 : NO_TOOLS_DIFF));
-      out.push({id: "pick", label: `Pick the lock (${L.label.toLowerCase()})`, extended: true,
-        roll: {attr: "dexterity", attrLabel: "Dexterity", ability: sk.key, abilityLabel: cap(sk.key), dice: (Number(ch.dexterity) || 0) + sk.value, diff, need: L.need, have: o.progress.pick ?? 0},
-        seconds: L.seconds, noise: {success: "quiet", fail: "quiet", botch: "quiet"},
-        note: `${ch.hasTools ? "" : `No picks or tools: +${NO_TOOLS_DIFF} difficulty. `}A botch jams the lock and loses the progress.`});
-    }
+    else out.push(pickOption(o, ch));
   }
-  if ( o.electronic !== "none" && isModern(ch) && !isOpen && !o.alarm && !o.beaten ) {
-    const E = ELECTRONIC[o.electronic], sk = electronicSkill(ch.abilities);
-    out.push({id: "hack", label: `Beat the keypad or alarm (${E.label.toLowerCase()})`, extended: true,
-      roll: {attr: "intelligence", attrLabel: "Intelligence", ability: sk.key, abilityLabel: cap(sk.key), dice: (Number(ch.intelligence) || 0) + sk.value, diff: E.diff, need: E.need, have: o.progress.hack ?? 0},
-      seconds: E.seconds, noise: {success: "silent", fail: "silent", botch: "loud"}, note: "A botch sets off the alarm."});
-  }
+  if ( o.electronic !== "none" && isModern(ch) && !isOpen && !o.alarm && !o.beaten ) out.push(hackOption(o, ch));
   if ( !isOpen ) {
     if ( pane ) out.push({id: "smash", label: "Break the pane", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud. The window stays open and can't be closed."});
     else out.push(forceOption("force", `Force the ${KINDS[o.kind].toLowerCase()}`, strength, ch, BUILDS[o.build], o.progress.force ?? 0,
@@ -239,6 +271,38 @@ export function optionsFor(o, ch = {}) {
       out.push({id: "knock", label: "Knock", roll: null, seconds: TURN, noise: {success: "loud"}});
     }
   }
+  if ( (ch.powers ?? []).length ) out.push({id: "power", label: "Use a power", roll: null, power: true, note: `${ch.powers.join(", ")}: opens the WoDX actions menu.`});
+  return out;
+}
+const jammedNote = () => ({id: "jammed", label: "The lock is jammed", roll: null, disabled: true, note: "Nobody can pick it now; force it, or ask the Storyteller."});
+function pickOption(o, ch) {
+  const L = LOCKS[o.lock], sk = lockSkill(ch.abilities, ch);
+  const diff = Math.min(10, L.diff + (ch.hasTools ? 0 : NO_TOOLS_DIFF));
+  return {id: "pick", label: `Pick the lock (${L.label.toLowerCase()})`, extended: true,
+    roll: {attr: "dexterity", attrLabel: "Dexterity", ability: sk.key, abilityLabel: cap(sk.key), dice: (Number(ch.dexterity) || 0) + sk.value, diff, need: L.need, have: o.progress.pick ?? 0},
+    seconds: L.seconds, noise: {success: "quiet", fail: "quiet", botch: "quiet"},
+    note: `${ch.hasTools ? "" : `No picks or tools: +${NO_TOOLS_DIFF} difficulty. `}A botch jams the lock and loses the progress.`};
+}
+function hackOption(o, ch) {
+  const E = ELECTRONIC[o.electronic], sk = electronicSkill(ch.abilities);
+  return {id: "hack", label: `Beat the keypad or alarm (${E.label.toLowerCase()})`, extended: true,
+    roll: {attr: "intelligence", attrLabel: "Intelligence", ability: sk.key, abilityLabel: cap(sk.key), dice: (Number(ch.intelligence) || 0) + sk.value, diff: E.diff, need: E.need, have: o.progress.hack ?? 0},
+    seconds: E.seconds, noise: {success: "silent", fail: "silent", botch: "loud"}, note: "A botch sets off the alarm."};
+}
+/** A chest, cabinet, strongbox or safe: open it, take what is inside, pick or force its lock, beat its keypad. */
+function containerOptions(o, ch) {
+  const out = [];
+  const name = CONTAINERS[o.kind].label.toLowerCase().split(" ")[0];
+  const isOpen = o.ds === "open", locked = o.ds === "locked";
+  const strength = (Number(ch.strength) || 0) + (Number(ch.potence) || 0);
+  if ( isOpen ) {
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Take what is inside (${o.items.length === 1 ? "one thing" : `${o.items.length} things`})`, roll: null, seconds: TURN, noise: {success: "silent"}});
+    out.push({id: "close", label: `Close the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
+  } else if ( !locked ) out.push({id: "open", label: `Open the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
+  if ( ch.hasKey && o.keyName && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: locked ? "Unlock it with the key" : "Lock it with the key", roll: null, seconds: TURN, noise: {success: "quiet"}});
+  if ( locked && o.lock !== "none" ) out.push(o.jammed ? jammedNote() : pickOption(o, ch));
+  if ( o.electronic !== "none" && isModern(ch) && !isOpen && !o.alarm && !o.beaten ) out.push(hackOption(o, ch));
+  if ( !isOpen ) out.push(forceOption("force", `Force the ${name}`, strength, ch, BUILDS[o.build], o.progress.force ?? 0));
   if ( (ch.powers ?? []).length ) out.push({id: "power", label: "Use a power", roll: null, power: true, note: `${ch.powers.join(", ")}: opens the WoDX actions menu.`});
   return out;
 }
@@ -288,6 +352,7 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "lock": return done("locks it with the key.", {ds: "locked"});
       case "unbar": flags.barred = false; return done("lifts the bar.");
       case "knock": return done("knocks.");
+      case "take": flags.taken = true; return done("takes what is inside.");
       case "smash": flags.broken = true; return done("breaks the pane.", {ds: "open"});
       case "force": flags.progress = {...o.progress, force: 0}; return done("forces it open.", {ds: "open"});
       case "breach": return done("breaks through the wall.");
@@ -402,4 +467,17 @@ export function cleanSettings(s = {}) {
   out.keyName = String(s.keyName ?? "").slice(0, 80).trim();
   out.wall = WALLS[s.wall] ? s.wall : "";
   return out;
+}
+
+/** Clean a tile's container settings from the config form. */
+export function cleanContainer(s = {}) {
+  return {
+    container: !!s.container,
+    kind: CONTAINERS[s.kind] ? s.kind : "chest",
+    material: MATERIALS[s.material] && !["glass", "horn"].includes(s.material) ? s.material : "",
+    lock: LOCKS[s.lock] ? s.lock : "",
+    electronic: ELECTRONIC[s.electronic] ? s.electronic : "none",
+    keyName: String(s.keyName ?? "").slice(0, 80).trim(),
+    items: parseItems(s.items).join("\n")
+  };
 }
