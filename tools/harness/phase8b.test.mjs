@@ -90,7 +90,7 @@ test("journeys: legs, seeding, hazards and the Great Maelstroms", () => {
   for ( const realm of Object.keys(J.REALMS) ) {
     const a = J.planJourney({realm, hours: 8, year: 1700, randFor: randFor(`j:${realm}`), tables});
     assert.deepEqual(a, J.planJourney({realm, hours: 8, year: 1700, randFor: randFor(`j:${realm}`), tables}));
-    assert.equal(a.legs.length, 4);
+    assert.equal(a.legs.length, J.REALMS[realm].legs ?? 4);
     assert.ok(a.legs.every(l => l.landmark));
     if ( realm === "umbra" ) assert.equal(a.maelstroms, 0);
   }

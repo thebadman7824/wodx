@@ -34,13 +34,28 @@ export function drawJourney({realm = "tempest", hours = 2, storm = false, travel
   if ( !g ) return null;
   count ??= game.settings.get(MODULE_ID, "journeyCount") ?? 0;
   const year = chron()?.eras?.currentYear?.() ?? null;
-  const j = J.planJourney({realm, hours, year, storm, tables: g.lookup(g.context()), randFor: k => g.random(`journey:${count}:${realm}:${k}`, nonce)});
+  let fired = null, moon = null;
+  try { fired = chron()?.events?.fired?.() ?? null; } catch (e) { fired = null; }
+  try { moon = moonNow(); } catch (e) { moon = null; }
+  const j = J.planJourney({realm, hours, year, storm, fired, moon, tables: g.lookup(g.context()), randFor: k => g.random(`journey:${count}:${realm}:${k}`, nonce)});
   return {...j, travellers, count, nonce, year};
+}
+
+/** The moon's phase index now (0 new ... 4 full), from WoDX Chronicle's calendar. */
+let CAL = null;
+import("../../wodx-chronicle/scripts/calendar.mjs").then(m => { CAL = m; }).catch(() => { CAL = null; });
+export function moonNow() {
+  if ( !CAL ) return null;
+  const lat = game.settings.get("wodx-chronicle", "latitude");
+  return CAL.describeTime(game.time.worldTime, lat)?.moon?.index ?? null;
 }
 
 function journeyHtml(j) {
   return `<p><b>${esc(j.realmLabel)}</b>, ${j.hours} hour${j.hours === 1 ? "" : "s"}${j.travellers.length ? `: ${esc(j.travellers.map(t => t.name).join(", "))}` : ""}</p>
     ${j.great ? `<p class="wodx-quiet">The year of ${esc(j.great)}: the storm is far likelier.</p>` : ""}
+    ${j.moonRisk ? `<p class="wodx-quiet">${j.moonRisk < 1 ? "The moon is full or near it: the road is safer." : j.moonRisk > 1 ? "The moon is dark or nearly: the road is more dangerous." : "A half moon."}</p>` : ""}
+    ${j.arrival ? `<p class="wodx-quiet">Time on the trod: ${esc(J.slipWords(j.arrival))}.</p>` : ""}
+    ${j.note ? `<p class="wodx-quiet">${esc(j.note)}</p>` : ""}
     <ol>${j.legs.map(l => `<li>${esc(l.landmark)}${l.hazard ? `<br><b>Hazard:</b> ${esc(l.hazard)}` : ""}${l.maelstrom ? `<br><b>The Maelstrom:</b> ${esc(l.maelstrom)}` : ""}</li>`).join("")}</ol>`;
 }
 

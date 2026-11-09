@@ -6,7 +6,10 @@ export const STATUS = {
   umbra: {id: "wodx-umbra", name: "In the Umbra", img: "icons/svg/portal.svg"},
   caught: {id: "wodx-caught", name: "Caught in the Gauntlet", img: "icons/svg/net.svg"},
   lost: {id: "wodx-lost", name: "Lost in the Pattern Web", img: "icons/svg/daze.svg"},
-  shadowlands: {id: "wodx-shadowlands", name: "In the Shadowlands", img: "icons/svg/skull.svg"}
+  shadowlands: {id: "wodx-shadowlands", name: "In the Shadowlands", img: "icons/svg/skull.svg"},
+  dreaming: {id: "wodx-dreaming", name: "In the Near Dreaming", img: "icons/svg/sun.svg"},
+  deep: {id: "wodx-deep-umbra", name: "Beyond the Penumbra", img: "icons/svg/aura.svg"},
+  net: {id: "wodx-net", name: "Jacked into the Net", img: "icons/svg/lightning.svg"}
 };
 const OUR_STATUSES = new Set(Object.values(STATUS).map(s => s.id));
 
@@ -45,7 +48,7 @@ function knowsPulse(actor) {
 export function worldOf(actor) {
   return actor?.getFlag?.(MODULE_ID, "world") ?? null;
 }
-const WORLDS = new Set(["physical", "umbra", "shadowlands"]);
+const WORLDS = new Set(["physical", "umbra", "shadowlands", "dreaming"]);
 
 /**
  * Apply status and record changes to a traveler. Runs locally for owners; otherwise asks the active GM.

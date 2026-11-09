@@ -1,6 +1,8 @@
 import {MODULE_ID} from "./ratings.mjs";
 import {LAYERS, TWIN_LAYERS, loadManifest, planTwins, buildTwins, removeTwins, makeUmbralPath, layersOf, twinOf} from "./twins.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {addDreamingLevel, makeTrod} from "./realms.mjs";
+import {TRODS} from "./realms-rules.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -16,6 +18,8 @@ export class TwinsApp extends ApplicationV2 {
       build: TwinsApp.#onBuild,
       remove: TwinsApp.#onRemove,
       path: TwinsApp.#onPath,
+      dreaming: TwinsApp.#onDreaming,
+      trod: TwinsApp.#onTrod,
       all: TwinsApp.#onAll,
       reload: TwinsApp.#onReload
     }
@@ -79,6 +83,8 @@ export class TwinsApp extends ApplicationV2 {
     const here = globalThis.canvas?.scene;
     const twinned = scenes.filter(s => layersOf(s).penumbra && s.id !== here?.id);
     const pathOptions = twinned.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join("");
+    const dreamed = game.scenes.filter(s => layersOf(s).dreaming && s.id !== here?.id).sort((a, b) => a.name.localeCompare(b.name));
+    const hereDream = !!(here && layersOf(here).dreaming);
     div.innerHTML = `
       <div class="wodx-top">
         <p>Each map gets a <strong>Penumbra</strong> level (elevation ${LAYERS.penumbra.bottom}) and a <strong>Shadowlands</strong> level (${LAYERS.shadowlands.bottom}) with its twin night map. Roofs and lights are copied onto each twin level; walls, sounds and regions stay on every level. A backup of each scene is written to Data/wodx-backups/scenes before it changes.</p>
@@ -101,6 +107,16 @@ export class TwinsApp extends ApplicationV2 {
           <button type="button" data-action="path" ${twinned.length ? "" : "disabled"}><i class="fa-solid fa-moon"></i> Make Umbral path</button>`
           : `<span class="wodx-quiet">View a scene with twin levels to make an Umbral path from it.</span>`}
         <button type="button" data-action="reload"><i class="fa-solid fa-rotate"></i> Read the art list again</button>
+      </footer>
+      <footer class="form-footer wodx-footer wow-dreaming">
+        ${here ? (hereDream ? `
+          <label>Trod from <strong>${esc(here.name)}</strong> to</label>
+          ${dreamed.length > 5 ? searchBox("select[name=trodTo]", "Search…", "Search destinations") : ""}
+          <select name="trodTo">${dreamed.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join("")}</select>
+          <select name="trodKind" data-fixed>${Object.entries(TRODS).map(([k, v]) => `<option value="${k}">${esc(v.label)}</option>`).join("")}</select>
+          <button type="button" data-action="trod" ${dreamed.length ? "" : "disabled"}><i class="fa-solid fa-route"></i> Make trod</button>`
+          : `<button type="button" data-action="dreaming"><i class="fa-solid fa-feather"></i> Add a Near Dreaming level to ${esc(here.name)}</button>`)
+          : `<span class="wodx-quiet">View a scene to give it a Near Dreaming level.</span>`}
       </footer>`;
     return div;
   }
@@ -163,6 +179,24 @@ export class TwinsApp extends ApplicationV2 {
     try {
       await makeUmbralPath(canvas.scene, to);
       ui.notifications.info(`Made a moon path between ${canvas.scene.name} and ${to.name}, on both Penumbra levels, at the middle of each map. Move it where the path runs.`);
+    } catch (err) { ui.notifications.error(err.message); }
+  }
+
+  static async #onDreaming() {
+    try {
+      await addDreamingLevel(canvas.scene);
+      ui.notifications.info(`${canvas.scene.name} has a Near Dreaming level now (elevation 3000), showing its own map, warmer.`);
+    } catch (err) { ui.notifications.error(err.message); }
+    await this.render();
+  }
+
+  static async #onTrod() {
+    const to = game.scenes.get(this.element.querySelector("select[name=trodTo]")?.value);
+    const kind = this.element.querySelector("select[name=trodKind]")?.value ?? "silver";
+    if ( !to || !canvas?.scene ) return;
+    try {
+      await makeTrod(canvas.scene, to, {kind});
+      ui.notifications.info(`Made a trod between ${canvas.scene.name} and ${to.name}, on both Near Dreaming levels, at the middle of each map. Move it where the road runs.`);
     } catch (err) { ui.notifications.error(err.message); }
   }
 
