@@ -446,6 +446,7 @@ let me = gm;
 const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll(), tokens: new Coll(), lights: new Coll()};
 const uuids = new Map();
 const damage = [];
+const soaks = [];
 
 function wall(id, c, door, ds, flags = {}) {
   const doc = {id, c, door, ds, levels: new Set(), flags: {[MOD]: flags}, parent: scene,
@@ -520,6 +521,7 @@ globalThis.game = {
     soakAndApply: async (tok, fd) => {
       const a = tok.actor ?? tok, levels = Math.max(0, fd.amount - 1);
       damage.push([a.id, fd.type, levels, "soaked"]);
+      soaks.push(fd);
       const msg = {id: `c${chat.length}`, flags: {"wodx-combat": {data: {type: fd.type, levels, applied: true, undo: {uuid: a.id, damage: {lethal: 0}}}}}, async delete() { game.messages.delete(this.id); this.deleted = true; }};
       game.messages.set(msg.id, msg);
       return {levels, message: msg};
@@ -564,7 +566,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide && !x.o.hazard).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -1027,4 +1029,157 @@ test("runtime: Search the area finds someone hidden nearby when the successes re
     assert.equal(tokNpc.document.hidden, true);
     assert.equal(cupboard.document.flags[MOD].occupants.length, 1);
   } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; tokNpc.document.hidden = false; cupboard.document.flags[MOD].occupants = []; }
+});
+
+/* ---------------- fire and hazards ---------------- */
+
+test("hazards: fire does its size in levels a turn, soaked at its heat; lethal to mortals, aggravated to the rest, and a vampire soaks it only as fire", () => {
+  const f = R.describeHazard({hazard: true, hazardKind: "fire", size: "large", heat: "forge"});
+  assert.equal(f.live, true);
+  const m = R.hazardHit(f, {profile: "mortal"});
+  assert.deepEqual([m.mode, m.amount, m.type, m.fireSun, m.soakDiff], ["levels", 2, "lethal", false, 9]);
+  assert.equal(R.hazardHit(f, {profile: "lupine"}).type, "aggravated");
+  const v = R.hazardHit(f, {profile: "vampire"});
+  assert.equal(v.fireSun, true);
+  assert.ok(v.notes.some(n => /Courage/.test(n)));
+  assert.equal(R.hazardHit(R.describeHazard({hazardKind: "fire", burning: false}), {}), null, "a fire that is out does nothing");
+  assert.equal(R.nameOf(f), "Fire, burning (bonfire)");
+  assert.deepEqual(Object.values(R.FIRE_SIZES).map(x => x.levels), [1, 2, 3]);
+  assert.deepEqual(Object.values(R.FIRE_HEAT).map(x => x.diff), [3, 5, 7, 8, 9, 10], "the same heat table as WoDX Actions");
+});
+
+test("hazards: a brazier is harmless until knocked over; then it burns, and can be put out", () => {
+  const b = R.describeHazard({hazardKind: "brazier"});
+  assert.equal(b.live, false);
+  const ops = R.optionsFor(b, ch());
+  assert.deepEqual(ids(ops), ["knockOver"]);
+  assert.equal(ops[0].noise.success, "loud");
+  const out = R.resolve(b, ops[0], []);
+  assert.deepEqual(out.patch.flags, {spilled: true, burning: true});
+  const down = R.describeHazard({hazardKind: "brazier", spilled: true});
+  assert.equal(down.live, true);
+  assert.deepEqual(ids(R.optionsFor(down, ch())), ["putOut"]);
+  assert.match(R.nameOf(down), /knocked over and burning/);
+});
+
+test("hazards: a small fire goes out with no roll, a bonfire takes Dexterity + Athletics at 7, an inferno not by hand", () => {
+  const small = R.optionsFor(R.describeHazard({hazardKind: "fire", size: "small"}), ch());
+  assert.equal(small[0].roll, null);
+  const big = R.optionsFor(R.describeHazard({hazardKind: "fire", size: "large"}), ch({abilities: {athletics: 2}}));
+  assert.equal(big[0].roll.dice, 5);
+  assert.equal(big[0].roll.diff, 7);
+  const o = R.describeHazard({hazardKind: "fire", size: "large"});
+  assert.equal(R.resolve(o, big[0], [{successes: 1, botch: false}]).patch.flags.burning, false);
+  const fail = R.resolve(o, big[0], [{successes: 0, botch: false}]);
+  assert.equal(fail.patch.flags.burning, undefined);
+  assert.equal(fail.patch.flags.tries["pc1:putOut"], undefined, "no actor id passed: the key is ':putOut'");
+  assert.equal(R.resolve(o, big[0], [{successes: 0, botch: true}]).burns, true);
+  const inferno = R.optionsFor(R.describeHazard({hazardKind: "fire", size: "inferno"}), ch());
+  assert.ok(inferno[0].disabled);
+  assert.deepEqual(ids(R.optionsFor(R.describeHazard({hazardKind: "fire", burning: false}), ch())), ["alight"]);
+});
+
+test("hazards: glass costs dice, less one a success stepping carefully; a live wire its current in levels; both can be made safe", () => {
+  const g = R.describeHazard({hazardKind: "sharp", hazDice: 3});
+  assert.equal(R.carefulRoll(g, ch({abilities: {athletics: 1}})).dice, 4);
+  assert.deepEqual([R.hazardHit(g, {}, {successes: 1, botch: false}).amount, R.hazardHit(g, {}, null).type], [2, "lethal"]);
+  assert.equal(R.hazardHit(g, {}, {successes: 5, botch: false}).amount, 0);
+  assert.deepEqual(ids(R.optionsFor(g, ch())), ["sweep"]);
+  assert.equal(R.describeHazard({hazardKind: "sharp", cleared: true}).live, false);
+  const w = R.describeHazard({hazardKind: "shock", shock: "major"});
+  assert.deepEqual([R.hazardHit(w, {}).amount, R.hazardHit(w, {}).mode], [4, "levels"]);
+  assert.deepEqual(ids(R.optionsFor(w, ch())), ["powerOff"]);
+  assert.equal(R.describeHazard({hazardKind: "shock", live: false}).live, false);
+  assert.deepEqual(Object.values(R.SHOCKS).map(x => x.levels), [2, 4, 6, 8]);
+  assert.deepEqual(R.cleanHazard({hazard: true, hazardKind: "nope", hazDice: "40", hazType: "x"}),
+    {hazard: true, hazardKind: "fire", size: "small", heat: "torch", shock: "minor", hazDice: 20, hazType: "", burning: true, spilled: false, cleared: false, live: true, pcsOnly: false});
+});
+
+const fire = tile("fire1", 1500, 1000, {hazard: true, hazardKind: "fire", size: "large", heat: "forge", lightIds: "flame1"});
+const glass = tile("glass1", 1500, 1300, {hazard: true, hazardKind: "sharp", hazDice: 3});
+const brazier = tile("braz1", 1800, 1000, {hazard: true, hazardKind: "brazier", size: "small"});
+const flame = light("flame1", 1550, 1050, false);
+canvas.tiles.placeables.push(fire, glass, brazier);
+
+test("runtime: walking into a fire burns through WoDX Combat at its heat; moving within it does not burn again; Undo takes it back", async () => {
+  tokPc.document.x = 1500; tokPc.document.y = 800;
+  await hooks.get("canvasReady")[0]();
+  tokPc.document.y = 1000;
+  const cards = await api.onTokenMoved(tokPc.document);
+  assert.equal(cards.length, 1);
+  const done = cards[0].flags[MOD].done;
+  assert.match(done.text, /is burned/);
+  assert.deepEqual(damage.at(-1), ["pc1", "lethal", 1, "soaked"]);
+  assert.deepEqual([soaks.at(-1).mode, soaks.at(-1).amount, soaks.at(-1).soakDiff, soaks.at(-1).fireSun], ["levels", 2, 9, false]);
+  tokPc.document.x = 1510;
+  assert.equal((await api.onTokenMoved(tokPc.document)).length, 0, "already in it");
+  await api.undoCard(cards[0]);
+  assert.deepEqual(damage.at(-1), ["pc1", "set", {lethal: 0}]);
+  assert.ok(!game.messages.has(done.damageMsg));
+});
+
+test("runtime: in combat, a turn that starts in a fire burns again; NPCs too unless the tile says players only", async () => {
+  const cards = await api.onTurnStart({started: true, combatant: {token: tokPc.document}});
+  assert.equal(cards.length, 1);
+  assert.ok(cards[0].flags[MOD].done.lines.some(l => /starts the turn in it/.test(l)));
+  tokNpc.document.x = 1500; tokNpc.document.y = 1000;
+  assert.equal((await api.onTurnStart({started: true, combatant: {token: tokNpc.document}})).length, 1);
+  fire.document.flags[MOD].pcsOnly = true;
+  assert.equal((await api.onTurnStart({started: true, combatant: {token: tokNpc.document}})).length, 0);
+  delete fire.document.flags[MOD].pcsOnly;
+  tokNpc.document.x = 400; tokNpc.document.y = 1500;
+});
+
+test("runtime: beating out the fire puts out its lights too; Undo lights it all again", async () => {
+  faces = [9, 2, 2, 2, 2];
+  pc.system.abilities.athletics = {value: 2, type: "talent"};
+  try {
+    const msg = await api.attempt(tokPc, "fire1", "putOut", {fd: {}});
+    assert.equal(msg.flags[MOD].done.result, "done");
+    assert.equal(fire.document.flags[MOD].burning, false);
+    assert.equal(flame.hidden, true);
+    assert.equal((await api.onTurnStart({started: true, combatant: {token: tokPc.document}})).length, 0, "out: no harm");
+    await api.undoCard(msg);
+    assert.equal(fire.document.flags[MOD].burning, undefined);
+    assert.equal(flame.hidden, false);
+    // A botch burns the one fighting it
+    faces = [1, 2, 2, 2, 2];
+    const b = await api.attempt(tokPc, "fire1", "putOut", {fd: {}});
+    assert.equal(b.flags[MOD].done.result, "botch");
+    assert.ok(b.flags[MOD].done.damageMsg);
+    await api.undoCard(b);
+  } finally { delete pc.system.abilities.athletics; }
+});
+
+test("runtime: stepping through glass rolls Dexterity + Athletics first, a die fewer each success", async () => {
+  tokPc.document.x = 1500; tokPc.document.y = 1150;
+  await hooks.get("canvasReady")[0]();
+  faces = [9, 2, 2];                // 1 success: 3 dice become 2
+  tokPc.document.y = 1300;
+  const cards = await api.onTokenMoved(tokPc.document);
+  assert.equal(cards.length, 1);
+  assert.ok(cards[0].flags[MOD].done.lines.some(l => /Stepping carefully/.test(l)));
+  assert.deepEqual([soaks.at(-1).mode, soaks.at(-1).amount, soaks.at(-1).type], ["pool", 2, "lethal"]);
+  await api.undoCard(cards[0]);
+});
+
+test("runtime: knocking a brazier over starts a fire there; Undo stands it up again", async () => {
+  tokPc.document.x = 1700; tokPc.document.y = 1000;
+  const msg = await api.attempt(tokPc, "braz1", "knockOver");
+  assert.equal(brazier.document.flags[MOD].spilled, true);
+  assert.equal(api.describeTile(brazier.document).live, true);
+  await api.undoCard(msg);
+  assert.equal(brazier.document.flags[MOD].spilled, undefined);
+  tokPc.document.x = 400; tokPc.document.y = 300;
+  await hooks.get("canvasReady")[0]();
+});
+
+test("runtime: the WoDX part of the tile config keeps the hazard's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {hazard: true, hazardKind: "shock", shock: "severe", heat: "molten", hazDice: 4, pcsOnly: true}}});
+  assert.match(html, /name="flags.wodx-interactables.hazard" checked/);
+  assert.match(html, /value="shock" selected/);
+  assert.match(html, /value="severe" selected/);
+  assert.match(html, /value="molten" selected/);
+  assert.match(html, /name="flags.wodx-interactables.hazDice" value="4"/);
+  assert.match(html, /name="flags.wodx-interactables.pcsOnly" checked/);
 });
