@@ -5,6 +5,7 @@
  */
 
 import * as FR from "./face-rules.mjs";
+import * as MR from "./mouth-rules.mjs";
 export * as FACE from "./face-rules.mjs";
 export const MOD = "wodx-paperdoll";
 export const LOOK_VERSION = 2;
@@ -73,7 +74,13 @@ export const EYES_ORDER = Object.keys(FR.EYES);
 export const GROUNDS = {"": {label: "What fits the character"}, gold: {label: "Gold leaf"}, lapis: {label: "Lapis with gold stars", bg: "1f2f6e"},
   red: {label: "Vermilion with gold stars", bg: "8e1d1d"}, green: {label: "Verdigris with gold stars", bg: "1f4a32"},
   violet: {label: "Purple with gold stars", bg: "4a2a62"}, night: {label: "Night with silver stars", bg: "14161f", star: "c8ccd8", line: "8a90a0"},
-  ember: {label: "Smoke with embers", bg: "2a0e0a", star: "e0642a", line: "8a3a20"}, parchment: {label: "Bare parchment"}};
+  ember: {label: "Smoke with embers", bg: "2a0e0a", star: "e0642a", line: "8a3a20"}, parchment: {label: "Bare parchment"},
+  rose: {label: "Rose with silver stars", bg: "6e2340", star: "d8d8e2", line: "b8a0b0"},
+  diaper: {label: "Red and blue diaper", kind: "diaper", bg: "8e1d1d", alt: "1f2f6e"},
+  vine: {label: "Green with a gold vine", kind: "vine", bg: "1c3a26"},
+  lily: {label: "Azure with gold lilies", kind: "lily", bg: "24407e"},
+  chequer: {label: "Bone and black chequer", kind: "chequer", bg: "1a1816", alt: "d8ccb0"},
+  punched: {label: "Punched gold", kind: "punched"}};
 /** The coloured ring inside the gilt one. */
 export const RINGS = {"": {label: "What fits the character"}, mortal: {label: "Blue, for the living", c: "2b4a9a"}, kindred: {label: "Red, for the Kindred", c: "9a1f1f"},
   sworn: {label: "Carmine, for the blood-bound and sworn", c: "b0244a"}, creature: {label: "Green, for spirits and beasts", c: "2f6b3a"}};
@@ -112,9 +119,12 @@ export const MOODS = {
   disgruntled: {label: "Disgruntled", eyebrows: "variant13", mouth: "sad04"},
   upset: {label: "Upset", eyebrows: "variant11", mouth: "sad03"},
   grim: {label: "Grim", eyebrows: "variant12", mouth: "sad05"},
-  snarling: {label: "Snarling", eyebrows: "variant13", mouth: "sad06"},
-  unconscious: {label: "Eyes closed", eyes: "variant19", eyebrows: "variant12", mouth: "sad09"}
+  snarling: {label: "Snarling", eyebrows: "variant13", mouth: "sad05", expr: "snarl"},
+  unconscious: {label: "Eyes closed", eyes: "variant19", eyebrows: "variant12", mouth: "sad09", expr: "slack"}
 };
+
+/** The expression the mouth shows: the mood's, else the character's own mouth. */
+export const expressionFor = (look, mood = "own") => { const m = MOODS[mood] ?? MOODS.own; return m.expr ?? m.mouth ?? look?.face?.mouth ?? "happy02"; };
 
 /* ---- The health track ---- */
 export const LEVELS = ["bruised", "hurt", "injured", "wounded", "mauled", "crippled", "incapacitated"];
@@ -178,8 +188,16 @@ export function step(look, part, by) {
   const i = Math.max(0, list.indexOf(look.face[part]));
   return {...look, face: {...look.face, [part]: list[(i + by + list.length * 4) % list.length]}};
 }
-/** A random look from a seed (the same seed gives the same look). */
-export function randomLook(seed) {
+/** How often a kind of character comes up with a skin no human has (out of 100). */
+export function fantasticChance({type = "", variant = ""} = {}) {
+  const v = String(variant).toLowerCase();
+  if ( type === "Changeling" ) return /kinain|mortal/.test(v) ? 0 : 60;
+  if ( type === "Creature" ) return /spirit|fae|fair|shadow|chimera|demon/.test(v) ? 50 : 15;
+  if ( type === "Demon" ) return 25;
+  return 0;
+}
+/** A random look from a seed (the same seed gives the same look). who: the character's kind, as themeFor takes it. */
+export function randomLook(seed, who = {}) {
   let h = hash32(String(seed), 0x9e3779b9);
   const next = n => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h % n; };
   const l = defaultLook(seed);
@@ -194,6 +212,8 @@ export function randomLook(seed) {
   l.face.beard = next(100) < 62 ? "" : PARTS.beard[1 + next(PARTS.beard.length - 1)];
   l.face.freckles = next(100) < 8;
   l.colors.skin = FR.SKIN_HUMAN[next(FR.SKIN_HUMAN.length)];
+  const odd = fantasticChance(who);
+  if ( odd && next(100) < odd ) l.colors.skin = FR.SKIN_FANTASTIC[next(FR.SKIN_FANTASTIC.length)];
   const natural = Object.keys(HAIR).filter(k => !FR.HAIR_GREY.includes(k));
   const grey = {old: 60, aged: 90, middle: 25}[l.face.age] ?? 0;
   l.colors.hair = next(100) < grey ? FR.HAIR_GREY[next(FR.HAIR_GREY.length)] : natural[next(natural.length)];
@@ -231,7 +251,7 @@ export function loreleiOptions(look, mood = "own", {key = false, mask = false, f
     const k = inksOf(look);
     Object.assign(o, {eyesColor: ["2a1a10"], mouthColor: [k.lips], eyebrowsColor: [k.brows], noseColor: [k.nose]});
   }
-  if ( mask ) { o.skinColor = ["ffffff"]; o.hairColor = ["000000"]; o.frecklesProbability = 0; o.glassesProbability = 0; o.earringsProbability = 0; }
+  if ( mask ) { o.skinColor = ["ffffff"]; o.hairColor = ["000000"]; o.mouthColor = ["fdfdfd"]; o.frecklesProbability = 0; o.glassesProbability = 0; o.earringsProbability = 0; }
   return o;
 }
 const loreleiBeard = b => /^variant0[12]$/.test(b ?? "");
@@ -263,34 +283,29 @@ export function keySvg(look, key) {
  * Fuller lips and brows that show: the mouth (found by its colour) gets a stroke of its own colour round it and a
  * soft wash of lip colour behind it; on very dark skin the brows get a lighter rim under them.
  */
-export function inkHead(head, look, eyes = null) {
+export function inkHead(head, look, eyes = null, mood = "own") {
   const k = inksOf(look);
   const at = hex => new RegExp(`<path([^>]*?) d="([^"]+)"([^>]*?) fill="#${hex}"\\/>`, "g");
-  // Lips: the mouth's own shape grown downward into a full lower lip and upward into a thinner upper one, so the
-  // corners stay fine; a light on the lower lip; Lorelei's own line kept on top as the parting, darker
-  const part = FR.mix(k.lips, "1a0608", 0.5), upper = FR.mix(k.lips, "1a0608", 0.2), m = eyes?.mouth;
-  let s = String(head).replace(at(k.lips), (all, pre, d, post) => {
-    const p = (fill, extra = "") => `<path${pre} d="${d}"${post} fill="#${fill}"${extra}/>`;
-    if ( !m ) return p(k.lips, ` stroke="#${k.lips}" stroke-width="5" stroke-linejoin="round"`);
-    const cx = ((m.x0 + m.x1) / 2 - 10).toFixed(1), top = (m.y0 + 60).toFixed(1), bot = (m.y1 + 60).toFixed(1), h = Math.max(6, m.y1 - m.y0);
-    // the box is in the picture's space; Lorelei's paths sit inside its translate(10 -60), so the box is moved into it
-    const lo = Math.min(3.2, 1 + 26 / h), up = Math.min(2.2, 1 + 12 / h);
-    return `<g transform="translate(${cx} ${top}) scale(1.04 ${lo.toFixed(2)}) translate(${-cx} ${-top})">${p(k.lips, ` stroke="#${k.lips}" stroke-width="3"`)}</g>`
-      + `<g transform="translate(${cx} ${bot}) scale(1.02 ${up.toFixed(2)}) translate(${-cx} ${-bot})">${p(upper, ` stroke="#${upper}" stroke-width="2"`)}</g>`
-      + `<g transform="translate(${cx} ${top}) scale(.7 ${(lo * 0.55).toFixed(2)}) translate(${-cx} ${-top + 4})">${p("ffffff", ' fill-opacity=".18"')}</g>`
-      + p(part, ` stroke="#${part}" stroke-width="2"`);
+  // Lips: Lorelei's mouth gives way to WoDX's own, drawn to fit under the nose and between the eyes (mouth-rules)
+  let done = false;
+  let s = String(head).replace(at(k.lips), () => {
+    if ( done ) return "";
+    done = true;
+    return MR.mouthSvg(expressionFor(look, mood), MR.mouthPlace(eyes), {lips: k.lips, skin: look.colors.skin});
   });
   if ( k.rim ) s = s.replace(at(k.brows), (m, d) => `<path d="${d}" fill="none" stroke="#${k.rim}" stroke-width="5" stroke-linejoin="round"/>${m}`);
   return s;
 }
 export function headLayers({look, head, mask, eyes = null, mood = "own"}) {
-  head = inkHead(head, look, eyes);
+  head = inkHead(head, look, eyes, mood);
   const t = FR.buildTransform(look.face.build);
   const {skin: on, defs} = FR.skinLayers(look.face, look.colors);
   const af = FR.affliction(look.face.affliction, look.colors.skin, eyes), skin = on + af.head;
   // In the mask, black is nudged off pure black, so the sepia inking of the picture leaves the mask alone
   const m = skin ? `<mask id="wpd-skin" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="1200">${String(mask ?? "").replaceAll("viewboxMask", "wpd-vbm")
-    .replace(/(<path\b[^>]*?)fill="#fff"/gi, '$1fill="#000"').replace(/(fill|stroke)="#000(000)?"/gi, '$1="#010101"')}</mask>` : "";
+    .replace(/(<path\b[^>]*?)fill="#fff"/gi, '$1fill="#000"').replace(/(fill|stroke)="#000(000)?"/gi, '$1="#010101"')
+    // Lorelei's mouth counts as skin; WoDX's own mouth is cut out of it
+    .replace(/<path([^>]*?) d="([^"]+)"([^>]*?) fill="#fdfdfd"\/>/i, (all, pre, d, post) => `<path${pre} d="${d}"${post} fill="#ffffff"/>${MR.mouthSilhouette(expressionFor(look, mood), MR.mouthPlace(eyes))}`)}</mask>` : "";
   const iris = mood === "unconscious" ? "" : FR.irises(eyes, look.colors.eyes, {skip: /^(lostEye|eyepatch)$/.test(look.face.affliction) ? [0] : []});
   return `<defs>${defs}${m}</defs><g${t ? ` transform="${t}"` : ""}>${head}${iris}${skin ? `<g mask="url(#wpd-skin)">${skin}</g>` : ""}${af.over}</g>`;
 }
@@ -302,6 +317,7 @@ export const featureKey = (look, mood = "own") => { const o = loreleiOptions(loo
  * A face is built in stages, and each is checked before the next is drawn on it:
  * 1. head: the head in its build is measured (neck, shoulders, face outline);
  * 2. features: eyes, brows, nose and mouth sit on that face (fit-rules checkFeatures), and the pupils are found;
+ * 2a. mouth: the mouth drawn by WoDX lies inside the face outline, with room to spare;
  * 2b. colours: lips, brows and nose stand out from the skin (inksOf);
  * 3. skin: age, complexion, marks, scars, facial hair and afflictions lie under the mask of visible skin;
  * 4. over the eye: the lost eye or the patch has an eye to cover;
@@ -309,12 +325,14 @@ export const featureKey = (look, mood = "own") => { const o = loreleiOptions(loo
  * 6. ring: headwear stays inside the ring.
  * Returns the list of stages, each {stage, ok, why}. A failed stage names what went wrong.
  */
-export function stagesOf({look, anchors: A, features, eyes, crop}) {
+export function stagesOf({look, anchors: A, features, eyes, crop, mood = "own"}) {
   const out = [], add = (stage, ok, why = "") => out.push({stage, ok: !!ok, why: ok ? "" : why});
   add("head", A && A.face?.length >= 20 && A.faceBox?.w > 150 && A.blobTop > A.faceBox?.y, "the head could not be measured");
   const bad = features ? Object.entries(features.parts).filter(([, p]) => !p.ok).map(([k]) => k) : ["features not drawn"];
   add("features", features?.ok, `off the face: ${bad.join(", ")}`);
   const k = inksOf(look), dim = ["lips", "nose"].filter(p => k.ratio[p] < FR.NEED[p]).concat(k.ratio.brows < FR.NEED.brows && !k.rim ? ["brows"] : []);
+  const mouth = eyes?.pupils?.length ? MR.mouthShape(expressionFor(look, mood), MR.mouthPlace(eyes)) : null;
+  add("mouth", !eyes?.pupils?.length || mouth && MR.mouthFits(mouth, A?.face, buildOf(look)), "the mouth runs off the face");
   add("colours", !dim.length, `blends into the skin: ${dim.join(", ")}`);
   add("skin", true);
   const over = /^(lostEye|eyepatch)$/.test(look.face.affliction ?? "");
@@ -474,12 +492,21 @@ export function headwear(A, cl) {
  * Marks of the health track, drawn on the skin under clothes and veil, kept inside the measured face outline.
  * Placed by fractions of the face's box, so they sit the same on every face shape. House rule art: one set per level.
  */
-export function damageMarks(A, level) {
-  const {skin, over} = damageLayers(A, level);
+export function damageMarks(A, level, skin0) {
+  const {skin, over} = damageLayers(A, level, skin0);
   return skin + over;
 }
 /** The marks in two parts: skin (on the skin, to lie under the mask of visible skin) and over (the bandage). */
-export function damageLayers(A, level) {
+/**
+ * The colour going from the face at Mauled and worse: the skin's own colour drained of warmth, at its own lightness,
+ * so a face greys rather than whitens (a light wash over dark skin read as a white film).
+ */
+function pallor(B, skin, level) {
+  const v = Math.round(FR.lum(skin) * 255).toString(16).padStart(2, "0"), grey = FR.mix(`${v}${v}${v}`, "7a8a84", 0.08);
+  const c = FR.mix(skin, grey, 0.75), o = level >= 7 ? 0.5 : level >= 6 ? 0.38 : 0.24;
+  return `<rect x="${B.x - 40}" y="${B.y - 40}" width="${B.w + 80}" height="${B.h + 80}" fill="#${c}" fill-opacity="${o}"/>`;
+}
+export function damageLayers(A, level, skin = "c99a6e") {
   if ( !level ) return {skin: "", over: ""};
   const B = A.faceBox, X = fx => f0(B.x + B.w * fx), Y = fy => f0(B.y + B.h * fy), S = v => f0(v * B.w / 400);
   const out = [];
@@ -497,7 +524,7 @@ export function damageLayers(A, level) {
   // Wounded: a cut over the brow, bleeding down the temple
   if ( level >= 4 ) out.push(cut(0.62, 0.12, 0.86, 0.04, 8), `<path d="M${X(0.86)} ${Y(0.05)} C${X(0.88)} ${Y(0.14)} ${X(0.86)} ${Y(0.22)} ${X(0.88)} ${Y(0.3)}" stroke="${blood}" stroke-opacity=".8" stroke-width="${S(9)}" stroke-linecap="round" fill="none"/>`);
   // Mauled: a second cut across the cheek, and the colour going from the face
-  if ( level >= 5 ) out.push(cut(0.62, 0.5, 0.78, 0.62, 7), `<rect x="${B.x - 40}" y="${B.y - 40}" width="${B.w + 80}" height="${B.h + 80}" fill="#d9d7cf" fill-opacity="${level >= 7 ? 0.32 : level >= 6 ? 0.24 : 0.14}"/>`);
+  if ( level >= 5 ) out.push(cut(0.62, 0.5, 0.78, 0.62, 7), pallor(B, skin, level));
   // Crippled: a linen bandage across the brow
   const top = [];
   if ( level >= 6 ) top.push(`<path d="M${X(-0.1)} ${Y(0.08)} C${X(0.3)} ${Y(-0.02)} ${X(0.7)} ${Y(-0.02)} ${X(1.1)} ${Y(0.1)} L${X(1.1)} ${Y(0.19)} C${X(0.7)} ${Y(0.07)} ${X(0.3)} ${Y(0.07)} ${X(-0.1)} ${Y(0.17)} Z" fill="#efe8d8" stroke="${K}" stroke-width="${w}" stroke-linejoin="round"/>`,
@@ -581,11 +608,35 @@ function finishDefs(ground, cx, cy) {
     + `<filter id="wpd-paper" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="5"/><feColorMatrix values="0 0 0 0 0.3  0 0 0 0 0.22  0 0 0 0 0.12  0 0 0 -1.1 0.75"/></filter>`
     + `<filter id="wpd-fibre" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.5" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 0.97  0 0 0 0 0.9  0 0 -1.2 0 0.62"/></filter>`
     + `<filter id="wpd-cloth" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.06 0.9" numOctaves="2" seed="3" result="n"/><feColorMatrix in="n" values="0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0 0.12  0 0 -1.4 0 1.05" result="w"/><feComposite in="w" in2="SourceGraphic" operator="in" result="wt"/><feBlend in="wt" in2="SourceGraphic" mode="multiply"/></filter>`
-    + (g.bg ? `<pattern id="wpd-stars" patternUnits="userSpaceOnUse" width="70" height="70" patternTransform="rotate(45 ${cx} ${cy})"><rect width="70" height="70" fill="#${g.bg}"/><path d="M0 0H70M0 0V70" stroke="#${g.line ?? "d9b04c"}" stroke-opacity=".35" stroke-width="2"/><circle cx="35" cy="35" r="4.5" fill="#${g.star ?? "e6c25a"}"/></pattern>` : "")
+    + groundPattern(g, cx, cy)
+    + (g.bg && !g.kind ? `<pattern id="wpd-stars" patternUnits="userSpaceOnUse" width="70" height="70" patternTransform="rotate(45 ${cx} ${cy})"><rect width="70" height="70" fill="#${g.bg}"/><path d="M0 0H70M0 0V70" stroke="#${g.line ?? "d9b04c"}" stroke-opacity=".35" stroke-width="2"/><circle cx="35" cy="35" r="4.5" fill="#${g.star ?? "e6c25a"}"/></pattern>` : "")
     + `<linearGradient id="wpd-gilt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2d27a"/><stop offset=".45" stop-color="#b98a2e"/><stop offset=".7" stop-color="#e8c463"/><stop offset="1" stop-color="#8f6620"/></linearGradient>`;
+}
+/** The patterned grounds: a diaper of lozenges, a vine scroll, lilies, a chequer, and gold with punched work. */
+function groundPattern(g, cx, cy) {
+  const G = "e6c25a", L = "d9b04c", rot = `patternTransform="rotate(45 ${cx} ${cy})"`;
+  switch ( g.kind ) {
+    case "diaper": return `<pattern id="wpd-pat" patternUnits="userSpaceOnUse" width="120" height="120" ${rot}><rect width="120" height="120" fill="#${g.bg}"/>`
+      + `<rect width="60" height="60" fill="#${g.alt}"/><rect x="60" y="60" width="60" height="60" fill="#${g.alt}"/><path d="M0 0H120M0 60H120M0 0V120M60 0V120" stroke="#${L}" stroke-width="4"/>`
+      + [[30, 30], [90, 90], [90, 30], [30, 90]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="none" stroke="#${G}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="2.5" fill="#${G}"/>`).join("") + `</pattern>`;
+    case "vine": return `<pattern id="wpd-pat" patternUnits="userSpaceOnUse" width="160" height="160"><rect width="160" height="160" fill="#${g.bg}"/>`
+      + `<path d="M0 80 C40 20 80 140 120 80 S160 20 160 80" fill="none" stroke="#${L}" stroke-width="5"/>`
+      + `<path d="M40 52 c-14 -20 4 -34 16 -22 c8 8 -2 18 -9 12 M100 108 c14 20 -4 34 -16 22 c-8 -8 2 -18 9 -12" fill="none" stroke="#${L}" stroke-width="4" stroke-linecap="round"/>`
+      + `<path d="M60 64 q14 -16 26 -4 q-12 14 -26 4 Z M140 96 q-14 16 -26 4 q12 -14 26 -4 Z" fill="#${G}"/><circle cx="20" cy="130" r="4" fill="#${G}"/><circle cx="100" cy="30" r="4" fill="#${G}"/></pattern>`;
+    case "lily": return `<pattern id="wpd-pat" patternUnits="userSpaceOnUse" width="110" height="110"><rect width="110" height="110" fill="#${g.bg}"/>`
+      + [[27, 27], [82, 82]].map(([x, y]) => `<g transform="translate(${x} ${y})" fill="#${G}"><path d="M0 -20 C7 -10 7 -2 0 4 C-7 -2 -7 -10 0 -20 Z"/>`
+        + `<path d="M-3 2 C-10 -8 -20 -6 -18 2 C-16 8 -8 6 -4 4 Z M3 2 C10 -8 20 -6 18 2 C16 8 8 6 4 4 Z"/><rect x="-9" y="4" width="18" height="4" rx="2"/><path d="M-2 8 L0 18 L2 8 Z"/></g>`).join("") + `</pattern>`;
+    case "chequer": return `<pattern id="wpd-pat" patternUnits="userSpaceOnUse" width="100" height="100"><rect width="100" height="100" fill="#${g.bg}"/>`
+      + `<rect width="50" height="50" fill="#${g.alt}"/><rect x="50" y="50" width="50" height="50" fill="#${g.alt}"/><path d="M0 0H100M0 50H100M0 0V100M50 0V100" stroke="#8a8070" stroke-width="2"/></pattern>`;
+    case "punched": return `<pattern id="wpd-pat" patternUnits="userSpaceOnUse" width="44" height="44" ${rot}><circle cx="11" cy="11" r="4" fill="#5a3a0e" fill-opacity=".45"/>`
+      + `<circle cx="33" cy="33" r="4" fill="#5a3a0e" fill-opacity=".45"/><circle cx="33" cy="11" r="1.8" fill="#fff3c0" fill-opacity=".5"/><circle cx="11" cy="33" r="1.8" fill="#fff3c0" fill-opacity=".5"/></pattern>`;
+    default: return "";
+  }
 }
 function groundSvg(ground, x0, y0) {
   const g = GROUNDS[ground] ?? GROUNDS.gold, box = `x="${x0}" y="${y0}" width="${V}" height="${V}"`;
+  if ( g.kind === "punched" ) return `<rect ${box} fill="#8f6418"/><rect ${box} filter="url(#wpd-gold)"/><rect ${box} filter="url(#wpd-leaf)" opacity=".3"/><rect ${box} fill="url(#wpd-pat)"/>`;
+  if ( g.kind ) return `<rect ${box} fill="url(#wpd-pat)"/><rect ${box} filter="url(#wpd-paper)" opacity=".35"/>`;
   if ( g.bg ) return `<rect ${box} fill="url(#wpd-stars)"/><rect ${box} filter="url(#wpd-paper)" opacity=".5"/>`;
   if ( ground === "parchment" ) return `<rect ${box} fill="#e2cfa4"/><rect ${box} filter="url(#wpd-paper)" opacity=".9"/><rect ${box} filter="url(#wpd-fibre)" opacity=".5"/>`;
   return `<rect ${box} fill="#8f6418"/><rect ${box} filter="url(#wpd-gold)"/><rect ${box} filter="url(#wpd-leaf)" opacity=".3"/>`;
@@ -600,7 +651,7 @@ function trim(A) {
 }
 
 /**
- * The whole picture as SVG, finished as an illuminated page: a gilt or starred ground, sepia ink, paper grain and
+ * The whole picture as SVG, finished as an illuminated page: a gilt, starred or patterned ground, sepia ink and
  * a gilt ring with a coloured ring inside it. head: from headLayers. style: {ground, ring} (see styleFor). ring:
  * draw the ring in (when the token frames of WoDX Atmosphere are not drawing it). Returns {svg, crop}.
  */
@@ -623,11 +674,12 @@ export function compose({look, head, anchors: A, frame = DEFAULT_FRAME, ring = t
       + at(lw * 0.55, `fill="none" stroke="#fff7d0" stroke-opacity=".5" stroke-width="2" stroke-dasharray="2 18"`);
   }
   const box = `x="${x0}" y="${y0}" width="${V}" height="${V}"`;
-  const grain = `<rect ${box} filter="url(#wpd-paper)" opacity=".6" style="mix-blend-mode:multiply"/><rect ${box} filter="url(#wpd-fibre)" opacity=".3"/>`;
+  // No paper grain over the figure: it laid a pale film on faces and robes. The grounds keep their own.
+  const grain = "";
   const hasVeil = look.clothes.headwear && look.clothes.headwear !== "none";
   // The marks of the health track lie under the mask of visible skin (in Lorelei's space, so the build is undone
   // inside it), so a fringe or a beard stays over them; the bandage goes over everything on the head
-  const dmRaw = damageLayers(A, level), ch = changeLayers(A, changes);
+  const dmRaw = damageLayers(A, level, look.colors.skin), ch = changeLayers(A, changes);
   const dm = {skin: ch + dmRaw.skin, over: dmRaw.over}, bt = FR.buildTransform(look.face.build), b = FR.buildOf(look.face.build);
   const inv = bt ? `translate(${FR.PIVOT[0]} ${FR.PIVOT[1]}) scale(${1 / b.sx} ${1 / b.sy}) translate(${-FR.PIVOT[0]} ${-FR.PIVOT[1]})` : "";
   const marks = !dm.skin ? "" : String(head).includes('id="wpd-skin"')

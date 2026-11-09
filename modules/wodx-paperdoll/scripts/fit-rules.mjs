@@ -113,15 +113,18 @@ const isK = (d, i, c) => Math.abs(d[i] - c[0]) < 60 && Math.abs(d[i + 1] - c[1])
 
 /**
  * Find the eyes on the features drawing, set in the build of the face. px as for measure. Returns
- * {pupils: [{side, x, y, r}], eyes: [{side, x0, y0, x1, y1}], mouth: {x0, y0, x1, y1}} in Lorelei's own space (the build taken back out), side 0
+ * {pupils: [{side, x, y, r}], eyes: [{side, x0, y0, x1, y1}], mouth: {x0, y0, x1, y1}, nose} in Lorelei's own space (the build taken back out), side 0
  * the near eye: a pupil is the eye colour with no skin within 10 pixels (the outline of the eye always has skin close by).
  */
 export function findEyes(px, {sx = 1, sy = 1} = {}) {
   const W = px.width, H = px.height, d = px.data, c = FK.eyes;
   const green = (x, y) => { if ( x < 0 || y < 0 || x >= W || y >= H ) return false; const i = (y * W + x) * 4; return d[i + 1] > 200 && d[i] < 80 && d[i + 2] < 80; };
-  const split = 490 + 75 * sx, P = [[0, 0, 0], [0, 0, 0]], B = [[1e9, 1e9, -1, -1], [1e9, 1e9, -1, -1]], MB = [1e9, 1e9, -1, -1];
-  for ( let y = 450; y < Math.min(H, 900); y++ ) for ( let x = 250; x < Math.min(W, 850); x++ ) if ( isK(d, (y * W + x) * 4, FK.mouth) ) {
-    MB[0] = Math.min(MB[0], x); MB[1] = Math.min(MB[1], y); MB[2] = Math.max(MB[2], x); MB[3] = Math.max(MB[3], y);
+  const split = 490 + 75 * sx, P = [[0, 0, 0], [0, 0, 0]], B = [[1e9, 1e9, -1, -1], [1e9, 1e9, -1, -1]], MB = [1e9, 1e9, -1, -1], NB = [1e9, 1e9, -1, -1];
+  const grow = (b, x, y) => { b[0] = Math.min(b[0], x); b[1] = Math.min(b[1], y); b[2] = Math.max(b[2], x); b[3] = Math.max(b[3], y); };
+  for ( let y = 350; y < Math.min(H, 900); y++ ) for ( let x = 250; x < Math.min(W, 850); x++ ) {
+    const i = (y * W + x) * 4;
+    if ( y >= 450 && isK(d, i, FK.mouth) ) grow(MB, x, y);
+    else if ( isK(d, i, FK.nose) ) grow(NB, x, y);
   }
   for ( let y = 250; y < Math.min(H, 700); y++ ) for ( let x = 250; x < Math.min(W, 850); x++ ) {
     if ( !isK(d, (y * W + x) * 4, c) ) continue;
@@ -135,7 +138,8 @@ export function findEyes(px, {sx = 1, sy = 1} = {}) {
   const ix = x => 490 + (x - 490) / sx, iy = y => 815 + (y - 815) / sy, f = v => +v.toFixed(1);
   return {pupils: P.map(([tx, ty, n], side) => n > 30 * sx * sy ? {side, x: f(ix(tx / n)), y: f(iy(ty / n)), r: f(Math.sqrt(n / (sx * sy) / Math.PI) + 6)} : null).filter(Boolean),
     eyes: B.map(([x0, y0, x1, y1], side) => x1 > 0 ? {side, x0: f(ix(x0)), y0: f(iy(y0)), x1: f(ix(x1)), y1: f(iy(y1))} : null).filter(Boolean),
-    mouth: MB[2] > 0 ? {x0: f(ix(MB[0])), y0: f(iy(MB[1])), x1: f(ix(MB[2])), y1: f(iy(MB[3]))} : null};
+    mouth: MB[2] > 0 ? {x0: f(ix(MB[0])), y0: f(iy(MB[1])), x1: f(ix(MB[2])), y1: f(iy(MB[3]))} : null,
+    nose: NB[2] > 0 ? {x0: f(ix(NB[0])), y0: f(iy(NB[1])), x1: f(ix(NB[2])), y1: f(iy(NB[3]))} : null};
 }
 
 /**

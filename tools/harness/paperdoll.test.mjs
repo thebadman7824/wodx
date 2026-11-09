@@ -265,7 +265,7 @@ test("each face is built in stages, and every stage checks out on every face sha
     const look = D.normalize({...D.defaultLook("stages"), face: {...D.defaultLook().face, head, build, eyes: pickOf("eyes"), eyebrows: pickOf("eyebrows"), mouth: pickOf("mouth"), nose: pickOf("nose"), hair: pickOf("hair")}});
     const A = measureLook(look), px = featPx(look);
     const st = D.stagesOf({look, anchors: A, features: F.checkFeatures(px, A), eyes: F.findEyes(px, D.buildOf(look)), crop: D.cropFor(A, D.DEFAULT_FRAME, D.headwear(A, look.clothes).tops)});
-    assert.deepEqual(st.map(s => s.stage), ["head", "features", "colours", "skin", "over the eye", "clothes", "ring"]);
+    assert.deepEqual(st.map(s => s.stage), ["head", "features", "mouth", "colours", "skin", "over the eye", "clothes", "ring"]);
     for ( const s of st ) if ( !s.ok ) fails.push(`${head} ${build || "average"} ${look.face.hair}: ${s.stage}: ${s.why}`);
   }
   assert.deepEqual(fails, []);
@@ -319,4 +319,47 @@ test("lasting changes: in the composed picture", {skip: !Resvg && "@resvg/resvg-
   assert.ok(svg.includes("wpd-face-ch") && svg.includes("wpd-glow"));
   const r = pixels(svg);
   assert.ok(r.width > 0);
+});
+
+const MR = await imp("modules/wodx-paperdoll/scripts/mouth-rules.mjs");
+test("fantastic skins: the fae and the uncanny may have them, mortals never", () => {
+  assert.ok(D.FACE.SKIN_FANTASTIC.length >= 12 && D.FACE.SKIN_FANTASTIC.every(h => D.SKIN[h] && !D.FACE.SKIN_HUMAN.includes(h)));
+  const roll = who => Array.from({length: 200}, (_, i) => D.randomLook(`who ${i}`, who).colors.skin);
+  assert.ok(roll({type: "Mortal"}).every(s => D.FACE.SKIN_HUMAN.includes(s)));
+  assert.ok(roll({type: "Vampire"}).every(s => D.FACE.SKIN_HUMAN.includes(s)));
+  const fae = roll({type: "Changeling"}).filter(s => D.FACE.SKIN_FANTASTIC.includes(s)).length;
+  assert.ok(fae > 80 && fae < 160, String(fae));
+  assert.ok(roll({type: "Changeling", variant: "Kinain"}).every(s => D.FACE.SKIN_HUMAN.includes(s)));
+  // a look without a kind is the same look as before
+  assert.deepEqual(D.randomLook("same"), D.randomLook("same", {}));
+});
+test("mouths: WoDX draws its own, for every mouth and mood, and Lorelei's is gone", {skip: !Resvg && "@resvg/resvg-js is not installed"}, () => {
+  for ( const m of D.PARTS.mouth ) assert.ok(MR.EXPRESSIONS[m], m);
+  for ( const [k, m] of Object.entries(D.MOODS) ) assert.ok(MR.EXPRESSIONS[D.expressionFor(D.defaultLook(), k)], k);
+  for ( const [mouth, mood] of [["happy02", "own"], ["happy06", "own"], ["sad04", "own"], ["happy02", "snarling"], ["happy02", "unconscious"]] ) {
+    const look = D.normalize({...D.defaultLook("m"), face: {...D.defaultLook().face, mouth}}), k = D.inksOf(look), h = headOf(look, mood);
+    assert.equal((h.match(/class="wpd-mouth"/g) ?? []).length, 1, `${mouth} ${mood}`);
+    assert.ok(!new RegExp(`<path[^>]*fill="#${k.lips}"/>`).test(h.replace(/<g class="wpd-mouth">[^]*?<\/g><\/g>|<g class="wpd-mouth">[^]*$/, "")), "Lorelei's mouth is not drawn");
+    // the mask counts Lorelei's mouth as skin and cuts out the new one
+    assert.ok(!/fdfdfd/.test(h));
+    if ( MR.expression(D.expressionFor(look, mood)).teeth ) assert.match(h, /clip-path="url\(#wpd-m-in\)"/);
+  }
+  const S = MR.mouthShape("happy02", {cx: 560, cy: 620, hw: 70});
+  assert.ok(S.box.x1 - S.box.x0 === 140 && S.box.y1 - S.box.y0 > 25 && !/NaN/.test(S.upper + S.lower));
+  // smiles lift the corners, frowns drop them
+  const c = k => { const s = MR.mouthShape(k, {cx: 560, cy: 620, hw: 70}); return s.corners[0][1] - s.mid.up; };
+  assert.ok(c("happy06") < c("sad04"));
+});
+test("grounds: every one draws, no paper grain lies over the figure, injured faces drain rather than whiten", {skip: !Resvg && "@resvg/resvg-js is not installed"}, () => {
+  assert.ok(Object.keys(D.GROUNDS).length >= 15);
+  const look = D.defaultLook("g"), A = measureLook(look), head = headOf(look);
+  for ( const ground of Object.keys(D.GROUNDS).filter(Boolean) ) {
+    const {svg} = D.compose({look, head, anchors: A, style: {ground, ring: "mortal"}});
+    assert.ok(pixels(svg).width > 0, ground);
+    assert.ok(!/wpd-fibre\)" opacity=".3"/.test(svg), ground);
+    if ( D.GROUNDS[ground].kind ) assert.match(svg, /url\(#wpd-pat\)/);
+  }
+  const dark = D.damageLayers(A, 7, "362117").skin, m = dark.match(/<rect[^>]*fill="#([0-9a-f]{6})"/);
+  assert.ok(m && D.FACE.lum(m[1]) < 0.25, "the pallor of a dark face stays dark");
+  assert.ok(!/d9d7cf/.test(dark));
 });

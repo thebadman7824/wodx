@@ -1080,3 +1080,11 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Ben asked for the live wire to roll pulling free at the book's difficulties. Walking onto a live wire now holds the character (shown on the card). **Pull free of the current** is Strength at 5 for a vampire and 9 for anyone else; cutting the power frees everyone; Undo for each.
 - A vampire's soak against the current can botch, and a botch makes the damage aggravated: WoDX Combat 3.8.2 adds the botchAggravated option to soakAndApply (off unless a caller asks).
 - Tests: 3 new (rules, runtime, Combat soak); 914 harness pass. Gate step 26 (the marksman on a live wire).
+
+### Paperdoll 0.6.0, 2026-11-09: redrawn mouths, fantastic skins, no white film (B396-B399)
+- Mouths drawn by WoDX (mouth-rules.mjs), placed from the nose and pupils found on the features drawing; 15 expressions; teeth follow the upper lip's curve; Lorelei's mouth hidden from the picture and counted as skin in the mask. New stage "mouth" in stagesOf. findEyes also returns the nose box.
+- 16 fantastic skins (SKIN_FANTASTIC) and fantasticChance by kind; randomLook takes the character's kind, and a look without one is unchanged.
+- Mauled and worse: the pallor is the skin drained to grey (was a fixed #d9d7cf wash). Paper grain over the figure removed.
+- Six grounds: rose, diaper, vine, lily, chequer, punched.
+- Checks: harness 922 pass; mouth sweep 10,800 placements (4 heads x 15 builds x 12 eyes x 15 expressions), none off the face. Samples in /mnt/project-files/paperdoll/mouths-0.6/. Deploy and gatepaperdoll wait for the PC.
+
