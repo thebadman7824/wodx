@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.1.0: the open world.
+ * WoDX Storyteller 0.2.0: the open world, and the ledger.
  *
  * Players roam the world on their own, between sessions or side by side within one: they travel from place to place
  * and act alone (hunting, downtime, research, influence, talking to people), each on their own time in the night. The
@@ -13,6 +13,7 @@
 import * as C from "./core.mjs";
 import * as A from "./apps.mjs";
 import * as W from "./world-rules.mjs";
+import * as Led from "./ledger.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -23,11 +24,13 @@ Hooks.once("init", () => {
   if ( !isWoDXWorld() ) return;
   active = true;
   C.registerSettings();
+  Led.registerLedgerSettings();
+  Led.registerLedgerHooks();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) C.registerHandlers(); });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -42,6 +45,7 @@ Hooks.once("ready", () => {
     log: C.log, entries: C.entries, personalTime: C.personalTime, setPersonal: C.setPersonal, advancePersonal: C.advancePersonal,
     beats: C.beats, saveBeat: C.saveBeat, deleteBeat: C.deleteBeat, checkBeats: C.checkBeats,
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,
+    ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass
   };
   const mod = game.modules.get(C.MOD);
@@ -100,6 +104,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => A.openOnYourOwn()};
   tokens.tools.wodxTracker = {name: "wodxTracker", title: "The Storyteller's tracker (every character, convening, beats)", icon: "fa-solid fa-binoculars", order: 113,
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
+  tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
+    button: true, visible: game.user.isGM, onChange: () => Led.LedgerApp.open()};
 });
 
 /* ---- The socket ---- */

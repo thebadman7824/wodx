@@ -540,6 +540,20 @@ game.world.id = worldId;
   const o = App.DEFAULT_OPTIONS;
   windows.push({name: "The Storyteller's tracker", tag: o.tag ?? "div", classes: ["application", ...(o.classes ?? [])].join(" "), width: o.position.width, height: o.position.height,
     content: app.element.querySelector("section.window-content").innerHTML});
+  // The Ledger: forty entries of every kind, open and closed, long names
+  {
+    const kinds = ["oath", "debt", "boon", "consequence"];
+    await game.settings.set("wodx-storyteller", "ledger", {entries: Array.from({length: 40}, (_, i) => ({id: `led${i}`, kind: kinds[i % 4], size: "major",
+      from: {id: people[i % people.length].id, name: people[i % people.length].name}, to: {id: null, name: "Bogdan Ursu, Voivode of Rothenstein and its valley"},
+      what: `A promise of some length, number ${i}, to see how the line wraps in the window`, made: game.time.worldTime - 86400 * i, due: i % 3 ? game.time.worldTime + 86400 * i : null,
+      status: i % 5 ? "open" : "kept"})), heirs: {}, veil: {value: 4, log: []}});
+    const LApp = (await import(join(root, "modules/wodx-storyteller/scripts/ledger.mjs"))).LedgerApp;
+    const la = new LApp({});
+    await la.render({force: true});
+    const lo = LApp.DEFAULT_OPTIONS;
+    windows.push({name: "The Ledger", tag: lo.tag ?? "div", classes: ["application", ...(lo.classes ?? [])].join(" "), width: lo.position.width, height: lo.position.height,
+      content: la.element.querySelector("section.window-content").innerHTML});
+  }
   for ( const [label, fn] of [["Out on your own", () => st.openOnYourOwn(people[1].id)], ["Convene", () => st.conveneDialog({actorIds: [people[0].id]})],
     ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
     ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()]] ) {

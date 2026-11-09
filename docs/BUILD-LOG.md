@@ -666,3 +666,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Languages in chat, 2026-11-09: WoDX Chronicle 0.5.1 (B124)
 - Gap review item 9. scripts/languages-rules.mjs (pure: Linguistics allowance, made-up words, /in parsing) and scripts/languages.mjs (hooks on chatMessage, preCreateChatMessage, renderChatMessageHTML and renderChatLog; the Languages window, with a search box).
 - Tests: languages.test.mjs (5). 528 harness tests pass.
+
+### The Ledger, 2026-11-09: WoDX Storyteller 0.2.0 (B125)
+- Gap review item 8. scripts/ledger-rules.mjs (pure) and scripts/ledger.mjs (due dates, the Veil, heirs and succession through the approval queue, the Ledger window with a search box on each list, a toolbar button for the Storyteller).
+- Tests: ledger.test.mjs (8). 536 harness tests pass. UI fit adds the Ledger with forty entries.
+- The archive gate ran 9/9 in rothenstein-wodx with 500 characters (Creation 0.7.0, deployed 2026-11-09).
