@@ -157,6 +157,12 @@
    "title": "The Black Hand: A Guide to the Tal'Mahe'Ra",
    "short": "Black Hand",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "anarchs",
+   "title": "Anarchs Unbound",
+   "short": "Anarchs Unbound",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -185,6 +191,7 @@
   "v20comp.json",
   "lotb.json",
   "rotb.json",
-  "blackhand.json"
+  "blackhand.json",
+  "anarchs.json"
  ]
 }
