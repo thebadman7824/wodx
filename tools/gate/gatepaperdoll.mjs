@@ -44,7 +44,7 @@ export async function run() {
     if ( scene ) [token] = await scene.createEmbeddedDocuments("Token", [{name: actor.name, actorId: actor.id, actorLink: true, x: 0, y: 0, hidden: true}]);
     const p1 = await api.save(actor, look);
     const firstBake = structuredClone(api.last?.() ?? null);
-    await api.settled(); await sleep(500);
+    await api.settled(); await sleep(1500);
     const tex = () => actor.prototypeToken.texture.src, live = () => token ? scene.tokens.get(token.id)?.texture?.src : tex();
     const head = await fetch(`/${p1}`, {method: "HEAD"});
     const tk = token ? scene.tokens.get(token.id) : null;

@@ -1017,3 +1017,5 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Paperdoll 0.1.1: placed tokens are found through the actor's own list as well as by searching the scenes. gatepaperdoll: the ring step flips the frames setting to a value that changes the answer; the bake step records more detail. encyclopedia.test.mjs builds the check script's path with fileURLToPath (Windows).
 - Paperdoll 0.1.2: only Token documents with an id on a Scene are updated (0.1.1 sent an update without an _id); a failed token update no longer stops the bake.
 - Paperdoll 0.1.3: api.last() reports what the last bake found and updated on placed tokens; gatepaperdoll step 3 records it.
+- Paperdoll 0.1.4: a mood can set the eyes; "unconscious" (eyes variant19) at Incapacitated, ahead of frenzy (B345).
+- Paperdoll 0.1.4 also: placed tokens are updated with diff: false through game.scenes, and checked again 0.8 s later; a token that went back to its old picture gets the new one again (api.last().recheck lists them). The first gate runs showed the placed token returning to mystery-man after a successful update.
