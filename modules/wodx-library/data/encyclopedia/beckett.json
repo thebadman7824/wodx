@@ -1,0 +1,501 @@
+[
+ {
+  "id": "bjd-grave-war",
+  "title": "The Book of the Grave-War",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The lost text behind Beckett's travels.",
+  "claims": [
+   {
+    "text": "The scholar Beckett hunts a lost tome called Book of the Grave-War, and the search keeps pulling Beckett to the American west coast, Washington, Berlin and further.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "book-of-nod"
+  ]
+ },
+ {
+  "id": "bjd-milwaukee",
+  "title": "Milwaukee in the Final Nights",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Camarilla city on the brink.",
+  "claims": [
+   {
+    "text": "The flight of the local Anarchs has weakened the Camarilla, though the Kindred who stayed defend the city firmly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Recent Sabbat attacks have been so precise that someone inside seems to be feeding them information.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Lupines keep up a war on the outskirts that the Kindred do not understand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "lupines"
+  ]
+ },
+ {
+  "id": "bjd-washington",
+  "title": "Washington, D.C.",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A city under the Sword of Caine.",
+  "claims": [
+   {
+    "text": "Few Kindred go to Washington willingly: Vykos is there, the Sabbat commit open atrocities, and the Camarilla must work unlike anywhere else.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The more the city's Kindred turn monstrous to fight back, the weaker their loyalty to the Traditions grows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bjd-vitel",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "bjd-vitel",
+  "title": "Marcus Vitel",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A former Prince of Washington.",
+  "claims": [
+   {
+    "text": "Vitel was the Roman Lucius Sejanus in life, Embraced into Clan Lasombra, and ruled Washington while passing as a Camarilla Ventrue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Loyal mostly to self and later to the Sabbat, Vitel is thought to have helped the Sword of Caine take Washington and other East Coast cities by handing over sensitive knowledge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra",
+   "bjd-washington"
+  ]
+ },
+ {
+  "id": "bjd-southern-crusade",
+  "title": "The Sabbat Crusade Across the South",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sword of Caine's sweep through the American southeast.",
+  "claims": [
+   {
+    "text": "Years ago a Sabbat crusade took nearly every major Southern city, Birmingham, Savannah, Atlanta, Charleston and Richmond, then swung north to Washington and Baltimore.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "The Sabbat were poor rulers yet held these cities for many years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "bjd-pieterzoon"
+  ]
+ },
+ {
+  "id": "bjd-pieterzoon",
+  "title": "Jan Pieterzoon",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Leader of the Camarilla push to retake the East Coast.",
+  "claims": [
+   {
+    "text": "Pieterzoon, childe of the Ventrue Hardestadt, heads the countermove against the Sabbat in the East.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "For years Pieterzoon has been torn between the war and the conflicting orders of a sire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue",
+   "bjd-southern-crusade"
+  ]
+ },
+ {
+  "id": "bjd-mithras",
+  "title": "Mithras",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ancient Ventrue who shaped Kindred Britain.",
+  "claims": [
+   {
+    "text": "Mithras is a Ventrue so old and mighty that the culture of the British Kindred has bent around that presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Mithras never formally joined the Camarilla, in large part from contempt for Hardestadt, yet enforced the Traditions in Britain centuries before the sect existed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Kindred historians hold that, but for an ill-timed torpor, Mithraism might have displaced Christianity as Rome's faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "It was said that Mithras could command anyone met even once, at any distance, if their whereabouts were known.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-london",
+   "ventrue"
+  ]
+ },
+ {
+  "id": "bjd-web-of-knives",
+  "title": "The Web of Knives",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The warrior cult that long ruled the Assamites.",
+  "claims": [
+   {
+    "text": "Of all clans, the Assamites struggle most with the signs of Gehenna, and their true variety stayed hidden for centuries behind the Web of Knives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "This warrior death cult reveres Haqim as a blood god who wants every other Kindred destroyed, and it ruled the clan for centuries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "The clan's old face of diablerie-hungry killers grew out of a blood curse laid on it by the Baali in the nights of the Roman Empire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites",
+   "gehenna",
+   "lotb-baali"
+  ]
+ },
+ {
+  "id": "bjd-samedi-haiti",
+  "title": "The Samedi of Haiti",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A bloodline that scholars puzzle over.",
+  "claims": [
+   {
+    "text": "The Samedi of Haiti draw much speculation, and bloodlines without allies, being outsiders, live always near extinction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 183,
+      "pdf": 184
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-samedi"
+  ]
+ },
+ {
+  "id": "bjd-smiling-jack",
+  "title": "Smiling Jack",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A famous Anarch of Los Angeles.",
+  "claims": [
+   {
+    "text": "A Brujah and childe of Mama Lion, Smiling Jack was a Caribbean pirate in life, if rumour holds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 219,
+      "pdf": 220
+     }
+    ]
+   },
+   {
+    "text": "A renowned Anarch, Jack would sooner mentor than lead, kept a haven in Los Angeles for nearly twenty years, and rivals Jeremy MacNeil in popularity there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 219,
+      "pdf": 220
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs",
+   "brujah"
+  ]
+ },
+ {
+  "id": "bjd-burning-monastery",
+  "title": "The Burning Monastery",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A medieval painting by a Kindred artist.",
+  "claims": [
+   {
+    "text": "Katherine Wiese holds paintings on loan from Athanasios, among them medieval works by Kindred painters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 307,
+      "pdf": 308
+     }
+    ]
+   },
+   {
+    "text": "A copy of the Burning Monastery that may be the original sent one patron into frenzy at a glance, and rumour gives some pieces Noddist meaning.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 307,
+      "pdf": 308
+     }
+    ]
+   }
+  ],
+  "see": [
+   "book-of-nod"
+  ]
+ },
+ {
+  "id": "bjd-berlin",
+  "title": "Berlin After the Purge",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A city cut down by a Justicar.",
+  "claims": [
+   {
+    "text": "Berlin once had two Princes; after Gustav took the Blood Curse a Justicar came and purged the city's Kindred, and many burned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 419,
+      "pdf": 420
+     }
+    ]
+   },
+   {
+    "text": "Wilhelm, Gustav's childe and in practice Prince of West Berlin, lost standing along with the Primogen, and the False Caine affair under their rule did not help.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 419,
+      "pdf": 420
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla"
+  ]
+ }
+]
