@@ -177,6 +177,33 @@ export const VESSELS = {
     bird: { label: "Bird", pool: 0.5 }, rat: { label: "Bat / rat", pool: 0.25 }
 };
 
+/**
+ * What is in a vessel's blood (V20 pp. 295, 301-302). V20 Dark Ages has no rule of its own, so WoDX uses V20's in
+ * every era (house rule). Drugs touch a vampire far less than a mortal.
+ */
+export const VESSEL_STATES = {
+    clean: { label: "Nothing unusual" },
+    drunk: { label: "Drunk", note: "Alcohol: −1 die to Dexterity and Intelligence pools for every two drinks in the vessel's blood, fading by one die an hour (V20 p. 301)." },
+    stimulant: { label: "On cocaine, meth or speed", note: "A vampire with Celerity has one more dot of it for 10 − Stamina minutes (V20 p. 301)." },
+    hallucinogen: { label: "On a hallucinogen", note: "Pools drop by 1 to 3, with visions like Dementation's second level, as the Storyteller decides (V20 p. 301)." },
+    opiate: { label: "On heroin, morphine or barbiturates", note: "Lower Dexterity and Ability pools, and frenzy is easier to resist, as the Storyteller decides (V20 p. 302)." },
+    disease: { label: "Carrying a blood-borne disease", note: "Vampires take no harm from most sickness but carry blood-borne disease to later vessels (V20 p. 295)." }
+};
+
+/** Alcohol's penalty: one die from Dexterity and Intelligence pools for every two drinks. */
+export function drinkPenalty(drinks) { return Math.floor(Math.max(0, Number(drinks) || 0) / 2); }
+
+/**
+ * Blood-borne disease (V20 p. 295): Intelligence + Medicine at 7 spots it. Missing it exposes the vampire, who resists
+ * with Stamina at 6; a botch on the spotting roll makes a carrier at once.
+ */
+export function diseaseOutcome(spot, resist = null) {
+    if (spot.botch) return { spotted: false, carrier: true, why: "botch" };
+    if (spot.successes > 0) return { spotted: true, carrier: false };
+    if (!resist) return { spotted: false, carrier: null };
+    return { spotted: false, carrier: !(resist.successes > 0), why: resist.successes > 0 ? "resisted" : "exposed" };
+}
+
 export const HUNTING_GROUNDS = {
     slums: { label: "Slums / the Circus", diff: 4 }, lower: { label: "Lower-class neighborhood", diff: 5 },
     market: { label: "Market district", diff: 6 }, merchant: { label: "Merchant-class neighborhood", diff: 7 },

@@ -389,3 +389,25 @@ export function expectedHarm({ atkDice, atkDiff, atkAuto = 0, defDice = 0, defDi
 
 /** How much worse each damage type is, for ranking attacks of equal expected levels against each other. */
 export const HARM_WEIGHT = { bashing: 1, lethal: 1.25, aggravated: 1.6 };
+
+/* ---------------- Shots and reloading (3.8.0, a house rule that starts off) ---------------- */
+
+/** A ranged weapon's shots: only weapons with a capacity on their sheet are counted (bows and slings never are). */
+export function shotsOf(clip) {
+    const max = Math.max(0, Math.round(Number(clip?.max) || 0));
+    const value = Math.max(0, Math.min(max, Math.round(Number(clip?.value) || 0)));
+    return { counted: max > 0, value, max, empty: max > 0 && value < 1 };
+}
+
+/**
+ * Turns to reload. A firearm takes one full turn with the character's concentration and can be part of a multiple
+ * action (V20 p. 278). A crossbow takes five turns (V20 p. 281); in the Dark Ages a mechanical bow takes five turns
+ * less one per dot of Archery (V20 Dark Ages p. 348), at least one (house rule).
+ */
+export function reloadTurns({ crossbow = false, darkAges = false, archery = 0 } = {}) {
+    if (!crossbow) return { turns: 1, ref: "V20 p. 278", multi: true };
+    if (darkAges) return { turns: Math.max(1, 5 - Math.max(0, Math.round(Number(archery) || 0))), ref: "V20 Dark Ages p. 348", multi: false };
+    return { turns: 5, ref: "V20 p. 281", multi: false };
+}
+
+export const isCrossbow = name => /crossbow|arbalest|arbalète|armbrust/i.test(String(name ?? ""));

@@ -1431,3 +1431,15 @@ export function cleanTarget(s = {}) {
   const blank = v => v === "" || v === null || v === undefined;
   return {isTarget: !!s.isTarget, targetKind: o.kind, objBuild: o.build, bottles: blank(s.bottles) ? "" : o.count, smashed: o.broken};
 }
+
+/**
+ * A haven's security (WoDX Storyteller's haven record on the scene): each dot of security adds 1 to the difficulty
+ * of anyone who is not its owner or a guest breaking in (V20 pp. 112-113, Domain). Only breaking-in rolls count.
+ */
+export const INTRUDING = new Set(["pick", "smash", "hack", "disarm", "climb", "climbEasy"]);
+export function havenSecurity(haven, actorId, opId) {
+  if ( !haven || !INTRUDING.has(opId) ) return 0;
+  const inside = [...(haven.owners ?? []), ...(haven.guests ?? [])];
+  if ( actorId && inside.includes(actorId) ) return 0;
+  return Math.max(0, Math.min(5, Math.round(Number(haven.security) || 0)));
+}

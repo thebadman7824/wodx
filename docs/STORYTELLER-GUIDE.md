@@ -181,6 +181,8 @@ Each token's **WoDX Actions** button opens its line's menu. The line comes from 
 
 **Movement.** In a fight each move shows the pace over the token: walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, in yards, with Celerity and wounds counted. The setting "Movement in a fight" can stop moves past running speed (never yours). The card notes when a character moved more than half their running speed, after which they cannot attack.
 
+**Moves out of turn.** Set "Moves out of turn" to "Only the character whose turn it is" and a player can move a token in a running fight only on that character's turn. A character holding the action presses Act next first. Tokens outside the fight move freely, and you can always move any token yourself, so a dodge, a shove or a fall is yours to move. It starts Off.
+
 **The turn conductor.** Off by default. With **NPC turns**, an NPC's turn ends once WoDX NPC has acted or you accept its plan, then waits 3 seconds so you can read the cards. With **Everyone**, a player's turn also ends 6 seconds after their action is spent, unless they hold. A time limit per player turn is off (0) by default; when it runs out, the action is held. A banner above the hotbar shows the turn, the countdown and who is holding. Players get **End turn**, **Hold**, **+1 extra action** and **Act next**; you also get **Step back** and **Pause**. Extra actions from Celerity or Rage come in a second pass at the end of the round. A held action is lost at the round's end, so a hold on the last turn of a round is lost at once.
 
 ## WoDX Targeting: who a power or attack is aimed at
