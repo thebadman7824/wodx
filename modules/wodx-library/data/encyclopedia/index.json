@@ -289,6 +289,12 @@
    "title": "New York by Night",
    "short": "New York by Night",
    "edition": "Revised"
+  },
+  {
+   "id": "sfbn",
+   "title": "San Francisco by Night",
+   "short": "San Francisco by Night",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -339,6 +345,7 @@
   "mcbn.json",
   "mtbn.json",
   "nobn.json",
-  "nybn.json"
+  "nybn.json",
+  "sfbn.json"
  ]
 }
