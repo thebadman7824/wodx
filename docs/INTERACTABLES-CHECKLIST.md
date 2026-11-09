@@ -67,17 +67,25 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] WoDX Combat 3.7.6: a soak difficulty from the caller
 - [x] Tile config: the Hazard section
 - [x] Harness tests (10 new) and UI fit
-- [ ] Gate step 19 in rothenstein-wodx
-- [ ] Deployed
+- [x] Gate step 19 in rothenstein-wodx: 19/19 at fe68eef
+- [x] Deployed 2026-11-09 (backups Backups\wodx-interactables-0.6.0-2026-11-09, Backups\wodx-combat-3.7.5-2026-11-09)
 - [ ] Electrocution page ref (V20 core) to pin
+
+## 0.8.0: altars, relics and fetishes (2026-11-09)
+- [x] Rules: holy ground with a rating, desecration, a demon seared (WoDX Actions' reading of Demon pp. 254-255); relics and fetishes to take (B152)
+- [x] Runtime: Pray here opens WoDX Actions' prayer; stepping on or a turn in combat; take with Undo
+- [x] Tile config: the Altar, relic or fetish section
+- [x] Harness tests (6 new) and UI fit
+- [ ] Gate step 20 in rothenstein-wodx
+- [ ] Deployed
 
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
 - [x] Clues and documents (0.4.0, deployed)
 - [x] Light sources (0.5.0, deployed)
 - [x] Hiding places (0.6.0, deployed)
-- [x] Fire and hazards (0.7.0, not deployed yet)
-- [ ] Altars, relics and fetishes
+- [x] Fire and hazards (0.7.0, deployed)
+- [x] Altars, relics and fetishes (0.8.0, not deployed yet)
 - [ ] Watch points (mirrors, windows on the street, phones and radios)
 - [ ] Mounts and vehicles
 - [ ] Step 2: climbing, ledges and jumps

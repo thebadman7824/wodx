@@ -595,7 +595,10 @@ game.world.id = worldId;
       title: "The priest hole behind the chapel panelling", occupants: [{a: "x1", n: "Brother Anselm of the Cistercian grange", s: 2}, {a: "x2", n: "A frightened novice", s: 0}]}}}},
     // A bonfire, which takes a roll to beat out
     {document: {id: "tile7", documentName: "Tile", x: 160, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {hazard: true, hazardKind: "fire", size: "large", heat: "forge",
-      title: "The hayloft over the stables of the Golden Stag inn"}}}}];
+      title: "The hayloft over the stables of the Golden Stag inn"}}}},
+    // An altar, holy ground
+    {document: {id: "tile8", documentName: "Tile", x: 160, y: 60, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {sacred: true, sacredKind: "altar", rating: 4,
+      title: "The high altar of the Church of St. Aegidius, under the rood screen"}}}}];
   globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document])), lights: new Coll([["lampA", {id: "lampA", x: 300, y: 300, hidden: false, flags: {}}]])}, grid: {size: 100},
     walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};

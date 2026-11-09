@@ -8,6 +8,7 @@
  * systems; docs/DECISIONS.md records them.
  */
 import {FIRE_HEAT as ACTIONS_FIRE_HEAT} from "../../wodx-actions/scripts/rules.js";
+import {holy as demonHoly} from "../../wodx-actions/scripts/demon-rules.js";
 
 export const TURN = 3; // seconds in a turn (V20 Dark Ages p. 322)
 export const MINUTE = 60;
@@ -161,6 +162,18 @@ export const SHOCKS = {
   major: {label: "Fuse box", levels: 4},
   severe: {label: "Industrial line", levels: 6},
   fatal: {label: "Main line or third rail", levels: 8}
+};
+/**
+ * Altars, relics and fetishes on tiles. An altar or shrine is holy ground with a rating (1 to 5): praying there uses
+ * WoDX Actions' prayer, and a demon who walks onto it is seared as WoDX Actions' "The holy" reads Demon: The Fallen
+ * (pp. 254-255), until it is desecrated. A relic or a fetish rests on its tile until someone takes it; a fetish is then
+ * attuned and used from the WoDX actions menu (W20 p. 221; DA:W p. 92).
+ */
+export const SACRED = {
+  altar: {label: "Church altar or chapel", ground: true, carry: false},
+  shrine: {label: "Wayside shrine or holy well", ground: true, carry: false},
+  relic: {label: "Holy relic", ground: false, carry: true},
+  fetish: {label: "Fetish or talen in its resting place", ground: false, carry: true}
 };
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
@@ -376,6 +389,31 @@ export function carefulRoll(o, ch = {}) {
   const sk = bestOf(ch.abilities ?? {}, ["athletics"]);
   return {attr: "dexterity", ability: sk.key, dice: (Number(ch.dexterity) || 0) + sk.value, diff: 6};
 }
+/**
+ * An altar, shrine, relic or fetish on a tile. f: the tile's flags.wodx-interactables, with sacred: true.
+ * rating: holy ground's rating or a relic's Faith potential (1 to 5); a fetish's Gnosis (1 to 10).
+ */
+export function describeSacred(f = {}) {
+  const kind = SACRED[f.sacredKind] ? f.sacredKind : "altar";
+  const top = kind === "fetish" ? 10 : 5;
+  const rating = Math.max(1, Math.min(top, Math.round(Number(f.rating) || (kind === "fetish" ? 5 : 1))));
+  return {
+    sacred: true, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
+    kind, rating, desecrated: !!f.desecrated, items: parseItems(f.sacredItems), taken: !!f.taken,
+    title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", progress: {}, tries: f.tries ?? {}
+  };
+}
+/** Whether a sacred tile is holy ground now. */
+export const holyGround = o => !!o?.sacred && SACRED[o.kind].ground && !o.desecrated;
+/**
+ * What holy ground does to a demon (WoDX Actions' reading of Demon: The Fallen pp. 254-255): torment 3 or less, nothing;
+ * otherwise lethal levels equal to the rating, and a Willpower roll each turn to stay. Null for anyone else.
+ */
+export function holyHarm(o, {kind = "", torment = 0} = {}) {
+  if ( !holyGround(o) || kind !== "demon" ) return null;
+  return demonHoly(torment, o.rating, {ground: true});
+}
+
 /** The search successes it takes to find one person hiding. */
 export const hideNeed = (o, occ) => HIDES[o.kind].need + Math.floor(Math.max(0, Number(occ?.s) || 0) / 2);
 /** Who a search finds in a hiding place. bonus: a search of that very place counts one more success. */
@@ -396,6 +434,11 @@ export function parseItems(text) {
 
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
+  if ( o.sacred ) {
+    const S = SACRED[o.kind], t = o.title || S.label;
+    if ( S.ground ) return `${t}${o.desecrated ? ", desecrated" : ""}`;
+    return `${t}${o.taken || !o.items.length ? ", taken" : ""}`;
+  }
   if ( o.hazard ) {
     const H = HAZARDS[o.kind], t = o.title || H.label;
     if ( o.kind === "fire" ) return `${t}${o.burning ? `, burning (${FIRE_SIZES[o.size].label.split(":")[0].toLowerCase()})` : ", out"}`;
@@ -441,6 +484,7 @@ export function optionsFor(o, ch = {}) {
   if ( o.light ) return lightOptions(o);
   if ( o.hide ) return hideOptions(o, ch);
   if ( o.hazard ) return hazardOptions(o, ch);
+  if ( o.sacred ) return sacredOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -606,6 +650,23 @@ function hazardOptions(o, ch) {
   return out;
 }
 
+/** An altar or shrine: pray there, or desecrate it. A relic or fetish: take it. */
+function sacredOptions(o) {
+  const S = SACRED[o.kind], out = [];
+  if ( S.ground ) {
+    if ( o.desecrated ) return [{id: "desecratedNote", label: "Desecrated", roll: null, disabled: true, note: "It is not holy ground until the Storyteller consecrates it again."}];
+    out.push({id: "pray", label: "Pray here", roll: null, opens: "prayer", seconds: 3600, noise: {success: "quiet"},
+      note: `Holy ground, rating ${o.rating}: in the prayer window, pick Holy Ground and set the rating to ${o.rating}.`});
+    out.push({id: "desecrate", label: "Desecrate it", roll: null, seconds: MINUTE, noise: {success: "loud"}, note: "It stops being holy ground until it is consecrated again."});
+  }
+  if ( S.carry ) {
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: "Take it", roll: null, seconds: TURN, noise: {success: "silent"},
+      note: o.kind === "fetish" ? `Gnosis ${o.rating}. Attune and use it from the WoDX actions menu (Fetish or talen).` : `Faith potential ${o.rating}.`});
+    else out.push({id: "goneNote", label: "Nothing left to take", roll: null, disabled: true, note: o.items.length ? "Someone has taken it." : "The Storyteller has not named the item on the tile."});
+  }
+  return out;
+}
+
 /** A light source: light it or put it out; break it if it can break. */
 function lightOptions(o) {
   const L = LIGHTS[o.kind], out = [];
@@ -732,6 +793,7 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "putOut": flags.burning = false; return done("puts the fire out.");
       case "alight": flags.burning = true; return done("sets it alight.");
       case "sweep": flags.cleared = true; return done("sweeps a path clear.");
+      case "desecrate": flags.desecrated = true; return done("desecrates it.");
       case "powerOff": flags.live = false; return done("cuts the power.");
       case "powerOn": flags.live = true; return done("turns the power back on.");
       case "cutFree": flags.holding = null; return done("cuts the snare and frees whoever it held.");
@@ -941,4 +1003,12 @@ export function cleanHazard(s = {}) {
   return {hazard: !!s.hazard, hazardKind: HAZARDS[s.hazardKind] ? s.hazardKind : "fire", size: FIRE_SIZES[s.size] ? s.size : "small",
     heat: FIRE_HEAT[s.heat] ? s.heat : "torch", shock: SHOCKS[s.shock] ? s.shock : "minor", hazDice: dice, hazType: DAMAGE_TYPES[s.hazType] ? s.hazType : "",
     burning: s.burning !== false, spilled: !!s.spilled, cleared: !!s.cleared, live: s.live !== false, pcsOnly: !!s.pcsOnly};
+}
+
+/** Clean a tile's altar, relic or fetish settings from the config form. */
+export function cleanSacred(s = {}) {
+  const kind = SACRED[s.sacredKind] ? s.sacredKind : "altar";
+  const top = kind === "fetish" ? 10 : 5;
+  return {sacred: !!s.sacred, sacredKind: kind, rating: Math.max(1, Math.min(top, Math.round(Number(s.rating) || (kind === "fetish" ? 5 : 1)))),
+    desecrated: !!s.desecrated, sacredItems: parseItems(s.sacredItems).join("\n")};
 }

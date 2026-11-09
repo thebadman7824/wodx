@@ -447,6 +447,7 @@ const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, wall
 const uuids = new Map();
 const damage = [];
 const soaks = [];
+const prayed = [];
 
 function wall(id, c, door, ds, flags = {}) {
   const doc = {id, c, door, ds, levels: new Set(), flags: {[MOD]: flags}, parent: scene,
@@ -516,7 +517,8 @@ globalThis.game = {
   settings: {register: (m, k, cfg) => settings.set(`${m}.${k}`, cfg.default), get: (m, k) => settings.get(`${m}.${k}`)},
   keybindings: {register: () => {}},
   modules: new Coll([[MOD, {}], ["wodx-chronicle", {api: {propose: async p => proposals.push(p), registerApprovalHandler: () => {}, eras: {activeEra: () => ({profile: {id: "victorian"}}), currentYear: () => 1890}}}]]),
-  wodxActions: {getKind: () => "mortal"},
+  wodxActions: {getKind: a => a?.kindForTest ?? "mortal", demonInfo: a => ({torment: {perm: a?.tormentForTest ?? 0}, willpower: {perm: 4}}),
+    prayer: async a => { prayed.push(a.id); return "prayer window"; }},
   wodxCombat: {applyDamage: async (a, t, n) => damage.push([a.id, t, n]), healDamage: async (a, t, n) => damage.push([a.id, t, -n]),
     soakAndApply: async (tok, fd) => {
       const a = tok.actor ?? tok, levels = Math.max(0, fd.amount - 1);
@@ -566,7 +568,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide && !x.o.hazard).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide && !x.o.hazard && !x.o.sacred).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -1182,4 +1184,102 @@ test("runtime: the WoDX part of the tile config keeps the hazard's choices", () 
   assert.match(html, /value="molten" selected/);
   assert.match(html, /name="flags.wodx-interactables.hazDice" value="4"/);
   assert.match(html, /name="flags.wodx-interactables.pcsOnly" checked/);
+});
+
+/* ---------------- altars, relics and fetishes ---------------- */
+
+test("sacred: an altar is holy ground with a rating; pray there or desecrate it; desecrated, it is not holy", () => {
+  const o = R.describeSacred({sacred: true, sacredKind: "altar", rating: 3});
+  assert.ok(R.holyGround(o));
+  const ops = R.optionsFor(o, ch());
+  assert.deepEqual(ids(ops), ["pray", "desecrate"]);
+  assert.equal(ops[0].opens, "prayer");
+  assert.match(ops[0].note, /rating to 3/);
+  assert.equal(ops[1].noise.success, "loud");
+  assert.equal(R.resolve(o, ops[1], []).patch.flags.desecrated, true);
+  const d = R.describeSacred({sacredKind: "altar", desecrated: true});
+  assert.ok(!R.holyGround(d));
+  assert.ok(R.optionsFor(d, ch())[0].disabled);
+  assert.equal(R.nameOf(d), "Church altar or chapel, desecrated");
+});
+
+test("sacred: holy ground sears a demon past Torment 3, lethal by its rating, with a roll to stay; nobody else", () => {
+  const o = R.describeSacred({sacredKind: "shrine", rating: 2});
+  assert.deepEqual([R.holyHarm(o, {kind: "demon", torment: 6}).lethal, R.holyHarm(o, {kind: "demon", torment: 6}).stayRoll], [2, true]);
+  assert.equal(R.holyHarm(o, {kind: "demon", torment: 3}).harmed, false);
+  assert.equal(R.holyHarm(o, {kind: "vampire", torment: 9}), null);
+  assert.equal(R.holyHarm(R.describeSacred({sacredKind: "relic", rating: 5}), {kind: "demon", torment: 9}), null, "a relic on a tile is not holy ground");
+});
+
+test("sacred: a relic or fetish can be taken once; a fetish's rating is its Gnosis, up to 10", () => {
+  const f = R.describeSacred({sacredKind: "fetish", rating: 7, sacredItems: "Item.dagger"});
+  assert.equal(f.rating, 7);
+  const ops = R.optionsFor(f, ch());
+  assert.deepEqual(ids(ops), ["take"]);
+  assert.match(ops[0].note, /Gnosis 7/);
+  assert.ok(R.optionsFor(R.describeSacred({sacredKind: "fetish", sacredItems: "x", taken: true}), ch())[0].disabled);
+  assert.equal(R.describeSacred({sacredKind: "relic", rating: 9}).rating, 5);
+  assert.deepEqual(R.cleanSacred({sacred: true, sacredKind: "fetish", rating: "12", sacredItems: " a \n\n b "}), {sacred: true, sacredKind: "fetish", rating: 10, desecrated: false, sacredItems: "a\nb"});
+});
+
+const altar = tile("altar1", 2000, 1000, {sacred: true, sacredKind: "altar", rating: 3});
+const reliquary = tile("relic1", 2200, 1000, {sacred: true, sacredKind: "relic", rating: 2, sacredItems: "Item.dagger"});
+canvas.tiles.placeables.push(altar, reliquary);
+
+test("runtime: a demon stepping onto holy ground is seared and rolls to stay; Undo heals it; anyone else walks on", async () => {
+  npc.kindForTest = "demon"; npc.tormentForTest = 6;
+  try {
+    tokNpc.document.x = 2000; tokNpc.document.y = 800;
+    await hooks.get("canvasReady")[0]();
+    faces = [9, 2, 2, 2];
+    tokNpc.document.y = 1000;
+    const cards = await api.onTokenMoved(tokNpc.document);
+    assert.equal(cards.length, 1);
+    const done = cards[0].flags[MOD].done;
+    assert.deepEqual(damage.at(-1), ["npc1", "lethal", 3]);
+    assert.ok(done.lines.some(l => /It endures the turn/.test(l)), done.lines.join(" | "));
+    assert.equal((await api.onTurnStart({started: true, combatant: {token: tokNpc.document}})).length, 1, "again at the start of its turn");
+    await api.undoCard(cards[0]);
+    assert.deepEqual(damage.at(-1), ["npc1", "lethal", -3]);
+    // Desecrated: nothing
+    altar.document.flags[MOD].desecrated = true;
+    assert.equal((await api.onTurnStart({started: true, combatant: {token: tokNpc.document}})).length, 0);
+    delete altar.document.flags[MOD].desecrated;
+  } finally { delete npc.kindForTest; delete npc.tormentForTest; }
+  // A mortal: nothing at all
+  tokNpc.document.y = 800; await hooks.get("canvasReady")[0]();
+  tokNpc.document.y = 1000;
+  assert.equal((await api.onTokenMoved(tokNpc.document)).length, 0);
+  tokNpc.document.x = 400; tokNpc.document.y = 1500;
+  await hooks.get("canvasReady")[0]();
+});
+
+test("runtime: praying at an altar opens WoDX Actions' prayer; desecrating it is loud and undone; a relic is taken and Undo takes it back", async () => {
+  tokPc.document.x = 2000; tokPc.document.y = 1000;
+  try {
+    const r = await api.attempt(tokPc, "altar1", "pray");
+    assert.equal(r, "prayer window");
+    assert.deepEqual(prayed, ["pc1"]);
+    const m = await api.attempt(tokPc, "altar1", "desecrate");
+    assert.equal(altar.document.flags[MOD].desecrated, true);
+    assert.equal(m.flags[MOD].done.noise, "loud");
+    await api.undoCard(m);
+    assert.equal(altar.document.flags[MOD].desecrated, undefined);
+    tokPc.document.x = 2200;
+    const before = pc.items.length;
+    const t = await api.attempt(tokPc, "relic1", "take");
+    assert.equal(pc.items.length, before + 1);
+    assert.equal(reliquary.document.flags[MOD].taken, true);
+    await api.undoCard(t);
+    assert.equal(pc.items.length, before);
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the altar's choices", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {sacred: true, sacredKind: "fetish", rating: 8, desecrated: true, sacredItems: "Item.klaive"}}});
+  assert.match(html, /name="flags.wodx-interactables.sacred" checked/);
+  assert.match(html, /value="fetish" selected/);
+  assert.match(html, /name="flags.wodx-interactables.rating" value="8"/);
+  assert.match(html, /name="flags.wodx-interactables.desecrated" checked/);
+  assert.match(html, />Item.klaive<\/textarea>/);
 });

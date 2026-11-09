@@ -1,5 +1,5 @@
 /**
- * Interactables gate (WoDX Interactables 0.7.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Interactables gate (WoDX Interactables 0.8.0), in Foundry, in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gate-interact.mjs?${Date.now()}`)).run()
  * Back the world up first. The gate makes its own scene ("Gate Interact"), two characters of its own ("Gate Interact
  * burglar", a player's character, and "Gate Interact watchman", an NPC) and deletes them all at the end. It fixes the
@@ -18,6 +18,7 @@
  *  12. the tile config window shows the WoDX container part
  *  13-18. traps (search, spring, disarm), a clue, a lantern, hiding in a wardrobe
  *  19. walking into a fire burns the burglar through WoDX Combat at the fire's heat; putting it out; Undo for both
+ *  20. an altar: listed, desecrated (loud) and Undo; a relic on a tile taken (the gate's world item) and Undo
  * Result: Data/wodx-gate/gate-interact-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -72,7 +73,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.7.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.7.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.8.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.8.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -375,6 +376,28 @@ export async function run() {
       await sleep(400);
       ok("19. walking into a fire burns through WoDX Combat, soaked at the fire's heat; it can be put out; Undo for both", hookFired && burned && same && listed && out && again,
         {hookFired, direct: !hookFired && !!card, text: done?.text ?? null, lines: done?.lines ?? null, burned, same, listed, out, again, diag});
+    });
+
+    await step("20. altar and relic", async () => {
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: 700, y: 640, width: 60, height: 60, texture: {src: "icons/svg/temple.svg"}, flags: {[MOD]: {sacred: true, sacredKind: "altar", rating: 3, gate: "altar"}}},
+        {x: 600, y: 560, width: 40, height: 40, texture: {src: "icons/svg/holy-shield.svg"}, flags: {[MOD]: {sacred: true, sacredKind: "relic", rating: 2, sacredItems: ledger?.uuid ?? "", gate: "relic"}}}]);
+      await sleep(500);
+      const altar = findTile("altar"), relic = findTile("relic");
+      const near = ix().interactablesFor(tok).map(x => x.doc.id);
+      const listed = near.includes(altar?.id) && near.includes(relic?.id);
+      const holy = ix().rules.holyGround(ix().describeTile(altar));
+      const m1 = await applied(await ix().attempt(tok, altar.id, "desecrate"));
+      const desecrated = altar.flags[MOD]?.desecrated === true && m1?.flags?.[MOD]?.done?.noise === "loud";
+      await ix().undoCard(m1);
+      const holyAgain = ix().rules.holyGround(ix().describeTile(altar));
+      const had = burglar.items.filter(i => i.name === ledger?.name).length;
+      const m2 = await applied(await ix().attempt(tok, relic.id, "take"));
+      const taken = burglar.items.filter(i => i.name === ledger?.name).length === had + 1 && relic.flags[MOD]?.taken === true;
+      await ix().undoCard(m2);
+      const back = burglar.items.filter(i => i.name === ledger?.name).length === had && !relic.flags[MOD]?.taken;
+      ok("20. an altar is holy ground, desecrated loudly and put back by Undo; a relic is taken and Undo takes it back", listed && holy && desecrated && holyAgain && taken && back,
+        {listed, holy, desecrated, holyAgain, taken, back, near});
     });
 
     await step("10. alongside", async () => {
