@@ -1,0 +1,274 @@
+[
+ {
+  "id": "cba-black-throne",
+  "title": "The Eldest and the du'at",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Alamut was ruled before the clan split.",
+  "claims": [
+   {
+    "text": "The Eldest sat on the Black Throne as supreme leader, answerable only to Haqim. When no Fourth Generation childe was available, the du'at chose one of its own. A unanimous challenge from the du'at could depose an Eldest, which has happened once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The du'at was the council of the three caste heads: the Caliph of the warriors, the Vizier of the viziers and the Amr of the sorcerers. Alamut's records date it to around 2000 BC.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "A warrior who thinks the Caliph is failing may demand a duel for the post, but the Caliph picks its form, from bare hands to strategic command. A beaten Caliph submits to diablerie; a beaten challenger is consumed and their descendants choose destruction or exile.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Jamal, a warrior, held the Black Throne from 1494 to 1998. Ur-Shulgi says Jamal refused to renounce Allah and was destroyed for it; many schismatics call Jamal a martyr. Ur-Shulgi does not take the title, giving it to Haqim alone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "With one member destroyed and two departed, the du'at is unlikely to meet again, and the Caliph's seat stands empty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites",
+   "v20c-alamut",
+   "cba-schism"
+  ]
+ },
+ {
+  "id": "cba-castes",
+  "title": "The three castes",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Warriors, viziers and sorcerers among the Children of Haqim.",
+  "claims": [
+   {
+    "text": "For centuries outsiders knew only the warriors and lumped every other Assamite together as viziers. The clan encouraged the mistake, to keep its blood magic hidden from the Tremere and its resources hidden from enemies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "The sorcerers claim to be the oldest organised blood magicians. They began in the Second City as mortal wizards working beside Haqim's judges, and later led incursions into al-Andalus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "After the Tremere curse, breaking it became the sorcerers' first duty. Many drifted away or fell to Tremere raids; only in the last decade have they risen again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Viziers have no formal structure. Following Arab scholarly custom, a vizier's teachers count for as much as the sire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "A North African Bedouin warrior line uses Animalism, ghoul beasts and warhorses, owes no sect and is loyal to Alamut in name only. A courtier line of perhaps two dozen viziers, once active in Byzantium, favours Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 42,
+      "pdf": 43
+     },
+     {
+      "book": "cbassamite",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites",
+   "rotb-assamite-sorcery",
+   "cba-black-throne"
+  ]
+ },
+ {
+  "id": "cba-breaking",
+  "title": "The Breaking",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The 1998 lifting of the Tremere curse on the Assamites.",
+  "claims": [
+   {
+    "text": "Until late 1998 every Assamite carried the Tremere curse: vampire blood harmed them and gave no nourishment, and attempted diablerie burned them with no gain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Since the Breaking, warriors can drink Kindred blood again and risk addiction to it each time they taste it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 42,
+      "pdf": 43
+     },
+     {
+      "book": "cbassamite",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtanarch-convention-of-thorns",
+   "cba-black-throne"
+  ]
+ },
+ {
+  "id": "cba-schism",
+  "title": "The Assamite Schism",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The split between ur-Shulgi's loyalists and al-Ashrad's followers.",
+  "claims": [
+   {
+    "text": "Schismatics first appeared publicly in early 2000. They read Haqim's Law of Judgement with moderation and call the slaughter of all other vampires genocide.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Many left over faith: ur-Shulgi banned all worship but that of Haqim and destroyed respected elders who would not give up Allah. The first to resist were the Leopards of Zion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "As would-be Camarilla allies, schismatics publicly forgo diablerie. Warriors usually live under a sorcerer or vizier's watch, and princes often excuse them from Elysium.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Al-Ashrad acts as both Amr and Eldest, and Tegyrius keeps the post of Vizier. The faction has no Caliph, since the Camarilla would see one as a threat. Locally the eldest sorcerer or vizier leads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Loyalists are true independents who wear no badge of their side, so a loyalist cannot be told from a schismatic at a glance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbassamite",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cba-black-throne",
+   "assamites",
+   "camarilla"
+  ]
+ }
+]

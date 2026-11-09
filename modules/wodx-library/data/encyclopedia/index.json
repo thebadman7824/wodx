@@ -313,6 +313,12 @@
    "title": "Guide to the Anarchs",
    "short": "Guide to the Anarchs",
    "edition": "Revised"
+  },
+  {
+   "id": "cbassamite",
+   "title": "Clanbook: Assamite (Revised)",
+   "short": "Clanbook: Assamite",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -367,6 +373,7 @@
   "sfbn.json",
   "gtcam.json",
   "gtsab.json",
-  "gtanarch.json"
+  "gtanarch.json",
+  "cbassamite.json"
  ]
 }
