@@ -61,7 +61,7 @@ export async function run() {
     if ( token ) R.ident = {sameObject: tk === token, oldRef: token.texture?.src, docSource: tk?._source?.texture?.src, sceneSource: scene._source?.tokens?.find?.(t => t._id === token.id)?.texture?.src ?? null,
       placeable: tk?.object?.document?.texture?.src ?? null, server: await serverGet("Token", scene, token.id)};
     ok("3. bake", !!p1 && p1.endsWith(".webp") && head.ok && tex() === p1 && live() === p1 && actor.flags[MOD]?.baked,
-      {path: p1, proto: tex(), token: live(), head: head.status, scene: scene?.id ?? null, tokenId: token?.id ?? null, link: tk?.actorLink ?? null, tokenActor: tk?.actorId ?? null, actor: actor.id, baked: actor.flags[MOD]?.baked ?? null, firstBake, lastBake: api.last?.() ?? null, sceneTokens: scene ? scene.tokens.filter(t => t.actorId === actor.id).map(t => `${t.id}:${t.actorLink}:${t.texture?.src}`) : null});
+      {path: p1, proto: tex(), token: live(), tokenSource: tk?._source?.texture?.src ?? null, placeable: tk?.object?.document?.texture?.src ?? null, head: head.status, scene: scene?.id ?? null, tokenId: token?.id ?? null, link: tk?.actorLink ?? null, tokenActor: tk?.actorId ?? null, actor: actor.id, baked: actor.flags[MOD]?.baked ?? null, firstBake, lastBake: api.last?.() ?? null, sceneTokens: scene ? scene.tokens.filter(t => t.actorId === actor.id).map(t => `${t.id}:${t.actorLink}:${t.texture?.src}`) : null});
 
     if ( scene ) {
       const plain = await Actor.create({name: "WoDX gate: plain token", type: "Mortal"});
@@ -94,7 +94,7 @@ export async function run() {
 
     await api.open(actor); await sleep(900);
     const el = document.querySelector(`#wodx-paperdoll-${actor.id}`);
-    ok("7. the window", el?.querySelectorAll(".wodx-step").length === 9 && !!el.querySelector("button[data-action=save]") && !!el.querySelector(".wodx-paperdoll-pic img")
+    ok("7. the window", el?.querySelectorAll(".wodx-step").length === D.FACE_ORDER.length && !!el.querySelector("button[data-action=save]") && !!el.querySelector(".wodx-paperdoll-pic img")
       && [...el.querySelectorAll("select")].every(s => s.hasAttribute("data-fixed")), {steps: el?.querySelectorAll(".wodx-step").length});
     await foundry.applications.instances?.get?.(`wodx-paperdoll-${actor.id}`)?.close?.();
 

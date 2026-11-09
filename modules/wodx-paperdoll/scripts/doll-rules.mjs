@@ -4,6 +4,8 @@
  * so clothes always sit on the character. Carried things are never drawn. Pure functions: no Foundry here.
  */
 
+import * as FR from "./face-rules.mjs";
+export * as FACE from "./face-rules.mjs";
 export const MOD = "wodx-paperdoll";
 export const LOOK_VERSION = 1;
 
@@ -11,13 +13,20 @@ export const LOOK_VERSION = 1;
 const run = (prefix, n) => Array.from({length: n}, (_, i) => `${prefix}${String(i + 1).padStart(2, "0")}`);
 export const PARTS = {
   head: run("variant", 4), eyes: run("variant", 24), eyebrows: run("variant", 13), nose: run("variant", 6),
-  mouth: [...run("happy", 18), ...run("sad", 9)], hair: run("variant", 48), beard: ["", ...run("variant", 2)],
-  glasses: ["", ...run("variant", 5)], earrings: ["", ...run("variant", 3)]
+  mouth: [...run("happy", 18), ...run("sad", 9)], hair: run("variant", 48), beard: ["", ...run("variant", 2), ...Object.keys(FR.WHISKERS)],
+  glasses: ["", ...run("variant", 5)], earrings: ["", ...run("variant", 3)],
+  build: Object.keys(FR.BUILD), age: Object.keys(FR.AGES), cheeks: Object.keys(FR.CHEEKS), marks: Object.keys(FR.MARKS), scar: Object.keys(FR.SCARS)
 };
-export const PART_LABELS = {head: "Face shape", eyes: "Eyes", eyebrows: "Brows", nose: "Nose", mouth: "Mouth", hair: "Hair", beard: "Beard", glasses: "Spectacles", earrings: "Earrings"};
+export const PART_LABELS = {head: "Face shape", build: "Build of the face", eyes: "Eyes", eyebrows: "Brows", nose: "Nose", mouth: "Mouth", hair: "Hair", beard: "Facial hair",
+  age: "Age", cheeks: "Complexion", marks: "Marks", scar: "Scar", glasses: "Spectacles", earrings: "Earrings"};
+/** Names for the choices that have them; the others are numbered. */
+export const PART_NAMES = {build: Object.fromEntries(Object.entries(FR.BUILD).map(([k, v]) => [k, v.label])), age: FR.AGES, cheeks: FR.CHEEKS, marks: FR.MARKS, scar: FR.SCARS,
+  beard: {"": "None", variant01: "Full beard", variant02: "Long beard", ...FR.WHISKERS}};
+/** The order the steppers come in. */
+export const FACE_ORDER = ["head", "build", "eyes", "eyebrows", "nose", "mouth", "hair", "beard", "age", "cheeks", "marks", "scar", "glasses", "earrings"];
 
-export const SKIN = {"f0d6bf": "Fair", "f2d3b1": "Light", "e0b590": "Warm", "c99a6e": "Olive", "a8754f": "Tan", "8d5a3b": "Brown", "6b4129": "Deep brown", "4a2c1d": "Dark", "d7d2c8": "Deathly pale"};
-export const HAIR = {"1f1a17": "Black", "3b2a20": "Dark brown", "5a3a28": "Brown", "8a5a34": "Chestnut", "b5762f": "Auburn", "c9a15b": "Fair", "e2cf9a": "Flaxen", "9c9a96": "Grey", "efece6": "White"};
+export const SKIN = FR.SKIN;
+export const HAIR = FR.HAIR;
 export const DYES = {"3f6b4c": "Green", "34558c": "Woad blue", "9c3b30": "Madder red", "b8463c": "Red", "c9a640": "Weld yellow", "cbbd9b": "Undyed wool", "6b4a32": "Brown", "2a2a2e": "Black", "5b3f6b": "Violet", "f3efe4": "White linen"};
 export const METALS = {"d9b04c": "Gilt", "b8bcc2": "Silver", "8a6a3a": "Bronze", "4f4943": "Iron"};
 export const HEADWEAR = {none: "Nothing", veil: "Veil and wimple", fillet: "Veil, wimple and fillet"};
@@ -64,7 +73,8 @@ export function moodFor(look, {level = 0, frenzy = false, follow = true} = {}) {
 /* ---- A look ---- */
 export function defaultLook(seed = "") {
   return {v: LOOK_VERSION, seed: String(seed),
-    face: {head: "variant01", eyes: "variant05", eyebrows: "variant07", nose: "variant01", mouth: "happy05", hair: "variant02", beard: "", glasses: "", earrings: "", freckles: false},
+    face: {head: "variant01", eyes: "variant05", eyebrows: "variant07", nose: "variant01", mouth: "happy05", hair: "variant02", beard: "", glasses: "", earrings: "", freckles: false,
+      build: "", age: "", cheeks: "", marks: "", scar: ""},
     colors: {skin: "f0d6bf", hair: "5a3a28"},
     clothes: {gown: "3f6b4c", mantle: true, mantleColor: "34558c", lining: "b8463c", brooch: "d9b04c", headwear: "none", veil: "f3efe4"},
     mood: "own", followHealth: true, portrait: false};
@@ -97,10 +107,20 @@ export function randomLook(seed) {
   let h = hash32(String(seed), 0x9e3779b9);
   const next = n => { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; return h % n; };
   const l = defaultLook(seed);
-  for ( const k of ["head", "eyes", "eyebrows", "nose", "hair"] ) l.face[k] = PARTS[k][next(PARTS[k].length)];
+  for ( const k of ["head", "build", "eyes", "eyebrows", "nose", "hair"] ) l.face[k] = PARTS[k][next(PARTS[k].length)];
   l.face.mouth = PARTS.mouth[next(18)];
-  l.colors.skin = Object.keys(SKIN)[next(8)];
-  l.colors.hair = Object.keys(HAIR)[next(Object.keys(HAIR).length)];
+  // Most faces are grown; the rarer parts come up now and then
+  const weighted = list => { let n = next(list.reduce((s, [, w]) => s + w, 0)); for ( const [v, w] of list ) { if ( n < w ) return v; n -= w; } return list[0][0]; };
+  l.face.age = weighted([["youth", 3], ["", 8], ["seasoned", 5], ["middle", 4], ["old", 2], ["aged", 1]]);
+  l.face.cheeks = next(100) < 45 ? "" : PARTS.cheeks[1 + next(PARTS.cheeks.length - 1)];
+  l.face.marks = next(100) < 70 ? "" : PARTS.marks[1 + next(PARTS.marks.length - 1)];
+  l.face.scar = next(100) < 82 ? "" : PARTS.scar[1 + next(PARTS.scar.length - 1)];
+  l.face.beard = next(100) < 62 ? "" : PARTS.beard[1 + next(PARTS.beard.length - 1)];
+  l.face.freckles = next(100) < 8;
+  l.colors.skin = FR.SKIN_HUMAN[next(FR.SKIN_HUMAN.length)];
+  const natural = Object.keys(HAIR).filter(k => !FR.HAIR_GREY.includes(k));
+  const grey = {old: 60, aged: 90, middle: 25}[l.face.age] ?? 0;
+  l.colors.hair = next(100) < grey ? FR.HAIR_GREY[next(FR.HAIR_GREY.length)] : natural[next(natural.length)];
   const dyes = Object.keys(DYES).filter(k => k !== "f3efe4");
   l.clothes.gown = dyes[next(dyes.length)];
   l.clothes.mantleColor = dyes[next(dyes.length)];
@@ -112,20 +132,40 @@ export const CLOSE_HAIR = "variant02";
 export const hairFor = look => look.clothes?.headwear && look.clothes.headwear !== "none" ? CLOSE_HAIR : look.face.hair;
 
 /** The options DiceBear's Lorelei takes for this look and mood. key: draw it in key colours for measuring. */
-export function loreleiOptions(look, mood = "own", {key = false} = {}) {
+export function loreleiOptions(look, mood = "own", {key = false, mask = false} = {}) {
   const f = look.face, m = MOODS[mood] ?? MOODS.own;
   const o = {seed: look.seed || "wodx", head: [f.head], eyes: [m.eyes ?? f.eyes], eyebrows: [m.eyebrows ?? f.eyebrows], nose: [f.nose], mouth: [m.mouth ?? f.mouth], hair: [hairFor(look)],
     skinColor: [key ? "00ff00" : look.colors.skin], hairColor: [key ? "ff0000" : look.colors.hair],
-    beardProbability: f.beard ? 100 : 0, glassesProbability: f.glasses ? 100 : 0, earringsProbability: f.earrings ? 100 : 0,
+    beardProbability: loreleiBeard(f.beard) ? 100 : 0, glassesProbability: f.glasses ? 100 : 0, earringsProbability: f.earrings ? 100 : 0,
     frecklesProbability: f.freckles ? 100 : 0, hairAccessoriesProbability: 0};
-  if ( f.beard ) o.beard = [f.beard];
+  if ( loreleiBeard(f.beard) ) o.beard = [f.beard];
   if ( f.glasses ) o.glasses = [f.glasses];
   if ( f.earrings ) o.earrings = [f.earrings];
   if ( key ) { o.mouth = ["happy05"]; o.eyebrows = ["variant07"]; o.frecklesProbability = 0; o.glassesProbability = 0; o.earringsProbability = 0; }
+  if ( mask ) { o.skinColor = ["ffffff"]; o.hairColor = ["000000"]; o.frecklesProbability = 0; o.glassesProbability = 0; o.earringsProbability = 0; }
   return o;
 }
+const loreleiBeard = b => /^variant0[12]$/.test(b ?? "");
 /** What the measurement depends on: the same key means the same anchors. */
-export const fitKey = look => [look.face.head, hairFor(look), look.face.beard].join("|");
+export const fitKey = look => [look.face.head, hairFor(look), loreleiBeard(look.face.beard) ? look.face.beard : "", look.face.build ?? ""].join("|");
+/** The build's scale, for measuring. */
+export const buildOf = look => { const b = FR.buildOf(look?.face?.build); return {sx: b.sx, sy: b.sy}; };
+/** Lorelei's key drawing (the whole SVG), set in the build of the face, ready to be measured. */
+export function keySvg(look, key) {
+  const t = FR.buildTransform(look.face.build);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980" width="980" height="980"><g${t ? ` transform="${t}"` : ""}>${innerSvg(key)}</g></svg>`;
+}
+/**
+ * The head for the picture: Lorelei's drawing (inner part) in the build of the face, with age, complexion, marks,
+ * scar and facial hair on the skin. mask: Lorelei's drawing of the same face in mask colours (inner part), so
+ * those parts show only on visible skin.
+ */
+export function headLayers({look, head, mask}) {
+  const t = FR.buildTransform(look.face.build);
+  const {skin, defs} = FR.skinLayers(look.face, look.colors);
+  const m = skin ? `<mask id="wpd-skin" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="1200">${String(mask ?? "").replaceAll("viewboxMask", "wpd-vbm").replace(/(<path\b[^>]*?)fill="#fff"/gi, '$1fill="#000"')}</mask>` : "";
+  return `<defs>${defs}${m}</defs><g${t ? ` transform="${t}"` : ""}>${head}${skin ? `<g mask="url(#wpd-skin)">${skin}</g>` : ""}</g>`;
+}
 
 /* ---- Hashing (file names for baked pictures) ---- */
 export function hash32(s, seed = 0x811c9dc5) {
@@ -222,7 +262,7 @@ export function filletBox(A) {
 export function headwear(A, cl) {
   if ( !cl.headwear || cl.headwear === "none" ) return {svg: "", tops: []};
   const {mirror, nr, neckL, neckR, shL} = frameOf(A);
-  const F = A.face, TEMPLE = 470;
+  const F = A.face, TEMPLE = 815 + (470 - 815) * (A.build?.sy ?? 1);
   const lowerIdx = F.map((p, i) => i).filter(i => F[i][1] >= TEMPLE);
   const lower = lowerIdx.map(i => F[i]);
   const iL = lowerIdx[lowerIdx.length - 1], iR = lowerIdx[0];
