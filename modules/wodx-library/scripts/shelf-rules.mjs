@@ -6,15 +6,17 @@
  */
 
 import {MOD} from "./gear-rules.mjs";
+import * as E from "./ency-rules.mjs";
 
 /** The shelves: one world compendium each. */
 export const SHELVES = {
   vampire: {name: "wodx-shelf-vampire", label: "WoDX · Vampire"},
   werewolf: {name: "wodx-shelf-werewolf", label: "WoDX · Werewolf"},
   wraith: {name: "wodx-shelf-wraith", label: "WoDX · Wraith"},
-  rules: {name: "wodx-shelf-rules", label: "WoDX · Rules, conditions and eras"}
+  rules: {name: "wodx-shelf-rules", label: "WoDX · Rules, conditions and eras"},
+  encyclopedia: {name: "wodx-encyclopedia", label: "WoDX · Encyclopaedia Tenebrarum"}
 };
-export const SHELF_ORDER = ["vampire", "werewolf", "wraith", "rules"];
+export const SHELF_ORDER = ["vampire", "werewolf", "wraith", "rules", "encyclopedia"];
 export const LINE_LABELS = {all: "Every line", vampire: "Vampire", ghoul: "Ghoul", werewolf: "Werewolf", wraith: "Wraith", mage: "Mage", changeling: "Changeling",
   hunter: "Hunter", mummy: "Mummy", demon: "Demon", mortal: "Mortal"};
 
@@ -123,12 +125,20 @@ export function fromEras(json) {
     pages: [{name: p.name, html: `<p><strong>Years:</strong> ${p.prologue ? "a prologue, set by hand" : `${esc(p.start ?? "?")} to ${esc(p.end ?? "?")}`}.</p><p><strong>Rules from:</strong> ${esc(p.basis ?? "")}.</p>${[].concat(p.ourCall ?? []).length ? `<p><strong>House readings:</strong> ${esc([].concat(p.ourCall).join("; "))}.</p>` : ""}`}]}));
 }
 
+/** The encyclopedia's entries as journals (with fixed ids, so their links hold), skipping any that fail the checks. */
+export function fromEncyclopedia(ency) {
+  const books = Object.fromEntries((ency?.books ?? []).map(b => [b.id, b]));
+  const entries = (ency?.entries ?? []).filter(e => !E.checkEntry(e, books).length);
+  const titles = Object.fromEntries(entries.map(e => [e.id, e.title]));
+  return entries.map(e => ({...E.toJournal(e, {books, titles, pack: `world.${SHELVES.encyclopedia.name}`, MOD}), shelf: "encyclopedia"}));
+}
+
 /** Every shelf's entries from the sources given (missing sources are skipped). */
 export function buildShelves(src = {}) {
   return [
     ...fromDisciplines(src.disciplines), ...fromRoads(src.roads), ...fromGifts(src.gifts),
     ...fromArcanoi(src.arcanoi), ...fromArcanoi(src.arcanoiGW, {gw: true}), ...fromThorns(src.wraith),
-    ...fromConditions(src.conditions), ...fromHouseRules(src.houseRules), ...fromEras(src.eras)
+    ...fromConditions(src.conditions), ...fromHouseRules(src.houseRules), ...fromEras(src.eras), ...fromEncyclopedia(src.encyclopedia)
   ];
 }
 

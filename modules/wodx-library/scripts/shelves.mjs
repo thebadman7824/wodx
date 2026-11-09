@@ -7,7 +7,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
  * own summaries with page references, and the Library window that shows what fits the chronicle's era.
  */
 
-export const SHELF_VERSION = 1;
+export const SHELF_VERSION = 2;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const eraNow = () => game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
 const eraName = id => game.modules.get("wodx-chronicle")?.api?.eras?.getProfile?.(id)?.name ?? id;
@@ -25,7 +25,10 @@ export async function sources() {
   let conditions = [], houseRules = null;
   try { conditions = (await import("../../wodx-chronicle/scripts/conditions.mjs")).CORE_CONDITIONS ?? []; } catch { /* Chronicle missing */ }
   try { houseRules = (await import("../../wodx-chronicle/data/house-rules.mjs")).default; } catch { /* Chronicle missing */ }
-  return {disciplines, roads, gifts, arcanoi, arcanoiGW, wraith, eras, conditions, houseRules};
+  const idx = await json(`modules/${MOD}/data/encyclopedia/index.json`);
+  const parts = await Promise.all((idx?.files ?? []).map(f => json(`modules/${MOD}/data/encyclopedia/${f}`)));
+  const encyclopedia = {books: idx?.books ?? [], entries: parts.flatMap(p => (Array.isArray(p) ? p : p?.entries) ?? [])};
+  return {disciplines, roads, gifts, arcanoi, arcanoiGW, wraith, eras, conditions, houseRules, encyclopedia};
 }
 
 const findPack = name => game.packs?.get?.(`world.${name}`) ?? [...(game.packs ?? [])].find(p => p.metadata?.name === name && p.metadata?.packageType === "world") ?? null;
@@ -59,7 +62,7 @@ export async function installShelves() {
       else out.kept++;
     }
     if ( remove.length ) await JournalEntry.deleteDocuments(remove, {pack: pack.collection});
-    if ( create.length ) await JournalEntry.createDocuments(create, {pack: pack.collection});
+    if ( create.length ) await JournalEntry.createDocuments(create, {pack: pack.collection, keepId: create.some(d => d._id)});
     out.created += create.length - remove.length;
   }
   await game.settings.set(MOD, "shelves", SHELF_VERSION);
