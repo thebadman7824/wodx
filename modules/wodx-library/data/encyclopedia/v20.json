@@ -1,0 +1,3325 @@
+[
+ {
+  "id": "kindred",
+  "title": "Kindred",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The vampires' own name for themselves: the undead children of Caine who feed on mortal blood.",
+  "claims": [
+   {
+    "text": "Vampires make their homes in cities and see everything beyond them as dangerous ground, held by Lupines and worse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 16,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Kindred society runs on territories and domains, much like a medieval patchwork of fiefs.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 16,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "embrace",
+   "generation",
+   "caine",
+   "masquerade"
+  ]
+ },
+ {
+  "id": "embrace",
+  "title": "The Embrace",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a mortal is made a vampire: drained of blood, then given a little of the sire's.",
+  "claims": [
+   {
+    "text": "To Embrace, a vampire drains the victim and then gives back a small amount of the vampire's own blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The new vampire is the sire's childe; a newly made one still under the sire's protection is a fledgling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kindred",
+   "generation",
+   "ghouls",
+   "third-tradition"
+  ]
+ },
+ {
+  "id": "generation",
+  "title": "Generation",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How many steps of the Embrace separate a vampire from Caine, and so how potent the vampire's blood is.",
+  "claims": [
+   {
+    "text": "Each Embrace makes the childe one Generation further from Caine than the sire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "The Clan founders are of the Third Generation, and the Thirteenth is common in modern nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Generation sets how much blood a vampire can hold and how far certain Disciplines can be mastered.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Vampires of the Fifteenth Generation cannot sire at all, and the rise of the thin-blooded is read as a sign of the End Times.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 30,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "diablerie",
+   "caine",
+   "antediluvians",
+   "gehenna"
+  ]
+ },
+ {
+  "id": "diablerie",
+  "title": "Diablerie",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Drinking another vampire's blood and soul to Final Death, the way to lower one's Generation.",
+  "claims": [
+   {
+    "text": "Diablerie consumes a vampire's blood until the victim meets Final Death, and can permanently lower the diablerist's Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     },
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Elders call it the Amaranth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Once the blood is gone, the diablerist makes an extended Strength roll at difficulty 9 to take the victim's essence, each success an unsoakable aggravated health level.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 294,
+      "pdf": 302
+     }
+    ]
+   },
+   {
+    "text": "For a month for each Generation of difference, sensitive Kindred feel something wrong about a diablerist.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 295,
+      "pdf": 303
+     }
+    ]
+   }
+  ],
+  "see": [
+   "generation",
+   "sixth-tradition",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "caine",
+  "title": "Caine",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "classical",
+   "modern"
+  ],
+  "summary": "The First Vampire of Kindred legend, the source of every vampire's curse.",
+  "claims": [
+   {
+    "text": "The Camarilla mostly treats the tale of Caine as a symbolic parable; the Sabbat takes it literally.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Belief in Caine divides Kindred much as a faith divides mortals.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "book-of-nod",
+   "antediluvians",
+   "generation",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "book-of-nod",
+  "title": "The Book of Nod",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The scattered scripture of the Kindred, telling of Caine, the First City and the end of days.",
+  "claims": [
+   {
+    "text": "Many of the doomsday prophecies Kindred fear come from this scripture.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "It teaches that the coming of the thin-blooded is a sign that Gehenna is near.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 30,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caine",
+   "gehenna"
+  ]
+ },
+ {
+  "id": "antediluvians",
+  "title": "Antediluvians",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Third Generation, founders of the thirteen Clans, said to sleep until Gehenna.",
+  "claims": [
+   {
+    "text": "Antediluvian means one of the Third Generation, the eldest Kindred in existence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The Clans were reputedly founded by the Third Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "At Gehenna they are expected to wake and devour their descendants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 30,
+      "pdf": 38
+     },
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna",
+   "generation",
+   "jyhad",
+   "clans"
+  ]
+ },
+ {
+  "id": "gehenna",
+  "title": "Gehenna",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "time-of-judgment"
+  ],
+  "summary": "The prophesied end of the Kindred, when the Antediluvians rise and the race of Caine is destroyed.",
+  "claims": [
+   {
+    "text": "In the legends the sky rains blood, the Antediluvians wake and feed on their childer, and Caine returns to judge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 30,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Most Kindred fear it whether or not they believe in it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 30,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "antediluvians",
+   "book-of-nod",
+   "golconda"
+  ]
+ },
+ {
+  "id": "golconda",
+  "title": "Golconda",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A fabled state of transcendence in which a vampire masters the Beast.",
+  "claims": [
+   {
+    "text": "Golconda is a near-mythical state of true mastery over the Beast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 30,
+      "pdf": 38
+     },
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The Inconnu are a loose confederation of Kindred who seek it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 22,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-beast",
+   "inconnu",
+   "humanity"
+  ]
+ },
+ {
+  "id": "jyhad",
+  "title": "The Jyhad",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The endless secret war of the elders, fought through younger Kindred and mortal pawns.",
+  "claims": [
+   {
+    "text": "The Jyhad is the spiteful, age-old war of schemes the elders wage on one another.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 18,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Elders, vampires of two centuries or more, are its keenest players.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "antediluvians",
+   "camarilla",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "masquerade",
+  "title": "The Masquerade",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The First Tradition: hiding the existence of vampires from mortals.",
+  "claims": [
+   {
+    "text": "The First Tradition forbids revealing a vampire's nature to anyone not of the Blood, on pain of losing all claims of the Blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 23,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "traditions",
+   "camarilla",
+   "kindred"
+  ]
+ },
+ {
+  "id": "traditions",
+  "title": "The Traditions",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The six ancient laws of the Kindred that the Camarilla upholds.",
+  "claims": [
+   {
+    "text": "The six Traditions are the Masquerade, the Domain, the Progeny, the Accounting, Hospitality and Destruction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 23,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The Traditions sit at the heart of Camarilla practice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 39,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "masquerade",
+   "camarilla",
+   "prince",
+   "third-tradition",
+   "sixth-tradition"
+  ]
+ },
+ {
+  "id": "third-tradition",
+  "title": "The Progeny and the Accounting",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Traditions that govern making new vampires: permission first, and a sire answers for the childe.",
+  "claims": [
+   {
+    "text": "A vampire may Embrace only with an elder's leave; an unsanctioned sire and childe may both be destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 23,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Until released, a childe must obey the sire, and the sire bears the childe's sins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 23,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "traditions",
+   "embrace"
+  ]
+ },
+ {
+  "id": "sixth-tradition",
+  "title": "Destruction and the Blood Hunt",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Tradition that forbids killing another vampire and reserves the Blood Hunt to the eldest.",
+  "claims": [
+   {
+    "text": "Only the eldest may destroy a vampire or call a Blood Hunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 23,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Diablerie breaks this law at its worst.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 23,
+      "pdf": 31
+     },
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "traditions",
+   "diablerie",
+   "prince"
+  ]
+ },
+ {
+  "id": "prince",
+  "title": "Prince",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Camarilla ruler of a city, who claims it as a domain under the Traditions.",
+  "claims": [
+   {
+    "text": "Princes claim whole cities as domains and may let lesser vampires hold territory within them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "By the Fifth Tradition a visiting vampire must present to the ruler of the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 23,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "traditions",
+   "camarilla",
+   "elysium"
+  ]
+ },
+ {
+  "id": "elysium",
+  "title": "Elysium",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Neutral ground where vampires meet without violence, usually in places of culture.",
+  "claims": [
+   {
+    "text": "Elysium is a gathering place where vampires may meet without fear of harm, often an opera house, theatre or museum.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The Sabbat respects it less than the Camarilla does.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "prince",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "ghouls",
+  "title": "Ghouls",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortals fed vampire blood without being drained, made into servants.",
+  "claims": [
+   {
+    "text": "A ghoul is made by feeding a mortal a little vitae without first draining the mortal's blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "A ghoul's master is called the domitor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "blood-bond",
+   "embrace"
+  ]
+ },
+ {
+  "id": "blood-bond",
+  "title": "The Blood Bond",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The enslaving love that comes from drinking the same vampire's blood on three nights.",
+  "claims": [
+   {
+    "text": "Drinking a vampire's blood binds the drinker in a growing devotion, also called the blood oath.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     },
+     {
+      "book": "v20",
+      "page": 287,
+      "pdf": 295
+     }
+    ]
+   },
+   {
+    "text": "Vinculi made through the Vaulderie do not fade over time as ordinary blood bonds do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 290,
+      "pdf": 298
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vaulderie",
+   "ghouls",
+   "tremere"
+  ]
+ },
+ {
+  "id": "vaulderie",
+  "title": "The Vaulderie",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sabbat rite of shared blood that replaces the blood bond with loyalty to the pack.",
+  "claims": [
+   {
+    "text": "Pack members who skip the Vaulderie for more than a month are shunned at best and destroyed at worst.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 289,
+      "pdf": 297
+     }
+    ]
+   },
+   {
+    "text": "The bond it creates is the Vinculum, rated by a die roll the first time a character takes part.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 289,
+      "pdf": 297
+     }
+    ]
+   },
+   {
+    "text": "Six points of Vaulderie vitae wear down an existing blood bond and replace it with Vinculi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 290,
+      "pdf": 298
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "blood-bond"
+  ]
+ },
+ {
+  "id": "sects",
+  "title": "Sects",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great factions of the Kindred: the Camarilla, the Sabbat and the Anarch Movement, with others beside.",
+  "claims": [
+   {
+    "text": "The three best-known Sects are the Camarilla, the Sabbat and the Anarch Movement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Kindred who belong to no Sect and refuse a Prince's claim are Autarkis, often lone outcasts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 22,
+      "pdf": 30
+     },
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "sabbat",
+   "anarchs",
+   "independents",
+   "inconnu"
+  ]
+ },
+ {
+  "id": "camarilla",
+  "title": "The Camarilla",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The largest Sect, which upholds the Traditions and the Masquerade under elders and Princes.",
+  "claims": [
+   {
+    "text": "Its traditional strongholds are Chicago, New Orleans, Vienna, London and Paris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 38,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Traditions are at the heart of the Sect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 39,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Rebels call it the Ivory Tower.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 51,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "traditions",
+   "prince",
+   "sabbat",
+   "anarchs"
+  ]
+ },
+ {
+  "id": "sabbat",
+  "title": "The Sabbat",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sect opposed to the Camarilla, which rejects humanity and wages war on the Antediluvians.",
+  "claims": [
+   {
+    "text": "Its traditional strongholds are Detroit, Miami, Mexico City, Montreal and Madrid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 40,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "The Code of Milan sets out the Sect's laws.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 41,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The Lasombra and Tzimisce stand apart in it; most other Sabbat vampires reject Clan loyalty.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 43,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vaulderie",
+   "lasombra",
+   "tzimisce",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "anarchs",
+  "title": "The Anarch Movement",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A movement of young vampires who reject the rule of elders.",
+  "claims": [
+   {
+    "text": "Its traditional strongholds are Los Angeles, San Diego and San Francisco.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 44,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "It began as a faction within the Camarilla.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 44,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "The spirit of the old Anarch Revolt is flaring up again in the modern nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 45,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarch-revolt",
+   "camarilla",
+   "brujah"
+  ]
+ },
+ {
+  "id": "anarch-revolt",
+  "title": "The Anarch Revolt",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "The rising of young Kindred against their elders, centuries ago, that gave birth to the Camarilla and the Sabbat.",
+  "claims": [
+   {
+    "text": "The revolt of centuries past is the model for today's anarch unrest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 45,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The revolt is remembered across the Clans' histories, among them the Lasombra's.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 45,
+      "pdf": 53
+     },
+     {
+      "book": "v20",
+      "page": 436,
+      "pdf": 444
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs",
+   "sabbat",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "independents",
+  "title": "The Independent Clans",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Clans that stand outside the great Sects: the Assamites, Followers of Set, Giovanni and Ravnos.",
+  "claims": [
+   {
+    "text": "Their strongholds are Alamut for the Assamites, Cairo for the Followers of Set and Venice for the Giovanni.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 46,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Independent Clans often act like small Sects with agendas of their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 22,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites",
+   "followers-of-set",
+   "giovanni",
+   "ravnos"
+  ]
+ },
+ {
+  "id": "inconnu",
+  "title": "The Inconnu",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A secretive confederation of elders seeking Golconda, who watch the other Sects.",
+  "claims": [
+   {
+    "text": "The Inconnu seek Golconda and rarely have more than one or two members in a domain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 22,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "A watcher, called a Monitor, may live in another Sect's domain to observe it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 22,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Some think them a cult of would-be gods, others remnants of an old Roman conspiracy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 22,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "golconda",
+   "sects"
+  ]
+ },
+ {
+  "id": "true-black-hand",
+  "title": "The Tal'Mahe'Ra",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The True Black Hand: a paranoid Sect based in the Underworld.",
+  "claims": [
+   {
+    "text": "Its stronghold lies in the Underworld, and it breeds ghouls on scattered estates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 22,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Many Kindred doubt it exists at all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 22,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sects",
+   "ghosts"
+  ]
+ },
+ {
+  "id": "clans",
+  "title": "Clans",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The thirteen great lineages of the Kindred, each passing on its Disciplines and its curse through the blood.",
+  "claims": [
+   {
+    "text": "There are thirteen known Clans, each reputedly founded by one of the Third Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "A Clan's members share traits passed down through the blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Vampires with no Clan are called Caitiff.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 32,
+      "pdf": 40
+     },
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "antediluvians",
+   "disciplines",
+   "caitiff"
+  ]
+ },
+ {
+  "id": "assamites",
+  "title": "The Assamites",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The childer of Haqim, a Clan of assassins and judges based at Alamut.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Celerity, Obfuscate and Quietus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 48,
+      "pdf": 56
+     },
+     {
+      "book": "v20",
+      "page": 49,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Other Kindred call the childer of Haqim Assamites, and fear them as killers in the dark.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 48,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "An Assamite's skin darkens with age, where other vampires grow paler.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 49,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "brujah",
+  "title": "Clan Brujah",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebels and firebrands whose legacy of greatness is marred by their tempers.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Celerity, Potence and Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 50,
+      "pdf": 58
+     },
+     {
+      "book": "v20",
+      "page": 51,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Brujah history is one of past glory spoiled by the Clan's own fiery nature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 50,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "A Brujah's rage makes resisting frenzy harder.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 50,
+      "pdf": 58
+     },
+     {
+      "book": "v20",
+      "page": 51,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "followers-of-set",
+  "title": "The Followers of Set",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Corrupters who peddle vice and serve their dark god from Cairo.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Obfuscate, Presence and Serpentis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 52,
+      "pdf": 60
+     },
+     {
+      "book": "v20",
+      "page": 53,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Setites trade in addiction, debasement and corruption, which many Kindred fear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 52,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Bright light hurts them more than other vampires.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 52,
+      "pdf": 60
+     },
+     {
+      "book": "v20",
+      "page": 53,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "gangrel",
+  "title": "Clan Gangrel",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wild, bestial wanderers who make their havens in the wilderness.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Animalism, Fortitude and Protean.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 54,
+      "pdf": 62
+     },
+     {
+      "book": "v20",
+      "page": 55,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Gangrel are predators of the wild places, and their havens often lack modern comforts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 54,
+      "pdf": 62
+     },
+     {
+      "book": "v20",
+      "page": 55,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Each frenzy can leave a Gangrel with a new animal feature.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 54,
+      "pdf": 62
+     },
+     {
+      "book": "v20",
+      "page": 55,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "giovanni",
+  "title": "Clan Giovanni",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A family Clan of necromancers who rose in Renaissance Venice.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Dominate, Necromancy and Potence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 56,
+      "pdf": 64
+     },
+     {
+      "book": "v20",
+      "page": 57,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "The Giovanni family grew rich and powerful during the Venetian Renaissance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 56,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "They keep villas and estates as havens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 57,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "lasombra",
+  "title": "Clan Lasombra",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Proud masters of shadow who lead the Sabbat.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Dominate, Obtenebration and Potence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 58,
+      "pdf": 66
+     },
+     {
+      "book": "v20",
+      "page": 59,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Lasombra would rather rule in hell than serve in heaven, and they lead through fear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 58,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "A Lasombra casts no reflection.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 58,
+      "pdf": 66
+     },
+     {
+      "book": "v20",
+      "page": 59,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "malkavian",
+  "title": "Clan Malkavian",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Seers and madmen, cursed twice: by vampirism and by insanity.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Auspex, Dementation and Obfuscate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 60,
+      "pdf": 68
+     },
+     {
+      "book": "v20",
+      "page": 61,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Every Malkavian suffers the curse of the Kindred and a mind in turmoil as well.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 60,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Each carries at least one derangement that can never be cured.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 60,
+      "pdf": 68
+     },
+     {
+      "book": "v20",
+      "page": 61,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "nosferatu",
+  "title": "Clan Nosferatu",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hideous information brokers who hide in sewers and warrens.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Animalism, Obfuscate and Potence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 62,
+      "pdf": 70
+     },
+     {
+      "book": "v20",
+      "page": 63,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "The Embrace twists every Nosferatu into a monstrous form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 62,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "They often build warrens in sewers or tunnels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 63,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "ravnos",
+  "title": "Clan Ravnos",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wandering tricksters and thieves who move like rumours.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Animalism, Chimerstry and Fortitude.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 64,
+      "pdf": 72
+     },
+     {
+      "book": "v20",
+      "page": 65,
+      "pdf": 73
+     }
+    ]
+   },
+   {
+    "text": "The Ravnos are thieves and tricksters who rarely settle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 64,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Each Ravnos is driven by a vice that is hard to resist.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 64,
+      "pdf": 72
+     },
+     {
+      "book": "v20",
+      "page": 65,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "toreador",
+  "title": "Clan Toreador",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Artists and aesthetes who see the night as a world of wonder.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Auspex, Celerity and Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 66,
+      "pdf": 74
+     },
+     {
+      "book": "v20",
+      "page": 67,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "To the Toreador, nightfall reveals an endless realm of beauty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 66,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "Beauty can hold a Toreador spellbound.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 66,
+      "pdf": 74
+     },
+     {
+      "book": "v20",
+      "page": 67,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "tremere",
+  "title": "Clan Tremere",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Blood sorcerers who were once something other than vampires.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Auspex, Dominate and Thaumaturgy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 68,
+      "pdf": 76
+     },
+     {
+      "book": "v20",
+      "page": 69,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "The Tremere existed long ago as something other than vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 68,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Many Tremere rely on the Clan's central chantry in a city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 69,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "tzimisce",
+  "title": "Clan Tzimisce",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Old Eastern lords of flesh-shaping who stand with the Sabbat.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Animalism, Auspex and Vicissitude.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 70,
+      "pdf": 78
+     },
+     {
+      "book": "v20",
+      "page": 71,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "Tzimisce prefer communal havens shared with their packs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 71,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "A Tzimisce must rest near earth from a place important to the vampire in life.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 70,
+      "pdf": 78
+     },
+     {
+      "book": "v20",
+      "page": 71,
+      "pdf": 79
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "ventrue",
+  "title": "Clan Ventrue",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Lords and kings who claim the right to rule Kindred society.",
+  "claims": [
+   {
+    "text": "Its Disciplines are Dominate, Fortitude and Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 72,
+      "pdf": 80
+     },
+     {
+      "book": "v20",
+      "page": 73,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Through history the Ventrue have stood as leaders while other Clans schemed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 72,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "A Ventrue's haven reflects the vampire's dignity and must be kept flawless.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 73,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "A Ventrue can feed only on one kind of mortal.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 72,
+      "pdf": 80
+     },
+     {
+      "book": "v20",
+      "page": 73,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "disciplines"
+  ]
+ },
+ {
+  "id": "caitiff",
+  "title": "Caitiff",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Vampires with no Clan, scorned by Kindred society.",
+  "claims": [
+   {
+    "text": "Caitiff carry no Clan's lineage that others recognise.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 32,
+      "pdf": 40
+     },
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "anarchs"
+  ]
+ },
+ {
+  "id": "antitribu",
+  "title": "Antitribu",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Members of a Clan who have turned against their Clan's Sect, usually by joining the Sabbat.",
+  "claims": [
+   {
+    "text": "Antitribu means anti-Clan; some have grown into bloodlines of their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "clans",
+   "bloodlines"
+  ]
+ },
+ {
+  "id": "bloodlines",
+  "title": "Bloodlines",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Smaller lineages outside the thirteen Clans, such as the Baali, Kiasyd, Salubri and Samedi.",
+  "claims": [
+   {
+    "text": "Lesser bloodlines include the Baali, Daughters of Cacophony, Gargoyles, Kiasyd, Salubri and Samedi.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 393,
+      "pdf": 401
+     },
+     {
+      "book": "v20",
+      "page": 478,
+      "pdf": 486
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "antitribu"
+  ]
+ },
+ {
+  "id": "coterie",
+  "title": "Coterie and Pack",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A small group of Kindred bound by need or interest; in the Sabbat, a pack.",
+  "claims": [
+   {
+    "text": "A coterie is a small band of Kindred; the Sabbat calls it a pack.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "vaulderie"
+  ]
+ },
+ {
+  "id": "ages-of-kindred",
+  "title": "Neonates, Ancillae and Elders",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ranks of age among vampires, from the newly made to those of centuries.",
+  "claims": [
+   {
+    "text": "An elder has two centuries or more of unlife; an ancilla is proven, between elders and neonates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 33,
+      "pdf": 41
+     },
+     {
+      "book": "v20",
+      "page": 34,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "jyhad",
+   "embrace"
+  ]
+ },
+ {
+  "id": "the-beast",
+  "title": "The Beast",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The predatory hunger and rage in every vampire, always testing the mind's control.",
+  "claims": [
+   {
+    "text": "The struggle between morality and monstrosity is the heart of the game.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 309,
+      "pdf": 317
+     }
+    ]
+   },
+   {
+    "text": "As Humanity falls the Beast grows more prominent, and low-Humanity vampires may act on urges against their will.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 311,
+      "pdf": 319
+     }
+    ]
+   }
+  ],
+  "see": [
+   "humanity",
+   "frenzy",
+   "golconda"
+  ]
+ },
+ {
+  "id": "humanity",
+  "title": "Humanity",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The trait that measures how much of a vampire's mortal decency is left.",
+  "claims": [
+   {
+    "text": "Characters of Humanity 4 or less may be driven by urges that must be resisted with Conscience rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 311,
+      "pdf": 319
+     }
+    ]
+   },
+   {
+    "text": "Losing Humanity follows a hierarchy of sins and a degeneration roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 309,
+      "pdf": 317
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-beast",
+   "virtues",
+   "paths-of-enlightenment",
+   "degeneration"
+  ]
+ },
+ {
+  "id": "degeneration",
+  "title": "Degeneration",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a vampire loses Humanity or Path rating by committing sins against it.",
+  "claims": [
+   {
+    "text": "Committing a sin at or below one's rating calls for a roll that can lower the rating.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 309,
+      "pdf": 317
+     }
+    ]
+   }
+  ],
+  "see": [
+   "humanity",
+   "paths-of-enlightenment"
+  ]
+ },
+ {
+  "id": "virtues",
+  "title": "Virtues",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Conscience, Self-Control and Courage: the traits that hold the Beast in check.",
+  "claims": [
+   {
+    "text": "The three Virtues are Conscience, Self-Control and Courage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 119,
+      "pdf": 127
+     },
+     {
+      "book": "v20",
+      "page": 120,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "Courage is what lets a vampire face fire and sunlight without fleeing in terror.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 120,
+      "pdf": 128
+     }
+    ]
+   }
+  ],
+  "see": [
+   "humanity",
+   "frenzy",
+   "willpower"
+  ]
+ },
+ {
+  "id": "willpower",
+  "title": "Willpower",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A vampire's drive and self-control, spent for automatic successes and to resist impulses.",
+  "claims": [
+   {
+    "text": "Willpower is one of a vampire's core traits.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 120,
+      "pdf": 128
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtues"
+  ]
+ },
+ {
+  "id": "frenzy",
+  "title": "Frenzy",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "When the Beast takes over in rage, hunger or terror.",
+  "claims": [
+   {
+    "text": "The Storyteller may call for a frenzy roll whenever a character could lose control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 298,
+      "pdf": 306
+     }
+    ]
+   },
+   {
+    "text": "Camarilla vampires couch threats in double talk to avoid setting off frenzy in public.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 298,
+      "pdf": 306
+     }
+    ]
+   },
+   {
+    "text": "A vampire in frenzy gains temporary benefits from the state.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 298,
+      "pdf": 306
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-beast",
+   "virtues",
+   "brujah",
+   "gangrel"
+  ]
+ },
+ {
+  "id": "paths-of-enlightenment",
+  "title": "Paths of Enlightenment",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Moral codes some vampires follow instead of Humanity, each with its own sins.",
+  "claims": [
+   {
+    "text": "The Paths include Caine, Cathari, Death and the Soul, the Feral Heart, Harmony, Honorable Accord, Lilith, Metamorphosis, Night, Paradox, Power and the Inner Voice, and Typhon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 320,
+      "pdf": 328
+     },
+     {
+      "book": "v20",
+      "page": 340,
+      "pdf": 348
+     }
+    ]
+   },
+   {
+    "text": "Most Sabbat vampires follow a Path rather than Humanity.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 309,
+      "pdf": 317
+     },
+     {
+      "book": "v20",
+      "page": 313,
+      "pdf": 321
+     }
+    ]
+   }
+  ],
+  "see": [
+   "humanity",
+   "sabbat",
+   "degeneration"
+  ]
+ },
+ {
+  "id": "aggravated-damage",
+  "title": "Aggravated Damage",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wounds from fire, sunlight, claws and fangs that vampires heal only slowly.",
+  "claims": [
+   {
+    "text": "Vampires shrug off most bashing damage that would hurt a mortal badly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 285,
+      "pdf": 293
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sunlight-and-fire"
+  ]
+ },
+ {
+  "id": "sunlight-and-fire",
+  "title": "Sunlight and Fire",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The two great banes of vampires, both causing aggravated damage.",
+  "claims": [
+   {
+    "text": "Sunlight's effects on vampires have their own rules among the systems of play.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 301,
+      "pdf": 309
+     },
+     {
+      "book": "v20",
+      "page": 302,
+      "pdf": 310
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtues",
+   "aggravated-damage"
+  ]
+ },
+ {
+  "id": "torpor",
+  "title": "Torpor",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Deathlike sleep that takes vampires who are badly hurt or very old.",
+  "claims": [
+   {
+    "text": "Torpor can follow grievous wounds, and elders may sink into it for ages.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 121,
+      "pdf": 129
+     },
+     {
+      "book": "v20",
+      "page": 122,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "humanity",
+   "antediluvians"
+  ]
+ },
+ {
+  "id": "drugs-in-blood",
+  "title": "Drugs in the Blood",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Vampires who feed on intoxicated mortals feel the drug themselves.",
+  "claims": [
+   {
+    "text": "Heroin, morphine and barbiturates in a victim's blood lower a vampire's Dexterity and Ability pools and make frenzy easier to resist.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 302,
+      "pdf": 310
+     }
+    ]
+   },
+   {
+    "text": "Marijuana slows a vampire's sense of time and costs a die from Perception pools.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 302,
+      "pdf": 310
+     }
+    ]
+   }
+  ],
+  "see": [
+   "frenzy"
+  ]
+ },
+ {
+  "id": "disciplines",
+  "title": "Disciplines",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The supernatural powers of the blood, from Animalism to Vicissitude.",
+  "claims": [
+   {
+    "text": "The Disciplines are Animalism, Auspex, Celerity, Chimerstry, Dementation, Dominate, Fortitude, Necromancy, Obfuscate, Obtenebration, Potence, Presence, Protean, Quietus, Serpentis, Thaumaturgy and Vicissitude.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 128,
+      "pdf": 136
+     },
+     {
+      "book": "v20",
+      "page": 244,
+      "pdf": 252
+     }
+    ]
+   },
+   {
+    "text": "Generation limits how far a vampire can master certain Disciplines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 28,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "clans",
+   "generation",
+   "thaumaturgy"
+  ]
+ },
+ {
+  "id": "animalism",
+  "title": "Animalism",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Command and kinship with beasts, and in time the Beast itself.",
+  "claims": [
+   {
+    "text": "Command and kinship with beasts, and in time the Beast itself.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 128,
+      "pdf": 136
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "auspex",
+  "title": "Auspex",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Heightened senses, auras and reading minds.",
+  "claims": [
+   {
+    "text": "Heightened senses, auras and reading minds.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 134,
+      "pdf": 142
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "celerity",
+  "title": "Celerity",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Supernatural speed.",
+  "claims": [
+   {
+    "text": "Supernatural speed.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 142,
+      "pdf": 150
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "chimerstry",
+  "title": "Chimerstry",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Ravnos art of illusion.",
+  "claims": [
+   {
+    "text": "The Ravnos art of illusion.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 144,
+      "pdf": 152
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "dementation",
+  "title": "Dementation",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Malkavian power to spread madness.",
+  "claims": [
+   {
+    "text": "The Malkavian power to spread madness.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 147,
+      "pdf": 155
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "dominate",
+  "title": "Dominate",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Commanding and rewriting minds through eye contact.",
+  "claims": [
+   {
+    "text": "Commanding and rewriting minds through eye contact.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 151,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "fortitude",
+  "title": "Fortitude",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Supernatural toughness, even against fire and sunlight.",
+  "claims": [
+   {
+    "text": "Supernatural toughness, even against fire and sunlight.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 158,
+      "pdf": 166
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "necromancy",
+  "title": "Necromancy",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Power over the dead and the souls of the dead, practised by the Giovanni.",
+  "claims": [
+   {
+    "text": "Power over the dead and the souls of the dead, practised by the Giovanni.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 159,
+      "pdf": 167
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "obfuscate",
+  "title": "Obfuscate",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hiding from notice and wearing false faces.",
+  "claims": [
+   {
+    "text": "Hiding from notice and wearing false faces.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 184,
+      "pdf": 192
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "obtenebration",
+  "title": "Obtenebration",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Lasombra mastery of living shadow.",
+  "claims": [
+   {
+    "text": "The Lasombra mastery of living shadow.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 188,
+      "pdf": 196
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "potence",
+  "title": "Potence",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Supernatural strength.",
+  "claims": [
+   {
+    "text": "Supernatural strength.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 192,
+      "pdf": 200
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "presence",
+  "title": "Presence",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Supernatural charisma, awe and dread.",
+  "claims": [
+   {
+    "text": "Supernatural charisma, awe and dread.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 193,
+      "pdf": 201
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "protean",
+  "title": "Protean",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Changing shape, from claws to wolf to mist.",
+  "claims": [
+   {
+    "text": "Changing shape, from claws to wolf to mist.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 199,
+      "pdf": 207
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "quietus",
+  "title": "Quietus",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Assamite art of silent killing and poisonous blood.",
+  "claims": [
+   {
+    "text": "The Assamite art of silent killing and poisonous blood.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 203,
+      "pdf": 211
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "serpentis",
+  "title": "Serpentis",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Setite gifts of the serpent.",
+  "claims": [
+   {
+    "text": "The Setite gifts of the serpent.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 209,
+      "pdf": 217
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "thaumaturgy",
+  "title": "Thaumaturgy",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Blood magic of paths and rituals, kept by the Tremere.",
+  "claims": [
+   {
+    "text": "Blood magic of paths and rituals, kept by the Tremere.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 212,
+      "pdf": 220
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "vicissitude",
+  "title": "Vicissitude",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Tzimisce art of shaping flesh and bone.",
+  "claims": [
+   {
+    "text": "The Tzimisce art of shaping flesh and bone.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 241,
+      "pdf": 249
+     }
+    ]
+   }
+  ],
+  "see": [
+   "disciplines"
+  ]
+ },
+ {
+  "id": "lupines",
+  "title": "Lupines",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kindred name for the werewolves, deadly foes who hold the wild lands beyond the cities.",
+  "claims": [
+   {
+    "text": "Packs of savage Lupines roam outside the cities, one reason vampires stay in them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 16,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kindred",
+   "gangrel"
+  ]
+ },
+ {
+  "id": "fae-as-seen-by-kindred",
+  "title": "The Fae, Seen by the Kindred",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "To vampires, faeries are capricious legends with no interest in their affairs, until they take one.",
+  "claims": [
+   {
+    "text": "Faeries seem to belong to two courts and care nothing for vampires, so any meeting depends on their whims.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 32,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "A faerie's interest can bring a vampire cruel jokes or deadly feuds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 32,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lupines"
+  ]
+ },
+ {
+  "id": "ghosts",
+  "title": "Ghosts and the Veil",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The restless dead beyond the Veil, whom only a few Kindred understand.",
+  "claims": [
+   {
+    "text": "A Veil separates the living from the dead, and some ghosts linger on this side of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 32,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The Giovanni, some Tremere and members of the True Black Hand know something of the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 32,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Kindred scholars believe the ghosts have an empire of their own in the Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 32,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni",
+   "necromancy",
+   "true-black-hand"
+  ]
+ }
+]
