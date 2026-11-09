@@ -772,3 +772,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Step 4 of "Responsive Maps for WoDX". alert-rules.mjs: CARRIERS, carryPlan, carryTargets, normCarry and dueCarries; TRIGGER_DOES, triggerFires, triggerEvent. routines.mjs: the WoDX: Trigger region behaviour (onTrigger), raiseAlarmFull and carryAlarm (bell, phone and radio at once, runners on scene flag carrying), deliverCarries on the clock, undoCarry from the alarm card and the reaction's Undo. The Alert zone gains Carries the alarm to, How it gets there and Minutes on the way. module.json documentTypes adds trigger.
 - Storyteller: map beats match their value whatever the case; the log reads "X reached the cellar stairs."
 - Tests: 2 rules and 2 runtime, 636 in all. gate-maps steps 8 (a bell carries the alarm) and 9 (a trigger region), 9 steps in all. Not deployed yet.
+- Tests: responsive-maps.test.mjs (4 rules tests) and runtime tests in phase7c-runtime (2 map events, marks), phase7d-runtime (wrongs and the rumour button) and phase7e-runtime (log and beats); 583 in all. Gate: tools/gate/gate-maps.mjs, 7 steps. Not deployed yet.
+
+### Chronicle 0.5.4 and Actions 3.14.1, 2026-11-09: lighter on slow computers
+- From the Live performance study (doc "Live performance for slower machines"): the live world has 3,234 animated lights, three full-size map layers on 23 outdoor scenes and 51 looping video tiles. Player browsers already skip the heavy WoDX work.
+- Chronicle: a client setting, Scene video effects (Show or Hide). Hide pauses every video tile and stops drawing it for that player only; image tiles and the scene are untouched. It holds through tile updates (refreshTile).
+- Actions: the Garou test pack is fetched only when makeTestPack is called, so players no longer download it.
+- Lazy loading of each line's code is logged in PENDING-REVIEW.md as not done yet (every line file is also used at start-up). World changes from the study wait for Ben.
+- Tests: 9 new, 633 in all after merging main. Gate: gateeffects (8 steps).

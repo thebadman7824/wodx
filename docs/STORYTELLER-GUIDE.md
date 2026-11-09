@@ -315,6 +315,8 @@ A good habit for a first live session: leave everything on Suggest, and switch o
 
 **Long skips.** Use **Pass the years** and read the plan first; write it to the journal if you want to think it over. Faction turns run for each week of the skip, twelve at most.
 
+**Slow computers.** A player whose map stutters can, on their own computer: set Performance Mode to Low and Maximum Framerate to 30, turn off Light Source Animation and Token Vision Animation (Configure Settings, Core), and set **Scene video effects** to Hide (WoDX Chronicle). Hide pauses the looping fog, embers and snow tiles for that player only; the scene doesn't change.
+
 **Light touch.** If the table wants fewer interruptions, set NPCs in combat, routines and factions to Off for the night, and set Dawn and dusk to Off or "New Night automatically".
 
 ## Known quirks
