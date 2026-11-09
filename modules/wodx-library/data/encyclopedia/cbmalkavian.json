@@ -1,0 +1,253 @@
+[
+ {
+  "id": "cbm-malkav",
+  "title": "Malkav and the brothers",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "Clan legends of the Malkavian Antediluvian.",
+  "claims": [
+   {
+    "text": "Malkavian tales say Saulot and Set came to console Malkav. Set held that truth is found in the depths of the soul; Malkav, that it comes from eyes that see too much. Asked to judge, Saulot could not answer and set out to find one.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Before leaving, Saulot gave a sword to Set and a crown to Malkav, took a staff of thornwood from Set, and let Malkav draw an eye on Saulot's brow in blood.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The clan holds that Malkav was later broken apart, that every Malkavian descends from that broken state, and that Malkav chose a sacred number of childer, said to be eight, 12, 20 or 36.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "An old song makes Zillah Malkav's sire and beloved, whom Malkav later helped destroy.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "malkavian",
+   "cbm-madness-network"
+  ]
+ },
+ {
+  "id": "cbm-madness-network",
+  "title": "The Madness Network",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The shared mind that links the Malkavians.",
+  "claims": [
+   {
+    "text": "Every Malkavian is thought to be tied to a disembodied web also called the Cobweb or the Tapestry. Most hear only a faint flutter a few times a year.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Outsiders can learn Dementation but never hear the Network. Any Caitiff shown to reach it is usually hunted down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "A Malkavian childe abandoned at the Embrace is usually as mad as the rest, but never develops the clan Disciplines; a rare few come through sane and are always cast out as Caitiff.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Dementation was sealed off from the Camarilla Malkavians for centuries, and they imitated its Network powers with Auspex and Obfuscate. It has since reawakened across the clan; a few were untouched and keep Dominate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "malkavian",
+   "cbm-malkavian-time"
+  ]
+ },
+ {
+  "id": "cbm-malkavian-time",
+  "title": "Malkavian Time",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Trait that tunes a Malkavian to the Network.",
+  "claims": [
+   {
+    "text": "Malkavian Time is a clan-only Talent. About a week before a major clan gathering, Wits + Malkavian Time is rolled in secret.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "One success gives an urge to go to the place as it begins; three give a night or two of warning and its purpose; five give a week's warning and a clear vision. Six or more risk picking up an elder's derangement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Those with more than three dots can often hear a clanmate's death scream within the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "To send a deliberate message, roll Wits + Malkavian Time at difficulty 9: it reaches one person within the city and carries up to two words per success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbm-madness-network"
+  ]
+ },
+ {
+  "id": "cbm-vasantasena",
+  "title": "Vasantasena",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance",
+   "victorian",
+   "modern"
+  ],
+  "summary": "The Malkavian antitribu seer of the Sabbat.",
+  "claims": [
+   {
+    "text": "Born a princess of an Indian royal house near the end of the first millennium, Vasantasena was Embraced by a wandering Malkavian holy man, and the two came to Europe in the time of the Inquisition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "They helped rally the clan behind the new Camarilla, but Vasantasena turned from it over its disbelief in the Antediluvians and led a brood of anarchs into the young Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "Vasantasena's knowledge of the Camarilla's founding and tactics may have saved the Sabbat. The seer scorns the Paths of Enlightenment and greatly fears the Antediluvians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "It is said that Vasantasena's Auspex sees everything that happens in the Sabbat.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbmalkavian",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "malkavian",
+   "antitribu",
+   "sabbat"
+  ]
+ }
+]

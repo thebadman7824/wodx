@@ -331,6 +331,12 @@
    "title": "Clanbook: Giovanni (Revised)",
    "short": "Clanbook: Giovanni",
    "edition": "Revised"
+  },
+  {
+   "id": "cbmalkavian",
+   "title": "Clanbook: Malkavian (Revised)",
+   "short": "Clanbook: Malkavian",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -388,6 +394,7 @@
   "gtanarch.json",
   "cbassamite.json",
   "cbbrujah.json",
-  "cbgiovanni.json"
+  "cbgiovanni.json",
+  "cbmalkavian.json"
  ]
 }
