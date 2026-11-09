@@ -62,6 +62,9 @@ export async function run() {
   const keep = {uniform: CONFIG.Dice.randomUniform, t0: game.time.worldTime, scene: canvas.scene?.id,
     approvals: foundry.utils.deepClone(game.settings.get("wodx-chronicle", "approvals")), messages: new Set(game.messages.map(m => m.id))};
   let scene = null, burglar = null, watchman = null;
+  // Errors in the console while the gate runs (the Storyteller side of a card runs in a hook)
+  const consoleError = console.error;
+  console.error = (...a) => { R.notes.push(`console: ${a.map(x => x?.stack ?? x?.message ?? String(x)).join(" ").slice(0, 400)}`); consoleError(...a); };
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
@@ -97,7 +100,9 @@ export async function run() {
 
     await step("2. list", async () => {
       const list = ix().interactablesFor(tok).map(x => x.doc.id);
-      ok("2. the door, the window, the barred door and the wall are in reach, the far door is not", [door.id, win.id, barred.id, wattle.id].every(id => list.includes(id)) && !list.includes(far.id), {list});
+      const names = {[door.id]: "door", [win.id]: "window", [barred.id]: "barred door", [wattle.id]: "wattle wall", [far.id]: "far door"};
+      ok("2. the door, the window, the barred door and the wall are in reach, the far door is not", [door.id, win.id, barred.id, wattle.id].every(id => list.includes(id)) && !list.includes(far.id),
+        {list: list.map(id => names[id] ?? id), center: tok.center, distances: ix().interactablesFor(tok).map(x => [names[x.doc.id] ?? x.doc.id, Math.round(x.distance ?? -1)])});
     });
 
     await step("3. pick", async () => {
@@ -135,19 +140,23 @@ export async function run() {
     });
 
     await step("6. window", async () => {
-      const msg = await applied(await ix().attempt(tok, win.id, "smash", {fd: {}}));
+      const ops = ix().rules.optionsFor(ix().describeWall(win), ix().characterFor(burglar, tok.center, win)).map(o => o.id + (o.disabled ? " (off)" : ""));
+      const sent = await ix().attempt(tok, win.id, "smash", {fd: {}});
+      const msg = await applied(sent);
       const after = {ds: win.ds, broken: win.flags[MOD]?.broken ?? null, result: msg?.flags?.[MOD]?.done?.result ?? null, lines: msg?.flags?.[MOD]?.done?.lines ?? null};
       const broke = after.ds === W.OPEN && after.broken === true;
       await ix().undoCard(msg);
       ok("6. the pane breaks at once; Undo mends it", broke && win.ds === W.CLOSED && !win.flags[MOD]?.broken,
-        {after, undone: {ds: win.ds, broken: win.flags[MOD]?.broken ?? null}, options: ix().interactablesFor(tok).find(x => x.doc.id === win.id) ? "in reach" : "not in reach"});
+        {sent: !!sent, ask: msg?.flags?.[MOD]?.ask ?? null, ops, after, undone: {ds: win.ds, broken: win.flags[MOD]?.broken ?? null}, options: ix().interactablesFor(tok).find(x => x.doc.id === win.id) ? "in reach" : "not in reach"});
     });
 
     await step("7. wall", async () => {
       await attrs(burglar, {strength: 5});
       const msg = await applied(await ix().attempt(tok, wattle.id, "breach", {fd: {}}));
       const q = game.settings.get("wodx-chronicle", "approvals").pending.find(p => p.type === `${MOD}.breach`);
-      ok("7. breaking through waits in the queue; the wall stands", !!q && msg.flags[MOD]?.done?.waiting && wattle.move !== CONST.WALL_MOVEMENT_TYPES.NONE, {queued: q?.title});
+      ok("7. breaking through waits in the queue; the wall stands", !!q && msg?.flags?.[MOD]?.done?.waiting && wattle.move !== CONST.WALL_MOVEMENT_TYPES.NONE,
+        {queued: q?.title ?? null, sent: !!msg, ask: msg?.flags?.[MOD]?.ask ?? null, done: msg?.flags?.[MOD]?.done ?? null, move: wattle.move,
+         ops: ix().rules.optionsFor(ix().describeWall(wattle), ix().characterFor(burglar, tok.center, wattle)).map(o => o.id + (o.auto ? " (auto)" : ""))});
       await attrs(burglar, {strength: 2});
     });
 
@@ -178,6 +187,7 @@ export async function run() {
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   finally {
     CONFIG.Dice.randomUniform = keep.uniform;
+    console.error = consoleError;
     try {
       if ( game.time.worldTime !== keep.t0 ) await game.time.advance(keep.t0 - game.time.worldTime);
       await game.settings.set("wodx-chronicle", "approvals", keep.approvals);
