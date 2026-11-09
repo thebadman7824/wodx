@@ -940,3 +940,8 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 
 - rumour-rules.mjs (new): HEAT, QUIET_NIGHTS, MAX_NIGHTS, buildContacts, normRumour(s), live, spreadNight, nightsDue, firstTeller. rumours.mjs (new): the rumours setting and rumourNetwork switch, contacts (factions and scenes), startRumour, tick (on the clock, after a skip, or one night by hand), endRumour, removeRumour, heardBy, The rumour mill window. approveNight starts the night's rumour; Draw for the story opens the mill; api.rumours.
 - UI fit: The rumour mill with 20 rumours. Tests: tools/harness/rumours.test.mjs (4). Gate: tools/gate/gaterumours.mjs, 7 steps.
+
+## 2026-11-09: prelude and Embrace scene templates (Storyteller 0.9.0, B278)
+
+- prelude-rules.mjs (new): PRELUDES (eleven lines, three parts each), LINE_ORDER, lineFor(type, variant), hunterKind(year), composePrelude, preludeHtml. prelude.mjs (new): makePrelude({actorId, line, scene}) makes a Storyteller-only journal in WoDX preludes and, if asked, a bare night scene (not in navigation) with a note that opens it; preludeDialog (character list with a search box, fixed line list). Draw for the story gains A prelude. api.prelude {dialog, make, compose, lineFor, lines}.
+- UI fit: the prelude dialog. Tests: tools/harness/prelude.test.mjs (5). Gate: tools/gate/gateprelude.mjs, 7 steps.
