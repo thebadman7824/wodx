@@ -617,4 +617,4 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Gate 6b, talen spent and kept: the talen spent by the first run stays on the sheet marked spent, as it should, so later runs were turned away. The gate now makes the test talen whole again before the step.
 - Gate 6c, inquisitor Blessing (17/18): the risked Conviction worked (4 to 5, Piety 6). Now that the test hunters belong to a test player, the inner voice posted "The Impulse grows" when Conviction rose, and the gate read that card in place of the Blessing card. The gate turns the inner voices off while it runs, as 6l and 6m already do, puts the setting back after, and finds the Blessing card by its text.
 - Sheets gate 1 (2/7): written for Sheets 0.1. Since 0.3 the sheet's page is .wodx-book with data-set paths, Mists and Weaving are two tracks, sheets open locked, and a modern changeling has the WoDX Changeling 20th sheet. The gate now uses the current markup, opens the sheet unlocked and puts the lock back.
-- 462 harness tests pass and the quality check passes.
+- 473 harness tests pass (with Actions 3.13.0 merged) and the quality check passes.
