@@ -287,3 +287,36 @@ test("lips, brows and nose show against every skin tone and every hair colour", 
   assert.equal(D.normalize({colors: {lips: "zz"}}).colors.lips, "");
   assert.ok(Object.keys(D.LIPS).length >= 8);
 });
+
+test("lasting changes: only those that show, on parts the picture has, one per part", () => {
+  const list = D.changesToDraw([{part: "face", source: "vicissitude"}, {part: "torso", source: "scar"}, {part: "eyes", source: "visage"}, {part: "mouth", source: "metis", shows: false}, {part: "face", source: "scar"}, {part: "skin", source: "nonsense"}]);
+  assert.deepEqual(list, [{part: "eyes", source: "visage"}, {part: "face", source: "scar"}, {part: "skin", source: "other"}]);
+  assert.deepEqual(D.changesToDraw(undefined), []);
+});
+
+test("lasting changes: the key stays the same without them, and changes with them", () => {
+  const look = D.defaultLook("Ada");
+  const base = {look, mood: "own", level: 0, frame: D.DEFAULT_FRAME, ring: true};
+  assert.equal(D.bakeKey(base), D.bakeKey({...base, changes: []}));
+  assert.notEqual(D.bakeKey(base), D.bakeKey({...base, changes: [{part: "face", source: "vicissitude"}]}));
+});
+
+test("lasting changes: drawn inside the face outline, a glow for a demon's visage", () => {
+  const A = {faceBox: {x: 100, y: 100, w: 400, h: 500}, facePath: "M100 100 L500 100 L500 600 Z"};
+  assert.equal(D.changeLayers(A, []), "");
+  const svg = D.changeLayers(A, [{part: "eyes", source: "visage"}, {part: "head", source: "vicissitude"}, {part: "whole", source: "taint"}]);
+  assert.match(svg, /clip-path="url\(#wpd-face-ch\)"/);
+  assert.match(svg, /id="wpd-glow"/);
+  assert.match(svg, /#8b4f45/);
+  assert.ok(!D.changeLayers(A, [{part: "face", source: "scar"}]).includes("wpd-glow"));
+});
+
+test("lasting changes: in the composed picture", {skip: !Resvg && "@resvg/resvg-js is not installed"}, () => {
+  const look = veiled();
+  const A = measureLook(look);
+  const head = headOf(look);
+  const svg = D.compose({look, head, anchors: A, changes: [{part: "face", source: "vicissitude"}, {part: "eyes", source: "visage"}]}).svg;
+  assert.ok(svg.includes("wpd-face-ch") && svg.includes("wpd-glow"));
+  const r = pixels(svg);
+  assert.ok(r.width > 0);
+});

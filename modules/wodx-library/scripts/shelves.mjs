@@ -106,6 +106,7 @@ export class LibraryApp extends ApplicationV2 {
   };
   static #instance;
   line = "all";
+  shelf = "all";
   eraOnly = true;
   static open() { this.#instance ??= new LibraryApp(); return this.#instance.render({force: true}); }
   static refresh() { if ( this.#instance?.rendered ) this.#instance.render(); }
@@ -113,7 +114,9 @@ export class LibraryApp extends ApplicationV2 {
   async _renderHTML() {
     const era = eraNow();
     const all = await catalogue();
-    const list = all.filter(e => S.fits({lines: e.lines, eras: e.eras}, {line: this.line, era: this.eraOnly ? era : null}));
+    const list = all.filter(e => (this.shelf === "all" || e.shelf === this.shelf) && S.fits({lines: e.lines, eras: e.eras}, {line: this.line, era: this.eraOnly ? era : null}));
+    const shelves = [["all", "Every shelf"], ...S.SHELF_ORDER.map(k => [k, S.SHELVES[k].label.replace(/^WoDX · /, "")])]
+      .map(([k, v]) => `<option value="${k}"${k === this.shelf ? " selected" : ""}>${esc(v)}</option>`).join("");
     const lines = Object.entries(S.LINE_LABELS).map(([k, v]) => `<option value="${k}"${k === this.line ? " selected" : ""}>${esc(v)}</option>`).join("");
     const rows = list.map(e => `<li class="wodx-shelf-row" data-search-text="${esc(`${e.name} ${S.SHELVES[e.shelf].label} ${e.book}`)}">
       <button type="button" class="wodx-shelf-open" data-action="open" data-uuid="${esc(e.uuid)}">${esc(e.name)}</button>
@@ -122,6 +125,7 @@ export class LibraryApp extends ApplicationV2 {
     div.className = "wodx-body";
     div.innerHTML = `<div class="wodx-top">
         <div class="form-group"><label>Line</label><div class="form-fields"><select name="line" data-fixed aria-label="Line">${lines}</select></div></div>
+        <div class="form-group"><label>Shelf</label><div class="form-fields"><select name="shelf" data-fixed aria-label="Shelf">${shelves}</select></div></div>
         <div class="form-group"><label><input type="checkbox" name="eraOnly"${this.eraOnly ? " checked" : ""}> Only what fits ${esc(era ? eraName(era) : "this era")}</label></div>
         ${searchBox("ul.wodx-shelf-list", "Search the Library…", "Search the Library")}
         <p class="hint">${list.length} of ${all.length} entries. WoDX's own summaries with the book and page; read the book for the full text.</p></div>
@@ -132,6 +136,7 @@ export class LibraryApp extends ApplicationV2 {
         <button type="button" data-action="gear"><i class="fa-solid fa-khanda"></i> Gear by era</button>
         ${game.user.isGM ? `<button type="button" data-action="install"><i class="fa-solid fa-book"></i> Refresh the shelves</button>` : ""}</footer>`;
     div.querySelector("select[name=line]").addEventListener("change", ev => { this.line = ev.target.value; this.render(); });
+    div.querySelector("select[name=shelf]").addEventListener("change", ev => { this.shelf = ev.target.value; this.render(); });
     div.querySelector("input[name=eraOnly]").addEventListener("change", ev => { this.eraOnly = ev.target.checked; this.render(); });
     return div;
   }
