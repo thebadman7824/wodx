@@ -10,3 +10,7 @@
 - The tests load modules by file path, which Node on Windows reads as a URL. `harness/win-paths.mjs` fixes that, and every test file imports it first. A new test file should do the same.
 - The UI fit check needs the Playwright package but not its browser: `npm install --no-save playwright` in `tools/harness` (set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to skip the download). It uses Playwright's Chromium where one is installed, then Edge, then Chrome. `WODX_BROWSER` can name another browser.
 - `quality-check.sh` runs in Git Bash. It uses `python` where `python3` is only the Microsoft Store stub, and reads files as UTF-8.
+
+## audit
+
+`audit/ref-audit.mjs` checks page references against the OCR texts on the PC: every Encyclopaedia claim and every "p. N" in module code, data and docs. It writes a reading list of refs whose page does not back them up, and says whether each bare ref reads best as a printed or a pdf page. Run `node tools/audit/ref-audit.mjs --list` for counts, or see the header comment for the full run.
