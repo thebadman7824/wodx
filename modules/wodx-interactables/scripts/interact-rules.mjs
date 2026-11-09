@@ -94,6 +94,19 @@ export const TRAP_GRADES = {
   excellent: {label: "Excellent", hide: 3, diff: 7, seconds: MINUTE},
   masterwork: {label: "Masterwork", hide: 4, diff: 8, seconds: MINUTE}
 };
+/**
+ * Clues on tiles: letters, ledgers, bloodstains, writing on walls, tracks. The Storyteller writes what each shows:
+ * one text anyone gets on a look, and up to three more for 1, 2 and 3 or more successes on examining it.
+ * Examining: Perception + Investigation (a document: Intelligence + Investigation), difficulty 6.
+ */
+export const CLUES = {
+  document: {label: "Letter, ledger or document", attr: "intelligence", verb: "Read"},
+  mark: {label: "Bloodstain or mark", attr: "perception", verb: "Examine"},
+  writing: {label: "Writing or graffiti", attr: "intelligence", verb: "Read"},
+  trail: {label: "Tracks or a trail", attr: "perception", verb: "Study"},
+  object: {label: "Something out of place", attr: "perception", verb: "Examine"}
+};
+export const CLUE_TIERS = 3;
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
 export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
@@ -222,6 +235,25 @@ export function describeTrap(f = {}) {
     electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
+/**
+ * A clue on a tile. f: the tile's flags.wodx-interactables, with clue: true. texts[0]: what anyone sees; texts[k]:
+ * what k successes add. need: the search successes it takes to notice a hidden one. seen: {actorId: best successes}.
+ */
+export function describeClue(f = {}) {
+  const kind = CLUES[f.clueKind] ? f.clueKind : "document";
+  const texts = [f.text0, f.text1, f.text2, f.text3].map(t => String(t ?? "").trim().slice(0, 4000));
+  return {
+    clue: true, trap: false, container: false, door: false, secret: false, ds: "closed", kind, texts,
+    title: String(f.title ?? "").trim().slice(0, 80), need: Math.max(1, Math.min(5, Math.round(Number(f.need) || 1))),
+    found: !!f.found, seen: f.seen && typeof f.seen === "object" ? f.seen : {},
+    electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
+  };
+}
+/** The texts a character has learned from a clue, by their best successes (a botch or none: only the first). */
+export function clueTexts(o, successes = 0) {
+  const n = Math.max(0, Math.min(CLUE_TIERS, Number(successes) || 0));
+  return o.texts.slice(0, n + 1).filter(Boolean);
+}
 /** What a container holds: one item a line (a UUID, or the name of an item in the world), at most MAX_ITEMS. */
 export function parseItems(text) {
   const lines = Array.isArray(text) ? text : String(text ?? "").split(/\r?\n/);
@@ -230,6 +262,7 @@ export function parseItems(text) {
 
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
+  if ( o.clue ) return o.title || CLUES[o.kind].label;
   if ( o.trap ) {
     const T = TRAPS[o.kind], g = TRAP_GRADES[o.grade].label.toLowerCase();
     if ( o.holding ) return `${T.label}, holding someone`;
@@ -261,6 +294,7 @@ export function nameOf(o) {
 export function optionsFor(o, ch = {}) {
   if ( o.container ) return containerOptions(o, ch);
   if ( o.trap ) return trapOptions(o, ch);
+  if ( o.clue ) return clueOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -378,6 +412,21 @@ function trapOptions(o, ch) {
   return out;
 }
 
+/** A clue: look at it (no roll, when there is nothing deeper to find), or examine it for what successes add. */
+function clueOptions(o, ch) {
+  const C = CLUES[o.kind];
+  const deeper = o.texts.slice(1).some(Boolean);
+  const best = Number(o.seen?.[ch.actorId ?? ""]);
+  const label = `${C.verb} it`;
+  if ( !deeper ) return [{id: "examine", label, roll: null, seconds: TURN, noise: {success: "silent"}}];
+  const sk = bestOf(ch.abilities ?? {}, ["investigation"]);
+  const t = Number(o.tries?.[`${ch.actorId ?? ""}:examine`]) || 0;
+  return [{id: "examine", label, roll: {attr: C.attr, attrLabel: cap(C.attr), ability: sk.key, abilityLabel: cap(sk.key),
+    dice: (Number(ch[C.attr]) || 0) + sk.value, diff: Math.min(10, 6 + t), need: null, retries: t}, seconds: MINUTE,
+    noise: {success: "silent", fail: "silent", botch: "silent"},
+    note: `More successes show more.${best > 0 ? ` Seen before with ${best} success${best === 1 ? "" : "es"}: a new roll only adds.` : ""}${t ? ` Tried before: +${t} difficulty.` : ""}`}];
+}
+
 /** Searching an area for traps: Perception + Alertness or Investigation, whichever is better, difficulty 6, a minute. */
 export function searchOption(ch = {}) {
   const sk = bestOf(ch.abilities ?? {}, ["alertness", "investigation"]);
@@ -388,7 +437,7 @@ export function searchOption(ch = {}) {
 /** Which hidden traps a search finds: those whose grade needs no more successes than were rolled. A botch finds none. */
 export function searchFinds(traps = [], roll = {successes: 0, botch: false}) {
   if ( roll.botch ) return [];
-  return traps.filter(t => !t.found && Number(roll.successes) >= TRAP_GRADES[t.grade].hide);
+  return traps.filter(t => !t.found && Number(roll.successes) >= (t.clue ? t.need : TRAP_GRADES[t.grade].hide));
 }
 /** The roll to get clear of a springing trap: Dexterity + Athletics or Dodge, at the trap's grade. Null: no roll. */
 export function reflexRoll(o, ch = {}) {
@@ -466,6 +515,7 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "knock": return done("knocks.");
       case "take": flags.taken = true; return done("takes what is inside.");
       case "trigger": Object.assign(flags, {armed: false, sprung: true}); return done("sets it off from a safe distance.");
+      case "examine": return done("looks it over.");
       case "cutFree": flags.holding = null; return done("cuts the snare and frees whoever it held.");
       case "smash": flags.broken = true; return done("breaks the pane.", {ds: "open"});
       case "force": flags.progress = {...o.progress, force: 0}; return done("forces it open.", {ds: "open"});
@@ -479,6 +529,14 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
     out.seconds = option.seconds ?? 0;
     const key = `${actorId}:${id}`;
     if ( roll.botch || roll.successes <= 0 ) flags.tries = {...o.tries, [key]: (Number(o.tries?.[key]) || 0) + 1};
+    if ( id === "examine" ) {
+      const got = roll.botch ? 0 : Math.max(0, roll.successes);
+      const key = actorId || "?";
+      flags.seen = {...o.seen, [key]: Math.max(Number(o.seen?.[key]) || 0, got)};
+      if ( roll.botch || got <= 0 ) flags.tries = {...o.tries, [`${actorId}:examine`]: (Number(o.tries?.[`${actorId}:examine`]) || 0) + 1};
+      return Object.assign(out, {result: roll.botch ? "botch" : got > 0 ? "done" : "fail", noise: "silent", examine: roll.botch ? -1 : flags.seen[key],
+        text: roll.botch ? "examines it, and is sure of what it means." : got > 0 ? "examines it closely." : "examines it, and finds nothing more."});
+    }
     if ( id === "search" ) {
       return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: "silent", search: roll,
         text: roll.successes > 0 && !roll.botch ? "searches the area." : "searches the area, and finds nothing."});
@@ -622,4 +680,11 @@ export function cleanTrap(s = {}) {
     dice, damageType: DAMAGE_TYPES[s.damageType] ? s.damageType : "",
     armed: s.armed !== false && !s.sprung, found: !!s.found, npcs: !!s.npcs
   };
+}
+
+/** Clean a tile's clue settings from the config form. */
+export function cleanClue(s = {}) {
+  const t = k => String(s[k] ?? "").slice(0, 4000);
+  return {clue: !!s.clue, clueKind: CLUES[s.clueKind] ? s.clueKind : "document", title: String(s.title ?? "").slice(0, 80).trim(),
+    need: Math.max(1, Math.min(5, Math.round(Number(s.need) || 1))), found: !!s.found, text0: t("text0"), text1: t("text1"), text2: t("text2"), text3: t("text3")};
 }

@@ -70,7 +70,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.3.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.3.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.4.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.4.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -221,11 +221,12 @@ export async function run() {
       ok("12. the tile config shows the WoDX container part", !!part && /Container/.test(text) && /Inside/.test(text), {sample: text.replace(/\s+/g, " ").slice(0, 160)});
     });
 
+    // The burglar belongs to the Storyteller, so it counts as an NPC to a trap: the pit is set to go off for NPCs too.
     // Traps: a hidden pit in the room's south-west corner, off the burglar's square; a found snare by the east wall
     const findTile = tag => scene.tiles.find(t => t.flags?.[MOD]?.gate === tag);
     await step("13. search", async () => {
       await scene.createEmbeddedDocuments("Tile", [{x: 515, y: 735, width: 50, height: 50, hidden: true, texture: {src: "icons/svg/trap.svg"},
-        flags: {[MOD]: {trap: true, trapKind: "pit", grade: "good", gate: "pit"}}}]);
+        flags: {[MOD]: {trap: true, trapKind: "pit", grade: "good", npcs: true, gate: "pit"}}}]);
       await sleep(500);
       const pit = findTile("pit");
       await dice(9);
@@ -271,6 +272,24 @@ export async function run() {
       await ix().undoCard(msg);
       const armed = ix().describeTile(snare)?.armed === true;
       ok("15. a found snare is listed and disarmed (Wits + Larceny); Undo arms it again", listed && safe && armed, {listed, safe, armed, result: msg?.flags?.[MOD]?.done?.result ?? null});
+    });
+
+    await step("16. clue", async () => {
+      await scene.createEmbeddedDocuments("Tile", [{x: 560, y: 610, width: 40, height: 40, texture: {src: "icons/svg/book.svg"},
+        flags: {[MOD]: {clue: true, clueKind: "document", title: "Gate Interact letter", text0: "Gate text anyone sees.", text1: "Gate text for one success.", text3: "Gate text for three.", gate: "clue"}}}]);
+      await sleep(500);
+      const clue = findTile("clue");
+      const listed = ix().interactablesFor(tok).some(x => x.doc.id === clue?.id);
+      await dice(9);
+      const msg = await applied(await ix().attempt(tok, clue.id, "examine", {fd: {}}));
+      const d = msg?.flags?.[MOD]?.done;
+      const w = game.messages.get(d?.whisper ?? "");
+      const told = !!w && /Gate text anyone sees/.test(w.content) && /one success/.test(w.content) && w.whisper?.includes(game.user.id);
+      const quiet = !/Gate text/.test(msg?.content ?? "");
+      await ix().undoCard(msg);
+      const back = !game.messages.get(d?.whisper ?? "") && !clue.flags[MOD]?.seen;
+      ok("16. a clue: listed, read (Intelligence + Investigation), its text whispered and kept off the public card; Undo takes it back", listed && told && quiet && back,
+        {listed, told, quiet, back, result: d?.result ?? null});
     });
 
     await step("10. alongside", async () => {
