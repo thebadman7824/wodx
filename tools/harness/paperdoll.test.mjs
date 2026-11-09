@@ -16,25 +16,35 @@ let Resvg = null;
 try { ({Resvg} = createRequire(import.meta.url)("@resvg/resvg-js")); } catch (e) { /* the fitting tests skip */ }
 const pixels = svg => { const r = new Resvg(svg, {fitTo: {mode: "width", value: F.SIZE}}).render(); return {width: r.width, height: r.height, data: r.pixels}; };
 const av = o => V.createAvatar(V.lorelei, o).toString();
-const measureLook = look => F.measure(pixels(D.keySvg(look, av(D.loreleiOptions(look, "own", {key: true})))), D.buildOf(look));
-const eyesOf = (look, mood = "own") => F.findEyes(pixels(av(D.loreleiOptions(look, mood, {pupils: true}))));
+const measureRaw = look => F.measure(pixels(D.keySvg(look, av(D.loreleiOptions(look, "own", {key: true})))), D.buildOf(look));
+const measureLook = look => D.withFace(measureRaw(look), measureRaw(D.bareLook(look)));
+const featPx = (look, mood = "own") => pixels(D.keySvg(look, av(D.loreleiOptions(look, mood, {features: true}))));
+const eyesOf = (look, mood = "own") => F.findEyes(featPx(look, mood), D.buildOf(look));
 const headOf = (look, mood = "own") => D.headLayers({look, mood, eyes: Resvg ? eyesOf(look, mood) : null, head: D.innerSvg(av(D.loreleiOptions(look, mood))), mask: D.innerSvg(av(D.loreleiOptions(look, mood, {mask: true})))});
 const veiled = (over = {}) => D.normalize({...D.defaultLook("Ada Brandt"), clothes: {...D.defaultLook().clothes, headwear: "fillet"}, ...over});
 
 test("the face parts match Lorelei's own lists", () => {
   const p = V.lorelei.schema.properties;
   for ( const k of ["head", "eyes", "eyebrows", "nose", "mouth", "hair", "beard", "glasses", "earrings"] )
-    assert.deepEqual(D.PARTS[k].filter(v => k !== "beard" ? v : /^variant/.test(v)).slice().sort(), p[k].items.enum.slice().sort(), k);
+    assert.deepEqual((D.LORELEI[k] ?? D.PARTS[k]).filter(v => k !== "beard" ? v : /^variant/.test(v)).slice().sort(), p[k].items.enum.slice().sort(), k);
+  for ( const k of ["eyes", "eyebrows", "mouth", "hair"] ) {
+    for ( const v of D.PARTS[k] ) assert.ok(D.LORELEI[k].includes(v), `${k} ${v} is Lorelei's`);
+    // every part left out moves to a kept one
+    for ( const v of D.LORELEI[k] ) if ( !D.PARTS[k].includes(v) ) assert.ok(D.PARTS[k].includes(D.NEAREST[k][v]), `${k} ${v} has a nearest`);
+    assert.ok(D.PARTS[k].length < D.LORELEI[k].length, `${k}: the cartoonish ones are left out`);
+  }
+  assert.equal(D.normalize({face: {eyes: "variant05", mouth: "happy12"}}).face.eyes, "variant04");
+  assert.equal(D.normalize({face: {eyes: "variant05", mouth: "happy12"}}).face.mouth, "happy06");
   for ( const m of Object.values(D.MOODS) ) {
-    if ( m.eyebrows ) assert.ok(D.PARTS.eyebrows.includes(m.eyebrows));
-    if ( m.mouth ) assert.ok(D.PARTS.mouth.includes(m.mouth));
-    if ( m.eyes ) assert.ok(D.PARTS.eyes.includes(m.eyes));
+    if ( m.eyebrows ) assert.ok(D.LORELEI.eyebrows.includes(m.eyebrows));
+    if ( m.mouth ) assert.ok(D.LORELEI.mouth.includes(m.mouth));
+    if ( m.eyes ) assert.ok(D.LORELEI.eyes.includes(m.eyes));
   }
 });
 
 test("a look: bad values fall back, steps wrap, random looks repeat by seed", () => {
   const l = D.normalize({face: {eyes: "variant99", hair: "variant10", beard: "nope"}, colors: {skin: "<script>"}, clothes: {headwear: "crown", gown: "9c3b30"}, mood: "smug"});
-  assert.equal(l.face.eyes, "variant05");
+  assert.equal(l.face.eyes, "variant04");
   assert.equal(l.face.hair, "variant10");
   assert.equal(l.face.beard, "");
   assert.equal(l.colors.skin, "f0d6bf");
@@ -73,7 +83,7 @@ test("moods follow the health track and frenzy, unless turned off", () => {
   assert.equal(D.moodFor({...l, followHealth: false}, {level: 5}), "own");
   assert.equal(D.moodFor(l, {level: 5, follow: false}), "own");
   const o = D.loreleiOptions(l, "upset");
-  assert.deepEqual([o.eyebrows, o.mouth], [["variant01"], ["sad01"]]);
+  assert.deepEqual([o.eyebrows, o.mouth], [["variant11"], ["sad03"]]);
   const k = D.loreleiOptions(l, "upset", {key: true});
   assert.deepEqual([k.skinColor, k.hairColor, k.mouth], [["00ff00"], ["ff0000"], ["happy05"]]);
 });
@@ -173,7 +183,7 @@ test("enough choices that two random characters almost never match", () => {
 test("every new part is drawn on visible skin only, and shows on every face shape and build", {skip: !Resvg && "@resvg/resvg-js is not installed"}, () => {
   const W = 490, at = (p, x, y) => (y * W + x) * 4;
   const render = look => { const r = new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980">${headOf(look)}</svg>`, {fitTo: {mode: "width", value: W}}).render(); return r.pixels; };
-  const skin = "c99a6e", sk = [0xc9, 0x9a, 0x6e];
+  const skin = "c99a6e";
   const builds = ["", "narrow-short", "wide-long", "slim", "broad-short"];
   const bad = [], hidden = [];
   let n = 0;
@@ -184,7 +194,9 @@ test("every new part is drawn on visible skin only, and shows on every face shap
     const a = render(base), b = render({...base, face: {...base.face, [k]: v}});
     // skin pixels of the plain face, grown by 3 pixels for soft edges
     const onSkin = new Uint8Array(W * W);
-    for ( let y = 0; y < W; y++ ) for ( let x = 0; x < W; x++ ) { const i = at(a, x, y); if ( Math.abs(a[i] - sk[0]) + Math.abs(a[i + 1] - sk[1]) + Math.abs(a[i + 2] - sk[2]) < 12 ) onSkin[y * W + x] = 1; }
+    // the visible skin, from Lorelei's drawing in mask colours (the face is shaded, so its colour alone will not do)
+    const m = new Resvg(D.keySvg(base, av(D.loreleiOptions(base, "own", {mask: true})).replace(/(<path\b[^>]*?)fill="#fff"/gi, '$1fill="#000"')), {fitTo: {mode: "width", value: W}}).render().pixels;
+    for ( let y = 0; y < W; y++ ) for ( let x = 0; x < W; x++ ) { const i = at(m, x, y); if ( m[i] > 128 && m[i + 3] > 128 ) onSkin[y * W + x] = 1; }
     const near = (x, y) => { for ( let dy = -3; dy <= 3; dy++ ) for ( let dx = -3; dx <= 3; dx++ ) if ( onSkin[(y + dy) * W + x + dx] ) return true; return false; };
     let changed = 0, off = 0;
     for ( let y = 3; y < W - 3; y++ ) for ( let x = 3; x < W - 3; x++ ) {
@@ -241,4 +253,37 @@ test("the ground and ring: a player's choice wins, else what fits the character"
   assert.deepEqual(D.normalize({style: {ground: "plaid", ring: "<b>"}}).style, {ground: "", ring: ""});
   const k = st => D.bakeKey({look: l, mood: "own", level: 0, frame: D.DEFAULT_FRAME, ring: true, style: st});
   assert.notEqual(k({ground: "gold", ring: "mortal"}), k({ground: "red", ring: "mortal"}));
+});
+
+test("each face is built in stages, and every stage checks out on every face shape and build", {skip: !Resvg && "@resvg/resvg-js is not installed"}, () => {
+  const fails = [];
+  let n = 0;
+  for ( const head of D.PARTS.head ) for ( const build of ["", "narrow-short", "wide-long", "slim-long", "broad-short"] ) {
+    // a different set of parts each time, so the whole list is covered across the sweep
+    const pickOf = k => D.PARTS[k][(n * 7 + D.PARTS.head.indexOf(head) * 3) % D.PARTS[k].length];
+    n++;
+    const look = D.normalize({...D.defaultLook("stages"), face: {...D.defaultLook().face, head, build, eyes: pickOf("eyes"), eyebrows: pickOf("eyebrows"), mouth: pickOf("mouth"), nose: pickOf("nose"), hair: pickOf("hair")}});
+    const A = measureLook(look), px = featPx(look);
+    const st = D.stagesOf({look, anchors: A, features: F.checkFeatures(px, A), eyes: F.findEyes(px, D.buildOf(look)), crop: D.cropFor(A, D.DEFAULT_FRAME, D.headwear(A, look.clothes).tops)});
+    assert.deepEqual(st.map(s => s.stage), ["head", "features", "colours", "skin", "over the eye", "clothes", "ring"]);
+    for ( const s of st ) if ( !s.ok ) fails.push(`${head} ${build || "average"} ${look.face.hair}: ${s.stage}: ${s.why}`);
+  }
+  assert.deepEqual(fails, []);
+  // a feature pushed off the face is caught
+  const look = D.defaultLook("off"), A = measureLook(look);
+  const moved = pixels(D.keySvg(look, av(D.loreleiOptions(look, "own", {features: true})).replace(/<svg([^>]*)>/, '<svg$1><g transform="translate(330 0)">').replace(/<\/svg>\s*$/, "</g></svg>")));
+  assert.equal(F.checkFeatures(moved, A).ok, false);
+});
+
+test("lips, brows and nose show against every skin tone and every hair colour", () => {
+  const dim = [];
+  for ( const skin of D.FACE.SKIN_ORDER ) for ( const hair of Object.keys(D.HAIR) ) for ( const lips of Object.keys(D.LIPS) ) {
+    const k = D.inksOf(D.normalize({colors: {skin, hair, lips}}));
+    for ( const p of ["lips", "nose"] ) if ( k.ratio[p] < D.FACE.NEED[p] ) dim.push(`${p} on ${skin} (${lips || "own"})`);
+    if ( k.ratio.brows < D.FACE.NEED.brows && !k.rim ) dim.push(`brows ${hair} on ${skin}`);
+    assert.equal(new Set([k.lips, k.brows, k.nose, "2a1a10"]).size, 4, "each feature has a colour of its own");
+  }
+  assert.deepEqual([...new Set(dim)], []);
+  assert.equal(D.normalize({colors: {lips: "zz"}}).colors.lips, "");
+  assert.ok(Object.keys(D.LIPS).length >= 8);
 });

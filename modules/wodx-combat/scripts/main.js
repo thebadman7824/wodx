@@ -24,6 +24,7 @@ import * as F from "./flavor.js";
 import * as L from "./legacy.js";
 import * as AU from "./auto.js";
 import * as CD from "./conductor.js";
+import * as CR from "./conductor-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -74,6 +75,9 @@ function registerSettings() {
     s("movementLimit", "Movement in a fight",
         "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. Show the pace, or also stop a move past the running speed (the GM is never stopped).",
         String, "note", { choices: { note: "Show the pace", block: "Show it and stop moves past the running speed", off: "Off" } });
+    s("turnMoves", "Moves out of turn",
+        "In a fight, players move a character's token only on that character's turn (a character holding the action steps in first). The Storyteller can always move any token, for a dodge, a shove or a fall.",
+        String, "off", { choices: CR.TURN_MOVES });
 }
 const setting = k => game.settings.get(MOD, k);
 const countShots = () => { try { return !!game.settings.get(MOD, "countShots"); } catch (e) { return false; } };
@@ -1311,7 +1315,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.0", reload, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.1", reload, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1350,6 +1354,30 @@ function movedThisRound(tok) {
     if (!f || f.tag !== tag) return null;
     return { yards: Number(f.yards) || 0, limits: movementFor(doc.actor) };
 }
+/** The fight this token is in, if one is running on its scene, with its combatant. */
+function fightOf(doc) {
+    const sid = doc.parent?.id;
+    for (const combat of game.combats?.contents ?? []) {
+        if (!combat.started || (combat.scene && combat.scene.id !== sid)) continue;
+        const c = combat.combatants.find(x => x.tokenId === doc.id && (!x.sceneId || x.sceneId === sid));
+        if (c) return { combat, c };
+    }
+    return null;
+}
+// Out of turn, a player's token stays put (3.8.1). Registered before the yards count, so a refused move is not counted.
+Hooks.on("preUpdateToken", (doc, changes, options) => {
+    if (OFF || game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
+    let mode;
+    try { mode = setting("turnMoves"); } catch (e) { return; }
+    if (mode !== "block") return;
+    const f = fightOf(doc);
+    const held = f ? f.c.getFlag(MOD, "held") : null;
+    const r = CR.turnMove({ mode, isGM: false, inFight: !!f, isCurrent: !!f && f.combat.combatant?.id === f.c.id,
+        held: !!held && held.combatId === f?.combat.id && held.round === f?.combat.round });
+    if (r.ok) return;
+    ui.notifications.warn(`${doc.name} cannot move now: ${r.why}.`);
+    return false;
+});
 Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
     if (OFF || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
     let mode;

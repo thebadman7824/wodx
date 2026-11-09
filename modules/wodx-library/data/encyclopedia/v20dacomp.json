@@ -1,0 +1,789 @@
+[
+ {
+  "id": "dac-rome",
+  "title": "Rome in the Dark Medieval",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The fallen Eternal City.",
+  "claims": [
+   {
+    "text": "Rome holds a fraction of its old people, who still think themselves heirs of empire and resent being handled; it is also the seat of the Church and of the secret Inquisition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "The rioni are held for the Clans: the Cappadocians, many named Rosselini, rule the district of the Pantheon, while districts are kept in trust for the Tzimisce and for the Ravnos should a fit claimant appear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-cappadocians"
+  ]
+ },
+ {
+  "id": "dac-camilla",
+  "title": "Camilla and Cretheus",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The rulers of Rome's Cainites.",
+  "claims": [
+   {
+    "text": "Camilla, a master of the Road of Sin who once studied under, and loved, Tanitbaal-Sahar, said to have founded that Road, lets Rome's Cainites do as they like and backs challenges to the Papacy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Cretheus, Fifth Generation Ventrue and childe of Mithras, ruled Rome in fact for nearly 300 years and is the only public member of the Ignoti; bending the knee to Camilla in 1229 was read as the hidden ones' blessing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-rome",
+   "da-road-of-sin",
+   "inconnu"
+  ]
+ },
+ {
+  "id": "dac-bath",
+  "title": "Bath, the Free Fiefdom",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mithras' crown in the Baronies of Avalon.",
+  "claims": [
+   {
+    "text": "Bath's Cainites hold that if London is the seat of Mithras, Aquae Sulis is the crown; belief in Mithras is power there, and the Unconquered Sun's Praetorians train within its bounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Bath was one of the few domains to refuse tribute to the Triumvirate's invasion; after Roald Snake Eyes fell, Mithras' satraps made it a free fiefdom, autonomous from the barons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Bathing over an hour in its waters gives a vampire the toughness of one dot of Fortitude for the rest of the night.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "The wooden Guildhall serves for trade and taxes by day and for trading favours by night; feeding happens only in the alleys outside.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-mithraic-mysteries"
+  ]
+ },
+ {
+  "id": "dac-bath-factions",
+  "title": "Factions of Bath",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Heretics, Prometheans and Usurpers.",
+  "claims": [
+   {
+    "text": "Evnissyen's Promethean faction wants Bath rid of both pilgrims and Mithraism, and plots against the Consul Arcadius, Mithras' grandchilde.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 30,
+      "pdf": 31
+     },
+     {
+      "book": "v20dacomp",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The Salubri Bethany of Ely, once a leader of the Cainite Heresy there, fled Tremere persecution to Bath; at least five Salubri now shelter in the domain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 30,
+      "pdf": 31
+     },
+     {
+      "book": "v20dacomp",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The Winchester Tremere covet Bath and seek to weaken the blood tie between the Unconquered and Arcadius.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-bath",
+   "da-salubri"
+  ]
+ },
+ {
+  "id": "dac-mithraic-mysteries",
+  "title": "The Mithraic Mysteries",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The faith of the Unconquered Sun.",
+  "claims": [
+   {
+    "text": "Only the worthy among Mithras' faithful earn the title Pater: leaders who wear ruby rings and jewelled robes, keep the crucible of sacrificial blood and carry prayers to Mithras.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-bath"
+  ]
+ },
+ {
+  "id": "dac-black-dog",
+  "title": "Black Dogs",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Harbingers of death on the moors.",
+  "claims": [
+   {
+    "text": "Peasants of Wales and Britain tell of black dogs as large as a grown man, with ember-bright eyes, stalking travellers lost on the moors; none agree whether they are flesh or spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-bath"
+  ]
+ },
+ {
+  "id": "dac-bjarkarey",
+  "title": "Bjarkarey",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The last Einherjar state.",
+  "claims": [
+   {
+    "text": "After Olaf the Holy fell at Stiklarstadir to Thorir the Hound of Bjarkarey, the old Gangrel Viking Valborg Crooked-Eye took the island and revived the old ways in a twisted form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The court volva Gudrunn, a Fifth Generation Cappadocian and once a famed seer of Norway, casts runes and gives doubtful prophecy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Reavers secretly seize clergy and nobles for feast days and the midwinter blot; the Princes of the Black Cross know a bishop is held and seek mercenaries to free the captive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-gangrel"
+  ]
+ },
+ {
+  "id": "dac-constantinople",
+  "title": "Constantinople after the Dream",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Queen of Cities after 1204.",
+  "claims": [
+   {
+    "text": "Prince Alfonzo, Seventh Generation Lasombra, took the city by fear and intrigue to defy a sire in Venice, and now clings to it as a tyrant, short of allies and coin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Malachite, the Rock of Constantinople, a Seventh Generation Nosferatu and Michael's last true believer, works to raise a new Dream; agents called the Priors watch every court, guild and monastery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 58,
+      "pdf": 59
+     },
+     {
+      "book": "v20dacomp",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "Michaelite Toreador test each arriving Toreador's blood for a soul like their Martyr's, seeking a new prophet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Ghouls abandoned when the Trinity families burned or fled in 1204 now hunt Cainites from the Grand Bazaar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-toreador",
+   "da-nosferatu"
+  ]
+ },
+ {
+  "id": "dac-josselin",
+  "title": "Josselin the Blessed",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A self-made idol of Constantinople.",
+  "claims": [
+   {
+    "text": "A Frankish second son who plotted a brother's murder, Embraced by a Ventrue adviser; the most notorious of the new Cainite cult leaders who copy Michael's divinity with blood and obsession.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-constantinople"
+  ]
+ },
+ {
+  "id": "dac-mogadishu",
+  "title": "Mogadishu, the White Pearl",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The twin cities of Hamar and Shangani.",
+  "claims": [
+   {
+    "text": "The Assamites won the city after five centuries of manoeuvre, riding Islam's rise to defeat the Ramanga; the Na'ib rules and insists on public harmony among all kinds of vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Distance from European Princes made it a haven for ancillae and neonates, until elders fearing Gehenna began arriving with their lineage politics and old boons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-assamites"
+  ]
+ },
+ {
+  "id": "dac-mogadishu-figures",
+  "title": "Figures of the White Pearl",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Notables of Mogadishu.",
+  "claims": [
+   {
+    "text": "Aphobis, Tenth Generation Setite, rules the linen trade to Egypt, hates the slave trade as an offence to Apep, and hosts malcontents at the Jade Horse inn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Bantu, an Impundulu, and Esihle, a Bomkazi witch, are a married pair raised together from infancy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Jakuta, a Yoruba thaumaturge of Ife who claims no lineage, woke from long torpor and has borne the names Chango, Xango and Shango.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-mogadishu",
+   "da-setites"
+  ]
+ },
+ {
+  "id": "dac-mangaluru",
+  "title": "Mangaluru",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A spice port of Malabar.",
+  "claims": [
+   {
+    "text": "Named for the temple of Mangaladevi, it is a heart of the spice trade; legend says the sage Parashurama reclaimed the land from the sea.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 91,
+      "pdf": 92
+     },
+     {
+      "book": "v20dacomp",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "The Danava dwell in a temple there; Lasombra, Ventrue and Malkavians from Rome and Brujah from Carthage once sent childer to its shores.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "The Salubri allied with the devas, while the asura half of that brood call themselves a scourge on humanity; lately the deva elders sleep and the asura neonates rise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "The Daitya, Setites who became Buddhists once they had wiped out the Children of Osiris in the Himalayas, are old allies of the Salubri; the Ravnos live in every caste.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-salubri",
+   "da-ravnos"
+  ]
+ },
+ {
+  "id": "dac-feudal-ties",
+  "title": "Liege and Vassal",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Feudal relations between Cainites.",
+  "claims": [
+   {
+    "text": "A vassal may give a liege access to two Background dots for every Anchor Background dot the liege puts up; valued vassals may trade on reputation instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Coteries pool Backgrounds normally; married couples, or two men joined in enfrerement, pool holdings as one household.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "Cainites favour absolute inheritance: the eldest childe in good standing, by years in the Blood and whatever the gender, inherits the sire's holdings unless the sire names another succession.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-manor"
+  ]
+ },
+ {
+  "id": "dac-manor",
+  "title": "The Manor",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Expanded Domain Background.",
+  "claims": [
+   {
+    "text": "A domain's heart is its manor, the Domain Background; its points are split into aspects, and at least one dot must go to Area.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "Area runs from a tower or fortified cottage for about ten people up to a walled town or district of about a thousand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 107,
+      "pdf": 108
+     },
+     {
+      "book": "v20dacomp",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "Each Security dot adds +1 difficulty to break in by stealth or force; each Prosperity dot halves the cost of Resources up to its rating and gives -1 difficulty on Commerce rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "Servants run from a few part-time helpers, three on a trip, to a legion of sixty in a retinue; they roll 4 dice in their main task and 2 or 3 otherwise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 113,
+      "pdf": 114
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-feudal-ties"
+  ]
+ },
+ {
+  "id": "dac-arms",
+  "title": "Arms of the 13th Century",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Weapons and law.",
+  "claims": [
+   {
+    "text": "After the Assize of Arms in 1181 every free English peasant household must keep a spear, gambeson and iron cap; Jews must sell any mail, and no one may stockpile beyond the law's demand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Carrying a knife or cudgel is ordinary; the wealthy wear swords but surrender them on visits, and walking into town with several weapons signals trouble.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "A pavis planted in the ground gives one crouching person Good cover.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-streamlined-combat"
+  ]
+ },
+ {
+  "id": "dac-streamlined-combat",
+  "title": "Streamlined Combat",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "An optional faster combat system.",
+  "claims": [
+   {
+    "text": "Initiative is rolled once per fight and counted down; actions on the same number happen together, and players declare all multiple actions up front, resolved in later passes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "The first player character each turn may tag another character, who takes the tagger's initiative; delaying lets a character interrupt later actions once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "A ready longer-reach attack, like a spear or nocked arrow, goes before a shorter-reach one; a character may hustle, running and acting in one move.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   },
+   {
+    "text": "Attack and defence are rolled, but separate damage and soak rolls are cut.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20dacomp",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-arms"
+  ]
+ }
+]

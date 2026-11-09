@@ -1,5 +1,5 @@
 import * as D from "./doll-rules.mjs";
-import {measure, findEyes, SIZE} from "./fit-rules.mjs";
+import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
 
 /**
  * WoDX Paperdoll 0.1.0: a player builds the character's look (face parts, colours, era clothes) in a window on the
@@ -9,7 +9,7 @@ import {measure, findEyes, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.3.0";
+export const VERSION = "0.4.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -44,25 +44,34 @@ async function toCanvas(svg, size) {
 }
 const FITS = new Map();
 /** The anchors for this look's head: drawn once in key colours and measured, then kept. */
+async function measured(look) {
+  const c = await toCanvas(D.keySvg(look, await avatar(D.loreleiOptions(look, "own", {key: true}))), SIZE);
+  return measure(c.getContext("2d").getImageData(0, 0, SIZE, SIZE), D.buildOf(look));
+}
+/** The first stage: the head in its build, measured with its hair, and the face outline measured on the bare face. */
 export async function anchorsFor(look) {
   const key = D.fitKey(look);
   if ( FITS.has(key) ) return FITS.get(key);
-  const c = await toCanvas(D.keySvg(look, await avatar(D.loreleiOptions(look, "own", {key: true}))), SIZE);
-  const A = measure(c.getContext("2d").getImageData(0, 0, SIZE, SIZE), D.buildOf(look));
+  const A = D.withFace(await measured(look), await measured(D.bareLook(look)));
   if ( !A ) throw new Error("The head could not be measured.");
   FITS.set(key, A);
   return A;
 }
 
-const EYESEEN = new Map();
-/** Where the eyes and pupils are for this look's eyes: drawn once with magenta eyes and found, then kept. */
-export async function eyesFor(look, mood = "own") {
-  const o = D.loreleiOptions(look, mood, {pupils: true}), key = o.eyes[0];
-  if ( EYESEEN.has(key) ) return EYESEEN.get(key);
-  const c = await toCanvas(await avatar(o), SIZE);
-  const e = findEyes(c.getContext("2d").getImageData(0, 0, SIZE, SIZE));
-  EYESEEN.set(key, e);
-  return e;
+const FEATS = new Map();
+/**
+ * The second stage of the face: the features drawn in their own colours in the build of the face, checked against
+ * the measured head, and the pupils found. Kept by what they depend on.
+ */
+export async function featuresFor(look, mood = "own") {
+  const key = D.featureKey(look, mood);
+  if ( FEATS.has(key) ) return FEATS.get(key);
+  const A = await anchorsFor(look);
+  const c = await toCanvas(D.keySvg(look, await avatar(D.loreleiOptions(look, mood, {features: true}))), SIZE);
+  const px = c.getContext("2d").getImageData(0, 0, SIZE, SIZE);
+  const r = {eyes: findEyes(px, D.buildOf(look)), features: checkFeatures(px, A)};
+  FEATS.set(key, r);
+  return r;
 }
 
 /* ---- What a character shows now ---- */
@@ -91,9 +100,14 @@ export function stateOf(actor, look = lookOf(actor)) {
 }
 /** The picture as SVG, for a look in a state. */
 export async function draw(look, {level = 0, mood = "own", frame = D.DEFAULT_FRAME, ring = true, style = null} = {}) {
-  const A = await anchorsFor(look), eyes = await eyesFor(look, mood);
+  const A = await anchorsFor(look);
+  const {eyes, features} = await featuresFor(look, mood);
   const head = D.headLayers({look, eyes, mood, head: D.innerSvg(await avatar(D.loreleiOptions(look, mood))), mask: D.innerSvg(await avatar(D.loreleiOptions(look, mood, {mask: true})))});
-  return D.compose({look, head, anchors: A, frame, ring, level, style});
+  const out = D.compose({look, head, anchors: A, frame, ring, level, style});
+  out.stages = D.stagesOf({look, anchors: A, features, eyes, crop: out.crop});
+  const failed = out.stages.filter(s => !s.ok);
+  if ( failed.length ) console.warn(`${MOD} | a stage did not check out`, failed);
+  return out;
 }
 
 /* ---- Baking: on the Storyteller's computer ---- */
@@ -118,8 +132,10 @@ export async function bake(actor, {force = false} = {}) {
   const key = D.bakeKey(st);
   const name = `${key}.webp`, path = `${folder()}/${name}`;
   const files = await knownFiles();
+  let drawnStages = null;
   if ( force || !files.has(name) ) {
-    const {svg} = await draw(look, st);
+    const {svg, stages} = await draw(look, st);
+    drawnStages = stages;
     const c = await toCanvas(svg, 512);
     const blob = await new Promise(r => c.toBlob(r, "image/webp", 0.9));
     await FP().upload("data", folder(), new File([blob], name, {type: "image/webp"}), {}, {notify: false});
@@ -139,7 +155,7 @@ export async function bake(actor, {force = false} = {}) {
   };
   try { for ( const t of actor.getDependentTokens?.({linked: true}) ?? [] ) add(t); } catch (e) { /* older API */ }
   for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) if ( t.actorId === actor.id ) add(t);
-  const log = {actor: actor.id, path, found: [], updated: [], errors: [], recheck: [], reset: []};
+  const log = {actor: actor.id, path, found: [], updated: [], errors: [], recheck: [], reset: [], stages: drawnStages};
   // diff: false sends the picture even when this computer's copy already shows it, so every copy ends the same
   const put = async (sceneId, ids) => {
     const scene = game.scenes.get(sceneId);
@@ -242,7 +258,7 @@ export class PaperdollApp extends ApplicationV2 {
       <div class="wodx-scroll wodx-paperdoll-form">
         <h3>Face</h3>${D.FACE_ORDER.map(stepper).join("")}
         ${chk("freckles", "Freckles", f.freckles)}
-        ${sel("skin", "Skin", D.SKIN, L.colors.skin)}${sel("hairColor", "Hair colour", D.HAIR, L.colors.hair)}${sel("eyeColor", "Eyes", D.EYES, L.colors.eyes)}
+        ${sel("skin", "Skin", D.SKIN, L.colors.skin)}${sel("hairColor", "Hair colour", D.HAIR, L.colors.hair)}${sel("eyeColor", "Eyes", D.EYES, L.colors.eyes)}${sel("lips", "Lips", D.LIPS, L.colors.lips)}
         <h3>Clothes</h3>
         ${sel("gown", "Gown", D.DYES, cl.gown)}
         ${chk("mantle", "A mantle over the shoulders", cl.mantle)}
@@ -271,8 +287,10 @@ export class PaperdollApp extends ApplicationV2 {
     try {
       const lvl = this.preview, follow = lvl > 0;
       const mood = D.moodFor(this.look, {level: lvl, follow});
-      const {svg} = await draw(this.look, {level: lvl, mood, ...ringFor(this.actor), ring: true, style: D.styleFor(this.look, whoOf(this.actor))});
-      return `<img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}" alt="${esc(this.actor?.name ?? "")}">`;
+      const {svg, stages} = await draw(this.look, {level: lvl, mood, ...ringFor(this.actor), ring: true, style: D.styleFor(this.look, whoOf(this.actor))});
+      const bad = stages.filter(s => !s.ok);
+      return `<img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}" alt="${esc(this.actor?.name ?? "")}">`
+        + (bad.length ? `<p class="wodx-quiet">This face did not check out: ${esc(bad.map(s => s.why).join("; "))}. Try another part.</p>` : "");
     } catch (e) {
       console.warn(`${MOD} | preview`, e);
       return `<p class="wodx-quiet">The picture could not be drawn here.</p>`;
@@ -285,6 +303,7 @@ export class PaperdollApp extends ApplicationV2 {
     else if ( n === "skin" ) L.colors.skin = v;
     else if ( n === "hairColor" ) L.colors.hair = v;
     else if ( n === "eyeColor" ) L.colors.eyes = v;
+    else if ( n === "lips" ) L.colors.lips = v;
     else if ( n === "ground" || n === "ring" ) L.style = {...L.style, [n]: v};
     else if ( ["gown", "mantle", "mantleColor", "lining", "brooch", "headwear", "veil"].includes(n) ) L.clothes[n] = v;
     else if ( ["mood", "followHealth", "portrait"].includes(n) ) L[n] = v;

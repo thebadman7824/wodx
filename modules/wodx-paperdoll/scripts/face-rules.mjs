@@ -251,11 +251,20 @@ function softDefs(svg) {
  * Everything drawn on the skin for this face, in Lorelei's space, unmasked: age, cheeks, marks, scars and facial
  * hair, in that order (the beard over the scar). Returns {skin, defs}: wrap skin in the build and the skin mask.
  */
+/** Modelling: a soft shadow towards the edges of the face and under the jaw, and light on the cheekbone and brow,
+ * so the face reads as a head rather than a flat cartoon. */
+function modelling(skin) {
+  const dk = mix(skin, "2a1008", 0.6);
+  return {defs: `<radialGradient id="wpd-model" cx="575" cy="455" r="360" gradientUnits="userSpaceOnUse"><stop offset=".52" stop-color="#${dk}" stop-opacity="0"/><stop offset=".8" stop-color="#${dk}" stop-opacity=".22"/><stop offset="1" stop-color="#${dk}" stop-opacity=".42"/></radialGradient>`
+    + `<radialGradient id="wpd-lit"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>`,
+  svg: `<rect x="150" y="150" width="800" height="800" fill="url(#wpd-model)"/><ellipse cx="470" cy="515" rx="70" ry="42" fill="url(#wpd-lit)"/><ellipse cx="560" cy="380" rx="120" ry="36" fill="url(#wpd-lit)"/><ellipse cx="672" cy="505" rx="34" ry="30" fill="url(#wpd-lit)"/>`};
+}
 export function skinLayers(face, colors) {
-  const raw = ageLines(face.age) + cheeks(face.cheeks, colors.skin) + marks(face.marks, colors.skin) + scars(face.scar, colors.skin) + whiskers(face.beard, colors.hair, colors.skin)
+  const md = modelling(colors.skin);
+  const raw = md.svg + ageLines(face.age) + cheeks(face.cheeks, colors.skin) + marks(face.marks, colors.skin) + scars(face.scar, colors.skin) + whiskers(face.beard, colors.hair, colors.skin)
     + affliction(face.affliction, colors.skin, null).skin;
   const s = softDefs(raw);
-  return {skin: s.svg, defs: defs(colors.hair) + s.defs + EYE_DEFS};
+  return {skin: s.svg, defs: defs(colors.hair) + md.defs + s.defs + EYE_DEFS};
 }
 
 /* ---- Eyes: the colour of the iris, and the strange ones ---- */
@@ -357,4 +366,25 @@ export function affliction(kind, skin, found) {
     case "mottled": out.skin = `<g filter="url(#wpd-soft)">${scatter(16, 520, 520, 220, 260, 77).map(([x, y, k]) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(20 + 30 * k)}" ry="${f(16 + 22 * k)}" fill="#${k > 0.5 ? mix(skin, "6a4a70", 0.35) : mix(skin, "ffffff", 0.35)}" fill-opacity=".55"/>`).join("")}</g>`; break;
   }
   return out;
+}
+
+/* ---- Lips, and features that show against the skin ---- */
+/** Lip colours. "" is the character's own, from the skin. */
+export const LIPS = {"": "Their own", "b0505a": "Rose", "8e2a3a": "Berry", "a8202a": "Deep red", "6e2a4a": "Plum", "c8604a": "Coral",
+  "7a4232": "Brown", "4a2222": "Dark", "c8a8a8": "Pale and bloodless", "2a1a2a": "Blackened"};
+const relLum = h => { const c = rgb(h).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+/** The contrast of two colours, 1 (the same) to 21 (black on white). */
+export const contrast = (a, b) => { const x = relLum(a), y = relLum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+/** How much each feature must stand out from the skin. */
+export const NEED = {lips: 2.0, brows: 2.2, nose: 1.8};
+/**
+ * A colour for a feature that shows against this skin: the wanted colour moved the least it must go, darker or (for
+ * lips and the nose, on darker skin) lighter, until it stands out enough. Returns {c, ratio, light}.
+ */
+export function showing(want, skin, kind) {
+  const need = NEED[kind] ?? 1.6, dark = {lips: "3a0a12", nose: "2a1008"}[kind] ?? "0a0604";
+  const walk = to => { for ( let t = 0; t <= 1.0001; t += 0.04 ) { const c = mix(want, to, t); if ( contrast(c, skin) >= need ) return {c, t}; } return null; };
+  const d = walk(dark), l = kind === "brows" ? null : walk(kind === "lips" ? "f0b0b0" : mix(skin, "ffffff", 0.75));
+  const best = d && l ? (l.t < d.t ? {...l, light: true} : {...d, light: false}) : d ? {...d, light: false} : l ? {...l, light: true} : {c: mix(want, dark, 1), light: false};
+  return {c: best.c, ratio: contrast(best.c, skin), light: best.light};
 }

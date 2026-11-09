@@ -175,6 +175,12 @@
    "title": "Children of the Revolution",
    "short": "CotR",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "v20dacomp",
+   "title": "V20 Dark Ages Companion",
+   "short": "V20 DA Companion",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -206,6 +212,7 @@
   "blackhand.json",
   "anarchs.json",
   "redlist.json",
-  "cotr.json"
+  "cotr.json",
+  "v20dacomp.json"
  ]
 }
