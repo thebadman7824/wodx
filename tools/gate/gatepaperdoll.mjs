@@ -47,13 +47,19 @@ export async function run() {
     const pre = Hooks.on("preUpdateToken", (doc, ch, opts, userId) => { if ( doc.actorId === actor.id && ch?.texture ) texLog.push({at: Date.now(), phase: "pre", src: ch.texture.src, user: userId, stack: String(new Error().stack).split("\n").slice(2, 9).join(" | ")}); });
     const post = Hooks.on("updateToken", (doc, ch, opts, userId) => { if ( doc.actorId === actor.id && ch?.texture ) texLog.push({at: Date.now(), phase: "done", src: ch.texture.src, user: userId}); });
     R.texLog = texLog;
-    R.cleanupHooks = () => { Hooks.off("preUpdateToken", pre); Hooks.off("updateToken", post); };
+    if ( token ) { const us = token.updateSource.bind(token); token.updateSource = (c, o) => { if ( c?.texture || c?.["texture.src"] ) texLog.push({at: Date.now(), phase: "updateSource", src: c.texture?.src ?? c["texture.src"], stack: String(new Error().stack).split("\n").slice(2, 9).join(" | ")}); return us(c, o); }; }
+    const scReset = scene?.reset?.bind(scene); if ( scReset ) scene.reset = (...a) => { texLog.push({at: Date.now(), phase: "scene.reset", stack: String(new Error().stack).split("\n").slice(2, 9).join(" | ")}); return scReset(...a); };
+    R.cleanupHooks = () => { Hooks.off("preUpdateToken", pre); Hooks.off("updateToken", post); if ( scReset ) delete scene.reset; };
     const p1 = await api.save(actor, look);
     const firstBake = structuredClone(api.last?.() ?? null);
     await api.settled(); await sleep(1500);
     const tex = () => actor.prototypeToken.texture.src, live = () => token ? scene.tokens.get(token.id)?.texture?.src : tex();
     const head = await fetch(`/${p1}`, {method: "HEAD"});
     const tk = token ? scene.tokens.get(token.id) : null;
+    // What the server holds, and whether this computer's copy is still the same object
+    const serverGet = (type, parent, id) => new Promise(res => { try { game.socket.emit("modifyDocument", {type, action: "get", operation: {parentUuid: parent.uuid, query: {_id: id}}}, r => res(r?.result?.[0]?.texture?.src ?? r?.error ?? null)); setTimeout(() => res("no answer"), 4000); } catch (e) { res(e.message); } });
+    if ( token ) R.ident = {sameObject: tk === token, oldRef: token.texture?.src, docSource: tk?._source?.texture?.src, sceneSource: scene._source?.tokens?.find?.(t => t._id === token.id)?.texture?.src ?? null,
+      placeable: tk?.object?.document?.texture?.src ?? null, server: await serverGet("Token", scene, token.id)};
     ok("3. bake", !!p1 && p1.endsWith(".webp") && head.ok && tex() === p1 && live() === p1 && actor.flags[MOD]?.baked,
       {path: p1, proto: tex(), token: live(), head: head.status, scene: scene?.id ?? null, tokenId: token?.id ?? null, link: tk?.actorLink ?? null, tokenActor: tk?.actorId ?? null, actor: actor.id, baked: actor.flags[MOD]?.baked ?? null, firstBake, lastBake: api.last?.() ?? null, sceneTokens: scene ? scene.tokens.filter(t => t.actorId === actor.id).map(t => `${t.id}:${t.actorLink}:${t.texture?.src}`) : null});
 
