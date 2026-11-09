@@ -34,8 +34,19 @@
     ]
    },
    {
-    "text": "Durga Syn still endures with a brood of neonates and ancillae; some whisper that whatever sealed Russia off from the supernatural also blunted the curse there.",
+    "text": "Durga Syn still endures with a brood of neonates and ancillae.",
     "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 47,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Some whisper that whatever sealed Russia off from the supernatural also blunted the curse there.",
+    "tier": "rumour",
     "refs": [
      {
       "book": "cbravnos",
@@ -64,7 +75,7 @@
   "claims": [
    {
     "text": "Since the Week, Chimerstry no longer behaves as before; theories blame the Antediluvian's death or a last curse laid on the clan as it died.",
-    "tier": "stated",
+    "tier": "open",
     "refs": [
      {
       "book": "cbravnos",
