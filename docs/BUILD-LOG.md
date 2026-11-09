@@ -740,6 +740,7 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Broken things and fallen rows show as Broken (a new state list) and send a break event; gunshots send a noise event.
 - Firearms, Archery, Melee and Brawl are read from the sheet.
 - Tests: 8 new (6 rules, 2 runtime), 654 in all; UI fit adds a target and the throw window. Gate step 25 (a marksman, a target 10 yards off, a lamp).
+- Deployed 2026-11-09 from main f232f99 (backup Backups\wodx-interactables-0.13.1-2026-11-09, MD5s match). gate-interact 25/25.
 
 ### WoDX Senses 0.1.0, 2026-11-09: what the senses tell (B170 to B174)
 - Ben's request (9 November 2026): answer "what do I see, hear, smell" in chat. Design study: https://claude.ai/artifact/6z5pwGb2XZMMsA8jHHGaq4. Built all four steps of it in one module.

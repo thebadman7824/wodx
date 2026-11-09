@@ -126,8 +126,8 @@ Step 3 of the design note.
 - [x] Tile config: the Target section, the scoreboard, Clear the scoreboard
 - [x] Map: Broken shows for broken things and fallen rows, with a break event
 - [x] Harness tests (8 new) and UI fit
-- [ ] Gate step 25 in rothenstein-wodx
-- [ ] Deployed
+- [x] Gate step 25 in rothenstein-wodx: 25/25 at f232f99
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.13.1-2026-11-09, MD5s checked)
 - [ ] Aiming page ref (V20 core) to pin
 
 ## Still to build (Ben, 2026-11-09), in order
@@ -140,4 +140,4 @@ Step 3 of the design note.
 - [x] Watch points (0.10.0, deployed)
 - [x] Mounts and vehicles (0.11.0, deployed; 0.13.0 fixes the cart following)
 - [x] Step 2: climbing, ledges and jumps (0.13.1, deployed)
-- [x] Step 3: targets on tiles (0.14.0, built)
+- [x] Step 3: targets on tiles (0.14.0, deployed)
