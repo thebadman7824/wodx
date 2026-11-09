@@ -349,6 +349,12 @@
    "title": "Clanbook: Toreador (Revised)",
    "short": "Clanbook: Toreador",
    "edition": "Revised"
+  },
+  {
+   "id": "cbtremere",
+   "title": "Clanbook: Tremere (Revised)",
+   "short": "Clanbook: Tremere",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -409,6 +415,7 @@
   "cbgiovanni.json",
   "cbmalkavian.json",
   "cbnosferatu.json",
-  "cbtoreador.json"
+  "cbtoreador.json",
+  "cbtremere.json"
  ]
 }
