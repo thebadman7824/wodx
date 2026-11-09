@@ -274,7 +274,20 @@
   "see": [
    "camarilla",
    "sabbat",
-   "vav-london"
+   "vav-london",
+   "vav-brujah",
+   "vav-gangrel",
+   "vav-malkavian",
+   "vav-nosferatu",
+   "vav-toreador",
+   "vav-tremere",
+   "vav-ventrue",
+   "vav-lasombra",
+   "vav-tzimisce",
+   "vav-assamite",
+   "vav-setites",
+   "vav-giovanni",
+   "vav-ravnos"
   ]
  },
  {
@@ -325,7 +338,8 @@
   ],
   "see": [
    "vav-sects",
-   "antediluvians"
+   "antediluvians",
+   "vav-ventrue"
   ]
  },
  {
@@ -376,6 +390,884 @@
   ],
   "see": [
    "vav-gothic-victorian-age"
+  ]
+ },
+ {
+  "id": "vav-brujah",
+  "title": "Brujah in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "A clan sliding to the margins.",
+  "claims": [
+   {
+    "text": "Young Brujah, used to the rapid change of the age, expect it to carry the same weight with other Kindred, and miss how their taste for sweeping change sets their elders and conservative clans against them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 52,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "The clan has fallen from idealistic agents of a new Kindred order to sidelined neonates and bitter elders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 52,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-gangrel",
+  "title": "Gangrel in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Close to the Beast, drifting from politics.",
+  "claims": [
+   {
+    "text": "The Embrace brings Gangrel near the Beast; to offset this some take titles, becoming scourges of a city's outskirts in Camarilla lands or joining the Sabbat's apocalyptic knightly orders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 56,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "A few go autarkis and ignore princes altogether; most Gangrel still belong to the Camarilla, though the clan's interest in politics is fading.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 56,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-malkavian",
+  "title": "Malkavians in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Madness under study.",
+  "claims": [
+   {
+    "text": "As mortals come to see insanity as more than a defect, Kindred too watch the Lunatics with fresh and morbid interest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 60,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Some wonder, borrowing Darwin's language, whether the Malkavians are an evolutionary step in how Caine's line meets the world, or just twisted products of the times.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 60,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-nosferatu",
+  "title": "Nosferatu in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The clan that keeps up.",
+  "claims": [
+   {
+    "text": "Where many undead stay frozen, the Nosferatu adapt to the age's changes with unusual speed, unwilling to become relics while Ventrue and Toreador revel in old legacies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 64,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "They command the animal world second only to the Gangrel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 64,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-toreador",
+  "title": "Toreador in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Masters of passing for mortal.",
+  "claims": [
+   {
+    "text": "The Toreador may be the best of all Kindred at passing for mortal, keeping close to the fancies of the living.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 68,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "They work their will through influence and gesture instead of blood and fire, while others dismiss them with narrow stereotypes of dandies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 68,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-tremere",
+  "title": "Tremere in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Sorcerers first, with a fall ahead.",
+  "claims": [
+   {
+    "text": "The Tremere think of themselves as sorcerers before Kindred, and the birth of psychology fits the clan's swift rise in the period.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 72,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "By the end of the era, for all its occult leanings, the Tremere are set to be pushed to the margins once more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 72,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-ventrue",
+  "title": "Ventrue in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Rulers, greedy or dutiful.",
+  "claims": [
+   {
+    "text": "Some Ventrue show only greed and a stale sense of entitlement; others stand up for sect and clan against the Sabbat or calmly settle feuds; most fall between.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 76,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "They hold that without order Kindred would turn on themselves, pointing to the Anarch Revolt and the Inquisition, so a ruling clan must lead others from their self-destructive urges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 76,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects",
+   "vav-london"
+  ]
+ },
+ {
+  "id": "vav-lasombra",
+  "title": "Lasombra in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Old ways in a new world.",
+  "claims": [
+   {
+    "text": "Lasombra customs grow more outdated each night, and the clan must find a workable alternative to stay relevant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 80,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "They pick domains that suit refined, showy tastes but where their sins will not be dug up by day by a righteous Inquisition: districts in decline or on the rise, and churches.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 80,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-tzimisce",
+  "title": "Tzimisce in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Feudal lords of the barbarous lands.",
+  "claims": [
+   {
+    "text": "Most Tzimisce domains lie in the barbarous lands, untouched by Western ideas of government; some Fiends are still literal feudal masters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 84,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "They keep guards and networks of agents and set local peasants against each other, while most now mark their domains by artificial means.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 84,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-assamite",
+  "title": "Assamites in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Feared, and lately fashionable.",
+  "claims": [
+   {
+    "text": "An Assamite among the Kindred may be a contractor, a paid bodyguard or an adviser, so is not always cause for alarm, though many vampires panic anyway.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 89,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "In some Camarilla circles they are tolerated, even welcomed; young British and Western Kindred are fascinated by them as exotic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 89,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-setites",
+  "title": "Followers of Set in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Serpents of the occult societies.",
+  "claims": [
+   {
+    "text": "Few Setites work in Paris; Adrian King, who holds much power in occult groups across the Empire and Western Europe, has said Parisians already manage what Setites might do there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 96,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Setite strength is growing in America, in New England and along the East Coast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 96,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-giovanni",
+  "title": "Giovanni in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Bankers with a hidden aim.",
+  "claims": [
+   {
+    "text": "The clan's elders seem to have a greater goal, with control of the financial markets only a means to it, though most Giovanni are content with the wealth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 101,
+      "pdf": 101
+     }
+    ]
+   },
+   {
+    "text": "Even without necromancy they could be among the strongest clans; only Brujah, Toreador, Ventrue and Lasombra hold wider influence as clans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 101,
+      "pdf": 101
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-ravnos",
+  "title": "Ravnos in the Victorian Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Wanderers and tricksters.",
+  "claims": [
+   {
+    "text": "Many recent Embraces are not of Gypsy blood; the bond lies in shared outlook instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 107,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "The clan is known for tricksters, deceivers and thieves, and is mostly nomadic, by choice for the most part.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 107,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-london-rivals",
+  "title": "London's Uneasy Princedom",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Mithras rules, but not unopposed.",
+  "claims": [
+   {
+    "text": "Mithras is older than England itself and has never let go of many pagan ways, though London's Kindred are otherwise refined.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 132,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "The prince's power seems unchallenged, yet skirmishes over the princedom go on.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 132,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-london"
+  ]
+ },
+ {
+  "id": "vav-lisbon",
+  "title": "Lisbon",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "A city ruled through a voice.",
+  "claims": [
+   {
+    "text": "Lisbon's Kindred, elders among them, heed a young mortal woman called the Voice of the Prince.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 141,
+      "pdf": 141
+     }
+    ]
+   },
+   {
+    "text": "Most assume the Voice speaks for some great power, since a prince in disguise would be too obvious; yet in a sense the Voice is the Prince of Lisbon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 141,
+      "pdf": 141
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "vav-copenhagen",
+  "title": "Copenhagen",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "A capital on two islands.",
+  "claims": [
+   {
+    "text": "The city stands on two islands: the main part on Sjaelland, and the smaller Christianshavn on Amager, joined by bridges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 148,
+      "pdf": 148
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "vav-budapest",
+  "title": "Budapest",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The domain of Vencel Rikard.",
+  "claims": [
+   {
+    "text": "Prince Vencel Rikard has led the city's Kindred since before the Middle Ages; once thought weak and idle, Rikard now rules firmly but fairly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 159,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "Rikard has allies or pawns across Budapest and strong friends among the Russian Kindred, and rumour says Rikard's sire moved to Russia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 159,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "vav-uganda",
+  "title": "Uganda",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Savanna, jungle and older powers.",
+  "claims": [
+   {
+    "text": "Uganda offers hot savannas, thick jungles and distant mountains, with tales of strong mortal sorcerers and beings older than vampires and beyond death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 164,
+      "pdf": 164
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "vav-new-york",
+  "title": "New York",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Opera houses and Tammany Hall.",
+  "claims": [
+   {
+    "text": "The Academy of Music and the Metropolitan Opera House entertain the elite, and many of the richest families and political figures live in the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 168,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "Tammany Hall, run by Boss Tweed, keeps great power through illegal favours and vote-gathering, despite a setback in the 1870s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 168,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "vav-arcanum",
+  "title": "The Arcanum",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Scholars who study the Kindred.",
+  "claims": [
+   {
+    "text": "Some groups hunt Kindred for reasons other than destruction; the Arcanum, founded within the last decade, exists to study them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 197,
+      "pdf": 197
+     }
+    ]
+   },
+   {
+    "text": "Its focus on Kindred and other supernatural beings sets it apart from general occult interest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 197,
+      "pdf": 197
+     }
+    ]
+   },
+   {
+    "text": "Among witch-hunters, inquisitors are a little likelier to have True Faith, though it is still very rare.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 197,
+      "pdf": 197
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-golden-dawn",
+   "vav-sects"
+  ]
+ },
+ {
+  "id": "vav-lupines",
+  "title": "Lupines of the Age",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Werewolves by land and people.",
+  "claims": [
+   {
+    "text": "Lupines differ by region and people: the black-furred ones of Scandinavia are berserkers who live for battle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 202,
+      "pdf": 202
+     }
+    ]
+   },
+   {
+    "text": "Those of the Irish countryside and Scottish fens are smaller and mystical, preferring magical ambush to open attack; those of the New World are more spiritual still, sharing ways with native peoples.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 202,
+      "pdf": 202
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-gaslight-torchlight"
+  ]
+ },
+ {
+  "id": "vav-tainted-places",
+  "title": "Tainted Places",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Where madness and sickness soak into the world.",
+  "claims": [
+   {
+    "text": "In some places madness clings to the ground, and those who enter start to break down in mind and feeling; escape is often harder than it sounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 210,
+      "pdf": 210
+     }
+    ]
+   },
+   {
+    "text": "Disease too can seep into the world, and a truly vile one might even drive its victims like puppets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 210,
+      "pdf": 210
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-history-mystery"
+  ]
+ },
+ {
+  "id": "vav-character-creation",
+  "title": "Victorian Characters",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Building a Victorian Kindred.",
+  "claims": [
+   {
+    "text": "Characters are built as in Vampire: The Masquerade: seven dots to the primary Attributes, five to the secondary and the rest to the tertiary, then Abilities ranked the same way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 116,
+      "pdf": 116
+     }
+    ]
+   },
+   {
+    "text": "Ability dots only measure dice against other characters; they should not decide a story through period trivia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vav",
+      "page": 120,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vav-history-mystery"
   ]
  }
 ]
