@@ -211,6 +211,12 @@
    "title": "Vampire Storytellers Handbook (Revised)",
    "short": "ST Handbook (Rev)",
    "edition": "Revised"
+  },
+  {
+   "id": "cbgangrel",
+   "title": "Clanbook: Gangrel (Revised)",
+   "short": "CB Gangrel (Rev)",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -248,6 +254,7 @@
   "wildwest.json",
   "beckett.json",
   "dust.json",
-  "sthr.json"
+  "sthr.json",
+  "cbgangrel.json"
  ]
 }
