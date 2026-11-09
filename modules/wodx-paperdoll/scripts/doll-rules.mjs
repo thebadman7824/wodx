@@ -92,15 +92,17 @@ export function themeFor({type = "", variant = ""} = {}) {
   const v = String(variant).toLowerCase();
   switch ( type ) {
     case "Vampire": return {ground: "red", ring: "kindred"};
-    case "Mortal": return /ghoul|revenant|retainer/.test(v) ? {ground: "gold", ring: "sworn"} : /sorcer|psychic|faith/.test(v) ? {ground: "lapis", ring: "mortal"} : {ground: "gold", ring: "mortal"};
+    case "Mortal": return /ghoul|revenant|retainer/.test(v) ? {ground: "rose", ring: "sworn"} : /faith|inquisit|priest/.test(v) ? {ground: "diaper", ring: "mortal"}
+      : /sorcer|psychic/.test(v) ? {ground: "lily", ring: "mortal"} : {ground: "gold", ring: "mortal"};
     case "Mage": return {ground: "lapis", ring: "mortal"};
     case "Hunter": return {ground: "parchment", ring: "mortal"};
-    case "Werewolf": case "Changing Breed": return {ground: "green", ring: "creature"};
-    case "Changeling": return {ground: "violet", ring: "creature"};
-    case "Wraith": return {ground: "night", ring: "creature"};
+    case "Werewolf": return {ground: "green", ring: "creature"};
+    case "Changing Breed": return {ground: "vine", ring: "creature"};
+    case "Changeling": return {ground: "vine", ring: "creature"};
+    case "Wraith": return {ground: "chequer", ring: "creature"};
     case "Demon": return {ground: "ember", ring: "creature"};
-    case "Mummy": case "Exalted": return {ground: "gold", ring: "creature"};
-    case "Creature": return /spirit|shadow/.test(v) ? {ground: "night", ring: "creature"} : {ground: "green", ring: "creature"};
+    case "Mummy": case "Exalted": return {ground: "punched", ring: "creature"};
+    case "Creature": return /spirit|shadow/.test(v) ? {ground: "night", ring: "creature"} : /fae|fair|chimera/.test(v) ? {ground: "violet", ring: "creature"} : {ground: "green", ring: "creature"};
     default: return {ground: "gold", ring: "mortal"};
   }
 }

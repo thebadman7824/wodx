@@ -270,5 +270,5 @@ Sixteen skin tones no human has (fae blue, cornflower, deep water, verdant, moss
 At Mauled and worse the face was washed with a fixed pale grey (#d9d7cf), which laid a white film over dark skin. The wash now takes the skin's own colour drained toward a grey of the same lightness, so a face loses warmth without whitening. The paper grain and fibre that lay over the whole figure are gone too (Ben cleared it); the grounds keep their own texture.
 
 ## B399. Six more illuminated grounds (2026-11-09)
-Rose with silver stars, a red and blue diaper of lozenges with gold rings, green with a gold vine scroll, azure with gold lilies, a bone and black chequer, and gold leaf with punched work. None is chosen by kind yet; the themes per kind are unchanged.
+Rose with silver stars, a red and blue diaper of lozenges with gold rings, green with a gold vine scroll, azure with gold lilies, a bone and black chequer, and gold leaf with punched work. Ben (9 November): spawned NPCs get them by kind, players pick freely. Ghouls and retainers rose, the faithful diaper, sorcerers and psychics lilies, changing breeds and changelings the vine, fae creatures purple, wraiths the chequer, mummies and exalted punched gold.
 
