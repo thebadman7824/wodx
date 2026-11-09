@@ -586,6 +586,17 @@ game.world.id = worldId;
     windows.push({name: "The Ledger", tag: lo.tag ?? "div", classes: ["application", ...(lo.classes ?? [])].join(" "), width: lo.position.width, height: lo.position.height,
       content: la.element.querySelector("section.window-content").innerHTML});
   }
+  // The rumour mill: twenty rumours, some known to many
+  {
+    await game.settings.set("wodx-storyteller", "rumours", Array.from({length: 20}, (_, i) => ({id: `ru${i}`, text: `They say the miller's wife walks the river road at night, rumour number ${i}, with a long tail to wrap`,
+      started: game.time.worldTime - 3600 * i, night: 100, knownBy: people.slice(0, 1 + (i % people.length)).map(p => p.id), quiet: i % 5 === 0 ? 3 : 0, ended: i % 7 === 0, log: []})));
+    const RApp = (await import(join(root, "modules/wodx-storyteller/scripts/rumours.mjs"))).RumoursApp;
+    const ra = new RApp({});
+    await ra.render({force: true});
+    const rop = RApp.DEFAULT_OPTIONS;
+    windows.push({name: "The rumour mill", tag: rop.tag ?? "div", classes: ["application", ...(rop.classes ?? [])].join(" "), width: rop.position.width, height: rop.position.height,
+      content: ra.element.querySelector("section.window-content").innerHTML});
+  }
   // Dreams and visions: twelve waiting and twelve already dreamt, long titles
   {
     await game.settings.set("wodx-storyteller", "dreams", Array.from({length: 24}, (_, i) => ({id: `dr${i}`, actorId: people[i % people.length].id,
