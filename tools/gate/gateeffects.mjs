@@ -60,8 +60,11 @@ export async function run() {
     const tileOf = tag => canvas.tiles.placeables.find(t => t.document.flags?.wodxGate?.tag === tag);
     await until(() => FX.videoOf(tileOf("video")) && !FX.videoOf(tileOf("video")).paused);
     let vt = tileOf("video"), it = tileOf("image"), v = FX.videoOf(vt);
+    // A headless browser may block autoplay; start it by hand so the later steps have a playing video to pause
+    const autoplayed = !!v && !v.paused;
+    if ( v?.paused ) { v.muted = true; await v.play().catch(() => {}); await sleep(300); }
     ok("3. video draws and plays", !!vt?.mesh && vt.mesh.renderable !== false && !!v && !v.paused,
-      {hasMesh: !!vt?.mesh, hasVideo: !!v, paused: v?.paused, isVideo: vt?.isVideo});
+      {hasMesh: !!vt?.mesh, hasVideo: !!v, paused: v?.paused, autoplayed, isVideo: vt?.isVideo});
 
     await game.settings.set(CH, "sceneVideo", "hide");
     await until(() => vt.mesh.renderable === false && v.paused);
