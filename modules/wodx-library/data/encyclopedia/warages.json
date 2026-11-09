@@ -1,0 +1,268 @@
+[
+ {
+  "id": "wa-gehenna-cults",
+  "title": "Gehenna Cults",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Secret circles of Camarilla elders who fear the end.",
+  "claims": [
+   {
+    "text": "Officially the Camarilla calls Gehenna a tale to scare childer, but some elders fear it more than the young do, since their old blood is the prize.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "They meet in tiny sworn cells, some hidden inside ordinary social clubs, and none has more than a few hundred members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "wa-groundskeepers",
+  "title": "The Groundskeepers",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Elders who would find and watch the sleeping Antediluvians.",
+  "claims": [
+   {
+    "text": "Presented to younger Kindred as an elders' social club, the cult casts the Antediluvians as vermin under the soil and its members as watchful gardeners.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "It hopes to win through knowing every Antediluvian resting place, reading the signs of the end and staying alert, and pays fortunes for news of torpor sites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "A militant offshoot founded in 1898, the Master Edenic Groundskeepers, wants to strike first; it has drifted from the main body since the 1960s and may soon break away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 74,
+      "pdf": 75
+     },
+     {
+      "book": "warages",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna",
+   "antediluvians"
+  ]
+ },
+ {
+  "id": "wa-lawgivers",
+  "title": "The Way of the Ancient Lawgivers",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fundamentalists who would restore the order of the First City.",
+  "claims": [
+   {
+    "text": "Founded in 1312, it holds that all Kindred must return to the ways of the First City, when mortals and lesser vampires honoured the Antediluvians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Its hard core, the Cornerstones, scorn the lukewarm members they call Claystones yet depend on them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "A hidden subcell wants to end the Masquerade and openly enslave humanity; the Camarilla has sent archons to infiltrate the cult over it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna",
+   "masquerade"
+  ]
+ },
+ {
+  "id": "wa-servitors-irad",
+  "title": "The Servitors of Irad",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A hidden cult that serves the Jyhad.",
+  "claims": [
+   {
+    "text": "Founded in 1456, the cult recruits no one openly and works to keep other Kindred weak and misled before Gehenna.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Its members spread lies at Camarilla conclaves and infiltrate other Gehenna cults to split them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna",
+   "jyhad"
+  ]
+ },
+ {
+  "id": "wa-twilight-cult",
+  "title": "The Twilight Cult",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Elders hunting the last daughter of Eve.",
+  "claims": [
+   {
+    "text": "Founded in 1550, it believes one stanza of the Book of Nod about the last daughter of Eve is the key: control or destroy that daughter and Gehenna is averted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "A Ravnos member persuaded cult leaders, on thin evidence, that the daughter would be born among the Rroma, helped by a tale of a woman named Evania.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna",
+   "book-of-nod"
+  ]
+ },
+ {
+  "id": "wa-ninth-wave",
+  "title": "The Ninth Wave",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Elders who fear the return of magic and the fae.",
+  "claims": [
+   {
+    "text": "Founded in 1890 and named after a Tennyson poem, it holds that the Antediluvians sleep for lack of magic and will wake when a second Flood of magic comes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "It treats the return of the faeries as the sign of the end, and hopes to cut Arcadia off from Earth and destroy the fae left behind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "warages",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna"
+  ]
+ }
+]
