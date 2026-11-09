@@ -635,3 +635,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Tests: events.test.mjs (10) and longskip.test.mjs (9: one chronicle from 1197 to 2025 in seven Pass the Years steps with a Kindred elder, a ghoul, a mortal and a journal; after each step no actor, item or journal is lost, the era follows the date, the events fire oldest first and the elder's years awake grow). 498 harness tests pass.
 - UI fit: run in the cloud without Foundry's Font Awesome beside foundry2.css, every window (old and new alike) fails only the minimized header button check, which needs the icon font; to be rerun on the PC with the full public folder.
 - Gates: tools/gate/gateevents.mjs (9 steps) is new, and gateera.mjs is ported to rothenstein-wodx (it holds the world and deletes its cards). Not deployed yet.
+
+### Data versions and the nightly copy, 2026-11-09: still WoDX Chronicle 0.5.0 (B119)
+- Gap review item 6. scripts/migrations-rules.mjs (pure: the plan, which documents to back up, file names) and scripts/migrations.mjs (the run, the backup through FilePicker, the card, a log of the last 50 runs). API: game.wodx.chronicle.migrations.status(), run(), register(), backup().
+- No module needs a step yet, so every module is at data version 1; the first load of 0.5.0 stamps them.
+- tools/backup: nightly-backup.ps1 and register-nightly-backup.ps1 (PowerShell, below-normal priority, robocopy so a running Foundry is fine).
+- Tests: migrations.test.mjs (7: the plan, missing steps, newer data, the backup comes first and holds only the module's documents, the card, a failing step). 505 harness tests pass. gateevents gains step 10 (every WoDX module on has a data version).

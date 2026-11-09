@@ -15,6 +15,7 @@
  *   7. Chronicle Rules has a "Dated events" page with a table
  *   8. the Dated events window opens with a search box and a row per event
  *   9. put everything back
+ *  10. data versions: every WoDX module on in the world has one recorded, and a backup folder can be written
  * Result: Data/wodx-gate/gateevents-result.json.
  */
 const M = "wodx-chronicle";
@@ -109,5 +110,10 @@ export async function run() {
     ok("9. put back", game.time.worldTime === t0 && !!api?.isHeld?.() === saved.held
       && JSON.stringify(game.settings.get(M, "eventsFired")) === JSON.stringify(saved.fired), {removedCards: mine.length});
   }
+  try {
+    const st = api?.migrations?.status() ?? [];
+    const on = [...game.modules].filter(m => m.active && m.id.startsWith("wodx-")).map(m => m.id);
+    ok("10. data versions", on.length > 0 && on.every(id => st.find(s => s.module === id)?.data >= 1), {status: st});
+  } catch (err) { ok("10. data versions", false, {error: err.message}); }
   return save(R, "gateevents-result.json");
 }

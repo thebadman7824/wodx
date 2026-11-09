@@ -16,6 +16,7 @@ import * as theme from "./theme.mjs";
 import * as playerTools from "./player-tools.mjs";
 import * as gen from "./gen.mjs";
 import * as events from "./events.mjs";
+import * as migrations from "./migrations.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -54,6 +55,8 @@ Hooks.once("init", () => {
   gen.registerGenSettings();
   // Dated events
   events.registerEventSettings(async () => { await events.checkEvents(); await eras.refreshRulesJournal(); });
+  // Data versions for every WoDX module
+  migrations.registerMigrationSettings();
 
   // Calendar: Julian, then Gregorian at the chosen reform
   let reform = "bohemia-1584";
@@ -130,11 +133,17 @@ Hooks.once("ready", async () => {
     theme,
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
+    migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
       registerTables: gen.registerTables, installTables: gen.installTables, cultures: gen.CULTURES}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});
+  // Bring every WoDX module's stored data up to date before the others start on it
+  if ( isActiveGM() ) {
+    try { await migrations.runMigrations(); }
+    catch (err) { console.error("WoDX | Data versions could not be checked", err); }
+  }
   // Other WoDX modules wait for this: Foundry does not wait for an async ready hook to finish
   Hooks.callAll("wodxChronicleReady", api);
 
