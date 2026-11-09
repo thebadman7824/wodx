@@ -86,8 +86,9 @@ export const MENU_PLAN = {
     },
     /** Dark Ages: Mage (3.7.0): the same bands, Foundation and Pillars in place of Arete. */
     mageDA: {
-        act: ["action", "api:quickCheck", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "preset:researchmage", "api:numina", "api:trueFaith"],
-        resist: ["api:hazard"],
+        act: ["action", "api:quickCheck", "api:daCast", "api:daMage", "api:daQuintessence", "uses:quintessence", "api:daGuide", "preset:researchmage", "api:numina", "api:trueFaith"],
+        resist: ["api:daCountermagic", "api:hazard"],
+        st: ["api:daCertamen"],
         recover: ["api:healing", "uses:willpower"],
         scene: ["api:endScene", "api:voices", "rules:mage"]
     },
@@ -263,7 +264,10 @@ export const DESC = {
     "api:demonIllusion": "Demon: see through illusion (Perception + Alertness at 7, or the other demon's Faith or Torment)",
     "api:c20Bedlam": "Changeling 20th: Nightmare, Imbalance and the Bedlam Thresholds",
     "api:c20ColdIron": "Changeling 20th: cold iron's aggravated wound to both bodies and the Glamour it costs",
-    "api:daQuintessence": "Dark Ages: absorb from a cray, harvest Tass, the Fount's monthly rite, a day in the Umbra",
+    "api:daQuintessence": "Dark Ages: absorb from a cray, harvest Tass, the Fount's monthly rite, an offering to the Moon, a day in the Umbra",
+    "api:daCountermagic": "Dark Ages: cancel another's spell through the fellowship's own countermagic, 1 Quintessence",
+    "api:daGuide": "Dark Ages: which Pillar level each fellowship needs for common effects; wonders",
+    "api:daCertamen": "Dark Ages: the duel arcane, run by the Storyteller: wills, the locus, strikes and the stake",
     "uses:quintessence": "Spend or regain Quintessence",
     "uses:paradox": "Paradox gained, or shed after a Backlash",
     "rules:mage": "The mage rules at a glance, with page references",

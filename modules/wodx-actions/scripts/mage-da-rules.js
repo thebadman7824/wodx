@@ -7,6 +7,8 @@
  * brandings: [{level, text, at}], lastCast (world time), sceneTries: {key, failures, botches}}.
  */
 
+import { GRIMOIRE_ROTES } from "./mage-da-grimoire.js";
+
 /* ------------------------------------------------------------------ */
 /*  The fellowships (pp. 105–135)                                      */
 /* ------------------------------------------------------------------ */
@@ -85,7 +87,9 @@ export const ROTES = [
     { id: "unsleeping", f: "valdaermen", name: "Unsleeping Swords", levels: { fara: 3, galdrar: 2 }, page: 135,
         system: "One Quintessence per corpse raised, up to the successes. A corpse: Strength and Stamina 4, Dexterity and Wits 1, Brawl and Melee 2; Healthy, Healthy, −1, −1, −2, −5. Two more successes and Quintessence on one body: an Attribute dot or a −1 level; one: an Ability dot." },
     { id: "emptyroads", f: "valdaermen", name: "Curse of Empty and Endless Roads", levels: { fara: 4, galdrar: 4 }, page: 135,
-        system: "For the duration (often made lasting), no home, kin or welcome: the victim wanders, forgotten or despised." }
+        system: "For the duration (often made lasting), no home, kin or welcome: the victim wanders, forgotten or despised." },
+    // The Grimoire's rotes (book "G": Dark Ages: Mage Grimoire, printed pages)
+    ...GRIMOIRE_ROTES
 ];
 
 /* ------------------------------------------------------------------ */
@@ -112,16 +116,21 @@ export function castPlan({ levels = {}, ratings = {}, foundation = 1, fellowship
     let dice = Number(foundation) + (Number(ratings[top]) || 0) + (complex ? used.length - 1 : 0);
     if (opts.sanctum >= 5) { dice += 1; notes.push("sanctum: +1 die to the Foundation (p. 87)"); }
     if (opts.blotDice) { dice += Number(opts.blotDice); notes.push(`Blot: ${opts.blotDice} lethal level(s) given for as many dice (p. 131)`); }
+    if (opts.specialty) { dice += 1; notes.push("within the Foundation's specialty: +1 die (Grimoire p. 112)"); }
     // Difficulty: 4 + level (simple); 5 + highest + 1 per other Pillar (complex)
     let diff = complex ? 5 + highest + (used.length - 1) : 4 + highest;
     notes.push(complex ? `complex: 5 + ${highest} + ${used.length - 1}` : `simple: 4 + ${highest}`);
     if (opts.failures) { diff += Number(opts.failures); notes.push(`+${opts.failures} for earlier failures this scene`); }
     if (opts.botches) { diff += 2 * Number(opts.botches); notes.push(`+${2 * opts.botches} for earlier Backlash this scene`); }
+    // The first day of a season: suited magic −3, all other magic +3 (Grimoire pp. 110–111)
+    if (opts.season === "against") { diff += 3; notes.push("+3: against the season on its first day (Grimoire p. 110)"); }
     // Lowering: each point first removes an extra success needed above 9, then lowers from 9 (floor 4)
     let lower = 0;
     const q = Math.min(3, Math.max(0, Number(opts.quintessence) || 0));
     if (q) { lower += q; notes.push(`−${q} for Quintessence`); }
     if (opts.freeFocus) { lower += 1; notes.push("−1 for a focus no longer needed"); }
+    if (opts.season === "suits") { lower += 3; notes.push("−3: suits the season on its first day (Grimoire p. 110)"); }
+    if (opts.sunday && fellowship === "messianic") { lower += 1; notes.push("−1: an instantaneous spell on a Sunday (Grimoire p. 111)"); }
     const sanctumLower = opts.sanctum >= 3 ? 2 : opts.sanctum >= 2 ? 1 : 0;
     if (sanctumLower) { lower += sanctumLower; notes.push(`−${sanctumLower} in the sanctum`); }
     let extra = Math.max(0, diff - 9);

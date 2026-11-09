@@ -8,4 +8,4 @@
 - [x] Gender-neutral text (B48); search box on the rote list (B24); UI fit (B17) for the three dialogs
 - [x] Harness: phase6f.test.mjs (12); all 248 tests pass
 - [x] Gate 6f in Foundry (tools/gate/gate6f.mjs): 13/13, 2026-11-08
-- [ ] Later: the Mage Grimoire rotes; the later-era mage (Arete, Spheres, Paradox) on M20
+- [x] Later: the Mage Grimoire rotes (Phase 6n, 3.15.0); the later-era mage (Arete, Spheres, Paradox) on M20 (Phase 6m)

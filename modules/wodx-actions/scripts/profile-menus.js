@@ -92,7 +92,8 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
             ["Magic", [["api:daCast", "Cast a spell (Foundation + Pillar)", "fa-hat-wizard"], ["api:daMage", "Fellowship and Pillars", "fa-scroll"],
-                ["api:daQuintessence", "Gather Quintessence (cray, Fount)", "fa-gem"], ["uses:quintessence", "Quintessence", "fa-coins"]]],
+                ["api:daQuintessence", "Gather Quintessence (cray, Fount, Moon)", "fa-gem"], ["uses:quintessence", "Quintessence", "fa-coins"],
+                ["api:daCountermagic", "Countermagic", "fa-shield-alt"], ["api:daGuide", "Using the Art (Pillar guide)", "fa-book-open"], ["api:daCertamen", "Certámen (the duel arcane)", "fa-khanda"]]],
             ["Sorcery and Numina", [["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
