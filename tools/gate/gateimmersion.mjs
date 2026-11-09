@@ -54,7 +54,8 @@ export async function run() {
     const s2 = tok.flags["wodx-interactables"]?.carried;
     ok("3. burned out", s2 && !s2.lit && s2.left === 0 && tok.light.dim === 2, {state: s2, dim: tok.light.dim});
 
-    await actor.update({"system.health.damage.woundpenalty": -2, "system.health.damage.woundlevel": "Wounded"});
+    // The system works the penalty out from the damage, so the gate sets damage (4 lethal: Wounded, −2 on the V20 chart)
+    await actor.update({"system.health.damage.lethal": 4, "system.health.damage.woundpenalty": -2, "system.health.damage.woundlevel": "Wounded"});
     const edges = S.perception.rules.stateEdges(S.perception.stateOf(actor));
     const was = game.user.character;
     let screen = false, words = "";
