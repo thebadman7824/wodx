@@ -65,3 +65,9 @@
 /* Rule B24: search boxes over long lists */
 .application.wodx input.wodx-search, .wodx-dialog input.wodx-search { width: 100%; margin: 0 0 0.35rem; flex: none; }
 .application.wodx .form-group input.wodx-search { flex: 1 1 100%; }
+
+/* Languages in chat */
+.wodx-language { font-size: var(--font-size-11, 11px); font-style: italic; opacity: 0.8; margin-bottom: 2px; }
+.wodx-language.is-unknown { color: var(--color-text-subtle, #888); }
+.wodx-speaking { display: flex; align-items: center; gap: 4px; padding: 2px 0; font-size: var(--font-size-12, 12px); }
+.wodx-speaking input { flex: 1; min-width: 0; height: 24px; }

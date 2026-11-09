@@ -15,6 +15,10 @@ import * as timed from "./timed.mjs";
 import * as theme from "./theme.mjs";
 import * as playerTools from "./player-tools.mjs";
 import * as gen from "./gen.mjs";
+import * as events from "./events.mjs";
+import * as migrations from "./migrations.mjs";
+import * as languages from "./languages.mjs";
+import * as tours from "./tours.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -37,8 +41,12 @@ Hooks.once("init", () => {
     onClockChange: () => ClockApp.refresh(),
     onEraInputsChange: () => { eras.checkEra(); ClockApp.refresh(); },
     onActiveEraChange: async () => { await eras.onActiveEraChange(); ClockApp.refresh(); },
+    onHoldChange: async () => {
+      ClockApp.refresh();
+      if ( isActiveGM() && !skip.isHeld() ) { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); }
+    },
     onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); },
-    onRuleChange: async () => { await eras.checkEra(); await eras.refreshRulesJournal(); ClockApp.refresh(); }
+    onRuleChange: async () => { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); ClockApp.refresh(); }
   });
   // The WoDX look (6e): each player's own look, text size and motion
   theme.registerThemeSettings();
@@ -47,6 +55,13 @@ Hooks.once("init", () => {
   playerTools.registerPlayerToolSettings();
   // Phase 7a: the generator core
   gen.registerGenSettings();
+  // Dated events
+  events.registerEventSettings(async () => { await events.checkEvents(); await eras.refreshRulesJournal(); });
+  // Data versions for every WoDX module
+  migrations.registerMigrationSettings();
+  // Languages in chat
+  languages.registerLanguageSettings();
+  languages.registerLanguageHooks();
 
   // Calendar: Julian, then Gregorian at the chosen reform
   let reform = "bohemia-1584";
@@ -114,22 +129,36 @@ Hooks.once("ready", async () => {
     contentFixes,
     timeSkip: skip.timeSkip,
     isSkipping: skip.isSkipping,
+    isHeld: skip.isHeld,
+    hold: skip.setHold,
     conditions, timed,
     registerCondition: conditions.registerCondition,
     applyTimed: timed.applyTimed,
     endScene: timed.endScene,
     theme,
+    events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
+    tours: {start: tours.startTour},
+    languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
+    migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
       registerTables: gen.registerTables, installTables: gen.installTables, cultures: gen.CULTURES}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {chronicle: api});
+  // Foundry tours for players and the Storyteller
+  tours.registerTours();
+  // Bring every WoDX module's stored data up to date before the others start on it
+  if ( isActiveGM() ) {
+    try { await migrations.runMigrations(); }
+    catch (err) { console.error("WoDX | Data versions could not be checked", err); }
+  }
   // Other WoDX modules wait for this: Foundry does not wait for an async ready hook to finish
   Hooks.callAll("wodxChronicleReady", api);
 
   if ( isActiveGM() ) {
     await eras.checkEra();
+    await events.checkEvents();
     await eras.refreshRulesJournal();
     await contentFixes.checkContentFixes();
     if ( !setting("openingSet") && game.time.worldTime === 0 ) {
@@ -146,12 +175,14 @@ Hooks.on("updateWorldTime", () => {
   if ( skip.isSkipping() ) return;
   ClockApp.refresh();
   eras.checkEra();
+  events.checkEvents().then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
 
 Hooks.on("wodxSkipEnd", info => {
-  if ( !active ) return;
+  if ( !active || skip.isHeld() ) return;
   ClockApp.refresh();
   if ( !info?.eraHandled ) eras.checkEra();
+  events.checkEvents({label: info?.label || "the time skip"}).then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
 
 Hooks.on("getSceneControlButtons", controls => {

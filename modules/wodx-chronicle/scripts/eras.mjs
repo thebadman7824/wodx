@@ -122,6 +122,7 @@ export async function onActiveEraChange() {
  */
 export async function checkEra() {
   if ( !isActiveGM() || !state.loaded ) return;
+  if ( setting("hold") ) return;
   const target = targetEra();
   if ( !target.profile ) return;
   const activeId = setting("activeEra");

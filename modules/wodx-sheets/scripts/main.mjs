@@ -72,6 +72,19 @@ const flagObj = (a, k) => a.getFlag(ACT, k) ?? {};
 const stat = (key, s, roll = true, perm = true, temp = true) => ({ kind: "stat", key, stat: s, roll, perm, temp });
 const strip = v => String(v ?? "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 const leaf = v => String(v ?? "").split(".").pop().toLowerCase().replace(/[^a-z]/g, "");
+/** A weapon's line as the printed Combat box has it: difficulty, damage, and range and rate for a gun. */
+function weaponLine(i) {
+  const w = i.system ?? {}, d = w.damage ?? {}, kind = { b: "B", bashing: "B", l: "L", lethal: "L", a: "A", aggravated: "A" }[String(d.type ?? "").toLowerCase()] ?? "";
+  const attr = String(d.attribute ?? "") ? `${String(d.attribute).slice(0, 3).replace(/^./, c => c.toUpperCase())}+` : "";
+  const parts = [`diff ${n(w.difficulty) || 6}`, `${attr}${n(d.bonus)}${kind ? ` ${kind}` : ""}`];
+  if (i.type === "Ranged Weapon") parts.push(`range ${n(w.range)}`, `rate ${n(w.rate)}`, `clip ${n(w.clip?.max)}`);
+  if (w.conceal) parts.push(`conceal ${w.conceal}`);
+  return parts.join(", ");
+}
+function armorLine(i) {
+  const s = i.system?.soak ?? {}, pen = n(i.system?.dexpenalty);
+  return [`soak ${n(s.bashing)}/${n(s.lethal)}/${n(s.aggravated)}`, pen ? `Dex -${Math.abs(pen)}` : ""].filter(Boolean).join(", ");
+}
 /** Fixed rows (the six Realms, the six Hekau paths) read from items by name: read-only dots, the item opens on a click. */
 function fixedRows(a, names, test) {
   return names.map(([label, re]) => { const it = [...a.items].find(i => test(i) && re.test(`${i.name} ${i.system?.label ?? ""}`));
@@ -145,6 +158,19 @@ function block(key, a) {
     case "stains": return { kind: "items", title: "Stains", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.stain$/)(i))), empty: "None." };
     case "defaultAbilities": return { kind: "list", title: "Default Abilities", lines: SR.ORPHEUS_DEFAULTS.map(([t, p]) => ({ text: `${t} (${p})` })), empty: "" };
     case "rites": return { kind: "items", title: "Rites", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.(rite|ritual)$/)(i)), false), empty: "None." };
+    case "combat": {
+      const weapons = itemsOf(a, i => i.type === "Melee Weapon" || i.type === "Ranged Weapon").map(i => ({ id: i.id, name: `${i.name} (${weaponLine(i)})`, dots: null }));
+      const armor = itemsOf(a, i => i.type === "Armor").map(i => ({ id: i.id, name: `${i.name} (${armorLine(i)})`, dots: null }));
+      return { kind: "items", title: "Combat", rows: [...weapons, ...armor], empty: "No weapons or armor: add them as items.", note: `Soak ${n(a.system.soak?.bashing)} bashing, ${n(a.system.soak?.lethal)} lethal, ${n(a.system.soak?.aggravated)} aggravated` };
+    }
+    case "gear": { const m = a.system.money ?? {}, g = strip(a.system.gear);
+      return { kind: "items", title: "Possessions", rows: itemRows(itemsOf(a, i => i.type === "Item"), false), empty: g ? "" : "Nothing carried.", note: [g, n(m.carried) || n(m.bank) ? `Money: ${n(m.carried)} carried, ${n(m.bank)} put by` : ""].filter(Boolean).join(" · ") };
+    }
+    case "fetishes": return { kind: "items", title: "Fetishes and Talens", rows: itemsOf(a, i => i.type === "Fetish").map(i => ({ id: i.id, name: n(i.system?.gnosis) ? `${i.name} (Gnosis ${n(i.system.gnosis)})` : i.name, dots: SR.dots(i.system?.level ?? i.system?.value) })), empty: "None." };
+    case "rotes": return { kind: "items", title: "Rotes", roll: sheetFor(a) === "m20" ? "m20Cast" : "daMage", rows: itemRows(itemsOf(a, i => i.type === "Rote"), false), empty: "None yet." };
+    case "description": { const cut = t => t.length > 240 ? `${t.slice(0, 237)}...` : t;
+      return { kind: "list", title: "History and Description", lines: [["Appearance:", strip(a.system.appearance)], ["History:", strip(a.system.background)]].filter(([, t]) => t).map(([bold, t]) => ({ bold, text: cut(t) })), empty: "Written on the Bio tab." };
+    }
     case "health": return { kind: "health" };
     case "systemHealth": return { kind: "systemHealth" };
     case "experience": return { kind: "experience" };
@@ -413,5 +439,5 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.5.0", rules: SR, sheetFor, viewFor };
+  game.modules.get(MOD).api = { version: "0.6.0", rules: SR, sheetFor, viewFor };
 });

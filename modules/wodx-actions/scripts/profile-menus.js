@@ -512,6 +512,8 @@ export function build(ctx) {
             const all = [...g.bands.flatMap(b => b.buttons), ...g.scene];
             const btn = (x, item = true) => `<button type="button" data-k="${esc(x.spec)}"${item ? ` data-search-item data-search-text="${esc(`${x.label} ${x.desc}`)}"` : ""} title="${esc(x.desc || x.label)}" data-hint="${esc(x.desc)}"><i class="fas ${x.icon}" aria-hidden="true"></i><span>${esc(x.label)}</span></button>`;
             const rec = recent.map(s => all.find(x => x.spec === s)).filter(Boolean);
+            const mine = new Set(all.map(x => x.spec));
+            const extras = (ctx.searchExtras?.() ?? []).filter(x => !mine.has(x.spec));
             const html = `<div class="vta-grp-wrap wodx-menu2" data-line="${esc(kind)}">
               <div class="vta-menu-head"><span><span class="vta-who">${esc(actor.name)}</span><span class="vta-kindlabel">${esc(def === MENUS.kote ? "Kuei-jin (Kindred of the East)" : def === MENUS.orpheus ? "Orpheus (a spook)" : P.profileLabel(kind))}${overridden ? " (override)" : ""}</span></span>${kindBtn}</div>
               <input type="search" class="wodx-search vta-menu-find" data-search=".vta-intents" placeholder="Find an action…" aria-label="Find an action" autocomplete="off" spellcheck="false">
@@ -519,6 +521,7 @@ export function build(ctx) {
               <div class="vta-intents">
               ${g.bands.map(b => `<fieldset class="vta-grp vta-band vta-band-${b.id}"><legend>${esc(b.label)} <small>${esc(b.hint)}</small></legend><div class="vta-grp-btns">${b.buttons.map(x => btn(x)).join("")}</div></fieldset>`).join("")}
               ${g.scene.length ? `<div class="vta-scene" role="group" aria-label="The scene">${g.scene.map(x => btn(x)).join("")}</div>` : ""}
+              ${extras.length ? `<fieldset class="vta-grp vta-elsewhere"><legend>Also found <small>common checks and dramatic systems</small></legend><div class="vta-grp-btns">${extras.map(x => btn(x)).join("")}</div></fieldset>` : ""}
               </div>
               <p class="vta-hintbar" aria-live="polite" data-default="Type to find an action · arrow keys move · Enter uses it">Type to find an action · arrow keys move · Enter uses it</p>
             </div>`;
@@ -545,6 +548,7 @@ export function build(ctx) {
             case "shift": return shift(actor);
             case "regen": return regen(actor);
             case "rules": return rules(actor, arg);
+            case "check": return API.quickCheck?.({ actor, check: arg });
         }
     }
 

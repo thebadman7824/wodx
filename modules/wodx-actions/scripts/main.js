@@ -1793,7 +1793,12 @@ let PMX = null;
 function pm() {
     return PMX ??= PM.build({
         post, rollPool, rollBlock, resultLine, diceHtml, API, action, updateActor, willpower, attr, findAbility, setting,
-        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a), isKotE: a => KXD.isKotE(a), isOrpheus: a => OXD.isOrpheus(a)
+        spendWillpower, dialog, notify: m => ui.notifications.warn(m), isDA: a => MXD.isDA(a), isDAFae: a => FXD.isDA(a), isKotE: a => KXD.isKotE(a), isOrpheus: a => OXD.isOrpheus(a),
+        // The menu's search also finds every common check and dramatic system, so nothing is a page away
+        searchExtras: () => [
+            ...CK.CHECKS.map(c => ({ spec: `check:${c.key}`, label: c.label, desc: `${c.note} (${c.ref})`, icon: "fa-search" })),
+            ...Object.entries(PRESETS).filter(([k]) => k && !k.startsWith("check-")).map(([k, p]) => ({ spec: `preset:${k}`, label: p.label, desc: p.note ?? "", icon: "fa-dice-d10" }))
+        ]
     });
 }
 
@@ -1964,6 +1969,8 @@ function menuKeys(root, use) {
     if (!wrap) return;
     const find = wrap.querySelector(".vta-menu-find");
     const hint = wrap.querySelector(".vta-hintbar");
+    // The extra results (common checks, dramatic systems) show only while searching
+    find?.addEventListener("input", () => wrap.classList.toggle("is-searching", !!find.value.trim()));
     const shown = () => [...wrap.querySelectorAll("button[data-k]")].filter(b => b.offsetParent !== null && b.style.display !== "none");
     const say = b => { if (hint) hint.innerHTML = b ? `<b>${esc(b.textContent.trim())}</b>${b.dataset.hint ? `: ${esc(b.dataset.hint)}` : ""}` : esc(hint.dataset.default ?? ""); };
     wrap.addEventListener("mouseover", ev => { const b = ev.target.closest?.("button[data-k]"); if (b) say(b); });
