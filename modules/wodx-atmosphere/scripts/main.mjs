@@ -19,7 +19,7 @@ import * as K from "./kits-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.3.0";
+const VERSION = "0.4.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -60,6 +60,7 @@ function registerSettings() {
   game.settings.register(MOD, "dawnDread", {scope: "client", config: true, name: "Dawn dread",
     hint: "In the last half hour before sunrise the edge of the screen pales, birds start up at twenty minutes and a cock crows at ten. Turn it off on this computer.",
     type: Boolean, default: true, onChange: () => applyDread()});
+  world("muffleNew", {name: "Placed sounds are muffled by walls", hint: "A sound you place on a map is stopped by walls and heard muffled through them, like a sermon through the chapel door.", type: Boolean, default: true});
   world("dawnPressure", {name: "Rötschreck pressure before dawn", hint: "House rule: in the last ten minutes before sunrise, Rötschreck rolls are 1 harder.", type: Boolean, default: true});
   game.settings.register(MOD, "cueVolume", {scope: "client", config: true, name: "Cue volume", type: Number, default: 0.5, range: {min: 0, max: 1, step: 0.05}});
   world("frames", {name: "Token frames", hint: "A ring or a square in the era's material round each token (iron, gilt, brass, chrome, neon).",
@@ -316,6 +317,18 @@ function cuesForTime(time, delta) {
     if ( toDusk > 0 && toDusk <= delta ) playCue("dusk");
     if ( setting("dawnDread") ) for ( const c of K.dreadCuesCrossed(CAL.secondsToNextDawn(time, lat), delta) ) playCue(c);
   } catch (e) { /* no cue */ }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sound through walls                                                */
+/* ------------------------------------------------------------------ */
+
+/** Every placed sound on a scene stopped by walls and muffled through them (on), or let through (off). Returns the count changed. */
+export async function muffleScene(scene, on = true) {
+  if ( !scene || !game.user.isGM ) return 0;
+  const ups = [...(scene.sounds ?? [])].map(s => { const c = K.muffleChanges(s, on); return c ? {_id: s.id, ...c} : null; }).filter(Boolean);
+  if ( ups.length ) await scene.updateEmbeddedDocuments("AmbientSound", ups);
+  return ups.length;
 }
 
 /* ------------------------------------------------------------------ */
@@ -585,7 +598,9 @@ export function AtmosphereClass() {
         credits: async () => (await writeCredits())?.sheet?.render(true),
         handout: () => handoutDialog(),
         cue: (ev, t) => playCue(t.dataset.cue),
-        ambience: () => applyAmbience()
+        ambience: () => applyAmbience(),
+        muffle: async () => { await muffleScene(canvas?.scene, true); AtmosphereApp.refresh(); },
+        unmuffle: async () => { await muffleScene(canvas?.scene, false); AtmosphereApp.refresh(); }
       }
     };
     async _renderHTML() {
@@ -620,7 +635,11 @@ export function AtmosphereClass() {
         <section><h3>This scene${sc ? `: ${esc(sc.navName || sc.name)}` : ""}</h3>
           ${sc ? `<div class="form-group"><label>Weather here</label><select name="outdoors" data-fixed>${opt({auto: `Decide for me (now ${isOutdoor(sc) ? "out of doors" : "indoors"})`, on: "Out of doors: weather shows", off: "Indoors: no weather"}, f.outdoors ?? "auto")}</select></div>
           <div class="form-group"><label>Follow the clock's light</label><input type="checkbox" name="followClock"${f.followClock ? " checked" : ""}></div>
-          <div class="form-group"><label>Darkness at night (0 to 1)</label><input type="number" name="night" min="0" max="1" step="0.05" value="${Number.isFinite(Number(f.night)) && f.night !== undefined ? f.night : 0.9}"></div>` : "<p>No scene is being viewed.</p>"}
+          <div class="form-group"><label>Darkness at night (0 to 1)</label><input type="number" name="night" min="0" max="1" step="0.05" value="${Number.isFinite(Number(f.night)) && f.night !== undefined ? f.night : 0.9}"></div>
+          ${(() => { const all = [...(sc.sounds ?? [])]; const n = all.filter(x => K.isMuffled(x)).length;
+            return `<div class="form-group"><label>Sounds through walls</label><span>${n} of ${all.length} placed sounds are stopped by walls and heard muffled through them.</span></div>
+          <div class="watmo-row"><button type="button" data-action="muffle"${all.length && n < all.length ? "" : " disabled"}><i class="fa-solid fa-door-closed"></i> Muffle them all behind walls</button>
+          <button type="button" data-action="unmuffle"${n ? "" : " disabled"}><i class="fa-solid fa-door-open"></i> Let them all through walls</button></div>`; })()}` : "<p>No scene is being viewed.</p>"}
         </section>
         <section><h3>Era kit: ${esc(K0?.name ?? kit)}</h3>
           <p class="wodx-quiet">${esc(K0?.palette ?? "")}</p>
@@ -685,6 +704,7 @@ export async function prime() {
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
       moonHidden: () => !!now()?.moonHidden},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
+    walls: {muffle: muffleScene, changes: K.muffleChanges},
     dread: {now: dread, rotschreck: dreadRotschreck, apply: applyDread, tick: dreadTick},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
@@ -745,6 +765,12 @@ Hooks.on("updateSetting", s => {
   try { n = (game.settings.get("wodx-chronicle", "approvals")?.pending ?? []).length; } catch (e) { n = 0; }
   if ( pending !== null && n > pending ) playCue("notice");
   pending = n;
+});
+// A sound placed by hand is muffled through walls from the start, unless the world setting says otherwise
+Hooks.on("preCreateAmbientSound", (doc, data) => {
+  if ( !active || setting("muffleNew") === false || data?.walls === false ) return;
+  const c = K.muffleChanges({walls: data?.walls, effects: data?.effects}, true);
+  if ( c ) doc.updateSource(c);
 });
 Hooks.on("renderChatMessageHTML", (msg, html) => {
   html.querySelector?.("[data-watmo=open]")?.addEventListener("click", () => AtmosphereApp.open());

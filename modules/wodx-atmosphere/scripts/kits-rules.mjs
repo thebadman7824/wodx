@@ -45,6 +45,20 @@ export function dawnDread(secondsToDawn) {
   const strength = Math.round((1 - s / DREAD.from) * 100) / 100;
   return {strength, minutes: Math.ceil(s / 60), birds: s <= DREAD.birds, cock: s <= DREAD.cock, rotschreck: s <= DREAD.cock ? 1 : 0};
 }
+/**
+ * Sound through walls: an ambient sound that walls stop and that is heard muffled through them (a sermon through the
+ * chapel door). Foundry does the hearing; this is the setting it needs: walls on, and a low-pass for the muffled side.
+ * sound: {walls, effects: {muffled: {type, intensity}}}. Returns the update, or null when it is already so.
+ */
+export const MUFFLE = {type: "lowpass", intensity: 5};
+export function muffleChanges(sound = {}, on = true) {
+  const m = sound.effects?.muffled ?? {};
+  if ( !on ) return sound.walls === false ? null : {walls: false};
+  if ( sound.walls === true && m.type === MUFFLE.type && Number(m.intensity) > 0 ) return null;
+  return {walls: true, "effects.muffled.type": MUFFLE.type, "effects.muffled.intensity": Number(m.intensity) > 0 ? Number(m.intensity) : MUFFLE.intensity};
+}
+export const isMuffled = (sound = {}) => sound.walls === true && sound.effects?.muffled?.type === MUFFLE.type;
+
 /** The cues a clock move of delta seconds crosses, ending toDawn seconds before sunrise. */
 export function dreadCuesCrossed(toDawnAfter, delta) {
   const before = Number(toDawnAfter) + Number(delta);

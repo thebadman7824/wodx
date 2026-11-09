@@ -871,3 +871,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - sounds/common/birds.ogg and cock.ogg from tools/atmosphere/make-cues.py (pass a kit name or common to make only those).
 - Actions 3.16.0: the Rötschreck window's modifier starts at dawn's step while WoDX Atmosphere is on.
 - Tests: dawn-dread.test.mjs (4). Gate: tools/gate/gatedawn.mjs, 7 steps; the clock never moves.
+
+## 2026-11-09: sound through walls (Atmosphere 0.4.0, B267)
+
+- kits-rules.mjs: MUFFLE (low-pass, 5), muffleChanges(sound, on), isMuffled.
+- main.mjs: world setting "Placed sounds are muffled by walls" (preCreateAmbientSound); muffleScene(scene, on); the This scene part of the window counts them and has Muffle them all and Let them all through; api.walls.
+- Tests: one more in dawn-dread.test.mjs. Gate: tools/gate/gatewalls.mjs, 5 steps, a scene of its own.
+- UI fit's four "dialog onRender" warnings come from its mock DialogV2 having no element; they predate this and fail nothing.
