@@ -67,6 +67,12 @@
    "title": "Wraith: The Great War",
    "short": "W:GW",
    "edition": "Revised era"
+  },
+  {
+   "id": "demon",
+   "title": "Demon: The Fallen",
+   "short": "DtF",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -80,6 +86,7 @@
   "mummy2.json",
   "m20.json",
   "damage.json",
-  "greatwar.json"
+  "greatwar.json",
+  "demon.json"
  ]
 }

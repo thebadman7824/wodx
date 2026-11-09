@@ -1,0 +1,1253 @@
+[
+ {
+  "id": "dtf-the-fallen",
+  "title": "The Fallen",
+  "kind": "character",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebel angels loosed from the Abyss into mortal bodies.",
+  "claims": [
+   {
+    "text": "The fallen are the angels who rose against Heaven; demon is both a word for one lost to hate and madness, and a loose name for all of them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Elohim are the Creator's servants, the beings people call angels; Celestials covers angels and demons alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Demons turn up all over the world but gather most in the great cities, where human faith is thickest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-the-fall",
+   "dtf-the-abyss",
+   "dtf-sebettu"
+  ]
+ },
+ {
+  "id": "dtf-the-fall",
+  "title": "The Fall and the Age of Wrath",
+  "kind": "event",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Lucifer's rebellion and the war that followed.",
+  "claims": [
+   {
+    "text": "The Fall was Lucifer and a third of the Elohim waking humanity to awareness, which began the Age of Wrath.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Age of Wrath was the thousand-year war between Heaven and the fallen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "A faction of the fallen still seeks Lucifer, who vanished, and wants the war against Heaven resumed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-the-fallen",
+   "dtf-factions",
+   "dtf-the-abyss"
+  ]
+ },
+ {
+  "id": "dtf-the-abyss",
+  "title": "The Abyss",
+  "kind": "place",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The prison the Creator made for the fallen.",
+  "claims": [
+   {
+    "text": "The Abyss, also called the Pit, is the prison built by the Creator to hold the rebel angels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Its gates are now broken, and the fallen walk free once more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "Most warlords, House elders and faction leaders are still trapped there, so each freed demon chooses whom to follow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-the-fallen",
+   "dtf-earthbound"
+  ]
+ },
+ {
+  "id": "dtf-sebettu",
+  "title": "The Sebettu",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The seven rebel Houses.",
+  "claims": [
+   {
+    "text": "Sebettu means the Seven: the rebel Houses of the fallen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     },
+     {
+      "book": "demon",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "A House is an angelic hierarchy given one task in making and watching over the cosmos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Before the Fall each House had an autarch leading a council of lieutenants, with no rise or fall in rank.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "The rebels rebuilt their House order soon after breaking away, and Lucifer never tried to dissolve it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "A demon's starting Torment depends on the House.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-namaru",
+   "dtf-asharu",
+   "dtf-annunaki",
+   "dtf-lammasu",
+   "dtf-neberu",
+   "dtf-rabisu",
+   "dtf-halaku"
+  ]
+ },
+ {
+  "id": "dtf-namaru",
+  "title": "Namaru (Devils)",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebel angels of the dawn.",
+  "claims": [
+   {
+    "text": "Namaru is the proper name of the House of the dawn; Devils is the common one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Starting Torment for this House is 4.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "House lores: the Celestials, Flame and Radiance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-lore"
+  ]
+ },
+ {
+  "id": "dtf-asharu",
+  "title": "Asharu (Scourges)",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebel angels of the winds.",
+  "claims": [
+   {
+    "text": "Asharu is the proper name of the House of the wind; Scourges is the common one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Starting Torment for this House is 3.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "House lores: the Winds, Awakening and the Firmament.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-lore"
+  ]
+ },
+ {
+  "id": "dtf-annunaki",
+  "title": "Annunaki (Malefactors)",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebel angels of the earth.",
+  "claims": [
+   {
+    "text": "Annunaki is the proper name of the House of the earth; Malefactors is the common one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Starting Torment for this House is 3.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "House lores: the Earth, the Forge and Paths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-lore"
+  ]
+ },
+ {
+  "id": "dtf-lammasu",
+  "title": "Lammasu (Defilers)",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebel angels of the sea.",
+  "claims": [
+   {
+    "text": "Lammasu is the proper name of the House of the sea; Defilers is the common one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Starting Torment for this House is 3.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "House lores: Longing, Storms and Transfiguration.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Before the Fall they were the Nereids, angels of the first oceans, meant to stir mortals toward art, mystery and discovery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "Defilers most often join the Faustians or the Raveners.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-lore"
+  ]
+ },
+ {
+  "id": "dtf-neberu",
+  "title": "Neberu (Fiends)",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebel angels of the heavens.",
+  "claims": [
+   {
+    "text": "Neberu is the proper name of the House of the heavens; Fiends is the common one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Starting Torment for this House is 3.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 105,
+      "pdf": 106
+     }
+    ]
+   },
+   {
+    "text": "House lores: Light, Patterns and Portals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 105,
+      "pdf": 106
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-lore"
+  ]
+ },
+ {
+  "id": "dtf-rabisu",
+  "title": "Rabisu (Devourers)",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebel angels of the wild.",
+  "claims": [
+   {
+    "text": "Rabisu is the proper name of the House of the wild; Devourers is the common one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Starting Torment for this House is 4.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 103,
+      "pdf": 104
+     }
+    ]
+   },
+   {
+    "text": "House lores: the Beast, the Flesh and the Wild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 103,
+      "pdf": 104
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-lore"
+  ]
+ },
+ {
+  "id": "dtf-halaku",
+  "title": "Halaku (Slayers)",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rebel angels of the dead.",
+  "claims": [
+   {
+    "text": "Halaku is the proper name of the House of the dead; Slayers is the common one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Starting Torment for this House is 4.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "House lores: Death, the Realms and the Spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-lore"
+  ]
+ },
+ {
+  "id": "dtf-factions",
+  "title": "The Five Factions",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The philosophies that split the fallen.",
+  "claims": [
+   {
+    "text": "Cryptics want the truth behind Lucifer's vanishing and the other unanswered questions of the Fall.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Faustians would enslave humankind and turn it into a weapon against Heaven.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Luciferans seek Lucifer and a return to the war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Raveners want the universe destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Reconcilers would make Earth the paradise it was before the Age of Wrath.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Five factions divide the seven Houses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-the-fall"
+  ]
+ },
+ {
+  "id": "dtf-earthbound",
+  "title": "The Earthbound",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ancient demons anchored in the world.",
+  "claims": [
+   {
+    "text": "The Earthbound were called out of the Abyss in ancient times and found a way to fix themselves in the physical world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "They now try to enslave or destroy the fallen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-the-abyss",
+   "dtf-the-fallen"
+  ]
+ },
+ {
+  "id": "dtf-faith",
+  "title": "Faith (Demon)",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The trait that powers a demon.",
+  "claims": [
+   {
+    "text": "Faith fuels evocations, heals damage and lets a demon take on supernatural forms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 169,
+      "pdf": 170
+     }
+    ]
+   },
+   {
+    "text": "New characters begin with Faith 3; freebie points and experience raise it. Faith costs 6 freebie points a dot.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 124,
+      "pdf": 125
+     },
+     {
+      "book": "demon",
+      "page": 169,
+      "pdf": 170
+     }
+    ]
+   },
+   {
+    "text": "With no Faith left, a demon can still use powers only by ravaging the mind and soul of thralls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 169,
+      "pdf": 170
+     }
+    ]
+   },
+   {
+    "text": "The broad belief of ancient times has dwindled, leaving freed demons to fight over what remains.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 169,
+      "pdf": 170
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-pacts",
+   "dtf-torment",
+   "true-faith"
+  ]
+ },
+ {
+  "id": "dtf-torment",
+  "title": "Torment",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The scar of betrayal and the Abyss on a demon's soul.",
+  "claims": [
+   {
+    "text": "Torment is the opposite of Faith: the damage done by rebellion, war and ages in the Abyss.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "A hierarchy of sins runs from permanent Torment 10, where nothing is a sin, down through casual cruelty, planned harm and sins of passion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "A good deed can be rolled against Torment using Conscience, Conviction or Courage as fits; if Virtue wins, one temporary Torment is lost, and Willpower cannot be spent on the roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "Ten experience points lower permanent Torment by one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "High-Torment demons favour pacts that corrupt; low-Torment demons lean toward pacts of real gratitude, such as healing the sick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-faith",
+   "dtf-virtues",
+   "dtf-apocalyptic-form"
+  ]
+ },
+ {
+  "id": "dtf-virtues",
+  "title": "Virtues (Demon)",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Conscience, Conviction and Courage.",
+  "claims": [
+   {
+    "text": "Conscience measures the sense of right and wrong, Conviction the strength of belief, Courage the will to act on it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "Each Virtue starts at one dot, with three more to share among them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "Starting Willpower is the total of the two highest Virtues.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-torment"
+  ]
+ },
+ {
+  "id": "dtf-apocalyptic-form",
+  "title": "Apocalyptic Form",
+  "kind": "power",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A demon's true shape, shown in the flesh.",
+  "claims": [
+   {
+    "text": "The apocalyptic form, or visage, is the bodily echo of a demon's Celestial nature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Each form has four high-Torment powers: one may be added at permanent Torment 7, another at 8, and so on.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 170,
+      "pdf": 171
+     }
+    ]
+   },
+   {
+    "text": "When permanent Torment drops, high-Torment powers go one per point, newest first; low-Torment abilities stay.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 170,
+      "pdf": 171
+     }
+    ]
+   },
+   {
+    "text": "In danger a demon may call up a high-Torment power for one scene, at the cost of temporary Torment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 170,
+      "pdf": 171
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-torment",
+   "dtf-revelation"
+  ]
+ },
+ {
+  "id": "dtf-revelation",
+  "title": "Revelation",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What happens when a demon's nature shows itself to mortals.",
+  "claims": [
+   {
+    "text": "Revelation is always powerful for a mortal who sees it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "It also signals the demon's presence to anyone able to feel Creation being tampered with, which makes hiding harder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-apocalyptic-form"
+  ]
+ },
+ {
+  "id": "dtf-lore",
+  "title": "Lore",
+  "kind": "power",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The commands of Creation that make up a demon's powers.",
+  "claims": [
+   {
+    "text": "Lore is the source of Celestial power: the gathered commands for working the fabric of reality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "There are twenty-three lores; each House has three, and Humanity and the Fundament are open to all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 124,
+      "pdf": 125
+     },
+     {
+      "book": "demon",
+      "page": 170,
+      "pdf": 171
+     }
+    ]
+   },
+   {
+    "text": "A lore dot costs 7 freebie points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-sebettu",
+   "dtf-faith"
+  ]
+ },
+ {
+  "id": "dtf-pacts",
+  "title": "Pacts and Thralls",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How demons draw Faith from mortals.",
+  "claims": [
+   {
+    "text": "A thrall is a mortal bound to a demon by a pact of faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "A pact is a spoken bargain freely made: a service in return for a channel to the mortal's spiritual strength, which works at any distance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "It must be voluntary, though it can be struck under duress; doubt before the demon delivers breaks it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Reaping faith from fear or awe gives a quick return that fades, and the same person grows jaded if reaped too often; a pact gives a steady supply.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Pacts is also a Background: mortal sources of Faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-faith"
+  ]
+ },
+ {
+  "id": "dtf-legacy",
+  "title": "Legacy",
+  "kind": "term",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How much a demon remembers of angelic life.",
+  "claims": [
+   {
+    "text": "Legacy is the Background for how much of the divine existence before the host the demon recalls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "Eminence is standing among other demons; Paragon is special strength in one part of the House's domain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "demon",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-the-fallen"
+  ]
+ }
+]
