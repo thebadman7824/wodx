@@ -58,6 +58,51 @@ export const KITS = {
     grade: {saturation: 1, brightness: 1.03, contrast: 1.04, sepia: 0.12, hue: -3}, handouts: ["tablet", "manuscript"]}
 };
 
+/**
+ * Token frames by kit: a ring or a square drawn round each token in the era's material. color as a number (0xRRGGBB),
+ * width a share of the token's size. double draws a thin inner line; glow a soft outer one. House look.
+ */
+export const FRAMES = {
+  "dark-ages": {label: "Black iron", shape: "round", color: 0x4f4943, double: true},
+  "long-night": {label: "Tarnished bone", shape: "round", color: 0x8f8a7a},
+  "renaissance": {label: "Gilt", shape: "round", color: 0xb08d3c, double: true},
+  "victorian": {label: "Brass", shape: "square", color: 0xa07a3a, double: true},
+  "wild-west": {label: "Saddle leather", shape: "square", color: 0x7a5230},
+  "great-war": {label: "Gunmetal", shape: "square", color: 0x6b6b4f},
+  "modern": {label: "Chrome", shape: "square", color: 0x9aa3ad},
+  "time-of-judgment": {label: "Old blood", shape: "round", color: 0x8a1c1c, glow: true},
+  "future-darkness": {label: "Neon", shape: "square", color: 0x2fd6ff, glow: true},
+  "classical": {label: "Bronze", shape: "round", color: 0x9b6b3a},
+  "living-gods": {label: "Gold and lapis", shape: "round", color: 0xc9a227, double: true}
+};
+/** Who gets a frame. Fixed list. */
+export const FRAME_WHO = {off: "Nobody", characters: "The players' characters", all: "Every token with a character"};
+
+/** The frame for a kit, falling back along the kit chain. */
+export function frameFor(kit) {
+  for ( const k of kitChain(kit) ) if ( FRAMES[k] ) return {kit: k, width: 0.045, ...FRAMES[k]};
+  return {kit: "dark-ages", width: 0.045, ...FRAMES["dark-ages"]};
+}
+/** Does a token get a frame? who: off, characters or all. */
+export function framed(who, {hasActor = false, playerOwned = false} = {}) {
+  if ( who === "all" ) return hasActor;
+  if ( who === "characters" ) return hasActor && playerOwned;
+  return false;
+}
+/** The shapes to draw for a frame on a token w by h pixels: [{kind, x, y, w, h, r, width, color, alpha}]. */
+export function frameShapes(f, w, h) {
+  const lw = Math.max(2, Math.round(Math.min(w, h) * f.width));
+  const out = [];
+  const add = (inset, width, alpha) => {
+    if ( f.shape === "round" ) out.push({kind: "circle", x: w / 2, y: h / 2, r: Math.min(w, h) / 2 - inset, width, color: f.color, alpha});
+    else out.push({kind: "rect", x: inset, y: inset, w: w - inset * 2, h: h - inset * 2, r: Math.round(Math.min(w, h) * 0.08), width, color: f.color, alpha});
+  };
+  if ( f.glow ) add(-lw, lw * 2, 0.25);
+  add(lw / 2, lw, 0.95);
+  if ( f.double ) add(lw * 1.6, Math.max(1, Math.round(lw / 3)), 0.8);
+  return out;
+}
+
 /** The kit for an era profile (by its id, else the profile's own kit name). */
 export function kitFor(profile) {
   if ( !profile ) return "dark-ages";

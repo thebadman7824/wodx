@@ -809,3 +809,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Tests: atmosphere.test.mjs (22), 687 in all. UI fit takes the Atmosphere window and its three dialogs (to run on the PC: the cloud copy of foundry2.css fails every window on the minimised controls button). Gate: tools/gate/gate8.mjs, 14 steps, rothenstein-wodx only.
 - Not built yet in Phase 8: encounter and rumour tables by era, Otherworld travel, story aids, token frames.
 - PC run 2026-11-09: deployed to rothenstein-wodx (Atmosphere on there only), UI fit 621 ok, gatesenses 12/12, gate8 13/14. Step 9 waited for playback, which a headless browser never starts; the gate now checks the cue starts and gives each step a minute.
+
+### Phase 8, second half, 2026-11-09: the night's draw, story aids, Otherworld journeys, decay, token frames
+- Storyteller 0.5.0: data/night-tables.mjs (28 tables: the time of night, encounters in town and the wilds for four era groups, the Penumbra, the Shadowlands, rumours, symbols, dream, vision, augury and foreshadowing frames, relics, fetishes, talismans), night-rules.mjs (pure), night.mjs (draws, the queue, the nights and story aids journals, the dialogs, the Draw for the story button). Road trips with no table draw from WoDX's own.
+- Otherworlds 0.3.0: data/journey-tables.mjs, journey-rules.mjs (legs, hazards, the Great Maelstroms, the decay filter), journey.mjs (the journey dialog, the queue, the decay on the controlled token's client).
+- Atmosphere 0.2.0: token frames (kits-rules FRAMES, frameFor, framed, frameShapes; drawn on refreshToken), and the grade now joins the Shadowlands decay.
+- Decisions B207 to B212; choices in PENDING-REVIEW.md.
+- Tests: phase8b.test.mjs (10). UI fit takes the chooser, the night, the aid (both steps) and the journey (both steps). Gate: tools/gate/gate8b.mjs, 12 steps, rothenstein-wodx only.

@@ -11,4 +11,10 @@
 - [x] UI fit on the PC with Foundry's own fonts (621 ok, 2026-11-09)
 - [x] Deployed to rothenstein-wodx 2026-11-09; gate8 13/14, the cue step hung headless (fixed in the gate: steps time out, the cue is not awaited); gatesenses 12/12
 - [ ] Ben listens to the cues and reads the primers and weather lines (PENDING-REVIEW)
-- [ ] Encounter and rumour tables by era, Otherworld travel, story aids, token frames (not built yet)
+- [x] Encounter and rumour tables by era, the night's draw through the queue (Storyteller 0.5.0)
+- [x] Story aids: dreams, visions, auguries, foreshadowings, relics, fetishes, talismans
+- [x] Otherworld journeys and the Shadowlands' decay (Otherworlds 0.3.0)
+- [x] Token frames (Atmosphere 0.2.0)
+- [x] Harness tests for the second half (10 new)
+- [ ] Deployed to rothenstein-wodx, gate8b 12/12
+- [ ] Ben reads the night, aid and journey tables (PENDING-REVIEW)

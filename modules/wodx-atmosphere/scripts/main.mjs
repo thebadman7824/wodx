@@ -1,5 +1,5 @@
 /**
- * WoDX Atmosphere 0.1.0: the weather, lighting from the clock, and each era kit's sound and map colour.
+ * WoDX Atmosphere 0.2.0: the weather, lighting from the clock, and each era kit's sound, map colour and token frames.
  *
  *   Weather     each night's weather from the chronicle's seed, the climate and the date (weather-rules.mjs). At the
  *               turn of the night the Storyteller's client sets WoDX Actions' sky (which caps sunlight), puts rain,
@@ -19,7 +19,7 @@ import * as K from "./kits-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -58,6 +58,9 @@ function registerSettings() {
     type: String, default: "full", choices: {full: "Full", light: "Light", off: "Off"}, onChange: () => applyGrade()});
   game.settings.register(MOD, "cues", {scope: "client", config: true, name: "Era sound cues", hint: "A short sound at dawn, at sunset and (for the Storyteller) when something waits in the approval queue.", type: Boolean, default: true});
   game.settings.register(MOD, "cueVolume", {scope: "client", config: true, name: "Cue volume", type: Number, default: 0.5, range: {min: 0, max: 1, step: 0.05}});
+  world("frames", {name: "Token frames", hint: "A ring or a square in the era's material round each token (iron, gilt, brass, chrome, neon).",
+    type: String, default: "characters", choices: K.FRAME_WHO, onChange: () => redrawFrames()});
+  game.settings.register(MOD, "framesHere", {scope: "client", config: true, name: "Show token frames", hint: "Turn the era's token frames off on this computer only.", type: Boolean, default: true, onChange: () => redrawFrames()});
   hidden("overrides", Object, {});
   hidden("applied", Object, {});
   hidden("playlists", Object, {});
@@ -314,9 +317,50 @@ export function applyGrade() {
   const board = document.getElementById("board");
   if ( !board ) return "";
   const g = setting("grade");
-  const css = (!active || g === "off") ? "" : K.gradeCss(K.KITS[currentKit()]?.grade, g === "light" ? 0.5 : 1);
+  const grade = (!active || g === "off") ? "" : K.gradeCss(K.KITS[currentKit()]?.grade, g === "light" ? 0.5 : 1);
+  // WoDX Otherworlds' Shadowlands decay joins the grade, so neither overwrites the other
+  let decay = "";
+  try { decay = game.modules.get("wodx-otherworlds")?.api?.decayCss?.() ?? ""; } catch (e) { decay = ""; }
+  const css = [grade, decay].filter(Boolean).join(" ");
   board.style.filter = css;
   return css;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Token frames                                                       */
+/* ------------------------------------------------------------------ */
+
+const FRAME = "wodxFrame";
+function frameOn() { try { return active && setting("framesHere") !== false && setting("frames") !== "off"; } catch (e) { return false; } }
+/** Draw (or take away) one token's frame. Redrawn only when the kit or the token's size changes. */
+export function drawFrame(token) {
+  if ( !token || token.destroyed ) return;
+  const old = token.children?.find?.(c => c.name === FRAME);
+  const actor = token.document?.actor ?? token.actor;
+  const want = frameOn() && K.framed(setting("frames"), {hasActor: !!actor, playerOwned: !!actor?.hasPlayerOwner});
+  if ( !want ) { if ( old ) { token.removeChild(old); old.destroy(); } token._wodxFrameKey = null; return; }
+  const f = K.frameFor(currentKit());
+  const w = token.w ?? token.document?.width * (canvas?.grid?.size ?? 100), h = token.h ?? token.document?.height * (canvas?.grid?.size ?? 100);
+  const key = `${f.kit}:${w}:${h}`;
+  if ( old && token._wodxFrameKey === key ) return;
+  if ( old ) { token.removeChild(old); old.destroy(); }
+  const gfx = new PIXI.Graphics();
+  gfx.name = FRAME;
+  for ( const sh of K.frameShapes(f, w, h) ) {
+    if ( typeof gfx.lineStyle === "function" ) {
+      gfx.lineStyle(sh.width, sh.color, sh.alpha);
+      if ( sh.kind === "circle" ) gfx.drawCircle(sh.x, sh.y, sh.r); else gfx.drawRoundedRect(sh.x, sh.y, sh.w, sh.h, sh.r);
+    } else {
+      if ( sh.kind === "circle" ) gfx.circle(sh.x, sh.y, sh.r); else gfx.roundRect(sh.x, sh.y, sh.w, sh.h, sh.r);
+      gfx.stroke({width: sh.width, color: sh.color, alpha: sh.alpha});
+    }
+  }
+  gfx.eventMode = "none";
+  token.addChild(gfx);
+  token._wodxFrameKey = key;
+}
+export function redrawFrames() {
+  for ( const t of canvas?.tokens?.placeables ?? [] ) { t._wodxFrameKey = null; try { drawFrame(t); } catch (e) { console.warn(`${MOD} | frame`, e); } }
 }
 
 /* ------------------------------------------------------------------ */
@@ -594,7 +638,7 @@ export async function prime() {
   const api = {version: VERSION, open: () => AtmosphereApp.open(),
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
       moonHidden: () => !!now()?.moonHidden},
-    kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade},
+    kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
   return api;
@@ -621,7 +665,8 @@ Hooks.on("updateWorldTime", (time, delta) => {
 });
 let timeTimer = null;
 Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) applyWeather({force: true}); });
-Hooks.on("wodxEraApplied", () => { if ( active ) onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); });
+Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); } });
+Hooks.on("refreshToken", token => { if ( active ) { try { drawFrame(token); } catch (e) { console.warn(`${MOD} | frame`, e); } } });
 Hooks.on("canvasReady", () => {
   if ( !active ) return;
   applyGrade();

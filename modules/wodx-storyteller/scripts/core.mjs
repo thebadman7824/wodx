@@ -14,7 +14,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.4.0";
+export const VERSION = "0.5.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -272,7 +272,12 @@ async function findTable(ref) {
 }
 async function drawEncounter(dest) {
   const table = await findTable(travelOf(dest.scene).table ?? setting("encounterTable"));
-  if ( !table?.draw ) return {text: "Something on the road (no encounter table is set: choose one in the settings, or on the place).", table: null};
+  if ( !table?.draw ) {
+    // No table of its own: WoDX's road table for the era (folder WoDX tables), seeded by the place and the hour
+    let own = null;
+    try { own = chron()?.gen?.draw?.("night.encounter.wilds", {key: `road:${dest.uuid ?? dest.name}:${Math.floor(now() / 3600)}`})?.text ?? null; } catch (e) { own = null; }
+    return own ? {text: own, table: "WoDX: encounters in the wilds"} : {text: "Something on the road (no encounter table is set: choose one in the settings, or on the place).", table: null};
+  }
   try {
     const out = await table.draw({displayChat: false});
     const text = (out?.results ?? []).map(r => W.plain(r.description || r.text || r.name || "")).filter(Boolean).join("; ");

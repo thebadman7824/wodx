@@ -685,6 +685,44 @@ game.world.id = worldId;
   }
   api.DialogV2.wait = wait;
 }
+// The night's draw, a story aid and the chooser (Storyteller 0.5.0); an Otherworld journey (Otherworlds 0.3.0)
+{
+  const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+  const {NIGHT_TABLES} = await import(join(root, "modules/wodx-storyteller/data/night-tables.mjs"));
+  const {JOURNEY_TABLES} = await import(join(root, "modules/wodx-otherworlds/data/journey-tables.mjs"));
+  const defs = [...NIGHT_TABLES, ...JOURNEY_TABLES].map(d => ({...d, results: G.withRanges(d.results)}));
+  const chronMod = game.modules.get("wodx-chronicle") ?? {};
+  if ( !game.modules.get("wodx-chronicle") ) game.modules.set("wodx-chronicle", chronMod);
+  chronMod.api ??= {};
+  const oldGen = chronMod.api.gen, oldPropose = chronMod.api.propose;
+  chronMod.api.gen = {context: () => ({era: "medieval", eraId: "dark-ages"}), lookup: () => id => G.resolveTable(defs, id, {era: "medieval"}),
+    random: (k, n = 0) => G.stream("ui-fit", k, n), draw: () => null, registerTables: () => {}};
+  chronMod.api.propose = async () => null;
+  const Night = await import(join(root, "modules/wodx-storyteller/scripts/night.mjs"));
+  const Jy = await import(join(root, "modules/wodx-otherworlds/scripts/journey.mjs"));
+  try { Night.registerNightSettings(); } catch (e) { /* registered */ }
+  try { Jy.registerJourneySettings(); } catch (e) { /* registered */ }
+  const owMod = game.modules.get("wodx-otherworlds") ?? {active: true};
+  if ( !game.modules.get("wodx-otherworlds") ) game.modules.set("wodx-otherworlds", owMod);
+  owMod.api ??= {};
+  owMod.api.journeyDialog ??= Jy.journeyDialog;
+  const wait = api.DialogV2.wait;
+  // The first window of each, then (answering "draw") the preview that follows
+  let answer = null;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); const a = answer; answer = null; return a; };
+  const runs = [["Draw for the story", () => Night.drawChooser(), null], ["The night's draw", () => Night.nightDialog(), null],
+    ["A story aid", () => Night.aidDialog(), null], ["A story aid: the draw", () => Night.aidDialog(), {kind: "dream", actorId: null}],
+    ["An Otherworld journey", () => Jy.journeyDialog(), null], ["An Otherworld journey: the draw", () => Jy.journeyDialog(), {realm: "tempest", hours: 6, storm: true, tell: false}]];
+  for ( const [label, fn, first] of runs ) {
+    const n = captured.length;
+    answer = first;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n || (first && captured.length < n + 2) ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2.wait = wait;
+  chronMod.api.gen = oldGen;
+  chronMod.api.propose = oldPropose;
+}
 // WoDX Targeting 0.1.0: the target panel in the Discipline window, for one foe, an area of twelve, a casting and a hand-set target
 {
   game.modules.set("wodx-targeting", {active: true});

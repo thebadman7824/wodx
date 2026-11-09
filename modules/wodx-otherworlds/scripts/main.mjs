@@ -6,6 +6,7 @@ import * as senses from "./senses.mjs";
 import {TaggingApp, writeReport, writeChartsPage} from "./tagging-app.mjs";
 import {buildPenumbraPrototype} from "./prototype.mjs";
 import * as rules from "./rules.mjs";
+import * as journey from "./journey.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
 let active = false;
@@ -24,6 +25,7 @@ Hooks.once("init", () => {
   CONFIG.RegionBehavior.typeHints[BEHAVIOR_TYPE] = "Gauntlet, Shroud and Banality for this area; overrides the scene's ratings.";
   CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE] = "fa-solid fa-ghost";
   registerStatuses();
+  journey.registerJourneySettings();
 });
 
 Hooks.once("ready", () => {
@@ -37,7 +39,9 @@ Hooks.once("ready", () => {
     clearCrossing, openRatings: () => TaggingApp.open(), writeReport, writeChartsPage,
     buildPenumbraPrototype, placeOf, rules, STATUS,
     crossShroud, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
-    readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses
+    readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses,
+    journey: {draw: journey.drawJourney, propose: journey.proposeJourney, approve: journey.approveJourney, rules: journey.J},
+    journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, applyDecay: journey.applyDecay
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {otherworlds: api});
@@ -46,7 +50,15 @@ Hooks.once("ready", () => {
   // The year-and-a-day proposals go to WoDX Chronicle's approval queue
   if ( game.modules.get("wodx-chronicle")?.api ) registerYearHandler();
   else Hooks.once("wodxChronicleReady", () => registerYearHandler());
+  journey.registerJourneys();
+  journey.applyDecay();
 });
+
+/* ---- the Shadowlands' decay follows the controlled token ---- */
+const decaySoon = (() => { let t = null; return () => { clearTimeout(t); t = setTimeout(() => { try { journey.applyDecay(); } catch (e) { console.warn("WoDX | decay", e); } }, 150); }; })();
+Hooks.on("controlToken", () => { if ( active ) decaySoon(); });
+Hooks.on("canvasReady", () => { if ( active ) decaySoon(); });
+Hooks.on("updateToken", (doc, change) => { if ( active && ("level" in change || "x" in change || "y" in change) && doc.object?.controlled ) decaySoon(); });
 
 const skipping = () => !!game.modules.get("wodx-chronicle")?.api?.isSkipping?.();
 Hooks.on("updateWorldTime", () => {
