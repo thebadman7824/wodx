@@ -163,6 +163,12 @@
    "title": "Anarchs Unbound",
    "short": "Anarchs Unbound",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "redlist",
+   "title": "Dread Names, Red List",
+   "short": "Red List",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -192,6 +198,7 @@
   "lotb.json",
   "rotb.json",
   "blackhand.json",
-  "anarchs.json"
+  "anarchs.json",
+  "redlist.json"
  ]
 }
