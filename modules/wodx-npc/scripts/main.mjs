@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.6.1: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
+ * WoDX NPC 0.6.2: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
@@ -18,7 +18,7 @@ import {build as buildFactions} from "./factions.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.6.1";
+const VERSION = "0.6.2";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -243,8 +243,11 @@ function passableFor(tok) {
   const busy = occupied(tok);
   const d = canvas.dimensions;
   const inside = c => { const p = grid().getCenterPoint(c); return p.x >= d.sceneX && p.y >= d.sceneY && p.x < d.sceneX + d.sceneWidth && p.y < d.sceneY + d.sceneHeight; };
+  // On a gridless lattice a cell whose centre sits on a wall line is closed, so a path never slides along a wall
+  const walls = gridKind() === "lattice" ? [...(canvas.scene?.walls ?? [])].map(w => ({c: w.c, move: w.move, door: w.door, ds: w.ds})) : null;
+  const clear = b => !walls || !NR.onWall(centreFor(tok, b), walls);
   // Every cell the token would cover is inside the scene and free, and no wall stands between its centres
-  return (a, b) => cellsAt(tok, b).every(c => inside(c) && !busy.has(`${c.i},${c.j}`)) && !wallBetween(a, b, tok);
+  return (a, b) => cellsAt(tok, b).every(c => inside(c) && !busy.has(`${c.i},${c.j}`)) && clear(b) && !wallBetween(a, b, tok);
 }
 /** Neighbours and step costs for this scene's grid. */
 const stepsFor = () => gridKind() === "hex"
