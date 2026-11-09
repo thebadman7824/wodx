@@ -5,7 +5,7 @@ Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It tak
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-09 | Do NPCs set off traps? | Only when the trap tile has "NPCs set it off" ticked. Tokens owned by the Storyteller count as NPCs. | Tick the box on each trap. To change the default, flip the `npc` test in `trapsOnPath` (wodx-interactables/scripts/main.mjs). |
-| 2026-11-09 | How much damage does a pit do? | 2 bashing dice, with lethal as an option for spikes. The falling rule's V20 core page ref still needs pinning on the PC. | Set damage dice on the tile, or change `TRAPS.pit.dice` in interact-rules.mjs. |
+| 2026-11-09 | How much damage does a pit do? | 2 bashing dice, with lethal as an option for spikes. The core falling rule is one bashing die per 10 feet, soakable (V20 core printed p. 296), so 2 dice is a pit of about 20 feet. | Set damage dice on the tile, or change `TRAPS.pit.dice` in interact-rules.mjs. |
 | 2026-11-09 | How many search successes does each trap grade need? | Crude 1, good 2, excellent 3, masterwork 4, searching within three squares. | `TRAP_GRADES[*].hide` and `SEARCH_SQUARES`. |
 | 2026-11-09 | Can a character with no Investigation read a clue? | They can look at it, with no roll, and get the first part. Examining it closely needs Investigation, because an untrained Knowledge can't be rolled. | `clueOptions` in interact-rules.mjs. |
 | 2026-11-09 | Does lighting a lamp need a roll? | No. It takes a turn and is silent. A lantern, lamp or bulb can be broken, which is loud. | `lightOptions` in interact-rules.mjs. |
@@ -49,3 +49,9 @@ Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It tak
 | 2026-11-09 | When do phones and radios appear? | Telephones from about 1890, radios from about 1930, by the Chronicle year. | `WATCHES[*].from` in interact-rules.mjs. |
 | 2026-11-09 | Do mirrors hide Lasombra? | Yes, by their clan weakness; the Storyteller is whispered who has no reflection. The page ref still needs pinning. | `watchSees` (the mirror flag). |
 | 2026-11-09 | Version 0.9.0? | Left to the responsive maps work, so watch points are 0.10.0. | Nothing to reverse. |
+| 2026-11-09 | Which mounts and vehicles, and when? | Riding horse, mule, cart, carriage and rowing boat in every era; motor car from about 1900; motorcycle and motorboat from about 1910 (house dates, by the Chronicle year). | `MOUNTS[*].from` in interact-rules.mjs. |
+| 2026-11-09 | Does getting on a horse or into a car need a roll? | Not with a dot of Ride or Drive. With none, the Attribute alone at +1 difficulty to get it going; a failure means it won't go. | `mountOptions` in interact-rules.mjs. |
+| 2026-11-09 | What does a botch at the reins do? | A horse, mule or motorcycle throws the rider (off it, with Undo); anything else crashes. WoDX applies no damage: the Storyteller rolls the fall or the crash, since the books give no fixed figure for it. | The `mount`/`control`/`flatOut` case in `resolveCore`. |
+| 2026-11-09 | How is a rowing boat handled? | Stamina + Athletics to keep control or row flat out, no untrained penalty (Athletics is a Talent). | `MOUNTS.boat`. |
+| 2026-11-09 | Can a car be locked or hot-wired? | Not yet: any character can take the wheel. Keys and hot-wiring can come with the vehicle chart from the gear-by-era book check. | Ask for it. |
+| 2026-11-09 | How do passengers move? | Their tokens are moved by the same step as the one at the reins; walls are only checked for the driver's own move. A passenger who moves on their own gets off. | `carryAboard` in main.mjs. |
