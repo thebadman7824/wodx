@@ -48,7 +48,10 @@ export async function run() {
     if ( way.path ) {
       const pts = way.path.slice(1).map(c => ({x: c.j * 100, y: c.i * 100}));
       try { await npc.document.move(pts); } catch (e) { for ( const p of pts ) await npc.document.update(p); }
-      await sleep(1500);
+      // move() returns before the walk ends: wait until the token stands on the last waypoint (at most 8 s)
+      const end = pts[pts.length - 1], doc = () => canvas.tokens.get(npc.id)?.document;
+      for ( let k = 0; k < 40 && !(doc()?.x === end.x && doc()?.y === end.y); k++ ) await sleep(200);
+      await sleep(300);
     }
     const now = api.cellOf(canvas.tokens.get(npc.id));
     ok("3. walking it", last && now.i === last.i && now.j === last.j, {now, last});
