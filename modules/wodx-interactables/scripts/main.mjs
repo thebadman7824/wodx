@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.8.1: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
+ * WoDX Interactables 0.10.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
  *
  *   Interact   A player selects a token and presses Interact on the token HUD (or the I key). A window lists every door,
  *              window and breakable wall within reach of that token, nearest first, with the options for each: the
@@ -29,6 +29,9 @@
  *              out or set alight, glass swept aside, the power cut (0.7.0).
  *   Sacred     A tile marked as an altar or shrine is holy ground: pray there with WoDX Actions, desecrate it; a demon
  *              who walks onto it is seared. A relic or fetish on a tile can be taken (0.8.0); a caern stone, fetter or node opens the WoDX actions menu (0.8.1).
+ *   Watch      A tile marked as a watch point: a window on the street or a mirror shows who is in the area it is tied
+ *              to; a telephone or radio calls the one it is tied to or calls for help; a bell raises the alarm. Each
+ *              result is also published as a wodxMapEvent (0.10.0).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -40,7 +43,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.8.1";
+const VERSION = "0.10.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -110,16 +113,17 @@ export function describeWall(doc) {
 /** A container on a tile, or null. */
 export function describeTile(doc) {
   const f = doc?.flags?.[MOD] ?? {};
-  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred) ) return null;
+  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch) ) return null;
   if ( f.container ) return R.describeContainer(f);
   if ( f.trap ) return R.describeTrap(f);
   if ( f.clue ) return R.describeClue(f);
   if ( f.light ) { const lights = lightsOf(doc); return R.describeLight(f, {on: lights.some(l => !l.hidden), count: lights.length}); }
   if ( f.hide ) return R.describeHide(f);
   if ( f.hazard ) return R.describeHazard(f);
-  return R.describeSacred(f);
+  if ( f.sacred ) return R.describeSacred(f);
+  return R.describeWatch(f);
 }
-const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred"].some(k => doc.flags?.[MOD]?.[k] === true));
+const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch"].some(k => doc.flags?.[MOD]?.[k] === true));
 /** Whatever interactable a wall or tile is. */
 export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
 /** A wall or a tile on a scene, by id. */
@@ -523,6 +527,11 @@ export async function applyAsk(msg) {
     // Examining a clue: what the character learns goes to that player and the Storyteller only
     let whisper = null;
     if ( (op.id === "examine" || op.id === "look") && o.clue ) whisper = await clueReport(o, out, author, actor);
+    if ( o.watch ) {
+      const w = await watchReport(o, doc, out, op, author, actor, tokDoc);
+      if ( w.whisper ) whisper = w.whisper;
+      lines.push(...w.lines);
+    }
     if ( whisper ) lines.push("What was learned is in a whisper to the player and the Storyteller.");
     // A botch on forcing: one lethal level
     let hurt = 0;
@@ -1032,6 +1041,58 @@ export async function holyCard(tokDoc, actor, doc, o, why = "enters") {
   } finally { burning.delete(key); }
 }
 
+/* ------------------------------------------------------------------ */
+/*  Watch points                                                       */
+/* ------------------------------------------------------------------ */
+
+/** The tile a watch point is tied to: an id on the same scene, or a tile's UUID (another scene). */
+export async function watchTarget(o, doc) {
+  if ( !o?.target ) return null;
+  if ( o.target.includes(".") ) { try { return await fromUuid(o.target); } catch (e) { return null; } }
+  return doc?.parent?.tiles?.get?.(o.target) ?? null;
+}
+const hasStatus = (a, id) => !!a?.statuses?.has?.(id);
+/** The people a look shows: tokens in the tied tile's area, leaving out the hidden and the invisible. */
+export function peopleIn(target) {
+  if ( !target ) return [];
+  const scene = target.parent, r = rectOf(target);
+  return (scene?.tokens?.contents ?? [...(scene?.tokens?.values?.() ?? [])]).filter(t => !t.hidden && !hasStatus(t.actor, "invisible") && inRect(centerOf(t, scene), r))
+    .map(t => ({name: t.name ?? t.actor?.name ?? "Someone", uuid: t.uuid, lasombra: /lasombra/i.test(String(t.actor?.system?.clan ?? ""))}));
+}
+/** A map event for other modules (the responsive maps work): one plain shape for every result. */
+export function mapEvent(kind, {scene, doc, tokDoc, noise = "silent", object = "", heard = [], supernatural = false, extra = {}} = {}) {
+  const ev = {kind, scene: scene?.id ?? doc?.parent?.id ?? "", place: doc?.id ?? "", at: doc ? tileCenter(doc) : null, noise, who: tokDoc?.uuid ?? "",
+    object, heard, supernatural, ...extra};
+  Hooks.callAll("wodxMapEvent", ev);
+  return ev;
+}
+/** Active GM: a watch point's result. Whispers what a look shows; tells the Storyteller who a call reaches. */
+async function watchReport(o, doc, out, op, author, actor, tokDoc) {
+  const lines = [];
+  let whisper = null;
+  const target = await watchTarget(o, doc);
+  const to = [...new Set([author?.id, ...gmIds()].filter(Boolean))];
+  if ( op.id === "watch" ) {
+    const people = peopleIn(target);
+    const seen = R.watchSees(o, people, out.watch ?? {successes: 0, botch: false});
+    const body = !target ? "<p>The Storyteller describes the view.</p>"
+      : out.watch?.botch ? "<p>Nothing stirs (the Storyteller may say otherwise).</p>"
+      : seen.names.length ? `<p>${esc(listWords(seen.names))}.</p>` : `<p>${seen.count ? `${seen.count} ${seen.count === 1 ? "person" : "people"}, too far or too dim to make out.` : "Nobody."}</p>`;
+    whisper = await ChatMessage.create({speaker: {alias: actor.name}, whisper: to, content: cardHtml({title: `${esc(actor.name)}: ${esc(R.nameOf(o))}`, body})});
+    if ( seen.unreflected.length ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: cardHtml({title: "No reflection",
+      body: `<p>In the area but not in the mirror: ${esc(listWords(seen.unreflected))}.</p>`})});
+    mapEvent("watch", {doc, tokDoc, object: o.kind, extra: {target: target?.uuid ?? "", seen: seen.count}});
+  } else if ( out.calls ) {
+    const where = target ? `${R.nameOf(describeTile(target) ?? {watch: true, kind: o.kind, title: ""})}${target.parent?.id !== doc.parent?.id ? ` on ${target.parent?.name ?? "another scene"}` : ""}` : "nobody";
+    lines.push(`The call reaches ${where}: the Storyteller plays the other end.`);
+    mapEvent("call", {doc, tokDoc, noise: "quiet", object: o.kind, extra: {target: target?.uuid ?? ""}});
+  } else if ( out.raises ) {
+    lines.push(out.raises === "help" ? "Help is called: the Storyteller decides who comes, and how soon." : "The alarm is raised.");
+    mapEvent("alarm", {doc, tokDoc, noise: out.noise ?? "loud", object: o.kind, extra: {how: out.raises, target: target?.uuid ?? ""}});
+  }
+  return {whisper, lines};
+}
+
 /** The approval queue: a wall knocked through. */
 function registerBreach() {
   chron()?.registerApprovalHandler?.(BREACH, {
@@ -1098,6 +1159,7 @@ export function tileConfigHtml(doc) {
   const hideNow = doc?.flags?.[MOD]?.occupants ?? [];
   const z = R.cleanHazard(doc?.flags?.[MOD] ?? {});
   const a = R.cleanSacred(doc?.flags?.[MOD] ?? {});
+  const wch = R.cleanWatch(doc?.flags?.[MOD] ?? {});
   return `<fieldset class="wix-config wix-tile"><legend>WoDX</legend>
     <h4 class="wix-sub">Container</h4>
     <p class="hint">A chest, cabinet, strongbox or safe that characters can open, pick, force and take things from. Hide the tile to keep it from players until found.</p>
@@ -1162,6 +1224,11 @@ export function tileConfigHtml(doc) {
     ${field("Rating", `<input type="number" name="${p}.rating" value="${a.rating}" min="1" max="10">`, "Holy ground's rating, a relic's Faith potential, a caern's level, a fetter's or a node's rating: 1 to 5. A fetish's Gnosis: 1 to 10.")}
     ${field("Desecrated", `<input type="checkbox" name="${p}.desecrated"${a.desecrated ? " checked" : ""}>`, "Untick to consecrate it again.")}
     ${field("The relic or fetish", `<textarea name="${p}.sacredItems" rows="2" placeholder="Its UUID, or its name in the Items directory">${esc(a.sacredItems)}</textarea>`, "Taking it gives the character a copy.")}
+    <h4 class="wix-sub">Watch point</h4>
+    <p class="hint">A window on the street or a mirror shows who is in the area of the tile it is tied to; a telephone or a radio calls the one it is tied to, or calls for help; a bell, horn or alarm raises the alarm.</p>
+    ${field("Watch point", `<input type="checkbox" name="${p}.watch"${wch.watch ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
+    ${field("Kind of watch point", `<select name="${p}.watchKind" data-fixed>${opt(R.WATCHES, wch.watchKind)}</select>`, "A telephone from about 1890, a radio from about 1930.")}
+    ${field("Tied to", `<input type="text" name="${p}.target" value="${esc(wch.target)}" placeholder="A tile's id on this scene, or its UUID on another">`, "The area a window or mirror shows, or the phone a call reaches.")}
   </fieldset>`;
 }
 function onRenderTileConfig(app, html) {
@@ -1236,7 +1303,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
@@ -1264,7 +1331,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !tok?.actor || !col || !tok.document.isOwner ) return;
   const b = document.createElement("div");
   b.className = "control-icon wix-hud";
-  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues, lights, hiding places, hazards, altars, relics and fetishes within reach, and searching";
+  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues, lights, hiding places, hazards, altars, relics, fetishes and watch points within reach, and searching";
   b.innerHTML = '<i class="fa-solid fa-door-open"></i>';
   b.addEventListener("click", () => openInteract(tok).catch(e => console.error(`${MOD} |`, e)));
   col.appendChild(b);

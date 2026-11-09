@@ -598,7 +598,10 @@ game.world.id = worldId;
       title: "The hayloft over the stables of the Golden Stag inn"}}}},
     // An altar, holy ground
     {document: {id: "tile8", documentName: "Tile", x: 160, y: 60, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {sacred: true, sacredKind: "altar", rating: 4,
-      title: "The high altar of the Church of St. Aegidius, under the rood screen"}}}}];
+      title: "The high altar of the Church of St. Aegidius, under the rood screen"}}}},
+    // A telephone tied to another
+    {document: {id: "tile9", documentName: "Tile", x: 60, y: 60, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {watch: true, watchKind: "phone", target: "tile8",
+      title: "The candlestick telephone in the rector's study"}}}}];
   globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document])), lights: new Coll([["lampA", {id: "lampA", x: 300, y: 300, hidden: false, flags: {}}]])}, grid: {size: 100},
     walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
