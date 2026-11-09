@@ -1,0 +1,3978 @@
+[
+ {
+  "id": "changeling",
+  "title": "Changeling",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A faerie soul that survives by living inside a mortal body, half in the everyday world and half in the Dreaming.",
+  "claims": [
+   {
+    "text": "The fae began to wear human bodies as armour once the weight of the mortal world grew too much for them to bear in their own forms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Ordinary mortals see only the human; the faerie form shows only to beings of the Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "A changeling who leans too far toward mortal life withers under Banality, and one who leans too far into the Dreaming slides into Bedlam.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "banality",
+   "bedlam",
+   "chrysalis",
+   "changeling-way"
+  ]
+ },
+ {
+  "id": "kithain",
+  "title": "Kithain",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The changelings as a people, the faerie souls of the Dreaming who now live in mortal flesh, sorted into kith.",
+  "claims": [
+   {
+    "text": "The core book describes thirteen kith in all: boggans, clurichaun, eshu, nockers, piskies, pooka, redcaps, satyrs, selkies, two kinds of sidhe, sluagh and trolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 88,
+      "pdf": 89
+     },
+     {
+      "book": "c20",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "Kithain society is loosely feudal, run by quarrelling noble houses and split between the Seelie and Unseelie Courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "changeling",
+   "noble-houses",
+   "seelie-court",
+   "unseelie-court",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "the-dreaming",
+  "title": "The Dreaming",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A world built out of human imagination and dreams, reached by changelings for adventure and for the dreamstuff of chimera.",
+  "claims": [
+   {
+    "text": "The book defines the Dreaming as a realm made from the dreams and imagination of humankind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "It has three broad depths: the Near Dreaming closest to the waking world, the Far Dreaming between, and the Deep Dreaming furthest away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 53,
+      "pdf": 54
+     },
+     {
+      "book": "c20",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Book Three of the core book is given over to the Dreaming and what lives there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 299,
+      "pdf": 300
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcadia",
+   "chimera",
+   "near-dreaming",
+   "deep-dreaming",
+   "trods"
+  ]
+ },
+ {
+  "id": "near-dreaming",
+  "title": "The Near Dreaming",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The part of the Dreaming closest to mortal reality, where most changeling travel happens.",
+  "claims": [
+   {
+    "text": "The Near Dreaming is the band of the Dreaming that lies nearest the waking world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "The Far Dreaming sits between it and the Deep Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-dreaming",
+   "deep-dreaming"
+  ]
+ },
+ {
+  "id": "deep-dreaming",
+  "title": "The Deep Dreaming",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The depths of the Dreaming least tied to mortal reality, where Arcadia lies somewhere.",
+  "claims": [
+   {
+    "text": "The Deep Dreaming is the region of the Dreaming with the weakest bond to the waking world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Arcadia is said to lie somewhere within it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-dreaming",
+   "arcadia",
+   "near-dreaming"
+  ]
+ },
+ {
+  "id": "arcadia",
+  "title": "Arcadia",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "The lost homeland of the fae, somewhere in the Deep Dreaming, where the nobles fled when the gates closed.",
+  "claims": [
+   {
+    "text": "Arcadia is the birthplace of the fae and lies somewhere in the Deep Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "During the Shattering most ruling fae escaped there through the last open gate and left the commoners behind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Sidhe came back out of Arcadia at the Resurgence, when the gates opened again in 1969.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 106,
+      "pdf": 107
+     },
+     {
+      "book": "c20",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shattering",
+   "the-resurgence",
+   "arcadian-sidhe",
+   "deep-dreaming"
+  ]
+ },
+ {
+  "id": "autumn-world",
+  "title": "The Autumn World",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The changelings' name for the mundane mortal world, grown cold with Banality.",
+  "claims": [
+   {
+    "text": "The book calls the mortal world the Autumn world throughout its history of the fae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     },
+     {
+      "book": "c20",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Invoking the Autumn is a rule for calling on Banality's power on purpose.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 272,
+      "pdf": 273
+     }
+    ]
+   }
+  ],
+  "see": [
+   "banality",
+   "the-dreaming"
+  ]
+ },
+ {
+  "id": "glamour",
+  "title": "Glamour",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The stuff of dreams and wonder that feeds the fae and fuels their magic; one of a changeling's Tempers.",
+  "claims": [
+   {
+    "text": "Mortals are named as the main source of Glamour in the world, even as they are also the source of Banality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Glamour is spent on cantrips and other faerie effects, and its uses and how it is regained are set out with the other traits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 173,
+      "pdf": 174
+     },
+     {
+      "book": "c20",
+      "page": 174,
+      "pdf": 175
+     }
+    ]
+   },
+   {
+    "text": "Changelings take in Glamour through five kinds of Epiphany.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 261,
+      "pdf": 262
+     }
+    ]
+   }
+  ],
+  "see": [
+   "banality",
+   "epiphany",
+   "cantrips",
+   "tempers"
+  ]
+ },
+ {
+  "id": "banality",
+  "title": "Banality",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The cold, deadening force of disbelief that opposes Glamour and slowly erodes a changeling's faerie self.",
+  "claims": [
+   {
+    "text": "Banality works against Glamour; a little keeps a changeling grounded, but a high rating is a danger.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The core book gives rules for its effects, for gaining it and for shedding it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 174,
+      "pdf": 175
+     },
+     {
+      "book": "c20",
+      "page": 175,
+      "pdf": 176
+     },
+     {
+      "book": "c20",
+      "page": 269,
+      "pdf": 270
+     },
+     {
+      "book": "c20",
+      "page": 272,
+      "pdf": 273
+     }
+    ]
+   },
+   {
+    "text": "Too much Banality can make a changeling forget their faerie nature and live as an ordinary mortal.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glamour",
+   "the-mists",
+   "autumn-world",
+   "tempers"
+  ]
+ },
+ {
+  "id": "bedlam",
+  "title": "Bedlam",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The madness that takes a changeling who touches the Dreaming too deeply, losing hold of both worlds.",
+  "claims": [
+   {
+    "text": "Bedlam is defined as a madness that cuts a changeling off from mundane reality after too strong a contact with the Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Its rules, and the road toward the endless dream, come at the close of the systems chapter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 295,
+      "pdf": 296
+     }
+    ]
+   }
+  ],
+  "see": [
+   "banality",
+   "glamour",
+   "the-dreaming"
+  ]
+ },
+ {
+  "id": "chrysalis",
+  "title": "The Chrysalis",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The moment a sleeping faerie soul wakes and a mortal becomes a changeling.",
+  "claims": [
+   {
+    "text": "The Chrysalis is the awakening of the fae soul inside a mortal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Children who carry a fae soul often seem odd long before it, drawn to monsters, far lands and wonder tales.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "A changeling fresh from the Chrysalis is called a fledge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "changeling",
+   "fosterage",
+   "changeling-way"
+  ]
+ },
+ {
+  "id": "changeling-way",
+  "title": "The Changeling Way",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "The ritual that bound faerie souls to mortal bodies so they could survive the Banality of the mortal world.",
+  "claims": [
+   {
+    "text": "Fae who could not reach Arcadia at the Shattering took the Changeling Way and joined their souls to mortal ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "After that first generation died, their souls were reborn into mortal children, which is how changelings come to be born today.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Some Arcadian sidhe take mortal form by other means.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shattering",
+   "chrysalis",
+   "changeling"
+  ]
+ },
+ {
+  "id": "chimera",
+  "title": "Chimera",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Dreamstuff: creatures, objects and places made of dreams, real to the fae and unseen by mortals.",
+  "claims": [
+   {
+    "text": "Chimera are the building blocks of the Dreaming and can be beasts, things or features of the land.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The chimerical quality of the world is explained early in Chapter One.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 33,
+      "pdf": 34
+     },
+     {
+      "book": "c20",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-dreaming",
+   "the-mists"
+  ]
+ },
+ {
+  "id": "the-mists",
+  "title": "The Mists",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The forgetfulness that hides chimerical events from mortals and from changelings caught by Banality.",
+  "claims": [
+   {
+    "text": "The Mists are introduced as part of the nature of the fae and treated in more depth with the Banality rules.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 46,
+      "pdf": 47
+     },
+     {
+      "book": "c20",
+      "page": 270,
+      "pdf": 271
+     }
+    ]
+   }
+  ],
+  "see": [
+   "banality",
+   "chimera"
+  ]
+ },
+ {
+  "id": "fae-mien",
+  "title": "Fae Mien and Mortal Seeming",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A changeling's true faerie look, seen by other fae, and the human face the mortal world sees.",
+  "claims": [
+   {
+    "text": "The fae mien is the changeling's true appearance; ordinary mortals cannot usually see it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Mortal seeming and fae mien are covered together in Chapter One.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "A changeling has both at once rather than switching between them.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "changeling",
+   "seeming"
+  ]
+ },
+ {
+  "id": "seeming",
+  "title": "Seeming",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The three stages of a changeling's faerie life: childling, wilder and grump.",
+  "claims": [
+   {
+    "text": "Childlings are marked by curiosity and a wish for adventure; wilders by a drive to explore and test limits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The three seemings, childling, wilder and grump, each get their own write-up in Chapter Two.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 84,
+      "pdf": 85
+     },
+     {
+      "book": "c20",
+      "page": 85,
+      "pdf": 86
+     },
+     {
+      "book": "c20",
+      "page": 86,
+      "pdf": 87
+     },
+     {
+      "book": "c20",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "How changelings age is set out in Chapter One.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "changeling",
+   "fae-mien"
+  ]
+ },
+ {
+  "id": "fosterage",
+  "title": "Fosterage",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The time after the Chrysalis when an older changeling teaches a new one how to live as fae.",
+  "claims": [
+   {
+    "text": "Fosterage follows the Chrysalis in the book's account of the nature of the fae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "chrysalis"
+  ]
+ },
+ {
+  "id": "courts",
+  "title": "The Courts",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The two great political bodies of the Kithain, Seelie and Unseelie, with a hidden Shadow Court beside them.",
+  "claims": [
+   {
+    "text": "The Seelie and Unseelie Courts are named as the two largest governing bodies of the Kithain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Chapter One follows the Courts through the ages, then covers attitudes, membership and each Court in turn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 57,
+      "pdf": 58
+     },
+     {
+      "book": "c20",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "seelie-court",
+   "unseelie-court",
+   "shadow-court",
+   "escheat"
+  ]
+ },
+ {
+  "id": "seelie-court",
+  "title": "The Seelie Court",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Court of tradition, honour and chivalry, which led Concordia through most of modern history.",
+  "claims": [
+   {
+    "text": "The Seelie Court and its Code are described in Chapter One.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 59,
+      "pdf": 60
+     },
+     {
+      "book": "c20",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "House Gwydion sees itself as the head of the Seelie, as House Ailil does of the Unseelie.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "courts",
+   "unseelie-court",
+   "house-gwydion"
+  ]
+ },
+ {
+  "id": "unseelie-court",
+  "title": "The Unseelie Court",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Court of change, passion and freedom, which keeps its own Code against the Seelie one.",
+  "claims": [
+   {
+    "text": "The Unseelie Court and its Code are described in Chapter One.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "House Ailil claims to lead the Unseelie and justifies its schemes as restoring the balance of the Courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "courts",
+   "seelie-court",
+   "house-ailil",
+   "shadow-court"
+  ]
+ },
+ {
+  "id": "shadow-court",
+  "title": "The Shadow Court",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A secret, darker body behind the Unseelie Court, linked in rumour to House Ailil.",
+  "claims": [
+   {
+    "text": "The Shadow Court has its own section after the two open Courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Many fae believe every Ailil has a hand in it, though the book says the belief goes too far.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "unseelie-court",
+   "house-ailil",
+   "thallain"
+  ]
+ },
+ {
+  "id": "escheat",
+  "title": "The Escheat",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The highest law of the Kithain, sworn between the Seelie and Unseelie Courts.",
+  "claims": [
+   {
+    "text": "The Escheat is the oldest law shared by both Courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "courts",
+   "oaths"
+  ]
+ },
+ {
+  "id": "noble-houses",
+  "title": "Noble Houses",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great sidhe houses that rule Kithain society, each with its own court, gift and flaw.",
+  "claims": [
+   {
+    "text": "Chapter Two gives fourteen houses: Aesin, Ailil, Balor, Beaumayn, Danaan, Daireann, Dougal, Eiluned, Fiona, Gwydion, Leanhaun, Liam, Scathach and Varich.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 120,
+      "pdf": 121
+     },
+     {
+      "book": "c20",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   },
+   {
+    "text": "Each house entry gives a boon and a flaw for its members.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 128,
+      "pdf": 129
+     },
+     {
+      "book": "c20",
+      "page": 132,
+      "pdf": 133
+     },
+     {
+      "book": "c20",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-gwydion",
+   "house-ailil",
+   "house-fiona",
+   "house-eiluned",
+   "house-scathach",
+   "house-liam"
+  ]
+ },
+ {
+  "id": "house-aesin",
+  "title": "House Aesin",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A house bound to nature and beasts, who see themselves as guardians of the Dreaming.",
+  "claims": [
+   {
+    "text": "Members can speak with animals, and many feel a bond to one animal in particular.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "Outsiders often take them for savages, but they think of themselves as the last true keepers of fae society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses"
+  ]
+ },
+ {
+  "id": "house-ailil",
+  "title": "House Ailil",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Dragons: masters of politics and manipulation who claim the leadership of the Unseelie Court.",
+  "claims": [
+   {
+    "text": "Ailil are known as leaders, planners and manipulators, and other houses fear crossing them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "The house sees itself as head of the Unseelie Court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "unseelie-court",
+   "shadow-court",
+   "house-eiluned"
+  ]
+ },
+ {
+  "id": "house-balor",
+  "title": "House Balor",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Unseelie house whose members carry visible deformities from their Fomorian heritage.",
+  "claims": [
+   {
+    "text": "Balor deformities give no rules benefit on their own and show up in the mortal seeming as something odd but natural.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "Witnesses find a Balor hard to forget, which makes them easier to trace.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "fae-mien"
+  ]
+ },
+ {
+  "id": "house-beaumayn",
+  "title": "House Beaumayn",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A house of seers and occult seekers, many of whom dream true even before their Chrysalis.",
+  "claims": [
+   {
+    "text": "Beaumayn are often drawn early to the occult and to the hidden history of where they live.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "Unseelie members of the house are uncommon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "chrysalis"
+  ]
+ },
+ {
+  "id": "house-danaan",
+  "title": "House Danaan",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Pathfinders: a small house scattered across worlds, open to commoners in its ranks.",
+  "claims": [
+   {
+    "text": "Danaan is the only noble house led by a High Lord who is not sidhe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   },
+   {
+    "text": "The house dislikes the mortal world and admits commoner kith such as eshu, satyrs, piskies and nockers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses"
+  ]
+ },
+ {
+  "id": "house-daireann",
+  "title": "House Daireann",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A house known for its custom of hospitality and its sworn societies of herbalists and fighters.",
+  "claims": [
+   {
+    "text": "Its societies include poison makers, an oathbound order of fighters and the keepers of the cauldronhouses, wayhouses open to all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "oaths"
+  ]
+ },
+ {
+  "id": "house-dougal",
+  "title": "House Dougal",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Smiths: makers whose bodies slowly take on the craft, piece by piece.",
+  "claims": [
+   {
+    "text": "Each level of Title brings a working artificial part to a Dougal's body, such as a clockwork eye or a brass hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "backgrounds"
+  ]
+ },
+ {
+  "id": "house-eiluned",
+  "title": "House Eiluned",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The House of Secrets: a house of magic and prophecy founded by Ailil's sister.",
+  "claims": [
+   {
+    "text": "The founder Eiluned was the sister of Ailil and warned the sidhe of a coming darkness; the warning went unheeded and split the two.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "The house readied strongholds before the Sundering.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Gwydion's truth-sensing gift does not work on Eiluned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "house-ailil",
+   "the-sundering"
+  ]
+ },
+ {
+  "id": "house-fiona",
+  "title": "House Fiona",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Lions: a Seelie house of fierce love, loyalty and reckless daring.",
+  "claims": [
+   {
+    "text": "Fiona belong to the Seelie Court and value true love above all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 130,
+      "pdf": 131
+     }
+    ]
+   },
+   {
+    "text": "They court danger for its own sake.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 130,
+      "pdf": 131
+     }
+    ]
+   },
+   {
+    "text": "Fiona demanded a hearing and punishment after the Beltaine Massacre, and no one listened.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "seelie-court",
+   "night-of-iron-knives"
+  ]
+ },
+ {
+  "id": "house-gwydion",
+  "title": "House Gwydion",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A proud Seelie house of rulers and warriors that clings hardest to the old order.",
+  "claims": [
+   {
+    "text": "A Gwydion can sense lies with a Perception and Kenning roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Its flaw is an honour that cannot let an insult pass unavenged.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "The High King Dafyll who led the war against the commoners was of this house.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "seelie-court",
+   "accordance-war",
+   "high-lord-dafyll"
+  ]
+ },
+ {
+  "id": "house-leanhaun",
+  "title": "House Leanhaun",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Muses: an Unseelie house that shapes culture and feeds on the inspiration of mortals.",
+  "claims": [
+   {
+    "text": "Leanhaun seek jobs that bring them many potential Dreamers, such as agents, scouts and art teachers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "They play a long game of shaping culture through books, songs and films.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "dreamers"
+  ]
+ },
+ {
+  "id": "house-liam",
+  "title": "House Liam",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An exiled house that stood between mortals and the fae and stayed behind at the Shattering.",
+  "claims": [
+   {
+    "text": "Its founder King Liam believed the new Christian faith held the same creative spark as art and song.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 134,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "Liam and Scathach nobles took the Changeling Way and remained in the mortal world when the other nobles fled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     },
+     {
+      "book": "c20",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "house-scathach",
+   "autumn-sidhe",
+   "the-shattering"
+  ]
+ },
+ {
+  "id": "house-scathach",
+  "title": "House Scathach",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Gray Walkers: a house of warriors and agents with a bad name among nobles, who stayed behind at the Shattering.",
+  "claims": [
+   {
+    "text": "Scathach suffer a +2 difficulty on Social rolls with most nobles and royalist commoners; Liam and Danaan nobles are exempt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "Gray Walkers who are Autumn sidhe or other kith are barred from using Sovereign by an old pact.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "Scathach nobles were among those who stayed in the mortal world through the Interregnum.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     },
+     {
+      "book": "c20",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses",
+   "house-liam",
+   "autumn-sidhe"
+  ]
+ },
+ {
+  "id": "house-varich",
+  "title": "House Varich",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Puppetmasters: a house that reads patterns and predicts what others will do.",
+  "claims": [
+   {
+    "text": "Given time to study, a Varich can foresee outcomes such as markets, card hands or duels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   }
+  ],
+  "see": [
+   "noble-houses"
+  ]
+ },
+ {
+  "id": "households-and-motleys",
+  "title": "Households and Motleys",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The small groups changelings live in: households under one roof, and motleys bound by shared purpose.",
+  "claims": [
+   {
+    "text": "Changeling society is described through households, motleys, and the bond of liege and vassal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 63,
+      "pdf": 64
+     },
+     {
+      "book": "c20",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "liege-and-vassal",
+   "freeholds"
+  ]
+ },
+ {
+  "id": "liege-and-vassal",
+  "title": "Liege and Vassal",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The feudal oaths that tie commoners and nobles together in Kithain society.",
+  "claims": [
+   {
+    "text": "Liege and vassal ties are set out as part of changeling society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "The book's sample oaths include oaths of fealty.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 266,
+      "pdf": 267
+     }
+    ]
+   }
+  ],
+  "see": [
+   "oaths",
+   "noble-houses",
+   "households-and-motleys"
+  ]
+ },
+ {
+  "id": "freeholds",
+  "title": "Freeholds",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Places soaked in Glamour where changelings meet and live, with a balefire at their heart.",
+  "claims": [
+   {
+    "text": "A freehold is a place full of Glamour used as a home and meeting place.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The balefire is the part of a freehold where its Glamour gathers and is kept.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glamour",
+   "glades",
+   "trods"
+  ]
+ },
+ {
+  "id": "glades",
+  "title": "Glades",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wild places rich in Glamour, out in nature rather than tied to a court.",
+  "claims": [
+   {
+    "text": "Glades are listed first among the places of Glamour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "freeholds",
+   "trods"
+  ]
+ },
+ {
+  "id": "trods",
+  "title": "Trods",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Faerie roads that link freeholds and places of Glamour.",
+  "claims": [
+   {
+    "text": "Trods are described with glades and freeholds among the places of Glamour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "freeholds",
+   "the-dreaming"
+  ]
+ },
+ {
+  "id": "concordia",
+  "title": "Kingdom of Concordia",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great changeling realm of North America, ruled by a High King from Tara-Nar.",
+  "claims": [
+   {
+    "text": "Concordia is split into kingdoms such as Apples, Willows, Grass, the Burning Sun and Pacifica, each given a short write-up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 65,
+      "pdf": 66
+     },
+     {
+      "book": "c20",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "Commoners left in Concordia at the Shattering built their own rule before the sidhe came back.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tara-nar",
+   "high-king-david",
+   "accordance-war"
+  ]
+ },
+ {
+  "id": "tara-nar",
+  "title": "Tara-Nar",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The capital of Concordia, the High King's seat.",
+  "claims": [
+   {
+    "text": "Tara-Nar is named the capital of the western world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "concordia",
+   "high-king-david"
+  ]
+ },
+ {
+  "id": "kingdoms-beyond-concordia",
+  "title": "Changeling Realms Abroad",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The changeling kingdoms of Europe and the wider world, from Albion and Hibernia to the Empire of the Firebird.",
+  "claims": [
+   {
+    "text": "Chapter One sketches realms across the world, among them Albion, Hibernia, Caledonia, Cymru, Neustria, Iberia, the Hellenic Empire and the Empire of the Firebird.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 73,
+      "pdf": 74
+     },
+     {
+      "book": "c20",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "concordia"
+  ]
+ },
+ {
+  "id": "mythic-age",
+  "title": "The Mythic Age",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "classical",
+   "dark-ages"
+  ],
+  "summary": "The ancient time when fae and mortals shared the world freely and Glamour was everywhere.",
+  "claims": [
+   {
+    "text": "Kithain history opens with the Mythic Age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-sundering",
+   "the-shattering"
+  ]
+ },
+ {
+  "id": "the-sundering",
+  "title": "The Sundering",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The first great break between the fae and the mortal world, as Banality grew.",
+  "claims": [
+   {
+    "text": "The Sundering follows the Mythic Age in the book's history.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "House Eiluned saw it coming and fortified its freeholds in advance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mythic-age",
+   "the-shattering",
+   "house-eiluned"
+  ]
+ },
+ {
+  "id": "the-shattering",
+  "title": "The Shattering",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance"
+  ],
+  "summary": "The closing of the gates to Arcadia, when the nobles fled and the commoners were left behind.",
+  "claims": [
+   {
+    "text": "From the 14th century the gates broke one after another as faith and reason drove out old beliefs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Fae chose between sealing themselves into their realms, fleeing to Arcadia, or taking the Changeling Way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Those who sealed themselves away went mad on their own Glamour and became Lost Ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcadia",
+   "changeling-way",
+   "lost-ones",
+   "the-interregnum"
+  ]
+ },
+ {
+  "id": "the-interregnum",
+  "title": "The Interregnum",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "renaissance",
+   "victorian",
+   "wild-west",
+   "great-war",
+   "modern"
+  ],
+  "summary": "The long centuries when the commoners ran fae society alone, without the Arcadian nobles.",
+  "claims": [
+   {
+    "text": "The Interregnum runs from the Shattering until the sidhe returned, through world wars and the Depression.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     },
+     {
+      "book": "c20",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Changelings who fought in the world wars often came home Undone.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shattering",
+   "the-resurgence"
+  ]
+ },
+ {
+  "id": "the-resurgence",
+  "title": "The Resurgence",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The return of the Arcadian sidhe in 1969, when human hope reopened the way.",
+  "claims": [
+   {
+    "text": "After the Second World War, new dreams of space and the future sent Glamour back into the Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "The gates to Arcadia opened again on July 20, 1969.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   },
+   {
+    "text": "Returning nobles found commoners who had done well without them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcadia",
+   "night-of-iron-knives",
+   "accordance-war",
+   "arcadian-sidhe"
+  ]
+ },
+ {
+  "id": "night-of-iron-knives",
+  "title": "The Night of Iron Knives",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Beltaine Massacre, when sidhe murdered commoner leaders at a peace feast and set off the Accordance War.",
+  "claims": [
+   {
+    "text": "Arcadian sidhe invited commoner leaders to a Beltaine masquerade to talk peace, and masked killers with cold iron knives slew them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "House Fiona's calls for an inquiry went unheard and war followed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "accordance-war",
+   "cold-iron",
+   "house-fiona"
+  ]
+ },
+ {
+  "id": "accordance-war",
+  "title": "The Accordance War",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The war between returning nobles and commoners that ended with David crowned High King.",
+  "claims": [
+   {
+    "text": "Ten days after the massacre the nobles marched under High King Dafyll of House Gwydion and took San Francisco in the Battle of the Bay.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "The war ran alongside the mortal Vietnam war.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Queen Mab acknowledged David as High King after a sign from the Dreaming confirmed a prophecy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "night-of-iron-knives",
+   "high-king-david",
+   "high-lord-dafyll",
+   "queen-mab"
+  ]
+ },
+ {
+  "id": "evanescence",
+  "title": "The Evanescence",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The surge of nightmare Glamour around September 11, 2001 that let many Thallain into the Autumn world.",
+  "claims": [
+   {
+    "text": "The Evanescence is dated to around September 11, 2001.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "It brought nightmarish Glamour into the mortal world and opened the way for Thallain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "thallain",
+   "high-king-david"
+  ]
+ },
+ {
+  "id": "present-day",
+  "title": "Concordia in the Present Day",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A troubled realm with a returned but broken High King and rival claims to power.",
+  "claims": [
+   {
+    "text": "David returned from the Dreaming and spoke to the Parliament of Dreams, then withdrew, troubled by chaotic dreams.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "In the High King's absence conservative Arcadian sidhe gained influence through bribes and threats.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "high-king-david",
+   "faerilyth",
+   "evanescence"
+  ]
+ },
+ {
+  "id": "high-king-david",
+  "title": "High King David",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The young sidhe crowned High King of Concordia, who vanished and later came back changed.",
+  "claims": [
+   {
+    "text": "David bore Caliburn and was recognised by Queen Mab after a griffon shielded the boy at the court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "David tried to make peace with the commoners after the Accordance War.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "David went missing for years, then returned older and troubled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 40,
+      "pdf": 41
+     },
+     {
+      "book": "c20",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "accordance-war",
+   "queen-mab",
+   "faerilyth",
+   "tara-nar"
+  ],
+  "gender": "male"
+ },
+ {
+  "id": "high-lord-dafyll",
+  "title": "High King Dafyll",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The House Gwydion war leader who led the nobles at the start of the Accordance War.",
+  "claims": [
+   {
+    "text": "Dafyll, First Lord of War of House Gwydion, carried Caliburn and took San Francisco within a week.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "accordance-war",
+   "house-gwydion"
+  ]
+ },
+ {
+  "id": "queen-mab",
+  "title": "Queen Mab",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A great noble of Concordia whose blessing made David's rule secure.",
+  "claims": [
+   {
+    "text": "Mab first refused to accept David, then proclaimed the young noble High King after the prophecy came true.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "During David's absence Mab backed Princess Lenore and accused Faerilyth of a part in the disappearance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "high-king-david",
+   "faerilyth",
+   "accordance-war"
+  ]
+ },
+ {
+  "id": "faerilyth",
+  "title": "Faerilyth",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "David's queen, whose claim to rule was denied while David was missing.",
+  "claims": [
+   {
+    "text": "Faerilyth set up court in the Kingdom of Willows during David's absence, and Mab and Morwen both refused to call Faerilyth High Queen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Faerilyth embraced David on the High King's return to the Parliament of Dreams.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "high-king-david",
+   "queen-mab",
+   "present-day"
+  ]
+ },
+ {
+  "id": "thallain",
+  "title": "Thallain",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fae born of nightmare and darkness, enemies of the Kithain.",
+  "claims": [
+   {
+    "text": "The Evanescence let many Thallain into the Autumn world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Thallain are named across the book among the darker beings of the Dreaming.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 56,
+      "pdf": 57
+     },
+     {
+      "book": "c20",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "evanescence",
+   "shadow-court",
+   "dauntain"
+  ]
+ },
+ {
+  "id": "dauntain",
+  "title": "Dauntain",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Changelings with broken faerie souls who hunt Glamour and other fae.",
+  "claims": [
+   {
+    "text": "Dauntain carry old Brands that twist them, and they corrupt, torment and destroy Glamour and the Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "thallain",
+   "banality"
+  ]
+ },
+ {
+  "id": "enchanted-and-kinain",
+  "title": "The Enchanted and Kinain",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortals given Glamour so they can see the Dreaming, and mortals with faerie blood.",
+  "claims": [
+   {
+    "text": "The Enchanted are mortals filled with Glamour, chiefly so they can perceive the Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Kinain, kin of the fae, appear throughout the book as mortals tied to changeling families.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamers",
+   "glamour"
+  ]
+ },
+ {
+  "id": "gallain",
+  "title": "Gallain",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Creatures of the Dreaming that are not Kithain, such as the Nunnehi, the Inanimae and the Adhene.",
+  "claims": [
+   {
+    "text": "Gallain means any being of the Dreaming outside the Kithain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The Nunnehi of the Americas and the Inanimae, fae of objects and places, are among them.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 114,
+      "pdf": 115
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "the-dreaming"
+  ]
+ },
+ {
+  "id": "lost-ones",
+  "title": "Lost Ones",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "Fae who sealed themselves into their realms at the Shattering and went mad from their own Glamour.",
+  "claims": [
+   {
+    "text": "Fae who locked themselves inside unchanging realms during the Shattering became Lost Ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shattering",
+   "gallain"
+  ]
+ },
+ {
+  "id": "boggans",
+  "title": "Boggans",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hard-working, hospitable kith who love simple comforts and always know the court gossip.",
+  "claims": [
+   {
+    "text": "Boggans prize work and hospitality and are famed for honesty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Boggans know the latest court rumours better than anyone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "clurichaun",
+  "title": "Clurichaun",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Music-loving kith from Ireland, the truth behind the leprechaun tale.",
+  "claims": [
+   {
+    "text": "Mortal stories of leprechauns come from garbled tales of clurichaun.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "Most live in Ireland, and some came to American cities with Irish migrants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "eshu",
+  "title": "Eshu",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wanderers and storytellers who cannot resist the open road.",
+  "claims": [
+   {
+    "text": "Eshu take their name from a Yoruba trickster and messenger spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "They first arose from the dreams of the nomads of Chaldea.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "An eshu remembers every story heard.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "nockers",
+  "title": "Nockers",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Bitter, sarcastic master crafters who want everything perfect.",
+  "claims": [
+   {
+    "text": "Nockers are known as much for cynicism as for skill at making things.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "They prefer mechanical wonders to people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "piskies",
+  "title": "Piskies",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Quick, friendly couriers of the Dreaming who keep what they pocket.",
+  "claims": [
+   {
+    "text": "Piskies carry messages, parcels and secrets between courts and commoners.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Piskies tend to be solitary wanderers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "pooka",
+  "title": "Pooka",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Pranksters and jesters, each bonded to one kind of animal.",
+  "claims": [
+   {
+    "text": "Pooka love pranks and hate meanness and hard work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "Every pooka shares a close bond with a particular animal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "redcaps",
+  "title": "Redcaps",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kith born of nightmare, the terror of fae children and rebels against any ruler.",
+  "claims": [
+   {
+    "text": "Redcaps are named for caps dipped in enemies' blood in older days.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 100,
+      "pdf": 101
+     }
+    ]
+   },
+   {
+    "text": "Redcaps delight in disgusting or frightening others and oppose whoever rules.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 100,
+      "pdf": 101
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "satyrs",
+  "title": "Satyrs",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Passionate kith devoted to pleasure, revel and appetite.",
+  "claims": [
+   {
+    "text": "Satyrs pursue their desires without restraint and have the stamina for days of revel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "selkies",
+  "title": "Selkies",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Seal-folk of the sea, loving and distant, bound to their seal coats.",
+  "claims": [
+   {
+    "text": "Selkies are both seal and human, and guarding the seal coat shapes their wariness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "arcadian-sidhe",
+  "title": "Arcadian Sidhe",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The noble sidhe who fled to Arcadia and returned at the Resurgence.",
+  "claims": [
+   {
+    "text": "The returning sidhe found commoners who had thrived without them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "They are more fragile against Banality than commoners and lean on old customs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "autumn-sidhe",
+  "title": "Autumn Sidhe",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sidhe of Houses Liam and Scathach who stayed in the mortal world through the Interregnum.",
+  "claims": [
+   {
+    "text": "Liam and Scathach nobles took the Changeling Way rather than flee, and greeted the returning sidhe in 1969.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "sluagh",
+  "title": "Sluagh",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Secretive collectors of secrets and lost lore who live in old, dark places.",
+  "claims": [
+   {
+    "text": "Sluagh are called the underfolk; a few live in tunnels and sewers, most in old mansions or stone buildings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "Sluagh gather secrets and forgotten lore.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "trolls",
+  "title": "Trolls",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Honourable guardians whose strength fails them if they break their word.",
+  "claims": [
+   {
+    "text": "Trolls come from dreams of warriors and guardians and serve as protectors of the courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "A troll who breaks an oath sickens until the dishonour is redeemed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain",
+   "kith-creation"
+  ]
+ },
+ {
+  "id": "kith-creation",
+  "title": "Kith Creation",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rules for building a new kith: concept, role in the Dreaming, birthrights, frailty and affinity.",
+  "claims": [
+   {
+    "text": "New kith are built in six steps, from concept and role through birthrights, frailty and affinity to adjustment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 115,
+      "pdf": 116
+     },
+     {
+      "book": "c20",
+      "page": 116,
+      "pdf": 117
+     },
+     {
+      "book": "c20",
+      "page": 117,
+      "pdf": 118
+     },
+     {
+      "book": "c20",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "A worked example builds a kith from the domovoi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 118,
+      "pdf": 119
+     },
+     {
+      "book": "c20",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain"
+  ]
+ },
+ {
+  "id": "arts",
+  "title": "Arts",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The schools of faerie magic, from Chicanery and Primal to Sovereign and Wayfare.",
+  "claims": [
+   {
+    "text": "Chapter Four lists eighteen Arts: Autumn, Chicanery, Chronos, Contract, Dragon's Ire, Legerdemain, Metamorphosis, Naming, Oneiromancy, Primal, Pyretics, Skycraft, Soothsay, Sovereign, Spring, Summer, Wayfare and Winter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 198,
+      "pdf": 199
+     },
+     {
+      "book": "c20",
+      "page": 231,
+      "pdf": 232
+     }
+    ]
+   },
+   {
+    "text": "Scathach who are not Arcadian sidhe may not use Sovereign under an old pact.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   }
+  ],
+  "see": [
+   "realms",
+   "cantrips",
+   "bunks"
+  ]
+ },
+ {
+  "id": "realms",
+  "title": "Realms",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The second half of a cantrip: what it can affect, from people to places and time.",
+  "claims": [
+   {
+    "text": "There are six Realms: Actor, Fae, Nature, Prop, Scene and Time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 233,
+      "pdf": 234
+     },
+     {
+      "book": "c20",
+      "page": 236,
+      "pdf": 237
+     }
+    ]
+   },
+   {
+    "text": "A cantrip joins an Art with a Realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arts",
+   "cantrips"
+  ]
+ },
+ {
+  "id": "cantrips",
+  "title": "Cantrips",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Faerie spells: an Art and a Realm joined by Glamour.",
+  "claims": [
+   {
+    "text": "A cantrip is a spell made with Glamour from an Art and a Realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Cantrip casting is explained at the start of Chapter Four.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 194,
+      "pdf": 195
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arts",
+   "realms",
+   "bunks",
+   "glamour"
+  ]
+ },
+ {
+  "id": "bunks",
+  "title": "Bunks",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Actions a changeling performs to trigger or ease a cantrip.",
+  "claims": [
+   {
+    "text": "A bunk is an action done to activate a cantrip or make it easier.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 195,
+      "pdf": 196
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cantrips"
+  ]
+ },
+ {
+  "id": "unleashing",
+  "title": "Unleashing",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Letting raw Glamour loose without a cantrip's shape, with unpredictable results.",
+  "claims": [
+   {
+    "text": "Unleashing is treated after cantrips and bunks in Chapter Four.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 197,
+      "pdf": 198
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cantrips",
+   "glamour"
+  ]
+ },
+ {
+  "id": "tempers",
+  "title": "Tempers",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A changeling's three pools: Glamour, Willpower and Banality.",
+  "claims": [
+   {
+    "text": "Tempers, converting points between them, Willpower and Glamour each get a section in Chapter Six.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 258,
+      "pdf": 259
+     },
+     {
+      "book": "c20",
+      "page": 259,
+      "pdf": 260
+     },
+     {
+      "book": "c20",
+      "page": 260,
+      "pdf": 261
+     }
+    ]
+   },
+   {
+    "text": "Tempers are set during character creation, step four.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glamour",
+   "banality",
+   "invoking-the-wyrd"
+  ]
+ },
+ {
+  "id": "invoking-the-wyrd",
+  "title": "Invoking the Wyrd",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Making chimerical effects real in the mortal world, at a cost.",
+  "claims": [
+   {
+    "text": "Invoking the Wyrd is covered in the Tempers section.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 260,
+      "pdf": 261
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tempers",
+   "chimera"
+  ]
+ },
+ {
+  "id": "epiphany",
+  "title": "Epiphany",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The five ways a changeling gains Glamour: Rapture, Ravaging, Rhapsody, Revelry and Reverie.",
+  "claims": [
+   {
+    "text": "The five methods of Epiphany are Rapture, Ravaging, Rhapsody, Revelry and Reverie.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 261,
+      "pdf": 262
+     }
+    ]
+   },
+   {
+    "text": "Ravaging is the cruel way, taking Glamour by force from mortals.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "c20",
+      "page": 261,
+      "pdf": 262
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glamour",
+   "dreamers"
+  ]
+ },
+ {
+  "id": "dreamers",
+  "title": "Dreamers",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortals whose creativity feeds changelings with Glamour, and a Background that stands for them.",
+  "claims": [
+   {
+    "text": "Dreamers is one of the changeling Backgrounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 170,
+      "pdf": 171
+     }
+    ]
+   },
+   {
+    "text": "Leanhaun look for jobs that bring many Dreamers within reach.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   }
+  ],
+  "see": [
+   "epiphany",
+   "house-leanhaun",
+   "backgrounds"
+  ]
+ },
+ {
+  "id": "oaths",
+  "title": "Oaths",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Binding promises sworn under the Dreaming, with penalties for breaking them.",
+  "claims": [
+   {
+    "text": "Chapter Six covers swearing an oath, restoration and atonement, and gives sample oaths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 265,
+      "pdf": 266
+     },
+     {
+      "book": "c20",
+      "page": 266,
+      "pdf": 267
+     }
+    ]
+   },
+   {
+    "text": "Trolls suffer especially when they break an oath.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "escheat",
+   "liege-and-vassal",
+   "trolls"
+  ]
+ },
+ {
+  "id": "cold-iron",
+  "title": "Cold Iron",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The bane of the fae: wounds from cold iron are especially dangerous to changelings.",
+  "claims": [
+   {
+    "text": "Cold iron has its own rules in the Health section.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 291,
+      "pdf": 292
+     }
+    ]
+   },
+   {
+    "text": "The Beltaine Massacre was done with cold iron knives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "night-of-iron-knives"
+  ]
+ },
+ {
+  "id": "nightmare",
+  "title": "Nightmare",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A measure of how far a changeling's Glamour has turned dark.",
+  "claims": [
+   {
+    "text": "Nightmare has its own section in Chapter Six, before combat.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 275,
+      "pdf": 276
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glamour",
+   "thallain"
+  ]
+ },
+ {
+  "id": "kenning-and-gremayre",
+  "title": "Kenning and Gremayre",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The two changeling Abilities: a Talent for sensing Glamour and a Knowledge of faerie lore.",
+  "claims": [
+   {
+    "text": "Kenning is a changeling Talent and Gremayre a changeling Knowledge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 164,
+      "pdf": 165
+     },
+     {
+      "book": "c20",
+      "page": 168,
+      "pdf": 169
+     }
+    ]
+   },
+   {
+    "text": "House Gwydion uses Perception and Kenning to tell truth from lies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glamour"
+  ]
+ },
+ {
+  "id": "backgrounds",
+  "title": "Changeling Backgrounds",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Traits such as Chimera, Dreamers, Holdings, Remembrance, Retinue, Title and Treasures.",
+  "claims": [
+   {
+    "text": "The Backgrounds are Chimera, Contacts, Dreamers, Holdings, Mentor, Remembrance, Resources, Retinue, Title and Treasures, and they can be pooled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 169,
+      "pdf": 170
+     },
+     {
+      "book": "c20",
+      "page": 172,
+      "pdf": 173
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamers",
+   "chimera",
+   "house-dougal"
+  ]
+ },
+ {
+  "id": "legacies",
+  "title": "Legacies",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Paired Seelie and Unseelie personality archetypes that every changeling carries.",
+  "claims": [
+   {
+    "text": "Legacies come in Seelie and Unseelie sets, each with its own quest and ban.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 157,
+      "pdf": 158
+     }
+    ]
+   },
+   {
+    "text": "Seelie examples include Courtier, Paladin and Troubadour; Unseelie include Fool, Rogue and Riddler.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 157,
+      "pdf": 158
+     },
+     {
+      "book": "c20",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   }
+  ],
+  "see": [
+   "seelie-court",
+   "unseelie-court"
+  ]
+ },
+ {
+  "id": "threshold-and-antithesis",
+  "title": "Threshold and Antithesis",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A creation step that names what draws a changeling's Glamour and what threatens it.",
+  "claims": [
+   {
+    "text": "Threshold and Antithesis are step eight of character creation.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "c20",
+      "page": 146,
+      "pdf": 147
+     }
+    ]
+   }
+  ],
+  "see": [
+   "legacies"
+  ]
+ }
+]

@@ -1,6 +1,15 @@
 {
   "version": 1,
   "note": "The Encyclopaedia Tenebrarum: books are the sources entries cite; files hold the entries, one file per book or topic. Check with node tools/encyclopedia-check.mjs.",
-  "books": [],
-  "files": []
+  "books": [
+    {
+      "id": "c20",
+      "title": "Changeling: The Dreaming 20th Anniversary Edition",
+      "short": "C20",
+      "edition": "20th Anniversary"
+    }
+  ],
+  "files": [
+    "c20.json"
+  ]
 }
