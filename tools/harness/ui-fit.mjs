@@ -603,11 +603,14 @@ game.world.id = worldId;
       title: "The high altar of the Church of St. Aegidius, under the rood screen"}}}},
     // A telephone tied to another
     {document: {id: "tile9", documentName: "Tile", x: 60, y: 60, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {watch: true, watchKind: "phone", target: "tile8",
-      title: "The candlestick telephone in the rector's study"}}}}];
+      title: "The candlestick telephone in the rector's study"}}}},
+    // A coach nobody is driving yet
+    {document: {id: "tile10", documentName: "Tile", x: 60, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {mount: true, mountKind: "carriage",
+      title: "The black coach of the Graf von Rothenstein, with the family arms on its doors"}}}}];
   globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document])), lights: new Coll([["lampA", {id: "lampA", x: 300, y: 300, hidden: false, flags: {}}]])}, grid: {size: 100},
     walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
-  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")], ["Interact fire roll", () => ix.attempt(tok, "tile7", "putOut")]] ) {
+  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")], ["Interact fire roll", () => ix.attempt(tok, "tile7", "putOut")], ["Interact vehicle roll", () => ix.attempt(tok, "tile10", "mount")]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
@@ -618,6 +621,32 @@ game.world.id = worldId;
     content: `<div class="standard-form">${ix.tileConfigHtml(tiles[6].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
   globalThis.canvas = oldCanvas;
   CONFIG.Canvas = oldConfigCanvas;
+  api.DialogV2.wait = wait;
+}
+// WoDX Senses 0.1.0: the ask window (a character with Auspex) and the Place senses window (a scene with twelve regions)
+{
+  game.modules.set("wodx-senses", {active: true});
+  await import(join(root, "modules/wodx-senses/scripts/main.mjs"));
+  await Hooks.callAll("init");
+  const sn = game.modules.get("wodx-senses").api ?? null;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const oldCanvas = globalThis.canvas;
+  const a = [...game.actors.values()].find(x => x.type === "Mortal");
+  const auspex = {id: "ausp", name: "Auspex", type: "Power", system: {value: 3, type: "wod.types.discipline"}};
+  a.items.set("ausp", auspex);
+  const regions = new Coll(Array.from({length: 12}, (_, k) => [`r${k}`, {id: `r${k}`, name: `The cellar under the Golden Stag inn, by the old well, part ${k}`, flags: {"wodx-npc": {place: {kind: "tavern"}}}}]));
+  const sc = {id: "s", name: "The Golden Stag inn and its yard, by the Bishop's Gate", navName: "", regions, flags: {}};
+  const tok = {id: "stok", name: a.name, actor: a, document: {uuid: "Scene.s.Token.stok", name: a.name, actor: a, parent: sc}};
+  globalThis.canvas = {...(oldCanvas ?? {}), scene: sc, tokens: {controlled: [tok], placeables: [tok]}};
+  if ( !sn ) { console.error("FAIL WoDX Senses did not load (its ready hook may not have run)"); process.exitCode = 1; }
+  for ( const [label, fn] of [["Senses ask", () => sn?.openAsk()], ["Place senses", () => sn?.openPlaceLines(sc)]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  a.items.delete("ausp");
+  globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
 // WoDX Targeting 0.1.0: the target panel in the Discipline window, for one foe, an area of twelve, a casting and a hand-set target
@@ -683,7 +712,8 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-npc/styles/wodx-npc.css")).href,
   pathToFileURL(join(root, "modules/wodx-storyteller/styles/wodx-storyteller.css")).href,
   pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href,
-  pathToFileURL(join(root, "modules/wodx-targeting/styles/wodx-targeting.css")).href];
+  pathToFileURL(join(root, "modules/wodx-targeting/styles/wodx-targeting.css")).href,
+  pathToFileURL(join(root, "modules/wodx-senses/styles/wodx-senses.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));

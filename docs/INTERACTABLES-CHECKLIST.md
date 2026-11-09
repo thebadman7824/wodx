@@ -85,9 +85,19 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Runtime: the tied tile, the whisper, calls and alarms, wodxMapEvent, Undo
 - [x] Tile config: the Watch point section
 - [x] Harness tests (5 new) and UI fit
-- [ ] Gate step 21 in rothenstein-wodx
-- [ ] Deployed
+- [x] Gate step 21 in rothenstein-wodx: 21/21 at 3d1153d
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.8.1-2026-11-09)
 - [ ] Lasombra reflection page ref to pin
+
+## 0.11.0: mounts and vehicles (2026-11-09)
+- [x] Rules: eight kinds with seats and eras; getting on, Keep control, Go flat out, throws and crashes (B154)
+- [x] Runtime: at the reins and passengers, the tile and passengers carried with the driver's token, walking off, wodxMapEvent, Undo
+- [x] Ride and Drive read from the sheet; an untrained Skill the sheet lacks still costs +1
+- [x] Tile config: the Mount or vehicle section, with who is aboard and Everyone off
+- [x] Harness tests (6 new) and UI fit
+- [ ] Gate step 22 in rothenstein-wodx
+- [ ] Deployed
+- [ ] Untrained Skill page ref to pin (V20 core)
 
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
@@ -96,6 +106,6 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Hiding places (0.6.0, deployed)
 - [x] Fire and hazards (0.7.0, deployed)
 - [x] Altars, relics and fetishes (0.8.1, deployed)
-- [x] Watch points (0.10.0, not deployed yet)
-- [ ] Mounts and vehicles
+- [x] Watch points (0.10.0, deployed)
+- [x] Mounts and vehicles (0.11.0, not deployed yet)
 - [ ] Step 2: climbing, ledges and jumps

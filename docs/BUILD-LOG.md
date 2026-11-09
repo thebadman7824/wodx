@@ -708,6 +708,25 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Windows on the street, mirrors, telephones, radios and walkie-talkies, bells, horns and alarms on tiles, each tied to another tile. The tile config gains a Watch point section: kind and what it is tied to.
 - Look out or Look in it (Perception + Alertness): who is in the tied area goes in a whisper, names on a success, a count on none; hidden and invisible tokens stay out, and a mirror holds no Lasombra. Make a call reaches the tied phone; Call for help; Raise the alarm (loud). Phones and radios wait for their era.
 - Each watch result is also a wodxMapEvent for the responsive maps work (0.9.0 is theirs).
+- Tests: 5 new (2 rules, 3 runtime), 571 in all; UI fit adds a telephone. Gate step 21 (a window on the watchman's corner).
+- Deployed 2026-11-09 from main 3d1153d (backup Backups\wodx-interactables-0.8.1-2026-11-09, 5 files, MD5s match). gate-interact 21/21.
+
+### Interactables 0.11.0, 2026-11-09: mounts and vehicles (B154)
+- Riding horses, mules, carts, carriages, rowing boats, motor cars, motorcycles and motorboats on tiles. The tile config gains a Mount or vehicle section: kind, seats, who is aboard, and Everyone off.
+- Mount it or Drive it (no roll with a dot of Ride or Drive; the Attribute alone at +1 without); Get on as a passenger; Get off. At the reins: Keep control (Dexterity + Ride or Drive at 6) and Go flat out (+3). A botch throws the rider or crashes the vehicle. Cars, motorcycles and motorboats wait for their era.
+- Moving the token at the reins carries the tile and the passengers' tokens; a passenger who walks away gets off. Undo puts everyone back as they were aboard.
+- Ride and Drive are now read from the sheet, and a roll on a Skill the sheet lacks counts as untrained (+1), as WoDX Actions does.
+- mount, dismount, crash and ride (flat out) go out as wodxMapEvents.
+- Page refs pinned from the PC's book check: V20 core opening and closing p. 261, intrusion p. 260, alarms p. 255, retrying p. 251, climbing p. 258, falling p. 296 (printed pages).
+- Tests: 6 new (3 rules, 3 runtime), 577 in all; UI fit adds a coach. Gate step 22 (the burglar drives a cart). Not deployed yet.
+- 0.8.1: caern stones, fetters and nodes. Use it opens the WoDX actions menu (a fetter opens the Fetter window), and the option names the rating. 1 more test, 566 in all. Not deployed yet.
+
+### WoDX Senses 0.1.0, 2026-11-09: what the senses tell (B170 to B174)
+- Ben's request (9 November 2026): answer "what do I see, hear, smell" in chat. Design study: https://claude.ai/artifact/6z5pwGb2XZMMsA8jHHGaq4. Built all four steps of it in one module.
+- scripts/senses-rules.mjs (pure): era bands, indoors by kind, parts of the day, light level, difficulty steps and powers, reach by sense, the place, hour and other-world layers, compose by successes, the seeded draw, remembered answers, commands and questions, Obfuscate. scripts/main.mjs: the ask window, commands, the question button, gathering sources (Interactables tiles read through its own rules, doors, NPC routine activities, noise from wodxInteractablesNoise, the wodxSensesGather hook), channels for powers, the cards and their buttons, Place senses, Describe this place, the arrival card.
+- Lines: data/places.json (316 lines, 12 kinds of place by 4 senses, five era bands) and data/world.json (159 lines: hour, sky, moon, feast and curfew; live sources; the Penumbra with resonance and the Shadowlands; 10 power channels). Made from tools/senses-data/places.py and rest.py; edit those and run them, or edit the JSON.
+- Tests: senses.test.mjs (25: 2 table checks, 11 rules, 12 runtime). 591 harness tests pass. UI fit adds the ask window (with Auspex) and Place senses with twelve long-named regions; in the cloud container every window, old and new, fails only the minimized controls-button check (Font Awesome is not beside the copy of foundry2.css there), so the full check is to run on the PC.
+- Gate: tools/gate/gatesenses.mjs (12 steps) in rothenstein-wodx.
 - Tests: 5 new (2 rules, 3 runtime), 571 in all; UI fit adds a telephone. Gate step 21 (a window on the watchman's corner). Not deployed yet.
 
 ### Gear by era, 2026-11-09: WoDX Library 0.1.0, Combat 3.7.7 (B128)
