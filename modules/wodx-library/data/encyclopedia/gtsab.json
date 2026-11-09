@@ -1,0 +1,523 @@
+[
+ {
+  "id": "gtsab-regent",
+  "title": "The Regent of the Sabbat",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The nominal head of the Sword of Caine.",
+  "claims": [
+   {
+    "text": "The regent is meant to steer the sect's grand plan, backed by a consistory of mighty vampires, yet holds little real sway over the whole Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "A regent's nights go to hosting luminaries, hearing reports, plotting against rivals and presiding over ritae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "The present regent, the Toreador antitribu Melinda Galbraith, has made Mexico City home. Critics say Galbraith stages lavish ritae in place of results; Old World Sabbat think the regent looks no further than the Americas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 31,
+      "pdf": 32
+     },
+     {
+      "book": "gtsab",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "mcbn-melinda-galbraith",
+   "gtsab-prisci"
+  ]
+ },
+ {
+  "id": "gtsab-cardinals",
+  "title": "Cardinals",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sabbat lords over wide regions and their crusades.",
+  "claims": [
+   {
+    "text": "Cardinals rule great regions as the archbishops' superiors and direct the cities in them in the war against the Camarilla.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Bringing new cities under the sect is their duty. A city's fall takes years to plan, and burning it to the ground leaves nothing worth having.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Most Sabbat see their cardinal once a year at most, usually at sect rites. Some cardinals lead from the front, some plan every move, some whip their followers into frenzy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtsab-regent",
+   "gtsab-archbishops",
+   "cbl-lucita-after"
+  ]
+ },
+ {
+  "id": "gtsab-prisci",
+  "title": "Prisci and the consistory",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ancient advisers of the Sabbat.",
+  "claims": [
+   {
+    "text": "Prisci are old or mighty vampires chosen by the consistory to advise it. They hold no city and lead no sieges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 32,
+      "pdf": 33
+     },
+     {
+      "book": "gtsab",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Most are Lasombra, Tzimisce or Toreador antitribu. No priscus has ever been younger than 200 years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The consistory, which also seats some cardinals, resembles the upper Camarilla in its backstabbing. It picks its own members, and becoming an archbishop needs a priscus as patron.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Many prisci were lords or generals in life and spend long years in torpor, waking when needed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtsab-regent"
+  ]
+ },
+ {
+  "id": "gtsab-archbishops",
+  "title": "Archbishops and bishops",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sabbat's rulers of single cities.",
+  "claims": [
+   {
+    "text": "An archbishop, named by the region's cardinal, rules a Sabbat city and answers for every vampire in it. Most were pack priests first and most are under 200 years old.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Sabbat cities keep a looser rule than the Masquerade. The sect disdains mortals more than it hides from them, and crime rises because killing a witness is easier than cleaning up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Older vampires who hold the title, such as Moncada in Madrid, often hold it simply as the oldest and strongest in their cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "A city without an archbishop is run by a council of three to five bishops, drawn from pack priests and ducti, who answer to the cardinal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 33,
+      "pdf": 34
+     },
+     {
+      "book": "gtsab",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtsab-cardinals",
+   "mtbn-strathcona",
+   "rotb-auctoritas"
+  ]
+ },
+ {
+  "id": "gtsab-pack-ranks",
+  "title": "Ductus, priest and paladin",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The offices inside a Sabbat pack.",
+  "claims": [
+   {
+    "text": "A ductus leads a pack of three to seven, rules more by presence than rank, calls the pack's meetings and hands out duties. For a nomad it is usually the highest post open.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Every pack has at least one priest, second to the ductus, who leads its ritae, often writes new ones, and takes command if the ductus falls until a new leader is named.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Priests must keep packmates from infernalism and from slipping between Humanity and a Path untaught.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Templars, also called paladins, are elite guards named by a bishop or higher. They hold no secondary loyalties and may not join the Black Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "coterie",
+   "antitribu",
+   "tome-templars"
+  ]
+ },
+ {
+  "id": "gtsab-factions",
+  "title": "Sabbat factions",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The quarrelling camps inside the Sword of Caine.",
+  "claims": [
+   {
+    "text": "Loyalists say each vampire is their own master and defy leaders for its own sake. They have no hierarchy, take anyone, and are mostly young.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "The Status Quo, many Lasombra, Tzimisce and leading Black Hand members, backs Lasombra leadership and internal stability and points to recent war gains as proof.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Moderates want order without arbitrary codes and oppose rules such as the Purchase Pact and the revised Code of Milan. They are the most mixed camp.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 38,
+      "pdf": 39
+     },
+     {
+      "book": "gtsab",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Ultra-Conservatives, mostly the eldest Lasombra and Tzimisce, want a centralised, authoritarian sect ready for Gehenna and favour removing weak leaders by Monomacy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The Black Hand and the Inquisition forbid joint membership, and a rivalry between them is rumoured.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Smaller factions rise and vanish, such as the now extinct Fabians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "bh-false-hand",
+   "rotb-sabbat-inquisition",
+   "mcbn-second-sabbat-civil-war"
+  ]
+ },
+ {
+  "id": "gtsab-panders",
+  "title": "The Panders",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sabbat's recognised clanless.",
+  "claims": [
+   {
+    "text": "Panders have no Third Generation founder. Any Sabbat recruit who does not know their clan becomes a Pander, as do childer of Panders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "They rose after the Sabbat civil war of the late 1950s, when the clanless Joseph Pander led them against the Moderates at the urging of Lasombra and Tzimisce elders, and won formal recognition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Panders take the worst duties and usually form the first wave of a siege. Many still dress in the styles of the year they were Embraced.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtsab-factions",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "gtsab-vinculum",
+  "title": "Vinculum ratings",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Vaulderie's loyalty bonds are measured.",
+  "claims": [
+   {
+    "text": "The Vaulderie forms a Vinculum, a blood tie, between packmates. Its strength can shift each time the rite is held. Refusing it at least monthly brings ostracism or worse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "At a character's first Vaulderie, roll one die for each vampire whose blood was shared; the result is the Vinculum toward that vampire. New members are rolled for when they first join.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "At each later Vaulderie, roll a die per Vinculum: above the rating raises it by one, to 10 at most; a 1 lowers it by one, to 1 at least.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "When ties pull two ways, roll dice equal to each Vinculum, at difficulty 5 for the party the character would favour anyway and 7 for the others. Most successes wins the character's help.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "A 10 means giving or taking a life for the other; a 1 means no tie at all. Like a blood bond, the feeling is artificial and may sit beside real hatred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vaulderie",
+   "gtsab-pack-ranks"
+  ]
+ }
+]

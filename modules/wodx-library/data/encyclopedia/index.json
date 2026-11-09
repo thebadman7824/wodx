@@ -301,6 +301,12 @@
    "title": "Guide to the Camarilla",
    "short": "Guide to the Camarilla",
    "edition": "Revised"
+  },
+  {
+   "id": "gtsab",
+   "title": "Guide to the Sabbat",
+   "short": "Guide to the Sabbat",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -353,6 +359,7 @@
   "nobn.json",
   "nybn.json",
   "sfbn.json",
-  "gtcam.json"
+  "gtcam.json",
+  "gtsab.json"
  ]
 }
