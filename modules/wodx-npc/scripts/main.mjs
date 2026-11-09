@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.5.1: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
+ * WoDX NPC 0.6.0: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
@@ -18,7 +18,7 @@ import {build as buildFactions} from "./factions.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.5.1";
+const VERSION = "0.6.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -36,6 +36,10 @@ function registerSettings() {
   game.settings.register(MOD, "mode", {
     name: "NPCs in combat", hint: "What NPCs with no player owner do on their turn, unless the scene or the NPC says otherwise.",
     scope: "world", config: true, type: String, default: "suggest", choices: NR.MODES
+  });
+  game.settings.register(MOD, "gridless", {
+    name: "Move NPCs on gridless scenes", hint: "On a scene with no grid, NPCs walk a square lattice of the scene's grid size, round walls, as on a square grid.",
+    scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "options", {
     name: "Options on the card", hint: "How many of the NPC's options the Storyteller's card lists.",
@@ -174,12 +178,21 @@ export function planTurn(tok, combat = game.combat) {
 /* ------------------------------------------------------------------ */
 
 /* Square grids anchor a token by its top-left cell (a 2x2 token covers that cell and three more); hex grids by the cell
- * under its centre. Gridless scenes are not moved by WoDX. */
+ * under its centre. Gridless scenes are walked as a square lattice of the scene's grid size. */
 const gridKind = () => canvas.grid?.isSquare || canvas.grid?.type === CONST.GRID_TYPES.SQUARE ? "square"
-  : (canvas.grid?.isHexagonal || [2, 3, 4, 5].includes(canvas.grid?.type)) ? "hex" : "none";
+  : (canvas.grid?.isHexagonal || [2, 3, 4, 5].includes(canvas.grid?.type)) ? "hex"
+  : (() => { try { return setting("gridless"); } catch (e) { return true; } })() === false ? "none" : "lattice";
+/* On a gridless scene WoDX walks a square lattice of the scene's grid size laid over it; walls still stop it (NPC 0.6.0) */
+let latticeCache = null;
+const grid = () => {
+  if ( gridKind() !== "lattice" ) return canvas.grid;
+  const size = canvas.scene?.grid?.size || canvas.grid?.size || 100;
+  if ( latticeCache?.size !== size ) latticeCache = NR.latticeGrid(size);
+  return latticeCache;
+};
 const squareGrid = () => gridKind() !== "none"; // kept name: "a grid WoDX can walk"
 const sizeOf = tok => ({w: Math.max(1, Math.round(tok.document.width)), h: Math.max(1, Math.round(tok.document.height))});
-const cellOf = tok => gridKind() === "hex" ? canvas.grid.getOffset(tok.center) : canvas.grid.getOffset({x: tok.document.x + 1, y: tok.document.y + 1});
+const cellOf = tok => gridKind() === "hex" ? grid().getOffset(tok.center) : grid().getOffset({x: tok.document.x + 1, y: tok.document.y + 1});
 /** The cells a token would cover with its anchor at cell c. */
 function cellsAt(tok, c) {
   const {w, h} = sizeOf(tok);
@@ -198,8 +211,8 @@ function cellsAt(tok, c) {
 }
 /** Where a token's top-left goes for its anchor to sit at cell c. */
 function topLeftFor(tok, c) {
-  if ( gridKind() === "hex" ) { const m = canvas.grid.getCenterPoint(c); return {x: Math.round(m.x - tok.w / 2), y: Math.round(m.y - tok.h / 2)}; }
-  return {...canvas.grid.getTopLeftPoint(c)};
+  if ( gridKind() === "hex" ) { const m = grid().getCenterPoint(c); return {x: Math.round(m.x - tok.w / 2), y: Math.round(m.y - tok.h / 2)}; }
+  return {...grid().getTopLeftPoint(c)};
 }
 /** The token's centre with its anchor at cell c (for wall tests). */
 function centreFor(tok, c) { const p = topLeftFor(tok, c); return {x: p.x + tok.w / 2, y: p.y + tok.h / 2}; }
@@ -225,7 +238,7 @@ function wallBetween(a, b, tok) {
 function passableFor(tok) {
   const busy = occupied(tok);
   const d = canvas.dimensions;
-  const inside = c => { const p = canvas.grid.getCenterPoint(c); return p.x >= d.sceneX && p.y >= d.sceneY && p.x < d.sceneX + d.sceneWidth && p.y < d.sceneY + d.sceneHeight; };
+  const inside = c => { const p = grid().getCenterPoint(c); return p.x >= d.sceneX && p.y >= d.sceneY && p.x < d.sceneX + d.sceneWidth && p.y < d.sceneY + d.sceneHeight; };
   // Every cell the token would cover is inside the scene and free, and no wall stands between its centres
   return (a, b) => cellsAt(tok, b).every(c => inside(c) && !busy.has(`${c.i},${c.j}`)) && !wallBetween(a, b, tok);
 }
@@ -234,7 +247,7 @@ const stepsFor = () => gridKind() === "hex"
   ? (c => (canvas.grid.getAdjacentOffsets?.(c) ?? []).map(o => ({c: {i: o.i, j: o.j}, cost: 1})))
   : NR.squareSteps;
 const stepCost = () => gridKind() === "hex" ? (() => 1) : NR.squareCost;
-const hexHeuristic = goal => c => { try { return canvas.grid.getDistance?.(canvas.grid.getCenterPoint(c), canvas.grid.getCenterPoint(goal)) / (canvas.scene.grid.distance || 5) || 0; } catch (e) { return 0; } };
+const hexHeuristic = goal => c => { try { return canvas.grid.getDistance?.(grid().getCenterPoint(c), grid().getCenterPoint(goal)) / (canvas.scene.grid.distance || 5) || 0; } catch (e) { return 0; } };
 const cellsFor = yards => Math.floor((yards * unitsPerYard()) / (canvas.scene.grid.distance || 5) + 1e-6);
 
 async function walk(tok, path) {
@@ -255,9 +268,9 @@ function besideFor(tok, target, start) {
   if ( gridKind() === "hex" ) {
     const own = cellsAt(target, cellOf(target)), key = c => `${c.i},${c.j}`, taken = new Set(own.map(key)), out = new Map();
     for ( const c of own ) for ( const {c: n} of stepsFor()(c) ) if ( !taken.has(key(n)) ) out.set(key(n), n);
-    const at = canvas.grid.getCenterPoint(start);
-    return [...out.values()].sort((a, b) => Math.hypot(canvas.grid.getCenterPoint(a).x - at.x, canvas.grid.getCenterPoint(a).y - at.y)
-      - Math.hypot(canvas.grid.getCenterPoint(b).x - at.x, canvas.grid.getCenterPoint(b).y - at.y));
+    const at = grid().getCenterPoint(start);
+    return [...out.values()].sort((a, b) => Math.hypot(grid().getCenterPoint(a).x - at.x, grid().getCenterPoint(a).y - at.y)
+      - Math.hypot(grid().getCenterPoint(b).x - at.x, grid().getCenterPoint(b).y - at.y));
   }
   // Square: the ring round the foe, widened by the mover's own size so a large mover's anchor can stand there
   const f = footprint(target), {w, h} = sizeOf(tok);
@@ -266,7 +279,7 @@ function besideFor(tok, target, start) {
 
 /** The way to a cell beside a foe: {path, cost} (cost in grid steps), or {note} when there is none. */
 function approach(tok, target) {
-  if ( !squareGrid() ) return {note: "WoDX moves NPCs on square and hex grids only: move the token by hand"};
+  if ( !squareGrid() ) return {note: "this scene is gridless and WoDX is set not to move NPCs there: move the token by hand"};
   const pass = passableFor(tok), start = cellOf(tok), hex = gridKind() === "hex";
   for ( const goal of besideFor(tok, target, start).slice(0, 8) ) {
     const path = NR.findPath(start, goal, pass, {neighbors: stepsFor(), heuristic: hex ? hexHeuristic(goal) : null});
@@ -342,10 +355,10 @@ async function execute(tok, opt) {
       return {done: true, text: `${tok.name} shoots at ${target.name}.`};
     }
     case "flee": {
-      if ( !squareGrid() ) return {done: false, text: "WoDX moves NPCs on square and hex grids only: move the token by hand."};
+      if ( !squareGrid() ) return {done: false, text: "This scene is gridless and WoDX is set not to move NPCs there: move the token by hand."};
       const foes = readFight(tok).enemies.map(cellOf);
       const map = NR.reachable(cellOf(tok), passableFor(tok), cellsFor(lim.run), {neighbors: stepsFor()});
-      const px = c => canvas.grid.getCenterPoint(c);
+      const px = c => grid().getCenterPoint(c);
       const cell = NR.fleeCell(map, foes, gridKind() === "hex" ? ((a, b) => Math.hypot(px(a).x - px(b).x, px(a).y - px(b).y)) : undefined);
       const path = cell ? NR.pathTo(cell) : null;
       const moved = path ? await walk(tok, path) : false;
@@ -593,7 +606,7 @@ export async function openNpcPanel() {
 /* ------------------------------------------------------------------ */
 
 /* Phase 7c: routines, places and reactions, built with this module's grid helpers */
-const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,
+const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, grid, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,
   hexHeuristic, cellsFor, walk, approach, yardsBetween, obvious, hiddenByObfuscate});
 routines.hooks();
 /* Phase 7d: factions and domains, on top of 7c's places */

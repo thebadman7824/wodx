@@ -878,3 +878,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - main.mjs: world setting "Placed sounds are muffled by walls" (preCreateAmbientSound); muffleScene(scene, on); the This scene part of the window counts them and has Muffle them all and Let them all through; api.walls.
 - Tests: one more in dawn-dread.test.mjs. Gate: tools/gate/gatewalls.mjs, 5 steps, a scene of its own.
 - UI fit's four "dialog onRender" warnings come from its mock DialogV2 having no element; they predate this and fail nothing.
+
+## 2026-11-09: NPC movement on gridless scenes (NPC 0.6.0, B268)
+
+- npc-rules.mjs: latticeGrid(size), a square lattice with getOffset, getTopLeftPoint and getCenterPoint.
+- main.mjs: gridKind gives "lattice" on a gridless scene (unless the new world setting "Move NPCs on gridless scenes" is off); grid() returns the lattice there; the moving code and routines.mjs ask grid() for cells.
+- Tests: npc-gridless.test.mjs (3); phase 7 tests follow the version. Gate: tools/gate/gategridless.mjs, 5 steps, a gridless scene of its own with a wall.
