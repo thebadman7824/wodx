@@ -57,3 +57,40 @@ test("a claim says something about the world, not where the book puts it", () =>
   const e = {...other, claims: [{text: "It has its own section in Chapter Two.", tier: "stated", refs: [{book: "v20", page: 13}]}]};
   assert.match(E.checkEntry(e, {v20: books[0]}).join(), /describes the book/);
 });
+
+/* Library 0.4.0: the plan's tiers, books that differ, a rule edition by edition, the Shelf choice. */
+test("might be true and unknown are tiers; versions need two, each with a source", () => {
+  assert.equal(E.TIERS.rumour, "Might be true");
+  assert.equal(E.TIERS.open, "Unknown");
+  const b = {v20: books[0], rev: {id: "rev", title: "Vampire: The Masquerade Revised", short: "VtM Rev"}};
+  const ok = {...other, claims: [{text: "Who founded the sect is in question.", tier: "rumour", refs: [{book: "v20", page: 13}],
+    versions: [{text: "Seven clans met at the founding.", refs: [{book: "v20", page: 13}]}, {text: "The founders were fewer.", refs: [{book: "rev", page: 20}]}]}]};
+  assert.deepEqual(E.checkEntry(ok, b), []);
+  assert.match(E.checkEntry({...ok, claims: [{...ok.claims[0], versions: [ok.claims[0].versions[0]]}]}, b).join(), /two or more versions/);
+  assert.match(E.checkEntry({...ok, claims: [{...ok.claims[0], versions: [ok.claims[0].versions[0], {text: "Her line came first.", refs: []}]}]}, b).join(), /version 2 has no source/);
+  const html = E.toJournal(ok, {books: b}).pages[0].text.content;
+  assert.match(html, /Might be true/);
+  assert.match(html, /wodx-ency-versions.*Seven clans.*V20, p\. 13.*The founders were fewer.*VtM Rev, p\. 20/);
+});
+test("a rule traced edition by edition, with how WoDX plays it and a link", () => {
+  const b = {v20: books[0]};
+  const rule = {...other, id: "blood-pool", kind: "mechanic", editions: [{edition: "V20", text: "Blood points by generation.", refs: [{book: "v20", page: 121}]}],
+    wodx: {text: "Tracked on the sheet as the pool.", rule: "Compendium.world.wodx-shelf-rules.JournalEntry.abc123"}};
+  assert.deepEqual(E.checkEntry(rule, b), []);
+  assert.match(E.checkEntry({...rule, editions: [{text: "x", refs: [{book: "v20", page: 1}]}]}, b).join(), /no edition name/);
+  assert.match(E.checkEntry({...rule, wodx: {text: "x", rule: "javascript:alert(1)"}}, b).join(), /document UUID/);
+  assert.match(E.checkEntry({...rule, wodx: {text: "A sect — old."}}, b).join(), /em-dash/);
+  const html = E.toJournal(rule, {books: b}).pages[0].text.content;
+  assert.match(html, /From edition to edition.*<em>V20:<\/em> Blood points by generation/);
+  assert.match(html, /In WoDX:.*@UUID\[Compendium\.world\.wodx-shelf-rules\.JournalEntry\.abc123\]\{the rule\}/);
+  assert.match(E.entryText(rule), /Blood points by generation.*Tracked on the sheet/);
+});
+test("an entry with none of the new parts makes the same journal as before", () => {
+  const html = E.toJournal(good, {books: {v20: books[0]}}).pages[0].text.content;
+  assert.equal(html, `<p><em>Faction</em></p><p>The largest sect of the Kindred, keeper of the Masquerade.</p><ul><li>Its members keep the Six Traditions. <span class="wodx-ency-tier wodx-ency-stated">Stated</span> <span class="wodx-shelf-src">V20, p. 13 (pdf 15)</span></li></ul><p><strong>See also:</strong> @UUID[Compendium.world.wodx-encyclopedia.JournalEntry.${E.docId("the-masquerade")}]{the-masquerade}</p>`);
+});
+test("the Library window has a Shelf choice, marked fixed", async () => {
+  const src = (await import("node:fs")).readFileSync(fileURLToPath(new URL("../../modules/wodx-library/scripts/shelves.mjs", import.meta.url)), "utf8");
+  assert.match(src, /select name="shelf" data-fixed/);
+  assert.match(src, /this\.shelf === "all" \|\| e\.shelf === this\.shelf/);
+});

@@ -15,7 +15,9 @@ About 40 to 80 entries a book: the sects, clans or tribes or traditions, the mai
 ## Rules for every entry
 
 - WoDX's own words. Summarise, never paraphrase sentence by sentence. The overlap check refuses any run of eight words shared with the book text.
-- Every claim has a tier: `stated` (the book says it), `implied` (the book points to it), `reading` (WoDX's reading where the book is silent; use sparingly).
+- Every claim has a tier: `stated` (the book says it), `implied` (the book points to it), `rumour` (might be true: a legend, rumour or unreliable account in the setting), `open` (unknown: the book leaves it open on purpose), `reading` (WoDX's reading where the book is silent; use sparingly).
+- Where books disagree (a Revised book against V20, say), give one claim saying what is in question and `versions`: two or more `{text, refs}`, each with its own book. Don't make a second entry.
+- A rule entry (`kind: mechanic`) may add `editions`: `[{edition, text, refs}]`, oldest first, saying what changed, and `wodx`: `{text, rule}`, how WoDX plays it, `rule` being an optional UUID of the shelf entry it links to.
 - Every claim has at least one ref: `{"book", "page", "pdf"}`. `page` is the printed page; add `pdf` when the pdf page differs.
 - They/them unless the character's gender is known from the book; then set `"gender"` on the entry.
 - Each claim says something about the world or the rules, never where the book puts it ("covered in Chapter Six"); the page reference already says where. The check refuses "the book", "chapter", "section" and "sidebar" in claims.
