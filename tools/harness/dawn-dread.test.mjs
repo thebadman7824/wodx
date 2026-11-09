@@ -46,3 +46,18 @@ test("the Rötschreck window takes dawn's step only while WoDX Atmosphere is on"
   assert.match(src, /at\?\.active \? Number\(at\.api\?\.dread\?\.rotschreck\?\.\(\)\) \|\| 0 : 0/);
   assert.match(src, /name="mod" value="\$\{dawn\}"/);
 });
+
+/* WoDX Atmosphere 0.4.0: sound through walls. */
+test("a placed sound is stopped by walls and heard muffled through them, or let through", () => {
+  assert.deepEqual(K.muffleChanges({}), {walls: true, "effects.muffled.type": "lowpass", "effects.muffled.intensity": 5});
+  assert.deepEqual(K.muffleChanges({walls: true, effects: {muffled: {type: null, intensity: 8}}}), {walls: true, "effects.muffled.type": "lowpass", "effects.muffled.intensity": 8});
+  const done = {walls: true, effects: {muffled: {type: "lowpass", intensity: 5}}};
+  assert.equal(K.muffleChanges(done), null);
+  assert.ok(K.isMuffled(done));
+  assert.deepEqual(K.muffleChanges(done, false), {walls: false});
+  assert.equal(K.muffleChanges({walls: false}, false), null);
+  assert.ok(!K.isMuffled({walls: false, effects: {muffled: {type: "lowpass"}}}));
+  const src = readFileSync(join(root, "modules/wodx-atmosphere/scripts/main.mjs"), "utf8");
+  assert.match(src, /Hooks\.on\("preCreateAmbientSound"/);
+  assert.match(src, /data-action="muffle"/);
+});
