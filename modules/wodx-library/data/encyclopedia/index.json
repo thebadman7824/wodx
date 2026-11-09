@@ -25,12 +25,19 @@
    "title": "Werewolf: The Apocalypse 20th Anniversary Edition",
    "short": "W20",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "wtda",
+   "title": "Dark Ages: Werewolf",
+   "short": "DA:W",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
   "c20.json",
   "v20.json",
   "v20da.json",
-  "w20.json"
+  "w20.json",
+  "wtda.json"
  ]
 }
