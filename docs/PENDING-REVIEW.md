@@ -6,6 +6,8 @@ New entries go at the end of the "Waiting for review" table, which is last in th
 
 ## Approved by Ben, 9 November 2026
 
+The last 34 rows, added after the digest, were approved at 17:11 UTC.
+
 Ben read the digest of the entries below and approved all of them at 17:05 UTC, with the drafts (sense lines, weather lines, era primers, the night's tables, the cues) and the WoDX figures that were still to be checked against the books (the live wire, Lasombra and mirrors, the V20 difficulty chart, the C20 Mists chart, the Craftmasons' Pillar). Each still lists how to reverse it.
 
 | Date | Question | Choice made | How to reverse it |
@@ -157,11 +159,6 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 | 2026-11-09 | Personal themes: when is a spotlight moment? | The start of the character's turn in a fight (at most once a minute) and the Storyteller's Spotlight button; nothing else plays it on its own (B269). | Configure Settings, WoDX Atmosphere, "Personal themes" off; or change THEME_GAP in kits-rules.mjs. |
 | 2026-11-09 | Delete the legacy world "Dark Ages: Vampire Chronicle What Sleeps Beneath Rothenstein"? | **Ben approved the deletion** (9 November, 12:33 UTC), zipped into Backups first. Nothing in WoDX depends on it. | Unzip the Backups copy into Data\worlds. |
 | 2026-11-09 | The Windows firewall rule still lets anyone reach PC Foundry on port 30000. | Ben will remove it himself this evening (it needs admin rights); `wodx-repo\vps\lock-foundry-lan.ps1` does it. | Run the script again with `-Undo`. |
-
-## Waiting for review
-
-| Date | Question | Choice made | How to reverse it |
-|---|---|---|---|
 | 2026-11-09 | Places that age: when does a map change to its later picture? | On the first of the year it is set from, by the chronicle's year, checked when the clock settles, after a time skip and when an era is applied; only the map's own level changes, not its Otherworld twins (B270). | Remove the years in the Atmosphere window; the scene's own map comes back. |
 | 2026-11-09 | Faces that age: when does a face change, who ages, and what of ghouls? | One filter step a decade from forty (five steps); mortals and the living lines age, the undead and the Reborn do not; a ghoul's age stands still until the Storyteller marks it cut off from the blood, then the true age shows at once (B271). The ghoul page in V20 Dark Ages is still to pin. | Set the character to "Does not age" or press Stop in the Atmosphere window; give a picture for an age to replace the filter. |
 | 2026-11-09 | Layer looks: how should the Near Dreaming and the Net look on the map? | The Dreaming shimmers (richer colour, the hue swaying 28 degrees every seven seconds); the Net shows the map as glowing green and cyan lines; the Penumbra and Shadowlands keep their twin art (B272). | Configure Settings, WoDX Otherworlds, "Looks of the other worlds" off (per player); or change LOOKS in journey-rules.mjs. |
@@ -196,3 +193,8 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 | 2026-11-09 | Consensus: how big a Bane or Boon is, by the pool it spends | 1-4 small, 5-9 marked, 10-14 grave, 15+ a catastrophe or a miracle; the book only says small pool small event, large pool catastrophe or miracle (B331). | Edit fortuneSize in consensus-rules.js. |
 | 2026-11-09 | Consensus: M20 Reality Zones (optional in the book) | Off by default ("one Consensus everywhere"); "the place decides" reads each scene's accepted styles (B330). | Change "Reality Zones" in the settings. |
 | 2026-11-09 | Paperdoll tokens: which art should player tokens use? | A new code generator in the Rothenstein illuminated style (tools/paperdoll/illum.py), built as layers (ground, clothes, neck, face, brows, beard, moustache, hair) with the era ring from Atmosphere. First test: Sir Reinhold von Teck in Dark Ages and Victorian dress. The script that drew the 115 existing busts was not found on the PC. | Use the LPC sprites instead (tools/paperdoll/doll.py, samples in project files paperdoll/), or another source from the comparison on the Paperdoll Tokens study page. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
