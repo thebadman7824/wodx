@@ -1,0 +1,13 @@
+# Choices made without waiting, for Ben to review
+
+Ben's standing rule (9 November 2026): don't wait on him. Take the recommended option, keep going, and log the choice here. Deletions and changes to the Live world still wait for him.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-09 | Wraith 20th puts the Third Great Maelstrom "after 1598" with no year. When does it fire? | 1600 (house pick). | Configure Settings, Dated events: type another year for the Third Great Maelstrom. |
+| 2026-11-09 | V20 p. 418 gives no year for the purge of the Cappadocians. When does it fire? | 1444. | The same window: change its year. |
+| 2026-11-09 | Should metaplot events (Doissetep 1997, the Week of Nightmares, the Avatar Storm, the Sixth Great Maelstrom, the Time of Judgment) fire on their own? | Off by default; the Storyteller ticks the ones wanted. | Tick them in Dated events. |
+| 2026-11-09 | Which timeline gets which late events? | The late-1990s events and the Time of Judgment are classic only; the Venice Conclave, the Cyberpunks and the fall of the Masquerade are Future Darkness only (the existing Future Darkness branch house rule). | Switch an event on or off in Dated events, or change the branch rule. |
+| 2026-11-09 | What counts as a module's data version before any migration exists? | Every WoDX module starts at version 1. The first load of Chronicle 0.5.0 stamps them, with nothing run. | Nothing to undo: the stamp is the world setting wodx-chronicle.dataVersions. |
+| 2026-11-09 | Where does the nightly off-PC copy go? | Nothing on the PC syncs off it (OneDrive is not installed or signed in; no Google Drive or Dropbox). For now the nightly zip goes to a second drive, D:\WoDX nightly, at 04:30, and the newest 14 are kept. That guards against a failed C: drive, but not against losing the PC. Once the droplet or a cloud folder is ready, the task will point there. | Unregister-ScheduledTask -TaskName "WoDX nightly copy", or register it again with another -Destination. |
+| 2026-11-09 | Who may go to the archive of the dead? | The dead and Pass the Years' copies only. Player characters, and anyone with a linked token on a scene, stay in the world. | Bring back is in the Archive window; the archive is a world compendium. |
