@@ -109,6 +109,18 @@
    "title": "Mage: The Sorcerers Crusade",
    "short": "SC",
    "edition": "First edition"
+  },
+  {
+   "id": "vav",
+   "title": "Victorian Age: Vampire",
+   "short": "VA:V",
+   "edition": "Revised era"
+  },
+  {
+   "id": "dafae",
+   "title": "Dark Ages: Fae",
+   "short": "DA:F",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -129,6 +141,8 @@
   "htr.json",
   "inquisitor.json",
   "sorcerer.json",
-  "sc.json"
+  "sc.json",
+  "vav.json",
+  "dafae.json"
  ]
 }
