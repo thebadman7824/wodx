@@ -10,11 +10,12 @@
  *   6. Tended resets its clock
  *   7. heat: botches raise a place to Watched (+2 difficulty) and the Hunt reads the ground set for the scene
  *   8. heat: Hunted proposes the era's response
- *   9. clean up: scene, actors, messages, our queue entries
+ *   9. drift: two taint steps raise the scene's drift to +2 and Undo takes one back (Otherworlds 0.7.0)
+ *  10. clean up: scene, actors, messages, our queue entries
  * Result: Data/wodx-gate/gateupkeep-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const STEPS = 9;
+const STEPS = 10;
 const DAY = 86400;
 
 async function save(R) {
@@ -81,6 +82,15 @@ export async function run() {
     await sleep(300);
     const resp = Ch.approvals.pending().find(p => p.type === "wodx-storyteller.heat" && p.data?.sceneId === scene.id);
     ok("8. the era answers", !!resp && !!resp.data?.who, {who: resp?.data?.who});
+
+    const O = game.modules.get("wodx-otherworlds")?.api;
+    if ( O?.drift ) {
+      await O.drift.step(scene, "taint", "WoDX gate");
+      await O.drift.step(scene, "taint", "WoDX gate");
+      const two = O.drift.of(scene).value;
+      await O.drift.undo(scene);
+      ok("9. drift", two === 2 && O.drift.of(scene).value === 1 && O.drift.rules.withDrift(6, 2) === 8, {two, after: O.drift.of(scene).value});
+    } else ok("9. drift", false, {error: "WoDX Otherworlds 0.7.0 is not on"});
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   try {
     for ( const p of Ch.approvals.pending().filter(p => !pendingBefore.has(p.id) && /^wodx-storyteller\.(between|heat)$/.test(p.type)) ) await Ch.approvals.decide(p.id, "reject");
@@ -88,7 +98,7 @@ export async function run() {
     if ( mine.length ) await ChatMessage.deleteDocuments(mine);
     if ( scene ) await scene.delete();
     for ( const a of [vamp, kin] ) if ( a ) await a.delete();
-    ok("9. clean up", !game.scenes.getName("WoDX gate: alley") && !game.actors.getName("WoDX gate: night walker"), {});
-  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("9. clean up", false); }
+    ok("10. clean up", !game.scenes.getName("WoDX gate: alley") && !game.actors.getName("WoDX gate: night walker"), {});
+  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("10. clean up", false); }
   return save(R);
 }
