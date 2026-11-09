@@ -107,6 +107,7 @@ for ( let i = 0; i < 8; i++ ) await chronicle.propose({type: "request", title: `
 const {ClockApp} = await import(join(root, "modules/wodx-chronicle/scripts/clock-app.mjs"));
 const {ApprovalsApp} = await import(join(root, "modules/wodx-chronicle/scripts/approvals.mjs"));
 const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/house-rules-app.mjs"));
+const {EventsApp} = await import(join(root, "modules/wodx-chronicle/scripts/events.mjs"));
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
 const {CreationApp, SpendApp, awardDialog} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
 const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
@@ -128,7 +129,7 @@ class PlannedPassYears extends PassYearsApp {
 
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
-  ["House rules", HouseRulesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
+  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
   ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
   ["Pass the years", PlannedPassYears, {}], ["People", RolledPeople, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);

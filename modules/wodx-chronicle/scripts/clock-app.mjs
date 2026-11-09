@@ -33,7 +33,8 @@ export class ClockApp extends ApplicationV2 {
       approvals: () => approvals.ApprovalsApp.open(),
       rules: ClockApp.#onRules,
       houseRules: () => HouseRulesApp.open(),
-      eraTest: () => runEraTest()
+      eraTest: () => runEraTest(),
+      hold: ClockApp.#onHold
     }
   };
 
@@ -56,6 +57,7 @@ export class ClockApp extends ApplicationV2 {
     const p = a.profile;
     const waiting = approvals.pending().length;
     const lockId = setting("eraLock");
+    const held = !!setting("hold");
 
     const eraOptions = [`<option value="">Follow the date</option>`]
       .concat(eras.profiles().map(e => `<option value="${esc(e.id)}" ${e.id === lockId ? "selected" : ""}>${esc(e.name)}</option>`))
@@ -83,6 +85,7 @@ export class ClockApp extends ApplicationV2 {
         ${p ? `<p>${esc(p.switches)}</p><p class="wodx-quiet">Books: ${esc(p.basis)}</p>` : ""}
         ${gm && target.profile && p && target.profile.id !== p.id ? `<p class="wodx-notice">The date calls for ${esc(target.profile.name)}. ${waiting ? "A change is waiting in the approval queue." : ""}</p>` : ""}
         ${rule("lightTouch") ? `<p class="wodx-notice">Light-touch mode is on: no proposals tonight.</p>` : ""}
+        ${held ? `<p class="wodx-notice">The world is held: the clock moves, but nothing reacts to it.</p>` : ""}
       </section>
       ${gm ? `
       <section class="wodx-controls">
@@ -111,7 +114,8 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="approvals"><i class="fa-solid fa-inbox"></i> Approvals${waiting ? ` (${waiting})` : ""}</button>
           <button type="button" data-action="houseRules"><i class="fa-solid fa-scale-balanced"></i> House rules</button>
           <button type="button" data-action="manageLinesVeils"><i class="fa-solid fa-eraser"></i> Remove a line or veil</button>
-          <button type="button" data-action="eraTest"><i class="fa-solid fa-flask"></i> Era test</button>`
+          <button type="button" data-action="eraTest"><i class="fa-solid fa-flask"></i> Era test</button>
+          <button type="button" data-action="hold" title="Move the clock without the world reacting: no routines, faction turns, dated events or expiring effects"><i class="fa-solid fa-${held ? "play" : "pause"}"></i> ${held ? "Release the world" : "Hold the world"}</button>`
           : `<button type="button" data-action="ask"><i class="fa-solid fa-hand"></i> Ask the Storyteller</button>`}
         </div>
       </section>`;
@@ -144,6 +148,11 @@ export class ClockApp extends ApplicationV2 {
   static async #onLockEra(event, target) {
     if ( event.type === "click" ) return; // handled on change
     await setSetting("eraLock", target.value);
+  }
+
+  static async #onHold() {
+    const api = game.modules.get("wodx-chronicle")?.api;
+    await api?.hold?.(!api.isHeld());
   }
 
   static async #onRules() {
