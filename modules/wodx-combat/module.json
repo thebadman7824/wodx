@@ -2,7 +2,7 @@
   "id": "wodx-combat",
   "title": "WoDX Combat",
   "description": "World of Darkness Expanded: combat with actor-type profiles for every line: attack, defense, damage, soak (silver, cold iron, Fortitude, armor), health track, Rage extra actions, V20 Dark Ages maneuvers and WoDX conditions. Replaces vtda20-combat. Private use only; not for distribution or sale. Shots and reloads can be counted (a house rule that starts off): one round a shot from a weapon with a capacity, one turn to reload a firearm, longer for a crossbow.",
-  "version": "3.8.0",
+  "version": "3.8.1",
   "authors": [
     {
       "name": "Benjamin LeBrun"
