@@ -317,8 +317,8 @@ test("a Reaction region: the guard notices a player character after curfew and c
 test("the module: manifest declares the Reaction behaviour; in-game text is gender-neutral and writes no NPC dialogue", async () => {
   const {readFileSync} = await import("node:fs");
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
-  assert.equal(m.version, "0.4.0");
-  assert.deepEqual(m.documentTypes, {RegionBehavior: {reaction: {}, alertZone: {}}});
+  assert.equal(m.version, "0.5.0");
+  assert.deepEqual(m.documentTypes, {RegionBehavior: {reaction: {}, alertZone: {}, trigger: {}}});
   for ( const f of ["routines.mjs", "routine-rules.mjs"] ) {
     const src = readFileSync(join(root, "modules/wodx-npc/scripts", f), "utf8");
     const strings = (src.match(/`[^`]*`|"[^"\n]*"/g) ?? []).join(" ").replace(/<[^>]+>/g, " ");
@@ -447,4 +447,59 @@ test("marks: a door forced in an owned place is put right at the next dawn, on o
   const ruin = scene("Outskirts · The Old Mill");
   ruin.update = async d => { applyUpdate(ruin, d); return ruin; };
   assert.equal((await RT.noteMark({...ev, scene: ruin.id, place: ruin.uuid})).repairAt, null);
+});
+
+test("alarm carriers: a bell takes the alarm to the watch house at once, a runner reaches the mill later; Undo takes both back", async () => {
+  const yard = scene("Upper Town · The Tannery", {kind: "workplace"});
+  const watch = scene("Upper Town · The Watch House", {kind: "watch"});
+  const mill = scene("Outskirts · The Water Mill", {kind: "workplace"});
+  const zone = region(yard, "Bell zone", {x: 0, y: 0, width: 100, height: 100});
+  zone.behaviors.push({type: "wodx-npc.alertZone", disabled: false, system: {lights: "", sounds: "", carryTo: "watch house", carrier: "bell", minutes: 0}},
+    {type: "wodx-npc.alertZone", disabled: false, system: {lights: "", sounds: "", carryTo: "water mill", carrier: "runner", minutes: 15}});
+  view(yard);
+  game.time.worldTime = at(4, 19, 22);
+  const t0 = game.time.worldTime;
+  const [card] = await RT.onMapEvent({kind: "alarm", scene: yard.id, noise: "loud", objectName: "Bell rope", heard: [], message: "msgK"});
+  assert.equal(RT.alertLevel(watch), "alarm", "the bell carries at once");
+  assert.equal(RT.alertLevel(mill), "calm", "the runner is on the road");
+  assert.equal(yard.flags[MOD].carrying.length, 1);
+  assert.ok(chat.some(m => /the alarm spreads/.test(m.content) && /runner sets off for Outskirts · The Water Mill: about 15 minutes/.test(m.content)));
+  // Undo before the runner arrives: both turn back
+  await RT.undoAlarmCard(card);
+  assert.equal(RT.alertOf(watch), null);
+  assert.equal(yard.flags[MOD].carrying.length, 0);
+  // Again, and this time the runner arrives
+  await RT.raiseAlarm(yard, "the Storyteller");
+  game.time.worldTime = t0 + 16 * 60;
+  await RT.checkAlerts();
+  assert.equal(RT.alertLevel(mill), "alarm");
+  assert.match(chat.at(-1).content, /runner from Upper Town · The Tannery reaches Outskirts · The Water Mill/);
+  assert.equal(yard.flags[MOD].carrying.length, 0);
+  assert.equal((mill.flags[MOD].carrying ?? []).length, 0, "a carried alarm goes no further");
+});
+
+test("trigger regions: a player character walking in tells the Storyteller and passes a map event on; once means once; NPCs pass freely", async () => {
+  const cellar = scene("Upper Town · The Wine Cellar", {kind: "home"});
+  const r = region(cellar, "Cellar stairs", {x: 0, y: 0, width: 200, height: 200});
+  const beh = {id: "trg1", type: "wodx-npc.trigger", disabled: false, parent: r, system: {label: "the cellar stairs", does: "note", who: "pcs", once: true, fired: false}};
+  beh.update = async d => { applyUpdate(beh, d); return beh; };
+  beh.system.parent = beh;
+  r.behaviors.push(beh);
+  const pcB = actor("Bruno the thief", {template: "neonate", pc: true});
+  const npcB = actor("Cellar cat", {template: "civilian"});
+  const [tp, tn] = await cellar.createEmbeddedDocuments("Token", [{actorId: pcB.id, x: 50, y: 50}, {actorId: npcB.id, x: 60, y: 60}]);
+  const seen = [];
+  const old = globalThis.Hooks.callAll;
+  globalThis.Hooks.callAll = (k, e) => { if ( k === "wodxMapEvent" ) seen.push(e); };
+  try {
+    const n = chat.length;
+    assert.equal(await RT.onTrigger(beh.system, {data: {token: tn}, region: r}), null, "an NPC passes freely");
+    const ev = await RT.onTrigger(beh.system, {data: {token: tp}, region: r});
+    assert.deepEqual([ev.kind, ev.objectName, ev.who, ev.place], ["trigger", "the cellar stairs", tp.uuid, cellar.uuid]);
+    assert.equal(seen.length, 1);
+    assert.match(chat.at(-1).content, /Bruno the thief reached the cellar stairs/);
+    assert.equal(chat.length, n + 1);
+    assert.equal(beh.system.fired, true);
+    assert.equal(await RT.onTrigger(beh.system, {data: {token: tp}, region: r}), null, "once");
+  } finally { globalThis.Hooks.callAll = old; }
 });

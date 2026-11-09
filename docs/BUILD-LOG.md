@@ -767,6 +767,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### WoDX Senses 0.1.2, 2026-11-09: a new wall makes a new answer
 - Second gate run, 11/12: step 6 failed once memory worked. A wall raises a sound's need, but the answer's fingerprint held only which sources were there, so the earlier closer look's successes carried over and the muffled drinker was still heard. The fingerprint now holds each source's need as well. The new test fails on 0.1.1 and passes on 0.1.2. 632 harness tests pass.
 - Deployed 0.1.2 to rothenstein-wodx only (backups of 0.1.0 and 0.1.1 in Backups). gatesenses 12/12, UI fit 591/591 on the PC. Bundle wodx-2026-11-09c.bundle.
+
+### NPC 0.5.0 and Storyteller 0.3.1, 2026-11-09: trigger regions and alarm carriers (B163)
+- Step 4 of "Responsive Maps for WoDX". alert-rules.mjs: CARRIERS, carryPlan, carryTargets, normCarry and dueCarries; TRIGGER_DOES, triggerFires, triggerEvent. routines.mjs: the WoDX: Trigger region behaviour (onTrigger), raiseAlarmFull and carryAlarm (bell, phone and radio at once, runners on scene flag carrying), deliverCarries on the clock, undoCarry from the alarm card and the reaction's Undo. The Alert zone gains Carries the alarm to, How it gets there and Minutes on the way. module.json documentTypes adds trigger.
+- Storyteller: map beats match their value whatever the case; the log reads "X reached the cellar stairs."
+- Tests: 2 rules and 2 runtime, 636 in all. gate-maps steps 8 (a bell carries the alarm) and 9 (a trigger region), 9 steps in all. Not deployed yet.
 - Tests: responsive-maps.test.mjs (4 rules tests) and runtime tests in phase7c-runtime (2 map events, marks), phase7d-runtime (wrongs and the rumour button) and phase7e-runtime (log and beats); 583 in all. Gate: tools/gate/gate-maps.mjs, 7 steps. Not deployed yet.
 
 ### Chronicle 0.5.4 and Actions 3.14.1, 2026-11-09: lighter on slow computers
