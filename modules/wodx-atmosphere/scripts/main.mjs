@@ -17,10 +17,11 @@
 import * as W from "./weather-rules.mjs";
 import * as K from "./kits-rules.mjs";
 import * as AR from "./adaptive-rules.mjs";
+import * as PR from "./print-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.8.0";
+const VERSION = "0.9.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -806,6 +807,78 @@ export async function handoutDialog() {
   return j;
 }
 
+/* ---- Printable props: a journal or a scene's map, print-ready, through the browser's print window ---- */
+
+const printBase = () => { try { return new URL(foundry.utils.getRoute?.("/") ?? "/", globalThis.location?.href).href; } catch { return ""; } };
+/** The era fonts (WX ...) as @font-face rules with absolute urls, read from the stylesheets already loaded. */
+function eraFonts() {
+  const out = [];
+  for ( const sheet of [...(globalThis.document?.styleSheets ?? [])] ) {
+    let rules;
+    try { rules = sheet.cssRules; } catch { continue; }
+    for ( const r of [...(rules ?? [])] ) if ( r.type === 5 && /font-family:\s*["']?WX /.test(r.cssText) ) out.push(PR.absoluteUrls(r.cssText, sheet.href ?? globalThis.location?.href));
+  }
+  return out.join("\n");
+}
+const enrich = async (html, page) => {
+  const TE = foundry.applications?.ux?.TextEditor?.implementation ?? globalThis.TextEditor;
+  try { return await TE.enrichHTML(html, {relativeTo: page, secrets: false}); } catch { return html; }
+};
+/** A journal's printable page: its text pages enriched (Storyteller secrets left out), its image pages as pictures. */
+export async function journalPrintHtml(journal) {
+  const pages = [];
+  for ( const p of all(journal?.pages).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0)) ) {
+    if ( p.type === "text" ) pages.push({name: p.name, type: "text", html: await enrich(p.text?.content ?? "", p)});
+    else if ( p.type === "image" && p.src ) pages.push({name: p.name, type: "image", src: p.src});
+  }
+  return PR.journalDoc({title: journal?.name ?? "", pages, base: printBase(), styles: [`modules/${MOD}/styles/wodx-atmosphere.css`], fonts: eraFonts()});
+}
+/** A scene's map as drawn, ready to print. */
+export function scenePrintHtml(scene) {
+  const src = scene?.background?.src ?? scene?.img ?? "";
+  return PR.mapDoc({title: scene?.navName || scene?.name || "", src, width: scene?.width, height: scene?.height, base: printBase()});
+}
+/** Put the page in a hidden frame and open the print window (save as PDF from there). dry: build it only. Returns the frame. */
+export function printHtml(html, {dry = false} = {}) {
+  return new Promise(resolve => {
+    const f = document.createElement("iframe");
+    f.className = "wodx-print-frame";
+    f.setAttribute("aria-hidden", "true");
+    Object.assign(f.style, {position: "fixed", right: "0", bottom: "0", width: "0", height: "0", border: "0", visibility: "hidden"});
+    f.onload = () => {
+      if ( !dry ) {
+        try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { ui.notifications.warn("The print window could not open here."); }
+        setTimeout(() => f.remove(), 60000);
+      }
+      resolve(f);
+    };
+    f.srcdoc = html;
+    document.body.append(f);
+  });
+}
+export const printJournal = async (journal, opts) => journal ? printHtml(await journalPrintHtml(journal), opts) : null;
+export const printScene = (scene, opts) => {
+  if ( !scene ) return null;
+  if ( !(scene.background?.src ?? scene.img) ) { ui.notifications.warn(`${scene.name} has no map picture to print.`); return null; }
+  return printHtml(scenePrintHtml(scene), opts);
+};
+
+Hooks.on("getHeaderControlsJournalEntrySheet", (app, controls) => {
+  if ( !active || !game.user.isGM || controls.some(c => c.action === "wodxPrint") ) return;
+  const go = () => printJournal(app.document);
+  if ( app.options?.actions ) app.options.actions.wodxPrint = go;
+  controls.push({icon: "fa-solid fa-print", label: "Print or save as PDF", action: "wodxPrint", onClick: go});
+});
+const rowId = li => li?.dataset?.entryId ?? li?.[0]?.dataset?.entryId ?? li?.dataset?.documentId ?? li?.[0]?.dataset?.documentId;
+Hooks.on("getJournalEntryContextOptions", (app, options) => {
+  if ( !active ) return;
+  options.push({name: "Print or save as PDF", icon: '<i class="fa-solid fa-print"></i>', condition: () => game.user.isGM, callback: li => printJournal(game.journal.get(rowId(li)))});
+});
+Hooks.on("getSceneContextOptions", (app, options) => {
+  if ( !active ) return;
+  options.push({name: "Print the map", icon: '<i class="fa-solid fa-print"></i>', condition: () => game.user.isGM, callback: li => printScene(game.scenes.get(rowId(li)))});
+});
+
 /* ------------------------------------------------------------------ */
 /*  The Atmosphere window                                              */
 /* ------------------------------------------------------------------ */
@@ -1055,6 +1128,7 @@ export async function prime() {
     faces: {set: setFace, at: setFaceAge, apply: applyFace, applyAll: applyFaces, year: () => yearNow(), show: (actor, year = yearNow()) => K.faceFor({...(actor?.flags?.[MOD]?.face ?? {}), kind: faceKindOf(actor, actor?.flags?.[MOD]?.face)}, year)},
     dread: {now: dread, rotschreck: dreadRotschreck, apply: applyDread, tick: dreadTick},
     adaptive: {tension: tensionNow, adapt, heartbeat: heartbeatNow, update: updateHeart, playing: () => heart.cur, rules: AR},
+    print: {journal: printJournal, scene: printScene, journalHtml: journalPrintHtml, sceneHtml: scenePrintHtml, html: printHtml},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
   return api;

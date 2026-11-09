@@ -45,7 +45,7 @@ export async function run() {
     await actor.toggleStatusEffect("invisible", {active: true}); await sleep(400);
     const hunt = A.tension();
     ok("2. hiding", hunt === (fight ? "combat" : "hunt") && (before === "quiet" || before === hunt || fight), {before, hunt});
-    await actor.toggleStatusEffect("frenzy", {active: true}); await sleep(400);
+    await actor.toggleStatusEffect(CONFIG.statusEffects.some(e => e.id === "wodx-frenzy") ? "wodx-frenzy" : "frenzy", {active: true}); await sleep(400);
     ok("3. frenzy", A.tension() === "frenzy", {tension: A.tension()});
     await game.settings.set(MOD, "tension", "quiet"); await sleep(200);
     const held = A.tension();

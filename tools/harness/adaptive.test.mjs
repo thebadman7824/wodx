@@ -11,6 +11,8 @@ test("the tension: frenzy beats combat beats the hunt beats quiet; a tension hel
   assert.equal(AR.tensionOf({combat: true, statuses: ["invisible"]}), "combat");
   assert.equal(AR.tensionOf({combat: true, statuses: ["Frenzy"]}), "frenzy");
   assert.equal(AR.tensionOf({statuses: ["rotschreck"]}), "frenzy");
+  assert.equal(AR.tensionOf({statuses: ["wodx-frenzy"]}), "frenzy");
+  assert.equal(AR.tensionOf({statuses: ["wodx-rotschreck"]}), "frenzy");
   assert.equal(AR.tensionOf({set: "hunt", combat: true}), "hunt");
   assert.equal(AR.tensionOf({set: "nonsense", combat: true}), "combat");
 });
