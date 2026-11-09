@@ -1,29 +1,36 @@
 {
-  "version": 1,
-  "note": "The Encyclopaedia Tenebrarum: books are the sources entries cite; files hold the entries, one file per book or topic. Check with node tools/encyclopedia-check.mjs.",
-  "books": [
-    {
-      "id": "c20",
-      "title": "Changeling: The Dreaming 20th Anniversary Edition",
-      "short": "C20",
-      "edition": "20th Anniversary"
-    },
-    {
-      "id": "v20",
-      "title": "Vampire: The Masquerade 20th Anniversary Edition",
-      "short": "V20",
-      "edition": "20th Anniversary"
-    },
-    {
-      "id": "v20da",
-      "title": "Vampire: The Dark Ages 20th Anniversary Edition",
-      "short": "V20 Dark Ages",
-      "edition": "20th Anniversary"
-    }
-  ],
-  "files": [
-    "c20.json",
-    "v20.json",
-    "v20da.json"
-  ]
+ "version": 1,
+ "note": "The Encyclopaedia Tenebrarum: books are the sources entries cite; files hold the entries, one file per book or topic. Check with node tools/encyclopedia-check.mjs.",
+ "books": [
+  {
+   "id": "c20",
+   "title": "Changeling: The Dreaming 20th Anniversary Edition",
+   "short": "C20",
+   "edition": "20th Anniversary"
+  },
+  {
+   "id": "v20",
+   "title": "Vampire: The Masquerade 20th Anniversary Edition",
+   "short": "V20",
+   "edition": "20th Anniversary"
+  },
+  {
+   "id": "v20da",
+   "title": "Vampire: The Dark Ages 20th Anniversary Edition",
+   "short": "V20 Dark Ages",
+   "edition": "20th Anniversary"
+  },
+  {
+   "id": "w20",
+   "title": "Werewolf: The Apocalypse 20th Anniversary Edition",
+   "short": "W20",
+   "edition": "20th Anniversary"
+  }
+ ],
+ "files": [
+  "c20.json",
+  "v20.json",
+  "v20da.json",
+  "w20.json"
+ ]
 }
