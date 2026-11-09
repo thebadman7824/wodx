@@ -110,7 +110,11 @@
   ],
   "see": [
    "daf-oath-truce",
-   "daf-agendas"
+   "daf-agendas",
+   "daf-war-of-seasons",
+   "daf-spring-court",
+   "daf-summer-court",
+   "daf-winter-blindlord"
   ]
  },
  {
@@ -150,7 +154,9 @@
   ],
   "see": [
    "daf-courts",
-   "daf-agendas"
+   "daf-agendas",
+   "daf-battle-of-stone",
+   "daf-war-of-seasons"
   ]
  },
  {
@@ -251,7 +257,13 @@
    }
   ],
   "see": [
-   "daf-weaving-mists"
+   "daf-weaving-mists",
+   "daf-dominion-levels",
+   "daf-dominion-day",
+   "daf-dominion-night",
+   "daf-dominion-dawn",
+   "daf-dominion-dusk",
+   "daf-element-cantrip"
   ]
  },
  {
@@ -414,6 +426,1088 @@
   "see": [
    "daf-origins",
    "daf-courts"
+  ]
+ },
+ {
+  "id": "daf-iron",
+  "title": "Iron",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The metal that wounds the fae.",
+  "claims": [
+   {
+    "text": "Iron hurts the fae only when pure and cold-wrought, never as steel or another alloy, and no one knows why, though some think an oath lies behind it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Pure iron weapons deal aggravated damage to fae in every form, which can still be soaked, and each wound costs a temporary Mists point.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Iron mixed with other metals has no special effect on the fae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-echoes",
+   "daf-weaving-mists"
+  ]
+ },
+ {
+  "id": "daf-echoes",
+  "title": "Echoes and the Church",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "What drives the fae back.",
+  "claims": [
+   {
+    "text": "Iron and salt repel the fae for reasons none of them fully understand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Above all, Echoes come from the Church: a cross or a church bell drives many fae back.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-iron",
+   "daf-christianity"
+  ]
+ },
+ {
+  "id": "daf-war-of-seasons",
+  "title": "The War of Seasons",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The long war among the Four Courts.",
+  "claims": [
+   {
+    "text": "The Courts fought for many years, ending at the dreadful Battle of Stone, fought in the 300s AD.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Before that battle a fae who wished to leave the Court of upbringing for another was shamed, or killed if the Court was Winter or Summer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "The fighting went quiet only after the Courts nearly wiped one another out, and many fear it could happen again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-battle-of-ice",
+   "daf-battle-of-stone",
+   "daf-courts"
+  ]
+ },
+ {
+  "id": "daf-battle-of-ice",
+  "title": "The Battle of Ice",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A battle fought without firstborn.",
+  "claims": [
+   {
+    "text": "It was fought on a field near the Crystal Fortress, where neither side was strong enough to wrest the fortress away from Winter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "No firstborn took the field; inanimae led squads of changelings and enslaved mortals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-crystal-fortress",
+   "daf-war-of-seasons"
+  ]
+ },
+ {
+  "id": "daf-battle-of-stone",
+  "title": "The Battle of Stone",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The battle all four Courts lost.",
+  "claims": [
+   {
+    "text": "It followed the Battle of Ice by some 300 years, around the time Constantine I turned Christian.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "When it ended every one of the Four Courts had lost; many posts stood empty, and changelings grew so numerous that the Courts had to treat them as equals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "One survivor's view is that it settled nothing in the war and only split the fae from the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-war-of-seasons",
+   "daf-oath-truce",
+   "daf-heritage"
+  ]
+ },
+ {
+  "id": "daf-christianity",
+  "title": "The Spread of the Church",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the faith of Christ pushed the fae aside.",
+  "claims": [
+   {
+    "text": "Churches and crosses spread across lands once given to worship of the fae, while most Courts were too inward-looking to notice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Many fae strongholds fell into disuse, and people stopped coming to the faerie mounds to dance under the full moon as they once promised.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-echoes"
+  ]
+ },
+ {
+  "id": "daf-heritage",
+  "title": "Heritage and Age",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the fae reckon age by era.",
+  "claims": [
+   {
+    "text": "Before the Battle of Stone the fae did not count age at all, naming an old one by status instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Fae born before the Battle of Stone are of Golden Heritage; those born between that battle and the Oath-Truce are of Stone Heritage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-battle-of-stone",
+   "daf-great-oaths"
+  ]
+ },
+ {
+  "id": "daf-great-oaths",
+  "title": "Golden and Stone Oaths",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ancient oaths sworn with humanity.",
+  "claims": [
+   {
+    "text": "Long ago the fae learned to forge oaths with humankind at large; these are the rarest oaths a fae can hold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 90,
+      "pdf": 91
+     },
+     {
+      "book": "dafae",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   },
+   {
+    "text": "Oaths from the Golden Age, sworn between fae and whole nations, are the most powerful kind, and that knowledge was lost at the Battle of Stone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Stone Oaths date from the years after the Battle of Stone, before the Oath-Truce, and are rare, since the fae kept away from people then.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 90,
+      "pdf": 91
+     },
+     {
+      "book": "dafae",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   },
+   {
+    "text": "Very old self-forged oaths can be dangerous for their age, though most are narrow deals of protection, privacy or shared aid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-heritage",
+   "daf-oath-truce"
+  ]
+ },
+ {
+  "id": "daf-spring-court",
+  "title": "The Spring Court Today",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Court tired of standing still.",
+  "claims": [
+   {
+    "text": "Most of the Spring Court want no more of the suspended hostilities that followed the Battle of Stone or of the Oath-Truce; both were stretches of still time it disliked.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-courts",
+   "daf-dominion-dawn"
+  ]
+ },
+ {
+  "id": "daf-summer-court",
+  "title": "The Summer Court Today",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Court of conquest and guile.",
+  "claims": [
+   {
+    "text": "The Summer Court takes weakly held domains of other Courts in regency, without needing open force.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Well-defended holdings may find that the latest diplomats and visitors are scouts for a massed Summer attack.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-courts",
+   "daf-dominion-day",
+   "daf-crystal-fortress"
+  ]
+ },
+ {
+  "id": "daf-winter-blindlord",
+  "title": "The Blind Lord's Domain",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Winter holding that is both feared and crowded.",
+  "claims": [
+   {
+    "text": "Prince Callicantzaroi poses as a kind ruler, but most Winter fae there know the prince means murder for many visitors, and well-trained soldiers carry out even quiet wishes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The other Courts see it as a death trap for those who displease the blind lord, yet it is one of the busiest Winter domains in Western Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-courts",
+   "daf-dominion-night"
+  ]
+ },
+ {
+  "id": "daf-dominion-levels",
+  "title": "Dominion Levels and Court Ties",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How strong a cantrip can be.",
+  "claims": [
+   {
+    "text": "Each Dominion has five levels; the higher the level, the stronger its cantrips.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "A fae gets a bonus with the Dominion of the home Court: Winter with Night, Summer with Day, Spring with Dawn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "Level-one cantrips are small or brief, usually touching only the caster or one person within reach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Some effects come at different levels by Dominion; Dusk, given to travel, can cast one travel magic at level two where others need three.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-dominions"
+  ]
+ },
+ {
+  "id": "daf-dominion-day",
+  "title": "The Dominion of Day",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Light, faith and fire.",
+  "claims": [
+   {
+    "text": "Level-one Day cantrips allow limited mind control, calling up fire and boosting the caster's presence, but cannot force acts against a target's basic nature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Unlike Dawn and Dusk, Day can deal small aggravated wounds at range at one level, and it can burn poison out of a body, painfully.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 132,
+      "pdf": 133
+     },
+     {
+      "book": "dafae",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "Unleashed Day makes the caster glow like gold with crackling hair, embodying faith, fidelity and light, and onlookers find it hard to look away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   },
+   {
+    "text": "Day drains faith, confidence, loyalty and fidelity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-dominion-levels",
+   "daf-summer-court"
+  ]
+ },
+ {
+  "id": "daf-dominion-night",
+  "title": "The Dominion of Night",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Darkness and cold.",
+  "claims": [
+   {
+    "text": "Night deals with darkness and cold and is tied most closely to the Winter Court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "Gloom makes a small patch of darkness for hiding; Mindveil cannot read or rule minds but shields the user's thoughts from prying magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 140,
+      "pdf": 141
+     }
+    ]
+   },
+   {
+    "text": "Freeze Death cannot truly heal but can stop someone from dying, holding the body as it is.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   },
+   {
+    "text": "At higher levels Night can harm a group of foes with aggravated damage or shield as many as 20 allies; it drains joy, delight and elation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 140,
+      "pdf": 141
+     },
+     {
+      "book": "dafae",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-dominion-levels",
+   "daf-winter-blindlord"
+  ]
+ },
+ {
+  "id": "daf-dominion-dawn",
+  "title": "The Dominion of Dawn",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Earth, growth and purity.",
+  "claims": [
+   {
+    "text": "Dawn at higher levels can call protection from the earth and the great forest trees.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Brew and Bread is one of its cantrips; Dawn cannot read or control minds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 148,
+      "pdf": 149
+     }
+    ]
+   },
+   {
+    "text": "Dawn drains innocence, purity and virtue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-dominion-levels",
+   "daf-spring-court"
+  ]
+ },
+ {
+  "id": "daf-dominion-dusk",
+  "title": "The Dominion of Dusk",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Travel, decline and atonement.",
+  "claims": [
+   {
+    "text": "Dusk leans toward travel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "Few fae reach its highest level, and the ones that do rank with the most dangerous, and legends speak of drying a foe away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "Amends cannot control minds but nudges a target toward contrition and atonement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 156,
+      "pdf": 157
+     }
+    ]
+   },
+   {
+    "text": "Unleashed Dusk begins faintly and swells into an eerie, haunting melody.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-dominion-levels"
+  ]
+ },
+ {
+  "id": "daf-element-cantrip",
+  "title": "Moving an Element",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A basic cantrip over a Dominion's element.",
+  "claims": [
+   {
+    "text": "The player rolls Dominion + Wits and needs one success; the element moves for a turn per success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   },
+   {
+    "text": "It cannot change the element's nature: fire will not eat iron and water will not freeze at once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 125,
+      "pdf": 126
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-dominion-levels"
+  ]
+ },
+ {
+  "id": "daf-crystal-fortress",
+  "title": "The Crystal Fortress",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "An ice citadel older than the Golden Age.",
+  "claims": [
+   {
+    "text": "The ancient ice fortress lies in the far north of Scandinavia, just past the Arctic Circle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 170,
+      "pdf": 171
+     },
+     {
+      "book": "dafae",
+      "page": 171,
+      "pdf": 172
+     }
+    ]
+   },
+   {
+    "text": "No scholar knows who built it; it predates the Golden Age and may hold the secrets of where the fae and their magic came from.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 171,
+      "pdf": 172
+     }
+    ]
+   },
+   {
+    "text": "When the sun is down, travellers must wait for the Nordlys to light its walls and make spires and arches glow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 171,
+      "pdf": 172
+     }
+    ]
+   },
+   {
+    "text": "The Summer Court has held it for a century, expecting the other Courts to come for it when the Oath-Truce ends.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 171,
+      "pdf": 172
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-battle-of-ice",
+   "daf-summer-court"
+  ]
+ },
+ {
+  "id": "daf-glastonbury",
+  "title": "Glastonbury",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A place where old ways fade.",
+  "claims": [
+   {
+    "text": "A reclusive fae leader seldom left Glastonbury Tor or received visitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "In the years after the Battle of Stone, before the Oath-Truce, the people of Glastonbury lost their ties to the old ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 171,
+      "pdf": 172
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-christianity"
+  ]
+ },
+ {
+  "id": "daf-verdoren",
+  "title": "Verdoren",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A great lord of the wood.",
+  "claims": [
+   {
+    "text": "In the Golden Age Verdoren's court was among the most important of all, guarding human settlements near the edges of the wood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 173,
+      "pdf": 174
+     }
+    ]
+   },
+   {
+    "text": "Some hope to bring Verdoren back to battle, or at least to win over Verdoren's great army of children.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 173,
+      "pdf": 174
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-heritage"
+  ]
+ },
+ {
+  "id": "daf-vanished-kingdom",
+  "title": "The Vanished Kingdom",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A realm that disappeared.",
+  "claims": [
+   {
+    "text": "After the Battle of Stone one whole kingdom vanished without trace, and no one noticed until the Oath-Truce was signed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 173,
+      "pdf": 174
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-battle-of-stone"
+  ]
+ },
+ {
+  "id": "daf-werewolves",
+  "title": "The Fae and the Werewolves",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Old enemies and allies.",
+  "claims": [
+   {
+    "text": "In the Golden Age and the War of Seasons the Courts and the werewolves fought against and alongside each other by turns, making passing alliances.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 181,
+      "pdf": 182
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-war-of-seasons"
+  ]
+ },
+ {
+  "id": "daf-treasures",
+  "title": "Faerie Treasures",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Crafted wonders and Golden Age relics.",
+  "claims": [
+   {
+    "text": "A master craftsman might weave a shawl that stirs love in everyone who sees it, yet the relics of the Golden Age far surpass such trinkets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 186,
+      "pdf": 187
+     }
+    ]
+   },
+   {
+    "text": "Some Winter treasures are cauldrons with powerful Winter firstborn oathbound inside; each must be washed in human blood after use, or the bound fae goes free. Only two have been found.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dafae",
+      "page": 191,
+      "pdf": 192
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-great-oaths"
   ]
  }
 ]
