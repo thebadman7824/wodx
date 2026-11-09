@@ -955,3 +955,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 
 - adaptive-rules.mjs (new): TENSIONS, TENSION_LABELS, FRENZY_STATUSES, HUNT_STATUSES, tensionOf, moodFor, heartbeat, beatGap. kits-rules.mjs: a frenzy mood (music/frenzy in a kit folder). main.mjs: settings adaptive, tension (world) and heartbeat (client); tensionNow, adapt (acts only on a change), adaptSoon; combatStart and deleteCombat go through adapt when it is on, the old switch when off; effect hooks on players' characters; the heartbeat (Web Audio, two thumps a beat) follows the user's own character on updateActor and updateUser. api.adaptive {tension, adapt, heartbeat, update, playing, rules}.
 - Tests: tools/harness/adaptive.test.mjs (4). Gate: tools/gate/gateadaptive.mjs, 7 steps (music off while it runs).
+
+## 2026-11-09: printable props (Atmosphere 0.9.0, B281)
+
+- print-rules.mjs (new): PRINT_CSS, landscape, journalDoc, mapDoc, absoluteUrls. main.mjs: journalPrintHtml (text pages enriched with secrets off, image pages as pictures, the era fonts' @font-face rules copied in with absolute urls), scenePrintHtml, printHtml (a hidden frame, then the print window; dry builds only), printJournal, printScene; a header control on journal sheets and entries in the journal and scene directory menus, Storyteller only. api.print {journal, scene, journalHtml, sceneHtml, html}.
+- Tests: tools/harness/print.test.mjs (4). Gate: tools/gate/gateprint.mjs, 7 steps (never opens the print window).
+- Fix in the same PR (Atmosphere 0.9.0): the frenzy tension never fired in Foundry, since WoDX Chronicle's conditions are wodx-frenzy and wodx-rotschreck; tensionOf now drops the wodx- prefix, and gateadaptive toggles wodx-frenzy. rothenstein-wodx holds 11 started combats left by older gates, so gateadaptive's hunt step reads combat there (noted, not failed).

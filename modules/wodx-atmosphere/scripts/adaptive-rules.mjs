@@ -19,7 +19,8 @@ export const HUNT_STATUSES = ["invisible", "hidden", "stealth", "obfuscate", "st
  */
 export function tensionOf({set = "auto", combat = false, statuses = []} = {}) {
   if ( TENSION_LABELS[set] ) return set;
-  const has = list => statuses.some(s => list.includes(String(s).toLowerCase()));
+  // WoDX Chronicle registers its conditions as wodx-frenzy, wodx-rotschreck and so on
+  const has = list => statuses.some(s => list.includes(String(s).toLowerCase().replace(/^wodx-/, "")));
   if ( has(FRENZY_STATUSES) ) return "frenzy";
   if ( combat ) return "combat";
   if ( has(HUNT_STATUSES) ) return "hunt";
