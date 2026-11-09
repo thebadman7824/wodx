@@ -55,6 +55,7 @@ import * as OXD from "./orpheus.js";
 import * as ORR from "./orpheus-rules.js";
 import * as ZXD from "./m20.js";
 import * as ZR from "./m20-rules.js";
+import * as CNR from "./consensus-rules.js";
 import * as CK from "./checks-rules.js";
 
 const MOD = "wodx-actions";
@@ -75,6 +76,10 @@ function registerSettings() {
     game.settings.register(MOD, "flavorText", { name: "Flavor text on action cards",
         hint: "Add one short line of description under the result of each action card, picked to fit what was attempted and how it went. Edit the lines in scripts/flavor.js.",
         scope: "world", config: true, type: String, default: L.oldSetting("vtda20-actions", "flavorText", "all"), choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
+    game.settings.register(MOD, "consensusEra", { name: "Consensus by era", hint: "Before 1450 there is no coincidental or vulgar split; from 1450 to 1699 magick is casual or vain, with Fortune Dice (Sorcerers Crusade); from 1700 Mage 20th. The years are a house rule.",
+        scope: "world", config: true, type: Boolean, default: true });
+    game.settings.register(MOD, "realityZones", { name: "Reality Zones (Mage 20th)", hint: "Zone: a place's accepted styles decide what is coincidental. One world: one Consensus everywhere. Free: the Storyteller rules each time.",
+        scope: "world", config: true, type: String, default: "world", choices: { zone: "The place decides", world: "One Consensus everywhere", free: "The Storyteller rules each time" } });
     s("spendResources", "Deduct Willpower and blood", "Update the character sheet when Willpower or blood is spent or gained.", Boolean, true);
     s("applyChanges", "Apply results to sheets", "Apply health, Road, Virtue, frenzy and blood results automatically. Off: results are reported only.", Boolean, true);
     s("showDice", "Show the dice in chat", "List each die face in result cards.", Boolean, true);
@@ -2127,11 +2132,11 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.17.1",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.18.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
-    m20Cast: withActor(a => zx().cast(a)), m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor(a => zx().counter(a)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR,
+    m20Cast: withActor(a => zx().cast(a)), m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor(a => zx().counter(a)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
     // Dark Ages mages (3.7.0)
     daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
     daCountermagic: withActor(a => mx().counter(a)), daGuide: withActor(a => mx().guide(a)), daCertamen: withActor(a => mx().certamen(a)),

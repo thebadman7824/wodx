@@ -12,6 +12,7 @@
  */
 import * as M from "./m20-rules.js";
 import { aim, castIntent } from "./aim.js";
+import * as C from "./consensus-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -23,6 +24,19 @@ export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, updateActor, spendWillpower, notify } = ctx;
     const flag = a => a.getFlag(MOD, "m20") ?? {};
     const saveFlag = (a, patch) => ctx.setFlag(a, "m20", { ...flag(a), ...patch });
+    const get = (k, d) => { try { return game.settings.get(MOD, k); } catch (e) { return d; } };
+    /** The age of the chronicle's year: what Consensus the caster works under. */
+    function age() {
+        if (!get("consensusEra", true)) return C.AGES[2];
+        let y = null;
+        try { y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { /* no chronicle */ }
+        return C.ageFor(y);
+    }
+    const placeOf = scene => String(scene?.flags?.[MOD]?.consensus?.styles ?? "");
+    function suggest(actor, scene = canvas?.scene) {
+        const a = age();
+        return { age: a, ...C.suggestKind({ age: a.key, style: flag(actor).style ?? "", place: placeOf(scene), zones: get("realityZones", "world") }) };
+    }
 
     function info(actor) {
         const s = actor.system ?? {};
@@ -43,10 +57,13 @@ export function build(ctx) {
 
     async function cast(actor) {
         const i = info(actor);
+        const sg = suggest(actor), W = C.WORDS[sg.age.key];
         const row = k => `<div class="form-group"><label>${cap(k)} <small>${i.spheres[k]}</small></label><select name="s-${k}" data-fixed><option value="0">—</option>${[1, 2, 3, 4, 5].filter(l => l <= i.spheres[k]).map(l => `<option value="${l}">${l}</option>`).join("")}</select></div>`;
         const content = `<form><p><b>${esc(actor.name)}</b>: Arete ${i.arete}${i.dice < i.arete ? ` (Willpower ${i.willpower.perm} caps it: ${i.dice} dice)` : ""}; Quintessence ${i.quint}, Paradox ${i.paradox}${i.avatar ? `; Avatar ${i.avatar}` : ""}.</p>
           <fieldset><legend>Spheres used</legend>${M.SPHERES.filter(k => i.spheres[k]).map(row).join("") || "<p>No Spheres on the sheet.</p>"}</fieldset>
-          <div class="form-group"><label>The Effect is</label><select name="kind" data-fixed>${Object.entries(M.KINDS).map(([k, x]) => `<option value="${k}">${esc(x.label)} (highest + ${x.add})</option>`).join("")}</select></div>
+          <div class="form-group"><label>The Effect is</label><select name="kind" data-fixed>${Object.entries(M.KINDS).map(([k, x]) => `<option value="${k}"${k === sg.kind ? " selected" : ""}>${esc(W[k] ?? x.label)} (highest + ${x.add})</option>`).join("")}</select></div>
+          <div class="form-group"><label>The caster's style</label><input type="text" name="style" value="${esc(i.f.style ?? "")}" placeholder="Hermetic, Christian miracles, witchcraft, Taoist"/></div>
+          <p class="hint">${esc(sg.age.label)}${sg.why ? `: ${esc(sg.why)}` : "."}${sg.age.key === "dark" ? " A Dark Ages mage uses the Dark Ages cast." : ""} (${esc(sg.age.ref)})</p>
           <div class="form-group"><label>The feat</label><select name="feat" data-fixed>${M.FEATS.map(f => `<option value="${f.need}">${esc(f.label)}: ${f.need}</option>`).join("")}</select></div>
           <div class="form-group"><label>More successes declared (targets, damage, duration)</label><input type="number" name="extra" min="0" max="20" value="0"/></div>
           <fieldset><legend>Modifiers (net ±3)</legend>${Object.entries(M.MODIFIERS).map(([k, m]) => `<div class="form-group"><label><input type="checkbox" name="m-${k}"/> ${esc(m.label)} (${m.mod > 0 ? "+" : ""}${m.mod})</label></div>`).join("")}
@@ -65,18 +82,20 @@ export function build(ctx) {
             const d = M.degree(r, plan.need);
             const px = M.paradoxGained(fd.kind, plan.highest, r.botch);
             const after = px ? await setParadox(actor, info(actor).paradox + px) : null;
-            await saveFlag(actor, { lastMagick: game.time?.worldTime ?? 0 });
+            await saveFlag(actor, { lastMagick: game.time?.worldTime ?? 0, ...(String(fd.style ?? "").trim() ? { style: String(fd.style).trim() } : {}) });
+            const fortune = sg.age.key === "crusade" ? await fortuneRoll(actor) : null;
             const label = used.map(x => `${cap(x.sphere)} ${x.level}`).join(" / ");
-            let body = rollBlock(`Arete ${plan.dice}`, r, [`${label}: ${M.KINDS[fd.kind].label.toLowerCase()} (${plan.base}${plan.net ? `, ${plan.net > 0 ? "+" : ""}${plan.net}` : ""})`, ...(plan.capped ? ["modifiers capped at ±3"] : []),
+            let body = rollBlock(`Arete ${plan.dice}`, r, [`${label}: ${(W[fd.kind] ?? M.KINDS[fd.kind].label).toLowerCase()} (${plan.base}${plan.net ? `, ${plan.net > 0 ? "+" : ""}${plan.net}` : ""})`, ...(plan.capped ? ["modifiers capped at ±3"] : []),
                 ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : [])]);
             body += `<div class="vta-big ${d.key === "botch" ? "bad" : d.key === "success" || d.key === "extraordinary" ? "good" : ""}">${r.successes} of ${plan.need}: ${esc(d.text)}.</div>`;
             if ((d.key === "success" || d.key === "extraordinary" || d.key === "partial") && r.successes) {
                 body += fd.dmg ? `<div class="vta-res">Damage: ${M.damage(r.successes, { forces: used.some(x => x.sphere === "forces") })} levels (${M.damageType({ spheres: used.map(x => x.sphere) })}, unless charged with Prime or Pattern-breaking); the Effect is instant.</div>`
                     : `<div class="vta-res">Duration: ${M.duration(r.successes)}.</div>`;
             }
-            if (px) body += `<div class="vta-note">+${px} Paradox (${after.paradox})${after.quintLost ? `; it cancels ${after.quintLost} Quintessence on the wheel` : ""}.${after.paradox > 5 ? " Past five: the Storyteller may roll a backlash." : ""}${M.overload(after.paradox) ? " Twenty or more: an intense Quiet, a crack in reality, or worse." : ""}</div>`;
-            if (r.botch) body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
-            body += `<div class="wodx-quiet">${REF} pp. 501–504</div>`;
+            if (px) body += `<div class="vta-note">+${px} ${sg.age.key === "crusade" ? "Scourge" : "Paradox"} (${after.paradox})${after.quintLost ? `; it cancels ${after.quintLost} Quintessence on the wheel` : ""}.${after.paradox > 5 ? " Past five: the Storyteller may roll a backlash." : ""}${M.overload(after.paradox) ? " Twenty or more: an intense Quiet, a crack in reality, or worse." : ""}</div>`;
+            if (fortune) body += fortune.html;
+            if (r.botch && sg.age.key !== "crusade") body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
+            body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;
             return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean));
         }, { width: 560, render: root => aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }) });
     }
@@ -122,8 +141,39 @@ export function build(ctx) {
             return post(actor, `${actor.name}: countermagick`, rollBlock(`Arete ${plan.dice}`, r) + `<div class="vta-res">${r.successes} of the caster's successes cancelled${fd.mode === "reflect" ? "; any beyond theirs strike the caster" : ""}. A full action.</div><div class="wodx-quiet">${REF} p. 545</div>`, [r.roll].filter(Boolean));
         });
     }
+    /** The Fortune Dice (Sorcerers Crusade pdf p. 249): a 1 is a Bane, a 10 a Boon; either spends the whole Scourge Pool. */
+    async function fortuneRoll(actor) {
+        const pool = info(actor).paradox, n = C.fortuneDice(pool);
+        const roll = await new Roll(`${n}d10`).evaluate();
+        const faces = roll.dice?.[0]?.results?.map(x => x.result) ?? [];
+        const hit = C.readFortune(faces);
+        let out = null;
+        if (hit && pool > info(actor).paradoxPerm) out = await setParadox(actor, info(actor).paradoxPerm);
+        const html = `<div class="vta-note">Fortune ${n > 1 ? "Dice" : "Die"}: ${faces.join(", ")}. ${hit ? `A ${hit === "bane" ? "Bane" : "Boon"}: ${esc(C.fortuneSize(pool))}, shaped by the caster's virtue or vice; the Scourge Pool of ${pool} is spent${out ? ` (now ${out.paradox})` : ""}.` : "Fate holds its hand."}</div>`;
+        return { faces, hit, pool, html };
+    }
+    /** Clearing the Scourge (pdf p. 249): a day alone in meditation for each point. */
+    async function purify(actor) {
+        const i = info(actor), d = C.purifyDays(i.paradox - i.paradoxPerm);
+        if (!d) { notify(`${actor.name} has no Scourge to clear.`); return null; }
+        return dialog(`Purify: ${actor.name}`, `<p>${esc(actor.name)} must spend ${d} day${d === 1 ? "" : "s"} alone in meditation to clear the Scourge Pool of ${i.paradox}.</p>`, "Done", async () => {
+            await setParadox(actor, i.paradoxPerm);
+            await saveFlag(actor, { lastShed: game.time?.worldTime ?? 0 });
+            return post(actor, `${actor.name} is purified`, `<div class="vta-res">${d} day${d === 1 ? "" : "s"} alone in meditation; the Scourge is cleared.</div><div class="wodx-quiet">Sorcerers Crusade pdf p. 249</div>`);
+        });
+    }
+    /** The Storyteller sets the styles a place accepts (a Reality Zone, or what people believe there). */
+    async function placeDialog(scene = canvas?.scene) {
+        if (!game.user.isGM || !scene) return null;
+        const a = age();
+        return dialog(`Consensus: ${scene.navName || scene.name}`, `<form><p>${esc(a.label)}. ${a.key === "crusade" ? `Left empty, the styles of Europe count: ${C.CRUSADE_EUROPE.join(", ")}.` : a.key === "dark" ? "This age has no coincidental or vulgar split." : "Read only when Reality Zones are set to \"the place decides\"."}</p>
+          <div class="form-group"><label>Styles accepted here</label><input type="text" name="styles" value="${esc(placeOf(scene))}" placeholder="pagan, christian, alchemy"/></div></form>`, "Save",
+            async fd => scene.update({ [`flags.${MOD}.consensus`]: { styles: String(fd.styles ?? "").trim() } }));
+    }
+
     /** Shedding Paradox (p. 549): a point a week without overt magick while the pool is under five. Called by the world-time hook (GM). */
     async function shedAll(actors = game.actors?.filter?.(a => a.type === "Mage") ?? []) {
+        if (age().key === "crusade") return; // in the Crusade the Scourge is cleared by meditation, not by time
         const now = game.time?.worldTime ?? 0, week = 7 * 86400;
         for (const a of actors) {
             const i = info(a);
@@ -137,5 +187,5 @@ export function build(ctx) {
         }
     }
 
-    return { info, cast, backlash: backlashRoll, counter, shedAll, rules: M };
+    return { info, cast, backlash: backlashRoll, counter, shedAll, purify, placeDialog, age, suggest, rules: M };
 }

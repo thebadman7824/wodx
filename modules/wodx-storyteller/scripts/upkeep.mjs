@@ -293,11 +293,12 @@ export async function groundsDialog() {
 export async function upkeepChooser() {
   if ( !game.user.isGM ) return;
   const pick = await foundry.applications.api.DialogV2.wait({rejectClose: false, window: {title: "Upkeep"}, classes: ["wodx-dialog"],
-    content: "<p>Ties a character has to keep up, or the hunting grounds and how hot each one is.</p>",
+    content: "<p>Ties a character has to keep up, the hunting grounds and how hot each one is, or how each character lives on their Resources.</p>",
     buttons: [{action: "ties", label: "Ties that need tending"}, {action: "grounds", label: "Hunting grounds"},
       ...(game.modules.get("wodx-otherworlds")?.api?.drift ? [{action: "drift", label: "The Gauntlet over time"}] : []),
-      {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
+      {action: "money", label: "Money"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
   if ( pick === "drift" ) return game.modules.get("wodx-otherworlds")?.api?.drift?.dialog?.();
+  if ( pick === "money" ) return game.modules.get(MOD)?.api?.upkeep?.money?.dialog?.();
   if ( pick === "ties" ) return tiesDialog();
   if ( pick === "grounds" ) return groundsDialog();
   if ( pick === "check" ) { const n = await checkTies({force: true}); if ( !n.length ) ui.notifications.info("No ties have come due."); }

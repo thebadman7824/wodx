@@ -81,7 +81,7 @@ export const MENUS = {
     mage: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
-            ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"]]],
+            ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"], ["api:m20Purify", "Purify the Scourge (Crusade)", "fa-praying-hands"], ["api:m20Place", "Consensus here (GM)", "fa-landmark"]]],
             ["Sorcery and Numina", [["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]

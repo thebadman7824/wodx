@@ -80,8 +80,8 @@ export const MENU_PLAN = {
     mage: {
         act: ["action", "api:quickCheck", "cast", "uses:quintessence", "preset:researchmage", "api:hedgeMagic", "api:numina", "api:trueFaith"],
         resist: ["api:m20Counter", "uses:paradox", "api:hazard"],
-        st: ["api:m20Backlash"],
-        recover: ["api:healing", "uses:willpower"],
+        st: ["api:m20Backlash", "api:m20Place"],
+        recover: ["api:healing", "uses:willpower", "api:m20Purify"],
         scene: ["api:endScene", "api:voices", "rules:mage"]
     },
     /** Dark Ages: Mage (3.7.0): the same bands, Foundation and Pillars in place of Arete. */
@@ -233,6 +233,8 @@ export const DESC = {
     "cast": "Cast an effect: the Arete roll, the difficulty from the highest Sphere",
     "api:m20Counter": "Mage 20th: countermagick (Arete at 7), resisting Mind (Willpower), or a Quiet delusion dispelled",
     "api:m20Backlash": "Mage 20th: the Storyteller's backlash roll of the Paradox pool, or staving it off with Willpower",
+    "api:m20Purify": "The Sorcerers Crusade: clearing the Scourge, a day alone in meditation for each point",
+    "api:m20Place": "Consensus here: the styles of magick this place accepts (Storyteller)",
     "api:daCast": "Dark Ages: a spell through the fellowship's Foundation and Pillars; Backlash on a short roll with 1s",
     "api:daMage": "Dark Ages: the fellowship, its Foundation and Pillars, Twilight and Brandings",
     "api:daCantrip": "Dark Ages: a cantrip, Dominion + the trait it names, with the Court's Dominion, its hour and its season",

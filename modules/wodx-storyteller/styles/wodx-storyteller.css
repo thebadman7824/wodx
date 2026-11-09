@@ -38,6 +38,6 @@
 .wodx-dashboard-app .wstory-dash-overdue strong { color: #b43c3c; }
 .wodx-dashboard-app .wstory-dash-name { display: inline; width: auto; padding: 0 4px; font-weight: bold; }
 /* Upkeep (0.12.0): ties and hunting grounds tables scroll inside the dialog */
-.wst-ties .wst-scroll, .wst-grounds .wst-scroll { max-height: 50vh; overflow-y: auto; }
+.wst-ties .wst-scroll, .wst-grounds .wst-scroll, .wst-money .wst-scroll { max-height: 50vh; overflow-y: auto; }
 .wst-ties table, .wst-grounds table { width: 100%; }
 .wst-ties td input[type=number], .wst-grounds td input[type=number] { display: inline-block; }

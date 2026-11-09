@@ -22,6 +22,8 @@ import * as Codex from "./codex.mjs";
 import * as Letters from "./letters.mjs";
 import * as Up from "./upkeep.mjs";
 import * as UpRules from "./upkeep-rules.mjs";
+import * as Money from "./money.mjs";
+import * as MoneyRules from "./money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Prelude from "./prelude.mjs";
 import * as Dash from "./dashboard.mjs";
@@ -48,6 +50,8 @@ Hooks.once("init", () => {
   Letters.registerLetterHooks();
   Up.registerUpkeepSettings();
   Up.registerUpkeepHooks();
+  Money.registerMoneySettings();
+  Money.registerMoneyHooks();
   Rumours.registerRumourHooks();
   Dash.registerDashboardHooks();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
@@ -81,7 +85,8 @@ Hooks.once("ready", () => {
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
     letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
-      grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules},
+      grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules,
+      money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules}},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
     draw: Night.drawChooser, nightRules: Night.N
   };
