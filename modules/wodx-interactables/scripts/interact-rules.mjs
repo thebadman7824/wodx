@@ -3,7 +3,8 @@
  * Foundry calls, so the harness can test every pool, grade, noise and outcome.
  *
  * The rolls are the dramatic systems WoDX Actions already uses (V20 Dark Ages pp. 322-339: intrusion, forcing a door,
- * the lifting chart, noticing). V20 core page refs: TODO, to be pinned from the book texts on the PC (rule 5).
+ * the lifting chart, noticing). V20 core (printed pages; pdf page = printed + 8): opening and closing with the Strength
+ * Feats chart p. 261, intrusion p. 260, spotting alarms p. 255, retrying p. 251, climbing p. 258, falling p. 296.
  * Lock grades, the successes each needs, the time per roll and how far noise carries are house readings of those
  * systems; docs/DECISIONS.md records them.
  */
@@ -81,7 +82,8 @@ export const MAX_ITEMS = 50;
  * Traps on tiles. dice and type: the damage when it springs, unless the Storyteller sets others (a pit is a fall; spikes
  * make it lethal). reflex: whether the victim gets a Dexterity roll to get clear. holds: a snare catches and holds.
  * Finding, disarming and the reflex roll are house readings of the noticing and intrusion systems (V20 Dark Ages
- * pp. 322-339); falling damage follows the core falling rules (V20 core page ref: TODO, rule 5).
+ * pp. 322-339); a pit's 2 dice are a house figure under the core falling rule (one die of bashing per 10 feet, soakable:
+ * V20 core printed p. 296, pdf p. 304).
  */
 export const TRAPS = {
   snare: {label: "Snare", dice: 0, type: "bashing", reflex: true, holds: true, noise: "quiet"},
@@ -192,6 +194,26 @@ export const WATCHES = {
   radio: {label: "Radio or walkie-talkie", calls: true, from: 1930},
   bell: {label: "Bell, horn or alarm", alarm: true}
 };
+/**
+ * Mounts and vehicles on tiles. Getting on and riding or driving at an ordinary pace needs no roll with a dot in the
+ * skill (V20 p. 258 for driving); with none, the Attribute alone at +1 difficulty, as for any untrained Skill (WoDX
+ * Actions' pool adds it when the card is rolled; page ref to pin). Keeping control is Dexterity + the skill at 6; flat out is +3, as the riding and driving presets in
+ * WoDX Actions have it. A botch throws a rider or crashes a vehicle: the Storyteller rolls the damage.
+ * skill: the Ability; attr: the Attribute for keeping control; seats: with the one at the reins; from: the year it
+ * appears (the Chronicle year); thrown: a botch puts the one at the reins on the ground.
+ */
+export const MOUNTS = {
+  horse: {label: "Riding horse", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet"},
+  mule: {label: "Mule or donkey", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, thrown: true, noise: "quiet"},
+  cart: {label: "Cart or wagon", verb: "Take the reins", reins: "at the reins", skill: "ride", attr: "dexterity", seats: 4, noise: "quiet"},
+  carriage: {label: "Carriage or coach", verb: "Take the reins", reins: "at the reins", skill: "ride", attr: "dexterity", seats: 6, noise: "quiet"},
+  boat: {label: "Rowing boat", verb: "Take the oars", reins: "at the oars", skill: "athletics", attr: "stamina", seats: 4, noise: "quiet"},
+  car: {label: "Motor car", verb: "Drive it", reins: "at the wheel", skill: "drive", attr: "dexterity", seats: 5, from: 1900, noise: "loud"},
+  motorbike: {label: "Motorcycle", verb: "Ride it", reins: "on it", skill: "drive", attr: "dexterity", seats: 2, from: 1910, thrown: true, noise: "loud"},
+  motorboat: {label: "Motorboat", verb: "Take the helm", reins: "at the helm", skill: "drive", attr: "dexterity", seats: 6, from: 1910, noise: "loud"}
+};
+export const FLAT_OUT = 3;
+
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
 export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
@@ -440,6 +462,20 @@ export function describeWatch(f = {}) {
     electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
+/** A mount or vehicle on a tile. driver and riders: {a: actor id, t: token UUID, n: name}. */
+export function describeMount(f = {}) {
+  const kind = MOUNTS[f.mountKind] ? f.mountKind : "horse";
+  const seats = f.seats === "" || f.seats === null || f.seats === undefined ? MOUNTS[kind].seats : Math.max(1, Math.min(40, Math.round(Number(f.seats) || 1)));
+  const person = x => (x && typeof x === "object" && x.a ? {a: String(x.a), t: String(x.t ?? ""), n: String(x.n ?? "Someone")} : null);
+  return {
+    mount: true, watch: false, sacred: false, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
+    kind, seats, driver: person(f.driver), riders: (Array.isArray(f.riders) ? f.riders : []).map(person).filter(Boolean).slice(0, 40),
+    title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
+  };
+}
+/** Everyone aboard a mount or vehicle, the one at the reins first. */
+export const aboard = o => [o.driver, ...o.riders].filter(Boolean);
+
 /**
  * What a look out of a window or into a mirror shows. people: [{name, lasombra}] in the watched area (the runtime
  * leaves out the hidden). roll: {successes, botch}. Returns {count, names, unreflected}.
@@ -471,6 +507,10 @@ export function parseItems(text) {
 
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
+  if ( o.mount ) {
+    const M = MOUNTS[o.kind], n = aboard(o).length;
+    return `${o.title || M.label}${o.driver ? `, ${o.driver.n} ${M.reins}` : ""}${n > (o.driver ? 1 : 0) ? `, ${n} aboard` : ""}`;
+  }
   if ( o.watch ) return o.title || WATCHES[o.kind].label;
   if ( o.sacred ) {
     const S = SACRED[o.kind], t = o.title || S.label;
@@ -524,6 +564,7 @@ export function optionsFor(o, ch = {}) {
   if ( o.hazard ) return hazardOptions(o, ch);
   if ( o.sacred ) return sacredOptions(o, ch);
   if ( o.watch ) return watchOptions(o, ch);
+  if ( o.mount ) return mountOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -797,6 +838,42 @@ export function springTrap(o, reflex = null, actorId = "") {
   return {flags, dice, type: o.type, noise: T.noise, text, caught};
 }
 
+/**
+ * A mount or vehicle: get on at the reins or as a passenger, get off; at the reins, keep control or go flat out.
+ * Not in its era: nothing but a note.
+ */
+function mountOptions(o, ch) {
+  const M = MOUNTS[o.kind], me = ch.actorId ?? "", year = Number(ch.year) || 0;
+  if ( M.from && year && year < M.from ) return [{id: "eraNote", label: `No ${M.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${M.from}.`}];
+  const sk = bestOf(ch.abilities ?? {}, [M.skill]), trained = sk.value > 0;
+  const attrDots = Number(ch[M.attr]) || 0, attrLabel = cap(M.attr), skillLabel = cap(M.skill);
+  const pool = (base, extra = 0) => ({attr: M.attr, attrLabel, ability: M.skill, abilityLabel: skillLabel, dice: attrDots + sk.value,
+    diff: Math.min(10, base + extra), need: null, skill: !!plus});
+  const plus = M.skill === "athletics" ? "" : ", +1 difficulty";
+  const untrained = trained ? "" : ` No ${skillLabel}: ${attrLabel} alone${plus}.`;
+  if ( o.driver?.a === me ) {
+    return [
+      {id: "control", label: "Keep control", roll: pool(6), seconds: TURN, noise: {success: M.noise, fail: M.noise, botch: "loud"},
+        note: `An obstacle, a shy, a skid. Rough ground, rain or crowds: the Storyteller may add to it.${untrained} A botch: ${M.thrown ? "thrown" : "a crash"}.`},
+      {id: "flatOut", label: "Go flat out", roll: pool(6, FLAT_OUT), seconds: TURN, noise: {success: "loud", fail: "loud", botch: "loud"},
+        note: `At full speed: +${FLAT_OUT} difficulty. A failure: roll Keep control at once.${untrained} A botch: ${M.thrown ? "thrown" : "a crash"}.`},
+      {id: "dismount", label: "Get off", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Whoever else is aboard stays aboard."}
+    ];
+  }
+  if ( o.riders.some(r => r.a === me) ) return [{id: "dismount", label: "Get off", roll: null, seconds: TURN, noise: {success: "quiet"}}];
+  const out = [], n = aboard(o).length, full = n >= o.seats;
+  if ( !o.driver && !full ) {
+    out.push(trained ? {id: "mount", label: M.verb, roll: null, seconds: TURN, noise: {success: M.noise}, note: `${skillLabel} ${sk.value}: no roll at an ordinary pace. Whoever is at the reins moves it by moving their token.`}
+      : {id: "mount", label: M.verb, roll: pool(6), seconds: TURN, noise: {success: M.noise, fail: "quiet", botch: "loud"},
+        note: `No ${skillLabel}: ${attrLabel} alone${plus} to get it going. A failure: it won't go. A botch: ${M.thrown ? "thrown" : "a scrape or a stall"}.`});
+  }
+  // A seat is kept for the one at the reins while nobody holds them
+  if ( n + (o.driver ? 0 : 1) < o.seats ) out.push({id: "board", label: "Get on as a passenger", roll: null, seconds: TURN, noise: {success: "silent"},
+    note: "Carried along when the one at the reins moves. Moving the token away gets off."});
+  if ( full ) out.push({id: "fullNote", label: "No room aboard", roll: null, disabled: true, note: `It holds ${o.seats}.`});
+  return out;
+}
+
 function forceOption(id, label, strength, ch, b, have, {extra = 0, note = "", waits = false} = {}) {
   const need = b.need + extra;
   if ( strength >= b.feat + extra ) return {id, label, roll: null, auto: true, seconds: TURN, noise: {success: "loud"}, waits,
@@ -857,6 +934,9 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "call": out.calls = true; return done("makes a call.");
       case "callHelp": out.raises = "help"; return done("calls for help.");
       case "ringAlarm": out.raises = "alarm"; return done("raises the alarm.");
+      case "mount": out.boards = "driver"; return done(o.mount && MOUNTS[o.kind].skill === "drive" ? "gets in and starts it." : "gets on.");
+      case "board": out.boards = "rider"; return done("climbs aboard.");
+      case "dismount": out.leaves = true; return done("gets off.");
       case "desecrate": flags.desecrated = true; return done("desecrates it.");
       case "powerOff": flags.live = false; return done("cuts the power.");
       case "powerOn": flags.live = true; return done("turns the power back on.");
@@ -890,6 +970,22 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
     if ( id === "watch" ) {
       return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: "silent", watch: roll,
         text: roll.botch ? "looks, and is sure of something." : roll.successes > 0 ? "keeps watch." : "keeps watch, but makes out little."});
+    }
+    if ( id === "mount" || id === "control" || id === "flatOut" ) {
+      const M = MOUNTS[o.kind] ?? MOUNTS.horse, ok = roll.successes > 0 && !roll.botch;
+      if ( roll.botch ) {
+        if ( id === "mount" ) return Object.assign(out, {result: "botch", noise: noise.botch, mishap: M.thrown ? "thrown" : "stall",
+          text: M.thrown ? "tries to get on, and is thrown." : "tries to get it going, and stalls it or scrapes something."});
+        if ( M.thrown ) { out.leaves = true; return Object.assign(out, {result: "botch", noise: noise.botch, mishap: "thrown", text: "loses control, and is thrown."}); }
+        return Object.assign(out, {result: "botch", noise: noise.botch, mishap: "crash", text: "loses control, and crashes."});
+      }
+      if ( id === "mount" ) {
+        if ( ok ) out.boards = "driver";
+        return Object.assign(out, {result: ok ? "done" : "fail", noise: ok ? noise.success : noise.fail, text: ok ? "gets it going." : "can't get it to go."});
+      }
+      if ( ok ) return Object.assign(out, {result: "done", noise: noise.success, text: id === "flatOut" ? "goes flat out, and keeps control." : "keeps control."});
+      return Object.assign(out, {result: "fail", noise: noise.fail, slips: true,
+        text: id === "flatOut" ? "goes flat out, and starts to lose control: roll Keep control." : "starts to lose control: roll again."});
     }
     if ( id === "searchHide" ) {
       return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: noise.success, searchHide: roll,
@@ -1079,6 +1175,12 @@ export function cleanSacred(s = {}) {
   const top = kind === "fetish" ? 10 : 5;
   return {sacred: !!s.sacred, sacredKind: kind, rating: Math.max(1, Math.min(top, Math.round(Number(s.rating) || (kind === "fetish" ? 5 : 1)))),
     desecrated: !!s.desecrated, sacredItems: parseItems(s.sacredItems).join("\n")};
+}
+
+/** Clean a tile's mount or vehicle settings from the config form. */
+export function cleanMount(s = {}) {
+  const seats = s.seats === "" || s.seats === null || s.seats === undefined ? "" : Math.max(1, Math.min(40, Math.round(Number(s.seats) || 1)));
+  return {mount: !!s.mount, mountKind: MOUNTS[s.mountKind] ? s.mountKind : "horse", seats};
 }
 
 /** Clean a tile's watch point settings from the config form. target: the id of the tile it looks at or calls. */
