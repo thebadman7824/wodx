@@ -856,3 +856,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - crossing.mjs: three statuses (In the Near Dreaming, Beyond the Penumbra, Jacked into the Net). twins.mjs: layersOf knows the dreaming level. twins-app: Add a Near Dreaming level, Make trod.
 - Chronicle 0.6.1: the two new player buttons (Otherworld rolls, Jack into the Net) join the player button list.
 - Tests: realms.test.mjs (10); phase8b's journey test knows a one-leg road. Gate: tools/gate/gaterealms.mjs, 12 steps, two scenes of its own.
+
+## 2026-11-09: gate fixes after Otherworlds 0.4.0 (Otherworlds 0.4.1, Actions 3.15.1)
+
+- gaterealms step 11 failed in 1200: jack() returned the warning instead of nothing, so the gate saw a jack-in. Every refusal in realms.mjs now warns and returns null.
+- gate6e failed on lupine, mage, fae and mortal menus: the presets that the menu search added in 3.14.0 had no hint when the preset has no note. They now read "Roll" plus the label's roll (Carousing: "Roll Cha + Empathy").
+- ui-fit.mjs: the stand-in scene collection has filter and some, so the twins window renders.

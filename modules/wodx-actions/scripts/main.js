@@ -1788,6 +1788,9 @@ const MENU = [
     ["masquerade", "fa-mask", "Masquerade (GM)"], ["endStory", "fa-book", "End of story (GM)"], ["sunAndHaven", "fa-sun", "Sun and haven"], ["skyAndSun", "fa-cloud-sun", "Sky and sun (GM)"]
 ];
 
+/** A preset with no note of its own is described by its roll, from the label's brackets. */
+const presetHint = label => { const f = /\(([^)]+)\)/.exec(label ?? "")?.[1]; return f ? `Roll ${f}` : `Roll ${label ?? ""}`.trim(); };
+
 let PMX = null;
 function pm() {
     return PMX ??= PM.build({
@@ -1796,7 +1799,7 @@ function pm() {
         // The menu's search also finds every common check and dramatic system, so nothing is a page away
         searchExtras: () => [
             ...CK.CHECKS.map(c => ({ spec: `check:${c.key}`, label: c.label, desc: `${c.note} (${c.ref})`, icon: "fa-search" })),
-            ...Object.entries(PRESETS).filter(([k]) => k && !k.startsWith("check-")).map(([k, p]) => ({ spec: `preset:${k}`, label: p.label, desc: p.note ?? "", icon: "fa-dice-d10" }))
+            ...Object.entries(PRESETS).filter(([k]) => k && !k.startsWith("check-")).map(([k, p]) => ({ spec: `preset:${k}`, label: p.label, desc: p.note || presetHint(p.label), icon: "fa-dice-d10" }))
         ]
     });
 }
