@@ -7,6 +7,6 @@
 - [x] Menu: Countermagic, Using the Art, Certámen, each with its hint; key daCountermagic (daCounter is the fae's)
 - [x] Gender-neutral text and no em-dashes (B97 guard); search boxes on the rote list, the guide and the mage list (B24)
 - [x] Harness: phase6n.test.mjs (9); all 706 tests pass
-- [ ] UI fit on the PC (the cloud container lacks Font Awesome, so every window fails its header-icon check there)
-- [ ] Deploy WoDX Actions 3.15.0 to rothenstein-wodx (backup first, MD5 check, restart)
-- [ ] Gate 6n in Foundry (tools/gate/gate6n.mjs, 8 steps); gate 6f and 6g again, alongside
+- [x] UI fit on the PC: 654 windows ok, 2026-11-09 (the cloud container lacks Font Awesome, so every window fails its header-icon check there)
+- [x] Deploy WoDX Actions 3.15.0 to rothenstein-wodx: backup Backups/wodx-actions-3.14.1-2026-11-09, 58 files, 0 MD5 mismatches, server restarted
+- [x] Gate 6n in Foundry: 8/8, 2026-11-09 (afd5404). Gates 6f 12/13 and 6g 17/18 alongside: every functional step passed; the one miss in each was its version check, still pinned to 3.7 and 3.8, now loosened to any 3.x

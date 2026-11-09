@@ -66,7 +66,7 @@ export async function run() {
         await step("versions and the era", async () => {
             mg = await makeMagus();
             const era = game.modules.get("wodx-chronicle").api.eras.activeEra()?.profile?.id;
-            ok("versions and the era", /^3\.7\./.test(A().version) && !!A().daCast && era === "dark-ages", { actions: A().version, era, magus: mg.name });
+            ok("versions and the era", /^3\./.test(A().version) && !!A().daCast && era === "dark-ages", { actions: A().version, era, magus: mg.name });
         });
         await step("the sheet is read: fellowship, Foundation, Pillars, Fount, Sanctum, Quintessence", async () => {
             const i = A().daMageInfo(mg);
