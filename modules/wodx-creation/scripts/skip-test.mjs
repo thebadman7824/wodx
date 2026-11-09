@@ -13,13 +13,14 @@ import {bondStage} from "./rules.mjs";
 const FOLDER = "WoDX Skip Test";
 export const STEPS = [1347, 1450, 1837, 1914, 1997, 2025];
 
-function census() {
+function census(only = null) {
   const items = new Map();
-  for ( const a of game.actors ) for ( const i of a.items ?? [] ) items.set(`${a.id}.${i.id}`, i.name);
-  return {actors: new Set([...game.actors].map(a => a.id)), items, journals: new Set([...game.journal].map(j => j.id))};
+  const actors = only ? [...game.actors].filter(a => only.has(a.id)) : [...game.actors];
+  for ( const a of actors ) for ( const i of a.items ?? [] ) items.set(`${a.id}.${i.id}`, i.name);
+  return {actors: new Set(actors.map(a => a.id)), items, journals: new Set([...game.journal].map(j => j.id))};
 }
 
-async function makeCast(folder) {
+export async function makeCast(folder) {
   const mk = (name, type, extra = {}) => Actor.create(foundry.utils.mergeObject({name: `Skip Test · ${name}`, type, folder: folder.id,
     flags: {[MODULE_ID]: {skipTest: true}}}, extra, {inplace: false}));
   const vamp = CONFIG.worldofdarkness.sheettype.vampire;
@@ -51,28 +52,19 @@ export function isTestWorld(world = game.world) {
   return world?.id === "wodx-template" || !!world?.flags?.wodx?.testWorld;
 }
 
-export async function runSkipTest() {
-  if ( !game.user.isGM ) return null;
-  if ( !isTestWorld() ) {
-    ui.notifications.error(`The time-skip test only runs in wodx-template: it moves the clock to 2025 and passes 800 years over every character. This world is ${game.world?.title ?? game.world?.id}.`);
-    return null;
-  }
-  const {DialogV2} = foundry.applications.api;
-  const ok = await DialogV2.confirm({
-    classes: ["wodx", "wodx-dialog"],
-    window: {title: "Time-skip test"},
-    content: `<p>This makes five test characters, sets the clock to 1 January 1200, then passes the years to 2025 in ${STEPS.length} steps,
-      accepting every plan as proposed. It moves <strong>${esc(game.world.title ?? game.world.id)}</strong>'s clock and era for good.</p>
-      <p>Run it in <strong>wodx-template</strong>, not in a chronicle you are playing.</p>`,
-    rejectClose: false
-  });
-  if ( !ok ) return null;
-
+/**
+ * The skip and its checks. With onlyCast, the plans hold the five test characters alone, so the rest of the world
+ * is not aged; the caller (tools/gate/gateskip.mjs) holds the world first and puts the clock, era and cast back.
+ */
+export async function skipCore({onlyCast = false} = {}) {
   const engine = getEngine();
   await game.time.set(engine.dateToTime({year: 1200, month: 1, day: 1, hour: 21, minute: 0}));
+  // The cast is made on Dark Ages sheets whatever era the world stood in
+  if ( game.settings.get("wodx-chronicle", "activeEra") !== "dark-ages" ) await game.settings.set("wodx-chronicle", "activeEra", "dark-ages");
   const folder = game.folders.find(f => f.type === "Actor" && f.name === FOLDER) ?? await Folder.create({name: FOLDER, type: "Actor"});
   const cast = await makeCast(folder);
-  const before = census();
+  const ids = onlyCast ? new Set(Object.values(cast).map(a => a.id)) : null;
+  const before = census(ids);
   const results = [];
   const check = (name, pass, detail = "") => results.push({name, pass: !!pass, detail});
   const stepLog = [];
@@ -81,7 +73,7 @@ export async function runSkipTest() {
     const from = game.time.worldTime;
     const d = engine.timeToDate(from);
     const to = engine.dateToTime({year, month: d.month, day: d.day, hour: d.hour, minute: d.minute});
-    const plan = planSkip({from, to});
+    const plan = planSkip(onlyCast ? {from, to, actors: [...ids].map(id => game.actors.get(id)).filter(Boolean)} : {from, to});
     const proposed = plan.rows.reduce((n, r) => n + r.changes.filter(c => c.checked).length, 0);
     await applyPlan(plan, {label: `Skip test to ${year}`});
     stepLog.push({year, era: plan.toEra?.name, rows: plan.rows.length, proposed});
@@ -89,7 +81,7 @@ export async function runSkipTest() {
     check(`Era for ${year}`, game.modules.get("wodx-chronicle").api.eras.activeEra().profile?.id === plan.toEra?.id, plan.toEra?.name ?? "");
   }
 
-  const after = census();
+  const after = census(ids);
   const lostActors = [...before.actors].filter(id => !after.actors.has(id));
   const lostItems = [...before.items.keys()].filter(k => !after.items.has(k));
   const lostJournals = [...before.journals].filter(id => !after.journals.has(id));
@@ -122,6 +114,27 @@ export async function runSkipTest() {
   check("The medieval Theology is kept (or its 3 dots moved to Religion)", !!theo && (Number(theo.system.value) === 3 || (Number(theo.system.value) === 0 && religion >= 3)),
     `Theology ${theo?.system?.value}, Religion ${religion}`);
 
+  return {results, stepLog, cast, folder};
+}
+
+export async function runSkipTest() {
+  if ( !game.user.isGM ) return null;
+  if ( !isTestWorld() ) {
+    ui.notifications.error(`The time-skip test only runs in wodx-template: it moves the clock to 2025 and passes 800 years over every character. This world is ${game.world?.title ?? game.world?.id}.`);
+    return null;
+  }
+  const {DialogV2} = foundry.applications.api;
+  const ok = await DialogV2.confirm({
+    classes: ["wodx", "wodx-dialog"],
+    window: {title: "Time-skip test"},
+    content: `<p>This makes five test characters, sets the clock to 1 January 1200, then passes the years to 2025 in ${STEPS.length} steps,
+      accepting every plan as proposed. It moves <strong>${esc(game.world.title ?? game.world.id)}</strong>'s clock and era for good.</p>
+      <p>Run it in <strong>wodx-template</strong>, not in a chronicle you are playing.</p>`,
+    rejectClose: false
+  });
+  if ( !ok ) return null;
+
+  const {results, stepLog} = await skipCore();
   const passed = results.filter(r => r.pass).length;
   const html = `<p>${passed} of ${results.length} checks passed.</p>
     <table><thead><tr><th>Step</th><th>Era</th><th>Characters with changes</th><th>Changes proposed</th></tr></thead>

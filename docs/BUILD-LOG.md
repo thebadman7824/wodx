@@ -799,3 +799,4 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Choices on what carries over and the ghoul blood figure: B131 to B133 and PENDING-REVIEW.md.
 - Tests: creation-totals.test.mjs (10), 664 in all. UI fit takes the check window and both dialogs. Gate: tools/gate/gatestates.mjs, 7 steps.
 - 0.8.1: the PC gate (6/7) found the check opening an Awakened mage on DA:M in the Dark Ages testbed. lineFor now starts such sheets on M20, and risen wraiths on Wraith 20.
+- 0.8.2: skipCore({onlyCast}) splits the time-skip test from its button so a gate can age only the test cast; the cast is always made in the Dark Ages. Gate tools/gate/gateskip.mjs for rothenstein-wodx (holds the world, restores everything, fingerprints every existing character). Tests 665.

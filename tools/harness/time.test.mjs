@@ -204,6 +204,17 @@ test("GATE: 1197 to 2025 with nothing lost (the in-world time-skip test)", async
   assert.match(game.journal.find(j => j.getFlag(M, "kind") === "skip-test").pages.getName("Result").text.content, new RegExp(`${r.total} of ${r.total} checks passed`));
 });
 
+test("the cast-only skip leaves every other character as it was", async () => {
+  const {skipCore} = await import(join(root, "modules/wodx-creation/scripts/skip-test.mjs"));
+  const bystander = await Actor.create({name: "Bystander", type: "Mortal", system: {}});
+  await api().lineage.setChronology(bystander, {bornYear: 1180});
+  const before = JSON.stringify({s: bystander.system, f: bystander.flags});
+  const r = await skipCore({onlyCast: true});
+  const failed = r.results.filter(x => !x.pass);
+  assert.deepEqual(failed, [], JSON.stringify(failed));
+  assert.equal(JSON.stringify({s: game.actors.get(bystander.id).system, f: game.actors.get(bystander.id).flags}), before, "not aged, not killed");
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });
