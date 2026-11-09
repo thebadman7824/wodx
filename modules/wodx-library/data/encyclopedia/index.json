@@ -169,6 +169,12 @@
    "title": "Dread Names, Red List",
    "short": "Red List",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "cotr",
+   "title": "Children of the Revolution",
+   "short": "CotR",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -199,6 +205,7 @@
   "rotb.json",
   "blackhand.json",
   "anarchs.json",
-  "redlist.json"
+  "redlist.json",
+  "cotr.json"
  ]
 }
