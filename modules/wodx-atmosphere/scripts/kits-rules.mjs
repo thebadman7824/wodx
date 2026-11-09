@@ -7,7 +7,8 @@
  *   Music       moods (calm, tension, combat, sorrow, wonder), one Foundry playlist each, built from the files in
  *               the kit's folder or chosen from the world's own playlists (Rothenstein's score, for the Dark Ages)
  *   Ambience    one loop per kind of place (the twelve kinds WoDX NPC tags) and per weather, picked for the scene
- *   Sounds      short cues for dawn, dusk and a notice; procedural ones ship with the module, a kit folder can replace them
+ *   Sounds      short cues for dawn, dusk and a notice, and birdsong and cock-crow before sunrise; procedural ones ship
+ *               with the module, a kit folder can replace them
  *   Map colour  a light colour grade on the map for each era (sepia gaslight, drained plague years, neon future)
  *   Handouts    journal page templates in the era's style: manuscript, notice, broadside, newspaper, telegram and more
  *
@@ -26,7 +27,33 @@ export const MOODS = {
 /** The twelve kinds of place WoDX NPC tags, and the weather loops, in the order a scene looks for them. */
 export const PLACE_KINDS = ["home", "workplace", "church", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "other"];
 export const WEATHER_LOOPS = ["thunder", "gale", "downpour", "rain", "snow", "wind", "night"];
-export const CUES = {dawn: "Dawn is close", dusk: "Sunset", notice: "Something needs the Storyteller"};
+export const CUES = {dawn: "Dawn is close", dusk: "Sunset", notice: "Something needs the Storyteller", birds: "Birdsong before dawn", cock: "Cock-crow before dawn"};
+/** Cues that sound the same in every era: they ship once, in sounds/common, and a kit folder can still replace them. */
+export const COMMON_CUES = ["birds", "cock"];
+
+/**
+ * Dawn dread, the mirror of the Sunset cue: the last half hour before sunrise.
+ *   strength  0 at thirty minutes out, 1 at sunrise: how pale the screen's edge is
+ *   birds     from twenty minutes out; cock from ten
+ *   rotschreck  +1 difficulty on Rötschreck in the last ten minutes (house rule: the books give the sun its own difficulties but none for the hour before it)
+ * Null outside that half hour, or when there is no dawn to come (a polar night).
+ */
+export const DREAD = {from: 1800, birds: 1200, cock: 600};
+export function dawnDread(secondsToDawn) {
+  const s = Number(secondsToDawn);
+  if ( !Number.isFinite(s) || s <= 0 || s > DREAD.from ) return null;
+  const strength = Math.round((1 - s / DREAD.from) * 100) / 100;
+  return {strength, minutes: Math.ceil(s / 60), birds: s <= DREAD.birds, cock: s <= DREAD.cock, rotschreck: s <= DREAD.cock ? 1 : 0};
+}
+/** The cues a clock move of delta seconds crosses, ending toDawn seconds before sunrise. */
+export function dreadCuesCrossed(toDawnAfter, delta) {
+  const before = Number(toDawnAfter) + Number(delta);
+  const out = [];
+  if ( !(delta > 0) || !Number.isFinite(before) ) return out;
+  if ( before > DREAD.birds && toDawnAfter <= DREAD.birds && toDawnAfter > 0 ) out.push("birds");
+  if ( before > DREAD.cock && toDawnAfter <= DREAD.cock && toDawnAfter > 0 ) out.push("cock");
+  return out;
+}
 export const AUDIO_EXT = /\.(ogg|oga|mp3|wav|flac|webm|m4a|opus)$/i;
 
 /**

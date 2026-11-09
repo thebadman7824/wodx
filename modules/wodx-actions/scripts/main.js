@@ -884,11 +884,14 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const v = virtues(actor), rd = road(actor);
+    // WoDX Atmosphere's dawn dread: the last ten minutes before sunrise make it 1 harder (house rule)
+    let dawn = 0;
+    try { const at = game.modules.get("wodx-atmosphere"); dawn = at?.active ? Number(at.api?.dread?.rotschreck?.()) || 0 : 0; } catch (e) { dawn = 0; }
     const content = `<form>
-      <p>${esc(actor.name)}: Courage ${v.courage.value}, ${rd.name} ${rd.value}</p>
+      <p>${esc(actor.name)}: Courage ${v.courage.value}, ${rd.name} ${rd.value}</p>${dawn ? `<p class="vta-note">Dawn is minutes away: +${dawn} difficulty (house rule).</p>` : ""}
       <div class="form-group"><label>Provocation</label><select name="prov" data-fixed>${opts(Object.entries(R.ROTSCHRECK_PROVOCATIONS).map(([k, p]) => [k, `${p.label} (${p.diff})`]), provocation)}</select></div>
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="6"/></div>
-      <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="0"/></div>
+      <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="${dawn}"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
     </form>`;
     return dialog("Rötschreck check", content, "Roll", async fd => {

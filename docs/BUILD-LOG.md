@@ -862,3 +862,12 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - gaterealms step 11 failed in 1200: jack() returned the warning instead of nothing, so the gate saw a jack-in. Every refusal in realms.mjs now warns and returns null.
 - gate6e failed on lupine, mage, fae and mortal menus: the presets that the menu search added in 3.14.0 had no hint when the preset has no note. They now read "Roll" plus the label's roll (Carousing: "Roll Cha + Empathy").
 - ui-fit.mjs: the stand-in scene collection has filter and some, so the twins window renders.
+
+## 2026-11-09: dawn dread (Atmosphere 0.3.0, Actions 3.16.0, B266)
+
+- kits-rules.mjs: dawnDread(secondsToDawn) and dreadCuesCrossed(toDawn, delta); two new cues, birds and cock, shared by every era (COMMON_CUES).
+- main.mjs: client setting Dawn dread (the pale edge and the two cues), world setting Rötschreck pressure before dawn (house rule); applyDread on every clock move and at ready; the Storyteller's card at ten minutes, once a night; api.dread {now, rotschreck, apply, tick}.
+- styles: body.wodx-dawn-dread::after, an inset pale glow by --wodx-dread.
+- sounds/common/birds.ogg and cock.ogg from tools/atmosphere/make-cues.py (pass a kit name or common to make only those).
+- Actions 3.16.0: the Rötschreck window's modifier starts at dawn's step while WoDX Atmosphere is on.
+- Tests: dawn-dread.test.mjs (4). Gate: tools/gate/gatedawn.mjs, 7 steps; the clock never moves.
