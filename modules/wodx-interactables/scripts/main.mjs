@@ -59,7 +59,7 @@ import * as FillRules from "./fill-rules.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.17.1";
+const VERSION = "0.17.2";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -866,7 +866,9 @@ export async function setConcealed(tokDoc, on) {
   if ( has && typeof actor?.toggleStatusEffect === "function" ) {
     const now = !!actor.statuses?.has?.("invisible");
     // A token placed a moment ago may not be drawn yet; core reads its mesh when the status is applied
-    const undrawn = () => [tokDoc.object, ...(actor.getActiveTokens?.() ?? [])].some(t => t && !t.mesh);
+    // On the scene in view, a token placed a moment ago may have no placeable yet: wait for it too
+    const onView = !!tokDoc.parent && tokDoc.parent === globalThis.canvas?.scene;
+    const undrawn = () => (onView && !tokDoc.object) || [tokDoc.object, ...(actor.getActiveTokens?.() ?? [])].some(t => t && !t.mesh);
     for ( let i = 0; i < 20 && undrawn(); i++ ) await new Promise(r => setTimeout(r, 25));
     if ( now !== on ) await actor.toggleStatusEffect("invisible", {active: on});
     return "status";

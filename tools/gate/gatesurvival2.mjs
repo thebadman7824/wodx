@@ -8,11 +8,12 @@
  *   3. a Nosferatu's Appearance stays at 0; the change is still recorded; only changes that show come back by part
  *   4. a fill draw from Gear by era for the Dark Ages: links that open, nothing too big for a safe
  *   5. kept links land on a container tile
- *   6. clean up
+ *   6. hardship: three days without water posts a card with rolls and bashing; Undo heals it and puts the needs back
+ *   7. clean up
  * Result: Data/wodx-gate/gatesurvival2-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const STEPS = 6;
+const STEPS = 7;
 
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -69,13 +70,28 @@ export async function run() {
     await tile.update({"flags.wodx-interactables.items": lines});
     const saved = String(scene.tiles.get(tile.id).flags["wodx-interactables"].items).split("\n");
     ok("5. links on a container", saved[0] === "Item.old" && saved.length === 1 + got.length, {saved});
+
+    // 6. Hardship: a mortal three days without water (Stamina 1: past the limit, so it hurts without a roll)
+    const t = game.time.worldTime;
+    await a.update({"system.attributes.stamina.value": 1, "ownership.default": 3, "flags.wodx-storyteller.needs": {water: t - 3 * 86400 - 60, food: t, sleep: t, exposed: t, tired: 0, checked: {water: 0, food: 0, sleep: 0}}});
+    const dmgBefore = JSON.stringify(game.actors.get(a.id).system.health?.damage ?? {});
+    const hs = await ST.hardship.tick({force: true, actorIds: [a.id]});
+    await sleep(400);
+    const mine2 = hs.find(x => x.actor === a.id);
+    const hcard = game.messages.contents.find(m => m.timestamp >= msgStart && m.flags?.["wodx-storyteller"]?.hardship?.actor === a.id);
+    const hurt = JSON.stringify(game.actors.get(a.id).system.health?.damage ?? {}) !== dmgBefore;
+    if ( hcard ) await ST.hardship.undo(hcard);
+    await sleep(400);
+    const healed = JSON.stringify(game.actors.get(a.id).system.health?.damage ?? {}) === dmgBefore;
+    const need = game.actors.get(a.id).flags["wodx-storyteller"].needs;
+    ok("6. hardship", ST.hardship.living(game.actors.get(a.id)) && mine2?.bashing >= 2 && !!hcard && hurt && healed && need.checked.water === 0, {bashing: mine2?.bashing, lines: mine2?.lines, hurt, healed});
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   try {
-    const mine = game.messages.contents.filter(m => m.timestamp >= msgStart && m.flags?.["wodx-storyteller"]?.body).map(m => m.id);
+    const mine = game.messages.contents.filter(m => m.timestamp >= msgStart && (m.flags?.["wodx-storyteller"]?.body || m.flags?.["wodx-storyteller"]?.hardship)).map(m => m.id);
     if ( mine.length ) await ChatMessage.deleteDocuments(mine);
     if ( scene ) await scene.delete();
     for ( const x of [a, nos] ) if ( x ) await x.delete();
-    ok("6. clean up", !game.actors.getName("WoDX gate: the reshaped") && !game.scenes.getName("WoDX gate: the strongroom"), {});
-  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("6. clean up", false); }
+    ok("7. clean up", !game.actors.getName("WoDX gate: the reshaped") && !game.scenes.getName("WoDX gate: the strongroom"), {});
+  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("7. clean up", false); }
   return save(R);
 }

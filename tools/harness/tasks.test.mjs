@@ -95,5 +95,5 @@ test("tasks: wiring, the cap on rolls, Undo, and the window's search box", () =>
   const m = src("modules/wodx-storyteller/scripts/main.mjs");
   assert.match(m, /Tasks\.registerTaskHooks\(\)/);
   assert.match(m, /tasks: \{open: Tasks\.tasksDialog/);
-  assert.equal(JSON.parse(src("modules/wodx-storyteller/module.json")).version, "0.16.0");
+  assert.equal(JSON.parse(src("modules/wodx-storyteller/module.json")).version, "0.17.0");
 });

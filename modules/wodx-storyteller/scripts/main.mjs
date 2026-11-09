@@ -29,6 +29,8 @@ import * as Havens from "./havens.mjs";
 import * as HavenRules from "./haven-rules.mjs";
 import * as Body from "./body.mjs";
 import * as BodyRules from "./body-rules.mjs";
+import * as Hard from "./hardship.mjs";
+import * as HardRules from "./hardship-rules.mjs";
 import * as MoneyRules from "./money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Prelude from "./prelude.mjs";
@@ -61,6 +63,8 @@ Hooks.once("init", () => {
   Tasks.registerTaskSettings();
   Tasks.registerTaskHooks();
   Body.registerBodyHooks();
+  Hard.registerHardshipSettings();
+  Hard.registerHardshipHooks();
   Rumours.registerRumourHooks();
   Dash.registerDashboardHooks();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
@@ -96,6 +100,7 @@ Hooks.once("ready", () => {
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
       grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules,
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules}},
+    hardship: {open: Hard.hardshipDialog, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
     tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules},
