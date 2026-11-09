@@ -7,7 +7,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
  * own summaries with page references, and the Library window that shows what fits the chronicle's era.
  */
 
-export const SHELF_VERSION = 2;
+export const SHELF_VERSION = 3;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const eraNow = () => game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
 const eraName = id => game.modules.get("wodx-chronicle")?.api?.eras?.getProfile?.(id)?.name ?? id;
@@ -44,7 +44,7 @@ export function installShelves() {
 }
 async function doInstall() {
   const entries = S.buildShelves(await sources());
-  const out = {created: 0, remade: 0, kept: 0, packs: []};
+  const out = {created: 0, remade: 0, kept: 0, removed: 0, packs: []};
   for ( const key of S.SHELF_ORDER ) {
     const {name, label} = S.SHELVES[key];
     let pack = findPack(name);
@@ -58,20 +58,13 @@ async function doInstall() {
       doc.flags[MOD].hash = hash(doc);
       return doc;
     });
-    const docs = await pack.getDocuments();
-    const have = new Map(docs.filter(d => d.flags?.[MOD]?.shelf).map(d => [d.flags[MOD].shelf, d]));
-    const create = [], remove = [];
-    for ( const d of mine ) {
-      const old = have.get(d.flags[MOD].shelf);
-      if ( !old ) create.push(d);
-      else if ( old.flags[MOD].hash !== d.flags[MOD].hash ) { remove.push(old.id); create.push(d); out.remade++; }
-      else out.kept++;
-    }
+    const {create, remove, remade, kept, stale} = S.syncPlan(mine, await pack.getDocuments(), MOD);
+    out.remade += remade; out.kept += kept; out.removed += stale;
     const still = new Set((await pack.getIndex()).map(e => e._id));
     const gone = remove.filter(id => still.has(id));
     if ( gone.length ) await JournalEntry.deleteDocuments(gone, {pack: pack.collection});
     if ( create.length ) await JournalEntry.createDocuments(create, {pack: pack.collection, keepId: create.some(d => d._id)});
-    out.created += create.length - remove.length;
+    out.created += create.length - remade;
   }
   await game.settings.set(MOD, "shelves", SHELF_VERSION);
   LibraryApp.refresh();
