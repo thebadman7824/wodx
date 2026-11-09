@@ -361,6 +361,12 @@
    "title": "Clanbook: Tzimisce (Revised)",
    "short": "Clanbook: Tzimisce",
    "edition": "Revised"
+  },
+  {
+   "id": "cbventrue",
+   "title": "Clanbook: Ventrue (Revised)",
+   "short": "Clanbook: Ventrue",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -423,6 +429,7 @@
   "cbnosferatu.json",
   "cbtoreador.json",
   "cbtremere.json",
-  "cbtzimisce.json"
+  "cbtzimisce.json",
+  "cbventrue.json"
  ]
 }
