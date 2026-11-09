@@ -17,6 +17,7 @@ import * as playerTools from "./player-tools.mjs";
 import * as gen from "./gen.mjs";
 import * as events from "./events.mjs";
 import * as migrations from "./migrations.mjs";
+import * as languages from "./languages.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -57,6 +58,9 @@ Hooks.once("init", () => {
   events.registerEventSettings(async () => { await events.checkEvents(); await eras.refreshRulesJournal(); });
   // Data versions for every WoDX module
   migrations.registerMigrationSettings();
+  // Languages in chat
+  languages.registerLanguageSettings();
+  languages.registerLanguageHooks();
 
   // Calendar: Julian, then Gregorian at the chosen reform
   let reform = "bohemia-1584";
@@ -133,6 +137,7 @@ Hooks.once("ready", async () => {
     theme,
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
+    languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
       registerTables: gen.registerTables, installTables: gen.installTables, cultures: gen.CULTURES}

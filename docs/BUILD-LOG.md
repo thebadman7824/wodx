@@ -662,3 +662,7 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Gap review item 5. scripts/archive.mjs: candidates(), archive(), restore(), whereIs(), the index journal, and the Archive of the dead window (Configure Settings; two lists, each with a search box).
 - Tests: archive.test.mjs (5). Who may go and who stays (a player character, a linked token), the compendium first with the same id, an actor the compendium refused stays, bring back. A large world of 3000 characters and 400 journals in the stand-in: the Pass the Years plan 52 ms for 2002 rows, the archive list 6 ms, the events check under 1 ms, archiving 1003 in 313 ms. 523 harness tests pass with main merged.
 - Gate: tools/gate/gatearchive.mjs times the same things in Foundry with 500 test characters of its own, archives only those and deletes them after.
+
+### Languages in chat, 2026-11-09: WoDX Chronicle 0.5.1 (B124)
+- Gap review item 9. scripts/languages-rules.mjs (pure: Linguistics allowance, made-up words, /in parsing) and scripts/languages.mjs (hooks on chatMessage, preCreateChatMessage, renderChatMessageHTML and renderChatLog; the Languages window, with a search box).
+- Tests: languages.test.mjs (5). 528 harness tests pass.
