@@ -9,7 +9,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.4.0";
+export const VERSION = "0.5.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -96,14 +96,16 @@ export function stateOf(actor, look = lookOf(actor)) {
   const level = follow ? D.healthLevel(actor?.system?.health) : 0;
   const frenzy = !!actor?.system?.conditions?.isfrenzy;
   const mood = D.moodFor(look, {level, frenzy, follow});
-  return {look, level, mood, style: D.styleFor(look, whoOf(actor)), ...ringFor(actor)};
+  // Lasting changes kept by WoDX Storyteller (read straight from the flags: the module may be off)
+  const changes = D.changesToDraw(actor?.flags?.["wodx-storyteller"]?.body);
+  return {look, level, mood, changes, style: D.styleFor(look, whoOf(actor)), ...ringFor(actor)};
 }
 /** The picture as SVG, for a look in a state. */
-export async function draw(look, {level = 0, mood = "own", frame = D.DEFAULT_FRAME, ring = true, style = null} = {}) {
+export async function draw(look, {level = 0, mood = "own", frame = D.DEFAULT_FRAME, ring = true, style = null, changes = []} = {}) {
   const A = await anchorsFor(look);
   const {eyes, features} = await featuresFor(look, mood);
   const head = D.headLayers({look, eyes, mood, head: D.innerSvg(await avatar(D.loreleiOptions(look, mood))), mask: D.innerSvg(await avatar(D.loreleiOptions(look, mood, {mask: true})))});
-  const out = D.compose({look, head, anchors: A, frame, ring, level, style});
+  const out = D.compose({look, head, anchors: A, frame, ring, level, style, changes});
   out.stages = D.stagesOf({look, anchors: A, features, eyes, crop: out.crop});
   const failed = out.stages.filter(s => !s.ok);
   if ( failed.length ) console.warn(`${MOD} | a stage did not check out`, failed);
@@ -340,7 +342,7 @@ Hooks.on("getActorContextOptions", (app, options) => {
 Hooks.on("updateActor", (actor, changes) => {
   if ( !enabled() ) return;
   const fl = changes.flags?.[MOD];
-  if ( fl?.look !== undefined || changes.system?.health || changes.system?.conditions ) schedule(actor);
+  if ( fl?.look !== undefined || changes.system?.health || changes.system?.conditions || changes.flags?.["wodx-storyteller"]?.body !== undefined ) schedule(actor);
 });
 
 Hooks.once("init", () => {

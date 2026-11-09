@@ -1053,6 +1053,9 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Interactables 0.17.2: setConcealed also waits for a token placed a moment ago on the scene in view to get its placeable (the filters console error in gate-interact).
 - Tests: hardship.test.mjs. UI fit: Hardship on the road. Gate: gatesurvival2 step 6.
 
+## 2026-11-09: lasting changes on the paperdoll (Paperdoll 0.5.0, B386)
+- doll-rules.mjs: changesToDraw (the record's changes that show, one per drawn part) and changeLayers (marks inside the face outline: a stitched seam on the cheek, brow ridges, tinted or glowing eyes, marks at the mouth, veins from the jaw, a tint over the face), laid under the health marks. bakeKey adds the changes only when there are some. main.mjs reads flags.wodx-storyteller.body straight from the flags and re-bakes when it changes.
+- Tests: paperdoll.test.mjs (4 new). Gate: gatepaperdoll on the PC when it is back, with a look at a token that has changes.
 ## 2026-11-09: the Encyclopaedia's full form (Library 0.4.0, B285)
 - ency-rules.mjs: tiers rumour (Might be true) and open (Unknown); claim.versions (books that differ, each sourced); entry editions [{edition, text, refs}] and wodx {text, rule}. checkEntry checks every part; entryText (overlap) covers them. toJournal renders them; unchanged output for entries without them.
 - shelves.mjs: Shelf select in the Library window (data-fixed). CSS for tiers, versions, editions. Manual news line.
