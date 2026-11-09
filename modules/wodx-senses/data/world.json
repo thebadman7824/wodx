@@ -1,0 +1,1053 @@
+{
+ "version": 1,
+ "conditions": {
+  "part": {
+   "night": {
+    "sight": [
+     {
+      "t": "Above the roofs, stars, and the dark shape of the hills.",
+      "io": "out"
+     },
+     {
+      "t": "Beyond the window, nothing but the dark.",
+      "io": "in"
+     }
+    ],
+    "sound": [
+     {
+      "t": "Somewhere a watchman calls the hour.",
+      "e": [
+       "medieval"
+      ],
+      "io": "out"
+     },
+     {
+      "t": "A dog barks a long way off.",
+      "io": "out"
+     },
+     {
+      "t": "The quiet of the small hours."
+     },
+     {
+      "t": "A train, or a truck, far off and going away.",
+      "e": [
+       "modern",
+       "industrial",
+       "future"
+      ],
+      "io": "out"
+     }
+    ],
+    "smell": [
+     {
+      "t": "Night air, cold and damp.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "The cold of the night has got in."
+     },
+     {
+      "t": "Dew on everything.",
+      "io": "out"
+     }
+    ]
+   },
+   "dawn": {
+    "sight": [
+     {
+      "t": "Grey light, coming slowly."
+     },
+     {
+      "t": "The sky pales in the east.",
+      "io": "out"
+     }
+    ],
+    "sound": [
+     {
+      "t": "The first birds.",
+      "io": "out"
+     },
+     {
+      "t": "A bell for the first office.",
+      "e": [
+       "medieval",
+       "early"
+      ],
+      "io": "out"
+     }
+    ],
+    "smell": [
+     {
+      "t": "Wet grass and cold chimneys.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "The coldest hour, just before the sun."
+     }
+    ]
+   },
+   "day": {
+    "sight": [
+     {
+      "t": "Daylight, flat and plain.",
+      "io": "out"
+     },
+     {
+      "t": "Daylight through the shutters, in thin bars.",
+      "io": "in"
+     }
+    ],
+    "sound": [
+     {
+      "t": "The ordinary noise of people at work.",
+      "io": "out"
+     },
+     {
+      "t": "Church bells for the hour.",
+      "e": [
+       "medieval",
+       "early"
+      ],
+      "io": "out"
+     }
+    ],
+    "smell": [
+     {
+      "t": "Cooking fires and baking bread.",
+      "e": [
+       "medieval",
+       "early"
+      ],
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "The sun has some warmth in it.",
+      "io": "out"
+     }
+    ]
+   },
+   "dusk": {
+    "sight": [
+     {
+      "t": "The last red light on the roofs.",
+      "io": "out"
+     },
+     {
+      "t": "Lamps coming on, one by one.",
+      "io": "out"
+     }
+    ],
+    "sound": [
+     {
+      "t": "Doors shutting, bolts going home.",
+      "io": "out"
+     },
+     {
+      "t": "Bells for vespers.",
+      "e": [
+       "medieval",
+       "early"
+      ],
+      "io": "out"
+     }
+    ],
+    "smell": [
+     {
+      "t": "Supper smoke from every chimney.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "The air cools quickly as the light goes."
+     }
+    ]
+   }
+  },
+  "sky": {
+   "clear": {
+    "sight": [
+     {
+      "t": "The sky is clear and hard.",
+      "p": [
+       "day"
+      ],
+      "io": "out"
+     },
+     {
+      "t": "A clear night; every star is out.",
+      "p": [
+       "night"
+      ],
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "A clear sky, and a frost coming.",
+      "p": [
+       "night"
+      ],
+      "io": "out"
+     }
+    ]
+   },
+   "cloudy": {
+    "sight": [
+     {
+      "t": "Cloud, low and moving.",
+      "io": "out"
+     }
+    ],
+    "touch": [
+     {
+      "t": "A fitful wind under the cloud.",
+      "io": "out"
+     }
+    ]
+   },
+   "overcast": {
+    "sight": [
+     {
+      "t": "Rain, steady and grey, blurring everything past a few yards.",
+      "io": "out"
+     },
+     {
+      "t": "Rain runs down the window.",
+      "io": "in"
+     }
+    ],
+    "sound": [
+     {
+      "t": "Rain on the roof, steady."
+     },
+     {
+      "t": "Rain on the shutters.",
+      "io": "in"
+     },
+     {
+      "t": "Water rushing in the gutters.",
+      "io": "out"
+     }
+    ],
+    "smell": [
+     {
+      "t": "Wet earth and rain."
+     }
+    ],
+    "touch": [
+     {
+      "t": "Rain, cold, getting in at the collar.",
+      "io": "out"
+     },
+     {
+      "t": "The damp of the rain has come indoors.",
+      "io": "in"
+     }
+    ]
+   },
+   "storm": {
+    "sight": [
+     {
+      "t": "Fog, or rain so heavy it might as well be.",
+      "io": "out"
+     },
+     {
+      "t": "Lightning, and for an instant everything shows.",
+      "io": "out"
+     }
+    ],
+    "sound": [
+     {
+      "t": "Wind howling, things banging loose."
+     },
+     {
+      "t": "Thunder, close."
+     }
+    ],
+    "smell": [
+     {
+      "t": "Ozone and wet stone."
+     }
+    ],
+    "touch": [
+     {
+      "t": "The wind shoves and pulls; rain stings the face.",
+      "io": "out"
+     },
+     {
+      "t": "The walls shake in the gusts.",
+      "io": "in"
+     }
+    ]
+   }
+  },
+  "moon": {
+   "full": {
+    "sight": [
+     {
+      "t": "A full moon throws hard shadows."
+     }
+    ]
+   },
+   "gibbous": {
+    "sight": [
+     {
+      "t": "A swollen moon, bright enough to see by."
+     }
+    ]
+   },
+   "half": {
+    "sight": [
+     {
+      "t": "A half moon, and grey light enough to make out shapes."
+     }
+    ]
+   },
+   "crescent": {
+    "sight": [
+     {
+      "t": "A thin moon that gives almost no light."
+     }
+    ]
+   },
+   "new": {
+    "sight": [
+     {
+      "t": "No moon tonight; the dark is complete."
+     }
+    ]
+   }
+  },
+  "feast": {
+   "sight": [
+    {
+     "t": "Garlands on the doors for {{feast}}.",
+     "p": [
+      "day"
+     ]
+    }
+   ],
+   "sound": [
+    {
+     "t": "Bells, for {{feast}}.",
+     "p": [
+      "day",
+      "dusk"
+     ]
+    }
+   ],
+   "smell": [
+    {
+     "t": "Cooking for the feast of {{feast}}."
+    }
+   ]
+  },
+  "curfew": {
+   "sight": [
+    {
+     "t": "The streets are empty: curfew.",
+     "io": "out"
+    }
+   ],
+   "sound": [
+    {
+     "t": "Nobody about; only the watch, far off.",
+     "io": "out"
+    }
+   ]
+  }
+ },
+ "sources": {
+  "light.torch": {
+   "sight": [
+    {
+     "t": "A torch burns, smoky and orange."
+    }
+   ],
+   "smell": [
+    {
+     "t": "Pitch smoke from the torch."
+    }
+   ],
+   "sound": [
+    {
+     "t": "The torch spits and crackles.",
+     "n": 1
+    }
+   ]
+  },
+  "light.candle": {
+   "sight": [
+    {
+     "t": "Candles, their flames bending in the draught."
+    }
+   ],
+   "smell": [
+    {
+     "t": "Hot wax.",
+     "n": 1
+    }
+   ]
+  },
+  "light.lantern": {
+   "sight": [
+    {
+     "t": "A lantern throws a ring of light."
+    }
+   ],
+   "smell": [
+    {
+     "t": "Lamp oil.",
+     "n": 1
+    }
+   ]
+  },
+  "light.lamp": {
+   "sight": [
+    {
+     "t": "A lamp burns, turned low."
+    }
+   ],
+   "smell": [
+    {
+     "t": "Lamp oil, or gas.",
+     "n": 1
+    }
+   ]
+  },
+  "light.switch": {
+   "sight": [
+    {
+     "t": "Electric light, hard and even."
+    }
+   ],
+   "sound": [
+    {
+     "t": "The faint buzz of the bulb.",
+     "n": 2
+    }
+   ]
+  },
+  "fire": {
+   "sight": [
+    {
+     "t": "Fire, burning hot and bright."
+    }
+   ],
+   "sound": [
+    {
+     "t": "The roar and crack of the fire."
+    }
+   ],
+   "smell": [
+    {
+     "t": "Thick smoke."
+    }
+   ],
+   "touch": [
+    {
+     "t": "The heat of the fire beats against the skin."
+    }
+   ]
+  },
+  "brazier": {
+   "sight": [
+    {
+     "t": "A brazier full of coals."
+    }
+   ],
+   "smell": [
+    {
+     "t": "Charcoal smoke."
+    }
+   ],
+   "touch": [
+    {
+     "t": "Warmth from the brazier.",
+     "n": 1
+    }
+   ]
+  },
+  "sharp": {
+   "sight": [
+    {
+     "t": "Something glitters on the floor: broken glass, or worse.",
+     "n": 1
+    }
+   ]
+  },
+  "shock": {
+   "sound": [
+    {
+     "t": "A thin electric hum, and a smell of hot wire.",
+     "n": 1
+    }
+   ],
+   "smell": [
+    {
+     "t": "Scorched insulation.",
+     "n": 2
+    }
+   ]
+  },
+  "door.open": {
+   "sound": [
+    {
+     "t": "Sound comes through the open doorway."
+    }
+   ],
+   "touch": [
+    {
+     "t": "A draught from the open door."
+    }
+   ]
+  },
+  "door.broken": {
+   "sight": [
+    {
+     "t": "A door hangs off its hinges, the frame splintered."
+    }
+   ]
+  },
+  "hidden": {
+   "sound": [
+    {
+     "t": "Someone breathing, slow and careful, very close.",
+     "n": 2
+    }
+   ],
+   "smell": [
+    {
+     "t": "A trace of sweat and fear where nobody should be.",
+     "n": 3
+    }
+   ]
+  },
+  "trap": {
+   "sight": [
+    {
+     "t": "Something about the ground here looks wrong."
+    }
+   ]
+  },
+  "clue": {
+   "sight": [
+    {
+     "t": "{{name}} catches the eye; it would bear a closer look.",
+     "n": 1
+    }
+   ]
+  },
+  "people": {
+   "sight": [
+    {
+     "t": "In sight: {{people}}."
+    }
+   ]
+  },
+  "noise.quiet": {
+   "sound": [
+    {
+     "t": "A small sound not long ago, {{dir}}: a scrape, a click.",
+     "n": 1
+    }
+   ]
+  },
+  "noise.loud": {
+   "sound": [
+    {
+     "t": "A crash a moment ago, {{dir}}."
+    }
+   ]
+  },
+  "activity.sleep": {
+   "sound": [
+    {
+     "t": "Someone snoring {{dir}}.",
+     "n": 1
+    }
+   ]
+  },
+  "activity.rest": {
+   "sound": [
+    {
+     "t": "Low voices {{dir}}.",
+     "n": 1
+    }
+   ]
+  },
+  "activity.work": {
+   "sound": [
+    {
+     "t": "Someone at work {{dir}}: tools, footsteps."
+    }
+   ]
+  },
+  "activity.pray": {
+   "sound": [
+    {
+     "t": "Murmured prayer {{dir}}.",
+     "n": 1
+    }
+   ]
+  },
+  "activity.drink": {
+   "sound": [
+    {
+     "t": "Talk and the knock of cups {{dir}}."
+    }
+   ],
+   "smell": [
+    {
+     "t": "Ale and wine.",
+     "n": 1
+    }
+   ]
+  },
+  "activity.patrol": {
+   "sound": [
+    {
+     "t": "Measured footsteps {{dir}}: someone on watch.",
+     "n": 1
+    }
+   ]
+  },
+  "activity.hunt": {
+   "sound": [
+    {
+     "t": "Someone moving very quietly {{dir}}.",
+     "n": 3
+    }
+   ]
+  },
+  "activity.hide": {
+   "sound": [
+    {
+     "t": "A held breath, let out, {{dir}}.",
+     "n": 3
+    }
+   ]
+  },
+  "activity.errand": {
+   "sound": [
+    {
+     "t": "Footsteps {{dir}}, going somewhere."
+    }
+   ]
+  },
+  "activity.attend": {
+   "sound": [
+    {
+     "t": "Someone waiting {{dir}}, shifting from foot to foot.",
+     "n": 1
+    }
+   ]
+  },
+  "activity.wander": {
+   "sound": [
+    {
+     "t": "Footsteps {{dir}}."
+    }
+   ]
+  }
+ },
+ "otherworlds": {
+  "penumbra": {
+   "any": {
+    "sight": [
+     {
+      "t": "The world seen through deep water: the same shapes, softer, and lit from nowhere."
+     },
+     {
+      "t": "Things here look as they are felt, not as they are built."
+     },
+     {
+      "t": "Small spirits drift at the edges of sight and are gone when looked at.",
+      "n": 1
+     }
+    ],
+    "sound": [
+     {
+      "t": "The physical world is muffled, a sound in another room."
+     },
+     {
+      "t": "Something chitters, close, and stops.",
+      "n": 1
+     }
+    ],
+    "smell": [
+     {
+      "t": "The air tastes of the place's mood."
+     }
+    ],
+    "touch": [
+     {
+      "t": "The Gauntlet's pressure at the back of the head."
+     }
+    ]
+   },
+   "resonance": {
+    "wyld": {
+     "sight": [
+      {
+       "t": "Everything grows and shifts: plants that weren't there a moment ago, colours that won't settle."
+      }
+     ]
+    },
+    "weaver": {
+     "sight": [
+      {
+       "t": "Straight lines everywhere, and fine webs strung over every edge and corner."
+      }
+     ],
+     "sound": [
+      {
+       "t": "A faint clicking, like a great many small legs.",
+       "n": 1
+      }
+     ]
+    },
+    "wyrm": {
+     "sight": [
+      {
+       "t": "Black slime in the corners, and shadows that lean toward the living."
+      }
+     ],
+     "smell": [
+      {
+       "t": "Rot and oil and something burnt."
+      }
+     ]
+    },
+    "quiet": {
+     "sight": [
+      {
+       "t": "A still place; even the spirits here are sleeping."
+      }
+     ]
+    }
+   },
+   "kinds": {
+    "church": {
+     "sight": [
+      {
+       "t": "The church glows faintly from within, or stands hollow and cold, as its faith is."
+      }
+     ]
+    },
+    "haven": {
+     "sight": [
+      {
+       "t": "The walls are thick with fear, layered like soot."
+      }
+     ]
+    },
+    "caern": {
+     "sight": [
+      {
+       "t": "The caern blazes; the spirits here are many and awake."
+      }
+     ],
+     "sound": [
+      {
+       "t": "Voices in no language, all around."
+      }
+     ]
+    },
+    "tavern": {
+     "sight": [
+      {
+       "t": "Old quarrels hang in the air like smoke."
+      }
+     ]
+    },
+    "market": {
+     "sight": [
+      {
+       "t": "Want and greed, worn into the stones by a thousand bargains."
+      }
+     ]
+    },
+    "wilds": {
+     "sight": [
+      {
+       "t": "The trees stand tall and aware; some of them watch."
+      }
+     ]
+    },
+    "street": {
+     "sight": [
+      {
+       "t": "The street's reflection is narrow and furtive, all doorways."
+      }
+     ]
+    },
+    "home": {
+     "sight": [
+      {
+       "t": "Small comforts and old griefs, faint as breath on glass."
+      }
+     ]
+    }
+   }
+  },
+  "shadowlands": {
+   "any": {
+    "sight": [
+     {
+      "t": "Everything is grey, cracked and worn, as it will look when it has fallen down."
+     },
+     {
+      "t": "The living go by as warm, bright shapes."
+     },
+     {
+      "t": "Chains of rust on a door; letters on a wall that faded long ago.",
+      "n": 1
+     }
+    ],
+    "sound": [
+     {
+      "t": "The Skinlands come through thin and far away."
+     },
+     {
+      "t": "Someone weeping, somewhere close and not of this side.",
+      "n": 1
+     }
+    ],
+    "smell": [
+     {
+      "t": "Dust and ash and the end of things."
+     }
+    ],
+    "touch": [
+     {
+      "t": "The Shroud is a pressure, close against the face."
+     },
+     {
+      "t": "A pull, faint, toward something that matters.",
+      "n": 1
+     }
+    ]
+   },
+   "kinds": {
+    "church": {
+     "sight": [
+      {
+       "t": "Graves under the floor show as dark wells; some are not empty."
+      }
+     ]
+    },
+    "haven": {
+     "sight": [
+      {
+       "t": "The place is deep in decay, as if it died long before its owner."
+      }
+     ]
+    },
+    "home": {
+     "sight": [
+      {
+       "t": "Old deaths here have left their marks like water stains."
+      }
+     ]
+    },
+    "tavern": {
+     "sight": [
+      {
+       "t": "The tavern is half fallen in, its tables rotted, its fire cold ash."
+      }
+     ]
+    },
+    "wilds": {
+     "sight": [
+      {
+       "t": "The trees are grey bones; the fields lie under ash."
+      }
+     ]
+    },
+    "castle": {
+     "sight": [
+      {
+       "t": "Blood on the stones that no one living can see, from wars long over."
+      }
+     ]
+    }
+   }
+  }
+ },
+ "channels": {
+  "uncanny": {
+   "sense": "touch",
+   "any": [
+    {
+     "t": "The hairs rise on the neck: something not natural is close, {{dir}}."
+    }
+   ]
+  },
+  "taint": {
+   "sense": "smell",
+   "kindred": [
+    {
+     "t": "Wyrm-taint, the stale cold of the walking dead, {{dir}}.",
+     "n": 1
+    }
+   ],
+   "wyrm": [
+    {
+     "t": "Wyrm-taint, thick and sickening, {{dir}}.",
+     "n": 1
+    }
+   ],
+   "place": [
+    {
+     "t": "The place itself is fouled; the Wyrm has been at work here.",
+     "n": 1
+    }
+   ]
+  },
+  "trueform": {
+   "sense": "smell",
+   "lupine": [
+    {
+     "t": "Wolf-blood, {{dir}}: one of the Garou, or their kin.",
+     "n": 1
+    }
+   ],
+   "mortal": [
+    {
+     "t": "Only human, {{dir}}.",
+     "n": 1
+    }
+   ],
+   "kindred": [
+    {
+     "t": "A dead thing wearing a living scent, {{dir}}.",
+     "n": 2
+    }
+   ],
+   "fae": [
+    {
+     "t": "Flowers, cold iron and something older, {{dir}}.",
+     "n": 2
+    }
+   ],
+   "mage": [
+    {
+     "t": "A human scent with lightning in it, {{dir}}.",
+     "n": 2
+    }
+   ],
+   "any": [
+    {
+     "t": "Something not human and not animal, {{dir}}.",
+     "n": 2
+    }
+   ]
+  },
+  "unnatural": {
+   "sense": "sight",
+   "any": [
+    {
+     "t": "Not everyone here is what they look like: {{count}} {{dir}}.",
+     "n": 1
+    }
+   ]
+  },
+  "sphere-life": {
+   "sense": "touch",
+   "living": [
+    {
+     "t": "Life, all around: {{count}} warm, beating hearts within reach of the senses.",
+     "n": 1
+    }
+   ],
+   "kindred": [
+    {
+     "t": "And one heart, {{dir}}, that does not beat at all.",
+     "n": 1
+    }
+   ]
+  },
+  "sphere-spirit": {
+   "sense": "sight",
+   "spirit": [
+    {
+     "t": "Spirits gather {{dir}}; the Gauntlet is thin there.",
+     "n": 1
+    }
+   ],
+   "place": [
+    {
+     "t": "The Gauntlet here feels {thin as gauze|thick as a wall}.",
+     "n": 1
+    }
+   ]
+  },
+  "sphere-entropy": {
+   "sense": "sight",
+   "any": [
+    {
+     "t": "Decay in everything: the wood half rotten, the iron eaten through in places.",
+     "n": 1
+    }
+   ],
+   "kindred": [
+    {
+     "t": "Something {{dir}} carries death in it, held back but certain.",
+     "n": 1
+    }
+   ]
+  },
+  "sphere-prime": {
+   "sense": "touch",
+   "mage": [
+    {
+     "t": "Quintessence stirs {{dir}}: someone here works magic.",
+     "n": 1
+    }
+   ],
+   "place": [
+    {
+     "t": "The place is rich with raw Quintessence.",
+     "n": 1
+    }
+   ]
+  },
+  "chimerical": {
+   "sense": "sight",
+   "fae": [
+    {
+     "t": "Glamour {{dir}}: a kithain, and their true seeming plain to see.",
+     "n": 1
+    }
+   ],
+   "place": [
+    {
+     "t": "Chimerical things here: {a door that isn't there by day|flowers growing out of the stone|a small creature watching}.",
+     "n": 1
+    }
+   ]
+  },
+  "lifesight": {
+   "sense": "sight",
+   "living": [
+    {
+     "t": "The living burn bright: {{count}} of them {{dir}}."
+    }
+   ],
+   "hurt": [
+    {
+     "t": "One of them is hurt; the decay shows like a bruise on the light.",
+     "n": 1
+    }
+   ]
+  }
+ }
+}
