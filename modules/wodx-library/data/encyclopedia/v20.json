@@ -1359,7 +1359,7 @@
     ]
    },
    {
-    "text": "Rolls to resist or guide frenzy are two harder for a Brujah.",
+    "text": "A Brujah has +2 difficulty to resist or steer a frenzy.",
     "tier": "stated",
     "refs": [
      {
@@ -2384,7 +2384,7 @@
   "summary": "A vampire's drive and self-control, spent for automatic successes and to resist impulses.",
   "claims": [
    {
-    "text": "Willpower measures a character's inner drive and ability to beat unfavourable odds.",
+    "text": "Willpower is a character's inner drive, the strength to overcome bad odds.",
     "tier": "stated",
     "refs": [
      {

@@ -13,10 +13,17 @@
       "title": "Vampire: The Masquerade 20th Anniversary Edition",
       "short": "V20",
       "edition": "20th Anniversary"
+    },
+    {
+      "id": "v20da",
+      "title": "Vampire: The Dark Ages 20th Anniversary Edition",
+      "short": "V20 Dark Ages",
+      "edition": "20th Anniversary"
     }
   ],
   "files": [
     "c20.json",
-    "v20.json"
+    "v20.json",
+    "v20da.json"
   ]
 }
