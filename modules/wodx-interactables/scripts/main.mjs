@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.7.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
+ * WoDX Interactables 0.8.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
  *
  *   Interact   A player selects a token and presses Interact on the token HUD (or the I key). A window lists every door,
  *              window and breakable wall within reach of that token, nearest first, with the options for each: the
@@ -27,6 +27,8 @@
  *   Hazards    A tile marked as a hazard (fire, a brazier to knock over, broken glass, a live wire) hurts whoever walks
  *              into it, and in combat whoever starts a turn in it, through WoDX Combat, with Undo; a fire can be put
  *              out or set alight, glass swept aside, the power cut (0.7.0).
+ *   Sacred     A tile marked as an altar or shrine is holy ground: pray there with WoDX Actions, desecrate it; a demon
+ *              who walks onto it is seared. A relic or fetish on a tile can be taken (0.8.0).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -38,7 +40,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.7.0";
+const VERSION = "0.8.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -108,15 +110,16 @@ export function describeWall(doc) {
 /** A container on a tile, or null. */
 export function describeTile(doc) {
   const f = doc?.flags?.[MOD] ?? {};
-  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard) ) return null;
+  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred) ) return null;
   if ( f.container ) return R.describeContainer(f);
   if ( f.trap ) return R.describeTrap(f);
   if ( f.clue ) return R.describeClue(f);
   if ( f.light ) { const lights = lightsOf(doc); return R.describeLight(f, {on: lights.some(l => !l.hidden), count: lights.length}); }
   if ( f.hide ) return R.describeHide(f);
-  return R.describeHazard(f);
+  if ( f.hazard ) return R.describeHazard(f);
+  return R.describeSacred(f);
 }
-const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard"].some(k => doc.flags?.[MOD]?.[k] === true));
+const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred"].some(k => doc.flags?.[MOD]?.[k] === true));
 /** Whatever interactable a wall or tile is. */
 export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
 /** A wall or a tile on a scene, by id. */
@@ -322,6 +325,13 @@ export async function attempt(tok, wallId, opId, {fd = null} = {}) {
   const op = searching ? R.searchOption(ch) : R.optionsFor(o, ch).find(x => x.id === opId);
   if ( !op || op.disabled ) return null;
   if ( op.power ) return game.wodxActions?.menu?.({actor});
+  // Praying and the like: WoDX Actions' own window, on the player's side
+  if ( op.opens ) {
+    const fn = game.wodxActions?.[op.opens];
+    if ( typeof fn !== "function" ) { ui.notifications.warn("WoDX Actions is off, so there is no window for that."); return null; }
+    if ( op.note ) ui.notifications.info(op.note);
+    return fn(actor);
+  }
   if ( !game.users.activeGM ) ui.notifications.warn("No Storyteller is connected: the card is posted, but nothing changes until one is.");
   const ask = {v: 1, scene: canvas.scene.id, wall: searching ? SEARCH : doc.id, token: tok.document.uuid, op: op.id, label: op.label, user: game.user.id};
   if ( !op.roll ) return postAsk(tok, ask, [], `${esc(tok.name)}: ${esc(op.label)}`, optionSummary(op));
@@ -849,6 +859,12 @@ export async function onTokenMoved(tokDoc) {
   if ( setting("hazards") !== false ) {
     for ( const {doc, o} of hazardsOnPath(scene, from, to, {npc: !actor.hasPlayerOwner}) ) cards.push(await hazardCard(tokDoc, actor, doc, o, "enters"));
   }
+  if ( isDemonActor(actor) ) {
+    for ( const doc of tilesOf(scene) ) {
+      const o = describeTile(doc), r = rectOf(doc);
+      if ( R.holyGround(o) && !inRect(from, r) && segHitsRect(from, to, r) ) cards.push(await holyCard(tokDoc, actor, doc, o, "enters"));
+    }
+  }
   if ( setting("traps") === false ) return cards.filter(Boolean);
   for ( const {doc, o} of trapsOnPath(scene, from, to, {npc: !actor.hasPlayerOwner}) ) {
     if ( springing.has(doc.id) ) continue;
@@ -963,7 +979,57 @@ export async function onTurnStart(combat) {
     if ( o.pcsOnly && !actor.hasPlayerOwner ) continue;
     cards.push(await hazardCard(tokDoc, actor, doc, o, "turn"));
   }
+  if ( isDemonActor(actor) ) {
+    const p = centerOf(tokDoc, scene);
+    for ( const doc of tilesOf(scene) ) {
+      const o = describeTile(doc);
+      if ( R.holyGround(o) && inRect(p, rectOf(doc)) ) cards.push(await holyCard(tokDoc, actor, doc, o, "turn"));
+    }
+  }
   return cards.filter(Boolean);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Holy ground                                                        */
+/* ------------------------------------------------------------------ */
+
+const isDemonActor = actor => (game.wodxActions?.getKind?.(actor) ?? "") === "demon";
+const tormentOf = actor => num(game.wodxActions?.demonInfo?.(actor)?.torment?.perm ?? actor?.system?.advantages?.torment?.permanent);
+const willpowerOf = actor => num(game.wodxActions?.demonInfo?.(actor)?.willpower?.perm ?? actor?.system?.advantages?.willpower?.permanent);
+/**
+ * Active GM: holy ground sears a demon. Lethal levels by the ground's rating, then a Willpower roll (difficulty 6) to
+ * stay; failing, it flees the holy place. Undo heals the levels. why: "enters" or "turn".
+ */
+export async function holyCard(tokDoc, actor, doc, o, why = "enters") {
+  const key = `holy:${doc.id}:${tokDoc.uuid}`;
+  if ( burning.has(key) ) return null;
+  burning.add(key);
+  try {
+    const scene = doc.parent;
+    const h = R.holyHarm(o, {kind: "demon", torment: tormentOf(actor)});
+    const lines = [why === "turn" ? `${actor.name} starts the turn on holy ground.` : `${actor.name} steps onto holy ground (rating ${o.rating}).`];
+    let hurt = 0, faces = [];
+    if ( !h?.harmed ) lines.push(`${h?.why ?? "Nothing happens"}.`);
+    else {
+      try { await game.wodxCombat?.applyDamage?.(actor, "lethal", h.lethal); hurt = h.lethal; lines.push(`${h.lethal} lethal: seared flesh and stigmata.`); }
+      catch (e) { lines.push(`${h.lethal} lethal: seared flesh and stigmata (apply it by hand).`); }
+      if ( h.stayRoll ) {
+        const wp = Math.max(1, willpowerOf(actor));
+        const roll = new Roll(`${wp}d10`);
+        await roll.evaluate();
+        faces = roll.dice[0]?.results?.map(x => x.result) ?? [];
+        const r = countSuccesses(faces, 6, {});
+        lines.push(`Willpower to stay, ${wp} dice at 6: ${r.botch ? "a botch" : `${r.successes} success${r.successes === 1 ? "" : "es"}`}. ${r.successes > 0 && !r.botch ? "It endures the turn." : "It flees the holy place."}`);
+      }
+    }
+    lines.push("Demon: The Fallen pp. 254-255.");
+    const done = {result: "done", text: h?.harmed ? "is seared by holy ground." : "stands on holy ground, unharmed.", noise: "silent",
+      snap: {ds: null, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), hidden: !!doc.hidden}, hurt, advanced: 0, worldTime: game.time.worldTime, waiting: false, lines, given: [], undone: false};
+    const ask = {v: 1, scene: scene.id, wall: doc.id, token: tokDoc.uuid, op: "holy", label: "Holy ground", user: game.user.id, state: "done"};
+    const dice = faces.length ? `<div class="vta-dice">${faces.map(f => `<span class="vta-die ${f === 1 ? "one" : f >= 6 ? "hit" : "miss"}">${f}</span>`).join("")}</div>` : "";
+    const stub = {content: cardHtml({title: `${esc(actor.name)}: ${esc(R.nameOf(o))}`, dice}), speaker: {alias: actor.name}};
+    return await ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tokDoc}), content: resultHtml(stub, done, "Holy ground"), flags: {[MOD]: {ask, done}}});
+  } finally { burning.delete(key); }
 }
 
 /** The approval queue: a wall knocked through. */
@@ -1031,6 +1097,7 @@ export function tileConfigHtml(doc) {
   const h = R.cleanHide(doc?.flags?.[MOD] ?? {});
   const hideNow = doc?.flags?.[MOD]?.occupants ?? [];
   const z = R.cleanHazard(doc?.flags?.[MOD] ?? {});
+  const a = R.cleanSacred(doc?.flags?.[MOD] ?? {});
   return `<fieldset class="wix-config wix-tile"><legend>WoDX</legend>
     <h4 class="wix-sub">Container</h4>
     <p class="hint">A chest, cabinet, strongbox or safe that characters can open, pick, force and take things from. Hide the tile to keep it from players until found.</p>
@@ -1088,6 +1155,13 @@ export function tileConfigHtml(doc) {
     ${field("Power on", `<input type="checkbox" name="${p}.live"${z.live ? " checked" : ""}>`)}
     ${field("Damage type", `<select name="${p}.hazType" data-fixed>${opt({"": "As the kind suggests", ...R.DAMAGE_TYPES}, z.hazType)}</select>`, "Fire: lethal to mortals and ghouls, aggravated to everyone else; glass and current lethal. A vampire always takes fire as aggravated.")}
     ${field("Only player characters", `<input type="checkbox" name="${p}.pcsOnly"${z.pcsOnly ? " checked" : ""}>`, "Off: NPCs are hurt too.")}
+    <h4 class="wix-sub">Altar, relic or fetish</h4>
+    <p class="hint">An altar or shrine is holy ground: characters pray there, it can be desecrated, and a demon who walks onto it is seared. A relic or a fetish rests on the tile until someone takes it.</p>
+    ${field("Altar, relic or fetish", `<input type="checkbox" name="${p}.sacred"${a.sacred ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
+    ${field("Kind", `<select name="${p}.sacredKind" data-fixed>${opt(R.SACRED, a.sacredKind)}</select>`)}
+    ${field("Rating", `<input type="number" name="${p}.rating" value="${a.rating}" min="1" max="10">`, "Holy ground's rating or a relic's Faith potential, 1 to 5; a fetish's Gnosis, 1 to 10.")}
+    ${field("Desecrated", `<input type="checkbox" name="${p}.desecrated"${a.desecrated ? " checked" : ""}>`, "Untick to consecrate it again.")}
+    ${field("The relic or fetish", `<textarea name="${p}.sacredItems" rows="2" placeholder="Its UUID, or its name in the Items directory">${esc(a.sacredItems)}</textarea>`, "Taking it gives the character a copy.")}
   </fieldset>`;
 }
 function onRenderTileConfig(app, html) {
@@ -1106,6 +1180,7 @@ function onPreUpdateTile(doc, changes) {
   if ( !f || typeof f !== "object" ) return;
   for ( const k of ["material", "lock", "keyName"] ) if ( f[k] === "" ) f[k] = null;
   if ( "items" in f ) f.items = R.parseItems(f.items).join("\n");
+  if ( "sacredItems" in f ) f.sacredItems = R.parseItems(f.sacredItems).join("\n");
   // A lock set on a closed container locks it
   if ( f.lock && !f.ds && !doc.flags?.[MOD]?.ds ) f.ds = "locked";
   if ( "dice" in f && (f.dice === "" || f.dice === null) ) f.dice = null;
@@ -1161,7 +1236,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);
@@ -1189,7 +1264,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !tok?.actor || !col || !tok.document.isOwner ) return;
   const b = document.createElement("div");
   b.className = "control-icon wix-hud";
-  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues, lights, hiding places and hazards within reach, and searching";
+  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues, lights, hiding places, hazards, altars, relics and fetishes within reach, and searching";
   b.innerHTML = '<i class="fa-solid fa-door-open"></i>';
   b.addEventListener("click", () => openInteract(tok).catch(e => console.error(`${MOD} |`, e)));
   col.appendChild(b);

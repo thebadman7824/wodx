@@ -693,4 +693,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - A live hazard hurts whoever walks into it, and in combat whoever starts a turn in a fire or on a live wire (the updateCombat hook). Damage goes through WoDX Combat's soak, with Undo. Fire follows WoDX Actions' fire table (V20 Dark Ages pp. 355-360). Glass gets a careful-step roll first.
 - Interact options: knock over, put out (no roll, Dexterity + Athletics at 7, or not by hand), set alight, sweep a path, cut the power, turn it back on. A fire tied to scene lights turns them on and off with it.
 - WoDX Combat 3.7.6: soakAndApply takes a soak difficulty (fd.soakDiff), shown on its card.
-- Tests: 10 new (4 rules, 6 runtime), 507 in all; UI fit adds a burning hayloft and its put-out roll. Gate step 19 (the burglar walks into a fire, it is put out; Undo). Not deployed yet.
+- Tests: 10 new (4 rules, 6 runtime), 507 in all; UI fit adds a burning hayloft and its put-out roll. Gate step 19 (the burglar walks into a fire, it is put out; Undo).
+- Deployed 2026-11-09 from main fe68eef (backups Backups\wodx-interactables-0.6.0-2026-11-09 and Backups\wodx-combat-3.7.5-2026-11-09, MD5s match). gate-interact 19/19; step 19: hook fired, "is burned (1 level, soaked at 7)".
+
+### Interactables 0.8.0, 2026-11-09: altars, relics and fetishes (B152)
+- Altars and chapels, wayside shrines and holy wells, holy relics, fetishes and talens on tiles. The tile config gains an Altar, relic or fetish section: kind, rating, desecrated, the item.
+- Holy ground: Pray here opens WoDX Actions' prayer window; Desecrate it (loud) and Undo. A demon stepping onto it, or starting a turn on it in combat, is seared by WoDX Actions' reading of Demon: The Fallen pp. 254-255, with a Willpower roll to stay and Undo.
+- A relic or fetish is taken like a container's contents (a copy of the item goes to the character, Undo takes it back); a fetish is then used from the WoDX actions menu.
+- Tests: 6 new (3 rules, 3 runtime), 565 in all; UI fit adds a high altar. Gate step 20 (an altar desecrated and put back; a relic taken and given back). Not deployed yet.
