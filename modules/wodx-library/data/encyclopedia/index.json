@@ -241,6 +241,12 @@
    "title": "Elysium: The Elder Wars (War of Ages)",
    "short": "War of Ages",
    "edition": "Revised"
+  },
+  {
+   "id": "bloodyhearts",
+   "title": "Bloody Hearts: Diablerie Britain",
+   "short": "Bloody Hearts",
+   "edition": "1st"
   }
  ],
  "files": [
@@ -283,6 +289,7 @@
   "cblasombra.json",
   "cbravnos.json",
   "archons.json",
-  "warages.json"
+  "warages.json",
+  "bloodyhearts.json"
  ]
 }
