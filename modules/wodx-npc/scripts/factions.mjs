@@ -719,6 +719,46 @@ export function build(ctx) {
   /*  Hooks                                                              */
   /* ------------------------------------------------------------------ */
 
+  /* ------------------------------------------------------------------ */
+  /*  What players do on the map (0.5.0)                                 */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Active Storyteller: a map event from WoDX Interactables. A break-in, theft, fire or desecration at a place a
+   * faction holds is noted as a wrong (it weighs on the faction's next turn); Undo on the Interactables card takes the
+   * note back. A sign of something no mortal did waits for the Storyteller as a rumour to start.
+   */
+  async function onMapEvent(ev) {
+    if ( !isActiveGM() || mode() === "off" || !ev ) return null;
+    if ( ev.undone ) {
+      if ( !ev.message || !state().wrongs.some(w => w.id === ev.message) ) return null;
+      await mutate(s => { s.wrongs = s.wrongs.filter(w => w.id !== ev.message); return {state: s}; });
+      return {removed: ev.message};
+    }
+    let wrong = null;
+    const s0 = state();
+    const holder = ev.place ? F.holderOf(s0, ev.place) ?? (ev.scene ? F.holderOf(s0, game.scenes.get(ev.scene)?.uuid) : null) : null;
+    if ( holder && F.WRONG_KINDS[ev.kind] ) {
+      wrong = F.normWrong({id: ev.message, at: ev.at, faction: holder.id, kind: ev.kind, place: ev.place, by: ev.whoName, what: ev.objectName});
+      await mutate(s => { s.wrongs = [...s.wrongs.filter(w => w.id !== wrong.id), wrong]; return {state: s}; });
+    }
+    let card = null;
+    if ( ev.supernatural && ev.kind === "desecrate" ) {
+      card = await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, flags: {[MOD]: {mapBreach: {place: ev.place, event: `${ev.whoName ?? "Someone"} desecrated ${ev.objectName ?? "a holy place"}`, done: false}}},
+        content: `<div class="wodx-card wnpc wnpc-faction"><h3>A sign that may be talked of</h3><p>${esc(ev.whoName ?? "Someone")} desecrated ${esc(ev.objectName ?? "a holy place")}${holder ? `, held by ${esc(holder.name)}` : ""}.</p>
+          <p class="wodx-quiet">If mortals saw it or will find it, start a rumour (a Masquerade breach). Nothing happens unless you press the button.</p>
+          <div class="wnpc-done"><button type="button" class="wnpc-f-mapbreach">Start a rumour</button></div></div>`});
+    }
+    return {wrong, card};
+  }
+  async function startMapBreach(msg) {
+    const d = msg?.flags?.[MOD]?.mapBreach;
+    if ( !d || d.done || !game.user.isGM ) return null;
+    const id = await reportBreach({severity: 1, place: d.place, event: d.event});
+    await msg.update({[`flags.${MOD}.mapBreach.done`]: true, content: String(msg.content).replace(/<button[^>]*wnpc-f-mapbreach[^>]*>[^<]*<\/button>/, "<b>Rumour started.</b>")});
+    return id;
+  }
+
   let lastDay = null;
   function hooks() {
     Hooks.on("wodxChronicleReady", () => registerHandler());
@@ -732,10 +772,15 @@ export function build(ctx) {
       onClock("clock").catch(e => console.error(`${MOD} |`, e));
     });
     Hooks.on("wodxBreach", p => { onActionsBreach(p).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("wodxMapEvent", ev => { onMapEvent(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const fl = msg.flags?.[MOD];
-      if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart ) return;
+      if ( !fl?.factionTurn && !fl?.factionRumours && !fl?.breachStart && !fl?.mapBreach ) return;
+      el.querySelectorAll("button.wnpc-f-mapbreach").forEach(b => {
+        if ( !game.user.isGM ) { b.remove(); return; }
+        b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; startMapBreach(msg).catch(e => console.error(`${MOD} |`, e)); });
+      });
       el.querySelectorAll("button.wnpc-f-undo").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoCard(msg, b.dataset.key || "factionTurn").catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
@@ -743,7 +788,7 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
+  return {onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
     setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => FactionsAppClass().open(), rules: F, ROTHENSTEIN};
 }
