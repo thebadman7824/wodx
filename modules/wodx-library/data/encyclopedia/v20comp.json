@@ -502,32 +502,6 @@
   ]
  },
  {
-  "id": "v20c-utgard",
-  "title": "Utgard",
-  "kind": "place",
-  "lines": [
-   "vampire"
-  ],
-  "eras": [
-   "modern"
-  ],
-  "summary": "A grim domain in Norway.",
-  "claims": [
-   {
-    "text": "On Vesteroy the Kindred rule in the open; the handful of mortals there live solely as servants and food, a domain perhaps near the First City's terror.",
-    "tier": "stated",
-    "refs": [
-     {
-      "book": "v20comp",
-      "page": 71,
-      "pdf": 65
-     }
-    ]
-   }
-  ],
-  "see": []
- },
- {
   "id": "v20c-abbey-sacred-crown",
   "title": "The Abbey of the Sacred Crown",
   "kind": "place",
