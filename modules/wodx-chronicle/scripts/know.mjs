@@ -1,7 +1,7 @@
 import {MODULE_ID, esc} from "./util.mjs";
 import * as KR from "./know-rules.mjs";
 import {LANGUAGES} from "./languages-rules.mjs";
-import {languagesOf, meritLanguagesOf, charactersOf} from "./languages.mjs";
+import {languagesOf, charactersOf} from "./languages.mjs";
 
 /**
  * Knowledge-gated handouts in Foundry: the @Know enricher. Each client draws the passage for its own user, so the
@@ -14,7 +14,8 @@ export function traitsOf(actor) {
   const put = (name, v) => { const k = KR.traitKey(name), n = Number(v); if ( k && Number.isFinite(n) && n > (dots[k] ?? 0) ) dots[k] = n; };
   for ( const [key, a] of Object.entries(actor?.system?.abilities ?? {}) ) put(a?.label ? game.i18n?.localize?.(a.label) ?? key : key, a?.value), put(key, a?.value);
   for ( const i of actor?.items ?? [] ) put(i.name, i.system?.value);
-  return {languages: [...languagesOf(actor), ...meritLanguagesOf(actor)], dots};
+  // Language Merits give a number of languages, not their names: the names are the ones set in the Languages window
+  return {languages: languagesOf(actor), dots};
 }
 
 const knownLanguages = () => Object.values(LANGUAGES ?? {}).flat().map(l => typeof l === "string" ? l : l?.name).filter(Boolean);

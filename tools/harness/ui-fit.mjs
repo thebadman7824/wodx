@@ -586,6 +586,18 @@ game.world.id = worldId;
     windows.push({name: "The Ledger", tag: lo.tag ?? "div", classes: ["application", ...(lo.classes ?? [])].join(" "), width: lo.position.width, height: lo.position.height,
       content: la.element.querySelector("section.window-content").innerHTML});
   }
+  // Dreams and visions: twelve waiting and twelve already dreamt, long titles
+  {
+    await game.settings.set("wodx-storyteller", "dreams", Array.from({length: 24}, (_, i) => ({id: `dr${i}`, actorId: people[i % people.length].id,
+      title: `The drowned bell under the river, a long title number ${i} to see the wrap`, text: "Water. A bell. Someone calling a name that is not yet yours.",
+      at: i % 4 ? game.time.worldTime + 86400 * i : null, released: i >= 12, releasedAt: i >= 12 ? game.time.worldTime - 3600 * i : null, journalId: null})));
+    const DApp = (await import(join(root, "modules/wodx-storyteller/scripts/dreams.mjs"))).DreamsApp;
+    const da = new DApp({});
+    await da.render({force: true});
+    const dop = DApp.DEFAULT_OPTIONS;
+    windows.push({name: "Dreams and visions", tag: dop.tag ?? "div", classes: ["application", ...(dop.classes ?? [])].join(" "), width: dop.position.width, height: dop.position.height,
+      content: da.element.querySelector("section.window-content").innerHTML});
+  }
   for ( const [label, fn] of [["Out on your own", () => st.openOnYourOwn(people[1].id)], ["Convene", () => st.conveneDialog({actorIds: [people[0].id]})],
     ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
     ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()]] ) {
