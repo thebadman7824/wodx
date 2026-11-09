@@ -61,9 +61,10 @@ export async function run() {
     let screen = false, words = "";
     try {
       // The screen follows a controlled token before the assigned character, so let go of any first
-      canvas.tokens?.releaseAll?.();
+      for ( const t of [...(canvas.tokens?.controlled ?? [])] ) t.release();
       await game.user.update({character: actor.id});
       await sleep(200);
+      for ( const t of [...(canvas.tokens?.controlled ?? [])] ) t.release();
       R.notes.push(`character now ${game.user.character?.id}, controlled ${canvas.tokens?.controlled?.length ?? 0}`);
       S.perception.refreshScreen();
       screen = document.getElementById("wodx-senses-screen")?.className ?? "";
