@@ -16,10 +16,11 @@
  */
 import * as W from "./weather-rules.mjs";
 import * as K from "./kits-rules.mjs";
+import * as AR from "./adaptive-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.7.0";
+const VERSION = "0.8.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -67,6 +68,12 @@ function registerSettings() {
   world("frames", {name: "Token frames", hint: "A ring or a square in the era's material round each token (iron, gilt, brass, chrome, neon).",
     type: String, default: "characters", choices: K.FRAME_WHO, onChange: () => redrawFrames()});
   game.settings.register(MOD, "framesHere", {scope: "client", config: true, name: "Show token frames", hint: "Turn the era's token frames off on this computer only.", type: Boolean, default: true, onChange: () => redrawFrames()});
+  world("adaptive", {name: "Music follows the tension", hint: "The era music moves with the table: the combat playlist in a fight, the frenzy playlist (or combat) when a player's character frenzies, tension while one hides or stalks, and back to your chosen mood when it is quiet.",
+    type: Boolean, default: true, onChange: () => adaptSoon({force: true})});
+  world("tension", {name: "Tension", hint: "Read the table, or hold one tension by hand until you set it back.", type: String, default: "auto",
+    choices: {auto: "Read the table", ...AR.TENSION_LABELS}, onChange: () => adaptSoon({force: true})});
+  game.settings.register(MOD, "heartbeat", {scope: "client", config: true, name: "Heartbeat when the blood runs low",
+    hint: "For your own character with a blood pool: a heartbeat that quickens and loudens as the blood runs out.", type: Boolean, default: true, onChange: () => updateHeart()});
   hidden("overrides", Object, {});
   hidden("applied", Object, {});
   hidden("playlists", Object, {});
@@ -293,6 +300,78 @@ export async function applyAmbience(scene = game.scenes.active) {
     else if ( !on && s.playing ) await p.stopSound(s);
   }
   return want;
+}
+
+/* ---- Adaptive sound: the music follows the tension; the heartbeat ---- */
+
+const isPCActor = a => !!a?.hasPlayerOwner && !/group/i.test(String(a?.type ?? ""));
+/** Every condition on the players' characters, as status ids. */
+function tableStatuses() {
+  const out = [];
+  for ( const a of all(game.actors) ) if ( isPCActor(a) ) out.push(...(a.statuses ?? []));
+  return out;
+}
+export function tensionNow() {
+  return AR.tensionOf({set: setting("tension") ?? "auto", combat: all(game.combats).some(c => c.started), statuses: tableStatuses()});
+}
+let lastTension = null;
+/** Play the mood for the tension when the tension has changed (or when forced). Returns the tension, or null when off. */
+export async function adapt({force = false} = {}) {
+  if ( !isActiveGM() || !setting("music") || !setting("adaptive") ) return null;
+  const t = tensionNow();
+  if ( t === lastTension && !force ) return t;
+  const first = lastTension === null && !force;
+  lastTension = t;
+  if ( first && t === "quiet" ) return t;
+  const kit = currentKit();
+  const mood = AR.moodFor(t, setting("mood") || "calm", m => !!playlistFor(kit, m));
+  if ( mood ) await playMood(mood, {remember: false});
+  AtmosphereApp.refresh();
+  return t;
+}
+let adaptTimer = null;
+function adaptSoon(opts = {}) { clearTimeout(adaptTimer); adaptTimer = setTimeout(() => adapt(opts).catch(e => console.warn(`${MOD} | adaptive`, e)), 300); }
+
+const heart = {timer: null, ctx: null, cur: null};
+function thump(ctx, volume, at) {
+  const osc = ctx.createOscillator(), gain = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(62, at);
+  osc.frequency.exponentialRampToValueAtTime(34, at + 0.16);
+  gain.gain.setValueAtTime(0.0001, at);
+  gain.gain.exponentialRampToValueAtTime(Math.max(0.001, volume), at + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.2);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(at);
+  osc.stop(at + 0.22);
+}
+function beat(volume) {
+  try {
+    const AC = globalThis.AudioContext ?? globalThis.webkitAudioContext;
+    if ( !AC ) return;
+    heart.ctx ??= new AC();
+    if ( heart.ctx.state === "suspended" ) heart.ctx.resume?.();
+    const t = heart.ctx.currentTime + 0.02;
+    thump(heart.ctx, volume, t);
+    thump(heart.ctx, volume * 0.7, t + 0.15);
+  } catch (e) { /* no sound on this computer */ }
+}
+/** The heartbeat for this player's own character, now. Returns {bpm, volume} or null. */
+export function heartbeatNow() {
+  const a = game.user?.character;
+  if ( !a || setting("heartbeat") === false ) return null;
+  const bp = a.system?.advantages?.bloodpool;
+  const hb = AR.heartbeat({blood: bp?.temporary, max: bp?.max, hasBlood: /vampire/i.test(String(a.type)) || !!a.system?.settings?.hasbloodpool});
+  return hb ? {...hb, volume: Math.min(1, Math.round(hb.volume * 2 * (Number(setting("cueVolume")) || 0.5) * 100) / 100)} : null;
+}
+export function updateHeart() {
+  const hb = heartbeatNow();
+  if ( JSON.stringify(hb) === JSON.stringify(heart.cur) ) return hb;
+  clearInterval(heart.timer);
+  heart.timer = null;
+  heart.cur = hb;
+  if ( hb && hb.volume > 0 ) heart.timer = setInterval(() => beat(hb.volume), AR.beatGap(hb.bpm));
+  return hb;
 }
 
 /** The file for a cue: the kit folder's own first, else the sound shipped with the module. */
@@ -760,7 +839,7 @@ async function buildDialog() {
   if ( r.missing ) {
     return wait({window: {title: "Build the era's playlists"}, position: {width: 520},
       content: `<p>There is no folder <code>${esc(r.folder)}</code> in the Data folder yet.</p>
-        <p>Make it, with <code>music/calm</code>, <code>music/tension</code>, <code>music/combat</code>, <code>music/sorrow</code> and <code>music/wonder</code>
+        <p>Make it, with <code>music/calm</code>, <code>music/tension</code>, <code>music/combat</code>, <code>music/sorrow</code>, <code>music/wonder</code> and <code>music/frenzy</code>
         for the moods, <code>ambience</code> for loops named after a kind of place or weather (tavern.ogg, street.ogg, rain.ogg), and
         <code>sounds</code> for dawn.ogg, dusk.ogg, notice.ogg, birds.ogg and cock.ogg. A credits.json there records each file's source and licence.</p>
         <p class="wodx-quiet">Or pick the world's own playlists for each mood in the Atmosphere window. The folder setting is "${esc(root)}".</p>`,
@@ -975,6 +1054,7 @@ export async function prime() {
     ages: {set: setAge, apply: applyAges, picture: (scene, year) => K.ageFor(scene?.flags?.[MOD]?.ages ?? {}, year)},
     faces: {set: setFace, at: setFaceAge, apply: applyFace, applyAll: applyFaces, year: () => yearNow(), show: (actor, year = yearNow()) => K.faceFor({...(actor?.flags?.[MOD]?.face ?? {}), kind: faceKindOf(actor, actor?.flags?.[MOD]?.face)}, year)},
     dread: {now: dread, rotschreck: dreadRotschreck, apply: applyDread, tick: dreadTick},
+    adaptive: {tension: tensionNow, adapt, heartbeat: heartbeatNow, update: updateHeart, playing: () => heart.cur, rules: AR},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
   return api;
@@ -990,7 +1070,9 @@ Hooks.once("ready", async () => {
     await applyWeather({quiet: false});
     agedYear = yearNow();
     await ageEverything();
+    await adapt();
   }
+  updateHeart();
   Hooks.callAll("wodxAtmosphereReady", api);
 });
 
@@ -1027,17 +1109,30 @@ Hooks.on("updateCombat", (combat, change) => {
   if ( a?.hasPlayerOwner ) playTheme(a);
 });
 Hooks.on("combatStart", () => {
-  if ( !active || !isActiveGM() || !setting("music") || !playlistFor(currentKit(), "combat") ) return;
+  if ( !active || !isActiveGM() || !setting("music") ) return;
+  if ( setting("adaptive") ) return adaptSoon();
+  if ( !playlistFor(currentKit(), "combat") ) return;
   fights++;
   playMood("combat", {remember: false});
 });
 Hooks.on("deleteCombat", () => {
-  if ( !active || !isActiveGM() || !setting("music") || fights <= 0 ) return;
-  if ( all(game.combats).some(c => c.started) ) return;
+  if ( !active || !isActiveGM() || !setting("music") ) return;
+  if ( setting("adaptive") ) return adaptSoon();
+  if ( fights <= 0 || all(game.combats).some(c => c.started) ) return;
   fights = 0;
   const back = setting("mood") || "calm";
   if ( playlistFor(currentKit(), back) ) playMood(back);
 });
+// A condition comes or goes on a player's character: the tension may change; the player's own heartbeat may too
+const onEffect = effect => {
+  if ( !active ) return;
+  const a = effect?.parent;
+  if ( a?.hasPlayerOwner ) adaptSoon();
+};
+Hooks.on("createActiveEffect", onEffect);
+Hooks.on("deleteActiveEffect", onEffect);
+Hooks.on("updateActor", actor => { if ( active && actor?.id && actor.id === game.user?.character?.id ) updateHeart(); });
+Hooks.on("updateUser", (user, change) => { if ( active && user?.id === game.user?.id && "character" in (change ?? {}) ) updateHeart(); });
 // Something new in the approval queue: the Storyteller hears the notice cue
 let pending = null;
 Hooks.on("updateSetting", s => {
