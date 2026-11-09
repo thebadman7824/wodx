@@ -2,7 +2,7 @@
   "id": "wodx-interactables",
   "title": "WoDX Interactables",
   "description": "World of Darkness Expanded: doors, locks, windows and walls that can be broken through, on core Foundry walls. A player selects a token and presses Interact (token HUD or the I key) to see everything within reach, with the roll, the difficulty, the time and the noise shown before rolling. Results apply at once with an Undo for the Storyteller; only a wall knocked through waits in the approval queue. NPCs in earshot hear loud attempts. Private use only; not for distribution or sale.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "authors": [
     {
       "name": "WoDX Project (private)"

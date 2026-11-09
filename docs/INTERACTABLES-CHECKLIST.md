@@ -33,7 +33,7 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Disarm, set off from a distance, set again, break free, cut free
 - [x] Tile config: the Trap section; world setting "Traps go off"
 - [x] Harness tests (9 new) and UI fit
-- [ ] Gate steps 13 to 15 in rothenstein-wodx (first run 14/15: the gate's pit skipped the Storyteller-owned burglar; gate fixed)
+- [x] Gate steps 13 to 15 in rothenstein-wodx: 17/17 at 70673c3 (earlier runs missed step 14 because a plain token update did not reach the pit; the gate now jumps the token)
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.2.0-2026-11-09, MD5s checked)
 - [ ] V20 core falling page ref pinned on the PC
 
@@ -42,22 +42,30 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Runtime: examine or read; the text whispered to the player and the Storyteller; Search the area notices hidden clues; Undo deletes the whisper
 - [x] Tile config: the Clue section
 - [x] Harness tests (4 new) and UI fit
-- [ ] Gate step 16 in rothenstein-wodx
-- [ ] Deployed
+- [x] Gate step 16 in rothenstein-wodx: 17/17 at 70673c3
+- [x] Deployed 2026-11-09
 
 ## 0.5.0: light sources (2026-11-09)
 - [x] Rules: five kinds; light, put out, break (B119)
 - [x] Runtime: the scene's lights by id or nearby, with the Otherworlds copies; Undo
 - [x] Tile config: the Light source section
 - [x] Harness tests (2 new) and UI fit
-- [ ] Gate step 17 in rothenstein-wodx
+- [x] Gate step 17 in rothenstein-wodx: 17/17 at 70673c3
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.4.0-2026-11-09-b)
+
+## 0.6.0: hiding places (2026-11-09)
+- [x] Rules: six kinds with room and how hard to find; Dexterity + Stealth; searching by successes (B150)
+- [x] Runtime: the Invisible status, Search it, Search the area, walking out, Undo; the Storyteller is whispered who stays hidden
+- [x] Tile config: the Hiding place section
+- [x] Harness tests (3 new) and UI fit
+- [ ] Gate step 18 in rothenstein-wodx
 - [ ] Deployed
 
 ## Still to build (Ben, 2026-11-09), in order
 - [x] Traps (0.3.0, deployed)
-- [x] Clues and documents (0.4.0, not deployed yet)
-- [x] Light sources (0.5.0, not deployed yet)
-- [ ] Hiding places
+- [x] Clues and documents (0.4.0, deployed)
+- [x] Light sources (0.5.0, deployed)
+- [x] Hiding places (0.6.0, not deployed yet)
 - [ ] Fire and hazards
 - [ ] Altars, relics and fetishes
 - [ ] Watch points (mirrors, windows on the street, phones and radios)

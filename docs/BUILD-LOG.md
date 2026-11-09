@@ -645,5 +645,10 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Interactables 0.5.0, 2026-11-09: light sources (B119)
 - Light sources on tiles: torch or brazier, candles, lantern, oil or gas lamp, electric light switch. The tile config gains a Light source section: the kind, the ids of the lights it works (blank: the lights on it or within a square), and Broken.
 - Light it, put it out, switch it on or off: a turn, no roll, silent. A lantern, lamp or electric light can be broken (loud; it stays dark). WoDX Otherworlds' copies of those lights on the twin levels go on and off with them. Undo puts each light back.
-- Tests: 2 new (1 rules, 1 runtime); UI fit adds a lamp. Gate step 17 (a lantern lights the light beside it; Undo). Not deployed yet.
+- Tests: 2 new (1 rules, 1 runtime); UI fit adds a lamp. Gate step 17 (a lantern lights the light beside it; Undo). Deployed 2026-11-09: gate 17/17 at 70673c3. Step 14's diagnostics showed the pit fires from the move hook once the token really lands on it: the earlier misses were a plain token update that Foundry stopped short.
+
+### Interactables 0.6.0, 2026-11-09: hiding places (B150)
+- Hiding places on tiles: wardrobe or cupboard, under a bed or table, behind a curtain or tapestry, deep shadows, crawlspace or loft, priest hole. The tile config gains a Hiding place section: kind, room, and who is in it now.
+- Hide here (Dexterity + Stealth): in and out of sight at once (the Invisible status, so the player still sees the token); successes make the hider harder to find. Search it (one success better) or Search the area finds them by successes, and the Storyteller is whispered who stays hidden. Come out, or walk out, to end it. Undo on every result.
+- Tests: 3 new (1 rules, 2 runtime); UI fit adds a full priest hole. Gate step 18 (the burglar hides in a wardrobe; Undo). Not deployed yet.
 

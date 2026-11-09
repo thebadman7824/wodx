@@ -70,7 +70,7 @@ export async function run() {
   try {
     await step("1. module", async () => {
       const m = game.modules.get(MOD);
-      ok("1. WoDX Interactables 0.5.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.5.0" && typeof ix()?.attempt === "function"
+      ok("1. WoDX Interactables 0.6.0 is on, with its API, and the door control is the WoDX one", m?.active && m.version === "0.6.0" && typeof ix()?.attempt === "function"
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
@@ -318,6 +318,24 @@ export async function run() {
       await ix().undoCard(msg);
       const dark = lamp.hidden === true;
       ok("17. a lantern tied to the light beside it lights it, and Undo puts it out again", tied && lit && dark, {tied, lit, dark, result: msg?.flags?.[MOD]?.done?.result ?? null});
+    });
+
+    await step("18. hide", async () => {
+      await scene.createEmbeddedDocuments("Tile", [{x: 520, y: 620, width: 60, height: 60, texture: {src: "icons/svg/door-closed.svg"},
+        flags: {[MOD]: {hide: true, hideKind: "wardrobe", gate: "wardrobe"}}}]);
+      await sleep(500);
+      const wardrobe = findTile("wardrobe");
+      const listed = ix().interactablesFor(tok).some(x => x.doc.id === wardrobe?.id);
+      const seen = () => !!burglar.statuses?.has?.("invisible") || tb.hidden;
+      await dice(9);
+      const msg = await applied(await ix().attempt(tok, wardrobe.id, "hide", {fd: {}}));
+      await sleep(300);
+      const inside = (wardrobe.flags[MOD]?.occupants ?? []).some(x => x.a === burglar.id), hidden = seen();
+      await ix().undoCard(msg);
+      await sleep(300);
+      const back = !(wardrobe.flags[MOD]?.occupants ?? []).length && !seen();
+      ok("18. hiding in a wardrobe (Dexterity + Stealth) puts the burglar in it and out of sight; Undo brings it back", listed && inside && hidden && back,
+        {listed, inside, hidden, back, result: msg?.flags?.[MOD]?.done?.result ?? null, statuses: [...(burglar.statuses ?? [])]});
     });
 
     await step("10. alongside", async () => {
