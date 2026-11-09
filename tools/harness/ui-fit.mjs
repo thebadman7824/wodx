@@ -34,7 +34,7 @@ foundry.data.regionBehaviors = {RegionBehaviorType: class {}};
 CONFIG.RegionBehavior = {dataModels: {}, typeLabels: {}, typeHints: {}, typeIcons: {}};
 CONFIG.statusEffects = [];
 // A world the size of Rothenstein: 211 scenes
-class Coll extends Map { find(f) { for ( const v of this.values() ) if ( f(v) ) return v; } [Symbol.iterator]() { return this.values(); } }
+class Coll extends Map { find(f) { for ( const v of this.values() ) if ( f(v) ) return v; } filter(f) { return [...this.values()].filter(f); } some(f) { return [...this.values()].some(f); } [Symbol.iterator]() { return this.values(); } }
 game.scenes = new Coll();
 for ( let i = 0; i < 211; i++ ) {
   const id = `scene${String(i).padStart(11, "0")}`;

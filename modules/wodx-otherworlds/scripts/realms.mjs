@@ -127,9 +127,9 @@ const banalityOf = a => {
 
 /** Storyteller: the selected tokens go through a gateway into the Near Dreaming, or back out. The Mists for each. */
 export async function dreamingGate({enchanted = [], leave = null} = {}) {
-  if ( !game.user.isGM ) return ui.notifications.warn("The Storyteller opens the gateway.");
+  if ( !game.user.isGM ) { ui.notifications.warn("The Storyteller opens the gateway."); return null; }
   const tokens = canvas?.tokens?.controlled?.map(t => t.document) ?? [];
-  if ( !tokens.length ) return ui.notifications.warn("Select the travellers' tokens first.");
+  if ( !tokens.length ) { ui.notifications.warn("Select the travellers' tokens first."); return null; }
   const scene = tokens[0].parent;
   const L = layersOf(scene);
   const out = leave ?? tokens.every(t => tokenLayer(t) === "dreaming" || t.actor?.statuses?.has(STATUS.dreaming.id));
@@ -155,7 +155,7 @@ export async function dreamingGate({enchanted = [], leave = null} = {}) {
 export async function dreamingDialog() {
   if ( !game.user.isGM ) return;
   const tokens = canvas?.tokens?.controlled ?? [];
-  if ( !tokens.length ) return ui.notifications.warn("Select the travellers' tokens first.");
+  if ( !tokens.length ) { ui.notifications.warn("Select the travellers' tokens first."); return null; }
   const rows = tokens.filter(t => t.actor?.type !== "Changeling").map(t => `<div class="form-group"><label><input type="checkbox" name="ench" value="${t.id}"> ${esc(t.name)} is enchanted</label></div>`).join("");
   const r = await foundry.applications.api.DialogV2.wait({classes: ["wodx", "wodx-dialog"], window: {title: "A gateway to the Near Dreaming"}, rejectClose: false,
     content: `<p>${esc(tokens.map(t => t.name).join(", "))}</p>${rows}<p class="wodx-quiet">A mortal or other creature with no Glamour of its own goes through only if enchanted.</p>`,
@@ -214,8 +214,8 @@ export const netOpen = () => RR.netOpen(year());
 /** The selected tokens jack in, or out. The body lies still while the mind is in the Net (house rule: the article is silent). */
 export async function jack() {
   const tokens = canvas?.tokens?.controlled?.map(t => t.document) ?? [];
-  if ( !tokens.length ) return ui.notifications.warn("Select the token first.");
-  if ( !netOpen() ) return ui.notifications.warn(`There is no Net to enter before ${RR.NET_FROM}.`);
+  if ( !tokens.length ) { ui.notifications.warn("Select the token first."); return null; }
+  if ( !netOpen() ) { ui.notifications.warn(`There is no Net to enter before ${RR.NET_FROM}.`); return null; }
   const names = [];
   for ( const t of tokens ) {
     const a = t.actor;
@@ -280,7 +280,7 @@ export async function rollsDialog() {
   if ( r.kind === "storm" ) return sel ? shreddingWinds(sel, {shield: r.shield}) : ui.notifications.warn("Select the mage first.");
   if ( r.kind === "bridge" ) {
     const a = sel?.actor;
-    if ( !a ) return ui.notifications.warn("Select the ritemaster first.");
+    if ( !a ) { ui.notifications.warn("Select the ritemaster first."); return null; }
     const plan = RR.openedBridge({wits: at(a, "wits"), enigmas: ab(a, "enigmas"), caern: r.caern, target: r.target, totemMatch: r.totem, failedBefore: r.failed});
     const roll = await d10(plan.pool);
     const res = RR.openedBridgeResult(plan, roll.dice);
@@ -292,10 +292,10 @@ export async function rollsDialog() {
   }
   if ( r.kind === "wayfare" ) {
     const a = sel?.actor;
-    if ( !a ) return ui.notifications.warn("Select the changeling first.");
+    if ( !a ) { ui.notifications.warn("Select the changeling first."); return null; }
     const dots = re => num(a.items?.find(i => re.test(i.name))?.system?.value);
     const wayfare = dots(/^wayfare$/i), fae = dots(/^fae( realm)?$/i);
-    if ( wayfare < 3 || fae < 5 ) return ui.notifications.warn(`${sel.name} needs Wayfare 3 and the Fae Realm at 5 (has ${wayfare} and ${fae}).`);
+    if ( wayfare < 3 || fae < 5 ) { ui.notifications.warn(`${sel.name} needs Wayfare 3 and the Fae Realm at 5 (has ${wayfare} and ${fae}).`); return null; }
     const pool = wayfare + fae;
     const roll = await d10(pool);
     const c = roll.dice.filter(x => x >= 8).length - roll.dice.filter(x => x === 1).length;
@@ -314,9 +314,9 @@ export async function rollsDialog() {
     return m;
   }
   if ( r.kind === "net" ) {
-    if ( !sel ) return ui.notifications.warn("Select the netrunner first.");
+    if ( !sel ) { ui.notifications.warn("Select the netrunner first."); return null; }
     const cpus = num(r.cpus);
-    if ( !cpus && !tgt ) return ui.notifications.warn("Target the foe, or give the system's CPUs.");
+    if ( !cpus && !tgt ) { ui.notifications.warn("Target the foe, or give the system's CPUs."); return null; }
     return netContest({a: sel, b: tgt, programA: num(r.pa), programB: num(r.pb), protectA: num(r.prot), system: cpus || null});
   }
   return null;

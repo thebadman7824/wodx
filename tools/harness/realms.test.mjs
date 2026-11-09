@@ -107,5 +107,10 @@ test("Otherworlds 0.4.0 is wired: tools, the api, the twins window and the statu
   assert.match(main, /registerRealmSettings\(\)/); assert.match(main, /setupRealms\(\)/);
   assert.match(app, /data-action="dreaming"/); assert.match(app, /data-action="trod"/);
   for ( const id of ["wodx-dreaming", "wodx-deep-umbra", "wodx-net"] ) assert.match(cross, new RegExp(id));
-  assert.equal(JSON.parse(readFileSync(new URL("../../modules/wodx-otherworlds/module.json", import.meta.url), "utf8")).version, "0.4.0");
+  assert.equal(JSON.parse(readFileSync(new URL("../../modules/wodx-otherworlds/module.json", import.meta.url), "utf8")).version, "0.4.1");
+});
+
+test("a refused Net or gateway returns nothing, so a caller can tell it from a done one", () => {
+  const src = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/realms.mjs", import.meta.url), "utf8");
+  assert.ok(!/return ui\.notifications\.warn\(/.test(src.replace(/\? \w+\([^)]*\) : ui\.notifications\.warn/g, "")));
 });
