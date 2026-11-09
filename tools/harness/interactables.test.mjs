@@ -1733,3 +1733,140 @@ test("runtime: a vehicle follows the move the hook reports, even when the token'
     assert.deepEqual([van.document.x, van.document.y], [4600, 1000]);
   } finally { scene.tiles.delete("van1"); canvas.tiles.placeables.pop(); tokPc.document.x = 400; tokPc.document.y = 300; }
 });
+
+/* ---------------- 0.14.0: targets on tiles ---------------- */
+
+const pistol = {id: "gun1", name: "Pistol", ranged: true, attr: "dexterity", ability: "firearms", range: 20, diff: 6, accuracy: 0};
+const bow = {id: "bow1", name: "Short bow", ranged: true, attr: "dexterity", ability: "archery", range: 40, diff: 6, accuracy: 0};
+const tch = extra => ({actorId: "pc1", dexterity: 3, strength: 2, perception: 3, abilities: {firearms: 2, archery: 1, athletics: 1, brawl: 1}, weapons: [pistol, bow], yards: 30, inReach: false, ...extra});
+
+test("targets: range bands are WoDX Combat's: +0 within range, +1 to twice, +2 to three times, none further", () => {
+  assert.deepEqual([R.rangeBand(10, 20), R.rangeBand(20, 20), R.rangeBand(30, 20), R.rangeBand(60, 20), R.rangeBand(61, 20)], [0, 0, 1, 2, null]);
+  assert.deepEqual([R.ringFor(0), R.ringFor(1)?.label, R.ringFor(2)?.label, R.ringFor(5)?.label], [null, "outer ring", "inner ring", "centre"]);
+});
+
+test("targets: shooting with each ranged weapon on the sheet, throwing, and nothing out of range", () => {
+  const mark = R.describeTarget({isTarget: true, targetKind: "mark"});
+  const ops = R.optionsFor(mark, tch());
+  const gun = ops.find(o => o.id === "shoot:gun1"), arrow = ops.find(o => o.id === "shoot:bow1"), th = ops.find(o => o.id === "throw");
+  assert.deepEqual([gun.roll.dice, gun.roll.diff, gun.noise.success, gun.roll.skill], [5, 7, "loud", true]);
+  assert.deepEqual([arrow.roll.dice, arrow.roll.diff, arrow.noise.success], [4, 6, "quiet"]);
+  assert.deepEqual([th.roll.ability, th.roll.diff], ["athletics", 8]);
+  const far = R.optionsFor(mark, tch({yards: 80}));
+  assert.ok(far.find(o => o.id === "shoot:gun1").disabled);
+  assert.ok(!far.find(o => o.id === "shoot:bow1").disabled);
+  assert.ok(!far.some(o => o.id === "throw"));
+  assert.ok(R.optionsFor(mark, tch({yards: 200, weapons: []})).every(o => o.disabled));
+  assert.ok(!ops.some(o => o.id === "strike" || o.id === "breakIt"));
+});
+
+test("targets: rings score by successes on the scoreboard; a gun botch jams, a bow botch is a wild shot", () => {
+  const mark = R.describeTarget({isTarget: true, targetKind: "mark", scores: {npc1: {n: "Volker", shots: 2, hits: 1, pts: 1, best: 1}}});
+  const ops = R.optionsFor(mark, tch()), gun = ops.find(o => o.id === "shoot:gun1"), arrow = ops.find(o => o.id === "shoot:bow1");
+  const hit = R.resolve(mark, gun, [{successes: 4, botch: false}], {actorId: "pc1", actorName: "Anna Weiss"});
+  assert.equal(hit.result, "done");
+  assert.match(hit.text, /centre \(3 points\)/);
+  assert.deepEqual(hit.patch.flags.scores.pc1, {n: "Anna Weiss", shots: 1, hits: 1, pts: 3, best: 3});
+  assert.deepEqual(hit.patch.flags.scores.npc1.pts, 1);
+  const miss = R.resolve(mark, gun, [{successes: 0, botch: false}], {actorId: "pc1", actorName: "Anna Weiss"});
+  assert.deepEqual([miss.result, miss.patch.flags.scores.pc1.shots, miss.patch.flags.scores.pc1.hits, miss.noise], ["fail", 1, 0, "loud"]);
+  assert.equal(R.resolve(mark, gun, [{successes: 0, botch: true}], {actorId: "pc1"}).mishap, "jam");
+  assert.ok(R.resolve(mark, arrow, [{successes: 0, botch: true}], {actorId: "pc1"}).wild);
+  assert.ok(!miss.patch.flags.tries);
+  const board = R.describeTarget({targetKind: "mark", scores: hit.patch.flags.scores});
+  assert.deepEqual(R.scoreLines(board), ["1. Anna Weiss: 3 points, 1 hit in 1 try", "2. Volker: 1 point, 1 hit in 2 tries"]);
+  assert.deepEqual(R.optionsFor(board, tch()).at(-1).id, "scores");
+});
+
+test("targets: bottles go down a hit at a time and are set up again; a dummy counts blows within reach", () => {
+  const row = R.describeTarget({isTarget: true, targetKind: "bottles", bottles: 3, left: 1});
+  assert.equal(R.nameOf(row), "Bottles or cans in a row, 1 standing");
+  const gun = R.optionsFor(row, tch()).find(o => o.id === "shoot:gun1");
+  const out = R.resolve(row, gun, [{successes: 1, botch: false}], {actorId: "pc1"});
+  assert.deepEqual([out.patch.flags.left, out.text], [0, "shoots, and knocks the last one down."]);
+  const empty = R.describeTarget({targetKind: "bottles", bottles: 3, left: 0});
+  assert.equal(R.nameOf(empty), "Bottles or cans in a row, all knocked down");
+  assert.ok(R.optionsFor(empty, tch()).find(o => o.id === "setUp").disabled);
+  const up = R.optionsFor(empty, tch({inReach: true})).find(o => o.id === "setUp");
+  assert.equal(R.resolve(empty, up, []).patch.flags.left, 3);
+  assert.ok(!R.optionsFor(empty, tch()).some(o => o.id === "shoot:gun1"));
+  const dummy = R.describeTarget({targetKind: "dummy", hits: 2});
+  assert.ok(!R.optionsFor(dummy, tch()).some(o => o.id === "strike"));
+  const blow = R.optionsFor(dummy, tch({inReach: true, weapons: [{id: "sw", name: "Sword", ranged: false, accuracy: 0, diff: 6}], abilities: {melee: 2}})).find(o => o.id === "strike");
+  assert.deepEqual([blow.label, blow.roll.ability, blow.roll.dice], ["Strike it with the Sword", "melee", 5]);
+  assert.equal(R.resolve(dummy, blow, [{successes: 2, botch: false}], {actorId: "pc1"}).patch.flags.hits, 3);
+});
+
+test("targets: a fragile thing shatters on a hit; a heavy one holds and is broken up close by the lifting chart or Strength", () => {
+  const lamp = R.describeTarget({targetKind: "object", objBuild: "fragile"});
+  const shot = R.optionsFor(lamp, tch()).find(o => o.id === "shoot:bow1");
+  const out = R.resolve(lamp, shot, [{successes: 1, botch: false}], {actorId: "pc1"});
+  assert.deepEqual([out.patch.flags.smashed, out.noise], [true, "quiet"]);
+  assert.equal(R.nameOf(R.describeTarget({targetKind: "object", objBuild: "fragile", smashed: true})), "Something to break, broken");
+  const barrel = R.describeTarget({targetKind: "object", objBuild: "heavy"});
+  const held = R.resolve(barrel, R.optionsFor(barrel, tch()).find(o => o.id === "shoot:gun1"), [{successes: 3, botch: false}], {actorId: "pc1"});
+  assert.ok(!held.patch.flags.smashed);
+  assert.match(held.text, /holds/);
+  const brk = R.optionsFor(barrel, tch({inReach: true})).find(o => o.id === "breakIt");
+  assert.deepEqual([brk.extended, brk.roll.need, brk.roll.diff], [true, 3, 7]);
+  const got = R.resolve(barrel, brk, [{successes: 2, botch: false}, {successes: 1, botch: false}], {actorId: "pc1"});
+  assert.deepEqual([got.result, got.patch.flags.smashed, got.patch.flags.progress.breakIt], ["done", true, 0]);
+  const strong = R.optionsFor(barrel, tch({inReach: true, strength: 4})).find(o => o.id === "breakIt");
+  assert.ok(strong.auto && !strong.roll);
+  assert.equal(R.resolve(barrel, strong, []).patch.flags.smashed, true);
+  assert.equal(R.optionsFor(R.describeTarget({targetKind: "object", smashed: true}), tch())[0].id, "brokenNote");
+});
+
+test("targets: a target with rings is an archery butt in the early eras; the config is cleaned; broken shows on the map", () => {
+  const mark = R.describeTarget({targetKind: "mark"});
+  assert.equal(R.nameOf(mark, {eraId: "dark-ages", year: 1197}), "Archery butt");
+  assert.equal(R.nameOf(mark, {year: 1890}), "Target with rings");
+  assert.equal(R.nameOf(R.describeTarget({targetKind: "mark", title: "The butts"}), {year: 1197}), "The butts");
+  assert.deepEqual(R.cleanTarget({isTarget: "on", targetKind: "x", objBuild: "y", bottles: "99"}), {isTarget: true, targetKind: "mark", objBuild: "light", bottles: 24, smashed: false});
+  assert.equal(S.stateOf(R.describeTarget({targetKind: "object", smashed: true})), "broken");
+  assert.equal(S.stateOf(R.describeTarget({targetKind: "bottles", left: 2})), "standing");
+  assert.equal(S.groupOf(R.describeTarget({targetKind: "mark"})), "plain");
+});
+
+const tgtTile = tile("tgt1", 1600, 2600, {isTarget: true, targetKind: "mark"});
+canvas.tiles.placeables.push(tgtTile);
+const gunItem = {id: "gun1", name: "Pistol", type: "Ranged Weapon", system: {attack: {attribute: "dexterity", ability: "firearms", accuracy: 0}, range: 20, difficulty: 6}};
+
+test("runtime: a target out of reach is listed as far as the pistol carries; a shot scores; Undo takes the new name off the board", async () => {
+  pc.items.push(gunItem);
+  tokPc.document.x = 400; tokPc.document.y = 2600;
+  tgtTile.document.flags[MOD].scores = {npc1: {n: "Sergeant Volker", shots: 1, hits: 1, pts: 2, best: 2}};
+  try {
+    assert.ok(api.interactablesFor(tokPc).some(x => x.doc.id === "tgt1"));
+    const ch = api.characterFor(pc, tokPc.center, tgtTile.document);
+    assert.deepEqual([Math.round(ch.yards), ch.inReach, ch.weapons[0].name], [20, false, "Pistol"]);
+    faces = [9, 9, 2, 2];
+    const msg = await api.attempt(tokPc, "tgt1", "shoot:gun1", {fd: {}});
+    const d = msg.flags[MOD].done;
+    assert.equal(d.result, "done");
+    assert.equal(tgtTile.document.flags[MOD].scores.pc1.pts, 2);
+    assert.ok(d.lines.some(l => /Anna Weiss: 2 points, 1 of 1/.test(l)));
+    await api.undoCard(msg);
+    assert.deepEqual(Object.keys(tgtTile.document.flags[MOD].scores), ["npc1"]);
+    // Too far for anything on the sheet: not listed
+    tokPc.document.x = 1600 - 100 * 40;
+    pc.items.splice(pc.items.indexOf(gunItem), 1);
+    assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "tgt1"));
+  } finally {
+    if ( pc.items.includes(gunItem) ) pc.items.splice(pc.items.indexOf(gunItem), 1);
+    tokPc.document.x = 400; tokPc.document.y = 300; tgtTile.document.flags[MOD] = {isTarget: true, targetKind: "mark"};
+  }
+});
+
+test("runtime: the tile config keeps the target's choices, and Clear the scoreboard clears it", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {isTarget: true, targetKind: "bottles", bottles: 8, scores: {pc1: {n: "Anna Weiss", shots: 2, hits: 1}}}}});
+  assert.match(html, /name="flags.wodx-interactables.isTarget" checked/);
+  assert.match(html, /value="bottles" selected/);
+  assert.match(html, /name="flags.wodx-interactables.bottles" value="8"/);
+  assert.match(html, /Scoreboard: 1\. Anna Weiss: 1 hit in 2 tries/);
+  const changes = {flags: {[MOD]: {clearScores: true, bottles: ""}}};
+  hooks.get("preUpdateTile")[0]({flags: {[MOD]: {}}}, changes);
+  const f = changes.flags[MOD];
+  assert.ok(f.scores instanceof ForcedDeletion);
+  assert.deepEqual([f.left, f.hits, f.bottles, "clearScores" in f], [null, 0, null, false]);
+});

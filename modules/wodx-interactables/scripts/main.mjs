@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.12.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
+ * WoDX Interactables 0.14.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
  *
  *   Interact   A player selects a token and presses Interact on the token HUD (or the I key). A window lists every door,
  *              window and breakable wall within reach of that token, nearest first, with the options for each: the
@@ -40,6 +40,9 @@
  *   Climbing   A tile marked as a climb (a ladder, a rope, a tree, a rough wall, a cliff) or a gap to jump: Dexterity +
  *              Athletics, extended, up the climb; Strength + Athletics across the gap, with a roll to catch the ledge;
  *              arriving moves the token to the tile it is tied to, and a fall does bashing dice by its height (0.13.0).
+ *   Targets    A tile marked as a target (rings, bottles in a row, a practice dummy, something to break): shoot it with
+ *              each ranged weapon on the sheet at WoDX Combat's range bands, throw at it, strike or break it within
+ *              reach; rings score by successes on a scoreboard on the tile; fragile things break on a hit (0.14.0).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -52,7 +55,7 @@ import {registerStateSettings, setupStates, publish} from "./states.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.13.1";
+const VERSION = "0.14.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -122,7 +125,7 @@ export function describeWall(doc) {
 /** A container on a tile, or null. */
 export function describeTile(doc) {
   const f = doc?.flags?.[MOD] ?? {};
-  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch || f.mount || f.climb) ) return null;
+  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch || f.mount || f.climb || f.isTarget) ) return null;
   if ( f.container ) return R.describeContainer(f);
   if ( f.trap ) return R.describeTrap(f);
   if ( f.clue ) return R.describeClue(f);
@@ -132,9 +135,10 @@ export function describeTile(doc) {
   if ( f.sacred ) return R.describeSacred(f);
   if ( f.watch ) return R.describeWatch(f);
   if ( f.mount ) return R.describeMount(f);
-  return R.describeClimb(f);
+  if ( f.climb ) return R.describeClimb(f);
+  return R.describeTarget(f);
 }
-const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb"].some(k => doc.flags?.[MOD]?.[k] === true));
+const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb", "isTarget"].some(k => doc.flags?.[MOD]?.[k] === true));
 /** Whatever interactable a wall or tile is. */
 export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
 /** A wall or a tile on a scene, by id. */
@@ -171,7 +175,7 @@ const distanceToTile = (doc, p) => { const r = rectOf(doc); return Math.hypot(Ma
 /** Where a noise at an object starts, as heard from a point. */
 const noiseFrom = (doc, p) => (Array.isArray(doc?.c) ? R.besideWall(doc.c, R.sideOf(doc.c, p) ?? "a", 4) : nearOnTile(doc, p));
 
-const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness", "investigation", "athletics", "dodge", "ride", "drive"];
+const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness", "investigation", "athletics", "dodge", "ride", "drive", "firearms", "archery", "melee", "brawl"];
 const TOOLS = /lock ?picks?|picklock|thieves'? tools|skeleton key|bump key|pick gun|lock gun|tension wrench/i;
 const POWERS = /^(potence|celerity|protean|obtenebration|matter|forces|correspondence|inhabit|outrage|puppetry|argos|moliate)/i;
 
@@ -204,6 +208,28 @@ function eraNow() {
   } catch (e) { return {eraId: "", year: 0}; }
 }
 
+/** The weapons on a sheet, as WoDX Combat reads them: [{id, name, ranged, attr, ability, range, diff, accuracy}]. */
+export function weaponsOf(actor) {
+  const out = [];
+  for ( const i of actor?.items ?? [] ) {
+    if ( i.type !== "Melee Weapon" && i.type !== "Ranged Weapon" ) continue;
+    const s = i.system ?? {}, ranged = i.type === "Ranged Weapon";
+    if ( s.isnatural ) continue;
+    const ab = String(s.attack?.ability || (ranged ? "archery" : "melee")).toLowerCase();
+    out.push({id: i.id, name: String(i.name ?? "weapon"), ranged, attr: s.attack?.attribute || "dexterity", ability: ab === "custom" ? "archery" : ab,
+      range: num(s.range) || (ranged ? 10 : 0), diff: num(s.difficulty) || 6, accuracy: num(s.attack?.accuracy), equipped: !!s.isequipped});
+  }
+  return out.sort((a, b) => (b.equipped - a.equipped) || a.name.localeCompare(b.name));
+}
+/** Yards between two points on a scene, in a straight line. */
+export function yardsOn(scene, a, b) {
+  const g = scene?.grid ?? canvas?.scene?.grid ?? {};
+  const size = num(g.size) || 100, dist = num(g.distance) || 5, units = String(g.units ?? "ft");
+  const per = /m|meter|metre|yd|yard/i.test(units) ? dist : dist / 3;
+  return Math.hypot(num(a?.x) - num(b?.x), num(a?.y) - num(b?.y)) / size * per;
+}
+const reachPx = scene => (num(scene?.grid?.size) || canvas?.grid?.size || 100) * (0.5 + (num(setting("reach")) || 1));
+
 /** What WoDX reads from a character for the options. */
 export function characterFor(actor, center, doc) {
   const {abilities, meta} = abilitiesOf(actor);
@@ -217,7 +243,10 @@ export function characterFor(actor, center, doc) {
     hasKey: !!key && (actor?.items ?? []).some(i => String(i.name ?? "").toLowerCase().includes(key)),
     hasTools: (actor?.items ?? []).some(i => TOOLS.test(i.name ?? "")),
     powers: [...new Set((actor?.items ?? []).filter(i => i.type === "Power" && POWERS.test(i.name ?? "")).map(i => i.name.trim()))].slice(0, 6),
-    woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty)
+    woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty),
+    // A target: how far, whether within reach, and what is on the sheet to shoot or strike with
+    ...(o.isTarget && center && doc ? {weapons: weaponsOf(actor), yards: yardsOn(doc.parent, center, tileCenter(doc)),
+      inReach: distanceToTile(doc, center) <= reachPx(doc.parent)} : {})
   };
 }
 
@@ -255,6 +284,14 @@ export function interactablesFor(tok) {
     // A trap shows only once found (or to the Storyteller); anything else hidden stays hidden from players
     if ( !game.user.isGM && (o.trap ? !o.found : o.clue ? doc.hidden && !o.found : doc.hidden) ) continue;
     const d = distanceToTile(doc, tok.center);
+    // A target: listed as far as anything on the sheet can reach it, if the token can see it
+    if ( o.isTarget && d > reach ) {
+      const far = Math.max(R.THROW_YARDS, ...weaponsOf(tok.actor).filter(w => w.ranged).map(w => w.range)) * 3;
+      if ( yardsOn(canvas.scene, tok.center, tileCenter(doc)) > far ) continue;
+      if ( blocked("sight", tok.center, nearOnTile(doc, tok.center)) ) continue;
+      out.push({wall: tile, doc, o, distance: d});
+      continue;
+    }
     if ( d > reach ) continue;
     const near = nearOnTile(doc, tok.center);
     if ( blocked("move", tok.center, near) ) continue;
@@ -313,7 +350,7 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
     const opsHtml = ops.map(op => `<li class="wix-op${op.disabled ? " disabled" : ""}">`
       + (op.disabled ? `<b>${esc(op.label)}</b>` : `<button type="button" data-wall="${doc.id}" data-op="${op.id}">${esc(op.label)}</button>`)
       + `<div class="wodx-quiet">${esc(optionSummary(op))}</div></li>`).join("");
-    return `<li data-search-text="${esc(R.nameOf(o))}"><h4>${esc(R.nameOf(o))}${esc(bar)}</h4><ul class="wix-ops" data-fixed>${opsHtml || `<li class="wodx-quiet">Nothing to do here.</li>`}</ul></li>`;
+    return `<li data-search-text="${esc(R.nameOf(o, ch))}"><h4>${esc(R.nameOf(o, ch))}${esc(bar)}</h4><ul class="wix-ops" data-fixed>${opsHtml || `<li class="wodx-quiet">Nothing to do here.</li>`}</ul></li>`;
   }).join("");
   const search = onlyWall ? null : R.searchOption(characterFor(tok.actor, tok.center, null));
   const searchHtml = search ? `<div class="wix-search wix-op"><button type="button" data-wall="${SEARCH}" data-op="search">${esc(search.label)}</button><div class="wodx-quiet">${esc(optionSummary(search))}</div></div>` : "";
@@ -461,7 +498,7 @@ export async function applyAsk(msg) {
       return countSuccesses(faces, clampDifficulty(num(ask.diff) || 6), {specialty: !!ask.specialty, willpower: !!ask.willpower && k === 0, autoSuccesses: num(op.roll?.auto)});
     });
     if ( op.roll && !rolls.length ) return fail("The card has no roll.");
-    const out = R.resolve(o, op, rolls, {actorId: actor.id, ...eraNow()});
+    const out = R.resolve(o, op, rolls, {actorId: actor.id, actorName: actor.name, ...eraNow()});
     const tile = isTile(doc);
     const snap = {ds: tile ? null : doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), ...(tile ? {hidden: !!doc.hidden} : {})};
     const lines = [];
@@ -544,6 +581,7 @@ export async function applyAsk(msg) {
       lines.push(...w.lines);
     }
     if ( o.mount ) lines.push(...await mountReport(o, doc, out, op, actor, tokDoc));
+    if ( o.isTarget ) lines.push(...targetReport(o, doc, out, actor));
     let climbed = null;
     if ( o.climb ) { climbed = await climbReport(o, doc, out, actor, tokDoc); lines.push(...climbed.lines); }
     if ( whisper ) lines.push("What was learned is in a whisper to the player and the Storyteller.");
@@ -663,6 +701,11 @@ export async function undoCard(msg) {
     // The tile's own picture from before any state picture (artBase) stays: the picture is put back from it
     for ( const k of Object.keys(now) ) if ( !(k in done.snap.flags) && k !== "artBase" ) Object.assign(update, unsetKey(`flags.${MOD}.${k}`));
     for ( const [k, v] of Object.entries(done.snap.flags) ) update[`flags.${MOD}.${k}`] = v;
+    // Entries added since inside an object flag (a new name on a scoreboard) go too: an update only merges them
+    const plain = x => !!x && typeof x === "object" && !Array.isArray(x);
+    for ( const [k, v] of Object.entries(done.snap.flags) ) {
+      if ( plain(v) && plain(now[k]) ) for ( const sub of Object.keys(now[k]) ) if ( !(sub in v) ) Object.assign(update, unsetKey(`flags.${MOD}.${k}.${sub}`));
+    }
     await doc.update(update, isTile(doc) ? {} : {sound: false});
   }
   // People found in hiding go back into hiding (their places' occupant lists come back with each tile's flags)
@@ -1145,6 +1188,20 @@ async function mountReport(o, doc, out, op, actor, tokDoc) {
 /*  Climbing and jumping                                               */
 /* ------------------------------------------------------------------ */
 
+/** Active GM: the lines a target's card gets. */
+function targetReport(o, doc, out, actor) {
+  const lines = [];
+  if ( out.scores ) lines.push(...R.scoreLines(o));
+  else if ( out.patch?.flags?.scores ) {
+    const now = R.describeTarget({...(doc.flags?.[MOD] ?? {})});
+    const me = R.standings(now).find(x => x.a === actor.id);
+    if ( me && (o.kind === "mark" || o.kind === "dummy") ) lines.push(`${actor.name}: ${o.kind === "mark" ? `${me.pts} point${me.pts === 1 ? "" : "s"}, ` : ""}${me.hits} of ${me.shots}.`);
+  }
+  if ( out.wild ) lines.push("A wild shot: the Storyteller says where it lands.");
+  if ( out.mishap === "jam" ) lines.push("The gun is jammed until someone clears it (a turn, or the Storyteller's call).");
+  return lines;
+}
+
 /** Update options for a token put straight somewhere (a climb, a jump, an Undo): no walk along a path, walls ignored. */
 const STRAIGHT = td => ({animate: false, teleport: true, movement: {[td.id]: {method: "api", constrainOptions: {ignoreWalls: true, ignoreCost: true}}}});
 /** Where a token's centre would be with its corner at {x, y}. */
@@ -1297,6 +1354,8 @@ export function tileConfigHtml(doc) {
   const mnt = R.cleanMount(doc?.flags?.[MOD] ?? {});
   const onNow = R.aboard(R.describeMount(doc?.flags?.[MOD] ?? {}));
   const clb = R.cleanClimb(doc?.flags?.[MOD] ?? {});
+  const tgt = R.cleanTarget(doc?.flags?.[MOD] ?? {});
+  const board = R.describeTarget(doc?.flags?.[MOD] ?? {});
   return `<fieldset class="wix-config wix-tile"><legend>WoDX</legend>
     <h4 class="wix-sub">Container</h4>
     <p class="hint">A chest, cabinet, strongbox or safe that characters can open, pick, force and take things from. Hide the tile to keep it from players until found.</p>
@@ -1381,6 +1440,15 @@ export function tileConfigHtml(doc) {
     ${field("Gap in yards", `<input type="number" name="${p}.gap" value="${esc(clb.gap)}" min="1" max="20" placeholder="2">`, "A gap only: a success a yard.")}
     ${field("Drop in feet", `<input type="number" name="${p}.depth" value="${esc(clb.depth)}" min="0" max="1000" placeholder="10">`, "A gap only: how far a character falls who misses.")}
     ${field("Leads to", `<input type="text" name="${p}.climbTo" value="${esc(clb.climbTo)}" placeholder="A tile's id at the top or the far side">`, "Blank: you move the token yourself.")}
+    <h4 class="wix-sub">Target</h4>
+    <p class="hint">A target to shoot or throw at, bottles in a row, a practice dummy, or something to break. Range is measured from the shooter, with the bands of WoDX Combat.</p>
+    ${field("Target", `<input type="checkbox" name="${p}.isTarget"${tgt.isTarget ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
+    ${field("Kind of target", `<select name="${p}.targetKind" data-fixed>${opt(R.TARGETS, tgt.targetKind)}</select>`, "A target with rings is an archery butt in the early eras.")}
+    ${field("Made of", `<select name="${p}.objBuild" data-fixed>${opt(R.OBJECT_BUILDS, tgt.objBuild)}</select>`, "Something to break only. Fragile things break on any hit.")}
+    ${field("Bottles", `<input type="number" name="${p}.bottles" value="${esc(tgt.bottles)}" min="1" max="24" placeholder="6">`, "Bottles or cans only: how many in the row.")}
+    ${field("Broken", `<input type="checkbox" name="${p}.smashed"${tgt.smashed ? " checked" : ""}>`, "Something to break only. Untick to mend it.")}
+    ${tgt.isTarget && Object.keys(board.scores).length ? `<p class="hint">Scoreboard: ${esc(R.scoreLines(board).join("; "))}.</p>` : ""}
+    ${field("Clear the scoreboard", `<input type="checkbox" name="${p}.clearScores">`, "Tick and save to clear it and set the bottles up again.")}
   </fieldset>`;
 }
 function onRenderTileConfig(app, html) {
@@ -1413,6 +1481,15 @@ function onPreUpdateTile(doc, changes) {
   for ( const k of ["height", "gap", "depth"] ) if ( k in f && (f[k] === "" || f[k] === null) ) f[k] = null;
   if ( typeof f.climbTo === "string" ) f.climbTo = R.cleanClimb({climbTo: f.climbTo}).climbTo;
   // Everyone off, by the Storyteller's hand
+  if ( "bottles" in f && (f.bottles === "" || f.bottles === null) ) f.bottles = null;
+  if ( "clearScores" in f ) {
+    if ( f.clearScores ) {
+      const Del = globalThis.foundry?.data?.operators?.ForcedDeletion;
+      if ( Del ) f.scores = new Del(); else { delete f.scores; f["-=scores"] = null; }
+      f.left = null; f.hits = 0;
+    }
+    delete f.clearScores;
+  }
   if ( "clearAboard" in f ) { if ( f.clearAboard ) { f.driver = null; f.riders = []; } delete f.clearAboard; }
   // Arming a trap again by hand clears what it did last time
   if ( f.armed === true && doc.flags?.[MOD]?.sprung ) { f.sprung = false; f.holding = null; }
@@ -1490,7 +1567,7 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !tok?.actor || !col || !tok.document.isOwner ) return;
   const b = document.createElement("div");
   b.className = "control-icon wix-hud";
-  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues, lights, hiding places, hazards, altars, relics, fetishes, watch points, mounts, vehicles, climbs and gaps within reach, and searching";
+  b.dataset.tooltip = "Interact: doors, windows, walls, containers, traps, clues, lights, hiding places, hazards, altars, relics, fetishes, watch points, mounts, vehicles, climbs, gaps and targets within reach, and searching";
   b.innerHTML = '<i class="fa-solid fa-door-open"></i>';
   b.addEventListener("click", () => openInteract(tok).catch(e => console.error(`${MOD} |`, e)));
   col.appendChild(b);

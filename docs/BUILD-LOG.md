@@ -732,6 +732,15 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - 0.13.1: the move hook reads the new place from the change itself; climbs, jumps and their Undo put the token straight there (no animation, walls ignored); the gate waits for moves to settle. 1 more test.
 - 0.13.1 deployed 2026-11-09 from main 296459b (backup Backups\wodx-interactables-0.13.0-2026-11-09, MD5s match). gate-interact 24/24.
 
+### Interactables 0.14.0, 2026-11-09: targets on tiles (B156, B157)
+- Step 3 of the design note. A tile marked as a target: a target with rings (an archery butt in the early eras), bottles or cans in a row, a practice dummy, or something to break (fragile, light wood, heavy wood, stone, iron). The tile config gains a Target section with a scoreboard and Clear the scoreboard.
+- Listed out of reach as far as anything on the sheet carries, when the token can see it. Shoot it with each ranged weapon on the sheet (its Attribute, Ability, accuracy and difficulty, WoDX Combat's range bands); throw something at it (Dexterity + Athletics, 10 yards); strike a dummy (Melee or Brawl); break something up close (lifting chart or extended Strength).
+- Rings score 1, 2 or 3 by successes on a scoreboard on the tile; Read the scoreboard. A gun botch jams, a bow or throw botch is a wild shot. Fragile things shatter on a hit.
+- Undo takes a new name off the scoreboard too: Undo now removes entries added inside an object flag since the card.
+- Broken things and fallen rows show as Broken (a new state list) and send a break event; gunshots send a noise event.
+- Firearms, Archery, Melee and Brawl are read from the sheet.
+- Tests: 8 new (6 rules, 2 runtime), 654 in all; UI fit adds a target and the throw window. Gate step 25 (a marksman, a target 10 yards off, a lamp).
+
 ### WoDX Senses 0.1.0, 2026-11-09: what the senses tell (B170 to B174)
 - Ben's request (9 November 2026): answer "what do I see, hear, smell" in chat. Design study: https://claude.ai/artifact/6z5pwGb2XZMMsA8jHHGaq4. Built all four steps of it in one module.
 - scripts/senses-rules.mjs (pure): era bands, indoors by kind, parts of the day, light level, difficulty steps and powers, reach by sense, the place, hour and other-world layers, compose by successes, the seeded draw, remembered answers, commands and questions, Obfuscate. scripts/main.mjs: the ask window, commands, the question button, gathering sources (Interactables tiles read through its own rules, doors, NPC routine activities, noise from wodxInteractablesNoise, the wodxSensesGather hook), channels for powers, the cards and their buttons, Place senses, Describe this place, the arrival card.

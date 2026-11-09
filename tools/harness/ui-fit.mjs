@@ -609,11 +609,14 @@ game.world.id = worldId;
       title: "The black coach of the Graf von Rothenstein, with the family arms on its doors"}}}},
     // A cliff to climb
     {document: {id: "tile11", documentName: "Tile", x: 160, y: 260, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {climb: true, climbKind: "cliff", height: 60,
-      title: "The crag under the north tower of Burg Rothenstein, slick with rain"}}}}];
+      title: "The crag under the north tower of Burg Rothenstein, slick with rain"}}}},
+    // A target with rings and a scoreboard, out of reach
+    {document: {id: "tile12", documentName: "Tile", x: 460, y: 60, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {isTarget: true, targetKind: "mark",
+      title: "The straw butts behind the Schützenhaus on the meadow by the river", scores: {x1: {n: "Brother Anselm of the Cistercian grange", shots: 12, hits: 7, pts: 15}}}}}}];
   globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document])), lights: new Coll([["lampA", {id: "lampA", x: 300, y: 300, hidden: false, flags: {}}]])}, grid: {size: 100},
     walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
-  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")], ["Interact fire roll", () => ix.attempt(tok, "tile7", "putOut")], ["Interact vehicle roll", () => ix.attempt(tok, "tile10", "mount")], ["Interact climb roll", () => ix.attempt(tok, "tile11", "climb")]] ) {
+  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")], ["Interact fire roll", () => ix.attempt(tok, "tile7", "putOut")], ["Interact vehicle roll", () => ix.attempt(tok, "tile10", "mount")], ["Interact climb roll", () => ix.attempt(tok, "tile11", "climb")], ["Interact target roll", () => ix.attempt(tok, "tile12", "throw")]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
