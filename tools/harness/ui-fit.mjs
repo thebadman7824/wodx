@@ -201,6 +201,27 @@ await change.vitaeDialog();
 const states = await import(join(root, "modules/wodx-creation/scripts/states.mjs"));
 await states.deathDialog();
 await states.awakenDialog();
+await states.revenantDialog();
+await states.chrysalisDialog();
+await states.fallenDialog();
+await states.secondBreathDialog();
+{ // A new host needs a Demon sheet
+  const dm = uiActor(90, "Demon", "general"); game.actors.set(dm.id, dm);
+  await states.possessDialog();
+  game.actors.delete(dm.id);
+}
+{ // The Near Dreaming gateway and Otherworld rolls use DialogV2.wait
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const realms = await import(join(root, "modules/wodx-otherworlds/scripts/realms.mjs"));
+  const old = globalThis.canvas;
+  const traveller = {id: "trav1", name: "Test Garou", actor: {name: "Test Garou", type: "Werewolf"}, document: {name: "Test Garou"}};
+  globalThis.canvas = {...(old ?? {}), tokens: {...(old?.tokens ?? {}), controlled: [traveller]}};
+  await realms.dreamingDialog();
+  await realms.rollsDialog();
+  globalThis.canvas = old;
+  api.DialogV2.wait = wait;
+}
 // The First Change needs WoDX Actions' rules: load them on their own here (game.wodxActions comes later)
 {
   const GX = await import(join(root, "modules/wodx-actions/scripts/garou.js"));
