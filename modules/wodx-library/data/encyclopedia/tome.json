@@ -1,0 +1,802 @@
+[
+ {
+  "id": "tome-scath",
+  "title": "Scáth, the Wandering City",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A hidden city that moves and vanishes, sought by Cainite coteries.",
+  "claims": [
+   {
+    "text": "Scáth is said to shift its position and drop from sight at times, so no map can find it; seekers expect ancient mystic treasures there and a secret about the Blood itself.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "A diary of 1242 tells of a coterie sent by an unnamed powerful patron, chasing clues through Dublin, Edinburgh and Norwich toward London.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 9,
+      "pdf": 10
+     },
+     {
+      "book": "tome",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-creidne-hunger"
+  ]
+ },
+ {
+  "id": "tome-creidne-hunger",
+  "title": "The Road-Hunger of the Seekers",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the patron's gift changed the seekers' thirst.",
+  "claims": [
+   {
+    "text": "On the hunt for Scáth the travellers stopped needing blood: those who kept to the path felt fed, while those who strayed starved as if a week without a vessel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Childer Embraced on the road shared the gift, did not hunger and did not turn on their sires when they rose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "In Edinburgh a woman gave the coterie an ancient clawed fingerbone that killed plants within a foot and had already killed three horses that carried it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-scath"
+  ]
+ },
+ {
+  "id": "tome-abyss-mystics",
+  "title": "Abyss Mystics",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Lasombra who study the darkness as a path of worship and power.",
+  "claims": [
+   {
+    "text": "A small number of Lasombra scholars gaze into darkness to find secrets, servants and gods; they offer to entropy and gain powers to confuse, terrify and destroy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "The rest of the clan treats them with both respect and distance, and few Lasombra wish to follow them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Their underground sanctums are called Oubliettes; Boukephos of Clan Lasombra broke with this and raised one on the surface.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra",
+   "obtenebration"
+  ]
+ },
+ {
+  "id": "tome-ingurgitant-vortex",
+  "title": "The Ingurgitant Vortex",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "An Abyss Mystic's trap painted in blood.",
+  "claims": [
+   {
+    "text": "The mystic paints a spiral costing two blood points per metre, prays to the Abyss for an hour in sight of it and spends two Willpower, then rolls Manipulation + Occult at difficulty 6; each success keeps the vortex for two turns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "A botch bars the mystic from summoning Abyssal beings for seven nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "The mystic senses anyone near the sigil and whether mortal or Cainite; one blood point makes the vortex attack and drag victims into the Abyss for nights equal to the mystic's Obtenebration.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-abyss-mystics"
+  ]
+ },
+ {
+  "id": "tome-alamut-concealment",
+  "title": "Assamite Concealment Rite",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A blood rite that hides a place from travellers.",
+  "claims": [
+   {
+    "text": "The sorcerer circles in blood, anoints the head, lies facing the sky, and must reach shelter before sunrise; the rite drains all but one blood point by waking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "For a month, anyone within half a mile goes around the spot or passes it unseeing, and tracks to and from it vanish; done inside Alamut it covers all of Alamut.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites"
+  ]
+ },
+ {
+  "id": "tome-koldunism",
+  "title": "Koldunism in the Voivodate",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The spirit-pact sorcery of the Tzimisce lands.",
+  "claims": [
+   {
+    "text": "Rivals blame the Tzimisce grip on Hungaria, Poland and Bulgaria on bonds with earth spirits: the Telyavs speak of primordial demons, and the Tremere of Ceoris of wicked ancient spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Koldunism, like Necromancy, claims old pagan roots, so Cainites rate it above Hermetic ritual.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tzimisce",
+   "tome-evoke-storm"
+  ]
+ },
+ {
+  "id": "tome-evoke-storm",
+  "title": "Evoke the Storm",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Level Four Transylvanian kraina rite.",
+  "claims": [
+   {
+    "text": "From a high open place with a clear horizon the koldun can raise gales, lightning and storms anywhere in view, short of a hurricane; player and Storyteller agree the effect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "This lasting rite is lost if the koldun ever stays awake past dawn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-koldunism"
+  ]
+ },
+ {
+  "id": "tome-witches-of-echidna",
+  "title": "The Witches of Echidna",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Setite sorcerers who once sold their art across the Mediterranean.",
+  "claims": [
+   {
+    "text": "Through the Long Night these sorcerers worked for courts from Iberia to Constantinople, and their blood magic, older than the Tremere, won the Serpents sanctuary and places at court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "By the War of Princes Setites are mostly unwelcome, the Witches have faded, and Setite Sorcery is kept from other clans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Akhu is the Egyptian name for Setite Sorcery; its cults follow many gods but share one aim, to strengthen the clan and find and please its founder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 60,
+      "pdf": 61
+     },
+     {
+      "book": "tome",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set",
+   "set"
+  ]
+ },
+ {
+  "id": "tome-high-low-magic",
+  "title": "High and Low Magic",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the age ranks sorcery.",
+  "claims": [
+   {
+    "text": "Mortal scholars place learned high magic of philosophy and mystery cults above the low magic of hearth and countryside, where folk faith and nature worship blend.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "The Order of Hermes takes low secrets where it can, and other practitioners are pushed to join as a House or perish.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Cainites invert this: they think better of witchcraft than mortals do and worse of Hermetic ritual, which they tie to the usurping Tremere; nearly everyone hates devil worshippers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "tremere"
+  ]
+ },
+ {
+  "id": "tome-cainite-holdings",
+  "title": "Keeping Holdings Across Lifetimes",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the undead keep land in a mortal world.",
+  "claims": [
+   {
+    "text": "A Cainite may be, or pose as, the rightful lord or vassal of valuable holdings, and must plan for them to stay in hand as mortal faces age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Staying too long draws the Church's notice to unnatural good health, and failing to pass holdings smoothly to a childe or puppet can lose everything.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Some forge papers and a past and start over in another country, at the cost of fury if found out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-vampire-knights"
+  ]
+ },
+ {
+  "id": "tome-knights",
+  "title": "Knighthood",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The mounted warriors of the age.",
+  "claims": [
+   {
+    "text": "Most knights are of noble birth with some clerical schooling; they train from youth, and the less able buy out of service through scutage or fall into poverty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "Commoners rarely win knighthood on the field; they serve war by feeding knights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "Landed knights owe about forty days of military service.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-vampire-knights",
+   "tome-mounted-maneuvers"
+  ]
+ },
+ {
+  "id": "tome-mounted-maneuvers",
+  "title": "Mounted Maneuvers",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Two horseback attacks.",
+  "claims": [
+   {
+    "text": "Side Slam: from a walk, trot or canter, Dexterity + Ride at difficulty 6 hits up to three adjacent foes from a warhorse, two from a riding horse; it may only be dodged, deals the horse's Strength as bashing, and knocks prone anyone whose Strength the damage beats.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Unhorse: Strength + Brawl or Melee at +2 difficulty from horseback; successes equal to the rider's Strength dismount the target on top of the damage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-knights",
+   "dac-arms"
+  ]
+ },
+ {
+  "id": "tome-vampire-knights",
+  "title": "Cainite Knights",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Knights among the undead.",
+  "claims": [
+   {
+    "text": "Some were knighted before the Embrace; others join a Cainite chivalric order or are dubbed under the shadow feudalism of the Damned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Cainite knightly orders began as novelties and became traditions, and many have risen and fallen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-templars",
+   "tome-knights"
+  ]
+ },
+ {
+  "id": "tome-templars",
+  "title": "The Templars",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A military order beyond Cainite reach.",
+  "claims": [
+   {
+    "text": "The order is rich and known for meddling, sides with Saracens when it suits, and lends money in spite of the usury ban.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Its inner circle has always resisted Cainite subversion; meddlers burn, and rumour says supremely faithful warrior priests lead it and list night creatures to be judged on a future day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-vampire-knights",
+   "inquisition"
+  ]
+ },
+ {
+  "id": "tome-eye-for-steel",
+  "title": "Eye for the Weakness of Steel",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A combination Discipline of Auspex 1, Celerity 1 and Fortitude 1.",
+  "claims": [
+   {
+    "text": "Toreador and Ventrue of the Fellowship of Our Lady developed it, and it passed to their successors after the Fellowship broke apart in 1218 through infighting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "Each blood point spent lets one blow ignore three soak dice of ordinary armour on one foe; it is reflexive and lasts the scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador",
+   "ventrue"
+  ]
+ },
+ {
+  "id": "tome-nikolas-cult",
+  "title": "The Followers of Nikolas",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A cult of faithful Cainites watched by Moncada.",
+  "claims": [
+   {
+    "text": "The cult outlived Nikolas and never learned who set the inquisitor on it; Moncada knows it survived and tracks it, holding back for now, perhaps aware that striking before turned Nikolas into a martyr.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Blood Apocrypha, Guardian Vigil and Mask of a Thousand Faces are favoured among them, along with combination Disciplines of their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Most members are truly devout, though like any faith it draws frauds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-heaven",
+   "tome-faithful-damned"
+  ]
+ },
+ {
+  "id": "tome-faithful-damned",
+  "title": "The Faithful Damned",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Cainites who keep faith despite the curse.",
+  "claims": [
+   {
+    "text": "Some Cainites hold that they are not souls bound for Hell, and turn toward the light that burns them even with the Beast within.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "true-faith",
+   "tome-nikolas-cult"
+  ]
+ },
+ {
+  "id": "tome-demons",
+  "title": "Demons and the Damned",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How infernal powers court Cainites.",
+  "claims": [
+   {
+    "text": "Demons seldom show as horned devils; they wear the look of a friend, lover or confidant, and the strongest pose as gods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   },
+   {
+    "text": "All are unholy and all want something, and one may keep company with a Cainite for years before naming its price.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tome",
+      "page": 107,
+      "pdf": 108
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-infernalists"
+  ]
+ }
+]

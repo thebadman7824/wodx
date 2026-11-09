@@ -181,6 +181,12 @@
    "title": "V20 Dark Ages Companion",
    "short": "V20 DA Companion",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "tome",
+   "title": "V20 Dark Ages: Tome of Secrets",
+   "short": "Tome of Secrets",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -213,6 +219,7 @@
   "anarchs.json",
   "redlist.json",
   "cotr.json",
-  "v20dacomp.json"
+  "v20dacomp.json",
+  "tome.json"
  ]
 }
