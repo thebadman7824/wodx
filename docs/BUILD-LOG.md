@@ -1060,3 +1060,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - ency-rules.mjs: tiers rumour (Might be true) and open (Unknown); claim.versions (books that differ, each sourced); entry editions [{edition, text, refs}] and wodx {text, rule}. checkEntry checks every part; entryText (overlap) covers them. toJournal renders them; unchanged output for entries without them.
 - shelves.mjs: Shelf select in the Library window (data-fixed). CSS for tiers, versions, editions. Manual news line.
 - Tests: encyclopedia.test.mjs +4 (11 in all). Built in the cloud while the PC was off; deploy, gatelibrary, encydiag and UI fit wait for the PC.
+
+## 2026-11-09: a quiet interface and supernatural sight on the map (Senses 0.5.0, B286-B287)
+- quiet-rules.mjs / quiet.mjs: client setting quiet (off), keybinding quietToggle (Alt+Q), body class wsn-quiet hides #sidebar, #hotbar, #players; roll cards' "Difficulty: n" in words on this screen only; the state strip names the health level.
+- sight-rules.mjs / sight.mjs: actor flag wodx-senses.sight; token tool My sight (order 122) cycles the character's sights; client setting sightMap (on); board CSS filter and token rings on a PIXI layer, redrawn on control, canvas, token and actor changes.
+- Tests: senses.test.mjs +6. Gate: tools/gate/gatequiet.mjs (9 steps), queued for the PC. Built in the cloud while the PC was off.

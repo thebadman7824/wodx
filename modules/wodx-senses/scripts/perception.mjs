@@ -3,6 +3,8 @@
  * show only to whoever found them. The rules are in perception-rules.mjs; main.mjs passes its helpers in build().
  */
 import * as P from "./perception-rules.mjs";
+import * as Q from "./quiet-rules.mjs";
+import {quietOn} from "./quiet.mjs";
 import {resource, detectProfile} from "../../wodx-actions/scripts/profiles.js";
 
 const MOD = "wodx-senses";
@@ -60,6 +62,11 @@ export function refreshScreen() {
   const a = myCharacter();
   const which = setting("screen") === false ? null : P.screenFor({frenzy: inFrenzy(a), rotschreck: inRotschreck(a)});
   const edges = setting("state") === false ? [] : P.stateEdges(stateOf(a));
+  // The quiet interface always names the health level, unless a wound already shows
+  if ( a && quietOn() && !edges.some(e => /^(wound|incap)/.test(e.id)) ) {
+    const lvl = a.system?.health?.damage?.woundlevel;
+    edges.push({id: "health", words: Q.healthWord(lvl ? game.i18n.localize(lvl) : "")});
+  }
   let el = document.getElementById("wodx-senses-screen"), words = document.getElementById("wodx-senses-state");
   document.body.classList.toggle("wsn-drained", which === "rotschreck");
   if ( !which && !edges.length ) { el?.remove(); words?.remove(); return null; }
@@ -70,6 +77,7 @@ export function refreshScreen() {
     document.body.appendChild(el);
   }
   el.className = which ? `wsn-screen wsn-${which}` : `wsn-screen wsn-state-${edges[0].id}`;
+  if ( !which && edges.every(e => e.id === "health") ) el.className = "wsn-screen";
   if ( edges.length ) {
     if ( !words ) {
       words = document.createElement("div");
