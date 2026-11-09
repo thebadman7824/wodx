@@ -59,6 +59,20 @@ export function muffleChanges(sound = {}, on = true) {
 }
 export const isMuffled = (sound = {}) => sound.walls === true && sound.effects?.muffled?.type === MUFFLE.type;
 
+/**
+ * Personal themes: a short motif for a player character, heard by everyone at that character's spotlight moments
+ * (the start of their turn in a fight, or when the Storyteller presses Spotlight). Once a minute at most, so a quick
+ * round does not stack them. theme: {src, volume}; last: the real time (ms) it last played.
+ */
+export const THEME_GAP = 60000;
+export function themeToPlay(theme, {last = 0, now = Date.now(), force = false} = {}) {
+  const src = String(theme?.src ?? "").trim();
+  if ( !src || !AUDIO_EXT.test(src) ) return null;
+  if ( !force && now - Number(last || 0) < THEME_GAP ) return null;
+  const v = Number(theme?.volume);
+  return {src, volume: Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0.6};
+}
+
 /** The cues a clock move of delta seconds crosses, ending toDawn seconds before sunrise. */
 export function dreadCuesCrossed(toDawnAfter, delta) {
   const before = Number(toDawnAfter) + Number(delta);
