@@ -1094,6 +1094,18 @@ test("hazards: glass costs dice, less one a success stepping carefully; a live w
   assert.deepEqual(ids(R.optionsFor(w, ch())), ["powerOff"]);
   assert.equal(R.describeHazard({hazardKind: "shock", live: false}).live, false);
   assert.deepEqual(Object.values(R.SHOCKS).map(x => x.levels), [2, 4, 6, 8]);
+  // Held by the current: Strength to pull free, 5 for a vampire, 9 for anyone else; cutting the power frees everyone
+  assert.equal(R.hazardHit(w, {profile: "vampire"}).botchAggravated, true);
+  assert.ok(!R.hazardHit(w, {profile: "mortal"}).botchAggravated);
+  const held = R.describeHazard({hazardKind: "shock", shock: "major", caught: {pc1: true, npc1: true}});
+  assert.deepEqual(ids(R.optionsFor(held, ch())), ["pullFree", "powerOff"]);
+  assert.deepEqual([R.optionsFor(held, ch()).find(x => x.id === "pullFree").roll.diff, R.optionsFor(held, {...ch(), kind: "vampire"}).find(x => x.id === "pullFree").roll.diff], [9, 5]);
+  const pf = R.optionsFor(held, ch()).find(x => x.id === "pullFree");
+  assert.deepEqual(R.resolve(held, pf, [{successes: 1, botch: false}], {actorId: "pc1"}).patch.flags.caught, {pc1: false, npc1: true});
+  assert.equal(R.resolve(held, pf, [{successes: 0, botch: false}], {actorId: "pc1"}).result, "fail");
+  const off = R.optionsFor(held, ch()).find(x => x.id === "powerOff");
+  assert.deepEqual(R.resolve(held, off, [], {actorId: "pc1"}).patch.flags.caught, {pc1: false, npc1: false});
+  assert.ok(!ids(R.optionsFor(R.describeHazard({hazardKind: "shock", live: false, caught: {pc1: true}}), ch())).includes("pullFree"));
   assert.deepEqual(R.cleanHazard({hazard: true, hazardKind: "nope", hazDice: "40", hazType: "x"}),
     {hazard: true, hazardKind: "fire", size: "small", heat: "torch", shock: "minor", hazDice: 20, hazType: "", burning: true, spilled: false, cleared: false, live: true, pcsOnly: false});
 });
@@ -1922,4 +1934,26 @@ test("living maps: the change a tile needs, the form's ticked boxes, the words a
   const src = readFileSync(join(root, "modules/wodx-interactables/scripts/living.mjs"), "utf8");
   assert.match(src, /isHeld\?\.\(\)/, "nothing changes while the world is held");
   assert.match(src, /searchBox\(/, "the event list has a search box");
+});
+
+const wire = tile("wire1", 2200, 1000, {hazard: true, hazardKind: "shock", shock: "minor"});
+canvas.tiles.placeables.push(wire);
+test("runtime: walking onto a live wire holds the character until pulling free; Undo lets go", async () => {
+  tokPc.document.x = 2200; tokPc.document.y = 800;
+  await hooks.get("canvasReady")[0]();
+  tokPc.document.y = 1000;
+  try {
+    const cards = await api.onTokenMoved(tokPc.document);
+    assert.equal(cards.length, 1);
+    assert.equal(wire.document.flags[MOD].caught.pc1, true);
+    assert.ok(cards[0].flags[MOD].done.lines.some(l => /held by the current/.test(l)));
+    faces = [9, 2];
+    const msg = await api.attempt(tokPc, "wire1", "pullFree", {fd: {}});
+    assert.equal(msg.flags[MOD].done.result, "done");
+    assert.equal(wire.document.flags[MOD].caught.pc1, false);
+    await api.undoCard(msg);
+    assert.equal(wire.document.flags[MOD].caught.pc1, true);
+    await api.undoCard(cards[0]);
+    assert.ok(!wire.document.flags[MOD].caught?.pc1);
+  } finally { tokPc.document.x = 400; tokPc.document.y = 300; }
 });

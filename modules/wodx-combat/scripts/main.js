@@ -1217,9 +1217,14 @@ export async function soakAndApply(tok, fd) {
             aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true });
         if (sb) sp.notes.push(sb.note);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
-        soak = await rollPool(sp.dice, soakDiff, { canBotch: false, autoSuccesses: sp.autoSoak });
+        // A caller can ask that a botched soak turns the damage aggravated (electrocution of a vampire, V20 core printed p. 295, pdf 303)
+        soak = await rollPool(sp.dice, soakDiff, { canBotch: !!fd.botchAggravated, autoSuccesses: sp.autoSoak });
         if (soak.roll) rolls.push(soak.roll);
-        left = R.damageAfterSoak(dmgLevels, soak.successes, type, profile, { elder: isElder(actor) });
+        if (fd.botchAggravated && soak.botch) {
+            type = "aggravated";
+            sp.notes.push("Botched: the damage is aggravated");
+            left = { levels: dmgLevels, halved: false };
+        } else left = R.damageAfterSoak(dmgLevels, soak.successes, type, profile, { elder: isElder(actor) });
     }
     if (fd.chimerical && kind !== "fae") left = { levels: 0, halved: false };
     // Damage from one attack, entered by hand, dazes the same way (V20 Dark Ages p. 348)
