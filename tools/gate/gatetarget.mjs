@@ -71,7 +71,7 @@ export async function run({look = false} = {}) {
     await step("1 modules", async () => {
       const m = id => game.modules.get(id);
       const tags = Object.values(api()?.table ?? {}).reduce((n, x) => n + Object.keys(x).length, 0);
-      ok("1 modules", m(MOD)?.active && m(MOD).version === "0.1.0" && newer(m("wodx-actions").version, "3.12.0") && newer(m("wodx-combat").version, "3.7.5") && tags >= 931,
+      ok("1 modules", m(MOD)?.active && newer(m(MOD).version, "0.1.1") && newer(m("wodx-actions").version, "3.12.0") && newer(m("wodx-combat").version, "3.7.5") && tags >= 931,
         {targeting: m(MOD)?.version, actions: m("wodx-actions")?.version, combat: m("wodx-combat")?.version, tags});
     });
 

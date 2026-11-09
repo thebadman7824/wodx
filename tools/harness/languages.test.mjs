@@ -12,6 +12,10 @@ const L = await import(join(root, "modules/wodx-chronicle/scripts/languages-rule
 
 test("Linguistics: 1, 2, 4, 8, 16 beyond the native tongue", () => {
   assert.deepEqual([0, 1, 2, 3, 4, 5, 7].map(L.linguisticsAllows), [0, 1, 2, 4, 8, 16, 16]);
+  // V20: a language per Language Merit, two each with Natural Linguist
+  assert.equal(L.languagesFromMerits(["Language (Latin)", "Language: Czech", "Iron Will"]), 2);
+  assert.equal(L.languagesFromMerits(["Language (Latin)", "Natural Linguist"]), 2);
+  assert.equal(L.languagesFromMerits([]), 0);
 });
 
 test("scramble keeps the length and capitals, is the same each time, and differs by language", () => {

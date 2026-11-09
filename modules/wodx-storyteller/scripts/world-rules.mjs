@@ -241,7 +241,7 @@ export function reconcile(chars, world) {
 /*  Beats                                                              */
 /* ------------------------------------------------------------------ */
 
-export const BEAT_ON = {time: "A time", place: "A place", flag: "A flag on a character"};
+export const BEAT_ON = {time: "A time", place: "A place", flag: "A flag on a character", map: "A change on the map"};
 
 export function normBeat(b = {}) {
   const on = BEAT_ON[b.on] ? b.on : "time";
@@ -260,6 +260,8 @@ const getPath = (obj, path) => String(path ?? "").split(".").filter(Boolean).red
  *   {type: "time", world, personal: {actorId: seconds}}
  *   {type: "place", actor, place}            a character arrives somewhere (place: a scene id or uuid)
  *   {type: "flag", actor, flags}             a character's flags changed
+ *   {type: "map", actor, place, kind, state} something changed on the map (WoDX Interactables): the beat's place is
+ *                                            the scene, its value (blank: any) the kind of change or the new state
  */
 export function beatFires(beat, ev) {
   const b = normBeat(beat);
@@ -271,6 +273,10 @@ export function beatFires(beat, ev) {
   }
   if ( b.actor && ev.actor !== b.actor ) return false;
   if ( b.on === "place" ) return !!b.place && (ev.place === b.place || String(ev.place ?? "").endsWith(`.${b.place}`) || String(b.place).endsWith(`.${ev.place}`));
+  if ( b.on === "map" ) {
+    if ( b.place && !(ev.place === b.place || String(ev.place ?? "").startsWith(`${b.place}.`)) ) return false;
+    return b.value === null || b.value === ev.kind || b.value === ev.state;
+  }
   if ( b.on === "flag" ) {
     if ( !b.flag ) return false;
     const v = getPath(ev.flags, b.flag);
@@ -282,6 +288,22 @@ export function beatFires(beat, ev) {
 /* ------------------------------------------------------------------ */
 /*  Spotlight and reports                                              */
 /* ------------------------------------------------------------------ */
+
+/** A log line for a map event from WoDX Interactables, or null for one not worth the log (a noise nobody heard). */
+const MAP_WORDS = {noise: "made a noise at", open: "opened", force: "forced", break: "broke", alarm: "set off the alarm at", theft: "took what was in",
+  fire: "set fire to", fireOut: "put out", light: "lit", dark: "put out", desecrate: "desecrated", trap: "set off", disarm: "disarmed", hazard: "was hurt by",
+  holy: "stood on", found: "found something at", use: "used", crash: "came off or crashed", ride: "raced", watch: "kept watch from", call: "made a call on", mount: "got on", dismount: "got off"};
+export function mapEntry(ev) {
+  if ( !ev || ev.undone ) return null;
+  if ( ev.kind === "noise" && !(ev.heard ?? []).length ) return null;
+  if ( ["hazard", "holy", "light", "dark", "watch", "call", "mount", "dismount", "ride"].includes(ev.kind) ) return null;
+  const big = ["force", "break", "alarm", "theft", "fire", "desecrate", "crash"].includes(ev.kind);
+  const heard = (ev.heard ?? []).length;
+  return {id: `map:${String(ev.message ?? "").slice(0, 40)}`, kind: "world", scene: ev.scene ?? null, place: ev.place ?? null,
+    text: ev.kind === "crash" ? `${ev.whoName ?? "Someone"} came to grief with ${String(ev.objectName ?? "a mount or vehicle").toLowerCase()}${heard ? ` (heard by ${heard})` : ""}.`
+      : `${ev.whoName ?? "Someone"} ${MAP_WORDS[ev.kind] ?? "used"} ${String(ev.objectName ?? "something").toLowerCase()}${heard ? ` (heard by ${heard})` : ""}.`,
+    attention: big ? "A change on the map" : null};
+}
 
 /** What counts toward a player's share of the spotlight. */
 const SPOT = new Set(["solo", "travel", "roll", "arrive", "convene", "encounter", "cross"]);

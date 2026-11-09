@@ -99,6 +99,16 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.10.0-2026-11-09)
 - [ ] Untrained Skill page ref to pin (V20 core)
 
+## 0.12.0: pictures, markers and map events (2026-11-09)
+Step 1 of "Responsive Maps for WoDX".
+- [x] Rules: states by kind, the look for each, event kinds, the map event, feedback per player (B160)
+- [x] Runtime: picture swaps on the active Storyteller's client, Undo follows; markers on each client; tied ambient sounds; wodxMapEvent on every card and on Undo; floating word, flash and sound on each client by socket
+- [x] Tile config: pictures and sounds (a picture per state, follow a door or window, no marker, change sound, tied sounds)
+- [x] Settings: Map effects (each player), State markers (world)
+- [x] Harness tests (7 new) and UI fit
+- [ ] Gate step 21 in rothenstein-wodx
+- [ ] Deployed
+
 ## 0.13.0: climbing, ledges and jumps (2026-11-09)
 - [x] Rules: five climbs by yards a success, gaps by yards, catching the ledge, falls by height (B155)
 - [x] Runtime: arriving moves the token to the tile the climb leads to; falls through WoDX Combat; Undo for both

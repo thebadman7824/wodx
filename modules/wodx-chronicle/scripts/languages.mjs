@@ -1,6 +1,6 @@
 import {MODULE_ID, esc, setting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
-import {LANGUAGES, linguisticsAllows, understands, scramble, parseInCommand, norm} from "./languages-rules.mjs";
+import {LANGUAGES, linguisticsAllows, languagesFromMerits, understands, scramble, parseInCommand, norm} from "./languages-rules.mjs";
 
 /**
  * Languages in chat. Each character keeps the languages it speaks (flags["wodx-chronicle"].languages, the first one
@@ -39,6 +39,11 @@ export function linguisticsOf(actor) {
   if ( Number.isFinite(Number(a)) && Number(a) > 0 ) return Number(a);
   const item = [...(actor?.items ?? [])].find(i => /linguistics/i.test(i.name ?? ""));
   return Number(item?.system?.value) || 0;
+}
+
+/** Languages from Language Merits (V20 and the lines with no Linguistics Ability). */
+export function meritLanguagesOf(actor) {
+  return languagesFromMerits([...(actor?.items ?? [])].filter(i => i.type === "Feature" || i.type === "Trait").map(i => i.name));
 }
 
 /** The characters a user reads chat through: their assigned character and every actor they own. */
@@ -161,12 +166,13 @@ export class LanguagesApp extends ApplicationV2 {
     const rows = LanguagesApp.actors().map(a => {
       const list = languagesOf(a);
       const dots = linguisticsOf(a);
-      const allow = linguisticsAllows(dots);
+      const merits = meritLanguagesOf(a);
+      const allow = linguisticsAllows(dots) + merits;
       const over = list.length - 1 > allow;
       return `<div class="form-group wodx-language-row" data-search-item data-search-text="${esc(`${a.name} ${list.join(" ")}`)}">
         <label>${esc(a.name)}</label>
         <div class="form-fields"><input type="text" name="${esc(a.id)}" value="${esc(list.join(", "))}" list="wodx-language-names" placeholder="Native language first, then the others" aria-label="Languages of ${esc(a.name)}"></div>
-        <p class="hint">Linguistics ${dots}: ${allow} beyond the native tongue.${over ? " <strong>More than Linguistics gives.</strong>" : ""}</p></div>`;
+        <p class="hint">${dots ? `Linguistics ${dots}` : "No Linguistics"}${merits ? `, Language Merits ${merits}` : ""}: ${allow} beyond the native tongue.${over ? " <strong>More than the sheet gives.</strong>" : ""}</p></div>`;
     }).join("");
     const div = document.createElement("div");
     div.className = "wodx-body";

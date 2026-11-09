@@ -122,8 +122,22 @@ export function normState(s) {
   out.factions = (out.factions ?? []).map(normFaction);
   out.breaches = (out.breaches ?? []).map(normBreach);
   out.log = (out.log ?? []).slice(0, 200);
+  out.wrongs = (Array.isArray(out.wrongs) ? out.wrongs : []).filter(w => w && w.faction).map(normWrong).slice(-100);
   return out;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Wrongs done on the map (0.5.0)                                     */
+/* ------------------------------------------------------------------ */
+
+/** What a player can do on the map that a faction holding the place takes as a wrong. Fixed list. */
+export const WRONG_KINDS = {force: "a door forced", break: "something broken", theft: "a theft", fire: "a fire set", desecrate: "a holy place desecrated"};
+export function normWrong(w = {}) {
+  const str = (v, n = 160) => (v === undefined || v === null ? null : String(v).slice(0, n));
+  return {id: str(w.id, 60), at: Number(w.at) || 0, faction: str(w.faction, 60), kind: WRONG_KINDS[w.kind] ? w.kind : "break", place: str(w.place), by: str(w.by, 80), what: str(w.what, 80)};
+}
+/** The wrongs done to a faction since a time. */
+export const wrongsSince = (state, factionId, since = 0) => (state.wrongs ?? []).filter(w => w.faction === factionId && w.at >= since);
 export const influenceTotal = f => Object.values(f.assets.influence ?? {}).reduce((a, b) => a + b, 0);
 /** The faction's strongest sphere, or null. */
 export function topSphere(f) {
@@ -209,6 +223,8 @@ export function pickMove(state, f, rand, ctx = {}) {
   const rivals = rivalsOf(state, f);
   const bitter = rivals.filter(r => standingOf(f, r.id) <= -2);
   if ( bitter.length ) { w.defend += 2; w.scheme += 2; }
+  // A break-in, theft or fire at one of its places since the last turn: it looks to its defences
+  if ( wrongsSince(state, f.id, ctx.since ?? Infinity).length ) w.defend += 3;
   if ( !rivals.length ) { w.scheme = 0; if ( f.kind !== "hunters" ) w.hunt = 0; }
   const quarry = huntersQuarry(state, f);
   if ( f.kind === "hunters" && quarry ) w.hunt += 6;
@@ -521,7 +537,7 @@ export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], p
   for ( const f0 of order ) {
     const f = work.factions.find(x => x.id === f0.id);
     const rand = streamFor(`${seedKey}:${f.id}`);
-    const choice = pickMove(work, f, rand, {turn, spheres});
+    const choice = pickMove(work, f, rand, {turn, spheres, since: now - TURN_DAYS * 86400});
     const r = resolveMove(work, f, choice, rand, leaders, {turn, places, spheres, rand2: streamFor(`${seedKey}:${f.id}:defence`)});
     r.size = sizeOf(r.changes, {pcActors, state: work});
     results.push(r);

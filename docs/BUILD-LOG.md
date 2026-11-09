@@ -735,3 +735,22 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Lines: data/places.json (316 lines, 12 kinds of place by 4 senses, five era bands) and data/world.json (159 lines: hour, sky, moon, feast and curfew; live sources; the Penumbra with resonance and the Shadowlands; 10 power channels). Made from tools/senses-data/places.py and rest.py; edit those and run them, or edit the JSON.
 - Tests: senses.test.mjs (25: 2 table checks, 11 rules, 12 runtime). 591 harness tests pass. UI fit adds the ask window (with Auspex) and Place senses with twelve long-named regions; in the cloud container every window, old and new, fails only the minimized controls-button check (Font Awesome is not beside the copy of foundry2.css there), so the full check is to run on the PC.
 - Gate: tools/gate/gatesenses.mjs (12 steps) in rothenstein-wodx.
+- Tests: 5 new (2 rules, 3 runtime), 571 in all; UI fit adds a telephone. Gate step 21 (a window on the watchman's corner). Not deployed yet.
+
+### Gear by era, 2026-11-09: WoDX Library 0.1.0, Combat 3.7.7 (B128)
+- Gap review item 7. New module wodx-library: gear-rules.mjs (table parsing, row to item, era filter), main.mjs (compendium install, Gear by era window, give), data/gear.json built by tools/library/build-gear.mjs from docs/research/gear-tables (read from the books on the PC). Combat armor() counts implants.
+- Tests: gear.test.mjs (5). 554 harness tests pass. UI fit: the Gear window passes (only the minimized-button check fails in the container, as for every window). Gate: tools/gate/gategear.mjs (6 steps).
+
+### Book checks, 2026-11-09: Targeting 0.1.1, Chronicle 0.5.3 (B129)
+- Gap review item 10. tags.json: 39 tags fixed. gifts-daw.json: chk taken off 19 Gifts, 7 effects and one difficulty corrected. garou.json: metis confirmed. languages: languagesFromMerits(). Notes kept in docs/research/book-checks/book-checks.md. 554 harness tests pass.
+
+### Interactables 0.12.0, 2026-11-09: pictures, markers and map events (B160)
+- Step 1 of the design note "Responsive Maps for WoDX". scripts/state-rules.mjs (pure: states by kind, the look for a state, event kinds, the map event, feedback) and scripts/states.mjs (picture swaps on the active Storyteller's client from updateTile and updateWall, markers drawn on each client in the interface layer, tied ambient sounds, the event from each card's create or update, the socket that plays the moment on every client, the tile config's "pictures and sounds" part).
+- Watch points and mounts (0.10.0, 0.11.0) now send their events through states.publish, in the same shape as a card's: object is the tile id, objectKind the kind (window, bell, cart), place the NPC place. New event kinds: watch, call, mount, dismount, crash, ride. A card on a watch point or mount sends no second event.
+- main.mjs: cards now keep who heard (done.heard) and whether an alarm went off (done.alarm); Undo keeps the tile's original picture (artBase). module.json: socket on.
+- Tests: 7 new (4 rules, 3 runtime), in all (now 590 with the merge). UI fit adds the pictures and sounds part to the tile config. Gate step 23.
+
+### NPC 0.4.0 and Storyteller 0.3.0, 2026-11-09: the world answers the map (B161, B162)
+- Steps 2 and 3 of "Responsive Maps for WoDX". NPC: scripts/alert-rules.mjs (pure: alarm, wary, calm; notice difficulty by level; hearers; marks and repairs); routines.mjs listens for wodxMapEvent (hearers react on a reaction card, sleepers wake, alarms on scenes with an Undo card, the clock fades them, the WoDX: Alert zone region behaviour, repairs at dawn with Undo); faction-rules.mjs and factions.mjs keep wrongs against factions (+3 to Defend at the next turn) and post a rumour button for a supernatural desecration.
+- Storyteller: world-rules.mjs gets map beats (BEAT_ON.map) and mapEntry; core.mjs onMapEvent writes the log line, takes it out on Undo and checks beats; the beat window says "A change on the map".
+- Tests: responsive-maps.test.mjs (4 rules tests) and runtime tests in phase7c-runtime (2 map events, marks), phase7d-runtime (wrongs and the rumour button) and phase7e-runtime (log and beats); 583 in all. Gate: tools/gate/gate-maps.mjs, 7 steps. Not deployed yet.

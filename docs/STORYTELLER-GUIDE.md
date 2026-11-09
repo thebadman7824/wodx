@@ -275,6 +275,20 @@ What can be tried: open or close, open quietly (Dexterity + Stealth), lift a bar
 
 Settings (WoDX Interactables): the door-click shortcut, reach in grid squares, whether long attempts move the clock, whether NPCs hear noise, and whether traps go off. You can Shift-click a locked door yourself to use Interact for the selected token.
 
+## Responsive maps: the map shows what happened, and the world answers
+
+*Interactables 0.12.0, NPC 0.4.0 and Storyteller 0.3.0, on in the testing world (rothenstein-wodx) only. Not deployed yet.*
+
+**What players see.** When something on the map changes, everyone sees it and it stays: a door opens, a chest shows as forced or emptied, a fire burns out. Give a tile a picture for each state in the **WoDX: pictures and sounds** part of its config window, or tell it to follow a door by the wall's id. With no picture for a state, a small marker with the state's word sits on the tile (world setting "State markers"); clues and hiding places never show one. Each change also floats a word over the spot, a short flash for a loud one, and the tile's own sound, for everyone who can see or hear it. A player with a slow machine can set "Map effects" to Light or Off in their own settings; the lasting change still shows. Undo puts the picture back too.
+
+**Who hears it.** The NPCs who heard a noise each get a reaction card, the same as a WoDX: Reaction region: Suggest or Auto by their profile, with Undo. Someone asleep wakes instead and reacts to the next thing. The card never writes what an NPC says. Turn it off with "NPCs answer what they hear".
+
+**Alarms.** A keypad, a bell or you can put a place on alarm (**Raise the alarm** on the reaction card, or a tripped alarm). It holds an hour of world time, then the place is wary until the next dusk, then calm, and you get a note at each step. Watchers notice more easily meanwhile (difficulty 4 on alarm, 5 wary). Draw a region with the **WoDX: Alert zone** behaviour and list light or sound ids in it: they come on while the alarm holds. Undo on the alarm card takes it back.
+
+**Repairs and grudges.** A forced lock or a broken pane in a place someone owns or lives in is put right at the next dawn, on one card with Undo. A fire, a theft, a desecration or a wall broken through stays until you change it. A break-in, theft, fire or desecration at a faction's place is a wrong against it, so it looks to its defences at its next turn. A desecration by something supernatural gives you a **Start a rumour** button; nothing spreads unless you press it.
+
+**The log and beats.** What a player's character does on the map goes into the tracker's log, the serious ones marked for your attention. A beat can fire on **A change on the map**: pick a scene (or none for anywhere), and type a kind or state such as forced, theft or broken (blank for any change).
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.

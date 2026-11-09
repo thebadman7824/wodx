@@ -110,6 +110,8 @@ const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/
 const {EventsApp} = await import(join(root, "modules/wodx-chronicle/scripts/events.mjs"));
 const {ArchiveApp} = await import(join(root, "modules/wodx-creation/scripts/archive.mjs"));
 const {LanguagesApp} = await import(join(root, "modules/wodx-chronicle/scripts/languages.mjs"));
+const {GearApp, setGear} = await import(join(root, "modules/wodx-library/scripts/main.mjs"));
+setGear(JSON.parse((await import("node:fs")).readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8")));
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
 const {CreationApp, SpendApp, awardDialog} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
 const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
@@ -131,7 +133,7 @@ class PlannedPassYears extends PassYearsApp {
 
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
-  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
+  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["Gear by era", GearApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
   ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
   ["Pass the years", PlannedPassYears, {}], ["People", RolledPeople, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);
@@ -619,7 +621,7 @@ game.world.id = worldId;
   windows.push({name: "Wall config · WoDX part", tag: "form", classes: "application sheet wall-config", width: 480, height: "auto",
     content: `<div class="standard-form">${ix.configHtml(walls[0].document)}</div><footer class="form-footer"><button type="submit">Update Wall</button></footer>`});
   windows.push({name: "Tile config · WoDX part", tag: "form", classes: "application sheet tile-config", width: 560, height: "auto",
-    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[6].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
+    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[6].document)}${ix.states.statesConfigHtml(tiles[6].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
   globalThis.canvas = oldCanvas;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;

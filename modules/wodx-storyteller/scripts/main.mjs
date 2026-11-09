@@ -69,6 +69,7 @@ Hooks.on("updateSetting", s => {
 Hooks.on("updateWorldTime", () => { if ( active && !skipping() ) safe(C.onClock()); });
 Hooks.on("wodxSkipEnd", () => { if ( active ) safe(C.onClock()); });
 Hooks.on("wodxEndScene", () => { if ( active ) safe(C.release()); });
+Hooks.on("wodxMapEvent", ev => { if ( active ) safe(C.onMapEvent(ev)); });
 Hooks.on("wodxBreach", p => {
   if ( !active ) return;
   const by = p?.by?.uuid ? fromUuidSyncSafe(p.by.uuid) : null;

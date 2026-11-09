@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.10.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
+ * WoDX Interactables 0.12.0: doors, locks, windows and walls that can be broken through, on core Foundry walls; containers, traps, clues, light sources and hiding places on tiles.
  *
  *   Interact   A player selects a token and presses Interact on the token HUD (or the I key). A window lists every door,
  *              window and breakable wall within reach of that token, nearest first, with the options for each: the
@@ -35,6 +35,8 @@
  *   Mounts     A tile marked as a mount or vehicle (a horse, a cart, a carriage, a boat, a car, a motorcycle) takes one
  *              character at the reins and passengers; moving the token at the reins carries the tile and everyone
  *              aboard. Keeping control and going flat out roll Dexterity + Ride or Drive; cars appear in their era (0.11.0).
+ *   States     A tile shows a picture or a marker for each state, with tied sounds and a floating word, and every result
+ *              goes out as one wodxMapEvent in one shape (states.mjs, state-rules.mjs; 0.12.0).
  *   Climbing   A tile marked as a climb (a ladder, a rope, a tree, a rough wall, a cliff) or a gap to jump: Dexterity +
  *              Athletics, extended, up the climb; Strength + Athletics across the gap, with a roll to catch the ledge;
  *              arriving moves the token to the tile it is tied to, and a fall does bashing dice by its height (0.13.0).
@@ -46,6 +48,7 @@ import * as R from "./interact-rules.mjs";
 import {countSuccesses, clampDifficulty} from "../../wodx-actions/scripts/core-rules.js";
 import {actionPool} from "../../wodx-actions/scripts/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {registerStateSettings, setupStates, publish} from "./states.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
@@ -567,6 +570,7 @@ export async function applyAsk(msg) {
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given,
+      heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,
       damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? climbed?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed, moved: climbed?.moved ?? null, undone: false};
     const verdict = waiting ? "Waiting for the Storyteller" : {done: "Done", progress: "Headway", fail: "No luck", botch: "Botch"}[out.result] ?? "";
     await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
@@ -656,7 +660,8 @@ export async function undoCard(msg) {
       if ( l && !!l.hidden !== s0.hidden ) await l.update({hidden: s0.hidden});
     }
     const now = doc.flags?.[MOD] ?? {};
-    for ( const k of Object.keys(now) ) if ( !(k in done.snap.flags) ) Object.assign(update, unsetKey(`flags.${MOD}.${k}`));
+    // The tile's own picture from before any state picture (artBase) stays: the picture is put back from it
+    for ( const k of Object.keys(now) ) if ( !(k in done.snap.flags) && k !== "artBase" ) Object.assign(update, unsetKey(`flags.${MOD}.${k}`));
     for ( const [k, v] of Object.entries(done.snap.flags) ) update[`flags.${MOD}.${k}`] = v;
     await doc.update(update, isTile(doc) ? {} : {sound: false});
   }
@@ -913,7 +918,7 @@ async function springCard(tokDoc, actor, doc, o) {
   Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: sp.noise, heard: heard.map(h => h.uuid)});
   Hooks.callAll("wodxInteractablesTrap", {scene: scene.id, tile: doc.id, token: tokDoc.uuid, kind: o.kind, caught: sp.caught, dice: sp.dice});
   const done = {result: "done", text: sp.text, noise: sp.noise, snap, hurt: 0, advanced: 0, worldTime: game.time.worldTime, waiting: false, lines, given: [],
-    damageMsg: sp.damageMsg, undone: false};
+    damageMsg: sp.damageMsg, heard: heard.map(h => h.uuid), undone: false};
   const ask = {v: 1, scene: scene.id, wall: doc.id, token: tokDoc.uuid, op: "spring", label: "A trap", user: game.user.id, state: "done"};
   const title = `${esc(actor.name)}: ${esc(R.TRAPS[o.kind].label)}`;
   const faces = sp.reflex?.faces ?? [];
@@ -1076,12 +1081,11 @@ export function peopleIn(target) {
   return (scene?.tokens?.contents ?? [...(scene?.tokens?.values?.() ?? [])]).filter(t => !t.hidden && !hasStatus(t.actor, "invisible") && inRect(centerOf(t, scene), r))
     .map(t => ({name: t.name ?? t.actor?.name ?? "Someone", uuid: t.uuid, lasombra: /lasombra/i.test(String(t.actor?.system?.clan ?? ""))}));
 }
-/** A map event for other modules (the responsive maps work): one plain shape for every result. */
+/** A map event for other modules: the same shape as a card's (states.mjs), with what this result adds. */
 export function mapEvent(kind, {scene, doc, tokDoc, noise = "silent", object = "", heard = [], supernatural = false, extra = {}} = {}) {
-  const ev = {kind, scene: scene?.id ?? doc?.parent?.id ?? "", place: doc?.id ?? "", at: doc ? tileCenter(doc) : null, noise, who: tokDoc?.uuid ?? "",
-    object, heard, supernatural, ...extra};
-  Hooks.callAll("wodxMapEvent", ev);
-  return ev;
+  let objectName = null;
+  try { objectName = doc ? R.nameOf(describeTile(doc) ?? {}) || null : null; } catch (e) { objectName = null; }
+  return publish(kind, {scene, doc, tokDoc, noise, heard, supernatural, objectName, objectKind: object || null, extra});
 }
 /** Active GM: a watch point's result. Whispers what a look shows; tells the Storyteller who a call reaches. */
 async function watchReport(o, doc, out, op, author, actor, tokDoc) {
@@ -1447,12 +1451,14 @@ function installDoorClick() {
 
 Hooks.once("init", () => {
   registerSettings();
+  registerStateSettings();
   game.keybindings?.register?.(MOD, "interact", {
     name: "Interact", hint: "The Interact window for the selected token: doors, windows and walls within reach.",
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
   game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

@@ -22,7 +22,9 @@
  *  21. a window tied to the watchman's corner: looking out whispers the watchman's name; a wodxMapEvent goes out; Undo
  *  22. a cart: the burglar (no Ride: Dexterity alone) takes the reins; moving the token carries the cart; getting off
  *      leaves it behind; Undo
- *  23. a rough wall tied to a ledge tile: climbing it (fixed dice) moves the burglar onto the ledge; Undo brings it back;
+ *  23. pictures and events: a chest forced swaps to its "forced" picture, one wodxMapEvent goes out; an emptied box with
+ *      no picture gets a marker; Undo puts the picture back and sends the event again marked undone
+ *  24. a rough wall tied to a ledge tile: climbing it (fixed dice) moves the burglar onto the ledge; Undo brings it back;
  *      a gap: a jump that falls short hangs, losing the grip falls through WoDX Combat; Undo
  * Result: Data/wodx-gate/gate-interact-result.json.
  */
@@ -427,7 +429,7 @@ export async function run() {
       const d = msg?.flags?.[MOD]?.done;
       const w = game.messages.get(d?.whisper ?? "");
       const told = !!w && w.content.includes(watchman.name) && !(msg?.content ?? "").includes(watchman.name);
-      const event = events.some(e => e.kind === "watch" && e.place === win?.id);
+      const event = events.some(e => e.kind === "watch" && e.object === win?.id);
       await ix().undoCard(msg);
       const back = !game.messages.get(d?.whisper ?? "");
       ok("21. looking out of a window names who is in the area it is tied to, in a whisper; a wodxMapEvent goes out; Undo takes it back", listed && told && event && back,
@@ -446,7 +448,7 @@ export async function run() {
       await dice(9);
       const m1 = await applied(await ix().attempt(tok, cart.id, "mount", {fd: {}}));
       Hooks.off("wodxMapEvent", hid);
-      const atReins = cart.flags[MOD]?.driver?.a === burglar.id && events.some(e => e.kind === "mount" && e.place === cart.id);
+      const atReins = cart.flags[MOD]?.driver?.a === burglar.id && events.some(e => e.kind === "mount" && e.object === cart.id);
       // Foundry may snap the token to the grid, so the cart is checked against where the token really went
       const x0 = cart.x, t0 = tb.x, driver = foundry.utils.deepClone(cart.flags[MOD]?.driver ?? null);
       await tb.update({x: tb.x + G});
@@ -465,7 +467,40 @@ export async function run() {
         {listed, atReins, carried, off, left, back, result: m1?.flags?.[MOD]?.done?.result ?? null, cartX: cart.x, x0, x1, t0, t1, t2, driver, at: {cx, cy}});
     });
 
-    await step("23. climbing", async () => {
+    await step("23. pictures and events", async () => {
+      await sleep(500);
+      const cx = tb.x + 50, cy = tb.y + 50;
+      await scene.createEmbeddedDocuments("Tile", [
+        {x: cx - 105, y: cy - 25, width: 50, height: 50, texture: {src: "icons/svg/chest.svg"}, flags: {[MOD]: {container: true, kind: "chest", lock: "cheap", ds: "locked", art: {forced: "icons/svg/explosion.svg"}, gate: "artchest"}}},
+        {x: cx - 105, y: cy + 30, width: 50, height: 50, texture: {src: "icons/svg/chest.svg"}, flags: {[MOD]: {container: true, kind: "box", ds: "open", gate: "plainbox"}}}]);
+      await sleep(500);
+      const chest = findTile("artchest"), box = findTile("plainbox");
+      const events = [];
+      const hook = Hooks.on("wodxMapEvent", e => events.push(e));
+      try {
+        await dice(9);
+        let m = null;
+        for ( let k = 0; k < 4 && !chest.flags[MOD]?.lockBroken; k++ ) m = await applied(await ix().attempt(tok, chest.id, "force", {fd: {}}));
+        for ( let k = 0; k < 30 && chest.texture.src !== "icons/svg/explosion.svg"; k++ ) await sleep(100);
+        const swapped = chest.texture.src === "icons/svg/explosion.svg" && chest.flags[MOD]?.artBase === "icons/svg/chest.svg";
+        const ev = events.find(e => e.object === chest.id && e.kind === "force" && !e.undone);
+        await box.update({[`flags.${MOD}.taken`]: true});
+        await sleep(400);
+        const look = ix().states.lookOf(box);
+        const layer = canvas.interface.children.find(c => c.name === "wodxStateMarkers");
+        const marker = look?.look?.marker === "Emptied" && (layer?.children?.length ?? 0) >= 1;
+        await ix().undoCard(m);
+        for ( let k = 0; k < 30 && chest.texture.src !== "icons/svg/chest.svg"; k++ ) await sleep(100);
+        const back = chest.texture.src === "icons/svg/chest.svg" && !chest.flags[MOD]?.lockBroken;
+        const undoneEv = events.some(e => e.object === chest.id && e.undone);
+        const effects = game.settings.get(MOD, "effects");
+        ok("23. a forced chest shows its forced picture, one map event goes out; an emptied box gets a marker; Undo puts the picture back and says so",
+          swapped && !!ev && marker && back && undoneEv && !!effects,
+          {swapped, ev, marker, markerCount: layer?.children?.length ?? null, back, undoneEv, effects, src: chest.texture.src, result: m?.flags?.[MOD]?.done?.result ?? null});
+      } finally { Hooks.off("wodxMapEvent", hook); }
+    });
+
+    await step("24. climbing", async () => {
       const cx = tb.x + 50, cy = tb.y + 50;
       await scene.createEmbeddedDocuments("Tile", [
         {x: 1100, y: 1200, width: 100, height: 100, texture: {src: "icons/svg/target.svg"}, flags: {[MOD]: {gate: "ledge"}}}]);
@@ -496,7 +531,7 @@ export async function run() {
       await ix().undoCard(m3);
       const healed = !game.messages.get(d3?.damageMsg ?? "") && gap.flags[MOD]?.hanging?.[burglar.id] === true;
       await ix().undoCard(m2);
-      ok("23. climbing a wall moves the burglar onto the ledge and Undo brings it back; a short jump hangs, letting go falls through WoDX Combat, Undo takes it back", listed && up && down && hangs && fell && healed,
+      ok("24. climbing a wall moves the burglar onto the ledge and Undo brings it back; a short jump hangs, letting go falls through WoDX Combat, Undo takes it back", listed && up && down && hangs && fell && healed,
         {listed, up, down, hangs, fell, healed, results: [m1, m2, m3].map(m => m?.flags?.[MOD]?.done?.result ?? null), tok: {x: tb.x, y: tb.y}, ledge: lc, at: {cx, cy}});
     });
 
