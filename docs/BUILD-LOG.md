@@ -967,3 +967,12 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - From the Player Immersion Study (approved by Ben 2026-11-09). Interactables 0.16.0 (carry-rules.mjs, carry.mjs), Senses 0.4.0 (stateEdges, stateOf), Chronicle 0.9.0 (reckoning-rules.mjs, house rule eraReckoning, the player clock), Storyteller 0.11.0 (letters-rules.mjs, letters.mjs, player button wodxLetters, socket req.letter), Atmosphere 0.10.0 (opening-rules.mjs, client setting openingCard, scene choice noCard, api.opening), NPC 0.7.0 (faces-rules.mjs, faces.mjs, world setting faces).
 - Tests: tools/harness/immersion.test.mjs (12); version pins moved in perception, phase7b, phase7c-runtime and phase7d tests. Full suite 801 pass. Gate: tools/gate/gateimmersion.mjs, 9 steps.
 
+## 2026-11-09: the Library's shelves, the manual and What's new (Library 0.2.0, B282)
+
+- shelf-rules.mjs (new): SHELVES, LINE_LABELS, ALL_ERAS, fromDisciplines, fromRoads, fromGifts, fromArcanoi, fromThorns, fromConditions, fromHouseRules, fromEras, buildShelves, fits, hashOf. shelves.mjs (new): sources, installShelves (made at ready when the shelf version rises; remade by hash), catalogue, LibraryApp (id wodx-library; line list, era filter, search), ensureManual, ensureChangelog. data/manual.mjs (new): MANUAL pages and CHANGES. Toolbar button wodxLibrary (order 116). api.library, api.manual, api.changelog.
+- Tests: tools/harness/library.test.mjs (5). Gate: tools/gate/gatelibrary.mjs, 6 steps.
+
+## 2026-11-09: ways and realms (Otherworlds 0.6.0, B283)
+
+- ways-rules.mjs (new): DEEP_REALMS, REALM_ORDER, WAY_KINDS, WAY_ORDER, endLayer, wayRegion, realmScene. ways.mjs (new): makeRealm, makeWay (refuses when a layer is missing), waysDialog. Toolbar button wodxWays (Storyteller, order 132); api.ways {make, realm, dialog, isRealm, rules}.
+- Tests: tools/harness/ways.test.mjs (3). Gate: tools/gate/gateways.mjs, 7 steps. UI fit: the Ways and realms dialog.
