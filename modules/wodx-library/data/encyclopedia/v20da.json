@@ -103,7 +103,7 @@
     ]
    },
    {
-    "text": "An ancilla is usually of the Tenth or Eleventh Generation, between 100 and 200 years old and hungry for power.",
+    "text": "An ancilla is usually of the Tenth or Eleventh Generation, aged a century or two and eager for power.",
     "tier": "stated",
     "refs": [
      {
@@ -194,7 +194,7 @@
     ]
    },
    {
-    "text": "In 1133 Tremere sorcerers raided Saulot's tomb and committed Amaranth, and their eldest became Third Generation.",
+    "text": "In 1133 a band of Tremere broke into Saulot's tomb and drank the Antediluvian's soul, so their eldest rose to the Third Generation.",
     "tier": "stated",
     "refs": [
      {
@@ -236,7 +236,7 @@
   "summary": "Caine's six commandments as Cainites of 1242 know them, each with its own wording.",
   "claims": [
    {
-    "text": "The six are the Covenant, the Domain, the Progeny, the Accounting, Destruction and the Silence of the Blood.",
+    "text": "The six are the Covenant, the Domain, the Progeny, the Accounting, Destruction and the Silence.",
     "tier": "stated",
     "refs": [
      {
@@ -285,7 +285,7 @@
     ]
    },
    {
-    "text": "The Sixth Tradition, the Silence of the Blood, forbids revealing one's nature to those not of the blood.",
+    "text": "The last Tradition, the Silence, forbids revealing one's nature to those not of the blood.",
     "tier": "stated",
     "refs": [
      {
@@ -394,7 +394,7 @@
   "summary": "Drinking another Cainite's heart's blood or soul for a sudden rise in power.",
   "claims": [
    {
-    "text": "The Amaranth is drinking the heart's blood or soul of another Cainite, an ethically doubtful but very effective way to gain power.",
+    "text": "To commit the Amaranth is to drain another Cainite down to the soul; it is dubious morally but a fast road to power.",
     "tier": "stated",
     "refs": [
      {
@@ -1015,7 +1015,7 @@
     ]
    },
    {
-    "text": "Each Assamite vizier is obsessed with the highest intellectual or creative Ability, which acts as a derangement.",
+    "text": "Every Assamite vizier has an obsession, working as a derangement, with the vizier's best intellectual or creative Ability.",
     "tier": "stated",
     "refs": [
      {
@@ -1054,7 +1054,7 @@
     ]
    },
    {
-    "text": "Rolls to resist or guide frenzy are two higher for a Brujah.",
+    "text": "A Brujah has +2 difficulty to resist or steer a frenzy.",
     "tier": "stated",
     "refs": [
      {
@@ -1104,7 +1104,7 @@
     ]
    },
    {
-    "text": "Cappadocians are the lorekeepers and historians of the Cainites, studying death through dissection, the dead and the Underworld.",
+    "text": "Cappadocians keep the lore and history of the Cainites and study death through dissection, the dead and the Underworld.",
     "tier": "stated",
     "refs": [
      {
@@ -1606,7 +1606,7 @@
     ]
    },
    {
-    "text": "The Gargoyles are built from the corpses of other vampires, most often Nosferatu, Gangrel and Tzimisce.",
+    "text": "Gargoyles are made from dead vampires' bodies, most often of Nosferatu, Gangrel and Tzimisce.",
     "tier": "stated",
     "refs": [
      {
@@ -1909,7 +1909,7 @@
   "summary": "By the 1240s Italy is a patchwork of growing cities where kine and Cainite thrive.",
   "claims": [
    {
-    "text": "By the middle of the 13th century Italy is a geographic name only; loyalty comes from the cities, swollen by migrants from the countryside.",
+    "text": "By the 1240s Italy is only a name on the map; loyalty comes from the cities, swollen by migrants from the countryside.",
     "tier": "stated",
     "refs": [
      {
