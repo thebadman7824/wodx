@@ -1,6 +1,6 @@
 import json
 BANDS={"m":"medieval","e":"early","i":"industrial","d":"modern","f":"future"}
-def L(t,n=0,e=None,p=None,io=None,sky=None,moon=None,w=None,glows=None):
+def L(t,n=0,e=None,p=None,io=None,sky=None,moon=None,w=None,glows=None,wx=None):
     d={"t":t}
     if n: d["n"]=n
     if e: d["e"]=[BANDS[c] for c in e]
@@ -9,6 +9,7 @@ def L(t,n=0,e=None,p=None,io=None,sky=None,moon=None,w=None,glows=None):
     if sky: d["sky"]=sky.split()
     if moon: d["moon"]=moon.split()
     if w: d["w"]=w
+    if wx: d["wx"]=wx.split()
     return d
 def parse(block):
     """Lines like:  [n] [e=mi] [p=night dusk] [io=in] | text"""

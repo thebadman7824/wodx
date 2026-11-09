@@ -24,3 +24,10 @@
 .wstory-dialog .wstory-report { max-height: 60vh; }
 .wstory-dialog .wstory-report h3 { margin: 0.5em 0 0.1em; }
 .wstory-status { margin: 0.3em 0; }
+
+/* Start a chronicle */
+.wstory-setup fieldset { margin: 0.5em 0; }
+.wstory-setup .wstory-lines { display: grid; grid-template-columns: repeat(auto-fill, minmax(16em, 1fr)); gap: 0.2em 0.8em; margin-top: 0.3em; }
+.wstory-setup .wstory-lines label { display: flex; align-items: center; gap: 0.35em; }
+.wstory-setup .form-group > label { flex: 0 0 14em; }
+.wstory-setup details { margin-top: 0.4em; }

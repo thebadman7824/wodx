@@ -1,0 +1,195 @@
+/**
+ * WoDX Atmosphere: the era kits' sound and art, as data and pure rules (no Foundry calls, so the harness can test them).
+ *
+ * Each era profile has a kit. The look (paper, type, frames) is WoDX Chronicle's; this module adds what is heard and
+ * the colour of the maps:
+ *
+ *   Music       moods (calm, tension, combat, sorrow, wonder), one Foundry playlist each, built from the files in
+ *               the kit's folder or chosen from the world's own playlists (Rothenstein's score, for the Dark Ages)
+ *   Ambience    one loop per kind of place (the twelve kinds WoDX NPC tags) and per weather, picked for the scene
+ *   Sounds      short cues for dawn, dusk and a notice; procedural ones ship with the module, a kit folder can replace them
+ *   Map colour  a light colour grade on the map for each era (sepia gaslight, drained plague years, neon future)
+ *   Handouts    journal page templates in the era's style: manuscript, notice, broadside, newspaper, telegram and more
+ *
+ * Files live outside the module, in the Data folder: wodx-kits/<kit>/music/<mood>/, wodx-kits/<kit>/ambience/ and
+ * wodx-kits/<kit>/sounds/, each with an optional credits.json ({file: {source, license, credit}}).
+ */
+
+export const MOODS = {
+  calm: "Calm: travel, talk, the city at night",
+  tension: "Tension: stalking, hiding, something wrong",
+  combat: "Combat",
+  sorrow: "Sorrow: loss, the Beast, the dead",
+  wonder: "Wonder: the Umbra, the Dreaming, true magic"
+};
+
+/** The twelve kinds of place WoDX NPC tags, and the weather loops, in the order a scene looks for them. */
+export const PLACE_KINDS = ["home", "workplace", "church", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "other"];
+export const WEATHER_LOOPS = ["thunder", "gale", "downpour", "rain", "snow", "wind", "night"];
+export const CUES = {dawn: "Dawn is close", dusk: "Sunset", notice: "Something needs the Storyteller"};
+export const AUDIO_EXT = /\.(ogg|oga|mp3|wav|flac|webm|m4a|opus)$/i;
+
+/**
+ * The kits. grade: the map colour (saturation, brightness and contrast as multipliers, sepia 0 to 1, hue a turn in
+ * degrees), handouts: the templates offered first in this era. uses: a kit whose files are borrowed when this one has none.
+ */
+export const KITS = {
+  "dark-ages": {name: "Dark Ages", palette: "Organ drones, chant, lute, harp, dulcimer, frame drums; modal keys",
+    grade: {saturation: 0.9, brightness: 1, contrast: 1.05, sepia: 0.12, hue: 0}, handouts: ["manuscript", "notice"]},
+  "long-night": {name: "Plague and Long Night", uses: "dark-ages", palette: "Tolling bells, sparse chant, wind through empty streets",
+    grade: {saturation: 0.55, brightness: 0.95, contrast: 1.05, sepia: 0.15, hue: 0}, handouts: ["notice", "manuscript"]},
+  "renaissance": {name: "Renaissance", uses: "dark-ages", palette: "Lute consort, recorders, viols, horns, stately dances",
+    grade: {saturation: 0.9, brightness: 1, contrast: 1.05, sepia: 0.25, hue: 0}, handouts: ["engraving", "broadside", "manuscript"]},
+  "victorian": {name: "Victorian", palette: "String quartet, music box, pipe organ, rain on cobbles, carriages",
+    grade: {saturation: 0.75, brightness: 1, contrast: 1.08, sepia: 0.35, hue: -4}, handouts: ["newspaper", "calling-card", "letter"]},
+  "wild-west": {name: "Wild West", palette: "Solo fiddle, reed instruments, wind, coyotes, distant trains",
+    grade: {saturation: 0.8, brightness: 1.02, contrast: 1.08, sepia: 0.3, hue: -5}, handouts: ["wanted", "broadside", "telegram", "letter"]},
+  "great-war": {name: "Great War", palette: "Low brass, field drums, distant artillery, gramophone crackle",
+    grade: {saturation: 0.5, brightness: 0.97, contrast: 1.1, sepia: 0.2, hue: 0}, handouts: ["telegram", "field-order", "letter"]},
+  "modern": {name: "Modern", palette: "Dark ambient, industrial pads, synthesized bass, rain and sirens",
+    grade: {saturation: 0.85, brightness: 1, contrast: 1.12, sepia: 0, hue: 4}, handouts: ["email", "printout", "newspaper"]},
+  "time-of-judgment": {name: "Time of Judgment", uses: "modern", palette: "Modern, with choir and bell motifs breaking through",
+    grade: {saturation: 1.1, brightness: 0.96, contrast: 1.12, sepia: 0.2, hue: -12}, handouts: ["email", "printout", "newspaper"]},
+  "future-darkness": {name: "Future Darkness", palette: "Synthwave and industrial",
+    grade: {saturation: 1.15, brightness: 1, contrast: 1.15, sepia: 0, hue: 8}, handouts: ["terminal", "feed", "email"]},
+  "classical": {name: "Classical", uses: "dark-ages", palette: "Lyre, aulos, frame drums",
+    grade: {saturation: 0.95, brightness: 1.02, contrast: 1.04, sepia: 0.1, hue: 0}, handouts: ["tablet", "manuscript"]},
+  "living-gods": {name: "Age of Living Gods", uses: "dark-ages", palette: "Harp, sistrum, reed pipes, temple drums",
+    grade: {saturation: 1, brightness: 1.03, contrast: 1.04, sepia: 0.12, hue: -3}, handouts: ["tablet", "manuscript"]}
+};
+
+/** The kit for an era profile (by its id, else the profile's own kit name). */
+export function kitFor(profile) {
+  if ( !profile ) return "dark-ages";
+  if ( KITS[profile.id] ) return profile.id;
+  return KITS[profile.kit] ? profile.kit : "dark-ages";
+}
+/** The kit and the kits it borrows from, nearest first. */
+export function kitChain(kit) {
+  const out = [];
+  let k = kit;
+  while ( k && KITS[k] && !out.includes(k) ) { out.push(k); k = KITS[k].uses; }
+  return out;
+}
+
+export const kitFolder = (kit, root = "wodx-kits") => `${root}/${kit}`;
+export const playlistName = (kit, mood) => `WoDX · ${KITS[kit]?.name ?? kit} · ${(MOODS[mood] ?? mood).split(":")[0]}`;
+export const ambienceName = kit => `WoDX · ${KITS[kit]?.name ?? kit} · Ambience`;
+export const folderName = kit => `WoDX · ${KITS[kit]?.name ?? kit}`;
+
+/** A track's name from its file: "rain-out.ogg" -> "rain out". */
+export const trackName = path => decodeURIComponent(String(path).split("/").pop()).replace(AUDIO_EXT, "").replace(/[_-]+/g, " ").trim();
+
+/**
+ * Sort a kit folder's files (as Foundry lists them) into moods, ambience keys and cues.
+ * files: paths. Returns {music: {mood: [paths]}, ambience: {key: path}, cues: {cue: path}, other: [paths]}.
+ */
+export function sortFiles(kit, files, root = "wodx-kits") {
+  const base = kitFolder(kit, root) + "/";
+  const out = {music: {}, ambience: {}, cues: {}, other: []};
+  for ( const f of files ?? [] ) {
+    const p = String(f);
+    if ( !AUDIO_EXT.test(p) ) continue;
+    const dec = decodeURIComponent(p);
+    const i = dec.indexOf(base);
+    const rel = (i >= 0 ? dec.slice(i + base.length) : dec).split("/");
+    const key = trackName(rel[rel.length - 1]).toLowerCase();
+    if ( rel[0] === "music" && rel.length >= 3 && MOODS[rel[1]] ) (out.music[rel[1]] ??= []).push(p);
+    else if ( rel[0] === "ambience" ) {
+      const k = key.split(" ")[0];
+      if ( PLACE_KINDS.includes(k) || WEATHER_LOOPS.includes(k) ) out.ambience[k] ??= p;
+      else out.other.push(p);
+    } else if ( rel[0] === "sounds" && CUES[key] ) out.cues[key] = p;
+    else out.other.push(p);
+  }
+  for ( const m of Object.keys(out.music) ) out.music[m].sort();
+  return out;
+}
+
+/**
+ * Which ambience loops a scene plays, from what the kit has: one for the place and, out of doors, one for the weather.
+ * place: {kind, indoor}, tags: the weather tags, night: true at night, have: the keys the kit has.
+ */
+export function ambienceFor({kind = "other", indoor = false, tags = [], night = true} = {}, have = []) {
+  const has = k => have.includes(k);
+  const out = [];
+  if ( has(kind) ) out.push(kind);
+  else if ( !indoor && has("street") && ["market", "gate"].includes(kind) ) out.push("street");
+  else if ( has("other") ) out.push("other");
+  if ( !indoor ) {
+    const w = WEATHER_LOOPS.filter(k => k !== "night").find(k => tags.includes(k) && has(k));
+    if ( w ) out.push(w);
+    else if ( night && has("night") && !out.length ) out.push("night");
+  }
+  return out;
+}
+
+/** The mood to play when nothing else asks: combat while a fight runs, else calm. */
+export function moodFor({combat = false, chosen = null} = {}) {
+  if ( combat ) return "combat";
+  return MOODS[chosen] ? chosen : "calm";
+}
+
+/**
+ * The map colour grade as a CSS filter for the board, at a strength from 0 (none) to 1. CSS filter functions run on the
+ * graphics card, so the grade costs next to nothing; "" when there is nothing to do.
+ */
+export function gradeCss(grade, strength = 1) {
+  const g = grade ?? {};
+  const s = Math.max(0, Math.min(1, Number(strength) || 0));
+  const lerp = (a, b) => Math.round((a + (b - a) * s) * 1000) / 1000;
+  const parts = [];
+  const sat = lerp(1, g.saturation ?? 1), sep = lerp(0, g.sepia ?? 0), bri = lerp(1, g.brightness ?? 1), con = lerp(1, g.contrast ?? 1), hue = lerp(0, g.hue ?? 0);
+  if ( sat !== 1 ) parts.push(`saturate(${sat})`);
+  if ( sep ) parts.push(`sepia(${sep})`);
+  if ( hue ) parts.push(`hue-rotate(${hue}deg)`);
+  if ( bri !== 1 ) parts.push(`brightness(${bri})`);
+  if ( con !== 1 ) parts.push(`contrast(${con})`);
+  return parts.join(" ");
+}
+
+/* ------------------------------------------------------------------ */
+/*  Handouts                                                           */
+/* ------------------------------------------------------------------ */
+
+/** The handout templates: label, the eras they suit, and the fields the form asks for. */
+export const HANDOUTS = {
+  manuscript: {label: "Manuscript leaf", eras: "Dark Ages to the Renaissance", from: "Written by", date: "Dated"},
+  notice: {label: "Proclamation or plague notice", eras: "Dark Ages, the Long Night", from: "By order of", date: "Given on"},
+  engraving: {label: "Engraved broadsheet", eras: "Renaissance", from: "Printed by", date: "Printed"},
+  broadside: {label: "Broadside", eras: "Renaissance to the Wild West", from: "Printed by", date: "Dated"},
+  newspaper: {label: "Newspaper column", eras: "Victorian to Modern", from: "Newspaper", date: "Edition"},
+  "calling-card": {label: "Calling card", eras: "Victorian", from: "Name on the card", date: "At home on"},
+  letter: {label: "Letter", eras: "Any era with paper and ink", from: "Signed", date: "Dated"},
+  wanted: {label: "Wanted poster", eras: "Wild West", from: "Offered by", date: "Reward"},
+  telegram: {label: "Telegram", eras: "Victorian to the Great War", from: "From", date: "Sent"},
+  "field-order": {label: "Field order", eras: "Great War", from: "Signed", date: "Time of issue"},
+  email: {label: "Email", eras: "Modern and after", from: "From", date: "Sent"},
+  printout: {label: "Printout or file", eras: "Modern and after", from: "File", date: "Printed"},
+  terminal: {label: "Terminal screen", eras: "Future Darkness", from: "Host", date: "Timestamp"},
+  feed: {label: "News feed", eras: "Future Darkness", from: "Feed", date: "Posted"},
+  tablet: {label: "Tablet or inscription", eras: "Classical, the Age of Living Gods", from: "Carved for", date: "In the year"}
+};
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
+
+/** Handout templates in the order an era offers them: its own first, then the rest. */
+export function handoutsFor(kit) {
+  const own = KITS[kit]?.handouts ?? [];
+  return [...own, ...Object.keys(HANDOUTS).filter(k => !own.includes(k))];
+}
+
+/**
+ * A handout page's HTML. Body text keeps its paragraphs (blank lines) and line breaks; nothing in it is read as HTML.
+ * The classes are styled by styles/wodx-atmosphere.css.
+ */
+export function renderHandout(id, {title = "", body = "", from = "", date = ""} = {}) {
+  const t = HANDOUTS[id] ? id : "letter";
+  const paras = String(body ?? "").split(/\r?\n\s*\r?\n/).map(p => p.trim()).filter(Boolean)
+    .map(p => `<p>${esc(p).replace(/\r?\n/g, "<br>")}</p>`).join("");
+  const meta = (label, v) => v ? `<p class="wodx-ho-meta"><span>${esc(label)}:</span> ${esc(v)}</p>` : "";
+  const h = HANDOUTS[t];
+  const head = t === "telegram" ? `<p class="wodx-ho-banner">TELEGRAM</p>` : t === "wanted" ? `<p class="wodx-ho-banner">WANTED</p>`
+    : t === "terminal" ? `<p class="wodx-ho-banner">&gt; ACCESS GRANTED</p>` : "";
+  return `<div class="wodx-handout wodx-ho-${t}">${head}${title ? `<h2>${esc(title)}</h2>` : ""}${t === "email" || t === "terminal" || t === "feed" ? meta(h.from, from) + meta(h.date, date) : ""}${paras}${t === "email" || t === "terminal" || t === "feed" ? "" : meta(h.from, from) + meta(h.date, date)}</div>`;
+}

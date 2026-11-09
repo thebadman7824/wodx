@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.2.0: the open world, and the ledger.
+ * WoDX Storyteller 0.4.0: the open world, the ledger, and starting a chronicle on the world template (setup.mjs).
  *
  * Players roam the world on their own, between sessions or side by side within one: they travel from place to place
  * and act alone (hunting, downtime, research, influence, talking to people), each on their own time in the night. The
@@ -14,6 +14,7 @@ import * as C from "./core.mjs";
 import * as A from "./apps.mjs";
 import * as W from "./world-rules.mjs";
 import * as Led from "./ledger.mjs";
+import * as Setup from "./setup.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -26,6 +27,7 @@ Hooks.once("init", () => {
   C.registerSettings();
   Led.registerLedgerSettings();
   Led.registerLedgerHooks();
+  Setup.registerSetupSettings();
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
@@ -46,7 +48,8 @@ Hooks.once("ready", () => {
     beats: C.beats, saveBeat: C.saveBeat, deleteBeat: C.deleteBeat, checkBeats: C.checkBeats,
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach},
-    beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass
+    beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
+    setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules}
   };
   const mod = game.modules.get(C.MOD);
   if ( mod ) mod.api = api;
@@ -56,6 +59,7 @@ Hooks.once("ready", () => {
     const n = rep.sections.reduce((t, s) => t + s.lines.length, 0);
     if ( rep.since !== null && n ) ui.notifications.info(`WoDX: ${n} things happened between sessions. Open the tracker's Between sessions report.`);
   }
+  Setup.maybeOpenSetup();
 });
 
 /* ---- Watching the table (the active Storyteller's client writes; the others only redraw) ---- */
@@ -107,6 +111,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
     button: true, visible: game.user.isGM, onChange: () => Led.LedgerApp.open()};
+  tokens.tools.wodxSetup = {name: "wodxSetup", title: "Start a chronicle (opening date, era, lines, the Storyteller screen)", icon: "fa-solid fa-book-open", order: 118,
+    button: true, visible: game.user.isGM, onChange: () => Setup.openSetup()};
 });
 
 /* ---- The socket ---- */

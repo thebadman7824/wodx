@@ -32,6 +32,7 @@ test("every place kind WoDX NPC tags has lines for all four senses, with somethi
 });
 
 test("every line is well formed: text, a need from 0 to 5, known tags", () => {
+  const WX_TAGS = ["rain", "downpour", "snow", "sleet", "hail", "fog", "mist", "wind", "gale", "thunder", "snow-lying", "cold", "hot", "leaves"];
   const bands = Object.keys(R.ERA_BANDS), parts = ["night", "dawn", "day", "dusk"], skies = ["clear", "cloudy", "overcast", "storm"];
   const walk = (x, path) => {
     if ( Array.isArray(x) ) for ( const l of x ) {
@@ -40,6 +41,7 @@ test("every line is well formed: text, a need from 0 to 5, known tags", () => {
       for ( const e of l.e ?? [] ) assert.ok(bands.includes(e), `${path} band ${e}`);
       for ( const p of l.p ?? [] ) assert.ok(parts.includes(p), `${path} part ${p}`);
       for ( const k of l.sky ?? [] ) assert.ok(skies.includes(k), `${path} sky ${k}`);
+      for ( const k of l.wx ?? [] ) assert.ok(WX_TAGS.includes(k), `${path} weather ${k}`);
       if ( l.io ) assert.ok(["in", "out"].includes(l.io), path);
       assert.ok(!/\s—\s|--/.test(l.t), `${path}: no dashes in ${l.t}`);
     }

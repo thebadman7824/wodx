@@ -1,0 +1,48 @@
+/* WoDX Atmosphere: the Atmosphere window and the handout templates. */
+.watmo-app .window-content { overflow-y: auto; }
+.watmo-body section { margin: 0 0 0.9em; padding-bottom: 0.6em; border-bottom: 1px solid rgba(127, 127, 127, 0.3); }
+.watmo-body h3 { margin: 0.2em 0 0.4em; }
+.watmo-body .form-group { display: flex; gap: 0.5em; align-items: center; flex-wrap: wrap; margin: 0.25em 0; }
+.watmo-body .form-group > label { flex: 0 0 15em; }
+.watmo-body .form-group > select { flex: 1 1 12em; min-width: 10em; }
+.watmo-body .form-group > button { flex: 0 0 auto; width: auto; }
+.watmo-row { display: flex; flex-wrap: wrap; gap: 0.4em; margin-top: 0.4em; }
+.watmo-row > button { flex: 0 0 auto; width: auto; }
+.watmo-fc { width: 100%; border-collapse: collapse; font-size: 0.92em; }
+.watmo-fc td { padding: 0.25em 0.3em; vertical-align: top; border-top: 1px solid rgba(127, 127, 127, 0.25); }
+.watmo-fc td:first-child { white-space: nowrap; }
+.watmo-fc td:last-child { white-space: nowrap; text-align: right; }
+.watmo-fc button { width: auto; padding: 0 0.5em; line-height: 1.6; }
+button.watmo-on { outline: 2px solid var(--wx-accent, #b33); }
+
+/* Handouts: each kind looks like its paper. Fonts come from WoDX Chronicle. */
+.wodx-handout { padding: 1.2em 1.4em; margin: 0.5em auto; max-width: 40em; line-height: 1.5; border-radius: 2px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35); }
+.wodx-handout h2 { border: 0; margin: 0 0 0.6em; text-align: center; }
+.wodx-handout .wodx-ho-meta { margin: 0.6em 0 0; font-style: italic; }
+.wodx-handout .wodx-ho-meta span { font-style: normal; opacity: 0.75; }
+.wodx-handout .wodx-ho-banner { text-align: center; letter-spacing: 0.25em; font-weight: bold; margin: 0 0 0.5em; }
+.wodx-ho-manuscript, .wodx-ho-tablet { background: #efe3c4; color: #2c1d0e; font-family: "WX Alegreya", "Palatino Linotype", serif; border: 1px solid #b89b62; }
+.wodx-ho-manuscript h2 { font-family: "WX Uncial", "WX Blackletter", serif; color: #7a1d12; }
+.wodx-ho-manuscript p:first-of-type::first-letter { font-family: "WX Blackletter", serif; font-size: 2.6em; float: left; line-height: 0.9; margin: 0.05em 0.1em 0 0; color: #7a1d12; }
+.wodx-ho-tablet { background: #d9d2c3; color: #2a2620; font-family: "WX Baskerville", serif; letter-spacing: 0.05em; text-align: center; }
+.wodx-ho-notice { background: #e8dcc0; color: #1f150b; font-family: "WX Blackletter", "WX Alegreya", serif; border: 3px double #3a2a18; text-align: center; }
+.wodx-ho-notice p { font-family: "WX Alegreya", serif; }
+.wodx-ho-engraving { background: #f0e6cf; color: #2b2116; font-family: "WX Baskerville", serif; border: 6px double #5b4630; }
+.wodx-ho-broadside, .wodx-ho-wanted { background: #eadfc5; color: #1b130b; font-family: "WX Baskerville", serif; text-align: center; border: 1px solid #8a7550; }
+.wodx-ho-broadside h2, .wodx-ho-wanted h2, .wodx-ho-wanted .wodx-ho-banner { font-family: "WX Poster", "WX Didone", serif; font-size: 1.8em; text-transform: uppercase; }
+.wodx-ho-wanted .wodx-ho-banner { font-size: 2.6em; letter-spacing: 0.1em; margin-bottom: 0.1em; }
+.wodx-ho-newspaper { background: #f2efe6; color: #151515; font-family: "WX Baskerville", "Times New Roman", serif; column-count: 2; column-gap: 1.5em; text-align: justify; }
+.wodx-ho-newspaper h2 { column-span: all; font-family: "WX Didone", serif; font-size: 1.7em; border-bottom: 2px solid #151515; }
+.wodx-ho-calling-card { background: #fbf8f1; color: #1c1c1c; max-width: 24em; text-align: center; font-family: "WX Didone", serif; border: 1px solid #c9c2b2; }
+.wodx-ho-letter { background: #f5eedd; color: #22201b; font-family: "WX Alegreya", serif; font-style: italic; }
+.wodx-ho-telegram, .wodx-ho-field-order { background: #efe7cf; color: #1c1a14; font-family: "WX Typewriter", "WX Courier", monospace; text-transform: uppercase; }
+.wodx-ho-field-order { border-left: 6px solid #6b6b4a; }
+.wodx-ho-telegram .wodx-ho-banner { border-bottom: 2px solid #1c1a14; padding-bottom: 0.2em; }
+.wodx-ho-email, .wodx-ho-printout { background: #ffffff; color: #111; font-family: "WX Plex", Arial, sans-serif; }
+.wodx-ho-email .wodx-ho-meta, .wodx-ho-printout .wodx-ho-meta { font-style: normal; font-family: "WX Plex Mono", monospace; font-size: 0.9em; }
+.wodx-ho-printout { font-family: "WX Courier", monospace; }
+.wodx-ho-terminal, .wodx-ho-feed { background: #07100c; color: #5cff9d; font-family: "WX Plex Mono", monospace; text-shadow: 0 0 4px rgba(92, 255, 157, 0.45); }
+.wodx-ho-terminal h2, .wodx-ho-feed h2 { font-family: "WX Techno", monospace; color: #9dffd0; text-align: left; }
+.wodx-ho-feed { color: #f0f0ff; background: #0d0b1a; text-shadow: none; border-left: 4px solid #ff3ea5; }
+.wodx-ho-feed h2 { color: #ff3ea5; }
+.wodx-ho-field-order h2 { font-family: "WX Stencil", monospace; }

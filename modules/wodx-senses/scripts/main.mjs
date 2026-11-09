@@ -1,5 +1,5 @@
 /**
- * WoDX Senses 0.1.0: what a character sees, hears, smells and feels, answered in chat.
+ * WoDX Senses 0.2.0: what a character sees, hears, smells and feels, answered in chat.
  *
  *   Asking     /look, /listen, /smell, /touch, or /sense for all four (a word after it puts lines about that first:
  *              "/look door"). The player toolbar button "What do I notice?" opens the same choice. A plain question in
@@ -23,7 +23,7 @@ import * as R from "./senses-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-senses";
-const VERSION = "0.1.2";
+const VERSION = "0.2.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -145,6 +145,10 @@ function moment(scene, p) {
   const indoor = R.isIndoor(place);
   let sky = "clear";
   try { sky = game.settings.get("wodx-actions", "sky") || "clear"; } catch (e) { /* clear */ }
+  // WoDX Atmosphere's weather, when it is on: its tags pick the weather lines and steps
+  let weather = null;
+  try { weather = modOn("wodx-atmosphere") ? (game.modules.get("wodx-atmosphere")?.api?.weather?.now?.() ?? null) : null; } catch (e) { weather = null; }
+  if ( weather?.sky ) sky = weather.sky;
   const moon = R.moonWord(t?.moon?.index);
   const year = num(t?.year) || num(chron()?.eras?.currentYear?.());
   const darkness = num(scene?.environment?.darknessLevel ?? scene?.darkness);
@@ -159,7 +163,8 @@ function moment(scene, p) {
       curfew = !!RR.isCurfew?.({hour: t.hour, minute: t.minute, isNight: t.isNight});
     }
   } catch (e) { /* no calendar extras */ }
-  return {t, hours, hour: Math.floor(hours), part, place, indoor, sky, moon, era: R.eraBand(year), year, light, feast, curfew, viewing: onCanvas(scene)};
+  return {t, hours, hour: Math.floor(hours), part, place, indoor, sky, moon, era: R.eraBand(year), year, light, feast, curfew, viewing: onCanvas(scene),
+    wx: weather ? weather.tags : null, heavy: weather?.intensity === "heavy", weather};
 }
 
 /** The world layer a token stands in: physical, penumbra or shadowlands. */
@@ -422,13 +427,13 @@ export async function answer(req) {
     ctx.uncannyRoll = r;
   }
   for ( const sense of senses ) {
-    const ctxL = {era: ctx.era, part: ctx.part, sky: ctx.sky, indoor: ctx.indoor, moon: ctx.moon};
+    const ctxL = {era: ctx.era, part: ctx.part, sky: ctx.sky, indoor: ctx.indoor, moon: ctx.moon, wx: ctx.wx};
     const src = sourceLines(sense, gathered.sources, ctx, pw, gathered);
     const heldOut = src.filter(l => l.held);
     const live = src.filter(l => !l.held);
     const crowd = gathered.sources.some(s => s.key === "activity.drink") || ["tavern", "market"].includes(ctx.place.kind) && ctx.part !== "night";
     const masked = gathered.sources.some(s => (s.key === "fire" || s.key === "brazier") && yardsBetween(me, s.at, scene) <= 10);
-    const D = R.difficulty(sense, {light: ctx.light, crowd, sky: ctx.sky, indoor: ctx.indoor, masked}, pw);
+    const D = R.difficulty(sense, {light: ctx.light, crowd, sky: ctx.sky, indoor: ctx.indoor, masked, wx: ctx.wx, heavy: ctx.heavy}, pw);
     // what is there and how hard each is to catch: a new wall or light changes the answer
     const fp = R.fingerprint([...live.map(l => `${l.id}:${l.n}`), ...(sense === "sight" ? [`light:${ctx.light}`] : [])]);
     const key = R.memoryKey({scene: scene.id, place: ctx.place.id, hour: `${ctx.t?.year ?? 0}-${ctx.t?.month ?? 0}-${ctx.t?.day ?? 0}-${ctx.hour}`, sense});
@@ -466,7 +471,7 @@ export async function answer(req) {
     sections.push({sense, lines, diff: D, successes, botch, rolled, roll, chosen: res.lines, held, repeat: !rolled && sameAsBefore});
   }
   try { await actor.update({[`flags.${MOD}.memory`]: R.trimMemory(memory)}); } catch (e) { console.warn(`${MOD} | could not remember the answer`, e); }
-  const result = {actor: actor.id, actorName: actor.name, token: req.token, user: user.id, scene: scene.id, ctx: {part: ctx.part, light: ctx.light, sky: ctx.sky, place: ctx.place, era: ctx.era, layer: ctx.layer, viewing: ctx.viewing},
+  const result = {actor: actor.id, actorName: actor.name, token: req.token, user: user.id, scene: scene.id, ctx: {part: ctx.part, light: ctx.light, sky: ctx.sky, place: ctx.place, era: ctx.era, layer: ctx.layer, viewing: ctx.viewing, wx: ctx.wx},
     sections, closer: !!req.closer, uncanny: ctx.uncannyRoll ? {successes: ctx.uncannyRoll.successes} : null};
   await postAnswer(result, rolls, user, td);
   return result;
@@ -487,7 +492,7 @@ function playerBody(res) {
 }
 function stBody(res) {
   const ctx = res.ctx;
-  const head = `<p class="wodx-quiet">${esc(cap(ctx.place.kind))}${ctx.place.name ? ` (${esc(ctx.place.name)})` : ""}, ${esc(ctx.part)}, ${esc(ctx.light)} light, sky ${esc(ctx.sky)}, ${esc(ctx.era)}${ctx.layer !== "physical" ? `, in the ${esc(cap(ctx.layer))}` : ""}${ctx.viewing ? "" : ". View the scene for walls and light to count"}.</p>`;
+  const head = `<p class="wodx-quiet">${esc(cap(ctx.place.kind))}${ctx.place.name ? ` (${esc(ctx.place.name)})` : ""}, ${esc(ctx.part)}, ${esc(ctx.light)} light, sky ${esc(ctx.sky)}${ctx.wx?.length ? ` (${esc(ctx.wx.join(", "))})` : ""}, ${esc(ctx.era)}${ctx.layer !== "physical" ? `, in the ${esc(cap(ctx.layer))}` : ""}${ctx.viewing ? "" : ". View the scene for walls and light to count"}.</p>`;
   return head + res.sections.map(s => {
     const roll = s.rolled ? `Perception + Alertness at ${s.diff.diff}${s.diff.parts.length ? ` (${esc(s.diff.parts.join(", "))})` : ""}: ${s.botch ? "a botch" : `${s.successes} success${s.successes === 1 ? "" : "es"}`}`
       : s.repeat ? `The same answer as before (${s.successes} success${s.successes === 1 ? "" : "es"})` : s.diff.blind ? "Too dark to see" : "A plain look, no roll";
@@ -568,7 +573,7 @@ export async function describePlace({scene = canvas?.scene, point = null} = {}) 
   if ( !game.user.isGM || !scene ) return null;
   const p = point ?? {x: num(scene.dimensions?.width ?? scene.width) / 2, y: num(scene.dimensions?.height ?? scene.height) / 2};
   const ctx = moment(scene, p);
-  const ctxL = {era: ctx.era, part: ctx.part, sky: ctx.sky, indoor: ctx.indoor, moon: ctx.moon};
+  const ctxL = {era: ctx.era, part: ctx.part, sky: ctx.sky, indoor: ctx.indoor, moon: ctx.moon, wx: ctx.wx};
   const seed = (() => { try { return chron()?.gen?.seed?.() ?? game.world.id; } catch (e) { return game.world.id; } })();
   const body = [];
   for ( const sense of ["sight", "sound", "smell"] ) {

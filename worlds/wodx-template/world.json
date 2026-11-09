@@ -9,14 +9,15 @@
   },
   "background": "systems/worldofdarkness/assets/img/graphics/Art%20of%20Vampire%20The%20Masquerade%20Summoning.jpg",
   "joinTheme": "minimal",
-  "description": "<p>World of Darkness Expanded (WoDX) template world. Phase 0: an empty world on the WoDX system fork. Later phases add the era profiles, modules and starter content. Private use only.</p>",
+  "description": "<p>World of Darkness Expanded (WoDX) template world. Turn on the WoDX modules, then the Storyteller's Start a chronicle window sets the opening date (and with it the era), the place, the climate and the lines at the table, and makes the Storyteller screen, the era primer, the group actor and Session Zero. Private use only.</p>",
   "packs": [],
   "flags": {
     "wodx": {
       "template": true,
       "eraProfile": "dark-ages",
       "startYear": 1197,
-      "phase": 0
+      "phase": 8,
+      "templateVersion": 1
     }
   }
 }
