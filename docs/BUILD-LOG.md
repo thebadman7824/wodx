@@ -653,6 +653,41 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Tests: 3 new (1 rules, 2 runtime); UI fit adds a full priest hole. Gate step 18 (the burglar hides in a wardrobe; Undo).
 - Deployed 2026-11-09 from main 414877e (backup Backups\wodx-interactables-0.5.0-2026-11-09, five files, MD5s match). gate-interact 18/18. Step 18 used the token's hidden switch (no Invisible status in that world).
 
+### Dated events and the long time skip, 2026-11-09: WoDX Chronicle 0.5.0 (B120, B121)
+- From the gap review in the Master Plan (items 1 and 2), which Ben asked to have built in full.
+- Dated events: 25 events with their book dates and pages, fired once as the clock passes them, undone when it goes back, one card per time skip, a Chronicle Rules page, and a Dated events window (search box, a switch, date and journal link per event). Metaplot events start off. The Future Darkness branch switch picks the timeline.
+- Hold the world: a Clock button that lets the clock move with nothing reacting; every module's per-tick work already checks isSkipping(), which now covers the hold. Releasing catches up once.
+- Tests: events.test.mjs (10) and longskip.test.mjs (9: one chronicle from 1197 to 2025 in seven Pass the Years steps with a Kindred elder, a ghoul, a mortal and a journal; after each step no actor, item or journal is lost, the era follows the date, the events fire oldest first and the elder's years awake grow). 498 harness tests pass.
+- UI fit: run in the cloud without Foundry's Font Awesome beside foundry2.css, every window (old and new alike) fails only the minimized header button check, which needs the icon font; to be rerun on the PC with the full public folder.
+- Gates: tools/gate/gateevents.mjs (9 steps) is new, and gateera.mjs is ported to rothenstein-wodx (it holds the world and deletes its cards). Not deployed yet.
+
+### Data versions and the nightly copy, 2026-11-09: still WoDX Chronicle 0.5.0 (B122)
+- Gap review item 6. scripts/migrations-rules.mjs (pure: the plan, which documents to back up, file names) and scripts/migrations.mjs (the run, the backup through FilePicker, the card, a log of the last 50 runs). API: game.wodx.chronicle.migrations.status(), run(), register(), backup().
+- No module needs a step yet, so every module is at data version 1; the first load of 0.5.0 stamps them.
+- tools/backup: nightly-backup.ps1 and register-nightly-backup.ps1 (PowerShell, below-normal priority, robocopy so a running Foundry is fine).
+- Tests: migrations.test.mjs (7: the plan, missing steps, newer data, the backup comes first and holds only the module's documents, the card, a failing step). 505 harness tests pass. gateevents gains step 10 (every WoDX module on has a data version).
+
+### The archive of the dead and a large world, 2026-11-09: WoDX Creation 0.7.0 (B123)
+- Gap review item 5. scripts/archive.mjs: candidates(), archive(), restore(), whereIs(), the index journal, and the Archive of the dead window (Configure Settings; two lists, each with a search box).
+- Tests: archive.test.mjs (5). Who may go and who stays (a player character, a linked token), the compendium first with the same id, an actor the compendium refused stays, bring back. A large world of 3000 characters and 400 journals in the stand-in: the Pass the Years plan 52 ms for 2002 rows, the archive list 6 ms, the events check under 1 ms, archiving 1003 in 313 ms. 523 harness tests pass with main merged.
+- Gate: tools/gate/gatearchive.mjs times the same things in Foundry with 500 test characters of its own, archives only those and deletes them after.
+
+### Languages in chat, 2026-11-09: WoDX Chronicle 0.5.1 (B124)
+- Gap review item 9. scripts/languages-rules.mjs (pure: Linguistics allowance, made-up words, /in parsing) and scripts/languages.mjs (hooks on chatMessage, preCreateChatMessage, renderChatMessageHTML and renderChatLog; the Languages window, with a search box).
+- Tests: languages.test.mjs (5). 528 harness tests pass.
+
+### The Ledger, 2026-11-09: WoDX Storyteller 0.2.0 (B125)
+- Gap review item 8. scripts/ledger-rules.mjs (pure) and scripts/ledger.mjs (due dates, the Veil, heirs and succession through the approval queue, the Ledger window with a search box on each list, a toolbar button for the Storyteller).
+- Tests: ledger.test.mjs (8). 536 harness tests pass. UI fit adds the Ledger with forty entries.
+- The archive gate ran 9/9 in rothenstein-wodx with 500 characters (Creation 0.7.0, deployed 2026-11-09).
+
+### Menu search, tours and check flavor, 2026-11-09: WoDX Actions 3.14.0, Chronicle 0.5.2 (B126)
+- Gap review item 4. profile-menus.js: the "Also found" group (checks and presets, shown only while searching; a new "check:<key>" spec). flavor.js: CHECK_POOLS and CHECK_GROUP_POOLS, read from the card's title. tours.mjs: two tours with a fallback for missing buttons; a Tour button on the Clock.
+- Tests: flavor-checks.test.mjs (2), tours.test.mjs (2). 540 harness tests pass.
+
+### Sheets past the first page, 2026-11-09: WoDX Sheets 0.6.0 (B127)
+- Gap review item 12. sheet-rules.mjs: page2 filled for all sheets but faeDA and wr20 (already had theirs). main.mjs: new blocks combat, gear, fetishes, rotes, description, with weaponLine() and armorLine(). block.hbs: an items block can carry a note.
+- Tests: sheets3.test.mjs (4). 544 harness tests pass. Gate: tools/gate/gatesheet5.mjs (13 steps).
 ### Interactables 0.7.0, Combat 3.7.6, 2026-11-09: fire and hazards (B151)
 - Hazards on tiles: fire, a brazier, lamp or candle stand to knock over, broken glass or caltrops, a live wire. The tile config gains a Hazard section: kind, the fire's size and heat, burning, knocked over, the glass's dice, swept aside, the current, power on, damage type, players only.
 - A live hazard hurts whoever walks into it, and in combat whoever starts a turn in a fire or on a live wire (the updateCombat hook). Damage goes through WoDX Combat's soak, with Undo. Fire follows WoDX Actions' fire table (V20 Dark Ages pp. 355-360). Glass gets a careful-step roll first.

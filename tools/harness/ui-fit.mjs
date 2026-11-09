@@ -107,6 +107,9 @@ for ( let i = 0; i < 8; i++ ) await chronicle.propose({type: "request", title: `
 const {ClockApp} = await import(join(root, "modules/wodx-chronicle/scripts/clock-app.mjs"));
 const {ApprovalsApp} = await import(join(root, "modules/wodx-chronicle/scripts/approvals.mjs"));
 const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/house-rules-app.mjs"));
+const {EventsApp} = await import(join(root, "modules/wodx-chronicle/scripts/events.mjs"));
+const {ArchiveApp} = await import(join(root, "modules/wodx-creation/scripts/archive.mjs"));
+const {LanguagesApp} = await import(join(root, "modules/wodx-chronicle/scripts/languages.mjs"));
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
 const {CreationApp, SpendApp, awardDialog} = await import(join(root, "modules/wodx-creation/scripts/apps.mjs"));
 const spendActor = [...game.actors.values()].find(a => a.type === "Vampire");
@@ -128,7 +131,7 @@ class PlannedPassYears extends PassYearsApp {
 
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
-  ["House rules", HouseRulesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
+  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
   ["Creation and experience", CreationApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
   ["Pass the years", PlannedPassYears, {}], ["People", RolledPeople, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);
@@ -537,6 +540,20 @@ game.world.id = worldId;
   const o = App.DEFAULT_OPTIONS;
   windows.push({name: "The Storyteller's tracker", tag: o.tag ?? "div", classes: ["application", ...(o.classes ?? [])].join(" "), width: o.position.width, height: o.position.height,
     content: app.element.querySelector("section.window-content").innerHTML});
+  // The Ledger: forty entries of every kind, open and closed, long names
+  {
+    const kinds = ["oath", "debt", "boon", "consequence"];
+    await game.settings.set("wodx-storyteller", "ledger", {entries: Array.from({length: 40}, (_, i) => ({id: `led${i}`, kind: kinds[i % 4], size: "major",
+      from: {id: people[i % people.length].id, name: people[i % people.length].name}, to: {id: null, name: "Bogdan Ursu, Voivode of Rothenstein and its valley"},
+      what: `A promise of some length, number ${i}, to see how the line wraps in the window`, made: game.time.worldTime - 86400 * i, due: i % 3 ? game.time.worldTime + 86400 * i : null,
+      status: i % 5 ? "open" : "kept"})), heirs: {}, veil: {value: 4, log: []}});
+    const LApp = (await import(join(root, "modules/wodx-storyteller/scripts/ledger.mjs"))).LedgerApp;
+    const la = new LApp({});
+    await la.render({force: true});
+    const lo = LApp.DEFAULT_OPTIONS;
+    windows.push({name: "The Ledger", tag: lo.tag ?? "div", classes: ["application", ...(lo.classes ?? [])].join(" "), width: lo.position.width, height: lo.position.height,
+      content: la.element.querySelector("section.window-content").innerHTML});
+  }
   for ( const [label, fn] of [["Out on your own", () => st.openOnYourOwn(people[1].id)], ["Convene", () => st.conveneDialog({actorIds: [people[0].id]})],
     ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
     ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()]] ) {

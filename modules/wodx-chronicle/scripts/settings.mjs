@@ -42,6 +42,9 @@ export function registerSettings(hooks) {
     scope: "world", config: false, type: String, default: "", onChange: () => hooks.onEraInputsChange()
   });
   game.settings.register(MODULE_ID, "declinedEra", {scope: "world", config: false, type: String, default: ""});
+  game.settings.register(MODULE_ID, "hold", {
+    scope: "world", config: false, type: Boolean, default: false, onChange: () => hooks.onHoldChange?.()
+  });
   game.settings.register(MODULE_ID, "skipping", {scope: "world", config: false, type: Object, default: null});
   game.settings.register(MODULE_ID, "declinedFixes", {scope: "world", config: false, type: Object, default: {}});
   game.settings.register(MODULE_ID, "openingSet", {scope: "world", config: false, type: Boolean, default: false});

@@ -63,7 +63,7 @@ export const SHEETS = {
       ["academics", "cosmology", "enigmas", "hearthwisdom", "investigation", "linguistics", "medicine", "occult", "politics", "theology"]),
     advantages: [["backgrounds"], ["foundation"], ["pillars"]],
     lower: [["otherTraits"], ["quintessence", "willpower", "backlash"], ["health", "experience"]],
-    page2: [], buttons: ["daMage", "daQuintessence"]
+    page2: [["meritsFlaws", "rotes"], ["derangements", "combat"], ["gear", "description"]], buttons: ["daMage", "daQuintessence"]
   },
   inqDA: {
     type: "Hunter", book: "Dark Ages: Inquisitor", sheetPage: "pdf p. 239", title: "Dark Ages: Inquisitor",
@@ -74,7 +74,7 @@ export const SHEETS = {
       ["academics", "hearthwisdom", "investigation", "law", "linguistics", "medicine", "occult", "politics", "seneschal", "theology"]),
     advantages: [["backgrounds"], ["virtues"], ["superiorVirtues"]],
     lower: [["blessingsCurses", "holyArt"], ["piety", "willpower", "conviction", "callous"], ["health", "experience"]],
-    page2: [], buttons: ["hunterSheet", "hunterPower", "prayer"]
+    page2: [["otherTraits", "derangements"], ["combat"], ["gear", "description"]], buttons: ["hunterSheet", "hunterPower", "prayer"]
   },
   werewolfDA: {
     type: "Werewolf", book: "Dark Ages: Werewolf", sheetPage: "pdf p. 233", title: "Dark Ages: Werewolf",
@@ -86,7 +86,7 @@ export const SHEETS = {
       ["academics", "enigmas", "hearthwisdom", "investigation", "law", "linguistics", "medicine", "occult", "politics", "rituals"]),
     advantages: [["backgrounds"], ["gifts"], ["gifts2"]],
     lower: [["meritsFlaws"], ["rage", "gnosis", "willpower"], ["health", "experience"]],
-    page2: [], buttons: ["rageRoll", "useGift", "shiftForm"]
+    page2: [["otherTraits", "rites"], ["fetishes", "derangements"], ["combat", "gear", "description"]], buttons: ["rageRoll", "useGift", "shiftForm"]
   },
   kindredDA: {
     type: "Vampire", book: "Vampire: The Dark Ages 20th Anniversary Edition", sheetPage: "pdf pp. 472–473", title: "Vampire: The Dark Ages",
@@ -97,7 +97,7 @@ export const SHEETS = {
       ["academics", "enigmas", "hearthwisdom", "investigation", "law", "medicine", "occult", "politics", "seneschal", "theology"]),
     advantages: [["disciplines"], ["backgrounds"], ["virtues"]],
     lower: [["otherTraits"], ["road", "willpower", "bloodpool"], ["health", "weakness"]],
-    page2: [["meritsFlaws", "rituals"], ["paths", "derangements"], ["experience"]], buttons: ["useDiscipline", "frenzy", "feed"]
+    page2: [["meritsFlaws", "rituals"], ["paths", "derangements"], ["combat", "gear", "description"]], buttons: ["useDiscipline", "frenzy", "feed"]
   },
   ghoulDA: {
     type: "Mortal", book: "Vampire: The Dark Ages 20th Anniversary Edition (the Kindred sheet, for a ghoul)", sheetPage: "pdf pp. 472–473", title: "Vampire: The Dark Ages (ghoul)",
@@ -106,7 +106,7 @@ export const SHEETS = {
     abilities: null, // the same as the Kindred sheet
     advantages: [["disciplines"], ["backgrounds"], ["virtues"]],
     lower: [["otherTraits"], ["road", "willpower", "bloodpool"], ["health", "experience"]],
-    page2: [["meritsFlaws"], ["derangements"], []], buttons: ["ghoulBlood", "useDiscipline"]
+    page2: [["meritsFlaws", "derangements"], ["combat"], ["gear", "description"]], buttons: ["ghoulBlood", "useDiscipline"]
   }
 };
 SHEETS.ghoulDA.abilities = SHEETS.kindredDA.abilities;
@@ -125,7 +125,7 @@ Object.assign(SHEETS, {
       ["academics", "computer", "finance", "investigation", "law", "medicine", "occult", "politics", "science", "technology"]),
     advantages: [["disciplines"], ["backgrounds"], ["virtues"]],
     lower: [["meritsFlaws"], ["road", "willpower", "bloodpool"], ["systemHealth", "weakness", "experience"]],
-    page2: [], buttons: ["useDiscipline", "frenzy", "feed"]
+    page2: [["otherTraits", "rituals"], ["paths", "derangements"], ["combat", "gear", "description"]], buttons: ["useDiscipline", "frenzy", "feed"]
   },
   ghoul20: {
     type: "Mortal", book: "Vampire: The Masquerade 20th Anniversary Edition (the Kindred sheet, for a ghoul)", sheetPage: "p. 519", title: "Vampire: The Masquerade (ghoul)",
@@ -133,7 +133,7 @@ Object.assign(SHEETS, {
     abilities: null,
     advantages: [["disciplines"], ["backgrounds"], ["virtues"]],
     lower: [["meritsFlaws"], ["road", "willpower", "bloodpool"], ["systemHealth", "experience"]],
-    page2: [], buttons: ["ghoulBlood", "useDiscipline"]
+    page2: [["otherTraits", "derangements"], ["combat"], ["gear", "description"]], buttons: ["ghoulBlood", "useDiscipline"]
   },
   w20: {
     type: "Werewolf", book: "Werewolf: The Apocalypse 20th Anniversary Edition", sheetPage: "pdf p. 552", title: "Werewolf: The Apocalypse",
@@ -144,7 +144,7 @@ Object.assign(SHEETS, {
       ["academics", "computer", "enigmas", "investigation", "law", "medicine", "occult", "rituals", "science", "technology"]),
     advantages: [["backgrounds"], ["gifts"], ["gifts2"]],
     lower: [["renown", "rank"], ["rage", "gnosis", "willpower"], ["systemHealth", "experience"]],
-    page2: [], buttons: ["rageRoll", "useGift", "shiftForm"]
+    page2: [["otherTraits", "rites"], ["fetishes", "derangements"], ["combat", "gear", "description"]], buttons: ["rageRoll", "useGift", "shiftForm"]
   },
   m20: {
     type: "Mage", book: "Mage: The Ascension 20th Anniversary Edition", sheetPage: "p. 249", title: "Mage: The Ascension",
@@ -155,7 +155,7 @@ Object.assign(SHEETS, {
       ["academics", "computer", "cosmology", "enigmas", "esoterica", "investigation", "law", "medicine", "occult", "politics", "science"]),
     powers: { title: "Spheres", cols: [["spheres1"], ["spheres2"], ["spheres3"]] },
     advantages: [["backgrounds", "otherTraits"], ["arete", "willpower", "quintessenceWheel"], ["systemHealth", "experience"]],
-    lower: [], page2: [], buttons: ["m20Cast", "m20Counter"]
+    lower: [], page2: [["meritsFlaws", "rotes"], ["derangements"], ["combat", "gear", "description"]], buttons: ["m20Cast", "m20Counter"]
   },
   c20: {
     type: "Changeling", book: "Changeling: The Dreaming 20th Anniversary Edition", sheetPage: "p. 500", title: "Changeling: The Dreaming",
@@ -166,7 +166,7 @@ Object.assign(SHEETS, {
       ["academics", "computer", "enigmas", "gremayre", "investigation", "law", "medicine", "politics", "science", "technology"]),
     advantages: [["backgrounds"], ["arts"], ["realms"]],
     lower: [["birthrights", "antithesis", "experience"], ["glamour", "willpower", "nightmare", "banality"], ["health", "threshold"]],
-    page2: [], buttons: ["c20Cantrip", "c20Unleash", "c20Mists"]
+    page2: [["meritsFlaws", "otherTraits"], ["combat"], ["gear", "description"]], buttons: ["c20Cantrip", "c20Unleash", "c20Mists"]
   },
   wr20: {
     type: "Wraith", book: "Wraith: The Oblivion 20th Anniversary Edition", sheetPage: "pdf pp. 592–593", title: "Wraith: The Oblivion",
@@ -185,7 +185,7 @@ Object.assign(SHEETS, {
     abilities: cols(HTR_T, HTR_S, ["academics", "bureaucracy", "computer", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "researchK", "science"]),
     advantages: [["backgrounds"], ["edges"], ["hunterVirtues"]],
     lower: [["derangements"], ["conviction", "willpower", "experience"], ["systemHealth"]],
-    page2: [], buttons: ["hunterPower", "hunterSheet", "secondSight"]
+    page2: [["meritsFlaws", "otherTraits"], ["combat"], ["gear", "description"]], buttons: ["hunterPower", "hunterSheet", "secondSight"]
   },
   demon: {
     type: "Demon", book: "Demon: The Fallen", sheetPage: "p. 303", title: "Demon: The Fallen",
@@ -193,7 +193,7 @@ Object.assign(SHEETS, {
     abilities: cols(HTR_T, HTR_S, ["academics", "computer", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "religion", "researchK", "science"]),
     advantages: [["backgrounds"], ["lores"], ["virtues"]],
     lower: [["apocalypticForm"], ["faith", "torment", "willpower"], ["systemHealth", "experience"]],
-    page2: [], buttons: ["demonEvoke", "demonForm", "demonReap"]
+    page2: [["meritsFlaws", "otherTraits"], ["derangements", "combat"], ["gear", "description"]], buttons: ["demonEvoke", "demonForm", "demonReap"]
   },
   mummy: {
     type: "Mummy", book: "Mummy: The Resurrection", sheetPage: "the printed sheet", title: "Mummy: The Resurrection",
@@ -202,7 +202,7 @@ Object.assign(SHEETS, {
       ["academics", "bureaucracy", "computer", "cosmology", "enigmas", "investigation", "law", "linguistics", "medicine", "occult", "researchK", "science"]),
     advantages: [["backgrounds"], ["hekau"], ["meritsFlaws"]],
     lower: [["otherTraits", "experience"], ["balance", "willpower", "sekhem"], ["systemHealth"]],
-    page2: [], buttons: ["mummyCast", "mummySekhem", "mummyBalance"]
+    page2: [["derangements"], ["combat"], ["gear", "description"]], buttons: ["mummyCast", "mummySekhem", "mummyBalance"]
   },
   kote: {
     type: "Vampire", book: "Kindred of the East", sheetPage: "the printed sheet", title: "Kindred of the East",
@@ -213,7 +213,7 @@ Object.assign(SHEETS, {
       ["computer", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "rituals", "science"]),
     advantages: [["disciplines"], ["backgrounds"], ["rites"]],
     lower: [["yinYang"], ["dharma", "hun", "willpower", "po", "demonchi"], ["systemHealth", "imbalance", "experience"]],
-    page2: [], buttons: ["kotFeed", "kotSpend", "kotDharma"]
+    page2: [["meritsFlaws", "otherTraits"], ["derangements", "combat"], ["gear", "description"]], buttons: ["kotFeed", "kotSpend", "kotDharma"]
   },
   orpheus: {
     type: "Mortal", book: "Orpheus", sheetPage: "p. 310", title: "Orpheus",
@@ -224,7 +224,7 @@ Object.assign(SHEETS, {
       ["academics", "bureaucracy", "computer", "enigmas", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "science"]),
     advantages: [["backgrounds"], ["horrors"], ["stains"]],
     lower: [["defaultAbilities"], ["vitality", "willpower", "spite"], ["systemHealth", "experience"]],
-    page2: [], buttons: ["orphHorror", "orphVitality", "orphSpite"]
+    page2: [["meritsFlaws", "otherTraits"], ["derangements", "combat"], ["gear", "description"]], buttons: ["orphHorror", "orphVitality", "orphSpite"]
   }
 });
 SHEETS.ghoul20.abilities = SHEETS.v20.abilities;

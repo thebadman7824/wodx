@@ -2,6 +2,7 @@ import {MODULE_ID, esc, rule} from "./util.mjs";
 import {HOUSE_RULES} from "./settings.mjs";
 import {REFORMS} from "./calendar-math.mjs";
 import {conditionsHTML} from "./conditions.mjs";
+import {eventsHTML} from "./events.mjs";
 
 const OBSERVER = () => CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
 
@@ -49,7 +50,7 @@ async function setPage(journal, pageName, html) {
 /*  Chronicle Rules                             */
 /* -------------------------------------------- */
 
-const RULES_PAGES = ["Era and calendar", "House rules", "Conditions"];
+const RULES_PAGES = ["Era and calendar", "House rules", "Conditions", "Dated events"];
 
 /**
  * Rewrite the Chronicle Rules journal from the current settings. GM only.
@@ -89,6 +90,7 @@ async function _writeChronicleRules({profile, interlude, locked, dateLabel}) {
   }).join("");
   await setPage(journal, "House rules", `<p>Updated (in-game date): ${stamp}</p>${groups}`);
   await setPage(journal, "Conditions", conditionsHTML());
+  await setPage(journal, "Dated events", eventsHTML());
   return journal;
 }
 

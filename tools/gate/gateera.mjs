@@ -1,9 +1,11 @@
 /**
- * Era advancement gate (WoDX Creation 0.6.0, B83), in Foundry as a Gamemaster, in wodx-template only:
+ * Era advancement gate (WoDX Creation 0.6.0, B83), in Foundry as Gamemaster Test, in rothenstein-wodx only:
  *   await (await import(`/wodx-gate/gateera.mjs?${Date.now()}`)).run()
- * Makes a test vampire and a test mortal in "WoDX era test pack", passes the years from now to 1840 for those two
- * alone, checks what changed, then puts the clock and the era back and removes what it made. The world's other
- * characters are not in the plan. Result: Data/wodx-gate/gateera-result.json.
+ * Needs WoDX Chronicle 0.5.0: the gate holds the world first, so moving the clock to 1840 wakes no routine,
+ * faction turn, dated event, expiring effect or era proposal in Rothenstein. It makes a test vampire and a test
+ * mortal in "WoDX era test pack", passes the years to 1840 for those two alone, checks what changed, then puts the
+ * clock, the era and the hold back, deletes its chat cards and removes what it made. The world's other characters
+ * are not in the plan. Result: Data/wodx-gate/gateera-result.json.
  */
 const C = "wodx-creation", CH = "wodx-chronicle";
 const R = {started: new Date().toISOString(), steps: [], errors: []};
@@ -13,21 +15,33 @@ const api = () => game.modules.get(C).api;
 const chron = () => game.modules.get(CH).api;
 
 export async function run() {
-  if ( game.world.id !== "wodx-template" ) {
-    ui.notifications.error("The era advancement gate only runs in wodx-template: it moves the clock to 1840.");
+  if ( game.world.id !== "rothenstein-wodx" ) {
+    ui.notifications.error("The era advancement gate runs in rothenstein-wodx only.");
     return {refused: game.world.id};
+  }
+  if ( typeof chron()?.hold !== "function" ) {
+    ui.notifications.error("The era advancement gate needs WoDX Chronicle 0.5.0 or later (Hold the world).");
+    return {refused: "chronicle too old"};
   }
   const origErr = console.error;
   console.error = (...a) => { R.errors.push(a.map(x => x?.stack ? String(x.stack).split("\n").slice(0, 4).join(" | ") : String(x)).join(" ")); origErr.apply(console, a); };
   const startTime = game.time.worldTime;
   const startEra = game.settings.get(CH, "activeEra");
+  const startLock = game.settings.get(CH, "eraLock");
+  const startHeld = chron().isHeld();
+  const msgsBefore = new Set(game.messages.map(m => m.id));
+  await chron().hold(true);
   const made = [];
-  let folder, plan, vamp, mortal;
+  let folder, plan, vamp, mortal, startRules = null;
   try {
     await step("1. House rules: the five Passing the years switches, with B83's defaults", async () => {
+      // The world may have its own choices: the gate runs on B83's defaults and step 7 puts the world's back
       const want = {yearsThickBlood: false, yearsMortalDecline: true, yearsMoralityDrift: false, yearsExperience: true, yearsConvertAbilities: true};
+      startRules = Object.fromEntries(Object.keys(want).map(k => [k, game.settings.get(CH, `rule.${k}`)]));
+      const defaults = Object.fromEntries(Object.keys(want).map(k => [k, game.settings.settings.get(`${CH}.rule.${k}`)?.default]));
+      for ( const [k, v] of Object.entries(want) ) if ( startRules[k] !== v ) await game.settings.set(CH, `rule.${k}`, v);
       const seen = Object.fromEntries(Object.keys(want).map(k => [k, game.settings.get(CH, `rule.${k}`)]));
-      ok("1. House rules: the five Passing the years switches, with B83's defaults", JSON.stringify(seen) === JSON.stringify(want), {seen});
+      ok("1. House rules: the five Passing the years switches, with B83's defaults", JSON.stringify(defaults) === JSON.stringify(want) && JSON.stringify(seen) === JSON.stringify(want), {world: startRules, defaults});
     });
 
     await step("2. Test characters made, in the Dark Ages", async () => {
@@ -102,8 +116,14 @@ export async function run() {
       const snapFolder = game.folders.find(f => f.type === "Actor" && f.name === "WoDX · Before the years");
       if ( snapFolder && !game.actors.some(a => a.folder?.id === snapFolder.id) ) await snapFolder.delete();
       if ( R.journal && R.page ) await game.journal.get(R.journal)?.pages.get(R.page)?.delete();
-      ok("7. Put back: the clock, the era and the test characters", game.time.worldTime === startTime && game.settings.get(CH, "activeEra") === startEra
-        && !made.some(id => game.actors.get(id)), {worldTime: game.time.worldTime, startTime});
+      if ( game.settings.get(CH, "eraLock") !== startLock ) await game.settings.set(CH, "eraLock", startLock);
+      for ( const [k, v] of Object.entries(startRules ?? {}) ) if ( game.settings.get(CH, `rule.${k}`) !== v ) await game.settings.set(CH, `rule.${k}`, v);
+      await new Promise(r => setTimeout(r, 500));
+      const mine = game.messages.filter(m => !msgsBefore.has(m.id)).map(m => m.id);
+      if ( mine.length ) await ChatMessage.deleteDocuments(mine);
+      await chron().hold(startHeld);
+      ok("7. Put back: the clock, the era, the hold and the test characters", game.time.worldTime === startTime && game.settings.get(CH, "activeEra") === startEra
+        && chron().isHeld() === startHeld && !made.some(id => game.actors.get(id)), {worldTime: game.time.worldTime, startTime, removedCards: mine.length});
     });
     console.error = origErr;
   }
