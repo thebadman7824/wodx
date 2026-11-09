@@ -343,6 +343,12 @@
    "title": "Clanbook: Nosferatu (Revised)",
    "short": "Clanbook: Nosferatu",
    "edition": "Revised"
+  },
+  {
+   "id": "cbtoreador",
+   "title": "Clanbook: Toreador (Revised)",
+   "short": "Clanbook: Toreador",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -402,6 +408,7 @@
   "cbbrujah.json",
   "cbgiovanni.json",
   "cbmalkavian.json",
-  "cbnosferatu.json"
+  "cbnosferatu.json",
+  "cbtoreador.json"
  ]
 }
