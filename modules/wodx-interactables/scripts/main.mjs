@@ -54,10 +54,12 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerStateSettings, setupStates, publish} from "./states.mjs";
 import {setupLiving} from "./living.mjs";
 import {setupCarry} from "./carry.mjs";
+import * as Fill from "./fill.mjs";
+import * as FillRules from "./fill-rules.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.16.1";
+const VERSION = "0.17.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -1339,6 +1341,10 @@ function onRenderWallConfig(app, html) {
   wrap.innerHTML = configHtml(doc);
   const footer = form.querySelector("footer, .form-footer, .sheet-footer");
   if ( footer ) footer.before(wrap.firstElementChild); else form.appendChild(wrap.firstElementChild);
+  form.querySelector("[data-wix-fill]")?.addEventListener("click", ev => {
+    ev.preventDefault();
+    Fill.fillDialog(app.document ?? app.object, form.querySelector(`[name="flags.${MOD}.items"]`)).catch(e => console.error(`${MOD} |`, e));
+  });
   app.setPosition?.({height: "auto"});
 }
 /** The WoDX part of a tile's config window: a container. */
@@ -1372,6 +1378,7 @@ export function tileConfigHtml(doc) {
     ${field("Keypad or alarm", `<select name="${p}.electronic" data-fixed>${opt(R.ELECTRONIC, f.electronic)}</select>`, "Only in the modern eras.")}
     ${field("Key", `<input type="text" name="${p}.keyName" value="${esc(f.keyName)}" placeholder="Name of the key item">`)}
     ${field("Inside", `<textarea name="${p}.items" rows="4" placeholder="One item a line: its UUID, or its name in the Items directory">${esc(f.items)}</textarea>`, "Taking them gives the character a copy of each. Leave it empty and say what is inside yourself.")}
+    ${field("", `<button type="button" data-wix-fill>Fill by place and era…</button>`, "Draws from Gear by era for the chronicle's era, for you to check before anything goes in.")}
     <h4 class="wix-sub">Trap</h4>
     <p class="hint">A snare, pit, tripwire or spring blade. Hide the tile: it goes off when a character walks over it, and players see it once a search finds it.</p>
     ${field("Trap", `<input type="checkbox" name="${p}.trap"${t.trap ? " checked" : ""}>`, "A tile is a container or a trap; a container wins if both are ticked.")}
@@ -1543,7 +1550,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, rules: FillRules}, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();

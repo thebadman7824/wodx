@@ -212,3 +212,6 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 | 2026-11-09 | Havens: which rolls the security makes harder | Picking, forcing, hacking, disarming and climbing; tracking is shown, not applied (B375). | Edit INTRUDING in wodx-interactables/scripts/interact-rules.mjs. |
 | 2026-11-09 | Tainted vessels in the Dark Ages | V20's rules in every era; a carrier stays one until cleared (B376). | Edit VESSEL_STATES in wodx-actions/scripts/rules.js; clear flags.wodx-actions.carrier on the actor. |
 | 2026-11-09 | Hardship on the road | Not built until a book gives rules for exposure (B377). The PC helper's suggested house rule (Bashing damage at set times, Stamina + Survival to resist) is not used. | Ask for it as a house rule, and it can be built. |
+| 2026-11-09 | Bodies that change: who may add a change | Only the Storyteller; players read their own list (B378). | Change addChange() in wodx-storyteller/scripts/body.mjs. |
+| 2026-11-09 | Bodies that change: Appearance held at 0 | Nosferatu and Samedi, matched on the sheet's clan or bloodline (B379). | Edit ZERO_APPEARANCE in wodx-storyteller/scripts/body-rules.mjs. |
+| 2026-11-09 | Filling a container: what each place holds | Weights by kind of thing per place, house rule (B380). | Edit PLACES in wodx-interactables/scripts/fill-rules.mjs. |
