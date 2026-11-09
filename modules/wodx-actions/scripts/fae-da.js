@@ -18,6 +18,7 @@
  */
 import * as F from "./fae-da-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -222,7 +223,7 @@ export function build(ctx) {
             await setFlag(actor, "daFaeCasts", { key, n: count });
             if (count > 5) body += `<div class="vta-note">${count} castings of this cantrip this scene: overuse draws the fae toward the Locked state (p. 104).</div>`;
             return post(actor, `${actor.name} casts ${name}`, body, [r.roll].filter(Boolean));
-        }, { width: 520 });
+        }, { width: 520, render: root => aim(root, { actor, cast: { intent: "e" } }) });
     }
 
     /* -------------------------------------------------------------- */

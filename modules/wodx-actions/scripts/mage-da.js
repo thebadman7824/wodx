@@ -16,6 +16,7 @@
 import * as M from "./mage-da-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -155,7 +156,7 @@ export function build(ctx) {
             const msg = await post(actor, `${actor.name} casts${rote ? `: ${rote.name}` : ""}`, body, [r.roll].filter(Boolean));
             if (out.result === "backlash" && msg) await msg.setFlag(MOD, "daBacklash", { actor: actor.uuid, ones: out.ones, highest: plan.highest, pillarsUsed: plan.pillarsUsed, cancelled: 0, done: null });
             return msg;
-        }, { width: 520 });
+        }, { width: 520, render: root => aim(root, { actor, cast: { intent: "e" } }) });
     }
     const btn = (what, actor, label, gm = false) => `<button type="button" class="vta-btn" data-mx="${what}" data-actor="${esc(actor.uuid)}"${gm ? " data-gm" : ""}>${esc(label)}</button>`;
 

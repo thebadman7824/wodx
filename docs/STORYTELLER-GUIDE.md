@@ -183,6 +183,16 @@ Each token's **WoDX Actions** button opens its line's menu. The line comes from 
 
 **The turn conductor.** Off by default. With **NPC turns**, an NPC's turn ends once WoDX NPC has acted or you accept its plan, then waits 3 seconds so you can read the cards. With **Everyone**, a player's turn also ends 6 seconds after their action is spent, unless they hold. A time limit per player turn is off (0) by default; when it runs out, the action is held. A banner above the hotbar shows the turn, the countdown and who is holding. Players get **End turn**, **Hold**, **+1 extra action** and **Act next**; you also get **Step back** and **Pause**. Extra actions from Celerity or Rage come in a second pass at the end of the round. A held action is lost at the round's end, so a hold on the last turn of a round is lost at once.
 
+## WoDX Targeting: who a power or attack is aimed at
+
+**What it does.** When a power or attack window opens and no one is targeted, a box at the top names the likeliest target and why: the foe who hit last, then whoever is in reach, then the nearest for a hostile power; the most wounded for healing; the nearest ally for a helpful power; the user for a power on oneself. Below it are the next three and **No target**. The box follows the power picked in the window. It is in the Discipline, Gift, Arcanos, Evocation, Edge, Horror, Hekau, Blessing, Effect, spell and cantrip windows, and in the attack dialog.
+
+**Settings.** "Targeting" (world): **Off**, **Suggest** (the default) or **Automatic**. Suggest fills the window with its choice and makes it the target only when the window is used. Automatic sets the target as the window opens, for the Storyteller only; players always get Suggest. Each player can turn it off for their own computer with "Targeting for me".
+
+**What it never does.** It never changes a target someone set by hand; it names it "set by hand" and leaves it. It never picks a token hidden by the Storyteller, an invisible or Obfuscated one, or one the user cannot see. Area powers list everyone in range, allies unticked, and set nothing until "Target these" is pressed. A neutral token counts as a foe only after harm passed between them; a player who aims at one gets a warning, and you get a whisper. Casting windows with no power list (Mage 20th, Dark Ages mages and fae, Changeling cantrips) ask what the casting is aimed at.
+
+**Ranges.** Touch, melee reach, voice (30 yards), line of sight, any distance, by each power's tag. Powers from the sheet only are guessed from their names.
+
 ## WoDX Sheets and the Sheet look
 
 Each line's sheet follows its printed sheet, and the sheet follows the era: a Dark Ages chronicle gets the Dark Ages: Fae, Dark Ages: Mage, Dark Ages: Inquisitor, Dark Ages: Werewolf and V20 Dark Ages Kindred and ghoul sheets; later eras get V20, W20, M20, C20, Wraith 20th, Hunter: The Reckoning, Demon, Mummy, Kindred of the East and Orpheus. Only the Core page changes. Every other tab is the system's own, so rolls, dots, health and gear work as before. The header fields are the Bio tab's own controls, so a change on one shows on the other. Locked sheets show text, as the system does.

@@ -573,6 +573,45 @@ game.world.id = worldId;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;
 }
+// WoDX Targeting 0.1.0: the target panel in the Discipline window, for one foe, an area of twelve, a casting and a hand-set target
+{
+  game.modules.set("wodx-targeting", {active: true});
+  await import(join(root, "modules/wodx-targeting/scripts/main.mjs"));
+  await Hooks.callAll("init");
+  const tApi = game.modules.get("wodx-targeting").api;
+  if ( !tApi ) { console.error("FAIL WoDX Targeting did not load"); process.exitCode = 1; }
+  else {
+    const T = tApi.rules;
+    const table = JSON.parse((await import("node:fs")).readFileSync(join(root, "modules/wodx-targeting/data/tags.json"), "utf8"));
+    const oldCanvas = globalThis.canvas, oldTargets = game.user.targets;
+    const me = {id: "tme", name: "Anezka of the Silver Adit, a Cainite", center: {x: 0, y: 0}, document: {disposition: 1, hidden: false, width: 1}, visible: true};
+    const acting = {id: "Ame", uuid: "Actor.Ame", name: me.name, system: {}, statuses: new Set(), getActiveTokens: () => [me]};
+    me.actor = acting;
+    const toks = [me, ...Array.from({length: 12}, (_, i) => ({id: `t${i}`, name: `A foe with a very long name indeed, number ${i}`, center: {x: 60 + i * 40, y: 0}, visible: true,
+      document: {disposition: i % 4 === 0 ? 1 : -1, hidden: false, width: 1}, actor: {id: `A${i}`, uuid: `Actor.A${i}`, name: `Foe ${i}`, system: {health: {damage: {lethal: i % 3}}}, statuses: new Set()}}))];
+    globalThis.canvas = {...(oldCanvas ?? {}), ready: true, scene: {grid: {distance: 5, units: "ft"}}, grid: {measurePath: ([a, b]) => ({distance: Math.hypot(a.x - b.x, a.y - b.y) / 100 * 5})},
+      tokens: {placeables: toks, controlled: [me], get: id => toks.find(t => t.id === id), setTargets() {}}};
+    game.user.targets = new Set();
+    game.settings.get = ((get) => (m, k) => (m === "wodx-targeting" ? ({mode: "suggest", mine: "world"})[k] : get(m, k)))(game.settings.get.bind(game.settings));
+    const disc = captured.find(c => /Use a Discipline/.test(c.window?.title ?? ""));
+    const panelWindow = (name, power, opts = {}) => {
+      const holder = document.createElement("div");
+      holder.innerHTML = `<form>${disc?.content ?? ""}</form>`;
+      const form = holder.querySelector("form");
+      tApi.attach(holder, {actor: acting, tag: () => (power ? T.tagFor(table, "disc", power) : null), ...opts});
+      windows.push({name: `Dialog · Targeting: ${name}`, tag: "div", classes: ["application", "dialog", ...(disc?.classes ?? ["wodx-dialog"])].join(" "), width: disc?.position?.width ?? 540, height: "auto",
+        content: `<form class="dialog-form standard-form"><div class="dialog-content standard-form">${form.innerHTML}</div>
+          <footer class="form-footer"><button type="submit">OK</button><button type="button">Cancel</button></footer></form>`});
+    };
+    panelWindow("a foe", "dominate-command");
+    panelWindow("an area of twelve", "presence-awe");
+    panelWindow("a casting", null, {cast: {intent: "h"}});
+    game.user.targets = new Set([toks[3]]);
+    panelWindow("set by hand", "dominate-command");
+    globalThis.canvas = oldCanvas;
+    game.user.targets = oldTargets;
+  }
+}
 for ( const c of captured ) {
   windows.push({name: `Dialog · ${c.window?.title ?? "untitled"}`, tag: "div",
     classes: ["application", "dialog", ...(c.classes ?? [])].join(" "), width: c.position?.width ?? 400, height: "auto",
@@ -596,7 +635,8 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-creation/styles/wodx-creation.css")).href,
   pathToFileURL(join(root, "modules/wodx-npc/styles/wodx-npc.css")).href,
   pathToFileURL(join(root, "modules/wodx-storyteller/styles/wodx-storyteller.css")).href,
-  pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href];
+  pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href,
+  pathToFileURL(join(root, "modules/wodx-targeting/styles/wodx-targeting.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));

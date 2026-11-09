@@ -14,6 +14,7 @@
 import * as H from "./hunter-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -129,7 +130,7 @@ export function build(ctx) {
                 body += `<div class="vta-res ${r.successes > 0 && !r.botch ? "good" : "bad"}">Risked ${risk}: Conviction ${after} → ${R.after}${R.lostAll ? " (a botch: all of it lost)" : ""} (p. 160).</div>`;
             }
             return post(actor, `${actor.name}: ${esc(name)}`, body + `<div class="wodx-quiet">${esc(fd.kind)} · Dark Ages: Inquisitor, Chapter Five</div>`, [r.roll]);
-        }, { width: 540 });
+        }, { width: 540, render: root => aim(root, { actor, power: r => { const nm = r.querySelector("[name=other]")?.value?.trim() || r.querySelector("[name=b]")?.value; return nm ? { id: nm, n: nm } : null; } }) });
     }
 
     /* ---------------- Virtue rolls ---------------- */

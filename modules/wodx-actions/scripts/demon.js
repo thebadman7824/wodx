@@ -15,6 +15,7 @@
  */
 import * as D from "./demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -155,7 +156,7 @@ export function build(ctx) {
             body += `<div class="vta-res">${esc(revealLine(info(actor).spent))}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 161, 169–171, ${D.LORES[lore].page}</div>`;
             return post(actor, `${actor.name} evokes ${e.name}`, body, [r.roll].filter(Boolean));
-        }, { width: 560 });
+        }, { width: 560, render: root => aim(root, { actor, lib: "evo", power: r => { const v = r.querySelector("[name=evo]")?.value; const e = known.find(x => opt(x) === v); return e ? { id: v, n: e.name } : null; } }) });
     }
 
     /* -- the apocalyptic form ---------------------------------------- */

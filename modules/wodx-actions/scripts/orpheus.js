@@ -13,6 +13,7 @@
  */
 import * as O from "./orpheus-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -92,7 +93,7 @@ export function build(ctx) {
             if (note) body += `<div class="vta-note">${esc(note)}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 124, 190–193</div>`;
             return post(actor, `${actor.name}: ${it?.name ?? "a Horror"}`, body, rolls.filter(Boolean));
-        }, { width: 520 });
+        }, { width: 520, render: root => aim(root, { actor, lib: "horror", power: r => { const it = i.horrors.find(x => x.id === r.querySelector("[name=h]")?.value); if (!it) return null; const key = String(it.name ?? "").toLowerCase().replace(/[^a-z]/g, ""); return { id: key, n: it.name }; } }) });
     }
 
     /* -- Vitality ----------------------------------------------------------- */

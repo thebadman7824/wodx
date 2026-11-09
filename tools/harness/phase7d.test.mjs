@@ -274,7 +274,7 @@ test("the module: version 0.3.0, the factions in the API, gender-neutral text, n
   // WoDX Actions tells WoDX NPC of a recorded breach
   const k = readFileSync(join(root, "modules/wodx-actions/scripts/kindred.js"), "utf8");
   assert.match(k, /Hooks\.callAll\("wodxBreach"/);
-  assert.equal(JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version, "3.11.2");
+  assert.equal(JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version, "3.12.0");
 });
 
 test("a scene no one tagged gets a kind from its name, and battle maps are not places", () => {

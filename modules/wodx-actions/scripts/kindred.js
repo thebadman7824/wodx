@@ -19,6 +19,7 @@ import * as P from "./profiles.js";
 import * as GX from "./garou.js";
 import * as G from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
+import { aim } from "./aim.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -136,10 +137,10 @@ export function build(ctx) {
         const sheet = sheetDisciplines(actor);
         const list = K.powersFor(DATA.disc.powers, sheet);
         if (!list.length) return ctx.notify(`${actor.name} has no Discipline dots the library knows (${sheet.map(s => s.name).join(", ") || "none on the sheet"}).`);
-        const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
+        let tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const rows = list.map(p => [p.id, `${p.d} ${"•".repeat(Math.min(5, p.l))}${p.l > 5 ? ` (${p.l})` : ""}: ${p.n}${p.elder ? " (elder)" : p.passive ? " (passive)" : ""}`]);
         const b = ctx.blood(actor);
-        const content = `<form class="wodx-disc"><p><b>${esc(actor.name)}</b>: blood ${b.value}/${b.max}, ${b.perTurn} a turn${tgt ? `; target <b>${esc(tgt.name)}</b>` : ""}</p>
+        const content = `<form class="wodx-disc"><p><b>${esc(actor.name)}</b>: blood ${b.value}/${b.max}, ${b.perTurn} a turn${tgt ? `<span class="wodx-hdr-tgt">; target <b>${esc(tgt.name)}</b></span>` : ""}</p>
           <div class="form-group"><label>Power</label>${searchBox("select[name=power]", "Search powers…", "Search powers")}<select name="power" data-fixed>${rows.map(([v, l], i) => `<option value="${v}" ${i === 0 ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-disc-info vta-note"></div>
           <div class="form-group wodx-disc-attr" style="display:none"><label>Activation Attribute (the page names it)</label><select name="attr" data-fixed>${K.ATTRS.map(a => `<option value="${a}">${lab(a)}</option>`).join("")}</select></div>
@@ -197,7 +198,8 @@ export function build(ctx) {
                 if (marked) body += `<div class="vta-note">Masquerade: ${esc(tgt.name)} marked as made to forget (${marked} record${marked === 1 ? "" : "s"}).</div>`;
             }
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls);
-        }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root)); } });
+        }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
+            aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
     }
 
     /* ---------------- Roads ---------------- */
