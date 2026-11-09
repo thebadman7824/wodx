@@ -1,7 +1,8 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {fileURLToPath} from "node:url";
+import {fileURLToPath, pathToFileURL} from "node:url";
+import {readFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 
 /*
@@ -1869,4 +1870,56 @@ test("runtime: the tile config keeps the target's choices, and Clear the scorebo
   const f = changes.flags[MOD];
   assert.ok(f.scores instanceof ForcedDeletion);
   assert.deepEqual([f.left, f.hits, f.bottles, "clearScores" in f], [null, 0, null, false]);
+});
+
+/* ---------------- 0.15.0: living maps ---------------- */
+
+test("living maps: conditions, events and years decide whether a tile's rule holds", async () => {
+  const L = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/living-rules.mjs")));
+  const winterNight = {year: 1350, month: 1, day: 10, isNight: true, church: {}, weather: ["snow-lying", "cold"], fired: ["black-death"]};
+  assert.equal(L.seasonOfMonth(12), "winter");
+  assert.equal(L.seasonOfMonth(4), "spring");
+  assert.equal(L.seasonOfMonth(8), "summer");
+  assert.equal(L.seasonOfMonth(10), "autumn");
+  assert.equal(L.holds({mode: "show", when: ["winter", "snow"]}, winterNight), true);
+  assert.equal(L.holds({mode: "show", when: ["winter", "day"]}, winterNight), false);
+  assert.equal(L.holds({mode: "off", when: ["winter"]}, winterNight), false);
+  assert.equal(L.holds({mode: "show", when: []}, winterNight), false, "a rule that asks nothing never holds");
+  assert.equal(L.holds({mode: "show", event: "black-death"}, winterNight), true);
+  assert.equal(L.holds({mode: "show", event: "black-death", eventWhen: "before"}, winterNight), false);
+  assert.equal(L.holds({mode: "show", from: 1347, to: 1352}, winterNight), true);
+  assert.equal(L.holds({mode: "show", from: 1353}, winterNight), false);
+  assert.equal(L.holds({mode: "show", to: 1300}, winterNight), false);
+  // The church day: a revel, a feast, a fast (a plain Friday is not a fast here)
+  assert.equal(L.holds({mode: "show", when: ["revel"]}, {...winterNight, church: {revel: true}}), true);
+  assert.equal(L.holds({mode: "show", when: ["fast"]}, {...winterNight, church: {fast: "Friday: no meat"}}), false);
+  assert.equal(L.holds({mode: "show", when: ["fast"]}, {...winterNight, church: {fast: "The Lenten fast"}}), true);
+  assert.equal(L.holds({mode: "show", when: ["fog"]}, {...winterNight, weather: ["mist"]}), true);
+});
+
+test("living maps: the change a tile needs, the form's ticked boxes, the words and the moment key", async () => {
+  const L = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/living-rules.mjs")));
+  assert.deepEqual(L.changeFor({mode: "show", when: ["night"]}, true, {hidden: true}), {hidden: false});
+  assert.deepEqual(L.changeFor({mode: "show", when: ["night"]}, false, {hidden: false}), {hidden: true});
+  assert.deepEqual(L.changeFor({mode: "show", when: ["night"]}, true, {hidden: false}), {});
+  assert.deepEqual(L.changeFor({mode: "hide", when: ["night"]}, true, {hidden: false}), {hidden: true});
+  assert.deepEqual(L.changeFor({mode: "art", when: ["winter"], art: "maps/mill-snow.webp"}, true, {src: "maps/mill.webp"}), {src: "maps/mill-snow.webp", base: "maps/mill.webp"});
+  assert.deepEqual(L.changeFor({mode: "art", when: ["winter"], art: "maps/mill-snow.webp"}, false, {src: "maps/mill-snow.webp", base: "maps/mill.webp"}), {src: "maps/mill.webp"});
+  assert.deepEqual(L.changeFor({mode: "art", when: ["winter"], art: "maps/mill-snow.webp"}, true, {src: "maps/mill-snow.webp", base: "maps/mill.webp"}), {});
+  const r = L.cleanRule({mode: "show", when: {winter: true, night: false, bogus: true}, from: "1347", to: "", event: "black-death<>", art: ' "x.webp" '});
+  assert.deepEqual(r.when, ["winter"]);
+  assert.equal(r.from, 1347);
+  assert.equal(r.to, null);
+  assert.equal(r.event, "black-death");
+  assert.equal(r.art, "x.webp");
+  assert.equal(L.cleanRule({mode: "nonsense"}).mode, "off");
+  assert.equal(L.ruleWords({mode: "show", when: ["winter", "night"], event: "black-death", from: 1347, to: 1352}, () => "the Black Death"),
+    "Shows only while it holds: winter, at night, after the Black Death, from 1347 to 1352");
+  const a = L.momentKey({year: 1350, month: 1, day: 10, isNight: true, weather: ["cold", "snow"], fired: ["b", "a"]});
+  const b = L.momentKey({year: 1350, month: 1, day: 10, isNight: true, weather: ["snow", "cold"], fired: ["a", "b"]});
+  assert.equal(a, b);
+  assert.notEqual(a, L.momentKey({year: 1350, month: 1, day: 10, isNight: false, weather: ["snow", "cold"], fired: ["a", "b"]}));
+  const src = readFileSync(join(root, "modules/wodx-interactables/scripts/living.mjs"), "utf8");
+  assert.match(src, /isHeld\?\.\(\)/, "nothing changes while the world is held");
+  assert.match(src, /searchBox\(/, "the event list has a search box");
 });

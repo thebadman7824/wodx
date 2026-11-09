@@ -835,3 +835,7 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Open items, 2026-11-09: NPC power plans use the target picker (NPC 0.5.1; B252)
 - npc-rules.mjs: POWER_AIM ("h.s") and aimPower(option, ranked). main.mjs: rankPower(tok) asks WoDX Targeting (when on) to rank; postPlan aims every "Use a power" option; execute sets the target before opening the menu.
 - Tests: targeting.test.mjs gains the NPC case (716 in all). Gate: gatetarget step 8b.
+
+### Open items, 2026-11-09: living maps (Interactables 0.15.0; B253)
+- living-rules.mjs (pure): CONDITIONS, MODES, cleanRule, holds, changeFor, ruleWords, momentKey. living.mjs: context() from the Chronicle clock, its church day and fired events and Atmosphere's weather tags; sync() over every living tile on every scene (skipped while the world is held or skipping; force for gates); the "WoDX: living map" section in the tile config (event list with a search box). api.living.
+- Tests: interactables.test.mjs gains two (718 in all). Gate: tools/gate/gateliving.mjs, 8 steps, a scene of its own in rothenstein-wodx.
