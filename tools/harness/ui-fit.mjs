@@ -563,7 +563,7 @@ game.world.id = worldId;
   }
   api.DialogV2.wait = wait;
 }
-// Interactables: the Interact window (eight doors, windows and walls, two containers, two traps and a clue in reach, long names, the search button), the roll dialog, the WoDX part of a wall's and a tile's config
+// Interactables: the Interact window (eight doors, windows and walls, two containers, two traps, a clue, a lamp and a hiding place in reach, long names, the search button), the roll dialog, the WoDX part of a wall's and a tile's config
 {
   const ix = game.modules.get("wodx-interactables").api;
   const wait = api.DialogV2.wait;
@@ -571,6 +571,7 @@ game.world.id = worldId;
   const a = [...game.actors.values()].find(x => x.type === "Mortal");
   a.items.set("picks", {id: "picks", name: "Lock picks", type: "Equipment", system: {}});
   a.system.abilities.larceny = {value: 3, type: "skill", isvisible: true, speciality: "Old church locks"};
+  a.system.abilities.investigation = {value: 2, type: "knowledge", isvisible: true};
   const M = "wodx-interactables";
   const walls = Array.from({length: 8}, (_, k) => ({document: {id: `wall${k}`, c: [100 + k * 20, 200, 100 + k * 20, 300], door: k === 7 ? 0 : 1, ds: k % 3 === 0 ? 2 : k % 3 === 1 ? 0 : 1, levels: new Set(),
     flags: {[M]: k === 7 ? {wall: "stone"} : {kind: ["door", "window", "gate", "shutter", "hatch", "door", "door"][k], material: ["ironbound", "glass", "heavy", "wood", "wood", "steel", "wood"][k],
@@ -586,11 +587,16 @@ game.world.id = worldId;
     {document: {id: "tile3", documentName: "Tile", x: 60, y: 260, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {trap: true, trapKind: "snare", grade: "crude", found: true, sprung: true, holding: "someone"}}}},
     // A clue with a long name and text in every part
     {document: {id: "tile4", documentName: "Tile", x: 260, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {clue: true, clueKind: "document",
-      title: "A water-stained letter from the Abbess of St. Walburga to the Prince's seneschal", text0: "Torn.", text1: "A name.", text2: "A date.", text3: "A seal."}}}}];
-  globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document]))}, grid: {size: 100},
+      title: "A water-stained letter from the Abbess of St. Walburga to the Prince's seneschal", text0: "Torn.", text1: "A name.", text2: "A date.", text3: "A seal."}}}},
+    // A light source tied to a light by id
+    {document: {id: "tile5", documentName: "Tile", x: 260, y: 260, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {light: true, lightKind: "lamp", title: "The gas lamp over the chancery door", lightIds: "lampA"}}}},
+    // A hiding place with two people in it already
+    {document: {id: "tile6", documentName: "Tile", x: 360, y: 160, width: 100, height: 100, hidden: false, levels: new Set(), flags: {[M]: {hide: true, hideKind: "priesthole",
+      title: "The priest hole behind the chapel panelling", occupants: [{a: "x1", n: "Brother Anselm of the Cistercian grange", s: 2}, {a: "x2", n: "A frightened novice", s: 0}]}}}}];
+  globalThis.canvas = {...(oldCanvas ?? {}), scene: {id: "s", walls: new Coll(walls.map(w => [w.document.id, w.document])), tiles: new Coll(tiles.map(t => [t.document.id, t.document])), lights: new Coll([["lampA", {id: "lampA", x: 300, y: 300, hidden: false, flags: {}}]])}, grid: {size: 100},
     walls: {placeables: walls}, tiles: {placeables: tiles}, tokens: {placeables: [tok], controlled: [tok]}};
   CONFIG.Canvas = {...(oldConfigCanvas ?? {}), polygonBackends: {move: {testCollision: () => false}, sight: {testCollision: () => false}, sound: {testCollision: () => []}}};
-  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")]] ) {
+  for ( const [label, fn] of [["Interact", () => ix.openInteract(tok)], ["Interact roll", () => ix.attempt(tok, "wall0", "pick")], ["Interact search roll", () => ix.attempt(tok, "_search", "search")], ["Interact clue roll", () => ix.attempt(tok, "tile4", "examine")], ["Interact hide roll", () => ix.attempt(tok, "tile6", "hide")]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
@@ -598,7 +604,7 @@ game.world.id = worldId;
   windows.push({name: "Wall config · WoDX part", tag: "form", classes: "application sheet wall-config", width: 480, height: "auto",
     content: `<div class="standard-form">${ix.configHtml(walls[0].document)}</div><footer class="form-footer"><button type="submit">Update Wall</button></footer>`});
   windows.push({name: "Tile config · WoDX part", tag: "form", classes: "application sheet tile-config", width: 560, height: "auto",
-    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[4].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
+    content: `<div class="standard-form">${ix.tileConfigHtml(tiles[6].document)}</div><footer class="form-footer"><button type="submit">Update Tile</button></footer>`});
   globalThis.canvas = oldCanvas;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;

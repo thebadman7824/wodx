@@ -67,7 +67,7 @@ export async function run() {
       await check("M20 page two: Merits and Flaws, Rotes", m, "m20", ["Merits and Flaws", "Rotes", "Derangements"]);
       await check("Dark Ages Mage page two", m, "mageDA", ["Merits and Flaws", "Rotes"]);
       await check("V20 ghoul page two", g, "ghoul20", ["Other Traits", "Derangements"]);
-      await check("Hunter: The Reckoning page two", h, "htr", ["Merits and Flaws", "Other Traits"]);
+      await check("Hunter: The Reckoning page two (Blessings and Curses, as the sheet names them)", h, "htr", ["Blessings and Curses", "Other Traits"]);
       await check("Dark Ages Inquisitor page two", h, "inqDA", ["Other Traits", "Derangements"]);
       await check("C20 page two", c, "c20", ["Merits and Flaws", "Other Traits"]);
       await check("Demon page two", d, "demon", ["Merits and Flaws", "Derangements"]);

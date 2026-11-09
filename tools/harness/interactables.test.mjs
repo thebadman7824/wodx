@@ -358,12 +358,15 @@ test("traps: a search finds those its successes reach; getting clear takes dice 
 test("clues: the Storyteller's text in four parts; more successes show more; a plain one needs no roll", () => {
   const o = R.describeClue({clue: true, clueKind: "document", title: "A letter to the bishop", text0: "Sealed in red wax.", text1: "The hand is shaky.", text3: "It names the miller."});
   assert.equal(R.nameOf(o), "A letter to the bishop");
-  const [op] = R.optionsFor(o, ch({intelligence: 3, abilities: {investigation: 2}}));
-  assert.equal(op.id, "examine"); assert.equal(op.label, "Read it");
+  const [look, op] = R.optionsFor(o, ch({intelligence: 3, abilities: {investigation: 2}}));
+  assert.equal(look.id, "look"); assert.equal(look.roll, null);
+  assert.equal(op.id, "examine"); assert.equal(op.label, "Read it closely");
+  const untrained = R.optionsFor(o, ch({intelligence: 3, abilities: {}}));
+  assert.deepEqual(ids(untrained), ["look", "examineNote"]); assert.equal(untrained[1].disabled, true);
   assert.equal(op.roll.attrLabel, "Intelligence"); assert.equal(op.roll.dice, 5); assert.equal(op.roll.diff, 6);
-  const mark = R.optionsFor(R.describeClue({clueKind: "mark", text0: "x", text1: "y"}), ch({abilities: {}}))[0];
-  assert.equal(mark.roll.attrLabel, "Perception"); assert.equal(mark.roll.abilityLabel, "Investigation"); assert.equal(mark.roll.dice, 3);
-  assert.equal(R.optionsFor(R.describeClue({text0: "Only this."}), ch())[0].roll, null);
+  const mark = R.optionsFor(R.describeClue({clueKind: "mark", text0: "x", text1: "y"}), ch({abilities: {investigation: 1}}))[1];
+  assert.equal(mark.roll.attrLabel, "Perception"); assert.equal(mark.roll.abilityLabel, "Investigation"); assert.equal(mark.roll.dice, 4);
+  assert.deepEqual(R.optionsFor(R.describeClue({text0: "Only this."}), ch()).map(x => [x.id, x.label, x.roll]), [["look", "Read it", null]]);
   const two = R.resolve(o, op, [{successes: 2, botch: false}], {actorId: "pc1"});
   assert.equal(two.examine, 2); assert.equal(two.patch.flags.seen.pc1, 2);
   assert.deepEqual(R.clueTexts(o, 2), ["Sealed in red wax.", "The hand is shaky."]);
@@ -375,6 +378,44 @@ test("clues: the Storyteller's text in four parts; more successes show more; a p
   assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 2}).length, 0);
   assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 3}).length, 1);
   assert.deepEqual(R.cleanClue({clue: 1, clueKind: "rune", need: 9, title: "  T  "}), {clue: true, clueKind: "document", title: "T", need: 5, found: false, text0: "", text1: "", text2: "", text3: ""});
+});
+
+test("light sources: light or put out with no roll; a lantern can be broken; one tied to no light says so", () => {
+  const dark = R.describeLight({light: true, lightKind: "lantern"}, {on: false, count: 1});
+  assert.equal(R.nameOf(dark), "Lantern, dark");
+  assert.deepEqual(ids(R.optionsFor(dark, ch())), ["lightOn", "breakLight"]);
+  const on = R.resolve(dark, R.optionsFor(dark, ch())[0], []);
+  assert.equal(on.lights, true); assert.equal(on.noise, "silent");
+  const br = R.resolve(dark, R.optionsFor(dark, ch())[1], []);
+  assert.equal(br.lights, false); assert.equal(br.patch.flags.broken, true); assert.equal(br.noise, "loud");
+  const torch = R.describeLight({lightKind: "torch"}, {on: true, count: 2});
+  assert.deepEqual(ids(R.optionsFor(torch, ch())), ["lightOff"]);
+  assert.equal(R.optionsFor(R.describeLight({lightKind: "switch"}, {on: true, count: 1}), ch())[0].label, "Switch it off");
+  assert.equal(R.optionsFor(R.describeLight({}, {count: 0}), ch())[0].disabled, true);
+  assert.deepEqual(R.optionsFor(R.describeLight({broken: true}, {on: true, count: 1}), ch()), []);
+  assert.equal(R.cleanLight({light: 1, lightIds: "abc123, x y;<bad>"}).lightIds, "abc123, x, y");
+});
+
+test("hiding places: hide with Dexterity + Stealth; each two successes make a searcher need one more; a full place has no room", () => {
+  const o = R.describeHide({hide: true, hideKind: "shadows"});
+  assert.equal(o.room, 3);
+  const ops = R.optionsFor(o, ch({dexterity: 3, abilities: {stealth: 2, alertness: 1}}));
+  assert.deepEqual(ids(ops), ["hide", "searchHide"]);
+  assert.equal(ops[0].roll.dice, 5); assert.equal(ops[0].roll.diff, 6);
+  const hid = R.resolve(o, ops[0], [{successes: 3, botch: false}], {actorId: "pc1"});
+  assert.equal(hid.hides, 3); assert.equal(hid.noise, "silent");
+  const poor = R.resolve(o, ops[0], [{successes: 0, botch: false}], {actorId: "pc1"});
+  assert.equal(poor.hides, 0); assert.equal(poor.noise, "quiet"); assert.equal(poor.patch.flags.tries["pc1:hide"], 1);
+  assert.equal(R.resolve(o, ops[0], [{successes: 0, botch: true}], {actorId: "pc1"}).noise, "loud");
+  const full = R.describeHide({hideKind: "wardrobe", occupants: [{a: "npc1", s: 3, n: "Volker"}]});
+  assert.equal(R.nameOf(full), "Wardrobe or cupboard, full");
+  assert.deepEqual(ids(R.optionsFor(full, ch())), ["fullNote", "searchHide"]);
+  assert.deepEqual(ids(R.optionsFor(full, ch({actorId: "npc1"}))), ["comeOut"]);
+  assert.equal(R.hideNeed(full, full.occupants[0]), 2);
+  assert.equal(R.findHidden(full, {successes: 1}).length, 0);
+  assert.equal(R.findHidden(full, {successes: 1}, {bonus: 1}).length, 1);
+  assert.equal(R.findHidden(full, {successes: 5, botch: true}).length, 0);
+  assert.deepEqual(R.cleanHide({hide: 1, hideKind: "barrel", room: "40"}), {hide: true, hideKind: "wardrobe", room: 12});
 });
 
 /* ---------------- the runtime, on a stand-in for Foundry ---------------- */
@@ -402,7 +443,7 @@ const gm = {id: "gm", isGM: true, active: true}, player = {id: "pl", isGM: false
 users.set("gm", gm); users.set("pl", player);
 Object.defineProperty(users, "activeGM", {get: () => gm});
 let me = gm;
-const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll(), tokens: new Coll()};
+const scene = {id: "scn1", name: "Gate town", grid: {size: G, units: "ft"}, walls: new Coll(), tiles: new Coll(), tokens: new Coll(), lights: new Coll()};
 const uuids = new Map();
 const damage = [];
 
@@ -430,7 +471,8 @@ function actor(id, name, {str = 2, dex = 3, per = 3, larceny = 2, player: pc = t
     async update(data) { for ( const [k, v] of Object.entries(data) ) setPath(this, k, v); return this; }};
 }
 function token(id, a, x, y, owner = "pl") {
-  const doc = {id, x, y, width: 1, height: 1, actor: a, hidden: false, parent: scene, uuid: `Scene.scn1.Token.${id}`, testUserPermission: u => u.isGM || u.id === owner, get isOwner() { return me.isGM || me.id === owner; }};
+  const doc = {id, x, y, width: 1, height: 1, actor: a, hidden: false, parent: scene, uuid: `Scene.scn1.Token.${id}`, testUserPermission: u => u.isGM || u.id === owner, get isOwner() { return me.isGM || me.id === owner; },
+    async update(d) { for ( const [k, v] of Object.entries(d) ) setPath(doc, k, v); return doc; }};
   const t = {id, name: a.name, actor: a, document: doc, w: G, h: G, get center() { return {x: doc.x + G / 2, y: doc.y + G / 2}; }};
   doc.object = t;
   uuids.set(doc.uuid, doc);
@@ -522,7 +564,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap && !x.o.light && !x.o.hide).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -850,8 +892,10 @@ test("runtime: examining a clue whispers what the successes reach to the player 
   try {
     assert.ok(api.interactablesFor(tokPc).some(x => x.doc.id === "clue1"));
     assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "clue2"), "a hidden clue waits for a search");
-    faces = [9, 9, 2, 2, 2];        // Intelligence 2, no Investigation: two dice, two successes
+    pc.system.abilities.investigation = {value: 1, type: "knowledge", isvisible: true};
+    faces = [9, 9, 2];               // Intelligence 2 + Investigation 1: two successes
     const msg = await api.attempt(tokPc, "clue1", "examine", {fd: {}});
+    delete pc.system.abilities.investigation;
     const d = msg.flags[MOD].done;
     assert.equal(d.result, "done");
     const w = game.messages.get(d.whisper);
@@ -889,4 +933,98 @@ test("runtime: the WoDX part of the tile config keeps the clue's text", () => {
   assert.match(html, /value="trail" selected/);
   assert.match(html, /name="flags.wodx-interactables.need" value="3"/);
   assert.match(html, />Two people &lt;and&gt; a dog<\/textarea>/);
+});
+
+/* ---------------- light sources ---------------- */
+
+function light(id, x, y, hidden, flags = {}) {
+  const doc = {id, x, y, hidden, flags, parent: scene, async update(d) { for ( const [k, v] of Object.entries(d) ) setPath(doc, k, v); return doc; }};
+  scene.lights.set(id, doc);
+  return doc;
+}
+const lamp1 = light("light1", 760, 220, true);
+const lampTwin = light("light1p", 760, 220, true, {"wodx-otherworlds": {twinOf: "light1", layer: "penumbra"}});
+const farLight = light("light9", 2000, 2000, true);
+const lantern = tile("lamp1", 700, 200, {light: true, lightKind: "lantern"});
+canvas.tiles.placeables.push(lantern);
+
+test("runtime: a lantern works the lights on or beside it and their Otherworlds copies; Undo puts them back", async () => {
+  assert.deepEqual(api.lightsOf(lantern.document).map(l => l.id), ["light1", "light1p"]);
+  tokPc.document.x = 700; tokPc.document.y = 300;
+  me = player;
+  try {
+    assert.equal(R.nameOf(api.describeTile(lantern.document)), "Lantern, dark");
+    const on = await api.attempt(tokPc, "lamp1", "lightOn");
+    assert.equal(on.flags[MOD].done.result, "done");
+    assert.equal(lamp1.hidden, false); assert.equal(lampTwin.hidden, false); assert.equal(farLight.hidden, true);
+    assert.equal(R.nameOf(api.describeTile(lantern.document)), "Lantern, lit");
+    const br = await api.attempt(tokPc, "lamp1", "breakLight");
+    assert.equal(lamp1.hidden, true); assert.equal(lantern.document.flags[MOD].broken, true);
+    me = gm;
+    await api.undoCard(br);
+    assert.equal(lamp1.hidden, false); assert.equal(lantern.document.flags[MOD].broken, undefined);
+    await api.undoCard(on);
+    assert.equal(lamp1.hidden, true); assert.equal(lampTwin.hidden, true);
+  } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; }
+  lantern.document.flags[MOD].lightIds = "light9";
+  assert.deepEqual(api.lightsOf(lantern.document).map(l => l.id), ["light9"], "named lights win over nearby ones");
+  delete lantern.document.flags[MOD].lightIds;
+});
+
+/* ---------------- hiding places ---------------- */
+
+const cupboard = tile("hide1", 300, 350, {hide: true, hideKind: "wardrobe"});
+canvas.tiles.placeables.push(cupboard);
+
+test("runtime: an NPC hides and goes out of sight; a search of the place finds it; Undo hides it again; walking out ends hiding", async () => {
+  tokNpc.document.x = 300; tokNpc.document.y = 350;
+  tokNpc.document.hidden = false;
+  await hooks.get("canvasReady")[0]();
+  faces = [9, 9, 9, 2, 2];          // 3 successes: a searcher needs 2
+  const hide = await api.attempt(tokNpc, "hide1", "hide", {fd: {}});
+  assert.equal(hide.flags[MOD].done.result, "done");
+  assert.equal(tokNpc.document.hidden, true);
+  assert.equal(cupboard.document.flags[MOD].occupants[0].s, 3);
+  // The player searches the cupboard: one success, plus one for searching the place itself
+  tokPc.document.x = 300; tokPc.document.y = 450;
+  me = player;
+  try {
+    faces = [9, 2, 2, 2, 2];
+    const look = await api.attempt(tokPc, "hide1", "searchHide", {fd: {}});
+    assert.ok(look.flags[MOD].done.lines.some(l => /finds Sergeant Volker/.test(l)), look.flags[MOD].done.lines.join(" | "));
+    assert.equal(tokNpc.document.hidden, false);
+    assert.equal(cupboard.document.flags[MOD].occupants.length, 0);
+    me = gm;
+    await api.undoCard(look);
+    assert.equal(tokNpc.document.hidden, true);
+    assert.equal(cupboard.document.flags[MOD].occupants.length, 1);
+  } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; }
+  // Out of the cupboard: out of hiding
+  tokNpc.document.x = 600; tokNpc.document.y = 1500;
+  await api.onTokenMoved(tokNpc.document);
+  assert.equal(tokNpc.document.hidden, false);
+  assert.equal(cupboard.document.flags[MOD].occupants.length, 0);
+  tokNpc.document.x = 400;
+  await hooks.get("canvasReady")[0]();
+});
+
+test("runtime: Search the area finds someone hidden nearby when the successes reach; the Storyteller hears of who stays hidden", async () => {
+  cupboard.document.flags[MOD].occupants = [{a: "npc1", t: tokNpc.document.uuid, n: "Sergeant Volker", s: 4}];
+  tokNpc.document.hidden = true;
+  tokPc.document.x = 300; tokPc.document.y = 450;
+  me = player;
+  try {
+    faces = [9, 9, 2, 2, 2];        // 2: not enough for 3
+    await api.attempt(tokPc, "_search", "search", {fd: {}});
+    assert.equal(tokNpc.document.hidden, true);
+    assert.ok(chat.some(c => c.whisper?.includes("gm") && /Still in hiding: Sergeant Volker/.test(c.content)));
+    faces = [9, 9, 9, 2, 2];
+    const m = await api.attempt(tokPc, "_search", "search", {fd: {}});
+    assert.equal(tokNpc.document.hidden, false);
+    assert.ok(m.flags[MOD].done.lines.some(l => /finds Sergeant Volker in hiding/.test(l)));
+    me = gm;
+    await api.undoCard(m);
+    assert.equal(tokNpc.document.hidden, true);
+    assert.equal(cupboard.document.flags[MOD].occupants.length, 1);
+  } finally { me = gm; tokPc.document.x = 400; tokPc.document.y = 300; tokNpc.document.hidden = false; cupboard.document.flags[MOD].occupants = []; }
 });

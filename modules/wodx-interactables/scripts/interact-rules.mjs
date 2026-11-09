@@ -107,6 +107,32 @@ export const CLUES = {
   object: {label: "Something out of place", attr: "perception", verb: "Examine"}
 };
 export const CLUE_TIERS = 3;
+
+/**
+ * Light sources on tiles, each tied to one or more of the scene's own lights. Lighting or putting one out takes a
+ * turn and no roll; a lantern, lamp or electric light can be broken (loud, and it stays dark).
+ */
+export const LIGHTS = {
+  torch: {label: "Torch or brazier", on: "Light it", off: "Put it out", breaks: false},
+  candle: {label: "Candles", on: "Light them", off: "Put them out", breaks: false},
+  lantern: {label: "Lantern", on: "Light it", off: "Put it out", breaks: true},
+  lamp: {label: "Oil or gas lamp", on: "Light it", off: "Turn it down", breaks: true},
+  switch: {label: "Electric light switch", on: "Switch it on", off: "Switch it off", breaks: true}
+};
+/**
+ * Hiding places on tiles. need: the search successes it takes to find someone hidden there, before their own Stealth;
+ * room: how many fit unless the Storyteller says otherwise. Hiding is Dexterity + Stealth, difficulty 6 (the Stealth
+ * contest, read as a roll now and a search later: a house rule; V20 page ref to pin, rule 5); every two successes add one to the
+ * successes a searcher needs.
+ */
+export const HIDES = {
+  wardrobe: {label: "Wardrobe or cupboard", need: 1, room: 1},
+  bed: {label: "Under a bed or table", need: 1, room: 1},
+  curtain: {label: "Behind a curtain or tapestry", need: 1, room: 2},
+  shadows: {label: "Deep shadows or a dark corner", need: 2, room: 3},
+  crawl: {label: "Crawlspace or loft", need: 2, room: 2},
+  priesthole: {label: "Priest hole or hidden room", need: 3, room: 4}
+};
 export const DAMAGE_TYPES = {bashing: "Bashing", lethal: "Lethal", aggravated: "Aggravated"};
 
 export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
@@ -249,6 +275,38 @@ export function describeClue(f = {}) {
     electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
+/**
+ * A light source on a tile. f: the tile's flags.wodx-interactables, with light: true. on: whether its lights are lit now
+ * (read from the scene's lights by the runtime); count: how many lights it is tied to.
+ */
+export function describeLight(f = {}, {on = false, count = 0} = {}) {
+  const kind = LIGHTS[f.lightKind] ? f.lightKind : "torch";
+  return {
+    light: true, clue: false, trap: false, container: false, door: false, secret: false, ds: "closed", kind,
+    title: String(f.title ?? "").trim().slice(0, 80), on: !!on && !f.broken, count: Number(count) || 0, broken: !!f.broken,
+    electronic: "none", lock: "none", items: [], progress: {}, tries: {}
+  };
+}
+/**
+ * A hiding place on a tile. f: the tile's flags.wodx-interactables, with hide: true.
+ * occupants: [{a: actorId, t: token uuid, n: name, s: hiding successes}].
+ */
+export function describeHide(f = {}) {
+  const kind = HIDES[f.hideKind] ? f.hideKind : "wardrobe";
+  const room = Math.max(1, Math.min(12, Math.round(Number(f.room) || HIDES[kind].room)));
+  const occupants = (Array.isArray(f.occupants) ? f.occupants : []).filter(x => x && x.a).slice(0, 12);
+  return {
+    hide: true, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "closed", kind, room, occupants,
+    title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
+  };
+}
+/** The search successes it takes to find one person hiding. */
+export const hideNeed = (o, occ) => HIDES[o.kind].need + Math.floor(Math.max(0, Number(occ?.s) || 0) / 2);
+/** Who a search finds in a hiding place. bonus: a search of that very place counts one more success. */
+export function findHidden(o, roll = {successes: 0, botch: false}, {bonus = 0} = {}) {
+  if ( roll.botch ) return [];
+  return o.occupants.filter(occ => Math.max(0, Number(roll.successes) || 0) + bonus >= hideNeed(o, occ));
+}
 /** The texts a character has learned from a clue, by their best successes (a botch or none: only the first). */
 export function clueTexts(o, successes = 0) {
   const n = Math.max(0, Math.min(CLUE_TIERS, Number(successes) || 0));
@@ -263,6 +321,8 @@ export function parseItems(text) {
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o) {
   if ( o.clue ) return o.title || CLUES[o.kind].label;
+  if ( o.hide ) return `${o.title || HIDES[o.kind].label}${o.occupants.length >= o.room ? ", full" : ""}`;
+  if ( o.light ) return `${o.title || LIGHTS[o.kind].label}${o.broken ? ", broken" : o.on ? ", lit" : ", dark"}`;
   if ( o.trap ) {
     const T = TRAPS[o.kind], g = TRAP_GRADES[o.grade].label.toLowerCase();
     if ( o.holding ) return `${T.label}, holding someone`;
@@ -295,6 +355,8 @@ export function optionsFor(o, ch = {}) {
   if ( o.container ) return containerOptions(o, ch);
   if ( o.trap ) return trapOptions(o, ch);
   if ( o.clue ) return clueOptions(o, ch);
+  if ( o.light ) return lightOptions(o);
+  if ( o.hide ) return hideOptions(o, ch);
   const out = [];
   const ab = k => Number(ch.abilities?.[k]) || 0;
   const tries = id => Number(o.tries?.[`${ch.actorId ?? ""}:${id}`]) || 0;
@@ -412,16 +474,50 @@ function trapOptions(o, ch) {
   return out;
 }
 
+/** A hiding place: hide in it, come out, or search it (one success better than searching the whole area). */
+function hideOptions(o, ch) {
+  const me = o.occupants.some(x => x.a === ch.actorId);
+  if ( me ) return [{id: "comeOut", label: "Come out of hiding", roll: null, seconds: TURN, noise: {success: "quiet"}}];
+  const out = [];
+  if ( o.occupants.length < o.room ) {
+    const st = bestOf(ch.abilities ?? {}, ["stealth"]);
+    const t = Number(o.tries?.[`${ch.actorId ?? ""}:hide`]) || 0;
+    out.push({id: "hide", label: "Hide here", roll: {attr: "dexterity", attrLabel: "Dexterity", ability: "stealth", abilityLabel: "Stealth",
+      dice: (Number(ch.dexterity) || 0) + st.value, diff: Math.min(10, 6 + t), need: null, retries: t}, seconds: TURN,
+      noise: {success: "silent", fail: "quiet", botch: "loud"},
+      note: `Hidden even on a failure, but easier to find; every two successes make it harder (${HIDES[o.kind].need} search success${HIDES[o.kind].need === 1 ? "" : "es"} at least). A botch makes a noise.`});
+  } else out.push({id: "fullNote", label: "No room to hide", roll: null, disabled: true, note: `It holds ${o.room}.`});
+  const sk = bestOf(ch.abilities ?? {}, ["alertness", "investigation"]);
+  out.push({id: "searchHide", label: "Search it", roll: {attr: "perception", attrLabel: "Perception", ability: sk.key, abilityLabel: cap(sk.key),
+    dice: (Number(ch.perception) || 0) + sk.value, diff: 6, need: null}, seconds: TURN, noise: {success: "quiet", fail: "quiet", botch: "quiet"},
+    note: "Looking right in it counts one success more than searching the area."});
+  return out;
+}
+
+/** A light source: light it or put it out; break it if it can break. */
+function lightOptions(o) {
+  const L = LIGHTS[o.kind], out = [];
+  if ( o.broken ) return out;
+  if ( !o.count ) return [{id: "noLight", label: "Not tied to any light", roll: null, disabled: true, note: "The Storyteller has not tied this to a light on the scene."}];
+  out.push(o.on ? {id: "lightOff", label: L.off, roll: null, seconds: TURN, noise: {success: "silent"}}
+    : {id: "lightOn", label: L.on, roll: null, seconds: TURN, noise: {success: "silent"}});
+  if ( L.breaks ) out.push({id: "breakLight", label: "Break it", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud, and it stays dark until the Storyteller mends it."});
+  return out;
+}
+
 /** A clue: look at it (no roll, when there is nothing deeper to find), or examine it for what successes add. */
 function clueOptions(o, ch) {
   const C = CLUES[o.kind];
   const deeper = o.texts.slice(1).some(Boolean);
   const best = Number(o.seen?.[ch.actorId ?? ""]);
   const label = `${C.verb} it`;
-  if ( !deeper ) return [{id: "examine", label, roll: null, seconds: TURN, noise: {success: "silent"}}];
+  const look = {id: "look", label: deeper ? "Look at it" : label, roll: null, seconds: TURN, noise: {success: "silent"}};
+  if ( !deeper ) return [look];
   const sk = bestOf(ch.abilities ?? {}, ["investigation"]);
   const t = Number(o.tries?.[`${ch.actorId ?? ""}:examine`]) || 0;
-  return [{id: "examine", label, roll: {attr: C.attr, attrLabel: cap(C.attr), ability: sk.key, abilityLabel: cap(sk.key),
+  // Investigation is a Knowledge, and an untrained Knowledge is not rolled (as in WoDX Actions): with none, only a look
+  if ( !(sk.value > 0) ) return [look, {id: "examineNote", label: `${label} closely`, roll: null, disabled: true, note: "Needs Investigation: without it there is only a look."}];
+  return [look, {id: "examine", label: `${label} closely`, roll: {attr: C.attr, attrLabel: cap(C.attr), ability: sk.key, abilityLabel: cap(sk.key),
     dice: (Number(ch[C.attr]) || 0) + sk.value, diff: Math.min(10, 6 + t), need: null, retries: t}, seconds: MINUTE,
     noise: {success: "silent", fail: "silent", botch: "silent"},
     note: `More successes show more.${best > 0 ? ` Seen before with ${best} success${best === 1 ? "" : "es"}: a new roll only adds.` : ""}${t ? ` Tried before: +${t} difficulty.` : ""}`}];
@@ -515,7 +611,11 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       case "knock": return done("knocks.");
       case "take": flags.taken = true; return done("takes what is inside.");
       case "trigger": Object.assign(flags, {armed: false, sprung: true}); return done("sets it off from a safe distance.");
-      case "examine": return done("looks it over.");
+      case "look": return done("looks it over.");
+      case "comeOut": out.comesOut = true; return done("comes out of hiding.");
+      case "lightOn": out.lights = true; return done(o.kind === "switch" ? "switches the light on." : "lights it.");
+      case "lightOff": out.lights = false; return done(o.kind === "switch" ? "switches the light off." : "puts it out.");
+      case "breakLight": out.lights = false; flags.broken = true; return done("breaks it, and it goes dark.");
       case "cutFree": flags.holding = null; return done("cuts the snare and frees whoever it held.");
       case "smash": flags.broken = true; return done("breaks the pane.", {ds: "open"});
       case "force": flags.progress = {...o.progress, force: 0}; return done("forces it open.", {ds: "open"});
@@ -536,6 +636,16 @@ function resolveCore(o, option, rolls, {actorId = ""} = {}) {
       if ( roll.botch || got <= 0 ) flags.tries = {...o.tries, [`${actorId}:examine`]: (Number(o.tries?.[`${actorId}:examine`]) || 0) + 1};
       return Object.assign(out, {result: roll.botch ? "botch" : got > 0 ? "done" : "fail", noise: "silent", examine: roll.botch ? -1 : flags.seen[key],
         text: roll.botch ? "examines it, and is sure of what it means." : got > 0 ? "examines it closely." : "examines it, and finds nothing more."});
+    }
+    if ( id === "hide" ) {
+      const got = roll.botch ? 0 : Math.max(0, roll.successes);
+      if ( got <= 0 ) flags.tries = {...o.tries, [`${actorId}:hide`]: (Number(o.tries?.[`${actorId}:hide`]) || 0) + 1};
+      return Object.assign(out, {result: roll.botch ? "botch" : got > 0 ? "done" : "fail", hides: got, noise: roll.botch ? noise.botch : got > 0 ? noise.success : noise.fail,
+        text: roll.botch ? "hides, knocking something over." : got > 0 ? "hides." : "hides, but not well."});
+    }
+    if ( id === "searchHide" ) {
+      return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: noise.success, searchHide: roll,
+        text: roll.successes > 0 && !roll.botch ? "searches it." : "searches it, and finds nobody."});
     }
     if ( id === "search" ) {
       return Object.assign(out, {result: roll.botch ? "botch" : roll.successes > 0 ? "done" : "fail", noise: "silent", search: roll,
@@ -687,4 +797,17 @@ export function cleanClue(s = {}) {
   const t = k => String(s[k] ?? "").slice(0, 4000);
   return {clue: !!s.clue, clueKind: CLUES[s.clueKind] ? s.clueKind : "document", title: String(s.title ?? "").slice(0, 80).trim(),
     need: Math.max(1, Math.min(5, Math.round(Number(s.need) || 1))), found: !!s.found, text0: t("text0"), text1: t("text1"), text2: t("text2"), text3: t("text3")};
+}
+
+/** Clean a tile's light settings from the config form. lightIds: the ids of the scene lights it works, comma separated. */
+export function cleanLight(s = {}) {
+  const ids = String(s.lightIds ?? "").split(/[\s,;]+/).map(x => x.trim()).filter(x => /^[A-Za-z0-9]{1,32}$/.test(x)).slice(0, 20);
+  return {light: !!s.light, lightKind: LIGHTS[s.lightKind] ? s.lightKind : "torch", lightIds: ids.join(", "), broken: !!s.broken};
+}
+
+/** Clean a tile's hiding-place settings from the config form. */
+export function cleanHide(s = {}) {
+  const kind = HIDES[s.hideKind] ? s.hideKind : "wardrobe";
+  const room = s.room === "" || s.room === null || s.room === undefined ? "" : Math.max(1, Math.min(12, Math.round(Number(s.room) || 1)));
+  return {hide: !!s.hide, hideKind: kind, room};
 }
