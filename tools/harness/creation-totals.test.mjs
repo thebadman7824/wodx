@@ -132,6 +132,8 @@ test("the Awakening: Arete 1, the Affinity Sphere, Avatar and Quintessence", asy
   assert.ok(items.some(i => i.name === "Avatar" && i.system.value === 1));
   assert.ok(items.some(i => i.name === "Resources" && i.system.value === 2));
   assert.equal(m.system.focus.paradigm, "Hermetic");
+  const {lineFor} = await import(join(root, "modules/wodx-creation/scripts/totals-check.mjs"));
+  assert.equal(lineFor(m), "m20", "an Awakened mage is checked by M20 in any era");
   assert.throws(() => R.awakenStart({affinity: "nope"}), /Affinity/);
 });
 

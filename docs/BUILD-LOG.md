@@ -798,3 +798,4 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - The Creation window gains Death into a wraith, The Awakening and Creation check. api: deathToWraith, deathDialog, awaken, awakenDialog, totals, check.
 - Choices on what carries over and the ghoul blood figure: B131 to B133 and PENDING-REVIEW.md.
 - Tests: creation-totals.test.mjs (10), 664 in all. UI fit takes the check window and both dialogs. Gate: tools/gate/gatestates.mjs, 7 steps.
+- 0.8.1: the PC gate (6/7) found the check opening an Awakened mage on DA:M in the Dark Ages testbed. lineFor now starts such sheets on M20, and risen wraiths on Wraith 20.

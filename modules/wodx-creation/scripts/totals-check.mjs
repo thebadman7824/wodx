@@ -59,6 +59,14 @@ function extras(L) {
   return Object.keys(L.costs).filter(k => !counted.has(k)).map(k => COST_LABEL[k] ?? k[0].toUpperCase() + k.slice(1));
 }
 
+/** The book to start on: the one a WoDX change of state built the sheet by, else the sheet type's book for the era. */
+export function lineFor(actor) {
+  const f = actor.flags?.["wodx-creation"] ?? {};
+  if ( f.awakening ) return "m20";
+  if ( f.wraith ) return "wr20";
+  return defaultLine(actor.type, {variant: actor.system?.settings?.variant, eraId: eraId()});
+}
+
 const eraId = () => game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? "";
 
 export class CreationCheckApp extends ApplicationV2 {
@@ -91,7 +99,7 @@ export class CreationCheckApp extends ApplicationV2 {
     div.className = "wodx-body";
     if ( !actor ) { div.innerHTML = `<p class="wodx-quiet">There is no character sheet to check.</p>`; return div; }
     this.actorId = actor.id;
-    const lineId = this.lineId && TOTALS[this.lineId] ? this.lineId : defaultLine(actor.type, {variant: actor.system?.settings?.variant, eraId: eraId()});
+    const lineId = this.lineId && TOTALS[this.lineId] ? this.lineId : lineFor(actor);
     this.lineId = lineId;
     const res = checkCreation(totalsView(actor, lineId), lineId);
     const L = res.line;
