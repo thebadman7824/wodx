@@ -586,7 +586,7 @@
   "summary": "The duties a Kuei-jin is born to.",
   "claims": [
    {
-    "text": "A direction is a star-born influence on personality and duty; there are five: north, west, center, east and south.",
+    "text": "A direction is a star-born influence on personality and duty; each Kuei-jin has one of five, the four compass points plus the center.",
     "tier": "stated",
     "refs": [
      {
@@ -835,7 +835,7 @@
   "eras": [
    "modern"
   ],
-  "summary": "The barrier between the Middle Kingdom and the spirit worlds.",
+  "summary": "What divides the world of the living from the realms of spirit.",
   "claims": [
    {
     "text": "The Wall is the barrier between the Middle Kingdom and the Yin and Yang Worlds, known in the West as the Gauntlet or the Shroud.",
