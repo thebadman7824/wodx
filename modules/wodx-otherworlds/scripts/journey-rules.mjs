@@ -8,19 +8,23 @@
  *             world rots and greys on the map. A CSS filter, applied on the viewer's own client.
  */
 import * as G from "../../wodx-chronicle/scripts/gen-core.mjs";
+import {greatMaelstrom as gm, moonRisk, trodTime, TRODS} from "./realms-rules.mjs";
 
 /** The realms a journey can cross. Fixed list. */
 export const REALMS = {
   tempest: {label: "The Tempest (by a Byway)", hazard: 0.35, maelstrom: 0.05, lines: ["wraith"]},
   labyrinth: {label: "The Labyrinth", hazard: 0.6, maelstrom: 0.1, lines: ["wraith"]},
-  umbra: {label: "The Umbral roads (Moon Paths, the Near Umbra)", hazard: 0.3, maelstrom: 0, lines: ["werewolf", "mage", "changeling"]}
+  umbra: {label: "The Umbral roads (an airt, the Near Umbra)", hazard: 0.3, maelstrom: 0, lines: ["werewolf", "mage", "changeling"]},
+  moonpath: {label: "A Moon Path", hazard: 0.2, maelstrom: 0, moon: true, tables: "moon", lines: ["werewolf", "mage"]},
+  moonbridge: {label: "A Moon Bridge from a caern", hazard: 0.05, maelstrom: 0, moon: true, legs: 1, tables: "moon", lines: ["werewolf"]},
+  "trod-silver": {label: "A trod: the Silver Path", hazard: 0.2, maelstrom: 0, trod: "silver", tables: "trod", lines: ["changeling"]},
+  "trod-balor": {label: "A trod: a Path of Balor", hazard: 0.45, maelstrom: 0, trod: "balor", tables: "trod", lines: ["changeling"]},
+  "trod-twilight": {label: "A trod: a twilight road", hazard: 0.3, maelstrom: 0, trod: "twilight", tables: "trod", lines: ["changeling"]}
 };
 
-/** The years of the Great Maelstroms WoDX dates (see Dated events): the storm is far likelier then. */
-export const GREAT_MAELSTROMS = [[1347, 1352, "the Second Great Maelstrom"], [1600, 1601, "the Third Great Maelstrom"], [1916, 1918, "the Fourth Great Maelstrom"]];
-export function greatMaelstrom(year) {
-  const y = Number(year);
-  return GREAT_MAELSTROMS.find(([a, b]) => y >= a && y <= b)?.[2] ?? null;
+/** The year of a Great Maelstrom, if any (by the chronicle's fired events when given; see realms-rules.mjs). */
+export function greatMaelstrom(year, fired = null) {
+  return gm(year, fired);
 }
 
 /** Legs for a journey of so many hours. */
@@ -30,24 +34,41 @@ export const legsFor = hours => Math.max(1, Math.min(8, Math.ceil((Number(hours)
  * Plan a journey. randFor(key) gives a seeded stream for a leg. tables: (id) => table. storm: force the Maelstrom
  * odds up (the Storyteller's own Maelstrom).
  */
-export function planJourney({realm = "tempest", hours = 2, year = null, storm = false, randFor, tables} = {}) {
+export function planJourney({realm = "tempest", hours = 2, year = null, storm = false, randFor, tables, fired = null, moon = null} = {}) {
   const R = REALMS[realm] ?? REALMS.tempest;
-  const great = greatMaelstrom(year);
+  const great = R.maelstrom ? greatMaelstrom(year, fired) : null;
   const mChance = R.maelstrom ? (storm || great ? 0.4 : R.maelstrom) : 0;
+  // The moon's roads are safest at the full moon, worst at the new (house figures)
+  const risk = R.moon && moon !== null && moon !== undefined ? moonRisk(moon) : 1;
+  const hazard = Math.min(0.95, R.hazard * risk);
+  const key = R.tables ?? realm;
   const legs = [];
-  for ( let i = 0; i < legsFor(hours); i++ ) {
+  const nLegs = R.legs ?? legsFor(hours);
+  for ( let i = 0; i < nLegs; i++ ) {
     const rand = randFor(`leg:${i}`);
-    const leg = {n: i + 1, landmark: G.draw(`journey.${realm}.landmark`, {rand, tables})?.text ?? ""};
-    if ( rand() < R.hazard ) leg.hazard = G.draw(`journey.${realm}.hazard`, {rand, tables})?.text ?? null;
+    const leg = {n: i + 1, landmark: G.draw(`journey.${key}.landmark`, {rand, tables})?.text ?? ""};
+    if ( rand() < hazard ) leg.hazard = G.draw(`journey.${key}.hazard`, {rand, tables})?.text ?? null;
     if ( mChance && rand() < mChance ) leg.maelstrom = G.draw("journey.maelstrom", {rand, tables})?.text ?? null;
     legs.push(leg);
   }
-  return {realm, realmLabel: R.label, hours: Number(hours) || 1, legs, great, storm: !!storm,
+  const out = {realm, realmLabel: R.label, hours: Number(hours) || 1, legs, great, storm: !!storm,
     hazards: legs.filter(l => l.hazard).length, maelstroms: legs.filter(l => l.maelstrom).length};
+  if ( R.moon && moon !== null && moon !== undefined ) out.moonRisk = risk;
+  if ( realm === "moonbridge" ) out.note = "A Moon Bridge takes a thousandth of the time (the Rite of the Opened Bridge, W20 pdf 209 / p. 207).";
+  if ( R.trod ) { out.trod = R.trod; out.arrival = trodTime(hours, randFor("time")); out.note = TRODS[R.trod].note; }
+  return out;
 }
 
 export function journeyText(j) {
-  return j.legs.map(l => `Leg ${l.n}: ${l.landmark}${l.hazard ? ` Hazard: ${l.hazard}` : ""}${l.maelstrom ? ` Maelstrom: ${l.maelstrom}` : ""}`).join(" ");
+  const slip = j.arrival && j.arrival.slip !== "none" ? ` Time on the trod: ${slipWords(j.arrival)}.` : "";
+  return j.legs.map(l => `Leg ${l.n}: ${l.landmark}${l.hazard ? ` Hazard: ${l.hazard}` : ""}${l.maelstrom ? ` Maelstrom: ${l.maelstrom}` : ""}`).join(" ") + slip;
+}
+
+/** In words, how the trod's time ran. */
+export function slipWords(a) {
+  if ( !a || a.slip === "none" ) return "as planned";
+  if ( a.slip === "lost" ) return `they come out ${a.days} day${a.days === 1 ? "" : "s"} later than they should`;
+  return `${a.slip === "fast" ? "quicker" : "slower"} than planned, ${a.hours} hours`;
 }
 
 /** Decay strength from the Shroud (4 to 10; 7 when unknown): 1 at Shroud 4, 0.6 at 7, 0.2 at 10. House figures. */

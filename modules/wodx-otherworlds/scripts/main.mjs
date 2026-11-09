@@ -7,6 +7,8 @@ import {TaggingApp, writeReport, writeChartsPage} from "./tagging-app.mjs";
 import {buildPenumbraPrototype} from "./prototype.mjs";
 import * as rules from "./rules.mjs";
 import * as journey from "./journey.mjs";
+import * as realms from "./realms.mjs";
+import * as realmsRules from "./realms-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
 let active = false;
@@ -26,6 +28,8 @@ Hooks.once("init", () => {
   CONFIG.RegionBehavior.typeIcons[BEHAVIOR_TYPE] = "fa-solid fa-ghost";
   registerStatuses();
   journey.registerJourneySettings();
+  realms.registerRealmSettings();
+  realms.setupRealms();
 });
 
 Hooks.once("ready", () => {
@@ -41,7 +45,10 @@ Hooks.once("ready", () => {
     crossShroud, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
     readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses,
     journey: {draw: journey.drawJourney, propose: journey.proposeJourney, approve: journey.approveJourney, rules: journey.J},
-    journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, applyDecay: journey.applyDecay
+    journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, applyDecay: journey.applyDecay,
+    realms: {rules: realmsRules, storm: realms.storm, shreddingWinds: realms.shreddingWinds, addDreamingLevel: realms.addDreamingLevel, makeTrod: realms.makeTrod,
+      dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,
+      netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {otherworlds: api});
@@ -99,6 +106,18 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxAura = {
     name: "wodxAura", title: "Set the aura of the selected token's character", icon: "fa-solid fa-palette", order: 116,
     button: true, visible: game.user.isGM, onChange: () => senses.editAura(canvas?.tokens?.controlled?.[0]?.actor)
+  };
+  tokens.tools.wodxDreaming = {
+    name: "wodxDreaming", title: "A gateway to the Near Dreaming (Storyteller)", icon: "fa-solid fa-feather", order: 130,
+    button: true, visible: game.user.isGM, onChange: () => realms.dreamingDialog()
+  };
+  tokens.tools.wodxOtherRolls = {
+    name: "wodxOtherRolls", title: "Otherworld rolls: the Avatar Storm, the Opened Bridge, Wayfare, the Maelstrom, the Net", icon: "fa-solid fa-meteor", order: 131,
+    button: true, visible: true, onChange: () => realms.rollsDialog()
+  };
+  if ( realms.netOpen() ) tokens.tools.wodxJack = {
+    name: "wodxJack", title: "Jack into the Net, or out", icon: "fa-solid fa-network-wired", order: 132,
+    button: true, visible: true, onChange: () => realms.jack()
   };
   tokens.tools.wodxRatings = {
     name: "wodxRatings", title: "Otherworld ratings by scene", icon: "fa-solid fa-ghost", order: 112,

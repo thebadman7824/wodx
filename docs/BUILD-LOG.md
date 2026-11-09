@@ -848,3 +848,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - states-rules.mjs (pure): FAMILIES (the twelve revenant families), revenantStart; SEEMINGS, chrysalisStart; HOUSES, fallenStart, fallenWillpower, HOST_TARGETS, possession; secondBreathStart. Mechanics from research/book-checks/state-changes.md.
 - states.mjs: revenantBirth (same sheet, ghoul set-up), chrysalis, fallenHost, possess, secondBreath, each with a dialog (search boxes over the mortals, families and demons). The Creation window gains five buttons; the api gains the ten functions.
 - Tests: states2.test.mjs (6); 729 pass. Gate: tools/gate/gatestates2.mjs, 8 steps, rothenstein-wodx only. gate-interact step 1 now accepts 0.14.0 or later.
+
+### Open items, 2026-11-09: the other worlds, part two (Otherworlds 0.4.0, Chronicle 0.6.1; B260-B265)
+- realms-rules.mjs (pure): mists, TRODS, trodTime, wayfarePortal, moonRisk, CAERNS, openedBridge, stormState, shredding, acrossGauntlet, GREAT_MAELSTROMS and greatMaelstrom by fired events, maelstromDice, disembodiment, the Net (netSystem, netPool, netExchange, programTest), layerSoundFor.
+- realms.mjs: settings (The Avatar Storm; layer sound, volume, folder), addDreamingLevel, makeTrod, dreamingGate and its dialog, shreddingWinds (and on a mage reaching a Penumbra level), checkDisembodiment through the approval queue, jack and netContest, the Otherworld rolls window, each client's layer loop.
+- journey-rules.mjs: Moon Path, Moon Bridge and three trods; moon risk; time on a trod; Great Maelstroms from the chronicle's events. New tables: journey.moon.*, journey.trod.*.
+- crossing.mjs: three statuses (In the Near Dreaming, Beyond the Penumbra, Jacked into the Net). twins.mjs: layersOf knows the dreaming level. twins-app: Add a Near Dreaming level, Make trod.
+- Chronicle 0.6.1: the two new player buttons (Otherworld rolls, Jack into the Net) join the player button list.
+- Tests: realms.test.mjs (10); phase8b's journey test knows a one-leg road. Gate: tools/gate/gaterealms.mjs, 12 steps, two scenes of its own.

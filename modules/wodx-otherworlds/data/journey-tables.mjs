@@ -66,6 +66,43 @@ export const JOURNEY_TABLES = [
     "A Paradox spirit is hunting a mage, and does not care who stands near.",
     "The road crosses into the Atrocity Realm for a heartbeat: everyone rolls Willpower or freezes."
   ]),
+  T("journey.moon.landmark", "Moon Paths: landmarks", [
+    "Lunes dance along the path's edge, shapes changing with every step.",
+    "The path crosses a lake of still silver; the reflections walk a beat behind.",
+    "A Pathstone stands where the bridge touches down, older than the caern that raised it.",
+    "The path narrows to a thread of light over a gulf of stars.",
+    "An airt crosses the path: the faint track of some great spirit that came this way.",
+    "A shrine of white stones, left by travellers to the moon's honour.",
+    "The path forks; one branch is brighter, and the Lunes will not say why.",
+    "Far below, the Near Realms turn like lanterns in a fog."
+  ]),
+  T("journey.moon.hazard", "Moon Paths: hazards", [
+    "Lunes in a teasing mood lead the travellers off the path, then laugh.",
+    "The path dims as clouds cross the moon; whoever steps off is adrift.",
+    "A Bane has crept onto the path and waits in a shadow on the light.",
+    "A spirit demands a riddle answered before it moves aside.",
+    "The path splits under the travellers' feet: who goes which way?",
+    "Something follows from the last Realm, staying just out of sight."
+  ]),
+  T("journey.trod.landmark", "Trods: landmarks", [
+    "A hedge of thorns in full flower in midwinter, the trod running through a gap in it.",
+    "A ring of mushrooms the size of millstones, each with a door.",
+    "An inn with no sign where the hearth burns blue and nobody asks names.",
+    "A bridge kept by a troll who has fallen asleep at the post.",
+    "Standing stones that hum when a changeling passes them.",
+    "A stretch of road paved with old coins, every one a different king.",
+    "A river that runs uphill, the trod following its bank.",
+    "A crossroads where a chimera sells directions, for a memory."
+  ]),
+  T("journey.trod.hazard", "Trods: hazards", [
+    "Banality seeps in from a mortal town the trod passes too close to.",
+    "A Thallain lies in wait where the trod crosses into a Path of Balor.",
+    "The trod's owner wants a toll, and a song will not do.",
+    "Fog off the Mists: whoever falls behind forgets why they came.",
+    "A gateway ahead has realigned; it opens onto somewhere else now.",
+    "A chimera hunt crosses the road, and the hounds are not particular.",
+    "The road loops back on itself, and the same landmark passes twice."
+  ]),
   T("journey.maelstrom", "Maelstrom events", [
     "The storm rises to a scream: everyone in the open takes the Maelstrom's damage until they find shelter.",
     "A wall of Spectres rides the storm's front, sweeping up everything before it.",

@@ -30,12 +30,12 @@ export function layerOf(level) {
 /** The physical level and the twin levels of a scene. */
 export function layersOf(scene) {
   const levels = scene?.levels ? [...scene.levels] : [];
-  const out = {physical: null, penumbra: null, shadowlands: null, otherPhysical: []};
+  const out = {physical: null, penumbra: null, shadowlands: null, dreaming: null, otherPhysical: []};
   for ( const l of levels ) {
     const k = layerOf(l);
     if ( k === "physical" ) {
       if ( !out.physical ) out.physical = l; else out.otherPhysical.push(l);
-    } else if ( k in LAYERS && !out[k] ) out[k] = l;
+    } else if ( (k in LAYERS || k === "dreaming") && !out[k] ) out[k] = l;
   }
   return out;
 }
