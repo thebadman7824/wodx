@@ -26,7 +26,7 @@ WoDX notes:
 | wodx-npc | 0.3.0 | 7b (NPC profiles and combat tactics), 7c (places, routines on the clock, WoDX: Reaction regions), 7d (factions, faction turns, hunting grounds, Masquerade rumours) | rothenstein-wodx, wodx-template (needs wodx-chronicle, wodx-combat, wodx-actions) |
 | wodx-storyteller | 0.1.0 | 7e (the open world: the Storyteller's tracker, personal time and dawn, travel and road encounters, solo play, convening, beats, the spotlight, the report between sessions) | rothenstein-wodx (needs wodx-chronicle 0.4.3; reads wodx-npc and wodx-otherworlds when on). Not deployed yet |
 | wodx-interactables | 0.1.0 | Interactables step 1: doors, locks, windows and breakable walls on core walls, the Interact window, the door click, results with Undo, noise | rothenstein-wodx, wodx-template (needs wodx-chronicle, wodx-actions; uses wodx-combat and wodx-npc when on). Not deployed yet. |
-| wodx-targeting | 0.1.0 | WoDX Targeting (after 7d): target suggestions for powers and attacks, Off, Suggest (default) or Automatic for the Storyteller; tags for 931 powers | rothenstein-wodx, wodx-template (needs wodx-chronicle, wodx-combat 3.7.5, wodx-actions 3.12.0) |
+| wodx-targeting | 0.1.0 | WoDX Targeting (after 7d): target suggestions for powers and attacks, Off, Suggest (default) or Automatic for the Storyteller; tags for 931 powers | rothenstein-wodx (deployed and gated 9/9 on 2026-11-09), wodx-template (needs wodx-chronicle, wodx-combat 3.7.5, wodx-actions 3.12.0) |
 
 Chronicle, Otherworlds and Creation stay idle in worlds without `flags.wodx` (the original Rothenstein world). WoDX Actions and WoDX Combat stay off wherever vtda20-actions or vtda20-combat is still enabled; the original Rothenstein world keeps the vtda20 modules, which stay installed.
 

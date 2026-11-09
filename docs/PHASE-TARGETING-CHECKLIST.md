@@ -10,6 +10,6 @@
 - [x] Harness tests (targeting.test.mjs, 18); 406 pass; quality check passes
 - [x] UI fit at three sizes with Foundry 14's own CSS: every window passes
 - [x] Gate script (tools/gate/gatetarget.mjs), for rothenstein-wodx only
-- [ ] Deployed (Targeting 0.1.0, Actions 3.12.0, Combat 3.7.5), backups first, every file checked by MD5, Foundry restarted: waits for Ben's OK (the modules are shared with the Live Version world)
-- [ ] Gate in rothenstein-wodx
+- [x] Deployed (Targeting 0.1.0, Actions 3.12.0, Combat 3.7.5) on 2026-11-09 with Ben's OK, backups first, every file checked by MD5, Foundry restarted
+- [x] Gate in rothenstein-wodx: 9/9 on 2026-11-09 (the first run, 7/9, read Celerity, a self power, in steps 4 and 5; the gate was fixed in PR 13). Ticked area boxes checked by eye: they show.
 - [ ] WoDX NPC reads the same picker for its "Use a power" plans
