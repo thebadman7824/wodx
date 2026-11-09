@@ -91,6 +91,12 @@
    "title": "Hunter: The Reckoning",
    "short": "HtR",
    "edition": "First edition"
+  },
+  {
+   "id": "inquisitor",
+   "title": "Dark Ages: Inquisitor",
+   "short": "DA:I",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -108,6 +114,7 @@
   "demon.json",
   "kote.json",
   "orpheus.json",
-  "htr.json"
+  "htr.json",
+  "inquisitor.json"
  ]
 }
