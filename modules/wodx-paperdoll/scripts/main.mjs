@@ -106,7 +106,7 @@ export async function draw(look, {level = 0, mood = "own", frame = D.DEFAULT_FRA
   const {eyes, features} = await featuresFor(look, mood);
   const head = D.headLayers({look, eyes, mood, head: D.innerSvg(await avatar(D.loreleiOptions(look, mood))), mask: D.innerSvg(await avatar(D.loreleiOptions(look, mood, {mask: true})))});
   const out = D.compose({look, head, anchors: A, frame, ring, level, style, changes});
-  out.stages = D.stagesOf({look, anchors: A, features, eyes, crop: out.crop});
+  out.stages = D.stagesOf({look, anchors: A, features, eyes, crop: out.crop, mood});
   const failed = out.stages.filter(s => !s.ok);
   if ( failed.length ) console.warn(`${MOD} | a stage did not check out`, failed);
   return out;
@@ -233,7 +233,7 @@ export class PaperdollApp extends ApplicationV2 {
   constructor(options = {}) {
     super(options);
     this.actor = options.actor;
-    this.look = lookOf(this.actor) ?? D.randomLook(this.actor?.name ?? "");
+    this.look = lookOf(this.actor) ?? D.randomLook(this.actor?.name ?? "", whoOf(this.actor));
     this.preview = 0;
   }
   get title() { return `Paperdoll: ${this.actor?.name ?? ""}`; }
@@ -313,8 +313,8 @@ export class PaperdollApp extends ApplicationV2 {
     this.render();
   }
   static #onStep(ev, target) { this.look = D.step(this.look, target.dataset.part, Number(target.dataset.by)); this.render(); }
-  static #onRandom() { this.look = {...D.randomLook(`${this.actor?.name ?? ""} ${Date.now()}`), clothes: this.look.clothes, style: this.look.style, mood: this.look.mood, followHealth: this.look.followHealth, portrait: this.look.portrait}; this.render(); }
-  static #onReset() { this.look = lookOf(this.actor) ?? D.randomLook(this.actor?.name ?? ""); this.render(); }
+  static #onRandom() { this.look = {...D.randomLook(`${this.actor?.name ?? ""} ${Date.now()}`, whoOf(this.actor)), clothes: this.look.clothes, style: this.look.style, mood: this.look.mood, followHealth: this.look.followHealth, portrait: this.look.portrait}; this.render(); }
+  static #onReset() { this.look = lookOf(this.actor) ?? D.randomLook(this.actor?.name ?? "", whoOf(this.actor)); this.render(); }
   static async #onSave() {
     await saveLook(this.actor, this.look);
     ui.notifications.info(game.user.isGM ? "Look saved and put on the token." : "Look saved. The token changes once the Storyteller is here.");

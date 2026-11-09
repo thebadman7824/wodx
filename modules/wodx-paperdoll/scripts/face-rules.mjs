@@ -17,12 +17,18 @@ export const SKIN_LIST = [
   ["a8754f", "Tan"], ["a06c48", "Bronze"], ["98674a", "Cinnamon"], ["8d5a3b", "Brown"], ["855638", "Chestnut brown"], ["7c5034", "Umber"],
   ["744a30", "Warm brown"], ["6b4129", "Deep brown"], ["623c27", "Mahogany"], ["5a3724", "Espresso"], ["4f3021", "Dark"], ["4a2c1d", "Deep"],
   ["3f261a", "Ebony"], ["362117", "Deepest"], ["d7d2c8", "Deathly pale"], ["c9c6c0", "Ashen"], ["b9c0bf", "Grave grey"], ["c8d0c4", "Sickly green"],
-  ["d9cfe0", "Pallid violet"], ["e8e4dc", "Bloodless"]
+  ["d9cfe0", "Pallid violet"], ["e8e4dc", "Bloodless"],
+  // Colours no human skin has, for the fae, spirits and other uncanny folk
+  ["8fb3d9", "Fae blue"], ["6f8fc4", "Cornflower"], ["4a7a7a", "Deep water"], ["9cc49a", "Verdant"], ["6f9a6a", "Moss"],
+  ["b9a3d6", "Lavender"], ["8a6fae", "Amethyst"], ["c46a8a", "Briar rose"], ["e89a8a", "Coral"], ["c84a32", "Ember"],
+  ["d9b44a", "Gilded"], ["c4cad2", "Quicksilver"], ["8c8f94", "Ash"], ["5f6f7e", "Slate"], ["3a3f5c", "Midnight"], ["dfe8f0", "Moonlit"]
 ];
 /** Lookup by colour. (Some colours read as numbers, so the order lives in SKIN_ORDER, not in this object.) */
 export const SKIN = Object.fromEntries(SKIN_LIST);
 export const SKIN_ORDER = SKIN_LIST.map(([h]) => h);
 export const SKIN_HUMAN = SKIN_ORDER.slice(0, 32);
+/** The pallid tones of the dead and dying, then the fantastic ones. */
+export const SKIN_PALLID = SKIN_ORDER.slice(32, 38), SKIN_FANTASTIC = SKIN_ORDER.slice(38);
 /** Hair colours, natural ones first, then the greys of age. */
 export const HAIR = {
   "0e0c0b": "Blue black", "1f1a17": "Black", "2a211b": "Soft black", "3b2a20": "Dark brown", "4a3226": "Brown black", "5a3a28": "Brown",
