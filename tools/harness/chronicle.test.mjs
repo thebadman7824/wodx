@@ -256,6 +256,35 @@ test("queue relief in the queue: bulk approve with an exception, approve on its 
   await game.settings.set(M, "npcCap", 0);
 });
 
+test("knowledge-gated handouts: needs, readers, and what each sees", async () => {
+  const KR = await import(join(root, "modules/wodx-chronicle/scripts/know-rules.mjs"));
+  assert.deepEqual(KR.parseNeeds("Latin or Occult 3"), [{name: "Latin", key: "latin", dots: 0}, {name: "Occult", key: "occult", dots: 3}]);
+  assert.deepEqual(KR.parseNeeds("Animal Ken 2; Auspex 2").map(n => n.key), ["animalken", "auspex"]);
+  assert.deepEqual(KR.parseNeeds(""), []);
+  const scholar = {languages: ["Latin"], dots: {occult: 1}}, occultist = {languages: [], dots: {occult: 3}}, seer = {dots: {auspex: 2}};
+  const need = KR.parseNeeds("Latin or Occult 3");
+  assert.ok(KR.meets(need, scholar));
+  assert.ok(KR.meets(need, occultist));
+  assert.ok(!KR.meets(need, seer));
+  assert.ok(KR.meets(KR.parseNeeds("Occult"), scholar), "no dots given: one dot does");
+  assert.ok(KR.meets(KR.parseNeeds("Auspex 2"), seer));
+  const langs = ["Latin", "German"];
+  const no = KR.view("Latin", "Pax tecum, frater", {readers: [seer], languages: langs});
+  assert.equal(no.readable, false);
+  assert.notEqual(no.text, "Pax tecum, frater");
+  assert.equal(no.text, KR.view("Latin", "Pax tecum, frater", {readers: [], languages: langs}).text, "the same words scramble the same way");
+  assert.ok(!no.script);
+  assert.ok(KR.view("Occult 3", "the sign of the serpent", {readers: [scholar], languages: langs}).script, "a trait, not a language: marked as a script");
+  assert.deepEqual(KR.view("Latin", "Pax", {readers: [seer, scholar], languages: langs}), {readable: true, text: "Pax", label: "Latin", mark: false});
+  assert.deepEqual(KR.view("Latin", "Pax", {gm: true}), {readable: true, text: "Pax", label: "Latin", mark: true});
+  const p = KR.passages("<p>Open: @Know[Latin]{Pax tecum} and @Know[Auspex 2]{under the seal}</p>");
+  assert.equal(p.length, 2);
+  assert.equal(p[1].text, "under the seal");
+  const src = (await import("node:fs")).readFileSync(join(root, "modules/wodx-chronicle/scripts/main.mjs"), "utf8");
+  assert.match(src, /know\.registerKnow\(\)/);
+  assert.ok(CONFIG.TextEditor.enrichers.some(e => e.id === "wodx-chronicle.know"), "the enricher is registered at init");
+});
+
 test("module stays idle in a world without the WoDX flag", async () => {
   // Checked by reading main.mjs: init returns before registering anything when flags.wodx is missing.
   const src = (await import("node:fs")).readFileSync(join(root, "modules/wodx-chronicle/scripts/main.mjs"), "utf8");

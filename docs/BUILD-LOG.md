@@ -918,3 +918,9 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - settings.mjs: autoApprove (world, hidden), npcCap (world, 0 to 100). main.mjs: a Storyteller session start resets the count.
 - Tests: two more in chronicle.test.mjs (760 pass). Gate: tools/gate/gatequeue.mjs, 7 steps; it puts back the queue, rules and cap.
 - (approvals-rules.mjs went into PR 84 by mistake ahead of the rest; nothing used it there.)
+
+## 2026-11-09: knowledge-gated handouts (Chronicle 0.8.0, B274); queue window fix
+
+- know-rules.mjs (new): KNOW_PATTERN, traitKey, parseNeeds, meets, view, passages. know.mjs (new): traitsOf (languages from flags and Merits, dots from Abilities and any rated item), render, the @Know text enricher registered at init. languages.mjs exports charactersOf. api.know.
+- Queue window: Approve on its own is now a section of its own with a capped scroll box, not a closed details, so the UI fit can reach every box.
+- Tests: one more in chronicle.test.mjs (761 pass). Gate: tools/gate/gateknow.mjs, 7 steps.

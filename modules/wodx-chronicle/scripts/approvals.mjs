@@ -215,9 +215,9 @@ export class ApprovalsApp extends ApplicationV2 {
     const heldNote = kept ? `<p class="wodx-held">${kept} NPC proposal${kept === 1 ? " is" : "s are"} held back: past this session's cap of ${cap}. <button type="button" data-action="release">Put them in the queue</button></p>` : "";
     const ts = types().filter(t => !QR.NEVER_AUTO.includes(t.type));
     const rules = ts.map(t => `<li><label><input type="checkbox" class="wodx-auto" data-type="${esc(t.type)}"${auto[t.type] ? " checked" : ""}> ${esc(t.label)}</label></li>`).join("");
-    const standing = `<details class="wodx-standing"><summary>Approve on its own${Object.keys(auto).length ? ` (${Object.keys(auto).length})` : ""}</summary>
+    const standing = `<section class="wodx-standing"><h3>Approve on its own${Object.keys(auto).length ? ` (${Object.keys(auto).length})` : ""}</h3>
         <p class="wodx-quiet">A ticked kind is approved the moment it is proposed, and listed as approved on its own. A player's own request always waits. The cap on NPC proposals a session is in Configure Settings${cap ? ` (now ${cap})` : " (now none)"}.</p>
-        ${ts.length > 8 ? searchBox("ul.wodx-autolist", "Search kinds…", "Search kinds of proposal") : ""}<ul class="wodx-list wodx-autolist"${ts.length > 8 ? "" : " data-fixed"}>${rules}</ul></details>`;
+        ${ts.length > 8 ? searchBox("ul.wodx-autolist", "Search kinds…", "Search kinds of proposal") : ""}<ul class="wodx-list wodx-autolist"${ts.length > 8 ? "" : " data-fixed"}>${rules}</ul></section>`;
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
     div.innerHTML = `
