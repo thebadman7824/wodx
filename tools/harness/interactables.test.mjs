@@ -355,6 +355,28 @@ test("traps: a search finds those its successes reach; getting clear takes dice 
     {trap: true, trapKind: "snare", grade: "good", dice: 20, damageType: "", armed: true, found: false, npcs: false});
 });
 
+test("clues: the Storyteller's text in four parts; more successes show more; a plain one needs no roll", () => {
+  const o = R.describeClue({clue: true, clueKind: "document", title: "A letter to the bishop", text0: "Sealed in red wax.", text1: "The hand is shaky.", text3: "It names the miller."});
+  assert.equal(R.nameOf(o), "A letter to the bishop");
+  const [op] = R.optionsFor(o, ch({intelligence: 3, abilities: {investigation: 2}}));
+  assert.equal(op.id, "examine"); assert.equal(op.label, "Read it");
+  assert.equal(op.roll.attrLabel, "Intelligence"); assert.equal(op.roll.dice, 5); assert.equal(op.roll.diff, 6);
+  const mark = R.optionsFor(R.describeClue({clueKind: "mark", text0: "x", text1: "y"}), ch({abilities: {}}))[0];
+  assert.equal(mark.roll.attrLabel, "Perception"); assert.equal(mark.roll.abilityLabel, "Investigation"); assert.equal(mark.roll.dice, 3);
+  assert.equal(R.optionsFor(R.describeClue({text0: "Only this."}), ch())[0].roll, null);
+  const two = R.resolve(o, op, [{successes: 2, botch: false}], {actorId: "pc1"});
+  assert.equal(two.examine, 2); assert.equal(two.patch.flags.seen.pc1, 2);
+  assert.deepEqual(R.clueTexts(o, 2), ["Sealed in red wax.", "The hand is shaky."]);
+  assert.deepEqual(R.clueTexts(o, 9), ["Sealed in red wax.", "The hand is shaky.", "It names the miller."]);
+  // A new, worse roll keeps the best seen; a botch shows only the first part
+  const seen = R.describeClue({...o, clueKind: "document", text0: o.texts[0], text1: o.texts[1], text3: o.texts[3], seen: {pc1: 3}});
+  assert.equal(R.resolve(seen, op, [{successes: 1, botch: false}], {actorId: "pc1"}).examine, 3);
+  assert.equal(R.resolve(o, op, [{successes: 0, botch: true}], {actorId: "pc1"}).examine, -1);
+  assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 2}).length, 0);
+  assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 3}).length, 1);
+  assert.deepEqual(R.cleanClue({clue: 1, clueKind: "rune", need: 9, title: "  T  "}), {clue: true, clueKind: "document", title: "T", need: 5, found: false, text0: "", text1: "", text2: "", text3: ""});
+});
+
 /* ---------------- the runtime, on a stand-in for Foundry ---------------- */
 
 const G = 100;
@@ -470,7 +492,8 @@ globalThis.ChatMessage = {
   getSpeaker: ({token: t}) => ({alias: t?.object?.name ?? t?.actor?.name ?? "?"}),
   create: async data => {
     const msg = {id: `m${chat.length}`, ...structuredClone({...data, rolls: undefined}), rolls: data.rolls ?? [], author: me,
-      async update(d) { for ( const [k, v] of Object.entries(d) ) setPath(msg, k, v); return msg; }};
+      async update(d) { for ( const [k, v] of Object.entries(d) ) setPath(msg, k, v); return msg; },
+      async delete() { game.messages.delete(msg.id); return msg; }};
     chat.push(msg);
     game.messages.set(msg.id, msg);
     // The Storyteller's client picks the card up
@@ -499,7 +522,7 @@ const api = game.modules.get(MOD).api;
 
 test("runtime: within reach, nearest first; far doors and other levels are left out", () => {
   const list = api.interactablesFor(tokPc);
-  assert.deepEqual(list.filter(x => !x.o.container).map(x => x.doc.id), ["door1", "win1", "brk1"]);
+  assert.deepEqual(list.filter(x => !x.o.container && !x.o.clue && !x.o.trap).map(x => x.doc.id), ["door1", "win1", "brk1"]);
   door.document.levels = new Set(["upper"]);
   tokPc.document.level = "ground";
   assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "door1"));
@@ -814,4 +837,56 @@ test("runtime: the WoDX part of the tile config keeps the trap's choices", () =>
   assert.match(html, /name="flags.wodx-interactables.dice" value="7"/);
   assert.match(html, /name="flags.wodx-interactables.npcs" checked/);
   assert.match(html, /name="flags.wodx-interactables.armed" checked/);
+});
+
+/* ---------------- clues ---------------- */
+
+const letter = tile("clue1", 300, 150, {clue: true, clueKind: "document", title: "A torn letter", text0: "Half a page, torn.", text1: "A woman's name: Greta.", text2: "Written in haste.", text3: "The seal is the bishop's."});
+const stain = tile("clue2", 500, 150, {clue: true, clueKind: "mark", need: 2, text0: "A dark stain.", text1: "Blood, a day old."}, {hidden: true});
+canvas.tiles.placeables.push(letter, stain);
+
+test("runtime: examining a clue whispers what the successes reach to the player and the Storyteller; Undo takes it back", async () => {
+  me = player;
+  try {
+    assert.ok(api.interactablesFor(tokPc).some(x => x.doc.id === "clue1"));
+    assert.ok(!api.interactablesFor(tokPc).some(x => x.doc.id === "clue2"), "a hidden clue waits for a search");
+    faces = [9, 9, 2, 2, 2];        // Intelligence 2, no Investigation: two dice, two successes
+    const msg = await api.attempt(tokPc, "clue1", "examine", {fd: {}});
+    const d = msg.flags[MOD].done;
+    assert.equal(d.result, "done");
+    const w = game.messages.get(d.whisper);
+    assert.deepEqual(w.whisper.sort(), ["gm", "pl"]);
+    assert.match(w.content, /Half a page/); assert.match(w.content, /Greta/); assert.match(w.content, /in haste/);
+    assert.ok(!/bishop/.test(w.content), "three successes' worth stays hidden");
+    assert.ok(!/Greta/.test(msg.content), "the public card says nothing of it");
+    assert.equal(letter.document.flags[MOD].seen.pc1, 2);
+    me = gm;
+    await api.undoCard(msg);
+    assert.equal(game.messages.has(d.whisper), false);
+    assert.equal(letter.document.flags[MOD].seen, undefined);
+  } finally { me = gm; }
+});
+
+test("runtime: a search notices a hidden clue when the successes reach it, and shows it", async () => {
+  me = player;
+  try {
+    faces = [9, 2, 2, 2, 2];
+    await api.attempt(tokPc, "_search", "search", {fd: {}});
+    assert.equal(stain.document.hidden, true, "one success is not enough");
+    faces = [9, 9, 2, 2, 2];
+    const m = await api.attempt(tokPc, "_search", "search", {fd: {}});
+    assert.equal(stain.document.hidden, false);
+    assert.ok(m.flags[MOD].done.lines.some(l => /notices something: bloodstain or mark/.test(l)), m.flags[MOD].done.lines.join(" | "));
+    assert.ok(api.interactablesFor(tokPc).some(x => x.doc.id === "clue2"));
+    me = gm;
+    await api.undoCard(m);
+    assert.equal(stain.document.hidden, true);
+  } finally { me = gm; }
+});
+
+test("runtime: the WoDX part of the tile config keeps the clue's text", () => {
+  const html = api.tileConfigHtml({flags: {[MOD]: {clue: true, clueKind: "trail", title: "Prints", need: 3, text2: "Two people <and> a dog"}}});
+  assert.match(html, /value="trail" selected/);
+  assert.match(html, /name="flags.wodx-interactables.need" value="3"/);
+  assert.match(html, />Two people &lt;and&gt; a dog<\/textarea>/);
 });

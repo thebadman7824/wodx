@@ -634,4 +634,11 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - Searching: the Interact window gains Search the area (Perception + Alertness or Investigation, a minute). Each hidden trap within three squares is found when the successes reach its grade, and the tile is shown to players; the Storyteller is whispered what was missed. Undo hides them again. The window now opens even with nothing in reach, so the search is always there.
 - A found trap: disarm it (Wits + the lock Ability, a botch sets it off), set it off from a safe distance, set it again once spent. A snare's victim breaks free with Strength; anyone else cuts them free.
 - Tests: 9 new in interactables.test.mjs (3 rules, 6 runtime); 488 harness tests pass with main merged. UI fit adds two traps and the search roll window.
-- Gate: steps 13 (search finds a hidden pit; Undo), 14 (walking into it springs it, a WoDX Combat card; Undo puts it all back) and 15 (a found snare disarmed; Undo). Not deployed yet.
+- Gate: steps 13 (search finds a hidden pit; Undo), 14 (walking into it springs it, a WoDX Combat card; Undo puts it all back) and 15 (a found snare disarmed; Undo). Deployed 2026-11-09 (backup Backups\wodx-interactables-0.2.0-2026-11-09); the first run scored 14/15. Step 14 failed because the gate's burglar belongs to the Storyteller, so the pit, set for players' characters only, let it pass; the gate's pit now goes off for NPCs too.
+
+### Interactables 0.4.0, 2026-11-09: clues (B118)
+- Clues on tiles: a letter, ledger or document; a bloodstain or mark; writing or graffiti; tracks or a trail; something out of place. The tile config gains a Clue section: kind, the name players see, the successes it takes to notice a hidden one, and four texts (what anyone sees, then 1, 2, and 3 or more successes).
+- Reading (Intelligence + Investigation) or examining (Perception + Investigation), difficulty 6, a minute; no roll when only the first text is written. What is learned goes in a whisper to the player and the Storyteller; the public card only says it was examined. Each character's best successes are kept on the tile.
+- Search the area also notices hidden clue tiles by their own number of successes.
+- Tests: 4 new (1 rules, 3 runtime); UI fit adds a clue with a long name to the Interact window and shows the whole tile config. Gate step 16 (a letter read, the whisper checked, Undo). Not deployed yet.
+

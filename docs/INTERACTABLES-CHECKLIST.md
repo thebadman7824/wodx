@@ -33,13 +33,21 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Disarm, set off from a distance, set again, break free, cut free
 - [x] Tile config: the Trap section; world setting "Traps go off"
 - [x] Harness tests (9 new) and UI fit
-- [ ] Gate steps 13 to 15 in rothenstein-wodx
-- [ ] Deployed
+- [ ] Gate steps 13 to 15 in rothenstein-wodx (first run 14/15: the gate's pit skipped the Storyteller-owned burglar; gate fixed)
+- [x] Deployed 2026-11-09 (backup Backups\wodx-interactables-0.2.0-2026-11-09, MD5s checked)
 - [ ] V20 core falling page ref pinned on the PC
 
+## 0.4.0: clues (2026-11-09)
+- [x] Rules: five kinds, four texts by successes, Intelligence or Perception + Investigation, best successes kept, noticing by its own number (B118)
+- [x] Runtime: examine or read; the text whispered to the player and the Storyteller; Search the area notices hidden clues; Undo deletes the whisper
+- [x] Tile config: the Clue section
+- [x] Harness tests (4 new) and UI fit
+- [ ] Gate step 16 in rothenstein-wodx
+- [ ] Deployed
+
 ## Still to build (Ben, 2026-11-09), in order
-- [x] Traps (0.3.0, not deployed yet)
-- [ ] Clues and documents
+- [x] Traps (0.3.0, deployed)
+- [x] Clues and documents (0.4.0, not deployed yet)
 - [ ] Light sources
 - [ ] Hiding places
 - [ ] Fire and hazards
