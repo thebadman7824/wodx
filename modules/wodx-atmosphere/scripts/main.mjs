@@ -409,7 +409,7 @@ export async function makeHandout({template, title, body, from, date, show = fal
     pages: [{name, type: "text", text: {content: K.renderHandout(template, {title, body, from, date}), format: 1}}]});
 }
 
-async function handoutDialog() {
+export async function handoutDialog() {
   const kit = currentKit();
   const choices = Object.fromEntries(K.handoutsFor(kit).map(k => [k, `${K.HANDOUTS[k].label} (${K.HANDOUTS[k].eras})`]));
   const data = await wait({window: {title: "New handout"}, position: {width: 520},
@@ -433,7 +433,7 @@ async function handoutDialog() {
 const SKY_WORDS = {clear: "Clear", cloudy: "Cloudy", overcast: "Heavy cloud or rain", storm: "Storm or thick fog"};
 const PRECIP_WORDS = {none: "None", drizzle: "Drizzle", rain: "Rain", sleet: "Sleet", snow: "Snow", hail: "Hail"};
 
-async function setByHandDialog(jdn) {
+export async function setByHandDialog(jdn) {
   const d = weatherOn(jdn) ?? {};
   const data = await wait({window: {title: "Set the night's weather"}, position: {width: 460},
     content: `<div class="form-group"><label>Sky</label><select name="sky" data-fixed>${opt(SKY_WORDS, d.sky)}</select></div>
@@ -476,7 +476,7 @@ async function buildDialog() {
 }
 
 let appClass = null;
-function AtmosphereClass() {
+export function AtmosphereClass() {
   if ( appClass ) return appClass;
   const {ApplicationV2} = foundry.applications.api;
   appClass = class extends ApplicationV2 {
@@ -588,15 +588,21 @@ Hooks.once("init", () => {
   registerSettings();
 });
 
-Hooks.once("ready", async () => {
-  if ( !active ) return;
-  try { CAL = await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
+/** Load the calendar and publish the API (at ready; the harness calls it by itself). */
+export async function prime() {
+  try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
   const api = {version: VERSION, open: () => AtmosphereApp.open(),
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
       moonHidden: () => !!now()?.moonHidden},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
+  return api;
+}
+
+Hooks.once("ready", async () => {
+  if ( !active ) return;
+  const api = await prime();
   applyGrade();
   if ( isActiveGM() ) {
     if ( !setting("lastKit") ) await setSetting("lastKit", currentKit());

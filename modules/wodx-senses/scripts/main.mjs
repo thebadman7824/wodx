@@ -471,7 +471,7 @@ export async function answer(req) {
     sections.push({sense, lines, diff: D, successes, botch, rolled, roll, chosen: res.lines, held, repeat: !rolled && sameAsBefore});
   }
   try { await actor.update({[`flags.${MOD}.memory`]: R.trimMemory(memory)}); } catch (e) { console.warn(`${MOD} | could not remember the answer`, e); }
-  const result = {actor: actor.id, actorName: actor.name, token: req.token, user: user.id, scene: scene.id, ctx: {part: ctx.part, light: ctx.light, sky: ctx.sky, place: ctx.place, era: ctx.era, layer: ctx.layer, viewing: ctx.viewing},
+  const result = {actor: actor.id, actorName: actor.name, token: req.token, user: user.id, scene: scene.id, ctx: {part: ctx.part, light: ctx.light, sky: ctx.sky, place: ctx.place, era: ctx.era, layer: ctx.layer, viewing: ctx.viewing, wx: ctx.wx},
     sections, closer: !!req.closer, uncanny: ctx.uncannyRoll ? {successes: ctx.uncannyRoll.successes} : null};
   await postAnswer(result, rolls, user, td);
   return result;

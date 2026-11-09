@@ -659,6 +659,32 @@ game.world.id = worldId;
   globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
+// WoDX Atmosphere 0.1.0: the weather and atmosphere window, a night set by hand, a new handout; Start a chronicle (Storyteller 0.4.0)
+{
+  game.modules.set("wodx-atmosphere", {active: true});
+  const At = await import(join(root, "modules/wodx-atmosphere/scripts/main.mjs"));
+  await Hooks.callAll("init");
+  await At.prime();
+  game.playlists ??= new Coll();
+  for ( let i = 0; i < 30; i++ ) game.playlists.set(`pl${i}`, {id: `pl${i}`, name: `A playlist with a long name for the era, number ${i}`, sounds: [], playing: false});
+  const App = At.AtmosphereClass();
+  const app = new App({});
+  try {
+    await app.render({force: true});
+    const o = App.DEFAULT_OPTIONS;
+    windows.push({name: "Weather and atmosphere", tag: o.tag ?? "div", classes: ["application", ...(o.classes ?? [])].join(" "), width: o.position.width, height: o.position.height,
+      content: app.element.querySelector("section.window-content").innerHTML});
+  } catch (err) { console.error(`FAIL could not build the Atmosphere window: ${err.message}`); process.exitCode = 1; }
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const St = await import(join(root, "modules/wodx-storyteller/scripts/setup.mjs"));
+  for ( const [label, fn] of [["Set the night", () => At.setByHandDialog(At.nightJdn() ?? 2400000)], ["New handout", () => At.handoutDialog()], ["Start a chronicle", () => St.openSetup()]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2.wait = wait;
+}
 // WoDX Targeting 0.1.0: the target panel in the Discipline window, for one foe, an area of twelve, a casting and a hand-set target
 {
   game.modules.set("wodx-targeting", {active: true});
@@ -723,7 +749,8 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-storyteller/styles/wodx-storyteller.css")).href,
   pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href,
   pathToFileURL(join(root, "modules/wodx-targeting/styles/wodx-targeting.css")).href,
-  pathToFileURL(join(root, "modules/wodx-senses/styles/wodx-senses.css")).href];
+  pathToFileURL(join(root, "modules/wodx-senses/styles/wodx-senses.css")).href,
+  pathToFileURL(join(root, "modules/wodx-atmosphere/styles/wodx-atmosphere.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));

@@ -1,0 +1,14 @@
+# Phase 8 checklist: era profiles, kits, weather, the world template
+
+- [x] Weather rules, pure and tested: climates, era shifts, seeded nights, forecast, effects, house-rule steps, sun and darkness
+- [x] Applying at each night: the sky, scene effects out of doors, light from the clock; a scene's own effect kept; set a night by hand
+- [x] Era kits for the 11 profiles: palette, map grade, handout styles, music by mood, ambience, cues (procedural cues shipped)
+- [x] Build playlists from Data/wodx-kits, Credits journal, handouts
+- [x] Weather and atmosphere window with a 7-night forecast
+- [x] WoDX Senses 0.2.0 reads the weather
+- [x] Start a chronicle wizard (Storyteller 0.4.0) and the template world flag
+- [x] Harness tests (22 new, 687 in all), text cleanup
+- [ ] UI fit on the PC with Foundry's own fonts
+- [ ] Deployed to rothenstein-wodx, gate8 14/14
+- [ ] Ben listens to the cues and reads the primers and weather lines (PENDING-REVIEW)
+- [ ] Encounter and rumour tables by era, Otherworld travel, story aids, token frames (not built yet)
