@@ -223,6 +223,12 @@
    "title": "Clanbook: Lasombra (Revised)",
    "short": "CB Lasombra (Rev)",
    "edition": "Revised"
+  },
+  {
+   "id": "cbravnos",
+   "title": "Clanbook: Ravnos (Revised)",
+   "short": "CB Ravnos (Rev)",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -262,6 +268,7 @@
   "dust.json",
   "sthr.json",
   "cbgangrel.json",
-  "cblasombra.json"
+  "cblasombra.json",
+  "cbravnos.json"
  ]
 }
