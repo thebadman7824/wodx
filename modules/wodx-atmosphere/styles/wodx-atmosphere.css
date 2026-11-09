@@ -50,3 +50,5 @@ button.watmo-on { outline: 2px solid var(--wx-accent, #b33); }
 /* Dawn dread: the edge of the screen pales in the last half hour before sunrise. */
 body.wodx-dawn-dread::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9;
   box-shadow: inset 0 0 calc(40px + 160px * var(--wodx-dread, 0)) calc(8px * var(--wodx-dread, 0)) rgba(246, 236, 214, calc(0.15 + 0.5 * var(--wodx-dread, 0))); }
+.watmo-chip { display: inline-block; margin: 0.1em 0.2em 0 0; padding: 0 0.3em; border: 1px solid rgba(127, 127, 127, 0.4); border-radius: 3px; font-size: 0.9em; }
+.watmo-chip button { min-width: 0; width: auto; padding: 0 0.3em; line-height: 1.2; }
