@@ -3,6 +3,8 @@ import {registerSettings} from "./settings.mjs";
 import {makeCalendarClass, makeCalendarConfig, setReform, EPOCH_YEAR} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";
+import * as know from "./know.mjs";
+import * as knowRules from "./know-rules.mjs";
 import * as safety from "./safety.mjs";
 import {ClockApp, setDateDialog} from "./clock-app.mjs";
 import {HouseRulesApp} from "./house-rules-app.mjs";
@@ -68,6 +70,8 @@ Hooks.once("init", () => {
   // Languages in chat
   languages.registerLanguageSettings();
   languages.registerLanguageHooks();
+  // Knowledge-gated handouts: @Know[Latin]{...} in journals
+  know.registerKnow();
 
   // Calendar: Julian, then Gregorian at the chosen reform
   let reform = "bohemia-1584";
@@ -128,6 +132,7 @@ Hooks.once("ready", async () => {
     openClock: () => ClockApp.open(),
     setDate: setDateDialog,
     eras, approvals, safety,
+    know: {render: know.render, traitsOf: know.traitsOf, passages: knowRules.passages, rules: knowRules},
     propose: approvals.propose,
     registerApprovalHandler: approvals.registerHandler,
     rule,
