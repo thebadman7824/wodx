@@ -145,6 +145,12 @@
    "title": "Lore of the Bloodlines",
    "short": "LotB",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "rotb",
+   "title": "Rites of the Blood",
+   "short": "RotB",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -171,6 +177,7 @@
   "gr.json",
   "lotc.json",
   "v20comp.json",
-  "lotb.json"
+  "lotb.json",
+  "rotb.json"
  ]
 }
