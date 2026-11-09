@@ -45,3 +45,21 @@ test("a step that ends on a wall through a lattice cell's centre is tested a lit
   assert.ok(Math.abs(p.x - 33) < 1e-9 && Math.abs(p.y - 44) < 1e-9);
   assert.match(readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8"), /if \( gridKind\(\) === "lattice" \) pb = NR\.pastPoint\(pa, pb, 3\)/);
 });
+
+test("a lattice cell whose centre sits on a wall line is closed; open doors and walls that let movement through are not", () => {
+  const wall = {c: [750, 0, 750, 700], move: 20, door: 0, ds: 0};
+  assert.equal(NR.segmentDistance({x: 750, y: 550}, wall.c), 0);
+  assert.equal(NR.segmentDistance({x: 750, y: 750}, wall.c), 50);
+  assert.ok(NR.onWall({x: 750, y: 550}, [wall]));
+  assert.ok(NR.onWall({x: 752, y: 150}, [wall]));
+  assert.ok(!NR.onWall({x: 750, y: 750}, [wall]));
+  assert.ok(!NR.onWall({x: 650, y: 550}, [wall]));
+  assert.ok(!NR.onWall({x: 750, y: 550}, [{...wall, door: 1, ds: 1}]));
+  assert.ok(NR.onWall({x: 750, y: 550}, [{...wall, door: 1, ds: 0}]));
+  assert.ok(!NR.onWall({x: 750, y: 550}, [{...wall, move: 0}]));
+  // The gate's scene: a path from the left to the right of the wall goes under its end, never up its line
+  const pass = (a, b) => b.i >= 0 && b.j >= 0 && b.i < 10 && b.j < 15 && !NR.onWall({x: b.j * 100 + 50, y: b.i * 100 + 50}, [wall])
+    && !(Math.sign(a.j * 100 + 50 - 750) !== Math.sign(b.j * 100 + 50 - 750) && Math.min(a.i, b.i) * 100 + 50 < 700);
+  const path = NR.findPath({i: 3, j: 4}, {i: 3, j: 9}, pass, {neighbors: NR.squareSteps});
+  assert.ok(path && path.every(c => c.j !== 7 || c.i >= 7), JSON.stringify(path));
+});

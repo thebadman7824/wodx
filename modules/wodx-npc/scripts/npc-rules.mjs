@@ -314,3 +314,17 @@ export function pastPoint(a, b, d = 3) {
   if ( !len ) return {x: b.x, y: b.y};
   return {x: b.x + dx / len * d, y: b.y + dy / len * d};
 }
+
+/** The distance from point p to the segment [x0, y0, x1, y1]. */
+export function segmentDistance(p, c) {
+  const [x0, y0, x1, y1] = c, dx = x1 - x0, dy = y1 - y0, L = dx * dx + dy * dy;
+  const t = L ? Math.max(0, Math.min(1, ((p.x - x0) * dx + (p.y - y0) * dy) / L)) : 0;
+  return Math.hypot(p.x - (x0 + t * dx), p.y - (y0 + t * dy));
+}
+/**
+ * On a gridless lattice a cell whose centre lies on a wall (within eps pixels) is closed: a path may not slide along
+ * the wall line. walls: [{c, move, door, ds}]; a wall that does not block movement, or an open door, does not count.
+ */
+export function onWall(p, walls = [], eps = 4) {
+  return walls.some(w => Array.isArray(w.c) && w.move !== 0 && !(w.door > 0 && w.ds === 1) && segmentDistance(p, w.c) <= eps);
+}
