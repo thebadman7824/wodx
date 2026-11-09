@@ -54,12 +54,18 @@ export async function run() {
     const s2 = tok.flags["wodx-interactables"]?.carried;
     ok("3. burned out", s2 && !s2.lit && s2.left === 0 && tok.light.dim === 2, {state: s2, dim: tok.light.dim});
 
-    await actor.update({"system.health.damage.woundpenalty": -2, "system.health.damage.woundlevel": "Wounded"});
+    // The system works the penalty out from the damage, so the gate sets damage (4 lethal: Wounded, −2 on the V20 chart)
+    await actor.update({"system.health.damage.lethal": 4, "system.health.damage.woundpenalty": -2, "system.health.damage.woundlevel": "Wounded"});
     const edges = S.perception.rules.stateEdges(S.perception.stateOf(actor));
     const was = game.user.character;
     let screen = false, words = "";
     try {
+      // The screen follows a controlled token before the assigned character, so let go of any first
+      for ( const t of [...(canvas.tokens?.controlled ?? [])] ) t.release();
       await game.user.update({character: actor.id});
+      await sleep(200);
+      for ( const t of [...(canvas.tokens?.controlled ?? [])] ) t.release();
+      R.notes.push(`character now ${game.user.character?.id}, controlled ${canvas.tokens?.controlled?.length ?? 0}`);
       S.perception.refreshScreen();
       screen = document.getElementById("wodx-senses-screen")?.className ?? "";
       words = document.getElementById("wodx-senses-state")?.textContent ?? "";

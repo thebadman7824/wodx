@@ -68,6 +68,10 @@ else
   echo "  skipped: run 'npm install' in tools/harness first"
 fi
 
+echo "== Encyclopedia format"
+node tools/encyclopedia-check.mjs | tail -3 || true
+node tools/encyclopedia-check.mjs >/dev/null 2>&1 || { echo "FAIL encyclopedia"; fail=1; }
+
 echo "== UI fit (rule B17)"
 FOUNDRY_CSS="${FOUNDRY_CSS:-/mnt/user-data/uploads/Foundry Virtual Tabletop/resources/app/public/css/foundry2.css}"
 # Ben's PC: Foundry is installed on G:

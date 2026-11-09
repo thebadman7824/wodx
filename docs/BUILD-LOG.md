@@ -977,6 +977,12 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - ways-rules.mjs (new): DEEP_REALMS, REALM_ORDER, WAY_KINDS, WAY_ORDER, endLayer, wayRegion, realmScene. ways.mjs (new): makeRealm, makeWay (refuses when a layer is missing), waysDialog. Toolbar button wodxWays (Storyteller, order 132); api.ways {make, realm, dialog, isRealm, rules}.
 - Tests: tools/harness/ways.test.mjs (3). Gate: tools/gate/gateways.mjs, 7 steps. UI fit: the Ways and realms dialog.
 
+## 2026-11-09: the Encyclopaedia Tenebrarum frame (Library 0.3.0, B284)
+
+- ency-rules.mjs (new): KINDS, TIERS, BANNED, checkEntry, checkAll, docId, toJournal, shingles, overlap, entryText. shelf-rules.mjs: the encyclopedia shelf and fromEncyclopedia. shelves.mjs: SHELF_VERSION 2, reads data/encyclopedia/index.json, keeps fixed ids.
+- tools/encyclopedia-check.mjs (new; --text dir for the eight-word overlap check, --sample n for page spot checks), run by tools/quality-check.sh.
+- Tests: tools/harness/encyclopedia.test.mjs (5). Gate: gatelibrary now expects five shelves and 0.3.0. No entries yet; the first edition follows.
+
 ## 2026-11-09: simulated systems (Storyteller 0.12.0, Actions 3.17.0, B320-B323)
 
 - upkeep-rules.mjs (new, pure): nightsBetween, betweenPlan (deltas), TIE_KINDS, deriveTies, tieStatus, newlyDue, HEAT, HEAT_BANDS, addHeat, cooled, responseFor. upkeep.mjs (new): onSkip on wodxSkipEnd (one queue proposal, type wodx-storyteller.between; approve applies with an Undo card), checkTies once a game day and after a skip, tiesDialog, groundsDialog, addHeat on wodxHunted and on a "seen feeding" breach (type wodx-storyteller.heat starts a rumour). Toolbar button wodxUpkeep (Storyteller, order 121); api.upkeep. Settings betweenNights, ties, heat (world, on).
