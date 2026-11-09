@@ -146,7 +146,7 @@
   "summary": "The canon of the Sword of Caine.",
   "claims": [
    {
-    "text": "The ancient Book of Nod is the most sacred text and known in part to every member in good standing; scholars add the Erciyes Fragments, the Ubar Chronicles, the Gospels of Irad and Adah, the Codex of the Damned and the poem Wounds of the Night's Sword.",
+    "text": "The ancient Book of Nod is the most sacred text and known in part to every member in good standing; scholars also read the Codex of the Damned, the Gospels of Irad and Adah, the Ubar Chronicles, the Erciyes Fragments and the poem Wounds of the Night's Sword.",
     "tier": "stated",
     "refs": [
      {
@@ -276,7 +276,7 @@
   "summary": "The great rites of the Sabbat.",
   "claims": [
    {
-    "text": "The thirteen modern Auctoritas are the Binding, Blood Bath, Blood Feast, Creation Rites, Fire Dance, Games of Instinct, Palla Grande, Festivo dello Estinto, Monomacy, Sermons of Caine, War Party, Wild Hunt and Vaulderie.",
+    "text": "The thirteen modern Auctoritas are the Binding, the Vaulderie, the Creation Rites, the Blood Feast and Blood Bath, the Fire Dance, Games of Instinct, Palla Grande, Festivo dello Estinto, Monomacy, the Sermons of Caine, the War Party and the Wild Hunt.",
     "tier": "stated",
     "refs": [
      {
@@ -366,7 +366,7 @@
   "summary": "Blood magic of the Assassins.",
   "claims": [
    {
-    "text": "It began in the Second City, when mortal magicians were Embraced; they served as interrogators and demon hunters against the Baali.",
+    "text": "Its roots lie in the Second City, where the Clan Embraced mortal magicians; they served as interrogators and demon hunters against the Baali.",
     "tier": "stated",
     "refs": [
      {
@@ -517,7 +517,7 @@
     ]
    },
    {
-    "text": "When they attack that target together, a number of them equal to the successes act one round before it, and all gain the successes as a bonus to Alertness until sunrise or the end of the fight.",
+    "text": "When they attack that target together, up to one participant per success acts a round ahead of it, and all gain the successes as a bonus to Alertness until sunrise or the end of the fight.",
     "tier": "stated",
     "refs": [
      {
@@ -779,7 +779,7 @@
     ]
    },
    {
-    "text": "Beneath the shadow city sleep the Aralu, known only by the names on their tombs: Nergal, Ninmug, Loz and Al-Marhi.",
+    "text": "Beneath the shadow city sleep the Aralu, named only on their tombs as Loz, Nergal, Al-Marhi and Ninmug.",
     "tier": "stated",
     "refs": [
      {
@@ -868,7 +868,7 @@
     ]
    },
    {
-    "text": "A homunculus is shaped from the caster's blood and tissue to spy or serve; it has two health levels and two dots in each Physical Attribute, must drink a blood point a week, and its death deals its maker one unsoakable aggravated level.",
+    "text": "A homunculus is shaped from the caster's blood and tissue to spy or serve; it has 2 health levels and rates 2 in every Physical Attribute, must drink a blood point a week, and its death deals its maker one unsoakable aggravated level.",
     "tier": "stated",
     "refs": [
      {
@@ -1012,7 +1012,7 @@
     ]
    },
    {
-    "text": "The Veneficti, remnants of the infernalist mage Circle of Red enslaved by the Baali, guard its libraries and feed on will much as ghouls feed on blood.",
+    "text": "The Veneficti, remnants of the infernalist mage Circle of Red enslaved by the Baali, guard its libraries and live on will the way ghouls live on vitae.",
     "tier": "stated",
     "refs": [
      {
@@ -1040,7 +1040,7 @@
   "summary": "Hunters of the infernal in the Sword of Caine.",
   "claims": [
    {
-    "text": "Founded to stamp out infernalism and the Path of Evil Revelations, it grew to rule on heresy and to oversee Sabbat thaumaturges.",
+    "text": "Set up to root out infernalism and the Path of Evil Revelations in the Sect, it grew to rule on heresy and to oversee Sabbat thaumaturges.",
     "tier": "stated",
     "refs": [
      {
@@ -1270,7 +1270,7 @@
     ]
    },
    {
-    "text": "If a mortal drinks it, any vampire who feeds on that mortal within a day is affected as well.",
+    "text": "If a mortal drinks it, a vampire drinking from that mortal in the next 24 hours is caught too.",
     "tier": "stated",
     "refs": [
      {
