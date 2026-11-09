@@ -1,0 +1,936 @@
+[
+ {
+  "id": "kote-kuei-jin",
+  "title": "Kuei-jin",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The vampires of Asia, who live on Chi rather than blood.",
+  "claims": [
+   {
+    "text": "Kuei-jin is a recent coined word, mostly used by the young, thought to come from Gui Ren, demon people; elders call themselves Wan Kuei, Ten Thousand Demons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     },
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Wan Xian, Ten Thousand Immortals, is said to be the original name. Western Kindred call them Cathayans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     },
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "They cannot make ghouls, and those out of balance toward Yang can conceive or father children, called dhampyrs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Food and drink give no nourishment but can be taken; it takes about ten times a mortal's drink to get one drunk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Where a generation figure is ever needed, use 13 minus Dharma.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-chi",
+   "kote-dharma",
+   "kote-second-breath"
+  ]
+ },
+ {
+  "id": "kote-chi",
+  "title": "Chi",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The energy Kuei-jin take in and must keep in balance.",
+  "claims": [
+   {
+    "text": "The lowest, the chih-mei, take Chi from the flesh of thinking beings; more refined vampires can draw it from breath, spirit or pure essence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Yin Chi is called black and Yang Chi scarlet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     },
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Too much Yin makes a vampire more corpse-like and inhuman; too much Yang can breed deadly, catching vampiric diseases, such as the Crimson Fever.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     },
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A Ch'ing Shih is a vampire overwhelmed by Yin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A dragon nest is a place of strong Chi where the Wall is 5 or less; a dragon line joins two or more nests, and powerful shen can travel along it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "kote-wall",
+   "caern"
+  ]
+ },
+ {
+  "id": "kote-weaknesses",
+  "title": "Kuei-jin Weaknesses",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How sun, stake and sleep differ for the Kuei-jin.",
+  "claims": [
+   {
+    "text": "A stake through the heart does not paralyse by itself, but attacks can disrupt the heart's flow of Chi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Vampires of Yin are vulnerable to wood, and vampires of Yang to metal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Sunlight rots rather than burns them, and how badly depends on how much Yin they hold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Torpor is the Little Death: the body dies while the two souls stay inside, beset by visions and open to hostile magic. Many lose their Dharma through it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-chi"
+  ]
+ },
+ {
+  "id": "kote-souls",
+  "title": "Hun and P'o",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The two souls that replace Conscience, Self-Control and Courage.",
+  "claims": [
+   {
+    "text": "Kuei-jin have no Conscience, Self-Control or Courage; they use the paired traits Yin and Yang, and Hun and P'o.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Yin is sensitivity to negative energy, Yang receptiveness to positive energy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Hun is the higher, reasoning soul; P'o is the lower, animal soul, the Demon, close to what Kindred call the Beast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     },
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Shadow Nature is when the P'o rules the body; Wa Nature is the ordinary self. Fire Nature is frenzy and Wave Nature is Rotschreck.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     },
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-beast",
+   "frenzy",
+   "kote-yama-kings"
+  ]
+ },
+ {
+  "id": "kote-dharma",
+  "title": "Dharma",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Kuei-jin's path to enlightenment.",
+  "claims": [
+   {
+    "text": "A Dharma is the path to Golconda; elders prefer the older word Di'hana.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "An arhat has fully mastered a Dharma. A bodhisattva is one who nearly reaches enlightenment but stays back to help others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "All-Awareness, the Eastern word for Golconda, is the highest state, which very few reach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A satori is a sudden flash of enlightenment; diao are spells of blindness when a vampire strays from the Way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     },
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Xue was the first and best-known arhat and founded the Fivefold Way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     },
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Kindred idea of Golconda may be a flawed Cainite reading of Kuei-jin practice.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "golconda",
+   "kote-kuei-jin"
+  ]
+ },
+ {
+  "id": "kote-second-breath",
+  "title": "The Second Breath",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Kuei-jin rebirth.",
+  "claims": [
+   {
+    "text": "The Second Breath is the return from the spirit worlds, the Kuei-jin rebirth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "An urn is a mortal who could become Kuei-jin, or does.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The P'o of one about to become Kuei-jin is taken to Yomi to be tormented.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Many drop their mortal names after the Second Breath for epithets or titles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Koa is vampiric youth: a mortal lifetime to act as a child before taking up duties under Heaven.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "kote-spirit-worlds"
+  ]
+ },
+ {
+  "id": "kote-courts",
+  "title": "Courts, Wu and the Quincunx",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Kuei-jin society is organised.",
+  "claims": [
+   {
+    "text": "A court is a band of Kuei-jin with shared material or spiritual aims; many hide behind companies, tongs or secret societies. In Japan the word is house, or uji.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     },
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "A wu is a Kuei-jin family, something like a Sabbat pack.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "An ancestor rules a court or region, much like a Western prince; daimyo is the Japanese word.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The Quincunx is an alliance of five major Chinese courts, to which many but not all Chinese courts pay tribute.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "The Green Courts hold Korea and nearby China; the Golden Courts cover Southeast Asia and Indonesia, where female Kuei-jin have fared better.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A palace is a meeting place for all Kuei-jin of a region.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "A tong is a group of mortals who serve a vampire knowingly; a scarlet screen is a mortal or institution used without knowing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     },
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "kote-directions"
+  ]
+ },
+ {
+  "id": "kote-directions",
+  "title": "The Five Directions",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The duties a Kuei-jin is born to.",
+  "claims": [
+   {
+    "text": "A direction is a star-born influence on personality and duty; there are five: north, west, center, east and south.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "North is the Magistrate, who judges and keeps tradition; south is the Mandator, who carries out the courts' will.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "West is the Ghost Dancer, who deals with the spirit worlds; east is the Harvester, who works among mortals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     },
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Center is the Harmonic, who studies the soul and the vampire's own state.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "kote-wheel-of-ages",
+  "title": "The Wheel of Ages",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Kuei-jin view of history as a turning cycle.",
+  "claims": [
+   {
+    "text": "The world sinks through ever worse ages until the lowest point, then climbs back toward Paradise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The six ages are Heaven, Beauty, Legends, Beautiful Sadness, Darkness and the coming Age of Sorrow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     },
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The Fourth Age began when the Kuei-jin forsook their duties; human history and their weakness to sun date from it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The Age of Darkness runs from first contact with the West to now; the Age of Sorrow is close to Gehenna, though most see it as needed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A Demon Emperor will rise to rule the Sixth Age, replacing the August Personage of Jade; most think it will be one of the Yama Kings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna",
+   "kote-yama-kings"
+  ]
+ },
+ {
+  "id": "kote-yama-kings",
+  "title": "The Yama Kings",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Demonic spirit lords older than the Jade Emperor.",
+  "claims": [
+   {
+    "text": "They hold lands at the far edges of the Yin and Yang Worlds; the West calls those of Yang Banes and those of Yin Malfeans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "In this age they are tied to the P'o and try to bend Kuei-jin to their service; those who fall are akuma, devils.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     },
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Yomi is a hell world made from fouled parts of the Yin and Yang Worlds, where the Yama Kings hold domains.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "banes",
+   "kote-souls",
+   "kote-spirit-worlds"
+  ]
+ },
+ {
+  "id": "kote-spirit-worlds",
+  "title": "The Spirit Courts and the Wall",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Eastern names for the Umbra and its barrier.",
+  "claims": [
+   {
+    "text": "The Spirit Courts are the unseen realms beside the material world, the source of spirits and Chi; the West calls them the Umbrae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "The Yang World is the higher spirit world of nature spirits and kami; the Yin World is the lower one, home of wraiths and Spectres.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Ten Thousand Things means all Creation, the Tellurian.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "kote-wall"
+  ]
+ },
+ {
+  "id": "kote-wall",
+  "title": "The Wall",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The barrier between the Middle Kingdom and the spirit worlds.",
+  "claims": [
+   {
+    "text": "The Wall is the barrier between the Middle Kingdom and the Yin and Yang Worlds, known in the West as the Gauntlet or the Shroud.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "In the Middle Kingdom dragon lines lie closer to the surface than in the West; Yang lines are the Moon Bridges, Yin lines the Byways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 14,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gauntlet",
+   "the-shroud",
+   "kote-spirit-worlds"
+  ]
+ },
+ {
+  "id": "kote-terms",
+  "title": "Words of the Eastern Kindred",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Some slang and names of the Kuei-jin.",
+  "claims": [
+   {
+    "text": "Kin-jin is a scornful word for Western vampires, from a term for people of Caine; Zao-lat is Saulot.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     },
+     {
+      "book": "kote",
+      "page": 16,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Running Monkeys are Kuei-jin aged 40 or less, and also an insult for Westerners said to act like children forever.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Kyonshi is an insult for a young, brash, Westernised vampire. Shen means any supernatural or Awakened being; hengeyokai are shapeshifters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 15,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Shared terms come mostly from old Chinese, with Japanese, Sanskrit, Korean and other loan words.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kote",
+      "page": 13,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "caine"
+  ]
+ }
+]
