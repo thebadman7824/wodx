@@ -356,3 +356,24 @@ test("attacks: the likeliest foe, and the panel can switch or clear it", () => {
   assert.equal(api.preAttack(toks[0].actor), null, "a target set by hand: the attack keeps it");
   game.user.targets.clear();
 });
+
+test("WoDX NPC aims its power plans with the same ranking as the power windows", async () => {
+  const NR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/npc-rules.mjs")));
+  const state = {self: {id: "me", name: "Elder", wounds: 0}, tokens: [
+    {id: "a", name: "Near", side: "foe", visible: true, distance: 4, reach: false, los: true, lastHitMe: null},
+    {id: "b", name: "Biter", side: "foe", visible: true, distance: 9, reach: false, los: true, lastHitMe: 3},
+    {id: "c", name: "Friend", side: "friend", visible: true, distance: 2, reach: true, los: true, lastHitMe: null}]};
+  const opt = {action: "power", label: "Use a power", why: "this NPC fights with its powers", score: 3};
+  const aimed = NR.aimPower(opt, T.rank(NR.POWER_AIM, state));
+  assert.equal(aimed.target, "b");
+  assert.match(aimed.label, /on Biter$/);
+  assert.match(aimed.why, /attacked Elder last/);
+  // No foe in sight, Targeting off, or another kind of option: unchanged
+  assert.deepEqual(NR.aimPower(opt, T.rank(NR.POWER_AIM, {...state, tokens: [state.tokens[2]]})), opt);
+  assert.deepEqual(NR.aimPower(opt, null), opt);
+  const attack = {action: "attack", target: "a", label: "Attack", why: "x"};
+  assert.equal(NR.aimPower(attack, T.rank(NR.POWER_AIM, state)), attack);
+  const src = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
+  assert.match(src, /NR\.aimPower\(o, ranked \?\?= rankPower\(tok\)\)/);
+  assert.match(src, /api\?\.setTargets\?\.\(\[aim\.id\]\)/);
+});

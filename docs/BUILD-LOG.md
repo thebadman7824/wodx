@@ -831,3 +831,7 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - WoDX NPC: routine-rules re-exports the feasts from Chronicle (one list); the curfew starts at midnight on a night of revel; huntingAt takes the church step (town only) and the hunting card names it.
 - WoDX Senses: the feast check had no day number, so feasts counted from Easter were never found; it now passes the whole date, reads the Chronicle's feasts and the curfew hour.
 - Tests: church.test.mjs (9); 715 pass. Gate: tools/gate/gatechurch.mjs, 8 steps, rothenstein-wodx only.
+
+### Open items, 2026-11-09: NPC power plans use the target picker (NPC 0.5.1; B252)
+- npc-rules.mjs: POWER_AIM ("h.s") and aimPower(option, ranked). main.mjs: rankPower(tok) asks WoDX Targeting (when on) to rank; postPlan aims every "Use a power" option; execute sets the target before opening the menu.
+- Tests: targeting.test.mjs gains the NPC case (716 in all). Gate: gatetarget step 8b.
