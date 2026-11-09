@@ -1,0 +1,193 @@
+[
+ {
+  "id": "cbv-directorate",
+  "title": "The Directorate",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "victorian",
+   "modern"
+  ],
+  "summary": "The secret council of ephors at the head of Clan Ventrue.",
+  "claims": [
+   {
+    "text": "When the Camarilla was founded, Hardestadt also centralised the Ventrue, reviving a council of peers begun by Camilla. Some two dozen leading Ventrue signed the charter of the Council of Ephors, also called directors, whose names were kept secret.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "The ephors set clan policy on matters such as the Sabbat, the Tremere's rise, Caitiff, elections and markets, and princes and primogen are expected to follow it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Their gravest charges are slaying a fellow Ventrue and failing to answer a call for help. The accused is tried by an advocate before ephors hidden behind a curtain, a two-way mirror or darkness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Punishments include loss of titles, holdings and boons, imprisonment under a stake, or a forced blood bond. Ephors have ordered Final Death, though they never admit it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Strategoi, the clan's honorary generals, carry out the ephors' policies and are the only Ventrue likely to meet them face to face.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue",
+   "gtcam-inner-circle",
+   "cbv-gerousia"
+  ]
+ },
+ {
+  "id": "cbv-gerousia",
+  "title": "The Gerousia and praetor",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Ventrue organise in a single city.",
+  "claims": [
+   {
+    "text": "A city's Gerousia, or Board, seats its eldest Ventrue, led by a Ventrue prince if there is one. Members join by invitation and majority vote and can be removed only in dire cases judged by the ephors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The Board runs clan business like a holding company and settles clashes between Ventrue over the same resources. It holds a clanwide meeting on the first Tuesday of each month and private sessions as needed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The Board cannot command, but anyone who defies it loses its protection, and other Ventrue are free to attack their holdings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "A city has at most one praetor, an elder of great standing, who pays for the meeting place, chairs meetings and breaks ties. Below the praetor, aediles track junior Ventrue and handle the daily business.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbv-directorate",
+   "ventrue",
+   "gtcam-primogen"
+  ]
+ },
+ {
+  "id": "cbv-trade",
+  "title": "The Ventrue and the new trade",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How the clan grew rich as Europe reached for new worlds.",
+  "claims": [
+   {
+    "text": "After the Camarilla formed, the clan surged from the 16th century, while other Kindred, fearing the Inquisition, kept out of mortal affairs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Robert Kross, once Hardestadt's aide and among the Camarilla's first archons, became a silent partner in Dutch ventures that made great sums from Far East trade. Kross's childe, Juan-Miguel Ramirez, did the same in Spain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Ventrue historians say real enmity with the Lasombra began only with the Sabbat; many Ventrue now take the whole sect as a personal attack.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbventrue",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue",
+   "arc-archons",
+   "lasombra"
+  ]
+ }
+]

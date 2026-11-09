@@ -319,6 +319,54 @@
    "title": "Clanbook: Assamite (Revised)",
    "short": "Clanbook: Assamite",
    "edition": "Revised"
+  },
+  {
+   "id": "cbbrujah",
+   "title": "Clanbook: Brujah (Revised)",
+   "short": "Clanbook: Brujah",
+   "edition": "Revised"
+  },
+  {
+   "id": "cbgiovanni",
+   "title": "Clanbook: Giovanni (Revised)",
+   "short": "Clanbook: Giovanni",
+   "edition": "Revised"
+  },
+  {
+   "id": "cbmalkavian",
+   "title": "Clanbook: Malkavian (Revised)",
+   "short": "Clanbook: Malkavian",
+   "edition": "Revised"
+  },
+  {
+   "id": "cbnosferatu",
+   "title": "Clanbook: Nosferatu (Revised)",
+   "short": "Clanbook: Nosferatu",
+   "edition": "Revised"
+  },
+  {
+   "id": "cbtoreador",
+   "title": "Clanbook: Toreador (Revised)",
+   "short": "Clanbook: Toreador",
+   "edition": "Revised"
+  },
+  {
+   "id": "cbtremere",
+   "title": "Clanbook: Tremere (Revised)",
+   "short": "Clanbook: Tremere",
+   "edition": "Revised"
+  },
+  {
+   "id": "cbtzimisce",
+   "title": "Clanbook: Tzimisce (Revised)",
+   "short": "Clanbook: Tzimisce",
+   "edition": "Revised"
+  },
+  {
+   "id": "cbventrue",
+   "title": "Clanbook: Ventrue (Revised)",
+   "short": "Clanbook: Ventrue",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -374,6 +422,14 @@
   "gtcam.json",
   "gtsab.json",
   "gtanarch.json",
-  "cbassamite.json"
+  "cbassamite.json",
+  "cbbrujah.json",
+  "cbgiovanni.json",
+  "cbmalkavian.json",
+  "cbnosferatu.json",
+  "cbtoreador.json",
+  "cbtremere.json",
+  "cbtzimisce.json",
+  "cbventrue.json"
  ]
 }

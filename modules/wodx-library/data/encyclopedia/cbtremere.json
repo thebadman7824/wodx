@@ -1,0 +1,193 @@
+[
+ {
+  "id": "cbtr-pyramid",
+  "title": "The Tremere pyramid",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ranks and circles of the Tremere hierarchy.",
+  "claims": [
+   {
+    "text": "Apprentices rise only at the will of their regent or a higher authority. At the first circle most must report about once a week, visit the chantry weekly and voice no opinion on clan policy without leave; strict regents may make them live in the chantry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "By the second or third circle an apprentice knows the Traditions, the Tremere Oath and basic occultism and needs less watching. Fourth and fifth circle apprentices serve as aides and report monthly or yearly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "A difficult apprentice risks a blood bond to the Council under a strict regent, and few rebels last long.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "A regent founds or runs a chantry and reports to a lord, usually monthly, with a visit at least once a year. By the seventh circle a regent may run a large city chantry and its satellites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Lords rule regions such as a few US states or a small European country, working through clan ties and brokering favours. Each answers to a pontifex and meets with that pontifex at least every three years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Pontifices, just below the Council of Seven, oversee great regions or fields such as finance or religion. Rank in the pyramid often follows political need as much as merit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere",
+   "rotb-tremere-offices",
+   "cbtr-etrius"
+  ]
+ },
+ {
+  "id": "cbtr-etrius",
+  "title": "Etrius",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance",
+   "victorian",
+   "modern"
+  ],
+  "summary": "The cautious Tremere elder who keeps the founder's body.",
+  "claims": [
+   {
+    "text": "Etrius stood beside Tremere from the first, always urging caution against Goratrix's daring. Extremely conservative, Etrius has weathered the past thousand years safely.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "As one of the architects of the Camarilla, Etrius still has great sway in it, and hides personal aims behind clan security.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Barely able to use a telephone, Etrius relies on a chosen brood of neonates and on chains of aides who turn modern data into terms an elder of the Middle Ages can use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Etrius guards both the physical body and the legacy of Tremere, and grows ever more short-tempered and desperate under the pace of the modern world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere",
+   "cbtr-pyramid",
+   "cbtr-goratrix"
+  ]
+ },
+ {
+  "id": "cbtr-goratrix",
+  "title": "Goratrix",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Tremere's daring lieutenant, who found the formula of undeath.",
+  "claims": [
+   {
+    "text": "Goratrix is credited with the formula that made Tremere a vampire, said to have come from experiments on Tzimisce subjects, and urged Tremere to drink it and to turn the other followers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Where Etrius codified thaumaturgy with Tremere, Goratrix tested it in the field, experimenting on captured Cainites and sacrificing apprentices to the cause.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtremere",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere",
+   "cbtr-etrius"
+  ]
+ }
+]

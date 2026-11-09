@@ -1,0 +1,209 @@
+[
+ {
+  "id": "cbgv-promise-of-1528",
+  "title": "Augustus and the Promise of 1528",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "How the Giovanni took the Cappadocian blood and agreed to stay out of Kindred affairs.",
+  "claims": [
+   {
+    "text": "Augustus Giovanni diablerized the Cappadocian founder in 1444, rising to the Third Generation and splitting the old clan from the Venetian family.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Within decades other clans called the Necromancers Devil Kindred. To avoid a united front against them, the Giovanni swore in 1528 to stay forever outside Kindred affairs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Giovanni writers call the Promise the Camarilla's quiet blessing on the destruction of the Cappadocians, at a time when the young sect feared the Sabbat and any new faction.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Clan lore says Augustus forced a wraith bound to Japheth Cappadocius's journal, found in the Vatican's vaults, to speak of a Khazar's Diary and a True Vessel hidden at the Erciyes temple.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The Diary is said to hold a rite that would erase the wall between the living world and the Underworld, at the cost of 100,000,000 souls.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni",
+   "da-cappadocians",
+   "rotb-giovanni-necromancy"
+  ]
+ },
+ {
+  "id": "cbgv-premascines",
+  "title": "The Premascines",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "victorian",
+   "modern"
+  ],
+  "summary": "Augustus's surviving fellow conspirators, said to sleep under Venice.",
+  "claims": [
+   {
+    "text": "Giovanni tell of kin who helped Augustus rise against the founder, Embraced before 1444, and so perhaps of the Fourth or Fifth Generation. Accounts give anywhere from four to twelve of them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "They are said to have lain in the water beneath Venice for centuries, fed by the family, alien in mind, and perhaps able to feed on the dead's spirits.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Something has kept wraiths and spectres away from Venice for generations, even through the present unrest in the Underworld.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbgv-promise-of-1528",
+   "giovanni"
+  ]
+ },
+ {
+  "id": "cbgv-proxy-kiss",
+  "title": "The Proxy Kiss and the Fourth of April",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Giovanni make ghouls of their own kin, and the feast that marks the clan's birth.",
+  "claims": [
+   {
+    "text": "The Proxy Kiss is the feeding of Giovanni blood to a family member to make a ghoul. Some families make it a voluntary rite in a black mass; others slip the blood into food.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Only Italy keeps the custom faithfully. It is fading in the Americas, and some lesser families resent it as a way for the Venetian line to bind their young.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 48,
+      "pdf": 49
+     },
+     {
+      "book": "cbgiovanni",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Every 4 April the family holds a feast for the night Augustus chose to betray the clan founder. Only those who know the family's secret, or will before dawn, are invited.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "That night kin are put forward for the Proxy Kiss and the Embrace. The newly Embraced drink first, then the givers of the Kiss, then the elders; on that night alone ghouls may drink living blood too, and dispose of the bodies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Some Giovanni families hire out in wars: the Pisanob in South America and the Ghiberti in African conflicts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgiovanni",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni",
+   "lotc-giovanni-households",
+   "cbgv-promise-of-1528"
+  ]
+ }
+]
