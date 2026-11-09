@@ -31,7 +31,7 @@ export async function run() {
   const ST = game.modules.get("wodx-storyteller")?.api, IA = game.modules.get("wodx-interactables")?.api;
   let a = null, nos = null, scene = null;
   try {
-    ok("1. modules", atLeast("wodx-storyteller", "0.16.0") && atLeast("wodx-interactables", "0.17.0") && !!ST?.body?.add && !!IA?.fill?.draw,
+    ok("1. modules", atLeast("wodx-storyteller", "0.16.0") && atLeast("wodx-interactables", "0.17.1") && !!ST?.body?.add && !!IA?.fill?.draw,
       {versions: ["wodx-storyteller", "wodx-interactables", "wodx-library"].map(id => `${id} ${game.modules.get(id)?.version}`)});
 
     // 2. A lasting change and its Undo
