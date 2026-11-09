@@ -155,7 +155,7 @@
   "summary": "The ancient rift that split the living from the dead.",
   "claims": [
    {
-    "text": "No one knows how long ago or why, but a great upheaval tore a rift between the worlds of the living and the dead.",
+    "text": "Long ago, for reasons no one knows, a great upheaval split the land of the dead from the land of the living.",
     "tier": "stated",
     "refs": [
      {
@@ -608,7 +608,7 @@
   "summary": "The masks of office worn in the Hierarchy.",
   "claims": [
    {
-    "text": "Not every Hierarchy wraith wears a mask, but every one who wants to matter there does.",
+    "text": "Masks are optional in the Hierarchy, yet any wraith with ambition there wears one.",
     "tier": "stated",
     "refs": [
      {
@@ -842,7 +842,7 @@
     ]
    },
    {
-    "text": "The Midnight Express is a ghost train that stops at dozens of Necropoli before plunging into the deeper Underworld.",
+    "text": "The Midnight Express, a ghostly train, calls at many Necropoli on its way down into the deep Underworld.",
     "tier": "stated",
     "refs": [
      {
