@@ -508,6 +508,50 @@ export function damageLayers(A, level) {
     over: top.length ? `<g clip-path="url(#wpd-face)">${top.join("")}</g>` : ""};
 }
 
+/* ---- Lasting changes to the body (WoDX Storyteller's record, the ones that show) ---- */
+/** The parts the picture can show, and each source's colour: a reshaped seam, a pale scar, a demon's glow. */
+export const CHANGE_PARTS = ["face", "head", "eyes", "mouth", "skin", "whole"];
+const CHANGE_INK = {vicissitude: "#8b4f45", metis: "#6d5a48", moliate: "#5d6b78", visage: "#e0682a", taint: "#3d4a2a", scar: "#efe0cc", other: "#6a4a3a"};
+/** The changes worth drawing, from the record [{source, part, shows}]: one per part, newest wins, sorted for the key. */
+export function changesToDraw(list) {
+  const by = {};
+  for ( const c of Array.isArray(list) ? list : [] ) {
+    if ( !c || c.shows === false || !CHANGE_PARTS.includes(c.part) ) continue;
+    by[c.part] = CHANGE_INK[c.source] ? c.source : "other";
+  }
+  return Object.keys(by).sort().map(part => ({part, source: by[part]}));
+}
+/** The marks of lasting changes, on the skin, inside the face outline (as the marks of the health track). */
+export function changeLayers(A, changes) {
+  const list = changesToDraw(changes);
+  if ( !list.length ) return "";
+  const B = A.faceBox, X = fx => f0(B.x + B.w * fx), Y = fy => f0(B.y + B.h * fy), S = v => f0(v * B.w / 400);
+  const out = [];
+  for ( const {part, source} of list ) {
+    const c = CHANGE_INK[source], glow = source === "visage", op = source === "scar" ? 0.9 : 0.7;
+    const line = (d, wd = 6) => `<path d="${d}" fill="none" stroke="${c}" stroke-opacity="${op}" stroke-width="${S(wd)}" stroke-linecap="round"${glow ? ' filter="url(#wpd-glow)"' : ""}/>`;
+    if ( part === "face" ) {
+      // A seam along the far cheekbone, with the stitch marks of flesh worked by hand
+      out.push(line(`M${X(0.6)} ${Y(0.42)} C${X(0.7)} ${Y(0.5)} ${X(0.78)} ${Y(0.58)} ${X(0.82)} ${Y(0.7)}`, 7));
+      for ( const t of [0.25, 0.5, 0.75] ) { const x = 0.6 + 0.22 * t, y = 0.42 + 0.28 * t; out.push(line(`M${X(x - 0.03)} ${Y(y + 0.02)} L${X(x + 0.03)} ${Y(y - 0.02)}`, 4)); }
+    } else if ( part === "head" ) {
+      // Ridges along the brow: bone pushed up under the skin
+      for ( const x of [0.3, 0.7] ) out.push(line(`M${X(x - 0.08)} ${Y(0.06)} Q${X(x)} ${Y(-0.04)} ${X(x + 0.08)} ${Y(0.06)}`, 8));
+    } else if ( part === "eyes" ) {
+      for ( const x of [0.3, 0.7] ) out.push(`<ellipse cx="${X(x)}" cy="${Y(0.38)}" rx="${S(48)}" ry="${S(26)}" fill="${c}" fill-opacity="${glow ? 0.45 : 0.3}"${glow ? ' filter="url(#wpd-glow)"' : ""}/>`);
+    } else if ( part === "mouth" ) {
+      out.push(line(`M${X(0.32)} ${Y(0.74)} L${X(0.26)} ${Y(0.8)}`, 5), line(`M${X(0.68)} ${Y(0.74)} L${X(0.74)} ${Y(0.8)}`, 5));
+    } else if ( part === "skin" ) {
+      // Veins or patches spreading from the jaw
+      out.push(line(`M${X(0.12)} ${Y(0.85)} C${X(0.16)} ${Y(0.7)} ${X(0.1)} ${Y(0.62)} ${X(0.16)} ${Y(0.5)}`, 4), line(`M${X(0.88)} ${Y(0.85)} C${X(0.84)} ${Y(0.72)} ${X(0.9)} ${Y(0.64)} ${X(0.85)} ${Y(0.54)}`, 4));
+    } else if ( part === "whole" ) {
+      out.push(`<rect x="${B.x - 40}" y="${B.y - 40}" width="${B.w + 80}" height="${B.h + 80}" fill="${c}" fill-opacity="${glow ? 0.18 : 0.12}"/>`);
+    }
+  }
+  const defs = list.some(x => x.source === "visage") ? `<filter id="wpd-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${S(6)}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>` : "";
+  return `<defs>${defs}<clipPath id="wpd-face-ch"><path d="${A.facePath}"/></clipPath></defs><g clip-path="url(#wpd-face-ch)">${out.join("")}</g>`;
+}
+
 /* ---- The ring ---- */
 export const DEFAULT_FRAME = {kit: "dark-ages", shape: "round", color: 0x4f4943, double: true, width: 0.045};
 const V = 1360;
@@ -560,7 +604,7 @@ function trim(A) {
  * a gilt ring with a coloured ring inside it. head: from headLayers. style: {ground, ring} (see styleFor). ring:
  * draw the ring in (when the token frames of WoDX Atmosphere are not drawing it). Returns {svg, crop}.
  */
-export function compose({look, head, anchors: A, frame = DEFAULT_FRAME, ring = true, level = 0, style = null}) {
+export function compose({look, head, anchors: A, frame = DEFAULT_FRAME, ring = true, level = 0, style = null, changes = []}) {
   const st = style ?? styleFor(look);
   const hw = headwear(A, look.clothes);
   const crop = cropFor(A, frame, hw.tops);
@@ -583,7 +627,8 @@ export function compose({look, head, anchors: A, frame = DEFAULT_FRAME, ring = t
   const hasVeil = look.clothes.headwear && look.clothes.headwear !== "none";
   // The marks of the health track lie under the mask of visible skin (in Lorelei's space, so the build is undone
   // inside it), so a fringe or a beard stays over them; the bandage goes over everything on the head
-  const dm = damageLayers(A, level), bt = FR.buildTransform(look.face.build), b = FR.buildOf(look.face.build);
+  const dmRaw = damageLayers(A, level), ch = changeLayers(A, changes);
+  const dm = {skin: ch + dmRaw.skin, over: dmRaw.over}, bt = FR.buildTransform(look.face.build), b = FR.buildOf(look.face.build);
   const inv = bt ? `translate(${FR.PIVOT[0]} ${FR.PIVOT[1]}) scale(${1 / b.sx} ${1 / b.sy}) translate(${-FR.PIVOT[0]} ${-FR.PIVOT[1]})` : "";
   const marks = !dm.skin ? "" : String(head).includes('id="wpd-skin"')
     ? `<g${bt ? ` transform="${bt}"` : ""}><g mask="url(#wpd-skin)"><g${inv ? ` transform="${inv}"` : ""}>${dm.skin}</g></g></g>` : dm.skin;
@@ -599,7 +644,8 @@ export function compose({look, head, anchors: A, frame = DEFAULT_FRAME, ring = t
 export const innerSvg = s => String(s).replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "").replace(/<metadata>[\s\S]*?<\/metadata>/, "");
 
 /** The key for one baked picture: everything that changes what is drawn. */
-export function bakeKey({look, mood, level, frame, ring, style}) {
+export function bakeKey({look, mood, level, frame, ring, style, changes = []}) {
   const l = normalize(look), st = style ?? styleFor(l);
-  return hashOf(JSON.stringify([LOOK_VERSION, l.seed, l.face, l.colors, l.clothes, mood, level, frame?.kit, frame?.shape, frame?.color, !!ring, st.ground, st.ring]));
+  const ch = changesToDraw(changes);
+  return hashOf(JSON.stringify([LOOK_VERSION, l.seed, l.face, l.colors, l.clothes, mood, level, frame?.kit, frame?.shape, frame?.color, !!ring, st.ground, st.ring, ...(ch.length ? [ch] : [])]));
 }
