@@ -43,6 +43,12 @@
    "title": "The Hunters Hunted II",
    "short": "HH2",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "mummy2",
+   "title": "Mummy (Second Edition)",
+   "short": "Mummy 2e",
+   "edition": "Second"
   }
  ],
  "files": [
@@ -52,6 +58,7 @@
   "w20.json",
   "wtda.json",
   "wr20.json",
-  "hh2.json"
+  "hh2.json",
+  "mummy2.json"
  ]
 }
