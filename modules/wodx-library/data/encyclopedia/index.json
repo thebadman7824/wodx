@@ -127,6 +127,12 @@
    "title": "Ghouls and Revenants",
    "short": "G&R",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "lotc",
+   "title": "Lore of the Clans",
+   "short": "LotC",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -150,6 +156,7 @@
   "sc.json",
   "vav.json",
   "dafae.json",
-  "gr.json"
+  "gr.json",
+  "lotc.json"
  ]
 }
