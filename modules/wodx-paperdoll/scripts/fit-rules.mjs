@@ -58,7 +58,10 @@ export function measure(px, {sx = 1, sy = 1} = {}) {
   for ( const [y, [a, b]] of rows ) if ( y >= blobTop ) { bl = Math.min(bl, a); br = Math.max(br, b); }
 
   // The face, by rays from a point between the eyes and the mouth; the jaw is the lowest line in each column
-  const cx = Math.round(TX(510)), cy = Math.round(TY(480)), jawTop = Math.round(TY(789)), jawLow = Math.round(TY(600));
+  // (a long fringe can cover the point between the eyes: then the rays start lower, on the first skin below it)
+  const cx = Math.round(TX(510)), jawTop = Math.round(TY(789)), jawLow = Math.round(TY(600));
+  let cy = Math.round(TY(480));
+  for ( let y = cy; y < TY(600); y += 2 ) if ( k(cx, y) === "s" && k(cx, y + 6) === "s" ) { cy = y; break; }
   const jaw = new Map();
   for ( let x = 0; x < W; x++ ) for ( let y = jawTop; y >= jawLow; y-- ) if ( k(x, y) === "k" ) { jaw.set(x, y); break; }
   const ray = t => {
@@ -103,24 +106,61 @@ export function measure(px, {sx = 1, sy = 1} = {}) {
   };
 }
 
+/** The colours of the features drawing (see loreleiOptions features): skin and hair green, each feature its own. */
+export const FEATURE_KEY = {skin: "00ff00", eyes: "ff00ff", eyebrows: "ffff00", mouth: "0000ff", nose: "ff8000"};
+const FK = Object.fromEntries(Object.entries(FEATURE_KEY).map(([k, h]) => [k, [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16))]));
+const isK = (d, i, c) => Math.abs(d[i] - c[0]) < 60 && Math.abs(d[i + 1] - c[1]) < 60 && Math.abs(d[i + 2] - c[2]) < 60 && d[i + 3] > 128;
+
 /**
- * Find the eyes on a head drawn with magenta eyes and everything else green (see loreleiOptions pupils). px as for
- * measure. Returns {pupils: [{side, x, y, r}], eyes: [{side, x0, y0, x1, y1}]}, side 0 the near eye: a pupil is the magenta with
- * no green within 10 pixels (the outline of the eye always has skin close by).
+ * Find the eyes on the features drawing, set in the build of the face. px as for measure. Returns
+ * {pupils: [{side, x, y, r}], eyes: [{side, x0, y0, x1, y1}], mouth: {x0, y0, x1, y1}} in Lorelei's own space (the build taken back out), side 0
+ * the near eye: a pupil is the eye colour with no skin within 10 pixels (the outline of the eye always has skin close by).
  */
-export function findEyes(px) {
-  const W = px.width, H = px.height, d = px.data;
-  const mag = i => d[i] > 200 && d[i + 1] < 80 && d[i + 2] > 200, green = (x, y) => { if ( x < 0 || y < 0 || x >= W || y >= H ) return false; const i = (y * W + x) * 4; return d[i + 1] > 200 && d[i] < 80; };
-  const P = [[0, 0, 0], [0, 0, 0]], B = [[1e9, 1e9, -1, -1], [1e9, 1e9, -1, -1]];
-  for ( let y = 330; y < Math.min(H, 620); y++ ) for ( let x = 300; x < Math.min(W, 800); x++ ) {
-    if ( !mag((y * W + x) * 4) ) continue;
-    const side = x < 565 ? 0 : 1, b = B[side];
+export function findEyes(px, {sx = 1, sy = 1} = {}) {
+  const W = px.width, H = px.height, d = px.data, c = FK.eyes;
+  const green = (x, y) => { if ( x < 0 || y < 0 || x >= W || y >= H ) return false; const i = (y * W + x) * 4; return d[i + 1] > 200 && d[i] < 80 && d[i + 2] < 80; };
+  const split = 490 + 75 * sx, P = [[0, 0, 0], [0, 0, 0]], B = [[1e9, 1e9, -1, -1], [1e9, 1e9, -1, -1]], MB = [1e9, 1e9, -1, -1];
+  for ( let y = 450; y < Math.min(H, 900); y++ ) for ( let x = 250; x < Math.min(W, 850); x++ ) if ( isK(d, (y * W + x) * 4, FK.mouth) ) {
+    MB[0] = Math.min(MB[0], x); MB[1] = Math.min(MB[1], y); MB[2] = Math.max(MB[2], x); MB[3] = Math.max(MB[3], y);
+  }
+  for ( let y = 250; y < Math.min(H, 700); y++ ) for ( let x = 250; x < Math.min(W, 850); x++ ) {
+    if ( !isK(d, (y * W + x) * 4, c) ) continue;
+    const side = x < split ? 0 : 1, b = B[side];
     b[0] = Math.min(b[0], x); b[1] = Math.min(b[1], y); b[2] = Math.max(b[2], x); b[3] = Math.max(b[3], y);
     let near = false;
     for ( let dy = -10; dy <= 10 && !near; dy += 2 ) for ( let dx = -10; dx <= 10; dx += 2 ) if ( dx * dx + dy * dy <= 100 && green(x + dx, y + dy) ) { near = true; break; }
     if ( near ) continue;
     P[side][0] += x; P[side][1] += y; P[side][2]++;
   }
-  return {pupils: P.map(([sx, sy, n], side) => n > 30 ? {side, x: +(sx / n).toFixed(1), y: +(sy / n).toFixed(1), r: +(Math.sqrt(n / Math.PI) + 6).toFixed(1)} : null).filter(Boolean),
-    eyes: B.map(([x0, y0, x1, y1], side) => x1 > 0 ? {side, x0, y0, x1, y1} : null).filter(Boolean)};
+  const ix = x => 490 + (x - 490) / sx, iy = y => 815 + (y - 815) / sy, f = v => +v.toFixed(1);
+  return {pupils: P.map(([tx, ty, n], side) => n > 30 * sx * sy ? {side, x: f(ix(tx / n)), y: f(iy(ty / n)), r: f(Math.sqrt(n / (sx * sy) / Math.PI) + 6)} : null).filter(Boolean),
+    eyes: B.map(([x0, y0, x1, y1], side) => x1 > 0 ? {side, x0: f(ix(x0)), y0: f(iy(y0)), x1: f(ix(x1)), y1: f(iy(y1))} : null).filter(Boolean),
+    mouth: MB[2] > 0 ? {x0: f(ix(MB[0])), y0: f(iy(MB[1])), x1: f(ix(MB[2])), y1: f(iy(MB[3]))} : null};
+}
+
+/**
+ * The second stage of a face: do the eyes, brows, nose and mouth sit on it? px: the features drawing in the build of
+ * the face; A: the anchors measured on the same build. Each feature must be drawn (the brows may hide under a
+ * fringe), sit inside the outline of the head, and never reach the empty ground past the head: no pixel of it has the
+ * outside within 6 pixels. Returns {ok, parts: {eyes: {n, inside, off, ok}, ...}}.
+ */
+export function checkFeatures(px, A) {
+  const W = px.width, H = px.height, d = px.data;
+  // the head: from the outline of head and hair down to the shoulders
+  const xs = (A?.headTop ?? []).map(p => p[0]), M = 20;
+  const box = xs.length ? {x: Math.min(...xs), y: A.crown, w: Math.max(...xs) - Math.min(...xs), h: A.blobTop - A.crown} : {x: 0, y: 0, w: W, h: H};
+  const empty = (x, y) => x < 0 || y < 0 || x >= W || y >= H || d[(y * W + x) * 4 + 3] < 40;
+  const parts = {};
+  for ( const k of ["eyes", "eyebrows", "nose", "mouth"] ) {
+    let n = 0, inside = 0, off = 0;
+    for ( let y = 0; y < H; y += 2 ) for ( let x = 0; x < W; x += 2 ) {
+      if ( !isK(d, (y * W + x) * 4, FK[k]) ) continue;
+      n++;
+      if ( x >= box.x - M && x <= box.x + box.w + M && y >= box.y - M && y <= box.y + box.h + M ) inside++;
+      for ( const [dx, dy] of [[6, 0], [-6, 0], [0, 6], [0, -6], [4, 4], [-4, -4], [4, -4], [-4, 4]] ) if ( empty(x + dx, y + dy) ) { off++; break; }
+    }
+    const fi = n ? inside / n : 1;
+    parts[k] = {n, inside: +fi.toFixed(3), off, ok: (n > 20 || k === "eyebrows") && fi >= 0.99 && off === 0};
+  }
+  return {ok: Object.values(parts).every(p => p.ok), parts};
 }
