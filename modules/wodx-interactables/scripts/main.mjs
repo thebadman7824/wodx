@@ -865,6 +865,8 @@ export async function setConcealed(tokDoc, on) {
   const has = (CONFIG.statusEffects ?? []).some(e => e.id === "invisible");
   if ( has && typeof actor?.toggleStatusEffect === "function" ) {
     const now = !!actor.statuses?.has?.("invisible");
+    // A token placed a moment ago may not be drawn yet; core reads its mesh when the status is applied
+    for ( let i = 0; i < 20 && tokDoc.object && !tokDoc.object.mesh; i++ ) await new Promise(r => setTimeout(r, 25));
     if ( now !== on ) await actor.toggleStatusEffect("invisible", {active: on});
     return "status";
   }
