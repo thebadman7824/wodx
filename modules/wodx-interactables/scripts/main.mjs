@@ -57,7 +57,7 @@ import {setupCarry} from "./carry.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.16.0";
+const VERSION = "0.16.1";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -394,10 +394,13 @@ export async function attempt(tok, wallId, opId, {fd = null} = {}) {
   // The pool, by WoDX Actions' rules: wounds, bonus dice, an untrained Skill, a Knowledge one can't use untrained
   const m = op.roll.ability ? ch.meta[op.roll.ability] ?? {} : {};
   const type = String(m.type ?? "").includes("knowledge") ? "knowledge" : String(m.type ?? "").includes("skill") ? "skill" : m.type ? "talent" : op.roll.skill ? "skill" : "talent";
+  // A haven's security makes breaking in harder for anyone who does not live there (WoDX Storyteller's record)
+  const haven = R.havenSecurity(canvas.scene?.flags?.["wodx-storyteller"]?.haven, actor?.id, op.id);
   const built = actionPool({attribute: ch[op.roll.attr] ?? 0, attributeLabel: op.roll.attrLabel, ability: op.roll.ability ? (ch.abilities[op.roll.ability] ?? 0) : 0,
     abilityLabel: op.roll.abilityLabel, abilityKey: op.roll.ability, abilityType: type, bonusDice: num(fd.bonus),
-    extraDiff: num(fd.extraDiff), baseDifficulty: op.roll.diff, woundPenalty: ch.woundPenalty, retries: 0});
+    extraDiff: num(fd.extraDiff) + haven, baseDifficulty: op.roll.diff, woundPenalty: ch.woundPenalty, retries: 0});
   if ( built.blocked ) { ui.notifications.warn(built.blocked); return null; }
+  if ( haven ) built.parts.push(`haven security +${haven}`);
   let wp = !!fd.willpower;
   if ( wp ) {
     const w = actor.system?.advantages?.willpower ?? {};

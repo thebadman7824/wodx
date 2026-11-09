@@ -1024,6 +1024,12 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
 /*  Hunting & feeding (p. 334, 340-341)                               */
 /* ================================================================== */
 
+/** The vessel's blood: drink, drugs or disease (V20 pp. 295, 301-302). */
+function stateFields(sel = "clean") {
+    return `<div class="form-group"><label>In the vessel's blood</label><select name="vstate" data-fixed>${opts(Object.entries(R.VESSEL_STATES).map(([k, x]) => [k, x.label]), sel)}</select></div>
+      <div class="form-group"><label>Drinks, if drunk</label><input type="number" name="drinks" value="4" min="0" max="20"/></div>`;
+}
+
 export async function hunt({ actor: a } = {}) {
     const actor = needActor(a);
     if (!actor) return;
@@ -1045,6 +1051,7 @@ export async function hunt({ actor: a } = {}) {
       <div class="form-group"><label>Hours available</label><input type="number" name="hours" value="3" min="1"/></div>
       <div class="form-group"><label>Prey</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), "human")}</select></div>
       <div class="form-group"><label>Blood to take (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
+      ${stateFields(here?.outbreak ? "disease" : "clean")}
       <div class="form-group"><label><input type="checkbox" name="dieWorth"/> Storyteller option: prey yields one die's worth of blood</label></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
     </form>`;
@@ -1073,7 +1080,7 @@ async function resolveHunt(actor, fd) {
     body += `<div class="vta-big good">Prey caught: ${R.VESSELS[fd.vessel].label}.</div>`;
     let take = fd.take;
     if (fd.dieWorth) { const d = await rollPool(1, 11); rolls.push(d.roll); take = d.faces[0] ?? 1; body += `<div class="vta-note">One die's worth of blood: ${take}.</div>`; }
-    const fed = await feedResolve(actor, { vesselType: fd.vessel, take, vesselActor: null, rolls });
+    const fed = await feedResolve(actor, { vesselType: fd.vessel, take, vesselActor: null, rolls, state: fd.vstate, drinks: fd.drinks });
     return post(actor, `${actor.name} hunts`, body + fed.html, rolls);
 }
 
@@ -1087,17 +1094,38 @@ export async function feed({ actor: a, vessel: t } = {}) {
       <div class="form-group"><label>Vessel</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vessel && isVampire(vessel) ? "vampire" : "human")}</select></div>
       <div class="form-group"><label>Blood points to drink (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
       <div class="form-group"><label>Minutes the blood has been outside a living body</label><input type="number" name="cold" value="0" min="0"/></div>
+      ${stateFields(vessel?.flags?.[MOD]?.vesselState ?? "clean")}
     </form>`;
     return dialog("WoDX Feed", content, "Feed", async fd => {
         const rolls = [];
-        const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls });
+        const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls, state: fd.vstate, drinks: fd.drinks });
         return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls);
     });
 }
 
 /** Shared feeding: hunger check, amount, vessel risk, blood pool, Blood Oath. */
-async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rolls }) {
+async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rolls, state = "clean", drinks = 0 }) {
     let html = "";
+    // What is in the vessel's blood (V20 pp. 295, 301-302): a blood-borne disease may be spotted before drinking
+    const taint = R.VESSEL_STATES[state] && state !== "clean" ? state : null;
+    if (taint === "disease" && isVampire(actor)) {
+        const med = findAbility(actor, "medicine");
+        const spot = await rollPool(attr(actor, "intelligence") + num(med?.value), 7);
+        rolls.push(spot.roll);
+        html += rollBlock("Spotting the sickness: Intelligence + Medicine (7)", spot);
+        let out = R.diseaseOutcome(spot);
+        if (out.spotted) return { html: html + `<div class="vta-res good">${esc(actor.name)} tastes the sickness in time and does not drink. ${esc(R.VESSEL_STATES.disease.note)}</div>`, drunk: 0 };
+        if (out.carrier === null) {
+            const res = await rollPool(attr(actor, "stamina"), 6);
+            rolls.push(res.roll);
+            html += rollBlock("Resisting it: Stamina (6)", res);
+            out = R.diseaseOutcome(spot, res);
+        }
+        if (out.carrier) {
+            if (setting("applyChanges")) await updateActor(actor, { [`flags.${MOD}.carrier`]: { since: game.time?.worldTime ?? 0, what: "a blood-borne disease" } });
+            html += `<div class="vta-warn">${esc(actor.name)} now carries the sickness and can pass it to later vessels${out.why === "botch" ? " (a botch on spotting it)" : ""}.</div>`;
+        } else html += `<div class="vta-res">${esc(actor.name)} misses the sickness but throws it off.</div>`;
+    }
     const v = virtues(actor), b = blood(actor);
     const vessel = R.VESSELS[vesselType] ?? R.VESSELS.human;
     let vesselPool = vesselActor ? blood(vesselActor).value : vessel.pool;
@@ -1133,6 +1161,11 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         const ch = await changeBlood(actor, gain);
         html += `<div class="vta-res good">Blood pool ${ch.before} → ${ch.after}</div>`;
     }
+    if (taint && taint !== "disease" && drunk > 0 && isVampire(actor)) {
+        const pen = taint === "drunk" ? R.drinkPenalty(drinks) : 0;
+        html += `<div class="vta-note"><b>${esc(R.VESSEL_STATES[taint].label)}.</b> ${esc(R.VESSEL_STATES[taint].note)}${taint === "drunk" ? ` Now: −${pen} di${pen === 1 ? "e" : "ce"}.` : ""}</div>`;
+    }
+    if (drunk > 0 && flag(actor, "carrier") && ["human", "child"].includes(vesselType)) html += `<div class="vta-warn">${esc(actor.name)} carries a blood-borne disease: this vessel may now have it (V20 p. 295).</div>`;
     // The vessel
     const vRemaining = vesselPool - drunk;
     if (vesselActor && setting("applyChanges")) await updateActor(vesselActor, { "system.advantages.bloodpool.temporary": Math.max(0, blood(vesselActor).value - drunk) });
@@ -2132,7 +2165,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.18.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

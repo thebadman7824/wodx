@@ -464,10 +464,11 @@ game.world.id = worldId;
   const npc = [...game.actors.values()].find(a => a.type === "Vampire" && !a.hasPlayerOwner) ?? [...game.actors.values()][1];
   Object.assign(npc, {hasPlayerOwner: false, setFlag: async () => npc, unsetFlag: async () => npc, getFlag: () => undefined});
   const toks = Array.from({length: 9}, (_, k) => ({id: `npctok${k}`, name: `${npc.name} ${k}`, actor: npc, document: {hidden: false, disposition: -1}}));
-  const sceneMock = {getFlag: () => undefined, setFlag: async () => null, unsetFlag: async () => null};
+  const sceneMock = {id: "sceneMock", getFlag: () => undefined, setFlag: async () => null, unsetFlag: async () => null,
+    tokens: {contents: toks.map(t => ({id: t.id, name: t.name, actor: npc, hidden: false})), get: id => toks.find(t => t.id === id)}};
   const oldCanvas = globalThis.canvas;
   globalThis.canvas = {...(oldCanvas ?? {}), scene: sceneMock, tokens: {placeables: toks, get: id => toks.find(t => t.id === id), controlled: []}};
-  for ( const [label, fn] of [["NPC behaviour", () => npcApi.editBehavior(npc)], ["NPC panel", () => npcApi.openNpcPanel()]] ) {
+  for ( const [label, fn] of [["NPC behaviour", () => npcApi.editBehavior(npc)], ["NPC panel", () => npcApi.openNpcPanel()], ["Give an order", () => npcApi.orders.openOrders()]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
@@ -647,6 +648,9 @@ game.world.id = worldId;
     ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
     ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()],
     ["Upkeep", () => st.upkeep.open()], ["Ties that need tending", () => st.upkeep.ties(people[0].id)], ["Hunting grounds", () => st.upkeep.grounds()], ["Money by era", () => st.upkeep.money.dialog()],
+    ["Change a long task", () => { const f = people[0].flags ??= {}; f["wodx-storyteller"] = {...(f["wodx-storyteller"] ?? {}), tasks: {t1: {kind: "craft", name: "A silver reliquary", started: 0}}}; return st.tasks.edit(people[0].id, "t1"); }],
+    ["New long task", () => st.tasks.edit(people[0].id)], ["Long tasks", () => st.tasks.open()],
+    ["Havens", () => st.havens.open()], ["Haven", () => st.havens.edit()],
     ["The Gauntlet over time", () => (game.modules.get("wodx-otherworlds").api?.drift?.dialog ?? (() => import(join(root, "modules/wodx-otherworlds/scripts/drift.mjs")).then(m => m.driftDialog())))()]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
