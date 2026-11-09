@@ -1,0 +1,697 @@
+[
+ {
+  "id": "v20c-cathedral-of-flesh",
+  "title": "The Cathedral of Flesh",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The living church of the Tzimisce.",
+  "claims": [
+   {
+    "text": "The Tzimisce Yorak, set to guard a germ of the Antediluvian's mind, built a church-fortress sculpted from the bodies of peasants, slaves, rivals and beasts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 63,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "It first stood in Yorak's domain near the Carpathians; tonight no one knows where it is, and some say it has budded copies or is now the Antediluvian's own body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 63,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tzimisce",
+   "antediluvians"
+  ]
+ },
+ {
+  "id": "v20c-vampire-club",
+  "title": "The Vampire Club",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Anarch Elysium in San Francisco.",
+  "claims": [
+   {
+    "text": "Set in the beached hull of a bankrupt millionaire's yacht, it is a prize of the Anarch Free State, and Kindred of every faction treat it as Elysium.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 64,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs",
+   "elysium"
+  ]
+ },
+ {
+  "id": "v20c-catedral-da-se",
+  "title": "Catedral da Se",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sabbat's council in Sao Paulo.",
+  "claims": [
+   {
+    "text": "A council meets each year in the crypts beneath the cathedral to observe and set down the Sabbat's ritae; Archbishops, Bishops and Prisci attend by invitation only.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 64,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "The Archbishop of Sao Paulo also hosts deliberative diets of the Sect's leaders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 64,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat"
+  ]
+ },
+ {
+  "id": "v20c-red-sisters-midnight",
+  "title": "Red Sisters Midnight",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A wandering market of Kindred contraband.",
+  "claims": [
+   {
+    "text": "In domains of harsh Princes the market brokers forbidden goods such as relics of undead saints and banned Thaumaturgy, items with no worldly price.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 65,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Ravnos of the Phuri Dae bloodline run it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 65,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ravnos"
+  ]
+ },
+ {
+  "id": "v20c-kaymakli",
+  "title": "Kaymakli",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An underground city in Cappadocia.",
+  "claims": [
+   {
+    "text": "The tunnels cut into the Anatolian mountains hid early Christians and also fugitive vampires of the Clan of Death that the Giovanni overthrew.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 66,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni"
+  ]
+ },
+ {
+  "id": "v20c-highgate",
+  "title": "Highgate Cemetery",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A London graveyard with a dark name.",
+  "claims": [
+   {
+    "text": "Opened in the mid-19th century, Highgate has always had ties to the supernatural, including talk of a Vampire of Highgate in the 1970s and 1980s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 66,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "v20c-lecumberri",
+  "title": "Palacio de Lecumberri",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mexico City's Black Palace.",
+  "claims": [
+   {
+    "text": "A panopticon prison for criminals and enemies of the ruling party, where starvation, torture and death awaited the condemned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 66,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "v20c-gaslamp",
+  "title": "Gaslamp",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "San Diego in the Anarch Free State.",
+  "claims": [
+   {
+    "text": "No domain of the West Coast Anarch Free State has suffered more; the Free State has lost ground to a domain that rejoined the Camarilla and another overthrown by the Kindred of the East.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 67,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs"
+  ]
+ },
+ {
+  "id": "v20c-lodins-boardroom",
+  "title": "Lodin's Boardroom",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The sealed haven of a dead Prince.",
+  "claims": [
+   {
+    "text": "Chicago's Prince Lodin called a Blood Hunt on the werewolves in the mid-1990s and died in the Lupine rampage, along with half the city's Kindred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 67,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "The haven is said to hold the Roll of the Damned, listing every Kindred since Caine, and a 13th century amulet bearing the True Name of the Methuselah Menele, though some think these rumours are bait.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 67,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lupines",
+   "jyhad"
+  ]
+ },
+ {
+  "id": "v20c-pyre-of-moloch",
+  "title": "The Pyre of Moloch",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An old horror near Carthage.",
+  "claims": [
+   {
+    "text": "Romans who sacked Carthage told of human sacrifice and children thrown to the flames; those who speak Moloch's tongue are said to breed nightmares and desecration.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 67,
+      "pdf": 61
+     },
+     {
+      "book": "v20comp",
+      "page": 68,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "v20c-tomb-of-the-patriarch",
+  "title": "The Tomb of the Patriarch",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Beneath the Hagia Sophia.",
+  "claims": [
+   {
+    "text": "Byzantium's Dream, a Cainite utopia of learning led by lost Methuselahs, fell through betrayal, finally of its own champion, the Patriarch.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 68,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "A copy of the medieval Hagia Sophia is said to lie beneath the real one; scholars rank it with the Library of Alexandria for history and hints of the Damned's fate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 68,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gehenna"
+  ]
+ },
+ {
+  "id": "v20c-succubus-club",
+  "title": "The Succubus Club",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A wandering Kindred party.",
+  "claims": [
+   {
+    "text": "The first club opened in Chicago in the early 1990s, where Kindred fed on mortals drawn to the vampire scene; tonight it is a nomadic party moving across North America.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 68,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "v20c-prime-chantry",
+  "title": "The Prime Chantry",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Tremere seat in Vienna.",
+  "claims": [
+   {
+    "text": "Vienna holds Clan Tremere's most advanced chantry, the unquestioned centre of its political and Thaumaturgical power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 69,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere"
+  ]
+ },
+ {
+  "id": "v20c-alamut",
+  "title": "Alamut",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Assamite stronghold near Tehran.",
+  "claims": [
+   {
+    "text": "The Clan's ancestral home, where assassins train and sorcerers keep their lore, and where the Old Man under the mountain directs the Clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 70,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites"
+  ]
+ },
+ {
+  "id": "v20c-catacombes",
+  "title": "Catacombes de Paris",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ossuary under Paris.",
+  "claims": [
+   {
+    "text": "A 19th century ossuary of more than six million dead, partly open to the public, with hidden rooms and tunnels that Kindred use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 70,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "v20c-netchurch-lab",
+  "title": "Dr. Netchurch's Laboratory",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Malkavian science lab in Lowell.",
+  "claims": [
+   {
+    "text": "The Malkavian bioeschatologist Douglas Netchurch leads the posthumous sciences, studying how vampires react to modern stimuli.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 71,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "malkavian",
+   "lotc-douglas-netchurch"
+  ]
+ },
+ {
+  "id": "v20c-utgard",
+  "title": "Utgard",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A grim domain in Norway.",
+  "claims": [
+   {
+    "text": "On Vesteroy the Kindred rule in the open; the handful of mortals there live solely as servants and food, a domain perhaps near the First City's terror.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 71,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "v20c-abbey-sacred-crown",
+  "title": "The Abbey of the Sacred Crown",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where the Convention of Thorns was held.",
+  "claims": [
+   {
+    "text": "In this modest monastery near the village of Thorns, the young Camarilla ended the Anarch Revolt and the Assamites accepted the curse that checked their diablerie.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 71,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarch-revolt",
+   "assamites",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "v20c-gamla-stan",
+  "title": "Gamla Stan",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Stockholm's old town.",
+  "claims": [
+   {
+    "text": "The Ventrue and Toreador Princes of Scandinavia long ignored the Anarch threat, blaming the violence on refugees fleeing Baba Yaga in Russia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 72,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs"
+  ]
+ },
+ {
+  "id": "v20c-poveglia",
+  "title": "Poveglia",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Nosferatu warren off Venice.",
+  "claims": [
+   {
+    "text": "Once one of the Clan's largest spawning pits, the island held nearly enough Nosferatu to rival the Giovanni; now it is a wretched, half-empty warren.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 72,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nosferatu",
+   "giovanni"
+  ]
+ },
+ {
+  "id": "v20c-celestial-park",
+  "title": "Celestial Park",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Contested ground in Dallas.",
+  "claims": [
+   {
+    "text": "Werewolves and mages of Dallas once fought over the park as a store of mystic energy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 73,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lupines"
+  ]
+ },
+ {
+  "id": "v20c-varosha",
+  "title": "Varosha",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A frozen district of Famagusta.",
+  "claims": [
+   {
+    "text": "Cordoned off since the Turkish invasion of 1974, Varosha is frozen in time, its shops still hung with clothes untouched for decades.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 74,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "v20c-chase-vault",
+  "title": "The Chase Vault",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A family tomb in Barbados.",
+  "claims": [
+   {
+    "text": "The plantation-owning Chase family bought the churchyard vault in the early 19th century; it had been used only once before.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20comp",
+      "page": 74,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
