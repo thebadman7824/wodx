@@ -205,6 +205,12 @@
    "title": "Dust to Dust (V20)",
    "short": "Dust to Dust",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "sthr",
+   "title": "Vampire Storytellers Handbook (Revised)",
+   "short": "ST Handbook (Rev)",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -241,6 +247,7 @@
   "tome.json",
   "wildwest.json",
   "beckett.json",
-  "dust.json"
+  "dust.json",
+  "sthr.json"
  ]
 }

@@ -1,0 +1,446 @@
+[
+ {
+  "id": "sthr-arcane",
+  "title": "Arcane (Background)",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An optional Background that makes a vampire hard to find.",
+  "claims": [
+   {
+    "text": "People who try to recall an Arcane Kindred feel a vague nostalgia without detail; it is not invisibility and gives no help in a fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Each dot takes one die from pools used to search for the vampire, usually Perception or Investigation; it is passive, can be switched off, and does not aid Stealth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "It cannot be held alongside Status, Clan Prestige or Fame, and has no effect for vampires of Eighth Generation or stronger blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sthr-age"
+  ]
+ },
+ {
+  "id": "sthr-age",
+  "title": "Age (Background)",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An optional Background for elder chronicles.",
+  "claims": [
+   {
+    "text": "Age measures years spent active outside torpor, so a vampire who slept may be older than the rating shows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Each dot grants extra freebie points but costs Humanity, and the gain slows at higher ratings because the ancient learn poorly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Age and Military Force suit elder chronicles, and Storytellers are urged to bar them where players run neonates or ancillae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sthr-military-force"
+  ]
+ },
+ {
+  "id": "sthr-military-force",
+  "title": "Military Force (Background)",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An optional Background for commanding troops.",
+  "claims": [
+   {
+    "text": "Military Force lets a character call on armed soldiers; at the upper ratings that means an elite company of about a hundred hardened troops, and beyond it special weapons or national forces.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 36,
+      "pdf": 37
+     },
+     {
+      "book": "sthr",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sthr-age"
+  ]
+ },
+ {
+  "id": "sthr-daimoinon",
+  "title": "Daimoinon",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Discipline of the Baali.",
+  "claims": [
+   {
+    "text": "Sense the Sin: Perception + Empathy against the target's Self-Control + 4; one success shows a weak Virtue or Willpower, more uncover secrets, and three or more a core Derangement or old trauma.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Fear of the Void Below: after Sense the Sin, Wits + Intimidation against Courage + 4 brings trembling, then flight like Rötschreck, then fainting for the scene; Kindred resist with Courage against the Baali's Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Conflagration: each blood point spent makes black fire worth one die of aggravated damage, aimed with Dexterity + Occult at difficulty 6; it fades at the end of the turn and provokes Rötschreck like ordinary flame.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Psychomachia: after Sense the Sin, the target rolls the lowest Virtue at difficulty 6 or faces a phantom from their own darkness; a botch means frenzy or possession, and all harm from it is illusory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-baali"
+  ]
+ },
+ {
+  "id": "sthr-abominations",
+  "title": "Abominations",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Werewolves who have been Embraced.",
+  "claims": [
+   {
+    "text": "The Embrace cuts a werewolf off from the soul of the world; about a dozen such beings exist at once, and most end by suicide.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   },
+   {
+    "text": "An Abomination keeps old Gifts and rites, but only Wyrm-rites work and only Banes will teach new Gifts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   },
+   {
+    "text": "It cannot spend blood in the same turn it spends or rolls Gnosis or Rage, and it lives in a lasting, crippling despair.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   }
+  ],
+  "see": [
+   "garou"
+  ]
+ },
+ {
+  "id": "sthr-seeing-wraiths",
+  "title": "Vampires and Wraiths",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the undead notice the Restless.",
+  "claims": [
+   {
+    "text": "Few Kindred go a century without drawing a wraith's notice, usually by making one; necromancers meet them more often.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 165,
+      "pdf": 166
+     }
+    ]
+   },
+   {
+    "text": "Seeing past the Shroud needs the first level of the Ash Path; Auspex 3 or more may allow a fleeting glimpse at the Storyteller's call.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 165,
+      "pdf": 166
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wraiths",
+   "necromancy"
+  ]
+ },
+ {
+  "id": "sthr-changelings-and-blood",
+  "title": "Changelings and Kindred Blood",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the Embrace and vitae do to the fae.",
+  "claims": [
+   {
+    "text": "An Embraced changeling loses the fae nature and becomes an ordinary vampire, though often an odd one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "Changelings can be made ghouls and blood bound; a changeling ghoul carries two permanent points of Banality while Kindred blood remains.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sthr-abominations"
+  ]
+ },
+ {
+  "id": "sthr-manus-nigrum",
+  "title": "The Manus Nigrum (Revised account)",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient",
+   "modern"
+  ],
+  "summary": "The Black Hand as an older Revised source tells it.",
+  "claims": [
+   {
+    "text": "In this account the group grew into a Gehenna cult of mortals and vampires that wished to speed the Antediluvians' return and a new age of magic under their rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 178,
+      "pdf": 179
+     }
+    ]
+   },
+   {
+    "text": "Over time the vampires came to control the human magicians, and according to survivors most magicians left around 500 BC.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 178,
+      "pdf": 179
+     }
+    ]
+   }
+  ],
+  "see": [
+   "true-black-hand",
+   "sthr-enoch-aralu"
+  ]
+ },
+ {
+  "id": "sthr-enoch-aralu",
+  "title": "Enoch and the Aralu",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The cult's city and the tombs beneath it.",
+  "claims": [
+   {
+    "text": "Many of the cult's eldest Eastern members and its mystics settled in Enoch, far from most wraiths, studying its art for clues to the Antediluvians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 180,
+      "pdf": 181
+     }
+    ]
+   },
+   {
+    "text": "Deep in Enoch's foundations lay four tombs marked Aralu, which inscriptions and sent dreams suggested might hold Antediluvians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 180,
+      "pdf": 181
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-enoch",
+   "sthr-manus-nigrum"
+  ]
+ },
+ {
+  "id": "sthr-hand-lineages",
+  "title": "Lineages of the Manus Nigrum",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Assamite antitribu and True Brujah in the cult.",
+  "claims": [
+   {
+    "text": "A few Assamites helped found the cult and drew recruits after the Tremere curse, casting themselves as guardians of kin who fled to the Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 181,
+      "pdf": 182
+     }
+    ]
+   },
+   {
+    "text": "The True Brujah claim descent from Brujah untouched by Troile, who slew the founder; they differ from the clan in Disciplines and outlook, and some in the cult think they rose later by diablerie.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sthr",
+      "page": 181,
+      "pdf": 182
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sthr-manus-nigrum",
+   "da-temporis"
+  ]
+ }
+]
