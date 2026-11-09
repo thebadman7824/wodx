@@ -44,7 +44,17 @@ async function applied(msg, ms = 8000) {
   }
   return game.messages.get(msg?.id);
 }
-const dice = face => { CONFIG.Dice.randomUniform = () => (face - 0.5) / 10; };
+/** Fix every d10 to one face. Foundry's mapping from randomUniform to a face has changed between versions, so the
+ * gate tries both readings and keeps the one that gives the wanted face. */
+const dice = face => {
+  for ( const u of [(face - 0.5) / 10, 1 - (face - 0.5) / 10] ) {
+    CONFIG.Dice.randomUniform = () => u;
+    if ( new Roll("1d10").evaluateSync().dice[0].results[0].result === face ) return;
+  }
+  throw new Error(`could not fix the dice to ${face}`);
+};
+// The system keeps a stored total beside each attribute's value, and WoDX reads the total
+const attrs = (actor, o) => actor.update(Object.fromEntries(Object.entries(o).flatMap(([k, v]) => [[`system.attributes.${k}.value`, v], [`system.attributes.${k}.total`, v]])));
 
 export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) return "Run this gate in rothenstein-wodx only.";
@@ -59,20 +69,21 @@ export async function run() {
         && !!CONFIG.Canvas.doorControlClass?.wodxInteract, {version: m?.version, doorClass: CONFIG.Canvas.doorControlClass?.name});
     });
 
-    // The scene: a room with a locked door south, a window east, a barred heavy door west, a wattle wall north, a far door
+    // The scene: a small room around the burglar (each wall one square from the token's centre, within the default reach):
+    // a locked door south, a window east, a barred heavy door west, a wattle wall north, and a far door
     scene = await Scene.create({name: "Gate Interact", width: 2000, height: 2000, grid: {size: G, type: 1, distance: 5, units: "ft"}, tokenVision: false, padding: 0});
     await scene.view();
     await sleep(800);
     const W = CONST.WALL_DOOR_STATES;
     const [door, win, barred, wattle, far] = await scene.createEmbeddedDocuments("Wall", [
-      {c: [500, 800, 700, 800], door: 1, ds: W.LOCKED, flags: {[MOD]: {lock: "good"}}},
-      {c: [800, 500, 800, 700], door: 1, ds: W.CLOSED, flags: {[MOD]: {kind: "window"}}},
-      {c: [400, 500, 400, 700], door: 1, ds: W.CLOSED, flags: {[MOD]: {material: "heavy", barSide: "b", barred: true}}},
-      {c: [500, 400, 700, 400], door: 0, flags: {[MOD]: {wall: "wattle"}}},
+      {c: [520, 800, 680, 800], door: 1, ds: W.LOCKED, flags: {[MOD]: {lock: "good"}}},
+      {c: [700, 620, 700, 780], door: 1, ds: W.CLOSED, flags: {[MOD]: {kind: "window"}}},
+      {c: [500, 620, 500, 780], door: 1, ds: W.CLOSED, flags: {[MOD]: {material: "heavy", barSide: "b", barred: true}}},
+      {c: [520, 600, 680, 600], door: 0, flags: {[MOD]: {wall: "wattle"}}},
       {c: [1500, 1500, 1700, 1500], door: 1, ds: W.LOCKED}
     ]);
     const mk = (name, owner) => Actor.create({name, type: "Mortal", ownership: owner ? {default: 0, [game.user.id]: 3} : {default: 0},
-      system: {attributes: {strength: {value: 2}, dexterity: {value: 3}, perception: {value: 3}, intelligence: {value: 2}},
+      system: {attributes: {strength: {value: 2, total: 2}, dexterity: {value: 3, total: 3}, perception: {value: 3, total: 3}, intelligence: {value: 2, total: 2}},
         abilities: {larceny: {value: 2, isvisible: true}, alertness: {value: 2, isvisible: true}, stealth: {value: 1, isvisible: true}}}});
     burglar = await mk("Gate Interact burglar", true);
     watchman = await mk("Gate Interact watchman", false);
@@ -102,13 +113,13 @@ export async function run() {
       dice(10);
       const t = game.time.worldTime;
       // Three dice, all 10s: one roll is not enough for 8 successes
-      await burglar.update({"system.attributes.dexterity.value": 1, "system.abilities.larceny.value": 2});
+      await attrs(burglar, {dexterity: 1});
       const msg = await applied(await ix().attempt(tok, door.id, "pick", {fd: {}}));
       const progress = door.flags[MOD]?.progress?.pick, moved = game.time.worldTime - t;
       await ix().undoCard(msg);
       ok("4. progress kept on the door, five minutes on the clock; Undo puts both back", progress === 3 && moved === 300 && game.time.worldTime === t && !door.flags[MOD]?.progress?.pick, {progress, moved});
       await door.update({[`flags.${MOD}.lock`]: "good"});
-      await burglar.update({"system.attributes.dexterity.value": 3});
+      await attrs(burglar, {dexterity: 3});
     });
 
     await step("5. force", async () => {
@@ -124,18 +135,18 @@ export async function run() {
     });
 
     await step("6. window", async () => {
-      const msg = await applied(await ix().attempt(tok, win.id, "smash"));
+      const msg = await applied(await ix().attempt(tok, win.id, "smash", {fd: {}}));
       const broke = win.ds === W.OPEN && win.flags[MOD]?.broken === true;
       await ix().undoCard(msg);
       ok("6. the pane breaks at once; Undo mends it", broke && win.ds === W.CLOSED && !win.flags[MOD]?.broken);
     });
 
     await step("7. wall", async () => {
-      await burglar.update({"system.attributes.strength.value": 5});
-      const msg = await applied(await ix().attempt(tok, wattle.id, "breach"));
+      await attrs(burglar, {strength: 5});
+      const msg = await applied(await ix().attempt(tok, wattle.id, "breach", {fd: {}}));
       const q = game.settings.get("wodx-chronicle", "approvals").pending.find(p => p.type === `${MOD}.breach`);
       ok("7. breaking through waits in the queue; the wall stands", !!q && msg.flags[MOD]?.done?.waiting && wattle.move !== CONST.WALL_MOVEMENT_TYPES.NONE, {queued: q?.title});
-      await burglar.update({"system.attributes.strength.value": 2});
+      await attrs(burglar, {strength: 2});
     });
 
     await step("8. listen", async () => {
