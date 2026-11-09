@@ -43,12 +43,13 @@ export async function run() {
     const scene = game.scenes.viewed ?? game.scenes.active;
     if ( scene ) [token] = await scene.createEmbeddedDocuments("Token", [{name: actor.name, actorId: actor.id, actorLink: true, x: 0, y: 0, hidden: true}]);
     const p1 = await api.save(actor, look);
-    await api.settled();
+    const firstBake = structuredClone(api.last?.() ?? null);
+    await api.settled(); await sleep(500);
     const tex = () => actor.prototypeToken.texture.src, live = () => token ? scene.tokens.get(token.id)?.texture?.src : tex();
     const head = await fetch(`/${p1}`, {method: "HEAD"});
     const tk = token ? scene.tokens.get(token.id) : null;
     ok("3. bake", !!p1 && p1.endsWith(".webp") && head.ok && tex() === p1 && live() === p1 && actor.flags[MOD]?.baked,
-      {path: p1, proto: tex(), token: live(), head: head.status, scene: scene?.id ?? null, tokenId: token?.id ?? null, link: tk?.actorLink ?? null, tokenActor: tk?.actorId ?? null, actor: actor.id, baked: actor.flags[MOD]?.baked ?? null});
+      {path: p1, proto: tex(), token: live(), head: head.status, scene: scene?.id ?? null, tokenId: token?.id ?? null, link: tk?.actorLink ?? null, tokenActor: tk?.actorId ?? null, actor: actor.id, baked: actor.flags[MOD]?.baked ?? null, firstBake, lastBake: api.last?.() ?? null, sceneTokens: scene ? scene.tokens.filter(t => t.actorId === actor.id).map(t => `${t.id}:${t.actorLink}:${t.texture?.src}`) : null});
 
     const files1 = (await foundry.applications.apps.FilePicker.implementation.browse("data", `worlds/${game.world.id}/paperdoll`)).files.length;
     const p2 = await api.bake(actor);
