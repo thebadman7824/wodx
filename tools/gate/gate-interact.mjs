@@ -95,10 +95,13 @@ export async function run() {
     burglar = await mk("Gate Interact burglar", true);
     watchman = await mk("Gate Interact watchman", false);
     await burglar.createEmbeddedDocuments("Item", [{name: "Lock picks", type: "Feature", system: {}}]).catch(() => null);
-    const [tb, tw] = await scene.createEmbeddedDocuments("Token", [
+    await scene.createEmbeddedDocuments("Token", [
       {...(await burglar.getTokenDocument({x: 550, y: 650})).toObject(), actorLink: true},
       {...(await watchman.getTokenDocument({x: 550, y: 1100})).toObject(), actorLink: true, hidden: false}
     ]);
+    // Found by actor, not by the order Foundry hands the new tokens back in
+    const tb = scene.tokens.find(t => t.actorId === burglar.id), tw = scene.tokens.find(t => t.actorId === watchman.id);
+    if ( !tb || !tw ) throw new Error("the gate's tokens were not both created");
     await sleep(800);
     const tok = canvas.tokens.get(tb.id);
 
