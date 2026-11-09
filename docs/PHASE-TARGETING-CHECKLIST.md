@@ -1,6 +1,6 @@
 # WoDX Targeting checklist (WoDX Targeting 0.1.0, Actions 3.12.0, Combat 3.7.5)
 
-- [x] Decisions from the feasibility note: B84 (Ben), B108 and B109 (settled as recommended)
+- [x] Decisions from the feasibility note: B84 (Ben), B113 and B114 (settled as recommended)
 - [x] Tags for every library power: script seed, then a pass by eye over all 931 summaries
 - [ ] Tags checked against the books (elder powers and the Necromancy and Thaumaturgy paths first, tagged from their names)
 - [x] Pure rules (target-rules.mjs): sides, ranges, ranking for each intent, casting defaults, modes, last attacker, hand-set
