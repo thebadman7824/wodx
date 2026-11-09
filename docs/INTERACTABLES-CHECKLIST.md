@@ -15,5 +15,5 @@ Step 1 of the design note (WoDX: Interactable Map Elements). Steps 2 (climbing, 
 - [x] Harness tests (interactables.test.mjs): rules and runtime on a stand-in for Foundry
 - [x] UI fit at three sizes with Foundry 14's own foundry2.css (in the cloud, with the PC's stylesheet)
 - [ ] V20 core page refs pinned from the book texts on the PC (marked TODO in interact-rules.mjs; the V20 Dark Ages refs are in)
-- [ ] Gate in rothenstein-wodx (tools/gate/gate-interact.mjs), through the PC helper thread, after Ben's OK to deploy
-- [ ] Deployed (Interactables 0.1.0, a new module: enable it in rothenstein-wodx; Foundry restart)
+- [x] Gate in rothenstein-wodx (tools/gate/gate-interact.mjs): 10/10 on 2026-11-09, at commit e69ea48. The first runs failed on the gate script itself (dice mapping, reach, stored totals, creation order of walls and tokens), fixed in PRs 14 to 19; the module did not change
+- [x] Deployed 2026-11-09 (Interactables 0.1.0, MD5s checked), on in rothenstein-wodx only
