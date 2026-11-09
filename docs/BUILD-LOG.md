@@ -921,6 +921,12 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 
 ## 2026-11-09: knowledge-gated handouts (Chronicle 0.8.0, B274); queue window fix
 
-- know-rules.mjs (new): KNOW_PATTERN, traitKey, parseNeeds, meets, view, passages. know.mjs (new): traitsOf (languages from flags and Merits, dots from Abilities and any rated item), render, the @Know text enricher registered at init. languages.mjs exports charactersOf. api.know.
+- know-rules.mjs (new): KNOW_PATTERN, traitKey, parseNeeds, meets, view, passages. know.mjs (new): traitsOf (languages from the Languages window, dots from Abilities and any rated item), render, the @Know text enricher registered at init. languages.mjs exports charactersOf. api.know.
 - Queue window: Approve on its own is now a section of its own with a capped scroll box, not a closed details, so the UI fit can reach every box.
 - Tests: one more in chronicle.test.mjs (761 pass). Gate: tools/gate/gateknow.mjs, 7 steps.
+
+## 2026-11-09: dreams and visions you write (Storyteller 0.6.0, B275)
+
+- dreams-rules.mjs (new): DEFAULT_HOUR, normDream, normDreams, dueDreams, sortDreams, dreamHtml. dreams.mjs (new): the dreams world setting, saveDream, removeDream, releaseDream (journal in WoDX dreams, owners as observers, whispered card), checkDreams on the clock and after a skip, the Dreams and visions window (search boxes on every list). Reached from Draw for the story; api.dreams.
+- UI fit: the Dreams and visions window with 24 dreams. Tests: tools/harness/dreams.test.mjs (3). Gate: tools/gate/gatedreams.mjs, 6 steps.
+- Chronicle 0.8.1: traitsOf no longer spreads the Language Merits' count (a number, not names); the gate's step 3 threw on it.

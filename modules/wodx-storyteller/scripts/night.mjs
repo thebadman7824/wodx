@@ -206,8 +206,9 @@ export async function drawChooser() {
   const ow = game.modules.get("wodx-otherworlds")?.api?.journeyDialog;
   const choice = await DialogV2.wait({classes: ["wodx-dialog", "wstory-dialog"], window: {title: "Draw for the story"}, rejectClose: false,
     content: `<p>Seeded draws from WoDX's tables (folder WoDX tables, yours to edit). Each goes to the approval queue.</p>`,
-    buttons: [{action: "night", label: "Tonight", default: true}, {action: "aid", label: "A story aid"}, ...(ow ? [{action: "journey", label: "An Otherworld journey"}] : []), {action: "close", label: "Close"}]});
+    buttons: [{action: "night", label: "Tonight", default: true}, {action: "aid", label: "A story aid"}, ...(ow ? [{action: "journey", label: "An Otherworld journey"}] : []), {action: "dreams", label: "Dreams you write"}, {action: "close", label: "Close"}]});
   if ( choice === "night" ) return nightDialog();
   if ( choice === "aid" ) return aidDialog();
   if ( choice === "journey" ) return ow();
+  if ( choice === "dreams" ) return game.modules.get(MOD)?.api?.dreams?.open?.();
 }
