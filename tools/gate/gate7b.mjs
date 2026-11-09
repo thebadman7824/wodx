@@ -7,6 +7,8 @@
  * combat and its chat cards stay for the Storyteller to look at. Returns the view to the scene it started on.
  * Result: Data/wodx-gate/gate7b-result.json.
  */
+// Versions are floors: a later build still passes.
+const atLeastV = (a, b) => { const p = s => String(s ?? "0").split(".").map(n => parseInt(n, 10) || 0); const x = p(a), y = p(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i]; return true; };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const MOD = "wodx-npc"; // flags go under an active module's scope
 const npc = () => game.modules.get(MOD).api, C = () => game.wodxCombat;
@@ -114,7 +116,7 @@ export async function run() {
     templates: Object.fromEntries([...roles.byTemplate].map(([t, a]) => [t, a.name]))};
   let sc, T, combat;
   await step("versions", async () => {
-    ok("versions", /^0\.1\./.test(npc()?.version ?? "") && !!C()?.quickAttack && !!roles.hero && !!roles.fighter,
+    ok("versions", atLeastV(npc()?.version, "0.1.0") && !!C()?.quickAttack && !!roles.hero && !!roles.fighter,
       {npc: npc()?.version, combat: C()?.version, actions: game.wodxActions?.version, cast: R.cast});
   });
   await step("the arena: a wall, a player's character and Rothenstein NPCs", async () => {

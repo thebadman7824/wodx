@@ -7,6 +7,8 @@
  * own "Set sheet type" window): answer it with the general type. Opens each sheet, checks the printed sheet's sections in order, that the system's own tabs are still there and
  * nothing logged an error, clicks one dot and puts it back. Deletes nothing. Result: Data/wodx-gate/gatesheet4-result.json.
  */
+// Versions are floors: a later build still passes.
+const atLeastV = (a, b) => { const p = s => String(s ?? "0").split(".").map(n => parseInt(n, 10) || 0); const x = p(a), y = p(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i]; return true; };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const MOD = "wodx-sheets", ACT = "wodx-actions";
 const R = { started: new Date().toISOString(), steps: [], errors: [] };
@@ -60,7 +62,7 @@ export async function run() {
   const origErr = console.error;
   console.error = (...x) => { R.errors.push(x.map(v => v?.stack ? String(v.stack).split("\n").slice(0, 3).join(" | ") : String(v)).join(" ")); origErr.apply(console, x); };
   try {
-    await step("versions", async () => ok("versions", game.modules.get(MOD)?.api?.version === "0.4.0" && /^3\.1\d\./.test(game.wodxActions.version),
+    await step("versions", async () => ok("versions", atLeastV(game.modules.get(MOD)?.api?.version, "0.4.0") && atLeastV(game.wodxActions.version, "3.10.0"),
       { sheets: game.modules.get(MOD)?.api?.version, actions: game.wodxActions.version }));
     const v = await actor("Ilse (6e, Kindred)", "Vampire", "Sheet test: a Brujah of the nights now");
     await check("V20: Clan, Generation, Sire, the V20 Abilities, Disciplines, Backgrounds, Virtues, Humanity, Blood Pool, Weakness", v, "v20",

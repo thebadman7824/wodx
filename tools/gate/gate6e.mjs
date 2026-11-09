@@ -4,6 +4,8 @@
  * Uses a "WoDX 6e test pack" folder. Puts this computer's look settings back as they were; deletes nothing (its test card is
  * whispered to the Gamemaster). Result: Data/wodx-gate/gate6e-result.json.
  */
+// Versions are floors: a later build still passes.
+const atLeastV = (a, b) => { const p = s => String(s ?? "0").split(".").map(n => parseInt(n, 10) || 0); const x = p(a), y = p(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i]; return true; };
 const R = { started: new Date().toISOString(), steps: [], errors: [] };
 const MOD = "wodx-actions", CH = "wodx-chronicle";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -46,7 +48,7 @@ export async function run() {
         await step("versions", async () => {
             const ch = game.modules.get(CH)?.version;
             const th = game.modules.get(CH).api?.theme?.VERSION;
-            ok("versions", /^3\.6\./.test(A().version) && (/^0\.([3-9]|\d\d)\./.test(ch) || /^0\.([3-9]|\d\d)\./.test(th ?? "")), { actions: A().version, chronicle: ch, theme: th, note: ch !== "0.3.0" ? "Foundry shows the manifest read at its last start" : "" });
+            ok("versions", atLeastV(A().version, "3.6.0") && (/^0\.([3-9]|\d\d)\./.test(ch) || /^0\.([3-9]|\d\d)\./.test(th ?? "")), { actions: A().version, chronicle: ch, theme: th, note: ch !== "0.3.0" ? "Foundry shows the manifest read at its last start" : "" });
         });
         await game.settings.set(CH, "look", "era");
         await game.settings.set(CH, "textSize", "1");
