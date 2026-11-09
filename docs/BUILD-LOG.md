@@ -689,3 +689,7 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 ### Sheets past the first page, 2026-11-09: WoDX Sheets 0.6.0 (B127)
 - Gap review item 12. sheet-rules.mjs: page2 filled for all sheets but faeDA and wr20 (already had theirs). main.mjs: new blocks combat, gear, fetishes, rotes, description, with weaponLine() and armorLine(). block.hbs: an items block can carry a note.
 - Tests: sheets3.test.mjs (4). 544 harness tests pass. Gate: tools/gate/gatesheet5.mjs (13 steps).
+
+### Gear by era, 2026-11-09: WoDX Library 0.1.0, Combat 3.7.6 (B128)
+- Gap review item 7. New module wodx-library: gear-rules.mjs (table parsing, row to item, era filter), main.mjs (compendium install, Gear by era window, give), data/gear.json built by tools/library/build-gear.mjs from docs/research/gear-tables (read from the books on the PC). Combat armor() counts implants.
+- Tests: gear.test.mjs (5). 554 harness tests pass. UI fit: the Gear window passes (only the minimized-button check fails in the container, as for every window). Gate: tools/gate/gategear.mjs (6 steps).
