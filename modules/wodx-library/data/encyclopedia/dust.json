@@ -1,0 +1,237 @@
+[
+ {
+  "id": "dtd-sullivan-dane",
+  "title": "Sullivan Dane",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Jesuit-trained vampire hunter.",
+  "claims": [
+   {
+    "text": "Born in England in 1957, Dane felt called to the Lord's work young and sought to join the Jesuits in 1980.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 13,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "In 1982 Dane destroyed a neonate in Washington, D.C., and in that moment was flooded with names, faces and scenes, sure of a calling to hunt vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 13,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inquisition"
+  ]
+ },
+ {
+  "id": "dtd-lazlo-varga",
+  "title": "Lazlo Varga",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Hungarian occultist in America.",
+  "claims": [
+   {
+    "text": "Varga came from Hungary in early adulthood, speaking no English, and never came to accept the new country after being treated as stupid and lazy for it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Learned and drawn to the occult, Varga sought out a hidden circle of spiritualists and mediums in Detroit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtd-maria-dimatto"
+  ]
+ },
+ {
+  "id": "dtd-jean-lisle",
+  "title": "Jean Lisle",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Samedi driven by revenge.",
+  "claims": [
+   {
+    "text": "Jean Lisle is of the Samedi, a slave in what is now Haiti when given the name Jean; the birth name is lost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "A rotting monster forced its blood on Lisle in the Embrace, and every night since has been spent on revenge for slavery, a bloodlust that never fades.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-samedi",
+   "bjd-samedi-haiti"
+  ]
+ },
+ {
+  "id": "dtd-juggler",
+  "title": "Juggler",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A secretive Brujah.",
+  "claims": [
+   {
+    "text": "Juggler, a Brujah, has told no living vampire of the Embrace or the sire, and tells childer that the Old World life does not matter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The one clue to Juggler's origin is a slide into Italian when angry; otherwise Juggler speaks unaccented American English.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah"
+  ]
+ },
+ {
+  "id": "dtd-maria-dimatto",
+  "title": "Maria DiMatto",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Giovanni neonate and filmmaker.",
+  "claims": [
+   {
+    "text": "DiMatto, child of a Giovanni cousin, was Embraced in 1980 after a youthful fascination with the darker side of the family.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 17,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "A violent amateur film made at sixteen impressed the family and set DiMatto on a path into filmmaking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 17,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni"
+  ]
+ },
+ {
+  "id": "dtd-modius",
+  "title": "Modius",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Toreador of doubtful claims.",
+  "claims": [
+   {
+    "text": "Modius, a Toreador Embraced in middle age, says little of the past simply because no one has asked in years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 18,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Modius claims a hand in founding the Arcanum and to have been its first supernatural patron, and to have known every literary or occult figure of the 19th and early 20th centuries; Modius may believe it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dust",
+      "page": 18,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador"
+  ]
+ }
+]

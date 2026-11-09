@@ -199,6 +199,12 @@
    "title": "Beckett's Jyhad Diary",
    "short": "Beckett",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "dust",
+   "title": "Dust to Dust (V20)",
+   "short": "Dust to Dust",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -234,6 +240,7 @@
   "v20dacomp.json",
   "tome.json",
   "wildwest.json",
-  "beckett.json"
+  "beckett.json",
+  "dust.json"
  ]
 }
