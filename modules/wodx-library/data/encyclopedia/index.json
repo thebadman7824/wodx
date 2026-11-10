@@ -1081,6 +1081,12 @@
    "title": "The Sorcerers Crusade Companion",
    "short": "SCC",
    "edition": "First edition"
+  },
+  {
+   "id": "sccl",
+   "title": "Crusade Lore",
+   "short": "CL",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1263,6 +1269,7 @@
   "m2cf.json",
   "m2dp.json",
   "scah.json",
-  "sccomp.json"
+  "sccomp.json",
+  "sccl.json"
  ]
 }
