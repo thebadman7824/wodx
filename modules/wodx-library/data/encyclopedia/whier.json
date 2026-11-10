@@ -1,0 +1,299 @@
+[
+ {
+  "id": "whier-classes",
+  "title": "The classes of Stygia",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Hierarchy orders the society of the dead.",
+  "claims": [
+   {
+    "text": "The Hierarchy presents itself as strong, all-seeing and the only shield between the Restless and Oblivion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "It rules a society of ranks: the weakest wraiths become thralls or raw material for the forges, while most citizens work hard and hope superiors will promote them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "soulforging",
+   "stygia"
+  ]
+ },
+ {
+  "id": "whier-mirror-history",
+  "title": "Death's history",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern",
+   "dark-ages",
+   "classical"
+  ],
+  "summary": "How the Underworld grows from the disasters of the living.",
+  "claims": [
+   {
+    "text": "Stygian history mirrors the living world's, but tracks the growth of death rather than of life; war, plague, famine and disaster feed the Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Like any mirror the match is imperfect, and the history of Stygia departs in many ways from the world seen through the Shroud.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "the-shroud"
+  ]
+ },
+ {
+  "id": "whier-unlidded-eye",
+  "title": "Magisterium Veritatis and the Unlidded Eye",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Hierarchy's hunters of Heretics.",
+  "claims": [
+   {
+    "text": "Charon founded the Council of Inquisitors, the Magisterium Veritatis, with the Order of the Unlidded Eye as its knights, first to root Heretics out of Stygia; it now hunts Renegades and traitors as well.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Its knights wear the mask of the Grim Reapers for life; the mask is said to let them see into souls and to drive them to bring traitors to justice.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "heretics",
+   "renegades",
+   "charon"
+  ]
+ },
+ {
+  "id": "whier-anacreon-revolts",
+  "title": "The Anacreon revolts",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "Necropoli drifting from Stygia after Charon vanished.",
+  "claims": [
+   {
+    "text": "In 1931 an Anacreon of the Silent Legion in Boston resigned, protesting that Stygia ignored the Shadowlands beyond its borders while the mortal crisis stretched local Legions past their limits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Some Necropoli became nearly independent, their Legions loyal to local Anacreons; others answered with harsher security, or with the look of autonomy without a true break.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "After more than 20 years the Deathlords accepted that Charon would not return, and talk turned to which of them might be made Emperor, with the Smiling Lord favored.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "charon",
+   "hierarchy",
+   "gw-silent-legion"
+  ]
+ },
+ {
+  "id": "whier-deathlord-quarrels",
+  "title": "Quarrels over souls",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Deathlords divide the dead.",
+  "claims": [
+   {
+    "text": "The Skeletal Lord's palace, the Seat of Dust, is a bone-white hall for victims of plague and famine, more solid than it looks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Since Charon vanished, the division of souls among the Deathlords is disputed: the Lords of violence and pestilence never lack souls, while the Ashen Lady complains that longer human lives shrink the harvest owed to the Ashen Lady.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-skeletal-legion",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "whier-legion-orders",
+  "title": "Orders of the Legions",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Elite companies within the Legions.",
+  "claims": [
+   {
+    "text": "The Storm Maidens, called Valkyries or Amazons by outsiders, charge into Maelstroms to fight Spectres and take fewer losses than their recklessness ought to cost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "The Order of the Gray Knights, older and proven servants of the Ashen Lady, serve as honor guards and escorts for high-ranking wraiths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-legion-orders",
+   "maelstroms"
+  ]
+ },
+ {
+  "id": "whier-on-werewolves",
+  "title": "The Hierarchy on werewolves",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What Stygia thinks of the Garou.",
+  "claims": [
+   {
+    "text": "Stygian officials know the Silent Striders travel the ways of the dead, and fear that Garou can bind spirits into objects and often see wraiths as foes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Most werewolves count wraiths as creatures of the Wyrm, but some in the Hierarchy suspect the Wyrm the Garou describe is something like a Malfean, making them possible distant allies against Oblivion.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "whier",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silent-striders",
+   "oblivion"
+  ]
+ }
+]
