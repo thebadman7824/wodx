@@ -1555,6 +1555,12 @@
    "title": "Hunter: Utopia",
    "short": "HtR Utopia",
    "edition": "First edition"
+  },
+  {
+   "id": "hffg",
+   "title": "Hunter: Fall from Grace",
+   "short": "HtR FfG",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1816,6 +1822,7 @@
   "hfc.json",
   "hhw.json",
   "hsg.json",
-  "hutop.json"
+  "hutop.json",
+  "hffg.json"
  ]
 }
