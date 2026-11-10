@@ -1837,6 +1837,12 @@
       "title": "Libellus Sanguinis 1: Masters of the State",
       "short": "LS1",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dals2",
+      "title": "Libellus Sanguinis 2: Keepers of the Word",
+      "short": "LS2",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2145,6 +2151,7 @@
     "daibn.json",
     "inqcomp.json",
     "dajbn.json",
-    "dals1.json"
+    "dals1.json",
+    "dals2.json"
   ]
 }
