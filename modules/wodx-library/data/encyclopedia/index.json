@@ -2311,6 +2311,18 @@
       "title": "Revelations of the Dark Mother",
       "short": "Revelations of the Dark Mother",
       "edition": "Revised"
+    },
+    {
+      "id": "dfdd",
+      "title": "Damned and Deceived",
+      "short": "Damned and Deceived",
+      "edition": "First edition"
+    },
+    {
+      "id": "dfsd",
+      "title": "Saviors and Destroyers",
+      "short": "Saviors and Destroyers",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2698,6 +2710,8 @@
     "nhw3.json",
     "nysc3.json",
     "nhtd.json",
-    "nrdm.json"
+    "nrdm.json",
+    "dfdd.json",
+    "dfsd.json"
   ]
 }
