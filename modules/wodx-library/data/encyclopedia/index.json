@@ -2179,6 +2179,24 @@
       "title": "Clan Novel Saga 1: The Fall of Atlanta",
       "short": "Clan Novel Saga 1",
       "edition": "Novel"
+    },
+    {
+      "id": "ncns2",
+      "title": "Clan Novel Saga 2: The Eye of Gehenna",
+      "short": "Clan Novel Saga 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "ncns3",
+      "title": "Clan Novel Saga 3: Bloody September",
+      "short": "Clan Novel Saga 3",
+      "edition": "Novel"
+    },
+    {
+      "id": "ncns4",
+      "title": "Clan Novel Saga 4: End Games",
+      "short": "Clan Novel Saga 4",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2544,6 +2562,9 @@
     "nsosm.json",
     "npt.json",
     "nror.json",
-    "ncns1.json"
+    "ncns1.json",
+    "ncns2.json",
+    "ncns3.json",
+    "ncns4.json"
   ]
 }
