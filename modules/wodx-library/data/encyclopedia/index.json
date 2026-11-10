@@ -391,6 +391,12 @@
    "title": "Dark Ages Companion",
    "short": "DA Companion",
    "edition": "First edition"
+  },
+  {
+   "id": "dabi",
+   "title": "Dark Ages: British Isles",
+   "short": "DA British Isles",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -458,6 +464,7 @@
   "cbsetite.json",
   "daeu.json",
   "dav.json",
-  "dacomp.json"
+  "dacomp.json",
+  "dabi.json"
  ]
 }

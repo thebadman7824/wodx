@@ -1,0 +1,623 @@
+[
+ {
+  "id": "dbi-mithraic-cults",
+  "title": "The Mithraic cults of the Isles",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mortal worshippers who give Mithras real power in Britain.",
+  "claims": [
+   {
+    "text": "Mithras keeps a few cults of the old faith of Mithras alive, and their members include nobles and knights. Unlike most vampires, Mithras therefore holds real political power through mortals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 91,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "A cult's highest initiates are priests who may initiate others. The rites are bloody, the meetings secret and bound by oaths of silence, so the cults serve well as herds and as leverage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 91,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "Only proven Cainites lead a congregation. Many are bound by blood oath to Mithras or a trusted ally, so the cults double as a secret source of intelligence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 91,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "The Tremere track Mithraic worshippers, send what they learn to the Lion's Gate chantry, and leak it to agents in the Church so the Inquisition can strike. Several cults have already fallen this way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 91,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-mithraic-mysteries",
+   "daeu-british-isles",
+   "bjd-mithras"
+  ]
+ },
+ {
+  "id": "dbi-mithras-rule",
+  "title": "How Mithras rules",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The temper of the Prince of London toward rivals and intrigue.",
+  "claims": [
+   {
+    "text": "Mithras is a Fourth Generation Ventrue, childe of the clan's Antediluvian. Few Methuselahs would dare challenge Mithras, and younger Cainites have no chance against the prince.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Mithras claims to despise politics but is easily bored, and admires well-made schemes, including those of the Tremere and the Baron of York.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "A blatant or clumsy threat to London or to Mithras draws a violent answer. A clever challenger may be blood bound, banished from the Isles or destroyed, with the feat recorded for memory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Mithras's heirs share few interests and little rivalry. They keep the nearby satraps loyal and ready to fight, and meet now and then in London or Canterbury.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Mithras's direct power ends at the borders of the Baronies of Avalon, that is, England and Wales.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-british-isles",
+   "vav-london",
+   "dac-bath"
+  ]
+ },
+ {
+  "id": "dbi-blood-laws",
+  "title": "The Blood Laws",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "England's own reading of the Traditions.",
+  "claims": [
+   {
+    "text": "The Blood Laws are the English interpretation of the Six Traditions, built up over centuries of British custom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "They set fines and punishments for each breach and draw on precedents set by princes across the land.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-traditions",
+   "dbi-mithras-rule"
+  ]
+ },
+ {
+  "id": "dbi-saxon-norman-rift",
+  "title": "Saxon and Norman fiefs",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The old quarrel that splits the Cainites of England.",
+  "claims": [
+   {
+    "text": "The Saxon Cainites of Lincoln, Carlisle and York challenge the Norman and Roman Cainites of London, Chester, Gloucester, Canterbury and Norwich.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Among the Low Clans, would-be rebels quarrel among themselves and fail to face the High Clans together.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "The Tremere hope an attack on London would weaken both the Saxon fiefs and London to their own gain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbi-mithras-rule",
+   "da-war-of-princes"
+  ]
+ },
+ {
+  "id": "dbi-lothian",
+  "title": "The Fief of Lothian",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Edinburgh, a Toreador domain that bows to London only in name.",
+  "claims": [
+   {
+    "text": "Lothian sends tribute and accepts vassalage to Mithras, but Edinburgh is far from London and acts as an independent domain outside the Baronies of Avalon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Robert, the Toreador Prince of Edinburgh, claims the title of satrap but is not bound to Mithras, keeps no mithraeum, and plans for the day Mithras sleeps again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Robert leans on the Order of the Bitter Ashes for protection. Marcus Verus of Chester doubts that Mithras's enforcers could beat them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Lothian courts the Courts of Love with tribute of slaves and neonates, and the French see it as a possible ally in winning back Aquitaine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Edinburgh's nearer worries are the Lupines of the Highlands, Gangrel and einherjar further north, and twisted tunneling creatures that have slain Cainites in the Highlands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Lothian is also a center of the Cainite Heresy. Robert detests the Heretics but welcomes them as a useful tool.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 93,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-british-isles",
+   "dav-fiefs-black-cross"
+  ]
+ },
+ {
+  "id": "dbi-ireland",
+  "title": "The Cainite domains of Ireland",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Connaught, Uilidh and the Norman Pale.",
+  "claims": [
+   {
+    "text": "Wandering Gangrel and mendicant Malkavians in Ireland bow to no lord. The Connachta rule the largest domain but stand in danger now that Mithras has turned an eye to Ireland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 94,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "The Cainites of Uilidh descend from an ancient Brujah Methuselah remembered as the Morrigan, who chose to be diablerized by a childe when Saint Patrick came. Eileen, a grandchilde of one of the diablerists, rules as baroness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 94,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Eileen pays London a small yearly tribute to be left alone, shares Ulster with Feral Gangrel driven out of Connaught, and destroys every Tremere envoy. Rumor calls Eileen a blood magician.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 94,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "The Fief of Dublin holds the Norman colony with Dublin, Cork and Waterford. Its Cainites are all Anglo-Norman, who drove out the einherjar Gangrel and Ventrue once lairing there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 94,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Its Ventrue prince, Edward de Warene, is a grandchilde of Baron Stephen of Lincoln. Rivals scorn the Pale Cainites as soft for hiding in their cities from Lupine raids.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 94,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbi-mithras-rule",
+   "da-gangrel"
+  ]
+ },
+ {
+  "id": "dbi-wales",
+  "title": "The Cainite domains of Wales",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Welsh lords between Gloucester, Chester and the wilds.",
+  "claims": [
+   {
+    "text": "Deheubarth in the south is nominally under Gloucester and Baroness Seren, a Welsh queen in life whose loyalty against the Triumvirate won Mithras's support.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Further north, Furores speak out against Mithras. The Brujah Rhys of Tregaron staked two emissaries from Gloucester, one a powerful satrap, and left them for the sun.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Rhodry ap Geraint ap Mithras, the prince's grandchilde, holds Snowdonia, Lleyn and the lands by Chester, but real power reaches little past Anglesey, and Marcus Verus of Chester watches closely.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "About a century ago the Gangrel Methuselah Bodhmall slew every follower of Rhodry's on an expedition into the wilds and spared only Rhodry, on seeing Mithras's seal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Much of Powys is hostile ground for Cainites because of Lupines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbi-mithras-rule",
+   "dbi-saxon-norman-rift"
+  ]
+ },
+ {
+  "id": "dbi-mages",
+  "title": "Mages of the Isles",
+  "kind": "faction",
+  "lines": [
+   "mage",
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Fellowships stand in Britain.",
+  "claims": [
+   {
+    "text": "Mages of many Fellowships live across the Isles, and England is where they quarrel most over who will shape its future.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "The Order of Hermes is caught up in the Massasa War with the Tremere. Some Hermetics hope to turn the local Mithraic sect of vampires against them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "The Messianic Voices are torn between the Roman Church and the old Celtic Christianity of Wales, Scotland and Ireland. Elders work within the existing powers while the young want crusades and sweeping change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Universities, markets, new laws and the Magna Carta make the change of the age plain, and that unsettles the Old Faith and the Spirit-Talkers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbi-mithraic-cults",
+   "da-tremere"
+  ]
+ },
+ {
+  "id": "dbi-irish-garou",
+  "title": "Werewolves of Ireland",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Fianna and Silver Fangs of the Irish provinces.",
+  "claims": [
+   {
+    "text": "Along some Irish coasts, ancient heroes drove Wyrm creatures into the sea. Fianna call them Fomorians and fear they may wake.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 112,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "The Silver Fangs took Munster from the Fianna long ago and claim wide protectorates, though few honor the claims. The Fianna keep to the Boggeragh and Galtee hills.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 112,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "The Fianna shun the city of Cork, calling it a place whose existence fouls the sea beside it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 112,
+      "pdf": 114
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbi-ireland"
+  ]
+ },
+ {
+  "id": "dbi-haunted-places",
+  "title": "Haunted places of the Isles",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ghost tales told across Britain and Ireland.",
+  "claims": [
+   {
+    "text": "The ghosts of Arthur and Arthur's war leaders are said to haunt the field of Mount Badon, whose site the learned dispute between hillforts in Somerset, Dorset and Wiltshire.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 114,
+      "pdf": 116
+     }
+    ]
+   },
+   {
+    "text": "Every seven years the sorcerer Gerald Desmond is said to rise from Lough Gur on a silver-shod white horse; whoever catches the rein may win the sorcerer's grimoires.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 114,
+      "pdf": 116
+     }
+    ]
+   },
+   {
+    "text": "Locals report ghostly monks singing at St. Albans Abbey, and Bramber Castle in Sussex is said to hold the ghosts of three starved de Braose children and of Lady Maud de Hurst.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabi",
+      "page": 114,
+      "pdf": 116
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-british-isles"
+  ]
+ }
+]
