@@ -2095,6 +2095,18 @@
       "title": "Berlin by Night",
       "short": "BbN",
       "edition": "First edition"
+    },
+    {
+      "id": "cairbn",
+      "title": "Cairo by Night",
+      "short": "CabN",
+      "edition": "Revised"
+    },
+    {
+      "id": "dcbn",
+      "title": "Washington, D.C. by Night",
+      "short": "DCbN",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2446,6 +2458,8 @@
     "cblod.json",
     "wofd.json",
     "sune.json",
-    "berbn.json"
+    "berbn.json",
+    "cairbn.json",
+    "dcbn.json"
   ]
 }
