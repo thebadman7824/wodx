@@ -1,0 +1,84 @@
+[
+ {
+  "id": "wdil-doomslayers",
+  "title": "Doomslayers",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hunters of Spectres.",
+  "claims": [
+   {
+    "text": "Spectre hunting is centuries old but became a respectable trade only when ordinary wraiths took it up; the first Doomslayers were more mercenary than military.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdil",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Bands of five to eight hunters joined for safety and profit; most Necropoli paid Charon's bounty for each confirmed kill, proven by a piece of Corpus checked by a Pardoner, and some added rewards for troublesome Spectres.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdil",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spectres",
+   "charon",
+   "guilds"
+  ]
+ },
+ {
+  "id": "wdil-industrion",
+  "title": "Industrion",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Spectral works deep in the Labyrinth.",
+  "claims": [
+   {
+    "text": "The main chamber of Industrion was dug square by Spectres and is filled with scaffolding around the World Factory, with a waste shaft about three miles long running straight through it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdil",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "Broken vehicles and machinery litter the passages for a day's march around it, and pipes carry plasm and the products of Tempest-weaving in and out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdil",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spectres",
+   "wr20bo-zones",
+   "mrbom-labyrinths"
+  ]
+ }
+]

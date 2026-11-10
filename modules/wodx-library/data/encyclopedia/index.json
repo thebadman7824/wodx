@@ -1177,6 +1177,12 @@
    "title": "The Sea of Shadows",
    "short": "SoS",
    "edition": "First edition"
+  },
+  {
+   "id": "wdil",
+   "title": "Doomslayers: Into the Labyrinth",
+   "short": "Doom",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1375,6 +1381,7 @@
   "wbol.json",
   "wpg.json",
   "wdr.json",
-  "wsos.json"
+  "wsos.json",
+  "wdil.json"
  ]
 }
