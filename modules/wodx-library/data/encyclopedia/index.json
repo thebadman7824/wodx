@@ -1267,6 +1267,12 @@
    "title": "Guildbook: Spooks",
    "short": "GBSp",
    "edition": "First edition"
+  },
+  {
+   "id": "c20bof",
+   "title": "Changeling: The Dreaming 20th Anniversary Book of Freeholds",
+   "short": "C20BoF",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -1480,6 +1486,7 @@
   "wgmas.json",
   "wgpp.json",
   "wgsan.json",
-  "wgso.json"
+  "wgso.json",
+  "c20bof.json"
  ]
 }

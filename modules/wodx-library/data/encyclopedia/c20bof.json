@@ -1,0 +1,167 @@
+[
+ {
+  "id": "c20bof-reaving",
+  "title": "Reaving and wellsprings",
+  "kind": "term",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Raw Glamour and the forcing of balefires.",
+  "claims": [
+   {
+    "text": "A wellspring is an untapped source of Glamour rising between the Dreaming and the Autumn World; left alone it becomes the heartstone of a Glade, or it can be refined into a freehold's balefire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20bof",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Reaving forces a balefire to yield more Glamour than it would on its own; the Dreaming counts it a dangerous act of Banality, and it often weakens or destroys the balefire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20bof",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "freeholds",
+   "glades",
+   "glamour",
+   "banality"
+  ]
+ },
+ {
+  "id": "c20bof-codex-compendia",
+  "title": "The Codex Compendia",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Four lost volumes of fae history.",
+  "claims": [
+   {
+    "text": "The Codex Compendia are four volumes of fae history, mostly lost since the Shattering; some Kithain scholars hope the full set holds answers to the Endless Winter.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "c20bof",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Black tells of creation, Fomorian rule and its overthrow by the Tuatha de Danaan; the White, of Kithain rule and their oaths; the Red, of the War of the Courts and the rise of Banality; the Green, of a past that did not happen and still could.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20bof",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-shattering",
+   "mythic-age",
+   "courts"
+  ]
+ },
+ {
+  "id": "c20bof-parliament-of-dreams",
+  "title": "The Parliament of Dreams",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Concordia's assembly of commoners and nobles.",
+  "claims": [
+   {
+    "text": "High King David founded the Parliament of Dreams to give commoners a voice and a place to settle grievances with nobles; it has a Chamber of Commoners and a Chamber of Nobles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20bof",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Chamber of Nobles holds fourteen delegations, one per noble house, each with a single vote cast among its landed nobles; the High Lords speak for them or name a deputy. Passing anything through both chambers is slow and noisy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20bof",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "high-king-david",
+   "noble-houses",
+   "concordia"
+  ]
+ },
+ {
+  "id": "c20bof-firebrands",
+  "title": "Imbolc Firebrands",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How great balefires feed a kingdom's freeholds.",
+  "claims": [
+   {
+    "text": "At Imbolc, Firebrands carry fire from a great kingdom's capital balefire to rekindle the freeholds of its land; those from Tara-Nar serve only Concordia, from the Well of Flames.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20bof",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Other kingdoms light their lanterns from their own great fires, such as Emain Macha in Hibernia, the Caucasus Empire's Huma's Nest, the Wandering Dream's Ginga's Folly and the Gifts of Aganju in the Lands of Ancient Tales.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "c20bof",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "freeholds",
+   "tara-nar",
+   "kingdoms-beyond-concordia"
+  ]
+ }
+]
