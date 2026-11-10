@@ -1693,5 +1693,486 @@
   "see": [
    "sorc-psychic-phenomena"
   ]
+ },
+ {
+  "id": "sorc-societies",
+  "title": "Sorcerous societies",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why groups of hedge magicians stay small and hidden.",
+  "claims": [
+   {
+    "text": "Most societies of sorcerers number fewer than a hundred members, since few people have the patience to learn real magic and such groups lack public support.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Many sorcerous groups sit inside larger bodies, the Traditions and the Technocracy most of all, or hide inside orders that the world takes for ordinary clubs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-sorcerers",
+   "council-of-nine",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "sorc-linear-technocrats",
+  "title": "Extraordinary citizens",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Unawakened scientists who carry out the Technocracy's linear work.",
+  "claims": [
+   {
+    "text": "Much of the Technocracy's strength comes from gifted Sleepers who can follow its advanced theories, the doctor or engineer whose skill goes past normal science.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Each Convention has such linear workers: cybernetics for Iteration X, surveillance and hypnotic conditioning for the New World Order, designer drugs and gene work for the Progenitors, money for the Syndicate, deep sea and space travel for the Void Engineers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "iteration-x",
+   "new-world-order",
+   "progenitors",
+   "syndicate",
+   "void-engineers"
+  ]
+ },
+ {
+  "id": "sorc-aeon-rites",
+  "title": "Ancient Order of the Aeon Rites",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A graded secret fraternity of precise ritual magicians, centred on Amsterdam.",
+  "claims": [
+   {
+    "text": "The Order sorts members into an outer ring of first to third degree pupils, an inner ring of brothers and sisters who learn Paths, and higher grades above them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The tenth degree are the Secret Watchers, said to guide the Order after death; the founder Johannes Agrippa is reported to appear now and then with advice, as ghost or spirit.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The complete rites are kept in Amsterdam. Every tool must be built to exact measures, and one small slip means the whole ritual starts over.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-rituals",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "sorc-bataa",
+  "title": "Bata'a",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Caribbean spirit-workers whose magic blends Qua'ra, African and Christian belief.",
+  "claims": [
+   {
+    "text": "Escaped slaves learned the spirit arts from the last of the Qua'ra people, and those teachings merged with African faiths and Christianity into creeds like Voudun and Santeria; the old Qua'ra gods became the loa.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "All Bata'a power comes through dealing with spirits. They hold that a mage's Avatar is a spirit that rides the mage for good, and scorn those who will not admit it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Charms learned from possessing spirits are called Mjane. Using them without a spirit's leave is a selfish act the spirits may not forgive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "avatar",
+   "sorc-paths"
+  ]
+ },
+ {
+  "id": "sorc-children-of-osiris",
+  "title": "Children of Osiris (sorcerers)",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Egyptian resurrection cultists carrying on after their undead priests vanished.",
+  "claims": [
+   {
+    "text": "After their undead priests disappeared, the cult's mortal followers went back to Egypt, chanting in old temples and opening forgotten tombs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "The group is above all a resurrection cult, devoted to embalming, tombs and guarding the dead until they return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-sorcerers"
+  ]
+ },
+ {
+  "id": "sorc-cult-of-mercury",
+  "title": "Cult of Mercury",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A surviving Roman cult whose magic works only through huge congregations.",
+  "claims": [
+   {
+    "text": "The modern cult is held together by a few charismatic leaders, and followers expect a reward for their families in return for their part.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Any working needs at least a hundred participants in white robes chanting in Latin and Greek; a master may only draw on wards and spells the congregation charged beforehand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Every Mercurian Path is pure ritual: members get no instant effects but learn two extra rituals per Path level.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-rituals",
+   "mrdm-buried-arts"
+  ]
+ },
+ {
+  "id": "sorc-maison-liban",
+  "title": "Maison Liban",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hermetic sorcerers descended from a Tremere apprentice who turned from the house's hunger for power.",
+  "claims": [
+   {
+    "text": "The house traces itself to Mathieu de Calice, once an apprentice of Goratrix, who was sickened by the Schism that destroyed House Diedne.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Maison Liban does not crusade or use violence. Students are initiates until they may teach, and the oldest respected teacher leads with the title Pontifex.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Seals, rings, circles and Latin from old Hermetic tomes still shape their protective rites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "mrbt-tremere-cost"
+  ]
+ },
+ {
+  "id": "sorc-golden-fly",
+  "title": "Order of the Golden Fly",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Warrior-sorcerers who think they command the angel Mastema, when it commands them.",
+  "claims": [
+   {
+    "text": "Egyptian mystics who had lost their firstborn in the plagues summoned the angel Mastema, which agreed to teach them but taught only dark magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "The name comes from the golden fly jewel that ancient Egypt gave its brave warriors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Members rise by mastering their patron's powers, and recruits must endure torment from superiors. Binding is the first Path learned, and every other Path is capped by it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 39,
+      "pdf": 40
+     },
+     {
+      "book": "sorcerer",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-dark-paths",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "sorc-silver-portal",
+  "title": "Silver Portal",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Dreaming sorcerers whose trances bring both gifts and madness.",
+  "claims": [
+   {
+    "text": "The group works through dreaming trances, using techniques from a chain of translated texts traced back to a Persian scroll called the Zolondrodere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Its dreamers visit the Dream Realms, called Maya, and come back with insight, but their hold on reality wears away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-path-oneiromancy",
+   "marauders"
+  ]
+ },
+ {
+  "id": "sorc-star-council",
+  "title": "Star Council",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A small, hunted band of UFO researchers hiding salvaged technology.",
+  "claims": [
+   {
+    "text": "In 1969 the group broke into a restricted hangar, and it keeps the devices it found hidden in abandoned warehouses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 41,
+      "pdf": 42
+     },
+     {
+      "book": "sorcerer",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "An expedition to the Middle East with the cult called the Thal'hun turned violent; the Council left its San Francisco offices and went underground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The Council knows nothing of the Technocracy, so it cannot tell alien devices from ultratech.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sorcerer",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "void-engineers"
+  ]
  }
 ]
