@@ -176,6 +176,7 @@ Step 3 of the design note.
 - [x] The farmstead now builds on them, byte for byte the same map and sidecar from seed 1197
 - [x] tools/mapgen/ddtown.py: a village or small town of the Dark Ages, with households (B572)
 - [x] Adopt keeps each household on its building's region; the summary stays short on a big map (B573)
+- [x] ddtown.py: a city size, and --part splits a large place into smaller maps that join at trigger regions (B574, B575)
 - [x] Harness tests (11 new: 4 goods, 4 town sidecars, 3 generator runs)
 - [ ] Real importer test of a town (waits on Ben exporting one from Dungeondraft, as the farmstead does)
 - [ ] Gate in rothenstein-wodx: fill draws goods; adopt the village sidecar on a scene of its size

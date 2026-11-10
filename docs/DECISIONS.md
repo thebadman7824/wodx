@@ -376,3 +376,9 @@ ddtown.py builds a Dark Ages village or small town. Trades come from a "one for 
 
 ## B573. Households on adopted buildings (2026-11-10)
 Adopting a village or town keeps each household on its building's region (flags wodx-interactables household: label, trade, people by role). Nothing is made from them yet; seeding NPCs from them is a later WoDX NPC job. A household whose building is not a place on the map is left out with a plain note.
+
+## B574. A city size for the town generator (2026-11-10)
+A city is 168 by 124 squares and aims at 500 to 700 people, with up to three times the trades of a town and a grid of back streets every 18 to 20 squares, joined by cross lanes every 22. The numbers are a house rule, sized so the whole place splits into six parts of about Rothenstein's map size.
+
+## B575. Splitting large places into parts (2026-11-10)
+Any generated place wider or taller than 64 squares is cut into a grid of parts by default, to keep each map's image and wall count light on slower computers. Cuts sit on whole squares, moved up to a quarter part to miss buildings (a crossed building counts as six squares of unevenness); a building belongs to the part its middle stands in, and that part's map reaches past the cut to hold it. Edge trigger regions note the way into the next part. --part sets the size; 0 keeps one map.
