@@ -2011,6 +2011,12 @@
       "title": "Kinfolk (W20)",
       "short": "W20 Kinfolk",
       "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "w20ratw",
+      "title": "Rage Across the World (W20)",
+      "short": "W20 Rage Across the World",
+      "edition": "20th Anniversary companion"
     }
   ],
   "files": [
@@ -2348,6 +2354,7 @@
     "wasubs.json",
     "watrailmx.json",
     "w20cw.json",
-    "w20kin.json"
+    "w20kin.json",
+    "w20ratw.json"
   ]
 }
