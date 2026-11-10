@@ -1561,6 +1561,12 @@
    "title": "Hunter: Fall from Grace",
    "short": "HtR FfG",
    "edition": "First edition"
+  },
+  {
+   "id": "dcoa",
+   "title": "Demon: City of Angels",
+   "short": "City of Angels",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1823,6 +1829,7 @@
   "hhw.json",
   "hsg.json",
   "hutop.json",
-  "hffg.json"
+  "hffg.json",
+  "dcoa.json"
  ]
 }
