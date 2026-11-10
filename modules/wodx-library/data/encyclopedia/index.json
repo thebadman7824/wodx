@@ -1291,6 +1291,12 @@
    "title": "Noblesse Oblige: The Book of Houses",
    "short": "BoH1",
    "edition": "First edition"
+  },
+  {
+   "id": "cboh2",
+   "title": "Pour l'Amour et Liberte: The Book of Houses 2",
+   "short": "BoH2",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1508,6 +1514,7 @@
   "c20bof.json",
   "ctdpg.json",
   "cbdt.json",
-  "cboh1.json"
+  "cboh1.json",
+  "cboh2.json"
  ]
 }
