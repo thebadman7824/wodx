@@ -1,0 +1,167 @@
+[
+ {
+  "id": "htrpg-bystanders",
+  "title": "Bystanders",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "People who witnessed an imbuing call but held back and were not chosen.",
+  "claims": [
+   {
+    "text": "When the Messengers reach out, some witnesses freeze instead of acting; hunters call them the lost, duds or failed hunters, but many cannot forget what they saw and some go on fighting anyway.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 15,
+      "pdf": 17
+     },
+     {
+      "book": "htrpg",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The call comes as a voice, a changed sign, a smell of blood or turned earth, then a pull to look at the creature; hunters simply act, while bystanders stall over whether they are going mad.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Bystanders get no second sight, no edges and no guidance from the Heralds, yet the shock leaves them steadier against later terrors and somewhat able to resist mind control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 42,
+      "pdf": 44
+     },
+     {
+      "book": "htrpg",
+      "page": 43,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Many learn to spot one another by the look of the same pain in a stranger's eyes, much as survivors of any shared ordeal do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 43,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-messengers",
+   "htr-imbuing-witnesses"
+  ]
+ },
+ {
+  "id": "htrpg-lost-creeds",
+  "title": "Hermits and Waywards",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two rare Vision creeds that other hunters took for madmen.",
+  "claims": [
+   {
+    "text": "Among the few chosen, two very small creeds of the Vision Virtue went unnoticed for a long time because other hunters mistook their members for fringe extremists of known creeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Hermits withdraw from society, and more truly from other hunters and from monsters; Waywards are killers whose ferocity makes even Avengers look restrained.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Those who knew them before the imbuing say they acted this way from the start, and oddly both creeds seem to have the closest contact with the Heralds of all the imbued.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-visionaries",
+   "htr-avengers",
+   "htr-messengers"
+  ]
+ },
+ {
+  "id": "htrpg-alison-hersy",
+  "title": "Alison Hersy (Rabbitkeeper377)",
+  "kind": "character",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A bystander known on hunter-net.",
+  "claims": [
+   {
+    "text": "Alison Hersy posts on hunter-net as Rabbitkeeper377; without edges or second sight, Alison lived beside a creature for months and endured more first-hand contact with the supernatural than most chosen can picture.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 72,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "Hunter-net is Alison's main link to anyone besides a son who can grasp part of that ordeal, though Alison mostly reads rather than posts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htrpg",
+      "page": 72,
+      "pdf": 74
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htrpg-bystanders"
+  ]
+ }
+]

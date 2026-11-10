@@ -1441,6 +1441,12 @@
    "title": "Kithbook: Boggans",
    "short": "KB Boggans",
    "edition": "Second edition"
+  },
+  {
+   "id": "htrpg",
+   "title": "Hunter Players Guide",
+   "short": "HtR PG",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1683,6 +1689,7 @@
   "cksat.json",
   "ckslu.json",
   "cktrol.json",
-  "ckbog.json"
+  "ckbog.json",
+  "htrpg.json"
  ]
 }
