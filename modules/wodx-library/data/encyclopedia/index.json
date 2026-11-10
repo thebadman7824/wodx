@@ -1615,6 +1615,12 @@
    "title": "Outcasts: A Players Guide to Pariahs",
    "short": "Outcasts",
    "edition": "First edition"
+  },
+  {
+   "id": "wodbb",
+   "title": "The Bygone Bestiary",
+   "short": "Bygone Bestiary",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1886,6 +1892,7 @@
   "wod2.json",
   "wodtok.json",
   "wodhk.json",
-  "wodout.json"
+  "wodout.json",
+  "wodbb.json"
  ]
 }
