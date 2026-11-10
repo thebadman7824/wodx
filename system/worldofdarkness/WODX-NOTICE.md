@@ -21,3 +21,4 @@ old shape-effect clean-up it guarded is dropped, so nothing is deleted.
 Everything else is upstream 7.3.2, unmodified. The source of truth is the
 project repository (wodx-repo), where upstream is tagged as upstream-7.3.2.
 7.3.2-wodx.4 (Phase 10 code review): mortal-actor-sheet.js no longer sets an undeclared `found` when a bonus is added (it threw); dialog-trait.js adds a PC-sheet ability's specialty to the specialty text instead of an undeclared variable (it threw at 4 dots); the error messages in wod-item-base.js and migration.js name the right thing; mummy-actor-sheet.js reads the actor's type; totals.js copes with an actor without items.
+7.3.2-wodx.5 (Phase 10 code review, follow-up): the wodx.4 change took the wrong `found = true` out of mortal-actor-sheet.js. The Dark Ages vampire setup sets it again, so the sheet saves its era, and the line in the bonus branch of _onItemCreate, which threw "found is not defined", is gone.
