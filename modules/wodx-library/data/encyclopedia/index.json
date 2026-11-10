@@ -763,6 +763,12 @@
    "title": "M20 Book of Secrets",
    "short": "BoS",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "m20botf",
+   "title": "M20 Book of the Fallen",
+   "short": "BotF",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -892,6 +898,7 @@
   "dbtd.json",
   "dbdt.json",
   "m20hdy.json",
-  "m20bos.json"
+  "m20bos.json",
+  "m20botf.json"
  ]
 }
