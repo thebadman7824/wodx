@@ -775,6 +775,12 @@
    "title": "M20 Gods & Monsters",
    "short": "G&M",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "mrab",
+   "title": "Tradition Book: Akashic Brotherhood (Revised)",
+   "short": "TB:AB",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -906,6 +912,7 @@
   "m20hdy.json",
   "m20bos.json",
   "m20botf.json",
-  "m20gm.json"
+  "m20gm.json",
+  "mrab.json"
  ]
 }
