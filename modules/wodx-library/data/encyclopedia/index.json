@@ -415,6 +415,12 @@
    "title": "Dark Ages: Players Guide to Low Clans",
    "short": "DA Low Clans",
    "edition": "Revised"
+  },
+  {
+   "id": "dahc",
+   "title": "Dark Ages: Players Guide to High Clans",
+   "short": "DA High Clans",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -486,6 +492,7 @@
   "dabi.json",
   "cb.json",
   "botw.json",
-  "dalc.json"
+  "dalc.json",
+  "dahc.json"
  ]
 }
