@@ -119,7 +119,7 @@
     ]
    },
    {
-    "text": "Mithras's direct power ends at the borders of the Baronies of Avalon, that is, England and Wales.",
+    "text": "Mithras holds direct sway only within the Baronies of Avalon, meaning England and Wales.",
     "tier": "stated",
     "refs": [
      {
@@ -189,7 +189,7 @@
   "summary": "The old quarrel that splits the Cainites of England.",
   "claims": [
    {
-    "text": "The Saxon Cainites of Lincoln, Carlisle and York challenge the Norman and Roman Cainites of London, Chester, Gloucester, Canterbury and Norwich.",
+    "text": "Saxon vampires holding York, Lincoln and Carlisle stand against the Norman and Roman lords of London, Canterbury, Chester, Gloucester and Norwich.",
     "tier": "stated",
     "refs": [
      {
@@ -240,7 +240,7 @@
   "summary": "Edinburgh, a Toreador domain that bows to London only in name.",
   "claims": [
    {
-    "text": "Lothian sends tribute and accepts vassalage to Mithras, but Edinburgh is far from London and acts as an independent domain outside the Baronies of Avalon.",
+    "text": "Lothian sends tribute and accepts vassalage, yet its distance from the capital lets Edinburgh act as an independent domain outside the Baronies of Avalon.",
     "tier": "stated",
     "refs": [
      {
@@ -368,7 +368,7 @@
     ]
    },
    {
-    "text": "Its Ventrue prince, Edward de Warene, is a grandchilde of Baron Stephen of Lincoln. Rivals scorn the Pale Cainites as soft for hiding in their cities from Lupine raids.",
+    "text": "Edward de Warene, a Ventrue and grandchilde of Baron Stephen of Lincoln, rules it as prince. Rivals scorn the Pale Cainites as soft for hiding in their cities from Lupine raids.",
     "tier": "stated",
     "refs": [
      {
