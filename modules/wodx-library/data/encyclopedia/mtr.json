@@ -1,0 +1,576 @@
+[
+ {
+  "id": "mtr-amenti",
+  "title": "The Amenti",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mummies of the present night: an ancient spirit shard joined to a modern soul.",
+  "claims": [
+   {
+    "text": "An Amenti is a modern mummy: a shard of an ancient Egyptian spirit, the tem-akh, fused with the soul of a person who has just died, the two becoming one soul in the dead person's body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 20,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The Amenti are charged by Osiris with restoring Ma'at, the balance that corruption is eating away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 20,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Only a wounded soul can be chosen. The tem-akh seeks someone whose tragic flaw, called hamartia, kept them from happiness, such as an addict, a victim who could not fight back or a manipulator; a contented, balanced person has nothing to heal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 20,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "A slain Amenti is not finished: the spirit passes into the Underworld and returns to the body once it has gathered enough Sekhem.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 23,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mummies",
+   "mtr-joining",
+   "maat"
+  ]
+ },
+ {
+  "id": "mtr-joining",
+  "title": "The joining and the Spell of Life",
+  "kind": "mechanic",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a tem-akh and a dying soul become one mummy.",
+  "claims": [
+   {
+    "text": "Tem-akh shards wait across the Shroud for someone about to die whose flaws match their own strengths, sensing the coming death as ghosts can.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 21,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "At death the soul leaves the body wrapped in a caul of ectoplasm, the khu; the tem-akh pierces it before the soul can break free and offers a second life inside it. A simple refusal ends the offer, and suicides refuse most often.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 21,
+      "pdf": 19
+     },
+     {
+      "book": "mtr",
+      "page": 34,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "If the soul agrees, the shard burns away its weakest part, taking the memories tied to it and and in exchange the soul gains hazy recollections of old Egypt and of Amenti, the ghost city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 34,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The tem-akh must then carry the corpse back to the Lands of Faith, holding it together by will alone, where mortals loyal to Osiris perform the Spell of Life, also called the Rite of Rebirth, that makes the mummy whole.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 22,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mtr-amenti",
+   "spell-of-life",
+   "mtr-web-of-faith"
+  ]
+ },
+ {
+  "id": "mtr-dja-akh",
+  "title": "The Dja-akh",
+  "kind": "event",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ghost storm that shattered the old Egyptian dead and woke Osiris.",
+  "claims": [
+   {
+    "text": "The Dja-akh was a ghost storm in the Underworld near the end of the millennium; the black clouds of Apophis tore ancient souls apart, and only the strongest shards survived.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 20,
+      "pdf": 18
+     },
+     {
+      "book": "mtr",
+      "page": 24,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Even the great Egyptian ghost city of Amenti fell to it. The broken dead of the Dark Kingdom of Sand survived only because Osiris acted, and the god's awakening set the champions of Ma'at moving again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 26,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Most mummies who were between lives in the Underworld when it struck were destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 31,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Some wonder whether a Shemsu-heru traitor, who sold out the Dark Kingdom of Sand to vampires and was wiped from existence with Nomenclature Hekau, started the chain of events behind it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 29,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "amenti-and-duat",
+   "apophis",
+   "mtr-amenti"
+  ]
+ },
+ {
+  "id": "mtr-web-of-faith",
+  "title": "The Web of Faith",
+  "kind": "place",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The holy ground whose power sustains the Amenti.",
+  "claims": [
+   {
+    "text": "The Sekhem that powers a mummy's Hekau and keeps the body whole comes from the Web of Faith; inside the region it covers, an Amenti draws on it easily.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 23,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Outside it, a mummy must live on an internal reserve of Sekhem or on a relic charged with it, and such relics are very rare, so most Amenti stay near the Web and come back often when they travel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 23,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Some say the Sekhem comes from Osiris, who now dwells within the Web.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 23,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sekhem",
+   "mtr-amenti"
+  ]
+ },
+ {
+  "id": "mtr-amenti-kinds",
+  "title": "The kinds of Amenti",
+  "kind": "lore",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Each kind of mummy carries a different surviving part of the ancient soul.",
+  "claims": [
+   {
+    "text": "Which kind of Amenti a mummy becomes depends on which part of the ancient soul survived the Dja-akh as its tem-akh.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 23,
+      "pdf": 21
+     },
+     {
+      "book": "mtr",
+      "page": 24,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Kher-minu, the Tomb Watchers, carry the ka, the guardian of the body; Khri-habi, the Scroll-Bearers, carry the ba, the soul that travels and acts in the afterlife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 38,
+      "pdf": 35
+     },
+     {
+      "book": "mtr",
+      "page": 40,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Mesektet, the Night Suns, carry the sahu, the undying part that goes on to heaven; Sakhmu, the Spirit Scepters, carry the khu, the aura that anchors spirit to body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 42,
+      "pdf": 39
+     },
+     {
+      "book": "mtr",
+      "page": 44,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Sefekhi, the Unbandaged Ones, carry the khaibit, the shadow that holds drive, rage and hunger, and often lend their mortals honed battle instincts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 24,
+      "pdf": 22
+     },
+     {
+      "book": "mtr",
+      "page": 46,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Udja-sen, the Judged Ones, come from joinings that went wrong, where what was left of the modern soul was too weak for the rite.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 48,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "soul-of-khem",
+   "mtr-amenti"
+  ]
+ },
+ {
+  "id": "mtr-imkhu",
+  "title": "The Imkhu",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The dozen great mummies said to serve Horus directly.",
+  "claims": [
+   {
+    "text": "Devotees at Edfu say twelve Imkhu serve Horus, though no one can name them all; for their second Great Rite, Osiris is said to have chosen only the strongest tem-akh.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 30,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Names often given include Mestha, an old farmer said to be older than Horus; the lady Neith, Horus's warrior in the long war with Set's followers; and Tchatcha-em-ankh, held to be the greatest sorcerer among the Resurrected.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 30,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shemsu-heru",
+   "mtr-amenti"
+  ]
+ },
+ {
+  "id": "mtr-eset-a",
+  "title": "The Eset-a",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mummies who hunt for the scattered remains of Osiris.",
+  "claims": [
+   {
+    "text": "The Eset-a search the world for the remains of the god-king's body; their hunt has helped push governments toward returning Egyptian relics home.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 30,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Fearing that mortals could destroy or scatter the vessels holding Osiris's essence, they ignore mortal law and will steal or bribe to check a find, which worries other followers of Osiris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 30,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mtr-amenti"
+  ]
+ },
+ {
+  "id": "mtr-children-of-osiris",
+  "title": "The Children of Osiris",
+  "kind": "faction",
+  "lines": [
+   "mummy",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Vampires who sought redemption from Osiris.",
+  "claims": [
+   {
+    "text": "In the First Pharaoh's time, a blood demon named Khetamon truly wished to stop feeding on the living; Osiris blessed Khetamon and taught the way to fight the corruption within, and other repentant ghuls followed, calling themselves the Children of Osiris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 28,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "They kept the teachings after Set's treachery felled Osiris, practicing a strict self-mastery called Bardo; Khetamon led them for centuries until Set's followers killed Khetamon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 28,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Many found the rules hard to keep, and some paid them only lip service. Other followers of Ma'at still wonder what really drives a group built from blood drinkers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 28,
+      "pdf": 26
+     },
+     {
+      "book": "mtr",
+      "page": 29,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Osiris was said to have let Khetamon drink the god's own blood as a purification.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 28,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set",
+   "set"
+  ]
+ },
+ {
+  "id": "mtr-apepnu",
+  "title": "Apepnu",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Bane mummies, made by Set's stolen Spell of Life.",
+  "claims": [
+   {
+    "text": "The Apepnu, or Bane mummies, were made when Set cast a stolen form of the Spell of Life; they rose filled with demon spirits serving the seven faces of Apophis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 31,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "They served Set on Earth while each death delivered them to Apophis, and grew freer once Set went into hiding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 31,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Warned by Apophis, seven of them gathered at a prison camp in the Rub al Khali before the Dja-akh, died with their victims as the storm crossed the Empty Quarter, and came back gorged on shredded djinn and souls, sworn to stop the resurrection of Osiris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 31,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "They can fill corpses with the Bane spirits they command; these reapers, the Asekh-sen, hunt the followers of Osiris and try to destroy new Amenti before the Spell of Life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 22,
+      "pdf": 20
+     },
+     {
+      "book": "mtr",
+      "page": 26,
+      "pdf": 24
+     },
+     {
+      "book": "mtr",
+      "page": 31,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The Amkhat, an ancient Egyptian cult of cannibals, eat human and Amenti flesh for twisted power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtr",
+      "page": 26,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bane-mummies",
+   "apophis",
+   "set"
+  ]
+ }
+]

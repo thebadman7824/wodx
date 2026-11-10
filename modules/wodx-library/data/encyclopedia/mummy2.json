@@ -42,6 +42,28 @@
       "page": 13,
       "pdf": 14
      }
+    ],
+    "versions": [
+     {
+      "text": "In Mummy: The Resurrection, the mummy's mortal life is a modern one; only the tem-akh shard joined to it lived in ancient Egypt.",
+      "refs": [
+       {
+        "book": "mtr",
+        "page": 20,
+        "pdf": 18
+       }
+      ]
+     },
+     {
+      "text": "In Mummy Second Edition, the First Life is a mortal life in ancient Egypt.",
+      "refs": [
+       {
+        "book": "mummy2",
+        "page": 13,
+        "pdf": 14
+       }
+      ]
+     }
     ]
    },
    {
@@ -59,7 +81,8 @@
   "see": [
    "spell-of-life",
    "shemsu-heru",
-   "soul-of-khem"
+   "soul-of-khem",
+   "mtr-amenti"
   ]
  },
  {
@@ -302,13 +325,36 @@
       "page": 13,
       "pdf": 14
      }
+    ],
+    "versions": [
+     {
+      "text": "In Mummy: The Resurrection, the Apepnu served Set on Earth and Apophis after each death, and have acted more freely since Set went into hiding.",
+      "refs": [
+       {
+        "book": "mtr",
+        "page": 31,
+        "pdf": 29
+       }
+      ]
+     },
+     {
+      "text": "In Mummy Second Edition, they once served Set and now serve Apophis.",
+      "refs": [
+       {
+        "book": "mummy2",
+        "page": 13,
+        "pdf": 14
+       }
+      ]
+     }
     ]
    }
   ],
   "see": [
    "apophis",
    "set",
-   "spell-of-life"
+   "spell-of-life",
+   "mtr-apepnu"
   ]
  },
  {
@@ -667,6 +713,33 @@
       "page": 13,
       "pdf": 14
      }
+    ],
+    "versions": [
+     {
+      "text": "In Mummy: The Resurrection, the ghost city of Amenti fell to the Dja-akh, and the living mummies now take its name.",
+      "refs": [
+       {
+        "book": "mtr",
+        "page": 26,
+        "pdf": 24
+       },
+       {
+        "book": "mtr",
+        "page": 20,
+        "pdf": 18
+       }
+      ]
+     },
+     {
+      "text": "In Mummy Second Edition, Amenti still stands, hidden in the Underworld.",
+      "refs": [
+       {
+        "book": "mummy2",
+        "page": 13,
+        "pdf": 14
+       }
+      ]
+     }
     ]
    },
    {
@@ -683,7 +756,8 @@
   ],
   "see": [
    "mummies",
-   "wraiths"
+   "wraiths",
+   "mtr-dja-akh"
   ]
  },
  {
