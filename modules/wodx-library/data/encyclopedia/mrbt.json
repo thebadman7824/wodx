@@ -1,0 +1,159 @@
+[
+ {
+  "id": "mrbt-tremere-cost",
+  "title": "What the Tremere war cost the Order",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Hermetic reading of the Order's decline.",
+  "claims": [
+   {
+    "text": "A century of war against the renegade House Tremere drained Hermetic Quintessence stores, killed many magi and pulled the Order from its duties to Sleepers and to learning.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "So fixed on revenge were the magi that when the Craftmasons took Mistridge, the Order made no answer and missed what the loss meant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Some Hermetics now say the Order's tragic flaw is always fighting the wrong battle, and that it still burns with resentment at no longer being king.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere",
+   "order-of-hermes",
+   "dam-mistridge",
+   "mrgtt-mistridge-horizon"
+  ]
+ },
+ {
+  "id": "mrbt-flambeau-2000",
+  "title": "House Flambeau after Doissetep",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The fire house in the years after the Reckoning.",
+  "claims": [
+   {
+    "text": "Since the fall of Doissetep and the death of Porthos Fitz-Empress, Flambeau mages have turned fatalistic and eager for one great strike against the Technocracy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "It is now the busiest house, drawing close to half of all Hermetic applicants, and its raids on Technocratic, Nephandic and other strongholds have risen fivefold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Losses to weapons, Paradox, Quiet and the Cauls are mounting so fast that some fear the house will charge itself out of existence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mroh-flambeau",
+   "mroh-doissetep",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "mrbt-house-solificati",
+  "title": "The Alchemists join the Order",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the former Solificati became a Hermetic house.",
+  "claims": [
+   {
+    "text": "The Craft once called the Children of Knowledge, formerly the Solificati, startled everyone by accepting the Order of Hermes' offer and became its tenth house.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Alchemists had hoped to win the Tenth Seat of Unity on their own, but saw little chance past the Celestial Chorus and the Verbena and chose a side before being left behind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "They bring both classic alchemy and newer schools into the Order, a strong position from which they hope to purify it from within.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbt",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-solificati",
+   "order-of-hermes",
+   "m2hor-tenth-seat"
+  ]
+ }
+]

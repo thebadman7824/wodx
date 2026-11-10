@@ -931,6 +931,12 @@
    "title": "Lost Paths: Ahl-i-Batin and Taftani",
    "short": "LP",
    "edition": "Revised"
+  },
+  {
+   "id": "mrbt",
+   "title": "Blood Treachery",
+   "short": "BT",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1088,6 +1094,7 @@
   "mrdm.json",
   "mrdm2.json",
   "mrdote.json",
-  "mrlp.json"
+  "mrlp.json",
+  "mrbt.json"
  ]
 }
