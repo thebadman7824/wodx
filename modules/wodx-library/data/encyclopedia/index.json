@@ -1927,6 +1927,12 @@
       "title": "Caerns: Places of Power",
       "short": "Caerns",
       "edition": "Second edition"
+    },
+    {
+      "id": "wacroatan",
+      "title": "Croatan Song",
+      "short": "Croatan Song",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -2250,6 +2256,7 @@
     "waaxis.json",
     "waausp.json",
     "wacity.json",
-    "wacaern.json"
+    "wacaern.json",
+    "wacroatan.json"
   ]
 }

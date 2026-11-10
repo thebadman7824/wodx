@@ -1,0 +1,228 @@
+[
+ {
+  "id": "wacroatan-brother-of-sun",
+  "title": "The war against the Brother of the Sun",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern",
+   "wild-west"
+  ],
+  "summary": "A Croatan tale of the mound builders’ sun shaman.",
+  "claims": [
+   {
+    "text": "In the tale, a powerful sun shaman of the mound-building peoples burned the Croatan Garou Three Scars with a spear of fire, and Three Scars’ pack tore the shaman apart in their rage.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The shaman’s power lay in the sun and weakened in the Umbra under Luna, so the pack escaped there while Luna hid their trail.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "War followed across the shaman’s lands; the Croatan and their brother tribes sent packs to every pyramid and mound and struck together as the moon rose.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wacroatan-fall"
+  ]
+ },
+ {
+  "id": "wacroatan-fall",
+  "title": "The fall of the Croatan",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern",
+   "wild-west"
+  ],
+  "summary": "How the lost tribe died.",
+  "claims": [
+   {
+    "text": "The Wendigo again sing of Wanchese’s great army and its battle with the Eater-of-Souls, a victory that cost the lives of the army and of every Croatan who did not fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The Croatan feared a prophecy that the Eater-of-Souls would devour them and hoped to beat it by striking first; they died, but not in its maw, and some whisper the Eater now feeds Garou rage.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "When Wanchese died, the rest of the tribe lost its bond to the spirit world: spirits shunned them, taught no more Gifts, the Umbra closed to them, and their Kinfolk bore no more Croatan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The Uktena and Wendigo took over and guarded what Croatan caerns they could; others were abandoned and forgotten, and some were later claimed by European Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wacroatan-brother-of-sun"
+  ]
+ },
+ {
+  "id": "wacroatan-gifts",
+  "title": "Croatan Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern",
+   "wild-west"
+  ],
+  "summary": "Gifts of the lost tribe.",
+  "claims": [
+   {
+    "text": "Croatan Gifts include Cookfire, Turtle Body, Wyld Sight, Safe Cave, Turtle Shell, Call Earth Spirit, Hand of the Earth Lords, The Apocalypse Underearth, Resolute Vow, Umbral Burrowing and Wall of Granite.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 114,
+      "pdf": 115
+     },
+     {
+      "book": "wacroatan",
+      "page": 115,
+      "pdf": 116
+     },
+     {
+      "book": "wacroatan",
+      "page": 116,
+      "pdf": 117
+     },
+     {
+      "book": "wacroatan",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "The Apocalypse Underearth, taught by burrowing spirits such as Mole, Badger and Groundhog, opens secret tunnels beneath the Umbrascape for a Gnosis point; by the 20th century it is nearly lost, and Ratkin hold many of the tunnels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "Umbral Burrowing costs three Gnosis and lets the Garou slowly dig a new tunnel through the Umbrascape between any two points, with a Perception + Occult roll to come out in the right place.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wacroatan-raise-the-sun",
+  "title": "Raise the Sun",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern",
+   "wild-west"
+  ],
+  "summary": "A legendary level six rite.",
+  "claims": [
+   {
+    "text": "Raise the Sun is said to make the sun rise at any hour of the night, bringing on the next day.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "The last reliable account dates to about 1300, back when the tribe still kept its alliance with Helios and the Mound Builder Dreamspeakers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "Whether it calls an avatar of Helios or truly bends time is unknown, and its chance of working is left to the Storyteller.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacroatan",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
