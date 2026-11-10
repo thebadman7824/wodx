@@ -1381,6 +1381,12 @@
    "title": "Nobles: The Shining Host",
    "short": "Nobles",
    "edition": "Second edition"
+  },
+  {
+   "id": "cshc",
+   "title": "The Shadow Court",
+   "short": "SC",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1613,6 +1619,7 @@
   "ckow.json",
   "ciotm.json",
   "cl8m.json",
-  "cnob.json"
+  "cnob.json",
+  "cshc.json"
  ]
 }
