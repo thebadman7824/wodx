@@ -238,7 +238,7 @@ export async function embraceDialog() {
       <div class="form-group"><label>Blood on rising</label><input type="number" name="blood" value="${EMBRACE.startBlood}" min="0" max="10" step="1"></div>
       <div class="form-group"><label><input type="checkbox" name="moveTokens" checked> Tokens of the mortal become the vampire</label></div>
       <p class="wodx-quiet">Clan and Generation follow the sire; change them for a Caitiff or a lie. The childe starts on the
-        Road of Humanity (p. 111) at the mortal's rating, with the clan Disciplines listed at 0 dots.</p>`,
+        Road of Humanity (V20 Dark Ages p. 111) at the mortal's rating, with the clan Disciplines listed at 0 dots.</p>`,
     render: (event, dialog) => {
       const form = dialog.element.querySelector("form");
       form?.elements.sire?.addEventListener("change", () => {
@@ -279,7 +279,7 @@ export async function vitaeDialog() {
     window: {title: "Give vitae"},
     content: `
       <p>A mortal who drinks becomes a ghoul and gains Potence 1 (V20 Dark Ages p. 399). Three drinks on three nights
-        make a blood oath (pp. 341–342).</p>
+        make a blood oath (V20 Dark Ages pp. 341–342).</p>
       <div class="form-group"><label>Who drinks</label>${searchBox("select[name=drinker]", "Search characters…", "Search who drinks")}<select name="drinker">${options(drinkers, pick?.id ?? drinkers[0]?.id)}</select></div>
       <div class="form-group"><label>Whose blood</label>${searchBox("select[name=regnant]", "Search vampires…", "Search whose blood")}<select name="regnant">${options(vampires, vampires[0].id)}</select></div>
       <div class="form-group"><label>Blood points</label><input type="number" name="points" value="1" min="1" max="10" step="1"></div>

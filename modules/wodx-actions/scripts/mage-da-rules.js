@@ -34,7 +34,7 @@ export const FELLOWSHIPS = {
         specialties: ["Control", "Destruction", "Elements", "Transmutation"],
         pillars: [["anima", "Anima", "life"], ["corona", "Corona", "mind"], ["primus", "Primus", "Quintessence"], ["vires", "Vires", "forces"]],
         foci: "astrology, Enochian, numerology; wands, swords, chalices",
-        bar: "the Order forbids raising the dead, making true life and travel beyond the Lunar Sphere (p. 120)" },
+        bar: "the Order forbids raising the dead, making true life and travel beyond the Lunar Sphere (Dark Ages: Mage p. 120)" },
     spirit: { label: "Spirit-Talkers", foundation: "Sensitivity", gloss: "the call of the Invisible World", page: 125,
         perks: { 1: "sees into the Umbra wherever the Gauntlet is at or below the Sensitivity rating", 5: "regains Quintessence each day in the Umbra: 3 or the Fount rating, whichever is higher" },
         specialties: ["Awakening Spirits", "Dreams", "Shades of the Dead", "Summoning", "Travel"],
@@ -114,8 +114,8 @@ export function castPlan({ levels = {}, ratings = {}, foundation = 1, fellowship
     const complex = used.length > 1;
     // Pool: Foundation + the Pillar (simple), or + the highest Pillar involved and a die per other Pillar (complex)
     let dice = Number(foundation) + (Number(ratings[top]) || 0) + (complex ? used.length - 1 : 0);
-    if (opts.sanctum >= 5) { dice += 1; notes.push("sanctum: +1 die to the Foundation (p. 87)"); }
-    if (opts.blotDice) { dice += Number(opts.blotDice); notes.push(`Blot: ${opts.blotDice} lethal level(s) given for as many dice (p. 131)`); }
+    if (opts.sanctum >= 5) { dice += 1; notes.push("sanctum: +1 die to the Foundation (Dark Ages: Mage p. 87)"); }
+    if (opts.blotDice) { dice += Number(opts.blotDice); notes.push(`Blot: ${opts.blotDice} lethal level(s) given for as many dice (Dark Ages: Mage p. 131)`); }
     if (opts.specialty) { dice += 1; notes.push("within the Foundation's specialty: +1 die (Grimoire p. 112)"); }
     // Difficulty: 4 + level (simple); 5 + highest + 1 per other Pillar (complex)
     let diff = complex ? 5 + highest + (used.length - 1) : 4 + highest;
@@ -169,7 +169,7 @@ export function reach(successes, hurried = false) {
     return {
         duration: pick(DURATION, hurried ? `${20 + 20 * (s - 5)} turns` : "as the Storyteller sets (six successes or more)"),
         distance: pick(DISTANCE, hurried ? `${5 ** (s - 5)} miles` : "as the Storyteller sets (six successes or more)"),
-        note: "one extra success per extra target (p. 105)"
+        note: "one extra success per extra target (Dark Ages: Mage p. 105)"
     };
 }
 

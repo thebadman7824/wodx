@@ -124,7 +124,7 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       add("ghoulFed", `Fed each month by ${domitor?.name ?? l.domitor?.name ?? "the domitor"}`,
         `Does not age while the vitae lasts; blood pool ${oldMax}${newMax !== oldMax ? ` → ${newMax} (+1 a century)` : ""} (V20 Dark Ages p. 399)`, !gone, {newMax, domitorId: domitor?.id ?? l.domitor?.id});
       add("vitaeLapses", "The vitae lapses",
-        `${gone ? "The domitor is gone. " : ""}Reverts to the real age (${realEnd})${realEnd >= GHOUL_AGING.dustAt ? " and turns to dust" : ""}; the Disciplines go dark (p. 399)`, gone, {dust: realEnd >= GHOUL_AGING.dustAt});
+        `${gone ? "The domitor is gone. " : ""}Reverts to the real age (${realEnd})${realEnd >= GHOUL_AGING.dustAt ? " and turns to dust" : ""}; the Disciplines go dark (V20 Dark Ages p. 399)`, gone, {dust: realEnd >= GHOUL_AGING.dustAt});
     }
 
     // Bonds fade without a drink: one step per (12 − Willpower) months (V20DA p. 341)

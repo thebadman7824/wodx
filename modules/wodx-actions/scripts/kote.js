@@ -86,7 +86,7 @@ export function build(ctx) {
                 const y = Math.round(k * ry / 10), g = k - y;
                 gain = { yin: y, yang: g };
                 await setChi(actor, { yin: i.chi.yin + y, yang: i.chi.yang + g });
-                body += `<div class="vta-res">${k} ${k === 1 ? "level" : "levels"} of flesh → +${y} Yin, +${g} Yang; each a Health Level of the victim's.</div><div class="vta-note">Flesh-eating is a sure road to Dharmic degeneration (p. 137).</div>`;
+                body += `<div class="vta-res">${k} ${k === 1 ? "level" : "levels"} of flesh → +${y} Yin, +${g} Yang; each a Health Level of the victim's.</div><div class="vta-note">Flesh-eating is a sure road to Dharmic degeneration (Kindred of the East p. 137).</div>`;
             } else if (w === "breath") {
                 const me = await rollPool(i.v[fd.kind], 6), them = await rollPool(n(fd.sta), 6); rolls.push(me.roll, them.roll);
                 const k = Math.max(0, me.successes - them.successes);

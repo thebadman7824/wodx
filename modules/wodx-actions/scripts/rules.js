@@ -48,7 +48,7 @@ export function actionPool(p) {
         dice = p.daytimeCap;
     }
     if (diff >= 10 && (p.multiIndex > 0 || p.retries > 0))
-        blocked = blocked || "Difficulty reaches 10 from multiple actions or retries: the action cannot be attempted (p. 322-323).";
+        blocked = blocked || "Difficulty reaches 10 from multiple actions or retries: the action cannot be attempted (V20 Dark Ages pp. 322–323).";
     dice = Math.max(0, dice);
     return { dice, difficulty: diff, parts, blocked, autoSuccessAllowed: dice >= diff };
 }
@@ -123,7 +123,7 @@ export const FRENZY_PROVOCATIONS = {
     tasteblood: { label: "Taste of blood when hungry", diff: 6 },
     loved: { label: "Loved one in danger", diff: 7 },
     humiliation: { label: "Outright public humiliation", diff: 8 },
-    hunger: { label: "Hunger on catching prey (p. 334)", diff: 6 },
+    hunger: { label: "Hunger on catching prey (V20 Dark Ages p. 334)", diff: 6 },
     atrocity: { label: "Urge to commit an atrocity (9 – Conscience/Conviction)", diff: null },
     custom: { label: "Other (set difficulty)", diff: 6 }
 };

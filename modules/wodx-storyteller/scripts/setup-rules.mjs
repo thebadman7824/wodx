@@ -138,7 +138,7 @@ export const ROLLS_PAGE = `<h2>Rolls</h2>
 <table><thead><tr><th>Difficulty</th><th>How hard</th></tr></thead><tbody>
 <tr><td>3</td><td>Easy</td></tr><tr><td>4</td><td>Routine</td></tr><tr><td>5</td><td>Straightforward</td></tr><tr><td>6</td><td>Standard</td></tr>
 <tr><td>7</td><td>Challenging</td></tr><tr><td>8</td><td>Difficult</td></tr><tr><td>9</td><td>Extremely difficult</td></tr><tr><td>10</td><td>Nearly impossible</td></tr></tbody></table>
-<p class="wodx-quiet">V20 difficulty chart: pdf page 257, printed page 249.</p>
+<p class="wodx-quiet">V20 difficulty chart (pdf 257 / p. 249).</p>
 <table><thead><tr><th>Successes</th><th>Result</th></tr></thead><tbody>
 <tr><td>1</td><td>Marginal: it barely works</td></tr><tr><td>2</td><td>Moderate</td></tr><tr><td>3</td><td>Complete</td></tr><tr><td>4</td><td>Exceptional</td></tr><tr><td>5 or more</td><td>Phenomenal</td></tr></tbody></table>
 <ul>

@@ -63,7 +63,7 @@ export function build(ctx) {
                 await updateActor(actor, { [`system.advantages.virtues.${fd.virtue}.permanent`]: nv[fd.virtue] });
                 await setConviction(actor, 0);
                 const d = K.derangementsDue(j.virtues[fd.virtue], nv[fd.virtue]);
-                return post(actor, `${actor.name} grows stronger`, `<div class="vta-res good">${cap(fd.virtue)} ${j.virtues[fd.virtue]} → ${nv[fd.virtue]}; Conviction spent.</div>${d ? `<div class="vta-warn">${cap(fd.virtue)} ${nv[fd.virtue]}: the Storyteller assigns a derangement fitting the hunter and the Virtue (p. 131).</div>` : ""}<div class="wodx-quiet">Hunter: The Reckoning p. 139</div>`);
+                return post(actor, `${actor.name} grows stronger`, `<div class="vta-res good">${cap(fd.virtue)} ${j.virtues[fd.virtue]} → ${nv[fd.virtue]}; Conviction spent.</div>${d ? `<div class="vta-warn">${cap(fd.virtue)} ${nv[fd.virtue]}: the Storyteller assigns a derangement fitting the hunter and the Virtue (Hunter: The Reckoning p. 131).</div>` : ""}<div class="wodx-quiet">Hunter: The Reckoning p. 139</div>`);
             }
             if (fd.k === "story") {
                 const start = j.creedDef?.conviction ?? 3;
@@ -72,7 +72,7 @@ export function build(ctx) {
             }
             if (fd.k === "gain") {
                 const used = j.f.gained ?? {};
-                if (sessionKey() && used[fd.why] === sessionKey()) return ctx.notify("Once a session for that reason (p. 139).");
+                if (sessionKey() && used[fd.why] === sessionKey()) return ctx.notify("Once a session for that reason (Hunter: The Reckoning p. 139).");
                 await setImbued(actor, { gained: { ...used, [fd.why]: sessionKey() || String(game.time.worldTime) } });
                 const to = await setConviction(actor, j.conviction + 1);
                 return post(actor, `${actor.name}: Conviction`, `<div class="vta-res good">Conviction ${j.conviction} → ${to}.</div>`);
@@ -85,16 +85,16 @@ export function build(ctx) {
 
     async function secondSight(actor) {
         const i = info(actor), active = actor.getFlag(MOD, "sightScene") === sceneKey();
-        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}${active ? "; <b>second sight is active this scene</b>" : ""}. One Conviction point gives second sight and self-control for the scene (p. 132).</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}${active ? "; <b>second sight is active this scene</b>" : ""}. One Conviction point gives second sight and self-control for the scene (Hunter: The Reckoning p. 132).</p>
           <div class="form-group"><label>What</label><select name="k" data-fixed><option value="spend">Spend 1 Conviction: second sight and self-control</option><option value="react">React to a warning sign (Attribute + primary Virtue, 6)</option><option value="prerogative">Against a mighty foe (primary Virtue, Storyteller)</option></select></div>
           <div class="form-group"><label>Attribute (reaction)</label><select name="attr" data-fixed>${K.REACT.attrs.map(a => `<option value="${a}">${cap(a)}</option>`).join("")}</select> <label>foe</label> <select name="foe" data-fixed><option value="powerful">Powerful (6)</option><option value="mighty">Mighty (7)</option><option value="titanic">Titanic (8)</option></select></div></form>`;
         return dialog(`Second sight: ${actor.name}`, content, "Go", async fd => {
             if (fd.k === "spend") {
                 if (active) return ctx.notify("Already active this scene.");
-                if (i.conviction < 1) return ctx.notify("No Conviction: the hunter faces the night as anyone would (p. 132).");
+                if (i.conviction < 1) return ctx.notify("No Conviction: the hunter faces the night as anyone would (Hunter: The Reckoning p. 132).");
                 await setConviction(actor, i.conviction - 1);
                 await actor.setFlag(MOD, "sightScene", sceneKey());
-                return post(actor, `${actor.name}: second sight`, `<div class="vta-note">For the scene: hidden supernatural beings show as inhuman, spirits look solid, possessors show over their hosts; supernatural fear and mind, emotion or body control fail against the hunter (pp. 132–134).</div>`);
+                return post(actor, `${actor.name}: second sight`, `<div class="vta-note">For the scene: hidden supernatural beings show as inhuman, spirits look solid, possessors show over their hosts; supernatural fear and mind, emotion or body control fail against the hunter (Hunter: The Reckoning pp. 132–134).</div>`);
             }
             if (fd.k === "react") {
                 const r = await rollPool(attr(actor, fd.attr) + i.virtues[i.primary], K.REACT.difficulty);
@@ -147,7 +147,7 @@ export function build(ctx) {
                 const ok = !r.botch && r.successes > 0 && (!fd.resisted || fd.won);
                 const R = K.risk(conv + risk, risk, ok ? { successes: 1, botch: false } : { successes: 0, botch: !!r.botch }, { bonus: n(fd.award) });
                 await setConviction(actor, R.after);
-                body += `<div class="vta-res ${ok ? "good" : "bad"}">Risked ${risk}: Conviction ${conv + risk} → ${R.after}${R.lostAll ? " (a botch: all of it lost)" : ""}. A success counts only if the edge achieves something (p. 137).</div>`;
+                body += `<div class="vta-res ${ok ? "good" : "bad"}">Risked ${risk}: Conviction ${conv + risk} → ${R.after}${R.lostAll ? " (a botch: all of it lost)" : ""}. A success counts only if the edge achieves something (Hunter: The Reckoning p. 137).</div>`;
             }
             body += `<div class="vta-note">${esc(e.e)}</div><div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`;
             return post(actor, `${actor.name}: ${esc(e.name)}`, body, [r.roll]);

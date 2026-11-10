@@ -749,7 +749,7 @@ async function resolveAction(actor, target, fd) {
     const title = `${actor.name}: ${esc(fd.desc || (preset.label ? preset.label.split(" (")[0].replace(/^Common: /, "") : "Action"))}`;
     const label = [pool.attributeLabel, pool.abilityLabel].filter(Boolean).join(" + ");
     if (fd.auto && built.autoSuccessAllowed && fd.mode === "simple") {
-        return post(actor, title, `<div class="vta-sec"><b>${label}</b> (${built.dice} dice vs ${built.difficulty}): automatic success (p. 323).</div>${preset.note ? `<div class="vta-note">${preset.note}</div>` : ""}`);
+        return post(actor, title, `<div class="vta-sec"><b>${label}</b> (${built.dice} dice vs ${built.difficulty}): automatic success (V20 Dark Ages p. 323).</div>${preset.note ? `<div class="vta-note">${preset.note}</div>` : ""}`);
     }
     const r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
     const rolls = [...helperRolls, r.roll];
@@ -901,7 +901,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
     return dialog("Rötschreck check", content, "Roll", async fd => {
         if (flag(actor, "golconda")) return post(actor, `${actor.name} faces the flame`, `<div class="vta-big good">Golconda: immune to Rötschreck.</div>`);
         if (actor.system?.conditions?.isfrenzy && flag(actor, "frenzyType") !== "fear")
-            return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (p. 357).</div>`);
+            return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (V20 Dark Ages p. 357).</div>`);
         const p = R.ROTSCHRECK_PROVOCATIONS[fd.prov];
         const diff = R.clampDifficulty((fd.prov === "custom" ? fd.diff : p.diff) + fd.mod);
         return beastRoll(actor, { kind: "fear", diff, prov: p.label, wp: fd.wp, total: 0 });
@@ -1314,7 +1314,7 @@ async function resolveSpend(actor, fd) {
             if (setting("applyChanges")) await updateActor(t, { "system.advantages.bloodpool.temporary": Math.min(tb.max || 10, tb.value + fd.give) });
             html += `<div class="vta-sec"><b>Gives</b> ${fd.give} blood to ${esc(t.name)}.</div>`;
             html += await oathStep(t, actor, fd.give);
-            if (!isVampire(t)) html += `<div class="vta-note">A mortal who drinks Cainite blood becomes a ghoul (p. 399).</div>`;
+            if (!isVampire(t)) html += `<div class="vta-note">A mortal who drinks Cainite blood becomes a ghoul (V20 Dark Ages p. 399).</div>`;
         } else html += `<div class="vta-sec"><b>Gives</b> ${fd.give} blood (no target selected).</div>`;
     }
     const ch = await changeBlood(actor, -spent);

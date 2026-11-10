@@ -222,12 +222,12 @@ export const MANEUVERS = {
     riposte: { label: "Riposte (+1 diff, +1 dmg, defender +2 diff; needs a successful defense this turn)", diff: 1, dmg: 1, dice: 0, defDiff: 2 },
     // ---- VtDA20 p. 346-348 (maneuvers that change the roll; unarmed forms are in UNARMED)
     disarm: { label: "Disarm (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Disarm: roll damage normally; if it beats the victim's Strength dots, the weapon flies a number of yards equal to the extra successes (VtDA20 p. 346)." },
-    sweep: { label: "Sweep (+1 diff, knockdown)", diff: 1, dmg: 0, dice: 0, note: "Sweep: the victim is knocked down. Standing needs Dexterity + Athletics diff 6; failing loses the action, success costs -2 Initiative (p. 348)." },
-    tackle: { label: "Tackle (+1 diff, +1 dmg, knockdown)", diff: 1, dmg: 1, dice: 0, note: "Tackle: both fighters roll Dexterity + Athletics diff 7 or fall; all actions next turn are at +1 difficulty (p. 347)." },
-    hold: { label: "Hold (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Hold: the victim is immobilized until their next action, when both roll resisted Strength + Brawl (p. 346)." },
-    stake: { label: "Stake (+3 diff)", diff: 3, dmg: 0, dice: 0, note: "Stake: three damage successes pierce the heart: vampires are immobilized (torpid-like) and mortals die (p. 347)." },
-    impale: { label: "Impale (+3 diff, archery)", diff: 3, dmg: 0, dice: 0, note: "Impale: as a stake, with a shaft through the heart (p. 349)." },
-    suppress: { label: "Suppressive fire (-2 diff, defender +2)", diff: -2, dmg: 0, dice: 0, defDiff: 2, note: "Suppressive Fire (3+ Archery): a target who advances defends at +2 difficulty (p. 349)." },
+    sweep: { label: "Sweep (+1 diff, knockdown)", diff: 1, dmg: 0, dice: 0, note: "Sweep: the victim is knocked down. Standing needs Dexterity + Athletics diff 6; failing loses the action, success costs -2 Initiative (V20 Dark Ages p. 348)." },
+    tackle: { label: "Tackle (+1 diff, +1 dmg, knockdown)", diff: 1, dmg: 1, dice: 0, note: "Tackle: both fighters roll Dexterity + Athletics diff 7 or fall; all actions next turn are at +1 difficulty (V20 Dark Ages p. 347)." },
+    hold: { label: "Hold (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Hold: the victim is immobilized until their next action, when both roll resisted Strength + Brawl (V20 Dark Ages p. 346)." },
+    stake: { label: "Stake (+3 diff)", diff: 3, dmg: 0, dice: 0, note: "Stake: three damage successes pierce the heart: vampires are immobilized (torpid-like) and mortals die (V20 Dark Ages p. 347)." },
+    impale: { label: "Impale (+3 diff, archery)", diff: 3, dmg: 0, dice: 0, note: "Impale: as a stake, with a shaft through the heart (V20 Dark Ages p. 349)." },
+    suppress: { label: "Suppressive fire (-2 diff, defender +2)", diff: -2, dmg: 0, dice: 0, defDiff: 2, note: "Suppressive Fire (3+ Archery): a target who advances defends at +2 difficulty (V20 Dark Ages p. 349)." },
     // ---- House maneuvers (not from the book): Storyteller's option, added in v1.1.0 for the Rothenstein armory.
     lunge: { label: "Lunge [house] (+1 diff, +1 dmg, defender +1 diff; you are overextended)", diff: 1, dmg: 1, dice: 0, defDiff: 1, note: "Lunge: {name} is overextended and suffers +1 difficulty on defense until the next turn." },
     cleave: { label: "Overhead Cleave [house] (+2 diff, +3 dmg, no defense this turn)", diff: 2, dmg: 3, dice: 0, noDefense: true, note: "Overhead Cleave: {name} may not defend for the rest of the turn." },
