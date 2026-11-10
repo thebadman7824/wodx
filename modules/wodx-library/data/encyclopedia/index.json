@@ -1993,6 +1993,12 @@
       "title": "Subsidiaries: A Guide to Pentex",
       "short": "Subsidiaries",
       "edition": "Revised"
+    },
+    {
+      "id": "watrailmx",
+      "title": "Tales from the Trail: Mexico",
+      "short": "Tales from the Trail: Mexico",
+      "edition": "Wild West"
     }
   ],
   "files": [
@@ -2327,6 +2333,7 @@
     "wapast.json",
     "wapossess.json",
     "watwilight.json",
-    "wasubs.json"
+    "wasubs.json",
+    "watrailmx.json"
   ]
 }
