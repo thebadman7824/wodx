@@ -1,0 +1,283 @@
+[
+ {
+  "id": "whaunts-haunts",
+  "title": "Haunts",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Places the dead hold as their own.",
+  "claims": [
+   {
+    "text": "Haunts are where the Gothic side of the world rules: ruined chapels, old towers and decaying mansions, steeped in half-forgotten lives, where the living feel they are trespassing and death holds sway.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 7,
+      "pdf": 8
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadowlands",
+   "the-shroud"
+  ]
+ },
+ {
+  "id": "whaunts-providence",
+  "title": "Providence of the dead",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A New England city ruled by a Hierarchy family.",
+  "claims": [
+   {
+    "text": "Providence has long been a home for horror, and its ghosts know Brown University and the Italian neighborhoods around a ruined church spire; even Kindred tread lightly there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Ambrose Tillinghast rules the dead of Providence with the force of the Hierarchy and the spirits of the Tillinghast family behind that rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A white three-storey Colonial house on campus is shown to visitors as a landmark; guides tell of shifting chalk outlines, figures at windows and a dripping ghost calling for Sarey, and its attic has never been opened.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "wraiths"
+  ]
+ },
+ {
+  "id": "whaunts-hermitage",
+  "title": "Hermitage Castle",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern",
+   "dark-ages"
+  ],
+  "summary": "Lord Soulis's border fortress.",
+  "claims": [
+   {
+    "text": "Hermitage Castle stands alone in the border country between Scotland and England, about fifty miles from Edinburgh near Hawick, its grounds soaked in centuries of bloodshed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The ancestral home of Lord Soulis has no Renegades or Heretics among its dead, only the iron rule of the Hierarchy, where weakness means destruction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "whaunts-atlantic-city",
+  "title": "Atlantic City",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A gambling town that drew the dead.",
+  "claims": [
+   {
+    "text": "Few Restless gathered in Atlantic City until gambling was made legal there in 1980; before that its dead were mostly Enfants and old wraiths bound to happier summers, ignored by Hierarchy and Heretic alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Some say vampires with money in the city pushed legal gambling, others blame Technomancers.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "heretics"
+  ]
+ },
+ {
+  "id": "whaunts-children-of-flesh",
+  "title": "The Children of the Flesh",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Heretic Circle that keeps bodies for the Resurrection.",
+  "claims": [
+   {
+    "text": "Santo Domingos took the title of saint, wrote the Tome of Os from a claimed vision, and founded the Children of the Flesh to claim and preserve bodies for a Day of Resurrection.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Its members long for physical life and reject both the Far Shores and the Void; the living world is all that counts to them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "heretics",
+   "transcendence"
+  ]
+ },
+ {
+  "id": "whaunts-teachs-hole",
+  "title": "Teach's Hole",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Blackbeard's Haunt on a Wyld-touched island.",
+  "claims": [
+   {
+    "text": "Wyld energy keeps most buildings and technology on the island from showing in the Shadowlands; the Coast Guard station appears half-sunk, and a graveyard shows with every marker in place.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "The only dead on the island gather at Teach's Hole, Blackbeard's Haunt, where a pirate gang of Renegades called the Brethren of the Tempest camp and party on the beaches, out of the Hierarchy's reach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "maelstroms"
+  ]
+ },
+ {
+  "id": "whaunts-khatyn-mir",
+  "title": "Khatyn Mir",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "A sanctuary of the dead in a destroyed Belarusian village.",
+  "claims": [
+   {
+    "text": "The village of Khatyn, destroyed by the Nazis, is a sanctuary of the dead; Adas Kaminsky, who looks like a small child, gathered its citizens and is known to most Belarusians among the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "A small secret Heretic group worships the village as the center of the Shadowlands; Renegades are welcomed, though a few abuse the sanctuary.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "whaunts",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "heretics",
+   "renegades"
+  ]
+ }
+]
