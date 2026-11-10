@@ -955,6 +955,12 @@
    "title": "The Book of Madness",
    "short": "BoM",
    "edition": "Revised"
+  },
+  {
+   "id": "mrfdf",
+   "title": "Forged by Dragon's Fire",
+   "short": "FbDF",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1116,6 +1122,7 @@
   "mrbt.json",
   "mrman.json",
   "mrftlv.json",
-  "mrbom.json"
+  "mrbom.json",
+  "mrfdf.json"
  ]
 }
