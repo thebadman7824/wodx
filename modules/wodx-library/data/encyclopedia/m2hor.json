@@ -1,0 +1,290 @@
+[
+ {
+  "id": "m2hor-seasons",
+  "title": "The seasons of a Chantry",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How mages describe the age of a Realm or Chantry.",
+  "claims": [
+   {
+    "text": "Mages speak of Chantries and Realms as passing through seasons: Spring for the newly founded, eager but short of wisdom and means.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 6,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "Summer marks peak strength and boldness, Autumn a halt to growth with wealth and political weight, and Winter a slide into memories and feuds while the work falls apart.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 6,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "After five centuries of neglect, a younger set of Council archmages hopes to bring Horizon into its Summer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 6,
+      "pdf": 7
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "m1boc-great-chantries"
+  ]
+ },
+ {
+  "id": "m2hor-founding",
+  "title": "The making of Horizon",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Council built its meeting Realm, 1450 to 1456.",
+  "claims": [
+   {
+    "text": "After the defeat of the Craftmasons in the Battle of Flames in 1450, the Primi of the Traditions resolved to build a Realm far from Earth as their meeting place.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "They went home and persuaded their peoples to pledge Nodes to the work; the Seers of Chronos gave the Gediz Caves first and set the example.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "At a minor Tribunal in the Gediz Caves in 1452 the Nodes, still called the Columns of Power, were formally dedicated; among them were Stonehenge and Glastonbury Tor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "mrgtt-mistridge-horizon",
+   "dam-mistridge"
+  ]
+ },
+ {
+  "id": "m2hor-council-seats",
+  "title": "Seats won and lost",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Changes on the Council from the 1500s to the Second World War.",
+  "claims": [
+   {
+    "text": "During the witch-hunts of the 1560s refugees flooded Horizon, and Doissetep, once called its sister Chantry, broke with it over a failed plan for European universities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "The Sons of Ether left the Technocracy in 1905 and took the empty Seat once held by the Solificati in 1906; in 1932 the Ahl-i-Batin quit the Council over Middle Eastern Quintessence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "A short wartime alliance with the Technocracy crushed a rising Nephandi threat and was disowned in 1946, when the Council marked its renewal with Reconciliation Day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "society-of-ether",
+   "sc-solificati",
+   "dam-ahl-i-batin",
+   "m1boc-doissetep"
+  ]
+ },
+ {
+  "id": "m2hor-spirits",
+  "title": "Spirits in Horizon",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the spirit world works differently inside the Realm.",
+  "claims": [
+   {
+    "text": "Horizon has no Gauntlet and no Umbral reflection of its own; a trained eye can make out the spirit dwelling in any object without using magic, though it is hard to spot.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Mystic barriers keep most Umbrood out unless invited; a spirit that does enter is visible but immaterial unless it chooses to hide.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "gauntlet",
+   "mrsw-lesser-spirits"
+  ]
+ },
+ {
+  "id": "m2hor-navids",
+  "title": "Navids and barter",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Trade and money in Horizon.",
+  "claims": [
+   {
+    "text": "Most trade in Horizon is barter, with food, art, clothing and tools the favored goods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The common coin is the navid, each engraved with one of the Spheres; the 100-navid piece shows all nine original Primi, a compromise after quarrels over whose face went where.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Because magic makes forgery easy, few merchants take coin from known wizards and ask for Tass or services instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "quintessence"
+  ]
+ },
+ {
+  "id": "m2hor-tenth-seat",
+  "title": "The Tenth Seat",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The envoys' chair in the Council Chambers.",
+  "claims": [
+   {
+    "text": "Each Council Seat draws Quintessence from Nodes on Earth through gates and windows in the Council Dome; a tenth Seat of onyx is kept for outside envoys.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   },
+   {
+    "text": "A strange sigil has lately appeared on the Tenth Seat, every Tradition has failed to claim it, and the Seats have begun to rearrange themselves every 20 days.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2hor",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "m2hor-founding"
+  ]
+ }
+]

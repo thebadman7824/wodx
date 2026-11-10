@@ -901,6 +901,12 @@
    "title": "The Book of Chantries",
    "short": "BoC",
    "edition": "1st"
+  },
+  {
+   "id": "m2hor",
+   "title": "Horizon: Stronghold of Hope",
+   "short": "HSH",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -1053,6 +1059,7 @@
   "mrit.json",
   "mrsw.json",
   "m2bow.json",
-  "m1boc.json"
+  "m1boc.json",
+  "m2hor.json"
  ]
 }
