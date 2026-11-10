@@ -1657,6 +1657,12 @@
       "title": "Counsel of Primogen",
       "short": "CoP",
       "edition": "Revised"
+    },
+    {
+      "id": "hotd",
+      "title": "Havens of the Damned",
+      "short": "HotD",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -1935,6 +1941,7 @@
     "mtr.json",
     "bsac.json",
     "sotb.json",
-    "cop.json"
+    "cop.json",
+    "hotd.json"
   ]
 }
