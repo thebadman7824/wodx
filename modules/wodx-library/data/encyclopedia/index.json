@@ -2041,6 +2041,12 @@
       "title": "Werewolf: The Wild West Companion",
       "short": "Wild West Companion",
       "edition": "Wild West"
+    },
+    {
+      "id": "wawwcore",
+      "title": "Werewolf: The Wild West",
+      "short": "Werewolf: The Wild West",
+      "edition": "Wild West"
     }
   ],
   "files": [
@@ -2383,6 +2389,7 @@
     "w20wwx.json",
     "waworap.json",
     "waways.json",
-    "wawwcomp.json"
+    "wawwcomp.json",
+    "wawwcore.json"
   ]
 }
