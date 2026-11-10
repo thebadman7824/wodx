@@ -2305,6 +2305,12 @@
       "title": "Haunting the Dead (Orpheus anthology)",
       "short": "Haunting the Dead",
       "edition": "Novel"
+    },
+    {
+      "id": "nrdm",
+      "title": "Revelations of the Dark Mother",
+      "short": "Revelations of the Dark Mother",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2691,6 +2697,7 @@
     "nhw2.json",
     "nhw3.json",
     "nysc3.json",
-    "nhtd.json"
+    "nhtd.json",
+    "nrdm.json"
   ]
 }
