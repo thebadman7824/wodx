@@ -1,0 +1,124 @@
+[
+ {
+  "id": "wr20hrd-becoming-a-wraith",
+  "title": "Becoming a wraith",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the newly dead arrive in the Shadowlands.",
+  "claims": [
+   {
+    "text": "Whatever a person expected of death, the afterlife of Reapers, Shadows and Stygia matches none of it, which shocks most new wraiths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20hrd",
+      "page": 7,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "One becomes a wraith by dying with unfinished business pressing enough to stay anchored to the living world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20hrd",
+      "page": 7,
+      "pdf": 8
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wraiths",
+   "reaping",
+   "passions-and-fetters"
+  ]
+ },
+ {
+  "id": "wr20hrd-dark-kingdoms",
+  "title": "Stygia and the other Dark Kingdoms",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the newly dead learn the map of the Underworld.",
+  "claims": [
+   {
+    "text": "Stygia, capital of the Dark Kingdom of Iron, stands on stable islands in a calm stretch of the Tempest, walled against Maelstroms; wraiths who have lost their Fetters live there, as did Charon, and the smith Nhudri works there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20hrd",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The water around Stygia is the Sea of Shadows; other Dark Kingdoms sit on their own islands in the Tempest, some in touch with Stygia, others hidden, and few risk the long voyage between them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20hrd",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stygia",
+   "maelstroms",
+   "charon"
+  ]
+ },
+ {
+  "id": "wr20hrd-renegade-gangs",
+  "title": "Renegade gangs",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The scattered groups outside the Hierarchy.",
+  "claims": [
+   {
+    "text": "Renegades have no single definition or united movement; they are many gangs of differing strength, place and purpose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20hrd",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The struggle is lopsided, a giant swatting mosquitoes, but each gang the Hierarchy crushes or buys is replaced by another; some gangs only want to help their members or live on their own terms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wr20hrd",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "hierarchy"
+  ]
+ }
+]

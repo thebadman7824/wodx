@@ -1129,6 +1129,12 @@
    "title": "Book of Oblivion",
    "short": "BoO",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "wr20hrd",
+   "title": "Handbook for the Recently Deceased",
+   "short": "HRD",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -1319,6 +1325,7 @@
   "scwp.json",
   "sccc.json",
   "dagrim.json",
-  "wr20bo.json"
+  "wr20bo.json",
+  "wr20hrd.json"
  ]
 }
