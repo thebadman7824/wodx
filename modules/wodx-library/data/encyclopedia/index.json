@@ -661,6 +661,12 @@
    "title": "Rage Across the Heavens",
    "short": "RA Heavens",
    "edition": "2nd"
+  },
+  {
+   "id": "ratw1",
+   "title": "Rage Across the World, Volume 1",
+   "short": "RA World 1",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -773,6 +779,7 @@
   "rany.json",
   "raru.json",
   "raam.json",
-  "rahe.json"
+  "rahe.json",
+  "ratw1.json"
  ]
 }
