@@ -1009,6 +1009,12 @@
    "title": "The Orphan's Survival Guide",
    "short": "OSG",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2arh",
+   "title": "Ascension's Right Hand",
+   "short": "ARH",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1179,6 +1185,7 @@
   "m2ta1.json",
   "m2ta2.json",
   "m2tt.json",
-  "m2osg.json"
+  "m2osg.json",
+  "m2arh.json"
  ]
 }
