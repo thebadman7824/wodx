@@ -1051,6 +1051,12 @@
    "title": "Hidden Lore",
    "short": "HL",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2stc",
+   "title": "Mage Storytellers Companion",
+   "short": "MSC",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1228,6 +1234,7 @@
   "m2sor.json",
   "m2ini.json",
   "m2mas.json",
-  "m2hl.json"
+  "m2hl.json",
+  "m2stc.json"
  ]
 }

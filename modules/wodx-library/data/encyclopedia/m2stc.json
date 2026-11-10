@@ -1,0 +1,369 @@
+[
+ {
+  "id": "m2stc-ancient-magic",
+  "title": "Magic in the ancient world",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "ancient",
+   "classical"
+  ],
+  "summary": "Key moments of mage history before the first millennium.",
+  "claims": [
+   {
+    "text": "Solomon built a temple on Hermetic principles, and with other Arab sorcerers bound or banished the spirits of the 10,000-Djinni Plague.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 8,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "The Himalayan Wars ran for six centuries and ended with the Akashics withdrawing into seclusion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 8,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "Greek scholars formed the Mt. Ossa Calyx in 150 BCE; after Caesar's murder Lucius Casioli turned it into the Collegium Praecepti, the Brotherhood of the Rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "The Great Fire of Rome in AD 64 burned the Hermetic library and split Christian from pagan, and the Messianic Voices were purged.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mreu-himalayan-war",
+   "dam-messianic-voices",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "m2stc-medieval-schisms",
+  "title": "Medieval schisms",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "From House Diedne's fall to the Solificati's break with Reason.",
+  "claims": [
+   {
+    "text": "House Diedne was wiped out between 1003 and 1022, and Mistridge was founded in 1067.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 10,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Lorenzo Golo founded House Golo, later the Sons of Ether, in 1171 from the rediscovered Kitab al Alacir, then left the Order to form the Natural Philosophers' Guild with Simon de Laurent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 10,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "The discovery of vampires in House Tremere led to the Massasa War and Tremere's banishment from the Order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 10,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Roger Bacon's London Accord of 1268 ended the war among England's artisan guilds; de Varre founded the Solificati in 1315, and they left the Order of Reason in 1335.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 11,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The Paris University Purge of 1330 killed many mages and destroyed the Hermetic covenant of Le Ictus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 11,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "dam-mistridge",
+   "mrbt-tremere-cost",
+   "society-of-ether",
+   "sc-solificati"
+  ]
+ },
+ {
+  "id": "m2stc-dust-witch",
+  "title": "War of the Dust Witch",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Fourteenth-century wars that split Africa's and China's mages.",
+  "claims": [
+   {
+    "text": "The War of the Dust Witch near Great Zimbabwe, 1345 to 1350, split the Ngoma and the Madzimbabwe into separate groups; plague in 1420 set them at war, each blaming the other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 11,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The Screaming Ghost Purge of 1356 to 1360 set Dalou'laoshi and Wu Lung against the Akashics and drove the Brotherhood back into Tibet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 11,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mreu-madzimbabwe",
+   "mrcrafts-wu-lung",
+   "akashayana",
+   "mrdote-silk-accord"
+  ]
+ },
+ {
+  "id": "m2stc-founding-wars",
+  "title": "The founding wars",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance"
+  ],
+  "summary": "Battles around the birth of the Council.",
+  "claims": [
+   {
+    "text": "Daedalean forces took Doissetep in 1448; the physical fortress fell and the main keep moved to a Horizon Realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The Second Mistridge Convocation in 1449 came under attack by Craftmasons and Artificers; the mystics won at heavy cost and helped build Horizon afterward.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Tezghul the Insane and Lithuanian demon-worshippers ravaged the Baltic from Kupala Alka from 1450 to 1453, and in 1452 the Daedaleans swore an Oath of Fire against vampires and magi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mroh-doissetep",
+   "m2fp-founding-timeline",
+   "dam-kupala",
+   "m2hor-founding"
+  ]
+ },
+ {
+  "id": "m2stc-modern-history",
+  "title": "Mage history from 1756",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "victorian",
+   "great-war",
+   "modern"
+  ],
+  "summary": "Renamings, defections and wars of the modern age.",
+  "claims": [
+   {
+    "text": "In 1756 more than a hundred Native American Dreamspeakers left Horizon over bias against tribal and shamanic magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 13,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "The Seers of Chronos became the Sahajiya in 1825, then the Cultists of Bacchus, then the Cult of Ecstasy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 13,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Babbage and Lovelace's work in 1834 gave rise to the Difference Engineers, who became the Virtual Adepts around 1880; the Natural Philosophers renamed themselves Electrodyne Engineers in 1866.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 13,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Stopping Lord Vargo in 1914 led to the New World Order's founding; the Ahl-i-Batin left the Council in 1932; a short alliance with the Union beat back the Nephandi in the Second World War.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "A spacecraft crashed near Roswell in 1947, hidden by the Void Engineers and New World Order, and the Clockwork Convention took the name Iteration X by the end of the 1950s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "cult-of-ecstasy",
+   "virtual-adepts",
+   "mrse-electrodyne-tesla",
+   "mrnwo-lord-vargo",
+   "iteration-x"
+  ]
+ },
+ {
+  "id": "m2stc-after-the-storm",
+  "title": "After the Storm",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Traditions fare once their Masters are cut off.",
+  "claims": [
+   {
+    "text": "The Masters cannot cross the Avatar Storm to Earth without risk of being torn apart, so the greatest Tradition mages are in exile.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "With many Council members dead, the surviving Masters grant that the Technocracy has won the formal war and fortify their own Realms; those left on Earth hide among the Sleepers and work slowly on people's beliefs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Crafts have mostly gone under, joining kindred Traditions, fading into Orphans or dying.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2stc",
+      "page": 17,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrva-after-the-storm",
+   "mrit-storm-views",
+   "mrcrafts-crafts"
+  ]
+ }
+]
