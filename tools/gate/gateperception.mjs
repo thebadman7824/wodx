@@ -59,8 +59,11 @@ export async function run() {
     await cainite.toggleStatusEffect("wodx-rotschreck", {active: true}); await sleep(500);
     const pale = document.getElementById("wodx-senses-screen")?.className ?? "";
     const drained = document.body.classList.contains("wsn-drained");
-    await cainite.toggleStatusEffect("wodx-frenzy", {active: false}); await cainite.toggleStatusEffect("wodx-rotschreck", {active: false}); await sleep(500);
-    const gone = !document.getElementById("wodx-senses-screen") && !document.body.classList.contains("wsn-drained");
+    await cainite.toggleStatusEffect("wodx-frenzy", {active: false}); await cainite.toggleStatusEffect("wodx-rotschreck", {active: false});
+    // the overlay fades out before it is removed: wait up to 3 s
+    const isGone = () => !document.getElementById("wodx-senses-screen") && !document.body.classList.contains("wsn-drained");
+    for ( let t = 0; t < 30 && !isGone(); t++ ) await sleep(100);
+    const gone = isGone();
     ok("3. screen", /wsn-frenzy/.test(red) && /wsn-rotschreck/.test(pale) && drained && gone, {red, pale, drained, gone});
 
     await wolf.update({"system.shapes.lupus.isactive": true, "system.shapes.homid.isactive": false}); await sleep(300);

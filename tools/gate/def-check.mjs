@@ -17,13 +17,17 @@ export async function run() {
         for (const [label, wid] of [["knife", knife?.id], ["punch", "unarmed:punch"]]) {
             const n = game.messages.size;
             await game.wodxCombat.attack({ attacker: M, target: W, weaponId: wid });
-            const t0 = Date.now(); while (game.messages.size === n && Date.now() - t0 < 6000) await new Promise(r => setTimeout(r, 100));
-            const msg = game.messages.contents.at(-1);
+            const card = () => game.messages.contents.slice(n).find(m => /Automatic defense:/.test(m.content));
+            const t0 = Date.now(); while (!card() && Date.now() - t0 < 8000) await new Promise(r => setTimeout(r, 100));
+            const msg = card();
             out.steps.push({ label, defaultValue, auto: (msg?.content.match(/Automatic defense:[^<]*/) ?? [""])[0], defense: (msg?.content.replace(/<[^>]+>/g, " ").match(/(Dodge|Block|Parry) \(Dexterity \+ [^)]*\)[^A-Z]*/) ?? [""])[0] });
         }
         out.best = game.wodxCombat.bestDefense(W, { defIndex: 0, defDice: 0, defDiff: 0 }, { ranged: false, type: "lethal" }).plans.map(p => [p.type, p.valid, p.dice, p.diff, !!p.weapon, p.invalid]);
     } finally { Hooks.off("renderDialogV2", h); }
     const file = new File([JSON.stringify(out, null, 1)], "def-check.json", { type: "application/json" });
     await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
-    return out.steps.map(s => s.auto).join(" | ");
+    const pass = out.steps.filter(s => s.auto).length;
+    out.summary = `${pass}/${out.steps.length}`;
+    console.log("def-check", out.summary, out.steps.map(s => s.auto).join(" | "));
+    return out.summary;
 }
