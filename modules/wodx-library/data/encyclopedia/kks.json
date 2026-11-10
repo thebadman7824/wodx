@@ -1,0 +1,162 @@
+[
+ {
+  "id": "kks-crime-cover",
+  "title": "Feeding Behind Crime",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Kuei-jin use the underworld without giving themselves away.",
+  "claims": [
+   {
+    "text": "A Kuei-jin can make criminals do nearly anything, as long as they see it only as crime; one who needs a steady supply of victims does better passing the feeding off as revenge on rival gangs or unruly locals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kks",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Great wealth and resources no mortal has let many Kuei-jin buy corrupt officials outright, while Disciplines or plain blackmail can sway honest ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kks",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-courts",
+   "kote-kuei-jin"
+  ]
+ },
+ {
+  "id": "kks-triads",
+  "title": "The Triads",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Chinese secret societies turned crime networks.",
+  "claims": [
+   {
+    "text": "Hong Kong was the Triad capital from 1949 until the 1997 handover, which sent many societies overseas and drew Western attention to them for the first time; their roots lie in old Chinese secret societies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kks",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Big societies such as the 14K, Shui Fong, Wo Shing Wo, Wo On Lok and Sun Yee On already ran much of their business abroad, and many leaders moved to Canada, the United States, Australia and Britain; staying close to corrupt officials proved the best way to survive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kks",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kks-crime-cover",
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "kks-yakuza",
+  "title": "The Yakuza",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Japan's organized crime families.",
+  "claims": [
+   {
+    "text": "The Yakuza modernized alongside Japan after the Meiji Restoration, taking over construction labour, rickshaws and the docks, though gambling stayed central to who they are and what they earn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kks",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The gumi system thrives by recruiting those Japanese society casts out: dropouts and misfits, members of the Korean and Chinese minorities and descendants of the burakumin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kks",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kks-crime-cover",
+   "kotec-japan-gaki",
+   "kotec-genji"
+  ]
+ },
+ {
+  "id": "kks-penanggalan",
+  "title": "Penanggalan of Southeast Asia",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mistresses of the rural Golden Courts.",
+  "claims": [
+   {
+    "text": "Penanggalan rule unchallenged across Cambodia, Laos, Vietnam, Thailand and Malaysia, using the fears of the rural poor through the 20th century to hold the jungles, fight one another and keep rival Kuei-jin bottled up in the cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kks",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Their grasp of modern society is weak.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kks",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-courts"
+  ]
+ }
+]
