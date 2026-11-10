@@ -811,6 +811,12 @@
    "title": "Tradition Book: Hollow Ones (Revised)",
    "short": "TB:HO",
    "edition": "Revised"
+  },
+  {
+   "id": "mroh",
+   "title": "Tradition Book: Order of Hermes (Revised)",
+   "short": "TB:OoH",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -948,6 +954,7 @@
   "mrce.json",
   "mrds.json",
   "mreu.json",
-  "mrho.json"
+  "mrho.json",
+  "mroh.json"
  ]
 }

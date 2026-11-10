@@ -1,0 +1,471 @@
+[
+ {
+  "id": "mroh-terms",
+  "title": "Hermetic terms",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Words of the Order of Hermes.",
+  "claims": [
+   {
+    "text": "Titles and trivia mark the Order, though the modern Tradition has trimmed much of the old ceremony for quicker dealings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Arx Hermeticum, the Fortress of Hermes, names the Order's structure and resolve; once tied to Doissetep, it has been reorganised rather than destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Bani means of the House of, and in diplomacy also covers other Traditions, so a Kannagara is addressed as bani Akashica.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Adam Kadmon, the Primordial Man, stands for the divine within humanity and a guide to godly perfection.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "mroh-doissetep"
+  ]
+ },
+ {
+  "id": "mroh-doissetep",
+  "title": "The ruins of Doissetep",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What remains of the Order's great Horizon fortress.",
+  "claims": [
+   {
+    "text": "In the Realm of Forces, the remains of Doissetep lie quiet, strewn with wrecked Umbral ships and glassy scars where science and sorcery once fought without limit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 33,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Ghosts and greedy scavengers sometimes pick through the slag, and now and then a Master braves the Avatar Storm to show the place to a student.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 33,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The ruins mark the end of an era for the Order of Hermes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 33,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "mroh-bonisagus"
+  ]
+ },
+ {
+  "id": "mroh-corrigenda",
+  "title": "The Peripheral Corrigenda",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The vast body of Hermetic case law.",
+  "claims": [
+   {
+    "text": "The Corrigenda gathers hundreds of thousands of rulings and touches nearly every part of Hermetic life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "It sets Tribunal sizes: usually six Quaesitores or mages of two other Houses, and 12 mages of four Houses under a Quaesitor for charges worthy of Requital.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "It also holds tens of thousands of overruled or outdated precepts, such as a 15th-century ban on firearms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "m20bos-council-justice"
+  ]
+ },
+ {
+  "id": "mroh-bonisagus",
+  "title": "House Bonisagus",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Lost, the Order's scattered theorists.",
+  "claims": [
+   {
+    "text": "The end of the Mythic Age drained the House's Quintessence and holdings, and the Bonisagi turned on one another.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "By the Reckoning the average Ivory Tower mage was past 100, showing how little the House courted the young.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "The loss of the Fraternal Society of Bonisagus at Doissetep left so many members unaccounted for that the House is now called the Lost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "mroh-doissetep"
+  ]
+ },
+ {
+  "id": "mroh-flambeau",
+  "title": "House Flambeau",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hermetic warriors of the Light.",
+  "claims": [
+   {
+    "text": "Flambeau take the first act of Creation, the call for light, as their model and seek to banish Darkness, Ahriman, in favour of Light, Ohrmuzd.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 52,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Dualists at heart, they scorn the material world and strive for a pure realm beyond the Umbrae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 52,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "They test their bodies to master fear, desire and pain, and defend the weak even at the cost of their lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 52,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "mroh-tytalus"
+  ]
+ },
+ {
+  "id": "mroh-fortunae",
+  "title": "House Fortunae",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Numismancers, masters of number and chance.",
+  "claims": [
+   {
+    "text": "Fortunae read the numeric patterns beneath Creation and use them to bend chance and to trust in destiny.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Seniority once ruled the House, reflecting its roots in Jewish religious tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "With many old scholars gone into seclusion, a younger meritocracy now ranks members by the brilliance of their proofs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "mroh-shaea",
+  "title": "House Shaea",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The House of the Crescent Moon, Egyptian Hermetics.",
+  "claims": [
+   {
+    "text": "Shaea practise a religious Hermeticism that calls on the gods of ancient Egypt rather than Greek, Roman, Hebrew or Christian powers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 57,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "To them a Name is the essence of a thing, and the Seshati command wind, foes, Umbrood and even space and time by speaking Names.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 57,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "The House is a sisterhood led by a High Priestess; it also uses curses, feline totem work and fertility magic, and binds dark entities in ways that skirt the Code of Hermes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 57,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "mroh-terms"
+  ]
+ },
+ {
+  "id": "mroh-tytalus",
+  "title": "House Tytalus",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hermetics who forge strength through conflict.",
+  "claims": [
+   {
+    "text": "After a failure that halved the House, the Tytali still refuse to soften their entry rites, which drives most recruits away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 60,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Apprentices face years of surprise tests from mentors and their allies, often at the worst moments, since an enemy will not wait.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 60,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Beating one's mentor in an open challenge ends the trials and marks the student's rise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 60,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "mroh-flambeau"
+  ]
+ },
+ {
+  "id": "mroh-verditius",
+  "title": "House Verditius and the Hermetic Will",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A new artisan House, and the Order's core belief.",
+  "claims": [
+   {
+    "text": "The present House Verditius is so new that it has not yet set initiation rites; its leaders from the old Houses Thig and Verditius are drafting them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 62,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Its Primus, Sharad Osei, once sought the never-filled seat of Primus of House Thig.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 62,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "More than any other group, the Order holds that the power to shape reality comes only from Awakened human will and the resolve to enforce it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mroh",
+      "page": 62,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "mroh-terms"
+  ]
+ }
+]
