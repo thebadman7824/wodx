@@ -1585,6 +1585,12 @@
    "title": "Demon Players Guide",
    "short": "Demon Players Guide",
    "edition": "First edition"
+  },
+  {
+   "id": "mtrpg",
+   "title": "Mummy: The Resurrection Players Guide",
+   "short": "Mummy Players Guide",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1851,6 +1857,7 @@
   "dcoa.json",
   "deb.json",
   "dhf.json",
-  "dpg.json"
+  "dpg.json",
+  "mtrpg.json"
  ]
 }

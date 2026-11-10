@@ -1,0 +1,239 @@
+[
+ {
+  "id": "mtrpg-three-lives",
+  "title": "The three lives of the Reborn",
+  "kind": "lore",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How an ancient spirit and a modern mortal become one of the Amenti.",
+  "claims": [
+   {
+    "text": "Unlike mortal hunters, who stand outside the supernatural, the Reborn belong to it: flesh made spirit, immortal yet dying again and again, servants of Balance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 13,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "A Reborn character is three people in turn: the tem-akh, the ancient spirit of the First Life; the modern mortal it joins, the Second Life; and the blend of the two that rises through the Rite of Rebirth, the Third Life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 13,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Whoever the Second Life was, even a nobody, the Rite of Rebirth makes the new Reborn a hero with a destiny.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 13,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mummies",
+   "spell-of-life",
+   "amenti-and-duat"
+  ]
+ },
+ {
+  "id": "mtrpg-teomallki",
+  "title": "The Teomallki",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Reborn of the Andes, made by the Spell of Going Westward.",
+  "claims": [
+   {
+    "text": "The Shemsu-heru long believed only Egypt held the secret of rebirth. After the Dja-akh, the Teomallki of the Andes and the Wu T'ian of China made themselves known, each with a rebirth as full as that of the Amenti.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 71,
+      "pdf": 73
+     }
+    ]
+   },
+   {
+    "text": "The Teomallki, also called Capacocha, descend from the mallki of Andean tradition. When foreign conquest destroyed the mallki and cut off their offerings, their spirits lingered without a way back, until Intimallki sun mummies of the Chimu spent nearly five centuries perfecting a spell that bonds a mallki spirit with a young soul.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 73,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Teomallki speak of Direction instead of Balance and face vision quests rather than the Judges of Maat. Their four dynasties, the suyu or quarters, are the Chaskimallki, Intimallki, Pachamallki and Uchumallki.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 73,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Once an illi, the ancient spirit, joins a fresh corpse, it controls the body until amawtas, the magicians, chant the Spell of Going Westward; the result is a fairly even blend of both lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 73,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Away from their homelands the Teomallki weaken just as the Amenti do outside the Web of Faith, and they have no name for the curse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 72,
+      "pdf": 74
+     },
+     {
+      "book": "mtrpg",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Long wary of foreign invaders, the Teomallki distrust the Amenti too, since Egyptian tem-akh roaming the world sometimes take souls the Teomallki see as theirs, and a few zealots hunt such intruders before they can join a body.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 72,
+      "pdf": 74
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mtrpg-three-lives",
+   "mtrpg-wu-tian",
+   "mummies"
+  ]
+ },
+ {
+  "id": "mtrpg-wu-tian",
+  "title": "The Wu T'ian",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Family of Heaven, Chinese Reborn of the Eight Immortals.",
+  "claims": [
+   {
+    "text": "The Wu T'ian, self-styled Family of Heaven, cycle between life and death like other Reborn, yet their souls never pass into Duat; they speak of heavenly realms the Amenti know nothing about.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "They claim the Eight Immortals made them. The Eight are now near demigods, rivals of Osiris in power, yet even they fear the coming Demon Age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 74,
+      "pdf": 76
+     },
+     {
+      "book": "mtrpg",
+      "page": 75,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "They fight the servants of corruption but hold that the rise of their demon emperor cannot be stopped; the Amenti take that emperor for a face of Apophis.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Some say the Eight descend from early followers of Lao-Tzu whose alchemy sometimes let them pass beyond life and death; others link them to the exalted Wan Xian of the Third Age.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 74,
+      "pdf": 76
+     },
+     {
+      "book": "mtrpg",
+      "page": 75,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Wu T'ian split into two dynasties by yin and yang: the Xian Lung, or Immortal Dragons, are guardians, lore-keepers and strategists; the Wu Feng, Family of the Phoenix, are healers, devil-hunters and peacemakers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 75,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Bound by duty to defend the Middle Kingdom, the Wu T'ian rarely travel; they gladly guide younger Reborn but guard their secrets from Yomi and test foreign seekers hard.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mtrpg",
+      "page": 72,
+      "pdf": 74
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mtrpg-teomallki",
+   "k1000h-yomi",
+   "apophis"
+  ]
+ }
+]
