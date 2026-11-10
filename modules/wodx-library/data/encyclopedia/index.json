@@ -643,6 +643,12 @@
    "title": "Rage Across New York",
    "short": "RA New York",
    "edition": "2nd"
+  },
+  {
+   "id": "raru",
+   "title": "Rage Across Russia",
+   "short": "RA Russia",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -752,6 +758,7 @@
   "raap.json",
   "raau.json",
   "raeg.json",
-  "rany.json"
+  "rany.json",
+  "raru.json"
  ]
 }
