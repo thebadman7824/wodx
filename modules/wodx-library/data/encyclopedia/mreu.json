@@ -1,0 +1,413 @@
+[
+ {
+  "id": "mreu-himalayan-war",
+  "title": "The Himalayan War",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ancient conflict between Akashics and the forerunners of the Euthanatos.",
+  "claims": [
+   {
+    "text": "Many events of the war are shielded against Time sight, some by old strategic wards and some by the reborn participants who would rather keep their past lives private.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Both Traditions discourage open study of the war, though modern death mages are more willing to dig and sometimes ask Akashics for help.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A modern chronology puts Akashic entry into India around 950 BCE, with doctrinal quarrels keeping them in northern camps.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos",
+   "akashayana",
+   "mrab-kannagara"
+  ]
+ },
+ {
+  "id": "mreu-chodona",
+  "title": "The Chodona",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Eight-Spoked Wheel of the Law that united the death mages.",
+  "claims": [
+   {
+    "text": "At the founding gathering the delegates first quarrelled over burial customs and accused one another of meddling with the Wheel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The Sirdar pointed out that each was repeating the same fears their home cultures held about them, and talk turned to shared purpose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Ten years later they set that purpose down as the Eight-Spoked Wheel of the Law, the Chodona; by 1314 the Wheel reached from Nepal to Ireland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos",
+   "mreu-chakravanti"
+  ]
+ },
+ {
+  "id": "mreu-chakravanti",
+  "title": "Chakravanti",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The oldest Thanatoic sect, which defines the Tradition.",
+  "claims": [
+   {
+    "text": "The Chakravanti trace their line to the Himalayan War and the driving of the Akashic Brotherhood out of southern India.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "The sect is split between traditionalists such as the Natatapas, who see new beliefs as confirming the Cycle, and Lhaksmists, who think new ideas question the old orthodoxy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Its core belief is that souls are eternal and reborn, lives rise or fall by karma, and siddhi let a skilled mage trade karmic traits with the oversoul.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos",
+   "mreu-himalayan-war",
+   "mreu-lhaksmists"
+  ]
+ },
+ {
+  "id": "mreu-lhaksmists",
+  "title": "Lhaksmists and Devasu",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two sects of the Chakravanti: fortune's devotees and Rudra's warriors.",
+  "claims": [
+   {
+    "text": "Lhaksmists began as a Natatapa subcult devoted to the Goddess of Fortune and now read chaos maths, information theory and gambling as signs of the Goddess.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "A Lhaksmist may let a coin or dice decide a weighty choice, treating luck as a test of will against karma, and usually keeps the result open to reading.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The Devasu channel Rudra, archer of the Vedic gods, through yoga and martial arts to defend Thanatoic lands, while internal threats are left to the Albireo.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mreu-chakravanti",
+   "euthanatos"
+  ]
+ },
+ {
+  "id": "mreu-madzimbabwe",
+  "title": "Madzimbabwe",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Southern African death mages tied to Great Zimbabwe.",
+  "claims": [
+   {
+    "text": "Legend says the Madzimbabwe came to the Convocation seeking the Sirdar Rustam, who had visited Africa on a last voyage and never come back.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Thanatoic history paints them as a young faction, but they had existed as an organised group for centuries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They link themselves to Great Zimbabwe, a meeting place for southern Africa's Awakened, and still prize the smaller stone courts in the region, many of which hold strong Nodes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos",
+   "mreu-chodona"
+  ]
+ },
+ {
+  "id": "mreu-hierochthonoi",
+  "title": "Hierochthonoi",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Greek priests of the earth among the Euthanatos.",
+  "claims": [
+   {
+    "text": "Rather than offer sacrifices, the Hierochthonoi give themselves to duty, following chthonic cults as old as Homer's day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "After Troy fell, sages spoke of the Ixos, sorcerer-spies said to have slipped Myrmidons into Ilion and to lie behind Agamemnon's death and the trials of Odysseus.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Chthonic gods like the Fates were honoured in caves and wild shrines, and Alexander's generals hired early Hierochthonoi as healers and necromancers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos",
+   "mreu-chodona"
+  ]
+ },
+ {
+  "id": "mreu-golden-chalice",
+  "title": "Golden Chalice",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The elite assassins of the Euthanatos.",
+  "claims": [
+   {
+    "text": "Apart from the Golden Chalice, no one joins a Vrata without first proving themselves in another sect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Tryouts are held yearly at a European estate that changes each time, mixing brutal physical tests, ambushes, alchemical riddles and staged betrayals around the clock.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Candidates need ratings of 4 in any five of Firearms, Melee, Stealth, Dodge, Technology, Subterfuge, Occult or Enigmas, two Spheres at 3, and one other rare gift; even that does not ensure entry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos",
+   "mreu-chakravanti"
+  ]
+ },
+ {
+  "id": "mreu-thanatoic-magic",
+  "title": "Spinning the soul",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why duty is the source of Thanatoic magic.",
+  "claims": [
+   {
+    "text": "To the Euthanatos the Chodona is not a moral rule laid on top of magic; duty is what makes their magic possible, since only a pure soul can touch the Akasha beneath reality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Save for Gilgul, the Atman, or Avatar, is held to be divine and indestructible, learning its own nature over many lives and able to reach Moksa.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "The Wheel gives the Tellurian its shape by enforcing cause and effect; if every being could bend reality, the world would fall back into chaos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mreu",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos",
+   "avatar",
+   "m20bos-council-justice"
+  ]
+ }
+]
