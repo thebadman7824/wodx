@@ -1,0 +1,98 @@
+[
+ {
+  "id": "heul-strange-monsters",
+  "title": "Rare and unknown monsters",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Creatures hunters have hardly ever met.",
+  "claims": [
+   {
+    "text": "Beyond bloodsuckers, shapechangers, sorcerers, demons and the walking dead, hunters run into rare, fleeting and bizarre beings that have seldom been seen before.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "heul",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Some such creatures echo human folklore and modern urban legends, from sewer alligators to killers with hooks, while others defy understanding altogether.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "heul",
+      "page": 12,
+      "pdf": 13
+     },
+     {
+      "book": "heul",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Wrong guesses and overconfidence carried over from known monsters have led hunters to terrible ends against these.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "heul",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-monsters",
+   "hemoon-hunters-and-werewolves",
+   "henoc-hunters-and-vampires"
+  ]
+ },
+ {
+  "id": "heul-tainted-places",
+  "title": "Tainted places",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sites the supernatural has touched.",
+  "claims": [
+   {
+    "text": "Not only creatures carry the supernatural: settings and places can be tainted or haunted too and threaten what hunters hold dear, whether they know it or not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "heul",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "One such account deals with a darkness born of the sea.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "heul",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "heul-strange-monsters"
+  ]
+ }
+]
