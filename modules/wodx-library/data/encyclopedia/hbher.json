@@ -1,0 +1,65 @@
+[
+ {
+  "id": "hbher-hermits",
+  "title": "The Hermit's burden",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why Hermits are the outcasts of the hunt.",
+  "claims": [
+   {
+    "text": "Hermits feel bound to act in the hunt, yet acting brings painful confrontation and holding back brings tormenting otherworldly commands, so they suffer either way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbher",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Other hunters often write Hermits off as insane or freakish and avoid working with them until times grow desperate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbher",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Now and then a Hermit is seized by a sweeping truth about monsters, the imbued or the Heralds and has no choice but to share it, which makes the outcasts valuable to hunters at large.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbher",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Each Hermit tends to coin a private vocabulary for monsters, hunters and the mission, built from Messenger contact and rare meetings with other imbued.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbher",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htrpg-lost-creeds",
+   "htr-messengers",
+   "hbave-creeds-take-shape"
+  ]
+ }
+]

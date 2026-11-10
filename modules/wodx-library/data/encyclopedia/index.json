@@ -1495,6 +1495,12 @@
    "title": "Hunter Book: Defender",
    "short": "HB Defender",
    "edition": "First edition"
+  },
+  {
+   "id": "hbher",
+   "title": "Hunter Book: Hermit",
+   "short": "HB Hermit",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1746,6 +1752,7 @@
   "hewd.json",
   "heul.json",
   "hbave.json",
-  "hbdef.json"
+  "hbdef.json",
+  "hbher.json"
  ]
 }
