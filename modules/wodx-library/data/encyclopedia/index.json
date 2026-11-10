@@ -1309,6 +1309,12 @@
    "title": "Denizens of the Dreaming",
    "short": "DotD",
    "edition": "Second edition"
+  },
+  {
+   "id": "cdan",
+   "title": "Dreams and Nightmares",
+   "short": "D&N",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1529,6 +1535,7 @@
   "cboh1.json",
   "cboh2.json",
   "cbolh.json",
-  "cden.json"
+  "cden.json",
+  "cdan.json"
  ]
 }
