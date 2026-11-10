@@ -937,6 +937,12 @@
    "title": "Blood Treachery",
    "short": "BT",
    "edition": "Revised"
+  },
+  {
+   "id": "mrman",
+   "title": "Manifesto: Transmissions from the Rogue Council",
+   "short": "Man",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1095,6 +1101,7 @@
   "mrdm2.json",
   "mrdote.json",
   "mrlp.json",
-  "mrbt.json"
+  "mrbt.json",
+  "mrman.json"
  ]
 }
