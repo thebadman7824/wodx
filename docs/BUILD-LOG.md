@@ -1121,3 +1121,10 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - The tile config has a Usual contents field; the farmstead's file sets the chest to a home.
 - gateadopt step 4 also checks the chest's guess.
 - Tests: 949 harness pass (2 new).
+
+## 2026-11-10: Phase 9 done, the Encyclopaedia Tenebrarum filled line by line
+
+- 2045 entries in modules/wodx-library/data/encyclopedia, from the core books (first edition, PRs 107-132) and then each line's supplements, one book per PR, up to PR 431 (main 8df185c, bundle wodx-2026-11-10o). Order: Vampire (V20, Revised, Dark Ages), Werewolf, Kindred of the East, Mage (M20, Revised and 2nd, Sorcerers Crusade, Dark Ages Grimoire), Wraith, Changeling, Hunter, Demon, Mummy, Orpheus, general World of Darkness.
+- Every claim was checked against its page, and the overlap check across all book texts finds no 8-word run shared with any book. Older entries that met new texts were reworded.
+- Left out: fiction, gamebooks, adventures and Storyteller-only books, fan compilations, books without readable page numbers or with unusable OCR (Mummy: The Resurrection core), rules-only quick references, and all Mind's Eye Theatre material (Ben, 2026-11-10). Real-world ethnography and history pages were left out too.
+- Deployed to rothenstein-wodx; encydiag 4/4, 283 files 0 mismatched, release stamp 8df185c.
