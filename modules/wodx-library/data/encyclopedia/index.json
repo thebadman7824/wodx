@@ -919,6 +919,12 @@
    "title": "Dead Magic 2: Secrets and Survivors",
    "short": "DM2",
    "edition": "Revised"
+  },
+  {
+   "id": "mrdote",
+   "title": "Dragons of the East",
+   "short": "DotE",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1074,6 +1080,7 @@
   "m1boc.json",
   "m2hor.json",
   "mrdm.json",
-  "mrdm2.json"
+  "mrdm2.json",
+  "mrdote.json"
  ]
 }
