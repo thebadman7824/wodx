@@ -74,6 +74,17 @@
    "modern"
   ],
   "summary": "The Garou campaign against Pentex in the rainforest.",
+  "date": {
+   "from": 1991,
+   "label": "from 1991",
+   "refs": [
+    {
+     "book": "raam",
+     "page": 19,
+     "pdf": 20
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Hollow Heart Caern is the Garou's main base in the Amazon War, holding medical and supply camps and the War Council, and every Garou bound for the jungle arrives there first.",

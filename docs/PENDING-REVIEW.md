@@ -308,4 +308,5 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-10 | How often a walled town has suburbs at its gates. | 85% for each gate field (B587). | Change the gate-out chance in assign_wards in layout.py. |
 | 2026-11-10 | How often a place has had a great fire. | Villages 20%, towns 40%, cities 60% (B588). | Change the fire chances in lay_out in organic.py. |
 | 2026-11-10 | Households now carry wealth (rich, middling, poor) in the map file; should Adopt keep it for WoDX NPC? | Not yet read by Adopt. | Add wealth to the household parse in adopt-rules.mjs (Interactables). |
+| 2026-11-10 | Which Encyclopaedia entries get a date, and from where. | Only events (and lore entries about one war, battle or treaty) whose books give a date on or beside the cited pages; 84 of 206 dated, the rest left blank; approx for decades and centuries (B593). | Edit the table D in tools/encyclopedia/event-dates.py and run it. |
 | 2026-11-10 | Which client works out a character's totals after a change. | Only the one that made the change (B600). | Remove the two `game.user.id` checks in wod-actor-base.js. |

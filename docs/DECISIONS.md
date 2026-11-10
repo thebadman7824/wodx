@@ -422,6 +422,11 @@ A walled town's fields at a gate become a suburb 85% of the time, with an inn an
 ## B588. Fire history (2026-11-10)
 Villages 20%, towns 40%, cities 60% have had one great fire: one block rebuilt in stone, with one burned-out plot left among the new houses.
 
+
+## B593. Dates for Encyclopaedia events (2026-11-10)
+An event gets a date only where a book near its cited pages gives one; an entry whose book gives no year stays undated rather than taking a date from outside the books. A date from another WoDX source book may stand in when the entry's own book is silent (the Iron Hag's waking, 1990, from Changing Breeds). Decades, centuries and "around" dates are marked approx. Lore entries that tell of one war, battle, fall or treaty were checked too; overviews of whole ages were left undated.
+## B589. Ways stop at the river bank; water gates in the wall (2026-11-10)
+Ben, 2026-11-10: a river must not lie over a path, and where the river passes the town wall there should be grates to let the water through. The river course is scored so a way that ends in the water, or a gate by the water, costs far more than one crossed by a bridge. Any way that still runs into the water without crossing stops on the bank, with stone river stairs down to the water (sidecar region landing-N, kept clear like a way). Alleys are not cut toward the river. Where the river passes the wall, the wall is cut and an iron grate (Cell-Bars wall texture) spans the water, with a tower on each bank (sidecar region water-gate-N, place kind gate, a note trigger). A self-check stops the generator if any way still runs into the water.
 ## B600. One client recomputes after a save (2026-11-10)
 The system's after-save recompute (totals, wound levels, movement) runs only on the client that made the change, and writes back only the values it changed instead of the whole character. Before, the Storyteller's and the owning player's browsers could both write the full actor after each change.
 

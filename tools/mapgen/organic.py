@@ -165,7 +165,7 @@ class OrganicTown(T.Town):
         for sg in self.segs:
             (ax, ay), (bx, by), h, _ = sg
             self.seg_grid.add((min(ax, bx) - h, min(ay, by) - h, abs(bx - ax) + 2 * h, abs(by - ay) + 2 * h), sg)
-        self.river_line, self.bridges = [], []
+        self.river_line, self.bridges, self.landings, self.grates = [], [], [], []
         if self.river_v: self.lay_river()
 
     def in_town(self, p): return G.inside(p, self.outline)
@@ -213,9 +213,15 @@ class OrganicTown(T.Town):
                     q = (a[0] + (b[0] - a[0]) * i / max(L_, 1), a[1] + (b[1] - a[1]) * i / max(L_, 1))
                     if abs(q[0] - self.xc) > self.cols or abs(q[1] - self.yc) > self.rows: continue
                     if min(G.seg_dist(q, p_, q_) for p_, q_ in zip(pts, pts[1:])) < h + hh: n += 1
+                if not any(seg_cross(a, b, p_, q_) for p_, q_ in zip(pts, pts[1:])):
+                    for q in (a, b):                          # a way that stops in the water costs the most
+                        if min(G.seg_dist(q, p_, q_) for p_, q_ in zip(pts, pts[1:])) < 1.25 * h + hh: n += 30
+            for g in self.gates:                              # nor through a town gate
+                if min(G.seg_dist(g, p_, q_) for p_, q_ in zip(pts, pts[1:])) < 1.25 * h + 4: n += 50
             return n
         pts = min(getattr(self, "river_cands", [self.river_v]), key=along)
         self.river_v = self.river_line = pts
+        self.trim_to_banks()
         for a, b in zip(pts, pts[1:]):
             sg = (a, b, h + .4, "river")                     # in the way grid (so nothing is built on it), not a way
             self.seg_grid.add((min(a[0], b[0]) - h, min(a[1], b[1]) - h, abs(b[0] - a[0]) + 2 * h, abs(b[1] - a[1]) + 2 * h), sg)
@@ -229,6 +235,64 @@ class OrganicTown(T.Town):
             L_, Lf = math.hypot(*d) or 1, math.hypot(*f) or 1
             sin = abs(d[0] * f[1] - d[1] * f[0]) / L_ / Lf                 # the way's slant across the stream
             self.bridges.append({"at": x, "dir": (d[0] / L_, d[1] / L_), "len": 2 * h / max(sin, .5) + 2.4, "w": 2.8 if k in ("main", "road") else 2.0})
+
+    def river_near(self, q):
+        """The nearest point on the river's middle line, and the distance to it."""
+        best = None
+        for a, b in zip(self.river_line, self.river_line[1:]):
+            dx, dy = b[0] - a[0], b[1] - a[1]
+            L2 = dx * dx + dy * dy or 1
+            t = max(0, min(1, ((q[0] - a[0]) * dx + (q[1] - a[1]) * dy) / L2))
+            c = (a[0] + dx * t, a[1] + dy * t)
+            d = math.dist(q, c)
+            if best is None or d < best[1]: best = (c, d)
+        return best
+
+    def river_seg_dist(self, a, b):
+        """How near a straight way from a to b comes to the river's middle line."""
+        best = 1e9
+        for p, q in zip(self.river_line, self.river_line[1:]):
+            if seg_cross(a, b, p, q): return 0.0
+            best = min(best, G.seg_dist(a, p, q), G.seg_dist(b, p, q), G.seg_dist(p, a, b), G.seg_dist(q, a, b))
+        return best
+
+    def trim_to_banks(self):
+        """A way that runs down to the river without crossing it stops on the bank, with stone stairs down to the
+        water (a landing for boats and buckets); one lying wholly in the water is dropped."""
+        vh = 1.25 * self.river_half                           # the water as drawn
+        pts, keep, self.landings = self.river_line, [], []
+        for a, b, hh, k in self.segs:
+            if any(seg_cross(a, b, p, q) for p, q in zip(pts, pts[1:])): keep.append((a, b, hh, k)); continue
+            ends = [a, b]
+            L_ = math.dist(a, b) or 1
+            for i in (0, 1):
+                o = ends[1 - i]
+                d = ((o[0] - ends[i][0]) / L_, (o[1] - ends[i][1]) / L_)
+                q, t = ends[i], 0.0
+                while self.river_near(q)[1] < vh + hh + .1 and t < L_:
+                    t += .25; q = (ends[i][0] + d[0] * t, ends[i][1] + d[1] * t)
+                if t >= L_: ends = None; break
+                if t > 0:
+                    ends[i] = q
+                    if 2 < q[0] < self.cols - 2 and 2 < q[1] < self.rows - 2 and not any(math.dist(q, l["at"]) < 3 for l in self.landings):
+                        c, dd = self.river_near(q)
+                        u = ((c[0] - q[0]) / dd, (c[1] - q[1]) / dd)
+                        ln = dd - vh + .4
+                        mid = (q[0] + u[0] * ln / 2, q[1] + u[1] * ln / 2)
+                        self.landings.append({"at": q, "dir": u, "poly": box_corners(mid[0], mid[1], math.atan2(u[1], u[0]), ln, max(1.6, 2 * hh)),
+                                              "mid": mid, "len": ln, "half": hh})
+                L_ = math.dist(*ends) if ends else 0
+            if ends and math.dist(*ends) > .5: keep.append((ends[0], ends[1], hh, k))
+        self.segs = keep
+        self.seg_grid = T.Grid(6)
+        for sg in self.segs:
+            (ax, ay), (bx, by), hh, _ = sg
+            self.seg_grid.add((min(ax, bx) - hh, min(ay, by) - hh, abs(bx - ax) + 2 * hh, abs(by - ay) + 2 * hh), sg)
+        for l in self.landings:                               # kept clear like a way, but not drawn as one
+            q, u, ln = l["at"], l["dir"], l["len"]
+            e = (q[0] + u[0] * ln, q[1] + u[1] * ln)
+            sg = (q, e, l["half"], "landing")
+            self.seg_grid.add((min(q[0], e[0]) - 2, min(q[1], e[1]) - 2, abs(e[0] - q[0]) + 4, abs(e[1] - q[1]) + 4), sg)
 
     def river_dist(self, q):
         return min(G.seg_dist(q, a, b) for a, b in zip(self.river_line, self.river_line[1:])) - self.river_half
@@ -438,6 +502,7 @@ class OrganicTown(T.Town):
                 if ch:
                     band = G.buffer_line(list(ch), gap / 2)
                     if any(G.separation(band, hb) < .2 for _, o in self.bgrid.near(G.bbox(band), 1) for hb in o.hulls): gap = 0.0
+                    elif self.river_line and self.river_seg_dist(*ch) < 1.25 * self.river_half + gap: gap = 0.0   # no alley into the water
                     else: alleys.append((ch[0], ch[1], gap / 2))
                 else: gap = 0.0
             p1 = G.half_plane(poly, p, nrm, gap / 2)
@@ -874,6 +939,41 @@ class OrganicTown(T.Town):
 
     # ------------------------------------------------------------ the wall
     def wall_pieces(self):
+        """The wall runs and towers, cut where the river passes through (self.grates: the water gates)."""
+        if getattr(self, "_walls", None): return self._walls
+        self._walls = self.cut_walls()
+        return self._walls
+
+    def cut_walls(self):
+        runs, towers = self.wall_runs()
+        self.grates = []
+        if not self.river_line or not runs: return runs, towers
+        h = 1.25 * self.river_half + .3
+        wet = lambda q: self.river_near(q)[1] < h
+        towers = [t for t in towers if self.river_near(t)[1] > h + .9]     # none standing in the stream
+        out = []
+        for run in runs:
+            cur, inside, entry, prev = [], False, None, None
+            for a, b in zip(run, run[1:]):
+                n = max(1, int(math.dist(a, b) / .1))
+                for k in range(n + (1 if b is run[-1] else 0)):
+                    q = (a[0] + (b[0] - a[0]) * k / n, a[1] + (b[1] - a[1]) * k / n)
+                    w = wet(q)
+                    if w and not inside:
+                        if cur: cur.append(q); out.append(cur)
+                        cur, inside, entry = [], True, prev or q
+                    elif not w and inside:
+                        self.grates.append((entry, q)); inside, cur = False, [q]
+                        L_ = math.dist(entry, q) or 1
+                        u = ((q[0] - entry[0]) / L_, (q[1] - entry[1]) / L_)
+                        towers += [(entry[0] - u[0] * 1.1, entry[1] - u[1] * 1.1), (q[0] + u[0] * 1.1, q[1] + u[1] * 1.1)]
+                    elif not w and (not cur or k == 0): cur.append(q)
+                    prev = q
+            if b is not None and not inside and cur and cur[-1] != run[-1]: cur.append(run[-1])
+            if cur: out.append(cur)
+        return [r for r in out if len(r) > 1 and sum(math.dist(a, b) for a, b in zip(r, r[1:])) > .3], towers
+
+    def wall_runs(self):
         """The curtain wall as open runs between the gates, each gate a gap of three squares; and the towers."""
         if not self.wall: return [], []
         ring = self.wall
@@ -934,6 +1034,10 @@ class OrganicTown(T.Town):
         runs, towers = self.wall_pieces()
         for run in runs:
             for piece in G.clip_line(run, bw): walls.append(wall_with_portals(piece, "Stone_A.png", [], False))
+        for p0, p1 in getattr(self, "grates", []):            # the water gates: iron bars across the stream
+            for piece in G.clip_line([p0, p1], bw): walls.append(wall_with_portals(piece, "Cell-Bars-Ribbon-A-wall.png", [], False))
+        for l in self.landings:                                # river stairs: stone steps down to the water
+            if overlaps(G.bbox(l["poly"]), win, 1): patterns.append(pattern(l["poly"], B.FLOORS["stone"], math.atan2(l["dir"][1], l["dir"][0])))
         for tx, ty in towers:
             if T.inside(tx, ty, win, 1.5):
                 ring = [(tx + 1.1 * math.cos(a * math.pi / 6), ty + 1.1 * math.sin(a * math.pi / 6)) for a in range(12)]
@@ -1030,6 +1134,14 @@ class OrganicTown(T.Town):
         if self.washing:
             rs = region_shape(self.washing["poly"])
             if rs: regions.append({"id": "washing-place", "label": "The washing place", "rect": rs[0], "points": rs[1], "place": {"kind": "other"}})
+        for k, l in enumerate(self.landings):
+            rs = region_shape(l["poly"])
+            if rs: regions.append({"id": f"landing-{k + 1}", "label": "River stairs", "rect": rs[0], "points": rs[1], "place": {"kind": "street"}})
+        if self.wall: self.wall_pieces()
+        for k, (p0, p1) in enumerate(getattr(self, "grates", [])):
+            rs = region_shape(G.buffer_line([p0, p1], 1))
+            if rs: regions.append({"id": f"water-gate-{k + 1}", "label": "Water gate", "rect": rs[0], "points": rs[1], "place": {"kind": "gate"},
+                                   "behaviors": [{"type": "trigger", "system": {"label": f"the water gate of {self.name}, an iron grate over the river", "does": "note", "who": "pcs"}}]})
         for k, br in enumerate(self.bridges):
             rs = region_shape(self.bridge_poly(br))
             if rs: regions.append({"id": f"bridge-{k + 1}", "label": "Bridge", "rect": rs[0], "points": rs[1], "place": {"kind": "street"}})
@@ -1070,7 +1182,9 @@ class OrganicTown(T.Town):
                     side = "west" if end[0] < .01 else "east" if end[0] > self.cols - .01 else "north" if end[1] < .01 else "south"
                     x = min(max(end[0] - 1.5, 0), self.cols - 3); y = min(max(end[1] - 1.5, 0), self.rows - 3)
                     rc = T.clip((x, y, 3, 3), win)
-                    if rc: regions.append({"id": f"road-{side}-{k + 1}", "label": f"Road in from the {side}", "rect": rc,
+                    rid = f"road-{side}-{k + 1}"
+                    while any(r["id"] == rid for r in regions): rid += "b"     # a road that leaves by the same side twice
+                    if rc: regions.append({"id": rid, "label": f"Road in from the {side}", "rect": rc,
                                            "behaviors": [{"type": "trigger", "system": {"label": f"the road into {self.name} from the {side}", "does": "note", "who": "pcs"}}]})
         nb = self.neighbours(pt)
         for side, other in nb.items():
@@ -1096,7 +1210,7 @@ class OrganicTown(T.Town):
         for a, b, h, k in self.segs:
             o.append(f'<line x1="{a[0] * s:.1f}" y1="{a[1] * s:.1f}" x2="{b[0] * s:.1f}" y2="{b[1] * s:.1f}" stroke="#c9b48a" stroke-width="{2 * h * s:.1f}" stroke-linecap="round"/>')
         if self.river_line:
-            o.append(f'<polyline points="{" ".join(map(f, self.river_line))}" fill="none" stroke="#7fa7c9" stroke-width="{2 * self.river_half * s:.1f}" stroke-linejoin="round"/>')
+            o.append(f'<polyline points="{" ".join(map(f, self.river_line))}" fill="none" stroke="#7fa7c9" stroke-width="{2.5 * self.river_half * s:.1f}" stroke-linejoin="round"/>')
         for q in self.burned: o.append(f'<polygon points="{" ".join(map(f, q))}" fill="#6d6259" stroke="#333"/>')
         if self.washing: o.append(f'<polygon points="{" ".join(map(f, self.washing["poly"]))}" fill="#cfe0ee" stroke="#456"/>')
         for br in self.bridges: o.append(f'<polygon points="{" ".join(map(f, self.bridge_poly(br)))}" fill="#a07a4c" stroke="#5a3d1e"/>')
@@ -1107,6 +1221,8 @@ class OrganicTown(T.Town):
             for a, c in self.plot_fences(pl): o.append(f'<line x1="{a[0] * s:.1f}" y1="{a[1] * s:.1f}" x2="{c[0] * s:.1f}" y2="{c[1] * s:.1f}" stroke="#6b4f2a" stroke-width="1"/>')
         runs, towers = self.wall_pieces()
         for run in runs: o.append(f'<polyline points="{" ".join(map(f, run))}" fill="none" stroke="#444" stroke-width="{.6 * s}"/>')
+        for p0, p1 in getattr(self, "grates", []): o.append(f'<line x1="{p0[0] * s:.1f}" y1="{p0[1] * s:.1f}" x2="{p1[0] * s:.1f}" y2="{p1[1] * s:.1f}" stroke="#222" stroke-width="{.5 * s}" stroke-dasharray="{.25 * s} {.25 * s}"/>')
+        for l in self.landings: o.append(f'<polygon points="{" ".join(map(f, l["poly"]))}" fill="#b8b2a6" stroke="#555"/>')
         for t in towers: o.append(f'<circle cx="{t[0] * s:.1f}" cy="{t[1] * s:.1f}" r="{1.1 * s}" fill="#666"/>')
         for b in self.blds:
             fill = {"rich": "#fff4d8", "poor": "#efe9e0"}.get(getattr(b, "wealth", ""), "#fffdf8")
@@ -1153,3 +1269,8 @@ class OrganicTown(T.Town):
             if not self.off_ways(b.hulls, b.rect, 0): raise SystemExit(f"{b.key} stands on a way")
         for g in self.gardens:
             if not self.off_ways([g["poly"]], g["rect"], 0): raise SystemExit(f"{g['id']} stands on a way")
+        if self.river_line:                                   # no way runs on into the water without a bridge
+            vh, rl = 1.25 * self.river_half, self.river_line
+            for a, b, hh, k in self.segs:
+                if any(seg_cross(a, b, p, q) for p, q in zip(rl, rl[1:])): continue
+                if min(self.river_near(a)[1], self.river_near(b)[1]) < vh + hh: raise SystemExit(f"a {k} runs into the river at {a}, {b}")

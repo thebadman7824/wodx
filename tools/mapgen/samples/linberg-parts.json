@@ -8,7 +8,7 @@
   120,
   133
  ],
- "population": 155,
+ "population": 142,
  "parts": [
   {
    "id": "A1",
@@ -19,46 +19,46 @@
     0
    ],
    "cells": [
-    62,
+    63,
     54
    ],
    "cut": [
     0,
     0,
-    57,
-    54
+    59,
+    50
    ],
    "neighbours": {
     "south": "B1",
     "east": "A2"
    },
-   "households": 7,
-   "population": 31
+   "households": 8,
+   "population": 41
   },
   {
    "id": "A2",
    "map": "linberg-a2.dungeondraft_map",
    "sidecar": "linberg-a2.wodx.json",
    "origin": [
-    57,
+    59,
     0
    ],
    "cells": [
-    63,
-    61
+    61,
+    54
    ],
    "cut": [
-    57,
+    59,
     0,
-    63,
-    54
+    61,
+    50
    ],
    "neighbours": {
     "south": "B2",
     "west": "A1"
    },
-   "households": 10,
-   "population": 35
+   "households": 7,
+   "population": 28
   },
   {
    "id": "B1",
@@ -66,24 +66,24 @@
    "sidecar": "linberg-b1.wodx.json",
    "origin": [
     0,
-    52
+    50
    ],
    "cells": [
-    60,
-    39
+    63,
+    42
    ],
    "cut": [
     0,
-    54,
-    57,
-    34
+    50,
+    59,
+    38
    ],
    "neighbours": {
     "north": "A1",
     "south": "C1",
     "east": "B2"
    },
-   "households": 5,
+   "households": 6,
    "population": 21
   },
   {
@@ -91,26 +91,26 @@
    "map": "linberg-b2.dungeondraft_map",
    "sidecar": "linberg-b2.wodx.json",
    "origin": [
-    57,
-    54
+    59,
+    47
    ],
    "cells": [
-    63,
-    34
+    61,
+    41
    ],
    "cut": [
-    57,
-    54,
-    63,
-    34
+    59,
+    50,
+    61,
+    38
    ],
    "neighbours": {
     "north": "A2",
     "south": "C2",
     "west": "B1"
    },
-   "households": 7,
-   "population": 25
+   "households": 8,
+   "population": 28
   },
   {
    "id": "C1",
@@ -118,49 +118,49 @@
    "sidecar": "linberg-c1.wodx.json",
    "origin": [
     0,
-    83
+    88
    ],
    "cells": [
-    60,
-    50
+    59,
+    45
    ],
    "cut": [
     0,
     88,
-    57,
+    59,
     45
    ],
    "neighbours": {
     "north": "B1",
     "east": "C2"
    },
-   "households": 8,
-   "population": 31
+   "households": 4,
+   "population": 13
   },
   {
    "id": "C2",
    "map": "linberg-c2.dungeondraft_map",
    "sidecar": "linberg-c2.wodx.json",
    "origin": [
-    52,
-    83
+    55,
+    88
    ],
    "cells": [
-    68,
-    50
+    65,
+    45
    ],
    "cut": [
-    57,
+    59,
     88,
-    63,
+    61,
     45
    ],
    "neighbours": {
     "north": "B2",
     "west": "C1"
    },
-   "households": 3,
-   "population": 12
+   "households": 2,
+   "population": 11
   }
  ]
 }

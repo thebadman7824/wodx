@@ -50,6 +50,17 @@
    "dark-ages"
   ],
   "summary": "The Cainite frenzy after the crusader capture of 1099.",
+  "date": {
+   "from": 1099,
+   "label": "1099",
+   "refs": [
+    {
+     "book": "dajbn",
+     "page": 38,
+     "pdf": 39
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The crusader capture of Jerusalem in 1099 was followed by slaughter so great that some streets ran deep with blood.",
@@ -100,6 +111,18 @@
    "dark-ages"
   ],
   "summary": "How the city’s undead society was rebuilt after 1099.",
+  "date": {
+   "from": 1099,
+   "label": "after 1099",
+   "approx": true,
+   "refs": [
+    {
+     "book": "dajbn",
+     "page": 38,
+     "pdf": 39
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 1120 the Brujah Azif came to the city and set about rotting its Christian institutions from within, aiming to bring down the Kingdom of Jerusalem.",

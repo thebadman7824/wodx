@@ -1061,6 +1061,18 @@
    "modern"
   ],
   "summary": "The rising of young Kindred against their elders, centuries ago, that gave birth to the Camarilla and the Sabbat.",
+  "date": {
+   "from": 1381,
+   "to": 1493,
+   "label": "1381 to 1493",
+   "refs": [
+    {
+     "book": "gtanarch",
+     "page": 19,
+     "pdf": 20
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The revolt of centuries past is the model for today's anarch unrest.",

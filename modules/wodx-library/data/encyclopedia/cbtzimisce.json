@@ -10,6 +10,18 @@
    "dark-ages"
   ],
   "summary": "How the young Fiends broke their elders' blood oaths.",
+  "date": {
+   "from": 1241,
+   "label": "after the Mongol invasion of 1241",
+   "approx": true,
+   "refs": [
+    {
+     "book": "cbtzimisce",
+     "page": 21,
+     "pdf": 22
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Clan legend says the Eldest freed the land spirit Kupala from the Carpathians, where Lupine shamans had trapped it, in return for lost magic and alliance; Kupala stayed bound to the soil and the region's Lupines never recovered.",

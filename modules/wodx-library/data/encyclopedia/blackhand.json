@@ -112,6 +112,18 @@
    "ancient"
   ],
   "summary": "The first Cainite allies of the cult.",
+  "date": {
+   "from": -800,
+   "to": -650,
+   "label": "800 to 650 BCE",
+   "refs": [
+    {
+     "book": "blackhand",
+     "page": 20,
+     "pdf": 21
+    }
+   ]
+  },
   "claims": [
    {
     "text": "From about 800 BCE the cult courted the Salubri and the Assamites in the East; both refused the idea of bringing Gehenna but kept fighting the Followers of Set.",

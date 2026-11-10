@@ -10,6 +10,19 @@
    "wild-west"
   ],
   "summary": "How a bound Bane became a fusion of Weaver and Wyrm.",
+  "date": {
+   "from": 1830,
+   "to": 1839,
+   "label": "1830s",
+   "approx": true,
+   "refs": [
+    {
+     "book": "wawwcore",
+     "page": 62,
+     "pdf": 65
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Few Garou know of the Storm Eater, and fewer recall when its Uktena binders chained it; once it had fed on Wyld energy until it grew vast, then lay dormant for ages unable to call its minions.",

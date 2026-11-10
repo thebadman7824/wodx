@@ -62,6 +62,17 @@
    "modern"
   ],
   "summary": "The end of the Brujah Council.",
+  "date": {
+   "from": 1990,
+   "label": "1990",
+   "refs": [
+    {
+     "book": "anarchs",
+     "page": 17,
+     "pdf": 18
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 1985 the Council sought a normal footing with the Camarilla against unnamed threats; in 1990 all contact stopped, then all contact with any Kindred in Russia, and Tremere spying there failed.",

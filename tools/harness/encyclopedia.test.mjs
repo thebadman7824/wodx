@@ -89,6 +89,21 @@ test("an entry with none of the new parts makes the same journal as before", () 
   const html = E.toJournal(good, {books: {v20: books[0]}}).pages[0].text.content;
   assert.equal(html, `<p><em>Faction</em></p><p>The largest sect of the Kindred, keeper of the Masquerade.</p><ul><li>Its members keep the Six Traditions. <span class="wodx-ency-tier wodx-ency-stated">Stated</span> <span class="wodx-shelf-src">V20, p. 13 (pdf 15)</span></li></ul><p><strong>See also:</strong> @UUID[Compendium.world.wodx-encyclopedia.JournalEntry.${E.docId("the-masquerade")}]{the-masquerade}</p>`);
 });
+test("an event's date: checked, shown under When with its page, and flagged by year", () => {
+  const b = {v20: books[0]};
+  const ev = {...good, id: "the-founding", kind: "event", date: {from: 1381, to: 1493, label: "1381 to 1493", refs: [{book: "v20", page: 13, pdf: 15}]}};
+  assert.deepEqual(E.checkEntry(ev, b), []);
+  assert.match(E.checkEntry({...ev, date: {...ev.date, from: 0}}, b).join(), /date.from must be a year/);
+  assert.match(E.checkEntry({...ev, date: {...ev.date, to: 1300}}, b).join(), /date.to must be a year no earlier/);
+  assert.match(E.checkEntry({...ev, date: {...ev.date, refs: []}}, b).join(), /date has no source/);
+  assert.match(E.checkEntry({...ev, date: {...ev.date, label: ""}}, b).join(), /date has no text/);
+  assert.deepEqual(E.checkEntry({...ev, date: {from: -800, label: "800 BCE", approx: true, refs: [{book: "v20", page: 13}]}}, b), []);
+  const j = E.toJournal(ev, {books: b});
+  assert.match(j.pages[0].text.content, /<p><strong>When:<\/strong> 1381 to 1493 <span class="wodx-shelf-src">V20, p\. 13 \(pdf 15\)<\/span><\/p>/);
+  assert.equal(j.flags["wodx-library"].year, 1381);
+  assert.equal(j.flags["wodx-library"].yearTo, 1493);
+  assert.equal(E.toJournal(good, {books: b}).flags["wodx-library"].year, undefined);
+});
 test("the Library window has a Shelf choice, marked fixed", async () => {
   const src = (await import("node:fs")).readFileSync(fileURLToPath(new URL("../../modules/wodx-library/scripts/shelves.mjs", import.meta.url)), "utf8");
   assert.match(src, /select name="shelf" data-fixed/);

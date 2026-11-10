@@ -61,6 +61,18 @@
    "modern"
   ],
   "summary": "How the Council built its meeting Realm, 1450 to 1456.",
+  "date": {
+   "from": 1450,
+   "to": 1456,
+   "label": "1450 to 1456",
+   "refs": [
+    {
+     "book": "m2hor",
+     "page": 41,
+     "pdf": 42
+    }
+   ]
+  },
   "claims": [
    {
     "text": "After the defeat of the Craftmasons in the Battle of Flames in 1450, the Primi of the Traditions resolved to build a Realm far from Earth as their meeting place.",
@@ -113,6 +125,18 @@
    "modern"
   ],
   "summary": "Changes on the Council from the 1500s to the Second World War.",
+  "date": {
+   "from": 1560,
+   "to": 1946,
+   "label": "1560s to 1946",
+   "refs": [
+    {
+     "book": "m2hor",
+     "page": 44,
+     "pdf": 45
+    }
+   ]
+  },
   "claims": [
    {
     "text": "During the witch-hunts of the 1560s refugees flooded Horizon, and Doissetep, once called its sister Chantry, broke with it over a failed plan for European universities.",

@@ -10,6 +10,19 @@
    "wild-west"
   ],
   "summary": "The Bane loosed on the Savage West in the 1830s.",
+  "date": {
+   "from": 1830,
+   "to": 1839,
+   "label": "1830s",
+   "approx": true,
+   "refs": [
+    {
+     "book": "w20wwx",
+     "page": 8,
+     "pdf": 9
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In the Pure Lands’ dawn times, the three native tribes could only weaken the mightiest Banes, so the Uktena sealed them under the earth behind wards tied to each spirit’s ban.",

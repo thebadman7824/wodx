@@ -62,6 +62,17 @@
    "modern"
   ],
   "summary": "The year the Technocracy lost its grip on Iran.",
+  "date": {
+   "from": 1979,
+   "label": "January 1979",
+   "refs": [
+    {
+     "book": "mrlp",
+     "page": 18,
+     "pdf": 19
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 1979 the Shah's government fell and Technocratic agents were driven out of Iran, a turn the Batini call the Reprieve.",
