@@ -673,6 +673,12 @@
    "title": "Rage Across the World, Volume 2 (Dark Alliance: Vancouver)",
    "short": "RA World 2",
    "edition": "First edition"
+  },
+  {
+   "id": "dawots",
+   "title": "Dark Ages: Wolves of the Sea",
+   "short": "DA Wolves of the Sea",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -787,6 +793,7 @@
   "raam.json",
   "rahe.json",
   "ratw1.json",
-  "ratw2.json"
+  "ratw2.json",
+  "dawots.json"
  ]
 }
