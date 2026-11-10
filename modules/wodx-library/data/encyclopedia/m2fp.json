@@ -1,0 +1,182 @@
+[
+ {
+  "id": "m2fp-grand-convocation",
+  "title": "The Grand Convocation",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance",
+   "modern"
+  ],
+  "summary": "The great meeting of mages that gave birth to the Council of Nine.",
+  "claims": [
+   {
+    "text": "Baldric LaSalle of House Tytalus carried word of a worldwide Tribunal; delegations gathered at a Node called Caverna Ominorum in the ruins of a Roman pavilion before going on to Horizon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 8,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "More than a thousand mages, beasts and companions met in Horizon, a Realm shaped from Prime Force drawn from nine sacred sites chosen by the Tradition founders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 8,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "Porthos, later Master of Doissetep, went as a young delegate and did not see the home Chantry again for nearly ten years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 8,
+      "pdf": 6
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "m2hor-founding",
+   "mroh-doissetep"
+  ]
+ },
+ {
+  "id": "m2fp-founding-timeline",
+  "title": "Road to the Council",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance",
+   "modern"
+  ],
+  "summary": "Key dates from Mistridge to the founding quests.",
+  "claims": [
+   {
+    "text": "The Craftmasons destroyed Mistridge in the winter of 1210, and the Convention of the White Tower met on 25 March 1325; the Ascension War is dated from 1330.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 12,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "In 1440 the Hermetic master Baldric met Lady Nightshade of the Verbena and Master Valorian of the Chorus in the ruins of Mistridge, where fae are said to have visited them, and the three agreed to found an order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 12,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "On the quests that followed, Nightshade travelled the Wyck paths to North America and met Star-of-Eagles, and froze the army of the English Inquisitor General Wyndgarde in a blizzard in Ireland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 12,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "Baldric and Valorian travelled through Africa and the Middle East alongside Sh'zar the Seer and Ali-beh-shaar of the Ahl-i-Batin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 12,
+      "pdf": 8
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-mistridge",
+   "mrgtt-craftmasons-rise",
+   "council-of-nine",
+   "verbena",
+   "celestial-chorus"
+  ]
+ },
+ {
+  "id": "m2fp-first-cabal",
+  "title": "The First Cabal",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance",
+   "modern"
+  ],
+  "summary": "The nine mages the young Council sent out together, and their fate.",
+  "claims": [
+   {
+    "text": "The Akashic member, Fall Breeze, spoke a dozen languages, had a famous temper and a growing taste for Ecstatic drugs, and died in battle at thirty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 18,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Heylel Teomim of the Solificati, the Cabal's leader and maker of the legendary Philosopher's Stone, was an alchemical fusion of two people, Julius de Medici and Mia de Napoli, who never fully became one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 28,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Heylel was later executed for betraying the Cabal, a charge Heylel's own testament disputes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2fp",
+      "page": 28,
+      "pdf": 16
+     },
+     {
+      "book": "m2fp",
+      "page": 42,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-solificati",
+   "mrcrafts-children-of-knowledge",
+   "akashayana"
+  ]
+ }
+]

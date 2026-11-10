@@ -1015,6 +1015,12 @@
    "title": "Ascension's Right Hand",
    "short": "ARH",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2fp",
+   "title": "The Fragile Path: Testaments of the First Cabal",
+   "short": "FP",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1186,6 +1192,7 @@
   "m2ta2.json",
   "m2tt.json",
   "m2osg.json",
-  "m2arh.json"
+  "m2arh.json",
+  "m2fp.json"
  ]
 }
