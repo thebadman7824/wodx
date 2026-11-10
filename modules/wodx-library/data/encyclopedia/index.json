@@ -1405,6 +1405,12 @@
    "title": "Kithbook: Pooka",
    "short": "KB Pooka",
    "edition": "Second edition"
+  },
+  {
+   "id": "ckeshu",
+   "title": "Kithbook: Eshu",
+   "short": "KB Eshu",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1641,6 +1647,7 @@
   "cshc.json",
   "cwic.json",
   "cknock.json",
-  "ckpooka.json"
+  "ckpooka.json",
+  "ckeshu.json"
  ]
 }

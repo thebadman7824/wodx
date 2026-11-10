@@ -1,0 +1,53 @@
+[
+ {
+  "id": "ckeshu-elegbara-orishas",
+  "title": "The Elegbara and the orishas",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Eshu faith and custom.",
+  "claims": [
+   {
+    "text": "All Elegbara, as the eshu call themselves, honor Eshu, if only as a token of respect, and a few form deep bonds with other orishas as well; they see the orishas at work in the world every day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckeshu",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The bravest, legend says, may one day join the orishas in the palace above the sky, the highest honor there is.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ckeshu",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Without the sidhe's tangled hierarchy, Elegbara settle quarrels openly and forgive as soon as the ordeal is over.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckeshu",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "eshu",
+   "cnob-fior"
+  ]
+ }
+]
