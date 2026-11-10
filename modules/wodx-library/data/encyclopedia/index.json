@@ -829,6 +829,12 @@
    "title": "Tradition Book: Verbena (Revised)",
    "short": "TB:Ve",
    "edition": "Revised"
+  },
+  {
+   "id": "mrva",
+   "title": "Tradition Book: Virtual Adepts (Revised)",
+   "short": "TB:VA",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -969,6 +975,7 @@
   "mrho.json",
   "mroh.json",
   "mrse.json",
-  "mrve.json"
+  "mrve.json",
+  "mrva.json"
  ]
 }

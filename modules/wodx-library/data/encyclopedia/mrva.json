@@ -1,0 +1,311 @@
+[
+ {
+  "id": "mrva-new-madrid",
+  "title": "The Difference Engineers and New Madrid",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An early Adept experiment that shook the Mississippi valley.",
+  "claims": [
+   {
+    "text": "The first Difference Engineers held that reality was a perception they could rework with Correspondence, Pattern and Entropy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Adepts say an attempt to make a lake and reroute the Mississippi set off the New Madrid quakes and opened the fault that still exists; Technocrats call it a natural anomaly.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Babbage's engine led the dissenters to think computation could unify the other Spheres.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "mrva-chaoticians"
+  ]
+ },
+ {
+  "id": "mrva-turing",
+  "title": "The death of Alan Turing",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The killing that drove the Adepts from the Union.",
+  "claims": [
+   {
+    "text": "Adept lore holds that a Man in Black shot Turing and staged it to look like suicide.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 22,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "With their leader gone, the Technocracy expected the Adepts to obey, and each side badly misjudged the other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 22,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Later research turned up the Turing Virus, a mental block that wiped any memory of a Turing project whenever the name was spoken aloud.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "new-world-order",
+   "iteration-x"
+  ]
+ },
+ {
+  "id": "mrva-after-the-storm",
+  "title": "The Adepts after the Avatar Storm",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Tradition changed in the new century.",
+  "claims": [
+   {
+    "text": "Before the Avatar Storm the Adepts were the flashy newcomers whom other Traditions did not take seriously.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "After a century of insisting information should be free, the Adepts finally pried loose the truth about their own past and purpose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Adept teaching runs on tests: hacker attacks, Correspondence rotes and Mind games, called Flame Wars, are meant to find the right teacher.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "mrva-turing"
+  ]
+ },
+ {
+  "id": "mrva-cyberpunks",
+  "title": "Cyberpunks",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The most violent Adept faction.",
+  "claims": [
+   {
+    "text": "Losing the Digital Web and facing police pressure on hackers and anarchists made Cyberpunks rediscover the ideals behind punk and anarchism.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 47,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Instead of blind raids, they now attack the myths that prop up Technocratic control, opening Sleeper eyes and upsetting the Union's Timeline.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 47,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "They still believe a new world must rise from the ashes of the old, though most see that as a fool's dream.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 47,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "mrva-cypherpunks"
+  ]
+ },
+ {
+  "id": "mrva-cypherpunks",
+  "title": "Cypherpunks",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Cryptogramics who hide the Adepts' data.",
+  "claims": [
+   {
+    "text": "Cypherpunks arose after the Cyberpunks crashed the It-X mainframe and the Technocracy struck back in real and virtual space.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 48,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Leading mathematicians encrypted and hid Adept streams so that for each Technocratic success, three or more Adept sites vanished.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 48,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Believing it had won, the Technocracy eased off; the hidden Adepts were safe behind layers of deception.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 48,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "mrva-cyberpunks",
+   "iteration-x"
+  ]
+ },
+ {
+  "id": "mrva-chaoticians",
+  "title": "Chaoticians",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Grey Men and Arithmeticians, the Adepts' mathematicians.",
+  "claims": [
+   {
+    "text": "Chaoticians claim descent from ancient mathematicians and say their insight into universal mathematics sparked the debate that founded the Order of Reason.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "When the Order of Reason formed in 1325, mathematicians made a sub-lodge, the Arithmeticians, never strong enough to be a Convention.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "In the 1800s they joined others around the computer to become the Difference Engineers, finally finding a place in the Union.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrva",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "sc-order-of-reason",
+   "mrva-new-madrid"
+  ]
+ }
+]
