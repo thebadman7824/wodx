@@ -403,6 +403,12 @@
    "title": "Changing Breeds (W20)",
    "short": "W20 Changing Breeds",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "botw",
+   "title": "Book of the Wyrm (W20)",
+   "short": "W20 Book of the Wyrm",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -472,6 +478,7 @@
   "dav.json",
   "dacomp.json",
   "dabi.json",
-  "cb.json"
+  "cb.json",
+  "botw.json"
  ]
 }

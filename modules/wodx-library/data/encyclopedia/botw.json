@@ -1,0 +1,531 @@
+[
+ {
+  "id": "botw-hydra",
+  "title": "The Hydra",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Wyrm broken into many heads.",
+  "claims": [
+   {
+    "text": "Caught in the Weaver's web, the Wyrm learned to twist things from within instead of destroying them outright. Corruption, as distinct from natural decay, began with it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "In its madness the Wyrm tore itself into pieces and those into smaller pieces. The Garou call these divisions the Hydra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Every servant of the Wyrm serves one of the Hydra's three heads. The heads are separate beings that cannot speak to one another and often work at cross purposes, which clever shifters exploit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wyrm",
+   "botw-triatic-wyrm",
+   "botw-maeljin"
+  ]
+ },
+ {
+  "id": "botw-triatic-wyrm",
+  "title": "The Triatic Wyrm",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Beast-of-War, Eater-of-Souls and the Defiler.",
+  "claims": [
+   {
+    "text": "The Wyrm itself is an abstraction found, if anywhere, as Malfeas. The largest parts of it that can appear in the world are the three heads of the Triatic Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Beast-of-War, the Calamity Wyrm, mirrors the Wyld as endless destruction with no regrowth. It lives in murderous battle-rage, and the Get of Fenris know it as Jormungandr.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Eater-of-Souls, the Consuming Wyrm, mirrors the Weaver by devouring everything. It shows itself in greed, obsession and wasting disease, and is the most active of the three.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "In the sixteenth century Eater-of-Souls tried to enter the physical world, and the Croatan tribe sacrificed itself to drive it back to Malfeas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Defiler is the Wyrm's twisted image of itself.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "botw-hydra",
+   "lost-tribes",
+   "triat"
+  ]
+ },
+ {
+  "id": "botw-maeljin",
+  "title": "The Maeljin Incarna",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Dark Lords who rule the Banes.",
+  "claims": [
+   {
+    "text": "The Urge Wyrms are heads of pure emotion and cannot take physical form. Each has a physical servant, a Maeljin Incarna or Dark Lord.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Every Maeljin Incarna was once a human so possessed by one Urge Wyrm that it became its avatar. They rule the Banes and the lands of Malfeas, and scheme against each other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "A slain Dark Lord is replaced in time, sometimes at once by the killer. Legend gives each a unique weakness that could keep its seat empty for a century and weaken its Urge Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Many human servants of the Wyrm swear to a Dark Lord, but Black Spiral Dancers prefer their own totems. The Maeljin and the Pentex directors see each other as rivals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Hellbringer serves Beast-of-War, and the Thurifuge serves Eater-of-Souls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "botw-hydra",
+   "banes",
+   "pentex"
+  ]
+ },
+ {
+  "id": "botw-roads-to-malfeas",
+  "title": "Roads to Malfeas",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Umbral paths into the Wyrm's realm.",
+  "claims": [
+   {
+    "text": "The edges of the Abyss hide caverns marked with Black Spiral runes in a corrupt Pictish tongue. Their path leads to a pit beneath a castle of Malfeas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "In the Atrocity Realm the busiest gateway stands among dead trees used as gibbets and opens into the Hellbringer's domain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "From the Scar, a black train runs from the rusted station called the Last Junction to Malfeas. It arrives empty and leaves loaded with fetishes, materials and slaves, guarded by powerful Banes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Above Malfeas lie the Wyrm Reaches, a decayed part of the Aetherial Realm where some Banes open Moon Bridges to Malfeas for a price.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "botw-maeljin"
+  ]
+ },
+ {
+  "id": "botw-pentex-charity",
+  "title": "Pentex's poisoned charity",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the Garou cannot simply burn down every tainted aid group.",
+  "claims": [
+   {
+    "text": "Pentex funds orphanages, shelters and food programs and laces what they give out with Wyrm-taint too faint for mundane senses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Destroying these groups would stop the taint but leave thousands hungry or homeless, a choice Pentex forces on the Garou on purpose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "When a few septs tried to fund relief of their own, Pentex used its reach in human society to crush the effort.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pentex"
+  ]
+ },
+ {
+  "id": "botw-first-teams",
+  "title": "Pentex First Teams",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Pentex's trained fomor strike squads.",
+  "claims": [
+   {
+    "text": "Pentex wants the strongest and most controllable fomori it can make, and its long First Team program recruits, trains and corrupts them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Recruiters across its subsidiaries look for the desperate: washed-out soldiers, injured athletes, the homeless. Most recruiters do not know the truth, and their bonuses keep them from asking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Pentex watches its employees across hundreds of subsidiaries for rising anger or discontent that marks them as candidates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pentex",
+   "fomori"
+  ]
+ },
+ {
+  "id": "botw-spiral-creed",
+  "title": "What the Black Spirals believe",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Black Spiral view of an Apocalypse already lost.",
+  "claims": [
+   {
+    "text": "Black Spiral Dancers hold that the Apocalypse has already happened and the world is only waiting to die, so the Garou fight for nothing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "They long to throw off the Veil and rule humanity openly. Meanwhile they take what they want, and some even build quiet communities and avoid open war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Their own Litany raises the fallen White Howlers as kings of a ruined world. The Princes of Ruin claim their duty to the Wyrm is already done, while most Spirals still owe it some worship.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Respect for another Spiral's territory is almost universal among them, since the tribe is under constant Garou attack.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-spiral-dancers",
+   "botw-hydra"
+  ]
+ },
+ {
+  "id": "botw-wyrm-taint",
+  "title": "Wyrm-taint in daily life",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What tainted goods do to ordinary people.",
+  "claims": [
+   {
+    "text": "Fomori are what comes of the Wyrm's spirit invested in living flesh, and they come in endless variety.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Pentex floods the world with tainted toys, food, drink, films and retreats. The taint makes people a little quicker to anger and less tolerant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Above all, tainted people are much easier for Banes to possess.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fomori",
+   "banes",
+   "pentex"
+  ]
+ },
+ {
+  "id": "botw-project-lycaon",
+  "title": "Project Lycaon",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Pentex's attempt to build its own Changing Breed.",
+  "claims": [
+   {
+    "text": "Neuro-Dynamic Laboratories is a Pentex front set up to raid Developmental Neogenetics Amalgamated and use whatever research it stole.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "Its Project Lycaon aims to create a Changing Breed under Pentex control, more pliable than the Black Spiral Dancers and able to fight Garou head to head.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "Bloodbats, man-sized bats with wolfish heads and acid blood, are a recent arrival, first seen attacking a clutch of Mokole in Australia a few years before the present day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "botw",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pentex",
+   "black-spiral-dancers",
+   "cb-mokole"
+  ]
+ }
+]
