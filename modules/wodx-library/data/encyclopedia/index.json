@@ -1543,6 +1543,12 @@
    "title": "Hunter: Holy War",
    "short": "HtR HW",
    "edition": "First edition"
+  },
+  {
+   "id": "hsg",
+   "title": "Hunter Survival Guide",
+   "short": "HtR SG",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1802,6 +1808,7 @@
   "hbred.json",
   "hbvis.json",
   "hfc.json",
-  "hhw.json"
+  "hhw.json",
+  "hsg.json"
  ]
 }

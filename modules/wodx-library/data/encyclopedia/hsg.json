@@ -1,0 +1,127 @@
+[
+ {
+  "id": "hsg-hunter-net",
+  "title": "Hunter-net",
+  "kind": "place",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The invitation-only network where hunters meet online.",
+  "claims": [
+   {
+    "text": "Hunter-net is no Internet provider: users bring their own access, no central registry of hunters exists and the servers running it can be moved.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hsg",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Its keepers hold as little user data as they can: mail is not archived or kept long, passwords must change at odd intervals, no real names or addresses are asked for, and entry is by invitation, checked through several layers of security.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hsg",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "When hunter-net crashed it came back up without anyone claiming credit, and some hunters believe the Messengers restored it; a few even claim edges that strengthen security or bend systems.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hsg",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Some imbued wonder whether the electronic world can be cleansed of monstrous meddling where the material world cannot, making the net a place for humanity to inherit.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hsg",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hewd-hunters-online",
+   "htr-messengers",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "hsg-hunters-unnoticed",
+  "title": "Why monsters overlook hunters",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hunters are still too new and too strange to draw notice.",
+  "claims": [
+   {
+    "text": "Against millennia of supernatural momentum, hunters are a very young group, and ancient beings see them as upstart mortals if at all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hsg",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Talk online of werewolves, ghosts, bloodsuckers or goblins reads to watching creatures as the noise of ignorant humans, since hunters do not know the true names of what they fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hsg",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Human hackers rarely bother with them, taking posts about killing demons and vampires for fantasy talk; the main online risks are viruses and posts about killings being passed to the police.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hsg",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Hunters expect that anonymity to wear off fast.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hsg",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hsg-hunter-net",
+   "htr-imbued"
+  ]
+ }
+]
