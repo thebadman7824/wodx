@@ -8,4 +8,6 @@ Reviewed by Ben on two pages; verdicts live in each page's database (collection 
   Fourteen clashes between the kept scenarios, each with a proposed join. Waiting for Ben.
   Ben, 2026-11-10: all 14 joins accepted except x01, where the other way was chosen: two cracks in late 2024 (the Sabbat Vaulderie braindance, the ghost voice matched by Netwatch AIs), the flood in 2025.
 - Timeline, draft 2026-11-10c (timeline-2026-11-10c.js, built by timeline-build.js): https://claude.ai/artifact/FQXP673rNxNLEi72dU2iU8
-  One card per year, 1990 to winter 2025. Waiting for Ben.
+  One card per year, 1990 to winter 2025. APPROVED by Ben 2026-11-10 with no changes: this is the branch's canon to 2025.
+- Rules Desk, round 2, draft 2026-11-10d (rules-desk-2026-11-10d.js): https://claude.ai/artifact/D8soW1q5bem79XjtATGPe4
+  Thirty rules gaps, three options each (verdict a, b, c, or note). Waiting for Ben.
