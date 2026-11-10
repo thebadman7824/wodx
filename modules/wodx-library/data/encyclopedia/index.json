@@ -1111,6 +1111,12 @@
    "title": "Witches and Pagans",
    "short": "WP",
    "edition": "First edition"
+  },
+  {
+   "id": "sccc",
+   "title": "Castles and Covenants",
+   "short": "CC",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1298,6 +1304,7 @@
   "scinf.json",
   "scor.json",
   "scsw.json",
-  "scwp.json"
+  "scwp.json",
+  "sccc.json"
  ]
 }
