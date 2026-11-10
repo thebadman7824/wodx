@@ -1135,6 +1135,12 @@
    "title": "Handbook for the Recently Deceased",
    "short": "HRD",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "whier",
+   "title": "The Hierarchy",
+   "short": "Hier",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1326,6 +1332,7 @@
   "sccc.json",
   "dagrim.json",
   "wr20bo.json",
-  "wr20hrd.json"
+  "wr20hrd.json",
+  "whier.json"
  ]
 }
