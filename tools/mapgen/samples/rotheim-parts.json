@@ -1,0 +1,166 @@
+{
+ "format": "wodx-map-parts",
+ "version": 1,
+ "name": "Rotheim",
+ "kind": "city",
+ "seed": 5,
+ "whole": [
+  168,
+  124
+ ],
+ "population": 599,
+ "parts": [
+  {
+   "id": "A1",
+   "map": "rotheim-a1.dungeondraft_map",
+   "sidecar": "rotheim-a1.wodx.json",
+   "origin": [
+    0,
+    0
+   ],
+   "cells": [
+    66,
+    62
+   ],
+   "cut": [
+    0,
+    0,
+    64,
+    62
+   ],
+   "neighbours": {
+    "south": "B1",
+    "east": "A2"
+   },
+   "households": 26,
+   "population": 106
+  },
+  {
+   "id": "A2",
+   "map": "rotheim-a2.dungeondraft_map",
+   "sidecar": "rotheim-a2.wodx.json",
+   "origin": [
+    64,
+    0
+   ],
+   "cells": [
+    47,
+    62
+   ],
+   "cut": [
+    64,
+    0,
+    44,
+    62
+   ],
+   "neighbours": {
+    "south": "B2",
+    "west": "A1",
+    "east": "A3"
+   },
+   "households": 20,
+   "population": 86
+  },
+  {
+   "id": "A3",
+   "map": "rotheim-a3.dungeondraft_map",
+   "sidecar": "rotheim-a3.wodx.json",
+   "origin": [
+    108,
+    0
+   ],
+   "cells": [
+    60,
+    62
+   ],
+   "cut": [
+    108,
+    0,
+    60,
+    62
+   ],
+   "neighbours": {
+    "south": "B3",
+    "west": "A2"
+   },
+   "households": 27,
+   "population": 113
+  },
+  {
+   "id": "B1",
+   "map": "rotheim-b1.dungeondraft_map",
+   "sidecar": "rotheim-b1.wodx.json",
+   "origin": [
+    0,
+    62
+   ],
+   "cells": [
+    64,
+    62
+   ],
+   "cut": [
+    0,
+    62,
+    64,
+    62
+   ],
+   "neighbours": {
+    "north": "A1",
+    "east": "B2"
+   },
+   "households": 25,
+   "population": 92
+  },
+  {
+   "id": "B2",
+   "map": "rotheim-b2.dungeondraft_map",
+   "sidecar": "rotheim-b2.wodx.json",
+   "origin": [
+    64,
+    62
+   ],
+   "cells": [
+    47,
+    62
+   ],
+   "cut": [
+    64,
+    62,
+    44,
+    62
+   ],
+   "neighbours": {
+    "north": "A2",
+    "west": "B1",
+    "east": "B3"
+   },
+   "households": 20,
+   "population": 80
+  },
+  {
+   "id": "B3",
+   "map": "rotheim-b3.dungeondraft_map",
+   "sidecar": "rotheim-b3.wodx.json",
+   "origin": [
+    108,
+    62
+   ],
+   "cells": [
+    60,
+    62
+   ],
+   "cut": [
+    108,
+    62,
+    60,
+    62
+   ],
+   "neighbours": {
+    "north": "A3",
+    "west": "B2"
+   },
+   "households": 26,
+   "population": 122
+  }
+ ]
+}

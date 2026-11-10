@@ -232,7 +232,7 @@ test("adopt: wired into Interactables, Storyteller only, short lists marked", ()
 
 /* Town generator sidecars (tools/mapgen/ddtown.py; Interactables 0.21.0 keeps households on their buildings) */
 const F = await import(join(root, "modules/wodx-interactables/scripts/fill-rules.mjs"));
-const TOWNS = ["hohenhausen", "birbach"].map(n => [n, readFileSync(join(root, `tools/mapgen/samples/${n}.wodx.json`), "utf8")]);
+const TOWNS = ["hohenhausen", "birbach", "rotheim-b2"].map(n => [n, readFileSync(join(root, `tools/mapgen/samples/${n}.wodx.json`), "utf8")]);
 
 test("adopt: the village and town sidecars read cleanly, households and all", () => {
   for ( const [n, text] of TOWNS ) {

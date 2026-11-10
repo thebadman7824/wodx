@@ -185,9 +185,18 @@ NID = Ids()
 def v2(x, y): return f"Vector2( {x:.6g}, {y:.6g} )"
 def pool(nums, kind="PoolVector2Array"): return f"{kind}( " + ", ".join(f"{n:.6g}" if isinstance(n, float) else str(n) for n in nums) + " )"
 P = lambda c: c * CELL
+ORIGIN = [0, 0]     # the top-left corner, in map cells, of the part of a map being written (a town split in parts)
+
+def at(x, y):
+    """A point in map cells as Dungeondraft pixels, from the part's own corner."""
+    ox, oy = ORIGIN
+    return (P(x - ox), P(y - oy)) if (ox or oy) else (P(x), P(y))
+
+def set_origin(x=0, y=0):
+    ORIGIN[0], ORIGIN[1] = x, y
 
 def obj(name, cx, cy, rot=0.0, scale=1.0, layer=100, shadow=True, kind="objects"):
-    return {"position": v2(P(cx), P(cy)), "rotation": rot, "scale": v2(scale, scale), "mirror": False,
+    return {"position": v2(*at(cx, cy)), "rotation": rot, "scale": v2(scale, scale), "mirror": False,
             "texture": asset(name, kind), "layer": layer, "shadow": shadow, "node_id": NID()}
 
 def wall_with_portals(points, texture, openings, loop):
@@ -203,22 +212,22 @@ def wall_with_portals(points, texture, openings, loop):
             if 0 < t < 1 and math.hypot(px_ - ox, py_ - oy) < .01:
                 tex, width = PORTALS[kind]
                 d = ((bx - ax) / L, (by - ay) / L)
-                portals.append({"position": v2(P(ox), P(oy)), "rotation": math.atan2(d[1], d[0]), "scale": v2(1, 1),
+                portals.append({"position": v2(*at(ox, oy)), "rotation": math.atan2(d[1], d[0]), "scale": v2(1, 1),
                                 "direction": v2(*d), "texture": asset(tex, "portals"), "radius": CELL * width / 2,
                                 "wall_id": int(nid, 16), "wall_distance": si + t, "closed": True, "node_id": NID()})
                 break
-    flat = [P(c) for p in points for c in p]
+    flat = [c for p in points for c in at(*p)]
     return {"points": pool(flat), "texture": asset(texture, "walls"), "color": "ffffffff", "loop": loop, "type": 1,
             "joint": 1, "normalize_uv": True, "shadow": True, "node_id": nid, "portals": portals}
 
 def pattern(points, texture, rot=0.0):
-    return {"position": v2(0, 0), "points": pool([P(c) for p in points for c in p]), "layer": 100, "color": "ffffffff",
+    return {"position": v2(0, 0), "points": pool([c for p in points for c in at(*p)]), "layer": 100, "color": "ffffffff",
             "outline": False, "texture": asset(texture, "tilesets"), "rotation": rot, "node_id": NID()}
 
 def path(points, texture, width, layer=100):
     x0, y0 = points[0]
     rel = [c for (x, y) in points for c in (P(x - x0), P(y - y0))]
-    return {"position": v2(P(x0), P(y0)), "rotation": 0, "scale": v2(1, 1), "edit_points": pool(rel), "smoothness": 0,
+    return {"position": v2(*at(x0, y0)), "rotation": 0, "scale": v2(1, 1), "edit_points": pool(rel), "smoothness": 0,
             "texture": asset(texture, "paths"), "width": width, "layer": layer, "fade_in": False, "fade_out": False,
             "grow": False, "shrink": False, "loop": False, "node_id": NID()}
 
