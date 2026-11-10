@@ -835,6 +835,12 @@
    "title": "Tradition Book: Virtual Adepts (Revised)",
    "short": "TB:VA",
    "edition": "Revised"
+  },
+  {
+   "id": "mrix",
+   "title": "Convention Book: Iteration X (Revised)",
+   "short": "CB:IX",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -976,6 +982,7 @@
   "mroh.json",
   "mrse.json",
   "mrve.json",
-  "mrva.json"
+  "mrva.json",
+  "mrix.json"
  ]
 }
