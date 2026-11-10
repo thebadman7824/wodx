@@ -35,10 +35,10 @@ export async function run() {
     ok("redraws print nothing of the actor to the console", objs === 0, { prints: objs, wodx: R.timeWodx, plain: R.timePlain ?? null });
   });
 
-  await step("a WoDX sheet's Core tab is the book's sheet and nothing else", async () => {
+  await step("a WoDX sheet's Core tab is the book's sheet (and its add-item button) only", async () => {
     const core = wodx.sheet.element[0].querySelector(".tab.core");
-    ok("a WoDX sheet's Core tab is the book's sheet and nothing else", !!core?.querySelector(".wodx-book") && core.children.length === 1,
-      { book: !!core?.querySelector(".wodx-book"), children: core?.children.length });
+    ok("a WoDX sheet's Core tab is the book's sheet (and its add-item button) only", !!core?.querySelector(".wodx-book") && [...core.children].every(c => c.classList.contains("wodx-book") || c.classList.contains("item-create")),
+      { book: !!core?.querySelector(".wodx-book"), children: [...(core?.children ?? [])].map(c => c.className) });
   });
 
   await step("a sheet in the system's own layout still draws its Core tab", async () => {
