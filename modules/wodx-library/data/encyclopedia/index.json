@@ -1279,6 +1279,12 @@
    "title": "Changeling: The Dreaming Player's Guide",
    "short": "CtDPG",
    "edition": "Second edition"
+  },
+  {
+   "id": "cbdt",
+   "title": "World of Darkness: Blood-Dimmed Tides",
+   "short": "BDT",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1494,6 +1500,7 @@
   "wgsan.json",
   "wgso.json",
   "c20bof.json",
-  "ctdpg.json"
+  "ctdpg.json",
+  "cbdt.json"
  ]
 }
