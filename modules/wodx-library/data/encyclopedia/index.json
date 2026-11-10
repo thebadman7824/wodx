@@ -1861,6 +1861,12 @@
       "title": "The Ashen Knight",
       "short": "Ashen Knight",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dathief",
+      "title": "The Ashen Thief",
+      "short": "Ashen Thief",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2173,6 +2179,7 @@
     "dals2.json",
     "darop.json",
     "daspoils.json",
-    "daknight.json"
+    "daknight.json",
+    "dathief.json"
   ]
 }

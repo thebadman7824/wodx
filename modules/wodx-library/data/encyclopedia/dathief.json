@@ -1,0 +1,271 @@
+[
+ {
+  "id": "dathief-scoundrels",
+  "title": "Cainite scoundrels",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Vampires who live among thieves and charlatans.",
+  "claims": [
+   {
+    "text": "Many vampires among mortal thieves share their prey’s motives: they rob houses and havens because they can, lacking the skill or chance to play at court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Some are thugs riding close to the Beast and ruled by greed; others are wretches with no other choice, such as the childe of a disgraced sire or a freed thrall hiding from a vengeful regnant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Most fall between these extremes, drawn to roguery by both temperament and circumstance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dathief-prometheans",
+   "dathief-furores"
+  ]
+ },
+ {
+  "id": "dathief-church-courts",
+  "title": "Cainites before Church courts",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Vampires caught up in ecclesiastical justice.",
+  "claims": [
+   {
+    "text": "Cainites who pass as mortals and can claim clerical status may be hauled before an ecclesiastical court for a crime.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "A vampire of standing can usually make the problem vanish with bribes and Disciplines, and even a neonate can often manage unless elders work against it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "A real inquest is hard to endure because hearings usually take place by day, and some clergy present hold real faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dathief-prometheans",
+  "title": "The Prometheans",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Cainite visionaries of the city underworld.",
+  "claims": [
+   {
+    "text": "Also known as Firebringers, the Prometheans form a scattered network of dreamers and would-be revolutionaries among urban Cainites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Their hope is a New Carthage, a fresh pact between vampires and mortals that serves both sides, set against princes, the Silence of the Blood and clan power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Working among harlots and thieves rather than lords and clergy has kept them largely unnoticed, and they are preparing a revolt without yet launching it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "They are present in most major European cities, among them Paris, London and Venice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dathief-furores"
+  ]
+ },
+ {
+  "id": "dathief-furores",
+  "title": "The Furores",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Young Cainite rebels against their elders.",
+  "claims": [
+   {
+    "text": "Cainite society favours old over young and strong over weak, and many neonates live as near-slaves to sires and elders, bound by blood oath or debt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Being the object of an elder’s obsessive affection can be worse than being a servant, since such lovers are often blood bound; and those who know too much are never let go.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Furores are mostly young and live in a very mortal way; few know more of Carthage than the idea of a lost golden age when all Cainites were equal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "All Furores know there have been places where rebels won, and many have seen or taken part in uprisings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dathief-prometheans"
+  ]
+ },
+ {
+  "id": "dathief-banu-sasan",
+  "title": "The Banu Sasan",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The famous rogues of the Islamic world.",
+  "claims": [
+   {
+    "text": "The Banu Sasan, the Sons of Sasan, are the most remarkable scoundrels of Islamic lands and like to claim descent from Persian royalty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Islamic vampires use mortal thieves, beggars and tricksters too; skills such as a naqqab’s talent for breaking into underground homes help in raiding enemy havens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Followers of Set are numerous in Islamic lands and use false-seeming in service of their god, while the Assamites try to curb such crime where they hold sway, their viziers including many legal scholars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dathief",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
