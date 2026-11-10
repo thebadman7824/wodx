@@ -1153,6 +1153,12 @@
    "title": "Haunts",
    "short": "Haunts",
    "edition": "First edition"
+  },
+  {
+   "id": "wbol",
+   "title": "The Book of Legions",
+   "short": "BoL",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1347,6 +1353,7 @@
   "wr20hrd.json",
   "whier.json",
   "wren.json",
-  "whaunts.json"
+  "whaunts.json",
+  "wbol.json"
  ]
 }
