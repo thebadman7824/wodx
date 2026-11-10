@@ -979,6 +979,12 @@
    "title": "The Book of Crafts",
    "short": "BoC",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2hota",
+   "title": "Halls of the Arcanum",
+   "short": "HotA",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1144,6 +1150,7 @@
   "mrfdf.json",
   "mrbr.json",
   "mrsth.json",
-  "mrcrafts.json"
+  "mrcrafts.json",
+  "m2hota.json"
  ]
 }
