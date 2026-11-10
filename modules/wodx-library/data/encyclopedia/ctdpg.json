@@ -1,0 +1,144 @@
+[
+ {
+  "id": "ctdpg-nunnehi",
+  "title": "The Nunnehi",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The fae of the native peoples of North America.",
+  "claims": [
+   {
+    "text": "The Nunnehi are faerie spirits born of the myths, dreams and vision quests of the native peoples of North America; the name means people who live anywhere, and they dwell in remote wilds and at the edges of human settlement, guarding against outsiders, European changelings included.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ctdpg",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "Where European fae hid through a changing ritual, the Nunnehi found willing hosts of deep spirit; the faerie spirit waited within a host until the host had a child, then joined with the child before birth. Many hosts became counselors and healers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ctdpg",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Nunnehi usually return among the descendants of their first hosts, which keeps them tied to their tribes but leaves those whose tribes have died out in grave trouble.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ctdpg",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Unlike other changelings, the Nunnehi have lost all touch with their Dreaming homeland, the Higher Hunting Grounds, which some think was destroyed.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ctdpg",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "changeling",
+   "the-dreaming",
+   "kithain"
+  ]
+ },
+ {
+  "id": "ctdpg-sidhe-rank",
+  "title": "Rank among the sidhe",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How standing really works among the sidhe.",
+  "claims": [
+   {
+    "text": "The sidhe keep the strictest hierarchy of any kith, showing deference upward and courtesy downward, at least in theory, and present a united front to commoners.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ctdpg",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "True standing follows intrigue more than title: a noble may keep a title after a dreadful scandal, but the invitations stop arriving and respect can take years to return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ctdpg",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcadian-sidhe",
+   "noble-houses"
+  ]
+ },
+ {
+  "id": "ctdpg-tunghat",
+  "title": "The tunghat",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Small green Nunnehi bonded to animals.",
+  "claims": [
+   {
+    "text": "Tunghat are small green folk with darker green hair, nails and teeth, who dress in green and hide under woven grass ponchos; their young can take on the look of their bonded animal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ctdpg",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Their warriors were once the most active; now many have lost heart, and some leave for circus animal acts or veterinary work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ctdpg",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ctdpg-nunnehi"
+  ]
+ }
+]
