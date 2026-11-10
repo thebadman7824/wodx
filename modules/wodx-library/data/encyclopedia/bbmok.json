@@ -1,0 +1,225 @@
+[
+ {
+  "id": "bbmok-gumagan",
+  "title": "The Gumagan",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Mokole of Australia and its islands.",
+  "claims": [
+   {
+    "text": "Gumagan are the Mokole of Bandaiyan, born to native peoples of Oceania, whose reptile forms are saltwater crocodiles or perenties, giant lizards kin to the Komodo dragon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 34,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Alone among the Mokole, they hold the Sun to be female, a Great Mother, and the Moon male, as their Aboriginal neighbours do, and they recognise seven solar auspices.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 34,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "They honour the ancestors of the Dreamtime, who shaped the land and became part of it; the Bunyip, once their teachers in Umbral travel, were wiped out after the coming of Europeans and Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 34,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Gumagan live in the deserts, Arnhem Land, New Guinea and the Torres Strait Islands; none have been left in southern Australia since the war that began in 1788.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 34,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-mokole"
+  ]
+ },
+ {
+  "id": "bbmok-makara",
+  "title": "The Makara",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Mokole of India and their seasonal auspices.",
+  "claims": [
+   {
+    "text": "Makara divide their auspices by season, not hour: Hemanta of winter are tricksters, Zarad of autumn mystics, Grisma of summer judges and police, Vasanta of spring warriors and travellers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 37,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "They see themselves as the diplomat stream of the Mokole, bound to aid the other children of their Mother.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 37,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Their great forms are shaped by what the Wani, the old Dragon Princes, once dreamed, ranging from vast crocodiles to many-headed serpents and Eastern dragons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 37,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-mokole"
+  ]
+ },
+ {
+  "id": "bbmok-zhong-lung",
+  "title": "The Zhong Lung",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The dragon-like Mokole of China.",
+  "claims": [
+   {
+    "text": "Zhong Lung great forms look more like dragons than any other Mokole's, with the nine resemblances, gills, manes and fiery pearls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 41,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The War of Rage never reached the Middle Kingdom, so they do not hate the Hakken the way African Mokole hate Garou; their foes are the Kuei-jin and other things of Yomi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 41,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "In mixed sentai they often serve as Pillars and Fists, and other hengeyokai treat them with clear awe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 41,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Few remain, but they live long, through the Sleep of the Dragon, elixirs and the shedding of old skin and bone; their Kin once fed and worshipped them for bringing rain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 41,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-mokole"
+  ]
+ },
+ {
+  "id": "bbmok-lost-memories",
+  "title": "Lost and Devoured Memories",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Spirits tied to the Mokole gift of ancestral memory.",
+  "claims": [
+   {
+    "text": "Mokole can walk into any memory held by their kind and play out its story; changing a remembered event is very hard, and a whole army might fail to rewrite a great moment of history.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 104,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Makara call a Mokole who has lost all memory pranastajjanika, a fate worse than death, and believe a spirit called a Pratigata holds that lost memory and could restore it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 104,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Smrtihara are Deep Umbra spirits that devour Gaia's memories; some Makara call them daughters of the Demoness of Sorrow, born of the world's suicidal imbalance.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbmok",
+      "page": 104,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-mokole",
+   "um-membrane-deep-umbra"
+  ]
+ }
+]

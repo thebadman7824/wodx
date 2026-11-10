@@ -583,6 +583,12 @@
    "title": "Breedbook: Ratkin (Revised)",
    "short": "BB Ratkin",
    "edition": "Revised"
+  },
+  {
+   "id": "bbmok",
+   "title": "Breedbook: Mokole (Revised)",
+   "short": "BB Mokole",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -682,6 +688,7 @@
   "bbnuw.json",
   "bbcor.json",
   "bbgur.json",
-  "bbrat.json"
+  "bbrat.json",
+  "bbmok.json"
  ]
 }
