@@ -1369,6 +1369,12 @@
    "title": "Isle of the Mighty",
    "short": "IotM",
    "edition": "Second edition"
+  },
+  {
+   "id": "cl8m",
+   "title": "Land of Eight Million Dreams",
+   "short": "L8MD",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1599,6 +1605,7 @@
   "cie3.json",
   "cinan.json",
   "ckow.json",
-  "ciotm.json"
+  "ciotm.json",
+  "cl8m.json"
  ]
 }
