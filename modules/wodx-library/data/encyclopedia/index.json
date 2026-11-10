@@ -1579,6 +1579,12 @@
    "title": "Demon: Houses of the Fallen",
    "short": "Houses of the Fallen",
    "edition": "First edition"
+  },
+  {
+   "id": "dpg",
+   "title": "Demon Players Guide",
+   "short": "Demon Players Guide",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1844,6 +1850,7 @@
   "hffg.json",
   "dcoa.json",
   "deb.json",
-  "dhf.json"
+  "dhf.json",
+  "dpg.json"
  ]
 }
