@@ -1,0 +1,54 @@
+[
+ {
+  "id": "wmed-mediums",
+  "title": "Mediums",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The living who speak with the dead.",
+  "claims": [
+   {
+    "text": "Natural mediums hold beliefs as varied as world religions, yet most know little of the real Shadowlands, the Hierarchy or Oblivion, and see the Underworld through a rosy haze.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wmed",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Whatever their motive, most have some sense that their contact brings peace to the Restless, and many think their gift sets them slightly above other people, other mediums included.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wmed",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Some chase profit and fame, working boardwalks near casinos and moving on to stage shows and television in hope of advising the rich, as Rasputin and Merlin did.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wmed",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wren-mediums",
+   "wraiths",
+   "hierarchy"
+  ]
+ }
+]

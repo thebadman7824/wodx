@@ -1207,6 +1207,12 @@
    "title": "The Risen",
    "short": "Risen",
    "edition": "First edition"
+  },
+  {
+   "id": "wmed",
+   "title": "Mediums: Speakers with the Dead",
+   "short": "Med",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1410,6 +1416,7 @@
   "wqd.json",
   "wna.json",
   "wme.json",
-  "wris.json"
+  "wris.json",
+  "wmed.json"
  ]
 }
