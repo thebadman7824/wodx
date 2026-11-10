@@ -293,3 +293,24 @@ A map generator writes a second file beside its map, name.wodx.json, saying what
 
 ## B405. A container's fill starts from where it sits (2026-11-10)
 Fill by place and era used to start at "a home" whatever the container's surroundings. It now starts from a first guess: the container's own Usual contents setting (a new field in its config, which a generated map's file can set), else the WoDX NPC place tag of the smallest tagged region it sits in, else the scene's tag, else a home. Home, haven and tavern fill as a home; workplace and market as a workshop; church as a church; gate and castle as an armoury; wilds as a camp; street, caern and other give no guess. The Storyteller still picks the place and checks the draw. Gear by era holds only weapons, armour, shields and cyberware, so everyday goods (food, tools, cloth, coin, papers) are a separate Library job, added to the Master Plan the same day. Interactables 0.20.0.
+
+## B430. The Storyteller's hand (2026-11-10)
+The conveniences around play sit behind one Storyteller-only toolbar button, the Storyteller's hand (WoDX Storyteller 0.18.0), instead of a button each: the toolbar is already long. Each tool also has a key binding and can be made into a macro in the folder "WoDX · Storyteller". Four keys have defaults on Alt+Shift (H the hand, G rules at a glance, R call for a roll, T +10 minutes, E end the scene, Q the queue); the rest start blank. From the Storyteller Conveniences study, approved by Ben.
+
+## B431. Rules at a glance reads the rules files (2026-11-10)
+The panel holds no numbers of its own: difficulties, frenzy and Rötschreck, fire and sun, the Gauntlet chart, changing form, Paradox backlash and the Quiet, Harrowings and the 41 common checks come from WoDX Actions' and WoDX Otherworlds' rules files, so a fix there shows here. It shows the shared sections and those of the lines at the table; "Every line" shows the rest. The Gauntlet follows the era profile's chart.
+
+## B432. Call for a roll (2026-11-10)
+Open, secret, or a button for each player. The Storyteller's computer rolls every pool, from the sheet, with wound penalties, an untrained Skill at +1 difficulty and an untrained Knowledge refused (V20). A player's button asks the Storyteller's computer to roll, so the player's machine does nothing and cannot alter a result; only an owner's press counts, once. A contest is one roll by the Storyteller that each character must beat; a tie goes to the contest.
+
+## B433. Before the players arrive, and the end of the night (2026-11-10)
+Before the players arrive checks and opens windows; it changes nothing itself, and in the live world it offers no buttons at all. The end of the night runs End the scene, the factions' turn, experience, End the session and the timer in that order, each one optional. Experience is ticked by the Storyteller per character and reason; nothing is awarded on its own (automatic XP stays dropped). The reasons follow the Revised and V20 pattern until each line's list is checked in its book.
+
+## B434. The session timer runs on real time (2026-11-10)
+A world setting holds the start, the planned end and breaks. Only the active Storyteller's computer checks it, every 30 seconds while it runs, and warns once before the end (30 minutes by default).
+
+## B435. Between sessions (2026-11-10)
+The next session sheet is a new page in a Storyteller-only journal each time, so earlier notes stay. Preloading maps is a separate choice on that window because it makes every player's computer fetch the maps at once. Last time, for the players, is built from log entries of kinds the players saw at the table (arrivals, called scenes, crossings, dawn, encounters, called rolls); solo acts, breaches, beats and notes are left out, and the Storyteller edits the draft before it is shown. Absent players leave the spotlight count and start unticked in Convene; the mark clears at End the session.
+
+## B436. Scene kits, quick extras, hooks and downtime (2026-11-10)
+A scene kit runs only steps whose module is on, in a fixed order (clock, scene, called characters, music, opening card, note). Quick extras are one actor per kind in "WoDX · Extras" with unlinked, hidden tokens; their traits are a draft until each book's ready-made characters are checked, and only traits the era's sheet has are written. The hooks board reads Nature, Demeanor, Flaws, Merits, Derangements and the Backgrounds that name people; its Willpower button adds one point up to the permanent rating and logs it. A downtime request goes to the approval queue; approving logs it as a solo act and tells the player.
