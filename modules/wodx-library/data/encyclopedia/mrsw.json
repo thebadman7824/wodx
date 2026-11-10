@@ -1,0 +1,390 @@
+[
+ {
+  "id": "mrsw-shaman-sickness",
+  "title": "The calling sickness",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How spirits mark someone to become a shaman.",
+  "claims": [
+   {
+    "text": "Spirits that want a Sleeper to Awaken may send dream visits or reflections in mirrors, but most often they simply make the chosen person fall gravely ill.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The illness resists every cure, and it often lifts only once an older shaman notices it and takes the sufferer on as a student.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "avatar"
+  ]
+ },
+ {
+  "id": "mrsw-sacred-brews",
+  "title": "Sacred brews and visionary plants",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Plant medicines used to reach the Other Side.",
+  "claims": [
+   {
+    "text": "Shamans usually boil and steep visionary plants into a drink, and only the shaman prepares it, since many such plants are deadly when handled badly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The recipes pass from teacher to student over generations; peyote and psilocybin mushrooms are the best known in North America, and peyote anchors a whole faith in the American southwest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Laws against drug use have made these rites rarer, though attempts to stamp them out have mostly failed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "mrsw-walking-spirits",
+  "title": "Shamans in the Umbra",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What changes when a shaman crosses into the spirit world.",
+  "claims": [
+   {
+    "text": "Once across the Gauntlet, a shaman's totem shows itself, familiars swell to at least double size unless their nature favors stealth, and spirits of the totem's Brood tend to show respect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Long exposure brings bleedover, when spirit sights intrude on waking life; quiet meditation on the material side usually clears it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "A shaman who stays away from Earth for somewhere between four months and a year loses the body for good and becomes a spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "gauntlet",
+   "totems",
+   "dam-familiars"
+  ]
+ },
+ {
+  "id": "mrsw-totem-bond",
+  "title": "Bonds with a totem",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How shamans and totems choose each other.",
+  "claims": [
+   {
+    "text": "A totem embodies one drive or quality, and allying with one ties the shaman to that quality for life and sometimes after it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "The choice may come from a mentor, from the shaman, from the totem itself, or from the shaman's Avatar; most bonds form at the Awakening or during training.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "A shaman never holds more than one totem, and a student's totem may differ entirely from the teacher's.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "Some shamans treat the totem as an ideal to live up to, while others ally with it for help with one lifelong goal, such as freeing a conquered people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "totems",
+   "avatar",
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "mrsw-celestines-incarna",
+  "title": "Celestines and Incarna",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great spirits above a shaman's reach.",
+  "claims": [
+   {
+    "text": "Celestines are pure archetypes of vast insight who grasp nothing outside their own nature, so any talk with one must be framed in its terms; ask a war god about pollution and it plans an attack.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Shamans therefore deal with Celestines only through distant worship or brief alliances, and look to the mightier but still understandable Incarna as patrons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "totems"
+  ]
+ },
+ {
+  "id": "mrsw-lesser-spirits",
+  "title": "Jagglings and Gafflings",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The lesser ranks of the spirit world.",
+  "claims": [
+   {
+    "text": "Jagglings are the spirits who become shamans' familiars; curious ones wander into the material world and stir up trouble, sometimes with angry mages trailing behind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Gafflings, the least spirits, have less free will, and shamans bind them into fetishes and talens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Most fetish spirits chose that home: an object shields them from Umbral attack, lets them study the material world, and works much like a vow taken by a monk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "Fetishes speak to their owners, offering counsel or asking questions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-familiars",
+   "umbra"
+  ]
+ },
+ {
+  "id": "mrsw-fetish-talisman",
+  "title": "Fetishes and talismans",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two kinds of shamanic tools.",
+  "claims": [
+   {
+    "text": "A fetish holds a spirit that powers it, such as a fire shirt that wards against burns or a snake staff that turns into a living serpent to guard the body while the spirit travels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "A talisman runs on Quintessence instead of a bound spirit; one well-known kind, a death mask, lets its wearer see wraiths and enter the Shadowlands through deep water or below ground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadowlands",
+   "mrsw-lesser-spirits"
+  ]
+ },
+ {
+  "id": "mrsw-spirit-trained",
+  "title": "Mages taught by spirits",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shamans Awakened with no human teacher.",
+  "claims": [
+   {
+    "text": "A few mages are Awakened and trained by a spirit rather than a person, and they tend to be cut off from other mages and to hold odd ideas about them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Dreamspeakers hold that spirits Awaken such mages as tools for some purpose, and a patron with a hidden aim may feed its student falsehoods.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrsw",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "avatar"
+  ]
+ }
+]
