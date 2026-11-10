@@ -1,0 +1,42 @@
+[
+ {
+  "id": "cie3-hibernian-festivals",
+  "title": "Royal birthdays of Hibernia",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the four Irish kingdoms honor their rulers.",
+  "claims": [
+   {
+    "text": "Each of Hibernia's four great kingdoms celebrates its ruler's birthday: Leinster holds a grand ball and bardic festival for King Bran on July 22; Munster marks Queen Nuala's day, September 22, with poetry, chimerical sculpture contests and a feast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cie3",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Connaught, ruled by machine-loving King Fiachra, holds a mechanics' fair of inventions, gadgets and train rides on May 6; on November 20 all sworn to King Finn gather to pledge loyalty and drink to Finn's health.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cie3",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kingdoms-beyond-concordia",
+   "noble-houses"
+  ]
+ }
+]
