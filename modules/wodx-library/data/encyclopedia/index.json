@@ -2089,6 +2089,12 @@
       "title": "Tribe Novel: Black Spiral Dancers & Wendigo",
       "short": "Tribe Novel 7",
       "edition": "Novel"
+    },
+    {
+      "id": "npeih",
+      "title": "Pentex Employee Indoctrination Handbook (W20)",
+      "short": "W20 Pentex Handbook",
+      "edition": "20th Anniversary companion"
     }
   ],
   "files": [
@@ -2439,6 +2445,7 @@
     "ntn3.json",
     "ntn4.json",
     "ntn5.json",
-    "ntn7.json"
+    "ntn7.json",
+    "npeih.json"
   ]
 }

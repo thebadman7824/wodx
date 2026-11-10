@@ -1,0 +1,119 @@
+[
+ {
+  "id": "npeih-pentex-history",
+  "title": "Pentex’s corporate history",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "From Premium Oil to Pentex.",
+  "claims": [
+   {
+    "text": "Pentex began as Premium Oil, built up by the oil tycoon Jeremiah Lassater; after both Lassater and the heir died early in the twentieth century, Colin Jenner took control, set up a five-member Board of Directors and renamed the firm Pentex.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "npeih",
+      "page": 5,
+      "pdf": 6
+     },
+     {
+      "book": "w20",
+      "page": 460,
+      "pdf": 462
+     }
+    ]
+   },
+   {
+    "text": "Its later directors include Harold Zettler and Executive Vice President Peter Culliford, whose combined experience is said to span more than a thousand years; Culliford reorganised the Board into its present subdivisions in 1994.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "npeih",
+      "page": 5,
+      "pdf": 6
+     },
+     {
+      "book": "wasubs",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pentex",
+   "wasubs-hiram"
+  ]
+ },
+ {
+  "id": "npeih-lycaon-squad",
+  "title": "Project Lycaon’s soldiers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Pentex’s home-grown shapeshifters in the field.",
+  "claims": [
+   {
+    "text": "Thanks to Project Lycaon, Pentex now fields a crack unit (War Wolves, Anurana and Samsa) that fights beside the First Teams, turning the shapeshifters’ own weapons against them; now and then a Black Spiral Dancer serves as officer or tactician.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "npeih",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "botw",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "botw-project-lycaon",
+   "botw-first-teams"
+  ]
+ },
+ {
+  "id": "npeih-easton",
+  "title": "Easton",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An energy firm quietly inside Pentex.",
+  "claims": [
+   {
+    "text": "Pentex absorbed Easton more than a decade ago without announcing it; Easton works as a sister company to Endron in experimental energy, and the two share resources freely.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "npeih",
+      "page": 41,
+      "pdf": 42
+     },
+     {
+      "book": "wasubs",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wasubs-hiram"
+  ]
+ }
+]
