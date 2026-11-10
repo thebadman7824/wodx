@@ -245,7 +245,9 @@ Ben approved every entry below, which had been waiting for review, at 04:03 UTC 
 | 2026-11-10 | Audit, weak refs: the Encyclopaedia claim about copies of Das Buch vom Grabkrieg (bh-grabkrieg) cites Beckett pdf 12-14, but the book is named on pdf 5 and 19. | Left as it is; the right page needs a look in the PDF. | Change the ref in beckett.json once checked. |
 | 2026-11-10 | Release stamp: where to show the build the server runs, and to whom? | A line in the Settings sidebar, for the GM only, plus a console line and a warning at start when packages come from different commits. | Edit onRenderSettings and announce in wodx-chronicle/scripts/release.mjs. |
 
-## Waiting for review
+## Approved by Ben, 10 November 2026, 18:18 UTC
+
+Ben approved every entry that was waiting for review at 18:18 UTC on 10 November 2026 (17 rows). Each still lists how to reverse it.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -268,3 +270,10 @@ Ben approved every entry below, which had been waiting for review, at 04:03 UTC 
 | 2026-11-10 | Bite and fire for creatures the books may not cover (a mortal's bite, fire on a mortal or a Garou)? | Left as the code has them (aggravated) until the PC reads the pages; rows bite and fire are marked check. | Nothing to reverse yet. |
 | 2026-11-10 | Which Cascade fires in 2099 when the Storyteller has not picked one? | None (B508): the Storyteller picks in Dated events. | Set a default in the futureCascade setting in scripts/events.mjs. |
 | 2026-11-10 | Do the Future Darkness timeline events start on? | Yes, on the branch; each can be switched off in Dated events. | Mark them metaplot in tools/wofd/build-future-events.mjs and rebuild. |
+| 2026-11-10 | Demons and mummies in a fight: the Garou soak or their own? | Their own, from the page checks: a demon soaks bashing with Stamina, lethal only in the apocalyptic form, aggravated only through a power (DtF pp. 171, 247); a mummy soaks bashing and lethal, aggravated only through Hekau (MtR p. 136). | Set demon and mummy back to soak: "lupine" in both profiles.js. |
+| 2026-11-10 | A bite from a mortal, ghoul or anyone without fangs? | Bashing, as a punch; only Kindred and shapechangers by form bite for aggravated (V20 p. 276 covers only fanged biters) (B520). | Remove the bite override in the weapon list (wodx-combat main.js). |
+| 2026-11-10 | The Delirium for ghouls, changelings and wraiths (the books are silent)? | Ghouls roll on the chart as mortals; changelings and wraiths are immune unless a power forces it, as vampires and mages are (B521). | Change the delirium row. |
+| 2026-11-10 | Dominate on a Garou or a mage (V20 is silent)? | A Garou resists with Willpower as a mortal; a mage counters by M20 p. 546 with Mind 1 required (B503). | Change the mind-powers row. |
+| 2026-11-10 | A vampire drinking mage or fae blood, and a Kuei-jin drawing Chi from a Garou (the books are silent)? | Mage and fae blood are ordinary blood. A Kuei-jin gains two Chi a point from a Garou, with V20's frenzy step for werewolf blood (V20 p. 380) (B522). | Change the feeding-supernatural row. |
+| 2026-11-10 | Celerity and Initiative in the Dark Ages (VtDA20 page not found)? | Never added, in any era, as V20 p. 142 says (B523). | Restore the Celerity term in rollInitiative (wodx-combat main.js). |
+| 2026-11-10 | V20's Willpower cost for healing more than one aggravated level a day? | Outside the Dark Ages, each level past the first costs a Willpower point (V20 p. 285); in the Dark Ages, five blood a level only. | Remove extraWp in the Kindred healing window (wodx-actions main.js). |

@@ -211,7 +211,7 @@ export class WoDItem extends Item {
 			}
         }
         catch (err) {
-            err.message = `Failed _handleAbilitiesCalculations Item ${item.name}: ${err.message}`;
+            err.message = `Failed _handleAbilitiesCalculations Item ${itemData?.name}: ${err.message}`;
             console.error(err);
         }
 
@@ -353,7 +353,7 @@ export class WoDItem extends Item {
 			}
         }
         catch (err) {
-            err.message = `Failed _handlePowerCalculations Item ${item.name}: ${err.message}`;
+            err.message = `Failed _handlePowerCalculations Item ${itemData?.name}: ${err.message}`;
             console.error(err);
         }
 

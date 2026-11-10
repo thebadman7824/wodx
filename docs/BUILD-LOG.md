@@ -1165,3 +1165,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - The 2099 era counts as Future Darkness for gear, the Library's shelves, clocks, keypads and people tables (Library 0.4.4, Interactables 0.20.1).
 - The fall of the Masquerade event moves to summer 2025, the house timeline's flood.
 - Tests: events, prelude, era resolution and hunter lines; 999 pass.
+- Page checks back from the PC (2026-11-10): every row settled (21 settled, 7 fixed, 0 open). Combat 3.8.4: demons and mummies soak by their own books, bites without fangs are bashing, Bonecraft talons are lethal and Vicissitude 1 no longer claws, Celerity adds nothing to Initiative. Actions 3.19.4: its old soak copy (which soaked a falling Garou as a mortal) now re-exports Combat's; V20's Willpower for each aggravated level past the first. B520-B524. Ben approved every PENDING-REVIEW row at 18:18 UTC.
+
+## Phase 10, polish: code review, first pass (2026-11-10)
+- ESLint (no-undef, unreachable, duplicate keys and cases, unsafe chaining) over every module and the fork. Modules: 1 real error class only, reads of another module's flags and settings that throw when that module is off: Sheets 0.6.1 and NPC 0.8.1 (Creation's lineage flag), Otherworlds 0.7.1 (Chronicle's journal flag and latitude). System 7.3.2-wodx.4: adding a bonus on a sheet threw, a PC-sheet ability with a specialty threw in the roll dialog, plus three wrong names in error paths.
+- 37 unused variables and helpers listed for the dead-code part.

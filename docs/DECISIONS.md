@@ -347,3 +347,17 @@ With the branch on, the 2004 Time of Judgment era never comes, even with its swi
 
 ## B509. The imbued on the Future Darkness branch (2026-11-10)
 The first imbued wake in 2023 on the branch, so hunters use The Hunters Hunted II rules from 1999 to 2022 there, with chrome. The classic timeline keeps the 1999 Reckoning. House rule.
+## B520. Bites without fangs (2026-11-10)
+V20's aggravated bite is for vampires and fanged creatures such as werewolves (pdf 284 / p. 276); the book gives no bite for anyone else. House rule: a mortal, ghoul or other creature without fangs bites for bashing damage, as a punch. Kindred bite for aggravated; shapechangers by form, as before. Vicissitude's Bonecraft (3) now gives lethal bone talons and Protean 2 aggravated claws; Vicissitude 1 no longer claws (V20 pdf 250 / p. 242).
+
+## B521. The Delirium beyond the Garou's own list (2026-11-10)
+W20 makes Kinfolk immune and vampires and mages normally immune (pdf 48 / p. 46, pdf 162 / p. 160) and says nothing of ghouls, changelings or wraiths. House rule: ghouls roll on the chart as mortals; changelings and wraiths are immune unless a power forces the Delirium.
+
+## B522. Blood of other lines (2026-11-10)
+Garou blood follows V20 (two blood points a point, and +1 to frenzy and Rötschreck difficulties a point while it lasts, pdf 388 / p. 380). House rule where the books are silent: mage and fae blood are ordinary blood, and a Kuei-jin draws two Chi a point from a Garou with the same frenzy step.
+
+## B523. Celerity and Initiative (2026-11-10)
+V20 Celerity adds nothing to Initiative (pdf 150 / p. 142), and no VtDA20 page was found that says otherwise, so by the rules basis Initiative never includes Celerity, in any era. Celerity still adds dice to Dexterity attack and defense pools under the combat setting.
+
+## B524. Demons and mummies soak by their own books (2026-11-10)
+WoDX Combat soaked demons and mummies as Garou, with Stamina against everything. Now a demon soaks bashing with Stamina, lethal only in the apocalyptic form, aggravated only through a power (DtF pdf 172 / p. 171, pdf 248 / p. 247); a mummy soaks bashing and lethal with Stamina and aggravated only through Hekau (MtR pdf 130 / p. 136). WoDX Actions' own older soak copy, which soaked Garou and wraiths as mortals when they fell, is replaced by the Combat rules. V20 healing of aggravated damage: each level past the first in a day also costs a Willpower point (pdf 293 / p. 285), outside the Dark Ages.

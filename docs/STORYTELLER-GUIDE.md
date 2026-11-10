@@ -179,6 +179,8 @@ Each token's **WoDX Actions** button opens its line's menu. The line comes from 
 
 **Damage.** Soak covers silver, cold iron, Fortitude and armour, with silver and gold by era, breed and form. Wraiths take harm on the Corpus track. One attack that does more than the target's Stamina after soak (Stamina + 2 for the supernatural) leaves them Dazed for a round. "Soak & Apply Damage" and "Heal or adjust" are macros for damage by hand.
 
+**When lines meet in a fight.** The attacker's book sets the damage type and the target's book sets the soak. A demon soaks lethal only in its apocalyptic form, a mummy soaks bashing and lethal but not aggravated, a Dark Ages fae soaks lethal in the mien and soaks cold iron, and a mortal takes fire as lethal. Only fangs bite for aggravated damage; anyone else's bite is bashing. Celerity adds dice to Dexterity rolls but nothing to Initiative. Every such ruling is in docs/RULES-CLASHES.md.
+
 **Initiative** is rolled for everyone at the start of a fight and every turn by default (setting "Roll initiative automatically": every turn, start only, or off).
 
 **Movement.** In a fight each move shows the pace over the token: walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, in yards, with Celerity and wounds counted. The setting "Movement in a fight" can stop moves past running speed (never yours). The card notes when a character moved more than half their running speed, after which they cannot attack.

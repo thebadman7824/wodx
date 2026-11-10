@@ -212,7 +212,7 @@ export async function writeReport() {
 /** Record the Gauntlet charts, with every WoDX choice marked, in the Chronicle Rules journal. */
 export async function writeChartsPage() {
   if ( !game.user.isGM ) return;
-  const rules = game.journal.find(j => j.getFlag("wodx-chronicle", "kind") === "chronicle-rules");
+  const rules = game.journal.find(j => j.flags?.["wodx-chronicle"]?.kind === "chronicle-rules");
   if ( !rules ) return;
   const keys = Object.keys(SETTLEMENTS).filter(k => k);
   const head = Object.values(CHARTS).map(c => `<th>${esc(c.name)}</th>`).join("");

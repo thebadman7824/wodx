@@ -120,7 +120,7 @@ export function readFight(tok, combat = game.combat) {
   const harm = NR.harmLog(cardsNow(), combat?.id);
   const {enemies, allies} = sides(tok, combat, harm);
   const myHarm = harm.get(actor.uuid) ?? new Map();
-  const lineage = actor.getFlag("wodx-creation", "lineage");
+  const lineage = actor.flags?.["wodx-creation"]?.lineage;
   const domitorId = lineage?.domitor?.id ?? null;
   const plans = new Map();
   const E = enemies.map(t => {

@@ -47,7 +47,7 @@ function registerSettings() {
         "Remove the Willpower and blood points spent in the attack and soak options from the character sheet.",
         Boolean, true);
     s("celerityDice", "Celerity adds dice to Dexterity rolls",
-        "Add Celerity dots to Dexterity-based attack, defense and Initiative pools.", Boolean, true);
+        "Add Celerity dots to Dexterity-based attack and defense pools (never to Initiative, V20 p. 142).", Boolean, true);
     s("potenceDice", "Potence adds dice to Strength damage",
         "Add Potence dots to Strength-based damage pools (blood spent turns them into automatic successes instead).",
         Boolean, true);
@@ -249,7 +249,13 @@ function weaponList(actor) {
                 type, dmgBonus: 1 + (k === "bite" ? nat.biteBonus : 0), secondaryId: "", minStr: 0, piercing: 0, desc: nat.note });
             continue;
         }
-        list.push({ id: `unarmed:${k}`, unarmed: true, ranged: false, ...u, secondaryId: "", minStr: 0, piercing: 0 });
+        const extra = {};
+        // Only fangs bite for aggravated damage (V20 pdf 284 / p. 276); anyone else bites as a punch does (house rule)
+        if (k === "bite" && getKind(actor) !== "kindred") Object.assign(extra, { type: "bashing", name: "Bite (no fangs: bashing)" });
+        // Protean 2 grows aggravated claws; Vicissitude's Bonecraft (3) grows talons that do lethal (V20 pdf 250 / p. 242)
+        if (k === "claw" && !(discipline(actor, "Protean") >= 2) && discipline(actor, "Vicissitude") >= 3)
+            Object.assign(extra, { type: "lethal", name: "Bone talons (Vicissitude, lethal)" });
+        list.push({ id: `unarmed:${k}`, unarmed: true, ranged: false, ...u, ...extra, secondaryId: "", minStr: 0, piercing: 0 });
     }
     return list;
 }
@@ -265,8 +271,11 @@ function weaponAbility(actor, w) {
 
 /** WoDX Actions' Werewolf and Fera helpers, when that module is on (Phase 6b). */
 function garouRules() { return game.wodxActions?.garouRules ?? null; }
-/** Dark Ages fae soak (DA:Fae pp. 88, 104), from WoDX Actions: {lethalSoak, baneSoak}, or nothing outside the Dark Ages rules. */
-function faeSoakOpts(actor, profile) {
+/** Soak options read from WoDX Actions: a demon's apocalyptic form {formOn}; a Dark Ages fae (DA:Fae pp. 88, 104) {lethalSoak, baneSoak}. */
+function soakOpts(actor, profile) {
+    if (profile === "demon") {
+        try { return { formOn: !!game.wodxActions?.demonInfo?.(actor)?.formOn }; } catch (e) { return {}; }
+    }
     if (profile !== "fae") return {};
     try {
         const f = game.wodxActions?.faeSoak?.(actor);
@@ -831,7 +840,7 @@ function soakPoolFor(target, profile, w, fd, dp) {
         armor: arm[dp.dmgType] ?? 0, armorPiercing: w.piercing, bypassArmor: fd.bypass,
         fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: fd.soakBonus,
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
-        ...faeSoakOpts(target, profile)
+        ...soakOpts(target, profile)
     });
 }
 
@@ -854,8 +863,8 @@ function tokenDistance(a, b, { reach = false } = {}) {
 function attackUsable(attacker, w, distance, reachD = distance) {
     const shifter = !!garouRules()?.isShifter?.(attacker);
     if (w.id === "unarmed:bite" && !w.natural) return "a bite needs a hold first (clinch, hold or tackle)";
-    if (w.id === "unarmed:claw" && !w.natural && !(discipline(attacker, "Protean") >= 2 || discipline(attacker, "Vicissitude") >= 1 || shifter))
-        return "no claws (Protean 2 or Vicissitude)";
+    if (w.id === "unarmed:claw" && !w.natural && !(discipline(attacker, "Protean") >= 2 || discipline(attacker, "Vicissitude") >= 3 || shifter))
+        return "no claws (Protean 2 or Vicissitude 3)";
     if (w.ranged && w.shots?.empty && countShots()) return "empty: reload first";
     const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
     if (distance != null) {
@@ -1009,7 +1018,7 @@ async function resolveCounter(defender, victim, extra, weaponItem) {
     if (dmg.roll) rolls.push(dmg.roll);
     const profile = getProfile(victim);
     const arm = armor(victim);
-    const sp = R.soakPool({ profile, damageType: type, stamina: attr(victim, "stamina"), fortitude: discipline(victim, "Fortitude"), armor: arm[type] ?? 0 });
+    const sp = R.soakPool({ profile, damageType: type, stamina: attr(victim, "stamina"), fortitude: discipline(victim, "Fortitude"), armor: arm[type] ?? 0, ...soakOpts(victim, profile) });
     const soak = await rollPool(sp.dice, 6, { canBotch: false });
     if (soak.roll) rolls.push(soak.roll);
     const left = R.damageAfterSoak(dmg.successes, soak.successes, type, profile, { elder: isElder(victim) });
@@ -1093,7 +1102,7 @@ function attackCard(c) {
 
 function profileLabel(p) {
     return { vampire: "Cainite", ghoul: "ghoul / revenant", mortal: "mortal", lupine: "Garou / supernatural", supernatural: "supernatural",
-        fae: "changeling", wraith: "wraith", spirit: "spirit" }[p] ?? p;
+        fae: "changeling", wraith: "wraith", spirit: "spirit", demon: "demon", mummy: "mummy" }[p] ?? p;
 }
 
 function appliedHtml(actor, r) {
@@ -1223,7 +1232,7 @@ export async function soakAndApply(tok, fd) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
             armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
-            aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...faeSoakOpts(actor, profile) });
+            aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...soakOpts(actor, profile) });
         if (sb) sp.notes.push(sb.note);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
         // A caller can ask that a botched soak turns the damage aggravated (electrocution of a vampire, V20 core printed p. 295, pdf 303)
@@ -1271,7 +1280,8 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         const a = c.actor;
         if (!a) continue;
         const dex = attr(a, "dexterity"), wits = attr(a, "wits");
-        const cel = setting("celerityDice") ? discipline(a, "Celerity") : 0;
+        // Celerity adds nothing to Initiative (V20 pdf 150 / p. 142)
+        const cel = 0;
         const wp = woundPenalty(a);
         const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0}`);
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
@@ -1329,7 +1339,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.3", reload, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.4", reload, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

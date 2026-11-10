@@ -49,7 +49,8 @@ let CAL = null;
 import("../../wodx-chronicle/scripts/calendar.mjs").then(m => { CAL = m; }).catch(() => { CAL = null; });
 export function moonNow() {
   if ( !CAL ) return null;
-  const lat = game.settings.get("wodx-chronicle", "latitude");
+  let lat;
+  try { lat = game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return null; }
   return CAL.describeTime(game.time.worldTime, lat)?.moon?.index ?? null;
 }
 

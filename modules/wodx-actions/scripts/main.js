@@ -1269,6 +1269,12 @@ async function resolveSpend(actor, fd) {
         const pend = flag(actor, "aggHealing") ?? 0;
         await setFlag(actor, "aggHealing", pend + healA);
         html += `<div class="vta-sec"><b>Aggravated:</b> ${healA * 5} blood committed; ${healA} level${healA === 1 ? "" : "s"} heal after a full day's rest. They will be removed at the next New Night.</div>`;
+        // V20: each level past the first in the same day also costs a Willpower point (V20 pdf 293 / p. 285)
+        const extraWp = healA > 1 && !FXD.isDA(null) ? healA - 1 : 0;
+        if (extraWp) {
+            await spendWillpower(actor, extraWp);
+            html += `<div class="vta-note">Each level past the first also costs a Willpower point: ${extraWp} spent (V20 p. 285).</div>`;
+        }
     }
     const turns = Math.ceil((healL + healB) / b.perTurn);
     if (turns > 1) html += `<div class="vta-note">At ${b.perTurn} blood per turn, healing takes ${turns} turns of concentration.</div>`;
@@ -2165,7 +2171,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.3",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.4",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

@@ -36,7 +36,7 @@ const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
 
 /**
  * soak: soak model used by the combat module.
- *   vampire | ghoul | mortal | lupine | wraith | fae | spirit   (see rules.soakPool)
+ *   vampire | ghoul | mortal | lupine | wraith | fae | spirit | demon | mummy   (see rules.soakPool)
  * res: resources shown/spent by the menus: [id, label].
  * bane: what ignores natural soak (silver, cold iron...).
  */
@@ -53,8 +53,8 @@ export const PROFILES = {
     wraith:   { label: "Wraith / Ghost",           soak: "wraith",  res: ["pathos", "corpus", "angst", "willpower"], bane: "" },
     spirit:   { label: "Spirit / Imp / Spectre",   soak: "spirit",  res: ["essence", "willpower"], bane: "" },
     beast:    { label: "Creature / Beast",         soak: "mortal",  res: ["willpower"] },
-    demon:    { label: "Demon",                    soak: "lupine",  res: ["faith", "torment", "willpower"], bane: "" },
-    mummy:    { label: "Mummy",                    soak: "lupine",  res: ["sekhem", "balance", "willpower"], bane: "" },
+    demon:    { label: "Demon",                    soak: "demon",   res: ["faith", "torment", "willpower"], bane: "" },
+    mummy:    { label: "Mummy",                    soak: "mummy",   res: ["sekhem", "balance", "willpower"], bane: "" },
     exalted:  { label: "Exalted",                  soak: "lupine",  res: ["essence", "willpower"], bane: "" }
 };
 

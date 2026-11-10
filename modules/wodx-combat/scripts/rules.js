@@ -42,7 +42,10 @@ export function clampDifficulty(d) {
  *   mortal   – Stamina + armor vs bashing; armor only vs lethal/aggravated (mortals treat aggravated as lethal).
  *              Also used for mages, hunters and animals (Mage 20 p. 334: mages cannot soak lethal without protection).
  *   lupine   – Stamina vs everything, silver ("bane") leaves no natural soak (W20 p. 148). Also the generic
- *              supernatural model for demons, mummies and Exalted.
+ *              supernatural model for Exalted.
+ *   demon    – Stamina vs bashing; vs lethal only in the apocalyptic form (formOn); aggravated: armor only, unless a
+ *              power says otherwise (Demon: the Fallen pdf 172 / p. 171, pdf 248 / p. 247).
+ *   mummy    – Stamina vs bashing and lethal; aggravated: armor only (Hekau aside) (Mummy: the Resurrection pdf 130 / p. 136).
  *   fae      – mortal soak; cold iron ("bane") is aggravated with only a difficulty-10 slim chance (Balor), so no natural soak.
  *              Dark Ages fae (DA:Fae): lethalSoak in the mien (p. 104) and baneSoak, cold iron soaked with Stamina (p. 88).
  *   wraith   – Stamina vs bashing and lethal, armor only vs aggravated (Spectre/Oblivion damage). House adaptation.
@@ -55,7 +58,7 @@ export function clampDifficulty(d) {
  */
 export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 0, armorPiercing = 0,
                            bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bane = false, bonus = 0, aggSoak = true,
-                           lethalSoak = false, baneSoak = false }) {
+                           lethalSoak = false, baneSoak = false, formOn = false }) {
     const notes = [];
     let effArmor = armor;
     if (fireOrSun && effArmor) { effArmor = 0; notes.push("armor does not protect against fire or sunlight"); }
@@ -82,8 +85,13 @@ export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 
             if (t === "aggravated" && !aggSoak) { sta = 0; fort = 0; notes.push("Dark Ages: no aggravated soak in Homid form (DA:W p. 102)"); }
             break;
         case "wraith":
+        case "mummy":
             if (t !== "aggravated") sta = stamina;
-            else notes.push("wraiths soak aggravated damage only with armor");
+            else notes.push(`${profile === "mummy" ? "mummies" : "wraiths"} soak aggravated damage only with armor (or a power that allows it)`);
+            break;
+        case "demon":
+            if (t === "bashing" || (t === "lethal" && formOn)) sta = stamina;
+            else notes.push(t === "lethal" ? "a demon soaks lethal damage only in the apocalyptic form" : "demons soak aggravated damage only with armor (or a power that allows it)");
             break;
         default: // mortal, fae
             if (t === "bashing" || (lethalSoak && t === "lethal") || (baneSoak && bane)) sta = stamina;

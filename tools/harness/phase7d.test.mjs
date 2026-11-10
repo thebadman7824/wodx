@@ -261,7 +261,7 @@ test("words: every change reads as a sentence", () => {
 test("the module: version 0.4.0, the factions in the API, gender-neutral text, no NPC dialogue", async () => {
   const {readFileSync} = await import("node:fs");
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
-  assert.equal(m.version, "0.8.0");
+  assert.equal(m.version, "0.8.1");
   const main = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
   assert.match(main, /const VERSION = "0\.8\.0"/);
   for ( const k of ["openFactions", "runFactionTurns", "endSession", "reportBreach", "huntingFor", "wodxFactions"] ) assert.ok(main.includes(k), k);

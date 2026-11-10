@@ -55,3 +55,25 @@ test("Dark Ages fae: Stamina soaks lethal in the mien and cold iron is soakable 
   assert.equal(R.soakPool({profile: "mortal", damageType: "lethal", stamina: 3}).dice, 0);
   assert.equal(R.soakPool({profile: "mortal", damageType: "bashing", stamina: 3}).dice, 3);
 });
+
+test("demons and mummies soak by their own books (DtF pp. 171, 247; MtR p. 136)", () => {
+  assert.equal(R.soakPool({profile: "demon", damageType: "bashing", stamina: 3}).dice, 3);
+  assert.equal(R.soakPool({profile: "demon", damageType: "lethal", stamina: 3}).dice, 0);
+  assert.equal(R.soakPool({profile: "demon", damageType: "lethal", stamina: 3, formOn: true}).dice, 3);
+  assert.equal(R.soakPool({profile: "demon", damageType: "aggravated", stamina: 3, formOn: true, armor: 1}).dice, 1);
+  assert.equal(R.soakPool({profile: "mummy", damageType: "lethal", stamina: 3}).dice, 3);
+  assert.equal(R.soakPool({profile: "mummy", damageType: "aggravated", stamina: 3}).dice, 0);
+});
+
+test("WoDX Actions soaks with the one Combat copy: a Garou falling soaks lethal", async () => {
+  const A = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/core-rules.js")).href);
+  assert.equal(A.soakPool, R.soakPool);
+  assert.equal(A.soakPool({profile: "lupine", damageType: "lethal", stamina: 4}).dice, 4);
+});
+
+test("the profiles give demons and mummies their own soak in both copies", async () => {
+  for (const m of ["wodx-combat", "wodx-actions"]) {
+    const P = await import(pathToFileURL(join(root, `modules/${m}/scripts/profiles.js`)).href);
+    assert.equal(P.PROFILES.demon.soak, "demon"); assert.equal(P.PROFILES.mummy.soak, "mummy");
+  }
+});

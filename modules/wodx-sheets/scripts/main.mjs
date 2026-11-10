@@ -255,8 +255,8 @@ function header(def, a) {
     clan: () => { const s = a.system; return s.clan === "custom" ? (s.custom?.clan || "") : loc(s.clan); },
     legacies: () => [strip(a.system.legacyseelie), strip(a.system.legacyunseelie)].filter(Boolean).join(" / ") || "(see the Bio tab)",
     startConviction: () => { const c = RR.CREEDS[leaf(a.system.creed)]; return c ? String(c.conviction) : "—"; },
-    domitor: () => { const l = a.getFlag("wodx-creation", "lineage") ?? {}; return game.actors.get(l.domitor)?.name ?? (l.domitor || "—"); },
-    domitorClan: () => { const l = a.getFlag("wodx-creation", "lineage") ?? {}; const d = game.actors.get(l.domitor); return d ? (d.system.clan === "custom" ? d.system.custom?.clan : loc(d.system.clan)) : "—"; }
+    domitor: () => { const l = a.flags?.["wodx-creation"]?.lineage ?? {}; return game.actors.get(l.domitor)?.name ?? (l.domitor || "—"); },
+    domitorClan: () => { const l = a.flags?.["wodx-creation"]?.lineage ?? {}; const d = game.actors.get(l.domitor); return d ? (d.system.clan === "custom" ? d.system.custom?.clan : loc(d.system.clan)) : "—"; }
   };
   return def.header.map(col => col.map(f => fieldView(f, a, choices, computed)));
 }
@@ -439,5 +439,5 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.6.0", rules: SR, sheetFor, viewFor };
+  game.modules.get(MOD).api = { version: "0.6.1", rules: SR, sheetFor, viewFor };
 });
