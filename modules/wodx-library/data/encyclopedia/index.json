@@ -751,6 +751,12 @@
    "title": "Dharma Book: Devil Tigers",
    "short": "DB Devil Tigers",
    "edition": "Revised era"
+  },
+  {
+   "id": "m20hdy",
+   "title": "M20 How Do You DO That?",
+   "short": "HDYDT",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -878,6 +884,7 @@
   "dbrc.json",
   "dbtw.json",
   "dbtd.json",
-  "dbdt.json"
+  "dbdt.json",
+  "m20hdy.json"
  ]
 }
