@@ -1,0 +1,168 @@
+[
+ {
+  "id": "raeg-cats-of-khem",
+  "title": "The Werecats of Egypt",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the Bastet outnumber the Garou along the Nile.",
+  "claims": [
+   {
+    "text": "Bastet have always far outnumbered Garou in Africa, and Egypt has been a werecat stronghold since the oldest days; the goddess Bast, first shown as a lioness, likely took that name from them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Egyptian Bastet revere Luna as Garou revere Gaia, and count Gaia a lesser figure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "When Set's curse drove the Silent Striders out of Khem, it was mainly the werecats, with the Mokole and Nagah, who kept the land from falling wholly to the Wyrm, so many Bastet see even native Striders as outsiders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Striders hold that Set took flesh as a vampire who conquered Egypt and nearly wiped out the Bubasti; both Striders and Bubasti loathe the Setites.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-bastet",
+   "silent-striders",
+   "tbss-sutekh",
+   "followers-of-set"
+  ]
+ },
+ {
+  "id": "raeg-tanta-bubastis",
+  "title": "Tanta and Bubastis",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A caern and a werecat den in the Nile Delta.",
+  "claims": [
+   {
+    "text": "The Sept of the Etesian Wind at Tanta hosts more moon bridges than any other Egyptian caern, so foreign Garou often arrive there first.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "The city's smokestacks breed Wyrm elementals, rumour tells of a vast smog spirit in its Penumbral skies, and the local Garou cannot enter or alter the mystic Etesian tower nearby.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "At Zagazig, once Bubastis, the cat temple is rubble, but in the Penumbra a shadow cat may lead a rare guest into a splendid den-realm beside a pocket realm where spirit townsfolk live as in Ptolemaic Egypt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caern",
+   "cb-bastet"
+  ]
+ },
+ {
+  "id": "raeg-wandering-oasis",
+  "title": "The Wandering Oasis",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Red Talon caern in the Arabian Desert.",
+  "claims": [
+   {
+    "text": "Red Talons keep a tiny oasis caern southwest of Suez that appears only when enough rain falls, mostly from November to March.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "A zorilla spirit, an ally more than a totem, leads wolves to the oasis by scent and watches it when the pack is away, in return for not being eaten.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "A moon bridge links it to the bawn of the Talons' smaller East Desert caern, the Sept of Hidden Waters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raeg",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "red-talons",
+   "caern"
+  ]
+ }
+]
