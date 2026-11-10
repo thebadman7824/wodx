@@ -1645,6 +1645,12 @@
       "title": "Blood Sacrifice: The Thaumaturgy Companion",
       "short": "BSac",
       "edition": "Revised"
+    },
+    {
+      "id": "sotb",
+      "title": "Sin of the Blood",
+      "short": "SotB",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -1921,6 +1927,7 @@
     "woddhx.json",
     "wod1.json",
     "mtr.json",
-    "bsac.json"
+    "bsac.json",
+    "sotb.json"
   ]
 }

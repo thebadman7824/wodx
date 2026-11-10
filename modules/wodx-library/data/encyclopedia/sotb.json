@@ -1,0 +1,573 @@
+[
+ {
+  "id": "sotb-camarilla-paths",
+  "title": "Paths in the Camarilla",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why a Camarilla Kindred on a Path of Enlightenment is a rare outsider.",
+  "claims": [
+   {
+    "text": "A Camarilla neonate following a Path instead of Humanity is almost unheard of.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The one case the writer knows is a Toreador alienist of the late 19th century, set on the Path of Death and the Soul by a sire who sat on a primogen council.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Following a Path in the Camarilla brands the follower an outsider and draws suspicion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sotb-harmony"
+  ]
+ },
+ {
+  "id": "sotb-wights",
+  "title": "Wights",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Vampires whose minds have fallen wholly to the Beast.",
+  "claims": [
+   {
+    "text": "Wights are driven by raw urge and are no longer able to reflect on their curse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Folk remedies of mortal legend, useless against an ordinary Cainite, seem to work on wights: mustard seed delays them and thorns keep them out.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The writer reads this as a divine opening that lets mortals hold such creatures off.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sotb-thin-blood"
+  ]
+ },
+ {
+  "id": "sotb-thin-blood",
+  "title": "Thin-Blooded Rumours",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Talk among Cainites about the last generation.",
+  "claims": [
+   {
+    "text": "Rumour says the thin-blooded cannot sire childer but bear the curse more lightly than other Kindred.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Stories tell of thin-bloods enduring sunlight for long spells, eating food and even fathering mortal children.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Serbian legend already spoke of the dhampir, a child of a vampire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sotb-wights"
+  ]
+ },
+ {
+  "id": "sotb-suspire",
+  "title": "The Suspire",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The last trial on the road to Golconda.",
+  "claims": [
+   {
+    "text": "The Suspire is the final ordeal of a seeker of Golconda, and its outcome decides the rest of unlife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Each Suspire is personal, aimed at the weakest parts of the seeker's soul, and nearly always touches on the seeker's clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Some include physical pain such as fire or sunlight to test control of the Beast, but the core of it is a journey into one's own lost soul.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sotb-camarilla-paths"
+  ]
+ },
+ {
+  "id": "sotb-unforgiving",
+  "title": "The Unforgiving",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Followers of a cold Path that prizes secrecy and gathered knowledge.",
+  "claims": [
+   {
+    "text": "The Path values secrecy, reasoning that an enemy who knows nothing makes mistakes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Its ethics reject emotion as tainted by the Beast, with fear, anger and love named as the worst.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Followers trust only what they perceive themselves, and check it more than once since even senses can be fooled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "They never pass up a chance to learn another Cainite's secret, and some sell information.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Almost all have high Alertness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "sotb-self-focus",
+  "title": "Path of Self-Focus",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Path of self-knowledge whose followers are called Internalists.",
+  "claims": [
+   {
+    "text": "Its sins include overconfidence, laziness, relying on or controlling others, holding back the Beast without need, and skipping nightly meditation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Internalists will let the Beast rage when the moment calls for it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Followers study whatever helps them know themselves, and all of them come to learn Meditation in time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "sotb-harmony",
+  "title": "Path of Harmony",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Path for Cainites who seek balance between Beast and Man.",
+  "claims": [
+   {
+    "text": "Harmonists aim to keep a balance between the predator and the person and to deal with the world without guilt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "As they progress they come to see vampires as parasites more than predators, which makes living beside humans easier.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "They are most common among Gangrel, Nosferatu, Brujah and Ravnos, and there are more of them in the Camarilla than in other sects.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Unlike some Paths, Harmonists do not scorn mercy or compassion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sotb-camarilla-paths"
+  ]
+ },
+ {
+  "id": "sotb-autarkis",
+  "title": "Autarkis",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kindred who live outside every sect.",
+  "claims": [
+   {
+    "text": "Autarkis have no mentors or support and learn by trial, error and pain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Among the Gehenna-minded at the fringe are suicide-pact cults, groups racing for Golconda, and Cainite survivalists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Secret desires are hard to hide among Kindred who read auras and minds, so some exile themselves for privacy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "sotb-dark-paths",
+  "title": "Dark Thaumaturgy Paths",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "New infernal Thaumaturgy and the price a demon asks for it.",
+  "claims": [
+   {
+    "text": "Invoking one of these powers takes a blood point and a Willpower roll at the power's level plus 3; a botch costs a permanent Willpower point.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "An optional rule ties each path to a fixed price owed to the demon who taught it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "One power inflicts the pain penalties of lost health levels by touch without real damage; supernatural targets resist with Willpower, and a vampire cannot be forced into torpor by it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "sotb-darwin-society",
+  "title": "The Darwin Society",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A club of young Kindred who began as a student debating society.",
+  "claims": [
+   {
+    "text": "It started as a mortal college club debating survival of the fittest, until a Malkavian Embraced the graduate student Palmer Ward.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Palmer Ward's sire died in a fire soon after, and Palmer survived alone before returning to the club.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Fearing a war between the sects, the Society left its city, moved south to a Camarilla domain and presented itself to the prince.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "sotb-skirmish-school",
+  "title": "The Skirmish School",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Sabbat club that runs daring contests.",
+  "claims": [
+   {
+    "text": "In one contest the Skirmish School and the Mercy Killers pack raced to steal an earring from Prince Marcel of New Orleans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "The prince destroyed at least one Skirmish School member who tried it under Obfuscate, and the Mercy Killers won.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "Big Daddy Lopez and Widow Annie went on to host ever more dangerous games.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sotb",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
