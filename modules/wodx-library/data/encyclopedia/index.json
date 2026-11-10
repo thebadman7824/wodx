@@ -1945,6 +1945,12 @@
       "title": "Frontier Secrets",
       "short": "Frontier Secrets",
       "edition": "Wild West"
+    },
+    {
+      "id": "cblod",
+      "title": "The Book of Lost Dreams",
+      "short": "Book of Lost Dreams",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -2271,6 +2277,7 @@
     "wacaern.json",
     "wacroatan.json",
     "wafreak.json",
-    "wafrontier.json"
+    "wafrontier.json",
+    "cblod.json"
   ]
 }
