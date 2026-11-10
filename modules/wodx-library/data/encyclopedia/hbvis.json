@@ -1,0 +1,70 @@
+[
+ {
+  "id": "hbvis-visionary-slang",
+  "title": "Visionary slang",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Visionaries talk about the hunt and each other.",
+  "claims": [
+   {
+    "text": "Each Visionary starts with private words tied to a personal theory of the hunt; as they meet, they begin sorting hunters into those who would destroy monsters, those who would fit them into society and those who only want to escape their influence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbvis",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Common terms include the adversaries for monsters, the challenge or in the field for the hunt, the big idea for a Visionary's theory and revelation for the imbuing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbvis",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Labels for their own kind include homebody, lurker or skulker, micro-manager, crackhead, prophet and tunnel visionary; other hunters call them thinkers, pathfinders, philosophers, navel-gazers and wayfarers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbvis",
+      "page": 20,
+      "pdf": 22
+     },
+     {
+      "book": "hbvis",
+      "page": 21,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Prophets, who try to turn their ideals into a religion, are generally mistrusted by other Visionaries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbvis",
+      "page": 21,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-visionaries",
+   "htr-hunter-slang",
+   "hbinn-innocent-slang"
+  ]
+ }
+]
