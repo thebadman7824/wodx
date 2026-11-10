@@ -1717,6 +1717,12 @@
       "title": "The Autumn People",
       "short": "Autumn People",
       "edition": "Second edition"
+    },
+    {
+      "id": "coti",
+      "title": "Children of the Inquisition",
+      "short": "CotI",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2005,6 +2011,7 @@
     "hbway.json",
     "wlbd.json",
     "wspg.json",
-    "cap.json"
+    "cap.json",
+    "coti.json"
   ]
 }

@@ -1,0 +1,569 @@
+[
+ {
+  "id": "coti-inquisition",
+  "title": "The Inquisition and the Kindred",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How the Inquisition broke the open rule of the clans.",
+  "claims": [
+   {
+    "text": "By the Middle Ages vampires preyed openly on mortals, until an organized Inquisition rose to destroy them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "Hundreds of vampires died, and the survivors saved themselves by steering the Inquisition onto the poor and powerless, at the cost of hundreds of thousands of mortal lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "The Kindred survived but were never the same afterward.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   }
+  ],
+  "see": [
+   "coti-dracula",
+   "coti-rafael"
+  ]
+ },
+ {
+  "id": "coti-dracula",
+  "title": "Vlad Tepes, Dracula",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "Prince of Wallachia turned vampire, counted among the Inconnu.",
+  "claims": [
+   {
+    "text": "Dracula is described as a member of the Inconnu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Tales of the mad prince and his stakes spread across Europe and the Near East, and Kindred rumour set them beside talk of a mystic of the Inconnu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "When Dracula warned that the Antediluvians threatened the Kindred, the clans struck back through human and vampire proxies, and Camarilla, Sabbat and Inquisition foes all hunted Dracula.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 19,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-tyler",
+  "title": "Tyler",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Brujah elder and revolutionary of the Camarilla.",
+  "claims": [
+   {
+    "text": "Tyler is a Brujah elder of the Camarilla who fights against every system of enforced injustice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 21,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-karsh",
+  "title": "Karsh",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Gangrel warlord of the Camarilla.",
+  "claims": [
+   {
+    "text": "Karsh stands among the enforcers of the Camarilla against anarchs, Sabbat paladins, Lupines and hunters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 25,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Abandoned by a lord in mortal life, Karsh came to serve only the Gangrel and the Camarilla.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 26,
+      "pdf": 26
+     },
+     {
+      "book": "coti",
+      "page": 27,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-vasantasena",
+  "title": "Vasantasena",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Malkavian antitribu of the Sabbat whose madness burns bright.",
+  "claims": [
+   {
+    "text": "Vasantasena is a Malkavian antitribu whose madness shows as too bright a light rather than darkness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 29,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Even fierce Sabbat leaders find this divinely inspired lunatic unsettling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 29,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-rafael",
+  "title": "Rafael de Corazon",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The Toreador elder who urged the Kindred to hide from mortals.",
+  "claims": [
+   {
+    "text": "With the Inquisition and the anarchs closing in, Rafael de Corazon called on the elders to give up their open ties to mortals and pass into shadow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 35,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Rafael came from the Spain of the wars between Christians and Muslims, and mediocre art brought little standing among the Toreador.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 35,
+      "pdf": 35
+     },
+     {
+      "book": "coti",
+      "page": 37,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "coti-inquisition"
+  ]
+ },
+ {
+  "id": "coti-gratiano",
+  "title": "Gratiano",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Lasombra elder of the Sabbat born to the de Veronese family.",
+  "claims": [
+   {
+    "text": "Gratiano was born to the wealthy de Veronese family of Italy and excelled in war, trade and politics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 39,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Gratiano entered the priesthood young and sought a bishopric.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 39,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-lambach",
+  "title": "Lambach",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Tzimisce elder of the Sabbat in Transylvania.",
+  "claims": [
+   {
+    "text": "Lambach is a Tzimisce elder of the Sabbat in the strife-torn lands of Transylvania and Romania.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 43,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Lambach knew well the Tzimisce power to mould mortal flesh.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 44,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-montano",
+  "title": "Montano",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Lasombra antitribu of the Camarilla, haunted by the death of the clan founder.",
+  "claims": [
+   {
+    "text": "Montano was born thousands of years ago on the Maasai steppes of East Africa.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 47,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "The destruction of the Lasombra Antediluvian torments Montano more than any other Kindred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 47,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Other Lasombra never felt fully at ease around Montano.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-etrius",
+  "title": "Etrius",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A member of the Tremere Inner Circle.",
+  "claims": [
+   {
+    "text": "Etrius sits on the Inner Circle of Clan Tremere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 51,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "The Tremere are the one clan whose founder became a vampire by personal effort rather than another's bite; it began as a medieval house of wizards losing its hold as magic faded.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 51,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-durga-syn",
+  "title": "Durga Syn",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An independent Ravnos elder tied to Baba Yaga.",
+  "claims": [
+   {
+    "text": "Durga Syn is an independent Ravnos elder of Russia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 55,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Russian peasants feared the Nosferatu Baba Yaga above all, and Baba Yaga's influence lingered long after torpor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 55,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Baba Yaga appeared at Durga Syn's deathbed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 56,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-genevra",
+  "title": "Genevra",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Giovanni necromancer allied with the Sabbat.",
+  "claims": [
+   {
+    "text": "The Giovanni kept great power in Italy through the Inquisition by working closely with the Church, some say too closely.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 59,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Genevra is a Giovanni allied with the Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 59,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-jalan-aajav",
+  "title": "Jalan-Aajav",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Black Hand seraph of the Sabbat.",
+  "claims": [
+   {
+    "text": "Jalan-Aajav is a seraph of the Black Hand, and the name alone terrifies the undead of the Sabbat underground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 63,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "The Sabbat invokes Jalan-Aajav to destroy an enemy or frighten a reluctant ally.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 63,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "coti-dominique",
+  "title": "Dominique",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Ventrue antitribu of the Sabbat.",
+  "claims": [
+   {
+    "text": "Dominique is a Ventrue antitribu of the Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 67,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "The Sabbat prizes freedom from authority, from the elders and from the Antediluvians above all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "coti",
+      "page": 67,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
