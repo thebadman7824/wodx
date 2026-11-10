@@ -1,0 +1,234 @@
+[
+ {
+  "id": "k1000h-yomi",
+  "title": "Yomi, the Thousand Hells",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hell-realm of the Yama Kings.",
+  "claims": [
+   {
+    "text": "Yomi, the Thousand Hells, is the home of the Yama Kings, each waiting for a chance to be crowned Demon Emperor, and the place where the souls of the truly wicked are tormented forever.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 9,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "Every Kuei-jin has passed through Yomi before the Second Breath returned them to the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 9,
+      "pdf": 7
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-yama-kings",
+   "kote-second-breath",
+   "kote-spirit-worlds"
+  ]
+ },
+ {
+  "id": "k1000h-first-akuma",
+  "title": "Mahanaga Visparakni",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Held to be the first akuma.",
+  "claims": [
+   {
+    "text": "Mahanaga Visparakni, said to be the first akuma, was claimed at once by the Yama Queen Tou Mu and has suffered at that demon's hands ever since.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 17,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "As corruption spread, the Wan Xian fought one another for little empires instead of guarding the Middle Kingdom, draining whole villages of Chi, and the August Personage of Jade grew angry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 17,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-wan-xian",
+   "kote-yama-kings",
+   "kote-fallen-courts"
+  ]
+ },
+ {
+  "id": "k1000h-pika-don",
+  "title": "Pika Don",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Yama King asleep since the atomic bombs.",
+  "claims": [
+   {
+    "text": "The Yama King Pika Don entered the Yin World right after the atomic blasts that ended World War II, meaning to gather the tainted Chi for a war against Emma-o.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 19,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "After drinking only a little of it, Pika Don fell into a nightmare-ridden slumber that has lasted to this night, which unsettles the other Yama Kings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 19,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-yama-kings",
+   "kotec-japan-gaki"
+  ]
+ },
+ {
+  "id": "k1000h-lanka",
+  "title": "Lanka",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A sleeping hell around Ravana's palace.",
+  "claims": [
+   {
+    "text": "Lanka lies dormant except for the grounds around its temple and the palace of Ravana.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 32,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Those who slip past the rakshas and come near say the palace is being rebuilt, or is growing, with rakshas and captured souls labouring on it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 32,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "k1000h-yomi"
+  ]
+ },
+ {
+  "id": "k1000h-wicked-city",
+  "title": "Mikaboshi's Wicked City",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An endless hell of urban blight.",
+  "claims": [
+   {
+    "text": "Mikaboshi's Wicked City is an urban wasteland running to every horizon under choking smog and acid sleet, its streets crowded with souls slaving at hopeless labour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 36,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "k1000h-yomi",
+   "kote-yama-kings",
+   "kote-fallen-courts"
+  ]
+ },
+ {
+  "id": "k1000h-failed-supplicants",
+  "title": "Failed Akuma Supplicants",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What becomes of Kuei-jin the Yama Kings reject.",
+  "claims": [
+   {
+    "text": "Many Kuei-jin who seek a Yama King's favour and fail fall to their P'o and are destroyed, or spend eternity in jade collars as guards and hunting beasts of their court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 105,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Others turn to the Devil-Tiger Dharma, either finding a road to enlightenment or falling to the Black Iron Talon sect; some become lesser akuma and scrape by on what little pay they get.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "k1000h",
+      "page": 105,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-yama-kings",
+   "kote-souls",
+   "kote-five-dharmas"
+  ]
+ }
+]
