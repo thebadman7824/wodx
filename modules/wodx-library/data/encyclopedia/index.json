@@ -1735,6 +1735,12 @@
       "title": "Hong Kong by Night",
       "short": "HKbN",
       "edition": "First edition"
+    },
+    {
+      "id": "encv",
+      "title": "Encyclopaedia Vampirica",
+      "short": "EncV",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2026,6 +2032,7 @@
     "cap.json",
     "coti.json",
     "kmw.json",
-    "hkbn.json"
+    "hkbn.json",
+    "encv.json"
   ]
 }
