@@ -433,6 +433,12 @@
    "title": "Shattered Dreams (W20)",
    "short": "W20 Shattered Dreams",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "w20wh",
+   "title": "Tribebook: White Howlers (W20)",
+   "short": "W20 White Howlers",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -507,6 +513,7 @@
   "dalc.json",
   "dahc.json",
   "w20umbra.json",
-  "w20sd.json"
+  "w20sd.json",
+  "w20wh.json"
  ]
 }

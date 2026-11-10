@@ -1,0 +1,208 @@
+[
+ {
+  "id": "wh-lion",
+  "title": "Lion, Totem of the White Howlers",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical"
+  ],
+  "summary": "The proud tribal totem of the lost tribe.",
+  "claims": [
+   {
+    "text": "Lion is proud and strong: a skilled tracker, a hard fighter and a noble leader whose charges stay safe while Lion walks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "Lion shows no mercy to anyone who invades the territory, claims the mantle or harasses those under Lion's care.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "Some who hear of Lion's patronage are puzzled, linking the name to the African great cat rather than this northern spirit.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-white-howlers",
+   "garou"
+  ]
+ },
+ {
+  "id": "wh-caledonia",
+  "title": "The White Howlers in Caledonia",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical"
+  ],
+  "summary": "The tribe's homeland and its neighbours in the north.",
+  "claims": [
+   {
+    "text": "Tribal memory holds that the Great Winter's ice drove the tribe's ancestors south; their septs were spread so thinly across the Caledonian wilds that finding an unknown sept of the tribe was common.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Meeting werewolves who did not follow Lion was another matter, and the ways of the Children of Stag still seem strange to White Howlers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wh-lion",
+   "wda-white-howlers",
+   "wda-fianna"
+  ]
+ },
+ {
+  "id": "wh-picts",
+  "title": "The Picts",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical"
+  ],
+  "summary": "The human people the White Howlers watched over.",
+  "claims": [
+   {
+    "text": "Popular images of the Picts as small, blue-painted, half-fae barbarians with poisoned spears hold grains of truth but are far from fair or accurate as a whole.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "At the tribe's height the White Howlers' Kinfolk were among the Picts.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "A White Howler born to Kinfolk parents who had long forgotten their werewolf ties would be nearly impossible, but such a birth would draw the spirits' notice, Lion's above all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wh-caledonia",
+   "wda-kinfolk"
+  ]
+ },
+ {
+  "id": "wh-war-with-rome",
+  "title": "The White Howlers' War with Rome",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical"
+  ],
+  "summary": "How fighting the legions left the tribe's Kin open to corruption.",
+  "claims": [
+   {
+    "text": "The tribe learned that meeting the Roman legions head on was hopeless, since its Kinfolk lacked the training and resources to stand against them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Busy settling back into the homeland after the Great Winter, the tribe noticed its Kinfolk's skirmishes with Rome almost too late.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "While the shapeshifters were away campaigning against Rome, fomori serving the invaders struck the undefended Kinfolk; survivors carried the taint of the attack in mind and blood, and some became fomori themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Rome's northern walls include the Antonine Wall, begun in AD 142 under Emperor Antoninus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wh",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wh-picts",
+   "wda-white-howlers",
+   "wda-black-spiral-dancers"
+  ]
+ }
+]
