@@ -1,0 +1,299 @@
+[
+ {
+  "id": "daknight-cainite-templars",
+  "title": "Cainites and the Templars",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why no vampire can truly serve as a Templar.",
+  "claims": [
+   {
+    "text": "No Cainite can keep the Templar duties of attending daytime services and fighting with a unit whose battles fall mostly by day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "The Templars hold more True Faith than most crusaders, and many of their brothers and houses repel even the most earnest crusading vampire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Some would-be Cainite Templars turn cynical and corrupt a house to dim its faith; more seek houses where faith is strong but not overwhelming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daknight-lazarene-nosferatu"
+  ]
+ },
+ {
+  "id": "daknight-lazarene-nosferatu",
+  "title": "The Lazarene Nosferatu",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Nosferatu ties to the Order of St. Lazarus.",
+  "claims": [
+   {
+    "text": "Often accused of starting the leprosy plague, the Nosferatu have a natural link with the Order of St. Lazarus, whose knights call themselves the living dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "The order gives zealous Nosferatu cover to leave their ruins and take an open part in the affairs of the Holy Land, and plenty of them gladly take up the work as penance before God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Nosferatu involvement runs deeper than cover alone, reaching into the Hospital of St. Lazarus itself.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daknight-gatherers",
+  "title": "The Gatherers",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The ancient coterie at the heart of the Order of the Bitter Ashes.",
+  "claims": [
+   {
+    "text": "Within a hundred years of the Exodus, a coterie later called the Gatherers came together to examine the new faith; some believed in Judaism, others in the sun worship of Akhenaton, but all thought the one god spoke through the new prophets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "In the order’s own model, an orrery, the Gatherers sit unmoving at the centre while the Grail Knights circle them like planets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daknight-bitter-ashes"
+  ]
+ },
+ {
+  "id": "daknight-bitter-ashes",
+  "title": "The Order of the Bitter Ashes",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Cainite knightly order and its fate.",
+  "claims": [
+   {
+    "text": "Founding knights orbit closest to the Gatherers and newer recruits further out, but all share the same duties and honours.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "For all its ideals and deeds, the order does not survive into the modern nights; the faith it guards will in the end consume it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "Politics will swallow its holdings, the Albigensian Crusade is a few decades from wrecking its Provencal lands, the advancing Reconquista will expose it, and the later Inquisition will take its last strongholds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daknight-gatherers",
+   "daknight-road-chivalry"
+  ]
+ },
+ {
+  "id": "daknight-road-chivalry",
+  "title": "The Road of Chivalry revisited",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The newest Road among Cainites.",
+  "claims": [
+   {
+    "text": "Chivalry is the newest set of ideals to serve as the basis of a Road, and a vampire on the Via Equitum bets that untested beliefs can hold back the Beast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "The Road arose because chivalry impressed some vampires seeking fresh moral guidance almost as soon as its ideas of Christian duty and nobility took shape.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "Women of the Damned can walk the Road and swear fealty, but moving among mortal tournaments in arms is very hard, so most lead a double life as court ladies who arm only away from mortal eyes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daknight-bitter-ashes"
+  ]
+ },
+ {
+  "id": "daknight-cainite-chivalry",
+  "title": "Cainites and chivalry",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Damned see the knightly ideal.",
+  "claims": [
+   {
+    "text": "Many Cainites mock chivalry, but its spread among the living has drawn their interest and given them a cover to move through noble society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 15,
+      "pdf": 16
+     },
+     {
+      "book": "daknight",
+      "page": 16,
+      "pdf": 17
+     },
+     {
+      "book": "daknight",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Cainite views on each knightly virtue are set against mortal ones, from prowess and loyalty to largesse, courtesy and honour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daknight",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "daknight",
+      "page": 22,
+      "pdf": 23
+     },
+     {
+      "book": "daknight",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daknight-road-chivalry"
+  ]
+ }
+]

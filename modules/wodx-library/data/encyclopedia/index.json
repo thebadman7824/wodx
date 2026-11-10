@@ -1855,6 +1855,12 @@
       "title": "Spoils of War",
       "short": "Spoils of War",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "daknight",
+      "title": "The Ashen Knight",
+      "short": "Ashen Knight",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2166,6 +2172,7 @@
     "dals1.json",
     "dals2.json",
     "darop.json",
-    "daspoils.json"
+    "daspoils.json",
+    "daknight.json"
   ]
 }
