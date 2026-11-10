@@ -1761,6 +1761,12 @@
       "edition": "First edition"
     },
     {
+      "id": "mum1",
+      "title": "World of Darkness: Mummy",
+      "short": "WoD:M",
+      "edition": "First edition"
+    },
+    {
       "id": "dacults",
       "title": "Ashen Cults",
       "short": "Ashen Cults",
@@ -1801,6 +1807,24 @@
       "title": "Constantinople by Night",
       "short": "CbN",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "lostp",
+      "title": "Lost Paths: Ahl-i-Batin and Taftani",
+      "short": "LP",
+      "edition": "Revised"
+    },
+    {
+      "id": "manif",
+      "title": "Manifesto: Transmissions from the Rogue Council",
+      "short": "MTRC",
+      "edition": "Revised"
+    },
+    {
+      "id": "bosh",
+      "title": "The Book of Shadows: The Mage Players Guide",
+      "short": "BoSh",
+      "edition": "First edition"
     },
     {
       "id": "dadevil",
@@ -2059,6 +2083,36 @@
       "title": "World of Future Darkness",
       "short": "World of Future Darkness",
       "edition": "First edition"
+    },
+    {
+      "id": "sune",
+      "title": "Sunset Empires",
+      "short": "SE",
+      "edition": "Revised"
+    },
+    {
+      "id": "berbn",
+      "title": "Berlin by Night",
+      "short": "BbN",
+      "edition": "First edition"
+    },
+    {
+      "id": "cairbn",
+      "title": "Cairo by Night",
+      "short": "CabN",
+      "edition": "Revised"
+    },
+    {
+      "id": "dcbn",
+      "title": "Washington, D.C. by Night",
+      "short": "DCbN",
+      "edition": "First edition"
+    },
+    {
+      "id": "frbn",
+      "title": "France by Night (Monde des Ténèbres: France)",
+      "short": "FbN",
+      "edition": "French edition"
     }
   ],
   "files": [
@@ -2355,6 +2409,7 @@
     "cchand.json",
     "dsbh.json",
     "ancb.json",
+    "mum1.json",
     "dacults.json",
     "dabic.json",
     "dacbbaali.json",
@@ -2362,6 +2417,9 @@
     "dacbsal.json",
     "daheresy.json",
     "dacbn.json",
+    "lostp.json",
+    "manif.json",
+    "bosh.json",
     "dadevil.json",
     "dahot.json",
     "daibn.json",
@@ -2404,6 +2462,11 @@
     "wawwcomp.json",
     "wawwcore.json",
     "cblod.json",
-    "wofd.json"
+    "wofd.json",
+    "sune.json",
+    "berbn.json",
+    "cairbn.json",
+    "dcbn.json",
+    "frbn.json"
   ]
 }

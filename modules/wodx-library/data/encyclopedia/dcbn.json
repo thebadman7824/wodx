@@ -1,0 +1,158 @@
+[
+ {
+  "id": "dcbn-vitel",
+  "title": "Prince Marcus Vitel",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Ventrue Prince of Washington, D.C.",
+  "claims": [
+   {
+    "text": "Marcus Vitel governs harshly and never pardons; offenders are turned into public lessons instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Vitel enlarged Elysium to cover several areas of the city and shielded members of the Senate, the Cabinet and the House from Kindred meddling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Vitel likes visiting the Lincoln Memorial and sometimes holds audiences there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dcbn-history",
+   "dcbn-baltimore"
+  ]
+ },
+ {
+  "id": "dcbn-history",
+  "title": "Washington's Kindred History",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Early princes of the capital.",
+  "claims": [
+   {
+    "text": "The Ventrue wanted the new capital to be a fresh, pliable city with no tradition behind it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The Brujah Prince of Georgetown, Arthur Carroll, once declared rule over all Washington with anarch and clan backing, but that reign did not long survive the Confederate win at the First Battle of Bull Run.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Some say the Toreador let the Ventrue pretend to control Washington while they took the city's real centers for themselves.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dcbn-vitel"
+  ]
+ },
+ {
+  "id": "dcbn-baltimore",
+  "title": "Baltimore and the Sabbat Threat",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The war city on Washington's doorstep.",
+  "claims": [
+   {
+    "text": "Sabbat and Camarilla fight over Baltimore, and if it falls, Washington is next in the Sabbat's path.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Both Sabbat bishops and a Camarilla prince claim Baltimore, so there is bloodshed there every night.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Sabbat packs threaten the capital every few years, and the Maryland border serves them as a staging ground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcbn",
+      "page": 39,
+      "pdf": 40
+     },
+     {
+      "book": "dcbn",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dcbn-vitel"
+  ]
+ }
+]
