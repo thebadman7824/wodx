@@ -1,0 +1,84 @@
+[
+ {
+  "id": "cdan-childrens-dreams",
+  "title": "Children's dreams and the Firchlis",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why children shape the Dreaming most.",
+  "claims": [
+   {
+    "text": "Young children sometimes glimpse chimerical reality before reason sets in, and their dreams, freer of Banality and more primal, shape the Near Dreaming more than adult dreams do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cdan",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Some believe children are a chief cause of the shimmering Firchlis that sweeps through the Mythic Realms and rearranges the dreamscape; beauty survives even in the darkest reaches because children still believe in miracles.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cdan",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "near-dreaming",
+   "the-dreaming",
+   "banality"
+  ]
+ },
+ {
+  "id": "cdan-seas-of-dream",
+  "title": "The Seas of Dream",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The oceans of the Near Dreaming.",
+  "claims": [
+   {
+    "text": "The Near Dreaming has oceans that mirror the waking seas; somewhere in their depths Atlantis still rests, merfolk make their homes, great leviathans sleep, and cities float beneath the waves, some thriving, some long empty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cdan",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "One sunken city lies beyond reach of even the most gifted; some sidhe swear it resembles Arcadia in every way.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cdan",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "near-dreaming",
+   "cbdt-merfolk",
+   "arcadia"
+  ]
+ }
+]
