@@ -1831,6 +1831,12 @@
       "title": "Jerusalem by Night",
       "short": "JbN",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dals1",
+      "title": "Libellus Sanguinis 1: Masters of the State",
+      "short": "LS1",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2138,6 +2144,7 @@
     "dahot.json",
     "daibn.json",
     "inqcomp.json",
-    "dajbn.json"
+    "dajbn.json",
+    "dals1.json"
   ]
 }
