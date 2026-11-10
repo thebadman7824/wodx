@@ -1897,6 +1897,54 @@
       "title": "Wind from the East",
       "short": "Wind from the East",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "wawor",
+      "title": "A World of Rage",
+      "short": "A World of Rage",
+      "edition": "Revised"
+    },
+    {
+      "id": "waaxis",
+      "title": "Axis Mundi: The Book of Spirits",
+      "short": "Axis Mundi",
+      "edition": "Second edition"
+    },
+    {
+      "id": "waausp",
+      "title": "Book of Auspices",
+      "short": "Book of Auspices",
+      "edition": "Revised"
+    },
+    {
+      "id": "wacity",
+      "title": "Book of the City",
+      "short": "Book of the City",
+      "edition": "Revised"
+    },
+    {
+      "id": "wacaern",
+      "title": "Caerns: Places of Power",
+      "short": "Caerns",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wacroatan",
+      "title": "Croatan Song",
+      "short": "Croatan Song",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wafreak",
+      "title": "Freak Legion: A Player's Guide to Fomori",
+      "short": "Freak Legion",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wafrontier",
+      "title": "Frontier Secrets",
+      "short": "Frontier Secrets",
+      "edition": "Wild West"
     }
   ],
   "files": [
@@ -2215,6 +2263,14 @@
     "dapillars.json",
     "datbn.json",
     "daveil.json",
-    "dawind.json"
+    "dawind.json",
+    "wawor.json",
+    "waaxis.json",
+    "waausp.json",
+    "wacity.json",
+    "wacaern.json",
+    "wacroatan.json",
+    "wafreak.json",
+    "wafrontier.json"
   ]
 }

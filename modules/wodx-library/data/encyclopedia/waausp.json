@@ -1,0 +1,320 @@
+[
+ {
+  "id": "waausp-ragabash-gifts",
+  "title": "New Ragabash Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of the New Moon auspice.",
+  "claims": [
+   {
+    "text": "New Ragabash Gifts run from Hush at level one through Trickster Beacon, Slip of the Tongue, Impunity, The Usual Suspects and Madness Season to Turn the Moon, Weakest Link and Firebringer at level six.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 32,
+      "pdf": 33
+     },
+     {
+      "book": "waausp",
+      "page": 33,
+      "pdf": 34
+     },
+     {
+      "book": "waausp",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Turn the Moon, taught by spirits of Luna, costs a Willpower point and a Manipulation + Primal Urge roll, and the target lives one day per success in an auspice the Ragabash chooses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The target loses that auspice’s Gifts, has Rage moved to the new auspice’s base and starts thinking in its terms; elders use it to teach those who take their duties too seriously.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Weakest Link lets the New Moon read the fears and concerns of a pack, friend or foe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waausp-theurge-gifts"
+  ]
+ },
+ {
+  "id": "waausp-theurge-gifts",
+  "title": "New Theurge Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of the Crescent Moon auspice.",
+  "claims": [
+   {
+    "text": "New Theurge Gifts include Airt Perception, Sense Chiminage, Spirit Knife, The Spirits’ Displeasure, Evocation of Ceremony, Castigate, Placation, Prophecy, Healing the Soul, Poisoned Legacy and Invoked Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 56,
+      "pdf": 57
+     },
+     {
+      "book": "waausp",
+      "page": 57,
+      "pdf": 58
+     },
+     {
+      "book": "waausp",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Prophecy, taught by owl-spirits, gives sporadic but true visions of the future; they come only when the Storyteller wishes and should not script player characters’ fates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Healing the Soul, taught by an avatar of Unicorn, takes a week of fasting, trance and spirit communion in solitude with a willing subject, and can cure insanity and heal trauma.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "If the subject’s own conduct caused the harm, Healing the Soul helps only once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waausp-ragabash-gifts"
+  ]
+ },
+ {
+  "id": "waausp-philodox-gifts",
+  "title": "New Philodox Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of the Half Moon auspice.",
+  "claims": [
+   {
+    "text": "New Philodox Gifts are Moon Lore, Omen of Truth, Divided Heart, Reality’s Path, Soul’s Guilt and Release from Bondage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Omen of Truth costs a Gnosis point and Perception + Enigmas, from difficulty 9 in a bare sealed room to 5 in a forest at sunset, reading an answer in signs such as a falling leaf.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "It takes at least a minute, half an hour lowers the difficulty by 1, and a botch gives a certain but wrong answer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Divided Heart, taught by tree-spirits, lets the judge briefly calm another Garou’s rage.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waausp-galliard-gifts",
+  "title": "New Galliard Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of the Gibbous Moon auspice.",
+  "claims": [
+   {
+    "text": "New Galliard Gifts are Perfect Recall, Unified Force, View the Battlefield, Book of Years, Legend’s Insight and Storyteller.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 101,
+      "pdf": 102
+     },
+     {
+      "book": "waausp",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Perfect Recall, taught by Weaver-spirits, costs a Gnosis point to recall any one detail from the Garou’s life, which can lower the difficulty of related rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "Unified Force, taught by a wolf-spirit, costs a Gnosis point per turn and lets the whole pack act on the highest initiative rolled, so long as no one frenzies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waausp-ahroun-gifts",
+  "title": "New Ahroun Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of the Full Moon auspice.",
+  "claims": [
+   {
+    "text": "New Ahroun Gifts include Empathy of Hatred, Pack Tactics, Spiritual Wrath, Renewed Vigor, Purity of Spirit, Touch of Rage, Aegis and One on One.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 122,
+      "pdf": 123
+     },
+     {
+      "book": "waausp",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "Aegis, taught by a wind-spirit, costs a Willpower point and raises the difficulty of every attack against the Garou by two for the scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "Under Aegis an attack that lands with only one success counts as a graze and deals bashing damage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "Renewed Vigor draws strength from slaying a creature of the Wyrm.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "waausp",
+      "page": 122,
+      "pdf": 123
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
