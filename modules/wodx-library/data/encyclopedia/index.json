@@ -2029,6 +2029,12 @@
       "title": "Rage: Warriors of the Apocalypse",
       "short": "Warriors of the Apocalypse",
       "edition": "Second edition"
+    },
+    {
+      "id": "waways",
+      "title": "Ways of the Wolf",
+      "short": "Ways of the Wolf",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2369,6 +2375,7 @@
     "w20kin.json",
     "w20ratw.json",
     "w20wwx.json",
-    "waworap.json"
+    "waworap.json",
+    "waways.json"
   ]
 }
