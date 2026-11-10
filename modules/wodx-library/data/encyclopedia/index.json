@@ -733,6 +733,12 @@
    "title": "Dharma Book: Resplendent Crane",
    "short": "DB Resplendent Crane",
    "edition": "Revised era"
+  },
+  {
+   "id": "dbtw",
+   "title": "Dharma Book: Thousand Whispers",
+   "short": "DB Thousand Whispers",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -857,6 +863,7 @@
   "ksw.json",
   "khd.json",
   "dbbf.json",
-  "dbrc.json"
+  "dbrc.json",
+  "dbtw.json"
  ]
 }
