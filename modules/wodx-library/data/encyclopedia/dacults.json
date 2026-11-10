@@ -1,0 +1,476 @@
+[
+ {
+  "id": "dacults-cults-of-blood",
+  "title": "Cults of blood",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mortal followings gathered by Cainites around 1215.",
+  "claims": [
+   {
+    "text": "Cainites gather mortal cults for nourishment, knowledge, obedience, indulgence or temporal power, and some elders run cults that worship them outright.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "dacults",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "dacults",
+      "page": 28,
+      "pdf": 29
+     },
+     {
+      "book": "dacults",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Recruits are cut off from outside contact and then shaped, given small secret tasks with reward for success and punishment for failure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 25,
+      "pdf": 26
+     },
+     {
+      "book": "dacults",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Dominate forces obedience without winning loyalty and can leave followers frightened, resentful or without will of their own; Presence keeps free will but needs a light touch.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The blood oath is held up as the surest way to bind a cult’s inner circle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 26,
+      "pdf": 27
+     },
+     {
+      "book": "dacults",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacults-cult-background"
+  ]
+ },
+ {
+  "id": "dacults-cult-background",
+  "title": "The Cult Background",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Rating a cult with cult points.",
+  "claims": [
+   {
+    "text": "Each dot of the Cult Background gives one cult point, five at most, to build a cult with Storyteller approval.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "A cult is described by six Traits: Size, Influence, Loyalty, Resources, Secrecy and Arcana; some carry negative values that free points for others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Size runs from 0 points for about ten members up to 6 for a thousand, with larger cults rare and usually off limits to players.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Influence runs from none, through a town or monastery, a city, a barony and a county or diocese, to a whole nation or all of the Church.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 74,
+      "pdf": 75
+     },
+     {
+      "book": "dacults",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Loyalty must be kept up through rites, contact with followers and Disciplines, and ranges from Divided at -2 through Opportunistic and Fairly Loyal upward.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacults-mithras",
+  "title": "The Cult of Mithras",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A warrior cult led by the Ventrue Methuselah Mithras.",
+  "claims": [
+   {
+    "text": "The cult claims to continue an ancient pagan faith from before Christ and draws soldiers and generals; its god walks among them as the Ventrue Methuselah Mithras.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Mithras woke from torpor near the Scottish border after the Norman invasion of 1066.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "A temple raised to Mithras in London was burned by the local clergy with Ventrue backing, killing those inside, though Mithras and some followers escaped.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Based in England, the cult reaches into Wales, Scotland and Aquitaine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacults-masons-marseilles",
+  "title": "The Masons of Marseilles",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A secretive builders’ guild used by Cainites.",
+  "claims": [
+   {
+    "text": "Guilds of the masons who build castles and cathedrals guard their trade secrets, and that secrecy suits Cainites with secrets of their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "In Marseilles, a port where many crusaders took ship, returning men brought back lore of the holy sites of Jerusalem to the guild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "The Marseilles guild has reach among other Masonic guilds in France and Italy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacults-lazarites",
+  "title": "The Followers of Lazarus",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A scattered cult honouring the Cappadocian Lazarus.",
+  "claims": [
+   {
+    "text": "Lazarites hold the Cappadocian Lazarus to be wise and divine and study life and death to imitate and serve that elder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Constancia, high priestess at Erciyes, calls them heretics because Lazarus defied Cappadocius and because they believe in resurrection.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Some say Lazarus is the man of the Gospel, Embraced before being raised by Christ, a blessing said to grant a new state and deep insight into death.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Lazarus later studied death in Egypt, including the funeral rites of the Egyptians, and visited the Great Library of Alexandria.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacults-house-goratrix",
+  "title": "House Goratrix",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A faction within Clan Tremere around the exiled Goratrix.",
+  "claims": [
+   {
+    "text": "Not long after House Tremere became a clan of vampires, blood rites, demonic pacts and charges of treachery began to spread within it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Goratrix, sent to Paris on the excuse of watching occult matters, nurses anger at the exile and plots a coup.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Goratrix works to turn Thaumaturgy toward a black art, and the faction has members at Ceoris, in Transylvania and across Europe and the Levant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacults-cults-of-blood"
+  ]
+ },
+ {
+  "id": "dacults-calomena",
+  "title": "Calomena’s Forsaken",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A vampiric cult in the Balkans.",
+  "claims": [
+   {
+    "text": "Before the sack of Constantinople in the Fourth Crusade, the city was plagued by a vampiric cult called the Chosen of Calomena.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Its remnant, Calomena’s Forsaken, now moves through the Balkans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacults-church-view",
+  "title": "The Church on the blood cults",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How a Church investigator describes Cainite cults.",
+  "claims": [
+   {
+    "text": "An inquisitor’s report describes cults that venerate and drink blood, shun meat and are said to have power over beasts, loyalties and lightning.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 89,
+      "pdf": 90
+     },
+     {
+      "book": "dacults",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "The report notes that sunlight burns these beings and fire drives them to terror, and that they name themselves Vampyr and claim descent from Cain.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 90,
+      "pdf": 91
+     },
+     {
+      "book": "dacults",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "It describes them as one quarrelsome cult with ranks, the most corpselike sitting highest, and some new ones still able to walk by day.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacults",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacults-cults-of-blood"
+  ]
+ }
+]
