@@ -2017,6 +2017,12 @@
       "title": "Rage Across the World (W20)",
       "short": "W20 Rage Across the World",
       "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "w20wwx",
+      "title": "Wyld West Expansion Pack (W20)",
+      "short": "W20 Wyld West",
+      "edition": "20th Anniversary companion"
     }
   ],
   "files": [
@@ -2355,6 +2361,7 @@
     "watrailmx.json",
     "w20cw.json",
     "w20kin.json",
-    "w20ratw.json"
+    "w20ratw.json",
+    "w20wwx.json"
   ]
 }
