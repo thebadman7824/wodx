@@ -1,0 +1,302 @@
+[
+ {
+  "id": "dawind-mongols-and-vampires",
+  "title": "Vampires and the Mongol rise",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Mongol conquest caught the undead off guard.",
+  "claims": [
+   {
+    "text": "To ancient vampires the whole Mongol era passes in a blink, yet in that moment empires fall and a small tribe of steppe nomads conquers the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Elders and ancestors alike are taken by surprise, all the more because the nomads are so ill-suited to vampiric control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Kings and emperors in Europe and China rule from fixed cities and castles, open to influence and surrounded by courtiers to feed on; the steppe offers no such easy hold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dawind-black-tortoise"
+  ]
+ },
+ {
+  "id": "dawind-black-tortoise",
+  "title": "The Black Tortoise Court",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Wan Kuei of the northern steppe, the Demons of Xia.",
+  "claims": [
+   {
+    "text": "The Cathayan vampires who stalk the steppe belong to the Black Tortoise Court, called the Demons of Xia by the Anda, who count them as ancient, unyielding enemies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Like the Anda they ride among the nomads, above all the Tatars and Ongguts, but most of the court lives in the more crowded Jin Empire and Xixia Kingdom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "The Wan Kuei claim the Asian night as their own and have little love for displaced western blood-drinkers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dawind-anda",
+   "dawind-temujin-rumour"
+  ]
+ },
+ {
+  "id": "dawind-anda",
+  "title": "The Anda",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Cainite orphans of the Mongol steppe.",
+  "claims": [
+   {
+    "text": "The Anda and Wu Zao are the scattered orphans of Caine on the Mongolian steppe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "The Anda feel bound to the loose earth of the steppe, which they see as the body of Itugen, the Mother Goddess who shields them from the sun.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Tugen’s Embrace (Animalism 1, Protean 3) works like burial in the earth but lets the vampire take others along for extra blood, most often a rider’s horses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dawind-road-yasa",
+   "dawind-black-tortoise"
+  ]
+ },
+ {
+  "id": "dawind-road-yasa",
+  "title": "The Road of the Yasa",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The barbarians’ Road of the steppe.",
+  "claims": [
+   {
+    "text": "Part Road of the Beast and part Road of Chivalry, the Road of the Yasa also holds ideas found in neither.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Its creed holds that settled city folk who cannot defend their lives and goods deserve to lose both; its followers wear the name Barbarians with pride.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Barbarians fiercely protect their mortal and Cainite families and their anda brothers, Embraced or not, and value personal honour, honesty and discipline.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dawind-anda"
+  ]
+ },
+ {
+  "id": "dawind-temujin-rumour",
+  "title": "Temujin after death",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Rumours that the Great Khan returned as a Wan Kuei.",
+  "claims": [
+   {
+    "text": "Unlike western vampires, a Wan Kuei is not brought over by another; only one brutal enough to fight free of hell returns, needing great will and great cruelty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Within a year of the Great Khan’s death, rumours spread that Temujin has come back from Yomi as a Wan Kuei; they persist for over a century but are never confirmed.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "One vampire claims before the Black Tortoise Ancestor to be Temujin, despite looking little like the khan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dawind-black-tortoise"
+  ]
+ },
+ {
+  "id": "dawind-animal-blood",
+  "title": "Living on animal blood",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Feeding on the steppe.",
+  "claims": [
+   {
+    "text": "Cainites on the steppe may have no choice but to feed from animals when no people are near, which serves between herds but harms them over time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Animal blood is poor nourishment and gives fewer blood points than its size suggests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Wan Kuei cannot feed from animals at all and starve long before any other problem arises.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawind",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

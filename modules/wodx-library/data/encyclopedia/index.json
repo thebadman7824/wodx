@@ -1891,6 +1891,12 @@
       "title": "Veil of Night",
       "short": "Veil of Night",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dawind",
+      "title": "Wind from the East",
+      "short": "Wind from the East",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2208,6 +2214,7 @@
     "dallal.json",
     "dapillars.json",
     "datbn.json",
-    "daveil.json"
+    "daveil.json",
+    "dawind.json"
   ]
 }
