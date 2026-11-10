@@ -1090,7 +1090,7 @@ export async function feed({ actor: a, vessel: t } = {}) {
     const vb = vessel ? blood(vessel) : null;
     const content = `<form>
       <p>${esc(actor.name)} feeds${vessel ? ` from <b>${esc(vessel.name)}</b> (blood ${vb.value})` : " (no target selected)"}</p>
-      <div class="form-group"><label>Vessel</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vessel && isVampire(vessel) ? "vampire" : "human")}</select></div>
+      <div class="form-group"><label>Vessel</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vessel && isVampire(vessel) ? "vampire" : vessel && P.detectProfile(vessel) === "fae" ? "fae" : "human")}</select></div>
       <div class="form-group"><label>Blood points to drink (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
       <div class="form-group"><label>Minutes the blood has been outside a living body</label><input type="number" name="cold" value="0" min="0"/></div>
       ${stateFields(vessel?.flags?.[MOD]?.vesselState ?? "clean")}
@@ -1164,6 +1164,9 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         const pen = taint === "drunk" ? R.drinkPenalty(drinks) : 0;
         html += `<div class="vta-note"><b>${esc(R.VESSEL_STATES[taint].label)}.</b> ${esc(R.VESSEL_STATES[taint].note)}${taint === "drunk" ? ` Now: −${pen} di${pen === 1 ? "e" : "ce"}.` : ""}</div>`;
     }
+    const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
+    const high = faeVessel && isVampire(actor) ? R.faeBloodHigh(drunk) : null;
+    if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;
     if (drunk > 0 && flag(actor, "carrier") && ["human", "child"].includes(vesselType)) html += `<div class="vta-warn">${esc(actor.name)} carries a blood-borne disease: this vessel may now have it (V20 p. 295).</div>`;
     // The vessel
     const vRemaining = vesselPool - drunk;

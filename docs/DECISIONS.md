@@ -354,7 +354,10 @@ V20's aggravated bite is for vampires and fanged creatures such as werewolves (p
 W20 makes Kinfolk immune and vampires and mages normally immune (pdf 48 / p. 46, pdf 162 / p. 160) and says nothing of ghouls, changelings or wraiths. House rule: ghouls roll on the chart as mortals; changelings and wraiths are immune unless a power forces the Delirium.
 
 ## B522. Blood of other lines (2026-11-10)
-Garou blood follows V20 (two blood points a point, and +1 to frenzy and Rötschreck difficulties a point while it lasts, pdf 388 / p. 380). House rule where the books are silent: mage and fae blood are ordinary blood, and a Kuei-jin draws two Chi a point from a Garou with the same frenzy step.
+Garou blood follows V20 (two blood points a point, and +1 to frenzy and Rötschreck difficulties a point while it lasts, pdf 388 / p. 380). House rule where the books are silent: mage and fae blood are ordinary blood (fae blood changed by B525), and a Kuei-jin draws two Chi a point from a Garou with the same frenzy step.
+
+## B525. Fae blood is a drug to Kindred (2026-11-10)
+Ben's ruling, replacing B522's "fae blood is ordinary blood": the Glamour in fae blood makes it a potent drug to Kindred, in every era. Each point drunk lasts one scene of hallucinations and waking dreams, in which the vampire sees the Dreaming's phantoms as real and cannot tell them from the world; every pool drops by 1, by 2 from three points drunk, by 3 from five. The scale follows V20's hallucinogen in a vessel's blood (p. 301). In the Dark Ages a fae's Court gift from VtDA20 (p. 181) comes on top. The Feed window has a Changeling / fae vessel, and a changeling actor as the vessel counts as fae.
 
 ## B523. Celerity and Initiative (2026-11-10)
 V20 Celerity adds nothing to Initiative (pdf 150 / p. 142), and no VtDA20 page was found that says otherwise, so by the rules basis Initiative never includes Celerity, in any era. Celerity still adds dice to Dexterity attack and defense pools under the combat setting.

@@ -193,7 +193,7 @@ export function outcomeOf({procedure, mode, result, reflective, caught, trapped}
   if ( mode === "peek" ) {
     if ( result.success ) {
       return {outcome: "peek", status: null, shift: null,
-        text: "The traveler sees across the Gauntlet. While peeking, they cannot perceive their own side."};
+        text: "The traveller sees across the Gauntlet. While peeking, they cannot perceive their own side."};
     }
     if ( result.botch && procedure === "w20" ) {
       return {outcome: "botch", status: "caught", shift: null, text: "Botch: caught in the Gauntlet."};
@@ -215,14 +215,14 @@ export function outcomeOf({procedure, mode, result, reflective, caught, trapped}
   if ( procedure === "dark-ages" ) {
     if ( reflective ) {
       return {outcome: "botch", status: null, shift: null,
-        text: "Botch: the reflective surface is ruined (the mirror shatters, the pond clouds, the shield rusts), but the traveler is not trapped."};
+        text: "Botch: the reflective surface is ruined (the mirror shatters, the pond clouds, the shield rusts), but the traveller is not trapped."};
     }
     return {outcome: "botch", status: "lost", shift: null,
-      text: "Botch: the Pattern Web takes the traveler. Hours or days later they return somewhere else, with no memory of what happened."};
+      text: "Botch: the Pattern Web takes the traveller. Hours or days later they return somewhere else, with no memory of what happened."};
   }
   if ( caught ) {
     return {outcome: "botch", status: "trapped", shift: null,
-      text: "Botch while caught: the traveler cannot leave on their own and is trapped until rescued (W20)."};
+      text: "Botch while caught: the traveller cannot leave on their own and is trapped until rescued (W20)."};
   }
   return {outcome: "botch", status: "caught", shift: null,
     text: "Botch: caught in the Gauntlet, half spirit and half flesh, until another Garou frees them or an hour passes for another try (W20)."};

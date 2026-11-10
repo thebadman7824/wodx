@@ -1122,7 +1122,7 @@ export default {
     "mage"
    ],
    "name": "Mage: Hermetics in the boardroom",
-   "summary": "Magi trade a bloodless form of Awakening the Flesh for favors, never money (WoFD p. 20, pdf 7).",
+   "summary": "Magi trade a bloodless form of Awakening the Flesh for favours, never money (WoFD p. 20, pdf 7).",
    "source": "House metaplot: the Future Darkness timeline"
   },
   {

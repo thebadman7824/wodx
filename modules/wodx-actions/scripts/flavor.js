@@ -87,7 +87,7 @@ export const POOLS = {
         ],
         botch: [
             "The hunger rises up through {name}, and for one heartbeat they forget which of them is the hunter.",
-            "{name} has taken too much. The vessel's face has gone the color of tallow.",
+            "{name} has taken too much. The vessel's face has gone the colour of tallow.",
             "A scream, and then running feet, and then the watch.",
             "{name} comes back to themselves with blood to the wrist and no memory of the last minute.",
             "Someone saw, and someone will talk."
@@ -224,7 +224,7 @@ export const POOLS = {
             "It hurts, and the hurt goes deep.",
             "[kindred] {name}'s flesh blisters and splits, and the Beast howls at the wrongness of it.",
             "The body remembers, even if {name} would rather not.",
-            "[living] Warm blood runs, and {name} goes gray around the mouth."
+            "[living] Warm blood runs, and {name} goes grey around the mouth."
         ],
         botch: [
             "The pain is total, and for a while there is nothing else.",

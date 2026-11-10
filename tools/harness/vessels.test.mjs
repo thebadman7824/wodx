@@ -33,5 +33,16 @@ test("vessels: the Hunt and Feed windows ask, and a plague year starts on diseas
   assert.match(s, /state: fd\.vstate, drinks: fd\.drinks/);
   assert.match(s, /Intelligence \+ Medicine \(7\)/);
   assert.match(s, /flags\.\$\{MOD\}\.carrier/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.19.5");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.19.6");
+});
+
+test("vessels: fae blood is a drug to Kindred, with hallucinations and waking dreams", () => {
+  assert.equal(R.VESSELS.fae.pool, 10);
+  assert.equal(R.faeBloodHigh(0), null);
+  assert.deepEqual([1, 2, 3, 4, 5, 8].map(p => R.faeBloodHigh(p).dice), [1, 1, 2, 2, 3, 3]);
+  assert.equal(R.faeBloodHigh(4).scenes, 4);
+  assert.match(R.faeBloodHigh(1).note, /potent drug.*hallucinates.*waking dreams/);
+  const s = src("modules/wodx-actions/scripts/main.js");
+  assert.match(s, /P\.detectProfile\(vesselActor\) === "fae"/);
+  assert.match(s, /R\.faeBloodHigh\(drunk\)/);
 });

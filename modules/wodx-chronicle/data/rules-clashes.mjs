@@ -198,9 +198,9 @@ export default {
       id: "feeding-supernatural", topic: "Drinking the blood of another line",
       lines: ["V20", "W20", "M20", "C20", "KotE"],
       books: "V20: Garou blood gives two blood points for each one drunk, and while it is in the system each point raises frenzy and Rötschreck difficulties by 1 (pdf 388 / p. 380). V20 says nothing of mage or fae blood. KotE: shapeshifters hold concentrated Chi, which they call Gnosis (pdf 7 / p. 9), with no rule for drinking it.",
-      settled: "Garou blood as V20 says. Mage and fae blood are ordinary blood (house rule). A Kuei-jin drawing Chi from a Garou gains two Chi a point, as V20's werewolf blood, and the same frenzy step (house rule).",
+      settled: "Garou blood as V20 says. Mage blood is ordinary blood (house rule). Fae blood is a potent drug to Kindred in every era: the Glamour in it brings hallucinations and waking dreams for a scene a point drunk, and pools drop by 1 to 3 (house rule); a Dark Ages fae's Court gift (VtDA20 p. 181) comes on top. A Kuei-jin drawing Chi from a Garou gains two Chi a point, as V20's werewolf blood, and the same frenzy step (house rule).",
       basis: "line", status: "settled", code: "wodx-actions kindred-rules.js",
-      refs: ["B522", "V20 p. 380", "KotE p. 9"]
+      refs: ["B522", "B525", "V20 p. 380", "KotE p. 9"]
     },
     {
       id: "paradox-witnesses", topic: "Paradox, Disciplines and supernatural witnesses",
