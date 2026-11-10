@@ -1285,6 +1285,12 @@
    "title": "World of Darkness: Blood-Dimmed Tides",
    "short": "BDT",
    "edition": "First edition"
+  },
+  {
+   "id": "cboh1",
+   "title": "Noblesse Oblige: The Book of Houses",
+   "short": "BoH1",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1501,6 +1507,7 @@
   "wgso.json",
   "c20bof.json",
   "ctdpg.json",
-  "cbdt.json"
+  "cbdt.json",
+  "cboh1.json"
  ]
 }
