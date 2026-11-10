@@ -799,6 +799,12 @@
    "title": "Tradition Book: Dreamspeakers (Revised)",
    "short": "TB:DS",
    "edition": "Revised"
+  },
+  {
+   "id": "mreu",
+   "title": "Tradition Book: Euthanatos (Revised)",
+   "short": "TB:Eu",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -934,6 +940,7 @@
   "mrab.json",
   "mrcc.json",
   "mrce.json",
-  "mrds.json"
+  "mrds.json",
+  "mreu.json"
  ]
 }
