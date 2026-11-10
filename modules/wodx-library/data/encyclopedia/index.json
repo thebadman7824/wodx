@@ -895,6 +895,12 @@
    "title": "Beyond the Barriers: The Book of Worlds",
    "short": "BoW",
    "edition": "2nd"
+  },
+  {
+   "id": "m1boc",
+   "title": "The Book of Chantries",
+   "short": "BoC",
+   "edition": "1st"
   }
  ],
  "files": [
@@ -1046,6 +1052,7 @@
   "m2gtech.json",
   "mrit.json",
   "mrsw.json",
-  "m2bow.json"
+  "m2bow.json",
+  "m1boc.json"
  ]
 }

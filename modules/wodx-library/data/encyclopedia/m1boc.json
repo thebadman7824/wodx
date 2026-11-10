@@ -1,0 +1,298 @@
+[
+ {
+  "id": "m1boc-mixed-chantries",
+  "title": "Chantries of many Traditions",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why mages of different paths share a home.",
+  "claims": [
+   {
+    "text": "Over the last three centuries, Chantries that mix several Traditions have become the main power among Tradition mages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Even in the Mythic Age some mages of differing paths or Hermetic houses pooled their efforts, and Technocratic expansion made such teamwork the rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Many see mixed cabals as a needed adaptation; more conservative factions still prefer a Chantry of one Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "m1boc-great-chantries",
+  "title": "The great Chantries",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The oldest and largest Tradition strongholds.",
+  "claims": [
+   {
+    "text": "The great Chantries have built Realms rarely under 200 miles across, with their own ecosystems and inhabitants, shaped by the will of their founders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Their buildings are vast, staffed by more Acolytes than needed, and usually keep an earthly site plus one or more outposts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Their covenants run long and dry on fine parchment, and apprentices copy them by hand; each new situation adds another clause.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m1boc-mixed-chantries",
+   "m1boc-chantry-rule"
+  ]
+ },
+ {
+  "id": "m1boc-doissetep",
+  "title": "Doissetep in its prime",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The greatest Tradition Chantry as it stood in the early 1990s.",
+  "claims": [
+   {
+    "text": "Doissetep, the Chantry of Cal Ladeim, sits in the Shard Realm of Forces behind black walls and towers heavy with gargoyles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "It is the largest Chantry known, home to ten cabals, each chasing its own agenda and each wanting to rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Outside attack can hardly touch it, but it is rotting from within, and Ascension is half forgotten amid the struggle for control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mroh-doissetep",
+   "m2bow-mars"
+  ]
+ },
+ {
+  "id": "m1boc-chantry-rule",
+  "title": "How Chantries are governed",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Common forms of Chantry leadership.",
+  "claims": [
+   {
+    "text": "The Panel of Deacons, the oldest common form, seats either the leading cabal or one voice from each cabal, each with an equal vote; Technocratic Constructs call such bodies Amalgam Primes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 142,
+      "pdf": 143
+     }
+    ]
+   },
+   {
+    "text": "Older Chantries often answer to one leader, who may be elected, may have to prove fitness, or in Progenitor Constructs may have to fight for the seat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 142,
+      "pdf": 143
+     }
+    ]
+   },
+   {
+    "text": "Politics among council members runs on alliances, favors owed and trickery, and outright dictators are not unknown.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m1boc-great-chantries",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "m1boc-new-nodes",
+  "title": "Opening a new Node",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How mages create a fresh source of Quintessence.",
+  "claims": [
+   {
+    "text": "Finding a site means a trip into the Near Umbra to locate a spot where the Tapestry is loose enough to channel Quintessence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "Each faction has its own way: Dreamspeakers petition spirits, Akashic Brothers meditate for days, Virtual Adepts work out the proof in mathematics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "All agree the job is perilous and best done by a whole cabal, since a mistake can draw Paradox or set off a chain reaction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   }
+  ],
+  "see": [
+   "quintessence",
+   "umbra"
+  ]
+ },
+ {
+  "id": "m1boc-nwo-rise",
+  "title": "The New World Order's rise",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the information Convention gained its edge.",
+  "claims": [
+   {
+    "text": "While other Conventions focused on building science, the New World Order gathered information, storing it in early living computers made with help from the Sons of Ether.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Its power grew through the 1800s as it infiltrated groups, among them the first mixed Tradition Chantries, and it became the Technocracy's internal police.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m1boc",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "technocracy",
+   "society-of-ether"
+  ]
+ }
+]
