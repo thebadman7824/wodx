@@ -1,0 +1,73 @@
+[
+ {
+  "id": "cfool-commoner-escheat",
+  "title": "Commoners and the Escheat",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How commoners read the old laws.",
+  "claims": [
+   {
+    "text": "Commoners who live closest to mortals rank the Right to Dream highest of the Escheat: inspiring mortals is honorable, but stifling their imagination, taking Glamour by force, or flooding them with too much inspiration are all crimes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cfool",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Seelie commoners, like Seelie nobles, never steal Glamour from a mortal except perhaps when many lives depend on it; moderate commoners often feel caught between a rigid Traditionalist noble and the Banality outside.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cfool",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "escheat",
+   "glamour",
+   "seelie-court"
+  ]
+ },
+ {
+  "id": "cfool-commoner-defiance",
+  "title": "Commoner freeholds and the returning sidhe",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How some commoners met the sidhe's return.",
+  "claims": [
+   {
+    "text": "When the sidhe came back demanding oaths of fealty, some commoner freeholds refused outright; at one, trolls escorted noble envoys off the grounds after they began wielding Sovereign Arts, and tension grew until a great conclave of commoner leaders was called to settle matters with the Royalists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cfool",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-resurgence",
+   "accordance-war",
+   "night-of-iron-knives"
+  ]
+ }
+]

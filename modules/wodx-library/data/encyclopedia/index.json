@@ -1321,6 +1321,12 @@
    "title": "The Enchanted",
    "short": "Ench",
    "edition": "Second edition"
+  },
+  {
+   "id": "cfool",
+   "title": "Fool's Luck: The Way of the Commoner",
+   "short": "FL",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1543,6 +1549,7 @@
   "cbolh.json",
   "cden.json",
   "cdan.json",
-  "cench.json"
+  "cench.json",
+  "cfool.json"
  ]
 }
