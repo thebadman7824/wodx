@@ -421,6 +421,12 @@
    "title": "Dark Ages: Players Guide to High Clans",
    "short": "DA High Clans",
    "edition": "Revised"
+  },
+  {
+   "id": "w20umbra",
+   "title": "Umbra: The Velvet Shadow (W20)",
+   "short": "W20 Umbra",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -493,6 +499,7 @@
   "cb.json",
   "botw.json",
   "dalc.json",
-  "dahc.json"
+  "dahc.json",
+  "w20umbra.json"
  ]
 }
