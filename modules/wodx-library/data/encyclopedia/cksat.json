@@ -1,0 +1,32 @@
+[
+ {
+  "id": "cksat-dionysus",
+  "title": "Dionysus among the Olympians",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "The satyrs' patron in the Olympian court.",
+  "claims": [
+   {
+    "text": "Satyr lore counts Dionysus as one of the Unseelie sidhe of Zeus's household on Olympus: a lover of chaos and freedom who scorned court etiquette, spoke freely whoever it angered, and was sought out even by Zeus when Zeus wished to set manners aside.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cksat",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "satyrs",
+   "unseelie-court",
+   "mythic-age"
+  ]
+ }
+]
