@@ -1681,6 +1681,12 @@
       "title": "The Succubus Club",
       "short": "SuccC",
       "edition": "First edition"
+    },
+    {
+      "id": "kebk",
+      "title": "Kindred of the Ebony Kingdom",
+      "short": "KotEK",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -1963,6 +1969,7 @@
     "hotd.json",
     "sog.json",
     "bmst.json",
-    "succ.json"
+    "succ.json",
+    "kebk.json"
   ]
 }
