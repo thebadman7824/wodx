@@ -1235,3 +1235,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - A frontage that would stand back to back with one already built in the same block, closer than 16 squares (20 to 24 in villages, outside the gates and in rich wards), is left as yards. Slum and craftsmen wards still build on alleys and back to back, packing their yards into courts. Towns come out a little less dense (Rotheim city seed 9: 161 households, was 186).
 - Each plot is a sidecar region "Yard of the <building>" (place home, private, owner the building). Plots are checked against every way like buildings.
 - Samples schondorf and linberg redrawn.
+
+## 2026-11-10: rivers, bridges, mills and washing places (map tools)
+- Second of the approved planning recommendations. An organic village, town or city may have a river (villages 50%, towns 60%, cities 75%; ddtown.py --river yes/no/random). It winds gently across the whole map and passes to one side of the market, 2.6 to 4.6 squares wide by size. It is not tied to the patches: buildings, wings, plots and gardens keep off it like a way (check_ways covers it), and each street or road that crosses it gets a plank bridge with railings. B583.
+- A watermill (a workshop whose household is the miller's) stands on the frontage nearest the water; a washing place (trough, bucket, barrel) sits on the town's bank upstream of the middle of town, leaving downstream for the dirty trades. The river is drawn with Forgotten Adventures' River_Bank_Blue path.
+- Sidecar regions: river-N (the river, place other), bridge-N (place street), washing-place (place other). Samples schondorf and linberg redrawn. Test: a town on a river has its river, bridges, washing place and miller; --river no has none.

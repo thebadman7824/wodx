@@ -131,6 +131,22 @@ test("mapgen: organic villages, towns and cities come out whole, and the samples
   }
 });
 
+test("mapgen: a town on a river has its banks clear, bridges, a mill and a washing place", {skip}, () => {
+  const dir = mkdtempSync(join(tmpdir(), "wodx-r-"));
+  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--river", "yes", "--assets", ASSETS, "--out", dir], dir);
+  const s = JSON.parse(readFileSync(join(dir, "haselberg.wodx.json"), "utf8"));
+  assert.deepEqual(A.parseSidecar(s).errors, []);
+  const ids = s.regions.map(r => r.id);
+  assert.ok(ids.includes("river-1"), "no river");
+  assert.ok(ids.some(i => i.startsWith("bridge-")), "no bridge");
+  assert.ok(ids.includes("washing-place"), "no washing place");
+  assert.ok(JSON.stringify(s.households).includes("miller"), "no miller");
+  // and a town told to have none has none
+  const d2 = mkdtempSync(join(tmpdir(), "wodx-r-"));
+  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--river", "no", "--assets", ASSETS, "--out", d2], d2);
+  assert.ok(!JSON.parse(readFileSync(join(d2, "haselberg.wodx.json"), "utf8")).regions.some(r => r.id.startsWith("river")));
+});
+
 test("mapgen: an organic town splits into parts that fit together, and its sample matches", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-op-"));
   const out = run([join(gen, "ddtown.py"), "--size", "town", "--seed", "3", "--assets", ASSETS, "--out", dir], dir);
