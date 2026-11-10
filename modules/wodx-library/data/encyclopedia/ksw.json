@@ -1,0 +1,271 @@
+[
+ {
+  "id": "ksw-tiaozhan-ye",
+  "title": "Tiaozhan Ye, Honourable Combat",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ritual duels of the August Courts.",
+  "claims": [
+   {
+    "text": "Left without their celestial patrons, the Five Emperors remade the tiaozhan ye so Kuei-jin could settle quarrels without weakening their duties or their court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Each emperor shaped a contest after the strength wanted in that court; the Black Tortoise, for one, tests endurance under the trials of unlife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-courts",
+   "kotec-treaty-quincunx"
+  ]
+ },
+ {
+  "id": "ksw-ganshezhe",
+  "title": "The Ganshezhe",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ritual mediators of honourable war.",
+  "claims": [
+   {
+    "text": "The Ganshezhe began as mediators of the Court of the Yellow Emperor and rose in standing as judges of how the Great Principle governs limited war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "They soon spread beyond the Yellow Emperor's lands and brought the other courts round to their reading of the Grand Arhat's teaching.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ksw-tiaozhan-ye",
+   "kote-great-principle"
+  ]
+ },
+ {
+  "id": "ksw-proper-hours",
+  "title": "The Proper Hours",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The graded levels of Kuei-jin conflict.",
+  "claims": [
+   {
+    "text": "Kuei-jin feuds are ranked by hours; Sharpening the Blade at Dawn is the mildest and seldom formally declared, while midnight war is open destruction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Friendly rivals usually agree their own sparring terms, though the wise still bring in a mediator so the rivalry does not grow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ksw-tiaozhan-ye",
+   "ksw-ganshezhe"
+  ]
+ },
+ {
+  "id": "ksw-grand-arhat-xue",
+  "title": "Grand Arhat Xue",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Teacher of the Great Principle.",
+  "claims": [
+   {
+    "text": "After the Ebon Dragon and the Scarlet Queen departed, Grand Arhat Xue, who had existed since the Third Age, came forward and taught that following the Great Principle would restore the August Personage's favour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Xue wrote nothing down; the disciple Ki recorded the teaching.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-great-principle",
+   "kote-wheel-of-ages"
+  ]
+ },
+ {
+  "id": "ksw-bamboo-princes",
+  "title": "The Bamboo Princes",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Takeouji, the modernist movement among Kuei-jin.",
+  "claims": [
+   {
+    "text": "The name Takeouji comes from a 1968 manifesto by Burakumin, which called the old ways hopelessly outdated and asked for a new breed of Kuei-jin with all the virtues of bamboo.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "The movement as it stands grew, ironically, out of the Flame Court of Hong Kong, the court most set on purging Western influence, when the Kin-jin hunter Maoxian Mao met Watanabe Kimiko of Clan Genji.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-genji",
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "ksw-great-leap-outward",
+  "title": "The Great Leap Outward",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The August Courts' push into the West.",
+  "claims": [
+   {
+    "text": "The Great Leap Outward, whose shape shows in the Quincunx's plans for the Jade Invasion of Los Angeles, is the largest joint effort the Five August Courts have ever made.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Its success or failure is expected to change Kuei-jin culture for good.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-cathayans-west",
+   "kotec-treaty-quincunx"
+  ]
+ },
+ {
+  "id": "ksw-chicago-chinatown",
+  "title": "Chicago's Chinatown",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Chinatown that stays out of city politics.",
+  "claims": [
+   {
+    "text": "Chicago is an odd exception among Western Chinatowns: its large Chinatown makes little effort to sway city politics, which some mandarins credit to the iron rule of the legendary Lodin.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ksw",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbn2-lodin",
+   "ksw-great-leap-outward"
+  ]
+ }
+]

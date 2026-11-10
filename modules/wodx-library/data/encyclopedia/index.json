@@ -709,6 +709,12 @@
    "title": "Heresies of the Way",
    "short": "Heresies of the Way",
    "edition": "Revised era"
+  },
+  {
+   "id": "ksw",
+   "title": "Shadow War",
+   "short": "Shadow War",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -829,6 +835,7 @@
   "bas.json",
   "k1000h.json",
   "kks.json",
-  "khow.json"
+  "khow.json",
+  "ksw.json"
  ]
 }
