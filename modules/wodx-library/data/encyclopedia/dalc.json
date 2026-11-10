@@ -203,7 +203,7 @@
     ]
    },
    {
-    "text": "The Hunt's chief rule is that only divination may pick the quarry, which can be friend or foe, mortal, Cainite or something stranger; choosing any other way would be passing judgment.",
+    "text": "The Hunt's first rule is that divination alone may choose the quarry, whether friend or foe, mortal, Cainite or stranger still; picking it any other way would amount to passing judgment.",
     "tier": "stated",
     "refs": [
      {
@@ -380,11 +380,6 @@
     "text": "They hunt the infernal asuratizayya and believe their homeland stays clean only through constant watch, while every land beyond is already spoiled.",
     "tier": "stated",
     "refs": [
-     {
-      "book": "dalc",
-      "page": 50,
-      "pdf": 53
-     },
      {
       "book": "dalc",
       "page": 55,
@@ -648,7 +643,7 @@
     ]
    },
    {
-    "text": "Each part of Lithuania has a Cainite watcher who reports to the Krive, a legendary dead king who drinks warm blood. The current Krive is Androjai, a Malkavian hard pressed by Ventrue riding with the Teutonic Knights.",
+    "text": "Every region of Lithuania has a Cainite watcher who answers to the Krive, a dead king of legend who drinks warm blood. The present Krive is Androjai, a Malkavian under heavy pressure from Ventrue who ride with the Teutonic Knights.",
     "tier": "stated",
     "refs": [
      {

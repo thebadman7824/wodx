@@ -114,7 +114,7 @@
   "summary": "The two halves of the Victorian world.",
   "claims": [
    {
-    "text": "The world splits into the civilised lands lit by gaslight and the barbarous lands lit by torchlight.",
+    "text": "The world divides into civilised lands under gaslight and barbarous ones still lit by torches.",
     "tier": "stated",
     "refs": [
      {
@@ -533,7 +533,7 @@
     ]
    },
    {
-    "text": "They command the animal world second only to the Gangrel.",
+    "text": "Only the Gangrel hold more sway over animals than they do.",
     "tier": "stated",
     "refs": [
      {
@@ -718,7 +718,7 @@
   "summary": "Feudal lords of the barbarous lands.",
   "claims": [
    {
-    "text": "Most Tzimisce domains lie in the barbarous lands, untouched by Western ideas of government; some Fiends are still literal feudal masters.",
+    "text": "Most Tzimisce domains sit in the barbarous lands, where Western ideas of government have not reached; some Fiends remain feudal lords in the literal sense.",
     "tier": "stated",
     "refs": [
      {
@@ -1177,7 +1177,7 @@
     ]
    },
    {
-    "text": "Those of the Irish countryside and Scottish fens are smaller and mystical, preferring magical ambush to open attack; American Lupines lean further toward the spiritual and share many customs with native peoples.",
+    "text": "The Lupines of rural Ireland and the Scottish fens are smaller and given to magic, preferring a mystical ambush to an open fight; American Lupines lean more toward the spiritual and share many customs with native peoples.",
     "tier": "stated",
     "refs": [
      {

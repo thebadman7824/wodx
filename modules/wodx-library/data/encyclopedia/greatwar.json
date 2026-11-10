@@ -12,7 +12,7 @@
   "summary": "The dead from November 1918 to the eve of the 1929 crash.",
   "claims": [
    {
-    "text": "The setting runs from Armistice Day, 11 November 1918, until the eve of the 1929 stock market crash.",
+    "text": "The setting covers the years from Armistice Day, 11 November 1918, up to the night before the stock market crash of 1929.",
     "tier": "stated",
     "refs": [
      {
@@ -45,7 +45,7 @@
     ]
    },
    {
-    "text": "The Shadowlands and the heart of the Empire are all but cut off; each Necropolis is an island among enemies.",
+    "text": "The Shadowlands are all but cut off from the Empire's heart, and every Necropolis stands alone among enemies.",
     "tier": "stated",
     "refs": [
      {
@@ -194,7 +194,7 @@
     ]
    },
    {
-    "text": "A Loyalist is a wraith who opposes the Smiling Lord's forces in the Insurrection.",
+    "text": "A Loyalist is a wraith who fights against the Smiling Lord's side in the Insurrection.",
     "tier": "stated",
     "refs": [
      {
@@ -289,7 +289,7 @@
   "summary": "Some named orders and branches of the 1920s Legions.",
   "claims": [
    {
-    "text": "The Bleak Legion is no true Legion but a Russian branch of the Silent Legion.",
+    "text": "The Bleak Legion is not a real Legion at all but a Russian offshoot of the Silent Legion.",
     "tier": "stated",
     "refs": [
      {
@@ -300,7 +300,7 @@
     ]
    },
    {
-    "text": "The Cataphractoi are the heavy cavalry of the Legion of Fate.",
+    "text": "The Cataphractoi serve the Legion of Fate as its heavy cavalry.",
     "tier": "stated",
     "refs": [
      {
@@ -377,7 +377,7 @@
   "summary": "The afterlives beyond Stygia drawn into the war.",
   "claims": [
    {
-    "text": "Souls of the Jade Empire, the Bush of Ghosts and the Indian afterlife are all caught up in the age.",
+    "text": "The age also sweeps up the souls of the Jade Empire, of the Bush of Ghosts and of the Indian afterlife.",
     "tier": "stated",
     "refs": [
      {
@@ -444,7 +444,7 @@
   "summary": "Terms from the Jade Kingdom, the Bush of Ghosts and Swar.",
   "claims": [
    {
-    "text": "In the Jade Kingdom, hun is the half of a wraith's soul that is intellect and spirit, the Psyche; a kuei is a malevolent spirit ruled by its p'o.",
+    "text": "In the Jade Kingdom, hun is the intellect and spirit, the Psyche, which makes up half of a wraith's soul; a kuei is a malevolent spirit ruled by its p'o.",
     "tier": "stated",
     "refs": [
      {
@@ -505,7 +505,7 @@
   "summary": "Nephwracks in Oblivion's direct service.",
   "claims": [
    {
-    "text": "The Generals of Oblivion are a select group of Nephwracks who serve Oblivion directly and side with or against Malfeans as they choose.",
+    "text": "The Generals of Oblivion are a small band of Nephwracks who answer to Oblivion itself and side with or against Malfeans as they please.",
     "tier": "stated",
     "refs": [
      {
@@ -574,7 +574,7 @@
   "summary": "The coup that unseated the Deathlord of Madness.",
   "claims": [
    {
-    "text": "On the Night of Short Chains the Smiling Lord and 250 of the Grim Guard force the Laughing Lady to give up the throne.",
+    "text": "On the Night of Short Chains the Smiling Lord, backed by 250 Grim Guards, makes the Laughing Lady abdicate.",
     "tier": "stated",
     "refs": [
      {
@@ -664,7 +664,7 @@
   "summary": "The Legion of the diseased.",
   "claims": [
    {
-    "text": "The Skeletal Lord is called the most dangerous of the three great Deathlords.",
+    "text": "Of the three great Deathlords, the Skeletal Lord is held to be the most dangerous.",
     "tier": "stated",
     "refs": [
      {
@@ -792,7 +792,7 @@
   "summary": "The Lady of Fate's own Legion.",
   "claims": [
    {
-    "text": "The Legion exists first for the benefit of the Lady of Fate, who is generally assumed to want the good of the whole Underworld.",
+    "text": "Above all the Legion serves the Lady of Fate, who is usually taken to want what is best for the whole Underworld.",
     "tier": "stated",
     "refs": [
      {
@@ -831,7 +831,7 @@
   "summary": "The Legion of those who chose death.",
   "claims": [
    {
-    "text": "The Silent Legion is a corps of individualists who brought themselves to the Underworld and wear that last free act as their mark.",
+    "text": "The Silent Legion is made up of individualists who chose their own way into the Underworld and bear that final free choice as their mark.",
     "tier": "stated",
     "refs": [
      {
@@ -1087,7 +1087,7 @@
   "summary": "Flying craft of the Legions.",
   "claims": [
    {
-    "text": "The Emerald Legion, the Legion of Fate and the Victims of Mystery all keep airships, used as couriers and troop carriers.",
+    "text": "Airships serve as couriers and troop carriers for the Emerald Legion, the Victims of Mystery and the Legion of Fate.",
     "tier": "stated",
     "refs": [
      {
@@ -1115,7 +1115,7 @@
   "summary": "Spectres hidden among the Restless.",
   "claims": [
    {
-    "text": "Thousands of Doppelgangers are active in the Twilight Era, burrowing into every level of society; some serve as eyes and ears for the Generals of Oblivion.",
+    "text": "Thousands of Doppelgangers work in the Twilight Era, burrowing into every level of society; some spy for the Generals of Oblivion.",
     "tier": "stated",
     "refs": [
      {
