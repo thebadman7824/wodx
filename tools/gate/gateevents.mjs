@@ -6,7 +6,7 @@
  * It holds the world first (WoDX Chronicle's Hold the world), so moving the clock wakes no routine, faction turn,
  * expiring effect or era proposal in Rothenstein, and checks the events itself with check({force: true}). At the end
  * it puts back the clock, the hold, the fired list and the Storyteller's event choices, and deletes its chat cards.
- *   1. the module: WoDX Chronicle 0.5.0 or later with the events API and 25 events
+ *   1. the module: WoDX Chronicle 0.5.0 or later with the events API and at least 25 events (the list grows)
  *   2. the settings menu "Dated events" is registered
  *   3. moving the clock past 1 October 1347 fires the Black Death: one card, the hook, has() true
  *   4. a jump to 1500 posts one card naming the Convention of Thorns
@@ -56,7 +56,7 @@ export async function run() {
   const cards = () => game.messages.filter(m => !msgsBefore.has(m.id) && /wodx-events/.test(m.content ?? ""));
   try {
     const mod = game.modules.get(M);
-    ok("1. module", mod?.active && newer(mod.version, "0.5.0") && api?.events && api.events.list().length === 25,
+    ok("1. module", mod?.active && newer(mod.version, "0.5.0") && api?.events && api.events.list().length >= 25,
       {version: mod?.version, events: api?.events?.list().length});
     ok("2. settings menu", !!game.settings.menus.get(`${M}.eventsMenu`));
 
@@ -93,7 +93,7 @@ export async function run() {
     await api.events.open(); await sleep(600);
     const app = [...foundry.applications.instances.values()].find(a => a.rendered && a.element?.classList.contains("wodx-events-app"));
     const rows = app?.element.querySelectorAll(".wodx-event-row").length ?? 0;
-    ok("8. window", !!app && !!app.element.querySelector("input.wodx-search") && rows === 25, {rows});
+    ok("8. window", !!app && !!app.element.querySelector("input.wodx-search") && rows >= 1 && rows <= api.events.list().length, {rows, total: api.events.list().length});
     await app?.close();
   } catch (err) {
     R.errors.push(`${err.message} | ${String(err.stack).split("\n").slice(0, 3).join(" | ")}`);

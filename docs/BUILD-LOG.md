@@ -1180,3 +1180,7 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - docs/TEST-GAPS.md, written by tools/harness/test-gaps.mjs: harness line coverage of every module file, the 18 files the harness never loads (window and hook files: Atmosphere and Library main, NPC faces and orders, Sheets main, most Storyteller windows) and the gates that name each module. Those files are covered by gates.
 - The weakest pure-rules file was Actions rules.js (76%). kindred-rules-core.test.mjs adds 7 tests for its helpers: resisted and extended rolls, teamwork, aura, Virtue and frenzy checks, hunting and feeding, healing, falling, lifting, oaths and diablerie.
 - Next: one full gate run on the PC with every module on, in every era.
+
+## Fae blood as a drug (2026-11-10)
+- Ben's ruling (B525): fae blood is a potent drug to Kindred in every era, with hallucinations and waking dreams for a scene a point drunk and pools 1 to 3 dice smaller. Actions 3.19.6: rules.js faeBloodHigh, a Changeling / fae vessel in the Feed window, a warning on the feeding card. Rules-clash row updated (Chronicle 0.11.3).
+- Phase 10 spelling pass: travellers, colour, grey, favour in the few prose strings that mixed spellings. gateevents now accepts a growing event list.

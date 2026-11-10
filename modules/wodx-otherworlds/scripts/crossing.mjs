@@ -123,7 +123,7 @@ export async function stepSideways({mode = "cross"} = {}) {
   const travelers = controlled.filter(t => canStepSideways(t.actor));
   const excluded = controlled.filter(t => !canStepSideways(t.actor));
   if ( !travelers.length ) {
-    return ui.notifications.warn("Only Garou and other shapeshifters can step sideways. Other travelers need their own powers.");
+    return ui.notifications.warn("Only Garou and other shapeshifters can step sideways. Other travellers need their own powers.");
   }
 
   const inShadow = travelers.filter(t => tokenLayer(t) === "shadowlands" || hasStatus(t.actor, STATUS.shadowlands.id));
@@ -132,7 +132,7 @@ export async function stepSideways({mode = "cross"} = {}) {
   const chart = place.chart;
   const procedure = chart.procedure;
   const inUmbraSet = new Set(travelers.map(t => hasStatus(t.actor, STATUS.umbra.id)));
-  if ( inUmbraSet.size > 1 ) return ui.notifications.warn("Some of these travelers are in the Umbra and some are not. Select one side at a time.");
+  if ( inUmbraSet.size > 1 ) return ui.notifications.warn("Some of these travellers are in the Umbra and some are not. Select one side at a time.");
   const inUmbra = inUmbraSet.has(true);
   const isPack = travelers.length > 1;
 

@@ -230,11 +230,11 @@ export async function writeChartsPage() {
     <h2>Sources</h2><ul>${sources}</ul>
     <h2>Crossing rules</h2>
     <ul>
-      <li><strong>Dark Ages:</strong> roll Gnosis against the Gauntlet. A reflective surface gives −1 and turns a botch into a ruined surface. Each failed attempt at the same spot adds +1 (at most 10). A botch without a surface loses the traveler in the Pattern Web for hours or days. Peeking needs one success and takes no time.</li>
-      <li><strong>W20 and Wild West:</strong> roll Gnosis against the Gauntlet, on a highly reflective surface (not needed with Pulse of the Invisible; a carried mirror may add +1). After a failure, wait an hour. A botch catches the traveler in the Gauntlet until another Garou frees them or an hour passes for another try; a second botch traps them until rescued. Peeking from the physical world is Gauntlet +3 (at most 9). In an Umbral storm, each 1 counts twice.</li>
+      <li><strong>Dark Ages:</strong> roll Gnosis against the Gauntlet. A reflective surface gives −1 and turns a botch into a ruined surface. Each failed attempt at the same spot adds +1 (at most 10). A botch without a surface loses the traveller in the Pattern Web for hours or days. Peeking needs one success and takes no time.</li>
+      <li><strong>W20 and Wild West:</strong> roll Gnosis against the Gauntlet, on a highly reflective surface (not needed with Pulse of the Invisible; a carried mirror may add +1). After a failure, wait an hour. A botch catches the traveller in the Gauntlet until another Garou frees them or an hour passes for another try; a second botch traps them until rescued. Peeking from the physical world is Gauntlet +3 (at most 9). In an Umbral storm, each 1 counts twice.</li>
       <li><strong>Shift time:</strong> 1 success, five minutes; 2, thirty seconds; 3 or more, instantly.</li>
       <li><strong>Packs:</strong> the opener of the way, usually the highest Gnosis, rolls once for the whole pack.</li>
-      <li><strong>WoDX reading:</strong> when a caught traveler succeeds, or a packmate's roll frees them, they arrive on the far side.</li>
+      <li><strong>WoDX reading:</strong> when a caught traveller succeeds, or a packmate's roll frees them, they arrive on the far side.</li>
       <li><strong>Disconnection</strong> (W20 p. 319): each lunar cycle spent in one world makes crossing to the other 1 harder; after a year and a day in the Penumbra a shapechanger begins to become a creature of spirit (proposed to the Storyteller). House rule: the same rule is used in the Dark Ages, which gives none.</li>
     </ul>
     <h2>One Umbra</h2>

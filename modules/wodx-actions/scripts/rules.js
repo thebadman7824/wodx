@@ -172,7 +172,7 @@ export function generation(gen) { return GENERATIONS[Math.max(3, Math.min(13, ge
 
 export const VESSELS = {
     human: { label: "Average human", pool: 10 }, child: { label: "Child", pool: 5 },
-    vampire: { label: "Cainite (10+)", pool: 10 }, werewolf: { label: "Lupine", pool: 20 },
+    vampire: { label: "Cainite (10+)", pool: 10 }, werewolf: { label: "Lupine", pool: 20 }, fae: { label: "Changeling / fae", pool: 10 },
     cow: { label: "Cow / horse", pool: 5 }, dog: { label: "Dog", pool: 2 }, cat: { label: "Cat", pool: 1 },
     bird: { label: "Bird", pool: 0.5 }, rat: { label: "Bat / rat", pool: 0.25 }
 };
@@ -189,6 +189,18 @@ export const VESSEL_STATES = {
     opiate: { label: "On heroin, morphine or barbiturates", note: "Lower Dexterity and Ability pools, and frenzy is easier to resist, as the Storyteller decides (V20 p. 302)." },
     disease: { label: "Carrying a blood-borne disease", note: "Vampires take no harm from most sickness but carry blood-borne disease to later vessels (V20 p. 295)." }
 };
+
+/**
+ * Fae blood (house rule, every era): the Glamour in it is a potent drug to Kindred, bringing hallucinations and
+ * waking dreams. Each point drunk lasts a scene; pools drop by 1, by 2 from three points, by 3 from five. A Dark Ages
+ * fae's Court gift (VtDA20 p. 181) comes on top.
+ */
+export function faeBloodHigh(points) {
+    const p = Math.max(0, Math.floor(Number(points) || 0));
+    if (!p) return null;
+    const dice = p >= 5 ? 3 : p >= 3 ? 2 : 1;
+    return { dice, scenes: p, note: `Fae blood: the Glamour in it is a potent drug. For ${p} scene${p === 1 ? "" : "s"} the vampire hallucinates and walks in waking dreams, seeing the Dreaming's phantoms as real and unable to tell them from the world; every pool is ${dice} di${dice === 1 ? "e" : "ce"} smaller.` };
+}
 
 /** Alcohol's penalty: one die from Dexterity and Intelligence pools for every two drinks. */
 export function drinkPenalty(drinks) { return Math.floor(Math.max(0, Number(drinks) || 0) / 2); }
