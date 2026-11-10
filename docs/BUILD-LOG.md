@@ -1230,7 +1230,7 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - organic.py now measures whole walls against every way band (geom.seg_poly_dist), checks gardens too, re-finds a spot for a plain tavern or chapel, and stops with an error if any building or garden is on a way (check_ways), as the farmstead generator does. After the fix: 0 overlaps over the same 15 towns. B581.
 - Samples schondorf and linberg redrawn.
 ## 2026-11-10: Era item lists (Library 0.6.0, B590-B592)
-- data/goods.mjs grows from 160 goods to 679, in 21 kinds and 80 sub-categories, covering the prologue ages, 1197 and every era to the Time of Future Judgement. Rows give years in use; eras are derived from Chronicle's era years.
+- data/goods.mjs grows from 160 goods to 681, in 21 kinds and 80 sub-categories, covering the prologue ages, 1197 and every era to the Time of Future Judgement. Rows give years in use; eras are derived from Chronicle's era years.
 - Every good carries tags.category, tags.era and tags.value (tier per era, 0 Trifle to 5 Treasure, set against Resources). VALUES, SOURCES, SUBS, ERA_YEARS, valueAt() exported.
 - Fill by place and era (Interactables) needs no change: it reads name, kind, eras and small as before; place weights cover the seven new kinds.
 - tools/goods/build-desk.mjs writes the review desk's item file. Desk: https://claude.ai/artifact/RFDVx5w2jCtbK1ASY8WeLP.

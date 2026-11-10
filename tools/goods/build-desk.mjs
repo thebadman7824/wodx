@@ -3,7 +3,7 @@
 import {writeFileSync} from "node:fs";
 const G = await import(new URL("../../modules/wodx-library/data/goods.mjs", import.meta.url));
 const eraName = {"living-gods": "Living Gods", "classical": "Classical", "dark-ages": "Dark Ages", "long-night": "Long Night",
-  "renaissance": "Renaissance", "victorian": "Victorian", "wild-west": "Wild West", "great-war": "Great War", "modern": "Modern",
+  "renaissance": "Renaissance", "age-of-reason": "Age of Reason", "victorian": "Victorian", "wild-west": "Wild West", "great-war": "Great War", "mid-century": "Mid-Century", "modern": "Modern",
   "time-of-judgment": "Time of Judgment", "future-darkness": "Future Darkness", "time-of-future-judgement": "Future Judgement"};
 const yr = y => y < 0 ? `${-y} BC` : String(y);
 const out = {

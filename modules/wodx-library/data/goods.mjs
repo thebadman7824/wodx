@@ -15,8 +15,8 @@
  */
 
 /** Chronicle's eras in the order goods pass through them. The Wild West runs beside the Victorian era. */
-export const ERAS = ["living-gods", "classical", "dark-ages", "long-night", "renaissance", "victorian", "wild-west",
-  "great-war", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
+export const ERAS = ["living-gods", "classical", "dark-ages", "long-night", "renaissance", "age-of-reason", "victorian",
+  "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
 
 /**
  * The years of each era, as Chronicle's data/eras.json gives them (a test keeps the two in step). The prologues have
@@ -24,7 +24,7 @@ export const ERAS = ["living-gods", "classical", "dark-ages", "long-night", "ren
  */
 export const ERA_YEARS = {
   "living-gods": [-10000, -801], "classical": [-800, 1196], "dark-ages": [1197, 1346], "long-night": [1347, 1449],
-  "renaissance": [1450, 1600], "victorian": [1837, 1901], "wild-west": [1860, 1899], "great-war": [1914, 1918],
+  "renaissance": [1450, 1600], "age-of-reason": [1601, 1836], "victorian": [1837, 1901], "wild-west": [1860, 1899], "great-war": [1914, 1918], "mid-century": [1919, 1989],
   "modern": [1990, 2003], "time-of-judgment": [2004, 2004], "future-darkness": [2010, 2098],
   "time-of-future-judgement": [2099, 2099]
 };
@@ -160,6 +160,7 @@ export const ROWS = [
   ["a bag of mixed coins from three countries", "coin-early-modern", 1450, 1901, S, 2],
   ["a Spanish silver piece of eight", "coin-early-modern", 1497, 1857, S, 2],
   ["a silver thaler", "coin-early-modern", 1518, 1908, S, 2],
+  ["a goldsmith's note promising payment", "coin-early-modern", 1640, 1800, S, 3],
   ["copper farthings", "coin-modern", 1613, 1960, S, 0],
   ["a gold sovereign", "coin-modern", 1817, 1932, S, 3],
   ["a US silver dollar", "coin-modern", 1794, 1935, S, 1],
@@ -398,6 +399,7 @@ export const ROWS = [
   ["a starched ruff", "cloth-fine", 1560, 1630, S, 2],
   ["a whalebone corset", "cloth-fine", 1550, 1920, L, 2],
   ["a silk cravat", "cloth-fine", 1660, 1900, S, 1],
+  ["a tricorne hat", "cloth-fine", 1650, 1800, L, 1],
   ["a top hat", "cloth-fine", 1793, 1950, L, 2],
   ["a frock coat", "cloth-fine", 1815, 1910, L, 3],
   ["a crinoline frame", "cloth-fine", 1850, 1870, L, 2],
