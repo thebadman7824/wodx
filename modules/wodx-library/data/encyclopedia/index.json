@@ -607,6 +607,12 @@
    "title": "Breedbook: Nagah (Revised)",
    "short": "BB Nagah",
    "edition": "Revised"
+  },
+  {
+   "id": "bkw",
+   "title": "Book of the Weaver",
+   "short": "Book of the Weaver",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -710,6 +716,7 @@
   "bbmok.json",
   "bbana.json",
   "bbrok.json",
-  "bbnag.json"
+  "bbnag.json",
+  "bkw.json"
  ]
 }
