@@ -1,0 +1,150 @@
+[
+ {
+  "id": "dbtw-hollow-reeds",
+  "title": "The Hollow Reeds",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Followers of the Thousand Whispers and their many lives.",
+  "claims": [
+   {
+    "text": "Hollow Reeds, the followers of the Thousand Whispers, see the turning of the Ages as one more ritual death, like their own run of many lives: a new existence with its own lessons, not a thing to fear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtw",
+      "page": 7,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The path prizes balance above all, and a Hollow Reed is expected to keep it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtw",
+      "page": 48,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-five-dharmas",
+   "kote-wheel-of-ages"
+  ]
+ },
+ {
+  "id": "dbtw-broken-mask",
+  "title": "The Broken Mask",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Hollow Reeds take up and discard lives.",
+  "claims": [
+   {
+    "text": "In the Broken Mask technique a Hollow Reed takes up a persona and then shatters it once it no longer serves, holding that a life means nothing without death at its end.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtw",
+      "page": 11,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Ending a life begins with the Ritual of a Thousand Cuts, in which each tie binding the Reed to that persona is cut with surgical care until the Reed is free to move on.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtw",
+      "page": 12,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A Hollow Reed seldom keeps more than three or four masks at once, most of them lesser masks rather than full false lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtw",
+      "page": 46,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbtw-hollow-reeds"
+  ]
+ },
+ {
+  "id": "dbtw-true-jade",
+  "title": "True Jade's Embassy",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Quincunx envoy before the Golden Queen.",
+  "claims": [
+   {
+    "text": "When True Jade carried the Quincunx's case to the Golden Queen of the penangallan, urging the court to reform along nobler lines, the Queen took offence at the Blood Court's presumption and threatened torture.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtw",
+      "page": 24,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kks-penanggalan",
+   "kotec-blood-court"
+  ]
+ },
+ {
+  "id": "dbtw-dancing-peacocks",
+  "title": "Dancing Peacocks",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Whispers most at home in mortal society.",
+  "claims": [
+   {
+    "text": "Through their ties to mortal society, the Dancing Peacocks are the Dharma's best forgers of new mortal identities, and their help makes a mask far more convincing to the authorities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtw",
+      "page": 29,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbtw-broken-mask",
+   "dbtw-hollow-reeds"
+  ]
+ }
+]
