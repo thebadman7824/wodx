@@ -2107,6 +2107,12 @@
       "title": "The Poison Tree (W20)",
       "short": "W20 The Poison Tree",
       "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "nror",
+      "title": "Rites of Renown (W20)",
+      "short": "W20 Rites of Renown",
+      "edition": "20th Anniversary companion"
     }
   ],
   "files": [
@@ -2460,6 +2466,7 @@
     "ntn7.json",
     "npeih.json",
     "nsosm.json",
-    "npt.json"
+    "npt.json",
+    "nror.json"
   ]
 }
