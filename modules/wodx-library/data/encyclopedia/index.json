@@ -1303,6 +1303,12 @@
    "title": "The Book of Lost Houses: The Second Coming",
    "short": "BoLH",
    "edition": "First edition"
+  },
+  {
+   "id": "cden",
+   "title": "Denizens of the Dreaming",
+   "short": "DotD",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1522,6 +1528,7 @@
   "cbdt.json",
   "cboh1.json",
   "cboh2.json",
-  "cbolh.json"
+  "cbolh.json",
+  "cden.json"
  ]
 }
