@@ -1,0 +1,330 @@
+[
+ {
+  "id": "m2bow-periphery",
+  "title": "The Periphery",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The edge of spirit sight on the material side.",
+  "claims": [
+   {
+    "text": "The Periphery is sensing the Otherworlds while still on the mundane side of the Gauntlet, felt as flashes of certainty, a sense of danger or a hint of what is coming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "It touches Sleepers too, chiefly people with a knack for Awareness, though for most of them it amounts to brief glimpses and visits to dream realms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Mages and Garou agree the Otherworlds have some structure, yet no map holds, since the places shift with each traveler's perception.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "gauntlet"
+  ]
+ },
+ {
+  "id": "m2bow-etherspace",
+  "title": "Etherspace, the Deep Umbra and the Void",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Three names for the depths past the Horizon.",
+  "claims": [
+   {
+    "text": "The Sons of Ether call the deep reaches Etherspace, the other Traditions say Deep Umbra, and the Technocracy speaks of the Void.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "No mage claims to understand it; talk of warped spirits, Nephandi Labyrinths and stranger masters still falls short of what is out there.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrit-beyond-horizon",
+   "um-membrane-deep-umbra",
+   "society-of-ether",
+   "void-engineers"
+  ]
+ },
+ {
+  "id": "m2bow-shade-realms",
+  "title": "Shade and Shard Realms",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The planets as mages travel them.",
+  "claims": [
+   {
+    "text": "Old tales hold that the One split into the Many: its large pieces became the Shard Realms, meaning the Sun, the nine planets and the Moon, while small bits became spirits and living things.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   },
+   {
+    "text": "Each Shard throws a shadow on the Horizon, a Shade Realm, which seems to mirror its planet but departs from the scientific picture in many ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A portal is a lasting gateway to a Realm, and a temporary one is called a Gate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrit-shard-realms",
+   "umbra"
+  ]
+ },
+ {
+  "id": "m2bow-shadowlands",
+  "title": "The Shadowlands seen by mages",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How mages understand the land of the dead.",
+  "claims": [
+   {
+    "text": "Mages describe the Shadowlands as the memory of what is and what was: anything people cared about intensely echoes there, worn by rot as the feeling fades.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "A building hated by thousands of pupils may stand there long after the real one is dust, and the Restless Dead live among these relics as creatures of passion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadowlands",
+   "mrsw-fetish-talisman"
+  ]
+ },
+ {
+  "id": "m2bow-great-race",
+  "title": "The race into space",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rival efforts to claim new worlds.",
+  "claims": [
+   {
+    "text": "Some Sons of Ether race the Technocracy to find Realms and settle planets first, and many of these pioneers fall prey to Nephandi and Marauders in the Void.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   },
+   {
+    "text": "Critics among mages call the race reckless, since the rush can wreck the very things it hopes to find.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "void-engineers",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "m2bow-mus",
+  "title": "The fall of the College on Mus",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Hermetic school lost in the Umbra.",
+  "claims": [
+   {
+    "text": "After the Second World War the Order of Hermes taught the remnants of the Batini at a College on the Shade Realm of Mus and took in many refugees.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   },
+   {
+    "text": "In August 1995 a Technocratic fleet attacked the Chantry; a third force of Umbrood, wormlike beasts and Nephandi then struck both sides and took the College.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   },
+   {
+    "text": "Chancellor Gilmore and a few others fled to Horizon by a last portal, while the three remaining Batini teachers stayed behind to destroy the building.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "m2bow-shade-realms"
+  ]
+ },
+ {
+  "id": "m2bow-mars",
+  "title": "The Martian Penumbra",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mars as mages knew it in the mid-1990s.",
+  "claims": [
+   {
+    "text": "Mars and Venus are the only Realms past the Horizon with Penumbrae of their own; in the Martian one, the canals Schiaparelli described are real.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   },
+   {
+    "text": "Two Tradition settlements stand where seven canals meet, the Trivium Charontis: the terraformed grounds of Doissetep, whose great house sits in an overlap zone with the Shade Realm of Forces, and a Sons of Ether camp nicknamed Bradbury, set up with the Deacons' leave in summer 1996.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "The settlements live by the slightly longer Martian day but keep records in Greenwich Mean Time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2bow",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mroh-doissetep",
+   "society-of-ether",
+   "m2bow-shade-realms"
+  ]
+ }
+]
