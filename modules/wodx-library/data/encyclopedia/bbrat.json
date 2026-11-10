@@ -1,0 +1,215 @@
+[
+ {
+  "id": "bbrat-last-gift",
+  "title": "The Last and Lowliest",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The Ratkin tale of their place among the Changing Breeds.",
+  "claims": [
+   {
+    "text": "Ratkin tell that Gaia blessed the rat-folk last of all the Changing Breeds, the smallest and quietest, teaching the humans who loved rats to hide, find food anywhere and stay safe.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 21,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "In their telling the Changing Breeds were once equals, the Bete, when the veil between flesh and spirit was thin as gossamer.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 21,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ratkin"
+  ]
+ },
+ {
+  "id": "bbrat-field-of-nettles",
+  "title": "The Field of Nettles",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "How the Ratkin remember the War of Rage.",
+  "claims": [
+   {
+    "text": "Ratkin remember the War of Rage as genocide: Garou hunted and herded wererats to be slaughtered, claiming the rat-folk carried disease.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The last Ratkin bards gathered at a sacred site called the Field of Nettles to compose a final tale of Garou betrayal, and died cursing the wolves with promises of plagues to come.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The survivors had already begun digging tunnels out of the physical world, and fled into the Umbra until the Garou believed them extinct.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ratkin",
+   "war-of-rage"
+  ]
+ },
+ {
+  "id": "bbrat-plagues-abroad",
+  "title": "Ratkin Plagues of Asia and Europe",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Great wererat families of the modern nights.",
+  "claims": [
+   {
+    "text": "Ratkin Tunnel Runners riddled the Shadow Curtain over Asia with boltholes, and when it fell in late 1998 the local wererats claimed the credit.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 45,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "In Southeast Asia a criminal empire runs from a temple in Indonesia under the Giant Rat of Sumatra, a title handed down since the Victorian age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 45,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "The Horde roams the steppe and taiga from Mongolia to Siberia, meeting monthly to trade word of the supernatural; every member learns war and makes Pain Daggers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 45,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Most Ratkin descend from brown rats, and only Plague Lords will admit to black-rat blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 45,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Europe's wererats answer to Madame DeFarge, who hides in the Paris sewers with a court dressed in the trappings of the French Revolution.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 45,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ratkin"
+  ]
+ },
+ {
+  "id": "bbrat-rat-king",
+  "title": "Rat Kings and Nests",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a Ratkin colony is ruled.",
+  "claims": [
+   {
+    "text": "A Rat King rules a Ratkin nest and needs the backing of the eldest wererat of each aspect, often won by bargains, before taking the throne.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 72,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "A senior Shadow Seer crowns the king in a formal rite that binds the ruler to the domain and lets the king watch it through the eyes of local rat-spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 72,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Knife-Skulkers have a rite that names a killer of their pack or Rat King, which is one reason elders hire wererats just passing through for assassinations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrat",
+      "page": 72,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ratkin",
+   "bbrat-plagues-abroad"
+  ]
+ }
+]

@@ -577,6 +577,12 @@
    "title": "Breedbook: Gurahl (Revised)",
    "short": "BB Gurahl",
    "edition": "Revised"
+  },
+  {
+   "id": "bbrat",
+   "title": "Breedbook: Ratkin (Revised)",
+   "short": "BB Ratkin",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -675,6 +681,7 @@
   "bbbas.json",
   "bbnuw.json",
   "bbcor.json",
-  "bbgur.json"
+  "bbgur.json",
+  "bbrat.json"
  ]
 }
