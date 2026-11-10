@@ -1411,6 +1411,12 @@
    "title": "Kithbook: Eshu",
    "short": "KB Eshu",
    "edition": "Second edition"
+  },
+  {
+   "id": "ckred",
+   "title": "Kithbook: Redcaps",
+   "short": "KB Redcaps",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1648,6 +1654,7 @@
   "cwic.json",
   "cknock.json",
   "ckpooka.json",
-  "ckeshu.json"
+  "ckeshu.json",
+  "ckred.json"
  ]
 }
