@@ -1327,6 +1327,12 @@
    "title": "Fool's Luck: The Way of the Commoner",
    "short": "FL",
    "edition": "Second edition"
+  },
+  {
+   "id": "cfhg",
+   "title": "Freeholds and Hidden Glens",
+   "short": "FHG",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1550,6 +1556,7 @@
   "cden.json",
   "cdan.json",
   "cench.json",
-  "cfool.json"
+  "cfool.json",
+  "cfhg.json"
  ]
 }

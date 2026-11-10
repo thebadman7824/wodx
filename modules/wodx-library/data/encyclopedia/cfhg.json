@@ -1,0 +1,84 @@
+[
+ {
+  "id": "cfhg-high-castle",
+  "title": "High Castle",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A mountain freehold of House Fiona.",
+  "claims": [
+   {
+    "text": "High Castle's dwellers opened many trods to other freeholds and welcomed any visitor who honored the fae's oaths of brotherhood with the Nunnehi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cfhg",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "As other Kithain holdings fell to attacks by native fae whose lands had been taken, refugees flocked there; bound by a promise not to expand outward, the Fiona dug down into the mountain, and Lord Tamlin, guided by a dream, moved the balefire to the castle's deepest heart.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cfhg",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-fiona",
+   "freeholds",
+   "ctdpg-nunnehi",
+   "trods"
+  ]
+ },
+ {
+  "id": "cfhg-goblin-town",
+  "title": "Goblin Town",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A nocker freehold that rearranges itself.",
+  "claims": [
+   {
+    "text": "Goblin Town shifts at random, its entrances and secret passages moving so that even long-time residents get lost; this makes a fine defense, and few know all its turns, Dr. Coma, Isaac Glass and Rat Breath knowing the most.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cfhg",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Some nockers hint that something sinister causes the shifting, since it began only recently; every nocker childling dreams of finding an undiscovered passage and the treasure rumored within.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cfhg",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nockers",
+   "freeholds"
+  ]
+ }
+]
