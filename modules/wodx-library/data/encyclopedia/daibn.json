@@ -1,0 +1,381 @@
+[
+ {
+  "id": "daibn-lasombra-iberia",
+  "title": "The Lasombra of Iberia",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Magister rule split by the Reconquista.",
+  "claims": [
+   {
+    "text": "Iberia is the heartland of Clan Lasombra, and the Magisters long stood united to show that every other Cainite feeds there at their pleasure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 12,
+      "pdf": 13
+     },
+     {
+      "book": "daibn",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "The war between Christians and Muslims divides them: devout Muslim Lasombra fight to save al-Andalus while their Christian kin pursue the Shadow Reconquista.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "That unity held until the end of the eleventh century; its first crack came when the Amici Noctis would not allow the Embrace of the Muslim leader al-Mansur on their terms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daibn-visigoth-wars",
+   "daibn-ashirra",
+   "daibn-lions-rodrigo"
+  ]
+ },
+ {
+  "id": "daibn-visigoth-wars",
+  "title": "Wars under the Visigoths",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Lasombra won Iberia.",
+  "claims": [
+   {
+    "text": "Brujah, Lasombra and Ventrue used the Visigothic invasion to fight one another: the Ventrue sought a return of Roman order and the Brujah a new Iberian identity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Lasombra held back and let their rivals wear each other down while keeping hold of mortal institutions, which began an age of Magister supremacy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "In A.D. 585 Ventrue raiders destroyed the Brujah elder Yzebel in what becomes northern Portugal, sealing the fate of both Brujah and Ventrue in Iberia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daibn-lasombra-iberia"
+  ]
+ },
+ {
+  "id": "daibn-taifa-intrigues",
+  "title": "Cainites among the taifas",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Power shifts after the fall of Cordoba’s authority.",
+  "claims": [
+   {
+    "text": "When Cordoban rule collapsed, the Assamite Hilel al-Masaari could no longer enforce a claim to the whole domain, and other sultans rose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "In Granada the Lasombra Badr came to notice, while in Cordoba the Lasombra intriguer Miriam bint Aisha publicly backed al-Masaari and privately spun a web of influence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Assamite vizier Umar al-Rashid helped prepare the Almoravid invasion, settled in Sevilla and backed the Brujah Gerusah bint Yoav as sultan; Umar and Miriam remain rivals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Iberian Lasombra came close to worshipping El Cid as an image of their ideals of decisive action.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daibn-lasombra-iberia"
+  ]
+ },
+ {
+  "id": "daibn-after-navas",
+  "title": "After Las Navas de Tolosa",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Muslim taifas left after the great battle.",
+  "claims": [
+   {
+    "text": "After Las Navas de Tolosa the Christian frontier pushes rapidly south, and a power vacuum opens in Muslim lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Murcia becomes a centre of resistance and a refuge for Ashirra bands, while Arjona becomes a vassal of Castile and even helps it against other Muslim states.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daibn-ashirra",
+  "title": "The Ashirra of al-Andalus",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Islamic Cainites of Iberia.",
+  "claims": [
+   {
+    "text": "Ashirra, Arabic for brethren, is the name Islamic Cainites use; the loose sect holds that Islam offers vampires a hope of salvation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Its guidelines include nightly prayers, almsgiving and a kind of blood fast in Ramadan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Since the Qur’an forbids drinking blood, most purify it in a bowl while praying for forgiveness and feed from healthy herds; others say jihad outweighs the sin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daibn-lasombra-iberia"
+  ]
+ },
+ {
+  "id": "daibn-lions-rodrigo",
+  "title": "The Lions of Rodrigo",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Brutal knights of the Shadow Reconquista.",
+  "claims": [
+   {
+    "text": "From the Pyrenees to the Atlas the Lions of Rodrigo are known as some of the most violent knights fighting for the Shadow Reconquista.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "Some Cainites think their thirst for blood outruns their piety, and diablerized Cainites have turned up in havens near their campaigns.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "By their own account the knights feed solely on heretics and enemies of the Church.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daibn-apostles-third-caine",
+  "title": "The Apostles of the Third Caine",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A reform sect of the Cainite Heresy.",
+  "claims": [
+   {
+    "text": "The Apostles broke from the See of Nod around the year 1000, believing Narses of Venice, then Archbishop of Nod, cared too much for worldly matters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Like the reforming monastic orders, they live austerely and hope to draw other Heretics away to prepare for the coming vampiric Messiah.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daheresy-eschatology"
+  ]
+ },
+ {
+  "id": "daibn-sword-st-james",
+  "title": "The Sword of St. James",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mortal hunters of supernatural evil.",
+  "claims": [
+   {
+    "text": "The Sword of St. James is a band of Christian men devoted to rooting out supernatural evil, distinct from the Knights of Santiago.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "The Iberian noble Rodrigue de Navarre founded it after stumbling on the Cainite Heresy, and has gathered evidence since 1190 that creatures of the night use mortals as pawns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daibn",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

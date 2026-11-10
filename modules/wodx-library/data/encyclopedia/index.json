@@ -1813,6 +1813,12 @@
       "title": "House of Tremere",
       "short": "House of Tremere",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "daibn",
+      "title": "Iberia by Night",
+      "short": "IbN",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2117,6 +2123,7 @@
     "daheresy.json",
     "dacbn.json",
     "dadevil.json",
-    "dahot.json"
+    "dahot.json",
+    "daibn.json"
   ]
 }
