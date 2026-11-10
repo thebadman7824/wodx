@@ -1105,6 +1105,12 @@
    "title": "The Swashbuckler's Handbook",
    "short": "SH",
    "edition": "First edition"
+  },
+  {
+   "id": "scwp",
+   "title": "Witches and Pagans",
+   "short": "WP",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1291,6 +1297,7 @@
   "sccl.json",
   "scinf.json",
   "scor.json",
-  "scsw.json"
+  "scsw.json",
+  "scwp.json"
  ]
 }
