@@ -1,0 +1,172 @@
+[
+ {
+  "id": "mrfdf-wonders",
+  "title": "Wonders in the modern age",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why enchanted objects still matter to mages.",
+  "claims": [
+   {
+    "text": "Many mages assume Wonders are outdated, since they are rare, slow to make, and a glowing sword in the street invites Paradox.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Yet Sleepers more readily believe that magic comes from magical things, or from high technology, than from magical people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "A Wonder does not spare its user from Paradox, but it can blunt the extra backlash that hostile witnesses bring.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "mrsw-fetish-talisman"
+  ]
+ },
+ {
+  "id": "mrfdf-wonder-kinds",
+  "title": "Kinds of Wonders",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How mages sort enchanted things.",
+  "claims": [
+   {
+    "text": "An Artifact holds lasting magical Effects that an Awakened user can call on; its technomagic counterpart is an Invention.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "A Charm gives one short burst of power until its material is spent, such as a candle burned down or a bullet fired; Technocrats call such things Gadgets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "A Fetish houses a spirit, a Familiar is a spirit with a lasting body bonded to a mage, and a Periapt is a refillable store of Quintessence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "mrfdf",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "A Talisman holds its own Arete and a sliver of its maker's will, so it may act on its own, sometimes to its owner's cost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrfdf-wonders",
+   "dam-familiars",
+   "quintessence"
+  ]
+ },
+ {
+  "id": "mrfdf-grimoires",
+  "title": "Grimoires",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Books that hold a piece of Enlightened will.",
+  "claims": [
+   {
+    "text": "A Grimoire is a book or other store of data, written with rare skill and infused with its maker's will, that can deepen an Awakened reader's grasp of reality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "It must be read whole and in its own language, so most Grimoires sit in Hermetic libraries, where the love of languages runs deep.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Countless Grimoires were lost with Horizon, though some insist its librarian Nicodemus Mulhouse had wards ready to carry the library to safety.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrfdf",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "m2hor-founding"
+  ]
+ }
+]
