@@ -58,6 +58,51 @@ test("diff: forward fires in order, back undoes newest first", () => {
   assert.deepEqual(back.undone, ["first-conclave", "grand-convocation", "cappadocians"]);
 });
 
+const FUTURE = (await import(join(root, "modules/wodx-chronicle/data/future-events.mjs"))).default;
+const ALL = [...E, ...FUTURE.events];
+
+test("Future Darkness events: unique ids, future branch only, real lines, Cascades only in 2099", () => {
+  const ids = new Set(E.map(e => e.id));
+  const LINES = new Set(["all", "vampire", "werewolf", "mage", "wraith", "changeling", "hunter", "demon", "mummy", "kote", "orpheus"]);
+  const cascades = new Set(FUTURE.cascades.map(c => c.id));
+  assert.equal(cascades.size, 5);
+  for ( const ev of FUTURE.events ) {
+    assert.ok(!ids.has(ev.id), `duplicate ${ev.id}`); ids.add(ev.id);
+    assert.equal(ev.branch, "future", ev.id);
+    assert.ok(Number.isInteger(ev.year) && ev.year >= 1990 && ev.year <= 2099, ev.id);
+    assert.ok(ev.name && ev.summary && ev.source, ev.id);
+    assert.ok(ev.lines.every(l => LINES.has(l)), ev.id);
+    assert.ok(!/\((?:[a-z]{1,2}\d{1,2}(?:, )?)+\)|\b[yz]\d{2}\b/.test(ev.summary), `desk code left in ${ev.id}`);
+    if ( ev.cascade ) assert.ok(cascades.has(ev.cascade) && ev.year === 2099, ev.id);
+    else assert.ok(ev.year <= 2098, ev.id);
+  }
+});
+
+test("each Cascade holds most of every line's endings", () => {
+  const TOTAL = {vampire: 4, werewolf: 4, mage: 5, wraith: 2, changeling: 5, demon: 3, hunter: 3, kote: 3, mummy: 4, orpheus: 2};
+  for ( const c of FUTURE.cascades ) {
+    const steps = FUTURE.events.filter(e => e.cascade === c.id && !e.id.endsWith("-end"));
+    for ( const [line, n] of Object.entries(TOTAL) ) {
+      const got = steps.filter(e => e.lines.includes(line)).length;
+      assert.ok(got > n / 2, `${c.id} ${line} ${got}/${n}`);
+    }
+  }
+});
+
+test("only the chosen Cascade fires, and only on the Future Darkness branch", () => {
+  const end = {year: 2099, month: 12, day: 31};
+  const none = R.firedAt(ALL, end, {futureBranch: true});
+  assert.ok(none.includes("wofd-2026-1") && none.some(id => id.startsWith("wofd-2098")));
+  assert.ok(!none.some(id => id.startsWith("tofj-")));
+  const k3 = R.firedAt(ALL, end, {futureBranch: true, cascade: "k3"});
+  assert.ok(k3.includes("tofj-k3-01") && k3.includes("tofj-k3-end"));
+  assert.ok(!k3.some(id => /^tofj-k[1245]-/.test(id)));
+  const classic = R.firedAt(ALL, end, {cascade: "k3"});
+  assert.ok(!classic.some(id => id.startsWith("tofj-") || id.startsWith("wofd-")));
+  const order = k3.filter(id => id.startsWith("tofj-k3-"));
+  assert.deepEqual(order, [...order].sort(), "a Cascade fires in its own order");
+});
+
 test("labels and override cleaning", () => {
   assert.equal(R.dateLabel({year: 1916, month: 7, day: 1}), "1 July 1916");
   assert.equal(R.dateLabel({year: 1435}), "1435");

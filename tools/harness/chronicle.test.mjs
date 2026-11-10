@@ -199,7 +199,7 @@ test("era test: a character per line in every era, all pass", async () => {
   const api = game.modules.get(M).api;
   mock.DialogV2.queue(() => true);
   const result = await api.runEraTest();
-  assert.equal(result.rows.length, 11 * 4);
+  assert.equal(result.rows.length, 12 * 4);
   assert.equal(result.failures, 0, JSON.stringify(result.rows.filter(r => !r.pass)));
   const j = game.journal.find(x => x.getFlag(M, "kind") === "era-test");
   assert.match(j.pages.getName("Results").text.content, /All passed/);

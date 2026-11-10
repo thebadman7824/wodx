@@ -93,6 +93,12 @@ export const PRIMERS = {
     storyteller: ["Old powers adapt or die. Cyberware costs Humanity. The Masquerade must survive cameras on every corner and minds that can be hacked.",
       "World of Future Darkness's bridge rules sit on top of V20; see the Chronicle Rules journal for what is switched on."]
   },
+  "time-of-future-judgement": {
+    players: ["The last year of the century. Every feed carries a new disaster, and each one seems to set off the next.",
+      "The old powers are out in the open, and they are failing."],
+    storyteller: ["The Future Darkness branch ends here. Pick one Cascade in Dated events: a chain of endings, each one the cause of the next, with most of every line's endings inside it.",
+      "Let the characters change where the chain breaks or holds. The Cascade's last event says how the world ends if nobody does."]
+  },
   "classical": {
     players: ["The ancient world: city-states and empires, temples to many gods, slaves and citizens, roads and legions.",
       "Omens, oracles and sacrifice are part of daily life."],

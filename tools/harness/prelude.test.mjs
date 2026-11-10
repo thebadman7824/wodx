@@ -26,6 +26,8 @@ test("hunters follow the era: the calling, the first sight, the Imbuing from 199
   assert.equal(P.hunterKind(1880), "mortal");
   assert.equal(P.hunterKind(1998), "mortal");
   assert.equal(P.hunterKind(1999), "imbued");
+  assert.equal(P.hunterKind(2010, {futureBranch: true}), "mortal");
+  assert.equal(P.hunterKind(2023, {futureBranch: true}), "imbued");
   assert.equal(P.composePrelude({line: "hunter", year: 1230}).title, "The calling");
   assert.equal(P.composePrelude({line: "hunter", year: 1990}).title, "The first sight");
   assert.equal(P.composePrelude({line: "hunter", year: 2003, name: "Ilse"}).title, "The Imbuing: Ilse");

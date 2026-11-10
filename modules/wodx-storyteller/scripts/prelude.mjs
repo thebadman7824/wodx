@@ -9,6 +9,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
  */
 
 const FOLDER = "WoDX preludes";
+const futureOn = () => { try { return !!globalThis.game?.settings?.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
 const yearNow = () => { try { return getEngine().timeToDate(globalThis.game?.time?.worldTime ?? 0).year; } catch { return null; } };
 const variantOf = a => a?.system?.settings?.variant ?? "";
 
@@ -21,7 +22,7 @@ export async function makePrelude({actorId = null, line = null, scene = false} =
   if ( !game.user.isGM ) return null;
   const actor = actorId ? game.actors.get(actorId) : null;
   const key = line || P.lineFor(actor?.type, variantOf(actor));
-  const p = P.composePrelude({line: key, name: actor?.name ?? "", year: yearNow()});
+  const p = P.composePrelude({line: key, name: actor?.name ?? "", year: yearNow(), futureBranch: futureOn()});
   const jf = await folder("JournalEntry");
   const journal = await JournalEntry.create({name: p.title, folder: jf?.id ?? null, ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE},
     pages: [{name: p.title, type: "text", text: {content: P.preludeHtml(p), format: 1}}],

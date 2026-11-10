@@ -2,6 +2,7 @@ import {MODULE_ID, esc, isActiveGM, rule, setting, setSetting, log} from "./util
 import {getEngine} from "./calendar.mjs";
 import {searchBox} from "./search.mjs";
 import EVENT_DATA from "../data/events.mjs";
+import FUTURE_DATA from "../data/future-events.mjs";
 import {eventTable, firedAt, diffFired, dateLabel, cleanOverride} from "./events-rules.mjs";
 
 /**
@@ -11,7 +12,9 @@ import {eventTable, firedAt, diffFired, dateLabel, cleanOverride} from "./events
  * Other modules ask with game.wodx.chronicle.events.has(id).
  */
 
-export const EVENTS = EVENT_DATA.events;
+export const EVENTS = [...EVENT_DATA.events, ...FUTURE_DATA.events];
+/** The Cascades of the Time of Future Judgement (2099): {id, name, pitch}. */
+export const CASCADES = FUTURE_DATA.cascades;
 export const BRANCH_NOTE = EVENT_DATA.branchNote;
 
 export function registerEventSettings(onChange) {
@@ -19,6 +22,8 @@ export function registerEventSettings(onChange) {
     scope: "world", config: false, type: Object, default: {}, onChange
   });
   // null until the first check, which records what has already happened without announcing it
+  // the Cascade of the Time of Future Judgement this chronicle follows in 2099; "" until the Storyteller picks one
+  game.settings.register(MODULE_ID, "futureCascade", {scope: "world", config: false, type: String, default: "", onChange});
   game.settings.register(MODULE_ID, "eventsFired", {scope: "world", config: false, type: Object, default: null});
   game.settings.registerMenu(MODULE_ID, "eventsMenu", {
     name: "Dated events",
@@ -30,7 +35,15 @@ export function registerEventSettings(onChange) {
   });
 }
 
-const opts = () => ({overrides: setting("eventOverrides") ?? {}, futureBranch: rule("futureBranch")});
+const opts = () => ({overrides: setting("eventOverrides") ?? {}, futureBranch: rule("futureBranch"), cascade: setting("futureCascade") ?? ""});
+
+/** The chosen Cascade's name, or a note that none is chosen yet. */
+function cascadeLine() {
+  const c = CASCADES.find(x => x.id === setting("futureCascade"));
+  return c ? `Time of Future Judgement (2099): ${c.name}.` : "Time of Future Judgement (2099): no Cascade chosen yet, so none of its events fire.";
+}
+const stateOf = (ev, done) => !ev.live ? (!ev.on ? "Off" : ev.cascade && rule("futureBranch") ? "Other Cascade" : "Other timeline")
+  : done.has(ev.id) ? "Happened" : "Ahead";
 
 /** Today's date on the Chronicle Clock. */
 function today() {
@@ -104,9 +117,10 @@ async function postCard(newly, undone, label) {
 export function eventsHTML() {
   const done = new Set(fired());
   const rows = list().map(ev => `<tr><td>${esc(dateLabel(ev))}${ev.moved ? " (moved)" : ""}</td><td>${esc(ev.name)}</td>
-    <td>${!ev.live ? (ev.on ? "Other timeline" : "Off") : done.has(ev.id) ? "Happened" : "Ahead"}</td><td>${esc(ev.source)}${ev.dateNote ? `<br><em>${esc(ev.dateNote)}</em>` : ""}</td></tr>`).join("");
+    <td>${stateOf(ev, done)}</td><td>${esc(ev.source)}${ev.dateNote ? `<br><em>${esc(ev.dateNote)}</em>` : ""}</td></tr>`).join("");
   return `<p>Each event fires once when the clock passes its date. The Storyteller turns them on or off and moves them in Configure Settings, Dated events.</p>
     <p><strong>Timeline:</strong> ${rule("futureBranch") ? "Future Darkness branch" : "classic"}. ${esc(BRANCH_NOTE)}</p>
+    ${rule("futureBranch") ? `<p>${esc(cascadeLine())}</p>` : ""}
     <table><thead><tr><th>Date</th><th>Event</th><th>State</th><th>Source</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
@@ -143,12 +157,18 @@ export class EventsApp extends ApplicationV2 {
           <input type="number" name="${esc(ev.id)}.day" value="${esc(ov[ev.id]?.day ?? "")}" placeholder="${ev.day ?? "day"}" aria-label="Day" min="1" max="31" step="1">
           <input type="text" name="${esc(ev.id)}.journal" value="${esc(ov[ev.id]?.journal ?? "")}" placeholder="Journal page UUID (optional)" aria-label="Journal page">
         </div>
-        <p class="hint">${esc(dateLabel(ev))} · ${!ev.live ? (ev.on ? "other timeline" : "off") : done.has(ev.id) ? "happened" : "ahead"} · ${esc(ev.summary)} <em>${esc(ev.source)}</em></p>
+        <p class="hint">${esc(dateLabel(ev))} · ${stateOf(ev, done).toLowerCase()} · ${esc(ev.summary)} <em>${esc(ev.source)}</em></p>
       </div>`).join("");
+    const cur = setting("futureCascade") ?? "";
+    const cascadeOptions = [{id: "", name: "None yet", pitch: ""}, ...CASCADES].map(c =>
+      `<option value="${esc(c.id)}" ${c.id === cur ? "selected" : ""} title="${esc(c.pitch)}">${esc(c.name)}</option>`).join("");
     const div = document.createElement("div");
     div.className = "wodx-body";
     div.innerHTML = `<div class="wodx-top">${searchBox(".wodx-event-list", "Search events…", "Search events")}
-        <p class="hint">Leave a date box empty to keep the book's date. Timeline: ${rule("futureBranch") ? "Future Darkness branch" : "classic"} (house rule switch).</p></div>
+        <p class="hint">Leave a date box empty to keep the book's date. Timeline: ${rule("futureBranch") ? "Future Darkness branch" : "classic"} (house rule switch).</p>
+        <div class="form-group"><label for="wodx-future-cascade">Cascade for 2099</label>
+          <div class="form-fields"><select id="wodx-future-cascade" name="futureCascade" data-fixed>${cascadeOptions}</select></div>
+          <p class="hint">The Time of Future Judgement on the Future Darkness branch: one chain of endings, each setting off the next. Only the chosen Cascade's events fire.</p></div></div>
       <div class="wodx-scroll wodx-event-list">${rows}</div>
       <footer class="form-footer wodx-footer"><button type="submit"><i class="fa-solid fa-floppy-disk"></i> Save dated events</button></footer>`;
     return div;
@@ -168,6 +188,8 @@ export class EventsApp extends ApplicationV2 {
       if ( /^[A-Za-z]+\.[A-Za-z0-9]{16}(\.[A-Za-z]+\.[A-Za-z0-9]{16})*$/.test(journal) ) o.journal = journal;
       if ( Object.keys(o).length ) next[ev.id] = o;
     }
+    const cascade = String(form.elements.futureCascade?.value ?? "");
+    if ( cascade !== (setting("futureCascade") ?? "") && (!cascade || CASCADES.some(c => c.id === cascade)) ) await setSetting("futureCascade", cascade);
     await setSetting("eventOverrides", next);
   }
 }

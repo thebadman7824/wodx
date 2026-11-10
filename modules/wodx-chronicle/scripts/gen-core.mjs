@@ -126,5 +126,5 @@ export function resolveTable(all, id, {era = null, culture = null} = {}) {
 export const ERA_GROUP = {
   "dark-ages": "medieval", "long-night": "medieval", "classical": "ancient", "living-gods": "ancient",
   "renaissance": "early-modern", "victorian": "industrial", "wild-west": "industrial", "great-war": "industrial",
-  "modern": "modern", "time-of-judgment": "modern", "future-darkness": "modern"
+  "modern": "modern", "time-of-judgment": "modern", "future-darkness": "modern", "time-of-future-judgement": "modern"
 };

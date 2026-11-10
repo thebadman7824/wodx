@@ -36,6 +36,16 @@ test("region and rules", () => {
   assert.deepEqual(at(2007, {rules: {futureBranch: true}}), ["modern", true]);
 });
 
+test("Future Darkness skips the Time of Judgment and ends in the Time of Future Judgement", () => {
+  const both = {rules: {futureBranch: true, timeOfJudgment: true}};
+  assert.deepEqual(at(2004, both), ["modern", true]);
+  assert.deepEqual(at(2098, both), ["future-darkness", false]);
+  assert.deepEqual(at(2099, both), ["time-of-future-judgement", false]);
+  assert.deepEqual(at(2150, both), ["time-of-future-judgement", true]);
+  assert.deepEqual(at(2099), ["modern", true]);
+  assert.deepEqual(at(2099, {rules: {timeOfJudgment: true}}), ["time-of-judgment", true]);
+});
+
 test("prologues never resolve by date", () => {
   for ( let y = 1000; y < 2100; y += 7 ) assert.ok(!["classical", "living-gods"].includes(at(y)[0]));
 });

@@ -26,9 +26,10 @@ const attrOpts = sel => ATTR.map(a => `<option value="${a}" ${a === sel ? "selec
 /** The rule line the chronicle's era and year call for. */
 export function lineNow() {
     const eras = game.modules.get("wodx-chronicle")?.api?.eras;
-    let id = null, year = null;
+    let id = null, year = null, futureBranch = false;
     try { id = eras?.activeEra?.()?.profile?.id ?? null; year = eras?.currentYear?.() ?? null; } catch (e) { /* no chronicle */ }
-    return H.hunterLine(id, year);
+    try { futureBranch = !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { futureBranch = false; }
+    return H.hunterLine(id, year, { futureBranch });
 }
 
 export function build(ctx) {

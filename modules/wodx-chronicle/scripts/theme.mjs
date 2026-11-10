@@ -17,7 +17,7 @@ export const VERSION = "0.4.0";
 export const KIT_TONE = {
   "dark-ages": "light", "long-night": "light", "renaissance": "light", "classical": "light", "living-gods": "light",
   "victorian": "light", "wild-west": "light", "great-war": "light",
-  "modern": "dark", "time-of-judgment": "dark", "future-darkness": "dark"
+  "modern": "dark", "time-of-judgment": "dark", "future-darkness": "dark", "time-of-future-judgement": "dark"
 };
 export const LOOKS = {era: "The era's own look", light: "Light paper, the era's type", dark: "Dark paper, the era's type", plain: "Plain (Foundry's own look)"};
 export const SIZES = {"1": "Normal", "1.15": "Large", "1.3": "Larger", "1.5": "Largest"};

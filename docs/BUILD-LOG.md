@@ -1156,3 +1156,12 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - One table of rules that two or more lines rule differently: modules/wodx-chronicle/data/rules-clashes.mjs, written out to docs/RULES-CLASHES.md by tools/clashes/render.mjs (B500-B506). 28 rows: 15 settled, 1 fixed in code, 12 waiting on a page check on the PC.
 - Fixed: WoDX Combat soaked Dark Ages fae as C20, so a fae in the mien could not soak lethal and cold iron took all natural soak. Now DA:Fae pp. 104 and 88 apply in the Dark Ages (Combat 3.8.3, Actions 3.19.3; Chronicle 0.10.2 carries the table).
 - tools/harness/rules-clashes.test.mjs: every row whole, each house rule named in DECISIONS, the doc matches the data, and the fae soak.
+
+## 2026-11-10: Future Darkness metaplot in the chronicle (Chronicle 0.11.0)
+- The approved Future Darkness timelines are dated events: 1990 to winter 2025 and 2026 to 2098, 288 events on the branch only (data/future-events.mjs, built by tools/wofd/build-future-events.mjs from docs/research/wofd).
+- New era: Time of Future Judgement, 2099, on the branch only; Future Darkness now ends in 2098. The Time of Judgment (2004) is skipped when the branch is on (excludedByRule in era profiles) (B507).
+- Five Cascades for 2099 (The Seventh Storm, The Machine Ascendant, The Red Star, Lilith's Bargain, The Fomorian Night), each holding most of every line's endings, 130 events. The Storyteller picks one in Dated events; none fires until one is picked (B508).
+- Hunters on the branch: mortal hunter rules until 2022, the imbued from 2023 (Actions 3.19.4, Storyteller 0.18.3 preludes) (B509).
+- The 2099 era counts as Future Darkness for gear, the Library's shelves, clocks, keypads and people tables (Library 0.4.4, Interactables 0.20.1).
+- The fall of the Masquerade event moves to summer 2025, the house timeline's flood.
+- Tests: events, prelude, era resolution and hunter lines; 999 pass.
