@@ -1,0 +1,418 @@
+[
+ {
+  "id": "cap-retreat-to-seeming",
+  "title": "Retreating into the mortal seeming",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A changeling choosing to become effectively mortal.",
+  "claims": [
+   {
+    "text": "A changeling who withdraws into the mortal seeming on purpose gains a temporary point of Banality and can no longer touch anything of the Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "If temporary Banality is above Glamour the retreat simply happens; otherwise the player rolls Willpower at a difficulty equal to current Glamour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "The changeling gets one attempt to come back alone, rolling the higher of Willpower or Glamour against current Banality; failure traps the changeling for a time set by the Mists Chart, though exposure to Glamour can free them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cap-banality-forgetting"
+  ]
+ },
+ {
+  "id": "cap-banality-forgetting",
+  "title": "Forgetting under Banality",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What happens when Banality outweighs Glamour.",
+  "claims": [
+   {
+    "text": "While Banality is above Glamour, a changeling risks spells of forgetting, usually starting after a story ends; one method is a daily Glamour roll against Banality on days without Glamour, with failure meaning a lapse sized by the Mists Chart.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "When permanent Banality is above both permanent Glamour and Willpower, the changeling may lose the fae self for good, faster the nearer Banality is to 10.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Weekly freehold visits, one day for every point that Banality exceeds Glamour holds this off, so a changeling active among other Kithain is rarely at risk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cap-retreat-to-seeming",
+   "cap-autumn-touch"
+  ]
+ },
+ {
+  "id": "cap-autumn-touch",
+  "title": "The touch of the Autumn People",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Autumn People spread Banality.",
+  "claims": [
+   {
+    "text": "An Autumn Person needs some direct contact with a changeling, even a brief scolding, to pass on Banality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The Storyteller rolls the Autumn Person’s Banality against the changeling’s Glamour; every success adds a point of temporary Banality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The roll can be repeated while the changeling stays near, though Storytellers are warned not to overdo it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cap-banality-forgetting"
+  ]
+ },
+ {
+  "id": "cap-sympathetic-mortals",
+  "title": "Mortals who glimpse the Dreaming",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How low Banality lets humans see the fae.",
+  "claims": [
+   {
+    "text": "A human whose permanent Banality is under 3 notices traces of the Dreaming: chimera seem like hallucinations and Kithain give off unease or mystery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "At Banality 1 a human may see the fae as they truly are, though a Perception + Occult roll is needed to make sense of the details.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Prolonged dealings with the uncanny wear down mortal Banality, and faerie food and drink can drop it to zero, which is risky: a human in the Dreaming or Arcadia without enough Banality cannot leave.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "cap-dauntain",
+  "title": "Dauntain",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fae-blooded enforcers of mundane reality.",
+  "claims": [
+   {
+    "text": "Dauntain are kin to the fae: each had the chance to break through the Chrysalis but was denied it by trauma, sorrow and pain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "They still count as Kithain and hold some Glamour, however little.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Where Autumn People wear the Dreaming down slowly like a glacier, Dauntain strike like a blizzard, short-lived and lethal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cap-apostates",
+   "cap-agendas"
+  ]
+ },
+ {
+  "id": "cap-apostates",
+  "title": "Apostates",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Dauntain who see Banality as the road home.",
+  "claims": [
+   {
+    "text": "Apostates believe the final triumph of Banality will return the fae to lost Arcadia, so the Undoing is a rebirth rather than the death of the soul.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "In their view Banality balances rather than destroys, driving Glamour back to Arcadia where it belongs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "They try to convert other Kithain and kill those who refuse, aiming to wipe out every trace of Glamour on Earth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cap-dauntain"
+  ]
+ },
+ {
+  "id": "cap-agendas",
+  "title": "Agendas",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The powers of Autumn Fae and Dauntain.",
+  "claims": [
+   {
+    "text": "Autumn Fae cannot cast cantrips and start with one level of Agendas; a Dauntain is built like a Kithain and adds three levels of Agendas to any Arts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Freebies and experience pay for Agendas exactly as they pay for Arts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Each Agenda names its own roll, always against the higher of the target’s Glamour or Willpower, and more successes make it last longer, up to a whole chronicle or until reversed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Neither Autumn Fae nor Dauntain should take the Chimera or Gremayre Backgrounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cap-burnout"
+  ]
+ },
+ {
+  "id": "cap-burnout",
+  "title": "Burnout",
+  "kind": "power",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Agenda that dulls the mind and heart.",
+  "claims": [
+   {
+    "text": "Burnout Agendas use Empathy + Manipulation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Mindblock stops the target thinking about one chosen topic, and Heartbind blocks one chosen positive feeling, harder against something as strong as true love.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 80,
+      "pdf": 81
+     },
+     {
+      "book": "cap",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Other effects fix the target on a dull chore, a pointless collection or a tedious new hobby; Geek Out also raises the difficulty of social rolls by 2.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cap",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cap-agendas"
+  ]
+ }
+]

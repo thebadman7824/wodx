@@ -1657,6 +1657,12 @@
       "title": "Shadow Players Guide",
       "short": "SPG",
       "edition": "First edition"
+    },
+    {
+      "id": "cap",
+      "title": "The Autumn People",
+      "short": "Autumn People",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -1935,6 +1941,7 @@
     "mtr.json",
     "hbway.json",
     "wlbd.json",
-    "wspg.json"
+    "wspg.json",
+    "cap.json"
   ]
 }
