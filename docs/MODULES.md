@@ -34,4 +34,4 @@ WoDX notes:
 
 Chronicle, Otherworlds and Creation stay idle in worlds without `flags.wodx` (the original Rothenstein world). WoDX Actions and WoDX Combat stay off wherever vtda20-actions or vtda20-combat is still enabled; the original Rothenstein world keeps the vtda20 modules, which stay installed.
 
-System fork: 7.3.2-wodx.2 adds the Group actor type (data only; the sheet is in wodx-creation); 7.3.2-wodx.3 stops the load-time migration error for werewolves with effects; 7.3.2-wodx.4 fixes four upstream errors (adding a bonus on a sheet, a PC-sheet ability with a specialty in the roll dialog, two error messages). The 7.3.2-wodx.1 files it replaced are in `wodx-repo/backups/system-7.3.2-wodx.1`.
+System fork: 7.3.2-wodx.2 adds the Group actor type (data only; the sheet is in wodx-creation); 7.3.2-wodx.3 stops the load-time migration error for werewolves with effects; 7.3.2-wodx.4 fixes four upstream errors (adding a bonus on a sheet, a PC-sheet ability with a specialty in the roll dialog, two error messages). The 7.3.2-wodx.1 files it replaced are in `wodx-repo/backups/system-7.3.2-wodx.1`. 7.3.2-wodx.6 fills missing English language keys.
