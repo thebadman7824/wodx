@@ -1,0 +1,145 @@
+[
+ {
+  "id": "m2mas-horizon-humans",
+  "title": "Mortals beyond the Horizon",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ordinary people who live in the far Realms.",
+  "claims": [
+   {
+    "text": "The Union has colonised far Realms for centuries, and some Tradition mages keep families in faerie lands or private Sanctums, so many humans live past the Horizon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2mas",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Only exceptional people cope there, trained for life on a Mars colony or in a floating castle; archmages can mix with them freely, since Paradox is little threat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2mas",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m2bow-mars",
+   "mrit-shard-realms",
+   "paradox"
+  ]
+ },
+ {
+  "id": "m2mas-archmage-life",
+  "title": "The burdens of archmagehood",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the greatest mages find little peace.",
+  "claims": [
+   {
+    "text": "An archmage must mind the gods of the Umbral Courts; a slight to a power such as Tahuti can start a perilous feud.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2mas",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Nephandi work twice as hard to recruit an archmage, and half the Umbral Courts want help with some crisis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2mas",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "To an archmage nearly everything becomes an omen, from an early spring to the pattern of broken glass.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2mas",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m20gm-bygones",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "m2mas-paradox-realm",
+  "title": "The Realm of Paradox",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A theory of a single Umbral home for Paradox, and the Radiance.",
+  "claims": [
+   {
+    "text": "Masters of Prime and archmages theorise that the Paradox Realms mages fall into are bubbles in one greater Realm of Paradox, but no one has proved it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2mas",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "A mage rarely lands in the same Paradox Realm twice, which archmages put down to Paradox shifting to fit each Effect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2mas",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "The Radiance is a Realm of pure possibility where magic is easier to work and harder to control; even Technomancers find it welcoming if they can get in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2mas",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "mrsth-permanent-paradox"
+  ]
+ }
+]

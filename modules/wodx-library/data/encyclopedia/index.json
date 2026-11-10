@@ -1039,6 +1039,12 @@
    "title": "Initiates of the Art",
    "short": "IotA",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2mas",
+   "title": "Masters of the Art",
+   "short": "MotA",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1214,6 +1220,7 @@
   "m2fp.json",
   "m2dw.json",
   "m2sor.json",
-  "m2ini.json"
+  "m2ini.json",
+  "m2mas.json"
  ]
 }
