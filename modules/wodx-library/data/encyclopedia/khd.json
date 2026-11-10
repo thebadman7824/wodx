@@ -1,0 +1,156 @@
+[
+ {
+  "id": "khd-shade-walkers",
+  "title": "Shade Walkers and Joss",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The uncanny luck of dhampyrs.",
+  "claims": [
+   {
+    "text": "Dhampyrs, also called Shade Walkers, have not risen from Hell and carry no crimes to atone for, though they do have a dark side.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "khd",
+      "page": 10,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Their joss is more than luck: they are knots of coincidence who win at casinos and slip their pursuers, and those who study their half-dead nature can learn to focus it for superhuman feats.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "khd",
+      "page": 10,
+      "pdf": 10
+     },
+     {
+      "book": "khd",
+      "page": 11,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-dhampyrs",
+   "kote-second-breath"
+  ]
+ },
+ {
+  "id": "khd-court-dhampyrs",
+  "title": "Dhampyrs and the Courts",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where half-damned children stand among the Kuei-jin.",
+  "claims": [
+   {
+    "text": "One dhampyr's estimate puts their number at around 900 across the Middle Kingdom, and many independent ones never meet another of their kind.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "khd",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "To join a wu, a dhampyr raised in a court needs a parent's leave to take part in the guanxi ceremony; an independent one must find a wu willing to perform it, and a wu made only of dhampyrs is possible.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "khd",
+      "page": 25,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-dhampyrs",
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "khd-golden-courts",
+  "title": "Dhampyrs of the Golden Courts",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Half-damned children in akuma-ridden Southeast Asia.",
+  "claims": [
+   {
+    "text": "The whole region of the Golden Courts is thick with akuma, which shapes how its dhampyrs live; sons who survive to adulthood usually leave the jungles as soon as they can, and Singapore gives some refuge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "khd",
+      "page": 30,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "khd-court-dhampyrs",
+   "kks-penanggalan"
+  ]
+ },
+ {
+  "id": "khd-dhampyr-life",
+  "title": "A Dhampyr's Life",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sunlight and mortality for the half-damned.",
+  "claims": [
+   {
+    "text": "Dhampyrs are not immortal; they are born, live out their lives and in time die.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "khd",
+      "page": 47,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Most prefer the night sky to the sun, and a rare few blister and peel in its light.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "khd",
+      "page": 47,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-dhampyrs",
+   "kote-weaknesses"
+  ]
+ }
+]
