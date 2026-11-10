@@ -2269,6 +2269,12 @@
       "title": "The Erciyes Fragments",
       "short": "Erciyes Fragments",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "nbon",
+      "title": "The Book of Nod",
+      "short": "Book of Nod",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -2649,6 +2655,7 @@
     "ndan1.json",
     "ndan11.json",
     "ndan9.json",
-    "nerc.json"
+    "nerc.json",
+    "nbon.json"
   ]
 }

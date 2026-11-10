@@ -1,0 +1,121 @@
+[
+ {
+  "id": "nbon-first-city",
+  "title": "The First City in the Book of Nod",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "dark-ages"
+  ],
+  "summary": "Noddist scripture on Caine’s childer.",
+  "claims": [
+   {
+    "text": "The scripture says Caine, ignoring the angel Uriel’s warning, Embraced Enosh of Seth’s line and named the First City Enoch after this childe, then made Zillah and Irad at Enoch’s plea.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nbon",
+      "page": 33,
+      "pdf": 25
+     },
+     {
+      "book": "cbmalkavian",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "When those childer began to sire more of their own, Caine forbade any further Embraces, and the city stood for ages at the heart of an empire.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nbon",
+      "page": 33,
+      "pdf": 25
+     },
+     {
+      "book": "cbnosferatu",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Caine cursed Nosferatu to wear that evil on the face forever after finding Nosferatu doing foul things with Nosferatu’s own childer.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nbon",
+      "page": 36,
+      "pdf": 28
+     },
+     {
+      "book": "cbnosferatu",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caine",
+   "cbn-matriarch",
+   "cbm-malkav"
+  ]
+ },
+ {
+  "id": "nbon-fall-second-city",
+  "title": "The fall of the Second City in the Book of Nod",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "dark-ages"
+  ],
+  "summary": "Noddist scripture on how the Thirteen were scattered.",
+  "claims": [
+   {
+    "text": "The Third Generation hunted down and killed the Second, Zillah, Irad and Enoch, and Caine cursed them all for it.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nbon",
+      "page": 36,
+      "pdf": 28
+     },
+     {
+      "book": "cbmalkavian",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Later Troile slew Brujah and fed on the sire’s flesh; war tore the Second City apart, and the Thirteen fled with their broods, many dying in the flight, after which anyone could sire as they pleased.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nbon",
+      "page": 36,
+      "pdf": 28
+     },
+     {
+      "book": "cbbrujah",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbb-brujah-and-troile",
+   "antediluvians"
+  ]
+ }
+]
