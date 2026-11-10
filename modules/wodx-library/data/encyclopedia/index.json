@@ -1387,6 +1387,12 @@
    "title": "The Shadow Court",
    "short": "SC",
    "edition": "First edition"
+  },
+  {
+   "id": "cwic",
+   "title": "War in Concordia",
+   "short": "WiC",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1620,6 +1626,7 @@
   "ciotm.json",
   "cl8m.json",
   "cnob.json",
-  "cshc.json"
+  "cshc.json",
+  "cwic.json"
  ]
 }
