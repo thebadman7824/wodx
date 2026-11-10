@@ -1987,6 +1987,12 @@
       "title": "Project Twilight",
       "short": "Project Twilight",
       "edition": "Second edition"
+    },
+    {
+      "id": "wasubs",
+      "title": "Subsidiaries: A Guide to Pentex",
+      "short": "Subsidiaries",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2320,6 +2326,7 @@
     "wakinfolk.json",
     "wapast.json",
     "wapossess.json",
-    "watwilight.json"
+    "watwilight.json",
+    "wasubs.json"
   ]
 }
