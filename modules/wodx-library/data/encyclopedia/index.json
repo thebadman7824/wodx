@@ -1447,6 +1447,12 @@
    "title": "Hunter Players Guide",
    "short": "HtR PG",
    "edition": "First edition"
+  },
+  {
+   "id": "heinf",
+   "title": "Hunter: The Infernal",
+   "short": "HtR Inf",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1690,6 +1696,7 @@
   "ckslu.json",
   "cktrol.json",
   "ckbog.json",
-  "htrpg.json"
+  "htrpg.json",
+  "heinf.json"
  ]
 }
