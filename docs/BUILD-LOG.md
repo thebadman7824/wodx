@@ -1128,3 +1128,11 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Every claim was checked against its page, and the overlap check across all book texts finds no 8-word run shared with any book. Older entries that met new texts were reworded.
 - Left out: fiction, gamebooks, adventures and Storyteller-only books, fan compilations, books without readable page numbers or with unusable OCR (Mummy: The Resurrection core), rules-only quick references, and all Mind's Eye Theatre material (Ben, 2026-11-10). Real-world ethnography and history pages were left out too.
 - Deployed to rothenstein-wodx; encydiag 4/4, 283 files 0 mismatched, release stamp 8df185c.
+
+## 2026-11-10: the Storyteller's hand (Storyteller 0.18.0, Chronicle 0.10.1)
+
+- From the Storyteller Conveniences study (https://claude.ai/artifact/PuoomdY22Me3psaqhJcSXc); Ben asked for all of it. B430-B436.
+- One new Storyteller button (a hand) opens: Before the players arrive, Rules at a glance, Call for a roll, Session timer, End of the night, Next session sheet, Scene kits, Quick extras, Character hooks, Absent tonight, Last time for the players. Players get a Downtime request button (a bed); Chronicle 0.10.1 lists it under Player toolbar buttons.
+- New files in wodx-storyteller/scripts: hand.mjs, between.mjs, and the rules glance-rules, callroll-rules, preflight-rules, wrapup-rules, prep-rules, kits-rules. Settings: timer, timerWarn, kits, absent. Approval type wodx-storyteller.downtime.
+- Waiting on the PC: each line's experience reasons and the books' ready-made extras (request sent to the PC helper); both are drafts in PENDING-REVIEW until then.
+- Tests: 971 harness pass (22 new in hand.test.mjs and between.test.mjs).

@@ -36,6 +36,8 @@ import * as Rumours from "./rumours.mjs";
 import * as Prelude from "./prelude.mjs";
 import * as Dash from "./dashboard.mjs";
 import * as PreludeRules from "./prelude-rules.mjs";
+import * as Hand from "./hand.mjs";
+import * as Between from "./between.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -67,12 +69,18 @@ Hooks.once("init", () => {
   Hard.registerHardshipHooks();
   Rumours.registerRumourHooks();
   Dash.registerDashboardHooks();
+  Hand.registerHandSettings();
+  Hand.registerHandHooks();
+  Hand.registerHandKeys();
+  Between.registerBetweenSettings();
+  Between.registerBetweenTools();
+  game.keybindings?.register?.(C.MOD, "downtime", {name: "Downtime request", editable: [], onDown: () => { Between.downtimeDialog(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "dashboard", {name: "The Storyteller's dashboard", editable: [], onDown: () => { Dash.DashboardApp.open(); return true; }, restricted: true});
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -105,6 +113,14 @@ Hooks.once("ready", () => {
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
     tasks: {open: Tasks.tasksDialog, edit: Tasks.editTask, of: Tasks.tasksOf, save: Tasks.saveTask, remove: Tasks.removeTask, pause: Tasks.setPaused, tick: Tasks.tick, undo: Tasks.undoTick, pool: Tasks.poolFor, rules: TaskRules},
     codex: {of: Codex.codexOf, reveal: Codex.reveal, dialog: Codex.revealDialog},
+    hand: {open: Hand.handDialog, run: Hand.runTool, tools: Hand.TOOLS, addTool: Hand.addTool, glance: () => Hand.GlanceApp.open(), call: Hand.callRoll, callDialog: Hand.callRollDialog,
+      answer: Hand.answerAsk, preflight: () => Hand.PreflightApp.open(), snapshot: Hand.snapshot, wrapUp: Hand.wrapUpDialog, timer: () => Hand.TimerApp.open(),
+      startTimer: Hand.startTimer, pauseTimer: Hand.pauseTimer, resumeTimer: Hand.resumeTimer, stopTimer: Hand.stopTimer, readTimer: Hand.readTimer, macros: Hand.makeMacros, sheetOf: Hand.sheetOf},
+    between: {prep: Between.prepDialog, writePrep: Between.writePrep, prepSections: Between.prepSections, preload: Between.preload,
+      kits: Between.kits, saveKit: Between.saveKit, removeKit: Between.removeKit, runKit: Between.runKit, kitsDialog: Between.kitsDialog,
+      extras: Between.makeExtras, extrasDialog: Between.extrasDialog, hooks: Between.hooksFor, hooksDialog: Between.hooksDialog, willpowerForNature: Between.willpowerForNature,
+      absent: Between.absentMap, setAbsent: Between.setAbsent, absentDialog: Between.absentDialog, recapDraft: Between.recapDraft, postRecap: Between.postRecap, recapDialog: Between.recapDialog,
+      downtime: Between.requestDowntime, downtimeDialog: Between.downtimeDialog},
     draw: Night.drawChooser, nightRules: Night.N
   };
   const mod = game.modules.get(C.MOD);
@@ -116,6 +132,7 @@ Hooks.once("ready", () => {
     if ( rep.since !== null && n ) ui.notifications.info(`WoDX: ${n} things happened between sessions. Open the tracker's Between sessions report.`);
   }
   Setup.maybeOpenSetup();
+  Hand.watchTimer();
 });
 
 /* ---- Watching the table (the active Storyteller's client writes; the others only redraw) ---- */
@@ -177,6 +194,10 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Dash.DashboardApp.open()};
   tokens.tools.wodxSetup = {name: "wodxSetup", title: "Start a chronicle (opening date, era, lines, the Storyteller screen)", icon: "fa-solid fa-book-open", order: 118,
     button: true, visible: game.user.isGM, onChange: () => Setup.openSetup()};
+  tokens.tools.wodxHand = {name: "wodxHand", title: "The Storyteller's hand (rules at a glance, call for a roll, before play, the end of the night, the timer)", icon: "fa-solid fa-hand-sparkles", order: 123,
+    button: true, visible: game.user.isGM, onChange: () => Hand.handDialog()};
+  tokens.tools.wodxDowntime = {name: "wodxDowntime", title: "Downtime request (what your character does between sessions)", icon: "fa-solid fa-bed", order: 124,
+    button: true, visible: true, onChange: () => Between.downtimeDialog()};
   tokens.tools.wodxDraw = {name: "wodxDraw", title: "Draw for the story (tonight, a story aid, an Otherworld journey)", icon: "fa-solid fa-dice-d20", order: 119,
     button: true, visible: game.user.isGM, onChange: () => Night.drawChooser()};
 });
@@ -194,6 +215,7 @@ async function onSocket(message) {
     return;
   }
   if ( !C.isActiveGM() ) return;
+  if ( type === "req.call" ) { await Hand.answerAsk(payload); return; }
   if ( type === "req.letter" ) { await Letters.send(payload); return; }
   if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;

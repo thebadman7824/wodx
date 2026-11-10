@@ -14,7 +14,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.17.0";
+export const VERSION = "0.18.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -74,6 +74,8 @@ export const entries = () => logState().entries;
 export const personalMap = () => setting("personal") ?? {};
 export const beats = () => (setting("beats") ?? []).map(W.normBeat);
 export const convenedMap = () => setting("convened") ?? {};
+/** Players marked away for this session (the "Absent tonight" window); cleared when the session ends. */
+export const absentIds = () => Object.entries(setting("absent") ?? {}).filter(([, v]) => v).map(([k]) => k);
 
 /** Add a line to the log (the active Storyteller only; other clients drop it). */
 export async function log(e) {
@@ -502,6 +504,7 @@ export async function endSession({factions = true} = {}) {
   if ( factions ) { try { await npc()?.endSession?.(); } catch (e) { console.error(`${MOD} |`, e); } }
   await release();
   await game.settings.set(MOD, "session", {at: now(), real: Date.now()});
+  try { if ( absentIds().length ) await game.settings.set(MOD, "absent", {}); } catch (e) { /* the setting comes with 0.18.0 */ }
   await log({kind: "session", text: "The session ended."});
 }
 
