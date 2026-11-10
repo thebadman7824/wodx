@@ -2023,6 +2023,12 @@
       "title": "Wyld West Expansion Pack (W20)",
       "short": "W20 Wyld West",
       "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "waworap",
+      "title": "Rage: Warriors of the Apocalypse",
+      "short": "Warriors of the Apocalypse",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -2362,6 +2368,7 @@
     "w20cw.json",
     "w20kin.json",
     "w20ratw.json",
-    "w20wwx.json"
+    "w20wwx.json",
+    "waworap.json"
   ]
 }
