@@ -120,7 +120,7 @@
     ]
    },
    {
-    "text": "At first Horus and the high priest of the cult of Isis chose who would receive it, judging virtue and conviction.",
+    "text": "In the early days, Horus and the cult's chief priest picked each candidate together, weighing virtue and conviction.",
     "tier": "stated",
     "refs": [
      {
@@ -246,6 +246,50 @@
       "pdf": 14
      }
     ]
+   },
+   {
+    "text": "The first to break with Horus was Ishmael, and every later dissenter is called by that name. Horus would not kill these wayward children, and sent them into exile beyond Egypt, as Osiris once banished Set.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "More joined their ranks in the Ptolemaic and early Roman years, as the Cult of Isis grew careless about whom it raised; many of these were Greek or Roman and went home to their families' lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "They form no society, only a name for Egyptian mummies outside Horus's fellowship. Some still fight the servants of Apophis while rejecting a code they see as a tyrant's private vendetta.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "When the Diaspora began, the departing Shemsu-heru found Ishmaelites living as mortal princes with armies, or as hermits studying immortality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
    }
   ],
   "see": [
@@ -265,7 +309,7 @@
   "summary": "The Antediluvian who slew Osiris, and those who serve Set.",
   "claims": [
    {
-    "text": "The first enemy of the Shemsu-heru was Set, the Antediluvian vampire who destroyed Osiris and sought to rule Egypt.",
+    "text": "Set, an Antediluvian, was the Shemsu-heru's oldest foe: the vampire killed Osiris and reached for the throne of Egypt.",
     "tier": "stated",
     "refs": [
      {
@@ -346,6 +390,72 @@
         "pdf": 14
        }
       ]
+     }
+    ]
+   },
+   {
+    "text": "Only seven were ever made, in Alexandria in the first century BC; all seven were native Egyptians who had served Set in life as priests, warriors and magicians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "They name themselves Tutu, Hemhemti, Amam, Qetu, Hau-hra, Saatet-ta and Kharebutu, and usually act alone, each served by Bane spirits, Setites or trained mortal worshippers of Apophis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "In their own eyes they alone see clearly: the world is broken past mending and has to be destroyed so a new one can be forged.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "They hunt for the secrets of the Great Rite so they can make more of their kind; most believe only Set knows how they were made.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Some deformed ones hide behind carved masks and rich robes, while others look human and are twisted only in spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Rumour says botched Great Rites can produce more of them on their own.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 35,
+      "pdf": 36
      }
     ]
    }
@@ -461,7 +571,7 @@
     ]
    },
    {
-    "text": "The Ba travels to the Underworld and must return to the body for Rebirth; it is also an energy that fuels that work.",
+    "text": "The Ba journeys into the Underworld and has to come back to the body before Rebirth can happen; the word also names the energy behind that journey.",
     "tier": "stated",
     "refs": [
      {
@@ -483,7 +593,7 @@
     ]
    },
    {
-    "text": "The Khaibit is the shadow, close kin to the Ka; a mummy whose humanity is lost is ruled by it.",
+    "text": "The Khaibit, the shadow, is closely tied to the Ka; once a mummy has lost all humanity, the shadow takes control.",
     "tier": "stated",
     "refs": [
      {
@@ -648,7 +758,7 @@
     ]
    },
    {
-    "text": "Its paths are Amulets, Alchemy, Celestial, Necromancy, Ren-hekau and Ushabti, each running from small cantrips to great sorcery.",
+    "text": "Its six paths (Alchemy, Amulets, Celestial, Necromancy, Ushabti and Ren-hekau) each run from small cantrips to great sorcery.",
     "tier": "stated",
     "refs": [
      {
@@ -705,7 +815,7 @@
     ]
    },
    {
-    "text": "Amenti is the stronghold of the Egyptian dead, hidden in the Underworld.",
+    "text": "Amenti is a hidden fortress in the Underworld where the Egyptian dead dwell.",
     "tier": "stated",
     "refs": [
      {
@@ -813,7 +923,7 @@
   "summary": "Horus's gathering of allies.",
   "claims": [
    {
-    "text": "A thousand years passed between the making of Horus and the next group of immortals, and what is known of it comes mostly by oral tradition.",
+    "text": "A millennium went by after Horus was made before more immortals joined, and most of what is known about that span is passed down by word of mouth.",
     "tier": "stated",
     "refs": [
      {
@@ -933,7 +1043,7 @@
   "summary": "Commandments given on leaving Egypt.",
   "claims": [
    {
-    "text": "As a last duty before leaving Egypt, Horus issued commandments now called the Code of Horus.",
+    "text": "Before departing Egypt, Horus set down a list of commandments, known today as the Code of Horus.",
     "tier": "stated",
     "refs": [
      {
@@ -951,6 +1061,50 @@
       "book": "mummy2",
       "page": 38,
       "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "Of its laws, the order to fight the minions of Apophis at all times is the one most mummies respect, and even some Ishmaelites honor it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The ban on dealing with vampires, the Accursed, is broken nearly every night, even by Horus's own followers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Another law forbids making new mummies; Horus gives no reason, and as long as only Horus holds the complete Rite of Rebirth, none can be made.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "One Ishmaelite commentator claims Horus was really the second mummy, the first being a farmer, and that Osiris was less of a martyr than Horus says.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 39,
+      "pdf": 40
      }
     ]
    }
@@ -983,7 +1137,7 @@
     ]
    },
    {
-    "text": "Its political height came in the Middle Kingdom and its cultural height under the Ptolemies and Romans, when it spread the worship of Osiris, the dying and rising god.",
+    "text": "Its political height came in the Middle Kingdom and its cultural height under the Ptolemies and Romans, when it spread the cult of Osiris as a god who died and rose again.",
     "tier": "stated",
     "refs": [
      {
@@ -1320,7 +1474,7 @@
   "summary": "The six schools of Egyptian magic.",
   "claims": [
    {
-    "text": "The six paths are Amulets, Alchemy, Celestial, Necromancy, Ren-hekau and Ushabti, each with spells from small cantrips to potent sorcery.",
+    "text": "Ushabti, Ren-hekau, Necromancy, Celestial, Amulets and Alchemy make up the six paths, each with spells from small cantrips to potent sorcery.",
     "tier": "stated",
     "refs": [
      {
@@ -1600,6 +1754,99 @@
   "see": [
    "soul-of-khem",
    "amenti-and-duat"
+  ]
+ },
+ {
+  "id": "mum-and-vampires",
+  "title": "Mummies and vampires",
+  "kind": "lore",
+  "lines": [
+   "mummy",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sworn foes by law, often allies in practice.",
+  "claims": [
+   {
+    "text": "Many mummies pity vampires more than they hate them, as beings trying to make the best of a condition forced on them, and think calling every Accursed evil is simplistic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "While Horus slept through the Dark Ages, many Shemsu-heru kept up ties with the Cappadocians, drawn by that clan's study of life and death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Both are creatures of eternity, and that shared state is why sworn enemies so often become allies and confidants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum-code-of-horus",
+   "set"
+  ]
+ },
+ {
+  "id": "mum-and-shapeshifters",
+  "title": "Mummies and shapeshifters",
+  "kind": "lore",
+  "lines": [
+   "mummy",
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Honorable but short-lived allies against the same enemy.",
+  "claims": [
+   {
+    "text": "Mummies find shapeshifters hard to bargain with, since they live short and violent lives and a deal made with one generation may be lost by the next, though their memory of past lives sometimes carries it on.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Mummies count them as fellow fighters for Ma'at and take the Wyrm they oppose to be Apophis; there is no formal alliance any more, but they remain allies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mummy2",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "apophis",
+   "maat"
   ]
  }
 ]
