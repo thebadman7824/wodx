@@ -529,6 +529,12 @@
    "title": "Tribebook: Silent Striders (Revised)",
    "short": "TB Silent Striders",
    "edition": "Revised"
+  },
+  {
+   "id": "tbsf",
+   "title": "Tribebook: Silver Fangs (Revised)",
+   "short": "TB Silver Fangs",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -619,6 +625,7 @@
   "tbgw.json",
   "tbrt.json",
   "tbsl.json",
-  "tbss.json"
+  "tbss.json",
+  "tbsf.json"
  ]
 }
