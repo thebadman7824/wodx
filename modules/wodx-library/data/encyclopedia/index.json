@@ -1651,6 +1651,12 @@
       "title": "Sin of the Blood",
       "short": "SotB",
       "edition": "Revised"
+    },
+    {
+      "id": "cop",
+      "title": "Counsel of Primogen",
+      "short": "CoP",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -1928,6 +1934,7 @@
     "wod1.json",
     "mtr.json",
     "bsac.json",
-    "sotb.json"
+    "sotb.json",
+    "cop.json"
   ]
 }
