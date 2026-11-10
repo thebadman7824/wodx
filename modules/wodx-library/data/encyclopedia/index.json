@@ -679,6 +679,12 @@
    "title": "Dark Ages: Wolves of the Sea",
    "short": "DA Wolves of the Sea",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "kotec",
+   "title": "Kindred of the East Companion",
+   "short": "KotE Companion",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -794,6 +800,7 @@
   "rahe.json",
   "ratw1.json",
   "ratw2.json",
-  "dawots.json"
+  "dawots.json",
+  "kotec.json"
  ]
 }
