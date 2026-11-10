@@ -1363,6 +1363,12 @@
    "title": "The Kingdom of Willows",
    "short": "KoW",
    "edition": "Second edition"
+  },
+  {
+   "id": "ciotm",
+   "title": "Isle of the Mighty",
+   "short": "IotM",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1592,6 +1598,7 @@
   "cie2.json",
   "cie3.json",
   "cinan.json",
-  "ckow.json"
+  "ckow.json",
+  "ciotm.json"
  ]
 }
