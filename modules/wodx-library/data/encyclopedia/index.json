@@ -1255,6 +1255,12 @@
    "title": "Guildbook: Puppeteers",
    "short": "GBP",
    "edition": "First edition"
+  },
+  {
+   "id": "wgsan",
+   "title": "Guildbook: Sandmen",
+   "short": "GBS",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1466,6 +1472,7 @@
   "wgart.json",
   "wghau.json",
   "wgmas.json",
-  "wgpp.json"
+  "wgpp.json",
+  "wgsan.json"
  ]
 }
