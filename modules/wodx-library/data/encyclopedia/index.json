@@ -1843,6 +1843,12 @@
       "title": "Libellus Sanguinis 2: Keepers of the Word",
       "short": "LS2",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "darop",
+      "title": "Right of Princes",
+      "short": "Right of Princes",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2152,6 +2158,7 @@
     "inqcomp.json",
     "dajbn.json",
     "dals1.json",
-    "dals2.json"
+    "dals2.json",
+    "darop.json"
   ]
 }

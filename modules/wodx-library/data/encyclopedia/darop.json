@@ -1,0 +1,333 @@
+[
+ {
+  "id": "darop-power-bases",
+  "title": "Power bases in the Dark Medieval",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "mage",
+   "werewolf",
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why every kind of supernatural band builds a shared domain.",
+  "claims": [
+   {
+    "text": "Mages of every stripe find they are weak alone and strong in company: pagan Fellowships band together to survive, Hermetics and Ahl-i-Batin share ideas, and the Messianic Voices ride on the Church.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Garou packs share a totem and can sway a stretch of land, openly or through Kinfolk, as defenders of the Earth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The shadow Inquisition keeps strongholds in the towns of Christendom where the Adversary feeds, gaining some worldly power along the way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "darop-pooled-backgrounds"
+  ]
+ },
+ {
+  "id": "darop-pooled-backgrounds",
+  "title": "Pooled Backgrounds",
+  "kind": "mechanic",
+  "lines": [
+   "vampire",
+   "mage",
+   "werewolf",
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Combining characters’ Backgrounds into a shared demesne.",
+  "claims": [
+   {
+    "text": "Players can merge their characters’ Backgrounds into a shared power base; a troupe of five could in theory pool around a hundred dots, so the Storyteller needs guidance to keep it in check.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Backgrounds generally cannot be bought with experience, though they can grow with Maturation points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "When a group builds a shared Anchor in play, the Storyteller may optionally ask each player to put in one experience point, except a player whose existing Background it grows from.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "darop-power-bases"
+  ]
+ },
+ {
+  "id": "darop-deconsecration",
+  "title": "Rite of Deconsecration",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A level four inquisitor ritus that unmakes Holy Ground.",
+  "claims": [
+   {
+    "text": "Seldom taught to young inquisitors, the rite permanently severs the divine link that gives Holy Ground its miraculous nature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "It takes an hour of undisturbed prayer on the site, usually on one’s knees before a picture of Christ risen, begging pardon, and costs 3 Conviction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "It is meant to keep a sacred site from being turned to evil use, leaving it spiritually inert.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "darop-ghostly-guardian",
+  "title": "Compel the Ghostly Guardian",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A level three Mortis ritual for warding a building with a ghost.",
+  "claims": [
+   {
+    "text": "The Giovanni devised it to guard warehouses and trading posts; few other Cappadocians know it and it is almost unknown outside Italy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "It binds the spirit of someone who died in the building, no larger than a large townhouse, to frighten intruders and warn its master.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "The caster needs the dead person’s name and a piece of the body or a cherished belonging, works for five hours and marks every opening in personal blood; some Cappadocians murder someone on site to be sure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbcapp-necromancy"
+  ]
+ },
+ {
+  "id": "darop-fiend-lands",
+  "title": "Lands of the Fiends",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Tzimisce domains taint the soil.",
+  "claims": [
+   {
+    "text": "No Cainites are as bound to native land as the Tzimisce, and something unclean clings to ground claimed even by a young Fiend.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Most often the soil turns grey and lifeless, beasts grow sly and vicious even toward people, and mortals become sullen and listless.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals1-fiefdom-power"
+  ]
+ },
+ {
+  "id": "darop-brochs",
+  "title": "The brochs of Scotland",
+  "kind": "place",
+  "lines": [
+   "vampire",
+   "werewolf",
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mysterious stone towers in the Highlands.",
+  "claims": [
+   {
+    "text": "Brochs are small, open-topped stone towers about two storeys high, plain outside but with stones fused by great heat inside, making walls stronger than most castles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Locals credit the faeries, but the Fianna, who have spoken with the fae, suspect a lost technique of the White Howlers and their Kinfolk.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Peasants shun them, but brigands, Old Faith mages and Gangrel have all made homes in them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "darop-jazari-locks",
+  "title": "Al-Jazari’s locks",
+  "kind": "term",
+  "lines": [
+   "vampire",
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Combination strongboxes of the Muslim world.",
+  "claims": [
+   {
+    "text": "A late 12th-century treatise on clever mechanisms describes a strongbox with eight dials and some four billion combinations, and Middle Eastern nobles and merchants now have chests and doors built on its principles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "The Ahl-i-Batin wonder whether al-Jazari was one of their own, and some Lasombra, Nosferatu and Toreador have taken an interest in the work.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "darop",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
