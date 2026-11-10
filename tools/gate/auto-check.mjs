@@ -23,8 +23,11 @@ export async function run() {
     out.cleared = stale.length;
     const n0 = game.messages.size;
     const combat = await Combat.create({ scene: sc.id, active: true });
-    // Earlier check gates leave their own test combats active: make this one the combat in view, so the turn counts read it
+    // Earlier check gates leave their own test combats active: switch them off for the fight (put back at the end) so this one is the combat in view, and the turn counts read it
+    const others = game.combats.filter(c => c.active && c.id !== combat.id).map(c => c.id);
+    if (others.length) await Combat.updateDocuments(others.map(_id => ({ _id, active: false })));
     await combat.activate(); await sleep(300);
+    out.inView = game.combat?.id === combat.id;
     await combat.createEmbeddedDocuments("Combatant", [{ tokenId: tW.id, sceneId: sc.id, actorId: W.id }, { tokenId: tM.id, sceneId: sc.id, actorId: M.id }]);
     await combat.startCombat(); await sleep(2500);
     const t1 = Date.now(); while (!game.messages.contents.slice(n0).some(m => /Initiative/.test(m.content)) && Date.now() - t1 < 8000) await sleep(100);
@@ -48,6 +51,8 @@ export async function run() {
     const hints = game.wodxCombat.attackHints(M, W, { weapon: "auto", maneuver: "normal", defense: "auto", flank: "auto", multi: "auto", defIndex: "auto", oppAuto: true }, { attackerTok: tM.object, targetTok: tW.object });
     out.steps.push({ name: "suggestions", pass: hints.length > 0, hints });
     await combat.delete();
+    // put the other test combats back as they were
+    if (others.length) await Combat.updateDocuments(others.map(_id => ({ _id, active: true })));
     out.summary = `${out.steps.filter(s => s.pass).length}/${out.steps.length}`;
     const file = new File([JSON.stringify(out, null, 1)], "auto-check.json", { type: "application/json" });
     await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
