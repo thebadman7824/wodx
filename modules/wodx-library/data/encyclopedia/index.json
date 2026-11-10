@@ -1429,6 +1429,12 @@
    "title": "Kithbook: Sluagh",
    "short": "KB Sluagh",
    "edition": "Second edition"
+  },
+  {
+   "id": "cktrol",
+   "title": "Kithbook: Trolls",
+   "short": "KB Trolls",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1669,6 +1675,7 @@
   "ckeshu.json",
   "ckred.json",
   "cksat.json",
-  "ckslu.json"
+  "ckslu.json",
+  "cktrol.json"
  ]
 }
