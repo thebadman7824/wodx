@@ -1224,3 +1224,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Outlines with wings go through to the sidecar and the plan; collisions use each part of the building. ddcore skips zero-length wall pieces.
 - Not done yet: fitting back and side walls to an odd-shaped plot; left for the burgage plot work suggested in the planning research (Claude Doc "Town planning lessons for the map generator").
 - Samples schondorf and linberg redrawn. Test: organic homes must include some with more than four corners.
+
+## 2026-11-10: buildings kept off streets, roads and alleys (map tools)
+- Ben: buildings must never stand on a path or road, since NPCs with daily rounds will walk them. A check over 15 towns found 218 overlaps, almost all with alleys: the old test measured only a building's corners against each way, so an alley could cross a long wall between them. One market tavern also moved when its variant would not furnish.
+- organic.py now measures whole walls against every way band (geom.seg_poly_dist), checks gardens too, re-finds a spot for a plain tavern or chapel, and stops with an error if any building or garden is on a way (check_ways), as the farmstead generator does. After the fix: 0 overlaps over the same 15 towns. B581.
+- Samples schondorf and linberg redrawn.

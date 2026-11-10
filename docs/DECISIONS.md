@@ -397,3 +397,6 @@ In organic towns a building may be stretched a little, and 60% of the time gains
 
 ## B580. Terraced rows (2026-11-10)
 Busy wards build their frontages as rows of houses almost touching, with wings only at the back: market and merchant always, administration 80%, gate and craftsmen 60%, slum 50% (a house rule). Facing end windows are dropped.
+
+## B581. Ways stay clear (2026-11-10)
+No building, wing or garden may touch a street, road or alley band; the generator stops rather than write a town that breaks this, because townsfolk on scheduled rounds will walk every way.

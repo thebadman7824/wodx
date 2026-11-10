@@ -36,6 +36,16 @@ def edge_dist(p, poly):
     """The distance to the outline, inside or out."""
     return min(seg_dist(p, a, b) for a, b in zip(poly, poly[1:] + poly[:1]))
 
+def seg_poly_dist(a, b, poly):
+    """The least distance from a segment to a polygon's area: 0 when it touches, crosses or lies inside."""
+    if inside(a, poly) or inside(b, poly): return 0.0
+    o = lambda u, v, w: (v[0] - u[0]) * (w[1] - u[1]) - (v[1] - u[1]) * (w[0] - u[0])
+    d = math.inf
+    for p, q in zip(poly, poly[1:] + poly[:1]):
+        if o(a, b, p) * o(a, b, q) < 0 and o(p, q, a) * o(p, q, b) < 0: return 0.0
+        d = min(d, seg_dist(p, a, b), seg_dist(a, p, q), seg_dist(b, p, q))
+    return d
+
 def separation(A, B):
     """For two convex polygons, the widest gap between them along any edge normal; below 0 they overlap."""
     best = -math.inf

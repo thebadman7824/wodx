@@ -171,10 +171,15 @@ class OrganicTown(T.Town):
             if any(G.separation(poly, hb) < gap for poly in polys for hb in b.hulls): return False
         for _, g in self.ggrid.near((x, y, w, h), .8):
             if any(G.separation(poly, g["poly"]) < .4 for poly in polys): return False
-        if any(G.seg_dist(q, a, c) < hh + .25 for q in pts for _, (a, c, hh, k) in self.seg_grid.near((x, y, w, h), 2)): return False
+        if not self.off_ways(polys, (x, y, w, h), .25): return False
         if self.wall and any(G.seg_dist(q, self.wall[i - 1], self.wall[i]) < 1.4 for q in pts for i in range(len(self.wall))): return False
         if any(G.separation(poly, self.market_poly) < .3 for poly in polys): return False
         return True
+
+    def off_ways(self, polys, box, clear):
+        """True when no street, road or alley band comes within clear of any piece (whole sides, not just corners:
+        the ways must stay open for people walking them)."""
+        return not any(G.seg_poly_dist(a, c, poly) < hh + clear for _, (a, c, hh, k) in self.seg_grid.near(box, 2) for poly in polys)
 
     def try_at(self, type_key, A, u, inward, t, setback, gap, blk, tdef=None):
         """A building of a type (or a variant of one, tdef) with its front on the block edge from A along u, starting
@@ -198,6 +203,7 @@ class OrganicTown(T.Town):
         return (cx, cy, th, cs, tdef)
 
     def put(self, type_key, label, spot, extra=None):
+        if spot is None: return None
         cx, cy, th, _, tdef = spot
         n = self.count.get(type_key, 0) + 1
         try: b = B.Angled(f"{type_key}-{n}", type_key, cx, cy, th, label, extra, tdef).furnish()
@@ -337,10 +343,11 @@ class OrganicTown(T.Town):
         for i, kind in fr:
             if i in es: self.fill_edge(es[i], ward, lot)
 
-    def best_spot(self, type_key, edges, blkfor, want="middle"):
-        """The spot nearest the market (or farthest) on any of the edges, for one special building."""
+    def best_spot(self, type_key, edges, blkfor, want="middle", plain=False):
+        """The spot nearest the market (or farthest) on any of the edges, for one special building. plain: the type as
+        it stands, not a variant."""
         best = None
-        tdef = B.variant(type_key, self.R)
+        tdef = B.TYPES[type_key] if plain else B.variant(type_key, self.R)
         for e, blk, ward in edges:
             sb, gap = SPACING.get(ward, (.6, .8))
             t = .3
@@ -365,14 +372,14 @@ class OrganicTown(T.Town):
         facing = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in plaza_edges(p, blk, kinds)]
         s = self.best_spot("tavern", facing, None)
         if not s: raise SystemExit("no room for the tavern on the market")
-        tavern = self.put("tavern", "Tavern", s) or self.put("tavern", "Tavern", s[:4] + (B.TYPES["tavern"],))
+        tavern = self.put("tavern", "Tavern", s) or self.put("tavern", "Tavern", self.best_spot("tavern", facing, None, plain=True))
         church = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["ward"] == "church" for e in self.edges_of(blk, kinds)]
         s = self.best_spot("chapel", church, None) or self.best_spot("chapel", facing, None)
         if not s:
             any_e = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in self.edges_of(blk, kinds)]
             s = self.best_spot("chapel", any_e, None)
         if not s: raise SystemExit("no room for the chapel")
-        chapel = self.put("chapel", "Chapel", s) or self.put("chapel", "Chapel", s[:4] + (B.TYPES["chapel"],))
+        chapel = self.put("chapel", "Chapel", s) or self.put("chapel", "Chapel", self.best_spot("chapel", church or facing, None, plain=True))
         near = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in self.edges_of(blk, kinds)
                 if math.dist(e["mid"], chapel.centre) < 30]
         s = self.best_spot("cottage", sorted(near, key=lambda x: math.dist(x[0]["mid"], chapel.centre))[:4], None)
@@ -415,6 +422,7 @@ class OrganicTown(T.Town):
             if o is not b and any(G.separation(poly, hb) < .5 for hb in o.hulls): return None
         for _, g in self.ggrid.near((x, y, w, h), 1):
             if G.separation(poly, g["poly"]) < .5: return None
+        if not self.off_ways([poly], (x, y, w, h), .2): return None
         g = {"id": f"{b.key}-garden", "rect": (x, y, w, h), "poly": poly, "of": b.key, "b": b, "d": d}
         self.gardens.append(g)
         self.ggrid.add((x, y, w, h), g)
@@ -720,4 +728,12 @@ class OrganicTown(T.Town):
         self.stocks = ch.world(ch.lw / 2 + 2.2, ch.lh + .8)
         self.stocks_th = ch.theta
         self.deco = self.scatter()
+        self.check_ways()
         return self
+
+    def check_ways(self):
+        """Stops if any building or garden stands on a street, road or alley: townsfolk walk these on their rounds."""
+        for b in self.blds:
+            if not self.off_ways(b.hulls, b.rect, 0): raise SystemExit(f"{b.key} stands on a way")
+        for g in self.gardens:
+            if not self.off_ways([g["poly"]], g["rect"], 0): raise SystemExit(f"{g['id']} stands on a way")
