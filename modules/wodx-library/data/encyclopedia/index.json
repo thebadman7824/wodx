@@ -1249,6 +1249,12 @@
    "title": "Guildbook: Masquers",
    "short": "GBM",
    "edition": "First edition"
+  },
+  {
+   "id": "wgpp",
+   "title": "Guildbook: Puppeteers",
+   "short": "GBP",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1459,6 +1465,7 @@
   "wche.json",
   "wgart.json",
   "wghau.json",
-  "wgmas.json"
+  "wgmas.json",
+  "wgpp.json"
  ]
 }
