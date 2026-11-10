@@ -1117,6 +1117,12 @@
    "title": "Castles and Covenants",
    "short": "CC",
    "edition": "First edition"
+  },
+  {
+   "id": "dagrim",
+   "title": "Dark Ages: Mage Grimoire",
+   "short": "DAMG",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1305,6 +1311,7 @@
   "scor.json",
   "scsw.json",
   "scwp.json",
-  "sccc.json"
+  "sccc.json",
+  "dagrim.json"
  ]
 }
