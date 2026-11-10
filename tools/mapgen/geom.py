@@ -117,6 +117,28 @@ def clip_poly(poly, win):
         pts = cut(pts, f, c)
     return pts if len(pts) >= 3 and abs(area(pts)) > .05 else None
 
+def convex(poly):
+    """True when every turn of the outline goes the same way."""
+    o = [(b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0]) for a, b, c in zip(poly, poly[1:] + poly[:1], poly[2:] + poly[:2])]
+    return all(v >= -1e-9 for v in o) or all(v <= 1e-9 for v in o)
+
+def clip_convex(poly, clipper):
+    """A polygon cut to a convex polygon (Sutherland and Hodgman), or None when little is left."""
+    sgn = 1 if area(clipper) > 0 else -1
+    out = list(poly)
+    for a, b in zip(clipper, clipper[1:] + clipper[:1]):
+        if not out: return None
+        side = lambda p: sgn * ((b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0]))
+        pts, out = out, []
+        for i, q in enumerate(pts):
+            p = pts[i - 1]
+            sp, sq = side(p), side(q)
+            if sq >= 0:
+                if sp < 0: t = sp / (sp - sq); out.append((p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t))
+                out.append(q)
+            elif sp >= 0: t = sp / (sp - sq); out.append((p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t))
+    return out if len(out) >= 3 and abs(area(out)) > .05 else None
+
 def clip_line(points, win):
     """A polyline cut to a window: the pieces that lie inside it."""
     x0, y0, w, h = win

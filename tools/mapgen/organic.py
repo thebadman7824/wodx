@@ -57,6 +57,13 @@ LOT = {   # the smallest lot, in square squares, by ward
     "slum": 60, "craftsmen": 80, "merchant": 80, "market": 80, "patriciate": 140, "administration": 90, "military": 90,
     "gate": 90, "gate-out": 150, "church": 90, "village": 170,
 }
+PLOT_DEPTH = {   # how far a house's plot runs back from the street, in squares, by ward (burgage plots; a house rule)
+    "slum": (4, 7), "craftsmen": (10, 16), "merchant": (12, 18), "market": (10, 14), "patriciate": (14, 20),
+    "administration": (10, 14), "military": (6, 9), "gate": (10, 14), "gate-out": (14, 20), "church": (10, 15), "village": (16, 24),
+}
+NO_PLOT = {"chapel", "guardhouse", "barn"}
+COURTS = {"slum", "craftsmen"}   # wards that build on alleys and back to back, packing yards into courts
+BACK_TO_BACK = {"village": 24, "gate-out": 22, "patriciate": 20}   # the least depth for two frontages back to back, else 16
 TERRACED = {"merchant": 1, "market": 1, "administration": .8, "gate": .6, "craftsmen": .6, "slum": .5}   # chance a frontage is a row
 CAPS = {"village": {"smithy": 1, "bakehouse": 1, "tavern": 1, "guardhouse": 0, "storehouse": 1},
         "town": {"smithy": 2, "bakehouse": 2, "tavern": 2, "guardhouse": 2, "storehouse": 3},
@@ -100,6 +107,7 @@ class OrganicTown(T.Town):
         self.ways()
         self.roads = []                                       # the grid generator's road rects: none here
         self.blds, self.gardens, self.households, self.notes = [], [], [], []
+        self.plots, self.frontages = [], {}
         self.bgrid, self.ggrid = T.Grid(), T.Grid()
         self.count = {}
 
@@ -260,6 +268,9 @@ class OrganicTown(T.Town):
                     b = self.put(tk, self.label_for(tk), spot)
                     if not b: continue
                     b.lot = blk
+                    tt = [(q[0] - e["A"][0]) * e["u"][0] + (q[1] - e["A"][1]) * e["u"][1] for q in spot[3]]
+                    b.front_on = (min(tt), max(tt))
+                    self.frontages.setdefault(id(e), (e, blk, ward, []))[3].append(b)
                     if row and prev and min(G.separation(prev.hulls[0], b.hulls[0]), 9) < .25:
                         ax = (math.cos(b.theta), math.sin(b.theta))
                         left = (prev.cx - b.cx) * ax[0] + (prev.cy - b.cy) * ax[1] < 0
@@ -393,7 +404,13 @@ class OrganicTown(T.Town):
                 self.lots(blk, kinds, ward)                    # cuts the alleys through a big block
                 es = self.edges_of(blk, kinds)
                 es.sort(key=lambda e: (e["kind"] != "main", -e["len"]))
-                for e in es + self.alley_edges(): self.fill_edge(e, ward, blk)
+                done = []
+                for e in es + (self.alley_edges() if ward in COURTS else []):
+                    # burgage plots: a frontage backing on to one already built leaves the land between as their yards
+                    if ward not in COURTS and any(e["in"][0] * f["in"][0] + e["in"][1] * f["in"][1] < -.6 and
+                                                  (e["mid"][0] - f["mid"][0]) * f["in"][0] + (e["mid"][1] - f["mid"][1]) * f["in"][1] < BACK_TO_BACK.get(ward, 16)
+                                                  for f in done): continue
+                    self.fill_edge(e, ward, blk); done.append(e)
         for p, blk, kinds in blocks.values():                 # farms: a farmhouse and a barn by the road
             if p["ward"] != "farm": continue
             for e in self.edges_of(blk, kinds, ("road",)):
@@ -404,10 +421,89 @@ class OrganicTown(T.Town):
                 s2 = self.try_at("barn", e["A"], e["u"], e["in"], end + 2, *SPACING["farm"], blk)
                 if s2: self.put("barn", "Barn", s2)
                 break
+        self.make_plots()
         for b in self.blds:
-            if b.type in ("cottage", "byre-house", "townhouse") and R.random() < .8: self.garden_behind(b)
+            if getattr(b, "plot", None) or b.type not in ("cottage", "byre-house", "townhouse"): continue
+            if R.random() < .8: self.garden_behind(b)
         self.people()
         if not any(b.type == "cottage" for b in self.blds): self.notes.append("no cottages")
+
+    def make_plots(self):
+        """Burgage plots: each house on a frontage gets a strip of land running back from the street, as wide as its
+        share of the frontage, to the ward's plot depth or until it meets another plot, a building or a way. Behind
+        the house: a yard, then a garden or croft to the back fence."""
+        R = self.R
+        for e, blk, ward, row in self.frontages.values():
+            if not G.convex(blk): continue
+            row = sorted(row, key=lambda b: b.front_on[0])
+            for k, b in enumerate(row):
+                if b.type in NO_PLOT: continue
+                # in the building's own frame (x along its front, y back from the street is negative): rows on one
+                # frontage share the same turn, so the plot lines between neighbours run straight back
+                c, s_ = math.cos(b.theta), math.sin(b.theta)
+                o = b.world(0, 0)
+                lx = lambda q: (q[0] - o[0]) * c + (q[1] - o[1]) * s_
+                ly = lambda q: -(q[0] - o[0]) * s_ + (q[1] - o[1]) * c
+                mine = [q for hb in b.hulls for q in hb]
+                x0, x1 = min(map(lx, mine)), max(map(lx, mine))
+                y0 = min(map(ly, mine))                         # the back wall
+                lo, hi = x0 - .4, x1 + .4
+                for j in (k - 1, k + 1):
+                    if not 0 <= j < len(row): continue
+                    qs = [q for hb in row[j].hulls for q in hb]
+                    if j < k:
+                        m = max(map(lx, qs))
+                        if x0 - m < 2: lo = max(min((m + x0) / 2, x0), m) if m < x0 else x0
+                    else:
+                        m = min(map(lx, qs))
+                        if m - x1 < 2: hi = min(max((m + x1) / 2, x1), m) if m > x1 else x1
+                d = R.uniform(*PLOT_DEPTH.get(ward, (8, 12)))
+                at = lambda x, y: b.world(x, y)
+                front, poly = b.lh + 2.5, None
+                for lo, hi in ((lo, hi), (max(lo, x0 - .1), min(hi, x1 + .1))):   # its share of the frontage, else its own width
+                    dd = d
+                    while dd > b.lh - y0 + .8:
+                        poly = G.clip_convex([at(lo, front), at(hi, front), at(hi, b.lh - dd), at(lo, b.lh - dd)], blk)
+                        if poly and self.plot_free(poly, b, row): break
+                        poly = None
+                        dd -= .5
+                    if poly: break
+                if not poly: continue
+                d = dd
+                A, inw = e["A"], e["in"]
+                bb = G.bbox(poly)
+                pl = {"id": f"{b.key}-plot", "poly": poly, "rect": bb, "b": b, "A": A, "in": inw}
+                self.plots.append(pl); b.plot = pl
+                gy = y0 - R.uniform(1.2, 2.2)                   # the yard by the back door, then the garden
+                yb = b.lh - d + .25
+                if gy - yb > 1.8 and b.type in ("cottage", "byre-house", "townhouse", "workshop"):
+                    gp = G.clip_convex([at(lo + .25, gy), at(hi - .25, gy), at(hi - .25, yb), at(lo + .25, yb)], poly)
+                    if gp and all(G.separation(gp, hb) > .3 for hb in b.hulls):
+                        bush = []
+                        for r_ in range(int((gy - yb - .3) / .9)):
+                            for c_ in range(int((hi - lo - 1.2) / .8)):
+                                q = at(lo + .85 + c_ * .8, gy - .6 - r_ * .9)
+                                if G.inside(q, gp): bush.append(q)
+                        g = {"id": f"{b.key}-garden", "rect": G.bbox(gp), "poly": gp, "of": b.key, "b": b, "d": gy - yb, "bushes": bush, "fence": False}
+                        self.gardens.append(g); self.ggrid.add(g["rect"], g)
+
+    def plot_fences(self, pl):
+        """A plot's fence lines: every side but the street front, and a side shared with the plot next door only once."""
+        P, A, inw = pl["poly"], pl["A"], pl["in"]
+        dep = lambda q: (q[0] - A[0]) * inw[0] + (q[1] - A[1]) * inw[1]
+        out = []
+        for a, c in zip(P, P[1:] + P[:1]):
+            if dep(a) < .3 and dep(c) < .3: continue
+            if math.dist(a, c) < .3: continue
+            out.append((a, c))
+        return out
+
+    def plot_free(self, poly, own, row=()):
+        bb = G.bbox(poly)
+        for _, o in self.bgrid.near(bb, .5):
+            if o is not own and any(G.separation(poly, hb) < .05 for hb in o.hulls): return False
+        if any(G.separation(poly, q["poly"]) < -.01 for q in self.plots if q["b"] is not own and overlaps(q["rect"], bb, .1)): return False
+        return self.off_ways([poly], bb, 0)
 
     def garden_behind(self, b):
         R = self.R
@@ -472,6 +568,9 @@ class OrganicTown(T.Town):
         R = self.R
         out = []
         for g in self.gardens:
+            if "bushes" in g:
+                for x, y in g["bushes"]: out.append((R.choice([f"Bush_Green_B{i}_1x1.webp" for i in (1, 2, 3)]), x, y, R.uniform(0, 6.3), .5, 100, .3))
+                continue
             b, d = g["b"], g["d"]
             for row in range(int((d - .3) / .9)):
                 for col in range(int((b.lw - 1.3) / .8)):
@@ -543,8 +642,11 @@ class OrganicTown(T.Town):
                 if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
                 for it, cx, cy, rot in b.items_world(r):
                     objects.append(obj(it["asset"], cx, cy, rot, it["scale"], 100))
+        for pl in self.plots:                                  # plot fences: the sides and back, open to the street
+            if not overlaps(pl["rect"], win, 2): continue
+            for a, c in self.plot_fences(pl): paths.append(path([a, c], "Fence-Wood-Ashen-A.png", 64))
         for g in self.gardens:
-            if not overlaps(g["rect"], win, 2): continue
+            if g.get("fence") is False or not overlaps(g["rect"], win, 2): continue
             p = g["poly"]                                     # edge 2 to 3 faces the house: the gate is there
             for i in range(4):
                 a, c = p[i], p[(i + 1) % 4]
@@ -638,6 +740,11 @@ class OrganicTown(T.Town):
             if b.t["place"]:
                 rs = region_shape(b.outline)
                 regions.append({"id": b.key, "label": b.label, "rect": rs[0], "points": rs[1], "place": {"kind": b.t["place"]}})
+        for pl in self.plots:
+            rs = region_shape(pl["poly"])
+            b = pl["b"]
+            if rs: regions.append({"id": pl["id"], "label": f"Yard of the {b.label.lower()}", "rect": rs[0], "points": rs[1],
+                                   "place": {"kind": "home" if b.t["place"] in ("home", None) else b.t["place"], "owner": b.key, "private": True}})
         wx, wy = self.well
         if T.inside(wx, wy, win):
             features.append({"id": "well", "label": "Well", "rect": [round(wx - .5 - ox, 3), round(wy - .5 - oy, 3), 1, 1],
@@ -693,7 +800,10 @@ class OrganicTown(T.Town):
         for a, b, h, k in self.segs:
             o.append(f'<line x1="{a[0] * s:.1f}" y1="{a[1] * s:.1f}" x2="{b[0] * s:.1f}" y2="{b[1] * s:.1f}" stroke="#c9b48a" stroke-width="{2 * h * s:.1f}" stroke-linecap="round"/>')
         o.append(f'<polygon points="{" ".join(map(f, self.market_poly))}" fill="#d8c9a3" stroke="#8a7650" stroke-dasharray="3 2"/>')
-        for g in self.gardens: o.append(f'<polygon points="{" ".join(map(f, g["poly"]))}" fill="#b9d3a0" stroke="#6b4f2a"/>')
+        for pl in self.plots: o.append(f'<polygon points="{" ".join(map(f, pl["poly"]))}" fill="#ebe4cf" stroke="none"/>')
+        for g in self.gardens: o.append(f'<polygon points="{" ".join(map(f, g["poly"]))}" fill="#b9d3a0" stroke="{"none" if g.get("fence") is False else "#6b4f2a"}"/>')
+        for pl in self.plots:
+            for a, c in self.plot_fences(pl): o.append(f'<line x1="{a[0] * s:.1f}" y1="{a[1] * s:.1f}" x2="{c[0] * s:.1f}" y2="{c[1] * s:.1f}" stroke="#6b4f2a" stroke-width="1"/>')
         runs, towers = self.wall_pieces()
         for run in runs: o.append(f'<polyline points="{" ".join(map(f, run))}" fill="none" stroke="#444" stroke-width="{.6 * s}"/>')
         for t in towers: o.append(f'<circle cx="{t[0] * s:.1f}" cy="{t[1] * s:.1f}" r="{1.1 * s}" fill="#666"/>')
