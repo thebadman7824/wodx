@@ -1,0 +1,856 @@
+[
+ {
+  "id": "cb-ajaba",
+  "title": "Ajaba, the werehyenas",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "African hyena-shifters scattered by a massacre.",
+  "claims": [
+   {
+    "text": "Ajaba once lived in tight family packs and villages, gathered into clans that were usually led by a female leader called the Aktu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 44,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Nearly every werehyena died in one night when Black Tooth and the Endless Storm struck their gathering in a crater. The few survivors scattered across Africa, the Middle East, India and beyond.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 44,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Where the Ajaba once culled their own weak and old, every Ajaba life is now precious to them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 44,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "All Ajaba begin with Willpower 3. They value the Renown of Ferocity, Cunning and Obligation, the last meaning service to the pack and the Breed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 49,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "They have homid, metis and hyaenid breeds. Shifter blood runs strong in them, and a mating of two Ajaba always yields a metis, who is fully accepted, sterile, and grows up within a few years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 49,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera",
+   "cb-black-tooth"
+  ]
+ },
+ {
+  "id": "cb-black-tooth",
+  "title": "Black Tooth and the Endless Storm",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The slaughter that nearly ended the Ajaba.",
+  "claims": [
+   {
+    "text": "On the night of the massacre every Ajaba able to travel had gathered in a crater, and all but a handful died there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 44,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Many survivors fled to the Middle East, where they live alongside Ratkin, Bastet and a few Mokole in growing cities such as Dubai.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 34,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ajaba"
+  ]
+ },
+ {
+  "id": "cb-ananasi",
+  "title": "Ananasi, the werespiders",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Children of Queen Ananasa who weave to restore the Triat.",
+  "claims": [
+   {
+    "text": "The Ananasi serve Queen Ananasa, their creator, spirit parent and totem. Their goal, called Symmetry, is to return the Triat to its proper places.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 58,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Each Ananasi follows one aspect of the Triat, Hatar (Wyrm), Kumoti (Wyld) or Tenere (Weaver), and one faction: Myrmidon warriors, Viskr wizards or Wyrsta questioners.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 58,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "They can split into a mass of ordinary spiders and gather again. Their forms are the human, the Lilian hybrid, the giant Pithus and the Crawlerling swarm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 58,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Every Ananasi has a blood pool of 10 and may not take Ancestors or Pure Breed. Ananasa judges them in Cunning, Obedience and Wisdom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 62,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "There are only two breeds, homid and arachnid. Spider-born Ananasi must eat their sac-mates and other spiders to grow large enough to change. No metis are known.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 62,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Only Hatar can enter the Umbra freely in Wyrm-tainted places; the other aspects add +2 to the difficulty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 62,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera",
+   "triat"
+  ]
+ },
+ {
+  "id": "cb-bastet",
+  "title": "Bastet, the werecats",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Secretive cat-shifters who hoard knowledge.",
+  "claims": [
+   {
+    "text": "The Bastet name the Triat the Star Family: Nala the First Mother (the Wyld), Rahjah the Maker (the Weaver) and Cahlash the Unmaker, whom they honor in the old balanced form of the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 71,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "A Bastet's spirit allies are called Jamak, and the bond is more equal than a Garou totem. A powerful werecat may claim an Umbral Den-Realm, and violating one is a deadly crime.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 71,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Werecats meet at full-moon gatherings called Taghairm, and young cats learn from a mentor, the Kuasha, who then drives them away to stand alone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 71,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "A Bastet's Pryio, set by the time of day of the First Change, shapes temperament: Daylight cats are direct, Twilight cats seek mysteries, and Night cats guard their secrets. Each regains Willpower by acting true to it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 85,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "Werecats take five shapes, from Homid through Sokto and Crinos to the Chatro and the Feline. Their Crinos causes a weaker Delirium, while the sabertooth Chatro causes it in full and bites for an extra die.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 85,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera"
+  ]
+ },
+ {
+  "id": "cb-corax",
+  "title": "Corax, the wereravens",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Raven's gossiping messengers and spies.",
+  "claims": [
+   {
+    "text": "Corax gather and spread secrets and cannot easily keep quiet about what they learn. A shiny object can draw them in even when it is bait.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 95,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "By drinking an eye from a corpse a Corax sees part of its last moments: the left eye shows the bad that came of the death, the right eye the good. Each corpse yields only one eye.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 95,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "There are two breeds, homid and corvid, and all begin with Rage 1, Gnosis 6, Willpower 3 and a free dot each of Subterfuge, Enigmas and Dodge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 95,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera"
+  ]
+ },
+ {
+  "id": "cb-gurahl",
+  "title": "Gurahl, the werebears",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rare healers and guardians of the land.",
+  "claims": [
+   {
+    "text": "Gurahl are few and mostly live alone to cover more ground. The Ice Stalkers of the far north are the exception and often travel in small groups.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 105,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Gurahl call the Wyrm the Pattern Breaker and the Weaver the Tapestry Maker. Their life stages follow the moon, and their ranks run from Kovi (child) to Matae (grandparent).",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 105,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Each autumn the four tribes, Ice Stalkers, Forest Keepers, River Keepers and Mountain Guardians, meet in the Council of Autumn, where the Matae decide by consensus and new cubs dance together.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 107,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "In dire need one of the four Ancient Ones may send a summons that wakes and calls every Gurahl, even those in hibernation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 107,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Like Garou, Gurahl are harmed by silver and cause the Delirium in Crinos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 107,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera"
+  ]
+ },
+ {
+  "id": "cb-kitsune",
+  "title": "Kitsune, the werefoxes",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fox sorcerers of the Beast Courts.",
+  "claims": [
+   {
+    "text": "Kitsune belong to the hengeyokai of Asia. They speak a fox language, Kitsune-go, and follow one of four Paths: Doshi sorcerers, Eji warriors, Gukutsushi dreamers and Kataribe poets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 124,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "Born after the Fourth Age, the foxes never ruled humans by fear, so their war form does not cause the Delirium. They must hide it carefully.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 126,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "They do not regenerate, so non-bashing damage is lethal to them. They soak silver at difficulty 8, and they frenzy only as foxes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 126,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Kitsune learn other Breeds' Gifts with a teacher. Each rise in rank adds a tail and doubles their lifespan; only Bai Mianxi ever had nine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 126,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "The birth of a Kitsune costs a life, most often that of the Kinfolk parent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 126,
+      "pdf": 119
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera"
+  ]
+ },
+ {
+  "id": "cb-mokole",
+  "title": "Mokole, the weresaurians",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Reptile-shifters who keep the memory of the Age of Kings.",
+  "claims": [
+   {
+    "text": "The Mokole remember the Age of Kings, when their ancestors, the Lizard Kings, ruled the earth before the Wonder-Work of the Wyrm ended it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 138,
+      "pdf": 131
+     }
+    ]
+   },
+   {
+    "text": "Their ancestral memories, the Mnesis, are passed down in streams: the Gumagan of Australia and Oceania, the Makara of India, and the Mokole-mbembe of Africa and the Americas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 140,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Each Mokole takes the shape of one varna, a reptile species such as crocodiles, alligators, caimans or monitor lizards. Their battle form, the Archid, varies widely, and none can still take the toolmaking Drachid form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 140,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Mokole live in family clutches that guard breeding grounds, and dream of a future when human civilization falls and the lost races return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 140,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera"
+  ]
+ },
+ {
+  "id": "cb-nagah",
+  "title": "Nagah, the wereserpents",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gaia's secret executioners, thought extinct by almost everyone.",
+  "claims": [
+   {
+    "text": "Before the War of Rage the Nagah passed as Gaia's mystics, but in truth they quietly killed those who threatened Gaia, corrupt Garou included.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 153,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Early in the War they withdrew into the Umbra and faked their extinction, even cutting their ties to the spirits. Almost every other shifter still believes them gone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 153,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "A few revealed themselves to the Beast Courts of Asia, whose members are bound by honor not to tell outsiders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 153,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "All Nagah begin with Willpower 4, regain Rage under water, and pay double to raise Rage. Their bite carries venom that deals seven more levels of aggravated damage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 157,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "They have no totems and step sideways only near their Ananta or in Serpent Waters. Rank comes from the judgment of the Sesha, not from sung tales.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 157,
+      "pdf": 150
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera",
+   "war-of-rage"
+  ]
+ },
+ {
+  "id": "cb-nuwisha",
+  "title": "Nuwisha, the werecoyotes",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Coyote's tricksters, who teach by pranks.",
+  "claims": [
+   {
+    "text": "The Nuwisha play the jester among the Breeds, exposing folly with tricks, and some aim deadly pranks at the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 166,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "When the War of Rage began they fled to the Umbra instead of fighting, and they claim credit for ending it. Since then only a hundred may stay in the physical world at once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 166,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "They dwelt in North America for ages. During the second War of Rage they tried to turn both sides against the Wyrm, until the Storm Eater's threat united the Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 166,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera",
+   "war-of-rage"
+  ]
+ },
+ {
+  "id": "cb-ratkin",
+  "title": "Ratkin, the wererats",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The most numerous Breed, sworn to tear down civilization.",
+  "claims": [
+   {
+    "text": "Gaia charged the Ratkin with culling humans by famine and disease. Garou envy of their success soured into slaughter during the War of Rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 177,
+      "pdf": 170
+     }
+    ]
+   },
+   {
+    "text": "Decades ago the wererats called their kind back from the Umbra and began breeding in great numbers, mostly as rat-born Ratkin hidden in vast nests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 177,
+      "pdf": 170
+     }
+    ]
+   },
+   {
+    "text": "Their goal is to destroy human civilization before the Weaver calcifies the world. Those in the Beast Courts call themselves Nezumi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 177,
+      "pdf": 170
+     }
+    ]
+   },
+   {
+    "text": "Ratkin blood poisons anyone who drinks it, vampires included. They are immune to disease, and can keen a silent alarm only other Ratkin hear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 182,
+      "pdf": 175
+     }
+    ]
+   },
+   {
+    "text": "Ratkin are made, not born: the Rite of the Birthing Plague kills most who undergo it and turns the survivors into wererats.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 182,
+      "pdf": 175
+     }
+    ]
+   },
+   {
+    "text": "They begin with Willpower 3, may not take Allies, Ancestors or Pure Breed, and are capped at 2 dots of Resources. Their Renown is Infamy, Cunning and Obligation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 182,
+      "pdf": 175
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera"
+  ]
+ },
+ {
+  "id": "cb-rokea",
+  "title": "Rokea, the weresharks",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sharks of Sea who rarely come ashore.",
+  "claims": [
+   {
+    "text": "Rokea speak of Sea and Unsea, the land. Those who spend time on land are called betweeners, and many other Rokea distrust them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 195,
+      "pdf": 188
+     }
+    ]
+   },
+   {
+    "text": "A nuclear test, part of Operation Wigwam, struck the largest Rokea gathering ever at Turna'a, and some weresharks blame an agent of Qyrl, their name for the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 195,
+      "pdf": 188
+     }
+    ]
+   },
+   {
+    "text": "Rokea regain Gnosis only in salt water, grottoes or from living spirit-caerns called Rorqual. They cannot step sideways without a Gift or rite.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 199,
+      "pdf": 192
+     }
+    ]
+   },
+   {
+    "text": "They frenzy on two successes, and four or more throws them into Kunmind, a blind feeding rage. They begin with Willpower 4 and hate being confined.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 199,
+      "pdf": 192
+     }
+    ]
+   },
+   {
+    "text": "Almost all are born of large sharks. Human-born Rokea exist only among the Same-Bito and most Rokea find them abhorrent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 199,
+      "pdf": 192
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera"
+  ]
+ },
+ {
+  "id": "cb-lost-breeds",
+  "title": "The Lost Breeds",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shifter lines that are gone, or thought to be.",
+  "claims": [
+   {
+    "text": "The Apis, Camazotz and Grondr died out hundreds or thousands of years ago, and lines such as the Bastet's Khara and the Gurahl's Okuma are lost too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 227,
+      "pdf": 220
+     }
+    ]
+   },
+   {
+    "text": "The Garou killed off some Breeds in and after the War of Rage. Others faded when their animal Kin died out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 227,
+      "pdf": 220
+     }
+    ]
+   },
+   {
+    "text": "Most shifters believe the Nagah extinct as well, which gives a few hope that other lost Breeds survive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cb",
+      "page": 227,
+      "pdf": 220
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fera",
+   "war-of-rage",
+   "cb-nagah"
+  ]
+ }
+]
