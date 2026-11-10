@@ -1633,6 +1633,12 @@
    "title": "A World of Darkness, First Edition",
    "short": "WoD 1e",
    "edition": "First edition"
+  },
+  {
+   "id": "mtr",
+   "title": "Mummy: The Resurrection",
+   "short": "MtR",
+   "edition": "Third edition"
   }
  ],
  "files": [
@@ -1907,6 +1913,7 @@
   "wodout.json",
   "wodbb.json",
   "woddhx.json",
-  "wod1.json"
+  "wod1.json",
+  "mtr.json"
  ]
 }
