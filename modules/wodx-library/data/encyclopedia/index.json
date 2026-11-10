@@ -1975,6 +1975,12 @@
       "title": "Past Lives",
       "short": "Past Lives",
       "edition": "Revised"
+    },
+    {
+      "id": "wapossess",
+      "title": "Possessed: A Player's Guide",
+      "short": "Possessed",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2306,6 +2312,7 @@
     "wahammer.json",
     "wahenge.json",
     "wakinfolk.json",
-    "wapast.json"
+    "wapast.json",
+    "wapossess.json"
   ]
 }

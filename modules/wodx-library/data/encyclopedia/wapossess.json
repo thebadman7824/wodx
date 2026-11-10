@@ -1,0 +1,216 @@
+[
+ {
+  "id": "wapossess-opening-to-banes",
+  "title": "How Banes take a host",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What makes a mortal open to possession.",
+  "claims": [
+   {
+    "text": "Possession usually follows a long moment of weakness: Banes are drawn to suffering, low self-worth and weak morals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The best target is miserable and takes it out on others, spreading the anguish Banes feed on, and often reaches for anything that might help, in effect inviting the Bane in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Some strong Banes prefer happy, successful people for the pleasure of fouling innocence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Of all the possessed, only the Kami seem truly at peace between their two natures.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wapossess-drones"
+  ]
+ },
+ {
+  "id": "wapossess-drones",
+  "title": "Drones",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Humans possessed by Weaver-spirits.",
+  "claims": [
+   {
+    "text": "Weaver-spirits cannot choose hosts freely as Banes do; possession is more like surgery, with powerful Weaver-spirits placing lesser spirit-stuff into a host who has opened to the OneSong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Drones are linked to a hive-mind of constant communication with Weaver-spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 51,
+      "pdf": 52
+     },
+     {
+      "book": "wapossess",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Servers are quiet, withdrawn Drones that act as living information stores and relay points for local web-spirits, guarded by pattern spiders; they need a high Symbiosis rating.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wapossess-opening-to-banes"
+  ]
+ },
+ {
+  "id": "wapossess-white-wolf",
+  "title": "The White Wolf",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A flesh-borne Kami of the European Arctic.",
+  "claims": [
+   {
+    "text": "Gaia makes flesh-borne Kami only where no Garou or other Kami are at hand to act.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "The White Wolf was an ice elemental bound into the form of a huge pure white wolf with icy blue eyes, roaming Europe’s far north; it avoids people and Garou and is rarely violent despite its strength.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Its purpose is unknown; some think it guards the north from the Wyrm or guides local Garou, and both Silver Fangs and Get of Fenris have benefited from it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Some Garou think it sired the Ice Pack house of the Silver Fangs; others think it may be the true ancestor of the Wendigo.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wapossess-consecration",
+  "title": "The Rite of Consecration",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How possessed characters are bound to patrons.",
+  "claims": [
+   {
+    "text": "There is no single Rite of Consecration: a fomor might be bound by a Black Spiral Dancer, while a Drone simply receives orders from its patron Weaver-spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 103,
+      "pdf": 104
+     }
+    ]
+   },
+   {
+    "text": "A consecrated Drone might find technology works flawlessly around it, or, if bound to a martial spirit such as a Chaos Monitor, gain aid in combat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapossess",
+      "page": 103,
+      "pdf": 104
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wapossess-drones"
+  ]
+ }
+]
