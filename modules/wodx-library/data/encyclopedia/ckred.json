@@ -1,0 +1,43 @@
+[
+ {
+  "id": "ckred-cannibals",
+  "title": "Redcaps who eat their own",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How fae society treats a redcap who devours people.",
+  "claims": [
+   {
+    "text": "A redcap who feeds on mortals or other Kithain keeps it quiet; once word spreads, the local court nearly always sets a high price on that redcap's head.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckred",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Eshu carry news of the sentence far and wide so there is no refuge, and sooner or later the cannibal is hunted down, killed if lucky, punished at length if not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckred",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "redcaps",
+   "eshu",
+   "courts"
+  ]
+ }
+]
