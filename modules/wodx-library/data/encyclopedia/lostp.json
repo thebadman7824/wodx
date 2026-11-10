@@ -1,0 +1,549 @@
+[
+ {
+  "id": "lostp-batini",
+  "title": "The Ahl-i-Batin",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern",
+   "dark-ages"
+  ],
+  "summary": "The Subtle Ones, a vanished Tradition of Unity and secrecy.",
+  "claims": [
+   {
+    "text": "Most Batini come from Middle Eastern cultures, most often Arabic ones, and the Tradition calls itself the Subtle Ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The Ahl-i-Batin are still based mostly in the Middle East at their five khanates, though in recent years members have turned up in the Americas, Africa and the Far East.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Batini prize formal order: without organization, they hold, the Unity cannot be acknowledged.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Training leans on mental drills, riddles and psychic defense, with Mind magic helping to persuade and shape initiates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 19,
+      "pdf": 20
+     },
+     {
+      "book": "lostp",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-khanates",
+   "lostp-taftani"
+  ]
+ },
+ {
+  "id": "lostp-khanates",
+  "title": "The Five Khanates",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The training schools of the Subtle Ones.",
+  "claims": [
+   {
+    "text": "A khanate is one of five Batini training schools, each with its own course of study and its own Murshid at its head.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The khanate called the Oasis of Eternal Bliss fell into corruption and was destroyed utterly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 16,
+      "pdf": 17
+     },
+     {
+      "book": "lostp",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "After that fall the Batini made the post of Qutb, who links the minds of the students and watches them for corruption.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "The Ikhwan at-Tawhid in Makkah has always trained more than its share of the Tradition's assassins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-batini",
+   "lostp-ghayba"
+  ]
+ },
+ {
+  "id": "lostp-ghayba",
+  "title": "Ghayba, the Occultation",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Batini art of vanishing from all senses.",
+  "claims": [
+   {
+    "text": "Ghayba means occultation: a state some extreme Batini reach in which nothing physical or magical can sense them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Facing enemies bent on their destruction, the Batini found their best answer was to disappear, at times quite literally.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Some Batini are so far lost to Occultation that no one can ask them about the Tradition's past.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-batini"
+  ]
+ },
+ {
+  "id": "lostp-iran",
+  "title": "The Batini and Iran",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Shah's fall eased Technocratic pressure on the Subtle Ones.",
+  "claims": [
+   {
+    "text": "The fall of the Shah of Iran and the rule of the Ayatollah ended Technocratic control there, giving the Batini a reprieve.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Training of new Qutbs began in Isfahan in October 1979.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The Batini know the political winds in Iran are shifting and expect their reprieve to end soon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-batini",
+   "lostp-khanates"
+  ]
+ },
+ {
+  "id": "lostp-magic",
+  "title": "Batini Magic",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Subtle Ones work their Arts.",
+  "claims": [
+   {
+    "text": "The Batini keep their magic as subtle as they can, so that a pointed word or a raised eyebrow can draw the response they want.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 33,
+      "pdf": 34
+     },
+     {
+      "book": "lostp",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The Tradition has long studied Correspondence, and each of the five factions approaches it a little differently.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Though Batini know the Solomonic codes for binding djinn, most prefer to deal with abstract spirits, using foci such as mathematics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The Batini spread the labyrinth as a tool of meditation, and such mazes were built in many lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-batini",
+   "lostp-djinn"
+  ]
+ },
+ {
+  "id": "lostp-taftani",
+  "title": "The Taftani",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern",
+   "dark-ages"
+  ],
+  "summary": "The Weavers, Persian wizards of fire and open vulgar magic.",
+  "claims": [
+   {
+    "text": "Most Taftani are not of Arab descent and still resent the Arab conquest of Persia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The Weavers go where they can work magic openly: open, thinly settled lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "The Taftani claim the flying carpets of legend, and still command sandstorms and bind djinn as their heritage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "They do not share the Traditions' idea of Ascension and instead wage the War for Asha against the Druj, the soldiers of falsehood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 70,
+      "pdf": 71
+     },
+     {
+      "book": "lostp",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-asha",
+   "lostp-djinn",
+   "lostp-batini"
+  ]
+ },
+ {
+  "id": "lostp-asha",
+  "title": "Asha and Druj",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Taftani view of truth, order and the soldiers of lies.",
+  "claims": [
+   {
+    "text": "Asha is Truth and right order in the Taftani view, and they also use the word for the Avatar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Those who live by Asha are said to live very long and healthy lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "A mage whose mind is clouded by madness or drugs cannot serve Asha, the Weavers say.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-taftani"
+  ]
+ },
+ {
+  "id": "lostp-devil-kings",
+  "title": "The Last Devil King",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "The Weavers and the end of the Devil Kings.",
+  "claims": [
+   {
+    "text": "In 610 the Weavers joined, uneasily, with the armies of Mohammed to destroy Al-Malek Al-Majun Ibn Iblis, last of the Devil Kings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Many djinn served the Devil Kings in secret, hoping to enjoy both power and revenge on humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-djinn",
+   "lostp-taftani"
+  ]
+ },
+ {
+  "id": "lostp-djinn",
+  "title": "The Djinn",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "ancient",
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "Spirits of smokeless fire, older than humankind.",
+  "claims": [
+   {
+    "text": "The djinn hold that they were made after the elemental spirits but before humans, from smokeless fire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Djinn are Bygones, fading from the world more slowly than most such beings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 105,
+      "pdf": 106
+     }
+    ]
+   },
+   {
+    "text": "Mages who made pacts with djinn often forgot their own side of the bargain once they had what they wanted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "In the War of Enslavement djinn were shut by the score into bottles, flasks and other vessels, and most of the rest were bound to Suleiman or other viziers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 107,
+      "pdf": 108
+     },
+     {
+      "book": "lostp",
+      "page": 108,
+      "pdf": 109
+     }
+    ]
+   },
+   {
+    "text": "Older djinn remember those prisons and still hold a deep grudge against humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "lostp",
+      "page": 22,
+      "pdf": 23
+     },
+     {
+      "book": "lostp",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lostp-taftani",
+   "lostp-devil-kings"
+  ]
+ }
+]

@@ -1807,6 +1807,12 @@
       "title": "Constantinople by Night",
       "short": "CbN",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "lostp",
+      "title": "Lost Paths: Ahl-i-Batin and Taftani",
+      "short": "LP",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2110,6 +2116,7 @@
     "dacbcapp.json",
     "dacbsal.json",
     "daheresy.json",
-    "dacbn.json"
+    "dacbn.json",
+    "lostp.json"
   ]
 }
