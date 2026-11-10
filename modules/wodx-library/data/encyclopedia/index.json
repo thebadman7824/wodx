@@ -667,6 +667,12 @@
    "title": "Rage Across the World, Volume 1",
    "short": "RA World 1",
    "edition": "2nd"
+  },
+  {
+   "id": "ratw2",
+   "title": "Rage Across the World, Volume 2 (Dark Alliance: Vancouver)",
+   "short": "RA World 2",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -780,6 +786,7 @@
   "raru.json",
   "raam.json",
   "rahe.json",
-  "ratw1.json"
+  "ratw1.json",
+  "ratw2.json"
  ]
 }
