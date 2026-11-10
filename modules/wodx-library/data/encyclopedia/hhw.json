@@ -1,0 +1,75 @@
+[
+ {
+  "id": "hhw-arab-imbued",
+  "title": "Imbued of the Middle East",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The imbuing as a worldwide event, seen from Arab lands.",
+  "claims": [
+   {
+    "text": "The imbuing is international and touches every culture; it is not a North American or Western phenomenon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hhw",
+      "page": 17,
+      "pdf": 18
+     },
+     {
+      "book": "hhw",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The Heralds enhance people in ways each hunter can grasp through their own experience and limits, so a hunter's culture and faith shape how they hunt and see themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hhw",
+      "page": 17,
+      "pdf": 18
+     },
+     {
+      "book": "hhw",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Arab imbued are found across fourteen countries of the Middle East, and most turn out to be much like hunters anywhere else.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hhw",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Through the Internet many of these hunters now have a voice in the worldwide hunter community, and foreign hunters visiting the region must learn its outlooks and obstacles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hhw",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-messengers",
+   "hewd-hunters-online"
+  ]
+ }
+]
