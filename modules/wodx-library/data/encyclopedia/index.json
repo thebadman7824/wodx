@@ -1345,6 +1345,12 @@
    "title": "Immortal Eyes: Shadows on the Hill",
    "short": "IE2",
    "edition": "First edition"
+  },
+  {
+   "id": "cie3",
+   "title": "Immortal Eyes: Court of All Kings",
+   "short": "IE3",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1571,6 +1577,7 @@
   "cfool.json",
   "cfhg.json",
   "cie1.json",
-  "cie2.json"
+  "cie2.json",
+  "cie3.json"
  ]
 }
