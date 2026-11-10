@@ -1357,6 +1357,12 @@
    "title": "Inanimae: The Secret Way",
    "short": "Inan",
    "edition": "Second edition"
+  },
+  {
+   "id": "ckow",
+   "title": "The Kingdom of Willows",
+   "short": "KoW",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1585,6 +1591,7 @@
   "cie1.json",
   "cie2.json",
   "cie3.json",
-  "cinan.json"
+  "cinan.json",
+  "ckow.json"
  ]
 }
