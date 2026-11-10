@@ -2035,6 +2035,12 @@
       "title": "Ways of the Wolf",
       "short": "Ways of the Wolf",
       "edition": "First edition"
+    },
+    {
+      "id": "wawwcomp",
+      "title": "Werewolf: The Wild West Companion",
+      "short": "Wild West Companion",
+      "edition": "Wild West"
     }
   ],
   "files": [
@@ -2376,6 +2382,7 @@
     "w20ratw.json",
     "w20wwx.json",
     "waworap.json",
-    "waways.json"
+    "waways.json",
+    "wawwcomp.json"
   ]
 }
