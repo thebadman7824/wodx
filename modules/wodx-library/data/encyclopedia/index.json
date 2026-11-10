@@ -637,6 +637,12 @@
    "title": "Rage Across Egypt",
    "short": "RA Egypt",
    "edition": "2nd"
+  },
+  {
+   "id": "rany",
+   "title": "Rage Across New York",
+   "short": "RA New York",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -745,6 +751,7 @@
   "bkwy.json",
   "raap.json",
   "raau.json",
-  "raeg.json"
+  "raeg.json",
+  "rany.json"
  ]
 }
