@@ -781,6 +781,12 @@
    "title": "Tradition Book: Akashic Brotherhood (Revised)",
    "short": "TB:AB",
    "edition": "Revised"
+  },
+  {
+   "id": "mrcc",
+   "title": "Tradition Book: Celestial Chorus (Revised)",
+   "short": "TB:CC",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -913,6 +919,7 @@
   "m20bos.json",
   "m20botf.json",
   "m20gm.json",
-  "mrab.json"
+  "mrab.json",
+  "mrcc.json"
  ]
 }
