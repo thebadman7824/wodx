@@ -1873,6 +1873,12 @@
       "title": "A World of Rage",
       "short": "A World of Rage",
       "edition": "Revised"
+    },
+    {
+      "id": "waaxis",
+      "title": "Axis Mundi: The Book of Spirits",
+      "short": "Axis Mundi",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -2187,6 +2193,7 @@
     "daspoils.json",
     "daknight.json",
     "dathief.json",
-    "wawor.json"
+    "wawor.json",
+    "waaxis.json"
   ]
 }
