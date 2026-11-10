@@ -499,6 +499,12 @@
    "title": "Tribebook: Fianna (Revised)",
    "short": "TB Fianna",
    "edition": "Revised"
+  },
+  {
+   "id": "tbfen",
+   "title": "Tribebook: Get of Fenris (Revised)",
+   "short": "TB Get of Fenris",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -584,6 +590,7 @@
   "tbfur.json",
   "tbgn.json",
   "tbcog.json",
-  "tbfia.json"
+  "tbfia.json",
+  "tbfen.json"
  ]
 }
