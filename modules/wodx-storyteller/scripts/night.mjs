@@ -3,7 +3,7 @@
  * (folder "WoDX tables", editable); every draw is seeded and goes to the approval queue, and nothing reaches a player
  * or the world before the Storyteller approves it.
  */
-import {MOD, esc, chron, setting, isActiveGM, log, entries, isPC, ownerOf} from "./core.mjs";
+import {MOD, esc, chron, setting, isActiveGM, log, entries, isPC} from "./core.mjs";
 import * as N from "./night-rules.mjs";
 export {N};
 import {NIGHT_TABLES} from "../data/night-tables.mjs";

@@ -33,5 +33,5 @@ test("vessels: the Hunt and Feed windows ask, and a plague year starts on diseas
   assert.match(s, /state: fd\.vstate, drinks: fd\.drinks/);
   assert.match(s, /Intelligence \+ Medicine \(7\)/);
   assert.match(s, /flags\.\$\{MOD\}\.carrier/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.19.4");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.19.5");
 });

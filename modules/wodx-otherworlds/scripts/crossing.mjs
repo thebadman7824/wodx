@@ -1,5 +1,5 @@
 import {MODULE_ID, placeOf} from "./ratings.mjs";
-import {CHARTS, planAttempt, countRoll, outcomeOf, SETTLEMENTS, disconnection} from "./rules.mjs";
+import {planAttempt, countRoll, outcomeOf, SETTLEMENTS, disconnection} from "./rules.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
 
 export const STATUS = {

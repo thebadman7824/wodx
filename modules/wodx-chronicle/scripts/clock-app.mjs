@@ -1,4 +1,4 @@
-import {MODULE_ID, esc, rule, setting, setSetting} from "./util.mjs";
+import {esc, rule, setting, setSetting} from "./util.mjs";
 import {describeTime, getEngine, secondsToNextDusk, secondsToNextDawn, MONTHS, REFORMS} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";

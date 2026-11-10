@@ -33,7 +33,7 @@ export function lineNow() {
 }
 
 export function build(ctx) {
-    const { post, rollPool, rollBlock, dialog, attr, findAbility, setting, spendWillpower, virtues, updateActor } = ctx;
+    const { post, rollPool, rollBlock, dialog, attr, findAbility, spendWillpower, virtues, updateActor } = ctx;
 
     /* ---------------- the inquisitor's sheet ---------------- */
 
@@ -140,7 +140,6 @@ export function build(ctx) {
 
     async function virtueRoll(actor) {
         const i = inq(actor);
-        const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}; Faith ${i.faith}, Wisdom ${i.wisdom}, Zeal ${i.zeal}; Exposure ${i.exposure}. Only Conviction buys a success on these (p. 160).</p>
           <div class="form-group"><label>What</label><select name="k" data-fixed>
             <option value="danger">Terror: walk into danger (Courage + Zeal, 6)</option>

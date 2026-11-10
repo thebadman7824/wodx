@@ -262,7 +262,7 @@
 ### WoDX Actions 3.2.0 (Combat 3.4.1, Creation 0.4.2), 2026-11-07: the Actions suggestions (Ben's request)
 
 - **New data** (mechanics as codes, summaries in WoDX's own words, page references; no book text):
-  - `data/disciplines-daw.json`: 329 entries from VtDA20 pp. 188–316 — every Discipline and variant at levels 1–5 with roll, difficulty, cost, duration and a short summary; Celerity, Fortitude and Potence 1–5 as passive; Thaumaturgy, Koldunic and Necromancy path powers with their tradition's rule; 122 elder powers by name, level and page.
+  - `data/disciplines-daw.json`: 329 entries from VtDA20 pp. 188–316: every Discipline and variant at levels 1–5 with roll, difficulty, cost, duration and a short summary; Celerity, Fortitude and Potence 1–5 as passive; Thaumaturgy, Koldunic and Necromancy path powers with their tradition's rule; 122 elder powers by name, level and page.
   - `data/roads-daw.json`: nine Roads (Beast, Heaven, Humanity, Kings, Lilith, Metamorphosis, Sin, Bones, Yasa) and their Paths, with aura, Virtues, pages and paraphrased hierarchies of sins (rationales not reproduced).
 - **New features** (`scripts/kindred.js`, pure rules in `scripts/kindred-rules.js`):
   - Use a Discipline: powers from the sheet's dots and paths (search box), pool, difficulty from the target, blood and Willpower paid, a timed effect for its duration. The Forgetful Mind marks a witness as made to forget.
@@ -1170,3 +1170,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 ## Phase 10, polish: code review, first pass (2026-11-10)
 - ESLint (no-undef, unreachable, duplicate keys and cases, unsafe chaining) over every module and the fork. Modules: 1 real error class only, reads of another module's flags and settings that throw when that module is off: Sheets 0.6.1 and NPC 0.8.1 (Creation's lineage flag), Otherworlds 0.7.1 (Chronicle's journal flag and latitude). System 7.3.2-wodx.4: adding a bonus on a sheet threw, a PC-sheet ability with a specialty threw in the roll dialog, plus three wrong names in error paths.
 - 37 unused variables and helpers listed for the dead-code part.
+
+## Phase 10, polish: AI tells and dead code (2026-11-10)
+- AI-tell scan of module strings, docs and all 2603 encyclopaedia entries: stock phrases, placeholders, emoji, em-dashes. Few hits; most were game terms (the Tapestry, the Delve Edge). Seven encyclopaedia summaries built on "X at the heart of Y" were reworded, and one em-dash came out of this log. The text-cleanup test now fails on a list of stock phrases and on placeholder text in any module string.
+- Dead code: the 37 unused imports, helpers and locals that ESLint found are gone. WoDX Actions' core-rules.js kept a second copy of the dice and health rules; it now passes WoDX Combat's copy through (every name it uses was already in Combat 3.7.4, the version on Live). The two profiles.js files stay as identical copies by design (whichever module loads first registers them). Old migrations from the vtda20 flags are kept, since the Live world cannot be checked from here.
+- Versions: Actions 3.19.5, Chronicle 0.11.2, Combat 3.8.5, Creation 0.9.1, Interactables 0.20.2, Library 0.4.5, NPC 0.8.2, Otherworlds 0.7.2, Paperdoll 0.6.4, Storyteller 0.18.4. Harness 983/983.

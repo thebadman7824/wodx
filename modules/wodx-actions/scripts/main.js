@@ -408,7 +408,6 @@ const btn = (action, label) => `<button type="button" class="vta-btn" data-actio
 function opts(entries, sel) {
     return entries.map(([v, l]) => `<option value="${esc(v)}" ${String(v) === String(sel) ? "selected" : ""}>${esc(l)}</option>`).join("");
 }
-const readForm = P.readForm;
 function rootOf(html) { return html instanceof HTMLElement ? html : (html?.[0] ?? html); }
 
 async function dialog(title, content, label, callback, { width = 460, render = null } = {}) {
@@ -2171,7 +2170,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.4",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.5",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

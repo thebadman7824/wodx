@@ -319,7 +319,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
 
 export function build(ctx) {
-    const { post, rollPool, rollBlock, resultLine, diceHtml, API, action, updateActor, willpower, attr, findAbility, setting } = ctx;
+    const { post, rollPool, rollBlock, API, action, updateActor, willpower, attr, findAbility, setting } = ctx;
 
     async function pay(actor, resId, cost) {
         if (!cost) return null;

@@ -19,7 +19,6 @@ const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const REF = M.REF;
 const ATTRS = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];
-const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());
 
 export const isMummy = actor => !!actor && (actor.type === "Mummy" || !!actor.system?.settings?.hasbalance && !!actor.system?.settings?.hassekhem);
 

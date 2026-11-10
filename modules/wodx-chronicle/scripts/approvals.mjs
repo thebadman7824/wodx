@@ -1,4 +1,4 @@
-import {MODULE_ID, esc, emit, isActiveGM, setting, setSetting} from "./util.mjs";
+import {esc, emit, isActiveGM, setting, setSetting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
 import * as QR from "./approvals-rules.mjs";
 

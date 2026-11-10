@@ -156,13 +156,12 @@ export function build(ctx) {
             if (n(fd.wp)) notes.push(`${fd.wp} Willpower`);
             let body = notes.length ? `<div class="vta-parts">${notes.map(esc).join(" · ")}</div>` : "";
             const rolls = [];
-            let faces = [], successes = 1;
+            let faces = [];
             if (a.r) {
                 const [at, sec] = a.r.split("+");
                 const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
                 const r = await rollPool(dice, fd.diff);
                 rolls.push(r.roll); faces = r.faces ?? [];
-                successes = r.botch ? 0 : r.successes;
                 body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : []);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }

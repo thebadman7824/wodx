@@ -19,7 +19,6 @@ const flagUnset = (doc, scope, key) => doc.update({[`flags.${scope}.-=${key}`]: 
 const SNAPSHOT_FOLDER = "WoDX · Before the years";
 const yearOf = time => getEngine().timeToDate(Number(time) || 0).year;
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
-const chronicle = () => game.modules.get("wodx-chronicle")?.api;
 const loc = key => (typeof key === "string" && key.startsWith("wod.") ? (game.i18n?.localize?.(key) ?? key) : key);
 
 /** The house-rule switches, read from WoDX Chronicle (rule.<id>). */
