@@ -1,0 +1,271 @@
+[
+ {
+  "id": "wahenge-beast-courts",
+  "title": "The Beast Courts of the Emerald Mother",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Society of the Eastern shapeshifters.",
+  "claims": [
+   {
+    "text": "The Beast Courts of the Emerald Mother are the formal name for hengeyokai society, often shortened to the Courts, which some elders find disrespectfully terse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 22,
+      "pdf": 10
+     },
+     {
+      "book": "wahenge",
+      "page": 23,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Every Gaian shapeshifter of the East counts as an honorary member, and some swear themselves fully to the Courts’ law.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 22,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "The Court of Ancestors is the society of hengeyokai Ancestor-spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 23,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wahenge-terms"
+  ]
+ },
+ {
+  "id": "wahenge-terms",
+  "title": "Hengeyokai terms",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Words used across the Beast Courts.",
+  "claims": [
+   {
+    "text": "A bakemono is a fomor, and centipede is slang for the Wyrm or its servants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 22,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "A dragon nest is a poetic shen term for a caern, and a dragon line is a line of strong Chi between nests, either a Yang line like a Moon Bridge or a Yin line like a Byway.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 23,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The Age of Testing is the Fourth Age, a time of war and strife from prehistory to the present millennium.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 22,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wahenge-beast-courts"
+  ]
+ },
+ {
+  "id": "wahenge-hakken-gifts",
+  "title": "Hakken Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of the Japanese werewolves.",
+  "claims": [
+   {
+    "text": "Hakken Gifts include Dream of a Thousand Cranes, Fair Path, Storm Winds Slash, Dark of Night, Living Treasure and Divine Wind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 64,
+      "pdf": 52
+     },
+     {
+      "book": "wahenge",
+      "page": 65,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Living Treasure, taught by an Ancestor-spirit, uses a touch and Manipulation + Etiquette at difficulty 7 to make an object’s awakened spirit tell one fragment of its history per success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 64,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Divine Wind, taught by an Ancestor-spirit or a servant of Narukami, costs at least one Rage and Stamina + Enigmas at difficulty 7, raising a storm a mile in radius per success that tears up trees, cars and buildings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 65,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wahenge-khan-kumo-gifts",
+  "title": "Khan and Kumo Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of the weretigers and werespiders.",
+  "claims": [
+   {
+    "text": "Khan Gifts include Gift of the Cricket, Tiger and Heaven Thunder Hammer, a level five blow that channels Heaven to shatter walls and splinter trees.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 69,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Kumo Gifts include Nimbleness, Shadow Step, Replenishment of the Flesh, Spittle of Corrosion, Snare of Beauty, Web Tremors and Elder Wisdom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 75,
+      "pdf": 63
+     },
+     {
+      "book": "wahenge",
+      "page": 76,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Elder Wisdom lets the Kumo commune with Marawa, Rati or Nareau, who may share secrets or, if out of sorts, punish the asker.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 76,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wahenge-nagah-gifts",
+  "title": "Nagah Gifts in the East",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of the wereserpents.",
+  "claims": [
+   {
+    "text": "Nagah Gifts include Eyes of the Dragon Kings, Veil of the Wani, Blessings of Kali, Breath of Sweet Amrita, Gaze of the Serpent, Breath of the Dragon Lords and Call the Flood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 79,
+      "pdf": 67
+     },
+     {
+      "book": "wahenge",
+      "page": 80,
+      "pdf": 68
+     },
+     {
+      "book": "wahenge",
+      "page": 81,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Call the Flood costs three Gnosis and a Gnosis roll, raising the waters a mile in radius per success against those who abuse the River.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 81,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "It is seldom used now, though legends tell of whole villages wiped out after offending the Nagah.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wahenge",
+      "page": 81,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

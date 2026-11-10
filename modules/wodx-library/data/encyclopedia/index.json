@@ -1957,6 +1957,12 @@
       "title": "Hammer and Klaive",
       "short": "Hammer and Klaive",
       "edition": "Revised"
+    },
+    {
+      "id": "wahenge",
+      "title": "Hengeyokai: Shapeshifters of the East",
+      "short": "Hengeyokai",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2285,6 +2291,7 @@
     "wafreak.json",
     "wafrontier.json",
     "waguard.json",
-    "wahammer.json"
+    "wahammer.json",
+    "wahenge.json"
   ]
 }
