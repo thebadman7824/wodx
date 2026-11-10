@@ -474,7 +474,7 @@ OPENING_FLAGS = {
 }
 BARRED_INSIDE = {"door", "double", "window"}     # a bar or peg on the inside, not set
 TILE_RULES = [   # (asset prefix, label, flags)
-    ("Chest_", "Chest", {"container": True, "kind": "chest", "lock": "cheap", "items": ""}),
+    ("Chest_", "Chest", {"container": True, "kind": "chest", "lock": "cheap", "items": "", "fillPlace": "home"}),
     ("Single_Bed", "Box bed", {"hide": True, "hideKind": "bed", "title": "Under the box bed"}),
     ("Hay_Pile", "Hay pile", {"hide": True, "hideKind": "crawl", "room": 2, "title": "Down in the hay"}),
     ("Brick_Oven", "Oven", {"light": True, "lightKind": "torch", "title": "The bread oven"}),

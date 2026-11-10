@@ -7,7 +7,8 @@
  *   1. the module: Interactables 0.19.0 or later, api.adopt
  *   2. the plan: 10 doors and shutters found, none new, 8 things, 1 light, the regions (4 with WoDX NPC on, else 2)
  *   3. applied: tiles, the light, regions and walls are real Foundry documents that Interactables reads
- *   4. the oven tile works its light; the house region is a home place; the track trigger is a WoDX: Trigger
+ *   4. the oven tile works its light; the house region is a home place; the track trigger is a WoDX: Trigger;
+ *      the chest's fill starts from a home (Interactables 0.20.0)
  *   5. the Scenes sidebar menu has Adopt a generated map and, once adopted, Undo the map adoption
  *   6. adopting again finds nothing new
  *   7. Undo removes what was made and puts the door walls back
@@ -61,8 +62,8 @@ export async function run() {
     const home = scene.regions.find(r => r.name === "Longhouse");
     const trig = scene.regions.find(r => r.name === "Track into the steading");
     ok("4. oven, place, trigger", api.describeTile(oven)?.on === true && api.lightsOf(oven).length === 1 && home?.flags?.["wodx-npc"]?.place?.kind === "home"
-      && (!npcOn || trig?.behaviors?.contents?.[0]?.type === "wodx-npc.trigger"),
-      {ovenOn: api.describeTile(oven)?.on, place: home?.flags?.["wodx-npc"]?.place, trig: trig?.behaviors?.contents?.map(b => b.type), shapes: home?.shapes?.map(s => s.type)});
+      && (!npcOn || trig?.behaviors?.contents?.[0]?.type === "wodx-npc.trigger") && api.fill.guess?.(tiles.find(t => t.flags?.[MOD]?.container))?.place === "home",
+      {ovenOn: api.describeTile(oven)?.on, place: home?.flags?.["wodx-npc"]?.place, trig: trig?.behaviors?.contents?.map(b => b.type), shapes: home?.shapes?.map(s => s.type), fill: api.fill.guess?.(tiles.find(t => t.flags?.[MOD]?.container))});
 
     const opts = [];
     Hooks.callAll("getSceneContextOptions", ui.scenes, opts);

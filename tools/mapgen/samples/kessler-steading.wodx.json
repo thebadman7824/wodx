@@ -275,7 +275,8 @@
     "container": true,
     "kind": "chest",
     "lock": "cheap",
-    "items": ""
+    "items": "",
+    "fillPlace": "home"
    }
   },
   {

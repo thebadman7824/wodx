@@ -6,6 +6,8 @@
  * the Storyteller keeps goes in. Guns too big to carry, ship and siege gear and parries are never drawn; cyberware
  * only in a clinic. A small container (a box, drawers, a strongbox, a safe) only takes what can be hidden in a
  * coat or smaller.
+ * 0.20.0: the place starts at a first guess: the container's own fill place (a generated map's file can set it), else
+ * the WoDX NPC place tag of the region it sits in, else the scene's tag, else a home. The Storyteller can change it.
  */
 
 /** What kind of thing an item of Gear by era is, or null when it never goes in a container. */
@@ -32,6 +34,23 @@ export const PLACES = {
   camp: {label: "A soldiers' or travellers' camp", w: {melee: 2, ranged: 2, thrown: 1, armor: 2, shield: 2, cyber: 0}},
   clinic: {label: "A clinic or a back-room surgeon", w: {melee: 1, ranged: 0, thrown: 0, armor: 0, shield: 0, cyber: 4}}
 };
+
+/** The fill place that fits each kind of WoDX NPC place; null where none fits (then a home). */
+export const FROM_NPC_PLACE = {
+  home: "home", haven: "home", tavern: "home", workplace: "workshop", market: "workshop", church: "church",
+  gate: "armory", castle: "armory", wilds: "camp", street: null, caern: null, other: null
+};
+
+/**
+ * The first guess of place for a container. own: its fillPlace flag; regions: the place kinds of the regions it sits
+ * in, the smallest first; scene: the scene's place kind. Returns {place, from: "own" | "region" | "scene" | null}.
+ */
+export function placeGuess({own = null, regions = [], scene = null} = {}) {
+  if ( PLACES[own] ) return {place: own, from: "own"};
+  for ( const k of regions ?? [] ) if ( FROM_NPC_PLACE[k] ) return {place: FROM_NPC_PLACE[k], from: "region"};
+  if ( FROM_NPC_PLACE[scene] ) return {place: FROM_NPC_PLACE[scene], from: "scene"};
+  return {place: "home", from: null};
+}
 
 /** Containers that only take small things: what hides in a pocket, a jacket or a coat. */
 export const SMALL = new Set(["box", "drawers", "strongbox", "safe"]);

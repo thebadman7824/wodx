@@ -1113,3 +1113,11 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - The farmstead generator (tools/mapgen/ddfarm.py, Dungeondraft edition) now also writes kessler-steading.wodx.json: 10 doors and shutters, 8 things (a locked chest, two box beds and three heaps of hay to hide in, the bread oven as a light, the well as a rope climb), the longhouse as a home and the barn as a workplace, and trigger regions on the track and the footbridge. A copy is in tools/mapgen/samples/.
 - Interactables 0.19.0: adopt-rules.mjs (read and check the file, place it on the scene, match the imported door walls, build the plan) and adopt.mjs (the scene's right-click menu: Adopt a generated map, and Undo the map adoption). B404.
 - Tests: 947 harness pass (11 new in adopt.test.mjs). Not gated in Foundry yet: the gate imports the farmstead with the Universal Battlemap Importer and adopts it in rothenstein-wodx.
+
+
+## 2026-11-10: a container's fill starts from where it sits (Interactables 0.20.0)
+
+- fill-rules.mjs: placeGuess and FROM_NPC_PLACE; fill.mjs: guessFor reads the container's Usual contents, then the place tags of the regions it sits in (smallest first), then the scene's tag, straight from the flags so it works with WoDX NPC off. The draw window shows where the guess came from. B405.
+- The tile config has a Usual contents field; the farmstead's file sets the chest to a home.
+- gateadopt step 4 also checks the chest's guess.
+- Tests: 949 harness pass (2 new).
