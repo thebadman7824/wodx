@@ -1,0 +1,205 @@
+[
+ {
+  "id": "tbsf-sun-and-moon",
+  "title": "Ordained by Sun and Moon",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The Silver Fang claim to rule the Garou Nation.",
+  "claims": [
+   {
+    "text": "Silver Fang lore says the tribe took up a human style of rule ordained by the Sun while still pledging its victories and stories to Luna.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 20,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Fangs hold that winning Falcon's promise made them the only tribe blessed by both Sun and Moon, and they see this as the root of their right to lead.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 20,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Their tales remember Arak Mammoth-Bold as a great king and master tactician who died leading attacks on a manifestation of the Beast-of-War.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 20,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silver-fangs"
+  ]
+ },
+ {
+  "id": "tbsf-mother-country",
+  "title": "The Mother Country",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Russia and its Silver Fangs in the modern nights.",
+  "claims": [
+   {
+    "text": "Fangs say real power in many nations still lies with an unseen aristocracy of the wealthy and well connected, which lets the tribe keep its old privilege hidden.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 31,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "In the Mother Country, after long dark years and recent wars, Queen Tamara Tvarivich leads the tribe toward a new era of power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 31,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The Russian Fangs' totem, Firebird, is kin to Phoenix and is said to foresee the Final Battle.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 31,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silver-fangs"
+  ]
+ },
+ {
+  "id": "tbsf-houses",
+  "title": "The Silver Fang Houses",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How bloodline and place shaped the tribe's houses.",
+  "claims": [
+   {
+    "text": "Silver Fang houses were once defined by bloodline, which followed the lands each house settled after leaving the Mother Country.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 37,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Today bloodline counts for less: Kin scattered by migration bear cubs far from their house's septs, and many join whichever house takes them in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 37,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "House Wyrmfoe holds lands in the American northeast, while House Wise Heart traditionally ruled the Mediterranean and Middle East.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 37,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silver-fangs",
+   "tbsf-mother-country"
+  ]
+ },
+ {
+  "id": "tbsf-kinfolk",
+  "title": "Silver Fang Kin and Ancestors",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the tribe keeps its bloodlines and remembers its kings.",
+  "claims": [
+   {
+    "text": "Some septs keep Kin-Fetches watching their Kinfolk for up to three generations, so that new Garou are found before their First Change goes wrong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 48,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "In the last century, especially in America and House Unbreakable Hearth, Fangs began choosing Kin for honesty, courage and ambition and not only wealth or lineage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 48,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Dead kings and lords of the tribe dwell in the Summer Lands of the Umbra, attended by Sun spirits, and answer when the need is great.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsf",
+      "page": 48,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silver-fangs",
+   "kinfolk",
+   "tbsf-houses"
+  ]
+ }
+]
