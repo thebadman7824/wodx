@@ -1,0 +1,311 @@
+[
+ {
+  "id": "vac-weeping-moon",
+  "title": "The Enlightened Society of the Weeping Moon",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "America's leading secret society of the age.",
+  "claims": [
+   {
+    "text": "Among America's many secret societies the foremost is the Enlightened Society of the Weeping Moon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "It has much in common with Freemasonry and almost surely grew from it; like the Masons it keeps its rites and business from outsiders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "vac-glastonbury-tor",
+  "title": "Glastonbury Tor",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "A thaumaturgical focus the Tremere guard.",
+  "claims": [
+   {
+    "text": "The castle on the Tor remains a strong thaumaturgical focus, and the local Tremere guard it closely in hope of tapping its power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "After Arthur's grave was found in the 1100s, stones from the castle went into building the Church of St. Michael on the Tor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daf-glastonbury",
+   "da-tremere"
+  ]
+ },
+ {
+  "id": "vac-strasbourg",
+  "title": "Strasbourg",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "A free city for Kindred travellers.",
+  "claims": [
+   {
+    "text": "Kindred treat Strasbourg as a handy starting point for almost anywhere in Western Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Its primogen keep the old garrison town free for travellers who can pay their way and are wise enough not to make trouble, using the resented mortal government as cover.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "vac-royal-web",
+  "title": "Victoria's Royal Web",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "How the queen's family ties tangle the Kindred of Europe.",
+  "claims": [
+   {
+    "text": "Queen Victoria's grandchildren married into the ruling houses of Germany, Russia, Greece, Romania, Spain, Sweden, Norway, Denmark and the old Bourbon-Orleans line of France.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "These ties keep throwing together Kindred from across Europe who would otherwise have little in common, and the friction that follows is constant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "vac-strasbourg"
+  ]
+ },
+ {
+  "id": "vac-new-orleans",
+  "title": "New Orleans After Reconstruction",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Northern Kindred who stayed on.",
+  "claims": [
+   {
+    "text": "The end of Reconstruction in 1877 eased the city's burdens but left behind a group of Kindred from the North who had tasted power there and want more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "These newcomers, mostly Ventrue, are based in the American Quarter and work out of the St. Charles Hotel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-ventrue"
+  ]
+ },
+ {
+  "id": "vac-mexico",
+  "title": "Mexico in the Victorian Age",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Chaos the Lasombra feed.",
+  "claims": [
+   {
+    "text": "The United States, relying on the Monroe Doctrine, loomed over a battered Mexico as the Colossus of the North, while rival leaders inside the country extorted tribute.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Fast-changing governments and fighting between troops and mercenary bands disrupt trade; the Lasombra fund groups and pass supplies to front organisations to stir further unrest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-lasombra"
+  ]
+ },
+ {
+  "id": "vac-passaglia",
+  "title": "The Passaglia",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Giovanni merchants of the East.",
+  "claims": [
+   {
+    "text": "The Passaglia, a merchant family within the Giovanni who arrived with Marco Polo's expedition, are the classic example of Kindred who crossed into Asia early.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "The Passaglia, and the Giovanni in general, credit their success in Asia to standing outside the Camarilla.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni"
+  ]
+ },
+ {
+  "id": "vac-africa",
+  "title": "Kindred and the Interior of Africa",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Why most Kindred ignored the heart of the continent.",
+  "claims": [
+   {
+    "text": "Traders in gold, ivory and slaves mostly kept to coastal posts and waited for native middlemen to bring goods to them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Most Kindred cared even less for the African interior, being busy holding on to their European domains.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "vac",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dc1-laibon"
+  ]
+ }
+]
