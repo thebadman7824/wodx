@@ -44,17 +44,37 @@ const O={
 'o2|2089':'The firm collapses when the last state that tolerated it turns on it after a Spectral attack on its own projectors (y11).',
 };
 // Ben's date moves, run h (2026-11-10 16:54Z)
-const MOVE={'d3|2068':'2079','d1|2079':'2068'};
+let MOVE={'d3|2068':'2079','d1|2079':'2068'};
 const EXTRA=[
 ['2027','Hunter · Night City','The registry, the Hunter Act and its deputies share one city: deputies police unregistered Kindred (y02).'],
 ['2039','Hunter · Lyon','The burning of a changeling freehold in Lyon splits the imbued; the Merciful walk out of the crusade (y12).'],
 ['2047','Demon · Mummy','The Alexandria school and the Reconcilers become uneasy allies, both working to undo the harm of the 2025 flood (y18).'],
 ];
+
+// Last check (run i) verdicts, 2026-11-10 17:03Z: z01-z05, z07, z08 OK; z06 fixed by Ben to 2059.
+Object.assign(O,{
+'mu2|2039':'The first copies walk out of the labs: bodies that come back breathing with no mind, no memory and no Ba. Biotechnica sells them quietly as organ stock and soldiers (z01).',
+'mu2|2057':'The corps start hunting true mummies for their Ba. Mummies hide their rebirths where no scanner reaches, deep in the glass and in tombs below the arcologies (z01).',
+'mu2|2083':'The first copy that keeps its mind: a corp brings its executives back with Ba stolen from captured mummies. They return as themselves, without Ma\'at (z01).',
+'h1|2027':'The Free States pass a Hunter Act. Registered imbued get powers of arrest over any unregistered being without a heartbeat, and a bounty schedule by creature. Registered Kindred answer to their corps; Fallen, changelings and mummies have heartbeats and fall outside the Act (z02).',
+'k1|2042':'Japan\'s registry covers the Kuei-jin too, so registered Courts can sign contracts. They rebuild openly inside the arcologies with corp sponsors and mortal staff, moving in for the last of the nests\' chi though the Weaver\'s grip is starving them (y15, z03). Unregistered Kuei-jin stay in the night markets of Hong Kong and Taipei.',
+'h3|2044':'Merciful imbued broker the Night City Accord, the local form of the Hunter Act: registered Kindred sign it as a condition of their contracts, Garou packs keep out of the arcologies (Garou under corp contract excepted), hunters keep the peace (y02, z04).',
+'h3|2063':'The Accord spreads to a dozen cities in the Free States, Japan and the Pacific Rim, never into the crusade\'s Europe. Visionaries study why the Messengers chose them, and some find answers in old Arcanum files on Kelvin (z04).',
+'w2|2085':'Glass Walkers working arcology security under corp contract find wild spirits trapped in the arcology walls, still alive, still calling. The find feeds the distrust that breaks the Accord a year later (z04).',
+'o3|2070':'The dead start coming back into bodies by themselves: driven out by the Tempest and through the projectors\' holes, those whose bodies still lie in suspension or a morgue drawer go back to their own, and the rest take whoever is nearest. They are possessions, not rebirths; only mummies return whole (z05).',
+'m3|2084':'The Nephandi find the Net soon after the first Awakenings there. Code that should not compile begins to run, and some of the newly Awakened are drawn to it. The Adepts blame the AI\'s Weaver side; the AI blames the Adepts (z06).',
+'c1|2098':'By 2098 the Dreaming is almost gone from the waking world, kept by a few oathcircles in the wastes, and those fae who remain feel the Endless Winter closing (z07).',
+'c2|2098':'By 2098 what is left of the Dreaming lives mostly in the Net, in the last large freeholds among the dream market\'s ruins, and no one knows if they will survive (z07).',
+'w1|2098':'By 2098 the Garou are split between those inside the system and those who burned their contracts, and in the preserves the Wyrm\'s servants hold more caerns than Gaia\'s (z08).',
+'m1|2098':'By 2098 the Free States and Night City are one push away from belief in magic or belief in machines, and both the Traditions and the Union mean to use them to push the rest of the world (z08).',
+});
+MOVE['m3|2084']='2059';
+const TAGO={'h1|2036':'Hunter · Free States, Pacific Rim'};
 const ev=[];
 for(const s of SCEN){ if(DROP.has(s.id)) continue;
  const tag=s.line+(REGION[s.id]?' · '+REGION[s.id]:'');
- for(const [y,t] of s.beats){ const k=s.id+'|'+y; ev.push([MOVE[k]||y,tag,(O[k]||t)+' ('+s.id+')']); delete O[k]; }
- ev.push(['2098',tag,s.fall+' ('+s.id+')']);
+ for(const [y,t] of s.beats){ const k=s.id+'|'+y; ev.push([MOVE[k]||y,TAGO[k]||tag,(O[k]||t)+' ('+s.id+')']); delete O[k]; }
+ {const k=s.id+'|2098';ev.push(['2098',tag,(O[k]||s.fall)+' ('+s.id+')']);delete O[k];}
 }
 if(Object.keys(O).length) throw new Error('unused overrides '+Object.keys(O));
 for(const e of EXTRA) ev.push(e);
