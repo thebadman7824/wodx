@@ -541,6 +541,12 @@
    "title": "Tribebook: Stargazers (Revised)",
    "short": "TB Stargazers",
    "edition": "Revised"
+  },
+  {
+   "id": "tbuk",
+   "title": "Tribebook: Uktena (Revised)",
+   "short": "TB Uktena",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -633,6 +639,7 @@
   "tbsl.json",
   "tbss.json",
   "tbsf.json",
-  "tbsg.json"
+  "tbsg.json",
+  "tbuk.json"
  ]
 }
