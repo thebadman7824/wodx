@@ -949,6 +949,12 @@
    "title": "The Fallen Tower: Las Vegas",
    "short": "FTLV",
    "edition": "Revised"
+  },
+  {
+   "id": "mrbom",
+   "title": "The Book of Madness",
+   "short": "BoM",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1109,6 +1115,7 @@
   "mrlp.json",
   "mrbt.json",
   "mrman.json",
-  "mrftlv.json"
+  "mrftlv.json",
+  "mrbom.json"
  ]
 }
