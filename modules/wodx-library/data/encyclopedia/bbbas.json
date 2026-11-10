@@ -1,0 +1,205 @@
+[
+ {
+  "id": "bbbas-saraam",
+  "title": "Saraam and the Cat Kings",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The Bagheera tale of their own beginning.",
+  "claims": [
+   {
+    "text": "Bagheera tell of Saraam, a woman who took two cat kings as mates, a black one of wisdom and magic and a spotted one of anger and war, and bore ten children, half human and half cat.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "In the tale, the Moon touched each child and turned it into its opposite, and the children went out to drive the serpents from the land.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The Bagheera call their duty dhamma: keeping the truce between big cats and humans and hunting the serpent of corruption.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-bastet"
+  ]
+ },
+ {
+  "id": "bbbas-bagheera",
+  "title": "The Bagheera",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The werepanthers and wereleopards of India and Africa.",
+  "claims": [
+   {
+    "text": "Werepanthers and wereleopards are one tribe from India and northern Africa, keeping a pact begun in the Impergium under which humans and big cats keep peace with each other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Over the ages the Bagheera pressed their Garou cousins to end the Impergium and sought peace with the Silent Striders, Children of Gaia and Black Furies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Most Bagheera stay close to both human and feline Kin, and no other Bastet tribe is as numerous or as respected.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-bastet",
+   "impergium",
+   "bbbas-saraam"
+  ]
+ },
+ {
+  "id": "bbbas-yava",
+  "title": "The Yava",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The three secrets each Bastet tribe guards.",
+  "claims": [
+   {
+    "text": "Bastet say their tongue, Khwar, comes from the first talks of the First Pride, and only a werecat taught by a mentor, a kuasha, grasps its finer points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 79,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "At the end of the First Year the kuasha gives the young cat three tribal secrets, the Yava, and departs; any or all of them may be true, and an outsider who learns them endangers the whole tribe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 79,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "By Seline's decree a Yava passes only with consent and no mind magic can take it, though torture can; some say early Garou tortured captive werecats for them and used them to slaughter tribes.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 79,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "A kit judged unready is left alone and watched from afar, and is told the Yava only after growing up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 79,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-bastet"
+  ]
+ },
+ {
+  "id": "bbbas-pryio",
+  "title": "Pryio and Breeds",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How werecats sort themselves by birth and by the hour.",
+  "claims": [
+   {
+    "text": "Werecats name breeds bluntly: the human-born are monkeychildren, metis come of a forbidden union of two Bastet, and the cat-born are wildcats, raised by big cats whose numbers are dwindling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 90,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "Each Bastet also has a pryio, the time of day tied to temperament: Daylight for an open heart, Twilight for complex and artistic minds, Night for those who guard their privacy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbbas",
+      "page": 90,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-bastet",
+   "bbbas-yava"
+  ]
+ }
+]
