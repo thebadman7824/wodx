@@ -871,6 +871,12 @@
    "title": "Guide to the Traditions",
    "short": "GttT",
    "edition": "Revised"
+  },
+  {
+   "id": "m2gtech",
+   "title": "Guide to the Technocracy",
+   "short": "GttTech",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -1018,6 +1024,7 @@
   "mrpg.json",
   "mrsy.json",
   "mrvoid.json",
-  "mrgtt.json"
+  "mrgtt.json",
+  "m2gtech.json"
  ]
 }
