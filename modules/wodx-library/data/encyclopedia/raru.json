@@ -1,0 +1,231 @@
+[
+ {
+  "id": "raru-tatar-yoke",
+  "title": "Garou and the Tatar Yoke",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance"
+  ],
+  "summary": "A tribal quarrel behind Mongol rule in Russia.",
+  "claims": [
+   {
+    "text": "With Kin of their own among the Mongol clans, the Shadow Lords quietly backed the Tatar Yoke over Russia from about 1240 to 1480.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "When the Silver Fangs demanded those families leave Fang lands, the Shadow Lords answered that they had no hold over the Mongols.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Ivan III's marriage to Sophia Paleologos, niece of the last Byzantine emperor, gave the Silver Fangs the new royal blood they wanted for their Kin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadow-lords",
+   "silver-fangs",
+   "tbsf-mother-country"
+  ]
+ },
+ {
+  "id": "raru-white-nights",
+  "title": "The White Nights",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Russia's summer solstice and its effect on the Kindred.",
+  "claims": [
+   {
+    "text": "During the White Nights of June, the sun stays up for two or three weeks north of St. Petersburg.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Kindred there are at their weakest and must sleep through it, while Garou roam freely and the Inquisition and Orthodox Church hunt the sleeping vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "The oldest and most powerful vampires of Russia travel south for the season or hide where no one can find them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kindred",
+   "inquisition"
+  ]
+ },
+ {
+  "id": "raru-russian-umbra",
+  "title": "The Russian Umbra",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Spirit Russia, lovely and ruined.",
+  "claims": [
+   {
+    "text": "Russia's Umbral forests are rich with Wyldlings and spirits, so beautiful they move even hard-hearted Garou, and wind spirits gossip under the great trees.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Where the land was ravaged, pollution Banes walk instead, tree spirits sour into Blight Children and the Leshii forest spirits twist into violent horrors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "In the worst places the Gauntlet has worn thin, spirits drift in and out unknowing, and mortals who stray there are rarely seen again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Russian cities in the Umbra are grey geometric mazes linked by twisting pipes, where spirits become cold automatons and people walk like the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "banes",
+   "bkw-machine"
+  ]
+ },
+ {
+  "id": "raru-zmei",
+  "title": "The Great Zmei",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The seven dragons of Russian legend.",
+  "claims": [
+   {
+    "text": "Baba Yaga summoned seven great dragons, the Zmei, named in Russian lore as Shazear, Goluko, Trevero, Illyana, Gregornous, Sharkala and Rustarin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "They began as Wyld creatures of an older age before the Wyrm's corruption dragged them down, and each resembles the Wyrm.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "For years they ruled wide dragon lands that people feared to enter, until the Silver Fangs of Russia drove them into slumber.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Russian lore remembers mages, not Garou, as the dragon-slayers of old.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "raru",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbn-baba-yaga",
+   "silver-fangs",
+   "wyrm"
+  ]
+ }
+]
