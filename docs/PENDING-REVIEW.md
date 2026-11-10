@@ -194,7 +194,9 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 | 2026-11-09 | Consensus: M20 Reality Zones (optional in the book) | Off by default ("one Consensus everywhere"); "the place decides" reads each scene's accepted styles (B330). | Change "Reality Zones" in the settings. |
 | 2026-11-09 | Paperdoll tokens: which art should player tokens use? | A new code generator in the Rothenstein illuminated style (tools/paperdoll/illum.py), built as layers (ground, clothes, neck, face, brows, beard, moustache, hair) with the era ring from Atmosphere. First test: Sir Reinhold von Teck in Dark Ages and Victorian dress. The script that drew the 115 existing busts was not found on the PC. | Use the LPC sprites instead (tools/paperdoll/doll.py, samples in project files paperdoll/), or another source from the comparison on the Paperdoll Tokens study page. |
 
-## Waiting for review
+## Approved by Ben, 10 November 2026
+
+Ben approved every entry below, which had been waiting for review, at 04:03 UTC on 10 November 2026. Each still lists how to reverse it. Where a row says a choice was left for Ben (the KotE shelf label, Live keeping moves out of turn Off), the approval keeps it as it stands; Live settings still change only when Ben says.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -242,3 +244,8 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 | 2026-11-10 | Audit, weak refs: Mummy blood (each point counts twice for a vampire and drains a Sekhem) has no source in Mummy 2nd; p. 145 is the back cover. Keep it? | Kept, and labelled a house rule until a book is found. | Remove bloodDrunk in mummy-rules.js. |
 | 2026-11-10 | Audit, weak refs: the Encyclopaedia claim about copies of Das Buch vom Grabkrieg (bh-grabkrieg) cites Beckett pdf 12-14, but the book is named on pdf 5 and 19. | Left as it is; the right page needs a look in the PDF. | Change the ref in beckett.json once checked. |
 | 2026-11-10 | Release stamp: where to show the build the server runs, and to whom? | A line in the Settings sidebar, for the GM only, plus a console line and a warning at start when packages come from different commits. | Edit onRenderSettings and announce in wodx-chronicle/scripts/release.mjs. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
