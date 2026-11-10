@@ -1144,3 +1144,10 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - The hooks board names V20 p. 267 for Willpower by Nature.
 - Fix: extras write Attribute totals too; gatehand sets the watcher's Perception total (the pool reads the total).
 - Gates on rothenstein-wodx with 0.18.1: gatehand 12 of 12, UI fit 747 ok. Tests: 971 pass.
+
+## 2026-11-10: the Encyclopaedia's full review, the unreached books and the narrative books
+
+- Full review of every entry (PRs 441-451): 5682 refs tested against their pages on squashed OCR text (key words, numbers, absolute words, 8-word overlap); 373 flagged refs read by hand; 9 wrong pages, 8 overstated claims and 1 claim not in its book fixed, 143 lines reworded. Open: the cbs-temples claim on staked Brujah Methuselahs can't be confirmed from the scan.
+- A walk of the book folders (/mnt/project-files/ency-left-out.md) found 116 books never reached; each is now added or skipped with a reason. Mummy: The Resurrection read with a column-aware OCR (tools-env\ocr-cols.py). A squashed-text overlap check (nsp-overlap.py) found 10 old Mummy runs the word check missed, now reworded.
+- Narrative books (Ben, 2026-11-10): facts from novels and anthologies went in only when a sourcebook entry backs them (57, tier implied, citing both books). The other 20 went to the Narrative Review Desk (https://claude.ai/artifact/2sH4gv1jC599dsEbX4ht2B). Ben accepted 16, added at tier rumour as "The novel ... tells that" (PR 478), and rejected 4. A desk note led to the sourcebook Esbat entry (PR 473), cross-linked with the Sabbat entries (PR 476).
+- Result: 2603 entries from 389 books.
