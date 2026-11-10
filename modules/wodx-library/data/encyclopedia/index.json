@@ -2263,6 +2263,12 @@
       "title": "Dark Ages Clan Novel 9: Toreador",
       "short": "DA Clan Novel 9",
       "edition": "Novel"
+    },
+    {
+      "id": "nerc",
+      "title": "The Erciyes Fragments",
+      "short": "Erciyes Fragments",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2642,6 +2648,7 @@
     "ndan13.json",
     "ndan1.json",
     "ndan11.json",
-    "ndan9.json"
+    "ndan9.json",
+    "nerc.json"
   ]
 }
