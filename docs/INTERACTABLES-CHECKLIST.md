@@ -149,3 +149,12 @@ Step 3 of the design note.
 - [x] Harness tests (3 new)
 - [ ] Gate step 26 in rothenstein-wodx
 - [ ] Deployed
+
+
+## 0.19.0: adopt a generated map (2026-11-10)
+- [x] Sidecar file from the farmstead generator (doors, shutters, chest, beds, hay, oven, well, places, triggers)
+- [x] Rules: read and check the file, cells to pixels, match the imported door walls, plan, summary (B404)
+- [x] Runtime: Adopt a generated map and Undo the map adoption on the scene's right-click menu, Storyteller only
+- [x] Harness tests (11 new)
+- [ ] Gate in rothenstein-wodx: import the farmstead, adopt it, interact with a door, the chest and the well, undo
+- [ ] Deployed

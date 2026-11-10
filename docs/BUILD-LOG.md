@@ -1106,3 +1106,10 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - The live server runs on Linux, where file names are case-sensitive. New harness test path-case.test.mjs reads every path the system, the modules and the world files refer to (manifests, imports, template and asset paths, CSS urls, image paths inside the compendium packs) and fails when one differs in letter case from the file on disk, or when a folder holds two names that differ only in case. 2,661 paths checked: no case mismatches. Not in the repo at all (not case faults): the system's orpheus/Fudge.ttf font and data/demon and assets/data JSON in import-helpers.js, and the world background "Art of Vampire The Masquerade Summoning.jpg" in both repo world files.
 - Release stamp: release.json in the system and every wodx- module, marked export-subst in .gitattributes, so git archive writes the commit and its date. tools/release/stamp.mjs stamps a copy made any other way. Chronicle shows the build to the GM in the Settings sidebar, logs it, and warns when packages come from different commits.
 - Tests: 936 harness pass (9 new). Not gated in Foundry yet.
+
+
+## 2026-11-10: adopt a generated map (Interactables 0.19.0)
+
+- The farmstead generator (tools/mapgen/ddfarm.py, Dungeondraft edition) now also writes kessler-steading.wodx.json: 10 doors and shutters, 8 things (a locked chest, two box beds and three heaps of hay to hide in, the bread oven as a light, the well as a rope climb), the longhouse as a home and the barn as a workplace, and trigger regions on the track and the footbridge. A copy is in tools/mapgen/samples/.
+- Interactables 0.19.0: adopt-rules.mjs (read and check the file, place it on the scene, match the imported door walls, build the plan) and adopt.mjs (the scene's right-click menu: Adopt a generated map, and Undo the map adoption). B404.
+- Tests: 947 harness pass (11 new in adopt.test.mjs). Not gated in Foundry yet: the gate imports the farmstead with the Universal Battlemap Importer and adopts it in rothenstein-wodx.
