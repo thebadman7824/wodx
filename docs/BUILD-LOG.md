@@ -1255,3 +1255,9 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Entries may carry `date` {from, to, label, approx, refs}: years with BCE negative, the date as the book writes it, and its page. The format check tests it; the journal shows it under When; the journal flags carry year and yearTo.
 - Ben asked for dates on every event, from the OCR'd books where they give one. 206 entries checked (195 events and 11 lore entries that tell of a war, battle, fall or treaty); the text of each cited page and the pages either side was searched for dates on the PC. 84 now carry a date. The rest have none on or near their pages, or their books are novels with no text on the PC (B593).
 - The table of dates and the script that writes them: tools/encyclopedia/event-dates.py.
+## 2026-11-10: river stairs and water gates (map tools)
+- Ben's report: the river lay over the end of one path, and the wall had no opening for the water. B589.
+- The river course now also counts dead ends in the water and gates by the water against it. Ways that still reach the water stop on the bank with stone river stairs (region landing-N). Alleys are not cut toward the river. check_ways() stops the generator if a way runs into the river.
+- Water gates: the wall is cut where the river passes, an iron grate spans the stream, and a tower stands on each bank (region water-gate-N). No wall tower stands in the water.
+- Plan view draws the river as wide as the Dungeondraft map does. Fixed a duplicate road-trigger id when one road leaves by the same side twice.
+- Sample linberg redrawn.
