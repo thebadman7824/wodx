@@ -1,0 +1,126 @@
+[
+ {
+  "id": "cboh2-ailil-claim",
+  "title": "House Ailil's claim",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How House Ailil sees itself.",
+  "claims": [
+   {
+    "text": "House Ailil prides itself on power, diplomacy and intrigue and wears its Unseelie nature openly; its emblem is the dragon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh2",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The house holds that it led the Winter Court of old, a place it says House Gwydion has usurped since the Resurgence.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cboh2",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-ailil",
+   "unseelie-court",
+   "house-gwydion",
+   "the-resurgence"
+  ]
+ },
+ {
+  "id": "cboh2-ailil-demesne",
+  "title": "Ailil and the right of demesne",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why House Ailil contests Seelie holdings.",
+  "claims": [
+   {
+    "text": "When the noble houses returned in 1969, Seelie houses seized every freehold they could and drove out the commoners who had kept them; Ailil says many of those freeholds were once its own and refuses to honor the new holders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh2",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Yet Ailil gives full respect to a Seelie noble who restores a freehold that belonged to that noble's house before the Sundering.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh2",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cboh2-ailil-claim",
+   "escheat",
+   "freeholds"
+  ]
+ },
+ {
+  "id": "cboh2-leanhaun-and-liam",
+  "title": "Leanhaun and Liam",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An old grudge between two houses.",
+  "claims": [
+   {
+    "text": "Leanhaun tradition blames Finellia's jealousy and a hasty curse for driving the house into the Unseelie camp, and calls Finellia, not the whole of House Liam, the true oath breaker; stories of Liam's disgrace all trace to some misstep by King Liam.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cboh2",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "House Liam scorns Leanhaun for preying on mortals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh2",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-leanhaun",
+   "house-liam",
+   "oaths"
+  ]
+ }
+]
