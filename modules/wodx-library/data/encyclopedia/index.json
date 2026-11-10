@@ -1063,6 +1063,12 @@
    "title": "The Chaos Factor",
    "short": "CF",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2dp",
+   "title": "Destiny's Price",
+   "short": "DP",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1242,6 +1248,7 @@
   "m2mas.json",
   "m2hl.json",
   "m2stc.json",
-  "m2cf.json"
+  "m2cf.json",
+  "m2dp.json"
  ]
 }
