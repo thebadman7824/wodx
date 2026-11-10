@@ -1921,6 +1921,12 @@
       "title": "Book of the City",
       "short": "Book of the City",
       "edition": "Revised"
+    },
+    {
+      "id": "wacaern",
+      "title": "Caerns: Places of Power",
+      "short": "Caerns",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -2243,6 +2249,7 @@
     "wawor.json",
     "waaxis.json",
     "waausp.json",
-    "wacity.json"
+    "wacity.json",
+    "wacaern.json"
   ]
 }

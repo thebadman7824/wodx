@@ -1,0 +1,264 @@
+[
+ {
+  "id": "wacaern-moon-bridges",
+  "title": "Kinds of Moon Bridge",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Safe, Attack and Wild bridges between caerns.",
+  "claims": [
+   {
+    "text": "A Safe Moon Bridge links two caerns with the consent of both Gatekeepers and both totems, and the Rite of the Opened Bridge can make it safer still.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "An Attack Moon Bridge is forced to a caern that does not want it, breaking through its totem’s defences with the Rite of Luna’s Spear; it is very dangerous to travel until established.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A Wild Moon Bridge is the third kind, opened without the usual control.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "How far a bridge can reach depends on caern rank, from about 1,000 miles for the lowest to 10,000 for the greatest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wacaern-tri-spiral",
+  "title": "The Sept of the Tri-Spiral",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Fianna caern in Ireland with three centres.",
+  "claims": [
+   {
+    "text": "Brugh na Boinne in County Meath is a level 5 Gnosis, Honour and Plenty caern under the Stag and Dana, open to all but controlled by the Fianna.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "No other known caern has three centres: the passage-grave mounds of Newgrange, Knowth and Dowth, set in a triangle a kilometre on each side.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Fianna Kinfolk farm the land around it, and the sept’s leaders all take the surname MacFionn and pass the property to their successors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wacaern-smiling-buddha",
+  "title": "The Smiling Happy Buddha",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A totem of Respect, Background cost 5.",
+  "claims": [
+   {
+    "text": "The Smiling Happy Buddha, also called Mi-lo Fo, the Laughing Buddha, grants followers tranquil peace and provides for their material needs; this totem is patron of silver- and goldsmiths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Packs chosen by the totem gain two extra Willpower points and three points of liquid Resources each story.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "In times of great stress the totem may appear to help renowned Garou focus their will, much like the Silver Fang Gift Mindblock.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wacaern-katajuta",
+  "title": "Katajuta",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Uktena caern in the Australian Outback.",
+  "claims": [
+   {
+    "text": "The caern’s bawn is vast, over 400 miles by 200, because so few people and Garou live there and food must be sought over great distances; Uktena scouts always patrol its edges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   },
+   {
+    "text": "Its centre, the Glade of the Ancestors, is a pool among ghost gum and bloodbark trees, which the sept holds to be the past lives of many of its members; in times of great threat the trees are said to bleed red sap.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   },
+   {
+    "text": "Diving through the pool leads to the Dreaming Womb, a cave of painted symbols where the barrier to the Umbra is thinnest; if the paintings are not kept fresh the caern loses power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wacaern-kitsune",
+  "title": "Kitsune",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The fox shapeshifters and their Jyu-ho.",
+  "claims": [
+   {
+    "text": "A Kitsune with more than one tail ages one year for every span of years equal to its tails, and age makes the Nine-Tails stronger and more beautiful rather than weaker.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "A Fox needs more than five tails to count as an elder, and many never become one however long they live.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "Kitsune dislike crude violence, most master their Rage through Zen practice or mantras, and some learn to wield a blade in the mouth in fox form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "Their Gifts, called Jyu-ho, use Gnosis or Rage; each path borrows Garou Gifts of a matching auspice, such as Doshi with Theurge Gifts and Eji with Ahroun Gifts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacaern",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
