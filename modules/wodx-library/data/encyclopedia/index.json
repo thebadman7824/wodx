@@ -1813,6 +1813,12 @@
       "title": "Lost Paths: Ahl-i-Batin and Taftani",
       "short": "LP",
       "edition": "Revised"
+    },
+    {
+      "id": "manif",
+      "title": "Manifesto: Transmissions from the Rogue Council",
+      "short": "MTRC",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2117,6 +2123,7 @@
     "dacbsal.json",
     "daheresy.json",
     "dacbn.json",
-    "lostp.json"
+    "lostp.json",
+    "manif.json"
   ]
 }
