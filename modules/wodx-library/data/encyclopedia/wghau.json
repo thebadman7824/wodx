@@ -1,0 +1,151 @@
+[
+ {
+  "id": "wghau-guild-aim",
+  "title": "The Haunters' aim",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the Haunters' Guild works toward.",
+  "claims": [
+   {
+    "text": "Haunters seek to join the two worlds and reclaim the Skinlands: by frightening the living one mind at a time they hope to wear the Shroud away until the dead can walk in daylight again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wghau",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Guild splits into loose alliances that share the goal but differ on method, among them the Bedlameers, Menagerians, Mandelbrots and Dantes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wghau",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds",
+   "the-shroud"
+  ]
+ },
+ {
+  "id": "wghau-hg-dwellers",
+  "title": "The H.G. Dwellers",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Haunter alliance led by Midian.",
+  "claims": [
+   {
+    "text": "Members follow their own projects as long as they serve the alliance, but a council of five settles major questions; Midian, the leader, names the council and sets its agenda, and holds the final vote.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wghau",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wghau-guild-aim"
+  ]
+ },
+ {
+  "id": "wghau-caligarians",
+  "title": "The Caligarians",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Haunters who call themselves Dark Muses.",
+  "claims": [
+   {
+    "text": "These Haunters love to haunt artists, claiming to grant mortal creators the inspiration of madness; many shape their own Corpus into art and keep ties with some Renegade Masquers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wghau",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "They have no chain of command, treating their craft as a lone vision; each year one is chosen to host a region or Necropolis, holding galas that open at a gallery showing work touched by a Dark Muse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wghau",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wghau-guild-aim",
+   "renegades"
+  ]
+ },
+ {
+  "id": "wghau-dantes",
+  "title": "The Dantes",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Haunters who think the Shadowlands are Purgatory.",
+  "claims": [
+   {
+    "text": "Formed after the Divine Comedy appeared, these Heretics believe the Shadowlands are Purgatory, a realm meant to test them, and act as its surveyors and explorers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wghau",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Dante Alighieri dwells in Stygia promoting the Hierarchy, which does nothing to cool their regard for the poem.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wghau",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wghau-guild-aim",
+   "heretics",
+   "shadowlands"
+  ]
+ }
+]

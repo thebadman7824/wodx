@@ -1237,6 +1237,12 @@
    "title": "Guildbook: Artificers",
    "short": "GBA",
    "edition": "First edition"
+  },
+  {
+   "id": "wghau",
+   "title": "Guildbook: Haunters",
+   "short": "GBH",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1445,6 +1451,7 @@
   "weoe.json",
   "wdkj.json",
   "wche.json",
-  "wgart.json"
+  "wgart.json",
+  "wghau.json"
  ]
 }
