@@ -2071,6 +2071,12 @@
       "title": "Tribe Novel: Red Talons & Fianna",
       "short": "Tribe Novel 3",
       "edition": "Novel"
+    },
+    {
+      "id": "ntn4",
+      "title": "Tribe Novel: Bone Gnawers & Stargazers",
+      "short": "Tribe Novel 4",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2418,6 +2424,7 @@
     "cblod.json",
     "wofd.json",
     "ntn2.json",
-    "ntn3.json"
+    "ntn3.json",
+    "ntn4.json"
   ]
 }
