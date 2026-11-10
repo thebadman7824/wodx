@@ -1,0 +1,81 @@
+[
+ {
+  "id": "wgso-forebears",
+  "title": "The Spooks' forebears",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "Who the Spooks claim as founders.",
+  "claims": [
+   {
+    "text": "The Spooks trace their line to legends from before the Sundering, when no Shroud stood: heroes such as Odysseus, Orpheus, Gilgamesh and Aeneas, who crossed between life and death by plain physical means rather than possession or haunting.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wgso",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "In Greece and Rome, offerings to the dead and the Cult of the Heroes let Pathos seep into the Shadowlands; early Spook gangs gathered it, used what they needed and bottled the rest for other wraiths, which no law then forbade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgso",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds",
+   "the-shroud"
+  ]
+ },
+ {
+  "id": "wgso-armadar",
+  "title": "Armadars",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A made Spook.",
+  "claims": [
+   {
+    "text": "Armadar, from a Latin phrase for knighting, is the Spooks' title for a Defender judged efficient and ruthless enough for promotion; the rank turns on serving the Guild's Cause, not on a tally of kills.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgso",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "An Armadar may take personal clients without Guild approval and leads a squad of Defenders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgso",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wgso-forebears"
+  ]
+ }
+]

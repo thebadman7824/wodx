@@ -1261,6 +1261,12 @@
    "title": "Guildbook: Sandmen",
    "short": "GBS",
    "edition": "First edition"
+  },
+  {
+   "id": "wgso",
+   "title": "Guildbook: Spooks",
+   "short": "GBSp",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1473,6 +1479,7 @@
   "wghau.json",
   "wgmas.json",
   "wgpp.json",
-  "wgsan.json"
+  "wgsan.json",
+  "wgso.json"
  ]
 }
