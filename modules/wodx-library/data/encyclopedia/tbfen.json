@@ -1,0 +1,171 @@
+[
+ {
+  "id": "tbfen-fall-of-heimhalla",
+  "title": "The Fall of Heimhalla",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The Get of Fenris legend of their first home.",
+  "claims": [
+   {
+    "text": "Get skalds sing that Fenris was the first and greatest warrior, and that his strongest foes were Odin One-Eye, Loki the trickster and Utgard-Loki, lord of the Jotunn.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "In the tale, Loki was barred from Heimhalla for deceit and plotted from a fortress near it, then went to Odin with a lie that the Fenrir meant to conquer both Asgard and Utgard.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "get-of-fenris"
+  ]
+ },
+ {
+  "id": "tbfen-first-reich",
+  "title": "The Get and the Frankish Empire",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Fenrir played the kingdoms of the early Middle Ages.",
+  "claims": [
+   {
+    "text": "The Get backed Charlemagne's empire at first because it was Germanic and held many of their Kin and territories, then turned against it once the Warders of Men and Silver Fangs took an interest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "After the empire was divided, the tribe pushed lords in the eastern kingdom to seize more power, helping the rise of duchies such as Saxony and Bavaria.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The Get count Otto the Great among their blood, though the Silver Fangs claim Otto's line too; the tribe saw the Magyars Otto defeated as foes because of their dealings with vampires.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "get-of-fenris",
+   "wda-warders-of-men",
+   "silver-fangs"
+  ]
+ },
+ {
+  "id": "tbfen-valkyria",
+  "title": "The Valkyria",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Get of Fenris who press for equal standing for the tribe's women.",
+  "claims": [
+   {
+    "text": "The Valkyria formed to fight the bias some Get jarls show toward female warriors, and they work to change minds within the tribe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Elders argue bitterly over the camp: some call it a needless division of a warrior people, while others defend it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "get-of-fenris"
+  ]
+ },
+ {
+  "id": "tbfen-mjolnirs-thunder",
+  "title": "Mjolnir's Thunder",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An old Fenrir camp of total war on the Wyrm.",
+  "claims": [
+   {
+    "text": "Mjolnir's Thunder is an old camp founded by Fenrir who had lost every worldly tie and gave themselves wholly to destroying the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Its few modern members care nothing for humans, wolves, spirits or the Veil, so the Wyrm sees them coming and other Get must cover their tracks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfen",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "get-of-fenris"
+  ]
+ }
+]
