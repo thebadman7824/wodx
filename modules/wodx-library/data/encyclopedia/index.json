@@ -1687,6 +1687,12 @@
    "title": "Clanbook: Cappadocian",
    "short": "DA CB Cappadocian",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "dacbsal",
+   "title": "Clanbook: Salubri",
+   "short": "DA CB Salubri",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -1970,6 +1976,7 @@
   "dacults.json",
   "dabic.json",
   "dacbbaali.json",
-  "dacbcapp.json"
+  "dacbcapp.json",
+  "dacbsal.json"
  ]
 }
