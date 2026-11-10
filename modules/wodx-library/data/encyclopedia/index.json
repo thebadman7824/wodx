@@ -1423,6 +1423,12 @@
    "title": "Kithbook: Satyrs",
    "short": "KB Satyrs",
    "edition": "Second edition"
+  },
+  {
+   "id": "ckslu",
+   "title": "Kithbook: Sluagh",
+   "short": "KB Sluagh",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1662,6 +1668,7 @@
   "ckpooka.json",
   "ckeshu.json",
   "ckred.json",
-  "cksat.json"
+  "cksat.json",
+  "ckslu.json"
  ]
 }

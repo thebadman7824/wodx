@@ -1,0 +1,44 @@
+[
+ {
+  "id": "ckslu-interregnum",
+  "title": "Sluagh in the Interregnum",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "renaissance",
+   "victorian"
+  ],
+  "summary": "What the closing of Arcadia meant for the sluagh.",
+  "claims": [
+   {
+    "text": "When the gates to Arcadia closed, the sidhe's courtly prejudice against the sluagh went with them, but a rougher, more chaotic scorn from other kith took its place.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckslu",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "With no sidhe to curb the worst impulses of the fae, the sluagh became handy targets for the fear, resentment and panic that followed the Shattering, and many were blamed as scapegoats.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckslu",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sluagh",
+   "the-interregnum",
+   "the-shattering"
+  ]
+ }
+]
