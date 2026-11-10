@@ -1,0 +1,327 @@
+[
+ {
+  "id": "dapillars-unholy-blood",
+  "title": "Cainites and the early Church",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How vampires exploited religion from the start.",
+  "claims": [
+   {
+    "text": "In the ages before Christ, the first vampires posed as living deities and ruled over cults, sects and whole peoples.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The secrecy of the first Christian cults of Rome and their meetings in catacombs made them natural herds, and charismatic vampire priests drew many converts into cults they had taken over.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dapillars-parish-priest"
+  ]
+ },
+ {
+  "id": "dapillars-parish-priest",
+  "title": "Cainites as parish priests",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why the parish is a poor post for a vampire.",
+  "claims": [
+   {
+    "text": "Parish priesthood brings hardship, social duty and heavy daytime ritual, so few Cainites want it: masses, blessings and burials all fall by day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "A vampire can manage it only by keeping a ghoul as the public face or by taking over a whole village, and even then a bishop’s visitation may expose the deceit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dapillars-unholy-blood"
+  ]
+ },
+ {
+  "id": "dapillars-three-pillars-vampires",
+  "title": "Three pillars of Cainite society",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The three estates among the Damned.",
+  "claims": [
+   {
+    "text": "Cainite courts mirror mortal society, split into warriors, clergy and labourers, though appearances among the Damned can be dangerously misleading.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "The peasant vampire may be the deadliest predator of all, and the most powerful vampires in history came from the peasantry, beginning with Caine, a tiller of the ground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dapillars-orders-of-night"
+  ]
+ },
+ {
+  "id": "dapillars-orders-of-night",
+  "title": "Orders of night",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How peasant Cainites build their own hierarchies.",
+  "claims": [
+   {
+    "text": "A lone peasant Cainite feels spiritually adrift, having known little privacy and much ordered hierarchy in life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 113,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "Such Cainites often gather other outcasts and build their own power structure, with the vampire’s brood at the top.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 113,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "They know a scattered village can barely feed and hide one vampire, so they are very reluctant to sire more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 113,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "Beyond death’s reach, the Cainite is cut off from hope of the next life and locked in a lasting present, watching old friends and kin pass away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dapillars-italian-cainites",
+  "title": "Cainites of the Italian communes",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Vampires in the Italian city-states.",
+  "claims": [
+   {
+    "text": "The strong, populous city-states recall the first cities Cainites knew, and country vampires seeing them for the first time often feel they have come home.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Their rapid rise has drawn more Cainites than the living can support, so havens and hunting grounds are scarce and old feuds threaten to split Cainite society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Unique to Italy and Sicily is the consigliere: a vampire appointed by the prince of a greater city to rule a smaller one, a grant that can be taken back as easily as given.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "At night the streets hold little but guards, with strict curfews, barred doors and churches locked.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dapillars-orvieto"
+  ]
+ },
+ {
+  "id": "dapillars-orvieto",
+  "title": "The massacre at Orvieto",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A warning that haunts Italian princes.",
+  "claims": [
+   {
+    "text": "Until 1194 the Brujah Marco held Orvieto as prince, and heretics thrived in the town with Marco’s blessing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "When the Pope placed the town under interdict to secure the road between Rome and Siena, its heretics seized Orvieto and drove out the Catholic bishop.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "What followed is the example Cainite princes think of first when they imagine the fall of their own cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dapillars-italian-cainites"
+  ]
+ },
+ {
+  "id": "dapillars-siena-anomalies",
+  "title": "Magical Siena",
+  "kind": "place",
+  "lines": [
+   "vampire",
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Mysteries tied to Siena.",
+  "claims": [
+   {
+    "text": "A two-foot block on Siena Cathedral bears the Sator Arepo square, read the same in every direction and widely held to be a magical charm, also found in the ruins of Pompeii.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Whether these signs point to mages, fae, diabolists or a hidden chantry is left open.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dapillars",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

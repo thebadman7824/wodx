@@ -1873,6 +1873,12 @@
       "title": "Liege, Lord, and Lackey",
       "short": "LL&L",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dapillars",
+      "title": "Three Pillars",
+      "short": "Three Pillars",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2187,6 +2193,7 @@
     "daspoils.json",
     "daknight.json",
     "dathief.json",
-    "dallal.json"
+    "dallal.json",
+    "dapillars.json"
   ]
 }
