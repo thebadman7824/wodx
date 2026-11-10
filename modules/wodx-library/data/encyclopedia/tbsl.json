@@ -1,0 +1,207 @@
+[
+ {
+  "id": "tbsl-mayan-war",
+  "title": "The Shadow Lords in the Americas",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Why the Lords struck at the Balam.",
+  "claims": [
+   {
+    "text": "Arriving in the Americas, the Shadow Lords found a society ruled through terror and blood sacrifice by priests, some of them Balam, which reminded them of their old Tzimisce enemies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "The bat-shifting Camazotz, who looked much like great vampires in war form, deepened the likeness, and memories of the Impaler were only a century old.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "In the Second War of Rage that followed, the Balam were nearly wiped out and their few survivors withdrew to the South American forests; the Ananasi were killed on principle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadow-lords",
+   "sd-second-war-of-rage",
+   "cb-ananasi",
+   "tzimisce"
+  ]
+ },
+ {
+  "id": "tbsl-grandfather-thunder",
+  "title": "Grandfather Thunder",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The tribe totem of the Shadow Lords.",
+  "claims": [
+   {
+    "text": "Grandfather Thunder is a harsh master whose storms bring life as well as death, washing away corruption so that something new can grow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Grandfather Thunder asks the tribe to use fear to rule those too weak to protect Gaia, to give respect where it is earned, and above all to sweep away the past and build something better.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Crow and Raven are the chief totems among Thunder's brood, and Shadow Lord society is modelled in large part on the ways of crows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadow-lords"
+  ]
+ },
+ {
+  "id": "tbsl-bringers-of-light",
+  "title": "The Bringers of Light",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shadow Lords who learn the Wyrm to fight it from within.",
+  "claims": [
+   {
+    "text": "The Bringers of Light study how the Wyrm works in order to undo its influence from inside, and they are counted among the most selfless Garou alive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They run with vampires, pass themselves off as Black Spiral Dancers and move among fomori to learn how the Wyrm's power works.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Shadow Lord camps do not fight one another; elders believe the competition makes the tribe stronger.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadow-lords",
+   "fomori"
+  ]
+ },
+ {
+  "id": "tbsl-judges-of-doom",
+  "title": "The Judges of Doom",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The most feared camp in the Garou Nation.",
+  "claims": [
+   {
+    "text": "The Judges of Doom hunt down and destroy Garou who openly break the Litany, and they work in secret with ruthless zeal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Watchful Lords believe the Judges are split into two warring factions: killers who use the Litany as an excuse, and stricter Judges who strike only at grave crimes such as a sept letting a caern be violated.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Most of the tribe accepts the camp as necessary, helped by the quiet support of Margrave Konietzko.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsl",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadow-lords",
+   "litany"
+  ]
+ }
+]
