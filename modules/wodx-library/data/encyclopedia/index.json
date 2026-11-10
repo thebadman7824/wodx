@@ -397,6 +397,12 @@
    "title": "Dark Ages: British Isles",
    "short": "DA British Isles",
    "edition": "Revised"
+  },
+  {
+   "id": "cb",
+   "title": "Changing Breeds (W20)",
+   "short": "W20 Changing Breeds",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -465,6 +471,7 @@
   "daeu.json",
   "dav.json",
   "dacomp.json",
-  "dabi.json"
+  "dabi.json",
+  "cb.json"
  ]
 }
