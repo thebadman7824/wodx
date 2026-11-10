@@ -1,0 +1,124 @@
+[
+ {
+  "id": "weoe-hong-kong-clash",
+  "title": "The Hong Kong clash",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Stygia and Yellow Springs at odds over Hong Kong.",
+  "claims": [
+   {
+    "text": "After a typhoon and a destructive Maelstrom struck Hong Kong, every wraith blamed someone else; Yellow Springs called it a Stygian signal that the Westerners would not leave willingly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "weoe",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The Jade army began seizing Stygian wraiths, mostly new souls still in their Cauls, for the torc, while Legionnaires arrived by Midnight Express and Western troops were reported Reaping Chinese souls back to Stygia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "weoe",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-jade-kingdom-terms",
+   "wme-midnight-express",
+   "reaping"
+  ]
+ },
+ {
+  "id": "weoe-stormwardens",
+  "title": "Stormwardens",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Deputies who warn of Maelstroms.",
+  "claims": [
+   {
+    "text": "The deputies of the Stormwardens take their work seriously and cling to half-century-old ideas of how it should be done.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "weoe",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "They remind wraiths that large-scale violence in the Shadowlands stirs storms in the Tempest, lecturing passersby to know where the nearest shelter is.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "weoe",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "maelstroms",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "weoe-fishers-paradise",
+  "title": "The Paradise of the Fishers",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Far Shore that grew unchecked.",
+  "claims": [
+   {
+    "text": "From the exile of the Ferrymen to the exile of the Shining Ones, most souls leaving Stygia sailed to uncertain fates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "weoe",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "The Ferrymen's Boatmen's Society watched too long while the Paradise of the Fishers grew from a few driftwood shacks into a vast blight on the Tempest; their envoys were shouted down by Fisher diplomats and ignored by Stygian officials fattened on its tithe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "weoe",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ferrymen",
+   "stygia",
+   "transcendence"
+  ]
+ }
+]

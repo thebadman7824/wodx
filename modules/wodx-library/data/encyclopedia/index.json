@@ -1213,6 +1213,12 @@
    "title": "Mediums: Speakers with the Dead",
    "short": "Med",
    "edition": "First edition"
+  },
+  {
+   "id": "weoe",
+   "title": "Ends of Empire",
+   "short": "EoE",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1417,6 +1423,7 @@
   "wna.json",
   "wme.json",
   "wris.json",
-  "wmed.json"
+  "wmed.json",
+  "weoe.json"
  ]
 }
