@@ -1165,6 +1165,12 @@
    "title": "Wraith Players Guide",
    "short": "WPG",
    "edition": "First edition"
+  },
+  {
+   "id": "wdr",
+   "title": "Dark Reflections: Spectres",
+   "short": "DR",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1361,6 +1367,7 @@
   "wren.json",
   "whaunts.json",
   "wbol.json",
-  "wpg.json"
+  "wpg.json",
+  "wdr.json"
  ]
 }

@@ -1,0 +1,83 @@
+[
+ {
+  "id": "wdr-servants-of-oblivion",
+  "title": "Spectres as servants of Oblivion",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the Spectres want.",
+  "claims": [
+   {
+    "text": "Spectres creep out of nihils from the Tempest and hide in the dark corners of Necropoli, attacking Hierarchy, Heretics and Renegades alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdr",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "They serve Oblivion directly by obeying their Malfean masters and indirectly by destroying souls, using the quarrels of wraith society to lead the Restless away from Transcendence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdr",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spectres",
+   "oblivion",
+   "transcendence"
+  ]
+ },
+ {
+  "id": "wdr-mortwights",
+  "title": "Mortwights",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Souls who become Spectres at the moment of death.",
+  "claims": [
+   {
+    "text": "A new kind of Spectre now appears more often: souls whose violent or traumatic deaths make them Spectres at once, called Mortwights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The other Spectre castes rank these casteless newcomers below Doppelgangers, but their numbers and skill in assaults on Stygia may soon force a change; even the Malfeans seem puzzled by them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spectres",
+   "gw-doppelgangers"
+  ]
+ }
+]
