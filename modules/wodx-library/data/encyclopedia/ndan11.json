@@ -1,0 +1,36 @@
+[
+ {
+  "id": "ndan11-goratrix-telyavs",
+  "title": "Goratrix and the Telyavs",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A rumoured thorn in Etrius’s side.",
+  "claims": [
+   {
+    "text": "Rumour at Ceoris holds that Goratrix writes secretly to the Telyavs, whose standing with the chantry is shaky, as a way to keep Etrius off balance.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ndan11",
+      "page": 49,
+      "pdf": 51
+     },
+     {
+      "book": "dacults",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbtr-goratrix",
+   "dacults-house-goratrix"
+  ]
+ }
+]

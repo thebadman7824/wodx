@@ -1,0 +1,35 @@
+[
+ {
+  "id": "ndan1-dracon-face",
+  "title": "The Dracon’s borrowed face",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Dracon shaped Constantinople’s art.",
+  "claims": [
+   {
+    "text": "The Dracon could sculpt its own flesh at will and once wore an idealised face of Christ, which inspired the city’s icon painters and, through their work, the people.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ndan1",
+      "page": 184,
+      "pdf": 186
+     },
+     {
+      "book": "dacbn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbn-dracon"
+  ]
+ }
+]
