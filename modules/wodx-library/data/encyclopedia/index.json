@@ -2095,6 +2095,12 @@
       "title": "Pentex Employee Indoctrination Handbook (W20)",
       "short": "W20 Pentex Handbook",
       "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "nsosm",
+      "title": "Songs of the Sun and Moon (W20)",
+      "short": "W20 Songs of the Sun and Moon",
+      "edition": "20th Anniversary companion"
     }
   ],
   "files": [
@@ -2446,6 +2452,7 @@
     "ntn4.json",
     "ntn5.json",
     "ntn7.json",
-    "npeih.json"
+    "npeih.json",
+    "nsosm.json"
   ]
 }

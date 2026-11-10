@@ -1,0 +1,53 @@
+[
+ {
+  "id": "nsosm-ahadi",
+  "title": "The Ahadi after Black Tooth",
+  "kind": "faction",
+  "lines": [
+   "werewolf",
+   "fera"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the African Fera came to unite.",
+  "claims": [
+   {
+    "text": "After Black Tooth’s purge, Simba prides came close to wiping out a whole Tanzanian group of Ajaba, and the other Fera kept silent until a young Ajaba persuaded them to unite as the Ahadi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nsosm",
+      "page": 7,
+      "pdf": 8
+     },
+     {
+      "book": "wawor",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Ajaba once held that their purpose was to kill the weak so the strong could thrive; since the massacre many have come to believe that strength lies in shared purpose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nsosm",
+      "page": 9,
+      "pdf": 10
+     },
+     {
+      "book": "cb",
+      "page": 44,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawor-black-tooth",
+   "cb-ajaba"
+  ]
+ }
+]
