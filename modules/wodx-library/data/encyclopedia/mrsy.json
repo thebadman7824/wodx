@@ -1,0 +1,309 @@
+[
+ {
+  "id": "mrsy-self-image",
+  "title": "How the Syndicate sees itself",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The money Convention as hero of the Union.",
+  "claims": [
+   {
+    "text": "Syndicate members call the Avatar Storm the Dimensional Anomaly and say it severed the Union's head while the Masses grew ever more connected.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "They claim to offer a level playing field and to protect consumers while showing the Masses how to play and what it will cost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "They see themselves as the earners who pay for the other Conventions' fight in the streets, and believe the war is being won.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "mrsy-chairs",
+  "title": "Chairs",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Syndicate leaders seated in big organisations.",
+  "claims": [
+   {
+    "text": "A Chair is placed in a large corporation or criminal network to keep its power and infrastructure intact.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Chairs are also expected to show steady growth, such as an oil magnate moving into solar and gas, or a shipper turning to smuggling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Syndicate work hands out great but fickle power with few rules, and agents can never be sure whether a task is Union business or someone's pet project.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "mrsy-financiers"
+  ]
+ },
+ {
+  "id": "mrsy-disbursements",
+  "title": "Disbursements",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The office that pays for the whole Union.",
+  "claims": [
+   {
+    "text": "Disbursements funds the whole Union, so its displeasure can kill a project, while its favour brings money, talent and power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "It holds the Union's largest and safest Ventures, packaging Quintessence for use across the world in return for small favours.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "It began at the Convention of the Ivory Tower when someone asked who would pay for the plans, and was first called the Sun Guild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "quintessence"
+  ]
+ },
+ {
+  "id": "mrsy-enforcers",
+  "title": "Enforcers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The muscle of the Syndicate.",
+  "claims": [
+   {
+    "text": "Enforcers rely first on persuasion, threats and blackmail, holding that the threat of force beats actual carnage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Private security is their stronghold, with mercenary firms as fronts, organised crime their lasting frontier and industrial espionage a sideline.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "They have thoroughly infiltrated law enforcement as well.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "mrsy-chairs"
+  ]
+ },
+ {
+  "id": "mrsy-financiers",
+  "title": "Financiers and the Proctor takeover",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The core of the Syndicate and how it took its modern form.",
+  "claims": [
+   {
+    "text": "Financiers found companies, mount hostile takeovers, lobby governments and break up firms when they are done with them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "In 1851 the tangle of guild laws was folded into one body named the Financiers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "With backing from Rathbone's new Ivory Tower, Reginald Proctor's cabal seized effective control of the Syndicate, ending the High Guild's role as a servant of the Order of Reason.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "mrpg-hippocratic-past",
+   "sc-high-guild"
+  ]
+ },
+ {
+  "id": "mrsy-media-control",
+  "title": "Media Control",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Syndicate's shapers of news.",
+  "claims": [
+   {
+    "text": "Early Media Control tried to take over newspapers but was rebuffed by press barons such as William Randolph Hearst.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "That started a century-long push to replace newspapers with newsreels, broadcast news and finally the Internet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Anonymous news is easier to steer, and Media Control is glad that online readers rarely ask who wrote a story.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsy",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "mrnwo-feed"
+  ]
+ }
+]
