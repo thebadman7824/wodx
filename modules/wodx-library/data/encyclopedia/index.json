@@ -1621,6 +1621,12 @@
    "title": "The Bygone Bestiary",
    "short": "Bygone Bestiary",
    "edition": "First edition"
+  },
+  {
+   "id": "woddhx",
+   "title": "World of Darkness: Demon Hunter X",
+   "short": "Demon Hunter X",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1893,6 +1899,7 @@
   "wodtok.json",
   "wodhk.json",
   "wodout.json",
-  "wodbb.json"
+  "wodbb.json",
+  "woddhx.json"
  ]
 }

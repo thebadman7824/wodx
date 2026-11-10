@@ -1,0 +1,91 @@
+[
+ {
+  "id": "woddhx-shih-founding",
+  "title": "The founding of the Shih",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "How Yi and a temple of monks began the hunt for shen under the Shang.",
+  "claims": [
+   {
+    "text": "Yi, a Shang noble's son, learned that Yi's own father and other nobles bargained with the Kuei-jin who fed on their people; for calling the father a coward, Yi was exiled with little more than a wagon and arms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "woddhx",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "After years among the Chou, Yi rode alone against spider-shen besieging a temple, expecting to die, and survived by a touch of the gods; the monks there became the first Shih.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "woddhx",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "woddhx",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Shih learned to turn their will into a weapon and to resist demon tricks through meditation and prayer, and took in survivors who had lost kin to the shen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "woddhx",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Through the river-spirit Heng-O, whom Yi married, Yi learned that not every shen is evil; their five children all became Shih.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "woddhx",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Shih study found that silver harms some shen and that jade of various colors guards against others; Yi had warnings carved on bones and shells and left where shen ruled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "woddhx",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The shen answered by using the Shang nobility to send soldiers to kill any shaman outside the corrupt Shang priesthood, while the Chou began to back Yi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "woddhx",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bas-shih",
+   "kote-weaknesses"
+  ]
+ }
+]
