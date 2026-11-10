@@ -1,0 +1,59 @@
+[
+ {
+  "id": "wme-midnight-express",
+  "title": "The Midnight Express",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A ghost train that runs between the Necropoli.",
+  "claims": [
+   {
+    "text": "The Midnight Express stops at stations in many great cities and at obscure places where stations once stood; its purpose and crew are a mystery, though it may first have been run by Ferrymen to guide souls to Stygia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wme",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Hierarchy, Renegades and Heretics all ride it, and it can even cross oceans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wme",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "At each stop only one car can be boarded, the train lingers about three minutes, and its cars come from many periods, most without a covered walkway between them, so crossing means a moment exposed to the Tempest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wme",
+      "page": 9,
+      "pdf": 10
+     },
+     {
+      "book": "wme",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ferrymen",
+   "stygia",
+   "wsos-tempest-ways"
+  ]
+ }
+]
