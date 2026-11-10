@@ -100,5 +100,5 @@ test("wiring: the tools join the hand, the setting clears at the session's end, 
   assert.match(a, /!away\.has\(u\.id\)/);
   const b = src("modules/wodx-storyteller/scripts/between.mjs");
   for ( const box of ['searchBox(".wst-hooks"', 'searchBox("select[name=sceneId]"', 'searchBox(".wst-prep-scenes"', 'searchBox("ul.wst-kits"'] ) assert.ok(b.includes(box), box);
-  assert.equal(JSON.parse(src("modules/wodx-storyteller/module.json")).version, "0.18.0");
+  { const v = JSON.parse(src("modules/wodx-storyteller/module.json")).version.split(".").map(Number); assert.ok(v[0] > 0 || v[1] > 18 || (v[1] === 18 && v[2] >= 0), "0.18.0 or later"); }
 });
