@@ -1,0 +1,112 @@
+[
+ {
+  "id": "cinan-glome-citadel",
+  "title": "The glome homeland",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The living-mountain citadel of the glomes.",
+  "claims": [
+   {
+    "text": "The glomes' homeland is a vast citadel grown from a living mountain, besieged three times and never taken; at its heart lies one of the few sources of chimerical iron, which supplicants must earn by running a harrowing gauntlet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cinan",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The glomes are the most hardline of the Inanimae, insisting the solimonds be driven from the Dreaming and refusing to give up the solimond homeland; the ondines lead those urging them to let old hatreds go.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cinan",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-dreaming",
+   "chimera"
+  ]
+ },
+ {
+  "id": "cinan-glome-ways",
+  "title": "The ways of the glomes",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the stone folk change so slowly.",
+  "claims": [
+   {
+    "text": "Glomes do everything deliberately, taking months to make friends or fall in or out of love, and once decided they rarely change course; a rock never changes its mind, as the saying goes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cinan",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Many glomes stay fiercely loyal to the memory of companions who left Earth in the Shattering and never came back.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cinan",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cinan-glome-citadel",
+   "the-shattering"
+  ]
+ },
+ {
+  "id": "cinan-old-wrongs",
+  "title": "Old wrongs among the Inanimae",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a two-thousand-year grudge surfaced at an investiture.",
+  "claims": [
+   {
+    "text": "Ancient pacts among the Inanimae are honored by those who remember them, and wrongs done two thousand years ago can return: at Sir Mendolir of House Fiona's investiture as baron, a towering stone figure accused Mendolir of oathbreaking and of murdering the Heavy Folk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cinan",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cinan-glome-ways",
+   "house-fiona",
+   "oaths"
+  ]
+ }
+]
