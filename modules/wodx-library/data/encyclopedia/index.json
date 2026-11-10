@@ -961,6 +961,12 @@
    "title": "Forged by Dragon's Fire",
    "short": "FbDF",
    "edition": "Revised"
+  },
+  {
+   "id": "mrbr",
+   "title": "The Bitter Road",
+   "short": "BR",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1123,6 +1129,7 @@
   "mrman.json",
   "mrftlv.json",
   "mrbom.json",
-  "mrfdf.json"
+  "mrfdf.json",
+  "mrbr.json"
  ]
 }

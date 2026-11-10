@@ -1,0 +1,175 @@
+[
+ {
+  "id": "mrbr-founding-quarrels",
+  "title": "Quarrels at the Council's birth",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the early Traditions found unity hard.",
+  "claims": [
+   {
+    "text": "The founding Council drew strong-willed mages from across the known world, and infighting came with them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "The forerunners of the Dreamspeakers found the Council's European outlook ugly, the Verbena still smarted from Celestial Chorus attacks, and the Akashics thought the West undisciplined.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "dreamspeakers",
+   "verbena",
+   "akashayana"
+  ]
+ },
+ {
+  "id": "mrbr-avatar-views",
+  "title": "Where Avatars come from",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Competing beliefs about the source of a mage's power.",
+  "claims": [
+   {
+    "text": "Mages hold many views on the origin of Avatars, but nearly all trace them to some divine source and agree that without them there is no magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "A Celestial Chorus view holds that the breath of life given to Adam was an Avatar from which all others descend.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Those who believe Nephandi Avatars are corrupted liken them to fallen angels.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "mrbr-letting-go",
+  "title": "Letting go of foci",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A step on the road past a single paradigm.",
+  "claims": [
+   {
+    "text": "Wisdom among mages begins when one finds that a spell no longer needs its usual focus, though the focus still makes the working easier.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "Some Archmages could reach the insight of an Oracle but refuse to give up their ideas of magic, perhaps fearing they will lose power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "mrbr-avatar-views"
+  ]
+ },
+ {
+  "id": "mrbr-unbelief",
+  "title": "Paradox spirits and Unbelief",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two dangers that weigh on flashy magic.",
+  "claims": [
+   {
+    "text": "Paradox spirits range from petty pests to legends such as Wrinkle, said to make overly flashy mages never have existed; most are best calmed by means other than magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Unbelief is the idea that things too fantastic to be accepted slowly fade: marvelous machines stop working, wondrous beasts die, and some fear mages themselves will follow.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrbr",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "mrfdf-wonders"
+  ]
+ }
+]
