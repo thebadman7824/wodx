@@ -1399,6 +1399,12 @@
    "title": "Kithbook: Nockers",
    "short": "KB Nockers",
    "edition": "Second edition"
+  },
+  {
+   "id": "ckpooka",
+   "title": "Kithbook: Pooka",
+   "short": "KB Pooka",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1634,6 +1640,7 @@
   "cnob.json",
   "cshc.json",
   "cwic.json",
-  "cknock.json"
+  "cknock.json",
+  "ckpooka.json"
  ]
 }
