@@ -1,0 +1,203 @@
+[
+ {
+  "id": "deb-dread-kings",
+  "title": "The Dread Kings",
+  "kind": "lore",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "ancient",
+   "modern"
+  ],
+  "summary": "How the first Earthbound rose as gods and shaped human history.",
+  "claims": [
+   {
+    "text": "With the fallen and the Host both gone, people spread across the world hunting for power that could explain life's terrors, and a few arcane scholars reached the very edge of the Abyss.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 16,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "What those sorcerers pulled out of the Pit was worshipped as gods and paid its worshippers in terrible power. These demons, later called the Earthbound or Dread Kings, worked from temples and sacred groves to remake the world, and their cycles of conquest and ruin run through history to the present.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 16,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The archdukes had their own doubts about Lucifer's plan to raise humanity to godhood, fearing the fallen would end as servants once more, and they chose to deceive the Morningstar.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 16,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Among the archdukes who came back as Earthbound, Abaddon was worshipped as the goddess Kybele and Asmodeus as Mithra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-earthbound",
+   "dtf-the-abyss",
+   "dcoa-infernal-court"
+  ]
+ },
+ {
+  "id": "deb-cult-of-kybele",
+  "title": "The Cult of Kybele",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "ancient",
+   "modern"
+  ],
+  "summary": "Abaddon's ancient cult, still alive as goddess worship.",
+  "claims": [
+   {
+    "text": "Abaddon put the image of a lustful goddess, porcelain-skinned with golden eyes and night-black hair, into the minds of would-be worshippers, along with the many-faced tree that held the demon itself.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Kybele offered pleasure, success, visions and prowess in war, but the rites demanded in return were bloody and degrading, and those who refused them were taken by the Galloi, a priesthood of eunuchs who built temples of wood, skin and stone in the wild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "By the fifth century the cult had spread from Asia Minor into Greece, and it survives today behind goddess worship groups that still keep some of the old grisly rites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "deb-dread-kings",
+   "dbi-mithraic-cults"
+  ]
+ },
+ {
+  "id": "deb-reliquaries",
+  "title": "Reliquaries",
+  "kind": "lore",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The objects or places that hold an Earthbound.",
+  "claims": [
+   {
+    "text": "Each Earthbound rests in a reliquary chosen to suit it, such as a sword for Manishtusu, Lord of Murder. Whatever the material, the demon's will makes it very hard to destroy, and older, stronger Earthbound tend to have larger, sturdier vessels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The archdukes were given their reliquaries by the humans who called them up; demons that slipped free of a sorcerer's binding had to make do with whatever lay nearest, so the vessels vary widely.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "An Earthbound can take apocalyptic form only near its reliquary and acts on the wider world through thralls, so the vessel is moved only when threatened. Rites held before it yield more Faith, but copies of it can stand in elsewhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Many Earthbound hid their reliquaries under earth or lava, or left them with a human bloodline; archaeology and greed have dug some of them up again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Dagon is said to have sunk its reliquary in the Atlantic and to rely wholly on copies and distant slaves.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Some Earthbound are tied not to an object but to a place, such as a cave, grove or mountaintop held sacred, where intruders met death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "deb",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-earthbound",
+   "dtf-apocalyptic-form",
+   "deb-dread-kings"
+  ]
+ }
+]

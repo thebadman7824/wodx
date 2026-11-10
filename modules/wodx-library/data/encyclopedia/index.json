@@ -1567,6 +1567,12 @@
    "title": "Demon: City of Angels",
    "short": "City of Angels",
    "edition": "First edition"
+  },
+  {
+   "id": "deb",
+   "title": "Demon: Earthbound",
+   "short": "Earthbound",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1830,6 +1836,7 @@
   "hsg.json",
   "hutop.json",
   "hffg.json",
-  "dcoa.json"
+  "dcoa.json",
+  "deb.json"
  ]
 }
