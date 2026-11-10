@@ -1417,6 +1417,12 @@
    "title": "Kithbook: Redcaps",
    "short": "KB Redcaps",
    "edition": "Second edition"
+  },
+  {
+   "id": "cksat",
+   "title": "Kithbook: Satyrs",
+   "short": "KB Satyrs",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1655,6 +1661,7 @@
   "cknock.json",
   "ckpooka.json",
   "ckeshu.json",
-  "ckred.json"
+  "ckred.json",
+  "cksat.json"
  ]
 }
