@@ -757,6 +757,12 @@
    "title": "M20 How Do You DO That?",
    "short": "HDYDT",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "m20bos",
+   "title": "M20 Book of Secrets",
+   "short": "BoS",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -885,6 +891,7 @@
   "dbtw.json",
   "dbtd.json",
   "dbdt.json",
-  "m20hdy.json"
+  "m20hdy.json",
+  "m20bos.json"
  ]
 }
