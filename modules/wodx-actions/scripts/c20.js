@@ -285,7 +285,7 @@ export function build(ctx) {
 
     async function coldIron(actor) {
         return dialog(`Cold iron: ${actor.name}`, `<form><div class="form-group"><label>Levels after soak</label><input type="number" name="k" min="1" max="10" value="1"/></div>
-          <p class="wodx-quiet">Aggravated to the physical and chimerical bodies at once, and a Glamour point a level (pp. 290–291).</p></form>`, "Apply", async fd => {
+          <p class="wodx-quiet">Aggravated to the physical and chimerical bodies at once, and a Glamour point a level (C20 pp. 290–291).</p></form>`, "Apply", async fd => {
             const k = Math.max(1, n(fd.k)), i = info(actor);
             const r = await game.wodxCombat?.applyDamage?.(actor, "aggravated", k);
             const ch = actor.system?.health?.damage?.chimerical;

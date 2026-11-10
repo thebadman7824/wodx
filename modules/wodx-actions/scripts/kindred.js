@@ -493,8 +493,8 @@ export function build(ctx) {
     async function onBlood(actor, before, after) {
         if (!isActiveGM() || !setting("eventPrompts") || P.detectProfile(actor) !== "kindred" || actor.getFlag(MOD, "torpor")) return null;
         const sc = n(actor.system?.advantages?.virtues?.selfcontrol?.permanent);
-        if (K.hungerCrossed(before, after, sc)) return prompt(actor, `${actor.name} hungers`, `<p>Blood ${after}, under ${7 - sc}: the sight, smell or taste of blood can drive ${esc(actor.name)} to frenzy (p. 357).</p>${kbtn("frenzy", actor, "Frenzy check (sight of blood)", "sightblood")}`);
-        if (n(after) === 0 && n(before) > 0) return prompt(actor, `${actor.name} is empty`, `<p>No blood left: ${esc(actor.name)} is ravenous; hunger frenzy is likely, and they can't rise without blood (p. 340).</p>${kbtn("frenzy", actor, "Frenzy check (hunger)", "hunger")}`);
+        if (K.hungerCrossed(before, after, sc)) return prompt(actor, `${actor.name} hungers`, `<p>Blood ${after}, under ${7 - sc}: the sight, smell or taste of blood can drive ${esc(actor.name)} to frenzy (V20 Dark Ages p. 357).</p>${kbtn("frenzy", actor, "Frenzy check (sight of blood)", "sightblood")}`);
+        if (n(after) === 0 && n(before) > 0) return prompt(actor, `${actor.name} is empty`, `<p>No blood left: ${esc(actor.name)} is ravenous; hunger frenzy is likely, and they can't rise without blood (V20 Dark Ages p. 340).</p>${kbtn("frenzy", actor, "Frenzy check (hunger)", "hunger")}`);
         return null;
     }
 

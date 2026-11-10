@@ -1185,3 +1185,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Ben's ruling (B525): fae blood is a potent drug to Kindred in every era, with hallucinations and waking dreams for a scene a point drunk and pools 1 to 3 dice smaller. Actions 3.19.6: rules.js faeBloodHigh, a Changeling / fae vessel in the Feed window, a warning on the feeding card. Rules-clash row updated (Chronicle 0.11.3).
 - Phase 10 spelling pass: travellers, colour, grey, favour in the few prose strings that mixed spellings. gateevents now accepts a growing event list.
 - Language files: system 7.3.2-wodx.6 adds the missing sheet names, "Unnamed passion" and "Unnamed fetter" to en.json and points two templates at keys that exist. New harness test lang-keys.test.mjs fails on any fixed key the system or a module asks for that en.json lacks. Other languages fall back to English.
+
+## Phase 10, polish: page references (2026-11-10)
+- 70 bare page refs on cards and windows now name their book, in the files that cite one book: Demon: The Fallen, Dark Ages: Fae, Dark Ages: Mage, Dark Ages: Inquisitor, Kindred of the East, Mummy: The Resurrection, Hunter: The Reckoning, Wraith 20th, C20 and V20 Dark Ages (Actions, Combat, Creation, Chronicle conditions). "pdf page N, printed page M" is now "pdf N / p. M". page-refs.test.mjs keeps them pinned.
+- Left as they are: refs whose sentence already names the book (rules-clash rows, Otherworlds charts, the Storyteller's wonder note), data files whose Library shelf names the book, and the mixed-book files (Garou, the ghoul window, Sheets), where a wrong guess would be worse than a bare page.
+- Versions: Actions 3.19.7, Chronicle 0.11.4, Combat 3.8.6, Creation 0.9.2, Storyteller 0.18.5.
