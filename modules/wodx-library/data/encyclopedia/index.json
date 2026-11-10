@@ -1243,6 +1243,12 @@
    "title": "Guildbook: Haunters",
    "short": "GBH",
    "edition": "First edition"
+  },
+  {
+   "id": "wgmas",
+   "title": "Guildbook: Masquers",
+   "short": "GBM",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1452,6 +1458,7 @@
   "wdkj.json",
   "wche.json",
   "wgart.json",
-  "wghau.json"
+  "wghau.json",
+  "wgmas.json"
  ]
 }

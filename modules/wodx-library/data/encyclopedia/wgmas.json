@@ -1,0 +1,133 @@
+[
+ {
+  "id": "wgmas-origins",
+  "title": "How the Masquers began",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Soulshapers before and after the Guild.",
+  "claims": [
+   {
+    "text": "Wraiths learned that a Corpus could be reshaped long before Inhabit was taught, so Masquers scoff at the Artificers' claim to be the eldest Guild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgmas",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Small trade circles of Soulshapers had long worked like family crafts; tradition says one of the earliest Anonymae drew the best of them together, after which an envoy pledged the Masquers' Guild to Charon's court.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wgmas",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Other Guilds name the Masquers among the two great traitors of Guild history.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wgmas",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds",
+   "wgart-guild-in-hiding"
+  ]
+ },
+ {
+  "id": "wgmas-brokers",
+  "title": "Masquers for hire",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the early Masquers sold.",
+  "claims": [
+   {
+    "text": "The young Guild showed deep respect for rank but served anyone who could pay, and soon offered far more than cosmetic or military reshaping: information gathering and murder among them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgmas",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "In many Necropoli this grew into something like organized crime, often with Hierarchy officials taking a share.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgmas",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wgmas-origins",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "wgmas-mnemoi-feud",
+  "title": "Masquers and the Mnemoi",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An old rivalry in the trade of secrets.",
+  "claims": [
+   {
+    "text": "Masquer apprentices learn that the Mnemoi were their rivals in brokering information, competing for oboli and Pathos; the memory-miners took to unmasking Moliated spies and assassins, and the rivalry became a secret war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgmas",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Masquer historians boast that their Guildmasters quietly turned Charon against the Mnemoi; comparing a Masquer to a Mnemos is still a grave insult.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wgmas",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wgmas-origins",
+   "oboli"
+  ]
+ }
+]
