@@ -113,6 +113,17 @@
    "modern"
   ],
   "summary": "The Kindred name for the Great Chicago Fire.",
+  "date": {
+   "from": 1871,
+   "label": "1871",
+   "refs": [
+    {
+     "book": "cbn2",
+     "page": 19,
+     "pdf": 20
+    }
+   ]
+  },
   "claims": [
    {
     "text": "A suicidal Malkavian lit the flames that swept the city in 1871. Few mortals died, but some 18,000 buildings burned and Maxwell's supporters were nearly all destroyed.",
@@ -329,6 +340,17 @@
    "modern"
   ],
   "summary": "The anarch uprising that made Chicago the front line of the War of Ages.",
+  "date": {
+   "from": 1966,
+   "label": "1966",
+   "refs": [
+    {
+     "book": "cbn2",
+     "page": 21,
+     "pdf": 22
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Searching Lincoln Park for a newly arrived Brujah, the prince's enforcer Balthazar came on a gathering of Brujah and attacked it. They were members of the band Urban Sprawl, popular anarchs who had preached nonviolence.",
@@ -391,6 +413,17 @@
    "modern"
   ],
   "summary": "The Lupine attacks that cost Chicago a third of its Kindred.",
+  "date": {
+   "from": 1993,
+   "label": "1993",
+   "refs": [
+    {
+     "book": "cbn2",
+     "page": 25,
+     "pdf": 26
+    }
+   ]
+  },
   "claims": [
    {
     "text": "On a moonlit night in 1993, werewolves struck the heart of the city, aiming at the Succubus Club. Lodin called a Blood Hunt on the Lupines.",

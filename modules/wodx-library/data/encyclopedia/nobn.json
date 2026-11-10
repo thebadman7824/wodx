@@ -174,6 +174,18 @@
    "renaissance"
   ],
   "summary": "The old land pact between New Orleans' Kindred and the Uktena.",
+  "date": {
+   "from": 1755,
+   "label": "after 1755",
+   "approx": true,
+   "refs": [
+    {
+     "book": "nobn",
+     "page": 19,
+     "pdf": 20
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Werewolves followed their Cajun kinfolk to the bayous after 1755 and fought the Uktena already there over a caern. In the end the vampires and the Uktena together pushed Cosa into the western swamps.",

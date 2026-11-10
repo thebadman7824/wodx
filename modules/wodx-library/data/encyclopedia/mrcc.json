@@ -10,6 +10,19 @@
    "modern"
   ],
   "summary": "How the Chorus split between Rome and Constantinople.",
+  "date": {
+   "from": 800,
+   "to": 899,
+   "label": "800s",
+   "approx": true,
+   "refs": [
+    {
+     "book": "mrcc",
+     "page": 19,
+     "pdf": 21
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Rapid growth set Western Singers seeking supremacy for Rome against Eastern Singers who wanted equal standing.",
@@ -61,6 +74,18 @@
    "modern"
   ],
   "summary": "The suppression of the Templars as the Chorus remembers it.",
+  "date": {
+   "from": 1307,
+   "to": 1314,
+   "label": "1307 to 1314",
+   "refs": [
+    {
+     "book": "mrcc",
+     "page": 23,
+     "pdf": 25
+    }
+   ]
+  },
   "claims": [
    {
     "text": "King Philip the Fair had the French Templars seized in 1307 on heresy charges, with papal leave, and is widely thought to have wanted their wealth.",

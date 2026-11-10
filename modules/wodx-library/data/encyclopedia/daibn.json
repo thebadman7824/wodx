@@ -67,6 +67,17 @@
    "dark-ages"
   ],
   "summary": "How the Lasombra won Iberia.",
+  "date": {
+   "from": 585,
+   "label": "AD 585 (fall of Yzebel)",
+   "refs": [
+    {
+     "book": "daibn",
+     "page": 21,
+     "pdf": 22
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Brujah, Lasombra and Ventrue used the Visigothic invasion to fight one another: the Ventrue sought a return of Roman order and the Brujah a new Iberian identity.",
@@ -117,6 +128,18 @@
    "dark-ages"
   ],
   "summary": "Power shifts after the fall of Cordoba’s authority.",
+  "date": {
+   "from": 1090,
+   "to": 1093,
+   "label": "1090 to 1093",
+   "refs": [
+    {
+     "book": "daibn",
+     "page": 25,
+     "pdf": 26
+    }
+   ]
+  },
   "claims": [
    {
     "text": "When Cordoban rule collapsed, the Assamite Hilel al-Masaari could no longer enforce a claim to the whole domain, and other sultans rose.",

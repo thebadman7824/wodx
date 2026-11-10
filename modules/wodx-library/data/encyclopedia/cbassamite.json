@@ -163,6 +163,17 @@
    "modern"
   ],
   "summary": "The 1998 lifting of the Tremere curse on the Assamites.",
+  "date": {
+   "from": 1998,
+   "label": "late 1998",
+   "refs": [
+    {
+     "book": "cbassamite",
+     "page": 42,
+     "pdf": 43
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Until late 1998 every Assamite carried the Tremere curse: vampire blood harmed them and gave no nourishment, and attempted diablerie burned them with no gain.",

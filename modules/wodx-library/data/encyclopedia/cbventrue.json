@@ -149,6 +149,19 @@
    "renaissance"
   ],
   "summary": "How the clan grew rich as Europe reached for new worlds.",
+  "date": {
+   "from": 1500,
+   "to": 1599,
+   "label": "16th century",
+   "approx": true,
+   "refs": [
+    {
+     "book": "cbventrue",
+     "page": 24,
+     "pdf": 25
+    }
+   ]
+  },
   "claims": [
    {
     "text": "After the Camarilla formed, the clan surged from the 16th century, while other Kindred, fearing the Inquisition, kept out of mortal affairs.",

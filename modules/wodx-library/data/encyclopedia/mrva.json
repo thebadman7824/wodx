@@ -10,6 +10,18 @@
    "modern"
   ],
   "summary": "An early Adept experiment that shook the Mississippi valley.",
+  "date": {
+   "from": 1810,
+   "to": 1811,
+   "label": "1810 to 1811",
+   "refs": [
+    {
+     "book": "mrva",
+     "page": 13,
+     "pdf": 15
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The first Difference Engineers held that reality was a perception they could rework with Correspondence, Pattern and Entropy.",

@@ -16,6 +16,11 @@
  *                   says what is in question
  *   editions        how a rule changed from edition to edition: [{edition, text, refs}], oldest first
  *   wodx            how WoDX plays it: {text, rule}, rule an optional UUID of the shelf entry or journal it links to
+ * Optional (Library 0.5.4):
+ *   date            when an event happened, from the books: {from, to, label, approx, refs}. from and to are years,
+ *                   BCE as negative numbers (no year 0); to only for a span; label the date as written ("1 May 1970",
+ *                   "4th century AD"); approx true when the book gives only a decade, a century or "around"; refs as
+ *                   for a claim
  */
 
 export const KINDS = {lore: "Lore", character: "Character", faction: "Faction", place: "Place", power: "Power", mechanic: "Rule", term: "Term", event: "Event"};
@@ -64,6 +69,13 @@ export function checkEntry(e, books = {}) {
     if ( !str(e.wodx?.text) ) out.push(`${who}: wodx has no text`);
     if ( e.wodx?.rule !== undefined && !/^(Compendium|JournalEntry|Item|RollTable)\.[\w.-]+$/.test(e.wodx.rule) ) out.push(`${who}: wodx.rule must be a document UUID`);
   }
+  if ( e.date !== undefined ) {
+    const d = e.date, yr = v => Number.isInteger(v) && v !== 0 && v <= 2200;
+    if ( !yr(d?.from) ) out.push(`${who}: date.from must be a year (BCE negative, no year 0)`);
+    if ( d?.to !== undefined && (!yr(d.to) || d.to < d.from) ) out.push(`${who}: date.to must be a year no earlier than date.from`);
+    if ( d?.approx !== undefined && typeof d.approx !== "boolean" ) out.push(`${who}: date.approx must be true or false`);
+    part("date", {text: d?.label, refs: d?.refs});
+  }
   const text = entryText(e);
   if ( BANNED.test(text) ) out.push(`${who}: names a 5th edition or later book`);
   if ( /—/.test(text) ) out.push(`${who}: an em-dash in the text`);
@@ -106,9 +118,10 @@ export function toJournal(e, {books = {}, pack = "world.wodx-encyclopedia", titl
   const editions = Array.isArray(e.editions) && e.editions.length ? `<p><strong>From edition to edition</strong></p><ol class="wodx-ency-editions">${e.editions.map(v => `<li><em>${esc(v.edition)}:</em> ${esc(v.text)} ${src(v.refs)}</li>`).join("")}</ol>` : "";
   const wodx = e.wodx?.text ? `<p><strong>In WoDX:</strong> ${esc(e.wodx.text)}${e.wodx.rule ? ` @UUID[${e.wodx.rule}]{the rule}` : ""}</p>` : "";
   const see = (e.see ?? []).map(s => `@UUID[Compendium.${pack}.JournalEntry.${docId(s)}]{${esc(titles[s] ?? s)}}`).join(", ");
-  const html = `<p><em>${esc(KINDS[e.kind] ?? e.kind)}</em></p><p>${esc(e.summary)}</p><ul>${claims}</ul>${editions}${wodx}${see ? `<p><strong>See also:</strong> ${see}</p>` : ""}`;
+  const when = e.date?.label ? `<p><strong>When:</strong> ${esc(e.date.label)} ${src(e.date.refs)}</p>` : "";
+  const html = `<p><em>${esc(KINDS[e.kind] ?? e.kind)}</em></p>${when}<p>${esc(e.summary)}</p><ul>${claims}</ul>${editions}${wodx}${see ? `<p><strong>See also:</strong> ${see}</p>` : ""}`;
   return {_id: docId(e.id), name: e.title, pages: [{name: e.title, type: "text", text: {content: html, format: 1}}],
-    flags: {[MOD]: {shelf: `ency-${e.id}`, ency: e.id, kind: e.kind, book: [...new Set((e.claims ?? []).flatMap(c => (c.refs ?? []).map(r => r.book)))].join(", "), lines: e.lines, eras: e.eras}}};
+    flags: {[MOD]: {shelf: `ency-${e.id}`, ency: e.id, kind: e.kind, book: [...new Set((e.claims ?? []).flatMap(c => (c.refs ?? []).map(r => r.book)))].join(", "), lines: e.lines, eras: e.eras, ...(e.date ? {year: e.date.from, yearTo: e.date.to ?? e.date.from} : {})}}};
 }
 
 /* ---- The text-overlap check: no run of words copied from the books ---- */
@@ -128,5 +141,5 @@ export function overlap(entryText, sourceShingles, n = SHINGLE) {
 /** All the words of an entry, for the checks: claims, the versions where books differ, editions and the WoDX note. */
 export function entryText(e) {
   const claims = (e?.claims ?? []).flatMap(c => [c?.text, ...(Array.isArray(c?.versions) ? c.versions.map(v => v?.text) : [])]);
-  return [e?.title, e?.summary, ...claims, ...(Array.isArray(e?.editions) ? e.editions.map(v => v?.text) : []), e?.wodx?.text].filter(str).join(". ");
+  return [e?.title, e?.summary, e?.date?.label, ...claims, ...(Array.isArray(e?.editions) ? e.editions.map(v => v?.text) : []), e?.wodx?.text].filter(str).join(". ");
 }

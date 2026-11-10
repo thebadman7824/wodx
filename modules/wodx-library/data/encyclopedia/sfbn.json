@@ -11,6 +11,17 @@
    "wild-west"
   ],
   "summary": "How the boom of 1849 brought the Kindred west.",
+  "date": {
+   "from": 1849,
+   "label": "1849",
+   "refs": [
+    {
+     "book": "sfbn",
+     "page": 21,
+     "pdf": 22
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 1849 San Francisco grew from 900 people to 26,000, with another 100,000 passing through on the way to the hills.",
@@ -148,6 +159,17 @@
    "modern"
   ],
   "summary": "The quake and fire that burned San Francisco, Chinatown included.",
+  "date": {
+   "from": 1906,
+   "label": "18 April 1906",
+   "refs": [
+    {
+     "book": "sfbn",
+     "page": 25,
+     "pdf": 26
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Kuei-jin say the Earth Dragon was restless. The quake lasted under a minute, and the fires it set burned some 28,000 buildings, all of Chinatown among them, while broken water mains left firefighters with buckets.",

@@ -1994,6 +1994,19 @@
    "renaissance"
   ],
   "summary": "The closing of the gates to Arcadia, when the nobles fled and the commoners were left behind.",
+  "date": {
+   "from": 1300,
+   "to": 1399,
+   "label": "from the 14th century",
+   "approx": true,
+   "refs": [
+    {
+     "book": "c20",
+     "page": 36,
+     "pdf": 37
+    }
+   ]
+  },
   "claims": [
    {
     "text": "From the 14th century the gates broke one after another as faith and reason drove out old beliefs.",
@@ -2051,6 +2064,19 @@
    "modern"
   ],
   "summary": "The long centuries when the commoners ran fae society alone, without the Arcadian nobles.",
+  "date": {
+   "from": 1300,
+   "to": 1969,
+   "label": "14th century to 1969",
+   "approx": true,
+   "refs": [
+    {
+     "book": "c20",
+     "page": 36,
+     "pdf": 37
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Interregnum runs from the Shattering until the sidhe returned, through world wars and the Depression.",
@@ -2096,6 +2122,17 @@
    "modern"
   ],
   "summary": "The return of the Arcadian sidhe in 1969, when human hope reopened the way.",
+  "date": {
+   "from": 1969,
+   "label": "20 July 1969",
+   "refs": [
+    {
+     "book": "c20",
+     "page": 108,
+     "pdf": 109
+    }
+   ]
+  },
   "claims": [
    {
     "text": "After the Second World War, new dreams of space and the future sent Glamour back into the Dreaming.",
@@ -2149,6 +2186,17 @@
    "modern"
   ],
   "summary": "The Beltaine Massacre, when sidhe murdered commoner leaders at a peace feast and set off the Accordance War.",
+  "date": {
+   "from": 1970,
+   "label": "1 May 1970",
+   "refs": [
+    {
+     "book": "cfool",
+     "page": 34,
+     "pdf": 35
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Arcadian sidhe invited commoner leaders to a Beltaine masquerade to talk peace, and masked killers with cold iron knives slew them.",
@@ -2190,6 +2238,17 @@
    "modern"
   ],
   "summary": "The war between returning nobles and commoners that ended with David crowned High King.",
+  "date": {
+   "from": 1970,
+   "label": "from May 1970; Battle of Manhattan December 1973",
+   "refs": [
+    {
+     "book": "cfool",
+     "page": 34,
+     "pdf": 35
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Ten days after the massacre the nobles marched under High King Dafyll of House Gwydion and took San Francisco in the Battle of the Bay.",
@@ -2243,6 +2302,17 @@
    "modern"
   ],
   "summary": "The surge of nightmare Glamour around September 11, 2001 that let many Thallain into the Autumn world.",
+  "date": {
+   "from": 2001,
+   "label": "11 September 2001",
+   "refs": [
+    {
+     "book": "c20",
+     "page": 28,
+     "pdf": 29
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Evanescence is dated to around September 11, 2001.",
