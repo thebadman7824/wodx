@@ -1,0 +1,733 @@
+[
+ {
+  "id": "kebk-ebony-kingdom",
+  "title": "The Ebony Kingdom",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Vampire Africa, a patchwork of kingdoms ruled by the Guruhi.",
+  "claims": [
+   {
+    "text": "All the vampire kingdoms of Africa together make up the Ebony Kingdom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "It now holds 11 lesser kingdoms, each under a Guruhi lord, split into smaller domains governed by magaji.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Laibon society is local and fragmented: a thin shared vampire culture spans the continent, but no single authority rules all domains.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Politics turn on the clash between tradition, backed by the Guruhi and elders, and the more progressive young Laibon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-terms",
+   "kebk-guruhi"
+  ]
+ },
+ {
+  "id": "kebk-terms",
+  "title": "Laibon Terms",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Common words of African vampire society.",
+  "claims": [
+   {
+    "text": "Laibon means an African vampire; in Maasai the word means shaman or medicine man.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "In the Ebony Kingdom clans are called legacies, a word with a stronger family sense than clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "kebk",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "A magaji is the leading vampire of a domain, much like a prince, from a Boko word for king.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Feuding within a legacy is thought unbecoming, though rivalries still happen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-magaji",
+  "title": "Magaji and Rival Claimants",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How domains are ruled in practice.",
+  "claims": [
+   {
+    "text": "Only a lord can grant the title of magaji, but countless pretenders claim it, and in big cities a claimant may rule without the Guruhi patron knowing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Guruhi kings are often old or distracted and may not care who is magaji if the kingdom is calm, so a domain can have two claimants or none and be truly lawless.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-guruhi"
+  ]
+ },
+ {
+  "id": "kebk-akunanse",
+  "title": "Akunanse",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The wandering storyteller legacy, called Weavers.",
+  "claims": [
+   {
+    "text": "The Akunanse take their name from the wise spider of Ashanti legend and are nicknamed Weavers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 14,
+      "pdf": 15
+     },
+     {
+      "book": "kebk",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "They roam the continent seeking knowledge, take on beastly traits of spider, lion, hyena or snake with age, and are valued as advisors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "They are probably rooted in Ghana but no longer call any region home, and they care less about the Jyhad than any other legacy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Legend tells of an Akunanse traveller named Hasani who crossed every kind of land in the 16th century.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-setites",
+  "title": "Setites of the Ebony Kingdom",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sub-Saharan Followers of Set, called Vipers.",
+  "claims": [
+   {
+    "text": "Nicknamed Vipers, they draw others under their sway while staying apart from Laibon politics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 15,
+      "pdf": 16
+     },
+     {
+      "book": "kebk",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "They await the finding of the Grand Temple, which some think lies in the Ebony Kingdom together with Set, who withdrew there in AD 33.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Zhenga, a Setite, rules the criminal underworld of Mombasa and wants to claim the city outright.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-guruhi",
+  "title": "Guruhi",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ruling legacy, called Kings.",
+  "claims": [
+   {
+    "text": "The Guruhi are nicknamed Kings and hold the kingdoms of the Ebony Kingdom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 31,
+      "pdf": 32
+     },
+     {
+      "book": "kebk",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Their looks shift with their moods, by turns hideous and angelic; their legend says a god cursed the founder to be only as fair as the founder's soul.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Their legacy Disciplines are Animalism, Potence and Presence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-ishtarri",
+  "title": "Ishtarri",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Outsider spies and diplomats, called Gluttons.",
+  "claims": [
+   {
+    "text": "The Ishtarri claim the name of the Babylonian goddess Ishtar and are nicknamed Gluttons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "They are not native to Africa, never hide it, and have made themselves vital to Laibon society through diplomacy and spying without trying to unseat the Guruhi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-kinyonyi",
+  "title": "Kinyonyi",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The travelling legacy that fetches and carries, called Nomads.",
+  "claims": [
+   {
+    "text": "Their name comes from the Luganda word for bird, and they travel more than any other legacy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "kebk",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Other Laibon turn to them to obtain goods or carry out tasks, for a price.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "They began as outsiders and keep their own organization apart from mainstream society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-naglopers",
+  "title": "Naglopers",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A debased and cruel legacy, called Horrors.",
+  "claims": [
+   {
+    "text": "Naglopers are a cruel, debased legacy nicknamed Horrors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "kebk",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Few are social, and the socially gifted ones count among the most frightening psychopaths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-osebo",
+  "title": "Osebo",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hot-blooded warrior legacy, called the Pride.",
+  "claims": [
+   {
+    "text": "Named for the proud leopard of Ashanti legend, the Osebo are among the most numerous legacies and are called the Pride.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "They Embrace on impulse, all share a fiery temper, and often serve as warriors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-shango",
+  "title": "Shango",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Warriors and sorcerers devoted to the Yoruba god of storms, called Judges.",
+  "claims": [
+   {
+    "text": "The Shango worship the Yoruba god of storms, magic and war and have long been the power behind many magaji.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "They uphold the established order, which often makes them allies of the Guruhi, and they keep quiet about their magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Laibon tales credit many fables to an old Shango named Jafari, who may never have existed.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-mla-watu",
+  "title": "Mla Watu",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A feared legacy that controls the dead, called Ghost-Eaters.",
+  "claims": [
+   {
+    "text": "The Mla Watu seek to command the dead rather than seek their counsel, which many Laibon find repulsive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 198,
+      "pdf": 199
+     }
+    ]
+   },
+   {
+    "text": "They want to be left alone, and most Laibon oblige them; the few who hunted them have tended to disappear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 198,
+      "pdf": 199
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-nkulu-zao",
+  "title": "Nkulu Zao",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunted childer of Zao-lat, called Soulsuckers.",
+  "claims": [
+   {
+    "text": "Their founder Zao-lat was found asleep by power-seeking magi and supposedly destroyed, drained by the strongest of them, who then hunted the childer.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 200,
+      "pdf": 201
+     }
+    ]
+   },
+   {
+    "text": "Nobody knows how many survive, and some think the belief that only a handful exist is spread by the Nkulu Zao themselves.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 200,
+      "pdf": 201
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-foreign-clans",
+  "title": "Foreign Clans in Africa",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Western clans that live in the Ebony Kingdom.",
+  "claims": [
+   {
+    "text": "Malkavians and Ventrue in Africa resemble their clanmates elsewhere but have usually left something behind to seek refuge there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 195,
+      "pdf": 196
+     }
+    ]
+   },
+   {
+    "text": "Laibon call the Malkavians Hyenas and the Ventrue Blue Bloods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 196,
+      "pdf": 197
+     },
+     {
+      "book": "kebk",
+      "page": 202,
+      "pdf": 203
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ },
+ {
+  "id": "kebk-beast-men",
+  "title": "Supernatural Africa",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Other beings Laibon meet.",
+  "claims": [
+   {
+    "text": "Ghosts and hunters in the Ebony Kingdom are much like those elsewhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 171,
+      "pdf": 172
+     }
+    ]
+   },
+   {
+    "text": "Instead of only Lupines, Africa has many kinds of beast-men, and the lines between kinds of supernatural blur more there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kebk",
+      "page": 171,
+      "pdf": 172
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kebk-ebony-kingdom"
+  ]
+ }
+]

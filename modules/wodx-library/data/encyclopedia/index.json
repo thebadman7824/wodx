@@ -1641,6 +1641,60 @@
       "edition": "Third edition"
     },
     {
+      "id": "bsac",
+      "title": "Blood Sacrifice: The Thaumaturgy Companion",
+      "short": "BSac",
+      "edition": "Revised"
+    },
+    {
+      "id": "sotb",
+      "title": "Sin of the Blood",
+      "short": "SotB",
+      "edition": "Revised"
+    },
+    {
+      "id": "cop",
+      "title": "Counsel of Primogen",
+      "short": "CoP",
+      "edition": "Revised"
+    },
+    {
+      "id": "hotd",
+      "title": "Havens of the Damned",
+      "short": "HotD",
+      "edition": "Revised"
+    },
+    {
+      "id": "sog",
+      "title": "State of Grace",
+      "short": "SoG",
+      "edition": "Revised"
+    },
+    {
+      "id": "bmst",
+      "title": "Blood Magic: Secrets of Thaumaturgy",
+      "short": "BMSoT",
+      "edition": "Revised"
+    },
+    {
+      "id": "succ",
+      "title": "The Succubus Club",
+      "short": "SuccC",
+      "edition": "First edition"
+    },
+    {
+      "id": "kebk",
+      "title": "Kindred of the Ebony Kingdom",
+      "short": "KotEK",
+      "edition": "Revised"
+    },
+    {
+      "id": "gfa",
+      "title": "Ghouls: Fatal Addiction",
+      "short": "G:FA",
+      "edition": "Revised"
+    },
+    {
       "id": "hbway",
       "title": "Hunter Book: Wayward",
       "short": "HB Wayward",
@@ -1663,6 +1717,48 @@
       "title": "The Autumn People",
       "short": "Autumn People",
       "edition": "Second edition"
+    },
+    {
+      "id": "coti",
+      "title": "Children of the Inquisition",
+      "short": "CotI",
+      "edition": "First edition"
+    },
+    {
+      "id": "kmw",
+      "title": "The Kindred Most Wanted",
+      "short": "KMW",
+      "edition": "First edition"
+    },
+    {
+      "id": "hkbn",
+      "title": "Hong Kong by Night",
+      "short": "HKbN",
+      "edition": "First edition"
+    },
+    {
+      "id": "encv",
+      "title": "Encyclopaedia Vampirica",
+      "short": "EncV",
+      "edition": "Revised"
+    },
+    {
+      "id": "cchand",
+      "title": "Caine's Chosen: The Black Hand",
+      "short": "CC:BH",
+      "edition": "Revised"
+    },
+    {
+      "id": "dsbh",
+      "title": "Dirty Secrets of the Black Hand",
+      "short": "DSotBH",
+      "edition": "Revised"
+    },
+    {
+      "id": "ancb",
+      "title": "Anarch Cookbook",
+      "short": "AnCB",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -1939,9 +2035,25 @@
     "woddhx.json",
     "wod1.json",
     "mtr.json",
+    "bsac.json",
+    "sotb.json",
+    "cop.json",
+    "hotd.json",
+    "sog.json",
+    "bmst.json",
+    "succ.json",
+    "kebk.json",
+    "gfa.json",
     "hbway.json",
     "wlbd.json",
     "wspg.json",
-    "cap.json"
+    "cap.json",
+    "coti.json",
+    "kmw.json",
+    "hkbn.json",
+    "encv.json",
+    "cchand.json",
+    "dsbh.json",
+    "ancb.json"
   ]
 }

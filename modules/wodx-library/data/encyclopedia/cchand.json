@@ -1,0 +1,282 @@
+[
+ {
+  "id": "cchand-hand",
+  "title": "The Black Hand of the Sabbat",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sabbat's secretive elite of warriors and strategists.",
+  "claims": [
+   {
+    "text": "Members of the Black Hand see the order as a Gehenna cult, a thin light holding out against the dark, though the Camarilla says the same of the whole Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 10,
+      "pdf": 11
+     },
+     {
+      "book": "cchand",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Outside the Hand, few Sabbat know much about it, and that mystery only adds to its fearsome name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Code of Milan requires all Sabbat to support the Black Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "cchand",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Hand first kept quiet and was valued for stealth and political advice, then let its skill at strategy and military training become known.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cchand-terms",
+   "cchand-assamites"
+  ]
+ },
+ {
+  "id": "cchand-terms",
+  "title": "Black Hand Ranks and Marks",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Titles and signs used inside the Black Hand.",
+  "claims": [
+   {
+    "text": "Mustajib, deserving ones, are newly initiated members of the Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 7,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "A Watch Commander leads all Hand members in a territory, watches local Sabbat politics and makes sure they share the Vaulderie with each other as well as with their packs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The crescent tattoo of the Hand has been in use since at least about 1550.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cchand-hand"
+  ]
+ },
+ {
+  "id": "cchand-civil-wars",
+  "title": "The Sabbat Civil Wars",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "victorian",
+   "modern"
+  ],
+  "summary": "Long infighting that forced the Sabbat to organize.",
+  "claims": [
+   {
+    "text": "Internal wars have filled most of Sabbat history, and the one benefit was that they pushed the sect into firmer organization.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Gorchist's claim to the regency went unchallenged, but from far away it meant little to most members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cchand-hand"
+  ]
+ },
+ {
+  "id": "cchand-assamites",
+  "title": "Assamite Antitribu in the Hand",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Assamite antitribu and their former grip on the Hand.",
+  "claims": [
+   {
+    "text": "The Assamite antitribu kept their clan identity and their own circles within the Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Until recently they held half the seats on the council of Seraphim and a third or more of the dominion posts, which bred resentment among other members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cchand-hand"
+  ]
+ },
+ {
+  "id": "cchand-andreikov",
+  "title": "Piotr Andreikov",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Black Hand emissary code-named Winter.",
+  "claims": [
+   {
+    "text": "Piotr Andreikov, code name Winter, is a Black Hand emissary.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Andreikov, born in America to Ukrainian immigrants, grew up an outsider in Houston schools.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cchand-hand"
+  ]
+ },
+ {
+  "id": "cchand-school-of-night",
+  "title": "The School of Night",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "An Elizabethan circle of scholars that drew Kindred interest.",
+  "claims": [
+   {
+    "text": "Dee, Raleigh, Marlowe, Bacon, Hariot and others were rumoured to form the School of Night, with interests from the occult and poetry to cryptography and the New World.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "A Nosferatu took an interest in the circle and sought its writings rather than Embracing such famous men.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cchand-hand"
+  ]
+ }
+]

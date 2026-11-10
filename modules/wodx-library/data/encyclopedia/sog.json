@@ -1,0 +1,368 @@
+[
+ {
+  "id": "sog-kindred-faith",
+  "title": "Kindred Readings of Scripture",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Kindred sects reshape mortal faiths to fit their own existence.",
+  "claims": [
+   {
+    "text": "Mortal scriptures say nothing of the Kindred, so some Kindred reread them with their own existence in mind, mostly without meaning to twist them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Most such sects hold that the Kindred have a deliberate place in God's order, though they disagree on what it is.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Some say God kept the Kindred out of scripture to hide them from mortals; others say the Kindred removed themselves from human writings.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Most of these faiths set a code of conduct, less strict than a Path of Enlightenment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Heresies the Church stamped out among mortals still have a following among Kindred, who have long memories.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sog-nazoreans",
+   "sog-elohists",
+   "sog-consumptionists",
+   "sog-deimosians",
+   "sog-patmostines"
+  ]
+ },
+ {
+  "id": "sog-nazoreans",
+  "title": "Nazoreans",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kindred who follow Jesus within traditional Jewish practice.",
+  "claims": [
+   {
+    "text": "Nazoreans keep traditional Jewish law, including dietary rules, and part ways with Judaism only over Jesus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "They hold Jesus to be the greatest of prophets and the promised anointed one of the line of David.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Leaders claim to have been active in Jesus's time or to descend from a vampire who was; the rest are converts acting as disciples.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sog-kindred-faith"
+  ]
+ },
+ {
+  "id": "sog-elohists",
+  "title": "Kindred Elohists",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two schools with their own creation stories for the Kindred.",
+  "claims": [
+   {
+    "text": "Kindred Elohists split into two main schools, the Lilin and the Nephilists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "The Lilin, also called Bahari after a word in their texts, are best known in the Sabbat for the Path of Lilith, though not all belong to the Sabbat or that Path.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Nephilists hold that vampires come from the Nephilim or from the evil spirits led by Mastema, and blame the dropping of Enoch and Jubilees from the Bible for Kindred ignorance of this.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Those who think themselves part angel usually try to do good.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sog-kindred-faith"
+  ]
+ },
+ {
+  "id": "sog-consumptionists",
+  "title": "Consumptionists",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An ancient Kindred faith awaiting a vampire who becomes God.",
+  "claims": [
+   {
+    "text": "Consumptionists teach that each Embrace passed on part of a share of God's might, so the latest generations hold almost none.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "The world ends, they say, when one last Kindred has drawn all that power back into one form and becomes God, making a new world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "It is one of the oldest Kindred faiths, older than Christianity by thousands of years, but has always been small and keeps shrinking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sog-kindred-faith"
+  ]
+ },
+ {
+  "id": "sog-deimosians",
+  "title": "Deimosianism",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A faith that tells Kindred to act as the fear they were born from.",
+  "claims": [
+   {
+    "text": "Deimosianism has almost no fixed rules and asks Kindred to follow their natures and instincts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "It teaches that Kindred descend from spiritual forms of human fear, so their place is to terrify and prey on mortals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sog-kindred-faith"
+  ]
+ },
+ {
+  "id": "sog-patmostines",
+  "title": "The Patmostine Order",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Christian sect of Kindred who believe the Rapture already happened.",
+  "claims": [
+   {
+    "text": "Named for Patmos, where Saint John received the Revelation, the Order believes the Rapture has come and gone, most likely at some time after the death of Christ.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "The Order holds that Kindred who meet Final Death are sure of Heaven, but the fewer who survive to Embrace others, the more worthy souls are missed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "It was founded in the 1530s, in the wake of the Reformation, by the French Toreador Louvel Tarneau.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Legend says Tarneau fasted for over a month during a crisis of faith without falling into torpor.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sog-kindred-faith",
+   "sog-rapture"
+  ]
+ },
+ {
+  "id": "sog-rapture",
+  "title": "Rapture Doctrines",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kindred beliefs that God has already left the world.",
+  "claims": [
+   {
+    "text": "Some Kindred sects, and some mortal ones, hold that the Rapture is past and God is wholly absent from the modern world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sog",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sog-patmostines"
+  ]
+ }
+]
