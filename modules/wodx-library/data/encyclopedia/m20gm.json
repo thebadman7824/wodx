@@ -1,0 +1,267 @@
+[
+ {
+  "id": "m20gm-backup-agents",
+  "title": "Backup agents",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hired teams that support mages in a crisis.",
+  "claims": [
+   {
+    "text": "Backup agents bring covering fire, extraction, getaways, or quieter help such as moving gear, passing messages, clean-up and paperwork.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "They serve a group and are loyal to it, but most of all they work for pay, so in a hopeless fight they pull back or run.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Teams have a leader who calls the moves, so they do not take orders from the mage they guard.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy"
+  ]
+ },
+ {
+  "id": "m20gm-avatars-as-characters",
+  "title": "Avatars as characters",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The inner gods of mages given a face.",
+  "claims": [
+   {
+    "text": "A mage may perceive an Avatar as anything from a whisper to a seemingly separate person.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "Most Avatars have no body and so no Physical Traits, except those made real through the Manifest Avatar Merit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "Great spirits such as Papa Legba are principles wearing a shape, here transition and passage, and deserve respect beyond their outward look.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar"
+  ]
+ },
+ {
+  "id": "m20gm-la-huesera",
+  "title": "La Huesera, the Bone Woman",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A spirit who gathers the bones of the forgotten.",
+  "claims": [
+   {
+    "text": "Bone Woman collects remains of vanishing animals such as wolves and polar bears, and of people nobody stops to remember.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   },
+   {
+    "text": "Bone Woman draws no line between beasts and humans, seeing all as different peoples.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   },
+   {
+    "text": "La Huesera has never been known to bring back anyone's loved one, holding that those who are mourned already live on in memory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   },
+   {
+    "text": "Bone Woman rebuilds the dead over weeks or months with beads, wire, wood and scraps, singing in the local native tongues.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "verbena"
+  ]
+ },
+ {
+  "id": "m20gm-aelida",
+  "title": "Lady Aelida, the Lady of Feathers",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A riddling spirit who wears the face of someone trusted.",
+  "claims": [
+   {
+    "text": "Aelida takes the form of whoever the viewer trusts most, but always wears a feather somewhere on that guise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 142,
+      "pdf": 143
+     }
+    ]
+   },
+   {
+    "text": "Aelida's feathers hold Tass, about five points each, and are sometimes given to mages who lend aid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 142,
+      "pdf": 143
+     }
+    ]
+   },
+   {
+    "text": "Aelida speaks in riddles and opposes the Technocracy and anyone who would bind the world to one form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 142,
+      "pdf": 143
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "quintessence"
+  ]
+ },
+ {
+  "id": "m20gm-bygones",
+  "title": "Bygones",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mythic beasts that the modern world no longer believes in.",
+  "claims": [
+   {
+    "text": "Griffins, imps, unicorns and their like suffer Unbelief Paradox outside the Umbrae and need a steady feed of Quintessence from human keepers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 183,
+      "pdf": 184
+     }
+    ]
+   },
+   {
+    "text": "Thrown into public view, often by Marauders, they tend to die within minutes and their bodies rot or fade soon after.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 183,
+      "pdf": 184
+     }
+    ]
+   },
+   {
+    "text": "Small Bygones can serve as Chantry guards, or blend into local belief if they keep their true nature quiet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20gm",
+      "page": 183,
+      "pdf": 184
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "marauders",
+   "quintessence"
+  ]
+ }
+]

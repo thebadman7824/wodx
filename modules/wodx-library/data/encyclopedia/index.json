@@ -769,6 +769,12 @@
    "title": "M20 Book of the Fallen",
    "short": "BotF",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "m20gm",
+   "title": "M20 Gods & Monsters",
+   "short": "G&M",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -899,6 +905,7 @@
   "dbdt.json",
   "m20hdy.json",
   "m20bos.json",
-  "m20botf.json"
+  "m20botf.json",
+  "m20gm.json"
  ]
 }
