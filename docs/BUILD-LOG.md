@@ -1240,3 +1240,12 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Second of the approved planning recommendations. An organic village, town or city may have a river (villages 50%, towns 60%, cities 75%; ddtown.py --river yes/no/random). It winds gently across the whole map and passes to one side of the market, 2.6 to 4.6 squares wide by size. It is not tied to the patches: buildings, wings, plots and gardens keep off it like a way (check_ways covers it), and each street or road that crosses it gets a plank bridge with railings. B583.
 - A watermill (a workshop whose household is the miller's) stands on the frontage nearest the water; a washing place (trough, bucket, barrel) sits on the town's bank upstream of the middle of town, leaving downstream for the dirty trades. The river is drawn with Forgotten Adventures' River_Bank_Blue path.
 - Sidecar regions: river-N (the river, place other), bridge-N (place street), washing-place (place other). Samples schondorf and linberg redrawn. Test: a town on a river has its river, bridges, washing place and miller; --river no has none.
+
+## 2026-11-10: dirty trades, wealth, landmarks, suburbs and fire (map tools)
+- Recommendations 3 to 7 of the approved planning doc. The river now takes the course (of ten tried) that runs along the fewest ways, so streets do not run into the water.
+- Dirty trades: about 30% of workshops become tanners, dyers, butchers, fullers and chandlers, placed by a score that favours downstream on the river, against or outside the wall, and far from the market; the rest take clean trades. B584.
+- Wealth: each house is rich, middling or poor by distance from the market, its ward and nearness to the dirty trades. Rich houses have stone and timber walls and boarded floors, middling timber and plaster, poor plain timber. Each household in the sidecar carries wealth (Adopt does not read it yet). B585.
+- Landmarks: public wells by the busier junctions away from the market, set back off the ways (towns 2, cities 6), a market cross a few squares from the market well, and a tower each side of every gate. B586.
+- Suburbs: gate wards outside the walls are now likely (85%), with inns and an almshouse (its keeper and almsmen) as well as cottages, smiths and workshops. B587.
+- Fire history: villages 20%, towns 40%, cities 60% have had a great fire in one block. One burned-out plot is left with charred timbers (sidecar region burned-N) and the block's houses were rebuilt in stone. B588.
+- Samples schondorf and linberg redrawn.

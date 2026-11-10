@@ -274,6 +274,6 @@ class Layout:
         road_v = {v for r in self.roads for v in r}
         for p in self.patches:
             if p["inner"] or p["ward"]: continue
-            if self.wall and any(g in p["v"] for g in self.gates) and R.random() < .5: p["ward"] = "gate-out"
+            if self.wall and any(g in p["v"] for g in self.gates) and R.random() < .85: p["ward"] = "gate-out"   # suburbs grow outside the gates
             elif set(p["v"]) & road_v and R.random() < (.8 if self.size == "village" else .5): p["ward"] = "farm"
             else: p["ward"] = "country"
