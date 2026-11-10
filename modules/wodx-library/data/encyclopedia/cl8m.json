@@ -1,0 +1,72 @@
+[
+ {
+  "id": "cl8m-hsien-duties",
+  "title": "The hsien",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "ancient",
+   "modern"
+  ],
+  "summary": "The spirit folk of Asia and their charge.",
+  "claims": [
+   {
+    "text": "The hsien hold that the Dragon Kings rule them and that in return for service they are granted immortality; they call themselves guardians of the Wheel of Fate and protectors of the Middle Kingdom, carrying a burden left by the failed Wan Xian.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cl8m",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Defying the Mandates of Heaven, the hsien once warred among themselves and nearly died out, until one of their number broke the Mandates for the good of all, or so that one tells it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cl8m",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-wan-xian"
+  ]
+ },
+ {
+  "id": "cl8m-gift-of-chien",
+  "title": "The Gift of the Chien",
+  "kind": "power",
+  "lines": [
+   "changeling",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the hsien take mortal bodies.",
+  "claims": [
+   {
+    "text": "Unlike the Wan Xian, now the Kuei-jin, the hsien were never forced into the bodies of the dead; the Gift of the Chien lets a hsien take the body of a dying mortal, usually inheriting that person's memories and papers along with it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cl8m",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cl8m-hsien-duties",
+   "mrdote-wan-kuei"
+  ]
+ }
+]
