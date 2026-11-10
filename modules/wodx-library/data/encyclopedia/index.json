@@ -1879,6 +1879,12 @@
       "title": "Axis Mundi: The Book of Spirits",
       "short": "Axis Mundi",
       "edition": "Second edition"
+    },
+    {
+      "id": "waausp",
+      "title": "Book of Auspices",
+      "short": "Book of Auspices",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2194,6 +2200,7 @@
     "daknight.json",
     "dathief.json",
     "wawor.json",
-    "waaxis.json"
+    "waaxis.json",
+    "waausp.json"
   ]
 }
