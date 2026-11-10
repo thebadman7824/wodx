@@ -1,0 +1,533 @@
+[
+ {
+  "id": "dahc-carthage-two-tales",
+  "title": "Carthage, Two Tellings",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Brujah and Ventrue remember the fall of the Second City.",
+  "claims": [
+   {
+    "text": "Brujah blame the Ventrue and their Toreador allies for turning Rome on Carthage and for corrupting some of the city's finest minds; some legends say the first Troile still lies trapped under the salted ground.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 21,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The Ventrue account paints Carthage as a den of demon worship where Brujah and Assamites stood beside the Baali at sacrificial blood revels that killed mortals by the dozen.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 21,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "In the Ventrue telling, Carthage grew from Brujah backing into Rome's rival, lost Iberia after the Second Punic War, and still left many Romans, living and dead, demanding its total destruction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 56,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbb-carthage",
+   "da-brujah",
+   "da-ventrue"
+  ]
+ },
+ {
+  "id": "dahc-brujah-memory",
+  "title": "Zealots Who Forget",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why fewer young Brujah learn their clan's history.",
+  "claims": [
+   {
+    "text": "Once almost every Brujah knew the clan's past; Zealots ignorant of it are now growing common.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 23,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Brujah Embraced by sires who remember Carthage or Constantinople are far likelier to be taught; others ask why a new generation should inherit an anger it never saw.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 23,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dahc-carthage-two-tales",
+   "da-brujah"
+  ]
+ },
+ {
+  "id": "dahc-cappadocian-churchmen",
+  "title": "Cappadocians in the Church",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Graverobbers among the clergy, and the doubters among them.",
+  "claims": [
+   {
+    "text": "A few Cappadocians gained real power in the Church, as priests or by steering churchmen; Church records gave them insight into faith, life and death, and leverage over rulers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "A small number of these religious Cappadocians now judge their founder's aim of supplanting God to be blasphemy. They still love the founder, have done nothing against the clan and pray each night for a change of course.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-cappadocians"
+  ]
+ },
+ {
+  "id": "dahc-lasombra-and-church",
+  "title": "The Lasombra and the Church",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How much of the Church the Magisters truly hold.",
+  "claims": [
+   {
+    "text": "Tales of Lasombra control over cardinals and the Pope are much exaggerated, most likely by the Lasombra; the clan copies the Church's rites, ranks and ambitions, but its real sway over Church business is small, like every clan's.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 35,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "The existence of inquisitors and of Church factions working in secret to wipe out Cainites is offered as proof.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 35,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "The Lasombra founder still has close contact with the clan; sires use its power as a threat to frighten childer, and elders cannot predict what it will do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 36,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-lasombra",
+   "inq-shadow-inquisition"
+  ]
+ },
+ {
+  "id": "dahc-toreador-knights",
+  "title": "Toreador Knighthood",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Artisans' love affair with chivalry.",
+  "claims": [
+   {
+    "text": "The ideal of the knight took hold of many Toreador, perhaps through their urge to preserve beauty or their care for old songs and tales.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Toreador serve in knightly orders across the world, and the clan founded most of the Cainite knightly orders and still runs them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-toreador",
+   "tome-vampire-knights"
+  ]
+ },
+ {
+  "id": "dahc-obertus-dream",
+  "title": "The Obertus and the Dream",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Tzimisce monks keeping the Dream of Constantinople alive.",
+  "claims": [
+   {
+    "text": "Michael is gone, but through the Dracon and the Obertus monks many Tzimisce still pursue the Dream of a perfect society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 51,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The Library of the Forgotten no longer stands in Constantinople; its treasures are scattered among Obertus monasteries and hidden lairs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 51,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The Obertus lands lie between Tzimisce and Ventrue territory in Eastern Europe and serve as a buffer between the two.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 51,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-obertus",
+   "cbt-byzantium",
+   "da-tzimisce"
+  ]
+ },
+ {
+  "id": "dahc-ventrue-and-the-second",
+  "title": "Ventrue After the Flood",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Ventrue story of the revolt against the Second Generation.",
+  "claims": [
+   {
+    "text": "In Ventrue legend, after the Flood their founder hid a claim to rule, knowing the Second Generation resented the favour Caine had shown; the Second took command of their own get instead.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Their progeny soon chafed under that harsh rule and came to Ventrue for counsel, then met in secret and resolved to rise against their sires.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-ventrue"
+  ]
+ },
+ {
+  "id": "dahc-rome-and-italy",
+  "title": "Rome and Italy in the High Clan Wars",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The holy city's undead factions.",
+  "claims": [
+   {
+    "text": "Rome seethes with Cainite rivalry despite its people's strong faith. A Cappadocian faction fights two rival Nosferatu factions for the catacombs, while a few Tremere, who may be stoking the quarrel, loot Rome's ancient lore.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 72,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "The Tremere also keep a chantry in Siena, where it is caught between two Lasombra and Henricus Germanus, the Ventrue prince, as they fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 72,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "Venice is one of the few cities with many Cappadocians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 72,
+      "pdf": 74
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dalc-rome-warrens",
+   "da-italy",
+   "daeu-italy"
+  ]
+ },
+ {
+  "id": "dahc-true-brujah",
+  "title": "The True Brujah in 1230",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Survivors of the purge that followed the founder's fall.",
+  "claims": [
+   {
+    "text": "The second Troile and berserker childer purged the True Brujah as the Second City waned and other clans were busy. The True Brujah call it betrayal by jealous clans; the Brujah say the first Troile had become too cold and cruel.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 128,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Only a handful remain, alone or with one broodmate or childe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 128,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "They train the body by feeding strength, speed and endurance with blood, then by weights, pain, running and fighting, often the Greek pancratium; most still value the mind above the body and seek books on every subject.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 129,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-true-brujah",
+   "da-brujah"
+  ]
+ },
+ {
+  "id": "dahc-salubri-after-samiel",
+  "title": "The Salubri After Samiel",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A hunted clan split three ways.",
+  "claims": [
+   {
+    "text": "Samiel's Final Death and the loss of the Code dealt the clan a second heavy blow; most hold that Samiel fell at the Battle of Chorazin, where the Baali were broken.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 132,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "An obscure legend says the Tzimisce Eldest destroyed Samiel on finding a demon's taint.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 132,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "After Rome fell the line gathered in the Middle East, where Assamites and Setites kept the Baali down; as the Catholic faith spread some Salubri moved to Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 132,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "The largest group now survives by posing as other clans or sheltering under powerful Cainites, scorned by most Salubri yet the likeliest to last.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 134,
+      "pdf": 136
+     }
+    ]
+   },
+   {
+    "text": "A small group seeks revenge on the Tremere and their allies and loses members fast; a young, charismatic Cainite named Adonai has become its leading figure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 134,
+      "pdf": 136
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-salubri",
+   "lotb-salubri",
+   "da-tremere"
+  ]
+ },
+ {
+  "id": "dahc-lamia-embrace",
+  "title": "Who Becomes Lamia",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Lamia choose their childer.",
+  "claims": [
+   {
+    "text": "Most Lamia come from the Cult of Lilith, but now and then a woman outside it draws a Lamia's notice and, after scrutiny and trials, is Embraced.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 144,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Such women are usually rebels against male rule, or stand out in physical feats or insight, and they face harsher judgment than cult-born Lamia. Men are very rarely Embraced.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahc",
+      "page": 144,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dc1-lamia",
+   "da-road-of-lilith",
+   "da-cappadocians"
+  ]
+ }
+]
