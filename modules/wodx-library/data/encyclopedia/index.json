@@ -613,6 +613,12 @@
    "title": "Book of the Weaver",
    "short": "Book of the Weaver",
    "edition": "Revised"
+  },
+  {
+   "id": "bkwy",
+   "title": "Book of the Wyld",
+   "short": "Book of the Wyld",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -717,6 +723,7 @@
   "bbana.json",
   "bbrok.json",
   "bbnag.json",
-  "bkw.json"
+  "bkw.json",
+  "bkwy.json"
  ]
 }
