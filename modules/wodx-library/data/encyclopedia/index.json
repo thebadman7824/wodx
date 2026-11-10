@@ -1141,6 +1141,12 @@
    "title": "The Hierarchy",
    "short": "Hier",
    "edition": "First edition"
+  },
+  {
+   "id": "wren",
+   "title": "Renegades",
+   "short": "Ren",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1333,6 +1339,7 @@
   "dagrim.json",
   "wr20bo.json",
   "wr20hrd.json",
-  "whier.json"
+  "whier.json",
+  "wren.json"
  ]
 }
