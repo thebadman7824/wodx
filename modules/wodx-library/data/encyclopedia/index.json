@@ -1627,6 +1627,12 @@
    "title": "World of Darkness: Demon Hunter X",
    "short": "Demon Hunter X",
    "edition": "First edition"
+  },
+  {
+   "id": "wod1",
+   "title": "A World of Darkness, First Edition",
+   "short": "WoD 1e",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1900,6 +1906,7 @@
   "wodhk.json",
   "wodout.json",
   "wodbb.json",
-  "woddhx.json"
+  "woddhx.json",
+  "wod1.json"
  ]
 }
