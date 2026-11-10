@@ -1194,3 +1194,4 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 ## Phase 10, polish: docs match the code (2026-11-10)
 - Checked: every module version in MODULES.md against its module.json; every file, test and gate path the docs name exists; the settings the Storyteller's guide names exist. All matched.
 - Found: Actions, Senses and Storyteller load rule files straight from sibling folders that their module.json does not require. MODULES.md now says to install every WoDX module together (a sibling may be off, not missing), and cross-imports.test.mjs checks that each of the 109 cross-module imports finds its file and names.
+- Live release checklist: docs/LIVE-RELEASE-CHECKLIST.md (before, release, after), walked once as a dry run on the cloud side; nothing released.
