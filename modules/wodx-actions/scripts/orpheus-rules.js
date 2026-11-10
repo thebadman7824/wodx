@@ -5,7 +5,6 @@
 
 export const REF = "Orpheus";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
-const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 /** The five Shades (p. 122): base Vitality, Willpower and Spite, the Horror each starts with and the two it can never learn. */
 export const SHADES = {

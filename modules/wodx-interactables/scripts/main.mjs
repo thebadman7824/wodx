@@ -178,7 +178,6 @@ function nearOnTile(doc, p, by = 4) {
 }
 const distanceToTile = (doc, p) => { const r = rectOf(doc); return Math.hypot(Math.max(r.x - p.x, 0, p.x - r.x - r.w), Math.max(r.y - p.y, 0, p.y - r.y - r.h)); };
 /** Where a noise at an object starts, as heard from a point. */
-const noiseFrom = (doc, p) => (Array.isArray(doc?.c) ? R.besideWall(doc.c, R.sideOf(doc.c, p) ?? "a", 4) : nearOnTile(doc, p));
 
 const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness", "investigation", "athletics", "dodge", "ride", "drive", "firearms", "archery", "melee", "brawl"];
 const TOOLS = /lock ?picks?|picklock|thieves'? tools|skeleton key|bump key|pick gun|lock gun|tension wrench/i;

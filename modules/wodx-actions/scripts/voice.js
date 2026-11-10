@@ -29,7 +29,7 @@ export function registerSettings() {
 }
 
 export function build(ctx) {
-    const { post, dialog, setFlag, notify, api, virtues, wraithInfo, inquisitor } = ctx;
+    const { dialog, setFlag, notify, api, virtues, wraithInfo, inquisitor } = ctx;
     const sceneKey = () => `${canvas?.scene?.id ?? "none"}:${n(game.settings.get(MOD, "wraithScene"))}`;
 
     function kindOf(actor) {

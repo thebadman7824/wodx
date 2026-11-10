@@ -624,7 +624,6 @@ export function cropFor(A, frame, tops = [], margin = 30) {
   while ( clearance(y0) < 0 && y0 > -260 ) y0 -= 10;
   return {x0, y0, lw, r, clearance: tops.length ? clearance(y0) : Infinity};
 }
-const hexColor = n => typeof n === "number" ? `#${n.toString(16).padStart(6, "0")}` : String(n);
 const INK = "#2a1a10";
 /** The filters and patterns of the illuminated finish. cx, cy: the centre, for the turn of the starred lattice. */
 function finishDefs(ground, cx, cy) {
@@ -699,7 +698,6 @@ export function compose({look, head, anchors: A, frame = DEFAULT_FRAME, ring = t
       + at(lw * 1.88, `fill="none" stroke="${line}" stroke-width="3"`)
       + at(lw * 0.55, `fill="none" stroke="#fff7d0" stroke-opacity=".5" stroke-width="2" stroke-dasharray="2 18"`);
   }
-  const box = `x="${x0}" y="${y0}" width="${V}" height="${V}"`;
   // No paper grain over the figure: it laid a pale film on faces and robes. The grounds keep their own.
   const grain = "";
   const hasVeil = look.clothes.headwear && look.clothes.headwear !== "none";

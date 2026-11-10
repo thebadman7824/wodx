@@ -58,7 +58,7 @@ export const oathLine = o => `${F.OATHS[o.kind]?.label.split(" ")[0] ?? o.kind} 
 const lines = t => String(t ?? "").split(/\n+/).map(l => l.trim()).filter(Boolean);
 
 export function build(ctx) {
-    const { post, rollPool, rollBlock, dialog, setFlag, attr, background, traits, spendWillpower, notify } = ctx;
+    const { post, rollPool, rollBlock, dialog, setFlag, background, traits, spendWillpower, notify } = ctx;
 
     function info(actor) {
         const f = actor.getFlag(MOD, "daFae") ?? {};
@@ -172,7 +172,6 @@ export function build(ctx) {
     };
     const traitSelect = (actor, sel) => `<select name="trait" data-fixed>${traits(actor).map(t => `<option value="${t.key}"${t.key === sel ? " selected" : ""}>${esc(t.label)} ${t.value}</option>`).join("")}</select>`;
     const traitOf = (actor, key) => traits(actor).find(t => t.key === key) ?? { key, label: key || "the trait", value: 0 };
-    const timeText = (d, t) => [t.hour ? `its hour (${F.DOMINIONS[d].hour})` : null, t.season ? F.DOMINIONS[d].season : null].filter(Boolean).join(" and ");
 
     /* -------------------------------------------------------------- */
     /*  Cantrips                                                       */

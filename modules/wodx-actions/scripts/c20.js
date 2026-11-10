@@ -14,7 +14,6 @@
  * Built by main.js with its helpers (ctx). Pure rules: c20-rules.js.
  */
 import * as C from "./c20-rules.js";
-import * as P from "./profiles.js";
 import { aim, castIntent } from "./aim.js";
 
 const MOD = "wodx-actions";

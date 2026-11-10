@@ -77,7 +77,6 @@ export async function editHaven(sceneId = null) {
   if ( !scene ) return ui.notifications.warn("Open a scene first.");
   const h = havenOf(scene) ?? H.normHaven({name: scene.navName || scene.name});
   const pcs = game.actors.filter(a => isPC(a));
-  const box = (name, a, on) => `<li><label><input type="checkbox" name="${name}.${a.id}"${on ? " checked" : ""}> ${esc(a.name)}</label></li>`;
   const r = ratingOf(h);
   const d = H.defences({walls: scene.walls?.contents ?? [], tiles: scene.tiles?.contents ?? []});
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 560}, window: {title: `Haven: ${scene.navName || scene.name}`}, classes: ["wodx-dialog", "wst-haven-edit"],

@@ -367,7 +367,7 @@ export function build(ctx) {
     /* ---------------- Gnosis ---------------- */
 
     async function meditate(actor) {
-        const i = info(actor), b = basis();
+        const i = info(actor);
         const today = Math.floor(game.time.worldTime / 86400), week = Math.floor(today / 7);
         const log = actor.getFlag?.(MOD, "meditation") ?? {};
         if (log.day === today) return ctx.notify("Once a day.");
@@ -494,7 +494,7 @@ export function build(ctx) {
     /* ---------------- Rites ---------------- */
 
     async function performRite(actor) {
-        const i = info(actor), b = basis(), D = DATA.garou ?? {};
+        const i = info(actor), D = DATA.garou ?? {};
         const rites = (actor.items ?? []).filter(it => it.type === "Power" && it.system?.type === "wod.types.rite");
         const types = Object.entries(D.rites ?? {}).filter(([k]) => k !== "page");
         const content = `<form><p><b>${esc(actor.name)}</b>: Rituals ${abilityDots(actor, "rituals")}, Rank ${i.rank}.</p>

@@ -628,7 +628,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const maneuver = maneuverTable()[fd.maneuver] ?? R.MANEUVERS.normal;
     const aKind = (fd.atkKind && fd.atkKind !== "auto") ? fd.atkKind : getKind(attacker);
     const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
-    const cel = discipline(attacker, "Celerity"), pot = discipline(attacker, "Potence");
+    const pot = discipline(attacker, "Potence");
 
     // ---- Automatic position, multiple actions, opponents and defense count (3.4.0)
     const autoNotes = resolveAutoOptions(attacker, target, fd, { attackerTok, targetTok });
@@ -654,7 +654,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         throw new Error(`${attacker.name}'s ${w.name} is empty. Reload it first (${t.turns} turn${t.turns === 1 ? "" : "s"}, ${t.ref}).`);
     }
     // ---- Attack pool
-    const { attrKey, ab, minStrDiff } = attackBasics(attacker, w);
+    const { attrKey, ab } = attackBasics(attacker, w);
     // ---- Profile boosts (blood, Rage extra actions, house Glamour/Pathos/... dice)
     let boostDice = 0, rageAction = 0;
     const boostSpend = [];
@@ -722,9 +722,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
 
     // ---- Damage
     let dmg = null, soak = null, outcome = null, armorBroken = false, dmgPool = null;
-    const fireSun = !!fd.fireSun;
     const dp = damageProfile(target, tKind, w, fd);
-    const { dmgType, bane, soakDiff, minLevels, sb } = dp;
+    const { dmgType, soakDiff, minLevels, sb } = dp;
     if (dp.note) log.push(dp.note);
     const fortChoice = fd.fortBlood;
     fd.fortBlood = resolveFortitude(target, fortChoice, dp, fd);
@@ -1339,7 +1338,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.4", reload, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.5", reload, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
