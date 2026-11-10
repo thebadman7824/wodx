@@ -1045,6 +1045,12 @@
    "title": "Masters of the Art",
    "short": "MotA",
    "edition": "Revised"
+  },
+  {
+   "id": "m2hl",
+   "title": "Hidden Lore",
+   "short": "HL",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1221,6 +1227,7 @@
   "m2dw.json",
   "m2sor.json",
   "m2ini.json",
-  "m2mas.json"
+  "m2mas.json",
+  "m2hl.json"
  ]
 }
