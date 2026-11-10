@@ -364,3 +364,15 @@ V20 Celerity adds nothing to Initiative (pdf 150 / p. 142), and no VtDA20 page w
 
 ## B524. Demons and mummies soak by their own books (2026-11-10)
 WoDX Combat soaked demons and mummies as Garou, with Stamina against everything. Now a demon soaks bashing with Stamina, lethal only in the apocalyptic form, aggravated only through a power (DtF pdf 172 / p. 171, pdf 248 / p. 247); a mummy soaks bashing and lethal with Stamina and aggravated only through Hekau (MtR pdf 130 / p. 136). WoDX Actions' own older soak copy, which soaked Garou and wraiths as mortals when they fell, is replaced by the Combat rules. V20 healing of aggravated damage: each level past the first in a day also costs a Willpower point (pdf 293 / p. 285), outside the Dark Ages.
+
+## B570. Everyday goods by era (2026-11-10)
+A container's fill now draws everyday goods as well as Gear by era. The goods list is a WoDX house rule (no book gives such a table): plain names, no prices or rules, each with its first and last of Chronicle's eras and a weight for each fill place (a home gets food, cloth and keepsakes; a church candles, papers and things of faith; a clinic medicine). What the Victorian era has the Wild West has too. Small containers take small goods only. The Storyteller picks gear, goods or both, defaulting to both. WoDX Library 0.5.0, Interactables 0.21.0.
+
+## B571. Building types for every generator (2026-11-10)
+Building types live in tools/mapgen/buildings.py, drawn facing south and turned to face any way, with their rooms, openings, furnishing, the WoDX NPC place their region gets and the fill place their chests start from. All twelve use the Forgotten Adventures packs, which are medieval, so they fit the Dark Ages to the Renaissance; later eras need other packs. Buildings sit on the half-cell grid so the furnishing works the same everywhere.
+
+## B572. Villages and small towns (2026-11-10)
+ddtown.py builds a Dark Ages village or small town. Trades come from a "one for so many people" rate (a house rule, not a book table); the tavern and chapel always face the market; the priest lives in a cottage near the chapel. Households are roles only (no names, no dialogue), sized one to eight, written into the sidecar. Night ambient light by default (Rothenstein's maps are drawn as night); --day gives daylight.
+
+## B573. Households on adopted buildings (2026-11-10)
+Adopting a village or town keeps each household on its building's region (flags wodx-interactables household: label, trade, people by role). Nothing is made from them yet; seeding NPCs from them is a later WoDX NPC job. A household whose building is not a place on the map is left out with a plain note.

@@ -5,6 +5,8 @@
  * index of WoDX Library's compendium "WoDX · Gear by era", draws for the chronicle's era, and shows the draw to keep,
  * drop or draw again. What is kept is added to the container's "Inside" list as compendium links; nothing is saved
  * until the config window is saved. Nothing runs on players' machines.
+ * 0.21.0: everyday goods by era (WoDX Library's data/goods.mjs: food, tools, cloth, coin, papers and the like) join the
+ * draw as plain lines of text. The Storyteller picks gear, goods or both; goods alone work without Gear by era.
  */
 import * as F from "./fill-rules.mjs";
 
@@ -40,6 +42,15 @@ export async function gearIndex() {
   return [...idx].map(e => ({name: e.name, type: e.type, uuid: e.uuid ?? `Compendium.${pack.collection}.Item.${e._id}`, flags: e.flags ?? {}, system: e.system ?? {}}));
 }
 
+/** Everyday goods from WoDX Library: {goods, weights}, empty when WoDX Library is off or too old. */
+export async function goodsData() {
+  if ( !game.modules.get("wodx-library")?.active ) return {goods: [], weights: null};
+  try {
+    const m = await import("../../wodx-library/data/goods.mjs");
+    return {goods: m.GOODS ?? [], weights: m.PLACE_WEIGHTS ?? null};
+  } catch (e) { return {goods: [], weights: null}; }
+}
+
 /** Draw for a container. opts: {place, count, era, container, items, rng}. Returns the drawn items. */
 export async function drawFor(opts = {}) {
   const items = opts.items ?? await gearIndex();
@@ -53,13 +64,16 @@ export async function drawFor(opts = {}) {
 export async function fillDialog(tile, field = null) {
   if ( !game.user.isGM ) return null;
   const items = await gearIndex();
-  if ( !items.length ) { ui.notifications.warn("Gear by era isn't installed yet. Open Gear by era once (WoDX Library) and try again."); return null; }
+  const {goods, weights} = await goodsData();
+  if ( !items.length && !goods.length ) { ui.notifications.warn("Gear by era isn't installed yet. Open Gear by era once (WoDX Library) and try again."); return null; }
+  const whatSel = !items.length ? "goods" : !goods.length ? "gear" : "both";
   const container = field?.form?.querySelector?.(`[name="flags.${MOD}.kind"]`)?.value ?? tile?.flags?.[MOD]?.kind ?? "chest";
   const era = eraNow();
   const formPlace = field?.form?.querySelector?.(`[name="flags.${MOD}.fillPlace"]`)?.value;
   const guess = guessFor(tile, formPlace === undefined ? undefined : formPlace || null);
   const ask = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 460}, window: {title: "Fill by place and era"}, classes: ["wodx-dialog", "wix-fill"],
-    content: `<p>Draws from Gear by era for ${esc(eraName(era))}. You see the draw before anything goes in.</p>
+    content: `<p>Draws for ${esc(eraName(era))}. You see the draw before anything goes in.</p>
+      <div class="form-group"><label>Draw from</label><select name="what" data-fixed>${opt(whatSel === "both" ? F.WHAT : {[whatSel]: F.WHAT[whatSel]}, whatSel)}</select></div>
       <div class="form-group"><label>The place</label><select name="place" data-fixed>${opt(F.PLACES, guess.place)}</select></div>
       ${guess.from ? `<p class="hint">${esc(guess.from === "own" ? "Set for this container." : `From where it sits: ${guess.name ?? "this scene"}.`)} Change it if it doesn't fit.</p>` : ""}
       <div class="form-group"><label>How many things</label><input type="number" name="count" value="3" min="1" max="12"></div>
@@ -67,14 +81,14 @@ export async function fillDialog(tile, field = null) {
     buttons: [{action: "draw", label: "Draw", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
   if ( !ask || ask === "cancel" ) return null;
   for ( let tries = 0; tries < 20; tries++ ) {
-    const got = F.draw(items, {era, place: ask.place, container, count: Number(ask.count) || 3});
-    if ( !got.length ) { ui.notifications.info("Nothing in Gear by era fits that place and era."); return null; }
+    const got = F.drawMixed({items, goods, weights, what: ask.what ?? whatSel, era, place: ask.place, container, count: Number(ask.count) || 3});
+    if ( !got.length ) { ui.notifications.info("Nothing fits that place and era."); return null; }
     const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 520}, window: {title: "The draw"}, classes: ["wodx-dialog", "wix-fill-review"],
-      content: `<p>Untick what doesn't belong here.</p><ul class="wix-fill-list" data-fixed>${got.map((g, i) => `<li><label><input type="checkbox" name="k${i}" checked> ${esc(g.name)}</label></li>`).join("")}</ul>`,
+      content: `<p>Untick what doesn't belong here.</p><ul class="wix-fill-list" data-fixed>${got.map((g, i) => `<li><label><input type="checkbox" name="k${i}" checked> ${esc(g.name)}${g.goods ? "" : " <span class=\"hint\">(gear)</span>"}</label></li>`).join("")}</ul>`,
       buttons: [{action: "keep", label: "Put these in", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "again", label: "Draw again"}, {action: "cancel", label: "Cancel"}]});
     if ( res === "again" ) continue;
     if ( !res || res === "cancel" ) return null;
-    const kept = got.filter((g, i) => res[`k${i}`]).map(g => g.uuid);
+    const kept = got.filter((g, i) => res[`k${i}`]).map(g => g.line);
     if ( !kept.length ) return [];
     if ( field ) field.value = F.mergeLines(field.value, kept);
     else if ( tile ) await tile.update({[`flags.${MOD}.items`]: F.mergeLines(tile.flags?.[MOD]?.items, kept)});

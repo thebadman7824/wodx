@@ -229,3 +229,62 @@ test("adopt: wired into Interactables, Storyteller only, short lists marked", ()
   assert.ok(a.includes("game.user.isGM"));
   assert.equal((a.match(/<ul(?![^>]*data-fixed)/g) ?? []).length, 0);
 });
+
+/* Town generator sidecars (tools/mapgen/ddtown.py; Interactables 0.21.0 keeps households on their buildings) */
+const F = await import(join(root, "modules/wodx-interactables/scripts/fill-rules.mjs"));
+const TOWNS = ["hohenhausen", "birbach"].map(n => [n, readFileSync(join(root, `tools/mapgen/samples/${n}.wodx.json`), "utf8")]);
+
+test("adopt: the village and town sidecars read cleanly, households and all", () => {
+  for ( const [n, text] of TOWNS ) {
+    const raw = JSON.parse(text);
+    const got = A.parseSidecar(text);
+    assert.equal(got.ok, true, n);
+    assert.deepEqual(got.errors, [], n);
+    assert.equal(got.data.openings.length, raw.openings.length, n);
+    assert.equal(got.data.features.length, raw.features.length, n);
+    assert.equal(got.data.regions.length, raw.regions.length, n);
+    assert.equal(got.data.households.length, raw.households.length, n);
+    assert.ok(raw.households.length >= 10, n);
+    for ( const h of got.data.households ) assert.ok(got.data.regions.find(r => r.household === h && r.place), h.id);
+    const kinds = new Set(got.data.regions.map(r => r.place?.kind).filter(Boolean));
+    for ( const k of ["home", "workplace", "church", "tavern", "market", "street"] ) assert.ok(kinds.has(k), `${n}: no ${k}`);
+  }
+});
+
+test("adopt: every town feature is something Interactables knows, and its fill place is real", () => {
+  for ( const [n, text] of TOWNS ) {
+    const sc = A.parseSidecar(text).data;
+    for ( const o of sc.openings ) { assert.ok(R.KINDS[o.flags.kind], o.id); assert.ok(R.MATERIALS[o.flags.material], o.id); }
+    for ( const f of sc.features ) {
+      assert.equal(A.TILE_KINDS.filter(x => f.flags[x] === true).length, 1, f.id);
+      if ( f.flags.container ) { assert.ok(F.PLACES[f.flags.fillPlace], `${f.id}: ${f.flags.fillPlace}`); assert.ok(R.CONTAINERS[f.flags.kind]); }
+      if ( f.flags.hide ) assert.equal(R.describeHide(f.flags).kind, f.flags.hideKind, f.id);
+      if ( f.flags.light ) assert.ok(R.LIGHTS[f.flags.lightKind], f.id);
+    }
+    assert.ok(sc.features.some(f => f.flags.container && f.flags.fillPlace === "church"), `${n}: no church chest`);
+  }
+});
+
+test("adopt: a town's plan sets up every door, and the summary stays short", () => {
+  for ( const [n, text] of TOWNS ) {
+    const sc = A.parseSidecar(text).data;
+    const p = A.plan(sc, {walls: importedWalls(sc, FRAME), tiles: [], lights: [], regions: []}, FRAME, new Set(Object.values(A.BEHAVIORS)));
+    assert.equal(p.wallUpdates.length, sc.openings.length, n);
+    assert.equal(p.wallCreates.length, 0, n);
+    assert.equal(p.regions.length, sc.regions.length, n);
+    const hh = p.regions.filter(r => r.flags[MOD].household);
+    assert.equal(hh.length, sc.households.length, n);
+    const lines = A.summary(p);
+    assert.ok(lines.some(l => /households of \d+ people/.test(l)), n);
+    assert.ok(lines.every(l => l.length < 260), n);
+  }
+});
+
+test("adopt: a household whose building is not on the map is left out in plain words", () => {
+  const got = A.parseSidecar({format: "wodx-map", version: 1, cells: [10, 10], regions: [{id: "h", label: "House", rect: [1, 1, 3, 3], place: {kind: "home"}}],
+    households: [{id: "a", building: "h", people: [{role: "smith"}]}, {id: "b", building: "nowhere", people: [{role: "baker"}]}, {id: "c", building: "h", people: []}]});
+  assert.equal(got.data.households.length, 1);
+  assert.equal(got.data.regions[0].household.people[0].role, "smith");
+  assert.equal(got.errors.length, 2);
+  assert.match(got.errors[0], /not a place on the map/);
+});

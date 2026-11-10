@@ -77,3 +77,51 @@ test("fill: the runtime reads the place tag of the region a container sits in, t
   assert.equal(Fi.guessFor(tile(150, 150, {fillPlace: "den"})).place, "den");
   assert.equal(Fi.guessFor(tile(150, 150, {fillPlace: "den"}), null).place, "home", "the form's blank choice wins over the saved one");
 });
+
+/* Everyday goods by era (Library data/goods.mjs; Interactables 0.21.0) */
+const G = await imp("modules/wodx-library/data/goods.mjs");
+
+test("goods: every row has a known kind, a real era range, and a weight somewhere", () => {
+  const names = new Set();
+  for ( const g of G.GOODS ) {
+    assert.ok(G.KINDS[g.kind], `${g.name}: kind ${g.kind}`);
+    assert.ok(g.eras.length, `${g.name}: no eras`);
+    assert.ok(!names.has(g.name), `${g.name}: twice`);
+    names.add(g.name);
+    assert.ok(Object.values(G.PLACE_WEIGHTS).some(w => w[g.kind] > 0), g.kind);
+  }
+  for ( const p of Object.keys(G.PLACE_WEIGHTS) ) assert.ok(F.PLACES[p], `goods place ${p} is not a fill place`);
+  for ( const p of Object.keys(F.PLACES) ) assert.ok(G.PLACE_WEIGHTS[p], `fill place ${p} has no goods weights`);
+});
+
+test("goods: every era Chronicle knows has food, light and money, except the prologues' money", () => {
+  const eras = JSON.parse(src("modules/wodx-chronicle/data/eras.json")).profiles.map(p => p.id);
+  for ( const e of eras ) {
+    assert.ok(G.ERAS.includes(e), `era ${e} missing from goods`);
+    for ( const k of ["food", "light", "tools", "cloth"] ) assert.ok(G.GOODS.some(g => g.kind === k && g.eras.includes(e)), `${e} has no ${k}`);
+  }
+  assert.ok(G.GOODS.some(g => g.eras.includes("wild-west") && /ale/.test(g.name)), "the Wild West shares the Victorian goods");
+});
+
+test("goods: a mixed draw keeps to the era, and a small container takes small goods only", () => {
+  const got = F.drawMixed({items: gear, goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "both", era: "dark-ages", place: "home", container: "chest", count: 12, rng: seq(0.05, 0.6, 0.35, 0.9, 0.2)});
+  assert.equal(got.length, 12);
+  for ( const g of got ) {
+    const src_ = g.goods ? G.GOODS.find(x => x.name === g.name) : gear.find(x => x.name === g.name);
+    assert.ok((src_.eras ?? src_.flags["wodx-library"].eras).includes("dark-ages"), g.name);
+    assert.ok(g.line, g.name);
+  }
+  const box = F.drawMixed({goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "goods", era: "modern", place: "den", container: "box", count: 12});
+  assert.ok(box.length > 0);
+  for ( const g of box ) assert.ok(G.GOODS.find(x => x.name === g.name).small, g.name);
+  assert.equal(F.drawMixed({items: gear, goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "gear", era: "modern", count: 5}).filter(g => g.goods).length, 0);
+  assert.equal(F.drawMixed({items: gear, goods: G.GOODS, weights: G.PLACE_WEIGHTS, what: "goods", era: "modern", count: 5}).filter(g => !g.goods).length, 0);
+});
+
+test("goods: names are plain text, gender-neutral, with no long dashes", () => {
+  for ( const g of G.GOODS ) {
+    assert.ok(!/\b(he|she|him|her|his|hers)\b/i.test(g.name), g.name);
+    assert.ok(!/[—–]/.test(g.name), g.name);
+    assert.ok(!/[<>]/.test(g.name), g.name);
+  }
+});

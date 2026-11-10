@@ -167,3 +167,16 @@ Step 3 of the design note.
 - [x] Harness tests (2 new)
 - [x] Gate (gateadopt 8/8, step 4 fill guess home) in rothenstein-wodx
 - [x] Deployed to rothenstein-wodx (main c452df7)
+
+
+## 0.21.0: everyday goods, more building types, villages and towns (2026-11-10)
+- [x] WoDX Library 0.5.0: data/goods.mjs, 160 everyday goods with their eras and a weight for each fill place (B570)
+- [x] Fill by place and era draws gear, goods or both; goods go in as plain lines (B570)
+- [x] tools/mapgen/ddcore.py (shared rooms, furnishing, writer, sidecar pieces) and buildings.py: 12 building types, set down facing any way (B571)
+- [x] The farmstead now builds on them, byte for byte the same map and sidecar from seed 1197
+- [x] tools/mapgen/ddtown.py: a village or small town of the Dark Ages, with households (B572)
+- [x] Adopt keeps each household on its building's region; the summary stays short on a big map (B573)
+- [x] Harness tests (11 new: 4 goods, 4 town sidecars, 3 generator runs)
+- [ ] Real importer test of a town (waits on Ben exporting one from Dungeondraft, as the farmstead does)
+- [ ] Gate in rothenstein-wodx: fill draws goods; adopt the village sidecar on a scene of its size
+- [ ] Deployed
