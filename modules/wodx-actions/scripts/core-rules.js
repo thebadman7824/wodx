@@ -34,67 +34,10 @@ export function clampDifficulty(d) {
 }
 
 /**
- * Build the soak pool for one hit (VtDA20 p. 345 and Fortitude p. 218).
- * profile: "vampire" | "ghoul" | "mortal" | "supernatural"
- *   vampire       – Stamina + Fortitude + armor vs bashing/lethal; Fortitude + armor vs aggravated.
- *   ghoul         – as mortal, but Fortitude also soaks lethal and aggravated.
- *   mortal        – Stamina + armor vs bashing; armor only vs lethal/aggravated (mortals treat aggravated as lethal).
- *   supernatural  – lupines, spirits etc.: Stamina + armor vs everything.
- * fireOrSun: the Cainite banes; armor never helps, and the Fortitude blood auto-soak may not be used.
- * fortitudeBlood: spend a blood point to soak Fortitude automatically instead of rolling it (once per turn).
- * armorPiercing: dice of armor ignored; bypassArmor: attacker took +2 difficulty to ignore armor.
+ * Soak and the damage left after it: the one copy lives in WoDX Combat's rules (every line's soak model, banes, the
+ * Dark Ages fae and the demon's form). This file used to carry an older copy that soaked Garou and wraiths as mortals.
  */
-export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 0, armorPiercing = 0,
-                           bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bonus = 0 }) {
-    const notes = [];
-    let effArmor = armor;
-    if (fireOrSun && effArmor) { effArmor = 0; notes.push("armor does not protect against fire or sunlight"); }
-    if (bypassArmor && effArmor) { effArmor = 0; notes.push("attack bypassed armor"); }
-    if (armorPiercing && effArmor) {
-        const cut = Math.min(effArmor, armorPiercing);
-        effArmor -= cut; notes.push(`armor piercing removes ${cut} armor dice`);
-    }
-    let sta = 0, fort = 0;
-    const t = damageType;
-    switch (profile) {
-        case "vampire":
-            if (t === "bashing" || t === "lethal") sta = stamina;
-            fort = fortitude;
-            if (t === "aggravated" && !fortitude) notes.push("no Fortitude: aggravated damage can only be soaked by armor");
-            break;
-        case "ghoul":
-            if (t === "bashing") sta = stamina;
-            fort = fortitude;
-            if (t !== "bashing" && !fortitude) notes.push("mortals soak lethal and aggravated damage only with armor");
-            break;
-        case "supernatural":
-            sta = stamina; fort = fortitude;
-            break;
-        default: // mortal
-            if (t === "bashing") sta = stamina;
-            else notes.push("mortals soak lethal and aggravated damage only with armor");
-            break;
-    }
-    let autoSoak = 0;
-    if (fortitudeBlood && fort > 0) {
-        if (fireOrSun) notes.push("Fortitude blood auto-soak cannot be used against fire or sunlight");
-        else { autoSoak = fort; fort = 0; notes.push(`blood point spent: Fortitude ${autoSoak} soaks automatically`); }
-    }
-    const dice = Math.max(0, sta + fort + effArmor + bonus);
-    return { dice, autoSoak, stamina: sta, fortitude: fort, armor: effArmor, notes };
-}
-
-/**
- * Damage remaining after soak. Vampires halve bashing damage after soaking, rounding down (VtDA20 p. 345).
- */
-export function damageAfterSoak(damage, soaked, damageType, profile) {
-    let left = Math.max(0, damage - soaked);
-    let halved = false;
-    if (damageType === "bashing" && profile === "vampire" && left > 0) {
-        left = Math.floor(left / 2); halved = true;
-    }
-    return { levels: left, halved };
-}
+export { soakPool, damageAfterSoak } from "../../wodx-combat/scripts/rules.js";
 
 /**
  * Add damage to a health track and resolve overflow (VtDA20 p. 345):

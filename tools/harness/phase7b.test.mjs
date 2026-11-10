@@ -194,7 +194,7 @@ test("Auto acts only on what WoDX can carry out; the rest wait for the Storytell
 
 test("the module: manifest, API and the card's buttons", () => {
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
-  assert.equal(m.version, "0.8.0");
+  assert.equal(m.version, "0.8.1");
   assert.deepEqual(m.relationships.requires.map(r => r.id).sort(), ["wodx-actions", "wodx-chronicle", "wodx-combat"]);
   const src = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
   assert.match(src, /const VERSION = "0\.8\.0"/);

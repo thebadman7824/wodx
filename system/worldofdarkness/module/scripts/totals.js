@@ -199,7 +199,7 @@ export async function calculateTotals(updateData) {
 
 	// armor
 	if (actor !== undefined) {
-		for (const i of actor?.items) {
+		for (const i of actor?.items ?? []) {
 			if ((i.type == "Armor") && (i.system?.isequipped)) {
 				if (updateData.system.shapes == undefined) {
 					updateData.system.soak.bashing += i.system.soak.bashing;

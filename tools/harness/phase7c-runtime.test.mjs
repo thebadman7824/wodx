@@ -317,7 +317,7 @@ test("a Reaction region: the guard notices a player character after curfew and c
 test("the module: manifest declares the Reaction behaviour; in-game text is gender-neutral and writes no NPC dialogue", async () => {
   const {readFileSync} = await import("node:fs");
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
-  assert.equal(m.version, "0.8.0");
+  assert.equal(m.version, "0.8.1");
   assert.deepEqual(m.documentTypes, {RegionBehavior: {reaction: {}, alertZone: {}, trigger: {}}});
   for ( const f of ["routines.mjs", "routine-rules.mjs"] ) {
     const src = readFileSync(join(root, "modules/wodx-npc/scripts", f), "utf8");

@@ -338,7 +338,6 @@ export default class MortalActorSheet extends foundry.appv1.sheets.ActorSheet {
 		actorData = await CreateHelper.SetAbilities(actorData, dataset.type.toLowerCase(), "darkages");
 
 		if (dataset.type == CONFIG.worldofdarkness.sheettype.vampire) {
-			found = true;
 			await CreateHelper.SetVampireAbilities(this.actor, "darkages");
 		}
 

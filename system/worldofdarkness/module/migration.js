@@ -28,7 +28,7 @@ export const UpdateWorld = async function (installedVersion, migrationVersion) {
                 // await actor.delete()
             }
             catch(err) {
-                console.error(`invalidDocumentIds ${actor.name}: ${err.message}`);
+                console.error(`invalidDocumentIds ${id}: ${err.message}`);
                 console.error(err);
             }
         }
@@ -40,7 +40,7 @@ export const UpdateWorld = async function (installedVersion, migrationVersion) {
                 console.error(`WoDX | Item ${item.name} is of a not valid type ${item.type}; kept untouched (not deleted)`);
             }
             catch(err) {
-                console.error(`invalidDocumentIds ${item.name}: ${err.message}`);
+                console.error(`invalidDocumentIds ${id}: ${err.message}`);
                 console.error(err);
             }
         }        

@@ -29,29 +29,26 @@ export default {
     {
       id: "soak-lethal", topic: "Who soaks lethal damage with Stamina",
       lines: ["V20", "W20", "M20", "C20", "HtR", "Wr20", "DtF", "MtR", "KotE"],
-      books: "Kindred, Garou and wraiths soak lethal with Stamina; mortals, mages (M20 p. 334), hunters and C20 changelings soak it only with armor.",
-      settled: "Each target by its own line's book (row hit-between-lines).",
-      basis: "line", status: "check", code: "wodx-combat profiles.js PROFILES.soak",
-      refs: ["VtDA20 p. 345", "M20 p. 334", "Ghouls and Revenants p. 262"],
-      check: "Demon: the Fallen and Mummy: the Resurrection: may Stamina soak lethal and aggravated damage? The code treats demons and mummies as Garou (Stamina against everything)."
+      books: "Kindred, Garou, wraiths and mummies soak lethal with Stamina (Mummy: the Resurrection pdf 130 / p. 136). Mortals, mages (M20 p. 334), hunters and C20 changelings soak it only with armor. A demon soaks lethal only in the apocalyptic form (DtF pdf 172 / p. 171).",
+      settled: "Each target by its own line's book. Demons and mummies now have their own soak models instead of the Garou one.",
+      basis: "line", status: "fixed", code: "wodx-combat profiles.js PROFILES.soak, rules.js soakPool (demon, mummy)",
+      refs: ["B524", "VtDA20 p. 345", "M20 p. 334", "DtF p. 171", "MtR p. 136", "Ghouls and Revenants p. 262"]
     },
     {
       id: "soak-aggravated", topic: "Who soaks aggravated damage",
       lines: ["V20", "VtDA20", "W20", "DA:W", "Wr20"],
-      books: "Kindred soak it with Fortitude only. Garou soak it with Stamina, except in Homid form in the Dark Ages (DA:W p. 102). Wraiths: armor only in the code (a house adaptation).",
-      settled: "Each target by its own line's book; Werewolf by era.",
-      basis: "line", status: "check", code: "wodx-combat rules.js soakPool; wodx-actions garou.js aggSoak",
-      refs: ["B41", "VtDA20 p. 345", "DA:W p. 102"],
-      check: "Wraith: The Oblivion 20th: may a wraith soak aggravated damage with Stamina, or only with an Arcanos? Give the page."
+      books: "Kindred soak it with Fortitude only. Garou soak it with Stamina, except in Homid form in the Dark Ages (DA:W p. 102). Wraiths soak it only with armor or certain Arcanoi (Wraith 20th pdf 393 / p. 400; Argos p. 224, Embody p. 232, Inhabit p. 246). Mummies only through Hekau (MtR p. 136); demons only through a power (DtF pdf 248 / p. 247).",
+      settled: "Each target by its own line's book; Werewolf by era. A power that grants aggravated soak is added by hand as soak bonus.",
+      basis: "line", status: "fixed", code: "wodx-combat rules.js soakPool; wodx-actions garou.js aggSoak",
+      refs: ["B41", "VtDA20 p. 345", "DA:W p. 102", "Wraith 20th p. 400", "DtF p. 247", "MtR p. 136"]
     },
     {
       id: "bashing-halved", topic: "Bashing damage halved after soak",
       lines: ["V20", "VtDA20", "KotE", "G&R"],
-      books: "Kindred halve bashing after soak, rounding down (VtDA20 p. 345). Kuei-jin run on the Vampire sheet and so halve it too.",
-      settled: "Kindred and elder ghouls halve it. Kuei-jin follow Kindred of the East.",
-      basis: "line", status: "check", code: "wodx-combat rules.js damageAfterSoak",
-      refs: ["VtDA20 p. 345"],
-      check: "Kindred of the East: do the Kuei-jin halve bashing damage as the Kindred do? Give the page."
+      books: "Kindred halve bashing after soak, rounding down (VtDA20 p. 345). The KotE core is silent; the Kindred of the East Companion says dhampyrs, unlike true vampires, do not halve bashing (pdf 32 / p. 31), so the Kuei-jin do.",
+      settled: "Kindred, Kuei-jin and elder ghouls halve it.",
+      basis: "line", status: "settled", code: "wodx-combat rules.js damageAfterSoak",
+      refs: ["VtDA20 p. 345", "KotE Companion p. 31"]
     },
     {
       id: "fae-soak-era", topic: "Fae soak and cold iron, Dark Ages against later eras",
@@ -72,29 +69,26 @@ export default {
     {
       id: "fire", topic: "Fire against creatures other than the Kindred",
       lines: ["V20", "W20", "M20", "C20", "Wr20", "HtR"],
-      books: "Kindred: aggravated, armor useless, only Fortitude soaks (VtDA20 p. 359, printed p. 221). The Fire or sunlight box in the combat window makes the hit aggravated for any target.",
-      settled: "The target's book decides (row hit-between-lines). Until the pages are read, the box stays aggravated for every target and the Storyteller can untick it.",
-      basis: "line", status: "check", code: "wodx-combat main.js damageProfile (fireSun)",
-      refs: ["VtDA20 p. 359", "VtDA20 p. 221"],
-      check: "V20 and W20: is fire aggravated or lethal for a mortal, and for a Garou? Give each page."
+      books: "Kindred: aggravated, armor useless, only Fortitude soaks (VtDA20 p. 359, printed p. 221). V20: a mortal takes aggravated damage, fire included, as lethal (pdf 293 / p. 285; fire chart pdf 305 / p. 297). W20: fire is always aggravated for Garou, ignores armor, and is soaked at a difficulty set by its heat (pdf 257 / p. 255, pdf 260 / p. 258).",
+      settled: "The Fire box makes the hit aggravated; a mortal or ghoul takes it as lethal, as the combat card already does. The heat difficulty comes from the Fire window.",
+      basis: "line", status: "settled", code: "wodx-combat main.js damageProfile (fireSun)",
+      refs: ["VtDA20 p. 359", "VtDA20 p. 221", "V20 p. 285", "W20 p. 255", "W20 p. 258"]
     },
     {
       id: "bite", topic: "Whose bite is aggravated",
       lines: ["V20", "VtDA20", "W20", "DA:W"],
-      books: "Kindred fangs: Strength + 1 aggravated, after a hold (VtDA20 pp. 346-347). Garou by form (DA:W pp. 106-107; W20 p. 285). The combat window's plain Bite is aggravated for anyone.",
-      settled: "Aggravated only for Kindred, and for shapechangers by form. Anyone else bites for lethal (house rule until the page is read).",
-      basis: "line", status: "check", code: "wodx-combat rules.js UNARMED.bite, main.js attackUsable",
-      refs: ["VtDA20 p. 346", "W20 p. 285", "DA:W p. 106"],
-      check: "V20 maneuvers chart: does it limit the aggravated bite to vampires, and what does a mortal's or ghoul's bite do? Give the page."
+      books: "The aggravated bite is for vampires and other creatures with fangs, such as werewolves, after a clinch, hold or tackle (V20 pdf 284 / p. 276). The book gives no rule for a mortal's or ghoul's bite.",
+      settled: "Aggravated for Kindred, and for shapechangers by form. Anyone else bites for bashing damage, as a punch (house rule).",
+      basis: "line", status: "fixed", code: "wodx-combat main.js weapon list (bite)",
+      refs: ["B520", "V20 p. 276", "W20 p. 285", "DA:W p. 106"]
     },
     {
       id: "claws", topic: "Claws from Disciplines",
       lines: ["V20", "VtDA20"],
-      books: "Protean 2 grows aggravated claws. The code also lets Vicissitude 1 claw.",
-      settled: "Only the power that the book says grows claws or bone weapons gives them, with the damage type the book gives.",
-      basis: "v20", status: "check", code: "wodx-combat main.js attackUsable",
-      refs: ["VtDA20 p. 347"],
-      check: "V20 and VtDA20 Vicissitude: which level gives bone weapons or claws, and is their damage lethal or aggravated? Give the pages."
+      books: "Protean 2 grows aggravated claws. Vicissitude's Bonecraft (3) grows bone spikes or talons that do lethal damage (V20 pdf 250 / p. 242; VtDA20 Bone Craft, Strength + 1 lethal, pdf 269 / p. 268). Chiropteran Marauder's claws do Strength + 2 aggravated (V20 p. 242; VtDA20 p. 270). The code let Vicissitude 1 claw for aggravated damage.",
+      settled: "Protean 2: aggravated claws. Vicissitude 3: bone talons for lethal. Higher forms by their own power.",
+      basis: "v20", status: "fixed", code: "wodx-combat main.js attackUsable",
+      refs: ["V20 p. 242", "VtDA20 p. 268", "VtDA20 p. 270"]
     },
     {
       id: "healing", topic: "Healing",
@@ -107,11 +101,10 @@ export default {
     {
       id: "aggravated-heal-cost", topic: "What a vampire pays to heal an aggravated wound",
       lines: ["V20", "VtDA20"],
-      books: "The code charges five blood and a day's rest in every era (VtDA20 p. 345).",
-      settled: "By era: VtDA20 in the Dark Ages, V20 after.",
-      basis: "era", status: "check", code: "wodx-actions rules.js planHealing",
-      refs: ["VtDA20 p. 345"],
-      check: "V20 core: the cost to heal one aggravated level (blood, Willpower, rest). Give the page."
+      books: "V20: a full day's rest and five blood for one level; each further level healed that day costs five more blood and a Willpower point (pdf 293 / p. 285). VtDA20: five blood and a day's rest a level (p. 345).",
+      settled: "By era: in the Dark Ages five blood a level; after, V20's extra Willpower point for each level past the first.",
+      basis: "era", status: "fixed", code: "wodx-actions main.js (the healing window)",
+      refs: ["V20 p. 285", "VtDA20 p. 345"]
     },
     {
       id: "willpower-back", topic: "How Willpower comes back",
@@ -132,29 +125,26 @@ export default {
     {
       id: "delirium", topic: "Who suffers the Delirium",
       lines: ["W20", "DA:W", "V20", "M20", "C20"],
-      books: "The Delirium chart by Willpower (DA:W p. 97; W20 p. 263). The Storyteller picks who rolls.",
-      settled: "Mortals and ghouls by the chart; Kinfolk and the other supernatural lines as W20 says.",
-      basis: "line", status: "check", code: "wodx-actions garou-rules.js delirium",
-      refs: ["DA:W p. 97", "W20 p. 263"],
-      check: "W20: which beings are untouched by the Delirium (Kinfolk, vampires, ghouls, mages, changelings, wraiths)? Give the page."
+      books: "Kinfolk are untouched (W20 pdf 48 / p. 46, p. 377). Mages and vampires are normally immune; only Garou and Fera resist even the Gift that forces it (pdf 162 / p. 160). The books say nothing of ghouls, changelings or wraiths.",
+      settled: "Mortals and ghouls roll on the chart. Kinfolk, Garou and Fera are immune; vampires, mages, changelings and wraiths are immune too unless a power forces the Delirium (house rule for the last three).",
+      basis: "line", status: "settled", code: "wodx-actions garou-rules.js delirium",
+      refs: ["B521", "DA:W p. 97", "W20 p. 263", "W20 p. 46", "W20 p. 160"]
     },
     {
       id: "mind-powers", topic: "One line's mind powers on another line",
       lines: ["V20", "M20", "DA:Fae", "HtR", "W20", "Wr20"],
-      books: "Dominate fails on a fae whose Day or Night is at least the vampire's rating (DA:Fae p. 181). Hunters with enough Conviction are immune to mind-clouding powers (HtR). Countermagic and Disciplines: not read yet.",
-      settled: "The target's book decides immunity; otherwise the power works by its own book.",
-      basis: "house", status: "check", code: "wodx-actions fae-da-rules.js, hunter-rules.js",
-      refs: ["B503", "DA:Fae p. 181"],
-      check: "M20: can countermagic or a Mind shield resist Dominate or Thaumaturgy? V20: does Dominate work on a Garou or a mage? Give the pages."
+      books: "Dominate fails on a fae whose Day or Night is at least the vampire's rating (DA:Fae p. 181). V20 lists who resists Dominate (lower Generation, True Faith, Nature) but not Garou or mages (pdf 166 / p. 158); Faith 2 lets a mortal resist by spending Willpower (pdf 380 / p. 372). M20: a mage counters a Discipline with Arete, and the Storyteller may ask for Mind against Dominate; Night-Folk counter magick with Wits + Occult, capped by their own power trait (pdf 547 / p. 546).",
+      settled: "The target's book decides. A Garou resists Dominate as a mortal does, with Willpower; a mage counters it as M20 says, with Mind 1 required (house rule for both). Otherwise the power works by its own book.",
+      basis: "house", status: "settled", code: "wodx-actions fae-da-rules.js, hunter-rules.js",
+      refs: ["B503", "DA:Fae p. 181", "V20 p. 158", "V20 p. 372", "M20 p. 546"]
     },
     {
       id: "initiative-celerity", topic: "Initiative and Celerity",
       lines: ["V20", "VtDA20", "W20"],
-      books: "Initiative is Dexterity + Wits + a die in every line. VtDA20 Celerity adds its dots to Dexterity pools and buys actions at the end of the turn (pdf p. 203). The combat setting adds Celerity to Initiative in every era.",
-      settled: "By era: VtDA20 in the Dark Ages, V20 after.",
-      basis: "era", status: "check", code: "wodx-combat main.js celerityDice, macros/initiative.js",
-      refs: ["VtDA20 pdf p. 203"],
-      check: "V20 Celerity: does it add dice to Dexterity pools or to Initiative, or only buy extra actions? Give the page."
+      books: "Initiative is Dexterity + Wits + a die in every line. V20 Celerity adds a die to Dexterity rolls; a blood point buys extra actions, dots so used add no dice that turn, and nothing goes to Initiative (pdf 150 / p. 142). VtDA20 Celerity: extra actions at the end of the turn (pdf p. 203).",
+      settled: "Celerity never adds to Initiative, in any era: V20 says so, and V20 comes first while no VtDA20 page says otherwise. It still adds dice to Dexterity attack and defense pools.",
+      basis: "era", status: "fixed", code: "wodx-combat main.js rollInitiative",
+      refs: ["B523", "V20 p. 142", "VtDA20 pdf p. 203"]
     },
     {
       id: "extra-actions", topic: "Extra actions from Celerity, Rage and Time",
@@ -207,20 +197,18 @@ export default {
     {
       id: "feeding-supernatural", topic: "Drinking the blood of another line",
       lines: ["V20", "W20", "M20", "C20", "KotE"],
-      books: "The books give Garou, mage and fae blood their own effects. Not read yet.",
-      settled: "The drinker's book decides what the blood gives; the target's book decides what losing it does.",
-      basis: "line", status: "check", code: "wodx-actions kindred-rules.js",
-      refs: [],
-      check: "V20: what does a vampire gain from Garou, mage or fae blood (blood points, risks)? Kindred of the East: Chi from a Garou. Give the pages."
+      books: "V20: Garou blood gives two blood points for each one drunk, and while it is in the system each point raises frenzy and Rötschreck difficulties by 1 (pdf 388 / p. 380). V20 says nothing of mage or fae blood. KotE: shapeshifters hold concentrated Chi, which they call Gnosis (pdf 7 / p. 9), with no rule for drinking it.",
+      settled: "Garou blood as V20 says. Mage and fae blood are ordinary blood (house rule). A Kuei-jin drawing Chi from a Garou gains two Chi a point, as V20's werewolf blood, and the same frenzy step (house rule).",
+      basis: "line", status: "settled", code: "wodx-actions kindred-rules.js",
+      refs: ["B522", "V20 p. 380", "KotE p. 9"]
     },
     {
       id: "paradox-witnesses", topic: "Paradox, Disciplines and supernatural witnesses",
       lines: ["M20", "DA:M", "V20", "W20"],
-      books: "Disciplines and Gifts are not magick and draw no Paradox. Vulgar magick seen by Sleepers does.",
-      settled: "Only Sleepers count as witnesses for Paradox; Kindred, Garou and the like do not.",
-      basis: "line", status: "check", code: "wodx-actions m20-rules.js",
-      refs: [],
-      check: "M20: do vampires, Garou or other supernatural onlookers count as Sleeper witnesses for vulgar magick? Give the page."
+      books: "The Night-Folk and their circles (vampires, Garou, ghouls, Kinfolk, kinain, cultists, mummies, hunters) do not count as Sleeper witnesses (M20 pdf 532 / p. 531). Disciplines and Gifts are not magick and draw no Paradox.",
+      settled: "Only Sleepers count as witnesses for Paradox.",
+      basis: "line", status: "settled", code: "wodx-actions m20-rules.js",
+      refs: ["M20 p. 531"]
     },
     {
       id: "chimerical", topic: "Chimerical damage and Banality",

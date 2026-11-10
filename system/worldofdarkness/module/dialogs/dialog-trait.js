@@ -216,7 +216,10 @@ export class DialogRoll extends FormApplication {
                 if ((parseInt(abilityItem.system.value) >= parseInt(CONFIG.worldofdarkness.specialityLevel)) || 
                     (CONFIG.worldofdarkness.alwaysspeciality[actortype].includes(abilityItem.system.id))) {
                     data.object.hasSpeciality = true;
-                    abilitySpeciality = abilityItem.system.speciality;
+                    if (abilityItem.system.speciality) {
+                        if (data.object.specialityText != "") data.object.specialityText += ", ";
+                        data.object.specialityText += abilityItem.system.speciality;
+                    }
                 }
             }
         }

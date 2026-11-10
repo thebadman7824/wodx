@@ -78,7 +78,7 @@ export default class MummyActorSheet extends MortalActorSheet {
 		const dataset = element.dataset;
 		const type = dataset.type;
 
-		if (type != CONFIG.worldofdarkness.sheettype.mummy) {
+		if (this.actor.type != CONFIG.worldofdarkness.sheettype.mummy) {
 			return;
 		}
 
