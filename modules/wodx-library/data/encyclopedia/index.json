@@ -1057,6 +1057,12 @@
    "title": "Mage Storytellers Companion",
    "short": "MSC",
    "edition": "Revised"
+  },
+  {
+   "id": "m2cf",
+   "title": "The Chaos Factor",
+   "short": "CF",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1235,6 +1241,7 @@
   "m2ini.json",
   "m2mas.json",
   "m2hl.json",
-  "m2stc.json"
+  "m2stc.json",
+  "m2cf.json"
  ]
 }
