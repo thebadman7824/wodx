@@ -1819,6 +1819,12 @@
       "title": "Manifesto: Transmissions from the Rogue Council",
       "short": "MTRC",
       "edition": "Revised"
+    },
+    {
+      "id": "bosh",
+      "title": "The Book of Shadows: The Mage Players Guide",
+      "short": "BoSh",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2124,6 +2130,7 @@
     "daheresy.json",
     "dacbn.json",
     "lostp.json",
-    "manif.json"
+    "manif.json",
+    "bosh.json"
   ]
 }
