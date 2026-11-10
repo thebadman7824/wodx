@@ -21,17 +21,21 @@ export function effective(ev, overrides = {}) {
   return out;
 }
 
-/** Does the event belong to this timeline? */
-export function inBranch(ev, futureBranch) {
+/**
+ * Does the event belong to this timeline? An event with `cascade` belongs only to that Cascade of the Time of
+ * Future Judgement, and fires only when the Storyteller has chosen it.
+ */
+export function inBranch(ev, futureBranch, cascade = "") {
+  if ( ev.cascade && ev.cascade !== cascade ) return false;
   if ( ev.branch === "future" ) return !!futureBranch;
   if ( ev.branch === "classic" ) return !futureBranch;
   return true;
 }
 
 /** Every event with overrides applied, oldest first, each marked `live` when it is on and in the branch. */
-export function eventTable(events, {overrides = {}, futureBranch = false} = {}) {
+export function eventTable(events, {overrides = {}, futureBranch = false, cascade = ""} = {}) {
   return events.map(ev => effective(ev, overrides))
-    .map(ev => ({...ev, live: ev.on && inBranch(ev, futureBranch), key: dateKey(ev)}))
+    .map(ev => ({...ev, live: ev.on && inBranch(ev, futureBranch, cascade), key: dateKey(ev)}))
     .sort((a, b) => a.key - b.key || a.id.localeCompare(b.id));
 }
 

@@ -274,7 +274,7 @@ export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
 export const EARSHOT = {silent: {open: 0, wall: 0}, quiet: {open: 5, wall: 0}, loud: {open: 30, wall: 10}};
 
 /** Eras with keypads, card readers and alarms. */
-const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness"]);
+const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"]);
 export function isModern({eraId = "", year = 0} = {}) { return MODERN_ERAS.has(eraId) || year >= 1970; }
 const DARK_AGE_ERAS = new Set(["dark-ages", "long-night", "classical", "living-gods"]);
 export function isDarkAge({eraId = "", year = 0} = {}) { return DARK_AGE_ERAS.has(eraId) || (year > 0 && year < 1450); }

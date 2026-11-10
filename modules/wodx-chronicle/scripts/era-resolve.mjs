@@ -51,12 +51,13 @@ export function mergeProfiles(moduleProfiles = [], worldProfiles = []) {
  * @param {number} year
  * @param {object} [options]
  * @param {string} [options.region="europe"]
- * @param {Record<string, boolean>} [options.rules]  House rules, for profiles with requiresRule
+ * @param {Record<string, boolean>} [options.rules]  House rules, for profiles with requiresRule or excludedByRule
  * @returns {{profile: object, interlude: boolean}}
  */
 export function resolveEra(profiles, year, {region = "europe", rules = {}} = {}) {
   const usable = profiles.filter(p => !p.prologue
     && (!p.requiresRule || rules[p.requiresRule])
+    && (!p.excludedByRule || !rules[p.excludedByRule])
     && (!p.regions || p.regions.includes(region)));
   if ( !usable.length ) return {profile: null, interlude: true};
 

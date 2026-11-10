@@ -19,7 +19,9 @@ export const SOURCES = {
 /** V20 firearms are modern guns: from the Great War on. Its blades, clubs and armor serve from the Victorian era. */
 export const V20_FIREARM_ERAS = ["great-war", "modern", "time-of-judgment", "future-darkness"];
 
-export const ERA_ORDER = ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "time-of-judgment", "future-darkness"];
+/** An era that carries another's gear and books: the Time of Future Judgement (2099) is Future Darkness's last year. */
+export const ERA_LIKE = {"time-of-future-judgement": "future-darkness"};
+export const ERA_ORDER = ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
 
 const BLUNT = /\b(sap|club|mace|staff|quarterstaff|hammer|warhammer|war hammer|rock|sling|flail|chair|table|tankard|candlestick|branch|knucks|whip|cat-o)/i;
 const dash = v => { const s = String(v ?? "").trim(); return s === "" || s === "—" || s === "-" || /^n\/?a$/i.test(s) ? "" : s; };
@@ -144,7 +146,8 @@ function describeItem(row, notes) {
 /** The gear an era's characters can carry, by kind and then name. */
 export function forEra(items, eraId) {
   const order = {"Melee Weapon": 0, "Ranged Weapon": 1, Armor: 2, Item: 3};
-  return items.filter(i => !eraId || (i.flags?.[MOD]?.eras ?? []).includes(eraId))
+  const id = ERA_LIKE[eraId] ?? eraId;
+  return items.filter(i => !eraId || (i.flags?.[MOD]?.eras ?? []).some(e => e === eraId || e === id))
     .sort((a, b) => (order[a.type] - order[b.type]) || a.name.localeCompare(b.name));
 }
 

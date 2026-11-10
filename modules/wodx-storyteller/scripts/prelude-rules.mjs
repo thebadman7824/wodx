@@ -129,17 +129,20 @@ export function lineFor(type, variant = "") {
   return "mortal";
 }
 
-/** Hunters follow the era: inquisitors in the Dark Ages, Hunters Hunted until 1998, the Imbuing from 1999. */
-export function hunterKind(year) {
+/**
+ * Hunters follow the era: inquisitors in the Dark Ages, Hunters Hunted until 1998, the Imbuing from 1999. On the
+ * Future Darkness branch the first imbued wake in 2023.
+ */
+export function hunterKind(year, {futureBranch = false} = {}) {
   const y = year === null || year === undefined || year === "" ? NaN : Number(year);
   if ( !Number.isFinite(y) ) return "mortal";
   if ( y < 1500 ) return "inquisitor";
-  if ( y < 1999 ) return "mortal";
+  if ( y < (futureBranch ? 2023 : 1999) ) return "mortal";
   return "imbued";
 }
 
-function hunterTemplate(year) {
-  const base = PRELUDES.hunter, kind = hunterKind(year);
+function hunterTemplate(year, opts = {}) {
+  const base = PRELUDES.hunter, kind = hunterKind(year, opts);
   if ( kind === "imbued" ) return {...base, title: "The Imbuing",
     turn: ["The night the truth is undeniable: a monster at work, and the person who was there to see it.",
       "The Messengers' words, which the player hears as text and feeling, never as a voice the Storyteller plays.",
@@ -151,9 +154,9 @@ function hunterTemplate(year) {
 }
 
 /** The parts of one prelude for a line, a character's name and the year. */
-export function composePrelude({line, name = "", year = null} = {}) {
+export function composePrelude({line, name = "", year = null, futureBranch = false} = {}) {
   const key = PRELUDES[line] ? line : "mortal";
-  const tpl = key === "hunter" ? hunterTemplate(year) : PRELUDES[key];
+  const tpl = key === "hunter" ? hunterTemplate(year, {futureBranch}) : PRELUDES[key];
   const who = String(name ?? "").trim();
   return {line: key, title: who ? `${tpl.title}: ${who}` : tpl.title, label: tpl.label, creation: tpl.creation,
     parts: [{heading: "Before", items: tpl.before}, {heading: "The turn", items: tpl.turn}, {heading: "After", items: tpl.after}]};

@@ -21,7 +21,7 @@ const HOUR_WORDS = ["twelve", "one", "two", "three", "four", "five", "six", "sev
 /** Which way the era tells time: "hours" | "striking" | "railway" | "digital". */
 export function styleFor(year, eraId = "") {
   const y = Number(year) || 0;
-  if ( eraId === "future-darkness" ) return "digital";
+  if ( eraId === "future-darkness" || eraId === "time-of-future-judgement" ) return "digital";
   if ( y >= 1840 ) return "railway";
   if ( y >= 1350 ) return "striking";
   return "hours";

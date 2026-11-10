@@ -338,3 +338,12 @@ House adaptation, already in the code: in the combat window the seven health lev
 
 ## B506. Two possessors in one body (2026-11-10)
 House rule: the one already inside holds the body. A newcomer (a demon, a wraith's Puppetry, a spirit) must win a resisted Willpower roll against it, difficulty 6 each; a tie keeps the first.
+
+## B507. The Time of Judgment on the Future Darkness branch (2026-11-10)
+With the branch on, the 2004 Time of Judgment era never comes, even with its switch on; the branch has its own end in 2099, the Time of Future Judgement. Future Darkness runs 2010 to 2098. House rule.
+
+## B508. Cascades for the Time of Future Judgement (2026-11-10)
+2099 runs as one of five Cascades: a chain of the 35 retold endings, each setting off the next, with most of every line's endings in each. Only the chosen Cascade's events fire; with none chosen, none fires. House rule.
+
+## B509. The imbued on the Future Darkness branch (2026-11-10)
+The first imbued wake in 2023 on the branch, so hunters use The Hunters Hunted II rules from 1999 to 2022 there, with chrome. The classic timeline keeps the 1999 Reckoning. House rule.

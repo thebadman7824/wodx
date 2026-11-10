@@ -21,7 +21,7 @@ export const LINE_LABELS = {all: "Every line", vampire: "Vampire", ghoul: "Ghoul
   hunter: "Hunter", mummy: "Mummy", demon: "Demon", mortal: "Mortal"};
 
 const DA = ["dark-ages", "long-night", "renaissance"];
-export const ALL_ERAS = ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "time-of-judgment", "future-darkness", "classical", "living-gods"];
+export const ALL_ERAS = ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement", "classical", "living-gods"];
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const title = s => String(s ?? "").replace(/[-_]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
@@ -146,7 +146,8 @@ export function buildShelves(src = {}) {
 export function fits(flags, {line = "all", era = null} = {}) {
   const f = flags ?? {};
   const lineOk = line === "all" || (f.lines ?? []).includes("all") || (f.lines ?? []).includes(line);
-  const eraOk = !era || (f.eras ?? []).includes(era);
+  const like = era === "time-of-future-judgement" ? "future-darkness" : era;
+  const eraOk = !era || (f.eras ?? []).includes(era) || (f.eras ?? []).includes(like);
   return lineOk && eraOk;
 }
 
