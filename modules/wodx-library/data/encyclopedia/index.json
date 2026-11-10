@@ -1339,6 +1339,12 @@
    "title": "Immortal Eyes: The Toybox",
    "short": "IE1",
    "edition": "First edition"
+  },
+  {
+   "id": "cie2",
+   "title": "Immortal Eyes: Shadows on the Hill",
+   "short": "IE2",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1564,6 +1570,7 @@
   "cench.json",
   "cfool.json",
   "cfhg.json",
-  "cie1.json"
+  "cie1.json",
+  "cie2.json"
  ]
 }

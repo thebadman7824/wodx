@@ -1,0 +1,43 @@
+[
+ {
+  "id": "cie2-yrtalien-court",
+  "title": "Yrtalien's Court of Shadows",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An exiled prince's freehold in Hawai'i.",
+  "claims": [
+   {
+    "text": "The sidhe prince Yrtalien built a freehold on the islands, its palace and garden lit with tiny chimerical lights in blues and purples and hung with crystal chandeliers dreamed up by the prince, and opened it as a Court of Shadows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cie2",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The Unseelie of the city have no single organization; many have simply come there, and whether they attend a gathering depends on who hosts it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cie2",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "unseelie-court",
+   "shadow-court",
+   "freeholds"
+  ]
+ }
+]
