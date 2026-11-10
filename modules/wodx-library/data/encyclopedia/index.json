@@ -1,1919 +1,1926 @@
 {
- "version": 1,
- "note": "The Encyclopaedia Tenebrarum: books are the sources entries cite; files hold the entries, one file per book or topic. Check with node tools/encyclopedia-check.mjs.",
- "books": [
-  {
-   "id": "c20",
-   "title": "Changeling: The Dreaming 20th Anniversary Edition",
-   "short": "C20",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "v20",
-   "title": "Vampire: The Masquerade 20th Anniversary Edition",
-   "short": "V20",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "v20da",
-   "title": "Vampire: The Dark Ages 20th Anniversary Edition",
-   "short": "V20 Dark Ages",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "w20",
-   "title": "Werewolf: The Apocalypse 20th Anniversary Edition",
-   "short": "W20",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "wtda",
-   "title": "Dark Ages: Werewolf",
-   "short": "DA:W",
-   "edition": "Dark Ages"
-  },
-  {
-   "id": "wr20",
-   "title": "Wraith: The Oblivion 20th Anniversary Edition",
-   "short": "Wr20",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "hh2",
-   "title": "The Hunters Hunted II",
-   "short": "HH2",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "mummy2",
-   "title": "Mummy (Second Edition)",
-   "short": "Mummy 2e",
-   "edition": "Second"
-  },
-  {
-   "id": "m20",
-   "title": "Mage: The Ascension 20th Anniversary Edition",
-   "short": "M20",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "damage",
-   "title": "Dark Ages: Mage",
-   "short": "DA:M",
-   "edition": "Dark Ages"
-  },
-  {
-   "id": "greatwar",
-   "title": "Wraith: The Great War",
-   "short": "W:GW",
-   "edition": "Revised era"
-  },
-  {
-   "id": "demon",
-   "title": "Demon: The Fallen",
-   "short": "DtF",
-   "edition": "First edition"
-  },
-  {
-   "id": "kote",
-   "title": "Kindred of the East",
-   "short": "KotE",
-   "edition": "Revised era"
-  },
-  {
-   "id": "orpheus",
-   "title": "Orpheus",
-   "short": "Orpheus",
-   "edition": "First edition"
-  },
-  {
-   "id": "htr",
-   "title": "Hunter: The Reckoning",
-   "short": "HtR",
-   "edition": "First edition"
-  },
-  {
-   "id": "inquisitor",
-   "title": "Dark Ages: Inquisitor",
-   "short": "DA:I",
-   "edition": "Revised era"
-  },
-  {
-   "id": "sorcerer",
-   "title": "Sorcerer (Revised)",
-   "short": "Sorc",
-   "edition": "Revised"
-  },
-  {
-   "id": "sc",
-   "title": "Mage: The Sorcerers Crusade",
-   "short": "SC",
-   "edition": "First edition"
-  },
-  {
-   "id": "vav",
-   "title": "Victorian Age: Vampire",
-   "short": "VA:V",
-   "edition": "Revised era"
-  },
-  {
-   "id": "dafae",
-   "title": "Dark Ages: Fae",
-   "short": "DA:F",
-   "edition": "Revised era"
-  },
-  {
-   "id": "gr",
-   "title": "Ghouls and Revenants",
-   "short": "G&R",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "lotc",
-   "title": "Lore of the Clans",
-   "short": "LotC",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "v20comp",
-   "title": "V20 Companion",
-   "short": "V20 Comp",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "lotb",
-   "title": "Lore of the Bloodlines",
-   "short": "LotB",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "rotb",
-   "title": "Rites of the Blood",
-   "short": "RotB",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "blackhand",
-   "title": "The Black Hand: A Guide to the Tal'Mahe'Ra",
-   "short": "Black Hand",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "anarchs",
-   "title": "Anarchs Unbound",
-   "short": "Anarchs Unbound",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "redlist",
-   "title": "Dread Names, Red List",
-   "short": "Red List",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "cotr",
-   "title": "Children of the Revolution",
-   "short": "CotR",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "v20dacomp",
-   "title": "V20 Dark Ages Companion",
-   "short": "V20 DA Companion",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "tome",
-   "title": "V20 Dark Ages: Tome of Secrets",
-   "short": "Tome of Secrets",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "wildwest",
-   "title": "The Wild West (V20)",
-   "short": "Wild West",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "beckett",
-   "title": "Beckett's Jyhad Diary",
-   "short": "Beckett",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "dust",
-   "title": "Dust to Dust (V20)",
-   "short": "Dust to Dust",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "sthr",
-   "title": "Vampire Storytellers Handbook (Revised)",
-   "short": "ST Handbook (Rev)",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbgangrel",
-   "title": "Clanbook: Gangrel (Revised)",
-   "short": "CB Gangrel (Rev)",
-   "edition": "Revised"
-  },
-  {
-   "id": "cblasombra",
-   "title": "Clanbook: Lasombra (Revised)",
-   "short": "CB Lasombra (Rev)",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbravnos",
-   "title": "Clanbook: Ravnos (Revised)",
-   "short": "CB Ravnos (Rev)",
-   "edition": "Revised"
-  },
-  {
-   "id": "archons",
-   "title": "Archons and Templars",
-   "short": "Archons & Templars",
-   "edition": "Revised"
-  },
-  {
-   "id": "warages",
-   "title": "Elysium: The Elder Wars (War of Ages)",
-   "short": "War of Ages",
-   "edition": "Revised"
-  },
-  {
-   "id": "bloodyhearts",
-   "title": "Bloody Hearts: Diablerie Britain",
-   "short": "Bloody Hearts",
-   "edition": "1st"
-  },
-  {
-   "id": "cotn",
-   "title": "Children of the Night (Revised)",
-   "short": "Children of the Night",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbn2",
-   "title": "Chicago by Night, Second Edition",
-   "short": "Chicago by Night",
-   "edition": "2nd"
-  },
-  {
-   "id": "labn",
-   "title": "Los Angeles by Night",
-   "short": "Los Angeles by Night",
-   "edition": "2nd"
-  },
-  {
-   "id": "mcbn",
-   "title": "Mexico City by Night",
-   "short": "Mexico City by Night",
-   "edition": "Revised"
-  },
-  {
-   "id": "mtbn",
-   "title": "Montreal by Night",
-   "short": "Montreal by Night",
-   "edition": "2nd"
-  },
-  {
-   "id": "nobn",
-   "title": "New Orleans by Night",
-   "short": "New Orleans by Night",
-   "edition": "2nd"
-  },
-  {
-   "id": "nybn",
-   "title": "New York by Night",
-   "short": "New York by Night",
-   "edition": "Revised"
-  },
-  {
-   "id": "sfbn",
-   "title": "San Francisco by Night",
-   "short": "San Francisco by Night",
-   "edition": "Revised"
-  },
-  {
-   "id": "gtcam",
-   "title": "Guide to the Camarilla",
-   "short": "Guide to the Camarilla",
-   "edition": "Revised"
-  },
-  {
-   "id": "gtsab",
-   "title": "Guide to the Sabbat",
-   "short": "Guide to the Sabbat",
-   "edition": "Revised"
-  },
-  {
-   "id": "gtanarch",
-   "title": "Guide to the Anarchs",
-   "short": "Guide to the Anarchs",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbassamite",
-   "title": "Clanbook: Assamite (Revised)",
-   "short": "Clanbook: Assamite",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbbrujah",
-   "title": "Clanbook: Brujah (Revised)",
-   "short": "Clanbook: Brujah",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbgiovanni",
-   "title": "Clanbook: Giovanni (Revised)",
-   "short": "Clanbook: Giovanni",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbmalkavian",
-   "title": "Clanbook: Malkavian (Revised)",
-   "short": "Clanbook: Malkavian",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbnosferatu",
-   "title": "Clanbook: Nosferatu (Revised)",
-   "short": "Clanbook: Nosferatu",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbtoreador",
-   "title": "Clanbook: Toreador (Revised)",
-   "short": "Clanbook: Toreador",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbtremere",
-   "title": "Clanbook: Tremere (Revised)",
-   "short": "Clanbook: Tremere",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbtzimisce",
-   "title": "Clanbook: Tzimisce (Revised)",
-   "short": "Clanbook: Tzimisce",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbventrue",
-   "title": "Clanbook: Ventrue (Revised)",
-   "short": "Clanbook: Ventrue",
-   "edition": "Revised"
-  },
-  {
-   "id": "cbsetite",
-   "title": "Clanbook: Followers of Set (Revised)",
-   "short": "Clanbook: Followers of Set",
-   "edition": "Revised"
-  },
-  {
-   "id": "daeu",
-   "title": "Dark Ages: Europe",
-   "short": "DA Europe",
-   "edition": "Revised"
-  },
-  {
-   "id": "dav",
-   "title": "Dark Ages: Vampire",
-   "short": "DA:V",
-   "edition": "Revised"
-  },
-  {
-   "id": "dacomp",
-   "title": "Dark Ages Companion",
-   "short": "DA Companion",
-   "edition": "First edition"
-  },
-  {
-   "id": "dabi",
-   "title": "Dark Ages: British Isles",
-   "short": "DA British Isles",
-   "edition": "Revised"
-  },
-  {
-   "id": "cb",
-   "title": "Changing Breeds (W20)",
-   "short": "W20 Changing Breeds",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "botw",
-   "title": "Book of the Wyrm (W20)",
-   "short": "W20 Book of the Wyrm",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "dalc",
-   "title": "Dark Ages: Players Guide to Low Clans",
-   "short": "DA Low Clans",
-   "edition": "Revised"
-  },
-  {
-   "id": "dahc",
-   "title": "Dark Ages: Players Guide to High Clans",
-   "short": "DA High Clans",
-   "edition": "Revised"
-  },
-  {
-   "id": "w20umbra",
-   "title": "Umbra: The Velvet Shadow (W20)",
-   "short": "W20 Umbra",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "w20sd",
-   "title": "Shattered Dreams (W20)",
-   "short": "W20 Shattered Dreams",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "w20wh",
-   "title": "Tribebook: White Howlers (W20)",
-   "short": "W20 White Howlers",
-   "edition": "20th Anniversary companion"
-  },
-  {
-   "id": "darh",
-   "title": "Dark Ages: Road of Heaven",
-   "short": "DA Road of Heaven",
-   "edition": "Revised"
-  },
-  {
-   "id": "dark",
-   "title": "Dark Ages: Road of Kings",
-   "short": "DA Road of Kings",
-   "edition": "Revised"
-  },
-  {
-   "id": "dab",
-   "title": "Dark Ages: Road of the Beast",
-   "short": "DA Road of the Beast",
-   "edition": "Revised"
-  },
-  {
-   "id": "das",
-   "title": "Dark Ages: Road of Sin",
-   "short": "DA Road of Sin",
-   "edition": "Revised"
-  },
-  {
-   "id": "vac",
-   "title": "Victorian Age Companion",
-   "short": "VA Companion",
-   "edition": "Revised"
-  },
-  {
-   "id": "dahum",
-   "title": "Dark Ages: Road of Humanity",
-   "short": "DA Road of Humanity",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbfur",
-   "title": "Tribebook: Black Furies (Revised)",
-   "short": "TB Black Furies",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbgn",
-   "title": "Tribebook: Bone Gnawers (Revised)",
-   "short": "TB Bone Gnawers",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbcog",
-   "title": "Tribebook: Children of Gaia (Revised)",
-   "short": "TB Children of Gaia",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbfia",
-   "title": "Tribebook: Fianna (Revised)",
-   "short": "TB Fianna",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbfen",
-   "title": "Tribebook: Get of Fenris (Revised)",
-   "short": "TB Get of Fenris",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbgw",
-   "title": "Tribebook: Glass Walkers (Revised)",
-   "short": "TB Glass Walkers",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbrt",
-   "title": "Tribebook: Red Talons (Revised)",
-   "short": "TB Red Talons",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbsl",
-   "title": "Tribebook: Shadow Lords (Revised)",
-   "short": "TB Shadow Lords",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbss",
-   "title": "Tribebook: Silent Striders (Revised)",
-   "short": "TB Silent Striders",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbsf",
-   "title": "Tribebook: Silver Fangs (Revised)",
-   "short": "TB Silver Fangs",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbsg",
-   "title": "Tribebook: Stargazers (Revised)",
-   "short": "TB Stargazers",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbuk",
-   "title": "Tribebook: Uktena (Revised)",
-   "short": "TB Uktena",
-   "edition": "Revised"
-  },
-  {
-   "id": "tbwen",
-   "title": "Tribebook: Wendigo (Revised)",
-   "short": "TB Wendigo",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbbas",
-   "title": "Breedbook: Bastet (Revised)",
-   "short": "BB Bastet",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbnuw",
-   "title": "Breedbook: Nuwisha (Revised)",
-   "short": "BB Nuwisha",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbcor",
-   "title": "Breedbook: Corax (Revised)",
-   "short": "BB Corax",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbgur",
-   "title": "Breedbook: Gurahl (Revised)",
-   "short": "BB Gurahl",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbrat",
-   "title": "Breedbook: Ratkin (Revised)",
-   "short": "BB Ratkin",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbmok",
-   "title": "Breedbook: Mokole (Revised)",
-   "short": "BB Mokole",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbana",
-   "title": "Breedbook: Ananasi (Revised)",
-   "short": "BB Ananasi",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbrok",
-   "title": "Breedbook: Rokea (Revised)",
-   "short": "BB Rokea",
-   "edition": "Revised"
-  },
-  {
-   "id": "bbnag",
-   "title": "Breedbook: Nagah (Revised)",
-   "short": "BB Nagah",
-   "edition": "Revised"
-  },
-  {
-   "id": "bkw",
-   "title": "Book of the Weaver",
-   "short": "Book of the Weaver",
-   "edition": "Revised"
-  },
-  {
-   "id": "bkwy",
-   "title": "Book of the Wyld",
-   "short": "Book of the Wyld",
-   "edition": "Revised"
-  },
-  {
-   "id": "raap",
-   "title": "Rage Across Appalachia",
-   "short": "RA Appalachia",
-   "edition": "2nd"
-  },
-  {
-   "id": "raau",
-   "title": "Rage Across Australia",
-   "short": "RA Australia",
-   "edition": "2nd"
-  },
-  {
-   "id": "raeg",
-   "title": "Rage Across Egypt",
-   "short": "RA Egypt",
-   "edition": "2nd"
-  },
-  {
-   "id": "rany",
-   "title": "Rage Across New York",
-   "short": "RA New York",
-   "edition": "2nd"
-  },
-  {
-   "id": "raru",
-   "title": "Rage Across Russia",
-   "short": "RA Russia",
-   "edition": "First edition"
-  },
-  {
-   "id": "raam",
-   "title": "Rage Across the Amazon",
-   "short": "RA Amazon",
-   "edition": "First edition"
-  },
-  {
-   "id": "rahe",
-   "title": "Rage Across the Heavens",
-   "short": "RA Heavens",
-   "edition": "2nd"
-  },
-  {
-   "id": "ratw1",
-   "title": "Rage Across the World, Volume 1",
-   "short": "RA World 1",
-   "edition": "2nd"
-  },
-  {
-   "id": "ratw2",
-   "title": "Rage Across the World, Volume 2 (Dark Alliance: Vancouver)",
-   "short": "RA World 2",
-   "edition": "First edition"
-  },
-  {
-   "id": "dawots",
-   "title": "Dark Ages: Wolves of the Sea",
-   "short": "DA Wolves of the Sea",
-   "edition": "Dark Ages"
-  },
-  {
-   "id": "kotec",
-   "title": "Kindred of the East Companion",
-   "short": "KotE Companion",
-   "edition": "Revised"
-  },
-  {
-   "id": "bas",
-   "title": "Blood and Silk",
-   "short": "Blood and Silk",
-   "edition": "Dark Ages"
-  },
-  {
-   "id": "k1000h",
-   "title": "The Thousand Hells",
-   "short": "Thousand Hells",
-   "edition": "Revised era"
-  },
-  {
-   "id": "kks",
-   "title": "Killing Streets",
-   "short": "Killing Streets",
-   "edition": "Revised era"
-  },
-  {
-   "id": "khow",
-   "title": "Heresies of the Way",
-   "short": "Heresies of the Way",
-   "edition": "Revised era"
-  },
-  {
-   "id": "ksw",
-   "title": "Shadow War",
-   "short": "Shadow War",
-   "edition": "Revised era"
-  },
-  {
-   "id": "khd",
-   "title": "Half-Damned: Dhampyr",
-   "short": "Half-Damned",
-   "edition": "Revised era"
-  },
-  {
-   "id": "dbbf",
-   "title": "Dharma Book: Bone Flowers",
-   "short": "DB Bone Flowers",
-   "edition": "Revised era"
-  },
-  {
-   "id": "dbrc",
-   "title": "Dharma Book: Resplendent Crane",
-   "short": "DB Resplendent Crane",
-   "edition": "Revised era"
-  },
-  {
-   "id": "dbtw",
-   "title": "Dharma Book: Thousand Whispers",
-   "short": "DB Thousand Whispers",
-   "edition": "Revised era"
-  },
-  {
-   "id": "dbtd",
-   "title": "Dharma Book: Thrashing Dragons",
-   "short": "DB Thrashing Dragons",
-   "edition": "Revised era"
-  },
-  {
-   "id": "dbdt",
-   "title": "Dharma Book: Devil Tigers",
-   "short": "DB Devil Tigers",
-   "edition": "Revised era"
-  },
-  {
-   "id": "m20hdy",
-   "title": "M20 How Do You DO That?",
-   "short": "HDYDT",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "m20bos",
-   "title": "M20 Book of Secrets",
-   "short": "BoS",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "m20botf",
-   "title": "M20 Book of the Fallen",
-   "short": "BotF",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "m20gm",
-   "title": "M20 Gods & Monsters",
-   "short": "G&M",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "mrab",
-   "title": "Tradition Book: Akashic Brotherhood (Revised)",
-   "short": "TB:AB",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrcc",
-   "title": "Tradition Book: Celestial Chorus (Revised)",
-   "short": "TB:CC",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrce",
-   "title": "Tradition Book: Cult of Ecstasy (Revised)",
-   "short": "TB:CoE",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrds",
-   "title": "Tradition Book: Dreamspeakers (Revised)",
-   "short": "TB:DS",
-   "edition": "Revised"
-  },
-  {
-   "id": "mreu",
-   "title": "Tradition Book: Euthanatos (Revised)",
-   "short": "TB:Eu",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrho",
-   "title": "Tradition Book: Hollow Ones (Revised)",
-   "short": "TB:HO",
-   "edition": "Revised"
-  },
-  {
-   "id": "mroh",
-   "title": "Tradition Book: Order of Hermes (Revised)",
-   "short": "TB:OoH",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrse",
-   "title": "Tradition Book: Sons of Ether (Revised)",
-   "short": "TB:SoE",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrve",
-   "title": "Tradition Book: Verbena (Revised)",
-   "short": "TB:Ve",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrva",
-   "title": "Tradition Book: Virtual Adepts (Revised)",
-   "short": "TB:VA",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrix",
-   "title": "Convention Book: Iteration X (Revised)",
-   "short": "CB:IX",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrnwo",
-   "title": "Convention Book: N.W.O. (M20)",
-   "short": "CB:NWO",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "mrpg",
-   "title": "Convention Book: Progenitors (M20)",
-   "short": "CB:Pg",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "mrsy",
-   "title": "Convention Book: Syndicate (M20)",
-   "short": "CB:Sy",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "mrvoid",
-   "title": "Convention Book: Void Engineers (M20)",
-   "short": "CB:VE",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "mrgtt",
-   "title": "Guide to the Traditions",
-   "short": "GttT",
-   "edition": "Revised"
-  },
-  {
-   "id": "m2gtech",
-   "title": "Guide to the Technocracy",
-   "short": "GttTech",
-   "edition": "2nd"
-  },
-  {
-   "id": "mrit",
-   "title": "The Infinite Tapestry",
-   "short": "IT",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrsw",
-   "title": "The Spirit Ways",
-   "short": "SW",
-   "edition": "Revised"
-  },
-  {
-   "id": "m2bow",
-   "title": "Beyond the Barriers: The Book of Worlds",
-   "short": "BoW",
-   "edition": "2nd"
-  },
-  {
-   "id": "m1boc",
-   "title": "The Book of Chantries",
-   "short": "BoC",
-   "edition": "1st"
-  },
-  {
-   "id": "m2hor",
-   "title": "Horizon: Stronghold of Hope",
-   "short": "HSH",
-   "edition": "2nd"
-  },
-  {
-   "id": "mrdm",
-   "title": "Dead Magic",
-   "short": "DM",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrdm2",
-   "title": "Dead Magic 2: Secrets and Survivors",
-   "short": "DM2",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrdote",
-   "title": "Dragons of the East",
-   "short": "DotE",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrlp",
-   "title": "Lost Paths: Ahl-i-Batin and Taftani",
-   "short": "LP",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrbt",
-   "title": "Blood Treachery",
-   "short": "BT",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrman",
-   "title": "Manifesto: Transmissions from the Rogue Council",
-   "short": "Man",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrftlv",
-   "title": "The Fallen Tower: Las Vegas",
-   "short": "FTLV",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrbom",
-   "title": "The Book of Madness",
-   "short": "BoM",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrfdf",
-   "title": "Forged by Dragon's Fire",
-   "short": "FbDF",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrbr",
-   "title": "The Bitter Road",
-   "short": "BR",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrsth",
-   "title": "Mage Storytellers Handbook",
-   "short": "MSH",
-   "edition": "Revised"
-  },
-  {
-   "id": "mrcrafts",
-   "title": "The Book of Crafts",
-   "short": "BoC",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2hota",
-   "title": "Halls of the Arcanum",
-   "short": "HotA",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2ta1",
-   "title": "Technocracy Assembled, Volume 1",
-   "short": "TA1",
-   "edition": "First edition"
-  },
-  {
-   "id": "m2ta2",
-   "title": "Technocracy Assembled, Volume 2",
-   "short": "TA2",
-   "edition": "First edition"
-  },
-  {
-   "id": "m2tt",
-   "title": "The Technomancer's Toybox",
-   "short": "TT",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2osg",
-   "title": "The Orphan's Survival Guide",
-   "short": "OSG",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2arh",
-   "title": "Ascension's Right Hand",
-   "short": "ARH",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2fp",
-   "title": "The Fragile Path: Testaments of the First Cabal",
-   "short": "FP",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2dw",
-   "title": "Digital Web",
-   "short": "DW",
-   "edition": "First edition"
-  },
-  {
-   "id": "m2sor",
-   "title": "Sorcerer: The Hedge Wizard's Handbook",
-   "short": "HWH",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2ini",
-   "title": "Initiates of the Art",
-   "short": "IotA",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2mas",
-   "title": "Masters of the Art",
-   "short": "MotA",
-   "edition": "Revised"
-  },
-  {
-   "id": "m2hl",
-   "title": "Hidden Lore",
-   "short": "HL",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2stc",
-   "title": "Mage Storytellers Companion",
-   "short": "MSC",
-   "edition": "Revised"
-  },
-  {
-   "id": "m2cf",
-   "title": "The Chaos Factor",
-   "short": "CF",
-   "edition": "Second edition"
-  },
-  {
-   "id": "m2dp",
-   "title": "Destiny's Price",
-   "short": "DP",
-   "edition": "Second edition"
-  },
-  {
-   "id": "scah",
-   "title": "The Artisan's Handbook",
-   "short": "AH",
-   "edition": "First edition"
-  },
-  {
-   "id": "sccomp",
-   "title": "The Sorcerers Crusade Companion",
-   "short": "SCC",
-   "edition": "First edition"
-  },
-  {
-   "id": "sccl",
-   "title": "Crusade Lore",
-   "short": "CL",
-   "edition": "First edition"
-  },
-  {
-   "id": "scinf",
-   "title": "Infernalism: The Path of Screams",
-   "short": "INF",
-   "edition": "First edition"
-  },
-  {
-   "id": "scor",
-   "title": "The Order of Reason",
-   "short": "OR",
-   "edition": "First edition"
-  },
-  {
-   "id": "scsw",
-   "title": "The Swashbuckler's Handbook",
-   "short": "SH",
-   "edition": "First edition"
-  },
-  {
-   "id": "scwp",
-   "title": "Witches and Pagans",
-   "short": "WP",
-   "edition": "First edition"
-  },
-  {
-   "id": "sccc",
-   "title": "Castles and Covenants",
-   "short": "CC",
-   "edition": "First edition"
-  },
-  {
-   "id": "dagrim",
-   "title": "Dark Ages: Mage Grimoire",
-   "short": "DAMG",
-   "edition": "First edition"
-  },
-  {
-   "id": "wr20bo",
-   "title": "Book of Oblivion",
-   "short": "BoO",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "wr20hrd",
-   "title": "Handbook for the Recently Deceased",
-   "short": "HRD",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "whier",
-   "title": "The Hierarchy",
-   "short": "Hier",
-   "edition": "First edition"
-  },
-  {
-   "id": "wren",
-   "title": "Renegades",
-   "short": "Ren",
-   "edition": "First edition"
-  },
-  {
-   "id": "whaunts",
-   "title": "Haunts",
-   "short": "Haunts",
-   "edition": "First edition"
-  },
-  {
-   "id": "wbol",
-   "title": "The Book of Legions",
-   "short": "BoL",
-   "edition": "First edition"
-  },
-  {
-   "id": "wpg",
-   "title": "Wraith Players Guide",
-   "short": "WPG",
-   "edition": "First edition"
-  },
-  {
-   "id": "wdr",
-   "title": "Dark Reflections: Spectres",
-   "short": "DR",
-   "edition": "First edition"
-  },
-  {
-   "id": "wsos",
-   "title": "The Sea of Shadows",
-   "short": "SoS",
-   "edition": "First edition"
-  },
-  {
-   "id": "wdil",
-   "title": "Doomslayers: Into the Labyrinth",
-   "short": "Doom",
-   "edition": "First edition"
-  },
-  {
-   "id": "wqd",
-   "title": "The Quick and the Dead",
-   "short": "QD",
-   "edition": "First edition"
-  },
-  {
-   "id": "wna",
-   "title": "Necropolis: Atlanta",
-   "short": "NA",
-   "edition": "First edition"
-  },
-  {
-   "id": "wme",
-   "title": "Midnight Express",
-   "short": "ME",
-   "edition": "First edition"
-  },
-  {
-   "id": "wris",
-   "title": "The Risen",
-   "short": "Risen",
-   "edition": "First edition"
-  },
-  {
-   "id": "wmed",
-   "title": "Mediums: Speakers with the Dead",
-   "short": "Med",
-   "edition": "First edition"
-  },
-  {
-   "id": "weoe",
-   "title": "Ends of Empire",
-   "short": "EoE",
-   "edition": "First edition"
-  },
-  {
-   "id": "wdkj",
-   "title": "Dark Kingdom of Jade",
-   "short": "DKJ",
-   "edition": "First edition"
-  },
-  {
-   "id": "wche",
-   "title": "Charnel Houses of Europe: The Shoah",
-   "short": "CHE",
-   "edition": "First edition"
-  },
-  {
-   "id": "wgart",
-   "title": "Guildbook: Artificers",
-   "short": "GBA",
-   "edition": "First edition"
-  },
-  {
-   "id": "wghau",
-   "title": "Guildbook: Haunters",
-   "short": "GBH",
-   "edition": "First edition"
-  },
-  {
-   "id": "wgmas",
-   "title": "Guildbook: Masquers",
-   "short": "GBM",
-   "edition": "First edition"
-  },
-  {
-   "id": "wgpp",
-   "title": "Guildbook: Puppeteers",
-   "short": "GBP",
-   "edition": "First edition"
-  },
-  {
-   "id": "wgsan",
-   "title": "Guildbook: Sandmen",
-   "short": "GBS",
-   "edition": "First edition"
-  },
-  {
-   "id": "wgso",
-   "title": "Guildbook: Spooks",
-   "short": "GBSp",
-   "edition": "First edition"
-  },
-  {
-   "id": "c20bof",
-   "title": "Changeling: The Dreaming 20th Anniversary Book of Freeholds",
-   "short": "C20BoF",
-   "edition": "20th Anniversary"
-  },
-  {
-   "id": "ctdpg",
-   "title": "Changeling: The Dreaming Player's Guide",
-   "short": "CtDPG",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cbdt",
-   "title": "World of Darkness: Blood-Dimmed Tides",
-   "short": "BDT",
-   "edition": "First edition"
-  },
-  {
-   "id": "cboh1",
-   "title": "Noblesse Oblige: The Book of Houses",
-   "short": "BoH1",
-   "edition": "First edition"
-  },
-  {
-   "id": "cboh2",
-   "title": "Pour l'Amour et Liberte: The Book of Houses 2",
-   "short": "BoH2",
-   "edition": "First edition"
-  },
-  {
-   "id": "cbolh",
-   "title": "The Book of Lost Houses: The Second Coming",
-   "short": "BoLH",
-   "edition": "First edition"
-  },
-  {
-   "id": "cden",
-   "title": "Denizens of the Dreaming",
-   "short": "DotD",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cdan",
-   "title": "Dreams and Nightmares",
-   "short": "D&N",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cench",
-   "title": "The Enchanted",
-   "short": "Ench",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cfool",
-   "title": "Fool's Luck: The Way of the Commoner",
-   "short": "FL",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cfhg",
-   "title": "Freeholds and Hidden Glens",
-   "short": "FHG",
-   "edition": "First edition"
-  },
-  {
-   "id": "cie1",
-   "title": "Immortal Eyes: The Toybox",
-   "short": "IE1",
-   "edition": "First edition"
-  },
-  {
-   "id": "cie2",
-   "title": "Immortal Eyes: Shadows on the Hill",
-   "short": "IE2",
-   "edition": "First edition"
-  },
-  {
-   "id": "cie3",
-   "title": "Immortal Eyes: Court of All Kings",
-   "short": "IE3",
-   "edition": "First edition"
-  },
-  {
-   "id": "cinan",
-   "title": "Inanimae: The Secret Way",
-   "short": "Inan",
-   "edition": "Second edition"
-  },
-  {
-   "id": "ckow",
-   "title": "The Kingdom of Willows",
-   "short": "KoW",
-   "edition": "Second edition"
-  },
-  {
-   "id": "ciotm",
-   "title": "Isle of the Mighty",
-   "short": "IotM",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cl8m",
-   "title": "Land of Eight Million Dreams",
-   "short": "L8MD",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cnob",
-   "title": "Nobles: The Shining Host",
-   "short": "Nobles",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cshc",
-   "title": "The Shadow Court",
-   "short": "SC",
-   "edition": "First edition"
-  },
-  {
-   "id": "cwic",
-   "title": "War in Concordia",
-   "short": "WiC",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cknock",
-   "title": "Kithbook: Nockers",
-   "short": "KB Nockers",
-   "edition": "Second edition"
-  },
-  {
-   "id": "ckpooka",
-   "title": "Kithbook: Pooka",
-   "short": "KB Pooka",
-   "edition": "Second edition"
-  },
-  {
-   "id": "ckeshu",
-   "title": "Kithbook: Eshu",
-   "short": "KB Eshu",
-   "edition": "Second edition"
-  },
-  {
-   "id": "ckred",
-   "title": "Kithbook: Redcaps",
-   "short": "KB Redcaps",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cksat",
-   "title": "Kithbook: Satyrs",
-   "short": "KB Satyrs",
-   "edition": "Second edition"
-  },
-  {
-   "id": "ckslu",
-   "title": "Kithbook: Sluagh",
-   "short": "KB Sluagh",
-   "edition": "Second edition"
-  },
-  {
-   "id": "cktrol",
-   "title": "Kithbook: Trolls",
-   "short": "KB Trolls",
-   "edition": "Second edition"
-  },
-  {
-   "id": "ckbog",
-   "title": "Kithbook: Boggans",
-   "short": "KB Boggans",
-   "edition": "Second edition"
-  },
-  {
-   "id": "htrpg",
-   "title": "Hunter Players Guide",
-   "short": "HtR PG",
-   "edition": "First edition"
-  },
-  {
-   "id": "heinf",
-   "title": "Hunter: The Infernal",
-   "short": "HtR Inf",
-   "edition": "First edition"
-  },
-  {
-   "id": "hemoon",
-   "title": "Hunter: The Moonstruck",
-   "short": "HtR Moon",
-   "edition": "First edition"
-  },
-  {
-   "id": "henoc",
-   "title": "Hunter: The Nocturnal",
-   "short": "HtR Noc",
-   "edition": "First edition"
-  },
-  {
-   "id": "hespell",
-   "title": "Hunter: The Spellbound",
-   "short": "HtR Spell",
-   "edition": "First edition"
-  },
-  {
-   "id": "hewd",
-   "title": "Hunter: The Walking Dead",
-   "short": "HtR WD",
-   "edition": "First edition"
-  },
-  {
-   "id": "heul",
-   "title": "Hunter: Urban Legends",
-   "short": "HtR UL",
-   "edition": "First edition"
-  },
-  {
-   "id": "hbave",
-   "title": "Hunter Book: Avenger",
-   "short": "HB Avenger",
-   "edition": "First edition"
-  },
-  {
-   "id": "hbdef",
-   "title": "Hunter Book: Defender",
-   "short": "HB Defender",
-   "edition": "First edition"
-  },
-  {
-   "id": "hbher",
-   "title": "Hunter Book: Hermit",
-   "short": "HB Hermit",
-   "edition": "First edition"
-  },
-  {
-   "id": "hbinn",
-   "title": "Hunter Book: Innocent",
-   "short": "HB Innocent",
-   "edition": "First edition"
-  },
-  {
-   "id": "hbjud",
-   "title": "Hunter Book: Judge",
-   "short": "HB Judge",
-   "edition": "First edition"
-  },
-  {
-   "id": "hbmar",
-   "title": "Hunter Book: Martyr",
-   "short": "HB Martyr",
-   "edition": "First edition"
-  },
-  {
-   "id": "hbred",
-   "title": "Hunter Book: Redeemer",
-   "short": "HB Redeemer",
-   "edition": "First edition"
-  },
-  {
-   "id": "hbvis",
-   "title": "Hunter Book: Visionary",
-   "short": "HB Visionary",
-   "edition": "First edition"
-  },
-  {
-   "id": "hfc",
-   "title": "Hunter: First Contact",
-   "short": "HtR FC",
-   "edition": "First edition"
-  },
-  {
-   "id": "hhw",
-   "title": "Hunter: Holy War",
-   "short": "HtR HW",
-   "edition": "First edition"
-  },
-  {
-   "id": "hsg",
-   "title": "Hunter Survival Guide",
-   "short": "HtR SG",
-   "edition": "First edition"
-  },
-  {
-   "id": "hutop",
-   "title": "Hunter: Utopia",
-   "short": "HtR Utopia",
-   "edition": "First edition"
-  },
-  {
-   "id": "hffg",
-   "title": "Hunter: Fall from Grace",
-   "short": "HtR FfG",
-   "edition": "First edition"
-  },
-  {
-   "id": "dcoa",
-   "title": "Demon: City of Angels",
-   "short": "City of Angels",
-   "edition": "First edition"
-  },
-  {
-   "id": "deb",
-   "title": "Demon: Earthbound",
-   "short": "Earthbound",
-   "edition": "First edition"
-  },
-  {
-   "id": "dhf",
-   "title": "Demon: Houses of the Fallen",
-   "short": "Houses of the Fallen",
-   "edition": "First edition"
-  },
-  {
-   "id": "dpg",
-   "title": "Demon Players Guide",
-   "short": "Demon Players Guide",
-   "edition": "First edition"
-  },
-  {
-   "id": "mtrpg",
-   "title": "Mummy: The Resurrection Players Guide",
-   "short": "Mummy Players Guide",
-   "edition": "First edition"
-  },
-  {
-   "id": "wod2",
-   "title": "A World of Darkness, Second Edition",
-   "short": "WoD 2e",
-   "edition": "Second edition"
-  },
-  {
-   "id": "wodtok",
-   "title": "World of Darkness: Tokyo",
-   "short": "Tokyo",
-   "edition": "First edition"
-  },
-  {
-   "id": "wodhk",
-   "title": "World of Darkness: Hong Kong",
-   "short": "Hong Kong",
-   "edition": "First edition"
-  },
-  {
-   "id": "wodout",
-   "title": "Outcasts: A Players Guide to Pariahs",
-   "short": "Outcasts",
-   "edition": "First edition"
-  },
-  {
-   "id": "wodbb",
-   "title": "The Bygone Bestiary",
-   "short": "Bygone Bestiary",
-   "edition": "First edition"
-  },
-  {
-   "id": "woddhx",
-   "title": "World of Darkness: Demon Hunter X",
-   "short": "Demon Hunter X",
-   "edition": "First edition"
-  },
-  {
-   "id": "wod1",
-   "title": "A World of Darkness, First Edition",
-   "short": "WoD 1e",
-   "edition": "First edition"
-  },
-  {
-   "id": "mtr",
-   "title": "Mummy: The Resurrection",
-   "short": "MtR",
-   "edition": "Third edition"
-  }
- ],
- "files": [
-  "c20.json",
-  "v20.json",
-  "v20da.json",
-  "w20.json",
-  "wtda.json",
-  "wr20.json",
-  "hh2.json",
-  "mummy2.json",
-  "m20.json",
-  "damage.json",
-  "greatwar.json",
-  "demon.json",
-  "kote.json",
-  "orpheus.json",
-  "htr.json",
-  "inquisitor.json",
-  "sorcerer.json",
-  "sc.json",
-  "vav.json",
-  "dafae.json",
-  "gr.json",
-  "lotc.json",
-  "v20comp.json",
-  "lotb.json",
-  "rotb.json",
-  "blackhand.json",
-  "anarchs.json",
-  "redlist.json",
-  "cotr.json",
-  "v20dacomp.json",
-  "tome.json",
-  "wildwest.json",
-  "beckett.json",
-  "dust.json",
-  "sthr.json",
-  "cbgangrel.json",
-  "cblasombra.json",
-  "cbravnos.json",
-  "archons.json",
-  "warages.json",
-  "bloodyhearts.json",
-  "cotn.json",
-  "cbn2.json",
-  "labn.json",
-  "mcbn.json",
-  "mtbn.json",
-  "nobn.json",
-  "nybn.json",
-  "sfbn.json",
-  "gtcam.json",
-  "gtsab.json",
-  "gtanarch.json",
-  "cbassamite.json",
-  "cbbrujah.json",
-  "cbgiovanni.json",
-  "cbmalkavian.json",
-  "cbnosferatu.json",
-  "cbtoreador.json",
-  "cbtremere.json",
-  "cbtzimisce.json",
-  "cbventrue.json",
-  "cbsetite.json",
-  "daeu.json",
-  "dav.json",
-  "dacomp.json",
-  "dabi.json",
-  "cb.json",
-  "botw.json",
-  "dalc.json",
-  "dahc.json",
-  "w20umbra.json",
-  "w20sd.json",
-  "w20wh.json",
-  "darh.json",
-  "dark.json",
-  "dab.json",
-  "das.json",
-  "vac.json",
-  "dahum.json",
-  "tbfur.json",
-  "tbgn.json",
-  "tbcog.json",
-  "tbfia.json",
-  "tbfen.json",
-  "tbgw.json",
-  "tbrt.json",
-  "tbsl.json",
-  "tbss.json",
-  "tbsf.json",
-  "tbsg.json",
-  "tbuk.json",
-  "tbwen.json",
-  "bbbas.json",
-  "bbnuw.json",
-  "bbcor.json",
-  "bbgur.json",
-  "bbrat.json",
-  "bbmok.json",
-  "bbana.json",
-  "bbrok.json",
-  "bbnag.json",
-  "bkw.json",
-  "bkwy.json",
-  "raap.json",
-  "raau.json",
-  "raeg.json",
-  "rany.json",
-  "raru.json",
-  "raam.json",
-  "rahe.json",
-  "ratw1.json",
-  "ratw2.json",
-  "dawots.json",
-  "kotec.json",
-  "bas.json",
-  "k1000h.json",
-  "kks.json",
-  "khow.json",
-  "ksw.json",
-  "khd.json",
-  "dbbf.json",
-  "dbrc.json",
-  "dbtw.json",
-  "dbtd.json",
-  "dbdt.json",
-  "m20hdy.json",
-  "m20bos.json",
-  "m20botf.json",
-  "m20gm.json",
-  "mrab.json",
-  "mrcc.json",
-  "mrce.json",
-  "mrds.json",
-  "mreu.json",
-  "mrho.json",
-  "mroh.json",
-  "mrse.json",
-  "mrve.json",
-  "mrva.json",
-  "mrix.json",
-  "mrnwo.json",
-  "mrpg.json",
-  "mrsy.json",
-  "mrvoid.json",
-  "mrgtt.json",
-  "m2gtech.json",
-  "mrit.json",
-  "mrsw.json",
-  "m2bow.json",
-  "m1boc.json",
-  "m2hor.json",
-  "mrdm.json",
-  "mrdm2.json",
-  "mrdote.json",
-  "mrlp.json",
-  "mrbt.json",
-  "mrman.json",
-  "mrftlv.json",
-  "mrbom.json",
-  "mrfdf.json",
-  "mrbr.json",
-  "mrsth.json",
-  "mrcrafts.json",
-  "m2hota.json",
-  "m2ta1.json",
-  "m2ta2.json",
-  "m2tt.json",
-  "m2osg.json",
-  "m2arh.json",
-  "m2fp.json",
-  "m2dw.json",
-  "m2sor.json",
-  "m2ini.json",
-  "m2mas.json",
-  "m2hl.json",
-  "m2stc.json",
-  "m2cf.json",
-  "m2dp.json",
-  "scah.json",
-  "sccomp.json",
-  "sccl.json",
-  "scinf.json",
-  "scor.json",
-  "scsw.json",
-  "scwp.json",
-  "sccc.json",
-  "dagrim.json",
-  "wr20bo.json",
-  "wr20hrd.json",
-  "whier.json",
-  "wren.json",
-  "whaunts.json",
-  "wbol.json",
-  "wpg.json",
-  "wdr.json",
-  "wsos.json",
-  "wdil.json",
-  "wqd.json",
-  "wna.json",
-  "wme.json",
-  "wris.json",
-  "wmed.json",
-  "weoe.json",
-  "wdkj.json",
-  "wche.json",
-  "wgart.json",
-  "wghau.json",
-  "wgmas.json",
-  "wgpp.json",
-  "wgsan.json",
-  "wgso.json",
-  "c20bof.json",
-  "ctdpg.json",
-  "cbdt.json",
-  "cboh1.json",
-  "cboh2.json",
-  "cbolh.json",
-  "cden.json",
-  "cdan.json",
-  "cench.json",
-  "cfool.json",
-  "cfhg.json",
-  "cie1.json",
-  "cie2.json",
-  "cie3.json",
-  "cinan.json",
-  "ckow.json",
-  "ciotm.json",
-  "cl8m.json",
-  "cnob.json",
-  "cshc.json",
-  "cwic.json",
-  "cknock.json",
-  "ckpooka.json",
-  "ckeshu.json",
-  "ckred.json",
-  "cksat.json",
-  "ckslu.json",
-  "cktrol.json",
-  "ckbog.json",
-  "htrpg.json",
-  "heinf.json",
-  "hemoon.json",
-  "henoc.json",
-  "hespell.json",
-  "hewd.json",
-  "heul.json",
-  "hbave.json",
-  "hbdef.json",
-  "hbher.json",
-  "hbinn.json",
-  "hbjud.json",
-  "hbmar.json",
-  "hbred.json",
-  "hbvis.json",
-  "hfc.json",
-  "hhw.json",
-  "hsg.json",
-  "hutop.json",
-  "hffg.json",
-  "dcoa.json",
-  "deb.json",
-  "dhf.json",
-  "dpg.json",
-  "mtrpg.json",
-  "wod2.json",
-  "wodtok.json",
-  "wodhk.json",
-  "wodout.json",
-  "wodbb.json",
-  "woddhx.json",
-  "wod1.json",
-  "mtr.json"
- ]
+  "version": 1,
+  "note": "The Encyclopaedia Tenebrarum: books are the sources entries cite; files hold the entries, one file per book or topic. Check with node tools/encyclopedia-check.mjs.",
+  "books": [
+    {
+      "id": "c20",
+      "title": "Changeling: The Dreaming 20th Anniversary Edition",
+      "short": "C20",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "v20",
+      "title": "Vampire: The Masquerade 20th Anniversary Edition",
+      "short": "V20",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "v20da",
+      "title": "Vampire: The Dark Ages 20th Anniversary Edition",
+      "short": "V20 Dark Ages",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "w20",
+      "title": "Werewolf: The Apocalypse 20th Anniversary Edition",
+      "short": "W20",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "wtda",
+      "title": "Dark Ages: Werewolf",
+      "short": "DA:W",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "wr20",
+      "title": "Wraith: The Oblivion 20th Anniversary Edition",
+      "short": "Wr20",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "hh2",
+      "title": "The Hunters Hunted II",
+      "short": "HH2",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "mummy2",
+      "title": "Mummy (Second Edition)",
+      "short": "Mummy 2e",
+      "edition": "Second"
+    },
+    {
+      "id": "m20",
+      "title": "Mage: The Ascension 20th Anniversary Edition",
+      "short": "M20",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "damage",
+      "title": "Dark Ages: Mage",
+      "short": "DA:M",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "greatwar",
+      "title": "Wraith: The Great War",
+      "short": "W:GW",
+      "edition": "Revised era"
+    },
+    {
+      "id": "demon",
+      "title": "Demon: The Fallen",
+      "short": "DtF",
+      "edition": "First edition"
+    },
+    {
+      "id": "kote",
+      "title": "Kindred of the East",
+      "short": "KotE",
+      "edition": "Revised era"
+    },
+    {
+      "id": "orpheus",
+      "title": "Orpheus",
+      "short": "Orpheus",
+      "edition": "First edition"
+    },
+    {
+      "id": "htr",
+      "title": "Hunter: The Reckoning",
+      "short": "HtR",
+      "edition": "First edition"
+    },
+    {
+      "id": "inquisitor",
+      "title": "Dark Ages: Inquisitor",
+      "short": "DA:I",
+      "edition": "Revised era"
+    },
+    {
+      "id": "sorcerer",
+      "title": "Sorcerer (Revised)",
+      "short": "Sorc",
+      "edition": "Revised"
+    },
+    {
+      "id": "sc",
+      "title": "Mage: The Sorcerers Crusade",
+      "short": "SC",
+      "edition": "First edition"
+    },
+    {
+      "id": "vav",
+      "title": "Victorian Age: Vampire",
+      "short": "VA:V",
+      "edition": "Revised era"
+    },
+    {
+      "id": "dafae",
+      "title": "Dark Ages: Fae",
+      "short": "DA:F",
+      "edition": "Revised era"
+    },
+    {
+      "id": "gr",
+      "title": "Ghouls and Revenants",
+      "short": "G&R",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "lotc",
+      "title": "Lore of the Clans",
+      "short": "LotC",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "v20comp",
+      "title": "V20 Companion",
+      "short": "V20 Comp",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "lotb",
+      "title": "Lore of the Bloodlines",
+      "short": "LotB",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "rotb",
+      "title": "Rites of the Blood",
+      "short": "RotB",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "blackhand",
+      "title": "The Black Hand: A Guide to the Tal'Mahe'Ra",
+      "short": "Black Hand",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "anarchs",
+      "title": "Anarchs Unbound",
+      "short": "Anarchs Unbound",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "redlist",
+      "title": "Dread Names, Red List",
+      "short": "Red List",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "cotr",
+      "title": "Children of the Revolution",
+      "short": "CotR",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "v20dacomp",
+      "title": "V20 Dark Ages Companion",
+      "short": "V20 DA Companion",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "tome",
+      "title": "V20 Dark Ages: Tome of Secrets",
+      "short": "Tome of Secrets",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "wildwest",
+      "title": "The Wild West (V20)",
+      "short": "Wild West",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "beckett",
+      "title": "Beckett's Jyhad Diary",
+      "short": "Beckett",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "dust",
+      "title": "Dust to Dust (V20)",
+      "short": "Dust to Dust",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "sthr",
+      "title": "Vampire Storytellers Handbook (Revised)",
+      "short": "ST Handbook (Rev)",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbgangrel",
+      "title": "Clanbook: Gangrel (Revised)",
+      "short": "CB Gangrel (Rev)",
+      "edition": "Revised"
+    },
+    {
+      "id": "cblasombra",
+      "title": "Clanbook: Lasombra (Revised)",
+      "short": "CB Lasombra (Rev)",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbravnos",
+      "title": "Clanbook: Ravnos (Revised)",
+      "short": "CB Ravnos (Rev)",
+      "edition": "Revised"
+    },
+    {
+      "id": "archons",
+      "title": "Archons and Templars",
+      "short": "Archons & Templars",
+      "edition": "Revised"
+    },
+    {
+      "id": "warages",
+      "title": "Elysium: The Elder Wars (War of Ages)",
+      "short": "War of Ages",
+      "edition": "Revised"
+    },
+    {
+      "id": "bloodyhearts",
+      "title": "Bloody Hearts: Diablerie Britain",
+      "short": "Bloody Hearts",
+      "edition": "1st"
+    },
+    {
+      "id": "cotn",
+      "title": "Children of the Night (Revised)",
+      "short": "Children of the Night",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbn2",
+      "title": "Chicago by Night, Second Edition",
+      "short": "Chicago by Night",
+      "edition": "2nd"
+    },
+    {
+      "id": "labn",
+      "title": "Los Angeles by Night",
+      "short": "Los Angeles by Night",
+      "edition": "2nd"
+    },
+    {
+      "id": "mcbn",
+      "title": "Mexico City by Night",
+      "short": "Mexico City by Night",
+      "edition": "Revised"
+    },
+    {
+      "id": "mtbn",
+      "title": "Montreal by Night",
+      "short": "Montreal by Night",
+      "edition": "2nd"
+    },
+    {
+      "id": "nobn",
+      "title": "New Orleans by Night",
+      "short": "New Orleans by Night",
+      "edition": "2nd"
+    },
+    {
+      "id": "nybn",
+      "title": "New York by Night",
+      "short": "New York by Night",
+      "edition": "Revised"
+    },
+    {
+      "id": "sfbn",
+      "title": "San Francisco by Night",
+      "short": "San Francisco by Night",
+      "edition": "Revised"
+    },
+    {
+      "id": "gtcam",
+      "title": "Guide to the Camarilla",
+      "short": "Guide to the Camarilla",
+      "edition": "Revised"
+    },
+    {
+      "id": "gtsab",
+      "title": "Guide to the Sabbat",
+      "short": "Guide to the Sabbat",
+      "edition": "Revised"
+    },
+    {
+      "id": "gtanarch",
+      "title": "Guide to the Anarchs",
+      "short": "Guide to the Anarchs",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbassamite",
+      "title": "Clanbook: Assamite (Revised)",
+      "short": "Clanbook: Assamite",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbbrujah",
+      "title": "Clanbook: Brujah (Revised)",
+      "short": "Clanbook: Brujah",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbgiovanni",
+      "title": "Clanbook: Giovanni (Revised)",
+      "short": "Clanbook: Giovanni",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbmalkavian",
+      "title": "Clanbook: Malkavian (Revised)",
+      "short": "Clanbook: Malkavian",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbnosferatu",
+      "title": "Clanbook: Nosferatu (Revised)",
+      "short": "Clanbook: Nosferatu",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbtoreador",
+      "title": "Clanbook: Toreador (Revised)",
+      "short": "Clanbook: Toreador",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbtremere",
+      "title": "Clanbook: Tremere (Revised)",
+      "short": "Clanbook: Tremere",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbtzimisce",
+      "title": "Clanbook: Tzimisce (Revised)",
+      "short": "Clanbook: Tzimisce",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbventrue",
+      "title": "Clanbook: Ventrue (Revised)",
+      "short": "Clanbook: Ventrue",
+      "edition": "Revised"
+    },
+    {
+      "id": "cbsetite",
+      "title": "Clanbook: Followers of Set (Revised)",
+      "short": "Clanbook: Followers of Set",
+      "edition": "Revised"
+    },
+    {
+      "id": "daeu",
+      "title": "Dark Ages: Europe",
+      "short": "DA Europe",
+      "edition": "Revised"
+    },
+    {
+      "id": "dav",
+      "title": "Dark Ages: Vampire",
+      "short": "DA:V",
+      "edition": "Revised"
+    },
+    {
+      "id": "dacomp",
+      "title": "Dark Ages Companion",
+      "short": "DA Companion",
+      "edition": "First edition"
+    },
+    {
+      "id": "dabi",
+      "title": "Dark Ages: British Isles",
+      "short": "DA British Isles",
+      "edition": "Revised"
+    },
+    {
+      "id": "cb",
+      "title": "Changing Breeds (W20)",
+      "short": "W20 Changing Breeds",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "botw",
+      "title": "Book of the Wyrm (W20)",
+      "short": "W20 Book of the Wyrm",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "dalc",
+      "title": "Dark Ages: Players Guide to Low Clans",
+      "short": "DA Low Clans",
+      "edition": "Revised"
+    },
+    {
+      "id": "dahc",
+      "title": "Dark Ages: Players Guide to High Clans",
+      "short": "DA High Clans",
+      "edition": "Revised"
+    },
+    {
+      "id": "w20umbra",
+      "title": "Umbra: The Velvet Shadow (W20)",
+      "short": "W20 Umbra",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "w20sd",
+      "title": "Shattered Dreams (W20)",
+      "short": "W20 Shattered Dreams",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "w20wh",
+      "title": "Tribebook: White Howlers (W20)",
+      "short": "W20 White Howlers",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "darh",
+      "title": "Dark Ages: Road of Heaven",
+      "short": "DA Road of Heaven",
+      "edition": "Revised"
+    },
+    {
+      "id": "dark",
+      "title": "Dark Ages: Road of Kings",
+      "short": "DA Road of Kings",
+      "edition": "Revised"
+    },
+    {
+      "id": "dab",
+      "title": "Dark Ages: Road of the Beast",
+      "short": "DA Road of the Beast",
+      "edition": "Revised"
+    },
+    {
+      "id": "das",
+      "title": "Dark Ages: Road of Sin",
+      "short": "DA Road of Sin",
+      "edition": "Revised"
+    },
+    {
+      "id": "vac",
+      "title": "Victorian Age Companion",
+      "short": "VA Companion",
+      "edition": "Revised"
+    },
+    {
+      "id": "dahum",
+      "title": "Dark Ages: Road of Humanity",
+      "short": "DA Road of Humanity",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbfur",
+      "title": "Tribebook: Black Furies (Revised)",
+      "short": "TB Black Furies",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbgn",
+      "title": "Tribebook: Bone Gnawers (Revised)",
+      "short": "TB Bone Gnawers",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbcog",
+      "title": "Tribebook: Children of Gaia (Revised)",
+      "short": "TB Children of Gaia",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbfia",
+      "title": "Tribebook: Fianna (Revised)",
+      "short": "TB Fianna",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbfen",
+      "title": "Tribebook: Get of Fenris (Revised)",
+      "short": "TB Get of Fenris",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbgw",
+      "title": "Tribebook: Glass Walkers (Revised)",
+      "short": "TB Glass Walkers",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbrt",
+      "title": "Tribebook: Red Talons (Revised)",
+      "short": "TB Red Talons",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbsl",
+      "title": "Tribebook: Shadow Lords (Revised)",
+      "short": "TB Shadow Lords",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbss",
+      "title": "Tribebook: Silent Striders (Revised)",
+      "short": "TB Silent Striders",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbsf",
+      "title": "Tribebook: Silver Fangs (Revised)",
+      "short": "TB Silver Fangs",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbsg",
+      "title": "Tribebook: Stargazers (Revised)",
+      "short": "TB Stargazers",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbuk",
+      "title": "Tribebook: Uktena (Revised)",
+      "short": "TB Uktena",
+      "edition": "Revised"
+    },
+    {
+      "id": "tbwen",
+      "title": "Tribebook: Wendigo (Revised)",
+      "short": "TB Wendigo",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbbas",
+      "title": "Breedbook: Bastet (Revised)",
+      "short": "BB Bastet",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbnuw",
+      "title": "Breedbook: Nuwisha (Revised)",
+      "short": "BB Nuwisha",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbcor",
+      "title": "Breedbook: Corax (Revised)",
+      "short": "BB Corax",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbgur",
+      "title": "Breedbook: Gurahl (Revised)",
+      "short": "BB Gurahl",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbrat",
+      "title": "Breedbook: Ratkin (Revised)",
+      "short": "BB Ratkin",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbmok",
+      "title": "Breedbook: Mokole (Revised)",
+      "short": "BB Mokole",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbana",
+      "title": "Breedbook: Ananasi (Revised)",
+      "short": "BB Ananasi",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbrok",
+      "title": "Breedbook: Rokea (Revised)",
+      "short": "BB Rokea",
+      "edition": "Revised"
+    },
+    {
+      "id": "bbnag",
+      "title": "Breedbook: Nagah (Revised)",
+      "short": "BB Nagah",
+      "edition": "Revised"
+    },
+    {
+      "id": "bkw",
+      "title": "Book of the Weaver",
+      "short": "Book of the Weaver",
+      "edition": "Revised"
+    },
+    {
+      "id": "bkwy",
+      "title": "Book of the Wyld",
+      "short": "Book of the Wyld",
+      "edition": "Revised"
+    },
+    {
+      "id": "raap",
+      "title": "Rage Across Appalachia",
+      "short": "RA Appalachia",
+      "edition": "2nd"
+    },
+    {
+      "id": "raau",
+      "title": "Rage Across Australia",
+      "short": "RA Australia",
+      "edition": "2nd"
+    },
+    {
+      "id": "raeg",
+      "title": "Rage Across Egypt",
+      "short": "RA Egypt",
+      "edition": "2nd"
+    },
+    {
+      "id": "rany",
+      "title": "Rage Across New York",
+      "short": "RA New York",
+      "edition": "2nd"
+    },
+    {
+      "id": "raru",
+      "title": "Rage Across Russia",
+      "short": "RA Russia",
+      "edition": "First edition"
+    },
+    {
+      "id": "raam",
+      "title": "Rage Across the Amazon",
+      "short": "RA Amazon",
+      "edition": "First edition"
+    },
+    {
+      "id": "rahe",
+      "title": "Rage Across the Heavens",
+      "short": "RA Heavens",
+      "edition": "2nd"
+    },
+    {
+      "id": "ratw1",
+      "title": "Rage Across the World, Volume 1",
+      "short": "RA World 1",
+      "edition": "2nd"
+    },
+    {
+      "id": "ratw2",
+      "title": "Rage Across the World, Volume 2 (Dark Alliance: Vancouver)",
+      "short": "RA World 2",
+      "edition": "First edition"
+    },
+    {
+      "id": "dawots",
+      "title": "Dark Ages: Wolves of the Sea",
+      "short": "DA Wolves of the Sea",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "kotec",
+      "title": "Kindred of the East Companion",
+      "short": "KotE Companion",
+      "edition": "Revised"
+    },
+    {
+      "id": "bas",
+      "title": "Blood and Silk",
+      "short": "Blood and Silk",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "k1000h",
+      "title": "The Thousand Hells",
+      "short": "Thousand Hells",
+      "edition": "Revised era"
+    },
+    {
+      "id": "kks",
+      "title": "Killing Streets",
+      "short": "Killing Streets",
+      "edition": "Revised era"
+    },
+    {
+      "id": "khow",
+      "title": "Heresies of the Way",
+      "short": "Heresies of the Way",
+      "edition": "Revised era"
+    },
+    {
+      "id": "ksw",
+      "title": "Shadow War",
+      "short": "Shadow War",
+      "edition": "Revised era"
+    },
+    {
+      "id": "khd",
+      "title": "Half-Damned: Dhampyr",
+      "short": "Half-Damned",
+      "edition": "Revised era"
+    },
+    {
+      "id": "dbbf",
+      "title": "Dharma Book: Bone Flowers",
+      "short": "DB Bone Flowers",
+      "edition": "Revised era"
+    },
+    {
+      "id": "dbrc",
+      "title": "Dharma Book: Resplendent Crane",
+      "short": "DB Resplendent Crane",
+      "edition": "Revised era"
+    },
+    {
+      "id": "dbtw",
+      "title": "Dharma Book: Thousand Whispers",
+      "short": "DB Thousand Whispers",
+      "edition": "Revised era"
+    },
+    {
+      "id": "dbtd",
+      "title": "Dharma Book: Thrashing Dragons",
+      "short": "DB Thrashing Dragons",
+      "edition": "Revised era"
+    },
+    {
+      "id": "dbdt",
+      "title": "Dharma Book: Devil Tigers",
+      "short": "DB Devil Tigers",
+      "edition": "Revised era"
+    },
+    {
+      "id": "m20hdy",
+      "title": "M20 How Do You DO That?",
+      "short": "HDYDT",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "m20bos",
+      "title": "M20 Book of Secrets",
+      "short": "BoS",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "m20botf",
+      "title": "M20 Book of the Fallen",
+      "short": "BotF",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "m20gm",
+      "title": "M20 Gods & Monsters",
+      "short": "G&M",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "mrab",
+      "title": "Tradition Book: Akashic Brotherhood (Revised)",
+      "short": "TB:AB",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrcc",
+      "title": "Tradition Book: Celestial Chorus (Revised)",
+      "short": "TB:CC",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrce",
+      "title": "Tradition Book: Cult of Ecstasy (Revised)",
+      "short": "TB:CoE",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrds",
+      "title": "Tradition Book: Dreamspeakers (Revised)",
+      "short": "TB:DS",
+      "edition": "Revised"
+    },
+    {
+      "id": "mreu",
+      "title": "Tradition Book: Euthanatos (Revised)",
+      "short": "TB:Eu",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrho",
+      "title": "Tradition Book: Hollow Ones (Revised)",
+      "short": "TB:HO",
+      "edition": "Revised"
+    },
+    {
+      "id": "mroh",
+      "title": "Tradition Book: Order of Hermes (Revised)",
+      "short": "TB:OoH",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrse",
+      "title": "Tradition Book: Sons of Ether (Revised)",
+      "short": "TB:SoE",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrve",
+      "title": "Tradition Book: Verbena (Revised)",
+      "short": "TB:Ve",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrva",
+      "title": "Tradition Book: Virtual Adepts (Revised)",
+      "short": "TB:VA",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrix",
+      "title": "Convention Book: Iteration X (Revised)",
+      "short": "CB:IX",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrnwo",
+      "title": "Convention Book: N.W.O. (M20)",
+      "short": "CB:NWO",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "mrpg",
+      "title": "Convention Book: Progenitors (M20)",
+      "short": "CB:Pg",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "mrsy",
+      "title": "Convention Book: Syndicate (M20)",
+      "short": "CB:Sy",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "mrvoid",
+      "title": "Convention Book: Void Engineers (M20)",
+      "short": "CB:VE",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "mrgtt",
+      "title": "Guide to the Traditions",
+      "short": "GttT",
+      "edition": "Revised"
+    },
+    {
+      "id": "m2gtech",
+      "title": "Guide to the Technocracy",
+      "short": "GttTech",
+      "edition": "2nd"
+    },
+    {
+      "id": "mrit",
+      "title": "The Infinite Tapestry",
+      "short": "IT",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrsw",
+      "title": "The Spirit Ways",
+      "short": "SW",
+      "edition": "Revised"
+    },
+    {
+      "id": "m2bow",
+      "title": "Beyond the Barriers: The Book of Worlds",
+      "short": "BoW",
+      "edition": "2nd"
+    },
+    {
+      "id": "m1boc",
+      "title": "The Book of Chantries",
+      "short": "BoC",
+      "edition": "1st"
+    },
+    {
+      "id": "m2hor",
+      "title": "Horizon: Stronghold of Hope",
+      "short": "HSH",
+      "edition": "2nd"
+    },
+    {
+      "id": "mrdm",
+      "title": "Dead Magic",
+      "short": "DM",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrdm2",
+      "title": "Dead Magic 2: Secrets and Survivors",
+      "short": "DM2",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrdote",
+      "title": "Dragons of the East",
+      "short": "DotE",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrlp",
+      "title": "Lost Paths: Ahl-i-Batin and Taftani",
+      "short": "LP",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrbt",
+      "title": "Blood Treachery",
+      "short": "BT",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrman",
+      "title": "Manifesto: Transmissions from the Rogue Council",
+      "short": "Man",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrftlv",
+      "title": "The Fallen Tower: Las Vegas",
+      "short": "FTLV",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrbom",
+      "title": "The Book of Madness",
+      "short": "BoM",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrfdf",
+      "title": "Forged by Dragon's Fire",
+      "short": "FbDF",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrbr",
+      "title": "The Bitter Road",
+      "short": "BR",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrsth",
+      "title": "Mage Storytellers Handbook",
+      "short": "MSH",
+      "edition": "Revised"
+    },
+    {
+      "id": "mrcrafts",
+      "title": "The Book of Crafts",
+      "short": "BoC",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2hota",
+      "title": "Halls of the Arcanum",
+      "short": "HotA",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2ta1",
+      "title": "Technocracy Assembled, Volume 1",
+      "short": "TA1",
+      "edition": "First edition"
+    },
+    {
+      "id": "m2ta2",
+      "title": "Technocracy Assembled, Volume 2",
+      "short": "TA2",
+      "edition": "First edition"
+    },
+    {
+      "id": "m2tt",
+      "title": "The Technomancer's Toybox",
+      "short": "TT",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2osg",
+      "title": "The Orphan's Survival Guide",
+      "short": "OSG",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2arh",
+      "title": "Ascension's Right Hand",
+      "short": "ARH",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2fp",
+      "title": "The Fragile Path: Testaments of the First Cabal",
+      "short": "FP",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2dw",
+      "title": "Digital Web",
+      "short": "DW",
+      "edition": "First edition"
+    },
+    {
+      "id": "m2sor",
+      "title": "Sorcerer: The Hedge Wizard's Handbook",
+      "short": "HWH",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2ini",
+      "title": "Initiates of the Art",
+      "short": "IotA",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2mas",
+      "title": "Masters of the Art",
+      "short": "MotA",
+      "edition": "Revised"
+    },
+    {
+      "id": "m2hl",
+      "title": "Hidden Lore",
+      "short": "HL",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2stc",
+      "title": "Mage Storytellers Companion",
+      "short": "MSC",
+      "edition": "Revised"
+    },
+    {
+      "id": "m2cf",
+      "title": "The Chaos Factor",
+      "short": "CF",
+      "edition": "Second edition"
+    },
+    {
+      "id": "m2dp",
+      "title": "Destiny's Price",
+      "short": "DP",
+      "edition": "Second edition"
+    },
+    {
+      "id": "scah",
+      "title": "The Artisan's Handbook",
+      "short": "AH",
+      "edition": "First edition"
+    },
+    {
+      "id": "sccomp",
+      "title": "The Sorcerers Crusade Companion",
+      "short": "SCC",
+      "edition": "First edition"
+    },
+    {
+      "id": "sccl",
+      "title": "Crusade Lore",
+      "short": "CL",
+      "edition": "First edition"
+    },
+    {
+      "id": "scinf",
+      "title": "Infernalism: The Path of Screams",
+      "short": "INF",
+      "edition": "First edition"
+    },
+    {
+      "id": "scor",
+      "title": "The Order of Reason",
+      "short": "OR",
+      "edition": "First edition"
+    },
+    {
+      "id": "scsw",
+      "title": "The Swashbuckler's Handbook",
+      "short": "SH",
+      "edition": "First edition"
+    },
+    {
+      "id": "scwp",
+      "title": "Witches and Pagans",
+      "short": "WP",
+      "edition": "First edition"
+    },
+    {
+      "id": "sccc",
+      "title": "Castles and Covenants",
+      "short": "CC",
+      "edition": "First edition"
+    },
+    {
+      "id": "dagrim",
+      "title": "Dark Ages: Mage Grimoire",
+      "short": "DAMG",
+      "edition": "First edition"
+    },
+    {
+      "id": "wr20bo",
+      "title": "Book of Oblivion",
+      "short": "BoO",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "wr20hrd",
+      "title": "Handbook for the Recently Deceased",
+      "short": "HRD",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "whier",
+      "title": "The Hierarchy",
+      "short": "Hier",
+      "edition": "First edition"
+    },
+    {
+      "id": "wren",
+      "title": "Renegades",
+      "short": "Ren",
+      "edition": "First edition"
+    },
+    {
+      "id": "whaunts",
+      "title": "Haunts",
+      "short": "Haunts",
+      "edition": "First edition"
+    },
+    {
+      "id": "wbol",
+      "title": "The Book of Legions",
+      "short": "BoL",
+      "edition": "First edition"
+    },
+    {
+      "id": "wpg",
+      "title": "Wraith Players Guide",
+      "short": "WPG",
+      "edition": "First edition"
+    },
+    {
+      "id": "wdr",
+      "title": "Dark Reflections: Spectres",
+      "short": "DR",
+      "edition": "First edition"
+    },
+    {
+      "id": "wsos",
+      "title": "The Sea of Shadows",
+      "short": "SoS",
+      "edition": "First edition"
+    },
+    {
+      "id": "wdil",
+      "title": "Doomslayers: Into the Labyrinth",
+      "short": "Doom",
+      "edition": "First edition"
+    },
+    {
+      "id": "wqd",
+      "title": "The Quick and the Dead",
+      "short": "QD",
+      "edition": "First edition"
+    },
+    {
+      "id": "wna",
+      "title": "Necropolis: Atlanta",
+      "short": "NA",
+      "edition": "First edition"
+    },
+    {
+      "id": "wme",
+      "title": "Midnight Express",
+      "short": "ME",
+      "edition": "First edition"
+    },
+    {
+      "id": "wris",
+      "title": "The Risen",
+      "short": "Risen",
+      "edition": "First edition"
+    },
+    {
+      "id": "wmed",
+      "title": "Mediums: Speakers with the Dead",
+      "short": "Med",
+      "edition": "First edition"
+    },
+    {
+      "id": "weoe",
+      "title": "Ends of Empire",
+      "short": "EoE",
+      "edition": "First edition"
+    },
+    {
+      "id": "wdkj",
+      "title": "Dark Kingdom of Jade",
+      "short": "DKJ",
+      "edition": "First edition"
+    },
+    {
+      "id": "wche",
+      "title": "Charnel Houses of Europe: The Shoah",
+      "short": "CHE",
+      "edition": "First edition"
+    },
+    {
+      "id": "wgart",
+      "title": "Guildbook: Artificers",
+      "short": "GBA",
+      "edition": "First edition"
+    },
+    {
+      "id": "wghau",
+      "title": "Guildbook: Haunters",
+      "short": "GBH",
+      "edition": "First edition"
+    },
+    {
+      "id": "wgmas",
+      "title": "Guildbook: Masquers",
+      "short": "GBM",
+      "edition": "First edition"
+    },
+    {
+      "id": "wgpp",
+      "title": "Guildbook: Puppeteers",
+      "short": "GBP",
+      "edition": "First edition"
+    },
+    {
+      "id": "wgsan",
+      "title": "Guildbook: Sandmen",
+      "short": "GBS",
+      "edition": "First edition"
+    },
+    {
+      "id": "wgso",
+      "title": "Guildbook: Spooks",
+      "short": "GBSp",
+      "edition": "First edition"
+    },
+    {
+      "id": "c20bof",
+      "title": "Changeling: The Dreaming 20th Anniversary Book of Freeholds",
+      "short": "C20BoF",
+      "edition": "20th Anniversary"
+    },
+    {
+      "id": "ctdpg",
+      "title": "Changeling: The Dreaming Player's Guide",
+      "short": "CtDPG",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cbdt",
+      "title": "World of Darkness: Blood-Dimmed Tides",
+      "short": "BDT",
+      "edition": "First edition"
+    },
+    {
+      "id": "cboh1",
+      "title": "Noblesse Oblige: The Book of Houses",
+      "short": "BoH1",
+      "edition": "First edition"
+    },
+    {
+      "id": "cboh2",
+      "title": "Pour l'Amour et Liberte: The Book of Houses 2",
+      "short": "BoH2",
+      "edition": "First edition"
+    },
+    {
+      "id": "cbolh",
+      "title": "The Book of Lost Houses: The Second Coming",
+      "short": "BoLH",
+      "edition": "First edition"
+    },
+    {
+      "id": "cden",
+      "title": "Denizens of the Dreaming",
+      "short": "DotD",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cdan",
+      "title": "Dreams and Nightmares",
+      "short": "D&N",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cench",
+      "title": "The Enchanted",
+      "short": "Ench",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cfool",
+      "title": "Fool's Luck: The Way of the Commoner",
+      "short": "FL",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cfhg",
+      "title": "Freeholds and Hidden Glens",
+      "short": "FHG",
+      "edition": "First edition"
+    },
+    {
+      "id": "cie1",
+      "title": "Immortal Eyes: The Toybox",
+      "short": "IE1",
+      "edition": "First edition"
+    },
+    {
+      "id": "cie2",
+      "title": "Immortal Eyes: Shadows on the Hill",
+      "short": "IE2",
+      "edition": "First edition"
+    },
+    {
+      "id": "cie3",
+      "title": "Immortal Eyes: Court of All Kings",
+      "short": "IE3",
+      "edition": "First edition"
+    },
+    {
+      "id": "cinan",
+      "title": "Inanimae: The Secret Way",
+      "short": "Inan",
+      "edition": "Second edition"
+    },
+    {
+      "id": "ckow",
+      "title": "The Kingdom of Willows",
+      "short": "KoW",
+      "edition": "Second edition"
+    },
+    {
+      "id": "ciotm",
+      "title": "Isle of the Mighty",
+      "short": "IotM",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cl8m",
+      "title": "Land of Eight Million Dreams",
+      "short": "L8MD",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cnob",
+      "title": "Nobles: The Shining Host",
+      "short": "Nobles",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cshc",
+      "title": "The Shadow Court",
+      "short": "SC",
+      "edition": "First edition"
+    },
+    {
+      "id": "cwic",
+      "title": "War in Concordia",
+      "short": "WiC",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cknock",
+      "title": "Kithbook: Nockers",
+      "short": "KB Nockers",
+      "edition": "Second edition"
+    },
+    {
+      "id": "ckpooka",
+      "title": "Kithbook: Pooka",
+      "short": "KB Pooka",
+      "edition": "Second edition"
+    },
+    {
+      "id": "ckeshu",
+      "title": "Kithbook: Eshu",
+      "short": "KB Eshu",
+      "edition": "Second edition"
+    },
+    {
+      "id": "ckred",
+      "title": "Kithbook: Redcaps",
+      "short": "KB Redcaps",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cksat",
+      "title": "Kithbook: Satyrs",
+      "short": "KB Satyrs",
+      "edition": "Second edition"
+    },
+    {
+      "id": "ckslu",
+      "title": "Kithbook: Sluagh",
+      "short": "KB Sluagh",
+      "edition": "Second edition"
+    },
+    {
+      "id": "cktrol",
+      "title": "Kithbook: Trolls",
+      "short": "KB Trolls",
+      "edition": "Second edition"
+    },
+    {
+      "id": "ckbog",
+      "title": "Kithbook: Boggans",
+      "short": "KB Boggans",
+      "edition": "Second edition"
+    },
+    {
+      "id": "htrpg",
+      "title": "Hunter Players Guide",
+      "short": "HtR PG",
+      "edition": "First edition"
+    },
+    {
+      "id": "heinf",
+      "title": "Hunter: The Infernal",
+      "short": "HtR Inf",
+      "edition": "First edition"
+    },
+    {
+      "id": "hemoon",
+      "title": "Hunter: The Moonstruck",
+      "short": "HtR Moon",
+      "edition": "First edition"
+    },
+    {
+      "id": "henoc",
+      "title": "Hunter: The Nocturnal",
+      "short": "HtR Noc",
+      "edition": "First edition"
+    },
+    {
+      "id": "hespell",
+      "title": "Hunter: The Spellbound",
+      "short": "HtR Spell",
+      "edition": "First edition"
+    },
+    {
+      "id": "hewd",
+      "title": "Hunter: The Walking Dead",
+      "short": "HtR WD",
+      "edition": "First edition"
+    },
+    {
+      "id": "heul",
+      "title": "Hunter: Urban Legends",
+      "short": "HtR UL",
+      "edition": "First edition"
+    },
+    {
+      "id": "hbave",
+      "title": "Hunter Book: Avenger",
+      "short": "HB Avenger",
+      "edition": "First edition"
+    },
+    {
+      "id": "hbdef",
+      "title": "Hunter Book: Defender",
+      "short": "HB Defender",
+      "edition": "First edition"
+    },
+    {
+      "id": "hbher",
+      "title": "Hunter Book: Hermit",
+      "short": "HB Hermit",
+      "edition": "First edition"
+    },
+    {
+      "id": "hbinn",
+      "title": "Hunter Book: Innocent",
+      "short": "HB Innocent",
+      "edition": "First edition"
+    },
+    {
+      "id": "hbjud",
+      "title": "Hunter Book: Judge",
+      "short": "HB Judge",
+      "edition": "First edition"
+    },
+    {
+      "id": "hbmar",
+      "title": "Hunter Book: Martyr",
+      "short": "HB Martyr",
+      "edition": "First edition"
+    },
+    {
+      "id": "hbred",
+      "title": "Hunter Book: Redeemer",
+      "short": "HB Redeemer",
+      "edition": "First edition"
+    },
+    {
+      "id": "hbvis",
+      "title": "Hunter Book: Visionary",
+      "short": "HB Visionary",
+      "edition": "First edition"
+    },
+    {
+      "id": "hfc",
+      "title": "Hunter: First Contact",
+      "short": "HtR FC",
+      "edition": "First edition"
+    },
+    {
+      "id": "hhw",
+      "title": "Hunter: Holy War",
+      "short": "HtR HW",
+      "edition": "First edition"
+    },
+    {
+      "id": "hsg",
+      "title": "Hunter Survival Guide",
+      "short": "HtR SG",
+      "edition": "First edition"
+    },
+    {
+      "id": "hutop",
+      "title": "Hunter: Utopia",
+      "short": "HtR Utopia",
+      "edition": "First edition"
+    },
+    {
+      "id": "hffg",
+      "title": "Hunter: Fall from Grace",
+      "short": "HtR FfG",
+      "edition": "First edition"
+    },
+    {
+      "id": "dcoa",
+      "title": "Demon: City of Angels",
+      "short": "City of Angels",
+      "edition": "First edition"
+    },
+    {
+      "id": "deb",
+      "title": "Demon: Earthbound",
+      "short": "Earthbound",
+      "edition": "First edition"
+    },
+    {
+      "id": "dhf",
+      "title": "Demon: Houses of the Fallen",
+      "short": "Houses of the Fallen",
+      "edition": "First edition"
+    },
+    {
+      "id": "dpg",
+      "title": "Demon Players Guide",
+      "short": "Demon Players Guide",
+      "edition": "First edition"
+    },
+    {
+      "id": "mtrpg",
+      "title": "Mummy: The Resurrection Players Guide",
+      "short": "Mummy Players Guide",
+      "edition": "First edition"
+    },
+    {
+      "id": "wod2",
+      "title": "A World of Darkness, Second Edition",
+      "short": "WoD 2e",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wodtok",
+      "title": "World of Darkness: Tokyo",
+      "short": "Tokyo",
+      "edition": "First edition"
+    },
+    {
+      "id": "wodhk",
+      "title": "World of Darkness: Hong Kong",
+      "short": "Hong Kong",
+      "edition": "First edition"
+    },
+    {
+      "id": "wodout",
+      "title": "Outcasts: A Players Guide to Pariahs",
+      "short": "Outcasts",
+      "edition": "First edition"
+    },
+    {
+      "id": "wodbb",
+      "title": "The Bygone Bestiary",
+      "short": "Bygone Bestiary",
+      "edition": "First edition"
+    },
+    {
+      "id": "woddhx",
+      "title": "World of Darkness: Demon Hunter X",
+      "short": "Demon Hunter X",
+      "edition": "First edition"
+    },
+    {
+      "id": "wod1",
+      "title": "A World of Darkness, First Edition",
+      "short": "WoD 1e",
+      "edition": "First edition"
+    },
+    {
+      "id": "mtr",
+      "title": "Mummy: The Resurrection",
+      "short": "MtR",
+      "edition": "Third edition"
+    },
+    {
+      "id": "bsac",
+      "title": "Blood Sacrifice: The Thaumaturgy Companion",
+      "short": "BSac",
+      "edition": "Revised"
+    }
+  ],
+  "files": [
+    "c20.json",
+    "v20.json",
+    "v20da.json",
+    "w20.json",
+    "wtda.json",
+    "wr20.json",
+    "hh2.json",
+    "mummy2.json",
+    "m20.json",
+    "damage.json",
+    "greatwar.json",
+    "demon.json",
+    "kote.json",
+    "orpheus.json",
+    "htr.json",
+    "inquisitor.json",
+    "sorcerer.json",
+    "sc.json",
+    "vav.json",
+    "dafae.json",
+    "gr.json",
+    "lotc.json",
+    "v20comp.json",
+    "lotb.json",
+    "rotb.json",
+    "blackhand.json",
+    "anarchs.json",
+    "redlist.json",
+    "cotr.json",
+    "v20dacomp.json",
+    "tome.json",
+    "wildwest.json",
+    "beckett.json",
+    "dust.json",
+    "sthr.json",
+    "cbgangrel.json",
+    "cblasombra.json",
+    "cbravnos.json",
+    "archons.json",
+    "warages.json",
+    "bloodyhearts.json",
+    "cotn.json",
+    "cbn2.json",
+    "labn.json",
+    "mcbn.json",
+    "mtbn.json",
+    "nobn.json",
+    "nybn.json",
+    "sfbn.json",
+    "gtcam.json",
+    "gtsab.json",
+    "gtanarch.json",
+    "cbassamite.json",
+    "cbbrujah.json",
+    "cbgiovanni.json",
+    "cbmalkavian.json",
+    "cbnosferatu.json",
+    "cbtoreador.json",
+    "cbtremere.json",
+    "cbtzimisce.json",
+    "cbventrue.json",
+    "cbsetite.json",
+    "daeu.json",
+    "dav.json",
+    "dacomp.json",
+    "dabi.json",
+    "cb.json",
+    "botw.json",
+    "dalc.json",
+    "dahc.json",
+    "w20umbra.json",
+    "w20sd.json",
+    "w20wh.json",
+    "darh.json",
+    "dark.json",
+    "dab.json",
+    "das.json",
+    "vac.json",
+    "dahum.json",
+    "tbfur.json",
+    "tbgn.json",
+    "tbcog.json",
+    "tbfia.json",
+    "tbfen.json",
+    "tbgw.json",
+    "tbrt.json",
+    "tbsl.json",
+    "tbss.json",
+    "tbsf.json",
+    "tbsg.json",
+    "tbuk.json",
+    "tbwen.json",
+    "bbbas.json",
+    "bbnuw.json",
+    "bbcor.json",
+    "bbgur.json",
+    "bbrat.json",
+    "bbmok.json",
+    "bbana.json",
+    "bbrok.json",
+    "bbnag.json",
+    "bkw.json",
+    "bkwy.json",
+    "raap.json",
+    "raau.json",
+    "raeg.json",
+    "rany.json",
+    "raru.json",
+    "raam.json",
+    "rahe.json",
+    "ratw1.json",
+    "ratw2.json",
+    "dawots.json",
+    "kotec.json",
+    "bas.json",
+    "k1000h.json",
+    "kks.json",
+    "khow.json",
+    "ksw.json",
+    "khd.json",
+    "dbbf.json",
+    "dbrc.json",
+    "dbtw.json",
+    "dbtd.json",
+    "dbdt.json",
+    "m20hdy.json",
+    "m20bos.json",
+    "m20botf.json",
+    "m20gm.json",
+    "mrab.json",
+    "mrcc.json",
+    "mrce.json",
+    "mrds.json",
+    "mreu.json",
+    "mrho.json",
+    "mroh.json",
+    "mrse.json",
+    "mrve.json",
+    "mrva.json",
+    "mrix.json",
+    "mrnwo.json",
+    "mrpg.json",
+    "mrsy.json",
+    "mrvoid.json",
+    "mrgtt.json",
+    "m2gtech.json",
+    "mrit.json",
+    "mrsw.json",
+    "m2bow.json",
+    "m1boc.json",
+    "m2hor.json",
+    "mrdm.json",
+    "mrdm2.json",
+    "mrdote.json",
+    "mrlp.json",
+    "mrbt.json",
+    "mrman.json",
+    "mrftlv.json",
+    "mrbom.json",
+    "mrfdf.json",
+    "mrbr.json",
+    "mrsth.json",
+    "mrcrafts.json",
+    "m2hota.json",
+    "m2ta1.json",
+    "m2ta2.json",
+    "m2tt.json",
+    "m2osg.json",
+    "m2arh.json",
+    "m2fp.json",
+    "m2dw.json",
+    "m2sor.json",
+    "m2ini.json",
+    "m2mas.json",
+    "m2hl.json",
+    "m2stc.json",
+    "m2cf.json",
+    "m2dp.json",
+    "scah.json",
+    "sccomp.json",
+    "sccl.json",
+    "scinf.json",
+    "scor.json",
+    "scsw.json",
+    "scwp.json",
+    "sccc.json",
+    "dagrim.json",
+    "wr20bo.json",
+    "wr20hrd.json",
+    "whier.json",
+    "wren.json",
+    "whaunts.json",
+    "wbol.json",
+    "wpg.json",
+    "wdr.json",
+    "wsos.json",
+    "wdil.json",
+    "wqd.json",
+    "wna.json",
+    "wme.json",
+    "wris.json",
+    "wmed.json",
+    "weoe.json",
+    "wdkj.json",
+    "wche.json",
+    "wgart.json",
+    "wghau.json",
+    "wgmas.json",
+    "wgpp.json",
+    "wgsan.json",
+    "wgso.json",
+    "c20bof.json",
+    "ctdpg.json",
+    "cbdt.json",
+    "cboh1.json",
+    "cboh2.json",
+    "cbolh.json",
+    "cden.json",
+    "cdan.json",
+    "cench.json",
+    "cfool.json",
+    "cfhg.json",
+    "cie1.json",
+    "cie2.json",
+    "cie3.json",
+    "cinan.json",
+    "ckow.json",
+    "ciotm.json",
+    "cl8m.json",
+    "cnob.json",
+    "cshc.json",
+    "cwic.json",
+    "cknock.json",
+    "ckpooka.json",
+    "ckeshu.json",
+    "ckred.json",
+    "cksat.json",
+    "ckslu.json",
+    "cktrol.json",
+    "ckbog.json",
+    "htrpg.json",
+    "heinf.json",
+    "hemoon.json",
+    "henoc.json",
+    "hespell.json",
+    "hewd.json",
+    "heul.json",
+    "hbave.json",
+    "hbdef.json",
+    "hbher.json",
+    "hbinn.json",
+    "hbjud.json",
+    "hbmar.json",
+    "hbred.json",
+    "hbvis.json",
+    "hfc.json",
+    "hhw.json",
+    "hsg.json",
+    "hutop.json",
+    "hffg.json",
+    "dcoa.json",
+    "deb.json",
+    "dhf.json",
+    "dpg.json",
+    "mtrpg.json",
+    "wod2.json",
+    "wodtok.json",
+    "wodhk.json",
+    "wodout.json",
+    "wodbb.json",
+    "woddhx.json",
+    "wod1.json",
+    "mtr.json",
+    "bsac.json"
+  ]
 }
