@@ -511,6 +511,12 @@
    "title": "Tribebook: Glass Walkers (Revised)",
    "short": "TB Glass Walkers",
    "edition": "Revised"
+  },
+  {
+   "id": "tbrt",
+   "title": "Tribebook: Red Talons (Revised)",
+   "short": "TB Red Talons",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -598,6 +604,7 @@
   "tbcog.json",
   "tbfia.json",
   "tbfen.json",
-  "tbgw.json"
+  "tbgw.json",
+  "tbrt.json"
  ]
 }
