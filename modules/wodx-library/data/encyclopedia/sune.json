@@ -1,0 +1,251 @@
+[
+ {
+  "id": "sune-age",
+  "title": "Asia in the Sunset Empires Era",
+  "kind": "lore",
+  "lines": [
+   "kote"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The Kuei-jin in nineteenth-century Asia, when mortal history outran the undead.",
+  "claims": [
+   {
+    "text": "In this era mortal events, not the Kuei-jin, the Kin-jin or the hengeyokai, drive the great changes sweeping Asia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 4,
+      "pdf": 5
+     }
+    ]
+   },
+   {
+    "text": "The Kuei-jin are no longer dominant, though they have not yet grasped it; it is their first lesson in humility since the fall from Wan Xian.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 4,
+      "pdf": 5
+     }
+    ]
+   },
+   {
+    "text": "Cainites lived in Asia far longer than most ancestors admit, and existed there only because the Kuei-jin let them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 5,
+      "pdf": 6
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sune-kinjin",
+   "sune-flame-court",
+   "kote-kuei-jin"
+  ]
+ },
+ {
+  "id": "sune-kinjin",
+  "title": "Kin-jin in the Treaty Ports",
+  "kind": "lore",
+  "lines": [
+   "kote"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "Western vampires riding colonial power into Asia.",
+  "claims": [
+   {
+    "text": "Western vampires survive this period more easily because they have learned to hide inside whatever society rules the day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 5,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "At first the Kuei-jin hold back from striking the Western undead, fearing the political cost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 5,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "Many Cathayans let Kin-jin settle in their cities, used them for private schemes and even trusted them as go-betweens with the outside world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 5,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "Kin-jin princes rule the foreign quarters built in Chinese cities, many of them shielded by European treaties.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 6,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "Some of the Western vampires in Shanghai belong to the Hellfire Clubs, drawn to the East by its occult mysteries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sune-age",
+   "sune-flesh-court"
+  ]
+ },
+ {
+  "id": "sune-flame-court",
+  "title": "The Fall of the Flame Court",
+  "kind": "event",
+  "lines": [
+   "kote"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "How the southern court broke under the Opium Wars.",
+  "claims": [
+   {
+    "text": "Seers say the Flame Court stands for the south, for greater yang, upheaval and change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "As war with Britain loomed, the court sank into bickering, blame and twilight wars, with dozens of wu each plotting alone against the British.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "In the end the court was declared collapsed, a verdict that spread to the other August Courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Kin-jin, and the Tremere above all, saw a chance to set up new domains along the southern coast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sune-age",
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "sune-flesh-court",
+  "title": "The Flesh Court of Shanghai",
+  "kind": "faction",
+  "lines": [
+   "kote"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The most open of the Quincunx courts toward foreigners.",
+  "claims": [
+   {
+    "text": "The Flesh Court Wan Kuei are the most progressive in the Quincunx, and they understand the Western mind better than any other court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The Quincunx already viewed the Flesh Court with suspicion for its mild stance on heretical Dharmas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The court is openly curious about and tolerant of foreigners, and no other region of China is as wealthy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "When the Taiping took Nanjing, rival courts spent nearly twenty years in shadow wars for indirect control of the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sune",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sune-kinjin",
+   "kote-courts"
+  ]
+ }
+]

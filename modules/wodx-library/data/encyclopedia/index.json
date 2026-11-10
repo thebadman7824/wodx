@@ -2083,6 +2083,12 @@
       "title": "World of Future Darkness",
       "short": "World of Future Darkness",
       "edition": "First edition"
+    },
+    {
+      "id": "sune",
+      "title": "Sunset Empires",
+      "short": "SE",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2432,6 +2438,7 @@
     "wawwcomp.json",
     "wawwcore.json",
     "cblod.json",
-    "wofd.json"
+    "wofd.json",
+    "sune.json"
   ]
 }
