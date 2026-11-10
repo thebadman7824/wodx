@@ -1,0 +1,214 @@
+[
+ {
+  "id": "wpg-stygian-feudalism",
+  "title": "Stygian feudalism",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern",
+   "dark-ages"
+  ],
+  "summary": "Why the Hierarchy keeps a medieval order.",
+  "claims": [
+   {
+    "text": "Feudalism in the living world gave the Hierarchy a stable model: everyone knew their place, owing loyalty upward and expecting it from below, which strengthened Stygia as a bulwark against Oblivion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The living have moved on, but Stygia resists modernizing, fearing that any change of government would leave it open to Spectral armies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "stygia"
+  ]
+ },
+ {
+  "id": "wpg-fugitives",
+  "title": "Fugitives",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Renegades on the run.",
+  "claims": [
+   {
+    "text": "Fugitives are wraiths who crossed the Hierarchy and escaped: runaway thralls, thieves, members of banned guilds, black marketeers, outlaws, and fallen Hierarchs ruined by rivals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "They band into Circles for survival, with leadership that shifts often; some bands are known for daring stands against their hunters, others for savagery that frightens most wraiths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "guilds"
+  ]
+ },
+ {
+  "id": "wpg-kingdom-of-ivory",
+  "title": "The Dark Kingdom of Ivory",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The African realm of the dead.",
+  "claims": [
+   {
+    "text": "In the African Underworld the souls of animals exist beside human souls, beings calling themselves gods compete for power and worship, and the Shadowlands look ominously lush.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "No way to make lasting matter from souls is known there, so Artifacts and relics are worth far more than elsewhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "The Dark Kingdom of Ivory deals often with Stygia yet little true knowledge escapes it; even its name is an outsider's label, not what its own dead call it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stygia",
+   "soulforging"
+  ]
+ },
+ {
+  "id": "wpg-kingdom-of-clay",
+  "title": "The Kingdom of Clay",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Aboriginal realm of the dead beside Australia.",
+  "claims": [
+   {
+    "text": "Few Stygian wraiths know of the Kingdom of Clay, which lies in the Tempest beside the Shadowlands of Australia, where colonial wraiths cling to the days of British rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "It is a kingdom with no king, free of the tyranny of Stygia's rulers, and named not for a rare substance but for the earth itself, a reminder of the bond between its Aboriginal dead and their land.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stygia",
+   "wpg-kingdom-of-ivory"
+  ]
+ },
+ {
+  "id": "wpg-lost-fetters",
+  "title": "Lost Fetters",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What happens when a Fetter is destroyed.",
+  "claims": [
+   {
+    "text": "A Fetter destroyed in the living world, or a living Fetter who dies before resolution, is lost for good.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "A wraith may pull a destroyed object across the Shroud as a relic, but it no longer ties the wraith to the living and gains no powers; abandoning a Fetter by choice is almost unheard of because of what it costs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wpg",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": [
+   "passions-and-fetters",
+   "the-shroud"
+  ]
+ }
+]

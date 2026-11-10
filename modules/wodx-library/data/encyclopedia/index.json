@@ -1159,6 +1159,12 @@
    "title": "The Book of Legions",
    "short": "BoL",
    "edition": "First edition"
+  },
+  {
+   "id": "wpg",
+   "title": "Wraith Players Guide",
+   "short": "WPG",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1354,6 +1360,7 @@
   "whier.json",
   "wren.json",
   "whaunts.json",
-  "wbol.json"
+  "wbol.json",
+  "wpg.json"
  ]
 }
