@@ -1,0 +1,108 @@
+[
+ {
+  "id": "wgsan-christian-turn",
+  "title": "Sandmen and the coming of Christianity",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "ancient",
+   "dark-ages"
+  ],
+  "summary": "How the Sandmen turned toward the Underworld.",
+  "claims": [
+   {
+    "text": "Dreamcrafters of old cultures had worked their way into religious roles, mostly aimed at the living, who still believed in old spirits and gods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgsan",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "When Christianity spread, many newer Sandmen looked to their place among the dead instead, believing the living to be in God's keeping; saints, priests and prophets no longer wished to hear tales of the Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgsan",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Worry that great secrets might be lost to Oblivion through Shadow-ridden Dreamcrafters gave them the shared purpose that later formed the Guild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgsan",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds",
+   "oblivion",
+   "the-shadow"
+  ]
+ },
+ {
+  "id": "wgsan-sandmen-today",
+  "title": "Sandmen in the Underworld",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where the Sandmen stand now.",
+  "claims": [
+   {
+    "text": "Fewer Sandmen serve the Hierarchy than the Heretics, Renegades or Vagabonds; many who practice Phantasm see Transcendence as close kin to dreaming, which puts them at odds with Hierarchy teaching.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgsan",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Those in Hierarchy Circles often work as state-backed artists or as spies and infiltrators.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgsan",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Many Sandmen once filled Heretical Mystery and Sensualist cults; the Succubus Randi Trate is famed for bringing four dream-infants of one mortal into the Shadowlands at once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgsan",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wgsan-christian-turn",
+   "transcendence",
+   "heretics",
+   "renegades"
+  ]
+ }
+]
