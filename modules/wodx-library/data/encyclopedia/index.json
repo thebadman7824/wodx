@@ -841,6 +841,12 @@
    "title": "Convention Book: Iteration X (Revised)",
    "short": "CB:IX",
    "edition": "Revised"
+  },
+  {
+   "id": "mrnwo",
+   "title": "Convention Book: N.W.O. (M20)",
+   "short": "CB:NWO",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -983,6 +989,7 @@
   "mrse.json",
   "mrve.json",
   "mrva.json",
-  "mrix.json"
+  "mrix.json",
+  "mrnwo.json"
  ]
 }
