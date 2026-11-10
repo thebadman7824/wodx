@@ -1,0 +1,410 @@
+[
+ {
+  "id": "mrcc-schism-paladins",
+  "title": "The great schism and the Paladins",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Chorus split between Rome and Constantinople.",
+  "claims": [
+   {
+    "text": "Rapid growth set Western Singers seeking supremacy for Rome against Eastern Singers who wanted equal standing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The Cabal of Pure Thought urged that the Byzantines be brought in by force, but the Pontifex and the Curia refused and allowed some difference.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "In the 800s militant Singers moved from Rome to Aachen and became the Palatine Knights, or Paladins, sworn to guard humanity from darkness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "celestial-chorus",
+   "sc-cabal-pure-thought"
+  ]
+ },
+ {
+  "id": "mrcc-templar-fall",
+  "title": "The fall of the Temple, 1307",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The suppression of the Templars as the Chorus remembers it.",
+  "claims": [
+   {
+    "text": "King Philip the Fair had the French Templars seized in 1307 on heresy charges, with papal leave, and is widely thought to have wanted their wealth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 23,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Over seven years knights were tortured and tried; some burned, while most recanted and entered other Orders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 23,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Grand Master Jacques de Molay is said to have planned a sacrifice to shield the Order while the rest gathered much of its fortune and slipped from public life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 23,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrcc-templars-today",
+   "tome-templars"
+  ]
+ },
+ {
+  "id": "mrcc-templars-today",
+  "title": "The Templar Knights in the Chorus today",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A small remnant of holy warriors.",
+  "claims": [
+   {
+    "text": "Fewer than 30 fully knighted members are known, and some of them do not use Sphere magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 43,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "The survivors argue over pressing on or pulling back to train recruits; those with prophetic gifts hint that either choice may not matter.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 43,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "The Knights favour Forces and lean on sorcerer consors skilled in Alchemy and Enchantment for their gear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 43,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrcc-templar-fall",
+   "sorc-sorcerers"
+  ]
+ },
+ {
+  "id": "mrcc-st-michael",
+  "title": "The Order of St. Michael",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A fast-growing Chorus order of local protectors.",
+  "claims": [
+   {
+    "text": "Founded in the 1950s among early liberation theologians of Central America, it sets out to bring justice and mercy to those denied both.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 43,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Once tiny, it grew sharply after the Reckoning thanks to its near-vigilante focus on local action.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 43,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "It takes few apprentices, welcomes Choristers who want to guard their own communities, and targets big corporations, organised crime and corrupt officials.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 43,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "celestial-chorus",
+   "mrcc-templars-today"
+  ]
+ },
+ {
+  "id": "mrcc-monists",
+  "title": "Monists",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Chorus thinkers who preach that all faiths are one.",
+  "claims": [
+   {
+    "text": "Monists hold that every faith, person and creation is part of the One, and that differences come only from human limits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "It is not a formal faction, yet most seasoned Choristers share some Monist belief.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Monists are the Singers most likely to work with other Traditions, so outsiders often judge the Chorus by them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "celestial-chorus",
+   "mrcc-alexandrians"
+  ]
+ },
+ {
+  "id": "mrcc-alexandrians",
+  "title": "Alexandrians",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Choristers who seek to reconcile faith and technology.",
+  "claims": [
+   {
+    "text": "Alexandrians argue that anything created has a purpose from the One and that reason is as valid a tool as faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "They prune outdated theology and cope with the modern age better than almost any other Chorus group.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "celestial-chorus",
+   "mrcc-monists"
+  ]
+ },
+ {
+  "id": "mrcc-other-faiths",
+  "title": "Rastafarians, Sikhs and Sufis in the Chorus",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Smaller faiths among the Singers.",
+  "claims": [
+   {
+    "text": "Rastafarian Singers name the One as Jah and some study the Sphere of Time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Sikhs rarely join the Chorus since some of their leaders forbid miracle-working; most Sikh Singers focus on Prime.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Tales link Awakened Sikhs to the near-forgotten Ahl-i-Batin, though no Sikh Singer has confirmed them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "More Awakened Sufis now join Chorus Chantries, trading old insight for shelter, and are rumoured to guard hidden Batini treasures.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "celestial-chorus",
+   "dam-ahl-i-batin"
+  ]
+ },
+ {
+  "id": "mrcc-secret-kings",
+  "title": "The Merovingians and Prester John",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Legends of holy bloodlines and a Christian emperor of Asia.",
+  "claims": [
+   {
+    "text": "A legend claims a secret Brotherhood of Zion created the Templars and built churches on ley lines by sacred geometry, perhaps even helping found the Technocracy.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 84,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Some Choristers once claimed Merovingian blood and Sang by right of long hair, chalice and crown; they vanished when the Templars appeared.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 84,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Medieval clergy, mundane and Singer alike, told of Prester John, a Christian ruler in the East and a mage said to hold the Garden of Eden within that realm.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrcc",
+      "page": 84,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrcc-templar-fall",
+   "technocracy"
+  ]
+ }
+]
