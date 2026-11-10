@@ -1,0 +1,52 @@
+[
+ {
+  "id": "nsc-silver-crown",
+  "title": "The Silver Crown",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The crown of the first Silver Fang king, as the novels tell it.",
+  "claims": [
+   {
+    "text": "The novel The Silver Crown tells that the Silver Crown is a true fetish from the Dawn Times, first worn by a Silver Fang king; it slays an unworthy wearer, and whoever survives putting it on is proven fit to rule the tribes.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "nsc",
+      "page": 48,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "The Tribe Novel Silent Striders and Black Furies tells that Albrecht and two companions found the crown, that Arkady went home in disgrace over it, and that Garou tell the tale as the Saga of the Silver Crown.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ntn2",
+      "page": 95,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "The Tribe Novel Black Spiral Dancers and Wendigo tells that Arkady of House Crescent Moon was stripped of the crown and of rank among the Silver Fangs and shamed the family line; cast out by Albrecht, the exile turned to a desperate attack on Malfeas itself.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ntn7",
+      "page": 22,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silver-fangs"
+  ]
+ }
+]

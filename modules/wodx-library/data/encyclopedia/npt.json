@@ -53,5 +53,38 @@
   "see": [
    "bjd-southern-crusade"
   ]
+ },
+ {
+  "id": "npt-southern-protectorate",
+  "title": "The Southern Protectorate",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Garou of the American Southeast, as one novel tells it.",
+  "claims": [
+   {
+    "text": "The novel The Poison Tree tells that the Southern Protectorate takes in the Garou from Mississippi to South Carolina and south into Florida, and that its Solstice Moot meets under the Grand Elder Helen Oakheart.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "npt",
+      "page": 37,
+      "pdf": 38
+     },
+     {
+      "book": "npt",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caern"
+  ]
  }
 ]

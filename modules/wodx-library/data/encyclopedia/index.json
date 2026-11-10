@@ -2323,6 +2323,18 @@
       "title": "Saviors and Destroyers",
       "short": "Saviors and Destroyers",
       "edition": "First edition"
+    },
+    {
+      "id": "nbw",
+      "title": "The Beast Within (V20 anthology)",
+      "short": "The Beast Within",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "nsc",
+      "title": "The Silver Crown (novel)",
+      "short": "The Silver Crown",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2712,6 +2724,8 @@
     "nhtd.json",
     "nrdm.json",
     "dfdd.json",
-    "dfsd.json"
+    "dfsd.json",
+    "nbw.json",
+    "nsc.json"
   ]
 }

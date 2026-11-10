@@ -31,5 +31,33 @@
   "see": [
    "cotn-theo-bell"
   ]
+ },
+ {
+  "id": "nbt2-abranson",
+  "title": "Angus Abranson",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Minneapolis elder and old friend of Theo Bell.",
+  "claims": [
+   {
+    "text": "The novel The Overseer tells that Angus Abranson holds a seat on the Minneapolis primogen and has been a friend of Theo Bell since the two met in London about a hundred years ago.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "nbt2",
+      "page": 8,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cotn-theo-bell"
+  ]
  }
 ]
