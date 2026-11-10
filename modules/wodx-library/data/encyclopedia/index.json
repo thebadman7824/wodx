@@ -1477,6 +1477,12 @@
    "title": "Hunter: The Walking Dead",
    "short": "HtR WD",
    "edition": "First edition"
+  },
+  {
+   "id": "heul",
+   "title": "Hunter: Urban Legends",
+   "short": "HtR UL",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1725,6 +1731,7 @@
   "hemoon.json",
   "henoc.json",
   "hespell.json",
-  "hewd.json"
+  "hewd.json",
+  "heul.json"
  ]
 }
