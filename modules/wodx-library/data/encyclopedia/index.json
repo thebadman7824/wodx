@@ -703,6 +703,12 @@
    "title": "Killing Streets",
    "short": "Killing Streets",
    "edition": "Revised era"
+  },
+  {
+   "id": "khow",
+   "title": "Heresies of the Way",
+   "short": "Heresies of the Way",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -822,6 +828,7 @@
   "kotec.json",
   "bas.json",
   "k1000h.json",
-  "kks.json"
+  "kks.json",
+  "khow.json"
  ]
 }
