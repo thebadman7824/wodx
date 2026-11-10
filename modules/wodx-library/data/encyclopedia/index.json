@@ -1465,6 +1465,12 @@
    "title": "Hunter: The Nocturnal",
    "short": "HtR Noc",
    "edition": "First edition"
+  },
+  {
+   "id": "hespell",
+   "title": "Hunter: The Spellbound",
+   "short": "HtR Spell",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1711,6 +1717,7 @@
   "htrpg.json",
   "heinf.json",
   "hemoon.json",
-  "henoc.json"
+  "henoc.json",
+  "hespell.json"
  ]
 }
