@@ -13,6 +13,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const held = () => { try { return !!chron()?.isHeld?.(); } catch (e) { return false; } };
+const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const ownerIds = a => game.users.filter(u => !u.isGM && a?.testUserPermission?.(u, "OWNER")).map(u => u.id);
 const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());
@@ -93,12 +94,29 @@ export async function tick({force = false} = {}) {
         let due = Math.min(R.MAX_ROLLS, R.dueRolls(task, t0));
         if ( !due ) continue;
         before[task.id] = raw[task.id];
+        // 0.20.0: a recipe waits while its materials or workshop are missing
+        const rc = R.recipeCheck(task, {year: yearNow(), carried: [...(a.items ?? [])].map(i => i.name)});
+        if ( !rc.ok ) {
+          after[task.id] = {...R.pauseTask(task), waits: rc.why};
+          lines.push({id: task.id, name: task.name, status: "paused", rolled: 0, sum: 0, botches: 0, total: task.total, goal: task.goal, dice: 0, diff: task.diff, more: 0, waits: rc.why});
+          continue;
+        }
         let t = task, sum = 0, botches = 0, rolled = 0;
         const dice = poolFor(a, t);
         while ( due-- > 0 && t.status === "open" ) {
           const r = await rollOnce(dice, t.diff, t.specialty);
           t = R.stepTask(t, r, t.next);
           rolled++; sum += r.successes; if ( r.botch ) botches++;
+        }
+        if ( t.status === "done" && t.makes && !t.made ) {
+          try {
+            const base = game.items?.getName?.(t.makes);
+            const data = base ? base.toObject() : {name: t.makes, type: "Item"};
+            delete data._id;
+            data.flags = {...(data.flags ?? {}), [MOD]: {...(data.flags?.[MOD] ?? {}), madeBy: t.id}};
+            await a.createEmbeddedDocuments("Item", [data]);
+            t = {...t, made: true};
+          } catch (e) { console.error(`${MOD} | made item`, e); }
         }
         after[task.id] = t;
         const more = R.dueRolls(t, t0);
@@ -118,6 +136,7 @@ export async function tick({force = false} = {}) {
 }
 
 function lineHtml(l) {
+  if ( l.waits ) return `<li><b>${esc(l.name)}</b> waits: ${esc(l.waits)}. It is paused; resume it in Long tasks when that is put right.</li>`;
   const head = `<b>${esc(l.name)}</b> (${l.dice} dice, difficulty ${l.diff}): ${l.rolled} roll${l.rolled === 1 ? "" : "s"}, ${l.sum} success${l.sum === 1 ? "" : "es"}${l.botches ? `, ${l.botches} botch${l.botches === 1 ? "" : "es"}` : ""}.`;
   const tail = l.status === "done" ? " <b>Finished.</b>" : l.status === "ruined" ? " <b>A botch ruined the work.</b>"
     : ` Now ${l.total} of ${l.goal}.${l.botches ? " A botch lost the successes so far." : ""}${l.more ? ` ${l.more} more roll${l.more === 1 ? "" : "s"} wait for the clock.` : ""}`;
@@ -139,6 +158,9 @@ export async function undoTick(message) {
   const a = game.actors.get(f?.actor);
   if ( !a || !f?.before || f.undone ) return;
   await a.update(Object.fromEntries(Object.entries(f.before).map(([id, t]) => [`flags.${MOD}.tasks.${id}`, t])));
+  // 0.20.0: what a finished recipe made goes again
+  const made = [...(a.items ?? [])].filter(i => i.flags?.[MOD]?.madeBy && f.before[i.flags[MOD].madeBy] && !f.before[i.flags[MOD].madeBy].made).map(i => i.id);
+  if ( made.length ) await a.deleteEmbeddedDocuments("Item", made);
   await message.update({[`flags.${MOD}.tasks.undone`]: true, content: message.content.replace(/<button type="button" data-action="wst-task-undo">Undo<\/button>/, "<p><i>Undone.</i></p>")});
 }
 
@@ -180,11 +202,15 @@ export async function editTask(actorId = null, taskId = null) {
       <div class="form-group"><label>Specialty applies</label><input type="checkbox" name="specialty"${t.specialty ? " checked" : ""}></div>
       <div class="form-group"><label>Delicate (a botch ruins it)</label><input type="checkbox" name="delicate"${t.delicate ? " checked" : ""}></div>
       <div class="form-group"><label>Note</label><input type="text" name="note" value="${esc(t.note)}"></div>
+      <div class="form-group"><label>Needs (carried)</label><input type="text" name="needs" value="${esc(t.needs)}" placeholder="silver; a mould; charcoal"></div>
+      <div class="form-group"><label>Where</label><select name="workshop" data-fixed>${Object.entries(R.WORKSHOPS).map(([k, v]) => opt(k, v.from ? `${v.label} (from about ${v.from})` : v.label, k === t.workshop)).join("")}</select></div>
+      <div class="form-group"><label>Makes</label><input type="text" name="makes" value="${esc(t.makes)}" placeholder="A silver reliquary (an item, or just its name)"></div>
       <p class="hint">${esc(R.KINDS[t.kind].ref)} The Storyteller sets the pool, the difficulty, the goal and the time for each roll${R.KINDS[t.kind].house ? "; this kind's starting point is a house rule" : ""}. The first roll comes one interval after the task starts.</p>`,
     buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
   if ( !res ) return null;
   return saveTask(a, {id: taskId, kind: res.kind, name: res.name, attr: res.attr, ability: res.ability, dice: num(res.dice),
-    diff: num(res.diff), goal: num(res.goal), interval: res.interval, specialty: !!res.specialty, delicate: !!res.delicate, note: res.note});
+    diff: num(res.diff), goal: num(res.goal), interval: res.interval, specialty: !!res.specialty, delicate: !!res.delicate, note: res.note,
+    needs: res.needs ?? "", workshop: res.workshop ?? "", makes: res.makes ?? "", waits: ""});
 }
 
 /** Every task the user can see, with Pause, Change and Remove. */

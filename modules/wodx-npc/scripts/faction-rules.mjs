@@ -114,8 +114,50 @@ export function normFaction(f = {}) {
     leader: f.leader || null, members: uniq(f.members), places: uniq(f.places),
     goals: (f.goals ?? []).filter(g => MOVES[g?.move]).map(g => ({move: g.move, sphere: g.sphere || null, target: g.target || null, place: g.place || null, note: String(g.note ?? "").slice(0, 200)})),
     assets: {herd: dot(a.herd), resources: dot(a.resources), status: dot(a.status), retainers: dot(a.retainers), contacts: dot(a.contacts), domain, security, influence},
-    standing, guard: Number(f.guard) || 0, notes: String(f.notes ?? "").slice(0, 2000)
+    standing, people: normPeople(f.people), guard: Number(f.guard) || 0, notes: String(f.notes ?? "").slice(0, 2000)
   };
+}
+
+/* ------------------------------------------------------------------ */
+/*  A character's standing with a faction (NPC 0.9.0)                  */
+/* ------------------------------------------------------------------ */
+
+/**
+ * How a faction regards one character, -3 to +3, with a word for each step. The books have no such track; the
+ * Status Background stays as each line's book defines it. These are house rules (PENDING-REVIEW).
+ */
+export const PEOPLE_STEPS = {"-3": "Hunted", "-2": "Hostile", "-1": "Distrusted", "0": "Unknown", "1": "Tolerated", "2": "Welcome", "3": "Honoured"};
+export const peopleWord = n => PEOPLE_STEPS[String(Math.max(STANDING.min, Math.min(STANDING.max, Math.round(Number(n) || 0))))];
+/** A word or a number to a step: "welcome" => 2. Returns null when it is neither. */
+export function peopleStep(v) {
+  const n = Number(v);
+  if ( String(v ?? "").trim() !== "" && Number.isFinite(n) ) return Math.max(STANDING.min, Math.min(STANDING.max, Math.round(n)));
+  const hit = Object.entries(PEOPLE_STEPS).find(([, w]) => w.toLowerCase() === String(v ?? "").trim().toLowerCase());
+  return hit ? Number(hit[0]) : null;
+}
+export function normPeople(p = {}) {
+  const out = {};
+  for ( const [k, v] of Object.entries(p ?? {}) ) { const n = peopleStep(v); if ( n ) out[String(k).slice(0, 40)] = n; }
+  return out;
+}
+/** A character's standing with every faction: {faction name and key, lower case: step}. */
+export function peopleStandingOf(state, actorId) {
+  const out = {};
+  for ( const f of state?.factions ?? [] ) {
+    const n = f.people?.[actorId] ?? 0;
+    out[String(f.name).toLowerCase()] = n;
+    if ( f.key ) out[String(f.key).toLowerCase()] = n;
+    out[String(f.id).toLowerCase()] = n;
+  }
+  return out;
+}
+/** Find a faction by id, key or name (whole name first, then a part of it). */
+export function findFaction(state, ref) {
+  const r = String(ref ?? "").trim().toLowerCase();
+  if ( !r ) return null;
+  const fs = state?.factions ?? [];
+  return fs.find(f => f.id.toLowerCase() === r || String(f.key ?? "").toLowerCase() === r || f.name.toLowerCase() === r)
+    ?? fs.find(f => f.name.toLowerCase().includes(r)) ?? fs.find(f => f.name.toLowerCase().includes(r.replace(/^the\s+/, ""))) ?? null;
 }
 export function normState(s) {
   const out = {...blankState(), ...(s ?? {})};
