@@ -1,0 +1,239 @@
+[
+ {
+  "id": "mrdm-buried-arts",
+  "title": "Dead magic",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The lost magical arts of vanished or hidden cultures.",
+  "claims": [
+   {
+    "text": "Some mages hunt for the magic of ancient or secretive peoples, from early Africa and Mesopotamia to Greece, Rome and the Arctic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Many of these arts were buried for good reason; some ask for sacrifices of virtue or of life, and few can practice them and stay sane.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "consensus"
+  ]
+ },
+ {
+  "id": "mrdm-cagn",
+  "title": "The tale of Cagn",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A San story some Hermetics link to vampire legend.",
+  "claims": [
+   {
+    "text": "A San tale tells of Cagn, whose son was killed by baboons and whom Cagn brought back from death by magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A Hermetic scholar has guessed that the name echoes Caine and that the story may preserve an early account of the first vampires being made.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caine",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "mrdm-maya-calendar",
+  "title": "The Maya count of ages",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Maya magic understood time.",
+  "claims": [
+   {
+    "text": "Maya priests built a calendar so exact that it drifts only a day in about 6,000 years, since naming each moment correctly was central to their magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "In their view the world had been destroyed five times and remade four, and the calendar was meant to fix when the next ending falls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "consensus"
+  ]
+ },
+ {
+  "id": "mrdm-aztec-sun",
+  "title": "The hungry sun",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Aztec belief that sacrifice kept creation going.",
+  "claims": [
+   {
+    "text": "Aztec faith held that human blood and hearts fed the gods the strength to hold up creation, and that the sun needed blood to rise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Mages who accept that shared belief shapes reality ask an uneasy question: whether, for that world, the sacrifices really were what held off its end.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": [
+   "consensus",
+   "mrdm-maya-calendar"
+  ]
+ },
+ {
+  "id": "mrdm-delphi",
+  "title": "The Oracle at Delphi",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great oracle of ancient Greece.",
+  "claims": [
+   {
+    "text": "Greek kings, priests and common farmers alike traveled to Delphi before crowning a ruler, going to war or making any great choice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Pilgrims paid the temple attendants, who examined the question; a young seer then breathed sulphurous fumes and spoke in a way only the attendants could read.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdm-buried-arts"
+  ]
+ },
+ {
+  "id": "mrdm-innu-arts",
+  "title": "Innu hunting magic",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Old magic of the northern hunters.",
+  "claims": [
+   {
+    "text": "An Innu rite lets a child take the name of someone truly dead, along with a measure of that person's gifts; a ghost's name will not serve.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Hunters once shouted together as brant geese passed over, confusing the birds so they fell from the sky, and a good catch called for a great shared feast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdm-buried-arts",
+   "mrsw-shaman-sickness"
+  ]
+ }
+]

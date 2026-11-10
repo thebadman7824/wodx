@@ -907,6 +907,12 @@
    "title": "Horizon: Stronghold of Hope",
    "short": "HSH",
    "edition": "2nd"
+  },
+  {
+   "id": "mrdm",
+   "title": "Dead Magic",
+   "short": "DM",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1060,6 +1066,7 @@
   "mrsw.json",
   "m2bow.json",
   "m1boc.json",
-  "m2hor.json"
+  "m2hor.json",
+  "mrdm.json"
  ]
 }
