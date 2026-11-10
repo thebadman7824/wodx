@@ -2059,6 +2059,12 @@
       "title": "World of Future Darkness",
       "short": "World of Future Darkness",
       "edition": "First edition"
+    },
+    {
+      "id": "ntn2",
+      "title": "Tribe Novel: Silent Striders & Black Furies",
+      "short": "Tribe Novel 2",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2404,6 +2410,7 @@
     "wawwcomp.json",
     "wawwcore.json",
     "cblod.json",
-    "wofd.json"
+    "wofd.json",
+    "ntn2.json"
   ]
 }
