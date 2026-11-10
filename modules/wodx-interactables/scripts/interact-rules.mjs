@@ -710,7 +710,7 @@ export function optionsFor(o, ch = {}) {
   }
   if ( barredHere && !isOpen ) out.push({id: "unbar", label: "Lift the bar", roll: null, seconds: TURN, noise: {success: "quiet"}});
   if ( !barredHere && o.barred && !o.barSide && !isOpen ) out.push({id: "unbar", label: "Lift the bar", roll: null, seconds: TURN, noise: {success: "quiet"}});
-  if ( ch.hasKey && o.keyName && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: locked ? "Unlock it with the key" : "Lock it with the key", roll: null, seconds: TURN, noise: {success: "quiet"}});
+  if ( ((ch.hasKey && o.keyName) || ch.opensFor) && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: ch.hasKey && o.keyName ? (locked ? "Unlock it with the key" : "Lock it with the key") : (locked ? "Unlock it (it opens for you)" : "Lock it (it opens for you)"), roll: null, seconds: TURN, noise: {success: "quiet"}});
 
   if ( locked && o.lock !== "none" ) {
     if ( o.jammed ) out.push(jammedNote());
@@ -757,7 +757,7 @@ function containerOptions(o, ch) {
     if ( o.items.length && !o.taken ) out.push({id: "take", label: `Take what is inside (${o.items.length === 1 ? "one thing" : `${o.items.length} things`})`, roll: null, seconds: TURN, noise: {success: "silent"}});
     out.push({id: "close", label: `Close the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
   } else if ( !locked ) out.push({id: "open", label: `Open the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
-  if ( ch.hasKey && o.keyName && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: locked ? "Unlock it with the key" : "Lock it with the key", roll: null, seconds: TURN, noise: {success: "quiet"}});
+  if ( ((ch.hasKey && o.keyName) || ch.opensFor) && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: ch.hasKey && o.keyName ? (locked ? "Unlock it with the key" : "Lock it with the key") : (locked ? "Unlock it (it opens for you)" : "Lock it (it opens for you)"), roll: null, seconds: TURN, noise: {success: "quiet"}});
   if ( locked && o.lock !== "none" ) out.push(o.jammed ? jammedNote() : pickOption(o, ch));
   if ( o.electronic !== "none" && isModern(ch) && !isOpen && !o.alarm && !o.beaten ) out.push(hackOption(o, ch));
   if ( !isOpen ) out.push(forceOption("force", `Force the ${name}`, strength, ch, BUILDS[o.build], o.progress.force ?? 0));
@@ -1095,8 +1095,8 @@ function resolveCore(o, option, rolls, {actorId = "", actorName = ""} = {}) {
     switch ( id ) {
       case "open": return done("opens it.", {ds: "open"});
       case "close": return done("closes it.", {ds: "closed"});
-      case "unlock": return done("unlocks it with the key.", {ds: "closed"});
-      case "lock": return done("locks it with the key.", {ds: "locked"});
+      case "unlock": return done(/key/.test(option.label ?? "key") ? "unlocks it with the key." : "unlocks it.", {ds: "closed"});
+      case "lock": return done(/key/.test(option.label ?? "key") ? "locks it with the key." : "locks it.", {ds: "locked"});
       case "unbar": flags.barred = false; return done("lifts the bar.");
       case "knock": return done("knocks.");
       case "take": flags.taken = true; return done("takes what is inside.");
@@ -1355,11 +1355,72 @@ export function cleanSettings(s = {}) {
   out.stuck = !!s.stuck;
   out.found = !!s.found;
   out.keyName = String(s.keyName ?? "").slice(0, 80).trim();
+  out.opensFor = String(s.opensFor ?? "").slice(0, 600).trim();
   out.wall = WALLS[s.wall] ? s.wall : "";
   return out;
 }
 
 /** Clean a tile's container settings from the config form. */
+/** How often a container's stock list is drawn again (Interactables 0.23.0). */
+export const RESTOCK = {"": "Never (draw it by hand)", dawn: "Every dawn", week: "Every week", month: "Every month", season: "Every season (three months)"};
+export const RESTOCK_SECONDS = {dawn: 86400, week: 7 * 86400, month: 30 * 86400, season: 91 * 86400};
+
+/**
+ * A stock list (Interactables 0.23.0), the Storyteller's own table for a container: one entry a line,
+ *   always: a tallow candle
+ *   1 in 3: a ritual book
+ *   50%: 3-12 silver pennies
+ *   when year >= 1890: 1 in 2: a box of matches
+ * A chance (always, "1 in N", or a percentage), a colon, an optional count or count range, then the item: a UUID or a
+ * name in the Items directory. "when <tests>:" in front limits a line by WoDX Chronicle's "Only when" tests (";" between).
+ * Returns {lines: [{p, min, max, item, when}], problems}.
+ */
+export function parseStock(text) {
+  const lines = [], problems = [];
+  for ( const raw of String(text ?? "").split(/\r?\n/) ) {
+    let line = raw.replace(/#.*$/, "").trim();
+    if ( !line ) continue;
+    let when = "";
+    const w = /^when\s+(.+?):\s*((?:always|\d+\s+in\s+\d+|\d+(?:\.\d+)?\s*%)\s*:.*)$/i.exec(line);
+    if ( w ) { when = w[1].trim(); line = w[2].trim(); }
+    const m = /^(always|(\d+)\s+in\s+(\d+)|(\d+(?:\.\d+)?)\s*%)\s*:\s*(?:(\d+)(?:\s*-\s*(\d+))?\s+)?(.+)$/i.exec(line);
+    if ( !m ) { problems.push(`"${raw.trim()}": write "1 in 3: a ritual book" or "50%: 3-12 silver pennies"`); continue; }
+    const p = /^always$/i.test(m[1]) ? 1 : m[2] ? Math.min(1, Number(m[2]) / Math.max(1, Number(m[3]))) : Math.min(1, Number(m[4]) / 100);
+    const min = m[5] ? Math.max(1, Number(m[5])) : 1, max = m[6] ? Math.max(min, Number(m[6])) : min;
+    lines.push({p, min: Math.min(min, 999), max: Math.min(max, 999), item: m[7].trim().slice(0, 200), when});
+  }
+  return {lines, problems};
+}
+
+/** Roll a stock list. passes: when-text => boolean (a line with no "when" always may). Returns item lines for "Inside". */
+export function rollStock(lines = [], {rng = Math.random, passes = () => true} = {}) {
+  const out = [];
+  for ( const l of lines ) {
+    if ( l.when && !passes(l.when) ) continue;
+    if ( l.p < 1 && rng() >= l.p ) continue;
+    const n = l.min + Math.floor(rng() * (l.max - l.min + 1));
+    out.push(n > 1 ? `${l.item} (${n})` : l.item);
+  }
+  return out;
+}
+
+/** Is a container due a fresh draw? last: world time of the last draw (0: never). Dawn-based kinds wait for the day to turn. */
+export function restockDue(restock, last = 0, now = 0) {
+  const s = RESTOCK_SECONDS[restock];
+  if ( !s ) return false;
+  if ( !last ) return true;
+  if ( restock === "dawn" ) return Math.floor(now / 86400) > Math.floor(last / 86400);
+  return now - last >= s;
+}
+
+/** The new "Inside" list: what the last draw put in and is still there goes; the new draw comes in. */
+export function restockLines(items, lastDrawn = [], fresh = []) {
+  const have = parseItems(items);
+  const left = [...lastDrawn];
+  const kept = have.filter(i => { const k = left.indexOf(i); if ( k >= 0 ) { left.splice(k, 1); return false; } return true; });
+  return [...kept, ...fresh];
+}
+
 export function cleanContainer(s = {}) {
   return {
     container: !!s.container,
@@ -1368,7 +1429,10 @@ export function cleanContainer(s = {}) {
     lock: LOCKS[s.lock] ? s.lock : "",
     electronic: ELECTRONIC[s.electronic] ? s.electronic : "none",
     keyName: String(s.keyName ?? "").slice(0, 80).trim(),
-    items: parseItems(s.items).join("\n")
+    opensFor: String(s.opensFor ?? "").slice(0, 600).trim(),
+    items: parseItems(s.items).join("\n"),
+    stock: String(s.stock ?? "").slice(0, 2000).trim(),
+    restock: RESTOCK[s.restock] ? s.restock : ""
   };
 }
 

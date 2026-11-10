@@ -17,10 +17,11 @@ import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
+import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.8.0";
+const VERSION = "0.9.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -43,6 +44,10 @@ function registerSettings() {
     name: "Move NPCs on gridless scenes", hint: "On a scene with no grid, NPCs walk a square lattice of the scene's grid size, round walls, as on a square grid.",
     scope: "world", config: true, type: Boolean, default: true
   });
+  game.settings.register(MOD, "householdReach", {
+    name: "A household's call, in yards", hint: "How far a hurt NPC's cry reaches the rest of their household on the scene. Beyond it, an Alert zone carries the alarm.",
+    scope: "world", config: true, type: Number, default: 40, range: {min: 5, max: 200, step: 5}
+  });
   game.settings.register(MOD, "options", {
     name: "Options on the card", hint: "How many of the NPC's options the Storyteller's card lists.",
     scope: "world", config: true, type: Number, default: 4, range: {min: 1, max: 8, step: 1}
@@ -57,7 +62,14 @@ function infoOf(actor) {
     melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery"))};
 }
 export function savedProfile(actor) { return actor?.getFlag(MOD, "behavior") ?? {}; }
-export function profileFor(actor) { return NR.profileOf(savedProfile(actor), NR.templateFor(infoOf(actor))); }
+export function profileFor(actor, {phases = true} = {}) {
+  const saved = savedProfile(actor);
+  const p = NR.profileOf(saved, NR.templateFor(infoOf(actor)));
+  if ( !phases || !String(saved.phases ?? "").trim() ) return p;
+  const W = chron()?.when;
+  if ( !W?.check ) return p;
+  return NR.withPhase(p, NR.phaseNow(NR.parsePhases(saved.phases).phases, when => W.check(when, {actor}).ok));
+}
 export function modeFor(actor, scene = canvas.scene) {
   return NR.modeOf({npc: savedProfile(actor).mode, scene: scene?.getFlag(MOD, "mode"), world: setting("mode")});
 }
@@ -412,7 +424,7 @@ function cardHtml({tok, profile, options, mode, result = null, chosen = null, un
   const head = mode === "auto" ? (waiting ? "Auto, waiting for the Storyteller" : "Auto") : "Suggestion";
   return `<div class="vta-card wodx-x wnpc wodx-line-${esc(line)}" data-line="${esc(line)}">`
     + `<header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3><span class="vta-verdict">${head}</span></header>`
-    + `<div class="vta-body"><p class="wodx-quiet">${esc(profile.label)}${profile.template !== savedProfile(tok.actor).template ? " (chosen by line)" : ""}. Flees at ${profile.fleeAt} wound levels.</p>`
+    + `<div class="vta-body"><p class="wodx-quiet">${esc(profile.label)}${profile.template !== savedProfile(tok.actor).template && !profile.phase ? " (chosen by line)" : ""}${profile.phase ? `, now ${esc(profile.phase)}` : ""}. Flees at ${profile.fleeAt} wound levels.</p>`
     + (waiting ? `<p><b>Needs the Storyteller:</b> ${esc(waiting.label)}. ${esc(waiting.why)}.</p>` : "")
     + `<ol class="wnpc-opts">${rows}</ol>`
     + (result ? `<div class="wnpc-done">${esc(result)}${undone ? " <b>Undone.</b>" : ` <button type="button" class="wnpc-undo">Undo</button>`}</div>` : "")
@@ -543,19 +555,26 @@ const TRAITS = {aggression: "Aggression", caution: "Caution", cunning: "Cunning"
 
 export async function editBehavior(actor) {
   if ( !actor || !game.user.isGM ) return null;
-  const saved = savedProfile(actor), p = profileFor(actor), auto = NR.templateFor(infoOf(actor));
+  const saved = savedProfile(actor), p = profileFor(actor, {phases: false}), auto = NR.templateFor(infoOf(actor));
   const opt = (o, v) => Object.entries(o).map(([k, l]) => `<option value="${k}"${k === v ? " selected" : ""}>${esc(l)}</option>`).join("");
   const tpl = Object.fromEntries([["", `By line (${NR.TEMPLATES[auto].label})`], ...Object.entries(NR.TEMPLATES).map(([k, t]) => [k, t.label])]);
   const modes = {"": `As the scene or world says (${NR.MODES[modeFor(actor)].split(" (")[0]})`, ...NR.MODES};
   const content = `<div class="wnpc-edit-form">
     <div class="wodx-field"><label>Template</label><select name="template" data-fixed>${opt(tpl, saved.template ?? "")}</select></div>
     <div class="wodx-field"><label>In combat</label><select name="mode" data-fixed>${opt(modes, saved.mode ?? "")}</select></div>
+    <div class="wodx-field"><label>Household</label><input type="text" name="household" value="${esc(saved.household ?? "")}" placeholder="The Kessler farm"/></div>
     <fieldset><legend>Temperament (0 to 2; blank keeps the template's)</legend>
     ${Object.entries(TRAITS).map(([k, l]) => `<div class="wodx-field"><label>${l}</label><input type="number" name="${k}" min="0" max="2" step="0.1" value="${saved[k] ?? ""}" placeholder="${p[k]}"/></div>`).join("")}
     <div class="wodx-field"><label>Flees at wound level</label><input type="number" name="fleeAt" min="1" max="7" step="1" value="${saved.fleeAt ?? ""}" placeholder="${p.fleeAt}"/></div>
     </fieldset>
     <fieldset><legend>Fears</legend>${Object.entries(FEARS).map(([k, l]) => `<label class="wnpc-check"><input type="checkbox" name="fear-${k}"${p.fears.includes(k) ? " checked" : ""}/> ${l}</label>`).join("")}</fieldset>
-    <p class="wodx-quiet">With no player owner, ${esc(actor.name)} acts on their combat turns as set here. Blank fields follow the template.</p></div>`;
+    <fieldset><legend>Talk sheet (only you see it)</legend>
+    <textarea name="talk" rows="3" style="width:100%" placeholder="carries bishop's seal => Opens the archive and names the night porter.">${esc(saved.talk ?? "")}</textarea>
+    <p class="wodx-quiet">Your own notes on what they will say or do, one a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to show a line only when it fits. The HUD's speech button shows the lines for the targeted character.</p></fieldset>
+    <fieldset><legend>Phases (first that fits is used)</legend>
+    <textarea name="phases" rows="3" style="width:100%" placeholder="Cornered: wounds >= mauled => aggression 2, caution 0, fleeAt 8">${esc(saved.phases ?? "")}</textarea>
+    <p class="wodx-quiet">One a line: a name, a colon, WoDX Chronicle tests (; between them), =&gt;, then changes: template, ${Object.keys(TRAITS).join(", ")}, fleeAt, tactics, fears.</p></fieldset>
+    <p class="wodx-quiet">With no player owner, ${esc(actor.name)} acts on their combat turns as set here. Blank fields follow the template. NPCs with the same household come when one of them is hurt within call.</p></div>`;
   const data = await foundry.applications.api.DialogV2.wait({
     window: {title: `Behaviour: ${actor.name}`, resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 460, height: "auto"}, content,
     buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object},
@@ -565,12 +584,26 @@ export async function editBehavior(actor) {
   if ( !data || data === "cancel" ) return null;
   if ( data === "routine" ) return routines.editRoutine(actor);
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
-  const out = {template: data.template || null, mode: data.mode || null};
+  const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
+    household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 4000) || null};
+  const ph = NR.parsePhases(out.phases);
+  if ( ph.problems.length ) ui.notifications.warn(`Phases: ${ph.problems.join(" ")}`);
   for ( const k of [...Object.keys(TRAITS), "fleeAt"] ) out[k] = data[k] === "" || data[k] === null || data[k] === undefined ? null : Number(data[k]);
   const fears = Object.keys(FEARS).filter(k => data[`fear-${k}`]);
   const base = NR.TEMPLATES[out.template ?? auto].fears;
   out.fears = (fears.length === base.length && fears.every(f => base.includes(f))) ? null : fears;
   return actor.setFlag(MOD, "behavior", out);
+}
+
+/** NPC 0.9.0: the talk sheet's lines for the character the Storyteller has targeted (or every line, with none). */
+export async function showTalk(actor) {
+  if ( !game.user.isGM || !actor ) return null;
+  const target = [...(game.user.targets ?? [])].find(t => t.actor && t.actor.id !== actor.id)?.actor ?? null;
+  const W = chron()?.when;
+  const lines = NR.talkFor(NR.parseTalk(savedProfile(actor).talk), target && W?.check ? when => W.check(when, {actor: target}).ok : null);
+  const body = lines.length ? `<ul>${lines.map(l => `<li>${esc(l.say)}${l.when && l.fits === null ? ` <span class="wodx-quiet">(if ${esc(l.when)})</span>` : ""}</li>`).join("")}</ul>` : "<p>Nothing on the sheet fits.</p>";
+  return foundry.applications.api.DialogV2.prompt({window: {title: `Talk sheet: ${actor.name}`}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 420},
+    content: `<p class="wodx-quiet">${target ? `For ${esc(target.name)}.` : "No character is targeted, so every line shows, with what it needs."}</p>${body}`, ok: {label: "Close"}, rejectClose: false});
 }
 
 /** The scene's NPCs at a glance, with the world and scene modes. */
@@ -636,7 +669,7 @@ Hooks.once("init", () => {
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders};
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -652,6 +685,43 @@ Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
   if ( chron()?.registerApprovalHandler ) factions.registerHandler(); // else on wodxChronicleReady
   ensureStyles();
+});
+/** NPC 0.9.0: one of a household is hurt; the others within call come. A card asks the Storyteller to bring them in. */
+async function householdAnswers(actor, info = {}) {
+  const tot = d => (typeof d === "number" ? d : num(d?.bashing) + num(d?.lethal) + num(d?.aggravated));
+  if ( !isActiveGM() || !actor || !(num(info.levels) > 0) || (info.after !== undefined && tot(info.after) <= tot(info.before)) ) return null;
+  const household = savedProfile(actor).household;
+  if ( !household ) return null;
+  const scene = canvas.scene;
+  const tok = canvas.tokens?.placeables?.find(t => t.actor?.id === actor.id || t.actor === actor);
+  if ( !tok || !scene ) return null;
+  const combat = game.combats?.find(c => c.scene?.id === scene.id) ?? null;
+  const inFight = new Set((combat?.combatants?.contents ?? []).map(c => c.tokenId));
+  const others = canvas.tokens.placeables.filter(t => t.actor && t.id !== tok.id).map(t => ({id: t.id, name: t.name, household: savedProfile(t.actor).household,
+    yards: yardsBetween(tok, t), pc: !!t.actor.hasPlayerOwner, down: wounds(t.actor) >= 7, inFight: inFight.has(t.id)}));
+  const kin = AR.kinToAnswer({id: tok.id, household}, others, {reach: Number(setting("householdReach")) || 40});
+  if ( !kin.length ) return null;
+  const names = kin.map(k => esc(k.name)).join(", ");
+  return ChatMessage.create({speaker: {alias: "WoDX"}, whisper: game.users.filter(u => u.isGM).map(u => u.id),
+    flags: {[MOD]: {kin: {tokens: kin.map(k => k.id), scene: scene.id}}},
+    content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(tok.name)} is hurt, and ${esc(household)} hears it: ${names} ${kin.length > 1 ? "come" : "comes"}.</p>`
+      + `${combat ? `<button type="button" class="wnpc-kin">Bring them into the fight</button>` : ""}</div></div>`});
+}
+Hooks.on("wodxDamageApplied", (actor, info) => { householdAnswers(actor, info).catch(e => console.error(`${MOD} | household`, e)); });
+Hooks.on("renderChatMessageHTML", (msg, el) => {
+  const kin = msg.getFlag(MOD, "kin");
+  if ( !kin ) return;
+  el.querySelectorAll("button.wnpc-kin").forEach(b => {
+    if ( !game.user.isGM || kin.done ) { b.remove(); return; }
+    b.addEventListener("click", async ev => {
+      ev.preventDefault(); b.disabled = true;
+      const combat = game.combats?.find(c => c.scene?.id === kin.scene);
+      const have = new Set((combat?.combatants?.contents ?? []).map(c => c.tokenId));
+      const add = kin.tokens.filter(id => !have.has(id)).map(tokenId => ({tokenId, sceneId: kin.scene, actorId: game.scenes.get(kin.scene)?.tokens?.get(tokenId)?.actorId}));
+      if ( combat && add.length ) await combat.createEmbeddedDocuments("Combatant", add);
+      await msg.setFlag(MOD, "kin", {...kin, done: true});
+    });
+  });
 });
 Hooks.on("combatStart", combat => { if ( isActiveGM() ) soon(combat); });
 Hooks.on("updateCombat", (combat, changed) => {
@@ -690,6 +760,14 @@ Hooks.on("renderTokenHUD", (hud, html) => {
   b.addEventListener("click", () => editBehavior(actor));
   b.addEventListener("contextmenu", ev => { ev.preventDefault(); const t = hud.object; postPlan(t, game.combat, planTurn(t, game.combat), "suggest").catch(e => console.error(`${MOD} |`, e)); });
   col.appendChild(b);
+  if ( String(savedProfile(actor).talk ?? "").trim() ) {
+    const t = document.createElement("div");
+    t.className = "control-icon wnpc-hud";
+    t.title = "Talk sheet: your notes for the targeted character";
+    t.innerHTML = '<i class="fa-solid fa-comment-dots"></i>';
+    t.addEventListener("click", () => showTalk(actor).catch(e => console.error(`${MOD} |`, e)));
+    col.appendChild(t);
+  }
 });
 
 /** A new module's stylesheet is read at server start; injecting it means a reload is enough. */

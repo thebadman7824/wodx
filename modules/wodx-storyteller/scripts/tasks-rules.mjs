@@ -54,8 +54,50 @@ export function normTask(t = {}) {
     total: Math.max(0, Math.round(n(t.total))), rolls: Math.max(0, Math.round(n(t.rolls))),
     started, next: t.next === undefined || t.next === null ? started + INTERVALS[interval].s : n(t.next),
     status: ["open", "paused", "done", "ruined"].includes(t.status) ? t.status : "open",
-    note: String(t.note ?? ""), log: Array.isArray(t.log) ? t.log.slice(-20) : []
+    note: String(t.note ?? ""), log: Array.isArray(t.log) ? t.log.slice(-20) : [],
+    needs: String(t.needs ?? "").slice(0, 1000).trim(), workshop: WORKSHOPS[t.workshop] ? t.workshop : "", makes: String(t.makes ?? "").slice(0, 120).trim(),
+    made: !!t.made, waits: String(t.waits ?? "").slice(0, 200)
   };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Recipes (Storyteller 0.20.0)                                       */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A long task can say what it needs, where, and what it makes. Each roll waits (the task pauses, with a note) while
+ * the character does not carry what it needs, or the workshop does not exist yet in the chronicle's year. Finished,
+ * the thing made goes to the character. The years are history, not the books: house figures (PENDING-REVIEW).
+ */
+export const WORKSHOPS = {
+  "": {label: "Anywhere", from: null},
+  forge: {label: "A forge or smithy", from: null},
+  bench: {label: "A craftsman's bench (wood, leather, cloth)", from: null},
+  still: {label: "A still or an alchemist's furnace", from: null},
+  scriptorium: {label: "A scribe's desk, ink and parchment", from: null},
+  chapel: {label: "A consecrated place", from: null},
+  press: {label: "A printing press", from: 1450},
+  laboratory: {label: "A chemist's laboratory", from: 1660},
+  machine: {label: "A machine shop with lathes", from: 1800},
+  darkroom: {label: "A photographer's darkroom", from: 1839},
+  electronics: {label: "An electronics bench", from: 1920},
+  computer: {label: "A computer and its software", from: 1975},
+  fabricator: {label: "A fabricator (a 3D printer)", from: 2010},
+  biolab: {label: "A gene lab", from: 2030}
+};
+
+/** The lines of what a task needs, cleaned. */
+export const needsOf = t => String(t?.needs ?? "").split(/\r?\n|;/).map(x => x.trim()).filter(Boolean).slice(0, 20);
+
+/** Can the next roll be made? ctx: {year, carried: [item names]}. Returns {ok, why}. */
+export function recipeCheck(task, {year = 0, carried = []} = {}) {
+  const t = normTask(task);
+  const w = WORKSHOPS[t.workshop];
+  if ( w?.from && year && year < w.from ) return {ok: false, why: `there is no ${w.label.replace(/^an? /i, "").toLowerCase()} before about ${w.from}`};
+  const have = (carried ?? []).map(x => String(x).toLowerCase());
+  const missing = needsOf(t).filter(need => !have.some(h => h.includes(need.toLowerCase())));
+  if ( missing.length ) return {ok: false, why: `needs ${missing.join(", ")}`};
+  return {ok: true, why: ""};
 }
 
 /** Count one roll (V20 Dark Ages pp. 322-323; the same in V20): 10s count twice with a specialty, each 1 cancels a success, a botch is no successes with a 1. */
@@ -97,6 +139,7 @@ export function resumeTask(task, now) {
   if ( t.status !== "paused" ) return t;
   t.status = "open";
   t.next = now + INTERVALS[t.interval].s;
+  t.waits = "";
   return t;
 }
 

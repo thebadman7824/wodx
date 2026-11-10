@@ -327,3 +327,88 @@ export function segmentDistance(p, c) {
 export function onWall(p, walls = [], eps = 4) {
   return walls.some(w => Array.isArray(w.c) && w.move !== 0 && !(w.door > 0 && w.ds === 1) && segmentDistance(p, w.c) <= eps);
 }
+
+/* ------------------------------------------------------------------ */
+/*  Phases (NPC 0.9.0)                                                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * An NPC can change how it fights when something becomes true: badly hurt, out of Blood, in frenzy, in Crinos. Each
+ * phase is a line the Storyteller writes in the behaviour window:
+ *
+ *   Cornered: wounds >= mauled => aggression 2, caution 0, fleeAt 8
+ *   Starving: blood <= 1; kind kindred => template neonate, tactics melee
+ *
+ * Before "=>" is a WoDX Chronicle "Only when" list (";" between tests); after it, the changes, separated by commas.
+ * The first phase whose list passes is in force; none: the profile as saved. Thresholds are the Storyteller's.
+ */
+export const PHASE_KEYS = ["template", "aggression", "caution", "cunning", "loyalty", "cowardice", "berserk", "power", "fleeAt", "tactics", "fears"];
+
+/** Phase text to {phases: [{name, when, changes}], problems}. */
+export function parsePhases(text) {
+  const phases = [], problems = [];
+  for ( const raw of String(text ?? "").split(/\r?\n/) ) {
+    const line = raw.replace(/#.*$/, "").trim();
+    if ( !line ) continue;
+    const m = /^([^:]{1,60}):\s*(.+?)\s*=>\s*(.+)$/.exec(line);
+    if ( !m ) { problems.push(`"${line}": write Name: tests => changes`); continue; }
+    const changes = {};
+    for ( const part of m[3].split(",").map(s => s.trim()).filter(Boolean) ) {
+      const [k0, ...v] = part.split(/\s+/);
+      const k = PHASE_KEYS.find(x => x.toLowerCase() === k0.toLowerCase());
+      if ( !k ) { problems.push(`"${part}": not something a phase can change (${PHASE_KEYS.join(", ")})`); continue; }
+      if ( k === "template" ) {
+        if ( !TEMPLATES[v[0]] ) { problems.push(`"${part}": no template called ${v[0] ?? ""} (${Object.keys(TEMPLATES).join(", ")})`); continue; }
+        changes.template = v[0];
+      } else if ( k === "tactics" || k === "fears" ) changes[k] = v.map(x => x.toLowerCase()).filter(Boolean);
+      else {
+        const n = Number(v[0]);
+        if ( !Number.isFinite(n) ) { problems.push(`"${part}": needs a number`); continue; }
+        changes[k] = k === "fleeAt" ? Math.max(1, Math.min(8, Math.round(n))) : Math.max(0, Math.min(2, n));
+      }
+    }
+    phases.push({name: m[1].trim(), when: m[2].trim(), changes});
+  }
+  return {phases, problems};
+}
+
+/** The first phase that passes. check: when-text => boolean. Returns the phase or null. */
+export function phaseNow(phases = [], check = () => false) {
+  for ( const p of phases ?? [] ) { try { if ( check(p.when) ) return p; } catch (e) { /* a list that cannot be read is skipped */ } }
+  return null;
+}
+
+/** A profile with a phase's changes laid over it. A new template replaces the base, then the phase's own numbers win. */
+export function withPhase(profile, phase) {
+  if ( !phase ) return profile;
+  const base = phase.changes.template ? {...TEMPLATES[phase.changes.template], template: phase.changes.template} : {};
+  return {...profile, ...base, ...Object.fromEntries(Object.entries(phase.changes).filter(([k]) => k !== "template")), phase: phase.name};
+}
+
+/* ------------------------------------------------------------------ */
+/*  Talk sheets (NPC 0.9.0)                                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A talk sheet is the Storyteller's own crib for an NPC: what they will say or do for whom. One line each:
+ *   kind kindred => Will not speak of the abbot to a Cainite.
+ *   carries bishop's seal => Opens the archive and names the night porter.
+ *   Grumbles about the price of salt.
+ * Before "=>" is a WoDX Chronicle "Only when" list about the character they talk to (";" between tests); a line with
+ * no "=>" is always there. Only the Storyteller sees it. WoDX writes none of it: these are the Storyteller's words.
+ */
+export function parseTalk(text) {
+  const out = [];
+  for ( const raw of String(text ?? "").split(/\r?\n/) ) {
+    const line = raw.trim();
+    if ( !line || line.startsWith("#") ) continue;
+    const k = line.indexOf("=>");
+    out.push(k >= 0 ? {when: line.slice(0, k).trim(), say: line.slice(k + 2).trim()} : {when: "", say: line});
+  }
+  return out.filter(l => l.say);
+}
+
+/** The lines that apply. check: when-text => boolean; null: no one to check against (every line, marked). */
+export function talkFor(lines = [], check = null) {
+  return (lines ?? []).map(l => ({...l, fits: !l.when ? true : check ? !!check(l.when) : null})).filter(l => l.fits !== false);
+}

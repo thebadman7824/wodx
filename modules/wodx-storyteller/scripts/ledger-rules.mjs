@@ -7,7 +7,8 @@ export const KINDS = {
   oath: "Oath or vow",
   debt: "Debt (money or a favour owed)",
   boon: "Boon (Kindred prestation)",
-  consequence: "Consequence (comes due on a date)"
+  consequence: "Consequence (comes due on a date)",
+  objective: "Objective (steps that tick from the map)"
 };
 /** Boon sizes, smallest first. */
 export const BOONS = {trivial: "Trivial", minor: "Minor", major: "Major", blood: "Blood", life: "Life"};
@@ -40,8 +41,66 @@ export function normEntry(e = {}) {
     status: STATUS[e.status] ? e.status : "open",
     announced: !!e.announced,
     notes: String(e.notes ?? "").slice(0, 1000),
-    history: Array.isArray(e.history) ? e.history.slice(-20) : []
+    history: Array.isArray(e.history) ? e.history.slice(-20) : [],
+    steps: kind === "objective" ? normSteps(e.steps) : []
   };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Objectives (Storyteller 0.20.0)                                    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * An objective is a Ledger entry with steps the Storyteller writes, one a line, each ticked by a map event:
+ *   reach the cellar stairs      a WoDX: Trigger region whose name has these words
+ *   open the reliquary           an object (door, chest) that comes to this state: open, forced, broken, empty,
+ *   found the trapdoor           found, disarmed, lit, out, desecrated, taken, sprung, broken through
+ *   any the abbot's study        any map event at something with these words
+ * Its due date, if set, is the date it fails by: the Ledger says so when it comes due. Ticking a step never awards
+ * Experience; the Storyteller decides what finishing it is worth.
+ */
+export const STEP_STATES = ["open", "forced", "broken", "empty", "emptied", "found", "disarmed", "lit", "out", "desecrated", "taken", "sprung", "breached", "broken through"];
+const low = v => String(v ?? "").trim().toLowerCase();
+
+export function parseStep(line) {
+  const t = String(line ?? "").replace(/#.*$/, "").trim();
+  if ( !t ) return null;
+  const m = /^(reach|any|broken through|[a-z]+)\s+(.+)$/i.exec(t);
+  if ( !m ) return {text: t, verb: "any", what: low(t), problem: null};
+  const verb = low(m[1]);
+  if ( verb === "reach" || verb === "any" || STEP_STATES.includes(verb) ) return {text: t, verb, what: low(m[2]).replace(/^the\s+/, ""), problem: null};
+  return {text: t, verb: "any", what: low(t), problem: null};
+}
+
+export function normSteps(list) {
+  if ( typeof list === "string" ) list = list.split(/\r?\n/).map(parseStep).filter(Boolean).map(s => ({...s, done: false, at: null, by: ""}));
+  return (Array.isArray(list) ? list : []).slice(0, 20).map(s => ({text: String(s?.text ?? "").slice(0, 200), verb: String(s?.verb ?? "any"), what: low(s?.what).slice(0, 120),
+    done: !!s?.done, at: s?.at === null || s?.at === undefined ? null : Number(s.at), by: String(s?.by ?? "").slice(0, 80)})).filter(s => s.text);
+}
+
+/** Does a map event tick this step? ev: a WoDX map event {kind, objectKind, objectName, state, undone}. */
+export function stepMatches(step, ev = {}) {
+  if ( !step || step.done || !ev || ev.undone ) return false;
+  const name = low(ev.objectName);
+  if ( !step.what || !name.includes(step.what) ) return false;
+  if ( step.verb === "any" ) return true;
+  if ( step.verb === "reach" ) return ev.objectKind === "trigger" || ev.kind === "trigger";
+  const state = low(ev.state);
+  const want = step.verb === "emptied" ? "empty" : step.verb === "breached" ? "broken through" : step.verb;
+  return state === want || state.startsWith(want) || low(ev.kind) === want;
+}
+
+/** Tick an objective's steps for one event. Returns {entry, ticked: [step texts], finished}. Pure: a new entry. */
+export function tickObjective(entry, ev = {}) {
+  if ( entry?.kind !== "objective" || entry.status !== "open" ) return {entry, ticked: [], finished: false};
+  const ticked = [];
+  const steps = entry.steps.map(s => {
+    if ( !stepMatches(s, ev) ) return s;
+    ticked.push(s.text);
+    return {...s, done: true, at: Number(ev.at) || 0, by: String(ev.whoName ?? "")};
+  });
+  const finished = !!ticked.length && steps.length > 0 && steps.every(s => s.done);
+  return {entry: {...entry, steps, status: finished ? "kept" : entry.status}, ticked, finished};
 }
 
 export function blankLedger() { return {entries: [], heirs: {}, veil: {value: VEIL_MAX, lastBreach: null, lastRise: null, log: []}}; }

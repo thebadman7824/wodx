@@ -557,6 +557,10 @@ export function build(ctx) {
           label: new f.StringField({required: false, blank: true, initial: "", label: "What it is", hint: "A few words for the log and for beats, such as \"the cellar stairs\". Blank: the region's name."}),
           does: new f.StringField({required: true, initial: "note", choices: AR.TRIGGER_DOES, label: "What happens"}),
           who: new f.StringField({required: true, initial: "pcs", choices: {pcs: "Player characters only", anyone: "Anyone"}, label: "Whom it fires for"}),
+          when: new f.StringField({required: false, blank: true, initial: "", label: "Only when",
+            hint: "Tests for who walks in and when, separated by ; such as: year 1200-1492; night; kind kindred; not clan Tremere. Blank: always. WoDX Chronicle's checker (Storyteller tools) lists every test."}),
+          then: new f.StringField({required: false, blank: true, initial: "", label: "Then also",
+            hint: "Outcomes, separated by ; such as: tell {name} smells the incense; cue notice; ledger consequence: the abbot hears of it. Also alarm, event, whisper."}),
           once: new f.BooleanField({initial: false, label: "Only once", hint: "After the first time, it stays quiet until you untick Already set off."}),
           fired: new f.BooleanField({initial: false, label: "Already set off"})
         };
@@ -801,6 +805,12 @@ export function build(ctx) {
     if ( !AR.triggerFires(system, {pc: !!actor?.hasPlayerOwner}) ) return null;
     const k = `${behavior.id ?? region.id}:${doc.id}`, t = Date.now();
     if ( firedNow.get(k) > t - 5000 ) return null;
+    // NPC 0.9.0: the region's "Only when" list, read by WoDX Chronicle; a list that cannot be read stays quiet
+    const W = chron()?.when;
+    if ( String(system.when ?? "").trim() ) {
+      if ( !W?.check ) return null;
+      if ( !W.check(system.when, {token: doc, actor, scene: region.parent ?? doc.parent}).ok ) return null;
+    }
     firedNow.set(k, t);
     const scene = region.parent ?? doc.parent;
     const placeUuid = region.flags?.[MOD]?.place?.kind ? region.uuid : scene?.uuid;
@@ -810,6 +820,7 @@ export function build(ctx) {
     Hooks.callAll("wodxMapEvent", ev);
     if ( system.does === "note" ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(),
       content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(ev.whoName ?? "Someone")} reached ${esc(ev.objectName)}.</p></div></div>`});
+    if ( String(system.then ?? "").trim() && W?.run ) await W.run(system.then, {token: doc, actor, scene, label: ev.objectName, event: ev});
     return ev;
   }
   /** The clock moved: alarms die down and wary places calm, with a note to the Storyteller. */
