@@ -1,0 +1,116 @@
+[
+ {
+  "id": "hespell-hunters-and-mages",
+  "title": "Hunters and sorcerers",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the imbued make of people who bend reality.",
+  "claims": [
+   {
+    "text": "Wizards and witches live everywhere, from huts to modern Western cities, shopping and walking the streets like anyone while able to bend minds, bodies and chance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hespell",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Hunters who see such people work their miracles wonder whether old witch-hunts had a point, but know little beyond legend: whether witches eat children, deal with demons or cloud the minds of officials and governments.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hespell",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Hunters find sorcerers on the streets, at universities and in posts of authority, and guess that those they manage to stop are the least experienced of their kind.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hespell",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mages",
+   "htr-imbued",
+   "htr-monsters",
+   "henoc-hunters-and-vampires"
+  ]
+ },
+ {
+  "id": "hespell-mage-faces",
+  "title": "Faces of the spellbound",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How hunters and sorcerers look to one another.",
+  "claims": [
+   {
+    "text": "Hunters and mages can be so alike in body and spirit that neither can always tell one from the other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hespell",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Some sorcerers pursue strange realms and obsessions that border on madness, and some build cruel private worlds for themselves and their followers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hespell",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Some work magic through science, which forces hunters to ask whether their own ideal world is so different, and when science has gone too far.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hespell",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "To sorcerers, hunters are often baffling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hespell",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hespell-hunters-and-mages"
+  ]
+ }
+]
