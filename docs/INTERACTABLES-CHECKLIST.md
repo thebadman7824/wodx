@@ -156,8 +156,8 @@ Step 3 of the design note.
 - [x] Rules: read and check the file, cells to pixels, match the imported door walls, plan, summary (B404)
 - [x] Runtime: Adopt a generated map and Undo the map adoption on the scene's right-click menu, Storyteller only
 - [x] Harness tests (11 new)
-- [ ] Gate in rothenstein-wodx: import the farmstead, adopt it, interact with a door, the chest and the well, undo
-- [ ] Deployed
+- [x] Gate in rothenstein-wodx: gateadopt 8/8 (2026-11-10 05:21Z, on a scene built to the farmstead's size)
+- [x] Deployed to rothenstein-wodx (main 69dffa8)
 
 
 ## 0.20.0: a container's fill starts from where it sits (2026-11-10)
