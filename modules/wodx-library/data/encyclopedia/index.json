@@ -457,6 +457,12 @@
    "title": "Dark Ages: Road of the Beast",
    "short": "DA Road of the Beast",
    "edition": "Revised"
+  },
+  {
+   "id": "das",
+   "title": "Dark Ages: Road of Sin",
+   "short": "DA Road of Sin",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -535,6 +541,7 @@
   "w20wh.json",
   "darh.json",
   "dark.json",
-  "dab.json"
+  "dab.json",
+  "das.json"
  ]
 }
