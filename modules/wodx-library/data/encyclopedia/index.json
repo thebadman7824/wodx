@@ -1069,6 +1069,12 @@
    "title": "Destiny's Price",
    "short": "DP",
    "edition": "Second edition"
+  },
+  {
+   "id": "scah",
+   "title": "The Artisan's Handbook",
+   "short": "AH",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1249,6 +1255,7 @@
   "m2hl.json",
   "m2stc.json",
   "m2cf.json",
-  "m2dp.json"
+  "m2dp.json",
+  "scah.json"
  ]
 }
