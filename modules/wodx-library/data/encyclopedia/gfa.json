@@ -1,0 +1,139 @@
+[
+ {
+  "id": "gfa-physiology",
+  "title": "Ghoul Physiology",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What vitae does to a ghoul's body, by one Kindred researcher's account.",
+  "claims": [
+   {
+    "text": "A ghoul's body replaces the vitae in its system with ordinary blood in about a month, close to one lunar cycle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gfa",
+      "page": 20,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Flesh cut from a living ghoul rots a little more slowly than human flesh, a difference visible only with close study on small pieces.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gfa",
+      "page": 18,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The researcher links the month-long cycle to the moon, an idea offered as speculation.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "gfa",
+      "page": 20,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gfa-bratovitch"
+  ]
+ },
+ {
+  "id": "gfa-ghoul-view",
+  "title": "Kindred Factions Seen by Ghouls",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How ghouls who swap notes describe the sects.",
+  "claims": [
+   {
+    "text": "Ghouls describe the anarchs as Kindred who want to tear down the secret government without saying what should replace it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gfa",
+      "page": 39,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Some anarchs are said to treat ghouls fairly well, but ghouls warn each other to read the fine print.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "gfa",
+      "page": 39,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "gfa-bratovitch",
+  "title": "The Bratovitch",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A depraved revenant family that breeds ghoul hounds for the Sabbat.",
+  "claims": [
+   {
+    "text": "The Bratovitch breed ghoul hounds for the Sabbat and earn grudging respect for stalking and fighting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gfa",
+      "page": 78,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "No other revenant family or clan enjoys their company.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gfa",
+      "page": 78,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "They push for self-improvement through heavy Vicissitude changes and by eating fallen foes, and some have tried rituals to draw power from Lupines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gfa",
+      "page": 78,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gfa-physiology"
+  ]
+ }
+]

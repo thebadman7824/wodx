@@ -1687,6 +1687,12 @@
       "title": "Kindred of the Ebony Kingdom",
       "short": "KotEK",
       "edition": "Revised"
+    },
+    {
+      "id": "gfa",
+      "title": "Ghouls: Fatal Addiction",
+      "short": "G:FA",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -1970,6 +1976,7 @@
     "sog.json",
     "bmst.json",
     "succ.json",
-    "kebk.json"
+    "kebk.json",
+    "gfa.json"
   ]
 }
