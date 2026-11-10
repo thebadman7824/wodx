@@ -188,8 +188,8 @@ def _rule(k, rule):
 
 class Building:
     """A building type set down at (x, y) facing a way. Everything is in map cells."""
-    def __init__(self, key, type_key, x, y, facing="S", label=None, extra=None):
-        t = TYPES[type_key]
+    def __init__(self, key, type_key, x, y, facing="S", label=None, extra=None, t=None):
+        t = t or TYPES[type_key]
         self.key, self.type, self.t = key, type_key, t
         self.label = label or t["label"]
         self.extra = extra or {}
@@ -241,8 +241,8 @@ class Angled:
     before the turn, so a type that furnishes facing south furnishes at every angle.
     Gives the same names the town code reads off a Building: key, type, t, label, extra, rooms (local), x, y, w, h
     (the box around it), centre, plus corners, world(), openings_world(), front()."""
-    def __init__(self, key, type_key, cx, cy, theta, label=None, extra=None):
-        self.local = Building(key, type_key, 0, 0, "S", label, extra)
+    def __init__(self, key, type_key, cx, cy, theta, label=None, extra=None, t=None):
+        self.local = Building(key, type_key, 0, 0, "S", label, extra, t)
         self.key, self.type, self.t, self.label, self.extra = key, type_key, self.local.t, self.local.label, self.local.extra
         self.theta, self.cx, self.cy = theta, cx, cy
         self.lw, self.lh = self.local.w, self.local.h
@@ -259,7 +259,28 @@ class Angled:
 
     @property
     def corners(self): return [self.world(0, 0), self.world(self.lw, 0), self.world(self.lw, self.lh), self.world(0, self.lh)]
-    outline = corners
+
+    @property
+    def outline(self):
+        """The building's outer wall on the map: its box, or an L or T where it has a wing or lean-to."""
+        pts = []
+        for q in self.t.get("outline") or [(0, 0), (self.lw, 0), (self.lw, self.lh), (0, self.lh)]:
+            if not pts or abs(pts[-1][0] - q[0]) > 1e-6 or abs(pts[-1][1] - q[1]) > 1e-6: pts.append(q)
+        if len(pts) > 1 and abs(pts[0][0] - pts[-1][0]) < 1e-6 and abs(pts[0][1] - pts[-1][1]) < 1e-6: pts.pop()
+        # drop corners that lie on a straight run (a wing flush with an end wall)
+        keep = [p for i, p in enumerate(pts) if abs((p[0] - pts[i - 1][0]) * (pts[(i + 1) % len(pts)][1] - p[1]) - (p[1] - pts[i - 1][1]) * (pts[(i + 1) % len(pts)][0] - p[0])) > 1e-9]
+        return [self.world(*q) for q in keep]
+
+    @property
+    def hulls(self):
+        """The building as one or more rectangles on the map (its main range and any wing), for spacing checks."""
+        return [[self.world(x, y), self.world(x + w, y), self.world(x + w, y + h), self.world(x, y + h)]
+                for x, y, w, h in self.t.get("parts") or [(0, 0, self.lw, self.lh)]]
+
+    def drop_side(self, side):
+        """Take the windows out of one end wall (W or E), where a neighbour's wall now stands against it."""
+        x = 0 if side == "W" else self.lw
+        self.local.openings[:] = [o for o in self.local.openings if not (o[0] == "window" and o[3] == "v" and abs(o[1] - x) < .01)]
 
     @property
     def rect(self): return (self.x, self.y, self.w, self.h)
@@ -303,3 +324,85 @@ class Angled:
     def furnish(self):
         self.local.furnish()
         return self
+
+
+# ------------------------------------------------------------------ variants: no two houses alike (organic towns)
+import copy as _copy
+
+STRETCH = {   # extra length (at the east end) and depth (at the front), in squares, by type
+    "cottage": ((0, 0, 1, 2), (0, 0, 1)), "townhouse": ((0, 1, 2), (0, 0, 1)), "workshop": ((0, 1, 2), (0, 0, 1)),
+    "bakehouse": ((0, 1), (0, 1)), "storehouse": ((0, 1, 2), (0, 1)), "byre-house": ((0, 1, 2), (0, 0, 1)),
+    "smithy": ((0, 1), (0, 1)), "tavern": ((0, 1, 2), (0, 1)), "guardhouse": ((0, 1), (0,)), "chapel": ((0,), (0, 1, 2)),
+}
+ANNEX = {     # a wing or lean-to: its name, width and depth choices, what is in it
+    "cottage": ("Lean-to", (3, 4), (2.5, 3), [(WOOD, "wall", 1, .8), (BARREL, "corner", 1, .75)]),
+    "townhouse": ("Store", (3, 4), (3,), [(CRATE, "corner", 2, .8), (SACK, "wall", 1, .75)]),
+    "workshop": ("Shed", (3, 4), (3,), [("Firewood_Stacked_A_1x1.webp", "wall", 1, .75), (CRATE, "corner", 1, .8)]),
+    "bakehouse": ("Flour store", (3,), (3,), [("Sack_Brown_E_Wheat_1x1.webp", "wall", 2, .75)]),
+    "smithy": ("Coal store", (3,), (3,), [("Sack_Brown_E_Coals_1x1.webp", "wall", 2, .75)]),
+    "tavern": ("Brewhouse", (4,), (3, 4), [(KEG, "wall", 2, .8), (BARREL, "corner", 1, .8)]),
+    "byre-house": ("Shed", (3, 4), (3,), [(WOOD, "wall", 1, .8), ("Hay_Bale_A_01_1x1.webp", "corner", 1, .75)]),
+    "chapel": ("Vestry", (3,), (3,), [(CHEST, "corner", 1, .9)]),
+}
+
+def variant(type_key, R, sides=True, chance=.6):
+    """A copy of a type, made a little longer or deeper and perhaps given a wing or lean-to at the back or one end
+    (an L or T). sides: False keeps wings off the end walls (a house in a terraced row). Always drawn facing south
+    with its front on the bottom wall; every room is a rectangle, so it furnishes as the plain type does."""
+    t = _copy.deepcopy(TYPES[type_key])
+    W, H = t["size"]
+    dws, dhs = STRETCH.get(type_key, ((0,), (0,)))
+    dw, dh = R.choice(dws), R.choice(dhs)
+    if dw or dh:
+        t["rooms"] = [(n, x, y, w + (dw if abs(x + w - W) < .01 else 0), h + (dh if abs(y + h - H) < .01 else 0), f) for n, x, y, w, h, f in t["rooms"]]
+        t["openings"] = [(k, x + (dw if abs(x - W) < .01 else 0), y + (dh if abs(y - H) < .01 else 0), a) for k, x, y, a in t["openings"]]
+        mv = lambda p: (p[0] + (dw if abs(p[0] - W) < .01 else 0), p[1] + (dh if abs(p[1] - H) < .01 else 0))
+        t["partitions"] = [(mv(a), mv(b)) for a, b in t["partitions"]]
+        W, H = W + dw, H + dh
+    t["size"] = (W, H)
+    t["outline"] = [(0, 0), (W, 0), (W, H), (0, H)]
+    t["parts"] = [(0, 0, W, H)]
+    if type_key not in ANNEX or R.random() > chance: return t
+    name, ws, ds, furn = ANNEX[type_key]
+    where = R.choice(("back", "back", "east", "west") if sides else ("back",))
+    aw, ad = R.choice(ws), R.choice(ds)
+    if where == "back":
+        if aw > W - 1: return t
+        ax = R.choice([k / 2 for k in range(0, int((W - aw) * 2) + 1)])
+        shift = lambda x, y: (x, y + ad)
+        wall_has = lambda o: o[3] == "h" and abs(o[2]) < .01 and ax - .01 <= o[1] <= ax + aw + .01
+        conn, inner, outer = ("doorway", ax + aw / 2, ad, "h"), (ax, 0, aw, ad), ("window", ax + aw / 2, 0, "h")
+        part, new_size = ((ax, ad), (ax + aw, ad)), (W, H + ad)
+        outline = [(0, ad), (ax, ad), (ax, 0), (ax + aw, 0), (ax + aw, ad), (W, ad), (W, H + ad), (0, H + ad)]
+        main = (0, ad, W, H)
+    else:
+        ah = min(ad + 1, H - 1)
+        aw = min(aw, 3)
+        if where == "east":
+            shift = lambda x, y: (x, y)
+            wall_has = lambda o: o[3] == "v" and abs(o[1] - W) < .01 and o[2] <= ah + .01
+            conn, inner, outer = ("doorway", W, ah / 2, "v"), (W, 0, aw, ah), ("window", W + aw, ah / 2, "v")
+            part, new_size = ((W, 0), (W, ah)), (W + aw, H)
+            outline = [(0, 0), (W + aw, 0), (W + aw, ah), (W, ah), (W, H), (0, H)]
+            main = (0, 0, W, H)
+        else:
+            shift = lambda x, y: (x + aw, y)
+            wall_has = lambda o: o[3] == "v" and abs(o[1]) < .01 and o[2] <= ah + .01
+            conn, inner, outer = ("doorway", aw, ah / 2, "v"), (0, 0, aw, ah), ("window", 0, ah / 2, "v")
+            part, new_size = ((aw, 0), (aw, ah)), (W + aw, H)
+            outline = [(0, 0), (W + aw, 0), (W + aw, H), (aw, H), (aw, ah), (0, ah)]
+            main = (aw, 0, W, H)
+    # windows in the wall the wing now covers go; a door there already becomes the way into the wing
+    hits = [o for o in t["openings"] if wall_has(o)]
+    t["openings"] = [o for o in t["openings"] if not (wall_has(o) and o[0] == "window")]
+    doors = [o for o in hits if o[0] != "window"]
+    t["rooms"] = [(n, *shift(x, y), w, h, f) for n, x, y, w, h, f in t["rooms"]]
+    t["openings"] = [(k, *shift(x, y), a) for k, x, y, a in t["openings"]]
+    t["partitions"] = [(shift(*a), shift(*b)) for a, b in t["partitions"]]
+    if not doors: t["openings"].append(conn)
+    t["openings"].append(outer)
+    t["rooms"].append((name, *inner, "earth"))
+    t["partitions"].append(part)
+    t["furnish"] = dict(t["furnish"]); t["furnish"][name] = list(furn)
+    t["size"], t["outline"], t["parts"] = new_size, outline, [main, inner]
+    return t
