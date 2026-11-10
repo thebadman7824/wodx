@@ -207,13 +207,18 @@
     ]
    },
    {
-    "text": "Critics among mages call the race reckless, since the rush can wreck the very things it hopes to find.",
-    "tier": "rumour",
+    "text": "Etherjammers and Void Engineers push their craft ever farther into deep space in what mages call the Great Race.",
+    "tier": "stated",
     "refs": [
      {
       "book": "m2bow",
       "page": 138,
       "pdf": 139
+     },
+     {
+      "book": "m2bow",
+      "page": 157,
+      "pdf": 158
      }
     ]
    }

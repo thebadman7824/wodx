@@ -593,7 +593,7 @@
   "summary": "Pagan mages who mourn a more magical world.",
   "claims": [
    {
-    "text": "The Old Faith sees the world as less magical than it once was, and looks back with longing.",
+    "text": "Followers of the Old Faith feel the world holds less magic than it once did, and they long for what was lost.",
     "tier": "stated",
     "refs": [
      {
@@ -904,7 +904,7 @@
   "summary": "An early joint act of the Houses.",
   "claims": [
    {
-    "text": "In 876 a coalition of Houses destroyed the lair of a powerful necromancer in Turkey and seized the stronghold.",
+    "text": "In 876 several Houses joined to destroy a mighty necromancer's lair in Turkey and took the stronghold for themselves.",
     "tier": "stated",
     "refs": [
      {
@@ -1021,7 +1021,7 @@
     ]
    },
    {
-    "text": "The immortal Wyck may not all be gone from the hills of England and Ireland.",
+    "text": "Perhaps not every immortal Wyck has left the hills of England and Ireland.",
     "tier": "stated",
     "refs": [
      {
@@ -1050,7 +1050,7 @@
   "summary": "The great stone circle on Salisbury Plain.",
   "claims": [
    {
-    "text": "The stones track cosmic time; Wyck masters, or great mages of the Old Faith, could stand at the centre and read the universe.",
+    "text": "The stones track cosmic time; Wyck masters, or great Old Faith mages, could stand in their centre and read the universe.",
     "tier": "stated",
     "refs": [
      {
@@ -1173,7 +1173,7 @@
   "summary": "The Pope's mage-catching soldiers.",
   "claims": [
    {
-    "text": "Once the prison stood, Pope Nicholas had to raise a force of devout soldiers and guards to capture, question and hold its prisoners.",
+    "text": "With the prison built, Pope Nicholas needed devout soldiers and guards to catch, question and keep its prisoners.",
     "tier": "stated",
     "refs": [
      {
@@ -1212,7 +1212,7 @@
   "summary": "A demon sleeping under the Carpathians.",
   "claims": [
    {
-    "text": "The essence of a major demon named Kupala lies under the Carpathians, known to perhaps a handful of mages.",
+    "text": "Beneath the Carpathians lies the essence of a great demon called Kupala, a secret perhaps a handful of mages share.",
     "tier": "stated",
     "refs": [
      {
@@ -1223,7 +1223,7 @@
     ]
    },
    {
-    "text": "In later centuries Kupala's presence will grow and lead to the birth of Tezghul the Insane.",
+    "text": "Over the following centuries Kupala's influence will grow until it gives rise to Tezghul the Insane.",
     "tier": "stated",
     "refs": [
      {
@@ -1279,7 +1279,7 @@
   "summary": "Why a cross alone does not turn the dead.",
   "claims": [
    {
-    "text": "A cross by itself does not turn the undead unless its holder uses it as a focus for magic.",
+    "text": "A cross alone will not drive off the undead; its bearer has to use it as a focus for magic.",
     "tier": "stated",
     "refs": [
      {

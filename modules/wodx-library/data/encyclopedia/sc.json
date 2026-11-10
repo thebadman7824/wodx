@@ -716,6 +716,11 @@
       "book": "sc",
       "page": 114,
       "pdf": 131
+     },
+     {
+      "book": "sc",
+      "page": 129,
+      "pdf": 146
      }
     ]
    }
@@ -859,6 +864,11 @@
       "book": "sc",
       "page": 114,
       "pdf": 131
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
      }
     ]
    }
@@ -990,7 +1000,7 @@
     ]
    },
    {
-    "text": "They call their voyages into the Void In Profundum Expeditio, a journey into the endless.",
+    "text": "Their voyages into the Void they name In Profundum Expeditio, the journey into the endless.",
     "tier": "stated",
     "refs": [
      {
