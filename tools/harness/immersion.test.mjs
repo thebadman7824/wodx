@@ -58,7 +58,7 @@ test("carried light: burns down, burns low once, and the weather puts some out",
 test("carried light: wired into Interactables", () => {
   const m = src("modules/wodx-interactables/scripts/main.mjs");
   assert.ok(m.includes("setupCarry()"));
-  assert.ok(src("modules/wodx-interactables/module.json").includes('"version": "0.18.1"'));
+  assert.ok(src("modules/wodx-interactables/module.json").match(/"version": "0\.(1[89]|[2-9]\d)\./));
   assert.ok(src("modules/wodx-interactables/scripts/carry.mjs").includes("searchBox") === false, "a fixed short list, marked data-fixed");
   assert.ok(src("modules/wodx-interactables/scripts/carry.mjs").includes("data-fixed"));
 });
