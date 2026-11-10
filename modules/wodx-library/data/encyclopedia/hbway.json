@@ -1,0 +1,583 @@
+[
+ {
+  "id": "hbway-wayward-mind",
+  "title": "The Wayward mindset",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why other imbued fear the Wayward.",
+  "claims": [
+   {
+    "text": "Waywards pursue the hunt with an obsessive, often hateful drive and will do almost anything to see it through.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 79,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "Each Wayward seems split between an ordinary, reasoning person and something colder and more childish, and the hunt is driven by the struggle between the two.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 79,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "hbway-deviance"
+  ]
+ },
+ {
+  "id": "hbway-conviction",
+  "title": "Wayward Conviction",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Waywards regain and lose Conviction.",
+  "claims": [
+   {
+    "text": "A Wayward regains a Conviction point when violence turns out to be the only thing that resolves a problem after every other approach failed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 80,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Another point comes from persuading a fellow hunter that the Wayward’s plan of destruction is the right one, or from finding information that supports the Wayward’s grand scheme.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 80,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Optional rules take a point away when the Wayward fails to hurt a monster, betrays or loses track of the personal crusade, or sees a problem solved by means that run against it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 80,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Only one such gain counts per game session, however many of the triggers occur.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 80,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-conviction"
+  ]
+ },
+ {
+  "id": "hbway-derangements",
+  "title": "Wayward derangements",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Personality disorders as the typical Wayward madness.",
+  "claims": [
+   {
+    "text": "Waywards are bent out of true from the moment of imbuing, so serious mental illness is a constant risk for the creed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 80,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Their usual afflictions are deep personality disorders such as antisocial and borderline personality disorder, rather than small phobias or neuroses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 80,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "A Storyteller may give a bonus to a player who works the derangement into the Wayward’s goal for the hunt instead of fighting it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 81,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "hbway-deviance",
+  "title": "Deviance",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The edge path of the Waywards.",
+  "claims": [
+   {
+    "text": "Deviance is the Wayward edge path, shaped to fit the Wayward outlook and unlike the paths of the other creeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 80,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Several of its edges look like gifts meant to help other hunters that went wrong, which hints that Waywards were meant for some other purpose.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 80,
+      "pdf": 84
+     },
+     {
+      "book": "hbway",
+      "page": 82,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "A hunter of another creed can manifest a Deviance edge, though few even know the Waywards exist.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 81,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-edges",
+   "hbway-impart",
+   "hbway-forewarn",
+   "hbway-enrage",
+   "hbway-question-dead"
+  ]
+ },
+ {
+  "id": "hbway-impart",
+  "title": "Impart",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Deviance edge that switches on second sight in other hunters.",
+  "claims": [
+   {
+    "text": "The player rolls Perception + Vision at difficulty 6, and each success turns on the second sight of one other hunter within a number of yards equal to five times the Wayward’s Vision.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 81,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Those affected spend no Conviction for the sight but gain none of the usual protection from mind, body and emotion control unless they activate their own second sight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 81,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Impart takes one action, works once per scene and lasts for the rest of the scene even if the recipients move away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 81,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hbway-deviance",
+   "htr-conviction"
+  ]
+ },
+ {
+  "id": "hbway-forewarn",
+  "title": "Forewarn",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Deviance edge that acts as a danger sense.",
+  "claims": [
+   {
+    "text": "Forewarn is always active: the Storyteller rolls Wits + Vision at difficulty 7 in secret whenever danger may be close.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 82,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Outside combat, each success warns the hunter about one turn before a hazard such as a rotten floor or a hidden trap.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 82,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Before an attack, the successes go either to initiative next turn or to a dodge, block or parry roll, as the player chooses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 82,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "It says only that something bad is coming, not what, and Conviction cannot be risked on it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 82,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hbway-deviance"
+  ]
+ },
+ {
+  "id": "hbway-enrage",
+  "title": "Enrage",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Deviance edge that drives other hunters into a killing rage.",
+  "claims": [
+   {
+    "text": "The player rolls Manipulation + Vision at difficulty 6; each success lets the Wayward push one other hunter within Vision yards into a berserk rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 82,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "Those affected attack the enemy violently, and even gentle hunters may come round surrounded by dead monsters and people alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 82,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "The edge may once have been meant to rally allies like a war leader, but in a broken mind it spreads bloodlust instead.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 82,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hbway-deviance"
+  ]
+ },
+ {
+  "id": "hbway-question-dead",
+  "title": "Questioning the dead",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Deviance edge that forces the dead to answer truthfully.",
+  "claims": [
+   {
+    "text": "The hunter spends a full action locking gazes with a corpse or undead creature, then spends one Conviction and rolls Perception + Vision at difficulty 8; each success allows one question that scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 83,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "It works on corpses and on the walking dead such as vampires, zombies and ghosts, and the answers are heard as whispers in the hunter’s mind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 83,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "The dead can only give what they believe to be true, a very old or powerful undead may resist with a Willpower roll at difficulty 6, and a corpse with no eyes or head cannot be asked.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 83,
+      "pdf": 87
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hbway-deviance"
+  ]
+ },
+ {
+  "id": "hbway-torture-poison",
+  "title": "Torture and Poison",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two new Skills common among Waywards.",
+  "claims": [
+   {
+    "text": "Torture and Poison are new Skills that Waywards often have, though other creeds may learn them with Storyteller approval.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 77,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Hiding the use of poison on a victim is a resisted roll of Wits + Poison against Intelligence + Medicine, both at difficulty 6.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 79,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "hbway-homemade-weapons",
+  "title": "Homemade weapons",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rules for designing and building improvised weapons.",
+  "claims": [
+   {
+    "text": "Building a scratch-made weapon starts with a design stage that settles what it is made of and how it does damage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 87,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "The materials set the most damage dice the weapon can deal, and that cap can never be more than twice the builder’s Crafts rating, or 1 without Crafts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 87,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "A construction stage and a chart for melee and ranged designs follow, along with tables for improvised melee, chemical, explosive and incendiary weapons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 85,
+      "pdf": 89
+     },
+     {
+      "book": "hbway",
+      "page": 86,
+      "pdf": 90
+     },
+     {
+      "book": "hbway",
+      "page": 87,
+      "pdf": 91
+     },
+     {
+      "book": "hbway",
+      "page": 88,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "hbway-signs",
+  "title": "Signs of the Righteous",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Marks that Waywards draw or carve on themselves for strength.",
+  "claims": [
+   {
+    "text": "At Vision 4 a Wayward begins to sense the meaning of certain symbols, and learns one more for each Vision point above 4.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 91,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "To use a sign, the Wayward draws the mark on the skin or concentrates on one already worn; it costs three Conviction and lasts a number of days equal to Vision.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 91,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "The benefit ends early if the mark is smudged, soaked or covered, and only one sign can be active at a time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 91,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Painful ways of marking may cost a level of bashing damage that cannot be soaked, and they usually leave scars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbway",
+      "page": 91,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hbway-deviance"
+  ]
+ }
+]
