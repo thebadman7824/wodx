@@ -1093,6 +1093,12 @@
    "title": "Infernalism: The Path of Screams",
    "short": "INF",
    "edition": "First edition"
+  },
+  {
+   "id": "scor",
+   "title": "The Order of Reason",
+   "short": "OR",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1277,6 +1283,7 @@
   "scah.json",
   "sccomp.json",
   "sccl.json",
-  "scinf.json"
+  "scinf.json",
+  "scor.json"
  ]
 }

@@ -1,0 +1,228 @@
+[
+ {
+  "id": "scor-enlightened-arts",
+  "title": "Enlightened arts, not magic",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How Daedaleans understand their own wonders.",
+  "claims": [
+   {
+    "text": "Daedaleans treat art, philosophy, science and scholarship as one field, where music and mathematics share the same rhythms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "The Order of Reason claims no link to magic; its members see nothing supernatural in their work, count themselves people using reason given by God, and believe they are trained to shield humanity from the occult.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Results beyond the ordinary are put down to mastery of a craft rather than sorcery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason",
+   "scah-artisan-ranks"
+  ]
+ },
+ {
+  "id": "scor-lodges",
+  "title": "Daedalean lodges",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The houses where cabals of the Order live and work.",
+  "claims": [
+   {
+    "text": "The Order runs schools, forges, trading houses, hospitals, preceptories and monasteries across Europe; very learned folk call such meeting places crays.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A typical lodge holds three or four cabals; the first tends to everyday business and relations with neighbors, and its leading adept, the magistrate, oversees every adept there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A lodge begins as a communal society under a charter, and cabals that enjoy its shelter are expected to run errands, investigations or trade to keep it safe and prosperous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason",
+   "scor-maximi"
+  ]
+ },
+ {
+  "id": "scor-maximi",
+  "title": "The Maximi",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The leaders of the Daedalean Conventions.",
+  "claims": [
+   {
+    "text": "The Celestial Masters follow one Maximus, the Ksirafai admit to none, and each of the other five Conventions follows two Maximi, by custom one man and one woman.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason",
+   "sc-celestial-masters",
+   "sc-ksirafai"
+  ]
+ },
+ {
+  "id": "scor-guilds",
+  "title": "Guilds of the Conventions",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The inner guilds and houses within each Daedalean Convention.",
+  "claims": [
+   {
+    "text": "Artificers include the Forgers or Vulcans, Bright Lions, Pythagorai and Mauls; Gabrielites include the Illustroferatores, Poenitenti and Venatores Maleficorum or Falcons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The Celestial Masters gather in the houses of Prometheus, Daedalus, Helios and Selene; Craftmasons sort into guilds named for the Chalice, Coin, Level, Hemlock, Arrow, Chisel, Stone and Scroll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The High Guild holds the Resplendent Axe, the Patrons Guild or Black Uncles, the Royal Griffin, the Sun Guild and the Rose Guild; the Cosians form the houses of Mandrake, Fire, Books, Knives and Olympus plus the Phylaxoi; Void Seekers include the Alexandrians, Odysseans, the Guild of Forge and Sail, the Order of the Grail, the League of St. Paul and the Herculinian Compact.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-artificers",
+   "sc-craftmasons",
+   "sc-high-guild",
+   "sc-void-seekers",
+   "sc-celestial-masters"
+  ]
+ },
+ {
+  "id": "scor-no-crusade",
+  "title": "The Order and the Council",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "What the Order of Reason does not do.",
+  "claims": [
+   {
+    "text": "The Order is not at endless war with the Council of Nine and has no plan to kill every Tradition mage in Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Daedaleans judge sorcerers, witches and warlocks by deeds; a few mages have been corrupted by power, but that does not damn every path other than reason.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scor",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason",
+   "scor-enlightened-arts"
+  ]
+ }
+]
