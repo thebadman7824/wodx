@@ -1549,6 +1549,12 @@
    "title": "Hunter Survival Guide",
    "short": "HtR SG",
    "edition": "First edition"
+  },
+  {
+   "id": "hutop",
+   "title": "Hunter: Utopia",
+   "short": "HtR Utopia",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1809,6 +1815,7 @@
   "hbvis.json",
   "hfc.json",
   "hhw.json",
-  "hsg.json"
+  "hsg.json",
+  "hutop.json"
  ]
 }
