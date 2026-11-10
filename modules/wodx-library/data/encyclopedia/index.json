@@ -1315,6 +1315,12 @@
    "title": "Dreams and Nightmares",
    "short": "D&N",
    "edition": "Second edition"
+  },
+  {
+   "id": "cench",
+   "title": "The Enchanted",
+   "short": "Ench",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1536,6 +1542,7 @@
   "cboh2.json",
   "cbolh.json",
   "cden.json",
-  "cdan.json"
+  "cdan.json",
+  "cench.json"
  ]
 }
