@@ -1681,6 +1681,12 @@
    "title": "Clanbook: Baali (Dark Ages)",
    "short": "DA CB Baali",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "dacbcapp",
+   "title": "Clanbook: Cappadocian",
+   "short": "DA CB Cappadocian",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -1963,6 +1969,7 @@
   "cap.json",
   "dacults.json",
   "dabic.json",
-  "dacbbaali.json"
+  "dacbbaali.json",
+  "dacbcapp.json"
  ]
 }
