@@ -1,0 +1,214 @@
+[
+ {
+  "id": "m2hota-syllabus",
+  "title": "The Arcanum's Syllabus",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The founding articles of the Arcanum.",
+  "claims": [
+   {
+    "text": "The Syllabus sets out a search for knowledge for its own sake, aimed at the members' enlightenment and in the end all humanity's.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "It holds that another world, where ancient myth is true, touches this one, and that only scholarship can tell real lore from superstition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Members are to observe, not judge or act on the supernatural by any fixed code, and the society's findings are not shared with outsiders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcanum"
+  ]
+ },
+ {
+  "id": "m2hota-founding",
+  "title": "Founding of the Arcanum",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Benjamen Holmscroft gathered nine scholars into a society in the 1880s.",
+  "claims": [
+   {
+    "text": "Nine founders from Britain, Ireland, Boston and Rome formed the first Arcanum, with Holmscroft Manor as the root of a hoped-for network of houses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The founders sat as the Executive Committee and chose Holmscroft as Grand Chancellor, with near total power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Holmscroft wrote the society's rituals, first held at Christmas 1885; a founder suspected they were far older than the Arcanum.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcanum"
+  ]
+ },
+ {
+  "id": "m2hota-structure",
+  "title": "Arcanum houses, colonies and lodges",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Arcanum organises its members.",
+  "claims": [
+   {
+    "text": "Colonies are houses in training: groups with no funds of their own that report to the nearest full house until the area proves busy enough to earn full status.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 17,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Field research on hauntings and the like is done in groups, for witnesses and safety; members who work together regularly form a lodge, often from one class of Neophytes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 17,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The Foundation House stands in the Fens of Cambridgeshire, and a London house in a Georgian townhouse handles business and outside meetings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The society first grew across Europe, from Berlin, Vienna, Paris and Prague to Amsterdam, Madrid and Stockholm; the Dublin House draws students of fae lore.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcanum",
+   "vav-arcanum"
+  ]
+ },
+ {
+  "id": "m2hota-factions",
+  "title": "Arcanum factions",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The informal camps that divide the Arcanum.",
+  "claims": [
+   {
+    "text": "Seekers treat the work as a personal quest for the Grail or the Stone and dismiss whatever they do not count as sacred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Progressivists want to strip away the Victorian trappings and secrecy and remake the society as a modern institution.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The Executive Committee now and then orders a lodge to drop a case as trivial or wasteful, which feeds suspicion that secrets are buried inside the society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hota",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcanum"
+  ]
+ }
+]
