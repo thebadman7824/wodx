@@ -231,3 +231,75 @@ class Building:
 
 def place(key, type_key, x, y, facing="S", label=None, extra=None):
     return Building(key, type_key, x, y, facing, label, extra)
+
+# ------------------------------------------------------------------ a type set down at any angle (organic towns)
+import math as _m
+
+class Angled:
+    """A building type turned to any angle: built and furnished in its own cells facing south, then turned by
+    theta (radians, clockwise on the map, 0 = facing south) and set with its middle at (cx, cy). Furnishing happens
+    before the turn, so a type that furnishes facing south furnishes at every angle.
+    Gives the same names the town code reads off a Building: key, type, t, label, extra, rooms (local), x, y, w, h
+    (the box around it), centre, plus corners, world(), openings_world(), front()."""
+    def __init__(self, key, type_key, cx, cy, theta, label=None, extra=None):
+        self.local = Building(key, type_key, 0, 0, "S", label, extra)
+        self.key, self.type, self.t, self.label, self.extra = key, type_key, self.local.t, self.local.label, self.local.extra
+        self.theta, self.cx, self.cy = theta, cx, cy
+        self.lw, self.lh = self.local.w, self.local.h
+        self.c, self.s = _m.cos(theta), _m.sin(theta)
+        xs, ys = zip(*self.corners)
+        self.x, self.y = min(xs), min(ys)
+        self.w, self.h = max(xs) - self.x, max(ys) - self.y
+        self.facing = "S"
+
+    def world(self, x, y):
+        """A point in the building's own cells, on the map."""
+        dx, dy = x - self.lw / 2, y - self.lh / 2
+        return (self.cx + dx * self.c - dy * self.s, self.cy + dx * self.s + dy * self.c)
+
+    @property
+    def corners(self): return [self.world(0, 0), self.world(self.lw, 0), self.world(self.lw, self.lh), self.world(0, self.lh)]
+    outline = corners
+
+    @property
+    def rect(self): return (self.x, self.y, self.w, self.h)
+
+    @property
+    def centre(self): return (self.cx, self.cy)
+
+    @property
+    def rooms(self): return self.local.rooms
+
+    @property
+    def normal(self): return (-self.s, self.c)            # the way the front faces
+
+    def front(self):
+        """The middle of the front wall, and a point one cell outside it."""
+        a = self.world(self.lw / 2, self.lh)
+        n = self.normal
+        return a, (a[0] + n[0], a[1] + n[1])
+
+    def openings_world(self):
+        """(kind, x, y, (ax, ay, bx, by)): each opening on the map, with the two ends of its gap."""
+        out = []
+        from ddcore import PORTALS
+        for kind, ox, oy, along in self.local.openings:
+            half = PORTALS[kind][1] / 2
+            a, b = ((ox - half, oy), (ox + half, oy)) if along == "h" else ((ox, oy - half), (ox, oy + half))
+            p, q = self.world(*a), self.world(*b)
+            out.append((kind, *self.world(ox, oy), (p[0], p[1], q[0], q[1])))
+        return out
+
+    def partitions_world(self): return [(self.world(*a), self.world(*b)) for a, b in self.local.partitions]
+
+    def room_poly(self, r): return [self.world(r.x, r.y), self.world(r.x + r.w, r.y), self.world(r.x + r.w, r.y + r.h), self.world(r.x, r.y + r.h)]
+
+    def items_world(self, r):
+        """(item, cx, cy, rotation) for each item in a room, on the map."""
+        for it in r.items:
+            cx, cy = self.world(it["x"] + it["w"] / 2, it["y"] + it["h"] / 2)
+            yield it, cx, cy, self.theta + (_m.pi / 2 if it["rot"] else 0.0)
+
+    def furnish(self):
+        self.local.furnish()
+        return self

@@ -1,0 +1,166 @@
+{
+ "format": "wodx-map-parts",
+ "version": 1,
+ "name": "Linberg",
+ "kind": "town",
+ "seed": 3,
+ "whole": [
+  120,
+  133
+ ],
+ "population": 261,
+ "parts": [
+  {
+   "id": "A1",
+   "map": "linberg-a1.dungeondraft_map",
+   "sidecar": "linberg-a1.wodx.json",
+   "origin": [
+    0,
+    0
+   ],
+   "cells": [
+    60,
+    49
+   ],
+   "cut": [
+    0,
+    0,
+    57,
+    47
+   ],
+   "neighbours": {
+    "south": "B1",
+    "east": "A2"
+   },
+   "households": 10,
+   "population": 46
+  },
+  {
+   "id": "A2",
+   "map": "linberg-a2.dungeondraft_map",
+   "sidecar": "linberg-a2.wodx.json",
+   "origin": [
+    53,
+    0
+   ],
+   "cells": [
+    67,
+    52
+   ],
+   "cut": [
+    57,
+    0,
+    63,
+    47
+   ],
+   "neighbours": {
+    "south": "B2",
+    "west": "A1"
+   },
+   "households": 11,
+   "population": 45
+  },
+  {
+   "id": "B1",
+   "map": "linberg-b1.dungeondraft_map",
+   "sidecar": "linberg-b1.wodx.json",
+   "origin": [
+    0,
+    46
+   ],
+   "cells": [
+    57,
+    36
+   ],
+   "cut": [
+    0,
+    47,
+    57,
+    32
+   ],
+   "neighbours": {
+    "north": "A1",
+    "south": "C1",
+    "east": "B2"
+   },
+   "households": 6,
+   "population": 26
+  },
+  {
+   "id": "B2",
+   "map": "linberg-b2.dungeondraft_map",
+   "sidecar": "linberg-b2.wodx.json",
+   "origin": [
+    57,
+    47
+   ],
+   "cells": [
+    63,
+    36
+   ],
+   "cut": [
+    57,
+    47,
+    63,
+    32
+   ],
+   "neighbours": {
+    "north": "A2",
+    "south": "C2",
+    "west": "B1"
+   },
+   "households": 12,
+   "population": 42
+  },
+  {
+   "id": "C1",
+   "map": "linberg-c1.dungeondraft_map",
+   "sidecar": "linberg-c1.wodx.json",
+   "origin": [
+    0,
+    74
+   ],
+   "cells": [
+    60,
+    59
+   ],
+   "cut": [
+    0,
+    79,
+    57,
+    54
+   ],
+   "neighbours": {
+    "north": "B1",
+    "east": "C2"
+   },
+   "households": 18,
+   "population": 72
+  },
+  {
+   "id": "C2",
+   "map": "linberg-c2.dungeondraft_map",
+   "sidecar": "linberg-c2.wodx.json",
+   "origin": [
+    53,
+    79
+   ],
+   "cells": [
+    67,
+    54
+   ],
+   "cut": [
+    57,
+    79,
+    63,
+    54
+   ],
+   "neighbours": {
+    "north": "B2",
+    "west": "C1"
+   },
+   "households": 8,
+   "population": 30
+  }
+ ]
+}

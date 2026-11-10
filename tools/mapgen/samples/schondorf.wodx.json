@@ -1,0 +1,7040 @@
+{
+ "format": "wodx-map",
+ "version": 1,
+ "name": "Sch\u00f6ndorf",
+ "map": "schondorf.dungeondraft_map",
+ "cells": [
+  122,
+  106
+ ],
+ "seed": 2,
+ "kind": "village",
+ "layout": "organic",
+ "walled": false,
+ "era": "dark-ages",
+ "population": 138,
+ "openings": [
+  {
+   "id": "tavern-1-double-0",
+   "label": "Tavern double",
+   "c": [
+    65.736,
+    62.523,
+    64.004,
+    63.523
+   ],
+   "inside": [
+    65.571,
+    67.237
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-window-1",
+   "label": "Tavern window",
+   "c": [
+    67.035,
+    61.773,
+    66.169,
+    62.273
+   ],
+   "inside": [
+    65.571,
+    67.237
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-window-2",
+   "label": "Tavern window",
+   "c": [
+    63.571,
+    63.773,
+    62.705,
+    64.273
+   ],
+   "inside": [
+    65.571,
+    67.237
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-window-3",
+   "label": "Tavern window",
+   "c": [
+    70.151,
+    65.17,
+    69.651,
+    64.304
+   ],
+   "inside": [
+    65.571,
+    67.237
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-window-4",
+   "label": "Tavern window",
+   "c": [
+    69.303,
+    69.701,
+    68.437,
+    70.201
+   ],
+   "inside": [
+    65.571,
+    67.237
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-door-6",
+   "label": "Tavern door",
+   "c": [
+    63.089,
+    66.938,
+    62.589,
+    66.072
+   ],
+   "inside": [
+    65.571,
+    67.237
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-door-7",
+   "label": "Tavern door",
+   "c": [
+    61.991,
+    71.036,
+    61.491,
+    70.17
+   ],
+   "inside": [
+    65.571,
+    67.237
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-double-0",
+   "label": "Chapel double",
+   "c": [
+    55.608,
+    66.789,
+    53.876,
+    67.789
+   ],
+   "inside": [
+    57.242,
+    71.62
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-2",
+   "label": "Chapel window",
+   "c": [
+    60.09,
+    70.553,
+    59.59,
+    69.687
+   ],
+   "inside": [
+    57.242,
+    71.62
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-3",
+   "label": "Chapel window",
+   "c": [
+    58.59,
+    67.954,
+    58.09,
+    67.088
+   ],
+   "inside": [
+    57.242,
+    71.62
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-4",
+   "label": "Chapel window",
+   "c": [
+    54.894,
+    73.553,
+    54.394,
+    72.687
+   ],
+   "inside": [
+    57.242,
+    71.62
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-5",
+   "label": "Chapel window",
+   "c": [
+    53.394,
+    70.954,
+    52.894,
+    70.088
+   ],
+   "inside": [
+    57.242,
+    71.62
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "chapel-1-window-6",
+   "label": "Chapel window",
+   "c": [
+    60.175,
+    75.7,
+    59.309,
+    76.2
+   ],
+   "inside": [
+    57.242,
+    71.62
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-1-door-0",
+   "label": "Priest's house door",
+   "c": [
+    73.078,
+    59.319,
+    72.212,
+    59.819
+   ],
+   "inside": [
+    73.462,
+    61.984
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-1-window-1",
+   "label": "Priest's house window",
+   "c": [
+    71.346,
+    60.319,
+    70.48,
+    60.819
+   ],
+   "inside": [
+    73.462,
+    61.984
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-1-window-2",
+   "label": "Priest's house window",
+   "c": [
+    76.31,
+    60.917,
+    75.81,
+    60.051
+   ],
+   "inside": [
+    73.462,
+    61.984
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-1-window-3",
+   "label": "Priest's house window",
+   "c": [
+    75.145,
+    63.899,
+    74.279,
+    64.399
+   ],
+   "inside": [
+    73.462,
+    61.984
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "smithy-1-double-0",
+   "label": "Smithy double",
+   "c": [
+    62.741,
+    35.117,
+    64.741,
+    35.117
+   ],
+   "inside": [
+    65.241,
+    32.617
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "smithy-1-window-2",
+   "label": "Smithy window",
+   "c": [
+    63.241,
+    30.117,
+    64.241,
+    30.117
+   ],
+   "inside": [
+    65.241,
+    32.617
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "smithy-1-window-3",
+   "label": "Smithy window",
+   "c": [
+    69.241,
+    32.117,
+    69.241,
+    33.117
+   ],
+   "inside": [
+    65.241,
+    32.617
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-2-door-0",
+   "label": "Cottage door",
+   "c": [
+    56.178,
+    35.995,
+    57.178,
+    35.995
+   ],
+   "inside": [
+    57.178,
+    33.495
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-2-window-1",
+   "label": "Cottage window",
+   "c": [
+    58.178,
+    35.995,
+    59.178,
+    35.995
+   ],
+   "inside": [
+    57.178,
+    33.495
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-2-window-2",
+   "label": "Cottage window",
+   "c": [
+    54.178,
+    32.995,
+    54.178,
+    33.995
+   ],
+   "inside": [
+    57.178,
+    33.495
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-2-window-3",
+   "label": "Cottage window",
+   "c": [
+    56.678,
+    30.995,
+    57.678,
+    30.995
+   ],
+   "inside": [
+    57.178,
+    33.495
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-3-door-0",
+   "label": "Cottage door",
+   "c": [
+    47.331,
+    36.453,
+    48.331,
+    36.453
+   ],
+   "inside": [
+    48.331,
+    33.953
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-3-window-1",
+   "label": "Cottage window",
+   "c": [
+    49.331,
+    36.453,
+    50.331,
+    36.453
+   ],
+   "inside": [
+    48.331,
+    33.953
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-3-window-2",
+   "label": "Cottage window",
+   "c": [
+    45.331,
+    33.453,
+    45.331,
+    34.453
+   ],
+   "inside": [
+    48.331,
+    33.953
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-3-window-3",
+   "label": "Cottage window",
+   "c": [
+    47.831,
+    31.453,
+    48.831,
+    31.453
+   ],
+   "inside": [
+    48.331,
+    33.953
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-4-door-0",
+   "label": "Cottage door",
+   "c": [
+    73.957,
+    21.418,
+    74.216,
+    20.452
+   ],
+   "inside": [
+    71.801,
+    19.805
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-4-window-1",
+   "label": "Cottage window",
+   "c": [
+    74.475,
+    19.486,
+    74.734,
+    18.52
+   ],
+   "inside": [
+    71.801,
+    19.805
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-4-window-2",
+   "label": "Cottage window",
+   "c": [
+    70.542,
+    22.573,
+    71.508,
+    22.832
+   ],
+   "inside": [
+    71.801,
+    19.805
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-4-window-3",
+   "label": "Cottage window",
+   "c": [
+    69.257,
+    19.641,
+    69.516,
+    18.675
+   ],
+   "inside": [
+    71.801,
+    19.805
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "storehouse-1-double-0",
+   "label": "Storehouse double",
+   "c": [
+    43.862,
+    14.493,
+    41.862,
+    14.493
+   ],
+   "inside": [
+    42.862,
+    16.993
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "storehouse-1-window-1",
+   "label": "Storehouse window",
+   "c": [
+    43.362,
+    19.493,
+    42.362,
+    19.493
+   ],
+   "inside": [
+    42.862,
+    16.993
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-5-door-0",
+   "label": "Cottage door",
+   "c": [
+    51.319,
+    15.316,
+    50.319,
+    15.316
+   ],
+   "inside": [
+    50.319,
+    17.816
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-5-window-1",
+   "label": "Cottage window",
+   "c": [
+    49.319,
+    15.316,
+    48.319,
+    15.316
+   ],
+   "inside": [
+    50.319,
+    17.816
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-5-window-2",
+   "label": "Cottage window",
+   "c": [
+    53.319,
+    18.316,
+    53.319,
+    17.316
+   ],
+   "inside": [
+    50.319,
+    17.816
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-5-window-3",
+   "label": "Cottage window",
+   "c": [
+    50.819,
+    20.316,
+    49.819,
+    20.316
+   ],
+   "inside": [
+    50.319,
+    17.816
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-6-door-0",
+   "label": "Cottage door",
+   "c": [
+    59.862,
+    15.882,
+    58.862,
+    15.882
+   ],
+   "inside": [
+    58.862,
+    18.382
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-6-window-1",
+   "label": "Cottage window",
+   "c": [
+    57.862,
+    15.882,
+    56.862,
+    15.882
+   ],
+   "inside": [
+    58.862,
+    18.382
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-6-window-2",
+   "label": "Cottage window",
+   "c": [
+    61.862,
+    18.882,
+    61.862,
+    17.882
+   ],
+   "inside": [
+    58.862,
+    18.382
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-6-window-3",
+   "label": "Cottage window",
+   "c": [
+    59.362,
+    20.882,
+    58.362,
+    20.882
+   ],
+   "inside": [
+    58.862,
+    18.382
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-7-door-0",
+   "label": "Cottage door",
+   "c": [
+    38.468,
+    24.846,
+    38.209,
+    25.812
+   ],
+   "inside": [
+    40.624,
+    26.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-7-window-1",
+   "label": "Cottage window",
+   "c": [
+    37.95,
+    26.778,
+    37.691,
+    27.744
+   ],
+   "inside": [
+    40.624,
+    26.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-7-window-2",
+   "label": "Cottage window",
+   "c": [
+    41.883,
+    23.691,
+    40.917,
+    23.432
+   ],
+   "inside": [
+    40.624,
+    26.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-7-window-3",
+   "label": "Cottage window",
+   "c": [
+    43.168,
+    26.623,
+    42.909,
+    27.589
+   ],
+   "inside": [
+    40.624,
+    26.459
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-8-door-0",
+   "label": "Cottage door",
+   "c": [
+    52.207,
+    25.481,
+    52.207,
+    24.481
+   ],
+   "inside": [
+    49.707,
+    24.481
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-8-window-1",
+   "label": "Cottage window",
+   "c": [
+    52.207,
+    23.481,
+    52.207,
+    22.481
+   ],
+   "inside": [
+    49.707,
+    24.481
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-8-window-2",
+   "label": "Cottage window",
+   "c": [
+    49.207,
+    27.481,
+    50.207,
+    27.481
+   ],
+   "inside": [
+    49.707,
+    24.481
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-8-window-3",
+   "label": "Cottage window",
+   "c": [
+    47.207,
+    24.981,
+    47.207,
+    23.981
+   ],
+   "inside": [
+    49.707,
+    24.481
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-door-0",
+   "label": "Cottage door",
+   "c": [
+    55.739,
+    23.877,
+    55.739,
+    24.877
+   ],
+   "inside": [
+    58.239,
+    24.877
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-1",
+   "label": "Cottage window",
+   "c": [
+    55.739,
+    25.877,
+    55.739,
+    26.877
+   ],
+   "inside": [
+    58.239,
+    24.877
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-2",
+   "label": "Cottage window",
+   "c": [
+    58.739,
+    21.877,
+    57.739,
+    21.877
+   ],
+   "inside": [
+    58.239,
+    24.877
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-3",
+   "label": "Cottage window",
+   "c": [
+    60.739,
+    24.377,
+    60.739,
+    25.377
+   ],
+   "inside": [
+    58.239,
+    24.877
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-10-door-0",
+   "label": "Cottage door",
+   "c": [
+    79.856,
+    69.849,
+    80.356,
+    68.983
+   ],
+   "inside": [
+    78.191,
+    67.733
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-10-window-1",
+   "label": "Cottage window",
+   "c": [
+    80.856,
+    68.117,
+    81.356,
+    67.251
+   ],
+   "inside": [
+    78.191,
+    67.733
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-10-window-2",
+   "label": "Cottage window",
+   "c": [
+    76.257,
+    70.081,
+    77.124,
+    70.581
+   ],
+   "inside": [
+    78.191,
+    67.733
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-10-window-3",
+   "label": "Cottage window",
+   "c": [
+    75.775,
+    66.916,
+    76.275,
+    66.05
+   ],
+   "inside": [
+    78.191,
+    67.733
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-11-door-0",
+   "label": "Cottage door",
+   "c": [
+    75.495,
+    76.269,
+    75.995,
+    75.403
+   ],
+   "inside": [
+    73.829,
+    74.153
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-11-window-1",
+   "label": "Cottage window",
+   "c": [
+    76.495,
+    74.537,
+    76.995,
+    73.671
+   ],
+   "inside": [
+    73.829,
+    74.153
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-11-window-2",
+   "label": "Cottage window",
+   "c": [
+    71.896,
+    76.501,
+    72.762,
+    77.001
+   ],
+   "inside": [
+    73.829,
+    74.153
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-11-window-3",
+   "label": "Cottage window",
+   "c": [
+    71.414,
+    73.336,
+    71.914,
+    72.47
+   ],
+   "inside": [
+    73.829,
+    74.153
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-door-0",
+   "label": "House and shop (draper) door",
+   "c": [
+    70.959,
+    83.149,
+    71.459,
+    82.283
+   ],
+   "inside": [
+    68.678,
+    80.1
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-window-1",
+   "label": "House and shop (draper) window",
+   "c": [
+    72.209,
+    80.984,
+    72.709,
+    80.117
+   ],
+   "inside": [
+    68.678,
+    80.1
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-window-3",
+   "label": "House and shop (draper) window",
+   "c": [
+    65.013,
+    81.448,
+    65.879,
+    81.948
+   ],
+   "inside": [
+    68.678,
+    80.1
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-window-4",
+   "label": "House and shop (draper) window",
+   "c": [
+    71.044,
+    78.001,
+    71.91,
+    78.501
+   ],
+   "inside": [
+    68.678,
+    80.1
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-1-window-5",
+   "label": "House and shop (draper) window",
+   "c": [
+    64.897,
+    79.649,
+    65.397,
+    78.783
+   ],
+   "inside": [
+    68.678,
+    80.1
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-1-door-0",
+   "label": "Workshop (carpenter) door",
+   "c": [
+    43.126,
+    44.639,
+    43.126,
+    43.639
+   ],
+   "inside": [
+    40.626,
+    43.139
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-1-window-1",
+   "label": "Workshop (carpenter) window",
+   "c": [
+    43.126,
+    42.139,
+    43.126,
+    41.139
+   ],
+   "inside": [
+    40.626,
+    43.139
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-1-window-2",
+   "label": "Workshop (carpenter) window",
+   "c": [
+    40.126,
+    46.639,
+    41.126,
+    46.639
+   ],
+   "inside": [
+    40.626,
+    43.139
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-1-window-3",
+   "label": "Workshop (carpenter) window",
+   "c": [
+    38.126,
+    43.639,
+    38.126,
+    42.639
+   ],
+   "inside": [
+    40.626,
+    43.139
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-12-door-0",
+   "label": "Cottage door",
+   "c": [
+    43.414,
+    52.578,
+    43.414,
+    51.578
+   ],
+   "inside": [
+    40.914,
+    51.578
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-12-window-1",
+   "label": "Cottage window",
+   "c": [
+    43.414,
+    50.578,
+    43.414,
+    49.578
+   ],
+   "inside": [
+    40.914,
+    51.578
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-12-window-2",
+   "label": "Cottage window",
+   "c": [
+    40.414,
+    54.578,
+    41.414,
+    54.578
+   ],
+   "inside": [
+    40.914,
+    51.578
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-12-window-3",
+   "label": "Cottage window",
+   "c": [
+    38.414,
+    52.078,
+    38.414,
+    51.078
+   ],
+   "inside": [
+    40.914,
+    51.578
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-13-door-0",
+   "label": "Cottage door",
+   "c": [
+    43.524,
+    60.476,
+    43.524,
+    59.476
+   ],
+   "inside": [
+    41.024,
+    59.476
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-13-window-1",
+   "label": "Cottage window",
+   "c": [
+    43.524,
+    58.476,
+    43.524,
+    57.476
+   ],
+   "inside": [
+    41.024,
+    59.476
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-13-window-2",
+   "label": "Cottage window",
+   "c": [
+    40.524,
+    62.476,
+    41.524,
+    62.476
+   ],
+   "inside": [
+    41.024,
+    59.476
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-13-window-3",
+   "label": "Cottage window",
+   "c": [
+    38.524,
+    59.976,
+    38.524,
+    58.976
+   ],
+   "inside": [
+    41.024,
+    59.476
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-2-door-0",
+   "label": "Workshop (cooper) door",
+   "c": [
+    35.228,
+    70.628,
+    36.094,
+    70.128
+   ],
+   "inside": [
+    35.277,
+    67.713
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-2-window-1",
+   "label": "Workshop (cooper) window",
+   "c": [
+    37.393,
+    69.378,
+    38.259,
+    68.878
+   ],
+   "inside": [
+    35.277,
+    67.713
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-2-window-2",
+   "label": "Workshop (cooper) window",
+   "c": [
+    31.995,
+    69.03,
+    32.495,
+    69.896
+   ],
+   "inside": [
+    35.277,
+    67.713
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-2-window-3",
+   "label": "Workshop (cooper) window",
+   "c": [
+    33.594,
+    65.798,
+    34.46,
+    65.298
+   ],
+   "inside": [
+    35.277,
+    67.713
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-14-door-0",
+   "label": "Cottage door",
+   "c": [
+    27.195,
+    62.816,
+    27.695,
+    63.682
+   ],
+   "inside": [
+    29.86,
+    62.432
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-14-window-1",
+   "label": "Cottage window",
+   "c": [
+    28.195,
+    64.548,
+    28.695,
+    65.414
+   ],
+   "inside": [
+    29.86,
+    62.432
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-14-window-2",
+   "label": "Cottage window",
+   "c": [
+    28.793,
+    59.584,
+    27.927,
+    60.084
+   ],
+   "inside": [
+    29.86,
+    62.432
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-14-window-3",
+   "label": "Cottage window",
+   "c": [
+    31.775,
+    60.749,
+    32.275,
+    61.615
+   ],
+   "inside": [
+    29.86,
+    62.432
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-15-door-0",
+   "label": "Cottage door",
+   "c": [
+    23.194,
+    56.146,
+    23.694,
+    57.012
+   ],
+   "inside": [
+    25.859,
+    55.762
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-15-window-1",
+   "label": "Cottage window",
+   "c": [
+    24.194,
+    57.878,
+    24.694,
+    58.745
+   ],
+   "inside": [
+    25.859,
+    55.762
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-15-window-2",
+   "label": "Cottage window",
+   "c": [
+    24.792,
+    52.914,
+    23.926,
+    53.414
+   ],
+   "inside": [
+    25.859,
+    55.762
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-15-window-3",
+   "label": "Cottage window",
+   "c": [
+    27.774,
+    54.079,
+    28.274,
+    54.945
+   ],
+   "inside": [
+    25.859,
+    55.762
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-16-door-0",
+   "label": "Cottage door",
+   "c": [
+    19.365,
+    49.292,
+    19.865,
+    50.158
+   ],
+   "inside": [
+    22.03,
+    48.908
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-16-window-1",
+   "label": "Cottage window",
+   "c": [
+    20.365,
+    51.024,
+    20.865,
+    51.89
+   ],
+   "inside": [
+    22.03,
+    48.908
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-16-window-2",
+   "label": "Cottage window",
+   "c": [
+    20.963,
+    46.06,
+    20.097,
+    46.56
+   ],
+   "inside": [
+    22.03,
+    48.908
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-16-window-3",
+   "label": "Cottage window",
+   "c": [
+    23.945,
+    47.225,
+    24.445,
+    48.091
+   ],
+   "inside": [
+    22.03,
+    48.908
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-door-0",
+   "label": "Cottage door",
+   "c": [
+    25.214,
+    37.714,
+    24.348,
+    38.214
+   ],
+   "inside": [
+    25.598,
+    40.379
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-window-1",
+   "label": "Cottage window",
+   "c": [
+    23.482,
+    38.714,
+    22.616,
+    39.214
+   ],
+   "inside": [
+    25.598,
+    40.379
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-window-2",
+   "label": "Cottage window",
+   "c": [
+    28.446,
+    39.312,
+    27.946,
+    38.446
+   ],
+   "inside": [
+    25.598,
+    40.379
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-window-3",
+   "label": "Cottage window",
+   "c": [
+    27.281,
+    42.294,
+    26.415,
+    42.794
+   ],
+   "inside": [
+    25.598,
+    40.379
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-18-door-0",
+   "label": "Cottage door",
+   "c": [
+    32.204,
+    34.121,
+    31.338,
+    34.621
+   ],
+   "inside": [
+    32.588,
+    36.786
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-18-window-1",
+   "label": "Cottage window",
+   "c": [
+    30.472,
+    35.121,
+    29.606,
+    35.621
+   ],
+   "inside": [
+    32.588,
+    36.786
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-18-window-2",
+   "label": "Cottage window",
+   "c": [
+    35.436,
+    35.719,
+    34.936,
+    34.853
+   ],
+   "inside": [
+    32.588,
+    36.786
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-18-window-3",
+   "label": "Cottage window",
+   "c": [
+    34.271,
+    38.701,
+    33.405,
+    39.201
+   ],
+   "inside": [
+    32.588,
+    36.786
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-19-door-0",
+   "label": "Cottage door",
+   "c": [
+    75.223,
+    33.684,
+    74.964,
+    34.65
+   ],
+   "inside": [
+    77.379,
+    35.297
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-19-window-1",
+   "label": "Cottage window",
+   "c": [
+    74.705,
+    35.616,
+    74.447,
+    36.582
+   ],
+   "inside": [
+    77.379,
+    35.297
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-19-window-2",
+   "label": "Cottage window",
+   "c": [
+    78.638,
+    32.529,
+    77.673,
+    32.27
+   ],
+   "inside": [
+    77.379,
+    35.297
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-19-window-3",
+   "label": "Cottage window",
+   "c": [
+    79.923,
+    35.462,
+    79.664,
+    36.427
+   ],
+   "inside": [
+    77.379,
+    35.297
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-20-door-0",
+   "label": "Cottage door",
+   "c": [
+    77.949,
+    25.788,
+    77.69,
+    26.754
+   ],
+   "inside": [
+    80.105,
+    27.401
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-20-window-1",
+   "label": "Cottage window",
+   "c": [
+    77.431,
+    27.72,
+    77.173,
+    28.686
+   ],
+   "inside": [
+    80.105,
+    27.401
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-20-window-2",
+   "label": "Cottage window",
+   "c": [
+    81.365,
+    24.633,
+    80.399,
+    24.374
+   ],
+   "inside": [
+    80.105,
+    27.401
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-20-window-3",
+   "label": "Cottage window",
+   "c": [
+    82.649,
+    27.565,
+    82.39,
+    28.531
+   ],
+   "inside": [
+    80.105,
+    27.401
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-1-door-0",
+   "label": "Farmhouse door",
+   "c": [
+    75.813,
+    49.058,
+    76.072,
+    50.024
+   ],
+   "inside": [
+    78.228,
+    48.411
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-1-door-1",
+   "label": "Farmhouse door",
+   "c": [
+    80.643,
+    47.764,
+    80.902,
+    48.73
+   ],
+   "inside": [
+    78.228,
+    48.411
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-1-double-4",
+   "label": "Farmhouse double",
+   "c": [
+    76.46,
+    51.473,
+    76.978,
+    53.405
+   ],
+   "inside": [
+    78.228,
+    48.411
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-1-window-5",
+   "label": "Farmhouse window",
+   "c": [
+    74.519,
+    44.229,
+    74.778,
+    45.195
+   ],
+   "inside": [
+    78.228,
+    48.411
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-1-window-6",
+   "label": "Farmhouse window",
+   "c": [
+    77.158,
+    42.486,
+    76.192,
+    42.745
+   ],
+   "inside": [
+    78.228,
+    48.411
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-1-window-7",
+   "label": "Farmhouse window",
+   "c": [
+    79.608,
+    43.901,
+    79.866,
+    44.867
+   ],
+   "inside": [
+    78.228,
+    48.411
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-1-window-8",
+   "label": "Farmhouse window",
+   "c": [
+    81.549,
+    51.145,
+    81.808,
+    52.111
+   ],
+   "inside": [
+    78.228,
+    48.411
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-door-0",
+   "label": "Farmhouse door",
+   "c": [
+    91.796,
+    27.056,
+    90.93,
+    26.556
+   ],
+   "inside": [
+    90.546,
+    29.221
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-door-1",
+   "label": "Farmhouse door",
+   "c": [
+    89.296,
+    31.386,
+    88.43,
+    30.886
+   ],
+   "inside": [
+    90.546,
+    29.221
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-double-4",
+   "label": "Farmhouse double",
+   "c": [
+    89.631,
+    25.806,
+    87.899,
+    24.806
+   ],
+   "inside": [
+    90.546,
+    29.221
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-window-5",
+   "label": "Farmhouse window",
+   "c": [
+    96.126,
+    29.556,
+    95.26,
+    29.056
+   ],
+   "inside": [
+    90.546,
+    29.221
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-window-6",
+   "label": "Farmhouse window",
+   "c": [
+    95.492,
+    32.654,
+    95.992,
+    31.788
+   ],
+   "inside": [
+    90.546,
+    29.221
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-window-7",
+   "label": "Farmhouse window",
+   "c": [
+    92.76,
+    33.386,
+    91.894,
+    32.886
+   ],
+   "inside": [
+    90.546,
+    29.221
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-2-window-8",
+   "label": "Farmhouse window",
+   "c": [
+    86.265,
+    29.636,
+    85.399,
+    29.136
+   ],
+   "inside": [
+    90.546,
+    29.221
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-21-door-0",
+   "label": "Cottage door",
+   "c": [
+    102.143,
+    33.54,
+    101.277,
+    33.04
+   ],
+   "inside": [
+    100.027,
+    35.205
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-21-window-1",
+   "label": "Cottage window",
+   "c": [
+    100.411,
+    32.54,
+    99.545,
+    32.04
+   ],
+   "inside": [
+    100.027,
+    35.205
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-21-window-2",
+   "label": "Cottage window",
+   "c": [
+    102.375,
+    37.138,
+    102.875,
+    36.272
+   ],
+   "inside": [
+    100.027,
+    35.205
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-21-window-3",
+   "label": "Cottage window",
+   "c": [
+    99.21,
+    37.62,
+    98.344,
+    37.12
+   ],
+   "inside": [
+    100.027,
+    35.205
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-3-door-0",
+   "label": "Farmhouse door",
+   "c": [
+    104.289,
+    47.598,
+    104.548,
+    46.632
+   ],
+   "inside": [
+    101.874,
+    46.951
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-3-door-1",
+   "label": "Farmhouse door",
+   "c": [
+    99.459,
+    46.304,
+    99.718,
+    45.338
+   ],
+   "inside": [
+    101.874,
+    46.951
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-3-double-4",
+   "label": "Farmhouse double",
+   "c": [
+    104.936,
+    45.184,
+    105.454,
+    43.252
+   ],
+   "inside": [
+    101.874,
+    46.951
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-3-window-5",
+   "label": "Farmhouse window",
+   "c": [
+    102.995,
+    52.428,
+    103.254,
+    51.462
+   ],
+   "inside": [
+    101.874,
+    46.951
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-3-window-6",
+   "label": "Farmhouse window",
+   "c": [
+    99.838,
+    52.617,
+    100.804,
+    52.876
+   ],
+   "inside": [
+    101.874,
+    46.951
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-3-window-7",
+   "label": "Farmhouse window",
+   "c": [
+    98.424,
+    50.168,
+    98.683,
+    49.202
+   ],
+   "inside": [
+    101.874,
+    46.951
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-3-window-8",
+   "label": "Farmhouse window",
+   "c": [
+    100.365,
+    42.924,
+    100.624,
+    41.958
+   ],
+   "inside": [
+    101.874,
+    46.951
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-22-door-0",
+   "label": "Cottage door",
+   "c": [
+    101.5,
+    59.287,
+    101.759,
+    58.322
+   ],
+   "inside": [
+    99.344,
+    57.675
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-22-window-1",
+   "label": "Cottage window",
+   "c": [
+    102.017,
+    57.356,
+    102.276,
+    56.39
+   ],
+   "inside": [
+    99.344,
+    57.675
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-22-window-2",
+   "label": "Cottage window",
+   "c": [
+    98.084,
+    60.443,
+    99.05,
+    60.702
+   ],
+   "inside": [
+    99.344,
+    57.675
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-22-window-3",
+   "label": "Cottage window",
+   "c": [
+    96.799,
+    57.51,
+    97.058,
+    56.545
+   ],
+   "inside": [
+    99.344,
+    57.675
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-23-door-0",
+   "label": "Cottage door",
+   "c": [
+    90.284,
+    63.134,
+    91.284,
+    63.134
+   ],
+   "inside": [
+    91.284,
+    60.634
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-23-window-1",
+   "label": "Cottage window",
+   "c": [
+    92.284,
+    63.134,
+    93.284,
+    63.134
+   ],
+   "inside": [
+    91.284,
+    60.634
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-23-window-2",
+   "label": "Cottage window",
+   "c": [
+    88.284,
+    60.134,
+    88.284,
+    61.134
+   ],
+   "inside": [
+    91.284,
+    60.634
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-23-window-3",
+   "label": "Cottage window",
+   "c": [
+    90.784,
+    58.134,
+    91.784,
+    58.134
+   ],
+   "inside": [
+    91.284,
+    60.634
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-4-door-0",
+   "label": "Farmhouse door",
+   "c": [
+    27.523,
+    85.302,
+    26.815,
+    86.009
+   ],
+   "inside": [
+    29.29,
+    87.069
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-4-door-1",
+   "label": "Farmhouse door",
+   "c": [
+    31.058,
+    88.837,
+    30.351,
+    89.544
+   ],
+   "inside": [
+    29.29,
+    87.069
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-4-double-4",
+   "label": "Farmhouse double",
+   "c": [
+    25.755,
+    87.069,
+    24.341,
+    88.484
+   ],
+   "inside": [
+    29.29,
+    87.069
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-4-window-5",
+   "label": "Farmhouse window",
+   "c": [
+    31.058,
+    81.766,
+    30.351,
+    82.473
+   ],
+   "inside": [
+    29.29,
+    87.069
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-4-window-6",
+   "label": "Farmhouse window",
+   "c": [
+    33.887,
+    83.18,
+    33.179,
+    82.473
+   ],
+   "inside": [
+    29.29,
+    87.069
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-4-window-7",
+   "label": "Farmhouse window",
+   "c": [
+    33.887,
+    86.009,
+    33.179,
+    86.716
+   ],
+   "inside": [
+    29.29,
+    87.069
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "byre-house-4-window-8",
+   "label": "Farmhouse window",
+   "c": [
+    28.583,
+    91.312,
+    27.876,
+    92.019
+   ],
+   "inside": [
+    29.29,
+    87.069
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  }
+ ],
+ "features": [
+  {
+   "id": "tavern-1-kitchen-0",
+   "label": "Oven (Kitchen)",
+   "rect": [
+    62.799,
+    71.063,
+    1.6,
+    1.6
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "tavern-1-cellar-store-5",
+   "label": "Chest (Cellar store)",
+   "rect": [
+    61.021,
+    68.427,
+    0.9,
+    0.9
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "chapel-1-chancel-3",
+   "label": "Chest (Chancel)",
+   "rect": [
+    56.925,
+    76.139,
+    0.9,
+    0.9
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-1-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    75.881,
+    61.9,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-1-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    70.303,
+    61.018,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-1-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    71.613,
+    63.287,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-1-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    72.729,
+    63.72,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "smithy-1-forge-0",
+   "label": "Hearth (Forge)",
+   "rect": [
+    64.061,
+    30.297,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "smithy-1-forge-6",
+   "label": "Chest (Forge)",
+   "rect": [
+    61.421,
+    30.297,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "smithy-1-smiths-room-0",
+   "label": "Box bed (Smith's room)",
+   "rect": [
+    68.061,
+    30.297,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-2-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    54.358,
+    31.175,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-2-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    58.998,
+    31.175,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-2-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    58.998,
+    33.175,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-2-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    57.998,
+    31.175,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-3-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    45.511,
+    31.633,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-3-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    50.151,
+    34.253,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-3-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    50.151,
+    32.253,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-3-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    49.151,
+    35.273,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-4-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    68.943,
+    21.075,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-4-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    73.157,
+    16.9,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-4-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    70.627,
+    16.222,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-4-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    73.401,
+    18.501,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 15.0
+  },
+  {
+   "id": "storehouse-1-store-0",
+   "label": "Crates (Store)",
+   "rect": [
+    44.682,
+    14.673,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "storehouse-1-store-1",
+   "label": "Crates (Store)",
+   "rect": [
+    40.042,
+    15.673,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "storehouse-1-store-2",
+   "label": "Crates (Store)",
+   "rect": [
+    40.042,
+    14.673,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "storehouse-1-store-3",
+   "label": "Crates (Store)",
+   "rect": [
+    40.042,
+    16.673,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-5-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    52.139,
+    19.136,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-5-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    47.499,
+    15.516,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-5-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    47.499,
+    17.516,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-5-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    48.499,
+    15.496,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-6-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    60.682,
+    19.702,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-6-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    56.042,
+    16.082,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-6-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    56.042,
+    18.702,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-6-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    57.042,
+    19.702,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-7-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    42.482,
+    24.189,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 105.0
+  },
+  {
+   "id": "cottage-7-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    38.268,
+    27.364,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 105.0
+  },
+  {
+   "id": "cottage-7-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    40.199,
+    27.881,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 105.0
+  },
+  {
+   "id": "cottage-7-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    38.024,
+    26.763,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 105.0
+  },
+  {
+   "id": "cottage-8-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    47.387,
+    26.301,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-8-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    47.887,
+    21.161,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-8-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    50.507,
+    21.161,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-8-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    47.387,
+    22.661,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-9-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    59.559,
+    22.057,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "cottage-9-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    59.059,
+    26.197,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "cottage-9-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    56.439,
+    26.197,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "cottage-9-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    59.559,
+    25.697,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-10-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    74.954,
+    68.332,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 30.0
+  },
+  {
+   "id": "cottage-10-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    79.994,
+    65.384,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "cottage-10-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    77.707,
+    64.064,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "cottage-10-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    79.927,
+    67.0,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 30.0
+  },
+  {
+   "id": "cottage-11-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    70.593,
+    74.752,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 30.0
+  },
+  {
+   "id": "cottage-11-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    73.346,
+    70.484,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "cottage-11-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    75.615,
+    71.794,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "cottage-11-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    72.413,
+    71.6,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 30.0
+  },
+  {
+   "id": "townhouse-1-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    66.578,
+    76.363,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 30.0
+  },
+  {
+   "id": "townhouse-1-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    65.895,
+    77.912,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "townhouse-1-back-room-2",
+   "label": "Hearth (Back room)",
+   "rect": [
+    64.575,
+    80.199,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "townhouse-1-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    69.46,
+    83.019,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 30.0
+  },
+  {
+   "id": "townhouse-1-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    67.174,
+    81.699,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 30.0
+  },
+  {
+   "id": "workshop-1-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    41.946,
+    39.819,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "workshop-1-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    41.946,
+    45.459,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "workshop-1-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    40.446,
+    39.319,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "workshop-1-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    41.946,
+    40.819,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "workshop-1-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    40.056,
+    45.459,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-12-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    38.594,
+    53.398,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-12-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    41.734,
+    48.258,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-12-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    39.734,
+    48.258,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-12-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    42.234,
+    49.758,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-13-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    38.704,
+    61.296,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-13-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    39.204,
+    56.156,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-13-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    41.204,
+    56.156,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "cottage-13-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    38.704,
+    57.676,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "workshop-2-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    38.129,
+    67.379,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "workshop-2-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    33.244,
+    70.199,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "workshop-2-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    37.059,
+    65.026,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "workshop-2-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    36.568,
+    66.675,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "workshop-2-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    32.424,
+    68.779,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-14-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    29.776,
+    59.013,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-14-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    29.394,
+    64.091,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-14-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    31.663,
+    62.781,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-14-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    31.596,
+    62.165,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-15-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    25.775,
+    52.343,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-15-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    25.393,
+    57.422,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-15-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    27.662,
+    56.112,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-15-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    24.443,
+    57.316,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-16-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    21.946,
+    45.489,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-16-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    21.547,
+    50.577,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-16-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    23.833,
+    49.257,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-16-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    20.614,
+    50.461,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-17-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    28.017,
+    40.295,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-17-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    23.749,
+    41.682,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-17-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    22.749,
+    39.95,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-17-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    24.865,
+    42.115,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "cottage-18-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    35.007,
+    36.702,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-18-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    30.738,
+    38.089,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-18-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    29.738,
+    36.357,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-18-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    30.052,
+    35.36,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "cottage-19-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    79.238,
+    33.028,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 195.0
+  },
+  {
+   "id": "cottage-19-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    75.023,
+    36.202,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 105.0
+  },
+  {
+   "id": "cottage-19-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    77.554,
+    36.88,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 105.0
+  },
+  {
+   "id": "cottage-19-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    74.779,
+    35.601,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 195.0
+  },
+  {
+   "id": "cottage-20-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    81.964,
+    25.131,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 195.0
+  },
+  {
+   "id": "cottage-20-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    77.749,
+    28.306,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 105.0
+  },
+  {
+   "id": "cottage-20-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    80.28,
+    28.984,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 105.0
+  },
+  {
+   "id": "cottage-20-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    77.505,
+    27.705,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 195.0
+  },
+  {
+   "id": "byre-house-1-living-room-0",
+   "label": "Oven (Living room)",
+   "rect": [
+    75.389,
+    45.647,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 165.0
+  },
+  {
+   "id": "byre-house-1-living-room-2",
+   "label": "Box bed (Living room)",
+   "rect": [
+    75.076,
+    42.614,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 75.0
+  },
+  {
+   "id": "byre-house-1-living-room-3",
+   "label": "Box bed (Living room)",
+   "rect": [
+    77.008,
+    42.097,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 75.0
+  },
+  {
+   "id": "byre-house-1-living-room-4",
+   "label": "Chest (Living room)",
+   "rect": [
+    74.852,
+    44.21,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 165.0
+  },
+  {
+   "id": "byre-house-2-living-room-0",
+   "label": "Oven (Living room)",
+   "rect": [
+    92.111,
+    28.178,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "byre-house-2-living-room-2",
+   "label": "Box bed (Living room)",
+   "rect": [
+    95.313,
+    29.738,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "byre-house-2-living-room-3",
+   "label": "Box bed (Living room)",
+   "rect": [
+    94.313,
+    31.47,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "byre-house-2-living-room-4",
+   "label": "Chest (Living room)",
+   "rect": [
+    94.697,
+    29.305,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "cottage-21-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    100.627,
+    37.441,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "cottage-21-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    96.858,
+    34.188,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "cottage-21-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    98.168,
+    31.919,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "cottage-21-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    97.474,
+    35.621,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "byre-house-3-living-room-0",
+   "label": "Oven (Living room)",
+   "rect": [
+    101.561,
+    48.413,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "byre-house-3-living-room-2",
+   "label": "Box bed (Living room)",
+   "rect": [
+    101.253,
+    51.427,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "byre-house-3-living-room-3",
+   "label": "Box bed (Living room)",
+   "rect": [
+    98.722,
+    50.748,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "byre-house-3-living-room-4",
+   "label": "Chest (Living room)",
+   "rect": [
+    102.014,
+    51.095,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-22-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    96.485,
+    58.944,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-22-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    98.169,
+    54.092,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-22-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    100.7,
+    54.77,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-22-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    100.943,
+    56.371,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 15.0
+  },
+  {
+   "id": "cottage-23-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    88.464,
+    58.314,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-23-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    93.104,
+    58.314,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-23-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    93.104,
+    60.314,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-23-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    92.104,
+    58.314,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "byre-house-4-living-room-0",
+   "label": "Oven (Living room)",
+   "rect": [
+    28.927,
+    83.594,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 135.0
+  },
+  {
+   "id": "byre-house-4-living-room-2",
+   "label": "Box bed (Living room)",
+   "rect": [
+    31.633,
+    81.388,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 135.0
+  },
+  {
+   "id": "byre-house-4-living-room-3",
+   "label": "Box bed (Living room)",
+   "rect": [
+    33.486,
+    83.241,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 135.0
+  },
+  {
+   "id": "byre-house-4-living-room-4",
+   "label": "Chest (Living room)",
+   "rect": [
+    30.558,
+    82.228,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 135.0
+  },
+  {
+   "id": "well",
+   "label": "Well",
+   "rect": [
+    57.86,
+    50.106,
+    1,
+    1
+   ],
+   "flags": {
+    "climb": true,
+    "climbKind": "rope",
+    "height": 30,
+    "depth": 30,
+    "title": "Down the well on the bucket rope"
+   }
+  }
+ ],
+ "regions": [
+  {
+   "id": "tavern-1",
+   "label": "Tavern",
+   "rect": [
+    59.241,
+    61.273,
+    12.66,
+    11.928
+   ],
+   "points": [
+    71.901,
+    68.201,
+    63.241,
+    73.201,
+    59.241,
+    66.273,
+    67.901,
+    61.273
+   ],
+   "place": {
+    "kind": "tavern"
+   }
+  },
+  {
+   "id": "chapel-1",
+   "label": "Chapel",
+   "rect": [
+    52.144,
+    65.789,
+    10.196,
+    11.66
+   ],
+   "points": [
+    62.34,
+    74.45,
+    57.144,
+    77.45,
+    52.144,
+    68.789,
+    57.34,
+    65.789
+   ],
+   "place": {
+    "kind": "church"
+   }
+  },
+  {
+   "id": "cottage-1",
+   "label": "Priest's house",
+   "rect": [
+    69.614,
+    58.319,
+    7.696,
+    7.33
+   ],
+   "points": [
+    77.31,
+    62.649,
+    72.114,
+    65.649,
+    69.614,
+    61.319,
+    74.81,
+    58.319
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "smithy-1",
+   "label": "Smithy",
+   "rect": [
+    61.241,
+    30.117,
+    8.0,
+    5.0
+   ],
+   "points": [
+    61.241,
+    30.117,
+    69.241,
+    30.117,
+    69.241,
+    35.117,
+    61.241,
+    35.117
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "cottage-2",
+   "label": "Cottage",
+   "rect": [
+    54.178,
+    30.995,
+    6.0,
+    5.0
+   ],
+   "points": [
+    54.178,
+    30.995,
+    60.178,
+    30.995,
+    60.178,
+    35.995,
+    54.178,
+    35.995
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-3",
+   "label": "Cottage",
+   "rect": [
+    45.331,
+    31.453,
+    6.0,
+    5.0
+   ],
+   "points": [
+    45.331,
+    31.453,
+    51.331,
+    31.453,
+    51.331,
+    36.453,
+    45.331,
+    36.453
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-4",
+   "label": "Cottage",
+   "rect": [
+    68.61,
+    16.26,
+    6.383,
+    7.09
+   ],
+   "points": [
+    68.61,
+    22.056,
+    70.163,
+    16.26,
+    74.992,
+    17.554,
+    73.44,
+    23.35
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "storehouse-1",
+   "label": "Storehouse",
+   "rect": [
+    39.862,
+    14.493,
+    6.0,
+    5.0
+   ],
+   "points": [
+    45.862,
+    19.493,
+    39.862,
+    19.493,
+    39.862,
+    14.493,
+    45.862,
+    14.493
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "cottage-5",
+   "label": "Cottage",
+   "rect": [
+    47.319,
+    15.316,
+    6.0,
+    5.0
+   ],
+   "points": [
+    53.319,
+    20.316,
+    47.319,
+    20.316,
+    47.319,
+    15.316,
+    53.319,
+    15.316
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-6",
+   "label": "Cottage",
+   "rect": [
+    55.862,
+    15.882,
+    6.0,
+    5.0
+   ],
+   "points": [
+    61.862,
+    20.882,
+    55.862,
+    20.882,
+    55.862,
+    15.882,
+    61.862,
+    15.882
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-7",
+   "label": "Cottage",
+   "rect": [
+    37.433,
+    22.914,
+    6.383,
+    7.09
+   ],
+   "points": [
+    43.815,
+    24.208,
+    42.262,
+    30.004,
+    37.433,
+    28.71,
+    38.985,
+    22.914
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-8",
+   "label": "Cottage",
+   "rect": [
+    47.207,
+    21.481,
+    5.0,
+    6.0
+   ],
+   "points": [
+    47.207,
+    27.481,
+    47.207,
+    21.481,
+    52.207,
+    21.481,
+    52.207,
+    27.481
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-9",
+   "label": "Cottage",
+   "rect": [
+    55.739,
+    21.877,
+    5.0,
+    6.0
+   ],
+   "points": [
+    60.739,
+    21.877,
+    60.739,
+    27.877,
+    55.739,
+    27.877,
+    55.739,
+    21.877
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-10",
+   "label": "Cottage",
+   "rect": [
+    74.525,
+    63.885,
+    7.33,
+    7.696
+   ],
+   "points": [
+    74.525,
+    69.081,
+    77.525,
+    63.885,
+    81.856,
+    66.385,
+    78.856,
+    71.581
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-11",
+   "label": "Cottage",
+   "rect": [
+    70.164,
+    70.305,
+    7.33,
+    7.696
+   ],
+   "points": [
+    70.164,
+    75.501,
+    73.164,
+    70.305,
+    77.495,
+    72.805,
+    74.495,
+    78.001
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "townhouse-1",
+   "label": "House and shop (draper)",
+   "rect": [
+    64.147,
+    75.751,
+    9.062,
+    8.696
+   ],
+   "points": [
+    64.147,
+    80.948,
+    67.147,
+    75.751,
+    73.209,
+    79.251,
+    70.209,
+    84.448
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "workshop-1",
+   "label": "Workshop (carpenter)",
+   "rect": [
+    38.126,
+    39.639,
+    5.0,
+    7.0
+   ],
+   "points": [
+    38.126,
+    46.639,
+    38.126,
+    39.639,
+    43.126,
+    39.639,
+    43.126,
+    46.639
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "cottage-12",
+   "label": "Cottage",
+   "rect": [
+    38.414,
+    48.578,
+    5.0,
+    6.0
+   ],
+   "points": [
+    38.414,
+    54.578,
+    38.414,
+    48.578,
+    43.414,
+    48.578,
+    43.414,
+    54.578
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-13",
+   "label": "Cottage",
+   "rect": [
+    38.524,
+    56.476,
+    5.0,
+    6.0
+   ],
+   "points": [
+    38.524,
+    62.476,
+    38.524,
+    56.476,
+    43.524,
+    56.476,
+    43.524,
+    62.476
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "workshop-2",
+   "label": "Workshop (cooper)",
+   "rect": [
+    30.995,
+    63.798,
+    8.562,
+    7.83
+   ],
+   "points": [
+    30.995,
+    67.298,
+    37.058,
+    63.798,
+    39.558,
+    68.128,
+    33.495,
+    71.628
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "cottage-14",
+   "label": "Cottage",
+   "rect": [
+    26.195,
+    58.584,
+    7.33,
+    7.696
+   ],
+   "points": [
+    30.525,
+    58.584,
+    33.525,
+    63.78,
+    29.195,
+    66.28,
+    26.195,
+    61.084
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-15",
+   "label": "Cottage",
+   "rect": [
+    22.194,
+    51.914,
+    7.33,
+    7.696
+   ],
+   "points": [
+    26.524,
+    51.914,
+    29.524,
+    57.111,
+    25.194,
+    59.611,
+    22.194,
+    54.414
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-16",
+   "label": "Cottage",
+   "rect": [
+    18.365,
+    45.06,
+    7.33,
+    7.696
+   ],
+   "points": [
+    22.695,
+    45.06,
+    25.695,
+    50.256,
+    21.365,
+    52.756,
+    18.365,
+    47.56
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-17",
+   "label": "Cottage",
+   "rect": [
+    21.75,
+    36.714,
+    7.696,
+    7.33
+   ],
+   "points": [
+    29.446,
+    41.044,
+    24.25,
+    44.044,
+    21.75,
+    39.714,
+    26.946,
+    36.714
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-18",
+   "label": "Cottage",
+   "rect": [
+    28.74,
+    33.121,
+    7.696,
+    7.33
+   ],
+   "points": [
+    36.436,
+    37.451,
+    31.24,
+    40.451,
+    28.74,
+    36.121,
+    33.936,
+    33.121
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-19",
+   "label": "Cottage",
+   "rect": [
+    74.188,
+    31.753,
+    6.383,
+    7.09
+   ],
+   "points": [
+    80.57,
+    33.047,
+    79.017,
+    38.842,
+    74.188,
+    37.548,
+    75.741,
+    31.753
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-20",
+   "label": "Cottage",
+   "rect": [
+    76.914,
+    23.856,
+    6.383,
+    7.09
+   ],
+   "points": [
+    83.296,
+    25.15,
+    81.743,
+    30.946,
+    76.914,
+    29.652,
+    78.467,
+    23.856
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "byre-house-1",
+   "label": "Farmhouse",
+   "rect": [
+    74.26,
+    41.969,
+    7.935,
+    12.885
+   ],
+   "points": [
+    79.09,
+    41.969,
+    82.196,
+    53.56,
+    77.366,
+    54.854,
+    74.26,
+    43.263
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "byre-house-2",
+   "label": "Farmhouse",
+   "rect": [
+    84.1,
+    24.056,
+    12.892,
+    10.33
+   ],
+   "points": [
+    94.492,
+    34.386,
+    84.1,
+    28.386,
+    86.6,
+    24.056,
+    96.992,
+    30.056
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-21",
+   "label": "Cottage",
+   "rect": [
+    96.179,
+    31.54,
+    7.696,
+    7.33
+   ],
+   "points": [
+    101.375,
+    38.87,
+    96.179,
+    35.87,
+    98.679,
+    31.54,
+    103.875,
+    34.54
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "byre-house-3",
+   "label": "Farmhouse",
+   "rect": [
+    97.907,
+    40.509,
+    7.935,
+    12.885
+   ],
+   "points": [
+    97.907,
+    52.1,
+    101.012,
+    40.509,
+    105.842,
+    41.803,
+    102.736,
+    53.394
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-22",
+   "label": "Cottage",
+   "rect": [
+    96.152,
+    54.13,
+    6.383,
+    7.09
+   ],
+   "points": [
+    96.152,
+    59.925,
+    97.705,
+    54.13,
+    102.535,
+    55.424,
+    100.982,
+    61.219
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-23",
+   "label": "Cottage",
+   "rect": [
+    88.284,
+    58.134,
+    6.0,
+    5.0
+   ],
+   "points": [
+    88.284,
+    58.134,
+    94.284,
+    58.134,
+    94.284,
+    63.134,
+    88.284,
+    63.134
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "byre-house-4",
+   "label": "Farmhouse",
+   "rect": [
+    23.28,
+    81.059,
+    12.021,
+    12.021
+   ],
+   "points": [
+    35.301,
+    84.594,
+    26.815,
+    93.08,
+    23.28,
+    89.544,
+    31.765,
+    81.059
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "market",
+   "label": "Village green",
+   "rect": [
+    45.612,
+    37.526,
+    28.404,
+    30.377
+   ],
+   "points": [
+    45.612,
+    38.976,
+    70.664,
+    37.526,
+    74.016,
+    56.157,
+    46.549,
+    67.903
+   ],
+   "place": {
+    "kind": "market"
+   }
+  },
+  {
+   "id": "street-1-1",
+   "label": "Main street",
+   "rect": [
+    0,
+    66.749,
+    47.146,
+    39.251
+   ],
+   "points": [
+    0,
+    105.14,
+    0.665,
+    106,
+    1.013,
+    106,
+    11.048,
+    98.245,
+    19.865,
+    90.76,
+    32.976,
+    76.372,
+    47.146,
+    69.057,
+    45.951,
+    66.749,
+    31.393,
+    74.309,
+    18.06,
+    88.888,
+    9.411,
+    96.225,
+    0,
+    103.497
+   ],
+   "place": {
+    "kind": "street"
+   }
+  },
+  {
+   "id": "street-2-1",
+   "label": "Main street",
+   "rect": [
+    69.445,
+    0,
+    13.694,
+    37.979
+   ],
+   "points": [
+    81.864,
+    0,
+    80.539,
+    0,
+    77.513,
+    15.342,
+    69.445,
+    37.074,
+    71.883,
+    37.979,
+    80.016,
+    16.049,
+    83.14,
+    0.252
+   ],
+   "place": {
+    "kind": "street"
+   }
+  },
+  {
+   "id": "road-west-1",
+   "label": "Road in from the west",
+   "rect": [
+    0,
+    103,
+    3,
+    3
+   ],
+   "behaviors": [
+    {
+     "type": "trigger",
+     "system": {
+      "label": "the road into Sch\u00f6ndorf from the west",
+      "does": "note",
+      "who": "pcs"
+     }
+    }
+   ]
+  },
+  {
+   "id": "road-north-2",
+   "label": "Road in from the north",
+   "rect": [
+    80.364,
+    0,
+    3.0,
+    3
+   ],
+   "behaviors": [
+    {
+     "type": "trigger",
+     "system": {
+      "label": "the road into Sch\u00f6ndorf from the north",
+      "does": "note",
+      "who": "pcs"
+     }
+    }
+   ]
+  }
+ ],
+ "households": [
+  {
+   "id": "tavern-1-household",
+   "building": "tavern-1",
+   "label": "Tavern household",
+   "trade": "alehouse keeper",
+   "people": [
+    {
+     "role": "alehouse keeper"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "servant"
+    }
+   ]
+  },
+  {
+   "id": "cottage-1-household",
+   "building": "cottage-1",
+   "label": "Priest's house household",
+   "trade": "priest",
+   "people": [
+    {
+     "role": "priest"
+    },
+    {
+     "role": "clerk"
+    }
+   ]
+  },
+  {
+   "id": "smithy-1-household",
+   "building": "smithy-1",
+   "label": "Smithy household",
+   "trade": "smith",
+   "people": [
+    {
+     "role": "smith"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "apprentice"
+    }
+   ]
+  },
+  {
+   "id": "cottage-2-household",
+   "building": "cottage-2",
+   "label": "Cottage household",
+   "trade": "carter",
+   "people": [
+    {
+     "role": "carter"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-3-household",
+   "building": "cottage-3",
+   "label": "Cottage household",
+   "trade": "cottager",
+   "people": [
+    {
+     "role": "cottager"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-4-household",
+   "building": "cottage-4",
+   "label": "Cottage household",
+   "trade": "labourer",
+   "people": [
+    {
+     "role": "labourer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-5-household",
+   "building": "cottage-5",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-6-household",
+   "building": "cottage-6",
+   "label": "Cottage household",
+   "trade": "cottager",
+   "people": [
+    {
+     "role": "cottager"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-7-household",
+   "building": "cottage-7",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-8-household",
+   "building": "cottage-8",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-9-household",
+   "building": "cottage-9",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
+    }
+   ]
+  },
+  {
+   "id": "cottage-10-household",
+   "building": "cottage-10",
+   "label": "Cottage household",
+   "trade": "cottager",
+   "people": [
+    {
+     "role": "cottager"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-11-household",
+   "building": "cottage-11",
+   "label": "Cottage household",
+   "trade": "carter",
+   "people": [
+    {
+     "role": "carter"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "townhouse-1-household",
+   "building": "townhouse-1",
+   "label": "House and shop (draper) household",
+   "trade": "draper",
+   "people": [
+    {
+     "role": "draper"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "servant"
+    }
+   ]
+  },
+  {
+   "id": "workshop-1-household",
+   "building": "workshop-1",
+   "label": "Workshop (carpenter) household",
+   "trade": "carpenter",
+   "people": [
+    {
+     "role": "carpenter"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-12-household",
+   "building": "cottage-12",
+   "label": "Cottage household",
+   "trade": "cottager",
+   "people": [
+    {
+     "role": "cottager"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-13-household",
+   "building": "cottage-13",
+   "label": "Cottage household",
+   "trade": "carter",
+   "people": [
+    {
+     "role": "carter"
+    }
+   ]
+  },
+  {
+   "id": "workshop-2-household",
+   "building": "workshop-2",
+   "label": "Workshop (cooper) household",
+   "trade": "cooper",
+   "people": [
+    {
+     "role": "cooper"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    },
+    {
+     "role": "apprentice"
+    }
+   ]
+  },
+  {
+   "id": "cottage-14-household",
+   "building": "cottage-14",
+   "label": "Cottage household",
+   "trade": "carter",
+   "people": [
+    {
+     "role": "carter"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-15-household",
+   "building": "cottage-15",
+   "label": "Cottage household",
+   "trade": "labourer",
+   "people": [
+    {
+     "role": "labourer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-16-household",
+   "building": "cottage-16",
+   "label": "Cottage household",
+   "trade": "labourer",
+   "people": [
+    {
+     "role": "labourer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-17-household",
+   "building": "cottage-17",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-18-household",
+   "building": "cottage-18",
+   "label": "Cottage household",
+   "trade": "widowed spinner",
+   "people": [
+    {
+     "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-19-household",
+   "building": "cottage-19",
+   "label": "Cottage household",
+   "trade": "widowed spinner",
+   "people": [
+    {
+     "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-20-household",
+   "building": "cottage-20",
+   "label": "Cottage household",
+   "trade": "carter",
+   "people": [
+    {
+     "role": "carter"
+    },
+    {
+     "role": "partner"
+    }
+   ]
+  },
+  {
+   "id": "byre-house-1-household",
+   "building": "byre-house-1",
+   "label": "Farmhouse household",
+   "trade": "farmer",
+   "people": [
+    {
+     "role": "farmer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "farmhand"
+    }
+   ]
+  },
+  {
+   "id": "byre-house-2-household",
+   "building": "byre-house-2",
+   "label": "Farmhouse household",
+   "trade": "farmer",
+   "people": [
+    {
+     "role": "farmer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-21-household",
+   "building": "cottage-21",
+   "label": "Cottage household",
+   "trade": "carter",
+   "people": [
+    {
+     "role": "carter"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "byre-house-3-household",
+   "building": "byre-house-3",
+   "label": "Farmhouse household",
+   "trade": "farmer",
+   "people": [
+    {
+     "role": "farmer"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-22-household",
+   "building": "cottage-22",
+   "label": "Cottage household",
+   "trade": "widowed spinner",
+   "people": [
+    {
+     "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-23-household",
+   "building": "cottage-23",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "byre-house-4-household",
+   "building": "byre-house-4",
+   "label": "Farmhouse household",
+   "trade": "farmer",
+   "people": [
+    {
+     "role": "farmer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    },
+    {
+     "role": "farmhand"
+    }
+   ]
+  }
+ ]
+}

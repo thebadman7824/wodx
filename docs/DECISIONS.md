@@ -382,3 +382,12 @@ A city is 168 by 124 squares and aims at 500 to 700 people, with up to three tim
 
 ## B575. Splitting large places into parts (2026-11-10)
 Any generated place wider or taller than 64 squares is cut into a grid of parts by default, to keep each map's image and wall count light on slower computers. Cuts sit on whole squares, moved up to a quarter part to miss buildings (a crossed building counts as six squares of unevenness); a building belongs to the part its middle stands in, and that part's map reaches past the cut to hold it. Edge trigger regions note the way into the next part. --part sets the size; 0 keeps one map.
+
+## B576. The organic layout is a port of the Medieval Fantasy City Generator's steps (2026-11-10)
+The original's source (Oleg Dolya, CC0) is followed step for step in WoDX's own Python, with two cuts: no citadel (WoDX has no castle building) and no water. The town's ward list is cut to wards WoDX has buildings for.
+
+## B577. Buildings in an organic town (2026-11-10)
+Every building is a furnished WoDX type turned to face its street, in 15 degree steps so walls and furniture line up neatly; it furnishes facing south in its own frame, so every type works at every angle. Blocks are cut into lots across their longest side, with a 1.2 square alley through big pieces, and buildings stand side by side along each frontage. The mix of types, the spacing and the caps on rare trades are by ward, as a house rule. The organic layout is the generator's default.
+
+## B578. Turned things and outlined regions in the WoDX map file (2026-11-10)
+A feature may carry rotation (degrees about its middle; its rect is its unturned size) and a region points (an outline in squares, its rect kept as the box). Adopt turns the tile and draws the region as a polygon; a bad outline falls back to the box with a note.

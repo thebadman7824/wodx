@@ -35,7 +35,7 @@ const slug = s => s.toLowerCase().replace(/ü/g, "u").replace(/ö/g, "o").replac
 test("mapgen: villages and towns come out whole, and the samples match their seeds", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-t-"));
   for ( const [size, seed, name] of [["village", 1197, "hohenhausen"], ["town", 1199, "birbach"], ["village", 3, null], ["town", 8, null]] ) {
-    const out = run([join(gen, "ddtown.py"), "--size", size, "--seed", String(seed), "--part", "0", "--assets", ASSETS, "--out", dir], dir);
+    const out = run([join(gen, "ddtown.py"), "--layout", "grid", "--size", size, "--seed", String(seed), "--part", "0", "--assets", ASSETS, "--out", dir], dir);
     const base = out.match(/^ok: ([^,]+),/m)?.[1];
     assert.ok(base, out);
     const sc = JSON.parse(readFileSync(join(dir, `${slug(base)}.wodx.json`), "utf8"));
@@ -86,7 +86,7 @@ function checkParts(dir, base, size) {
 test("mapgen: a town and a city split into parts that fit together", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-p-"));
   for ( const [size, seed, name] of [["town", 8, null], ["city", 5, "rotheim"], ["city", 9, null]] ) {
-    const out = run([join(gen, "ddtown.py"), "--size", size, "--seed", String(seed), "--assets", ASSETS, "--out", dir], dir);
+    const out = run([join(gen, "ddtown.py"), "--layout", "grid", "--size", size, "--seed", String(seed), "--assets", ASSETS, "--out", dir], dir);
     const base = slug(out.match(/^ok: ([^,]+),/m)?.[1] ?? "");
     assert.match(out, /in \d+ parts/, out);
     const idx = checkParts(dir, base, size);
@@ -97,7 +97,44 @@ test("mapgen: a town and a city split into parts that fit together", {skip}, () 
   }
   // a smaller --part makes more, smaller maps
   const d2 = mkdtempSync(join(tmpdir(), "wodx-q-"));
-  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "8", "--part", "32", "--assets", ASSETS, "--out", d2], d2);
+  run([join(gen, "ddtown.py"), "--layout", "grid", "--size", "town", "--seed", "8", "--part", "32", "--assets", ASSETS, "--out", d2], d2);
   const base = readdirSync(d2).find(f => f.endsWith("-parts.json")).replace("-parts.json", "");
   assert.ok(checkParts(d2, base, "town").parts.length >= 6);
+});
+
+/* The organic layout (organic.py, on layout.py's port of the Medieval Fantasy City Generator's steps): winding
+   streets, wards, a wall with gates, buildings turned to face their streets. */
+test("mapgen: organic villages, towns and cities come out whole, and the samples match their seeds", {skip}, () => {
+  const dir = mkdtempSync(join(tmpdir(), "wodx-o-"));
+  const out = run([join(gen, "ddtown.py"), "--size", "village", "--seed", "2", "--part", "0", "--name", "Schöndorf", "--assets", ASSETS, "--out", dir], dir);
+  assert.match(out, /^ok: Schöndorf, village/m);
+  const sc = JSON.parse(readFileSync(join(dir, "schondorf.wodx.json"), "utf8"));
+  assert.deepEqual(sc, JSON.parse(readFileSync(join(gen, "samples/schondorf.wodx.json"), "utf8")), "schondorf changed: run ddtown.py again into samples");
+  for ( const [size, seeds, least] of [["village", [1, 3, 4], 10], ["town", [1, 2, 4, 6], 30], ["city", [9], 120]] ) {
+    for ( const seed of seeds ) {
+      const d = mkdtempSync(join(tmpdir(), "wodx-o-"));
+      const o = run([join(gen, "ddtown.py"), "--size", size, "--seed", String(seed), "--part", "0", "--assets", ASSETS, "--out", d], d);
+      const base = slug(o.match(/^ok: ([^,]+),/m)?.[1] ?? "");
+      const s = JSON.parse(readFileSync(join(d, `${base}.wodx.json`), "utf8"));
+      const got = A.parseSidecar(s);
+      assert.deepEqual(got.errors, [], `${size} ${seed}`);
+      assert.equal(s.layout, "organic");
+      assert.ok(s.households.length >= least, `${size} ${seed}: ${s.households.length} households`);
+      const kinds = new Set(got.data.regions.map(r => r.place?.kind).filter(Boolean));
+      for ( const k of ["home", "church", "tavern", "market", "street"] ) assert.ok(kinds.has(k), `${size} ${seed}: no ${k}`);
+      // turned buildings: their outlines are kept, and some things are turned with them
+      assert.ok(got.data.regions.some(r => r.points && r.place?.kind === "home"), `${size} ${seed}: no outlines`);
+      assert.ok(got.data.features.some(f => f.rotation % 90 !== 0), `${size} ${seed}: nothing turned off the square`);
+    }
+  }
+});
+
+test("mapgen: an organic town splits into parts that fit together, and its sample matches", {skip}, () => {
+  const dir = mkdtempSync(join(tmpdir(), "wodx-op-"));
+  const out = run([join(gen, "ddtown.py"), "--size", "town", "--seed", "3", "--assets", ASSETS, "--out", dir], dir);
+  assert.match(out, /^ok: Linberg, walled small town/m);
+  const idx = checkParts(dir, "linberg", "town");
+  assert.deepEqual(idx, JSON.parse(readFileSync(join(gen, "samples/linberg-parts.json"), "utf8")), "linberg changed: run ddtown.py again into samples");
+  const gates = idx.parts.flatMap(p => JSON.parse(readFileSync(join(dir, p.sidecar), "utf8")).regions.filter(r => r.id.startsWith("gate-")));
+  assert.ok(gates.length >= 2, "a walled town has gates");
 });
