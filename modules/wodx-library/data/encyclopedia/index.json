@@ -2119,6 +2119,60 @@
       "title": "Monkeywrench! Pentex",
       "short": "Monkeywrench! Pentex",
       "edition": "First edition"
+    },
+    {
+      "id": "ntn2",
+      "title": "Tribe Novel: Silent Striders & Black Furies",
+      "short": "Tribe Novel 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "ntn3",
+      "title": "Tribe Novel: Red Talons & Fianna",
+      "short": "Tribe Novel 3",
+      "edition": "Novel"
+    },
+    {
+      "id": "ntn4",
+      "title": "Tribe Novel: Bone Gnawers & Stargazers",
+      "short": "Tribe Novel 4",
+      "edition": "Novel"
+    },
+    {
+      "id": "ntn5",
+      "title": "Tribe Novel: Children of Gaia & Uktena",
+      "short": "Tribe Novel 5",
+      "edition": "Novel"
+    },
+    {
+      "id": "ntn7",
+      "title": "Tribe Novel: Black Spiral Dancers & Wendigo",
+      "short": "Tribe Novel 7",
+      "edition": "Novel"
+    },
+    {
+      "id": "npeih",
+      "title": "Pentex Employee Indoctrination Handbook (W20)",
+      "short": "W20 Pentex Handbook",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "nsosm",
+      "title": "Songs of the Sun and Moon (W20)",
+      "short": "W20 Songs of the Sun and Moon",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "npt",
+      "title": "The Poison Tree (W20)",
+      "short": "W20 The Poison Tree",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "nror",
+      "title": "Rites of Renown (W20)",
+      "short": "W20 Rites of Renown",
+      "edition": "20th Anniversary companion"
     }
   ],
   "files": [
@@ -2474,6 +2528,15 @@
     "cairbn.json",
     "dcbn.json",
     "frbn.json",
-    "wamwp.json"
+    "wamwp.json",
+    "ntn2.json",
+    "ntn3.json",
+    "ntn4.json",
+    "ntn5.json",
+    "ntn7.json",
+    "npeih.json",
+    "nsosm.json",
+    "npt.json",
+    "nror.json"
   ]
 }

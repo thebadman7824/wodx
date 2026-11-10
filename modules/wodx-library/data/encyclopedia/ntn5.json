@@ -1,0 +1,53 @@
+[
+ {
+  "id": "ntn5-pure-tribes",
+  "title": "The Uktena and their neighbours",
+  "kind": "lore",
+  "lines": [
+   "werewolf",
+   "fera"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Old debts among the Pure Ones and the Gurahl.",
+  "claims": [
+   {
+    "text": "The Croatan, the third of the Pure tribes in North America before the Europeans, perished to the last in the destruction of a mighty Bane at Roanoke.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntn5",
+      "page": 202,
+      "pdf": 202
+     },
+     {
+      "book": "wawwcore",
+      "page": 57,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The Uktena have long worked to make amends to the Gurahl for the War of Rage, when Garou hunted and slaughtered the other shapeshifters.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntn5",
+      "page": 182,
+      "pdf": 182
+     },
+     {
+      "book": "bbcor",
+      "page": 22,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawwcore-croatan-bunyip",
+   "bbcor-war-of-rage"
+  ]
+ }
+]

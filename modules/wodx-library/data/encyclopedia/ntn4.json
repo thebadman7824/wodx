@@ -1,0 +1,53 @@
+[
+ {
+  "id": "ntn4-stargazer-departure",
+  "title": "Why the Stargazers left",
+  "kind": "lore",
+  "lines": [
+   "werewolf",
+   "fera"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Stargazers’ case for the other Fera.",
+  "claims": [
+   {
+    "text": "Stargazers who have left the Garou Nation say the West gave up on them as much as the reverse: they hold that the war cannot be won without Bastet, Corax, Kitsune, Gurahl and the other Fera, whom the Western tribes have driven away.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntn4",
+      "page": 176,
+      "pdf": 176
+     },
+     {
+      "book": "tbsg",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Stargazers feel a kinship with the Bagheera werepanthers, since both favour careful thought over open war.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntn4",
+      "page": 174,
+      "pdf": 174
+     },
+     {
+      "book": "bbbas",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tbsg-going-east",
+   "bbbas-bagheera"
+  ]
+ }
+]

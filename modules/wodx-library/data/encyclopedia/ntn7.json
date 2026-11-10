@@ -1,0 +1,41 @@
+[
+ {
+  "id": "ntn7-white-howler-tomb",
+  "title": "The tomb of the last White Howlers",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where the final fallen Howlers vanished.",
+  "claims": [
+   {
+    "text": "The White Howlers fell to corruption long ago; the last of them to yield to the Wyrm disappeared into a tomb behind a vast carved stone slab and never came out.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntn7",
+      "page": 13,
+      "pdf": 15
+     },
+     {
+      "book": "ntn7",
+      "page": 25,
+      "pdf": 27
+     },
+     {
+      "book": "w20",
+      "page": 392,
+      "pdf": 394
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lost-tribes",
+   "botw-spiral-creed"
+  ]
+ }
+]

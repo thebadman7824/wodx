@@ -1,0 +1,73 @@
+[
+ {
+  "id": "ntn2-mari-albrecht-pack",
+  "title": "Mari Cabrah in Albrecht’s pack",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mari as a member of the king’s pack.",
+  "claims": [
+   {
+    "text": "Mari Cabrah, once a rival of Albrecht, now runs in King Jonas Albrecht’s pack, which makes Mari an envoy of sorts whenever travelling outside the king’s New England protectorate.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntn2",
+      "page": 164,
+      "pdf": 164
+     },
+     {
+      "book": "waworap",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waworap-mari-cabrah"
+  ]
+ },
+ {
+  "id": "ntn2-konietzko-serbia",
+  "title": "Margrave Konietzko and the Serbian front",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Shadow Lord Margrave at war in the Balkans.",
+  "claims": [
+   {
+    "text": "Margrave Konietzko, a Shadow Lord, directs Garou efforts against the Wyrm’s forces in Serbia from the Sept of the Night Sky.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntn2",
+      "page": 32,
+      "pdf": 32
+     },
+     {
+      "book": "ntn2",
+      "page": 34,
+      "pdf": 34
+     },
+     {
+      "book": "tbsl",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tbsl-judges-of-doom"
+  ]
+ }
+]

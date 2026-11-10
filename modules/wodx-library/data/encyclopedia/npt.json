@@ -1,0 +1,57 @@
+[
+ {
+  "id": "npt-coastal-empire",
+  "title": "Savannah’s Coastal Empire",
+  "kind": "place",
+  "lines": [
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A besieged Garou protectorate in Georgia.",
+  "claims": [
+   {
+    "text": "The Shadow Lord Karl Ironhand and Karl’s pack seized Savannah’s Coastal Empire from a degenerate Fianna bloodline and held it for some twenty years against vampires, sorcerers and worse, ruling for about twenty-five.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "npt",
+      "page": 9,
+      "pdf": 10
+     },
+     {
+      "book": "npt",
+      "page": 119,
+      "pdf": 120
+     },
+     {
+      "book": "beckett",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "The city has been under siege for decades, and there are never enough Garou to keep the protectorate safe as aid from the other Southeastern tribes dwindles.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "npt",
+      "page": 9,
+      "pdf": 10
+     },
+     {
+      "book": "beckett",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bjd-southern-crusade"
+  ]
+ }
+]
