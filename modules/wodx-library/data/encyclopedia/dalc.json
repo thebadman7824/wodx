@@ -1,0 +1,668 @@
+[
+ {
+  "id": "dalc-laws-of-haqim",
+  "title": "The Laws of Haqim",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The code every Assamite answers to, and the quarrel over its last clause.",
+  "claims": [
+   {
+    "text": "Assamites may not destroy one another; that right belongs to the Eldest alone. Killing a Cainite of another clan carries no formal clan penalty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 19,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "An Assamite who breaks this law should travel to Alamut at once, confess and accept the Eldest's verdict; far from Alamut, any Assamite who once served as Eldest may judge instead. Those who come forward willingly are usually treated more gently.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 19,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Lying to or robbing a clanmate is also forbidden. A thief is pinned by four peers while an elder rips off the offending hand and dresses the stump with a salve that stops it growing back for a lunar month; vicious liars lose the tongue the same way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 19,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The last law tells the clan to judge the brood of Khayyin. The warrior caste reads it as a licence to slay any Cainite who falls short of Assamite honour; the viziers would judge only those who harm mortal society. The Crusades have strengthened the warriors' side.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 19,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "v20c-alamut",
+   "da-assamites"
+  ]
+ },
+ {
+  "id": "dalc-assamite-warriors-and-islam",
+  "title": "Assamite Warriors and Islam",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why the warrior caste turned to the faith of its recruits.",
+  "claims": [
+   {
+    "text": "Warriors once served more as judges than soldiers, watching Cainite movements in lands the clan claimed and shielding mortals where they could.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 18,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Alamut, the Eagle's Nest, lies hidden deep in Asia Minor, concealed from scrying by ritual sorcery; at any time hundreds of Cainites, ghouls and mortal servants live there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 18,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Fresh Embraces who had been devout Muslims took to clan teachings more readily, so the warrior caste came to Embrace mainly from Islam, and by the 13th century almost only Muslim men.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 20,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Clashes between faiths have spread into the clan, and more than a few Assamites have broken the Laws of Haqim openly to keep a religious duty instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 20,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dalc-laws-of-haqim",
+   "da-assamites"
+  ]
+ },
+ {
+  "id": "dalc-tinnis",
+  "title": "Tinnis",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Egyptian island city ruled by a Setite prince.",
+  "claims": [
+   {
+    "text": "After the fall of Tanis the Setites never again gathered their interests in one place. Its survivors built a sister city, Tinnis, on an island of Lake Manzala near the drowned ruins, with Setite nudging behind the choice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 27,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Tinnis lives by trade and ships its textiles across Egypt and further. It is the only Egyptian city with a Setite prince, Setepenre, Lord of Tinnis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 27,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Because the city can only be reached across water, Setepenre controls which Cainites arrive; some groups from many clans are welcomed, while many others are refused or destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 27,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-setites",
+   "cbs-temples"
+  ]
+ },
+ {
+  "id": "dalc-veles-wild-hunt",
+  "title": "Veles and the Wild Hunt",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Slavic Gangrel cult of the horned god and its sacred chase.",
+  "claims": [
+   {
+    "text": "Many Cainite courts of the Slavic lands revere the god Veles, and the Wild Hunt is central to that worship.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 31,
+      "pdf": 34
+     },
+     {
+      "book": "dalc",
+      "page": 32,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The Hunt's chief rule is that only divination may pick the quarry, which can be friend or foe, mortal, Cainite or something stranger; choosing any other way would be passing judgment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 32,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "A priest of Veles, usually a Gangrel able to take wolf or bear shape, plays the god as hunter. Once a year a second priest in stag, boar or fox shape plays the god as prey and dies a ritual death to keep the cycle turning; in dire need the prey-priest may give real heart's blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 32,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The quarry always feels the Hunt begin. Prey that lasts three days and nights earns a reward rather than death.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 32,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-gangrel"
+  ]
+ },
+ {
+  "id": "dalc-first-tongue",
+  "title": "The First Tongue",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Malkavian legend of the language lost at Babel.",
+  "claims": [
+   {
+    "text": "Clan legend says Duma, the angel of silence, gave each of seventy-seven Malkavians a fragment of the original speech of men and angels, and forbade joining the pieces before Gehenna.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 38,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Doubters note that there were probably never seventy-seven Malkavians so long ago; believers are not moved.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 38,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Malkavians once ruled several ancient cities of Mesopotamia, posing better than any other Cainites as the baalim, the generous yet greedy city-gods of the old Semites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 38,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-malkavians"
+  ]
+ },
+ {
+  "id": "dalc-rome-warrens",
+  "title": "The Warrens of Rome",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Nosferatu web of tunnels that others copied.",
+  "claims": [
+   {
+    "text": "Roman Nosferatu linked the crypts and secret passages under ordinary houses with hidden doors into one great warren.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The Cappadocians held the burial grounds and catacombs first and resisted at the start. Since one clan wanted shelter and the other a place for necromancy, decades of talks left the Nosferatu guarding the catacombs while keeping away from Cappadocian sanctums.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Nosferatu who enjoyed the warren's hospitality took its designs abroad, and Lepers elsewhere coaxed local mortals into digging for any reason so the tunnels could be adapted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 46,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-nosferatu",
+   "da-cappadocians",
+   "dc1-lazarene-knights"
+  ]
+ },
+ {
+  "id": "dalc-eastern-ravnos",
+  "title": "The Ravnos of India",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Caste-bound Charlatans and their war on the asuratizayya.",
+  "claims": [
+   {
+    "text": "The Indian Ravnos organise themselves by Indian custom and their founder's teachings; Embracing outside one's own caste is unthinkable, and the divisions of life carry over into unlife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "That rigid order has driven whole jati away over the years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "They hunt the infernal asuratizayya and believe their homeland stays clean only through constant watch, while every land beyond is already spoiled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 50,
+      "pdf": 53
+     },
+     {
+      "book": "dalc",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Eastern Ravnos hold mixed views of their Western cousins; some see them as branches that strayed too far from the spiritual home of the founder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-ravnos"
+  ]
+ },
+ {
+  "id": "dalc-tremere-city-chantries",
+  "title": "Tremere Chantries in the Cities",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why the young clan moved its houses out of the wilds.",
+  "claims": [
+   {
+    "text": "While Eastern chantries endured Tzimisce pressure, Tremere and Etrius studied Cainite origins, lineages, strengths and weaknesses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 61,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Meerlinda, settled in England, sent knowledge to them, and saw that a blood diet meant chantries had to leave the wilderness for the cities; Meerlinda sent childer out to start that move.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 61,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-tremere",
+   "cbtr-etrius"
+  ]
+ },
+ {
+  "id": "dalc-anda",
+  "title": "The Anda",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Gangrel nomads riding with the Mongols.",
+  "claims": [
+   {
+    "text": "The Anda care nothing for princes, their quarrels or secure European domains; fixed territory means little to nomads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 124,
+      "pdf": 127
+     }
+    ]
+   },
+   {
+    "text": "They see this era as a time to feed on the spreading chaos and fear and to prepare for the Golden Horde, which turns west in 1235 and pulls back in 1242.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 124,
+      "pdf": 127
+     }
+    ]
+   },
+   {
+    "text": "Alliances have some use to them, but sowing weakness and disorder pays better and pleases them more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 124,
+      "pdf": 127
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-gangrel",
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "dalc-lhiannan",
+  "title": "The Lhiannan",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Gangrel offshoot clinging to Europe's last pagan corners.",
+  "claims": [
+   {
+    "text": "The Lhiannan, an offshoot of the Gangrel, are the undead heirs of a fading pagan past, found in the last pagan pockets of Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 129,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "They reject descent from Caine and trace themselves to a figure called the Crone. Some Brujah and Cappadocian scholars link the Crone to a shadowy figure in the Noddist writings; no one knows the truth.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 129,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Their doom looks certain, yet they intend to resist it.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 129,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-gangrel",
+   "da-bloodlines",
+   "dc1-celtic-paganism"
+  ]
+ },
+ {
+  "id": "dalc-noiad",
+  "title": "The Noiad",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The oldest Gangrel line in Europe, serving Sami gods in the far north.",
+  "claims": [
+   {
+    "text": "The Noiad are said to be the first Cainites to enter Europe, thousands of years ago, and no longer accept Caine as their origin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 131,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "Their forebears came from Africa and the Fertile Crescent and followed the Sami into the far north of what is now Norway, Sweden and Finland; they see themselves as servants of the Sami gods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 131,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "A Noiad wins favour by protecting the Sami, defeating Christians or keeping the line alive; dealing with southerners invites suspicion, and learning their languages can mark one as mad.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 132,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "The bloodline punishes calls for change and cares little for the outside world, which may one day ruin it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 132,
+      "pdf": 135
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-gangrel",
+   "da-bloodlines"
+  ]
+ },
+ {
+  "id": "dalc-telyavelic",
+  "title": "The Telyavelic Tremere",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Pagan Tremere of Lithuania and their Krive.",
+  "claims": [
+   {
+    "text": "Disciplines: Auspex, Presence, Thaumaturgy. Weakness: frenzy rolls are two difficulty higher when a foe defends with True Faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 134,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "The Telyavs bound themselves to pagan lands and customs; in return for a closer tie to the living world, they protect it as far as they can.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 134,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "Each part of Lithuania has a Cainite watcher who reports to the Krive, a legendary dead king who drinks warm blood. The current Krive is Androjai, a Malkavian hard pressed by Ventrue riding with the Teutonic Knights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dalc",
+      "page": 134,
+      "pdf": 137
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-tremere",
+   "da-bloodlines",
+   "dc1-hospitallers-teutonic"
+  ]
+ }
+]

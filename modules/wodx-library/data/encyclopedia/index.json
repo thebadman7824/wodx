@@ -409,6 +409,12 @@
    "title": "Book of the Wyrm (W20)",
    "short": "W20 Book of the Wyrm",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "dalc",
+   "title": "Dark Ages: Players Guide to Low Clans",
+   "short": "DA Low Clans",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -479,6 +485,7 @@
   "dacomp.json",
   "dabi.json",
   "cb.json",
-  "botw.json"
+  "botw.json",
+  "dalc.json"
  ]
 }
