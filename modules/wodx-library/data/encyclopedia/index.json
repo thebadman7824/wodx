@@ -1693,6 +1693,30 @@
       "title": "Ghouls: Fatal Addiction",
       "short": "G:FA",
       "edition": "Revised"
+    },
+    {
+      "id": "hbway",
+      "title": "Hunter Book: Wayward",
+      "short": "HB Wayward",
+      "edition": "First edition"
+    },
+    {
+      "id": "wlbd",
+      "title": "Love Beyond Death",
+      "short": "LBD",
+      "edition": "First edition"
+    },
+    {
+      "id": "wspg",
+      "title": "Shadow Players Guide",
+      "short": "SPG",
+      "edition": "First edition"
+    },
+    {
+      "id": "cap",
+      "title": "The Autumn People",
+      "short": "Autumn People",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -1977,6 +2001,10 @@
     "bmst.json",
     "succ.json",
     "kebk.json",
-    "gfa.json"
+    "gfa.json",
+    "hbway.json",
+    "wlbd.json",
+    "wspg.json",
+    "cap.json"
   ]
 }
