@@ -2047,6 +2047,18 @@
       "title": "Werewolf: The Wild West",
       "short": "Werewolf: The Wild West",
       "edition": "Wild West"
+    },
+    {
+      "id": "cblod",
+      "title": "The Book of Lost Dreams",
+      "short": "Book of Lost Dreams",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wofd",
+      "title": "World of Future Darkness",
+      "short": "World of Future Darkness",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2390,6 +2402,8 @@
     "waworap.json",
     "waways.json",
     "wawwcomp.json",
-    "wawwcore.json"
+    "wawwcore.json",
+    "cblod.json",
+    "wofd.json"
   ]
 }
