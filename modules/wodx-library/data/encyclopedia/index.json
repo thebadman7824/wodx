@@ -1645,6 +1645,12 @@
    "title": "Love Beyond Death",
    "short": "LBD",
    "edition": "First edition"
+  },
+  {
+   "id": "wspg",
+   "title": "Shadow Players Guide",
+   "short": "SPG",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1921,6 +1927,7 @@
   "woddhx.json",
   "wod1.json",
   "mtr.json",
-  "wlbd.json"
+  "wlbd.json",
+  "wspg.json"
  ]
 }
