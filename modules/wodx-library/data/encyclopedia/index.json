@@ -1759,6 +1759,12 @@
       "title": "Anarch Cookbook",
       "short": "AnCB",
       "edition": "First edition"
+    },
+    {
+      "id": "mum1",
+      "title": "World of Darkness: Mummy",
+      "short": "WoD:M",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2054,6 +2060,7 @@
     "encv.json",
     "cchand.json",
     "dsbh.json",
-    "ancb.json"
+    "ancb.json",
+    "mum1.json"
   ]
 }

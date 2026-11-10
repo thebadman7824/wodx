@@ -1,0 +1,206 @@
+[
+ {
+  "id": "mum1-reborn",
+  "title": "The Reborn Mummies",
+  "kind": "faction",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern",
+   "ancient"
+  ],
+  "summary": "Egyptian immortals who die and return, as first shown to the Kindred.",
+  "claims": [
+   {
+    "text": "A mummy named Sahura was born on the Nile around 2600 BC under Pharaoh Khufu and has died and returned at least 25 times.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Each death and rebirth leaves a mummy a little forgetful, so even a sharp memory cannot hold every past life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Mummies count Intelligence as memory: at one dot the mind is a sieve, at five it is nearly perfect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum1-osiris",
+   "mum1-magic"
+  ]
+ },
+ {
+  "id": "mum1-magic",
+  "title": "The Decline of Egyptian Magic",
+  "kind": "lore",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "How mummies remember the fading of the old magic.",
+  "claims": [
+   {
+    "text": "Sahura told of the great magicians of ancient Egypt and of magic waning over the first two thousand years of Sahura's life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "A confusion of theologies muddied the art until it was little more than myth, and the burning of the library of Alexandria added to the loss.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Mummy magic includes necromancy, which in Egypt covered rites to guard the dead on their way, calls to the spirit world and darker workings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum1-reborn"
+  ]
+ },
+ {
+  "id": "mum1-osiris",
+  "title": "Osiris and Set, as Sahura Told It",
+  "kind": "event",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "ancient",
+   "mythic"
+  ],
+  "summary": "The mummies' oral account of the war between Osiris and Set.",
+  "claims": [
+   {
+    "text": "The tale is an oral account full of bias and is surely not true in every detail.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "In this account Osiris took blood sacrifices at night, shared blood with an elite guard and made a few of them into the king's image.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Set tore Osiris into pieces and scattered them across the delta, then took Isis and Horus captive.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Set plucked out Horus's eye and trapped Horus's Ba within it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "In the end Osiris was slain and burned completely, and Set left Egypt with Isis and the body of Horus.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum1-reborn",
+   "kmw-kemintiri"
+  ]
+ },
+ {
+  "id": "mum1-jyhad-view",
+  "title": "The Jyhad as Mummies See It",
+  "kind": "lore",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A mummy's view of the Kindred and their war.",
+  "claims": [
+   {
+    "text": "Horus writes that Camarilla vampires mistake the Jyhad for a petty power struggle in the physical world, blind to its true scope and to the threats facing the realms of the Ba.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mum1",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mum1-osiris"
+  ]
+ }
+]
