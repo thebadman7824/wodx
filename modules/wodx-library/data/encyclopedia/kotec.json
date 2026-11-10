@@ -12,7 +12,7 @@
   "summary": "The 1304 pact that founded the Five August Courts.",
   "claims": [
    {
-    "text": "In 1304, ten years after Kublai Khan died, the ancestors of the Black Tortoise, White Tiger and Yellow Emperor courts met at the Shaolin monastery near Changan and signed the Treaty of the Quincunx.",
+    "text": "In 1304, ten years after Kublai Khan died, ancestors from three courts (Yellow Emperor, White Tiger and Black Tortoise) met at the Shaolin monastery near Changan and signed the Treaty of the Quincunx.",
     "tier": "stated",
     "refs": [
      {
@@ -53,7 +53,7 @@
   "summary": "The figurehead who speaks for the whole Quincunx.",
   "claims": [
    {
-    "text": "One ancestor, drawn by lot at a gathering of the Five August Courts, may speak for the entire Quincunx and is held to be the choice of the celestial bureaucracy.",
+    "text": "One ancestor, drawn by lot at a gathering of the Five August Courts, may speak for the entire Quincunx and the celestial bureaucracy is said to have chosen that ancestor.",
     "tier": "stated",
     "refs": [
      {
@@ -225,7 +225,7 @@
     ]
    },
    {
-    "text": "The Meiji opening of Japan in the 19th century left the Bishamon struggling to keep up with the change, and they drew back into their private lairs.",
+    "text": "When Emperor Meiji opened Japan to foreigners, the Bishamon could not keep pace with the change, and they drew back into their private lairs.",
     "tier": "stated",
     "refs": [
      {
