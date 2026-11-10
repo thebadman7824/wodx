@@ -1453,6 +1453,12 @@
    "title": "Hunter: The Infernal",
    "short": "HtR Inf",
    "edition": "First edition"
+  },
+  {
+   "id": "hemoon",
+   "title": "Hunter: The Moonstruck",
+   "short": "HtR Moon",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1697,6 +1703,7 @@
   "cktrol.json",
   "ckbog.json",
   "htrpg.json",
-  "heinf.json"
+  "heinf.json",
+  "hemoon.json"
  ]
 }
