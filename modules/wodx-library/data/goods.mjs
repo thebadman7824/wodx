@@ -126,6 +126,86 @@ export const SUBS = {
   "tech-computing": ["tech", "Computers and phones", 2, "hist"], "tech-future": ["tech", "Gadgets of the future", 2, "future"]
 };
 
+/**
+ * How a good behaves when a character has it, by sub-category: [behaviour, stacks]. worn (on the body), wielded (held
+ * in the hand), used (consumed, kept as a count), coin (counted money), container (holds other things), lit (carried
+ * light), kept (simply owned). stacks: several of the same good share one line with a count. A good can differ from
+ * its sub through BEHAVIOUR_OVERRIDES. A house rule from the RPG Builder review (2026-11-10).
+ */
+export const BEHAVIOURS = {
+  worn: "Worn", wielded: "Wielded", used: "Used up, with a count", coin: "Counted money", container: "Container",
+  lit: "Carried light", kept: "Kept"
+};
+export const SUB_BEHAVIOUR = {
+  "coin-medieval": ["coin", true], "coin-early-modern": ["coin", true], "coin-modern": ["coin", true],
+  "coin-credit": ["kept", false], "coin-other": ["coin", true],
+  "food-staple": ["used", true], "food-meat": ["used", true], "food-produce": ["used", true], "food-spice": ["used", true],
+  "food-preserved": ["used", true], "food-future": ["used", true],
+  "drink-beer": ["used", true], "drink-wine": ["used", true], "drink-spirits": ["used", true], "drink-soft": ["used", true],
+  "drug-opiate": ["used", true], "drug-stimulant": ["used", true], "drug-hallucinogen": ["used", true],
+  "drug-sedative": ["used", true], "drug-gear": ["kept", false], "drug-future": ["used", true],
+  "vice-tobacco": ["used", true], "vice-gambling": ["kept", true],
+  "kitchen-cook": ["kept", false], "kitchen-table": ["kept", false],
+  "house-furnish": ["kept", false], "house-keep": ["kept", false], "house-appliance": ["kept", false],
+  "cloth-common": ["worn", false], "cloth-fine": ["worn", false], "cloth-work": ["worn", false],
+  "cloth-sewing": ["used", true], "cloth-future": ["worn", false],
+  "hygiene-wash": ["used", true], "hygiene-groom": ["kept", false], "hygiene-cosmetic": ["used", true],
+  "tools-farm": ["wielded", false], "tools-craft": ["wielded", false], "tools-trade": ["wielded", false],
+  "tools-thief": ["wielded", false], "tools-future": ["wielded", false],
+  "light-flame": ["lit", false], "light-electric": ["lit", false],
+  "papers-letters": ["kept", true], "papers-books": ["kept", false], "papers-official": ["kept", false],
+  "papers-writing": ["used", true], "papers-data": ["kept", true],
+  "faith-christian": ["kept", false], "faith-jewish": ["kept", false], "faith-islamic": ["kept", false],
+  "faith-eastern": ["kept", false], "faith-old": ["kept", false], "faith-future": ["kept", false],
+  "occult-folk": ["kept", false], "occult-learned": ["kept", false], "occult-spirit": ["kept", false],
+  "med-folk": ["used", true], "med-surgery": ["kept", false], "med-modern": ["used", true], "med-aids": ["worn", false],
+  "med-future": ["used", true],
+  "keepsake-memento": ["kept", false], "keepsake-oddment": ["kept", false],
+  "toys-game": ["kept", false], "toys-toy": ["kept", false], "toys-music": ["kept", false],
+  "valuables-jewel": ["worn", false], "valuables-plate": ["kept", false], "valuables-paper": ["kept", true],
+  "arms-blade": ["wielded", false], "arms-ammo": ["used", true], "arms-kit": ["kept", false],
+  "travel-ride": ["kept", false], "travel-pack": ["container", false], "travel-ticket": ["kept", true],
+  "tech-instrument": ["kept", false], "tech-media": ["kept", false], "tech-computing": ["kept", false],
+  "tech-future": ["kept", false]
+};
+/** Goods that behave unlike their sub-category: name: [behaviour, stacks]. */
+export const BEHAVIOUR_OVERRIDES = {
+  "tallow candles": ["lit", true], "beeswax candles": ["lit", true], "rushlights in a holder": ["lit", true],
+  "a pitch torch": ["lit", true], "a box of matches": ["used", true], "flint and steel with tinder": ["kept", false],
+  "a box of gas mantles": ["used", true], "a box of light bulbs": ["used", true], "glow sticks": ["lit", true],
+  "a petrol lighter": ["kept", false], "a disposable lighter": ["kept", false],
+  "a hand grenade": ["used", true], "a sword belt and scabbard": ["worn", false], "a gas mask in a canvas bag": ["worn", false],
+  "a bayonet": ["wielded", false], "a flare pistol": ["wielded", false], "a hunter's game bag": ["container", false],
+  "a quiver of arrows": ["container", false], "a gun cleaning kit": ["kept", false], "a powder horn": ["used", false],
+  "a sling and a pouch of stones": ["wielded", false],
+  "a pair of spurs": ["worn", false], "a set of car keys": ["kept", false], "a jerry can of petrol": ["used", false],
+  "a bedroll": ["kept", false], "a waterskin": ["used", false], "a tin canteen": ["used", false],
+  "a wristwatch": ["worn", false], "a pocket watch on a chain": ["worn", false], "a bag of loose gems": ["kept", true],
+  "a purse of silver pennies": ["coin", true], "a jar of loose change": ["coin", true],
+  "banknotes in a leather wallet": ["coin", true], "a credchip with a little money on it": ["coin", false],
+  "corporate scrip, good only in company towns": ["coin", true], "a bill of exchange drawn on an Italian bank": ["kept", false],
+  "a doctor's bag": ["container", false], "a first aid kit": ["used", false], "a wooden crutch": ["wielded", false],
+  "a pair of spectacles": ["worn", false], "a hearing aid": ["worn", false],
+  "a monk's habit": ["worn", false], "a prayer shawl": ["worn", false], "a set of tefillin": ["worn", false],
+  "a scapular": ["worn", false], "a wooden cross on a cord": ["worn", false], "a saint's medal": ["worn", false],
+  "a Thor's hammer amulet": ["worn", false], "a hag stone on a string": ["worn", false],
+  "a blue glass eye bead against the evil eye": ["worn", false], "a gris-gris bag": ["worn", false],
+  "a votive candle": ["lit", true], "a bundle of incense sticks": ["used", true], "paper money to burn for the dead": ["used", true],
+  "a vial of holy water": ["used", true], "a pyx of consecrated hosts": ["used", false],
+  "a lucky rabbit's foot": ["kept", false], "a vial of graveyard dirt": ["used", false],
+  "a pair of loaded dice": ["kept", false], "a deck of marked cards": ["kept", false],
+  "a pair of mirrored sunglasses": ["worn", false], "a filter mask for bad air days": ["worn", false],
+  "a commlink earpiece": ["worn", false], "a pair of smart glasses with a dead battery": ["worn", false],
+  "augmented reality contact lenses in a case": ["worn", false], "a body camera": ["worn", false],
+  "a pair of wireless earbuds": ["worn", false], "a dark lantern with a shutter": ["lit", false],
+  "a flashlight": ["lit", false], "a headlamp": ["lit", false], "a horsehair wig in a box": ["worn", false],
+  "a set of false teeth": ["worn", false], "a basket of eggs": ["used", true], "an apron of heavy leather": ["worn", false],
+  "a bolt of undyed wool": ["used", false], "a bolt of dyed silk": ["used", false],
+  "a needle case and thread": ["kept", false], "a pocket knife": ["wielded", false], "a coil of hemp rope": ["used", false],
+  "a box of iron nails": ["used", true], "a roll of duct tape": ["used", false], "a tin of fishhooks": ["used", true],
+  "a set of lockpicks in a cloth roll": ["kept", false], "a whetstone": ["kept", false]
+};
+
 /** How likely each kind of good is in each kind of place (0: never). The places are those of fill by place and era. */
 export const PLACE_WEIGHTS = {
   home: {coin: 2, food: 3, drink: 2, drugs: 1, vice: 1, kitchen: 3, house: 3, cloth: 3, hygiene: 2, tools: 2, light: 2, papers: 1, faith: 1, occult: 1, medicine: 1, keepsake: 3, toys: 2, valuables: 1, arms: 1, travel: 1, tech: 1},
@@ -896,6 +976,8 @@ export const GOODS = ROWS.map(([name, sub, from, to, small, value, src]) => {
   const g = {id: slug(name), name, kind, sub, from, to, eras, small: !!small, source: src ?? subSrc ?? "hist", steps};
   g.values = Object.fromEntries(eras.map(e => [e, valueAt(g, Math.max(ERA_YEARS[e][0], from))]));
   g.value = eras.length ? g.values[eras[0]] : valueAt(g, from);
-  g.tags = {category: `${kind}/${sub}`, era: eras, value: g.values};
+  const [use, stacks] = BEHAVIOUR_OVERRIDES[name] ?? SUB_BEHAVIOUR[sub] ?? ["kept", false];
+  Object.assign(g, {use, stacks});
+  g.tags = {category: `${kind}/${sub}`, era: eras, value: g.values, use, stacks};
   return g;
 });

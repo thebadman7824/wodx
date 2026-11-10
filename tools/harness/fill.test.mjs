@@ -164,3 +164,17 @@ test("goods: a value can change over the centuries", () => {
   assert.deepEqual([bible.values.renaissance, bible.values.victorian, bible.values.modern], [4, 2, 1]);
   assert.equal(G.valueAt(bible, 1700), 2);
 });
+
+test("goods: every sub-category and good has a behaviour and a stacks flag", () => {
+  for ( const s of Object.keys(G.SUBS) ) {
+    const b = G.SUB_BEHAVIOUR[s];
+    assert.ok(b && G.BEHAVIOURS[b[0]] && typeof b[1] === "boolean", `${s}: behaviour`);
+  }
+  for ( const n of Object.keys(G.BEHAVIOUR_OVERRIDES) ) assert.ok(G.GOODS.some(g => g.name === n), `override for unknown good ${n}`);
+  for ( const g of G.GOODS ) {
+    assert.ok(G.BEHAVIOURS[g.use] && typeof g.stacks === "boolean", g.name);
+    assert.equal(g.tags.use, g.use, g.name);
+  }
+  assert.equal(G.GOODS.find(g => g.name === "tallow candles").stacks, true);
+  assert.equal(G.GOODS.find(g => g.name === "a storm lantern").stacks, false);
+});

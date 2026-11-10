@@ -408,3 +408,6 @@ Value is a tier 0 to 5 (Trifle, Cheap, Modest, Costly, Dear, Treasure) measured 
 
 ## B592. Item Review Desk (2026-11-10)
 The lists went to Ben on the Item Review Desk artifact (https://claude.ai/artifact/RFDVx5w2jCtbK1ASY8WeLP), same pattern as the narrative desk: the item list is a published file built by tools/goods/build-desk.mjs, and Ben's marks (OK, Fix with a better value or a note, Cut) are kept in the desk's db collection verdicts, doc id = good id. Marks are applied to goods.mjs in a later PR. Goods carry the two bridge eras (age-of-reason 1601-1836, mid-century 1919-1989) that Ben added to Chronicle on 2026-11-10, so the 17th and 18th centuries and the mid-20th century have their own lists.
+
+## B593. Item behaviour and stacking (2026-11-10)
+From the RPG Builder review (Ben approved 2026-11-10 23:18Z in that thread): each of the 80 sub-categories has a default behaviour, one of worn, wielded, used (consumed, kept as a count), coin (counted money), container, lit (carried light) or kept, and a stacks yes or no. BEHAVIOUR_OVERRIDES lets a single good differ (candles stack and are lit, a quiver is a container). good.use, good.stacks and the same in good.tags. Both show on the category desk for Ben to mark. Still to come when items return to the desk: V20's concealment steps (pocket, jacket, trench coat, cannot hide) in place of the small flag.
