@@ -72,17 +72,13 @@ function smooth(pts, close = false) {
 }
 
 /**
- * Where the mouth goes, in the picture's own space with the build taken out (as findEyes gives it): under the nose,
- * a little toward the near side, and as wide as the eyes allow. Falls back on Lorelei's mouth box.
+ * Where the mouth goes, in the picture's own space with the build taken out (as findEyes gives it). Lorelei puts
+ * every mouth in the same place whatever the eyes and nose, so this mouth goes there too: the middle of where
+ * Lorelei's resting mouths sit, measured on its drawings (the parting at 630, centred on 562, under the nose, 66 to each side).
+ * The build then stretches it with the rest of the face. eyes is kept for callers; it does not move the mouth.
  */
-export function mouthPlace(eyes) {
-  const P = eyes?.pupils ?? [], N = eyes?.nose, M = eyes?.mouth;
-  const ipd = P.length === 2 ? Math.abs(P[1].x - P[0].x) : M ? (M.x1 - M.x0) * 1.4 : 190;
-  const mid = P.length === 2 ? (P[0].x + P[1].x) / 2 : M ? (M.x0 + M.x1) / 2 : 565;
-  const py = P.length ? P.reduce((s, p) => s + p.y, 0) / P.length : 458;
-  const cy = N ? N.y1 + 0.24 * ipd : M ? (M.y0 + M.y1) / 2 : py + 160;
-  return {cx: mid - 0.03 * ipd, cy, hw: 0.36 * ipd};
-}
+export const MOUTH_AT = {cx: 562, cy: 630, hw: 66};
+export function mouthPlace(eyes = null) { return {...MOUTH_AT}; }
 
 /** The outlines of a mouth, in the picture's space (build out), from an expression and a place. */
 export function mouthShape(expr, place, lips = null) {
