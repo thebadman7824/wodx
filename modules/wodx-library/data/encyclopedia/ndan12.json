@@ -1,0 +1,57 @@
+[
+ {
+  "id": "ndan12-obertus-state",
+  "title": "The Obertus State",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A domain drawn up for the Obertus monks.",
+  "claims": [
+   {
+    "text": "Jurgen of Verden, Vykos and Vladimir Rustovitch once drew up the boundaries of an Obertus State, where the order kept monasteries.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ndan12",
+      "page": 146,
+      "pdf": 148
+     },
+     {
+      "book": "datbn",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "The Obertus monks serve the Clan of Dragons, the Tzimisce, rather than God.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ndan12",
+      "page": 172,
+      "pdf": 174
+     },
+     {
+      "book": "ndan12",
+      "page": 253,
+      "pdf": 255
+     },
+     {
+      "book": "gr",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   }
+  ],
+  "see": [
+   "datbn-vladimir-rustovitch",
+   "gr-obertus"
+  ]
+ }
+]

@@ -1,0 +1,52 @@
+[
+ {
+  "id": "nls2-after-the-founder",
+  "title": "Lasombra elders after the founder’s fall",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Montano and Gratiano after the Antediluvian’s destruction.",
+  "claims": [
+   {
+    "text": "After the anarchs destroyed the founder’s body, Montano spent several winters wandering the northern ice trying to piece together the long story of the clan, and found too much had been lost.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nls2",
+      "page": 11,
+      "pdf": 13
+     },
+     {
+      "book": "coti",
+      "page": 47,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Montano has seen the founder’s mindless destroying rage only a few times in a thousand years, and lost the dearest of the founder’s other childer to one.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nls2",
+      "page": 63,
+      "pdf": 65
+     },
+     {
+      "book": "coti",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "coti-montano",
+   "coti-gratiano"
+  ]
+ }
+]

@@ -1,0 +1,40 @@
+[
+ {
+  "id": "ncns1-sabbat-atlanta",
+  "title": "The Sabbat strike on Atlanta",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Part of the Sabbat drive up the East Coast.",
+  "claims": [
+   {
+    "text": "Atlanta’s fall was part of a Sabbat push for supremacy on the continent; elite legionnaires hand-chosen by a Sabbat cardinal took part, and Sabbat packs attacked the city’s Kindred openly with no care for the Masquerade.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ncns1",
+      "page": 303,
+      "pdf": 305
+     },
+     {
+      "book": "ncns1",
+      "page": 313,
+      "pdf": 315
+     },
+     {
+      "book": "beckett",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bjd-southern-crusade"
+  ]
+ }
+]

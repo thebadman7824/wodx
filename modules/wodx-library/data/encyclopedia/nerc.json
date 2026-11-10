@@ -1,0 +1,69 @@
+[
+ {
+  "id": "nerc-prophecy",
+  "title": "The Erciyes Fragments",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Cainite prophecy of the Thirteen.",
+  "claims": [
+   {
+    "text": "The Erciyes Fragments are a prophecy, with later scholars’ notes in the margins, foretelling that the Thirteen will die a death with no bloodshed and leave no ghosts, which its readers take to mean diablerie.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nerc",
+      "page": 109,
+      "pdf": 1
+     },
+     {
+      "book": "rotb",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Its annotators note the rumour that Brujah was slain by Brujah’s own childe, a tale one of them dismisses as Ventrue slander.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nerc",
+      "page": 110,
+      "pdf": 2
+     },
+     {
+      "book": "cbbrujah",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "One verse speaks of a second founder bound and claimed by magic, which an annotator reads as a jab at the Tremere usurpers.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nerc",
+      "page": 110,
+      "pdf": 2
+     },
+     {
+      "book": "rotb",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-sabbat-scripture",
+   "cbb-brujah-and-troile",
+   "antediluvians"
+  ]
+ }
+]

@@ -1,0 +1,40 @@
+[
+ {
+  "id": "ndan9-salianna-rule",
+  "title": "Salianna over the Courts of Love",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Grand Court accepts a new sovereign.",
+  "claims": [
+   {
+    "text": "Salianna came to rule over the Courts of Love, and the Grand Court acknowledged that sovereignty.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ndan9",
+      "page": 11,
+      "pdf": 12
+     },
+     {
+      "book": "ndan9",
+      "page": 12,
+      "pdf": 13
+     },
+     {
+      "book": "daeu",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-france"
+  ]
+ }
+]

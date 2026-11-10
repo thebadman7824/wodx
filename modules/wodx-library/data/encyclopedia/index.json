@@ -2173,6 +2173,144 @@
       "title": "Rites of Renown (W20)",
       "short": "W20 Rites of Renown",
       "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "ncns1",
+      "title": "Clan Novel Saga 1: The Fall of Atlanta",
+      "short": "Clan Novel Saga 1",
+      "edition": "Novel"
+    },
+    {
+      "id": "ncns2",
+      "title": "Clan Novel Saga 2: The Eye of Gehenna",
+      "short": "Clan Novel Saga 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "ncns3",
+      "title": "Clan Novel Saga 3: Bloody September",
+      "short": "Clan Novel Saga 3",
+      "edition": "Novel"
+    },
+    {
+      "id": "ncns4",
+      "title": "Clan Novel Saga 4: End Games",
+      "short": "Clan Novel Saga 4",
+      "edition": "Novel"
+    },
+    {
+      "id": "nbt1",
+      "title": "Clan Novel Trilogy: Brujah 1, Slave Ring",
+      "short": "Brujah Trilogy 1",
+      "edition": "Novel"
+    },
+    {
+      "id": "nls2",
+      "title": "Clan Novel Trilogy: Lasombra 2, Shadows",
+      "short": "Lasombra Trilogy 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "nbt2",
+      "title": "Clan Novel Trilogy: Brujah 2, The Overseer",
+      "short": "Brujah Trilogy 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "ntw2",
+      "title": "Clan Novel Trilogy: Tremere 2, Widow’s Weeds",
+      "short": "Tremere Trilogy 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "nmi",
+      "title": "A Morbid Initiation (Victorian Age novel)",
+      "short": "A Morbid Initiation",
+      "edition": "Novel"
+    },
+    {
+      "id": "ndan12",
+      "title": "Dark Ages Clan Novel 12: Ventrue",
+      "short": "DA Clan Novel 12",
+      "edition": "Novel"
+    },
+    {
+      "id": "ndan5",
+      "title": "Dark Ages Clan Novel 5: Lasombra",
+      "short": "DA Clan Novel 5",
+      "edition": "Novel"
+    },
+    {
+      "id": "ndan13",
+      "title": "Dark Ages Clan Novel 13: Tzimisce",
+      "short": "DA Clan Novel 13",
+      "edition": "Novel"
+    },
+    {
+      "id": "ndan1",
+      "title": "Dark Ages Clan Novel 1: Nosferatu",
+      "short": "DA Clan Novel 1",
+      "edition": "Novel"
+    },
+    {
+      "id": "ndan11",
+      "title": "Dark Ages Clan Novel 11: Tremere",
+      "short": "DA Clan Novel 11",
+      "edition": "Novel"
+    },
+    {
+      "id": "ndan9",
+      "title": "Dark Ages Clan Novel 9: Toreador",
+      "short": "DA Clan Novel 9",
+      "edition": "Novel"
+    },
+    {
+      "id": "nerc",
+      "title": "The Erciyes Fragments",
+      "short": "Erciyes Fragments",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "nbon",
+      "title": "The Book of Nod",
+      "short": "Book of Nod",
+      "edition": "Second edition"
+    },
+    {
+      "id": "npp2",
+      "title": "Predator & Prey 2: Judge",
+      "short": "Predator & Prey 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "nhw2",
+      "title": "The Horizon War 2: The Ascension Warrior",
+      "short": "Horizon War 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "nhw3",
+      "title": "The Horizon War 3: War in Heaven",
+      "short": "Horizon War 3",
+      "edition": "Novel"
+    },
+    {
+      "id": "nysc3",
+      "title": "Year of the Scarab 3: Land of the Dead",
+      "short": "Year of the Scarab 3",
+      "edition": "Novel"
+    },
+    {
+      "id": "nhtd",
+      "title": "Haunting the Dead (Orpheus anthology)",
+      "short": "Haunting the Dead",
+      "edition": "Novel"
+    },
+    {
+      "id": "nrdm",
+      "title": "Revelations of the Dark Mother",
+      "short": "Revelations of the Dark Mother",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2537,6 +2675,29 @@
     "npeih.json",
     "nsosm.json",
     "npt.json",
-    "nror.json"
+    "nror.json",
+    "ncns1.json",
+    "ncns2.json",
+    "ncns3.json",
+    "ncns4.json",
+    "nbt1.json",
+    "nls2.json",
+    "nbt2.json",
+    "ntw2.json",
+    "nmi.json",
+    "ndan12.json",
+    "ndan5.json",
+    "ndan13.json",
+    "ndan1.json",
+    "ndan11.json",
+    "ndan9.json",
+    "nerc.json",
+    "nbon.json",
+    "npp2.json",
+    "nhw2.json",
+    "nhw3.json",
+    "nysc3.json",
+    "nhtd.json",
+    "nrdm.json"
   ]
 }

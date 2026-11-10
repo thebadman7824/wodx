@@ -1,0 +1,41 @@
+[
+ {
+  "id": "ndan5-trinity-gone",
+  "title": "After the Trinity",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Constantinople without its three elders.",
+  "claims": [
+   {
+    "text": "The Trinity of elders that once ruled Constantinople is gone; only the Dracon remains, unseen for centuries, and the followers of the other two would not necessarily rally to it.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ndan5",
+      "page": 190,
+      "pdf": 192
+     },
+     {
+      "book": "ndan5",
+      "page": 191,
+      "pdf": 193
+     },
+     {
+      "book": "dacbn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbn-dracon",
+   "dacbn-trinity"
+  ]
+ }
+]

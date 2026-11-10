@@ -1,0 +1,63 @@
+[
+ {
+  "id": "nysc3-amenti-war",
+  "title": "The Amenti war on the Apepnu",
+  "kind": "event",
+  "lines": [
+   "mummy"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the few Amenti fight the Bane mummies.",
+  "claims": [
+   {
+    "text": "Too few to sweep their foes away, and ignorant of how far the enemy reached, the Amenti gathered intelligence and made surgical strikes against pockets of Apepnu, slowly wearing them down.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nysc3",
+      "page": 16,
+      "pdf": 16
+     },
+     {
+      "book": "mtr",
+      "page": 22,
+      "pdf": 20
+     },
+     {
+      "book": "mtr",
+      "page": 26,
+      "pdf": 24
+     },
+     {
+      "book": "mtr",
+      "page": 31,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Many younger Amenti respect the Imkhu, whose wisdom and might are vital to restoring cosmic order, but feel the elder immortals have lost touch with the modern world and that Horus leans on them too much.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nysc3",
+      "page": 63,
+      "pdf": 63
+     },
+     {
+      "book": "mtr",
+      "page": 30,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mtr-apepnu",
+   "mtr-imkhu",
+   "mtr-amenti"
+  ]
+ }
+]
