@@ -1,0 +1,94 @@
+[
+ {
+  "id": "wna-atlanta-maelstrom",
+  "title": "Atlanta in the Fourth Great Maelstrom",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "How the great storm struck the Necropolis of Atlanta.",
+  "claims": [
+   {
+    "text": "During the Fourth Great Maelstrom, longer than most before it, Atlanta's wraiths crowded into the Hierarchy Citadel or hid in Haunts under the viaducts; many were lost to Oblivion and more fell to their Shadows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wna",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Fire-rain fell in sheets and clawing red serpent-things dropped from the sky, leaving scars even Masquers could not mend, while Doppelgangers sang to lone wraiths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wna",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Distrust swept the city afterward; loners and those who avoided Pardoners were suspected first, and some Circles posted a Pardoner at the door of their Haunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wna",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "maelstroms",
+   "gw-doppelgangers",
+   "guilds"
+  ]
+ },
+ {
+  "id": "wna-track-6a",
+  "title": "Track 6A",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Haunt beneath Five Points station.",
+  "claims": [
+   {
+    "text": "While building Atlanta's subway in the late 1970s, MARTA crews failed again and again to blast through one stretch of granite that geologists could find nothing wrong with.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wna",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Rather than use enough explosive to wreck the tunnel, engineers routed a short bypass, Track 6A, around the stone beneath Five Points station, and the spot is now a Haunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wna",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "whaunts-haunts"
+  ]
+ }
+]
