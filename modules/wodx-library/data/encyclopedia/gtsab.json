@@ -519,5 +519,85 @@
    "vaulderie",
    "gtsab-pack-ranks"
   ]
+ },
+ {
+  "id": "gtsab-esbat",
+  "title": "Esbat",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The regular gathering of a Sabbat pack.",
+  "claims": [
+   {
+    "text": "An esbat is the weekly meeting of a Sabbat pack, nomadic or founded, where packmates talk over the events that touch the pack and observe their ritae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 46,
+      "pdf": 47
+     },
+     {
+      "book": "encv",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Packs keep the auctoritas ritae at shared occasions such as esbats, before a siege, or when a new member joins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "v20",
+      "page": 507,
+      "pdf": 515
+     }
+    ]
+   },
+   {
+    "text": "The Vaulderie is performed at nearly every pack esbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 154,
+      "pdf": 155
+     },
+     {
+      "book": "encv",
+      "page": 183,
+      "pdf": 184
+     }
+    ]
+   },
+   {
+    "text": "Most Sabbat have heard of Thaumaturgical rituals because packs share what they know at esbats, though few ever learn to perform one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtsab",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Stories of sect legends, such as the Black Hand assassin called the Ebony Fox, pass around the fire at esbats.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cchand",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": []
  }
 ]
