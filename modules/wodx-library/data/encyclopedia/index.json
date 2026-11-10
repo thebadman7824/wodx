@@ -1171,6 +1171,12 @@
    "title": "Dark Reflections: Spectres",
    "short": "DR",
    "edition": "First edition"
+  },
+  {
+   "id": "wsos",
+   "title": "The Sea of Shadows",
+   "short": "SoS",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1368,6 +1374,7 @@
   "whaunts.json",
   "wbol.json",
   "wpg.json",
-  "wdr.json"
+  "wdr.json",
+  "wsos.json"
  ]
 }
