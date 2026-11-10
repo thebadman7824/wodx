@@ -1675,6 +1675,12 @@
       "title": "Blood Magic: Secrets of Thaumaturgy",
       "short": "BMSoT",
       "edition": "Revised"
+    },
+    {
+      "id": "succ",
+      "title": "The Succubus Club",
+      "short": "SuccC",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -1956,6 +1962,7 @@
     "cop.json",
     "hotd.json",
     "sog.json",
-    "bmst.json"
+    "bmst.json",
+    "succ.json"
   ]
 }

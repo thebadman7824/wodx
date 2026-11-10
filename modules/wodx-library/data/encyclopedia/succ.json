@@ -1,0 +1,186 @@
+[
+ {
+  "id": "succ-club",
+  "title": "The Succubus Club",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Chicago's long-lived nightclub and a favourite hunting ground of the Kindred.",
+  "claims": [
+   {
+    "text": "The club fills an old brick warehouse on State Street in Chicago and has stayed popular since it opened in 1982, an unusually long run for a nightclub.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Its crowds of mortal patrons draw the Kindred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Brennon Thornhill opened it on May 23, 1982, in the former Stardust disco, amid controversy over the deaths of several basement construction workers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "A Colombian owner rumoured to have underworld ties paid for the refit.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "succ-layout",
+   "succ-thornhill"
+  ]
+ },
+ {
+  "id": "succ-layout",
+  "title": "Reality, Elysium and the Labyrinth",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The three main floors of the Succubus Club.",
+  "claims": [
+   {
+    "text": "The main dance floor is nicknamed Reality, the balcony above it is called Elysium as a joke among Kindred, and the basement concert hall is the Labyrinth, which really holds a maze.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The Labyrinth has its own back entrance with a neon sign; Elysium is marked by signs, but Reality is only a nickname.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Elysium runs around the walls 15 feet above the floor, is quieter, and draws the older patrons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Anarchs seldom attend the VIP lounge parties and claim to scorn them, but many secretly envy those invited.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "succ-club"
+  ]
+ },
+ {
+  "id": "succ-thornhill",
+  "title": "Brennon Thornhill",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Owner and host of the Succubus Club.",
+  "claims": [
+   {
+    "text": "Brennon Thornhill keeps several havens around Chicago and seldom spends the day at the club, though the third-floor suite is lavish.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Bribes and political friends helped bury an old DEA probe of the club.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Penthouse parties at the club have become places where candidates meet celebrities to win donations and endorsements.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Thornhill runs a quiet whispering campaign against the rival club the Blue Velvet, fearing the Kindred clientele will move there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "succ",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "succ-club"
+  ]
+ }
+]
