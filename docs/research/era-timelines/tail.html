@@ -1,0 +1,46 @@
+const RUN="2026-11-10t1";
+const V={};let filter='all',coll=null,cur=null;const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const TIER={stated:'Stated in the book',implied:'Implied',rumour:'Might be true'};
+const LBL={ok:'OK',fix:'Fix',cut:'Cut'};
+function pick(){const h=location.hash.slice(1);cur=ERAS.find(e=>e.id===h)?.id||ERAS[0].id;}
+function controls(id){const st=(V[id]||{}).verdict||'';return {st,html:`<div class="vb"><button class="okb" aria-pressed="${st==='ok'}">OK</button><button class="fixb" aria-pressed="${st==='fix'}">Fix</button><button class="cutb" aria-pressed="${st==='cut'}">Cut</button></div><textarea id="n-${id}" placeholder="What should change, and why?"></textarea>`};}
+function wire(c,id){const ta=c.querySelector('textarea');ta.value=(V[id]||{}).note||'';
+ c.querySelector('.okb').onclick=()=>save(id,'ok',ta.value);c.querySelector('.fixb').onclick=()=>save(id,'fix',ta.value);c.querySelector('.cutb').onclick=()=>save(id,'cut',ta.value);
+ ta.onchange=()=>{if(V[id]?.verdict||ta.value)save(id,V[id]?.verdict||'fix',ta.value);};}
+function render(){
+ const nav=$('#eras');nav.textContent='';
+ for(const e of ERAS){const done=e.items.filter(i=>V[i.id]?.verdict).length;const b=document.createElement('button');b.setAttribute('aria-pressed',e.id===cur);b.innerHTML=`${esc(e.name)}<small>${done}/${e.items.length}</small>`;b.onclick=()=>{location.hash=e.id;};nav.append(b);}
+ const e=ERAS.find(x=>x.id===cur);let n={ok:0,fix:0,cut:0};e.items.forEach(i=>{const v=V[i.id]?.verdict;if(n[v]!==undefined)n[v]++;});
+ $('#tally').innerHTML=`<span><b>${e.items.length}</b> events</span><span><b>${n.ok}</b> OK</span><span><b>${n.fix}</b> Fix</span><span><b>${n.cut}</b> Cut</span><span><b>${e.items.length-n.ok-n.fix-n.cut}</b> not reviewed</span>`;
+ const host=$('#era');host.textContent='';
+ const h=document.createElement('div');h.innerHTML=`<h2>${esc(e.name)}</h2><p class="sub">${esc(e.span)}. ${e.items.filter(i=>i.src==='chronicle').length} already fire as dated events; ${e.items.filter(i=>i.src==='ency').length} come from the Encyclopaedia.</p>`;host.append(h);
+ const gid='era-'+e.id;const g=document.createElement('div');g.className='eranote';const k=controls(gid);g.innerHTML=`<p class="txt"><b>This era as a whole.</b> What is missing, which years matter most, anything to change before house-only events are drafted.</p>`+k.html;host.append(g);wire(g,gid);
+ const years=new Map();for(const i of e.items){const st=V[i.id]?.verdict||'';if(filter==='todo'&&st)continue;if(['ok','fix','cut'].includes(filter)&&st!==filter)continue;if(!years.has(i.year))years.set(i.year,[]);years.get(i.year).push(i);}
+ if(!years.size){const p=document.createElement('p');p.className='empty';p.textContent='Nothing to show with this filter.';host.append(p);}
+ for(const [y,list] of years){const row=document.createElement('div');row.className='yearrow';row.innerHTML=`<div class="yr">${y}</div>`;const cards=document.createElement('div');cards.className='cards';
+  for(const i of list){const {st,html}=controls(i.id);const c=document.createElement('article');c.className='card '+st;
+   const tags=[i.src==='chronicle'?'<span class="tag chron">Already a dated event</span>':'<span class="tag">Encyclopaedia</span>',i.line?`<span class="tag">${esc(i.line)}</span>`:'',i.tier!=='stated'?`<span class="tag soft">${esc(TIER[i.tier]||i.tier)}</span>`:'',i.also?.length?`<span class="tag soft">also ${i.also.join(', ')}</span>`:''].join('');
+   c.innerHTML=`<div class="head"><h3>${esc(i.title)}</h3><span class="state">${LBL[st]||'Not reviewed'}</span></div><div class="tags">${tags}</div><p class="txt">${esc(i.text)}</p><p class="refs">${esc(i.ref)}</p>`+html;cards.append(c);wire(c,i.id);}
+  row.append(cards);host.append(row);}
+}
+async function save(id,verdict,note){
+ if(!coll){$('#notice').textContent='Notes cannot be saved in this view. Open the page signed in to claude.ai.';return;}
+ V[id]={verdict,note,run:RUN};render();
+ try{await coll.doc(RUN+'__'+id).set({item:id,run:RUN,verdict,note:note||'',at:Date.now()});$('#notice').textContent='Saved.';}
+ catch(e){$('#notice').textContent='That note did not save ('+(e.code||'error')+'). Try again.';}
+}
+document.querySelectorAll('.filters button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('.filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});
+addEventListener('hashchange',()=>{pick();render();scrollTo(0,0);});
+pick();render();
+(async()=>{
+ const t=setTimeout(()=>{$('#notice').textContent='Saved notes did not load. Your clicks will still try to save.';},10000);
+ let db=null;try{db=window.claude?await claude.use('db'):null;}catch(e){db=null;}
+ if(!db){clearTimeout(t);$('#notice').textContent='Saved notes are unavailable here. Open the page signed in to claude.ai to review.';return;}
+ coll=db.collection('verdicts');
+ coll.onSnapshot(snap=>{clearTimeout(t);for(const k in V)delete V[k];
+  for(const d of snap.docs.map(d=>d.data()).filter(Boolean)){if(d.run===RUN)V[d.item]=d;}
+  $('#notice').textContent=`Draft ${RUN}. Notes save as you click.`;render();},
+  e=>{clearTimeout(t);$('#notice').textContent='Saved notes did not load ('+(e.code||'error')+').';});
+})();
+</script>
