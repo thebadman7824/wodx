@@ -1,0 +1,250 @@
+[
+ {
+  "id": "scsw-france",
+  "title": "France in the Age of Masks",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Royal intrigue and religious war in Renaissance France.",
+  "claims": [
+   {
+    "text": "Louis XI takes the throne in 1461 and drags France into plots and near revolt; Charles VIII invades Italy to claim Naples, starting some 50 years of war that wins nothing lasting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Catherine di Medici rules as regent for the young kings from 1560 to 1589, and the strife between Catholic nobles and Huguenots peaks in the St. Bartholomew's Day Massacre of 1572.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "scsw-islamic-courts",
+  "title": "Courts of the Muslim realms",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How intrigue works under the sultans.",
+  "claims": [
+   {
+    "text": "Sultans hold absolute legal power yet live with the constant danger of being overthrown, and a coup that succeeds is often taken as a sign that Destiny favors the victor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Many court servants are slaves raised from birth for loyalty; plots move with more care than in Europe, since caught conspirators die slowly and horribly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Sultan of Turkey keeps hundreds of slave concubines but may not take a wife by law.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "scsw-france"
+  ]
+ },
+ {
+  "id": "scsw-magickal-courts",
+  "title": "Courts of the wizards",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Otherworldly courts ruled by magi.",
+  "claims": [
+   {
+    "text": "Magickal courts can be castles of ice, floating cities or libraries to rival old Alexandria, and their courtiers use every kind of sorcery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Each such realm favors certain practices: a witch thrives in a coven garden where Artificer devices falter, while the reverse holds in an Artificer lodge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-artificers",
+   "scor-lodges"
+  ]
+ },
+ {
+  "id": "scsw-black-uncles",
+  "title": "The Black Uncles",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The Patrons Guild of the High Guild.",
+  "claims": [
+   {
+    "text": "The Patrons Guild are rich, clever High Guild members who shun open fighting and instead find promising artists, craftsmen and agents and fund them, on the understanding that the favored do as asked.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Most come from noble houses, some from wealthy merchant families; many join late in life after making a fortune elsewhere, leaving rough work to the Axes and the Rose Guild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-high-guild",
+   "scor-guilds"
+  ]
+ },
+ {
+  "id": "scsw-trevanus",
+  "title": "Trevanus and the idea merchants",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A tradesman's theory of value as a force.",
+  "claims": [
+   {
+    "text": "Trevanus, a tradesman, argued that value is a human idea: gold means nothing until laws give it worth, and someone who grasps those laws can weigh and exchange ideas as a merchant handles coins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Trevanus joined the arithmetic of trade with sacred geometry, claiming an Enlightened idea merchant could trade in thoughts and feelings themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-high-guild"
+  ]
+ },
+ {
+  "id": "scsw-floreati-manners",
+  "title": "Manners as mechanism",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How Daedalean courtiers see etiquette.",
+  "claims": [
+   {
+    "text": "Formal good manners set the Renaissance apart from the Middle Ages; Daedalean courtiers hold that people living under a set of rules have built a mechanism, and mechanisms can be steered.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "Floreati also keep the old Hermetic idea of as above, so below, treating etiquette as echoed in the body and in nature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scsw",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "scor-enlightened-arts",
+   "scsw-black-uncles"
+  ]
+ }
+]
