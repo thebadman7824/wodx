@@ -601,6 +601,12 @@
    "title": "Breedbook: Rokea (Revised)",
    "short": "BB Rokea",
    "edition": "Revised"
+  },
+  {
+   "id": "bbnag",
+   "title": "Breedbook: Nagah (Revised)",
+   "short": "BB Nagah",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -703,6 +709,7 @@
   "bbrat.json",
   "bbmok.json",
   "bbana.json",
-  "bbrok.json"
+  "bbrok.json",
+  "bbnag.json"
  ]
 }
