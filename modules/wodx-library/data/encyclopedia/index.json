@@ -1225,6 +1225,12 @@
    "title": "Dark Kingdom of Jade",
    "short": "DKJ",
    "edition": "First edition"
+  },
+  {
+   "id": "wche",
+   "title": "Charnel Houses of Europe: The Shoah",
+   "short": "CHE",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1431,6 +1437,7 @@
   "wris.json",
   "wmed.json",
   "weoe.json",
-  "wdkj.json"
+  "wdkj.json",
+  "wche.json"
  ]
 }
