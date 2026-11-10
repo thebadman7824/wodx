@@ -113,10 +113,7 @@ export default class MortalActorSheet extends foundry.appv1.sheets.ActorSheet {
 			}
 		}
 
-		// if (data.actor.type == CONFIG.worldofdarkness.sheettype.mortal) {
-		console.log(`${data.actor.name} - (${CONFIG.worldofdarkness.sheettype.mortal})`);
-		console.log(data.actor);
-		// }
+		// WoDX fork: no console print of the whole actor on every redraw
 
 		return data;
 	}	

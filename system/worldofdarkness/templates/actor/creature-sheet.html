@@ -40,6 +40,7 @@
 
 			<!-- Core Normal -->
 			<div class="tab core sheet-inner-area" data-group="primary" data-tab="core">
+				{{#unless wodxCore}}{{!-- WoDX fork: WoDX Sheets draws its own Core tab here --}}
 
 				<section class="sheet-spec-body">
 
@@ -62,6 +63,7 @@
 
 				</section>				
 				
+				{{/unless}}
 			</div>
 
 			{{!-- Combat Tab --}}

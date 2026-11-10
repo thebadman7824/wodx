@@ -40,6 +40,7 @@
 		
 			<!-- Core Normal -->
 			<div class="tab core sheet-inner-area" data-group="primary" data-tab="core">
+				{{#unless wodxCore}}{{!-- WoDX fork: WoDX Sheets draws its own Core tab here --}}
 
 				<i class="macroBtn pointer createicon fa-solid fa-square-plus item-create" title="{{localize "wod.labels.add.item"}}" aria-hidden="true" data-itemtype="All" data-origin="core"></i>
 
@@ -137,6 +138,7 @@
 						</div>						
 					</div>
 				</div>
+				{{/unless}}
 			</div>
 
 			{{!-- Combat Tab --}}

@@ -1261,3 +1261,9 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Water gates: the wall is cut where the river passes, an iron grate spans the stream, and a tower stands on each bank (region water-gate-N). No wall tower stands in the water.
 - Plan view draws the river as wide as the Dungeondraft map does. Fixed a duplicate road-trigger id when one road leaves by the same side twice.
 - Sample linberg redrawn.
+## 2026-11-10: lighter sheet saves and redraws (fork 7.3.2-wodx.7, WoDX Sheets 0.6.2)
+- From the character sheet review (https://claude.ai/artifact/9HMVrBciCtp9WQCAZiDSrW), steps 1 and 2.
+- After-save recompute: only the client that made the change runs it, and it writes the changed values only (module/scripts/wodx-save.js, `systemChanges`). The item-change recompute does the same. B600.
+- Mortal and PC sheets no longer print the whole actor to the console on every redraw.
+- All 12 line sheet templates wrap the Core tab in `{{#unless wodxCore}}`; WoDX Sheets sets `wodxCore` when it draws the book's sheet. B601.
+- Harness: sheet-speed.test.mjs. Gate: tools/gate/gatesheetspeed.mjs (redraw times, saves per change, totals follow, Core tab with and without a WoDX sheet).
