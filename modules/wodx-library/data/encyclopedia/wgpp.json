@@ -1,0 +1,94 @@
+[
+ {
+  "id": "wgpp-guild-standing",
+  "title": "The Puppeteers' standing",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Puppeteers' Guild survives.",
+  "claims": [
+   {
+    "text": "Charon is said to have allowed the Puppeteers only because they stood with the other Guilds at a time when Charon could not move against all of them; that bond still helps them survive.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wgpp",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Several Heretic cults that favor contact with the living, against the Dictum Mortuum, hide Puppeteers from their foes, and some Puppeteers take part, calling it a religious duty even when it endangers their hosts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgpp",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Of all the Guilds only the Pardoners are cool toward them, though each needs the other's services and stays civil in public.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgpp",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds",
+   "heretics"
+  ]
+ },
+ {
+  "id": "wgpp-fifth-maelstrom",
+  "title": "Puppeteers in the Fifth Maelstrom",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Why many Puppeteers stayed out of the storm.",
+  "claims": [
+   {
+    "text": "Many Puppeteers saw no reason to aid the Hierarchy and kept to protecting their own during the Maelstrom of the Second World War.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgpp",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "One small band led by Lance Salles went to help against advice, and nearly all of them became Spectres; after that the Guild sent no more rescue missions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgpp",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wgpp-guild-standing",
+   "maelstroms",
+   "spectres"
+  ]
+ }
+]
