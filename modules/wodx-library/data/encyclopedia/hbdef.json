@@ -1,0 +1,94 @@
+[
+ {
+  "id": "hbdef-defender-outlook",
+  "title": "Defenders and Martyrs",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Defenders guard what they value, and how that differs from Martyrs.",
+  "claims": [
+   {
+    "text": "Before the imbuing, Defenders tend to value something as much as life itself, a family, ethic, culture, place, creation or community, and their first answer to monsters is to protect it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbdef",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Defenders draw a line and fight hard for it but are not reckless: they plan, retreat when schemes fail and accept losing one charge to stay alive and save more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbdef",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Martyrs also guard people and places, but give of themselves with abandon, while Defenders weigh what to save and try to wear the enemy down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbdef",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-defenders",
+   "htr-martyrs"
+  ]
+ },
+ {
+  "id": "hbdef-defender-slang",
+  "title": "Defender slang",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Terms Defenders use for hunters and the hunt.",
+  "claims": [
+   {
+    "text": "Defenders call themselves hunters, and sometimes protectors, guards or champions; their purpose is the watch, also known as the mission or the calling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbdef",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "A kamikaze throws life away in the hunt with nothing saved; a recluse is a protector gone over the edge who guards something outside normal society; runaways are witnesses who fled at an imbuing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbdef",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-hunter-slang",
+   "hbave-avenger-slang",
+   "htrpg-bystanders"
+  ]
+ }
+]

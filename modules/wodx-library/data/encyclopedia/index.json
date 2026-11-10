@@ -1489,6 +1489,12 @@
    "title": "Hunter Book: Avenger",
    "short": "HB Avenger",
    "edition": "First edition"
+  },
+  {
+   "id": "hbdef",
+   "title": "Hunter Book: Defender",
+   "short": "HB Defender",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1739,6 +1745,7 @@
   "hespell.json",
   "hewd.json",
   "heul.json",
-  "hbave.json"
+  "hbave.json",
+  "hbdef.json"
  ]
 }
