@@ -1753,6 +1753,12 @@
       "title": "Dirty Secrets of the Black Hand",
       "short": "DSotBH",
       "edition": "Revised"
+    },
+    {
+      "id": "ancb",
+      "title": "Anarch Cookbook",
+      "short": "AnCB",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2047,6 +2053,7 @@
     "hkbn.json",
     "encv.json",
     "cchand.json",
-    "dsbh.json"
+    "dsbh.json",
+    "ancb.json"
   ]
 }

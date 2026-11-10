@@ -1,0 +1,180 @@
+[
+ {
+  "id": "ancb-anarchs",
+  "title": "Who the Anarchs Are",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The young rebels of the Camarilla, as the movement sees itself.",
+  "claims": [
+   {
+    "text": "Most anarchs are neonates who still identify closely with their mortal peers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Their ranks fill with bikers, punks, goths, young philosophy students, street gangsters, skaters and similar rebels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Princes and justicars who answer anarchs with harsh reprisal only swell the movement by giving it something to rebel against.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ancb-defeat"
+  ]
+ },
+ {
+  "id": "ancb-primogen",
+  "title": "Primogen and Anarchs",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the strength of a primogen council shapes a city.",
+  "claims": [
+   {
+    "text": "Some newer American towns have a prince but no primogen, being small enough to hold few vampires and little rebellion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "A strong prince who rules fairly usually dominates the council; where a prince works against the other clans, the primogen may be strong enough to push back.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ancb-anarchs"
+  ]
+ },
+ {
+  "id": "ancb-defeat",
+  "title": "When an Anarch Revolt Fails",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What usually follows a failed rising.",
+  "claims": [
+   {
+    "text": "Most of the time the prince wins, and the anarchs slip back to the outskirts and lie low.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Captured anarchs face the prince, or a justicar if their crimes broke the Masquerade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "After a defeat an anarch's best hope is usually to flee the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ancb-anarchs"
+  ]
+ },
+ {
+  "id": "ancb-garcia",
+  "title": "Salvador Garcia",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Brujah anarch known among the Kindred.",
+  "claims": [
+   {
+    "text": "Salvador Garcia is a Brujah, sired by Ferdinand and Embraced in 1892, who looks about 23.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Both sides have accused Garcia of working for the other rather than for the anarchs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ancb",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ancb-anarchs"
+  ]
+ }
+]
