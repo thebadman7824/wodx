@@ -823,6 +823,12 @@
    "title": "Tradition Book: Sons of Ether (Revised)",
    "short": "TB:SoE",
    "edition": "Revised"
+  },
+  {
+   "id": "mrve",
+   "title": "Tradition Book: Verbena (Revised)",
+   "short": "TB:Ve",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -962,6 +968,7 @@
   "mreu.json",
   "mrho.json",
   "mroh.json",
-  "mrse.json"
+  "mrse.json",
+  "mrve.json"
  ]
 }
