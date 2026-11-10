@@ -2113,6 +2113,12 @@
       "title": "France by Night (Monde des Ténèbres: France)",
       "short": "FbN",
       "edition": "French edition"
+    },
+    {
+      "id": "wamwp",
+      "title": "Monkeywrench! Pentex",
+      "short": "Monkeywrench! Pentex",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2467,6 +2473,7 @@
     "berbn.json",
     "cairbn.json",
     "dcbn.json",
-    "frbn.json"
+    "frbn.json",
+    "wamwp.json"
   ]
 }
