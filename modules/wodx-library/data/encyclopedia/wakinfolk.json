@@ -1,0 +1,253 @@
+[
+ {
+  "id": "wakinfolk-tribal-mating",
+  "title": "Tribes and their mates",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How each tribe chooses Kinfolk partners.",
+  "claims": [
+   {
+    "text": "Kinfolk who mate into another tribe usually come to be seen as Kinfolk of that tribe, though they keep ties to their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Get of Fenris are fiercely devoted to family, which for them can include anyone with a drop of Fenrir blood and zeal for the cause.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Shadow Lords pick mates for what they can offer, often wealthy, well-placed Kin; Silver Fangs keep strict dynastic lines of blue-blooded Kinfolk, valuing lineage over money.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Red Talons officially mate only with their wolf Kin, though more than one homid Garou has found a mate among them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wakinfolk-fellowships",
+  "title": "Kinfolk Fellowships",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Groups of Kinfolk working together.",
+  "claims": [
+   {
+    "text": "Fellowships are groups of Kinfolk working toward a shared purpose, from local circles of friends to organised, mobile networks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Some admit only one tribe, such as the Silvertree Genealogical Society of the Silver Fangs; others, like the Locksmiths and Viatopia, welcome all tribes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Almost all aim to keep communication strong between werewolves and Kin around the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wakinfolk-background-limits",
+  "title": "Tribal limits on Kinfolk Backgrounds",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What Kinfolk of each tribe may buy.",
+  "claims": [
+   {
+    "text": "Bone Gnawer Kin may take neither Pure Breed nor Resources above 3; Glass Walker Kin cannot buy Pure Breed or Mentor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Red Talon Kin cannot buy Allies, Contacts, Equipment or Resources; Shadow Lord Kin cannot buy Mentor; Silent Strider Kin cannot buy Resources; Wendigo Kin cannot buy Contacts or Resources.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Silver Fang Kin are required to put a Background point or more into Pure Breed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wakinfolk-gifts",
+  "title": "Kinfolk and Gifts",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Kinfolk can learn Gifts.",
+  "claims": [
+   {
+    "text": "A Kinfolk can learn a Gift from a spirit called by a willing Theurge, negotiating through an interpreter with Spirit Speech; a spirit pleased by the Kin may also offer to teach unbidden, in a matter of hours.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "A Garou may teach a Gift directly, but the Kin must practise for months before it works.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Kinfolk have no Rank, so none may have Gifts above level one, and most lack Gnosis, limiting them to Gifts that need none.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wakinfolk-supernatural",
+  "title": "Supernatural Kinfolk",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kinfolk who are also vampires, mages, wraiths or changelings.",
+  "claims": [
+   {
+    "text": "Kin sometimes become vampires, Awaken, linger as wraiths or are born with a faerie nature, though Gaia generally steers the Kin of the Garou away from such fates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Such a character is built with the rules of the other game and must buy the Supernatural Kinfolk Merit, 4 points or 5 for vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Good relations with Garou relatives are not assumed; a close Garou friend needs the 3-point Werewolf Companion Merit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wakinfolk",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

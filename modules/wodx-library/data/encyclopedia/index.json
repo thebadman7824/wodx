@@ -1963,6 +1963,12 @@
       "title": "Hengeyokai: Shapeshifters of the East",
       "short": "Hengeyokai",
       "edition": "Revised"
+    },
+    {
+      "id": "wakinfolk",
+      "title": "Kinfolk: Unsung Heroes",
+      "short": "Kinfolk: Unsung Heroes",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2292,6 +2298,7 @@
     "wafrontier.json",
     "waguard.json",
     "wahammer.json",
-    "wahenge.json"
+    "wahenge.json",
+    "wakinfolk.json"
   ]
 }
