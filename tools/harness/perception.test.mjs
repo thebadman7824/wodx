@@ -56,7 +56,7 @@ test("the module wires it in: settings, the HUD button, the isVisible wrap, play
   const src = readFileSync(join(root, "modules/wodx-senses/scripts/perception.mjs"), "utf8");
   const main = readFileSync(join(root, "modules/wodx-senses/scripts/main.mjs"), "utf8");
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-senses/module.json"), "utf8"));
-  assert.equal(m.version, "0.5.0");
+  assert.equal(m.version, "0.5.1");
   assert.match(main, /const VERSION = "0\.5\.0"/);
   assert.match(main, /setupPerception\(\{/);
   for ( const k of ["\"screen\"", "\"trails\"", "\"unseen\""] ) assert.ok(src.includes(`register(MOD, ${k}`), k);
