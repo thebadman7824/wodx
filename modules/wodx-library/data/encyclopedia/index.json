@@ -943,6 +943,12 @@
    "title": "Manifesto: Transmissions from the Rogue Council",
    "short": "Man",
    "edition": "Revised"
+  },
+  {
+   "id": "mrftlv",
+   "title": "The Fallen Tower: Las Vegas",
+   "short": "FTLV",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1102,6 +1108,7 @@
   "mrdote.json",
   "mrlp.json",
   "mrbt.json",
-  "mrman.json"
+  "mrman.json",
+  "mrftlv.json"
  ]
 }
