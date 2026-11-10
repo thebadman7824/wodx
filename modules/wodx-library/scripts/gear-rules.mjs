@@ -20,8 +20,8 @@ export const SOURCES = {
 export const V20_FIREARM_ERAS = ["great-war", "modern", "time-of-judgment", "future-darkness"];
 
 /** An era that carries another's gear and books: the Time of Future Judgement (2099) is Future Darkness's last year. */
-export const ERA_LIKE = {"time-of-future-judgement": "future-darkness"};
-export const ERA_ORDER = ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
+export const ERA_LIKE = {"time-of-future-judgement": "future-darkness", "age-of-reason": "renaissance", "mid-century": "great-war"};
+export const ERA_ORDER = ["dark-ages", "long-night", "renaissance", "age-of-reason", "victorian", "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
 
 const BLUNT = /\b(sap|club|mace|staff|quarterstaff|hammer|warhammer|war hammer|rock|sling|flail|chair|table|tankard|candlestick|branch|knucks|whip|cat-o)/i;
 const dash = v => { const s = String(v ?? "").trim(); return s === "" || s === "—" || s === "-" || /^n\/?a$/i.test(s) ? "" : s; };

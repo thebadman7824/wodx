@@ -15,7 +15,7 @@ Ben's rule (2026-11-10): anything that touches the passage of time must work in 
 
 ## Gaps still open, by priority
 
-1. **Years no era covers.** Chronicle has no profile for 1601 to 1836, 1902 to 1913, 1919 to 1989 or 2005 to 2009, so those years keep the last era. 1950 runs the Great War kit (sepia grade, field drums, telegram and field-order handouts), and Great War gear and goods; 1750 runs the Renaissance kit and gear. Fix proposed: two bridge profiles (Age of Reason 1601 to 1836, Mid-century 1919 to 1989) whose rules copy the era before, plus a fallback chain on every lookup keyed by era. Touches every module, so it waits for Ben's choice.
+1. **Years no era covers.** Done on Ben's choice (2026-11-10): two bridge eras, the Age of Reason (1601 to 1836) and Mid-century (1919 to 1989), with rules copied from the era before and their own look, music palette, colour grade, handouts and primers. Modules that hold no content of their own for them borrow it (`like` in eras.json: gear, fill, shelves, sounds). 1902 to 1913 and 2005 to 2009 still keep the era before.
 2. **Dated events on the classic timeline.** 25 events between 1197 and 2025: none before 1347 and none from 1601 to 1896. The future branch has about 418 for 1990 to 2099. Fix: an events pass built from the Encyclopaedia's dated entries, which already carry page references, then book checks on the PC.
 3. **Encyclopaedia era tags.** 1846 entries are tagged modern, 6 Future Darkness, none the Long Night. A tagging pass should mark which modern entries still hold after the Masquerade falls in 2025, using the approved Future Darkness timeline.
 4. **Gear by era is thin late.** Modern 22 items, Victorian 28, nothing written for 1919 to 1989 beyond Great War and V20 firearms.

@@ -57,6 +57,12 @@ export const PRIMERS = {
     storyteller: ["The Camarilla forms in 1486 and the Convention of Thorns ends the Anarch revolt in 1493; those who refuse become the Sabbat.",
       "For mages this is the Sorcerers Crusade: the Order of Reason's science against the old traditions. Witch trials are a real danger to anyone found out."]
   },
+  "age-of-reason": {
+    players: ["Kings rule by divine right until revolutions say otherwise. Coffee houses, newspapers and learned societies argue about everything, and the first banks and trading companies grow rich on distant colonies.",
+      "Flintlock muskets and pistols are common, swords still hang at gentlemen's hips, and wigs and powder mark rank. Travel is by coach and sail, slow and dangerous."],
+    storyteller: ["No era book covers these years, so the Renaissance's rules carry on: Roads, the Dark Ages ability sets, early firearms. The Camarilla and the Sabbat are young and still settling their borders.",
+      "For mages the Order of Reason hardens into the Technocracy. The witch trials fade, but reason itself becomes a weapon against magic, and the Gauntlet thickens."]
+  },
   "victorian": {
     players: ["Steam, gaslight and the telegraph. Railways cross the land, factories fill the cities with smoke, and newspapers print every scandal.",
       "Society runs on manners and class. A calling card, a good name and the right club open doors; poverty and the workhouse wait below."],
@@ -74,6 +80,12 @@ export const PRIMERS = {
       "Machine guns, gas, aircraft and tanks are new and terrible. Soldiers come back changed, if they come back."],
     storyteller: ["Mass death thins the Shroud and fills the Underworld. No-man's-land is a feeding ground and a hiding place.",
       "Borders and loyalties are tested for the Kindred too, as princes' cities fall into enemy hands or are bombed."]
+  },
+  "mid-century": {
+    players: ["Wireless sets, cinemas, motor cars and aeroplanes. A second world war comes and goes, and after it the world splits into two armed camps under the shadow of the bomb.",
+      "Telephones reach most homes, then television. Papers are checked at borders, secret police keep files, and many people learn to keep their thoughts to themselves."],
+    storyteller: ["No era book covers these years, so the Great War's rules carry on: Humanity and Paths, the Victorian ability sets, modern firearms. The modern era's books take over in 1990.",
+      "The Fifth Great Maelstrom breaks in 1945. Mass war, camps and purges fill the Underworld, and the Kindred of occupied cities serve new masters or flee them."]
   },
   "modern": {
     players: ["The world of the 1990s: cities that never sleep, crime and corruption, television and the first mobile phones and computers.",

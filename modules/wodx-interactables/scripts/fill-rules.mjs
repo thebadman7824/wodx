@@ -11,7 +11,7 @@
  */
 
 /** An era that draws another's gear, as WoDX Library's Gear by era has it: 2099 is Future Darkness's last year. */
-export const ERA_LIKE = {"time-of-future-judgement": "future-darkness"};
+export const ERA_LIKE = {"time-of-future-judgement": "future-darkness", "age-of-reason": "renaissance", "mid-century": "great-war"};
 
 /** What kind of thing an item of Gear by era is, or null when it never goes in a container. */
 export function categoryOf(item) {
