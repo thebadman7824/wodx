@@ -4,3 +4,4 @@
 **/LOG.old
 **/node_modules/
 tools/harness/package-lock.json
+__pycache__/

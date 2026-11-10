@@ -8,6 +8,7 @@
  *             bar; if the import made none, a new door wall is drawn there
  *   features  tiles over chests, beds, hay, an oven, a well: containers, hiding places, lights and climbs
  *   regions   places for NPC routines (a home, a workplace) and trigger regions where a track comes in
+ *   households  (0.21.0, a town generator's) who lives in each building, roles only: kept on that building's region
  * Positions in the sidecar are grid cells from the map's top-left corner, so the scale the map was imported at does
  * not matter. Everything made is marked with the sidecar's id for it: adopting again skips what is already there, and
  * Undo removes what was made and puts the door walls back as they were.
@@ -85,7 +86,20 @@ export function parseSidecar(input) {
     if ( !place && !behaviors.length ) { errors.push(`${r.id}: it is neither a place nor has a behaviour, so it was left out.`); continue; }
     regions.push({id: r.id, label: String(r.label ?? r.id).slice(0, 80), rect: r.rect.map(Number), place, behaviors});
   }
-  return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions}};
+  // 0.21.0: a town's households (roles only), each kept on its building's region for WoDX NPC to seed later
+  const households = [];
+  for ( const h of Array.isArray(d.households) ? d.households : [] ) {
+    if ( !fresh("household", h) ) continue;
+    const reg = regions.find(r => r.id === h.building && r.place);
+    if ( !reg ) { errors.push(`${h.id}: its building ${h.building ?? "(none)"} is not a place on the map, so it was left out.`); continue; }
+    const people = (Array.isArray(h.people) ? h.people : []).filter(p => plain(p) && typeof p.role === "string" && p.role.trim()).slice(0, 20)
+      .map(p => ({role: p.role.trim().slice(0, 40)}));
+    if ( !people.length ) { errors.push(`${h.id}: nobody lives in it, so it was left out.`); continue; }
+    const hh = {id: h.id, label: String(h.label ?? h.id).slice(0, 80), trade: String(h.trade ?? "").slice(0, 40), people};
+    reg.household = hh;
+    households.push(hh);
+  }
+  return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions, households}};
 }
 
 /**
@@ -170,7 +184,7 @@ export function regionData(r, fr, types = new Set()) {
     .map(b => ({type: BEHAVIORS[b.type], name: b.system.label ? String(b.system.label).slice(0, 80) : r.label, system: b.system}));
   const data = {name: r.label, color: r.place ? "#7a6a4f" : "#9b3b3b",
     shapes: [{type: "rectangle", x: Math.round(x), y: Math.round(y), width: Math.round(r.rect[2] * fr.size), height: Math.round(r.rect[3] * fr.size), rotation: 0, hole: false}],
-    behaviors, flags: {[MOD]: {adoptId: r.id}, ...(r.place ? {[NPC]: {place: r.place}} : {})}};
+    behaviors, flags: {[MOD]: {adoptId: r.id, ...(r.household ? {household: r.household} : {})}, ...(r.place ? {[NPC]: {place: r.place}} : {})}};
   return {data, skipped};
 }
 
@@ -214,7 +228,12 @@ export function summary(p) {
   if ( p.wallCreates.length ) out.push(`${n(p.wallCreates.length, "door wall", "door walls")} drawn new`);
   if ( p.tiles.length ) out.push(`${n(p.tiles.length, "thing", "things")} made interactable (${TILE_KINDS.filter(k => p.tiles.some(t => t.flags[MOD][k] === true)).map(k => KIND_WORDS[k]).join(", ")})`);
   if ( p.lights.length ) out.push(`${n(p.lights.length, "light", "lights")} placed`);
-  if ( p.regions.length ) out.push(`${n(p.regions.length, "region", "regions")} drawn (${p.regions.map(r => r.name).join(", ")})`);
+  if ( p.regions.length ) {
+    const names = p.regions.map(r => r.name), shown = names.slice(0, 8).join(", ");
+    out.push(`${n(p.regions.length, "region", "regions")} drawn (${names.length > 8 ? `${shown} and ${names.length - 8} more` : shown})`);
+  }
+  const hh = p.regions.map(r => r.flags?.[MOD]?.household).filter(Boolean);
+  if ( hh.length ) out.push(`${n(hh.length, "household", "households")} of ${hh.reduce((s, h) => s + h.people.length, 0)} people noted on their buildings, for WoDX NPC to seed later`);
   return out;
 }
 const KIND_WORDS = {container: "containers", trap: "traps", clue: "clues", light: "lights", hide: "hiding places", hazard: "hazards", sacred: "sacred things",
