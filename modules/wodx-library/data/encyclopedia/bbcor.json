@@ -1,0 +1,216 @@
+[
+ {
+  "id": "bbcor-burned-black",
+  "title": "How the Corax Were Burned Black",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The wereraven tale of Helios and their lost auspices.",
+  "claims": [
+   {
+    "text": "Corax tell how Helios once sulked at home and left the world dark, and the wereravens set a mirror at the door and cheered loudly about a new sun.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 18,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Seeing only a reflection, Helios wept, then raced back so eagerly when promised the old post again that the sun scorched the Corax black.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 18,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Grateful Helios wanted to keep the Corax, and Raven talked Luna into giving them up; so the wereravens lost their auspices and share one purpose, much like the Nuwisha.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 18,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-corax"
+  ]
+ },
+ {
+  "id": "bbcor-war-of-rage",
+  "title": "The War of Rage, Seen by Ravens",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "A Corax account of how the War of Rage began.",
+  "claims": [
+   {
+    "text": "Corax say the trouble began when one Silver Fang decided that ruling humans was not enough and the other Changing Breeds must bow as well.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 22,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Friends among the Garou cooled the quarrel with the Corax, who still moved their nests higher and hid their Kin and treasures.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 22,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "By this account, the Garou turned on the Gurahl when the bears would not hand over their great healing secrets, and struck first at the Mokole, Bastet, Ratkin and others to cut the bears off from allies; the Corax warned everyone and few listened.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 22,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-corax",
+   "war-of-rage",
+   "silver-fangs"
+  ]
+ },
+ {
+  "id": "bbcor-eye-drinking",
+  "title": "Drinking the Eyes",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The wereraven gift of seeing through the eyes of the dead.",
+  "claims": [
+   {
+    "text": "Every Corax can drink a corpse's eye to glimpse its death; the right eye shows the good in it and the left eye the evil.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 34,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The dead must be asked politely first, and the drinking is done in raven form; animal eyes work too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 34,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "A Corax can share the vision by feeding the swallowed eye to another wereraven, and the memory keeps for about a week.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 34,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "No Corax calls this a rite; it is simply what wereravens do, and hatchlings learn it in minutes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 34,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-corax"
+  ]
+ },
+ {
+  "id": "bbcor-west-coast",
+  "title": "Corax of the Pacific Coast",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Native wereravens and their lands in North America.",
+  "claims": [
+   {
+    "text": "Corax Kinfolk live in protected communities along the Pacific coast from Alaska through British Columbia, Washington and Oregon, a strip of land the wereravens will fight for.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Native Corax honour Raven as the one who brought back the Sun, guided Luna to the proper place and placed the stars one by one.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "They insist Raven is not Coyote: Coyote loves the trick itself, while Raven tricks only to teach or to put others where they belong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbcor",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-corax",
+   "cb-nuwisha"
+  ]
+ }
+]

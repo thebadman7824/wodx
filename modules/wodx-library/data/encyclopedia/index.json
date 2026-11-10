@@ -565,6 +565,12 @@
    "title": "Breedbook: Nuwisha (Revised)",
    "short": "BB Nuwisha",
    "edition": "Revised"
+  },
+  {
+   "id": "bbcor",
+   "title": "Breedbook: Corax (Revised)",
+   "short": "BB Corax",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -661,6 +667,7 @@
   "tbuk.json",
   "tbwen.json",
   "bbbas.json",
-  "bbnuw.json"
+  "bbnuw.json",
+  "bbcor.json"
  ]
 }
