@@ -1183,6 +1183,12 @@
    "title": "Doomslayers: Into the Labyrinth",
    "short": "Doom",
    "edition": "First edition"
+  },
+  {
+   "id": "wqd",
+   "title": "The Quick and the Dead",
+   "short": "QD",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1382,6 +1388,7 @@
   "wpg.json",
   "wdr.json",
   "wsos.json",
-  "wdil.json"
+  "wdil.json",
+  "wqd.json"
  ]
 }
