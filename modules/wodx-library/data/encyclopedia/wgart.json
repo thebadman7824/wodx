@@ -1,0 +1,145 @@
+[
+ {
+  "id": "wgart-guild-in-hiding",
+  "title": "The Artificers in Stygia",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The oldest Guild, officially broken centuries ago.",
+  "claims": [
+   {
+    "text": "The Artificers are the oldest Guild and the most bound by ritual, yet the Guild's survival defies Charon, who is said to have broken it about four centuries ago; most wraiths in Stygian lands believe the Guilds are gone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgart",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Soulforgers serve the Legions as weaponsmiths and enjoy some leeway if caught using Inhabit, and closeness between them passes as shop talk; an Artificer who speaks openly of the Guild faces arrest or silencing by elders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgart",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The Deathlords are probably not fooled, but they leave the story of Charon's ruling unchallenged for now.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wgart",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds",
+   "soulforging",
+   "arcanoi"
+  ]
+ },
+ {
+  "id": "wgart-three-ancients",
+  "title": "Nhudri's Three Ancients",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The first Artificer and three lost apprentices.",
+  "claims": [
+   {
+    "text": "Artificer scripture holds that the first Artificer, Nhudri, took three apprentices who became the core of the Guild; no record shows them destroyed or lost to Oblivion, yet none has been seen since the breaking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgart",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Some say Charon used the breaking to destroy three powerful souls sworn to Nhudri rather than to Charon; nothing proves or disproves it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wgart",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Their places passed to three offices: Master of Apprentices, Keeper of the Chain and Guardian of the Forge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgart",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wgart-guild-in-hiding",
+   "charon"
+  ]
+ },
+ {
+  "id": "wgart-guild-bonds",
+  "title": "Artificer loyalty",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Artificers bind their members.",
+  "claims": [
+   {
+    "text": "The Guild took on the shape of a craft society with a feudal streak: strong elders shelter Apprentices and Journeymen in return for loyalty, until the young grow able to challenge them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgart",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "The shared Soulforge Rites outweigh any oath to faith, nation or Stygia, and many Heretics either know nothing of the Guild or see it as a vanished secular body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wgart",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wgart-guild-in-hiding",
+   "heretics"
+  ]
+ }
+]

@@ -1231,6 +1231,12 @@
    "title": "Charnel Houses of Europe: The Shoah",
    "short": "CHE",
    "edition": "First edition"
+  },
+  {
+   "id": "wgart",
+   "title": "Guildbook: Artificers",
+   "short": "GBA",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1438,6 +1444,7 @@
   "wmed.json",
   "weoe.json",
   "wdkj.json",
-  "wche.json"
+  "wche.json",
+  "wgart.json"
  ]
 }
