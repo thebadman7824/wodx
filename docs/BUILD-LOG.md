@@ -1100,3 +1100,9 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Labelled house rules: the hunger line 7 - Self-Control, and Mummy blood (no source found).
 - Left for a look in the PDF: bh-grabkrieg, the Fount whispers on DA: Mage p. 87. The 26 CAN'T TELL rows are books with no text or image-only pages.
 - Tests: 927 harness pass.
+
+## 2026-11-10: release checks for the live server (Chronicle 0.10.0)
+
+- The live server runs on Linux, where file names are case-sensitive. New harness test path-case.test.mjs reads every path the system, the modules and the world files refer to (manifests, imports, template and asset paths, CSS urls, image paths inside the compendium packs) and fails when one differs in letter case from the file on disk, or when a folder holds two names that differ only in case. 2,661 paths checked: no case mismatches. Not in the repo at all (not case faults): the system's orpheus/Fudge.ttf font and data/demon and assets/data JSON in import-helpers.js, and the world background "Art of Vampire The Masquerade Summoning.jpg" in both repo world files.
+- Release stamp: release.json in the system and every wodx- module, marked export-subst in .gitattributes, so git archive writes the commit and its date. tools/release/stamp.mjs stamps a copy made any other way. Chronicle shows the build to the GM in the Settings sidebar, logs it, and warns when packages come from different commits.
+- Tests: 936 harness pass (9 new). Not gated in Foundry yet.

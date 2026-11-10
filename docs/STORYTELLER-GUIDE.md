@@ -104,6 +104,8 @@ The Clock's buttons:
 
 **The look.** WoDX windows and cards wear the era's kit (manuscript for the Dark Ages, typewriter for the Great War, neon for the Modern nights) and the line's accent. Each person can change their own look, text size and motion under Configure Settings (client settings).
 
+**Which build is running.** The Settings sidebar shows you the WoDX build the server runs, for example "WoDX build 3cd5b87, 9 Nov 2026" (players do not see it). "Mixed" means the system and modules on the server come from different commits, and you get a warning at start; hover over the line to see which package has which. "Not stamped" means the files were copied from a working folder rather than released.
+
 **Generated people.** Names and people come from tables keyed to the era and to "Where the chronicle's people come from" (Bohemia by default). The tables are installed as Roll Tables; edit them and WoDX keeps your edits.
 
 ## WoDX Otherworlds: the Umbra and the Shadowlands

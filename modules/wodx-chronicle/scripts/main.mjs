@@ -23,6 +23,7 @@ import * as languages from "./languages.mjs";
 import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
 import * as church from "./church.mjs";
+import * as release from "./release.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -148,6 +149,7 @@ Hooks.once("ready", async () => {
     endScene: timed.endScene,
     theme,
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
+    release: {check: release.check, current: release.current},
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, rules: church.rules},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
@@ -168,6 +170,9 @@ Hooks.once("ready", async () => {
   }
   // Other WoDX modules wait for this: Foundry does not wait for an async ready hook to finish
   Hooks.callAll("wodxChronicleReady", api);
+
+  // Which WoDX build this server runs (GM only, so players' machines skip the extra reads)
+  if ( game.user.isGM ) release.announce().catch(err => console.error("WoDX | Release stamp could not be read", err));
 
   if ( isActiveGM() ) {
     await eras.checkEra();
@@ -197,6 +202,8 @@ Hooks.on("wodxSkipEnd", info => {
   if ( !info?.eraHandled ) eras.checkEra();
   events.checkEvents({label: info?.label || "the time skip"}).then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
+
+Hooks.on("renderSettings", (app, html) => { if ( active ) release.onRenderSettings(app, html); });
 
 Hooks.on("getSceneControlButtons", controls => {
   if ( !active ) return;

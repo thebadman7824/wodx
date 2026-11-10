@@ -6,3 +6,7 @@
 *.webp binary
 *.ogg binary
 *.woff2 binary
+
+# Release stamp: git archive writes the commit and its date into every
+# release.json (see tools/release/README.md).
+release.json export-subst
