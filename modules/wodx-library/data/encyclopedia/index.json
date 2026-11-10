@@ -1867,6 +1867,12 @@
       "title": "The Ashen Thief",
       "short": "Ashen Thief",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "wawor",
+      "title": "A World of Rage",
+      "short": "A World of Rage",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2180,6 +2186,7 @@
     "darop.json",
     "daspoils.json",
     "daknight.json",
-    "dathief.json"
+    "dathief.json",
+    "wawor.json"
   ]
 }
