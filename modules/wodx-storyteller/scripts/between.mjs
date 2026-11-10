@@ -204,7 +204,7 @@ export async function makeExtras(key, {n = 1, x = null, y = null} = {}) {
     actor = await Actor.create(rest);
     // Only the traits the sheet has in this era: an Ability the era's sheet lacks is left out
     const upd = {};
-    for ( const [k, v] of Object.entries(system.attributes) ) if ( actor.system?.attributes?.[k] ) upd[`system.attributes.${k}.value`] = v.value;
+    for ( const [k, v] of Object.entries(system.attributes) ) if ( actor.system?.attributes?.[k] ) { upd[`system.attributes.${k}.value`] = v.value; if ( "total" in actor.system.attributes[k] ) upd[`system.attributes.${k}.total`] = v.value; }
     for ( const [k, v] of Object.entries(system.abilities) ) if ( actor.system?.abilities?.[k] ) { upd[`system.abilities.${k}.value`] = v.value; upd[`system.abilities.${k}.isvisible`] = true; }
     if ( actor.system?.advantages?.willpower ) { upd["system.advantages.willpower.permanent"] = system.advantages.willpower.permanent; upd["system.advantages.willpower.temporary"] = system.advantages.willpower.temporary; }
     if ( system.advantages.bloodpool && actor.system?.advantages?.bloodpool ) { upd["system.advantages.bloodpool.temporary"] = system.advantages.bloodpool.temporary; upd["system.advantages.bloodpool.max"] = system.advantages.bloodpool.max; }
@@ -222,7 +222,7 @@ export async function makeExtras(key, {n = 1, x = null, y = null} = {}) {
   }
   const made = await scene.createEmbeddedDocuments("Token", tokens);
   await ChatMessage.create({whisper: C.gmIds(), speaker: {alias: "Storyteller"},
-    content: `<div class="wodx-card"><h3>${esc(tpl.label)}${count > 1 ? ` ×${count}` : ""}</h3><p>${esc(K.extraSummary(tpl))}</p><p class="wodx-quiet">Placed hidden; reveal them when they enter. A draft until the book's ready-made characters are checked.</p></div>`});
+    content: `<div class="wodx-card"><h3>${esc(tpl.label)}${count > 1 ? ` ×${count}` : ""}</h3><p>${esc(K.extraSummary(tpl))}</p><p class="wodx-quiet">Placed hidden; reveal them when they enter. ${esc(tpl.ref ?? "")}</p></div>`});
   return made;
 }
 
@@ -276,7 +276,7 @@ export async function hooksDialog() {
     for ( const b of dlg?.element?.querySelectorAll?.("[data-hook]") ?? [] ) b.addEventListener("click", () => willpowerForNature(b.dataset.id));
   };
   return wait({window: {title: "Character hooks", resizable: true}, position: {width: 620}, render: wire,
-    content: `<p class="wodx-quiet">What each character brings to pull on: the Nature that gives Willpower back, Flaws, Derangements and the people their Backgrounds name. Read from the sheets.</p>
+    content: `<p class="wodx-quiet">What each character brings to pull on: the Nature that gives Willpower back (V20 p. 267, pdf 275; the Archetypes are on pp. 87-96), Flaws, Derangements and the people their Backgrounds name. Read from the sheets.</p>
       ${searchBox(".wst-hooks", "Search hooks…", "Search hooks")}<div class="wst-hooks wst-scroll">${rows || "<p>No players' characters yet.</p>"}</div>`,
     buttons: [{action: "close", label: "Close"}]});
 }

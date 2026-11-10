@@ -2,28 +2,69 @@
  * The end of the night and the session timer. No Foundry in this file.
  *
  *   Experience reasons: boxes for the Storyteller to tick, character by character. Nothing is awarded unless the
- *   Storyteller presses Award, and the amounts can be changed in the window. The reasons follow the Revised and V20
- *   pattern (a point for being there, then points for learning, acting, heroism; at a story's end success, danger
- *   and wisdom). Each line's own list replaces this once its book pages are checked.
+ *   Storyteller presses Award, and the amounts can be changed in the window. Each line has its core book's list, in
+ *   this module's own words; a line whose book gives no list (V20 Dark Ages, Mummy, Kindred of the East) uses the V20
+ *   list as a house rule. Pages are printed pages, with the pdf page after.
  *
  *   The timer runs on real time (the clock on the wall, not the game's): a planned end, breaks that pause it, and one
  *   warning a set number of minutes before the end.
  */
 
-export const SESSION_REASONS = [
-  {key: "there", label: "Took part in the session", xp: 1, auto: true},
-  {key: "learning", label: "Learned something from what happened", xp: 1},
-  {key: "acting", label: "Played the character well: Nature, Demeanor, the line's Morality", xp: 1},
-  {key: "heroism", label: "Risked something real for others or for the story", xp: 1}
-];
-export const STORY_REASONS = [
-  {key: "success", label: "The coterie reached its goal", xp: 1},
-  {key: "danger", label: "Survived real danger", xp: 1},
-  {key: "wisdom", label: "Found a clever answer, or one that will matter", xp: 1}
-];
-/** Each line's reasons; the shared list until the line's pages are checked. */
-export const LINE_REASONS = {};
-export const reasonsFor = (line, {story = false} = {}) => [...(LINE_REASONS[line]?.session ?? SESSION_REASONS), ...(story ? (LINE_REASONS[line]?.story ?? STORY_REASONS) : [])];
+const R = (key, label, xp = 1, extra = {}) => ({key, label, xp, ...extra});
+const THERE = R("there", "Took part in the session", 1, {auto: true});
+const LEARNING = R("learning", "Learned something from what happened");
+const ACTING = R("acting", "Played the character well");
+const INSPIRED = R("inspired", "Inspired play (a second point for acting)");
+const HEROISM = R("heroism", "Risked themselves for others");
+const SUCCESS = R("success", "The group reached its goal");
+const DANGER = R("danger", "Came through real danger");
+const WISDOM = R("wisdom", "Found a clever answer, or one that will matter");
+
+/** V20: 1 to 5 a session, more at a story's end (pp. 123-124, pdf 131-132). */
+export const SESSION_REASONS = [THERE, LEARNING, ACTING, INSPIRED, HEROISM];
+export const STORY_REASONS = [SUCCESS, DANGER, WISDOM];
+
+const V20 = {session: SESSION_REASONS, story: STORY_REASONS, ref: "V20 pp. 123-124 (pdf 131-132): 1 to 5 points a session"};
+const HOUSE = (book, ref) => ({...V20, ref: `${book} gives no list (${ref}); the V20 list is used as a house rule`});
+
+/** Each line's own list. */
+export const LINE_REASONS = {
+  vampire: V20,
+  ghoul: V20,
+  revenant: V20,
+  mortal: V20,
+  werewolf: {session: [THERE, LEARNING, R("concept", "Played to the character's concept"), ACTING, HEROISM], story: STORY_REASONS,
+    ref: "W20 pp. 243-244 (pdf 245-246): 1 to 5 a session, 1 to 3 more at a story's end"},
+  mage: {session: [THERE, LEARNING, ACTING, R("focus", "Played to the mage's focus: paradigm, practice, instruments"), HEROISM],
+    story: [SUCCESS, DANGER, WISDOM, R("drama", "Added to the story's drama")], ref: "M20 pp. 335-336 (pdf 336-337)"},
+  wraith: {session: [THERE, LEARNING, ACTING, R("circle", "Worked with the circle"), HEROISM],
+    story: [R("survival", "Came through the story"), SUCCESS, DANGER, WISDOM, R("shadow", "Shadow: as the Shadow's own experience rules say")],
+    ref: "Wraith 20th pp. 301-302 (pdf 366-367)"},
+  changeling: {session: [THERE, LEARNING, ACTING, HEROISM], story: STORY_REASONS, ref: "C20 p. 176 (pdf 177): 1 to 5 a session"},
+  hunter: {session: [THERE, LEARNING, ACTING, HEROISM], story: STORY_REASONS, ref: "Hunter: The Reckoning p. 141 (pdf 142)"},
+  demon: {session: [THERE, LEARNING, ACTING, HEROISM], story: STORY_REASONS, ref: "Demon: The Fallen p. 165 (pdf 166): up to 5 a session"},
+  orpheus: {session: [THERE, LEARNING, ACTING, HEROISM], story: STORY_REASONS, ref: "Orpheus pp. 202-203 (pdf 203-204); the end of a chronicle adds three more"},
+  mummy: HOUSE("Mummy Second Edition", "p. 70, pdf 71; Ba comes at each story's end, p. 112, pdf 113"),
+  kote: HOUSE("Kindred of the East", "pdf 84")
+};
+/** In the Dark Ages, vampires use V20 Dark Ages, which leaves the amount to the Storyteller. */
+export const DARK_AGES_VAMPIRE = HOUSE("V20 Dark Ages", "p. 185, pdf 186; no Trait rises more than one dot a story");
+
+/** A line's list. early: a Dark Ages era. */
+export function lineReasons(line, {early = false} = {}) {
+  if ( early && (line === "vampire" || line === "ghoul") ) return DARK_AGES_VAMPIRE;
+  return LINE_REASONS[line] ?? V20;
+}
+export const reasonsFor = (line, {story = false, early = false} = {}) => {
+  const l = lineReasons(line, {early});
+  return [...l.session, ...(story ? l.story : [])];
+};
+/** Every reason any of the lines uses, in a steady order, for the window's columns. */
+export function columnsFor(lines = [], {story = false, early = false} = {}) {
+  const out = new Map();
+  for ( const line of (lines.length ? lines : ["vampire"]) ) for ( const r of reasonsFor(line, {story, early}) ) if ( !out.has(r.key) ) out.set(r.key, r);
+  return [...out.values()];
+}
 
 /** The total for one character's ticked reasons (keys) and any extra points, never below 0. */
 export function totalFor(ticked = [], reasons = SESSION_REASONS, extra = 0) {

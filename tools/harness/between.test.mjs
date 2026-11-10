@@ -67,7 +67,7 @@ test("scene kits: steps follow the kit and the modules on", () => {
 
 test("quick extras: early and late eras, pools from the template, actor data the system reads", () => {
   const early = K.extrasFor(1197).map(e => e.key), late = K.extrasFor(1999).map(e => e.key);
-  assert.ok(early.includes("watch") && !early.includes("police") && early.includes("wolf"));
+  assert.ok(early.includes("watch") && !early.includes("police") && early.includes("wolf_da"));
   assert.ok(late.includes("police") && !late.includes("manatarms") && late.includes("ghoul"));
   const cop = K.EXTRAS.find(e => e.key === "police");
   assert.equal(K.poolOn(cop, "perception", "alertness"), 5);
@@ -76,7 +76,12 @@ test("quick extras: early and late eras, pools from the template, actor data the
   assert.equal(d.system.attributes.dexterity.value, 3);
   assert.equal(d.prototypeToken.actorLink, false);
   assert.match(K.extraSummary(cop), /Attack 5, Notice 5/);
-  for ( const e of K.EXTRAS ) assert.equal(Object.keys(e.attrs).length, 9, e.key);
+  for ( const e of K.EXTRAS ) { assert.equal(Object.keys(e.attrs).length, 9, e.key); assert.ok(e.ref, e.key); }
+  assert.ok(early.includes("wolf_da") && !early.includes("dog_large") && late.includes("dog_large"));
+  assert.match(K.extraSummary(cop), /Soak 3 bashing, none against lethal; .*health Hurt -1, Maimed -3, Incapacitated, Dead/);
+  const wolf = K.EXTRAS.find(e => e.key === "wolf");
+  assert.match(K.extraSummary(wolf), /Soak 3; Bite 4, claw 4 \(damage 4\); Willpower 3; health OK, -1, -1, -3, -5, Incapacitated/);
+  assert.equal(K.extraActorData(wolf).flags["wodx-storyteller"].extra.health, wolf.health);
 });
 
 test("downtime requests: clean data and a title for the queue", () => {

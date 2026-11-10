@@ -83,7 +83,14 @@ test("before the players arrive: clashes fail, the rest warn, a live world offer
 
 test("the wrap-up: ticked reasons add up, the note names them, steps follow the modules on", () => {
   const r = WR.reasonsFor("vampire", {story: true});
-  assert.equal(r.length, 7);
+  assert.equal(r.length, 8);
+  assert.ok(WR.reasonsFor("werewolf").some(x => x.key === "concept") && WR.reasonsFor("mage", {story: true}).some(x => x.key === "drama"));
+  assert.ok(WR.reasonsFor("wraith", {story: true}).some(x => x.key === "shadow") && !WR.reasonsFor("hunter").some(x => x.key === "inspired"));
+  assert.match(WR.lineReasons("vampire", {early: true}).ref, /V20 Dark Ages gives no list/);
+  assert.match(WR.lineReasons("mummy").ref, /house rule/);
+  for ( const l of Object.values(WR.LINE_REASONS) ) assert.match(l.ref, /p\. ?\d|pdf \d/);
+  const cols = WR.columnsFor(["vampire", "werewolf"], {story: true}).map(x => x.key);
+  assert.ok(cols.includes("inspired") && cols.includes("concept") && new Set(cols).size === cols.length);
   assert.equal(WR.totalFor(["there", "acting", "danger"], r), 3);
   assert.equal(WR.totalFor(["there"], r, -5), 0);
   assert.match(WR.noteFor(["there", "heroism"], r, 1), /took part.*risked.*\+1 by the Storyteller/);
