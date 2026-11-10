@@ -69,7 +69,7 @@ export function build(ctx) {
         else if (kind === "rage") d = { rage: P.resource(actor, "rage").value, willpower: wp };
         else if (kind === "gift") {
             const f = actor.getFlag?.(MOD, "daMage");
-            const da = f?.system === "da" || (f?.system !== "m20" && (f?.fellowship || eraNow() === "dark-ages"));
+            const da = f?.system === "da" || (f?.system !== "m20" && (f?.fellowship || ["dark-ages", "long-night"].includes(eraNow())));
             if (da) d = { era: "da", temp: n(f?.twilight?.temp), perm: n(f?.twilight?.perm) };
             else {
                 const av = actor.items?.find?.(i => i.type === "Feature" && /^avatar|^genius/i.test(i.name ?? ""));
@@ -78,7 +78,7 @@ export function build(ctx) {
         }
         else if (kind === "mists") {
             const f = actor.getFlag?.(MOD, "daFae");
-            const da = f?.system === "da" || (f?.system !== "c20" && (f?.origin || eraNow() === "dark-ages"));
+            const da = f?.system === "da" || (f?.system !== "c20" && (f?.origin || ["dark-ages", "long-night"].includes(eraNow())));
             if (da) {
                 const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
                 const spends = f?.weavingDay?.day === day ? n(f.weavingDay.n) : 0;

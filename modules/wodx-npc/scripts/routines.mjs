@@ -91,7 +91,7 @@ export function build(ctx) {
     const base = num(setting("curfewStart")) || 21;
     try { const c = chron()?.church?.on?.(d); return c?.active && c.curfewStart ? Math.max(base, c.curfewStart) : base; } catch (e) { return base; }
   }
-  const bookNow = () => { try { return chron()?.eras?.activeEra?.()?.profile?.id === "dark-ages" ? "v20da" : "v20"; } catch (e) { return "v20da"; } };
+  const bookNow = () => { try { return ["dark-ages", "long-night"].includes(chron()?.eras?.activeEra?.()?.profile?.id) ? "v20da" : "v20"; } catch (e) { return "v20da"; } };
 
   /* ------------------------------------------------------------------ */
   /*  Places                                                             */

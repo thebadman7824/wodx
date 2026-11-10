@@ -143,10 +143,16 @@ export function buildShelves(src = {}) {
 }
 
 /** Does an entry fit a line and an era? "all" on either side matches anything. */
+/**
+ * An era whose shelf also shows another's entries: 2099 is Future Darkness's last year, the Long Night keeps the Dark
+ * Ages books, and the Time of Judgment is the modern setting's last years (house rule, see PENDING-REVIEW).
+ */
+export const SHELF_LIKE = {"time-of-future-judgement": "future-darkness", "long-night": "dark-ages", "time-of-judgment": "modern"};
+
 export function fits(flags, {line = "all", era = null} = {}) {
   const f = flags ?? {};
   const lineOk = line === "all" || (f.lines ?? []).includes("all") || (f.lines ?? []).includes(line);
-  const like = era === "time-of-future-judgement" ? "future-darkness" : era;
+  const like = SHELF_LIKE[era] ?? era;
   const eraOk = !era || (f.eras ?? []).includes(era) || (f.eras ?? []).includes(like);
   return lineOk && eraOk;
 }

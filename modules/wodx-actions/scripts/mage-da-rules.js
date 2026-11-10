@@ -284,4 +284,4 @@ export const CREATION = { attributes: [7, 5, 3], abilities: [13, 9, 5], abilityC
     quintessence: (fount, cray) => Math.max(5, fount + cray) };
 
 /** Is this a Dark Ages mage chronicle? The era profile, unless the actor says otherwise. */
-export const isDarkAgesEra = eraId => eraId === "dark-ages";
+export const isDarkAgesEra = eraId => eraId === "dark-ages" || eraId === "long-night";

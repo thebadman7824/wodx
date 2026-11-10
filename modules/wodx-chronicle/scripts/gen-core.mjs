@@ -117,14 +117,37 @@ export function draw(tableId, {rand, tables, vars} = {}) {
  */
 export function resolveTable(all, id, {era = null, culture = null} = {}) {
   const c = all.filter(t => t.id === id);
-  const fit = t => (!t.era || t.era.includes(era)) && (!t.culture || t.culture.includes(culture));
   const score = t => (t.era ? 2 : 0) + (t.culture ? 1 : 0);
-  return c.filter(fit).sort((a, b) => score(b) - score(a))[0] ?? null;
+  // The era group first, then the groups it borrows from while it has no table of its own (future: modern)
+  for ( const g of groupChain(era) ) {
+    const fit = t => (!t.era || t.era.includes(g)) && (!t.culture || t.culture.includes(culture));
+    const best = c.filter(fit).sort((a, b) => score(b) - score(a))[0];
+    if ( best && (best.era || g === groupChain(era).at(-1)) ) return best;
+  }
+  return null;
+}
+
+/**
+ * Groups that borrow another's tables where they have none of their own: the World of Future Darkness draws the
+ * modern tables, the years between the Great War and the modern era the industrial ones, the prologues the medieval.
+ */
+export const GROUP_FALLBACK = {future: ["modern"], "mid-century": ["industrial"], ancient: ["medieval"]};
+export const groupChain = g => [g, ...(GROUP_FALLBACK[g] ?? [])];
+
+/**
+ * The era group for an era profile and a year. The profile decides, except in the years no era book covers between
+ * the Great War and the modern era (1919 to 1989), which are their own group, mid-century.
+ */
+export function eraGroupFor(profileId, year = null) {
+  const y = Number(year);
+  const base = ERA_GROUP[profileId] ?? "medieval";
+  if ( year !== null && year !== "" && Number.isFinite(y) && y >= 1919 && y <= 1989 && base !== "ancient" ) return "mid-century";
+  return base;
 }
 
 /** Era profiles gathered into the groups the people tables are written for. */
 export const ERA_GROUP = {
   "dark-ages": "medieval", "long-night": "medieval", "classical": "ancient", "living-gods": "ancient",
   "renaissance": "early-modern", "victorian": "industrial", "wild-west": "industrial", "great-war": "industrial",
-  "modern": "modern", "time-of-judgment": "modern", "future-darkness": "modern", "time-of-future-judgement": "modern"
+  "modern": "modern", "time-of-judgment": "modern", "future-darkness": "future", "time-of-future-judgement": "future"
 };

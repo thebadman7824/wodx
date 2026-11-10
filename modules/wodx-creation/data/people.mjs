@@ -231,6 +231,48 @@ const TRADES = {
     trade("paramedic", 1, "pms", {medicine: 2, drive: 2, alertness: 1}),
     trade("club bouncer", 1, "psm", {brawl: 3, intimidation: 2, alertness: 1}),
     trade("private investigator", 1, "msp", {investigation: 3, streetwise: 1, firearms: 1, subterfuge: 1})
+  ],
+  // 1919 to 1989, between the Great War and the modern era (house list)
+  "mid-century": [
+    trade("factory worker", 6, "pms", {craft: 2, athletics: 1, brawl: 1, technology: 1}),
+    trade("clerk", 4, "msp", {bureaucracy: 2, academics: 1, finance: 1}),
+    trade("police officer", 2, "psm", {brawl: 2, firearms: 1, drive: 1, law: 1, alertness: 1}),
+    trade("soldier", 2, "psm", {firearms: 2, athletics: 2, brawl: 1, survival: 1}),
+    trade("nurse", 2, "msp", {medicine: 2, empathy: 2, alertness: 1}),
+    trade("doctor", 1, "msp", {medicine: 3, science: 2, empathy: 1}),
+    trade("teacher", 1, "msp", {academics: 2, expression: 2, leadership: 1}),
+    trade("shop assistant", 3, "smp", {persuasion: 1, finance: 1, alertness: 1, empathy: 1}),
+    trade("lorry driver", 2, "pms", {drive: 3, streetwise: 1, technology: 1}),
+    trade("mechanic", 2, "pms", {technology: 3, drive: 1, craft: 1}),
+    trade("miner", 2, "pms", {athletics: 2, craft: 1, survival: 1, brawl: 1}),
+    trade("farm worker", 3, "pms", {animalken: 1, craft: 2, survival: 1, drive: 1}),
+    trade("railway worker", 2, "pms", {technology: 1, athletics: 1, craft: 2, alertness: 1}),
+    trade("telephone operator", 1, "msp", {technology: 1, alertness: 2, bureaucracy: 1}),
+    trade("waiter", 2, "smp", {etiquette: 1, empathy: 2, alertness: 1}),
+    trade("journalist", 1, "msp", {investigation: 2, expression: 2, persuasion: 1}),
+    trade("priest", 1, "msp", {academics: 2, empathy: 2, religion: 2}),
+    trade("musician", 1, "spm", {performance: 3, expression: 1, streetwise: 1}),
+    trade("informer", 1, "smp", {subterfuge: 2, streetwise: 2, investigation: 1})
+  ],
+  // The World of Future Darkness, 2010 on (house list, after the Cyberpunk 2020 roles the branch borrows)
+  future: [
+    trade("corp office worker", 5, "msp", {computer: 2, bureaucracy: 2, finance: 1}),
+    trade("corporate security", 2, "psm", {firearms: 2, brawl: 1, alertness: 2, security: 1}),
+    trade("street doctor", 1, "msp", {medicine: 3, technology: 2, streetwise: 1}),
+    trade("techie", 2, "msp", {technology: 3, computer: 2, craft: 1}),
+    trade("netrunner", 1, "msp", {computer: 4, technology: 1, investigation: 1}),
+    trade("media reporter", 1, "msp", {expression: 2, investigation: 2, computer: 1, persuasion: 1}),
+    trade("nomad", 2, "pms", {drive: 3, survival: 2, technology: 1, firearms: 1}),
+    trade("fixer", 1, "smp", {streetwise: 3, persuasion: 2, finance: 1}),
+    trade("gang member", 2, "psm", {brawl: 2, streetwise: 2, firearms: 1, intimidation: 1}),
+    trade("police officer", 2, "psm", {firearms: 2, drive: 1, law: 1, alertness: 1, computer: 1}),
+    trade("nurse", 2, "msp", {medicine: 2, empathy: 2, computer: 1}),
+    trade("delivery rider", 3, "pms", {drive: 2, athletics: 1, streetwise: 2}),
+    trade("food stall cook", 2, "pms", {craft: 2, streetwise: 1, empathy: 1}),
+    trade("teacher", 1, "msp", {academics: 2, expression: 2, computer: 1}),
+    trade("priest", 1, "msp", {academics: 2, empathy: 2, religion: 2}),
+    trade("musician", 1, "spm", {performance: 3, expression: 1, streetwise: 1}),
+    trade("farm technician", 2, "pms", {technology: 2, craft: 1, survival: 1, drive: 1})
   ]
 };
 // Cowhands, prospectors and gamblers are the American West's; Bohemia's industrial towns have none

@@ -398,6 +398,8 @@ In organic towns a building may be stretched a little, and 60% of the time gains
 ## B580. Terraced rows (2026-11-10)
 Busy wards build their frontages as rows of houses almost touching, with wings only at the back: market and merchant always, administration 80%, gate and craftsmen 60%, slum 50% (a house rule). Facing end windows are dropped.
 
+## B581. Ways stay clear (2026-11-10)
+No building, wing or garden may touch a street, road or alley band; the generator stops rather than write a town that breaks this, because townsfolk on scheduled rounds will walk every way.
 ## B590. Era item lists: three tags on every good (2026-11-10)
 Ben asked for long item lists for every era, everyday things as well as loot, each with a backend tag for category, era and value. Library's data/goods.mjs is extended rather than replaced: 679 goods in 21 kinds and 80 sub-categories (money, food, drink, drugs, vices, kitchen, household, clothes, grooming, tools, light, papers, faith, occult curios, medicine, keepsakes, toys and music, valuables, everyday arms and ammunition, travel, machines). Each row now gives the years the good was in use; its eras are worked out from those years against Chronicle's era years, so an item reaches exactly the eras it belongs to (the Wild West no longer copies the Victorian list wholesale). good.tags = {category "kind/sub", era [ids], value {era: tier}}. Weapons and armour with stat lines stay in Gear by era; the arms kind holds only things with no book stats.
 
