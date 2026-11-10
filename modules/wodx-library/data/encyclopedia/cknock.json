@@ -1,0 +1,43 @@
+[
+ {
+  "id": "cknock-hollow-earth",
+  "title": "The Hollow Earth",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Dreamrealm inside the world.",
+  "claims": [
+   {
+    "text": "The Hollow Earth is a very old Dreamrealm born of a once popular belief, a world within the world reached only through a fading chasm miles wide at the North Pole.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cknock",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "It teems with dinosaurs, ancient mammals and legendary beasts, and hosts lost peoples from Atlanteans and enlightened Golomonks to Nazi saucer folk; nockers have journeyed there for years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cknock",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nockers",
+   "deep-dreaming",
+   "realms"
+  ]
+ }
+]
