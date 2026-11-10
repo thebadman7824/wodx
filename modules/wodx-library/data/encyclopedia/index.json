@@ -2281,6 +2281,18 @@
       "title": "Predator & Prey 2: Judge",
       "short": "Predator & Prey 2",
       "edition": "Novel"
+    },
+    {
+      "id": "nhw2",
+      "title": "The Horizon War 2: The Ascension Warrior",
+      "short": "Horizon War 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "nhw3",
+      "title": "The Horizon War 3: War in Heaven",
+      "short": "Horizon War 3",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2663,6 +2675,8 @@
     "ndan9.json",
     "nerc.json",
     "nbon.json",
-    "npp2.json"
+    "npp2.json",
+    "nhw2.json",
+    "nhw3.json"
   ]
 }

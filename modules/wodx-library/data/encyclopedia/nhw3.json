@@ -1,0 +1,52 @@
+[
+ {
+  "id": "nhw3-assault-horizon",
+  "title": "The Technocratic assault on Horizon",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A strike at the Traditions’ home Realm.",
+  "claims": [
+   {
+    "text": "Technocratic forces attacked Horizon itself, using Prime Drainers aboard a combat dreadnought to strike at the Realm’s foundations while the defenders’ eyes were on the city of Concordia.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nhw3",
+      "page": 352,
+      "pdf": 354
+     },
+     {
+      "book": "m2hor",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Marianna of Balador, the Ecstatic Tradition’s voice among the Nine, was a close friend of the archmage Kallikos.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nhw3",
+      "page": 361,
+      "pdf": 363
+     },
+     {
+      "book": "m20",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m2hor-founding",
+   "council-of-nine"
+  ]
+ }
+]
