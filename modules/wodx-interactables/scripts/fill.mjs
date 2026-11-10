@@ -1,5 +1,5 @@
 /**
- * WoDX Interactables 0.17.0: fill a container by place and era. The rules are in fill-rules.mjs.
+ * WoDX Interactables 0.17.0 (0.20.0: a first guess of place from where it sits): fill a container by place and era. The rules are in fill-rules.mjs.
  *
  * Storyteller only, and only when asked: a button in the tile's config window ("Fill by place and era…") reads the
  * index of WoDX Library's compendium "WoDX · Gear by era", draws for the chronicle's era, and shows the draw to keep,
@@ -13,6 +13,24 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "
 const eraNow = () => game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
 const eraName = id => game.modules.get("wodx-chronicle")?.api?.eras?.getProfile?.(id)?.name ?? id ?? "any era";
 const opt = (obj, sel) => Object.entries(obj).map(([k, v]) => `<option value="${k}"${k === sel ? " selected" : ""}>${esc(v.label ?? v)}</option>`).join("");
+
+const NPC = "wodx-npc";
+const regionEl = r => { const e = r?.elevation?.bottom; return Number.isFinite(e) ? e : 0; };
+const inRegion = (r, p) => { try { return !!r.testPoint({x: p.x, y: p.y, elevation: regionEl(r)}, regionEl(r)); } catch (e) { return false; } };
+const areaOf = r => (r?.shapes ?? []).reduce((s, sh) => s + (Number(sh.width) || Number(sh.radiusX) * 2 || 1) * (Number(sh.height) || Number(sh.radiusY) * 2 || 1), 0) || Infinity;
+
+/**
+ * Where a container sits, as the fill's first guess: {place, from, name}. Reads WoDX NPC's place tags straight from
+ * the flags, so it works with WoDX NPC off.
+ */
+export function guessFor(tile, own = undefined) {
+  const scene = tile?.parent ?? canvas?.scene;
+  const c = {x: (Number(tile?.x) || 0) + (Number(tile?.width) || 0) / 2, y: (Number(tile?.y) || 0) + (Number(tile?.height) || 0) / 2};
+  const regions = [...(scene?.regions?.contents ?? [])].filter(r => r.flags?.[NPC]?.place?.kind && inRegion(r, c)).sort((a, b) => areaOf(a) - areaOf(b));
+  const g = F.placeGuess({own: own === undefined ? tile?.flags?.[MOD]?.fillPlace : own, regions: regions.map(r => r.flags[NPC].place.kind), scene: scene?.flags?.[NPC]?.place?.kind});
+  const name = g.from === "region" ? regions.find(r => F.FROM_NPC_PLACE[r.flags[NPC].place.kind])?.name : g.from === "scene" ? scene?.name : null;
+  return {...g, name: name ?? null};
+}
 
 /** The gear compendium's index, as plain items with their links. Empty when WoDX Library has not made it. */
 export async function gearIndex() {
@@ -38,9 +56,12 @@ export async function fillDialog(tile, field = null) {
   if ( !items.length ) { ui.notifications.warn("Gear by era isn't installed yet. Open Gear by era once (WoDX Library) and try again."); return null; }
   const container = field?.form?.querySelector?.(`[name="flags.${MOD}.kind"]`)?.value ?? tile?.flags?.[MOD]?.kind ?? "chest";
   const era = eraNow();
+  const formPlace = field?.form?.querySelector?.(`[name="flags.${MOD}.fillPlace"]`)?.value;
+  const guess = guessFor(tile, formPlace === undefined ? undefined : formPlace || null);
   const ask = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 460}, window: {title: "Fill by place and era"}, classes: ["wodx-dialog", "wix-fill"],
     content: `<p>Draws from Gear by era for ${esc(eraName(era))}. You see the draw before anything goes in.</p>
-      <div class="form-group"><label>The place</label><select name="place" data-fixed>${opt(F.PLACES, "home")}</select></div>
+      <div class="form-group"><label>The place</label><select name="place" data-fixed>${opt(F.PLACES, guess.place)}</select></div>
+      ${guess.from ? `<p class="hint">${esc(guess.from === "own" ? "Set for this container." : `From where it sits: ${guess.name ?? "this scene"}.`)} Change it if it doesn't fit.</p>` : ""}
       <div class="form-group"><label>How many things</label><input type="number" name="count" value="3" min="1" max="12"></div>
       ${F.SMALL.has(container) ? "<p class=\"hint\">A small container: only what hides in a coat or smaller.</p>" : ""}`,
     buttons: [{action: "draw", label: "Draw", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});

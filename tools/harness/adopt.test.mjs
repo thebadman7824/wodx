@@ -47,7 +47,7 @@ test("adopt: every feature and opening is something Interactables knows", () => 
   for ( const f of sc.features ) {
     const k = A.TILE_KINDS.filter(x => f.flags[x] === true);
     assert.equal(k.length, 1, f.id);
-    if ( f.flags.container ) { assert.ok(R.CONTAINERS[f.flags.kind]); assert.ok(R.LOCKS[f.flags.lock]); assert.equal(R.describeContainer(f.flags).ds, "locked"); }
+    if ( f.flags.container ) { assert.equal(f.flags.fillPlace, "home"); assert.ok(R.CONTAINERS[f.flags.kind]); assert.ok(R.LOCKS[f.flags.lock]); assert.equal(R.describeContainer(f.flags).ds, "locked"); }
     if ( f.flags.hide ) assert.equal(R.describeHide(f.flags).kind, f.flags.hideKind, f.id);
     if ( f.flags.climb ) { const o = R.describeClimb(f.flags); assert.equal(o.kind, "rope"); assert.equal(o.height, 25); }
     if ( f.flags.light ) { assert.ok(R.LIGHTS[f.flags.lightKind]); assert.ok(f.light); }

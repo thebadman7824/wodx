@@ -53,3 +53,27 @@ test("fill: the button, the review and the wiring", () => {
   assert.match(m, /data-wix-fill/);
   assert.match(m, /fill: \{open: Fill\.fillDialog/);
 });
+
+test("fill: the place starts from the container's own setting, then its region, then the scene", () => {
+  assert.deepEqual(F.placeGuess({own: "armory", regions: ["church"], scene: "home"}), {place: "armory", from: "own"});
+  assert.deepEqual(F.placeGuess({own: "nonsense", regions: ["street", "church"], scene: "home"}), {place: "church", from: "region"});
+  assert.deepEqual(F.placeGuess({regions: ["caern"], scene: "gate"}), {place: "armory", from: "scene"});
+  assert.deepEqual(F.placeGuess({regions: ["street"], scene: "other"}), {place: "home", from: null});
+  assert.deepEqual(F.placeGuess(), {place: "home", from: null});
+  for ( const v of Object.values(F.FROM_NPC_PLACE) ) assert.ok(v === null || F.PLACES[v], v);
+});
+
+test("fill: the runtime reads the place tag of the region a container sits in, the smallest first", async () => {
+  globalThis.canvas = null;
+  const Fi = await imp("modules/wodx-interactables/scripts/fill.mjs");
+  const region = (name, kind, x, y, w, h) => ({name, flags: {"wodx-npc": {place: {kind}}}, shapes: [{width: w, height: h}],
+    testPoint: p => p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h});
+  const scene = {name: "Steading", flags: {"wodx-npc": {place: {kind: "wilds"}}},
+    regions: {contents: [region("Yard", "street", 0, 0, 1000, 1000), region("Longhouse", "home", 100, 100, 300, 200), region("Chapel", "church", 600, 600, 100, 100)]}};
+  const tile = (x, y, flags = {}) => ({parent: scene, x, y, width: 50, height: 50, flags: {"wodx-interactables": flags}});
+  assert.deepEqual(Fi.guessFor(tile(150, 150)), {place: "home", from: "region", name: "Longhouse"});
+  assert.deepEqual(Fi.guessFor(tile(620, 620)), {place: "church", from: "region", name: "Chapel"});
+  assert.deepEqual(Fi.guessFor(tile(800, 100)), {place: "camp", from: "scene", name: "Steading"});
+  assert.equal(Fi.guessFor(tile(150, 150, {fillPlace: "den"})).place, "den");
+  assert.equal(Fi.guessFor(tile(150, 150, {fillPlace: "den"}), null).place, "home", "the form's blank choice wins over the saved one");
+});

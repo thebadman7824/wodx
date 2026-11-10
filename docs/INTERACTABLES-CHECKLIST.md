@@ -158,3 +158,12 @@ Step 3 of the design note.
 - [x] Harness tests (11 new)
 - [ ] Gate in rothenstein-wodx: import the farmstead, adopt it, interact with a door, the chest and the well, undo
 - [ ] Deployed
+
+
+## 0.20.0: a container's fill starts from where it sits (2026-11-10)
+- [x] Rules: first guess from the container's own setting, its region's place tag, the scene's tag (B405)
+- [x] Runtime: Usual contents field in the tile config; the draw window says where the guess came from
+- [x] Farmstead file sets the chest to a home
+- [x] Harness tests (2 new)
+- [ ] Gate (gateadopt step 4) in rothenstein-wodx
+- [ ] Deployed
