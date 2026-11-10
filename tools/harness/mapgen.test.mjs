@@ -131,15 +131,16 @@ test("mapgen: organic villages, towns and cities come out whole, and the samples
   }
 });
 
-test("mapgen: a town on a river has its banks clear, bridges, a mill and a washing place", {skip}, () => {
+test("mapgen: a town on a river has its banks clear, bridges, water gates, a mill and a washing place", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-r-"));
-  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--river", "yes", "--assets", ASSETS, "--out", dir], dir);
+  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--river", "yes", "--walls", "yes", "--assets", ASSETS, "--out", dir], dir);
   const s = JSON.parse(readFileSync(join(dir, "haselberg.wodx.json"), "utf8"));
   assert.deepEqual(A.parseSidecar(s).errors, []);
   const ids = s.regions.map(r => r.id);
   assert.ok(ids.includes("river-1"), "no river");
   assert.ok(ids.some(i => i.startsWith("bridge-")), "no bridge");
   assert.ok(ids.includes("washing-place"), "no washing place");
+  assert.ok(ids.filter(i => i.startsWith("water-gate-")).length >= 2, "the river passes the wall with no water gate");
   assert.ok(JSON.stringify(s.households).includes("miller"), "no miller");
   // and a town told to have none has none
   const d2 = mkdtempSync(join(tmpdir(), "wodx-r-"));
