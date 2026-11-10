@@ -1,0 +1,373 @@
+[
+ {
+  "id": "wofd-masquerade-frays",
+  "title": "The fraying Masquerade",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "future-darkness"
+  ],
+  "summary": "Why the Masquerade collapses in the 2020s.",
+  "claims": [
+   {
+    "text": "Cyber-senses defeat the old disguises: the Masquerade cannot fake scent, and even Kindred of very high Humanity rarely fool Image Enhancement, Thermographics or Sound Editing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 3,
+      "pdf": 3
+     }
+    ]
+   },
+   {
+    "text": "Edgerunners, gangs and many Megacorp executives therefore know something strange is out there, and some know exactly what; most such executives are pawns of the Ventrue, Giovanni, Tremere or mages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 3,
+      "pdf": 3
+     }
+    ]
+   },
+   {
+    "text": "The Masquerade is coming apart fast and falls by 2024 or 2025 at the latest, and when it does the Elders mean to sacrifice the younger generations to save their own Vitae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 3,
+      "pdf": 3
+     }
+    ]
+   },
+   {
+    "text": "Neonates and many Ancillae stay at the bottom of the heap, prizing any way to fake a heartbeat, breath and body heat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 3,
+      "pdf": 3
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wofd-clans-future",
+   "wofd-cyberware-kindred"
+  ]
+ },
+ {
+  "id": "wofd-clans-future",
+  "title": "The clans and sects in 2020",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "future-darkness"
+  ],
+  "summary": "How Kindred groups have shifted in the cyberpunk age.",
+  "claims": [
+   {
+    "text": "Assamites have more work than in centuries, drawing most of their money from Megacorp contacts and selling elder Vitae amid the Elder-Anarch feud.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 4,
+      "pdf": 4
+     }
+    ]
+   },
+   {
+    "text": "Among the Brujah, Iconoclasts lead street gangs and Idealists lose ground, while Individualists gain most, in music, as street operatives or quietly inside a few Corps.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 4,
+      "pdf": 4
+     }
+    ]
+   },
+   {
+    "text": "The Children of Carthage work through Anarch and Camarilla power structures toward a world where Kindred live openly; the Camarilla executes any it finds and calls Blood Hunts on mere suspicion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 4,
+      "pdf": 4
+     }
+    ]
+   },
+   {
+    "text": "Sabbat have taken more cities south and west, and some packs run as Nomads; the violent ones are treated as Booster gangs and sometimes hunted by Cyberpsycho squads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 5,
+      "pdf": 5
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wofd-masquerade-frays",
+   "wofd-others-future"
+  ]
+ },
+ {
+  "id": "wofd-others-future",
+  "title": "Other beings in 2020",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "mage",
+   "mummy",
+   "wraith",
+   "werewolf"
+  ],
+  "eras": [
+   "future-darkness"
+  ],
+  "summary": "Mages, mummies, ghosts and Garou in the future.",
+  "claims": [
+   {
+    "text": "Mages in human politics use every power that does not risk exposure; the Order of Hermes, a thousand years old, is no easy prey for the Corps, though most Hermetics hold themselves above such games.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 5,
+      "pdf": 5
+     }
+    ]
+   },
+   {
+    "text": "Mummies have changed only as much as the modern world demands, and few if any take cyberware.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 5,
+      "pdf": 5
+     }
+    ]
+   },
+   {
+    "text": "Tales of ghosts haunting mainframes, though uncommon, circulate on the Net.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 5,
+      "pdf": 5
+     }
+    ]
+   },
+   {
+    "text": "Several Garou packs travel with Nomad families, and Lupine packs make up some of the Nomad gangs that raid Corp sites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 3,
+      "pdf": 3
+     },
+     {
+      "book": "wofd",
+      "page": 5,
+      "pdf": 5
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wofd-clans-future"
+  ]
+ },
+ {
+  "id": "wofd-cyberpunk-discipline",
+  "title": "Cyberpunk (Discipline)",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "future-darkness"
+  ],
+  "summary": "Kindred power over machines.",
+  "claims": [
+   {
+    "text": "One power lets a Kindred talk to a machine: an AI can be spoken to normally, while any other device is reached through its spirit, as with Wooden Tongues, on Charisma + a fitting Ability; more successes give fuller talk, and five mean the machine will not mislead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "At level six, Ghost in the Machine, the user moves into any machine and controls it utterly while the body lies as if in torpor, aware of nothing unless near death or watched by a sensor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "No Kindred holding this Discipline is above the Seventh Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wofd-cyberware-kindred"
+  ]
+ },
+ {
+  "id": "wofd-cyberware-kindred",
+  "title": "Cyberware in undead bodies",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "future-darkness"
+  ],
+  "summary": "Which implants work for vampires.",
+  "claims": [
+   {
+    "text": "Anything working through the nerves or a Neural Processor keeps working, but anything relying on human biochemistry fails, and organ replacements do nothing in a vampire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 8,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "A Kindred with a Decentralized Heart can still be staked; staking any one pump is enough, once it is found.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 8,
+      "pdf": 8
+     },
+     {
+      "book": "wofd",
+      "page": 10,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Subdermal armour and Skinweave add one soak die per four points of protection.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 8,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "Fortitude protects only natural parts and Potence works with grafted muscle but not a Cyberarm, which counts as one dot of Potence for punching and two for crushing; Auspex does not sharpen Cyberoptics or Cyberaudio.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 8,
+      "pdf": 8
+     },
+     {
+      "book": "wofd",
+      "page": 9,
+      "pdf": 9
+     },
+     {
+      "book": "wofd",
+      "page": 11,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Cyberoptics make Gleam of the Red Eyes cost one blood, and cyber hands or arms make Feral Claws (Claws of the Wolf) cost two and slow Shadow of the Beast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wofd-net-combat",
+   "wofd-masquerade-frays"
+  ]
+ },
+ {
+  "id": "wofd-net-combat",
+  "title": "Netrunning",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "future-darkness"
+  ],
+  "summary": "Conflict inside the Net.",
+  "claims": [
+   {
+    "text": "Nearly every Net test uses Computer; initiative is Wits + Computer, with extra actions equal to the speed of the Cyberdeck in use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Each side rolls Intelligence + Computer at difficulty 6, adding Program Strength as automatic successes; successes beyond the foe’s become damage dice, soaked with dice equal to Wits plus any Protection Program.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wofd",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wofd-cyberware-kindred"
+  ]
+ }
+]

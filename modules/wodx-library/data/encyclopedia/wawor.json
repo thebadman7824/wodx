@@ -1,0 +1,346 @@
+[
+ {
+  "id": "wawor-baba-yaga-origin",
+  "title": "The Baba Yaga",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ancient sorceress who ruled behind the Shadow Curtain.",
+  "claims": [
+   {
+    "text": "Before the tsars and the first tribal chiefs, the Baba Yaga was a sorceress, teacher and healer at one with Gaia, tending the land’s hurts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   },
+   {
+    "text": "In the early world a shadow fell over the sorceress and darkened that great mind, and the creatures and spirits that once listened now fled in terror.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   },
+   {
+    "text": "In that despair the Wyrm offered, for a price, to make the wild obey once more; the Baba Yaga became its ally but never its mere pawn, with power close to an Incarna’s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawor-shadow-curtain"
+  ]
+ },
+ {
+  "id": "wawor-shadow-curtain",
+  "title": "The Shadow Curtain",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Russia’s supernatural isolation in the 1990s.",
+  "claims": [
+   {
+    "text": "When the Baba Yaga rose and the Shadow Curtain fell in the early 1990s, supernatural Russia disappeared behind an invisible barrier.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "In three nights the Baba Yaga’s forces purged almost every prominent vampire in Moscow, while the Garou saw little of the struggle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "In time it was unclear who was the prisoner behind the Curtain, the Garou or the Baba Yaga.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "The Wyrm-dragon Grigori Deathwing, most loyal of the Zmei, woke to fight on the Baba Yaga’s side.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawor-death-of-baba-yaga"
+  ]
+ },
+ {
+  "id": "wawor-death-of-baba-yaga",
+  "title": "The death of the Baba Yaga",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Russia freed in 1998.",
+  "claims": [
+   {
+    "text": "Through 1998 the Garou dismantled the Baba Yaga’s power piece by piece, and that obsession with the werewolves may have left the sorceress open to vampire foes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Many Black Spiral Dancers, disillusioned, quietly withdrew their aid, and other forces of the Wyrm came to see the sorceress as a liability.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "The end came almost without climax, probably not at Garou hands; something older and darker had moved, and the Shadow Curtain died along with the Baba Yaga.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Some Garou leaders worry that an unknown destroyer is worse than a known foe, since the long-sleeping Baba Yaga never understood the modern world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawor-shadow-curtain",
+   "wawor-russian-septs"
+  ]
+ },
+ {
+  "id": "wawor-russian-septs",
+  "title": "Septs of Russia",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Caerns that survived the Baba Yaga.",
+  "claims": [
+   {
+    "text": "A mysterious draining destroyed some Russian caerns and weakened others, and rumours tell of an artifact that might restore them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "The Sept of Gafnir’s Brood near St. Petersburg is a Get of Fenris Rage caern with a totem made of the furious ancestor spirits of Leningrad’s siege dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "The Sept of the Kilakacn, an all-Glass Walker caern in a storage site of the Hermitage museum, has Cockroach as its totem.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Its oldest Garou, the lupus Ahroun Anton Nordenskald, the Grey Wolf of the Baltic, survived the war against the Baba Yaga as a keen strategist, as in the wars before it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 79,
+      "pdf": 80
+     },
+     {
+      "book": "wawor",
+      "page": 82,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wawor-black-tooth",
+  "title": "Black Tooth",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The deranged Simba king of Africa.",
+  "claims": [
+   {
+    "text": "Black Tooth, a Simba from Zululand, gathered a pride in the ivory wars of the late 1970s and struck at all European intruders, supernatural or mundane.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "For fifteen years the Simba’s genocidal reign held the attention of all Africa’s shapeshifters, until a coalition of Bastet, Garou and Mokole broke the pride and scattered it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "That alliance has left African shapeshifters far less divided by hatred than those of Europe and the Americas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Not all Ajaba were destroyed: some fled abroad, some fell to the Wyrm, and others hid with the Mokole by the Zambezi or with other Bastet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wawor-amazon-war",
+  "title": "The Amazon War and the Balam",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The struggle for South America’s rainforest.",
+  "claims": [
+   {
+    "text": "The battle for the South American rainforest is one of the great struggles of the Garou world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 5,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "The Amazon War strikes close to the Balam, the werejaguars, because their Kinfolk are among the native peoples of the region.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Solitary by nature, the Balam stay mostly in their dens in the Amazonian Umbra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawor",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

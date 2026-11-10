@@ -1825,6 +1825,264 @@
       "title": "The Book of Shadows: The Mage Players Guide",
       "short": "BoSh",
       "edition": "First edition"
+    },
+    {
+      "id": "dadevil",
+      "title": "Devil's Due",
+      "short": "Devil's Due",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dahot",
+      "title": "House of Tremere",
+      "short": "House of Tremere",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daibn",
+      "title": "Iberia by Night",
+      "short": "IbN",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "inqcomp",
+      "title": "Dark Ages: Inquisitor Companion",
+      "short": "Inquisitor Companion",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dajbn",
+      "title": "Jerusalem by Night",
+      "short": "JbN",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dals1",
+      "title": "Libellus Sanguinis 1: Masters of the State",
+      "short": "LS1",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dals2",
+      "title": "Libellus Sanguinis 2: Keepers of the Word",
+      "short": "LS2",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "darop",
+      "title": "Right of Princes",
+      "short": "Right of Princes",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daspoils",
+      "title": "Spoils of War",
+      "short": "Spoils of War",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daknight",
+      "title": "The Ashen Knight",
+      "short": "Ashen Knight",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dathief",
+      "title": "The Ashen Thief",
+      "short": "Ashen Thief",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dallal",
+      "title": "Liege, Lord, and Lackey",
+      "short": "LL&L",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dapillars",
+      "title": "Three Pillars",
+      "short": "Three Pillars",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "datbn",
+      "title": "Transylvania by Night",
+      "short": "TbN",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daveil",
+      "title": "Veil of Night",
+      "short": "Veil of Night",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dawind",
+      "title": "Wind from the East",
+      "short": "Wind from the East",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "wawor",
+      "title": "A World of Rage",
+      "short": "A World of Rage",
+      "edition": "Revised"
+    },
+    {
+      "id": "waaxis",
+      "title": "Axis Mundi: The Book of Spirits",
+      "short": "Axis Mundi",
+      "edition": "Second edition"
+    },
+    {
+      "id": "waausp",
+      "title": "Book of Auspices",
+      "short": "Book of Auspices",
+      "edition": "Revised"
+    },
+    {
+      "id": "wacity",
+      "title": "Book of the City",
+      "short": "Book of the City",
+      "edition": "Revised"
+    },
+    {
+      "id": "wacaern",
+      "title": "Caerns: Places of Power",
+      "short": "Caerns",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wacroatan",
+      "title": "Croatan Song",
+      "short": "Croatan Song",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wafreak",
+      "title": "Freak Legion: A Player's Guide to Fomori",
+      "short": "Freak Legion",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wafrontier",
+      "title": "Frontier Secrets",
+      "short": "Frontier Secrets",
+      "edition": "Wild West"
+    },
+    {
+      "id": "waguard",
+      "title": "Guardians of the Caerns",
+      "short": "Guardians of the Caerns",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wahammer",
+      "title": "Hammer and Klaive",
+      "short": "Hammer and Klaive",
+      "edition": "Revised"
+    },
+    {
+      "id": "wahenge",
+      "title": "Hengeyokai: Shapeshifters of the East",
+      "short": "Hengeyokai",
+      "edition": "Revised"
+    },
+    {
+      "id": "wakinfolk",
+      "title": "Kinfolk: Unsung Heroes",
+      "short": "Kinfolk: Unsung Heroes",
+      "edition": "Revised"
+    },
+    {
+      "id": "wapast",
+      "title": "Past Lives",
+      "short": "Past Lives",
+      "edition": "Revised"
+    },
+    {
+      "id": "wapossess",
+      "title": "Possessed: A Player's Guide",
+      "short": "Possessed",
+      "edition": "Revised"
+    },
+    {
+      "id": "watwilight",
+      "title": "Project Twilight",
+      "short": "Project Twilight",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wasubs",
+      "title": "Subsidiaries: A Guide to Pentex",
+      "short": "Subsidiaries",
+      "edition": "Revised"
+    },
+    {
+      "id": "watrailmx",
+      "title": "Tales from the Trail: Mexico",
+      "short": "Tales from the Trail: Mexico",
+      "edition": "Wild West"
+    },
+    {
+      "id": "w20cw",
+      "title": "Changing Ways (W20)",
+      "short": "W20 Changing Ways",
+      "edition": "V20"
+    },
+    {
+      "id": "w20kin",
+      "title": "Kinfolk (W20)",
+      "short": "W20 Kinfolk",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "w20ratw",
+      "title": "Rage Across the World (W20)",
+      "short": "W20 Rage Across the World",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "w20wwx",
+      "title": "Wyld West Expansion Pack (W20)",
+      "short": "W20 Wyld West",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "waworap",
+      "title": "Rage: Warriors of the Apocalypse",
+      "short": "Warriors of the Apocalypse",
+      "edition": "Second edition"
+    },
+    {
+      "id": "waways",
+      "title": "Ways of the Wolf",
+      "short": "Ways of the Wolf",
+      "edition": "First edition"
+    },
+    {
+      "id": "wawwcomp",
+      "title": "Werewolf: The Wild West Companion",
+      "short": "Wild West Companion",
+      "edition": "Wild West"
+    },
+    {
+      "id": "wawwcore",
+      "title": "Werewolf: The Wild West",
+      "short": "Werewolf: The Wild West",
+      "edition": "Wild West"
+    },
+    {
+      "id": "cblod",
+      "title": "The Book of Lost Dreams",
+      "short": "Book of Lost Dreams",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wofd",
+      "title": "World of Future Darkness",
+      "short": "World of Future Darkness",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2131,6 +2389,49 @@
     "dacbn.json",
     "lostp.json",
     "manif.json",
-    "bosh.json"
+    "bosh.json",
+    "dadevil.json",
+    "dahot.json",
+    "daibn.json",
+    "inqcomp.json",
+    "dajbn.json",
+    "dals1.json",
+    "dals2.json",
+    "darop.json",
+    "daspoils.json",
+    "daknight.json",
+    "dathief.json",
+    "dallal.json",
+    "dapillars.json",
+    "datbn.json",
+    "daveil.json",
+    "dawind.json",
+    "wawor.json",
+    "waaxis.json",
+    "waausp.json",
+    "wacity.json",
+    "wacaern.json",
+    "wacroatan.json",
+    "wafreak.json",
+    "wafrontier.json",
+    "waguard.json",
+    "wahammer.json",
+    "wahenge.json",
+    "wakinfolk.json",
+    "wapast.json",
+    "wapossess.json",
+    "watwilight.json",
+    "wasubs.json",
+    "watrailmx.json",
+    "w20cw.json",
+    "w20kin.json",
+    "w20ratw.json",
+    "w20wwx.json",
+    "waworap.json",
+    "waways.json",
+    "wawwcomp.json",
+    "wawwcore.json",
+    "cblod.json",
+    "wofd.json"
   ]
 }

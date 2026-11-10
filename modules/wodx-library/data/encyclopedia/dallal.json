@@ -1,0 +1,331 @@
+[
+ {
+  "id": "dallal-blood-oath-cost",
+  "title": "The cost of the blood oath",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why Cainites do not bind every servant by blood.",
+  "claims": [
+   {
+    "text": "The Tzimisce take the blood oath furthest, using mystic means to breed whole families born loyal to their masters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 13,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "The oath compels loyalty and even love, but it visibly changes the servant’s behaviour, since the mortal acts on the master’s wishes rather than personal ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 13,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "That makes blood-bound servants hard to hide, a real problem for Cainites who want influence inside Europe’s great families.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 13,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dallal-oath-of-fealty"
+  ]
+ },
+ {
+  "id": "dallal-oath-of-fealty",
+  "title": "The oath of fealty",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Feudal oaths as a bond between Cainite and servant.",
+  "claims": [
+   {
+    "text": "Not every servant takes the blood oath; feudal society offers its own strong bond in the oath of fealty to a liege.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 48,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Whether a mortal sworn this way to a Cainite keeps faith depends on that mortal’s nature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 48,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Servants are moved by many things, among them duty, revenge, ignorance, security and even madness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 48,
+      "pdf": 44
+     },
+     {
+      "book": "dallal",
+      "page": 50,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dallal-blood-oath-cost"
+  ]
+ },
+ {
+  "id": "dallal-mortal-allies",
+  "title": "Mortal allies as characters",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Rules for playing a vampire’s mortal ally.",
+  "claims": [
+   {
+    "text": "Players can create mortal allies of Cainites, starting from a simple concept such as a Jewish scholar or a humble serf.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 58,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Useful allies include scholars and scribes, stewards and moneylenders, sheriffs and wardens, entertainers, and retainers such as bodyguards, spies, squires and heralds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 58,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Most Mortal Society Merits and Flaws from the core rules suit allies, but some, such as Known to be Dead or the Cainite Ties traits, do not unless the Storyteller allows them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 67,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dallal-ally-merits"
+  ]
+ },
+ {
+  "id": "dallal-ally-merits",
+  "title": "Merits for allies",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Traits for mortals who serve the Damned.",
+  "claims": [
+   {
+    "text": "Uncanny Sight, a 2-point Merit, gives a gut sense on meeting a vampire that this person carries the mark of Caine, though the feeling is not always right.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 67,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Soothe the Beast, a 2 to 5 point Merit, makes the ally’s touch and voice calming to restless minds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 67,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dallal-mortal-allies"
+  ]
+ },
+ {
+  "id": "dallal-numina",
+  "title": "Numina for mortal allies",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Hedge magic and other gifts among mortals.",
+  "claims": [
+   {
+    "text": "Hedge Magic, True Faith and psychic gifts are available to allies only with Storyteller approval and should stay rare.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 80,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Hedge magic is the limited craft of folk who live close to the land, usually taught by elders; many believe its users are mages, but they are serfs beside true magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 80,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "The paths include Cursing, Divination, Dowsing, Enchantment, Ephemera, and Summoning, Binding and Warding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 82,
+      "pdf": 73
+     },
+     {
+      "book": "dallal",
+      "page": 83,
+      "pdf": 74
+     },
+     {
+      "book": "dallal",
+      "page": 84,
+      "pdf": 75
+     },
+     {
+      "book": "dallal",
+      "page": 85,
+      "pdf": 76
+     },
+     {
+      "book": "dallal",
+      "page": 87,
+      "pdf": 78
+     },
+     {
+      "book": "dallal",
+      "page": 90,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "A curse’s severity matches the dots in the path; it usually strikes once, but enough successes can afflict several people, and the strongest curses last for generations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 82,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dallal-mortal-allies"
+  ]
+ },
+ {
+  "id": "dallal-changeling-allies",
+  "title": "Changeling allies",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why changelings serve Cainites more often than the true fae.",
+  "claims": [
+   {
+    "text": "Cainites meet true fae more often, yet it is changelings who most often end up as their allies, and they serve better.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 76,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "True fae are fleeting, unpredictable and dangerous, while changelings need food, shelter and clothing, so Cainites can bribe, threaten or reward them like mortals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 76,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "A vampire can also offer a changeling escape from Banality and violence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dallal",
+      "page": 76,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

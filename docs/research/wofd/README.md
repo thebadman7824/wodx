@@ -13,6 +13,12 @@ Reviewed by Ben on two pages; verdicts live in each page's database (collection 
   Thirty rules gaps, three options each (verdict a, b, c, or note).
   Ben, 2026-11-10 15:02Z: option A on all 30, no notes. Settled list: rules-settled-2026-11-10.md.
 - Round 3 part 1, 2025 to 2099, draft 2026-11-10e (future-desk-2026-11-10e.js): https://claude.ai/artifact/UF57mjxjeYkrK8kWL27Ru8
-  Three scenarios per line from the 2025 flood to the eve of 2099. Waiting for Ben. Part 2 (the 2099 endings) waits for the PC's summaries of the ending books.
+  Three scenarios per line from the 2025 flood to the eve of 2099.
+  Ben, 2026-11-10 16:07Z: c3, m2, mu3 dropped; v1-v3 and w1-w3 must be regional, not worldwide; every other scenario liked but to be deconflicted. All kept ones go to a clash board.
 - Round 3 part 2, Time of Future Judgement, draft 2026-11-10f (ftj-desk-2026-11-10f.js): https://claude.ai/artifact/U2AcAFjmya1EjwSwEfhFpA
-  35 cards, one per ending in the original ending books (summaries in ending-books-summaries.md), retold for 2099. Waiting for Ben.
+  35 cards, one per ending in the original ending books (summaries in ending-books-summaries.md), retold for 2099. ON HOLD (Ben 16:07Z) until the 2025-2099 timeline settles; may need a rewrite.
+- Round 3 clashes, draft 2026-11-10g (conflict-desk-2026-11-10g.js): https://claude.ai/artifact/AwbbEhCiaoz5bsPChrgTfA
+  19 clashes (y01-y19) among the 27 kept scenarios, with regions for v1-w3 on y01.
+  Ben, 2026-11-10 16:26Z: all 19 joins accepted.
+- Timeline 2026 to 2098, draft 2026-11-10h (timeline-2026-11-10h.js, built by timeline2-build.js): https://claude.ai/artifact/1qzrBEbTtHQNko1Y7no3rC
+  52 year cards, 138 events. Waiting for Ben.

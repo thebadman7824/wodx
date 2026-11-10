@@ -1,0 +1,238 @@
+[
+ {
+  "id": "wasubs-hiram",
+  "title": "The late Hiram Bollingsworth",
+  "kind": "character",
+  "lines": [
+   "werewolf",
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Endron’s founder, returned from death.",
+  "claims": [
+   {
+    "text": "Zettler sent Hiram Bollingsworth to the next world but not thoroughly enough: Hiram’s ghost lingered, learned to slip back into the Skinlands and became one of the Risen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Hiram still drives toward Endron’s success in bloody and emphatic ways, and wants revenge on those who ended that life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wasubs-magadon"
+  ]
+ },
+ {
+  "id": "wasubs-magadon",
+  "title": "Magadon’s public face",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Pentex pharmaceutical arm.",
+  "claims": [
+   {
+    "text": "Magadon’s Sales and Marketing division handles all its advertising and is the part of the company the public mostly meets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Media Crisis Teams on round-the-clock call can issue a press release within an hour of any bad story about a Magadon product anywhere in the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "One team works only to blunt bad press for Magadon’s rivals, presented as serving the industry, which has led to research sharing with its major competitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Its Gerontology division reaches the public mostly through Pentex-linked nursing homes that double as testing centres.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wasubs-bottled-bane"
+  ]
+ },
+ {
+  "id": "wasubs-bottled-bane",
+  "title": "Bane-in-a-bottle",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Magadon’s binary Bane infestations.",
+  "claims": [
+   {
+    "text": "Building on its binary chemical and biological products, Magadon has begun experimenting with binary Bane infestations, still rare because of the effort involved.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "In the first stage a dormant Bane is bound into a package of pills or a bottle of serum by Black Spiral Theurges or human specialists at a Magadon factory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The medicine ships to pharmacies and hospitals like any other, and the patient who takes it receives a sleeping Wyrm-spirit as a passenger.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wasubs-magadon"
+  ]
+ },
+ {
+  "id": "wasubs-king-breweries",
+  "title": "King Breweries’ pollution",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hidden truth behind King’s clean-water image.",
+  "claims": [
+   {
+    "text": "King Breweries’ professed concern for clean water is close to nil, and the company adds to the very problem it campaigns against.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Most breweries purify their waste before dumping it, but King does not; run-off from its main plant poisons everything up to sixty miles downstream.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "A brown film covers the water and things no one can identify churn below, toxic and long-lived.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wasubs-black-dog",
+  "title": "Black Dog Game Factory",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Pentex games publisher.",
+  "claims": [
+   {
+    "text": "Black Dog Game Factory of Atlanta is a role-playing game publisher owned within Pentex.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "When a teenager in Arizona murders two grandparents in a supposed vampire ritual, the firm’s marketing coordinator meets the outcry with open contempt for parents.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wasubs",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

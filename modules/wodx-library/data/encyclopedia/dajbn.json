@@ -1,0 +1,249 @@
+[
+ {
+  "id": "dajbn-crowded-city",
+  "title": "Too many Cainites",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why the Holy City draws and strains the Damned.",
+  "claims": [
+   {
+    "text": "Cainites usually keep apart to avoid mortal suspicion and fights over feeding, but Jerusalem draws far too many of them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Endless pilgrims, merchants and mercenaries mean nearly everyone can feed, yet no Cainite there feels safe, and the immortal city seethes with barely held conflict.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dajbn-weeks-of-blood",
+   "dajbn-cainite-influx"
+  ]
+ },
+ {
+  "id": "dajbn-weeks-of-blood",
+  "title": "The Weeks of Blood",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Cainite frenzy after the crusader capture of 1099.",
+  "claims": [
+   {
+    "text": "The crusader capture of Jerusalem in 1099 was followed by slaughter so great that some streets ran deep with blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The blood madness took the Cainites too: they tore victims apart without stopping to drink and fought one another openly in the streets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Most were so lost in frenzy that they failed to seek shelter from the sun, and very few of the Cainites present survived.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dajbn-cainite-influx"
+  ]
+ },
+ {
+  "id": "dajbn-cainite-influx",
+  "title": "Cainites under the Kingdom of Jerusalem",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the city’s undead society was rebuilt after 1099.",
+  "claims": [
+   {
+    "text": "In 1120 the Brujah Azif came to the city and set about rotting its Christian institutions from within, aiming to bring down the Kingdom of Jerusalem.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Refugees from Etheria’s Bethlehem returned after the crusader capture, more easily if they were Christian than Jewish or Muslim.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Because mortal power now favoured Christians, Christian Cainites quickly settled behind most of the city’s key institutions, while Jewish and Muslim Cainites found them hard to penetrate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "The Nosferatu Ephraim Embraced Hannah, a crippled waif, around 1180.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dajbn-observant-vampires",
+  "title": "Observant vampires",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Jewish and Muslim Cainites and the ban on blood.",
+  "claims": [
+   {
+    "text": "The hardest question for Jewish and Muslim Cainites is that their faiths forbid consuming blood, while Christian Cainites face no such rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Knowing the ban does not let them master the hunger, so each must make a private peace with God over breaking scripture.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Some Cainites argue that the scriptural prohibition does not apply to their kind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daibn-ashirra"
+  ]
+ },
+ {
+  "id": "dajbn-gabriel-chavez",
+  "title": "Gabriel Chavez, the Eyes of Alamut",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "An Assamite watcher in Jerusalem.",
+  "claims": [
+   {
+    "text": "Gabriel Chavez was born in 699 near Barcelona to an Iberian mother and an unknown Berber Muslim father.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Rejecting the maternal side of the family, Gabriel left home at the first chance to join the Umayyads and learn honour and the Qur’an.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Among the Cainites of Jerusalem, Gabriel serves as the Eyes of Alamut.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dajbn",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

@@ -1,0 +1,277 @@
+[
+ {
+  "id": "w20wwx-storm-eater",
+  "title": "The Storm Eater’s escape",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The Bane loosed on the Savage West in the 1830s.",
+  "claims": [
+   {
+    "text": "In the Pure Lands’ dawn times, the three native tribes could only weaken the mightiest Banes, so the Uktena sealed them under the earth behind wards tied to each spirit’s ban.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "The Storm Eater was one of them, a vast Bane that devoured Wyld spirits and took their power for itself; while imprisoned it could make none of its spawn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "It broke free some time in the 1830s, as caern after caern fell to the European Garou, and the Garou needed decades even to learn its name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tbwen-storm-eater",
+   "w20wwx-storm-born",
+   "w20wwx-savage-gauntlet"
+  ]
+ },
+ {
+  "id": "w20wwx-savage-gauntlet",
+  "title": "The Gauntlet in the Savage West",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "How thin the barrier runs on the frontier.",
+  "claims": [
+   {
+    "text": "Across most of the Savage West the Gauntlet sits at 5 or 6, reaching 7 in the biggest towns, so stepping sideways comes easily.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Garou lean on the Penumbra for flanking, ambush and escape, but only in calm weather; an Umbral storm takes most of that edge away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20wwx-storm-eater"
+  ]
+ },
+ {
+  "id": "w20wwx-storm-born",
+  "title": "The Storm-Born",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Children of spirit and flesh from the Broken Lands.",
+  "claims": [
+   {
+    "text": "Storm-Born look like ordinary people or animals until a tell shows, such as obsidian eyes, glyph brands that shine under the moon, or wrong-looking teeth; they cannot say where they came from.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "They are part flesh and part spirit, fused in a way unlike possession, and inherit the Storm Umbra; most Garou take them for mockeries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Most are violent and erratic, and each is bound by personal taboos much like a spirit’s ban.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20wwx-storm-eater"
+  ]
+ },
+ {
+  "id": "w20wwx-fera-west",
+  "title": "Fera in the Savage West",
+  "kind": "lore",
+  "lines": [
+   "werewolf",
+   "fera"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The other shapeshifters as the Garou push west.",
+  "claims": [
+   {
+    "text": "Local Fera kept a loose truce with the Uktena and Wendigo, but feel the natives do far too little against the incoming Garou, and many European bloodlines mistake unfamiliar American shifters for mockeries or Storm-Born.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "The West is plainly Nuwisha land, and the werecoyotes are finding the newcomers’ trouble less amusing than usual.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Every Gurahl tribe is present, and their reunions with European kin are the least hostile of any Fera; the Qualmi and Pumonca are the strongest Bastet tribes, with some Balam in the south.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20wwx-storm-born"
+  ]
+ },
+ {
+  "id": "w20wwx-frontier-gifts",
+  "title": "Frontier Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Gifts of the Wyld West.",
+  "claims": [
+   {
+    "text": "Ghost Town, a level five Ragabash Gift taught by a Mirage-spirit, makes a whole settlement or landmark look deserted or vanish; it costs two Willpower and a Wits + Subterfuge roll at difficulty 8.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Pulse of the Railroad, a level two Gift taught by an Iron-spirit, lets a Garou with an ear to a rail hear events anywhere along that line as if present.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20wwx-new-territory"
+  ]
+ },
+ {
+  "id": "w20wwx-new-territory",
+  "title": "Rite of New Territory",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "A level one rite to settle land claims without killing.",
+  "claims": [
+   {
+    "text": "Made to settle the frontier’s frequent boundary disputes without bloodshed, the rite formalises a tribe, sept or Kin group’s claim, such as first choice of a town’s better land, but never decides who owns a caern.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "It is a non-lethal duel witnessed by spirits: attackers roll Dexterity + Brawl and defenders Stamina + Brawl at difficulty 6, rising by one each turn without a winner; the first defender to fail falls and loses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20wwx",
+      "page": 35,
+      "pdf": 36
+     },
+     {
+      "book": "w20wwx",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20wwx-frontier-gifts"
+  ]
+ }
+]
