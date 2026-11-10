@@ -281,3 +281,7 @@ Ben: the lips looked like lipstick and the faces too happy. Lips are about 30% t
 
 ## B402. NPCs hear loud watch point, mount and climb events (2026-11-10)
 Events from watch points, mounts and climbs used to go out before the hearing check, so nobody reacted to a rider thrown in the yard or a horse at full gallop. They now wait for the check. A loud one (a crash, a fall, a gallop, a bell) carries the NPCs who heard it, and they react as they do to a forced door. A quiet one (mounting, a look from a window) carries nobody, so a quiet act never sets off a guard on its own. Interactables 0.18.1.
+
+
+## B403. Release checks: letter-case paths and a build stamp (2026-11-10)
+The live server is Linux, so a path that differs in case from its file works on the PC and breaks on release. A harness test now fails on any such path in the system, the modules or the world files. Each package carries release.json, filled in by git archive (export-subst) or by tools/release/stamp.mjs, and WoDX Chronicle shows the GM which commit the server runs, in the Settings sidebar, with a warning when packages differ. Players do not see it and their clients do not read the stamps. Chronicle 0.10.0.
