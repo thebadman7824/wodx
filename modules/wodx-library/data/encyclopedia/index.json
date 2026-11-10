@@ -517,6 +517,12 @@
    "title": "Tribebook: Red Talons (Revised)",
    "short": "TB Red Talons",
    "edition": "Revised"
+  },
+  {
+   "id": "tbsl",
+   "title": "Tribebook: Shadow Lords (Revised)",
+   "short": "TB Shadow Lords",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -605,6 +611,7 @@
   "tbfia.json",
   "tbfen.json",
   "tbgw.json",
-  "tbrt.json"
+  "tbrt.json",
+  "tbsl.json"
  ]
 }
