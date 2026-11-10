@@ -78,18 +78,55 @@ export function candidates(items, {era = null, place = "home", container = "ches
   return out;
 }
 
-/** Draw up to count different items, by weight. rng returns [0, 1). */
-export function draw(items, {era = null, place = "home", container = "chest", count = 3, rng = Math.random} = {}) {
-  const pool = candidates(items, {era, place, container});
+/** Pick up to n different entries of a weighted pool ({weight}), taking them out of the pool. rng returns [0, 1). */
+function pick(pool, n, rng) {
   const picked = [];
-  const n = Math.max(0, Math.min(12, Math.round(Number(count) || 0)));
   while ( picked.length < n && pool.length ) {
     const total = pool.reduce((s, p) => s + p.weight, 0);
     let r = rng() * total, i = 0;
     for ( ; i < pool.length - 1; i++ ) { r -= pool[i].weight; if ( r < 0 ) break; }
-    picked.push(pool.splice(i, 1)[0].item);
+    picked.push(pool.splice(i, 1)[0]);
   }
   return picked;
+}
+const howMany = count => Math.max(0, Math.min(12, Math.round(Number(count) || 0)));
+
+/** Draw up to count different items, by weight. rng returns [0, 1). */
+export function draw(items, {era = null, place = "home", container = "chest", count = 3, rng = Math.random} = {}) {
+  return pick(candidates(items, {era, place, container}), howMany(count), rng).map(p => p.item);
+}
+
+/**
+ * 0.21.0: everyday goods (WoDX Library's data/goods.mjs) that may be drawn for this era, place and container, each
+ * with its weight. weights: the goods' place weights (PLACE_WEIGHTS there). A small container takes small goods only.
+ */
+export function goodsCandidates(goods, weights, {era = null, place = "home", container = "chest"} = {}) {
+  const w = weights?.[place] ?? weights?.home ?? {};
+  const out = [];
+  for ( const g of goods ?? [] ) {
+    if ( !g?.name || !w[g.kind] ) continue;
+    if ( era && !(g.eras ?? []).includes(era) ) continue;
+    if ( SMALL.has(container) && !g.small ) continue;
+    out.push({item: g, weight: w[g.kind], cat: "goods"});
+  }
+  return out;
+}
+
+/** What the fill can draw: Gear by era, everyday goods, or both in one draw. */
+export const WHAT = {both: {label: "Gear and everyday goods"}, goods: {label: "Everyday goods only"}, gear: {label: "Gear by era only"}};
+
+/**
+ * One draw from gear and goods together. Returns [{name, line, goods}]: line is what goes in the container's list
+ * (a gear item's link, or a good's name as plain text).
+ */
+export function drawMixed({items = [], goods = [], weights = null, what = "both", era = null, place = "home", container = "chest", count = 3, rng = Math.random} = {}) {
+  const pool = [
+    ...(what === "goods" ? [] : candidates(items, {era, place, container})),
+    ...(what === "gear" ? [] : goodsCandidates(goods, weights, {era, place, container}))
+  ];
+  return pick(pool, howMany(count), rng).map(p => p.cat === "goods"
+    ? {name: p.item.name, line: p.item.name, goods: true}
+    : {name: p.item.name, line: p.item.uuid ?? p.item.name, goods: false});
 }
 
 /** Add lines to a container's list, once each. */
