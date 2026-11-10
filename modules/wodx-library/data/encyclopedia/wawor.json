@@ -60,6 +60,19 @@
    "modern"
   ],
   "summary": "Russia’s supernatural isolation in the 1990s.",
+  "date": {
+   "from": 1990,
+   "to": 1993,
+   "label": "early 1990s",
+   "approx": true,
+   "refs": [
+    {
+     "book": "wawor",
+     "page": 71,
+     "pdf": 72
+    }
+   ]
+  },
   "claims": [
    {
     "text": "When the Baba Yaga rose and the Shadow Curtain fell in the early 1990s, supernatural Russia disappeared behind an invisible barrier.",
@@ -121,6 +134,17 @@
    "modern"
   ],
   "summary": "Russia freed in 1998.",
+  "date": {
+   "from": 1998,
+   "label": "1998",
+   "refs": [
+    {
+     "book": "wawor",
+     "page": 76,
+     "pdf": 77
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Through 1998 the Garou dismantled the Baba Yaga’s power piece by piece, and that obsession with the werewolves may have left the sorceress open to vampire foes.",

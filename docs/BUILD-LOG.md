@@ -1249,3 +1249,9 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Suburbs: gate wards outside the walls are now likely (85%), with inns and an almshouse (its keeper and almsmen) as well as cottages, smiths and workshops. B587.
 - Fire history: villages 20%, towns 40%, cities 60% have had a great fire in one block. One burned-out plot is left with charred timbers (sidecar region burned-N) and the block's houses were rebuilt in stone. B588.
 - Samples schondorf and linberg redrawn.
+
+
+## 2026-11-10: dates for Encyclopaedia events (Library 0.5.4)
+- Entries may carry `date` {from, to, label, approx, refs}: years with BCE negative, the date as the book writes it, and its page. The format check tests it; the journal shows it under When; the journal flags carry year and yearTo.
+- Ben asked for dates on every event, from the OCR'd books where they give one. 206 entries checked (195 events and 11 lore entries that tell of a war, battle, fall or treaty); the text of each cited page and the pages either side was searched for dates on the PC. 84 now carry a date. The rest have none on or near their pages, or their books are novels with no text on the PC (B593).
+- The table of dates and the script that writes them: tools/encyclopedia/event-dates.py.

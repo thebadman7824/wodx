@@ -421,3 +421,7 @@ A walled town's fields at a gate become a suburb 85% of the time, with an inn an
 
 ## B588. Fire history (2026-11-10)
 Villages 20%, towns 40%, cities 60% have had one great fire: one block rebuilt in stone, with one burned-out plot left among the new houses.
+
+
+## B593. Dates for Encyclopaedia events (2026-11-10)
+An event gets a date only where a book near its cited pages gives one; an entry whose book gives no year stays undated rather than taking a date from outside the books. A date from another WoDX source book may stand in when the entry's own book is silent (the Iron Hag's waking, 1990, from Changing Breeds). Decades, centuries and "around" dates are marked approx. Lore entries that tell of one war, battle, fall or treaty were checked too; overviews of whole ages were left undated.

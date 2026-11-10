@@ -135,6 +135,17 @@
    "modern"
   ],
   "summary": "Necropoli drifting from Stygia after Charon vanished.",
+  "date": {
+   "from": 1931,
+   "label": "from 1 February 1931",
+   "refs": [
+    {
+     "book": "whier",
+     "page": 43,
+     "pdf": 44
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 1931 an Anacreon of the Silent Legion in Boston resigned, protesting that Stygia ignored the Shadowlands beyond its borders while the mortal crisis stretched local Legions past their limits.",

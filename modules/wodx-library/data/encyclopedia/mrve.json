@@ -50,6 +50,19 @@
    "modern"
   ],
   "summary": "The witch hunts as the Verbena remember them.",
+  "date": {
+   "from": 1200,
+   "to": 1499,
+   "label": "13th to 15th centuries, worst from 1435",
+   "approx": true,
+   "refs": [
+    {
+     "book": "mrve",
+     "page": 24,
+     "pdf": 25
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Secret Inquisitors, at times backed by Christian mages, were the worst danger to the Verbena.",

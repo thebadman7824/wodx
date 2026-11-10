@@ -11,6 +11,17 @@
    "renaissance"
   ],
   "summary": "The 1493 treaty that ended the Anarch Revolt and split the rebels.",
+  "date": {
+   "from": 1493,
+   "label": "23 October 1493",
+   "refs": [
+    {
+     "book": "gtanarch",
+     "page": 18,
+     "pdf": 19
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Convention let anarchs return to the domain of their clan elders and princes, with amnesty for all but the worst crimes of the revolt. It also barred the Assamites from ritual diablerie on Camarilla members.",
@@ -152,6 +163,18 @@
    "modern"
   ],
   "summary": "What became of the Anarch Free State after 1944.",
+  "date": {
+   "from": 1944,
+   "to": 1998,
+   "label": "1944 to 1998",
+   "refs": [
+    {
+     "book": "gtanarch",
+     "page": 23,
+     "pdf": 24
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Don Sebastian had Jeremy MacNeil seized and beaten in 1944. MacNeil urged six weeks of patience, and on 21 December 1944 armed anarchs struck the elders in their havens before dawn.",

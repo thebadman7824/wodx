@@ -155,6 +155,18 @@
    "dark-ages"
   ],
   "summary": "How the conflict over Transylvania began.",
+  "date": {
+   "from": 1000,
+   "label": "began around 1000",
+   "approx": true,
+   "refs": [
+    {
+     "book": "datbn",
+     "page": 124,
+     "pdf": 125
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Tzimisce resented Tremere chantries on lands they claimed, raiding the magi’s villages, supplies and sometimes the chantries themselves.",

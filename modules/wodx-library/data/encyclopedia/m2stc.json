@@ -74,6 +74,18 @@
    "dark-ages"
   ],
   "summary": "From House Diedne's fall to the Solificati's break with Reason.",
+  "date": {
+   "from": 1003,
+   "to": 1335,
+   "label": "1003 to 1335",
+   "refs": [
+    {
+     "book": "m2stc",
+     "page": 10,
+     "pdf": 10
+    }
+   ]
+  },
   "claims": [
    {
     "text": "House Diedne was wiped out between 1003 and 1022, and Mistridge was founded in 1067.",
@@ -150,6 +162,18 @@
    "dark-ages"
   ],
   "summary": "Fourteenth-century wars that split Africa's and China's mages.",
+  "date": {
+   "from": 1345,
+   "to": 1350,
+   "label": "1345 to 1350",
+   "refs": [
+    {
+     "book": "m2stc",
+     "page": 11,
+     "pdf": 11
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The War of the Dust Witch near Great Zimbabwe, 1345 to 1350, split the Ngoma and the Madzimbabwe into separate groups; plague in 1420 set them at war, each blaming the other.",
@@ -193,6 +217,18 @@
    "renaissance"
   ],
   "summary": "Battles around the birth of the Council.",
+  "date": {
+   "from": 1448,
+   "to": 1453,
+   "label": "1448 to 1453",
+   "refs": [
+    {
+     "book": "m2stc",
+     "page": 12,
+     "pdf": 12
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Daedalean forces took Doissetep in 1448; the physical fortress fell and the main keep moved to a Horizon Realm.",
@@ -248,6 +284,18 @@
    "modern"
   ],
   "summary": "Renamings, defections and wars of the modern age.",
+  "date": {
+   "from": 1756,
+   "to": 1880,
+   "label": "1756 to about 1880",
+   "refs": [
+    {
+     "book": "m2stc",
+     "page": 13,
+     "pdf": 13
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 1756 more than a hundred Native American Dreamspeakers left Horizon over bias against tribal and shamanic magic.",

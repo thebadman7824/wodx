@@ -293,6 +293,17 @@
    "dark-ages"
   ],
   "summary": "In May 1230 a great eclipse stirs dread across the Garou Nation.",
+  "date": {
+   "from": 1230,
+   "label": "May 1230",
+   "refs": [
+    {
+     "book": "wtda",
+     "page": 18,
+     "pdf": 19
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In May of 1230 an eclipse darkens the sky so deeply that workers go home thinking night has come.",
