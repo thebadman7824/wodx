@@ -1801,6 +1801,72 @@
       "title": "Constantinople by Night",
       "short": "CbN",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dadevil",
+      "title": "Devil's Due",
+      "short": "Devil's Due",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dahot",
+      "title": "House of Tremere",
+      "short": "House of Tremere",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daibn",
+      "title": "Iberia by Night",
+      "short": "IbN",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "inqcomp",
+      "title": "Dark Ages: Inquisitor Companion",
+      "short": "Inquisitor Companion",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dajbn",
+      "title": "Jerusalem by Night",
+      "short": "JbN",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dals1",
+      "title": "Libellus Sanguinis 1: Masters of the State",
+      "short": "LS1",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dals2",
+      "title": "Libellus Sanguinis 2: Keepers of the Word",
+      "short": "LS2",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "darop",
+      "title": "Right of Princes",
+      "short": "Right of Princes",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daspoils",
+      "title": "Spoils of War",
+      "short": "Spoils of War",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daknight",
+      "title": "The Ashen Knight",
+      "short": "Ashen Knight",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dathief",
+      "title": "The Ashen Thief",
+      "short": "Ashen Thief",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2103,6 +2169,17 @@
     "dacbcapp.json",
     "dacbsal.json",
     "daheresy.json",
-    "dacbn.json"
+    "dacbn.json",
+    "dadevil.json",
+    "dahot.json",
+    "daibn.json",
+    "inqcomp.json",
+    "dajbn.json",
+    "dals1.json",
+    "dals2.json",
+    "darop.json",
+    "daspoils.json",
+    "daknight.json",
+    "dathief.json"
   ]
 }

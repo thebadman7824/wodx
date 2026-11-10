@@ -1,0 +1,372 @@
+[
+ {
+  "id": "dals2-toreador-types",
+  "title": "Kinds of Artisan",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Patrons, Humanists and Caligulans among the Toreador.",
+  "claims": [
+   {
+    "text": "Patrons shape a protege’s whole personality as their art, sometimes cruelly, and later call in the debt; a Patron who feels wronged will not rest until repaid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Humanists believe in mortal worth and creativity, keep close to their own humanity and are among the best-informed Cainites about change among the living.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Other Toreador call some of their kin Caligulans: Cainites who revel in monstrosity, study torture on living subjects and bathe in blood to keep a mortal bloom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals2-melusines-song"
+  ]
+ },
+ {
+  "id": "dals2-melusines-song",
+  "title": "Melusine’s Song",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A sixth-level Presence power that commands through song.",
+  "claims": [
+   {
+    "text": "Named for the supposedly fae ancestor of the Anjou and Lusignan houses, it turns requests phrased in song into nearly irresistible commands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "It costs two blood and a Willpower point; everyone in earshot rolls Willpower at difficulty 8 or obeys without noticing, for as long as the singing lasts or the target stays near.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "A command to leave can be resisted with a second Willpower roll once the voice fades; Toreador in earshot are simply entranced, and knowing the power lowers all singing difficulties by 1.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals2-toreador-types",
+   "dals2-diplomats-boon"
+  ]
+ },
+ {
+  "id": "dals2-diplomats-boon",
+  "title": "Diplomat’s Boon and Double-Tongue",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Toreador combination powers for persuasion.",
+  "claims": [
+   {
+    "text": "Diplomat’s Boon (Presence 5, Auspex 3) costs a blood point and a turn of concentration to learn exactly what to say for a chosen response; a target pushed against core beliefs may resist with Willpower at difficulty 8.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Despite its gentle name it can sow enmity, arrange marriages and start wars as easily as it keeps the peace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Double-Tongue (Presence 6, Auspex 3) lets the intended listener hear one message while everyone else hears something different.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dals2-sielanic-earth",
+  "title": "Sielanic Thaumaturgy: the earth",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Path of the World’s Blood used by Telyavelic Tremere.",
+  "claims": [
+   {
+    "text": "Eyes of the Earth uses spirits of plants, stones and beasts to see everything within ten miles of the haven or shrine, though without sound, after drinking vitae mixed with soil and plant and animal matter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Roots of Power costs a blood point shed from the soles into bare earth; each success adds a point to Physical Attributes, none above 5, for a scene within about fifty feet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Arbor of Protection lets the vampire take refuge inside any living tree in the attuned realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals2-sielanic-dead",
+   "dals2-sielanic-rituals"
+  ]
+ },
+ {
+  "id": "dals2-sielanic-dead",
+  "title": "Path of the Shadow World",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Sielanic path for touching the dead.",
+  "claims": [
+   {
+    "text": "See the Dead costs a blood point and a Willpower roll to sense wraiths or Spectres in an area, with more successes revealing their mood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Repel the Angry Dead banishes a hostile ghost from a place such as a house or grave for one hour per success, sometimes only until some act appeases it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "At higher levels the sorcerer can enter the outer Underworld until dawn, taking another person with three successes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "The path dies out with the Telyavelic bloodline, though it is rumoured to live on within Dark Thaumaturgy.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals2-sielanic-earth"
+  ]
+ },
+ {
+  "id": "dals2-sielanic-rituals",
+  "title": "Sielanic rituals",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Rituals that bind a Telyavelic to the land.",
+  "claims": [
+   {
+    "text": "Become One with the Land attunes the caster to up to ten square miles by sleeping coated in blood mixed with its earth, letting the earth path work there; only one place can be attuned at a time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Soul of the Land, level four, requires a full day buried near the domain’s centre and then drinking blood mixed with that soil; the caster then senses every threat to the land and its creatures.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Through it the caster can foretell weather, move trees to hide paths, shift streams and raise boulders, kept up by eight blood points a week.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals2-sielanic-earth"
+  ]
+ },
+ {
+  "id": "dals2-brujah-war-powers",
+  "title": "Brujah powers of war",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Combination powers made for medieval battle.",
+  "claims": [
+   {
+    "text": "Command the Wary Steed (Presence 3, Animalism 2) costs a Willpower point and Manipulation + Animal Ken at difficulty 7: enemy mounts panic, making Ride rolls 3 harder and mounted combat impossible, while friendly mounts grow steadier.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Esprit de Corps (Potence 5, Presence 5) is rolled as Strength + Intimidation at difficulty 7, rallying from one ally up to every ally nearby by successes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Those rallied gain one dot of Potence for the scene for every two successes, and fear powers against them are 2 harder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Most of these powers suit medieval warfare and fade from use over the centuries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals2",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

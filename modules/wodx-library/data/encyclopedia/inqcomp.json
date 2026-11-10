@@ -1,0 +1,354 @@
+[
+ {
+  "id": "inqcomp-messianic-view",
+  "title": "Christian magi on the Blessings",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Messianic Voices see inquisitor powers.",
+  "claims": [
+   {
+    "text": "Christian magi of the Messianic Voices tend to see inquisitors who use showy Endowments as hedge wizards working theurgy through faith, or even as fellow magi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Their attitude ranges from pride in a shared cause to rivalry or mild scorn for overzealous younger siblings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "The Voices’ angelic magic outstrips all but the greatest Endowments, and some see both as gifts along one continuum of God-given talent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-endowments"
+  ]
+ },
+ {
+  "id": "inqcomp-curses-as-blessings",
+  "title": "Curses seen as signs of grace",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How inquisitors regard their Curses.",
+  "claims": [
+   {
+    "text": "Many inquisitors do not see their Curses as curses at all: stigmata mark the sufferer as Christ-like, and speaking in tongues proves the Holy Spirit within.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "The Church holds the stigmata to be extraordinarily holy, and the Red Order bears most of the Stigmata Curses, some with gratitude.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-curses"
+  ]
+ },
+ {
+  "id": "inqcomp-retreats",
+  "title": "Retreats and banking Conviction",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Learning Endowments in seclusion.",
+  "claims": [
+   {
+    "text": "Developing a new Endowment usually takes a retreat of a week to a month, set by player and Storyteller according to its power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "On retreat an inquisitor may bank more than the usual one Conviction point a day, up to the highest Superior Virtue plus its controlling Virtue, still rolling for prayer as normal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Rushing advancement through Conviction alone draws Curses; a single Curse is easily forgiven, several mark a rash inquisitor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "The inquisitor usually feels dread at once after the prideful act, and the Curse takes hold within about a day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 96,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-acquiring-curses",
+   "inqcomp-curses-as-blessings"
+  ]
+ },
+ {
+  "id": "inqcomp-serpents-fangs",
+  "title": "Pulling the Serpent’s Fangs",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "An Advocate-level Legacy of House Murnau.",
+  "claims": [
+   {
+    "text": "The Faith version costs a Conviction point and a Manipulation + Faith roll at difficulty 6, striking every supernatural foe in sight mute for three turns per success and breaking spoken effects such as Dominate or incantations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 109,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "The Wisdom version, Charisma + Wisdom at difficulty 6, forces a creature of darkness to spend a Willpower point per success each time it tries to act against the inquisitor for the scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 109,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "The Zeal version puts a target’s reasoning side to sleep: vampires and werewolves frenzy, magi fall asleep and fae react unpredictably.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 109,
+      "pdf": 111
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-house-of-murnau",
+   "inq-legacies"
+  ]
+ },
+ {
+  "id": "inqcomp-sisters-song",
+  "title": "Psalms of the Sisters",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Two Psalms of the Sisters of St. John.",
+  "claims": [
+   {
+    "text": "One facet lets a Sister in skin contact with a restrained creature sing its thoughts aloud, for two Conviction and Perception + Wisdom at difficulty 6, or 8 if the creature knows no human language.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 113,
+      "pdf": 115
+     }
+    ]
+   },
+   {
+    "text": "The Zeal facet, called Dies Irae, costs two Conviction and Charisma + Zeal at difficulty 7, bringing down divine fire, wind and lightning on every place in earshot that shelters Lucifer’s minions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 113,
+      "pdf": 115
+     }
+    ]
+   },
+   {
+    "text": "With two or more successes the cleansed place becomes Holy Ground with an Ambient Faith equal to the successes for a week, but the Sister takes a level of unsoakable bashing damage per success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 113,
+      "pdf": 115
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-psalms"
+  ]
+ },
+ {
+  "id": "inqcomp-hidden-presence",
+  "title": "A rite to hide the faithful",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Holy Art ritual that masks an inquisitor from supernatural senses.",
+  "claims": [
+   {
+    "text": "Over an hour of silent prayer the inquisitor is anointed with oils; each success on the roll at difficulty 7 adds one to the difficulty of supernatural attempts to see the inquisitor as more than an ordinary person.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 117,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Under it, powers such as Soul Sight show no special aura and even strong emotions are muted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 117,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "It lasts one hour per success plus one more per Conviction spent; some in the Church think a rite that hides the presence of God is somewhat sinful.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 117,
+      "pdf": 119
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-holy-art"
+  ]
+ },
+ {
+  "id": "inqcomp-tears-of-abel",
+  "title": "Tears of the Weeping Heart of Abel",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A level three Holy Art ritual that strengthens holy water.",
+  "claims": [
+   {
+    "text": "Agents of the shadow Inquisition in the Church hierarchy make sure some blessed water passes through their hands to receive this extra rite.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 117,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Starting with conventionally blessed water, on Holy Ground if performed alone, the inquisitor makes a thirty-minute Intelligence + Theology roll at difficulty 6, then spends one Conviction per vial and prays for thirty more minutes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 117,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "The result is a weapon against Satan’s minions that anyone can wield.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inqcomp",
+      "page": 117,
+      "pdf": 119
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-holy-art"
+  ]
+ }
+]
