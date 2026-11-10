@@ -1,0 +1,176 @@
+[
+ {
+  "id": "cboh1-cold-iron-craft",
+  "title": "Cold iron as House Dougal knows it",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What cold iron really is.",
+  "claims": [
+   {
+    "text": "House Dougal has long studied why cold iron harms the fae; most of what people call iron is really steel, and true cold iron is rare today.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Cold iron is best understood as a crude process: ore, found close to the surface across Concordia and even under some freeholds, is heated over charcoal and hammered; it makes heavy, brittle blades that dull fast, so it goes into daggers, arrowheads and bolts. Wrought iron in old cities is its most common modern form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Gossip holds that some Prodigals make cold iron with the qualities of steel, and that a weapon quenched in sidhe blood is hard for fae to sense.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cold-iron",
+   "house-dougal"
+  ]
+ },
+ {
+  "id": "cboh1-achen",
+  "title": "Achen, the hammer of Dougal",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "A lost relic of House Dougal.",
+  "claims": [
+   {
+    "text": "The fate of Achen, Dougal's hammer, is the great riddle of the Long Night: some say it went to Arcadia, others that it was left with Morann, who ran the house for years after most sidhe departed.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Many Dougal masters stayed behind with House Scathach, became changelings and in time died; others sealed their workshops into pockets of the Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-dougal",
+   "the-shattering",
+   "the-interregnum"
+  ]
+ },
+ {
+  "id": "cboh1-ilmarinen",
+  "title": "Ilmarinen",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A great smith among the Lost Ones.",
+  "claims": [
+   {
+    "text": "Many great smiths became Lost Ones in the Shattering; the most famous, Ilmarinen, shut away a workshop of Glamour toys in the cold north of Finland or Norway along with family and nocker and boggan servants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A chimerical likeness of Ilmarinen is said to deliver those toys to children worldwide by sled.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lost-ones",
+   "the-shattering"
+  ]
+ },
+ {
+  "id": "cboh1-fiona-shattering",
+  "title": "House Fiona in the Shattering",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How House Fiona survived the Shattering.",
+  "claims": [
+   {
+    "text": "As plague and hatred spread among mortals and the fae fought each other over Glamour, House Fiona's good terms with commoners let it share their freeholds where other houses were turned away, a kindness the house still remembers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "The luckiest of the house passed through the last gates to Arcadia; the few left behind faced the long exile.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cboh1",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-fiona",
+   "the-shattering",
+   "freeholds"
+  ]
+ }
+]
