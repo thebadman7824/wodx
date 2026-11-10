@@ -1,0 +1,206 @@
+[
+ {
+  "id": "bbnuw-one-trickster",
+  "title": "Coyote of Many Names",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Nuwisha belief that every trickster god is Coyote.",
+  "claims": [
+   {
+    "text": "Nuwisha hold that Coyote is the one true Trickster and only changes names to suit each land.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "They count among those masks Ti Malice, Loki, Raven, Oghma, Xochipilli, Chung Kuei in China, Ptah in Egypt, Pan in Greece and Kishijoten, who takes a woman's shape, in Japan.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Werecoyotes speak of Earth Mother where Garou say Gaia, and claim to have roamed every land long before Viking ships crossed the sea.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-nuwisha"
+  ]
+ },
+ {
+  "id": "bbnuw-fallen-star",
+  "title": "The Caern of the Fallen Star",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "A Nuwisha tale of a trick played on European Garou.",
+  "claims": [
+   {
+    "text": "Nuwisha tell how Coyote Laughs-At-Luna had warriors goad European Garou packs into a long, furious chase through the forests.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "When the packs tired, each was promised a caern for peace, and all were led together to one clearing where a star had fallen and the veil was thin.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Told to share it, the Garou fought each other instead, breaking the single rule Earth Mother set there: whoever spills blood in that place loses use of its gateway to the stars.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-nuwisha",
+   "garou"
+  ]
+ },
+ {
+  "id": "bbnuw-ptah-wagnerians",
+  "title": "The Ptah and the Wagnerians",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Nuwisha who shadow the Void Engineers in the Umbra.",
+  "claims": [
+   {
+    "text": "The Ptah among the Nuwisha accept they cannot stop the Void Engineers, so they steer those mages toward the Wyrm's corners of the Umbra and away from places of beauty, since whatever the mages chart becomes part of the Weaver's web.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Only a small Garou circle called the Wagnerians knows of the Ptah; most Garou think the War of Rage wiped out the Nuwisha, and the werecoyotes like it that way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The Wagnerians seek another Earth Mother to strengthen Gaia, and the Ptah help them while watching that they stray no closer to the Wyrm.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-nuwisha",
+   "void-engineers",
+   "war-of-rage"
+  ]
+ },
+ {
+  "id": "bbnuw-pan-kokopelli",
+  "title": "Pan and Kokopelli",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two faces of Coyote that many Nuwisha follow.",
+  "claims": [
+   {
+    "text": "Pan and Kokopelli are fertility faces of the Trickster; Kokopelli asks little beyond having fun, while Pan asks that desires be fed but never by force.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Both prize dance and music, so many Nuwisha learn the flute, and the werecoyote way of fighting grew out of dance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Kokopelli figures painted and carved across the American Southwest mark, the Nuwisha say, places where they once passed bringing music and joy.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnuw",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-nuwisha",
+   "bbnuw-one-trickster"
+  ]
+ }
+]
