@@ -1,0 +1,92 @@
+[
+ {
+  "id": "dpg-fontanelles",
+  "title": "Possessing the living",
+  "kind": "lore",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a demon can take a host who has not died.",
+  "claims": [
+   {
+    "text": "Most fallen enter the newly dead, whose souls are pushed out leaving only scraps of memory. Sometimes a demon instead takes a person who is still alive, and that fuller human soul may push back harder against the demon within.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dpg",
+      "page": 36,
+      "pdf": 38
+     },
+     {
+      "book": "dpg",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Some fallen call such open mortals fontanelles, after their weak membranes: something has worn the spirit thin enough for an escaping demon to find the body and slip in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dpg",
+      "page": 36,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "A person who cries out in true desperation for something vital, such as revenge, love or death, may draw a fleeing demon that offers a bargain; the price is nearly always possession.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dpg",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Dabbling occultists who stumble on real rites, or on a book a demon planted, can call a demon to themselves, and some beg for one to come.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dpg",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Many small cults hide sinister aims behind harmless fronts such as self-help groups, and members led step by step into worshipping strange angels may end by inviting a demon in. Many demons have founded such cults for this purpose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dpg",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "When a demon takes a living host, the human soul is not driven out but crushed down and trapped inside.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dpg",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-the-fallen",
+   "dtf-legacy",
+   "dtf-pacts"
+  ]
+ }
+]

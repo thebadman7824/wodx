@@ -1,0 +1,43 @@
+[
+ {
+  "id": "ckpooka-accordance-war",
+  "title": "Pooka in the Accordance War",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the pooka fought after the Night of Iron Knives.",
+  "claims": [
+   {
+    "text": "The pooka were enraged by the killings of the Night of Iron Knives: humans had hunted them before, but never had changelings killed with such cold planning, and the pooka banded together against their oppressors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckpooka",
+      "page": 20,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Those who could fight did so without mercy, while the small and weak scouted and spied; shifting into small animals such as mice, many slipped into enemy freeholds and became legends of the war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckpooka",
+      "page": 20,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pooka",
+   "accordance-war",
+   "night-of-iron-knives"
+  ]
+ }
+]

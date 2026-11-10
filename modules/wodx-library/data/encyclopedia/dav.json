@@ -1,0 +1,387 @@
+[
+ {
+  "id": "dav-long-night",
+  "title": "The Long Night",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The quiet centuries between the fall of Rome and the Crusades.",
+  "claims": [
+   {
+    "text": "After Carthage fell, many Cainites felt Rome had lost its wonder for their kind, though the city lingered for centuries in decadence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 49,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "When the barbarians took Rome, its old Cainite masters were destroyed, sank into torpor or hid, and younger vampires scattered to carve out kingdoms across Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 50,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "In the Long Night domains lay far apart, courts gathered more for company than need, and the War of Ages slowed. Constantinople rose as the great jewel of the age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 50,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The calm ended with the Crusades: ancients woke and moved into Europe, Muslim Cainites were angered, and Tremere's diablerie of Saulot shook the clans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 50,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbb-carthage",
+   "dac-constantinople",
+   "da-war-of-princes"
+  ]
+ },
+ {
+  "id": "dav-fiefs-black-cross",
+  "title": "The Fiefs of the Black Cross",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Hardestadt's Ventrue realm in the German lands.",
+  "claims": [
+   {
+    "text": "High Lord Hardestadt, a 5th-generation Ventrue, is the monarch. Prominent vassals include Lord Jurgen of Magdeburg and Julia Antasia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Its key domains are Magdeburg and the lands east of it, Cologne, Munich, Leipzig, and fiefs along the Rhine and in the northern Alps, mostly Bavaria.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Princes in one region need not all swear to the same lord or monarch; vampiric realms are looser than mortal nations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-holy-roman-empire",
+   "da-ventrue",
+   "da-prince"
+  ]
+ },
+ {
+  "id": "dav-italian-city-states",
+  "title": "The Cainite city-states of Italy",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Independent princes and a new kind of Cainite order.",
+  "claims": [
+   {
+    "text": "In the Italian cities the system of lords has nearly collapsed. Princes rule free of lords and monarchs and draw High and Low Clan Cainites alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 58,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Cainites there hide from mortals and act as unseen patrons of guilds, merchants and nobles, an order that adapts more easily to a changing world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 58,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "The Courts of Love and the Fiefs of the Black Cross both covet the wealth of Milan and Florence, and the Cainite Heresy hides in these cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 58,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-italy",
+   "da-italy"
+  ]
+ },
+ {
+  "id": "dav-midnight-crescent",
+  "title": "The Midnight Crescent",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Holy Land and the Islamic lands, as Europe's Cainites see them.",
+  "claims": [
+   {
+    "text": "European Cainites know little of the Holy Land or the Muslim realms around the Mediterranean, and stories of blessed vampires and Antediluvian lairs keep most of them away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 58,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "The clans there have a different social order, hiding among caliphs and pilgrims. Ties between Westerners and the Ashirra are strained even between members of one clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 58,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-outremer",
+   "daeu-iberia"
+  ]
+ },
+ {
+  "id": "dav-lasombra-divided",
+  "title": "The divided Magisters",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Reconquista splits Clan Lasombra.",
+  "claims": [
+   {
+    "text": "The Reconquista unites the Christian kingdoms of Spain but tears Clan Lasombra apart, with Muslim and Christian Lasombra fighting an unofficial civil war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Lasombra is said to stir in the Castle of Shadows in Sicily.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-lasombra",
+   "daeu-iberia"
+  ]
+ },
+ {
+  "id": "dav-low-clan-unrest",
+  "title": "Low Clan unrest",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Low Clans grow tired of the High Clans.",
+  "claims": [
+   {
+    "text": "While princes look elsewhere, young and outcast Cainites of the Low Clans make their move as bandit kings and inside the new guilds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Groups such as the Prometheans and the Furores talk of a great revolt and prepare for it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 55,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-high-and-low-clans"
+  ]
+ },
+ {
+  "id": "dav-excommunication",
+  "title": "Excommunication from a road",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Banishment from a road by its teachers.",
+  "claims": [
+   {
+    "text": "Leaving one road for another is not a crime, though apostates carry a mild stigma, and those who change more than once are distrusted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 97,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Influential teachers of a road can declare an adherent outlaw, cutting them off from its rites and followers. Anyone who helps the outcast risks the same.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 97,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Without fellow adherents an excommunicate tends to slide toward the Beast, so many rank the sentence close to a blood hunt, and the ashen priests wield it as princes wield the hunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 97,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-roads"
+  ]
+ },
+ {
+  "id": "dav-heaven-paths",
+  "title": "Paths of the Road of Heaven",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Penitence, Retribution and the heresy that the Damned are favored.",
+  "claims": [
+   {
+    "text": "The Faithful live across Christendom and beyond, including Muslims, Jews and even pagans, and monasteries are favored havens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 103,
+      "pdf": 106
+     }
+    ]
+   },
+   {
+    "text": "The Path of Penitence treats unlife as penance; many take vows of poverty and feed only on animals. The Path of Retribution sees itself as the hand of God's vengeance on the wicked, living or dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 103,
+      "pdf": 106
+     }
+    ]
+   },
+   {
+    "text": "A schismatic belief holds that Cainites are not cursed but raised above mortals by God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dav",
+      "page": 103,
+      "pdf": 106
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-heaven"
+  ]
+ }
+]

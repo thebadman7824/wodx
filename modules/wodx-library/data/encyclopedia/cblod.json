@@ -1,0 +1,239 @@
+[
+ {
+  "id": "cblod-ravnos-chimerstry",
+  "title": "Ravnos and the Dreaming",
+  "kind": "lore",
+  "lines": [
+   "changeling",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why Chimerstry matters to the fae.",
+  "claims": [
+   {
+    "text": "Of all the Kindred, the Ravnos pose the greatest danger to the Kithain and can affect the Dreaming most, though most of them have no idea of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Kithain see Chimerstry as the power to make chimera: anything a Ravnos conjures counts as a chimera its maker does not control, and its weapons and creatures can deal chimerical damage to changelings and the enchanted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Legend says an eshu, beaten in a talecraft contest by the clan’s founder, granted the vampire sight of the Dreaming; the founder learned to shape it and passed on the illusion-craft, but the sight itself was lost to later generations.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cblod-malkavians"
+  ]
+ },
+ {
+  "id": "cblod-malkavians",
+  "title": "Malkavians and the fae",
+  "kind": "lore",
+  "lines": [
+   "changeling",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The clan closest to the Dreaming.",
+  "claims": [
+   {
+    "text": "Madness and odd insight bring the Malkavians nearer the Dreaming than any other clan, and their low Banality makes them the easiest Kindred for Kithain to deal with.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Treaties and compacts between the clan and the fae run back centuries or longer, and many Malkavians recognise Kithain as fae even without seeing the fae mien.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Some simply turn up at freeholds to sit and watch the show, or even to socialise, though certain derangements make for poor relations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 12,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cblod-ravnos-chimerstry"
+  ]
+ },
+ {
+  "id": "cblod-gifts-dreaming",
+  "title": "Garou Gifts and the Dreaming",
+  "kind": "mechanic",
+  "lines": [
+   "changeling",
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How some werewolf Gifts touch changelings.",
+  "claims": [
+   {
+    "text": "Gifts are tuned to the spirit world, but many overlap with the Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 18,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Spirit Ward, a level four homid Gift, reaches into the Dreaming and keeps out any chimera.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 18,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Sense the Unnatural finds changelings at difficulty 9, or 7 if the Kithain is using an Art; an enchanted Garou using Name the Spirit can identify a distinct chimera.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 18,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "cblod-fae-and-wraiths",
+  "title": "Changelings and wraiths",
+  "kind": "lore",
+  "lines": [
+   "changeling",
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the fae shun the Restless Dead.",
+  "claims": [
+   {
+    "text": "Kithain have less contact with wraiths than with any other supernatural folk, and most avoid them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Many sidhe dread anything tied to death, since wraiths show that humans may go on after dying while no one knows what becomes of a sidhe who dies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Commoners tend to treat ghosts as bad luck, and childlings are split, though the ease many young fae feel around wraiths fades with age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "cblod-banality-eight",
+  "title": "Banality of Eight",
+  "kind": "mechanic",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The mind of a deeply banal changeling.",
+  "claims": [
+   {
+    "text": "At Banality 8 a changeling has the outlook of a feeble Autumn Person or a Heavy Sleeper, warding off despair through rigid obsession and seeing anyone different as a threat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 36,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Seelie at this stage struggle to leave home and need friends to lead them out of the fog; Unseelie either climb higher in the Shadow Court or break from it, and rogues cut off from the Court spiral into heavy Ravaging.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cblod",
+      "page": 36,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

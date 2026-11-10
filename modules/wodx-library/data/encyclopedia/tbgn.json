@@ -1,0 +1,235 @@
+[
+ {
+  "id": "tbgn-athens-vote",
+  "title": "Bone Gnawer Democracy",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical",
+   "modern"
+  ],
+  "summary": "Why the tribe elects its elders.",
+  "claims": [
+   {
+    "text": "Bone Gnawer tales say that when democracy reached Athens the tribe took it up, choosing elders by vote instead of letting them fight or scheme for rank.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Every member gets an equal say, metis included, which other tribes found hard to accept; the tribe saw it as a way to hold moots without violence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bone-gnawers"
+  ]
+ },
+ {
+  "id": "tbgn-seventh-hill",
+  "title": "Sept of the Seventh Hill",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical"
+  ],
+  "summary": "An early urban caern beneath Rome.",
+  "claims": [
+   {
+    "text": "Old tales put an ancient caern near where Rome would stand, which made the Seventh Hill sept among the earliest great city caerns.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Defending it taught the Bone Gnawers to guard the Veil and to learn from human politics, and families of the tribe lived in the catacombs below the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "By Roman times the tribe was strong and organised, helping humans in need and at times fighting the Glass Walkers and Shadow Lords and winning.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bone-gnawers",
+   "tbgn-athens-vote"
+  ]
+ },
+ {
+  "id": "tbgn-great-pipings",
+  "title": "The Great Pipings",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "Bone Gnawer tribal moots called across continents.",
+  "claims": [
+   {
+    "text": "Gatherings called Great Pipings spread through the tribe, and monthly tribal moots became common even though many members never attend.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "In the Age of Exploration, a few Bone Gnawers led by the hero Corazon Bitefinder slipped aboard ships to the New World, and a later Piping was held in Lisbon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bone-gnawers"
+  ]
+ },
+ {
+  "id": "tbgn-hidden-kin",
+  "title": "Bone Gnawer Kin in Other Lines",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "How the tribe's blood turns up among other Garou.",
+  "claims": [
+   {
+    "text": "Much of the tribe's Kinfolk comes from groups once treated as outsiders; American Bone Gnawers watched over the waves of European immigrants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "By the late 1800s the tribe had Kin among Irish and Scottish families, and descendants who earned glory were often taken in by the Fianna, so many Garou carry a Bone Gnawer ancestor they would rather hide.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Some wanderers leave children behind on purpose, trusting Rat to provide; tribal Theurges oppose this and ask elders to look after the abandoned Kin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bone-gnawers",
+   "kinfolk"
+  ]
+ },
+ {
+  "id": "tbgn-the-hood",
+  "title": "The Hood",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Bone Gnawer camp that robs the greedy to help the poor.",
+  "claims": [
+   {
+    "text": "The Hood marks greedy and exploitative people, Wyrm-tainted or simply slumlords and crooked officials, and takes from them, then spends the take on getting people out of poverty and addiction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The camp also shields the homeless and helpless of the cities, which has brought it into growing fights with supernatural predators.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Its charity has hard limits: anyone who abuses the help gets no second chance, and although elders have threatened its members with exile for breaking the law of the Garou, the threat seldom stops them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgn",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bone-gnawers"
+  ]
+ }
+]

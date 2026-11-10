@@ -1,0 +1,43 @@
+[
+ {
+  "id": "cshc-childrens-crusade",
+  "title": "The Children's Crusade",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Young redcaps sworn to kill Seelie nobles.",
+  "claims": [
+   {
+    "text": "The Children's Crusade, made up mostly of redcap childlings and young wilders, has one aim: to assassinate as many Seelie nobles as it can.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cshc",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "It draws support from Anarchists and Repudiators and from some Modernists who see it as a way to raise commoner power; its killers are nearly always childlings, who weather the Banality of slaying other fae more easily.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cshc",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadow-court",
+   "redcaps",
+   "unseelie-court"
+  ]
+ }
+]

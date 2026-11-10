@@ -1,0 +1,200 @@
+[
+ {
+  "id": "cotn-theo-bell",
+  "title": "Theo Bell",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The most feared archon of the Camarilla.",
+  "claims": [
+   {
+    "text": "Bell was born into slavery on a plantation in early Mississippi and is the childe of Don Cerro.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 51,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "As archon, Bell has earned the Inner Circle's personal praise seven times, a record, and anarchs in a hundred cities curse the nickname Killa-B.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 51,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Bell's one condition for the Embrace was the chance to return to the Bell plantation, and the first hunger led back there to its master.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 52,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arc-archons",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "cotn-cock-robin",
+  "title": "Cock Robin",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Nosferatu justicar.",
+  "claims": [
+   {
+    "text": "Robin was a silversmith's apprentice in colonial America, Embraced in 1757 during the French and English war for the continent and then abandoned by the sire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 45,
+      "pdf": 45
+     },
+     {
+      "book": "cotn",
+      "page": 46,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The sire is named as Alonso Cristo Petrodon de Seville; Robin is of the 7th generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 46,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Some say Robin's sire was the previous Nosferatu justicar, which would explain the choice of successor; others quickly hush the claim.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 45,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arc-archons",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "cotn-polonia",
+  "title": "Polonia",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Lasombra soldier of the Sabbat.",
+  "claims": [
+   {
+    "text": "Polonia is of the 7th generation, Embraced in 1600 by Anton de Concepcion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Tall, bearded and soldierly, Polonia favours white or grey and wears a silver crucifix, a gift from Polonia's mother, kept for more than three centuries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 24,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "cotn-al-ashrad",
+  "title": "Al-Ashrad",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Assamite Amr and great sorcerer of the clan.",
+  "claims": [
+   {
+    "text": "Al-Ashrad came to the Children of Haqim as a mortal magician, and some of the clan plotted against the newcomer; the Amr was ready and slew the plotters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 88,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Al-Ashrad is pale among the dark-skinned Assamites and wears white robes full of pockets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 89,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "A diamond fills al-Ashrad's empty left socket and is said to grant sight beyond sight.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cotn",
+      "page": 89,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites",
+   "rotb-assamite-sorcery"
+  ]
+ }
+]

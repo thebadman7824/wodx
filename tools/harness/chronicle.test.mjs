@@ -199,11 +199,90 @@ test("era test: a character per line in every era, all pass", async () => {
   const api = game.modules.get(M).api;
   mock.DialogV2.queue(() => true);
   const result = await api.runEraTest();
-  assert.equal(result.rows.length, 11 * 4);
+  assert.equal(result.rows.length, 12 * 4);
   assert.equal(result.failures, 0, JSON.stringify(result.rows.filter(r => !r.pass)));
   const j = game.journal.find(x => x.getFlag(M, "kind") === "era-test");
   assert.match(j.pages.getName("Results").text.content, /All passed/);
   assert.equal(CONFIG.worldofdarkness.defaultVampireEra, "darkages", "active era restored afterwards");
+});
+
+test("queue relief: the rules route a proposal and pick a bulk decision's entries", async () => {
+  const QR = await import(join(root, "modules/wodx-chronicle/scripts/approvals-rules.mjs"));
+  assert.equal(QR.routeProposal("era-change"), "queue");
+  assert.equal(QR.routeProposal("era-change", {auto: {"era-change": true}}), "auto");
+  assert.equal(QR.routeProposal("request", {auto: {request: true}}), "queue", "a player's request always waits");
+  assert.equal(QR.routeProposal("wodx-npc.faction", {cap: 2, used: 1}), "queue");
+  assert.equal(QR.routeProposal("wodx-npc.faction", {cap: 2, used: 2}), "hold");
+  assert.equal(QR.routeProposal("wodx-npc.faction", {cap: 0, used: 99}), "queue", "0 is no cap");
+  assert.equal(QR.routeProposal("wodx-npc.faction", {auto: {"wodx-npc.faction": true}, cap: 1, used: 5}), "auto");
+  assert.equal(QR.routeProposal("wodx-npcish", {cap: 1, used: 5}), "queue");
+  assert.deepEqual(QR.bulkIds([{id: "a"}, {id: "b"}, {id: "c"}], ["b"]), ["a", "c"]);
+  assert.deepEqual(QR.bulkIds([], ["x"]), []);
+  assert.deepEqual(QR.cleanAuto({a: true, b: false, request: true, c: "yes"}), {a: true});
+  assert.deepEqual(QR.cleanAuto({a: true, z: true}, ["a"]), {a: true});
+});
+
+test("queue relief in the queue: bulk approve with an exception, approve on its own, the NPC cap holds the rest", async () => {
+  const api = game.modules.get(M).api, A = api.approvals;
+  const done = [];
+  A.registerHandler("test-kind", {label: "Test kind", approve: e => done.push(e.title)});
+  A.registerHandler("wodx-npc.test", {label: "Test faction move", approve: e => done.push(e.title)});
+  for ( const t of ["one", "two", "three"] ) await A.propose({type: "test-kind", title: t});
+  const ids = A.pending().filter(p => p.type === "test-kind").map(p => p.id);
+  assert.equal(ids.length, 3);
+  const n = await A.decideMany("approve", {except: [ids[1]], ids: null});
+  assert.ok(n >= 2);
+  assert.deepEqual(done.slice(0, 2), ["one", "three"]);
+  assert.ok(A.pending().some(p => p.title === "two"), "the exception still waits");
+  await A.decideMany("reject", {ids: [ids[1]]});
+  assert.ok(!A.pending().some(p => p.type === "test-kind"));
+
+  await A.setAuto("test-kind", true);
+  assert.equal(await A.addToQueue({id: "auto1", type: "test-kind", title: "four", data: {}}), "auto");
+  assert.ok(done.includes("four"));
+  assert.ok(A.history().find(h => h.id === "auto1")?.auto, "listed as approved on its own");
+  await A.setAuto("test-kind", false);
+  assert.deepEqual(set("autoApprove"), {});
+
+  await game.settings.set(M, "npcCap", 1);
+  A.resetSession();
+  assert.equal(await A.addToQueue({id: "n1", type: "wodx-npc.test", title: "move one", data: {}}), "queued");
+  assert.equal(await A.addToQueue({id: "n2", type: "wodx-npc.test", title: "move two", data: {}}), "held");
+  assert.equal(A.held().length, 1);
+  assert.equal(await A.releaseHeld(), 1);
+  assert.equal(A.held().length, 0);
+  assert.ok(A.pending().some(p => p.id === "n2"));
+  await A.decideMany("reject", {ids: ["n1", "n2"]});
+  await game.settings.set(M, "npcCap", 0);
+});
+
+test("knowledge-gated handouts: needs, readers, and what each sees", async () => {
+  const KR = await import(join(root, "modules/wodx-chronicle/scripts/know-rules.mjs"));
+  assert.deepEqual(KR.parseNeeds("Latin or Occult 3"), [{name: "Latin", key: "latin", dots: 0}, {name: "Occult", key: "occult", dots: 3}]);
+  assert.deepEqual(KR.parseNeeds("Animal Ken 2; Auspex 2").map(n => n.key), ["animalken", "auspex"]);
+  assert.deepEqual(KR.parseNeeds(""), []);
+  const scholar = {languages: ["Latin"], dots: {occult: 1}}, occultist = {languages: [], dots: {occult: 3}}, seer = {dots: {auspex: 2}};
+  const need = KR.parseNeeds("Latin or Occult 3");
+  assert.ok(KR.meets(need, scholar));
+  assert.ok(KR.meets(need, occultist));
+  assert.ok(!KR.meets(need, seer));
+  assert.ok(KR.meets(KR.parseNeeds("Occult"), scholar), "no dots given: one dot does");
+  assert.ok(KR.meets(KR.parseNeeds("Auspex 2"), seer));
+  const langs = ["Latin", "German"];
+  const no = KR.view("Latin", "Pax tecum, frater", {readers: [seer], languages: langs});
+  assert.equal(no.readable, false);
+  assert.notEqual(no.text, "Pax tecum, frater");
+  assert.equal(no.text, KR.view("Latin", "Pax tecum, frater", {readers: [], languages: langs}).text, "the same words scramble the same way");
+  assert.ok(!no.script);
+  assert.ok(KR.view("Occult 3", "the sign of the serpent", {readers: [scholar], languages: langs}).script, "a trait, not a language: marked as a script");
+  assert.deepEqual(KR.view("Latin", "Pax", {readers: [seer, scholar], languages: langs}), {readable: true, text: "Pax", label: "Latin", mark: false});
+  assert.deepEqual(KR.view("Latin", "Pax", {gm: true}), {readable: true, text: "Pax", label: "Latin", mark: true});
+  const p = KR.passages("<p>Open: @Know[Latin]{Pax tecum} and @Know[Auspex 2]{under the seal}</p>");
+  assert.equal(p.length, 2);
+  assert.equal(p[1].text, "under the seal");
+  const src = (await import("node:fs")).readFileSync(join(root, "modules/wodx-chronicle/scripts/main.mjs"), "utf8");
+  assert.match(src, /know\.registerKnow\(\)/);
+  assert.ok(CONFIG.TextEditor.enrichers.some(e => e.id === "wodx-chronicle.know"), "the enricher is registered at init");
 });
 
 test("module stays idle in a world without the WoDX flag", async () => {

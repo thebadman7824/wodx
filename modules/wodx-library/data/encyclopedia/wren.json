@@ -1,0 +1,154 @@
+[
+ {
+  "id": "wren-early-renegades",
+  "title": "The first Renegade settlements",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "classical",
+   "dark-ages"
+  ],
+  "summary": "How Renegades built homes before the Necropoli.",
+  "claims": [
+   {
+    "text": "Early Renegades turned from Stygia, cut shelters from the Tempest near the fallen city, and built forts from soulstuff taken from its ruins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wren",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Villages burned by barbarian tribes in Europe reappeared in the Shadowlands, and Renegade scouts claimed some of these relic hamlets before Charon's Legions could; Renegade towns stood on the borders long before the Necropoli.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wren",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "charon",
+   "stygia"
+  ]
+ },
+ {
+  "id": "wren-thrall-runners",
+  "title": "Thrall runners",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Renegades who trade in freed wraiths.",
+  "claims": [
+   {
+    "text": "Some gangs raid shipments of captured wraiths, sell them as thralls more cheaply than the Hierarchy does, and pay off patrols with part of the oboli.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wren",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "They still call themselves Renegades, pointing to the captives they set free, especially those who can pay for their chains to be cut.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wren",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "oboli",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "wren-newark-skinnies",
+  "title": "The Newark Skinnies",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A daredevil Renegade club that defies the ban on touching the living.",
+  "claims": [
+   {
+    "text": "GNSA recruits have to prove themselves with an outrageous stunt, such as possessing a NASCAR driver on the last lap or Skinriding the US President during the State of the Union.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wren",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Members campaign against the Dictum Mortuum's ban on dealings with the living; the group seems devoted to pleasures of the flesh, but is said to serve a Puppeteer plan to weaken the Shroud and the Hierarchy.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wren",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "the-shroud"
+  ]
+ },
+ {
+  "id": "wren-mediums",
+  "title": "Renegades and mediums",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why Renegades argue over the living who can hear the dead.",
+  "claims": [
+   {
+    "text": "The Hierarchy forbids contact with mediums; some Renegades hate mediums who pry into their Haunts, while others use them to send word to agents among the living or see teaching the living as a revolutionary duty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wren",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "hierarchy"
+  ]
+ }
+]

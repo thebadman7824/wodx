@@ -30,6 +30,20 @@
 	"TYPES.Item.Sphere": "Sphere",
 	"TYPES.Item.Realm": "Realm",
 	"wod": {		
+		"sheet": {
+			"mortal": "Mortal sheet",
+			"werewolf": "Werewolf sheet",
+			"mage": "Mage sheet",
+			"vampire": "Vampire sheet",
+			"changeling": "Changeling sheet",
+			"hunter": "Hunter sheet",
+			"demon": "Demon sheet",
+			"wraith": "Wraith sheet",
+			"mummy": "Mummy sheet",
+			"exalted": "Exalted sheet",
+			"breed": "Changing Breed sheet",
+			"creature": "Creature sheet"
+		},
 		"system": {
 			"world": "World updated!",
 			"sheetlocked": "Can not edit as sheet is locked!",
@@ -1378,6 +1392,8 @@
 			"unnamedbloodbound": "Unnamed bloodbound",
 			"unnamedboon": "Unnamed boon",
 			"unnamedoath": "Unnamed oath",
+			"unnamedpassion": "Unnamed passion",
+			"unnamedfetter": "Unnamed fetter",
 			"descriptionmissing": "Description missing",
 			"unspent": "Unspent"
 		},
@@ -2137,7 +2153,7 @@
 				"attackrollbonus": "Attack roll bonus:",
 				"dodgemodifier": "Dodge modifier",
 				"generalmodifier": "General modifier",
-				"secondaryabilityinfo": "Pick what secodary ability to use for this weapon if no ability have been selected.",
+				"secondaryabilityinfo": "Pick the secondary ability to use for this weapon if no ability has been selected.",
 				"noattackordamage": "Your weapon has neither an attack roll nor a damage roll."
 			},
 			"soak": {

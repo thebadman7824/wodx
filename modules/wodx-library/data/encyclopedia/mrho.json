@@ -1,0 +1,359 @@
+[
+ {
+  "id": "mrho-romance",
+  "title": "The Living Embodiment of Romance",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Hollow Ones' creed.",
+  "claims": [
+   {
+    "text": "Hollow Ones insist their way is not a club but a living expression of Romance, and a newcomer swears to embody it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "They claim ancestry back to the early Middle Ages with some confidence, though records of earlier kindred spirits are unclear.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Not every Hollow One is strictly goth; their tone runs from deep despair to bold swagger, joined by a romantic, heroic, larger-than-life outlook that finds beauty in horror.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "mrho-vanguards"
+  ]
+ },
+ {
+  "id": "mrho-vanguards",
+  "title": "The first Hollow vanguards",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the modern Hollow tradition came together.",
+  "claims": [
+   {
+    "text": "Six Awakened intellectuals filled with romance met near the end of the First World War and pooled ideas on art, rights, love, misery and Ascension.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "They decided that open eyes bring a duty to keep dreams, myth and romance from ever going out of style.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Some of those founders still live, past 75 yet looking young through magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "mrho-romance"
+  ]
+ },
+ {
+  "id": "mrho-councilors",
+  "title": "Councilors and Revolutionaries",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The two main camps among the Hollow Ones.",
+  "claims": [
+   {
+    "text": "Each Hollower picks a personal style or fad, and while it lasts that choice binds the mage's magic as firmly as any Tradition's ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Nearly all agree the Technocracy is awful and that Marauder and Nephandic visions of reality are unacceptable.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Councilors see the Council of Nine as the least bad option and hope to teach the old Traditions ways to avoid fading into the past.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "mrho-night-folk",
+  "title": "Hollow Ones, vampires and fae",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Hollowers deal with the other night-dwellers.",
+  "claims": [
+   {
+    "text": "Some young Hollowers learn a few tricks useful to vampires and set off for big cities to find an undead friend; most are never seen again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "A few survive for a while as a prized mage in the pocket of some old elder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Fae love dream-minded mages, and Hollow Ones taken into the Dreaming often do not want to return, since it is nearly everything they wish the world were.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "The idea that all goths want to be vampires may once have fit part of the tradition, but it fits less and less.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "mrho-romance"
+  ]
+ },
+ {
+  "id": "mrho-railroad",
+  "title": "The Hollow Railroad",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Hollow Ones' network for passing word.",
+  "claims": [
+   {
+    "text": "Cells pass news by graffiti, symbols and post, both paper and electronic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Mind adepts receive messages in dreams, spirit-sensitive members hear from ghosts, and Time and Correspondence users scry far-off events.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Gaunts gather what ghosts have seen, and narcoleptic members share knowledge through staged dream dramas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "mrho-councilors"
+  ]
+ },
+ {
+  "id": "mrho-face",
+  "title": "Putting on your face",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Makeup and dress as a focus for subtle Mind magic.",
+  "claims": [
+   {
+    "text": "Striking makeup and clothing often serve as foci for quiet Mind Effects such as Empathic Projection and Psychic Impression.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Such uses of Mind are mostly coincidental.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Dressing up is also a ritual for steadying the mind before facing a situation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "coincidental-and-vulgar"
+  ]
+ },
+ {
+  "id": "mrho-against-technocracy",
+  "title": "Hollow Ones and the Technocracy",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why Hollowers see their life as revolt.",
+  "claims": [
+   {
+    "text": "Hollow Ones cast Technocrats as heartless and unimaginative, jealous of anyone who can feel and say what they feel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Living by inner passion instead of imposed norms is, to them, a daily act of resistance against a world turned into an assembly line.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrho",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "technocracy"
+  ]
+ }
+]

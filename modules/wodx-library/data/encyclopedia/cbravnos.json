@@ -1,0 +1,317 @@
+[
+ {
+  "id": "cbr-week-of-nightmares",
+  "title": "The Week of Nightmares",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The night the Ravnos clan was all but wiped out.",
+  "claims": [
+   {
+    "text": "Before the Week, the Ravnos of India were arguably the largest Kindred power in Asia, with princes ruling Indian cities and a long war against the Eastern Kindred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 45,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The European Ravnos, who travelled with mortal Rroma families, were nearly annihilated, so outsiders and outcasts make up most of the European survivors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 47,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Durga Syn still endures with a brood of neonates and ancillae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 47,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Some whisper that whatever sealed Russia off from the supernatural also blunted the curse there.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 47,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ravnos",
+   "chimerstry"
+  ]
+ },
+ {
+  "id": "cbr-chimerstry-after",
+  "title": "Chimerstry After the Week",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why illusions now turn on their makers.",
+  "claims": [
+   {
+    "text": "Chimerstry has worked differently ever since the Week of Nightmares; some Ravnos blame the founder's destruction, others a dying curse on the whole clan.",
+    "tier": "open",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 66,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Using up the final point of temporary Willpower on an illusion leaves the Ravnos suffering as if struck by The Haunting from Dementation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 66,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Pushing on past that point brings visions affecting every sense, at any hour and most often in tense moments, and they worsen until they become dangerous; a player who spots one can pay a Willpower point to dispel it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 66,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "chimerstry",
+   "ravnos"
+  ]
+ },
+ {
+  "id": "cbr-mayaparisatya",
+  "title": "Mayaparisatya",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Chimerstry at level nine, which alters what is real.",
+  "claims": [
+   {
+    "text": "This level nine power lets the Ravnos alter or create real objects or creatures for a limited time, such as turning the air around a rival to fire or making a locked door insubstantial.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 65,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "It costs 10 blood points and a permanent Willpower point with Manipulation + Subterfuge, at difficulty 6 against objects or the victim's Willpower against characters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 66,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "It reaches anything within miles that the Ravnos is aware of; it is likely that no surviving Ravnos has mastered it since the Week.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 66,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "chimerstry"
+  ]
+ },
+ {
+  "id": "cbr-sympathetic-agony",
+  "title": "Sympathetic Agony",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Chimerstry and Fortitude: an enemy feels the Ravnos's wounds.",
+  "claims": [
+   {
+    "text": "Created by the Kshatriya caste of India, it costs a blood point and a Manipulation + Intimidation roll against the victim's Perception + Self-Control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 67,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Each success lets the Ravnos ignore the pain of one health level and pass it to the attacker, who suffers as if wounded; the Ravnos keeps the wounds and the power lasts a scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 67,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "It costs 20 experience points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 67,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "chimerstry",
+   "fortitude"
+  ]
+ },
+ {
+  "id": "cbr-mask-of-cathay",
+  "title": "Mask of Cathay",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Animalism and Chimerstry: a Ravnos passes as one of the Eastern Kindred.",
+  "claims": [
+   {
+    "text": "Ravnos in Asia use it to hide among the Eastern Kindred by seeming to be one of them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 68,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "It costs a Willpower point and a blood point with Manipulation + Subterfuge at difficulty 6; each success is one an onlooker's sensing power must beat, or the Ravnos reads as a yin-aspected Kuei-jin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 69,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "It lasts one night per use and costs 15 experience points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 69,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "chimerstry",
+   "animalism"
+  ]
+ },
+ {
+  "id": "cbr-grave-robbers",
+  "title": "The Grave Robbers",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Five Ravnos hunting the clan's secrets in India.",
+  "claims": [
+   {
+    "text": "Linked loosely by shared interests before the Week, they drew together for protection afterwards, believing the end may already have begun.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 87,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Led by Dr. Lawrence Mayhew, an archaeologist and tomb robber, they took passage from an unknown benefactor to Calcutta and searched elder havens there and in other cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 87,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "They found what they took for the Antediluvian's resting place, but it still rang with the battle and they left at once; they keep a manor outside Calcutta.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbravnos",
+      "page": 87,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ravnos"
+  ]
+ }
+]

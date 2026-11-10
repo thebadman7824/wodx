@@ -43,7 +43,7 @@ export const ROLES = {
   domitor: {label: "With their domitor", kinds: []}
 };
 
-const all = [0, 1, 2, 3, 4, 5, 6], weekdays = [0, 1, 2, 3, 4, 5];
+const weekdays = [0, 1, 2, 3, 4, 5];
 const B = (from, to, place, activity, more = {}) => ({from, to, place, activity, when: "any", days: null, feast: "any", label: "", ...more});
 
 /**

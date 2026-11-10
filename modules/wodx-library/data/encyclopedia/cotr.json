@@ -1,0 +1,801 @@
+[
+ {
+  "id": "cotr-lados",
+  "title": "Lados",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "classical",
+   "modern"
+  ],
+  "summary": "A Malkavian of Alexander's age.",
+  "claims": [
+   {
+    "text": "A Malkavian of the 8th Generation, Embraced in 322 BCE, perhaps by Lykia; a general who watched Alexander's empire tear itself apart once Alexander died.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 19,
+      "pdf": 13
+     },
+     {
+      "book": "cotr",
+      "page": 21,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "malkavian"
+  ]
+ },
+ {
+  "id": "cotr-lizette-cordoba",
+  "title": "Lizette Cordoba",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Toreador of the Occupy protests.",
+  "claims": [
+   {
+    "text": "A Toreador of the 10th Generation, Embraced in 2011 by Avery; once a high school English teacher in New York who loved poetry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 23,
+      "pdf": 17
+     },
+     {
+      "book": "cotr",
+      "page": 25,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Lizette is a queen of the Occupy movement in that city, keeping it simmering, neither winning nor failing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 25,
+      "pdf": 19
+     },
+     {
+      "book": "cotr",
+      "page": 26,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador"
+  ]
+ },
+ {
+  "id": "cotr-nabataean",
+  "title": "The Nabataean",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "A Lasombra from Petra.",
+  "claims": [
+   {
+    "text": "A Lasombra of the 7th Generation, Embraced in 747 CE by Antipater of the Hoof; a man of Petra who even took up Christianity to fit in with the Roman-ruled elite.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 29,
+      "pdf": 23
+     },
+     {
+      "book": "cotr",
+      "page": 32,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Now a wanderer who wonders whether any of the Nabataean kind remain.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 32,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra"
+  ]
+ },
+ {
+  "id": "cotr-azrael",
+  "title": "Azrael (Svein Fortinbras)",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Setite of Norwegian black metal.",
+  "claims": [
+   {
+    "text": "Born in Bergen in 1970, Svein rose in the Norwegian black metal scene of the early 1990s and was Embraced in 1991 by Brynjar, a Follower of Set of the 12th Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 35,
+      "pdf": 29
+     },
+     {
+      "book": "cotr",
+      "page": 37,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Kindred watch Azrael's music warily, unsure what is planned.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 37,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set"
+  ]
+ },
+ {
+  "id": "cotr-willoughby",
+  "title": "Lady Margaret Willoughby",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "A Tremere made from a would-be witch.",
+  "claims": [
+   {
+    "text": "A Tremere of the 9th Generation, perhaps antitribu, Embraced in 1864; sire Lady Lise Paulmann is destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 45,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "The Tremere lord Hargau courted Paulmann and Willoughby, two amateur witches, and drew both into the clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 41,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tremere"
+  ]
+ },
+ {
+  "id": "cotr-meixiu",
+  "title": "Meixiu",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Malkavian bound for the East.",
+  "claims": [
+   {
+    "text": "A Malkavian of the 10th Generation, Embraced in 1989 by Colin McAllister; each night the delusion of being the Black Dragon Princess, heir of the Yellow Emperor, grows stronger.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 51,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "The Camarilla courts the Cathayans by hosting Eastern emissaries; far more rarely a Western Kindred goes east to deal with them directly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 47,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "malkavian",
+   "kote-kindred-disciplines"
+  ]
+ },
+ {
+  "id": "cotr-edgardo",
+  "title": "Edgardo Robbia",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "A Brujah mercenary of causes.",
+  "claims": [
+   {
+    "text": "A Brujah of the 8th Generation, Embraced in 1736 by Katherine Wiese, who released Edgardo early in the nineteenth century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 55,
+      "pdf": 49
+     },
+     {
+      "book": "cotr",
+      "page": 56,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Edgardo took work from mortals and Kindred alike, and in the 1970s grew close to the Baader-Meinhof Group.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 55,
+      "pdf": 49
+     },
+     {
+      "book": "cotr",
+      "page": 56,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah"
+  ]
+ },
+ {
+  "id": "cotr-dastur-anosh",
+  "title": "Dastur Anosh",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient",
+   "renaissance",
+   "modern"
+  ],
+  "summary": "The martyred founder of the Black Hand.",
+  "claims": [
+   {
+    "text": "An Assamite antitribu of the 5th Generation, sired by the Weeping Master; Black Hand apocrypha says Anosh was born in Persia and walked with Zarathustra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 59,
+      "pdf": 53
+     },
+     {
+      "book": "cotr",
+      "page": 64,
+      "pdf": 58
+     },
+     {
+      "book": "cotr",
+      "page": 65,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "After Anosh's Final Death the Black Hand made the duties into the title of Seraph, and appoints four Seraphs in tribute.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 59,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Recruits went on pilgrimage to the Weeping Stone to taste Zillah's vitae and take the black crescent; Anosh killed the Tzimisce Bishop Altzay in Monomacy for questioning that loyalty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 63,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Anosh later led the Black Hand in the New World from a refuge on Mount Washington in New England.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 63,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-false-hand",
+   "assamites"
+  ]
+ },
+ {
+  "id": "cotr-laurette-morel",
+  "title": "Laurette Morel",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "A Toreador of the Riviera.",
+  "claims": [
+   {
+    "text": "A Toreador of the 8th Generation, Embraced in 1790 by Émeric de Sauveterre, at home on the Côte d'Azur among the very rich; Villon sees a former Anarch self in Laurette.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 67,
+      "pdf": 61
+     },
+     {
+      "book": "cotr",
+      "page": 72,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador"
+  ]
+ },
+ {
+  "id": "cotr-maryann-fletcher",
+  "title": "Maryann Fletcher",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "The Hangman's Bride.",
+  "claims": [
+   {
+    "text": "A Nosferatu of the 8th Generation, Embraced in 1614 by Stanford Warwick, who found Maryann burned yet alive in a tavern after a Ventrue purge of the sire's servants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 75,
+      "pdf": 69
+     },
+     {
+      "book": "cotr",
+      "page": 76,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Active in clan politics, Maryann champions and invests in ShreckNet and clashes with users who spread disinformation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 76,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nosferatu",
+   "au-shrecknet"
+  ]
+ },
+ {
+  "id": "cotr-nasch",
+  "title": "Nasch the Circassian",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "An ancient Ventrue.",
+  "claims": [
+   {
+    "text": "A Ventrue of the 7th Generation, Embraced in 1263 by Palamon the Copt; a few childhood memories of the mountains are all that remain from before Egypt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 79,
+      "pdf": 73
+     },
+     {
+      "book": "cotr",
+      "page": 83,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue"
+  ]
+ },
+ {
+  "id": "cotr-marc-de-brabant",
+  "title": "Marc de Brabant",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "A Gangrel lord of border domains.",
+  "claims": [
+   {
+    "text": "Given as a child to a Benedictine priory in the twelfth century, Marc ran away at sixteen and was Embraced in 1216 by Megan of Bristol, a Gangrel of the 10th Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 86,
+      "pdf": 80
+     },
+     {
+      "book": "cotr",
+      "page": 89,
+      "pdf": 83
+     }
+    ]
+   },
+   {
+    "text": "Travellers crossing Marc's border domains owe tribute or tithe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 89,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gangrel"
+  ]
+ },
+ {
+  "id": "cotr-roderigo",
+  "title": "Roderigo al-Dakhil",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "A Nagaraja agent of the True Hand.",
+  "claims": [
+   {
+    "text": "Once a Castilian soldier fighting to retake Cadiz, Roderigo was Embraced in 1354 by Mokhadaji Ranpur, a Nagaraja of the 6th Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 91,
+      "pdf": 85
+     },
+     {
+      "book": "cotr",
+      "page": 97,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "Roderigo recruits agents by quietly aiding ambitious Kindred, both for the True Hand and for private ends; some former agents say the Hand's power is being gathered for personal use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 96,
+      "pdf": 90
+     },
+     {
+      "book": "cotr",
+      "page": 97,
+      "pdf": 91
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-false-hand",
+   "lotb-nagaraja"
+  ]
+ },
+ {
+  "id": "cotr-andrew-seneca",
+  "title": "Andrew Seneca",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "A Ventrue foe of the Anarchs.",
+  "claims": [
+   {
+    "text": "Born a slave on a Georgia cotton plantation and taken into the house as manservant to Jackson Mills; Embraced in 1807 by Monica San Valentin, Ventrue of the 8th Generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 99,
+      "pdf": 93
+     },
+     {
+      "book": "cotr",
+      "page": 102,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Now a sworn enemy of the Anarchs, still resentful that the Movement helped the Civil Rights struggle succeed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 102,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue"
+  ]
+ },
+ {
+  "id": "cotr-jaromir-cerny",
+  "title": "Jaromir Cerny",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Old Clan Tzimisce of Prague.",
+  "claims": [
+   {
+    "text": "Old Clan Tzimisce of the 8th Generation, Embraced in 1989 by Janek Ritka; dissident parents were arrested in Prague under Gustav Husak.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 106,
+      "pdf": 100
+     },
+     {
+      "book": "cotr",
+      "page": 110,
+      "pdf": 104
+     }
+    ]
+   },
+   {
+    "text": "More than twenty years have passed since the Velvet Revolution ended four decades of fear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 105,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-two-hands"
+  ]
+ },
+ {
+  "id": "cotr-colm-olliver",
+  "title": "Colm Olliver",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Brujah freed from a stake.",
+  "claims": [
+   {
+    "text": "A Brujah of the 11th Generation, Embraced in 1974 by Fat Ciaran; ambushed and staked on a farm truck bound for London in 1976, then left in torpor three years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 113,
+      "pdf": 107
+     },
+     {
+      "book": "cotr",
+      "page": 115,
+      "pdf": 109
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah"
+  ]
+ },
+ {
+  "id": "cotr-esperanza-lucifer",
+  "title": "Esperanza Lucifer",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "A Lasombra role that outlives its players.",
+  "claims": [
+   {
+    "text": "Lasombra of the 5th Generation, Embraced in 1812 by one known as Mary; when one Esperanza Lucifer falls, a new one takes up the fearsome role.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 117,
+      "pdf": 111
+     },
+     {
+      "book": "cotr",
+      "page": 121,
+      "pdf": 115
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra"
+  ]
+ },
+ {
+  "id": "cotr-apacia",
+  "title": "Apacia",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient",
+   "modern"
+  ],
+  "summary": "The Queen of Tombs.",
+  "claims": [
+   {
+    "text": "A Cappadocian of the 6th Generation, Embraced between 500 and 550 BCE by the Malenchaenos; Apacia was born into slavery under Ygratt, a Scythian warrior.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 123,
+      "pdf": 117
+     },
+     {
+      "book": "cotr",
+      "page": 128,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "Nominally a Bishop of the Sabbat, Apacia leads a tattooed motorcycle gang and is often picked to lead crusades.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 123,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "Roderigo al-Dakhil discovered Apacia while investigating the Giovanni.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cotr",
+      "page": 96,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "cotr-roderigo"
+  ]
+ }
+]

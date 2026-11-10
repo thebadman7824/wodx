@@ -1,0 +1,355 @@
+[
+ {
+  "id": "gtanarch-convention-of-thorns",
+  "title": "The Convention of Thorns",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance"
+  ],
+  "summary": "The 1493 treaty that ended the Anarch Revolt and split the rebels.",
+  "claims": [
+   {
+    "text": "The Convention let anarchs return to the domain of their clan elders and princes, with amnesty for all but the worst crimes of the revolt. It also barred the Assamites from ritual diablerie on Camarilla members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "It read more like a surrender than a peace. The Brujah backed it most, having suffered most, and asked only for a time limit on charges against their rebels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The Assamites refused to join, even after the founders tortured a captive Assamite elder to death in front of them. They paid ransom for the other five, kept their sovereignty and took a Tremere curse that made other vampires' blood poison to them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Many Lasombra and Tzimisce anarchs rejected the first draft and walked out declaring endless war, joined by members of every clan. They burned the nearby village of Silchester and killed everyone in it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Brujah signed twice, since clan members sat on both sides of the table. Most European Kindred active when the revolt began in 1381 were dead by its end in 1493.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarch-revolt",
+   "camarilla",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "gtanarch-libertas",
+  "title": "Libertas",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance",
+   "victorian",
+   "wild-west",
+   "great-war",
+   "modern"
+  ],
+  "summary": "The anarch belief that came out of the revolt.",
+  "claims": [
+   {
+    "text": "After the revolt no elder could assume their childer would obey without question, and that fear still shapes Camarilla rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Anarch thinkers hold that every Kindred, whatever their generation, has a free will they call libertas. Disciplines and the blood bond may suppress it, but each vampire has the right and duty to fight for it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "To anarchs, the Lextalionis binds only those who accept it, whether Caine or the elders laid it down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Some say the Camarilla's worst blunder at Thorns was dictating terms. Sharing even a little power might have ended the movement and kept the Sabbat from forming.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtanarch-convention-of-thorns",
+   "anarchs"
+  ]
+ },
+ {
+  "id": "gtanarch-free-state-fall",
+  "title": "The Free State's later years",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What became of the Anarch Free State after 1944.",
+  "claims": [
+   {
+    "text": "Don Sebastian had Jeremy MacNeil seized and beaten in 1944. MacNeil urged six weeks of patience, and on 21 December 1944 armed anarchs struck the elders in their havens before dawn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Within three months the Free State ran from the Mexican border to San Jose, though Prince Vannevar Thomas held San Francisco against them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Rather than a fellowship, the anarchs soon split into cross-clan gangs, each holding a barony where outsiders could not hunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The Free State survived a Sabbat attack in 1965 and a war with a mortal gang in 1992, but the Cathayan invasion of 1998 broke it. Anarchs briefly held San Francisco before Cathayans drove them out in mid-1998.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "San Diego was lost when its baron, Tara, went over to the Camarilla in return for being named prince.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "labn-anarch-free-states",
+   "labn-status-perfectus",
+   "labn-don-sebastian",
+   "kote-kuei-jin"
+  ]
+ },
+ {
+  "id": "gtanarch-barons",
+  "title": "Anarch barons",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The nearest thing the anarchs have to a prince.",
+  "claims": [
+   {
+    "text": "A baron passes few rules. Most of the work is settling disputes, making deals with other local leaders and enforcing the few customs that keep mortals unaware.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "A baron has a prince's duties without a prince's tools, and need not be old or strong; the best administrator might be 70 years dead. Any hint of favouritism can get a baron ousted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Many barons serve from a sense of duty; others use the post to gather boons, since favours are often the only real authority it gives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "A barony reaches only as far as local anarchs choose to accept the baron, rarely a whole city. Two barons may share one city, often cooperatively.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Anarch legend says the Malkavian Sean Rycek owes so many boons to rival elders that none dares call one in. Archons did track Rycek until losing the trail.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gtanarch-free-state-fall",
+   "prince",
+   "gtcam-prestation"
+  ]
+ },
+ {
+  "id": "gtanarch-gatherings",
+  "title": "Anarch gatherings",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ways anarchs meet: Elysium, salons, rants and raves.",
+  "claims": [
+   {
+    "text": "Some anarch communities keep an anarch Elysium, where anarchs gather safe from violence. Outsiders who come as one group's guests are not protected, and such Elysiums exist only where a baron can hold them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Salons are serious gatherings for debating philosophy, attended mostly by elders and idealists, sometimes by loyal Camarilla guests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "A rant, borrowed from the Brujah, is open to any speaker and is a popularity contest; unpopular speakers may be shouted or beaten down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Anarch raves, also taken from the Brujah, are nearly always held for some cause, often ending in damage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "gtanarch",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "elysium",
+   "gtanarch-barons"
+  ]
+ }
+]

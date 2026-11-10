@@ -218,7 +218,7 @@ export function build(ctx) {
             if (!actor.isOwner) return notify("Only the mage's player or the Storyteller spends the Quintessence.");
             const q = P.resource(actor, "quintessence").value, most = M.canCancel(q, left);
             if (!most) return notify(`${actor.name} has ${q} Quintessence: not enough to cancel a 1 (1 for the first).`);
-            const content = `<form><p>${left} one(s) left; ${q} Quintessence. Cancelling k ones costs 2^k − 1 (pp. 140).</p>
+            const content = `<form><p>${left} one(s) left; ${q} Quintessence. Cancelling k ones costs 2^k − 1 (Dark Ages: Mage p. 140).</p>
               <div class="form-group"><label>Cancel</label><select name="k" data-fixed>${Array.from({ length: most }, (_, k) => `<option value="${k + 1}">${k + 1} (costs ${M.cancelCost(k + 1)})</option>`).join("")}</select></div></form>`;
             return dialog(`Cancel the 1s: ${actor.name}`, content, "Spend", async fd => {
                 const k = Math.min(most, n(fd.k)), cost = M.cancelCost(k);
@@ -254,7 +254,7 @@ export function build(ctx) {
         } else if (what === "twilight") {
             const pts = M.twilightPoints(left, b.highest), tw = M.addTwilight(i.twilight, pts);
             await save(actor, { twilight: tw });
-            body = `<div class="vta-big bad">+${pts} Twilight: ${tw.temp} temporary, ${tw.perm} permanent (${esc(M.twilightStage(tw.perm))}).</div><div class="vta-note">It fades only with abstinence from magic (pp. 140–141).</div><div class="wodx-quiet">${REF} p. 140</div>`;
+            body = `<div class="vta-big bad">+${pts} Twilight: ${tw.temp} temporary, ${tw.perm} permanent (${esc(M.twilightStage(tw.perm))}).</div><div class="vta-note">It fades only with abstinence from magic (Dark Ages: Mage pp. 140–141).</div><div class="wodx-quiet">${REF} p. 140</div>`;
         } else return null;
         await msg.setFlag(MOD, "daBacklash", { ...b, done: what });
         return post(actor, `${M.BACKLASH[what].split(" (")[0]}: ${actor.name}`, body);
@@ -292,7 +292,7 @@ export function build(ctx) {
                 } else gain = Math.max(1, n(fd.tass));
                 gain = Math.min(gain, held, room);
                 await setFlag(actor, "crayStore", { value: held - gain, day, tapped: true });
-                body += `<div class="vta-note">The cray regains 1 a day only on days it is left untapped (p. 85).${held - gain <= 0 ? " It is empty: drawing past empty risks its life (p. 86)." : ""}</div>`;
+                body += `<div class="vta-note">The cray regains 1 a day only on days it is left untapped (Dark Ages: Mage p. 85).${held - gain <= 0 ? " It is empty: drawing past empty risks its life (Dark Ages: Mage p. 86)." : ""}</div>`;
             } else if (fd.how === "fount") { gain = Math.min(i.fount, room); await setFlag(actor, "fountMonth", month); }
             else if (fd.how === "moon") {
                 const mo = G.moonOffering(fd.offer, now?.moon?.index ?? 2, n(fd.offerPts));
@@ -358,8 +358,8 @@ export function build(ctx) {
           <p>Which Pillar level each fellowship needs for common effects${fel ? `, for ${esc(M.FELLOWSHIPS[fel].label)}` : ""}. A guide for the Storyteller's ruling, not a limit (${GREF} pp. 112–117, 153).</p>
           ${searchBox("ul.wodx-art", "Search effects…", "Search effects")}
           <ul class="wodx-art">${rows}</ul>
-          <fieldset><legend>An effect not listed: Pillar levels as a guide (p. 117)</legend><ul data-fixed>${levels}</ul></fieldset>
-          <fieldset><legend>Wonders (pp. 140–141)</legend><ul data-fixed>${wonders}</ul></fieldset>
+          <fieldset><legend>An effect not listed: Pillar levels as a guide (Dark Ages: Mage p. 117)</legend><ul data-fixed>${levels}</ul></fieldset>
+          <fieldset><legend>Wonders (Dark Ages: Mage pp. 140–141)</legend><ul data-fixed>${wonders}</ul></fieldset>
         </form>`;
         return dialog(`Using the Art${actor ? `: ${actor.name}` : ""}`, content, "Close", async () => true, { width: 600 });
     }

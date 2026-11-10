@@ -1,0 +1,865 @@
+[
+ {
+  "id": "bh-idran",
+  "title": "The Idran",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient",
+   "modern"
+  ],
+  "summary": "The mage cult behind the True Hand.",
+  "claims": [
+   {
+    "text": "About 3,000 years ago a cult of mages came to the Middle East; an Egyptian immortal, Inauhaten, led them into the Underworld to a sunless city and gave them the Guarded Rubrics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Strictly, Tal'Mahe'Ra names the Idran cult after it took up Enochian eschatology, and Black Hand names the Cainite sect serving its aims; most use the two loosely.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The cult grew from a war in the Himalayas between Eastern sages who sought to step off the Wheel and Western mortuary priests who held even corpses holy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   }
+  ],
+  "see": [
+   "true-black-hand",
+   "bh-enoch"
+  ]
+ },
+ {
+  "id": "bh-guarded-rubrics",
+  "title": "The Guarded Rubrics",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Idran's scripture of the end.",
+  "claims": [
+   {
+    "text": "The Rubrics share topics and some text with Noddist writings but look to the end rather than the beginning; one sign of the end is Caine's brood returning to Enoch.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Those who hold Enoch, the cult believes, steer the apocalypse; only beings touched by both life and death can take hold of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The yamasattva keep key passages hidden for fear of how the Hand might act on them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-idran"
+  ]
+ },
+ {
+  "id": "bh-two-hands",
+  "title": "The Eastern and Western Hands",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "The first Cainite allies of the cult.",
+  "claims": [
+   {
+    "text": "From about 800 BCE the cult courted the Salubri and the Assamites in the East; both refused the idea of bringing Gehenna but kept fighting the Followers of Set.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "It later reached the True Brujah, the Old Clan Tzimisce and a line of outcast Ventrue later called the Danava, who formed the Western Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-idran"
+  ]
+ },
+ {
+  "id": "bh-false-hand",
+  "title": "The Sabbat's Black Hand",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "The other Black Hand.",
+  "claims": [
+   {
+    "text": "After a cabal diablerized the Lasombra founder, Roderigo al-Dakhil urged the Hand to steer the rebels rather than destroy them, tying its fate to the young Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Roderigo later reported a Black Hand inside the Sabbat and claimed both its name and its founding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Sabbat's tattoo is a plain black crescent; the True Hand's adds the eclipse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-idran",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "bh-del-roh",
+  "title": "The Del'Roh",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "War leader and ruler of the Hand.",
+  "claims": [
+   {
+    "text": "The reunited Hand chose Anadja as war leader, taking a title from old Ghemalish meaning to serve; the campaign to retake Enoch took three years, the assault itself only two nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The Del'Roh is the only vampire to approach the Basalt Throne of Caine and keep both sanity and unlife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 29,
+      "pdf": 30
+     },
+     {
+      "book": "blackhand",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The Del'Roh claims to commune nightly with the Aralu Nergal while dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-wazir"
+  ]
+ },
+ {
+  "id": "bh-hand-opens",
+  "title": "The Hand Opens",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The modern recruitment drive.",
+  "claims": [
+   {
+    "text": "After the Fifth Maelstrom the sect stagnated; its narrow entry rules left it near irrelevance as the Camarilla and Sabbat grew.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The seraphim in conclave ended the old limits and began to recruit every Clan save the Tzimisce and the Followers of Set, to loud protest from younger members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Members guess the sect at anything from 400 to over 1,500, not counting mortal servants; even titled members rarely know the truth of Enoch or the Aralu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-wazir"
+  ]
+ },
+ {
+  "id": "bh-initiation",
+  "title": "Initiation Rites",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How recruits join the True Hand.",
+  "claims": [
+   {
+    "text": "In one rite the recruit guards a chosen mortal for seven nights, then must get that mortal to aid after a staged attack without feeding or giving vitae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "In the Rite of the Antediluvians the recruit bears the supervising mentor's Clan curse for a month as well as their own; mentors are mostly Malkavian, Nosferatu or Ventrue and never share the recruit's Clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The Rite of Sak Yant carves a black crescent with an eclipse into the palm; vitae alone cannot heal it, and only Hand members, or anyone in the Shadowlands, can see it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Specters hunt those who bear the mark, and legend says it leaves them open to the yamasattva's control.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-wazir"
+  ]
+ },
+ {
+  "id": "bh-wazir",
+  "title": "The Wazir and the Palm",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the True Hand is ruled.",
+  "claims": [
+   {
+    "text": "Ten seraphim serve the Del'Roh as lieutenants, ranked by their cover identities in other sects; with three undead magi called the yamasattva together these thirteen sit as a tribunal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "With the Del'Roh, that tribunal is the Wazir, which sets doctrine; below it dominions captain missions or infiltration, then the Cult of the Erinyes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-del-roh"
+  ]
+ },
+ {
+  "id": "bh-hand-allies",
+  "title": "Wraiths and Mortals",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Outsiders tied to the Hand.",
+  "claims": [
+   {
+    "text": "The Non-Aggression Treaty of Neall still holds, and several wraiths serve on retainer as guides and informants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Agents are told to avoid and flee the Society of Leopold, whose hunters seem able to find vampires anywhere; attempts to destroy it through pawns failed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-wazir"
+  ]
+ },
+ {
+  "id": "bh-bahari",
+  "title": "The Bahari in the Hand",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Lilith's cult within the True Hand.",
+  "claims": [
+   {
+    "text": "The Bahari impose purifying ordeals on wayward members and have won the trust of the Qadi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Their temple stands in a former slave pen of Enoch; the Azicithra sect recasts Caine as son and daughter of Lilith, marked by the Serpent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Three mortal witches Embraced by Lazarene Harbingers revived the order of the Lamia as the Drakaina.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The cult has no hierarchy of pontiffs and admits all who come sincerely to study pain, change and creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-wazir",
+   "lotb-harbingers"
+  ]
+ },
+ {
+  "id": "bh-crusade",
+  "title": "The Long Crusade",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Hand's war on infernalism.",
+  "claims": [
+   {
+    "text": "The Hand holds as an article of faith that the First City had no infernalists, and counts the war against diabolists among its oldest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "A shakar may go deeper into the Hand's secrets only after finding, studying and destroying an Asakku or an infernalist.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-infernalists"
+  ]
+ },
+ {
+  "id": "bh-asakku",
+  "title": "The Path of Asakku",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Corruption by the Watchers.",
+  "claims": [
+   {
+    "text": "Corrupted fall when a Watcher reaches a Kindred's soul through blood and power; drinking infected blood, mind contact with a member of the path, or strong Vicissitude from a Corrupted can open the way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "The Sinister Obsession derangement needs Willpower at difficulty 8 to pursue any long goal but Vicissitude, and each Vicissitude dot adds a success to the minimum needed to avoid degeneration.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "With Soul Whispers a Corrupted spends a blood point to share a tainted creature's senses and use Auspex, Animalism, Dominate and Vicissitude through it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-crusade"
+  ]
+ },
+ {
+  "id": "bh-enoch",
+  "title": "Enoch in the Underworld",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The First City in the Tempest.",
+  "claims": [
+   {
+    "text": "Enoch sits in the Tempest and opens straight onto the Labyrinth; five curved spires lift it above the sea, and Rawi poets compare them to a hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "Soulsteel chains, still babbling, tie the spires to black marble walls; the Del'Roh forbids fire in the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "Thousands of enslaved ghosts, lit from within by necromancy, circle the spires as false stars; members Embraced in the last century call them the Doomsday Clock.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-aralu",
+   "lotb-enoch"
+  ]
+ },
+ {
+  "id": "bh-aralu",
+  "title": "The Aralu",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The sleepers beneath Enoch.",
+  "claims": [
+   {
+    "text": "Four sarcophagi lay on the cliff before the city arrived, wrapped in a maze of overlapping catacombs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Inauhaten named the sleepers Loz, Arikel, Al-Marhi, Nergal and Ventru, while the Hand commonly says Loz, Nergal and Ninmgug, leaving four tombs and three or five names.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Loz brings nightmares of a helmeted warrior and lasting dread; Ninmgug's prophecies appear in blood in the library's volumes; the fourth tomb gives only a sense of being watched.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Most members hold the sleepers to be the founders of the Nosferatu, Toreador and Ventrue, though nothing supports it.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-enoch",
+   "rotb-tal-mahe-ra"
+  ]
+ },
+ {
+  "id": "bh-inauhaten",
+  "title": "Inauhaten",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The undying caretaker of the Aralu.",
+  "claims": [
+   {
+    "text": "An ancient being who met the Hand in Enoch claiming to tend the Aralu; it does not seem to be Kindred and refuses to say what it is.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "It remains an on-and-off ally of the Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-aralu",
+   "bh-idran"
+  ]
+ },
+ {
+  "id": "bh-ghosts",
+  "title": "Ghosts as Characters",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Playing a wraith beside the Hand.",
+  "claims": [
+   {
+    "text": "Ghosts spend Pathos for blood, gaining a point per success on Manipulation + Empathy at difficulty 6 to stir an emotion in a human.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   },
+   {
+    "text": "Each Generation dot a ghost buys makes it a step harder to compel by Necromancy; it is only an abstraction of potency.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   },
+   {
+    "text": "The player picks three in-clan Disciplines from a list that mimics wraith powers; others need a wraith teacher. Crossing to the living world takes Auspex 5 or possession by Dominate 5.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   },
+   {
+    "text": "A ghost with no fetters left is destroyed; two to four is a good number.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-hand-allies"
+  ]
+ },
+ {
+  "id": "bh-maeghar",
+  "title": "Maeghar",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Drifters of fae-touched blood.",
+  "claims": [
+   {
+    "text": "Not a true bloodline: Maeghar are accidents of blood mixed with fae wyrd and share no common sire; when the Kiasyd began vanishing in the Renaissance they left and dropped their old name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "Each carries a visible mark of the wyrd, from snow-white skin to extra arms, which may be bought as a Merit or Flaw.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "They own little but one cherished, often grisly collection, and many drink from a cup rather than from warm skin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "The Hand gives them backup without ties, and their roaming makes them its face in the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "blackhand",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lotb-kiasyd"
+  ]
+ }
+]

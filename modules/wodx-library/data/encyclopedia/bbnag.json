@@ -1,0 +1,229 @@
+[
+ {
+  "id": "bbnag-judges",
+  "title": "The Judges of the Breeds",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "How the Nagah remember their old duty.",
+  "claims": [
+   {
+    "text": "The Nagah were the judges and executioners of the Changing Breeds, and for every rogue they put down among all the other Breeds together, they had to kill nearly three Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 24,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Most nests now say their ancestors were too lenient with Garou warriors fresh from battle, and that the other Fera paid for that mercy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 24,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Back then the African and Pure Lands Nagah kept their duty more strictly than the European ones, since no Sesha yet set a single standard.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 24,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-nagah",
+   "garou"
+  ]
+ },
+ {
+  "id": "bbnag-wani-sesha",
+  "title": "The Wani and the Sesha",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Who guides and who rules the wereserpents.",
+  "claims": [
+   {
+    "text": "The Wani, the Dragon Kings, are the Nagah's spirit patrons, dwelling in Xi Wang Chi, a realm of cloud, wind and storm; accounts number them anywhere from three to a hundred and eight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Wani give law and send spirits to teach Gifts, but leave judgment to the Nagah; they favour no one above the wereserpents except the Mokole.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Sesha, by tradition three balaram, three ahi and three vasuki, speak for the Wani and head the race, keeping its laws and decreeing punishments.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Sesha also keep Nandana, the greatest Ananta, as a place where deserving Nagah may rest for a few moons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-nagah",
+   "bbnag-judges"
+  ]
+ },
+ {
+  "id": "bbnag-nests",
+  "title": "Nagah Nests",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The small bands wereserpents work in.",
+  "claims": [
+   {
+    "text": "Nagah form nests of two or three, three being the luckiest, bound not by totem or pack instinct but by need.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Nestmates are each other's closest friends and often lovers, a bond stronger than most marriages to Kinfolk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Carrying their havens with them as Ananta, nests go wherever their targets flee, usually settling in one city or province for a time under a Crown's direction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "When a nest is wiped out, its lone survivor may spend years resting in the Serpent Waters before it joins a new one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-nagah",
+   "bbnag-wani-sesha"
+  ]
+ },
+ {
+  "id": "bbnag-americas",
+  "title": "Nagah in the Americas",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wereserpents of South America and the Caribbean.",
+  "claims": [
+   {
+    "text": "Jungle warfare kept the South American Nagah fairly safe from the Garou, and many West African Kin were carried to the Americas by the slave trade, renewing their lines there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Uktena will speak with the Nagah, and they hold that feathered serpents and many other American serpent spirits are Wani in other masks; in the Second War of Rage some Garou of Uktena hid or protected them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Nagah Kin brought their lore of the serpent into the faiths that grew in the Caribbean and Louisiana, which honour the serpent god Damballah.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbnag",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-nagah",
+   "uktena",
+   "sd-second-war-of-rage"
+  ]
+ }
+]

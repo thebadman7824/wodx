@@ -1,0 +1,409 @@
+[
+ {
+  "id": "encv-iron-hag",
+  "title": "The Iron Hag Awake",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Word that Baba Yaga had woken and ruled Russia from behind a veil.",
+  "claims": [
+   {
+    "text": "Contact with the lands of the Iron Hag broke off, few who entered returned, and the Valkyries were the exception.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Only through them did the world learn that the Iron Hag was awake and steering what Kindred took for a Brujah-held Soviet Union, using demons, Cainites and Lupines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "coti-durga-syn"
+  ]
+ },
+ {
+  "id": "encv-chicago-war",
+  "title": "Lodin and Modius in Chicago",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "great-war"
+  ],
+  "summary": "The struggle that gave Lodin control of Chicago.",
+  "claims": [
+   {
+    "text": "In 1908 Lodin warned the city's oldest Kindred that anarch actions threatened the Masquerade, and the elders allowed Lodin to end the conflict by any means.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "A socialist leader whom Lodin had Embraced won over the city's Brujah, and Lodin set out to wipe out the anarchs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "By 1913 Lodin held the city and Modius fled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "encv-erciyes",
+  "title": "Erciyes",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "The Turkish mountain that held the heart of the Cappadocians.",
+  "claims": [
+   {
+    "text": "A ruined monastery atop Mount Erciyes was once the centre of the Cappadocian clan and a haven of Cappadocius between travels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Augustus Giovanni was Embraced there, and the Clan of Death stored its knowledge there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "encv-haiti",
+  "title": "Haiti",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Caribbean paradise for the Followers of Set.",
+  "claims": [
+   {
+    "text": "Haiti stands apart from the other Caribbean islands as a haven where the Followers of Set thrive amid Voodoo culture.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "encv-hakari",
+  "title": "Hakari",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The eldest of the Kindred of Japan.",
+  "claims": [
+   {
+    "text": "Hakari is called the elder of elders among the childer of Hiruko, roughly a Prince of Tokyo or perhaps of all Japan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "Hakari holds court in the Imperial Palace, is the oldest undead in Japan, and has probably walked the land since the age of the daimyo.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "Little is known of this figure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "encv-maclaren",
+  "title": "Ian MacLaren",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Ventrue banker who became Prince of Kingston, Ontario.",
+  "claims": [
+   {
+    "text": "Ian MacLaren, a banker of Scottish descent, was Embraced into Clan Ventrue in London in the 19th century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "After a string of financial mistakes in the 1970s, MacLaren was urged to leave and became Prince of Kingston, Ontario.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "encv-macneil",
+  "title": "Jeremy MacNeil",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Brujah leader of the Los Angeles anarchs.",
+  "claims": [
+   {
+    "text": "Jeremy MacNeil is a Brujah of the Eighth Generation, born in 1631 and Embraced in 1657.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "MacNeil was born in the Scottish Highlands and was known as a skilled fighter among the clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "MacNeil is a leading figure among the Los Angeles anarchs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "encv-qadi",
+  "title": "Qadi",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A title among the Tal'mahe'Ra.",
+  "claims": [
+   {
+    "text": "Qadi is the Tal'mahe'Ra title for the sect's counterpart of a justicar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "encv-qufur",
+  "title": "Qufur am-Heru",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Setite title taken from the first ghoul of Set.",
+  "claims": [
+   {
+    "text": "An Egyptian title roughly meaning greatest who guards me, used in the hierarchy of the Followers of Set.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "Legend says the first to bear it was the first mortal Set made a ghoul, a great warrior and chief advisor, who died defending Set's temple against Horus.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "That ghoul bound the family to serve Set forever.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "encv-arikel",
+  "title": "Arikel",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Toreador Antediluvian, as legends tell it.",
+  "claims": [
+   {
+    "text": "Legends name the Toreador founder Arikel, a great sculptor or perhaps the finest dancer of the age.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 164,
+      "pdf": 165
+     }
+    ]
+   },
+   {
+    "text": "Zillah is rumoured to be Arikel's sire, which would make Arikel a sibling of Nosferatu.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 164,
+      "pdf": 165
+     }
+    ]
+   },
+   {
+    "text": "Despite the rivalry of the two clans, rumour holds that Arikel felt pity or even love for the disfigured sibling.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "encv",
+      "page": 164,
+      "pdf": 165
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

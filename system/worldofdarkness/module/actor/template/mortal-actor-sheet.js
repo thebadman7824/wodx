@@ -985,7 +985,6 @@ export default class MortalActorSheet extends foundry.appv1.sheets.ActorSheet {
 		let itemData = undefined;	
 		
 		if (itemtype == "Bonus") {
-			found = true;
 			const id = $(event.currentTarget).data("parentid");
 
 			itemData = {

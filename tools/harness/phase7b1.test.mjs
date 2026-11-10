@@ -68,7 +68,7 @@ test("Hold: a held character steps in right after the current one", () => {
 
 test("wiring: Combat 3.7.0 loads the conductor; NPC 0.1.3 reports its turns; players ask, the Storyteller's client acts", () => {
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-combat/module.json"), "utf8"));
-  assert.equal(m.version, "3.7.7");
+  assert.equal(m.version, "3.8.7");
   const main = readFileSync(join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
   assert.match(main, /CD\.registerConductorSettings\(\)/);
   assert.match(main, /CD\.installConductor\(\)/);
@@ -91,4 +91,17 @@ test("Combat 3.7.4: Act next on a tie with the next combatant moves the current 
   assert.match(cd, /nextInit !== null && nextInit >= curInit \? Math\.round\(\(nextInit \+ 0\.002\) \* 10000\) \/ 10000 : curInit/);
   // the hero then lands strictly between them
   assert.ok(CR.stepInInitiative(8.002, 8) < 8.002 && CR.stepInInitiative(8.002, 8) > 8);
+});
+
+test("Combat 3.8.1: out of turn, a player's token stays put; the Storyteller never is stopped", () => {
+  const base = {mode: "block", isGM: false, inFight: true, isCurrent: false, held: false};
+  assert.equal(CR.turnMove({...base, mode: "off"}).ok, true);
+  assert.equal(CR.turnMove({...base, isGM: true}).ok, true);
+  assert.equal(CR.turnMove({...base, inFight: false}).ok, true, "a token outside the fight moves freely");
+  assert.equal(CR.turnMove({...base, isCurrent: true}).ok, true);
+  assert.equal(CR.turnMove(base).ok, false);
+  assert.match(CR.turnMove({...base, held: true}).why, /Act next/);
+  const main = readFileSync(join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
+  assert.ok(main.indexOf('setting("turnMoves")') < main.indexOf('setting("movementLimit")'), "the turn check runs before the yards are counted");
+  assert.match(main, /s\("turnMoves"[\s\S]*?"off", \{ choices: CR\.TURN_MOVES \}/);
 });

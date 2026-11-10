@@ -1,0 +1,57 @@
+[
+ {
+  "id": "nhw2-doissetep-decay",
+  "title": "Doissetep in its last days",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great Chantry consuming itself.",
+  "claims": [
+   {
+    "text": "Doissetep counted itself the greatest of the Tradition Chantries, with hundreds of servants, human and otherwise, and strict rules that kept visitors away from its arcane business.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nhw2",
+      "page": 241,
+      "pdf": 243
+     },
+     {
+      "book": "m1boc",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Many inside cared only for their own power, and in its last days archmages fought to the death in its halls until the oldest Chantry in existence was dying of jealousy rather than any outside magick.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nhw2",
+      "page": 241,
+      "pdf": 243
+     },
+     {
+      "book": "nhw2",
+      "page": 252,
+      "pdf": 254
+     },
+     {
+      "book": "m1boc",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m1boc-doissetep",
+   "mroh-doissetep"
+  ]
+ }
+]

@@ -1,0 +1,201 @@
+[
+ {
+  "id": "cbt-ishtar",
+  "title": "Ishtar, the bull dancer",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "An elder Toreador's account of the clan founder.",
+  "claims": [
+   {
+    "text": "One Toreador elder teaches that the founder was not Arikel the sculptor but a young bull dancer, born in Ubar and later worshipped in Sumer as Ishtar, also called Astarte or Inanna. The clan, in this account, was first the Clan of the Blossom.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The same account says Caine first made two perfect lovers who walked into the sun when they could not have children, and Caine forbade their names to be spoken.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "It says the bull dancer alone took no part in killing the Second Generation, so Caine left that childe uncursed, with the blessing never to lose the human taste for beauty, and sent the dancer north to flee the others.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "In Sumer the founder is said to have Embraced a mortal lover, Tammuz, before Ennoia, then calling itself Enkidu, came hunting with a Tablet of Destiny.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador",
+   "cbb-brujah-and-troile"
+  ]
+ },
+ {
+  "id": "cbt-byzantium",
+  "title": "Toreador of the dark centuries",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the clan kept classical learning alive after Rome.",
+  "claims": [
+   {
+    "text": "Eastern Toreador in Byzantium kept the idea of empire alive, while those in Europe hid in monasteries to preserve Roman learning, sometimes with the monks' knowledge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "As the roads crumbled, many European Toreador feared they were the last of their line.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Under Charlemagne the Lasombra pressed the Ventrue into partnership, and the Toreador bought a place in the new order with Greek and Roman scholarship. Brujah and Gangrel backed the Vikings against it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "A Brujah scholar claimed the Toreador of Constantinople traded classical knowledge to the Assamites, who in turn had the Saracens spare the city. The elder telling the tale doubted it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador",
+   "cbt-guilds"
+  ]
+ },
+ {
+  "id": "cbt-guilds",
+  "title": "Toreador guilds, the Grand Ball and Carnivale",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The clan's gatherings and their place in the Camarilla.",
+  "claims": [
+   {
+    "text": "A guild is in theory every Toreador in a city or county, but many become clubs for one art or one patron. Most are social, and few defend their members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Every Halloween leading Toreador hold a Grand Ball on each continent; some young Toreador now boycott it as a cliche.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Every 23 years the clan holds Carnivale, a week-long worldwide festival. At its end the mortal judged best of the age is Embraced, usually a compromise pick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Toreador back the Camarilla and Elysium strongly, and the Gangrel's departure alarmed them. Few serve as keepers, preferring to let others handle security.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Madame Guil, the Toreador justicar, will destroy princes to uphold the Traditions. A long rivalry with the Tremere justicar, Anastasz di Zagreb, has set the two clans against each other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbtoreador",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "toreador",
+   "elysium",
+   "gtcam-justicars",
+   "gtcam-keeper"
+  ]
+ }
+]

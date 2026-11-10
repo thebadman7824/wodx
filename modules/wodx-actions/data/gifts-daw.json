@@ -1615,9 +1615,8 @@
 "p": 138,
 "c": "g1",
 "t": "instant",
-"e": "An all-turn attack; on a hit, two extra damage dice, and three or more levels after soak dismay those watching.",
-"id": "dolorous-stroke",
-"chk": true
+"e": "An all-turn attack; on a hit, two extra damage dice, and three or more levels after soak dismay those watching: they lose a die against the character for the scene.",
+"id": "dolorous-stroke"
 },
 {
 "n": "Doppelganger",
@@ -2370,7 +2369,7 @@
 "r": "wits+enigmas",
 "d": "gauntlet",
 "t": "var",
-"e": "Summons Wyldlings who change the situation in their favor.",
+"e": "Summons Wyldlings who change the situation in their favour.",
 "id": "wyld-warp"
 }
 ]

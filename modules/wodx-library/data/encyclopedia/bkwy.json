@@ -1,0 +1,138 @@
+[
+ {
+  "id": "bkwy-wyld-war",
+  "title": "The Wyld at War",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Wyld fights its siblings in the modern nights.",
+  "claims": [
+   {
+    "text": "The Wyld can create but cannot give its creations a fixed form or place; the Weaver gives form but cannot truly create.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Mostly penned in the Umbra, the Wyld builds strength in the spirit realms and strikes at the Weaver and Wyrm with sudden, guerrilla-like attacks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Now and then it hurls itself at the Weaver in full force, but its nature makes it hard to stay on any one task for long.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The Wyld treats its Garou allies as incidental and would no more mourn a million of them than a person mourns shed skin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "triat",
+   "bkw-weaver-wyrm"
+  ]
+ },
+ {
+  "id": "bkwy-thresholds",
+  "title": "Wyld Thresholds",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Places where the Wyld breaks into the physical world.",
+  "claims": [
+   {
+    "text": "A Threshold is the Wyld made manifest in the physical world; Wyldling spirits treat it as holy ground and will defend it at any cost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "When a Threshold withdraws to the Umbra the land usually returns to the state it was in before, though in dire need it may break apart into a swarm of Wyldling-like spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "No one knows what births a Threshold; one theory blames the Wyrm's mass destruction of living things.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "A Threshold forming over a caern, an Abscess, can drive out the caern totem; Garou Theurges advise close communion with the caern's spirits as the best guard.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The Black Fury caern of Miria is held up as a Wyld caern where a Threshold and the sept live side by side.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkwy",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "triat",
+   "black-furies",
+   "bkwy-wyld-war"
+  ]
+ }
+]

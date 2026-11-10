@@ -1,0 +1,213 @@
+[
+ {
+  "id": "wdkj-hun-and-po",
+  "title": "The hun and the p'o",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern",
+   "ancient"
+  ],
+  "summary": "The Chinese teaching of two souls.",
+  "claims": [
+   {
+    "text": "Chinese belief holds that each person has two souls: the hun, made at conception, governs mind and spirit, and the p'o, made at birth, governs the body; like yin and yang they cannot work apart.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "At death they part, and the p'o stays near the corpse to guard it and see that proper funeral rites are done.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-jade-kingdom-terms",
+   "wraiths"
+  ]
+ },
+ {
+  "id": "wdkj-qin-shihuang",
+  "title": "Qin Shihuang and the Ways of the Spirits",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "The First Emperor's search for immortality.",
+  "claims": [
+   {
+    "text": "Late in life Qin Shihuang became obsessed with escaping death and kept mystics and magicians at court; when they failed, the emperor turned on them in fury.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Then a group came claiming to follow an old magical tradition called the Ways of the Spirits, rumored to hold power in both this world and the land of the dead.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wdkj-hun-and-po"
+  ]
+ },
+ {
+  "id": "wdkj-hiroshima-storm",
+  "title": "The storm after Hiroshima",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "How the atomic bombings struck the Jade Kingdom.",
+  "claims": [
+   {
+    "text": "The atomic bombs dropped on Hiroshima and Nagasaki unleashed a great Maelstrom through every realm of the dead. The Jade Kingdom spent weeks sheltering in Haunts and manor houses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "The storm tore up stretches of the Imperial Highway from the Yellow Springs to the Jade Palace and badly damaged most Imperial buildings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Peng Xin, hero of the war with Stygia, was earlier made a minister by the Emperor in place of the vanished Wu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "maelstroms",
+   "gw-jade-kingdom-terms"
+  ]
+ },
+ {
+  "id": "wdkj-militia",
+  "title": "The Jade militia",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Dark Kingdom of Jade raises soldiers.",
+  "claims": [
+   {
+    "text": "Local Commanders oversee training and the district armory, since most weapons are banned to citizens; monthly drills are required by law but seldom held.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Families may legally buy off militia duty for a yearly fee by showing hardship, and many Commanders define hardship loosely; the professional regiments are volunteers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-jade-kingdom-terms"
+  ]
+ },
+ {
+  "id": "wdkj-ti-yu",
+  "title": "Ti Yu, the Earth Prison",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hells of the Jade Kingdom.",
+  "claims": [
+   {
+    "text": "The hells were built around an underground walled city named Ti Yu, the Earth Prison, with broad streets and a Hall of Justice; like the Jade Palace and Stygia it lies within the Tempest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "Its cavern entrance at the mountain of Feng-tu and the maze beneath resemble the Veinous Stair; Hell is the harshest sentence of Jade law, but its capacity is limited, so the flow of souls into it is kept in check.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wdkj",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-jade-kingdom-terms",
+   "stygia"
+  ]
+ }
+]

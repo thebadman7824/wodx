@@ -108,19 +108,22 @@ export default {
       id: "doissetep", year: 1997, month: 11, day: 10, branch: "classic", lines: ["mage"], metaplot: true,
       name: "The fall of Doissetep",
       summary: "The Hermetic stronghold destroys itself. The Digital Web crashes in the Great Whiteout.",
-      source: "M20 pdf 29-30, 51"
+      source: "M20 pdf 29-30, 51",
+      dateNote: "The day is a house pick; move it to suit the chronicle."
     },
     {
       id: "week-of-nightmares", year: 1999, month: 6, day: 1, branch: "classic", lines: ["all", "vampire"], metaplot: true,
       name: "The Week of Nightmares",
       summary: "A week of mass nightmares and visions as something ancient wakes and rampages across India and Bangladesh.",
-      source: "M20 pdf 31"
+      source: "M20 pdf 31",
+      dateNote: "M20 gives only the year. The day is a house pick."
     },
     {
       id: "avatar-storm", year: 1999, month: 6, day: 8, branch: "classic", lines: ["mage", "werewolf"], metaplot: true,
       name: "The Avatar Storm",
       summary: "A storm in the spirit world flays the souls of mages who try to cross the Gauntlet.",
-      source: "M20 pdf 30-31, 83"
+      source: "M20 pdf 30-31, 83",
+      dateNote: "M20 gives only the year. The day is a house pick, a week into the Week of Nightmares."
     },
     {
       id: "sixth-great-maelstrom", year: 1999, month: 6, day: 8, branch: "classic", lines: ["wraith", "demon", "mummy"], metaplot: true,
@@ -161,13 +164,13 @@ export default {
       source: "World of Future Darkness p. 19 (pdf 6)"
     },
     {
-      id: "masquerade-frays", year: 2024, branch: "future", lines: ["all", "vampire"],
+      id: "masquerade-frays", year: 2025, month: 7, branch: "future", lines: ["all", "vampire"],
       name: "The Masquerade falls apart",
       summary: "Sensors, cyberoptics and the megacorps see too much. The Masquerade is in tatters and the elders throw the young to the wolves.",
       source: "World of Future Darkness p. 16 (pdf 3)",
-      dateNote: "The article says 2024 or 2025 at the latest (2021 in its playtest); move it to suit the chronicle."
+      dateNote: "The article says 2024 or 2025 at the latest (2021 in its playtest). The house timeline has two cracks in late 2024 and the flood in summer 2025; move it to suit the chronicle."
     }
   ],
   /** Which timeline each kind of event belongs to (a house rule, recorded in Chronicle Rules). */
-  branchNote: "The Future Darkness branch splits from the classic timeline in the 1990s. Events up to 1969 fire on both. The 1997 and 1999 events and the Time of Judgment are classic only, since World of Future Darkness was written before them and never mentions them. The Venice Conclave, the Cyberpunks and the fall of the Masquerade are Future Darkness only."
+  branchNote: "The Future Darkness branch splits from the classic timeline in the 1990s. Events up to 1969 fire on both. The 1997 and 1999 events and the Time of Judgment are classic only, since World of Future Darkness was written before them and never mentions them. The Venice Conclave, the Cyberpunks and the fall of the Masquerade are Future Darkness only, as is the house timeline from 1990 to 2098 and the Time of Future Judgement in 2099, where only the Cascade the Storyteller chooses fires."
 };

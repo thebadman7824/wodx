@@ -1,0 +1,148 @@
+[
+ {
+  "id": "wod2-kingston",
+  "title": "Kingston, Ontario",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A small Camarilla city that guards the St. Lawrence route and the Sabbat border.",
+  "claims": [
+   {
+    "text": "Only four Camarilla Kindred hold Kingston, a city too small by rights to feed even one; its universities and prisons make it worth the trouble, and it sits where Camarilla and Sabbat lands meet at the head of the St. Lawrence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 13,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Prince Iain MacLaren, a ninth-generation Ventrue banker Embraced in London in 1874, took the city after leaving Britain in 1979; a paid arrangement with Lucian of Gary to move Kindred down the river into the States funds the post.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 13,
+      "pdf": 13
+     },
+     {
+      "book": "wod2",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Brujah Angelique Cormier, a Quebec native barred from going home, spends nights lobbying the Camarilla to take Quebec from the Sabbat, and treats a destroyed sire as a martyr to that cause.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 13,
+      "pdf": 13
+     },
+     {
+      "book": "wod2",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "A Camarilla Samedi named Driscoll works nights as a janitor at the penitentiary and controls who feeds on its inmates; the old Gangrel Merill Olsen keeps out of local politics altogether.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 13,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "The local Kindred are said to stage well-timed crashes on Highway 401 to strand rivals who travel by night.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 13,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "sabbat",
+   "bjd-samedi-haiti"
+  ]
+ },
+ {
+  "id": "wod2-carfax-abbey",
+  "title": "Carfax Abbey",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A London goth club in a gutted church where anarchs gather.",
+  "claims": [
+   {
+    "text": "Carfax Abbey is a new goth dance club built inside an old London church: a maze of alcoves, three bars, a dance floor and a stage, open to any vampire and the main meeting ground for the city's growing anarch crowd.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 63,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Its ancilla owner, Holden, argued to Lady Anne that a club full of mortals dressed as vampires is the safest place for real ones to hide; the prince lets it stand, partly because it keeps the anarchs in one place that would burn easily.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 63,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Holden's ghouls, each trained a little in Celerity, throw out rowdy mortals, while a Brujah security chief handles trouble from the Kindred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 63,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "The house band Persephone Seed has two Kindred members, and vampires come to watch them flout the Masquerade on stage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod2",
+      "page": 63,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs",
+   "camarilla"
+  ]
+ }
+]

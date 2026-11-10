@@ -1,0 +1,43 @@
+[
+ {
+  "id": "ciotm-head-of-bran",
+  "title": "The head of Bran",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "ancient",
+   "great-war",
+   "modern"
+  ],
+  "summary": "A guardian buried beneath London.",
+  "claims": [
+   {
+    "text": "In legend Bran the Blessed, a giant and a king of Britain, was killed trying to conquer Ireland and asked to have the head buried beneath London's white hill as a guard against invaders. Through the seven years it took to carry it home, the head neither rotted nor lost its wit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ciotm",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "A second legend ties the land's safety to the ravens of the Tower, and its keepers have long made sure a few remain; during the Second World War, Nazi occultists, or perhaps rogue Technocrats, are said to have tried to reach the head.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ciotm",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mythic-age"
+  ]
+ }
+]

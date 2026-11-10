@@ -1,0 +1,40 @@
+[
+ {
+  "id": "ncns2-vitel-garlotte",
+  "title": "Vitel and Garlotte",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two neighbouring princes and old rivals.",
+  "claims": [
+   {
+    "text": "Marcus Vitel became prince of Washington some thirty years before 1999, when the previous prince, Marissa of Clan Tremere, met an end; Garlotte, prince of nearby Baltimore, has been a rival ever since and took Vitel in after Washington fell.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ncns2",
+      "page": 5,
+      "pdf": 7
+     },
+     {
+      "book": "ncns2",
+      "page": 29,
+      "pdf": 31
+     },
+     {
+      "book": "beckett",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bjd-vitel"
+  ]
+ }
+]

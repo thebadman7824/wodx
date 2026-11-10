@@ -1,0 +1,1224 @@
+[
+ {
+  "id": "hunters",
+  "title": "Hunters",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortals who hunt the Kindred: lonely, varied, and driven.",
+  "claims": [
+   {
+    "text": "Hunters are mortals who hunt vampires; their faces, methods and motives differ, but all seek the destruction of the Kindred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A hunter knows the vampire only from real encounters, clouded by myth and legend.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Most hunters cannot know how widely the Kindred infest the world, only that something preys on their own home.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The mood is desperate determination.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "alone-in-the-crowd",
+   "hunter-societies"
+  ]
+ },
+ {
+  "id": "alone-in-the-crowd",
+  "title": "Alone in the Crowd",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why a hunter can expect no thanks and little help.",
+  "claims": [
+   {
+    "text": "No one hands out medals for killing vampires; even a trusted friend may see the same horror and deny it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The higher a hunter appeals, the likelier it is to reach someone under vampire influence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Stockpiling weapons or searching the wrong things online puts a hunter on watch lists, and burning a haven can bring charges of arson or murder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hunters",
+   "project-twilight"
+  ]
+ },
+ {
+  "id": "hunter-societies",
+  "title": "The Big Leagues",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The organised hunter societies, seen from the street.",
+  "claims": [
+   {
+    "text": "Larger, organised hunter groups exist, but a lone hunter may find them bound up in their own protocols.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Arcanum recruits only those with the right skills and temperament.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Society of Leopold sends eager amateurs where it lacks the means to go, and prays for any who fall.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Project Twilight agents see civilian hunters as a threat to long operations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcanum",
+   "inquisition",
+   "project-twilight"
+  ]
+ },
+ {
+  "id": "hunter-view-camarilla",
+  "title": "The Kindred as Hunters See Them",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What a street hunter makes of vampire society.",
+  "claims": [
+   {
+    "text": "Vampires play at society with politics and sides, and loners are rare but strong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "One side keeps rules about being too obvious and answers to a Prince in each city, meeting in a council.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Its rules cover how much blood may be taken and how many deaths a neighbourhood can bear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "That side would often rather bargain with a hunter than be dragged into the light.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The other side worships its condition like a religion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "sabbat",
+   "hunters"
+  ]
+ },
+ {
+  "id": "inquisition",
+  "title": "The Inquisition",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Society of Leopold: the Church's crusaders against the Devil's children.",
+  "claims": [
+   {
+    "text": "No mortals frighten the Kindred more than the Inquisition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Its theme is the modern crusader, with the whole world as Holy Land and the Devil as the Enemy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "It recognises four sub-orders (Condotierri, Gladius Dei, the Censor's Office and the Order of Saint Joan); other groups count only as sects.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "All its orders aim to deliver humanity from supernatural evil, though their methods differ and even clash.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hunter-societies",
+   "true-faith",
+   "hh2-society-of-leopold",
+   "hh2-akritai",
+   "hh2-ikhwan-al-safa",
+   "hh2-knights-st-george"
+  ]
+ },
+ {
+  "id": "arcanum",
+  "title": "The Arcanum",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A scholarly society that studies the supernatural.",
+  "claims": [
+   {
+    "text": "The Arcanum's charge is knowledge of the otherworldly, and its mandate is knowledge, not war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 136,
+      "pdf": 137
+     },
+     {
+      "book": "hh2",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   },
+   {
+    "text": "Its theme is reckless exploration: members keep going where they know less than they should.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   },
+   {
+    "text": "Each Arcanum House funds its Lodges: a small House can keep one, a large House up to five.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   },
+   {
+    "text": "Lodges investigate reports of vampires, demons, werewolves and ghosts by interviewing witnesses and scouting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hunter-societies"
+  ]
+ },
+ {
+  "id": "project-twilight",
+  "title": "Project Twilight and the SAD",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The government hunters.",
+  "claims": [
+   {
+    "text": "The FBI's Special Affairs Division once hunted monsters with near freedom, and senior figures overlooked its orders for silver bullets and stakes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "Paperwork disguises the work: a raid on a werewolf compound is filed as a strike on terrorists with attack dogs, and silver rounds as Code Five.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hunter-societies",
+   "alone-in-the-crowd",
+   "hh2-us-government",
+   "hh2-chaoscope"
+  ]
+ },
+ {
+  "id": "numina",
+  "title": "Numina",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The gifts of psychics and hedge magicians.",
+  "claims": [
+   {
+    "text": "Psychics perceive hidden forces through extrasensory perception and can work on them with their minds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "Some are simply born with talents like telepathy, telekinesis or clairvoyance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "Telekinesis is rated by weight, from one pound at the first level to a thousand pounds at the fifth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hedge-magic",
+   "true-faith"
+  ]
+ },
+ {
+  "id": "hedge-magic",
+  "title": "Hedge Magic",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Folk sorcery of paths and rituals.",
+  "claims": [
+   {
+    "text": "A hedge magician must hold a world view at odds with modern thinking: a working curse means unlucky thirteens, spilled salt and black cats matter too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "numina",
+   "hh2-ritual-of-summoning"
+  ]
+ },
+ {
+  "id": "true-faith",
+  "title": "True Faith",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Divine favour that shields the faithful from the night.",
+  "claims": [
+   {
+    "text": "True Faith joins deep trust in the divine with divine favour, and only a blessed few have it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "The Faithful can repel vampires and ghosts with a holy symbol or prayer: spend Willpower and roll True Faith against the creature's permanent Willpower; each success is a turn it must flee.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Against a power that targets the Faithful directly and needs a roll, Faith is rolled at difficulty 7 and its successes subtract from the power's.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Powers used passively or indirectly get past that shield.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inquisition",
+   "numina",
+   "hh2-faith-shield"
+  ]
+ },
+ {
+  "id": "hunters-and-lupines",
+  "title": "Hunters and Lupines",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "When hunters cross paths with werewolves.",
+  "claims": [
+   {
+    "text": "A hunt may stray into werewolf lands, or one threat may menace hunter and werewolf alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "As allies Lupines are dangerous; as enemies, deadly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lupines",
+   "hunters"
+  ]
+ },
+ {
+  "id": "hh2-starting-humanity",
+  "title": "Starting Humanity",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a hunter's Humanity begins.",
+  "claims": [
+   {
+    "text": "A hunter's starting Humanity is Conscience plus Self-Control, a score from 5 to 10, and freebie points can raise it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hunters"
+  ]
+ },
+ {
+  "id": "hh2-hemophiliac",
+  "title": "Hemophiliac",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A three-point Physical Flaw.",
+  "claims": [
+   {
+    "text": "A cut hunter will not stop bleeding without medical help; after lethal or aggravated damage the hunter takes one more bashing level every five minutes until the wound is dressed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "A vampire who bites the hunter can close the wound by licking it, ending the bashing damage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hunters"
+  ]
+ },
+ {
+  "id": "hh2-faith-shield",
+  "title": "Faith Against Powers",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Using True Faith to resist a Discipline.",
+  "claims": [
+   {
+    "text": "When a Discipline or other power would affect a hunter with True Faith, the player can spend Willpower and roll Faith at difficulty 7; each success takes one from the power's activation roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "The protection covers only powers aimed directly at the character.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "true-faith"
+  ]
+ },
+ {
+  "id": "hh2-society-of-leopold",
+  "title": "Society of Leopold",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The modern Inquisition and its orders.",
+  "claims": [
+   {
+    "text": "The Society, like the Roman Church, is split into smaller divisions that share the aim of freeing humanity from supernatural evil but differ, and sometimes clash, in methods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "It recognises four sub-orders (Order of Saint Joan, Censor's Office, Gladius Dei, Condotierri); every other group is only a sect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Many Catholic religious orders sit within it; most bind members by the three monastic vows, and members mark their order with initials after their names.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 118,
+      "pdf": 119
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inquisition",
+   "hh2-condotierri",
+   "hh2-gladius-dei"
+  ]
+ },
+ {
+  "id": "hh2-condotierri",
+  "title": "Condotierri",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Society's guard order.",
+  "claims": [
+   {
+    "text": "Founded in the 15th century, the Condotierri are a quasi-military order that cares more for the Society's safety than for finishing missions, led by a Condotierre-General chosen by the Inquisitor-General.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "They guard the larger and older Cenacula and work in lances of three, after the old mounted soldier, squire and lancer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Novices now train at new combat schools in the Pyrenees and in the Nevada desert; the order is armed like a national military, short of heavy ordnance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "The Society's headquarters is the Monasterio di San Michele in Rome.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-society-of-leopold"
+  ]
+ },
+ {
+  "id": "hh2-gladius-dei",
+  "title": "Gladius Dei",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Sword of God.",
+  "claims": [
+   {
+    "text": "The Gladius Dei are the Society's elite, called the Sword of God, and its most distinguished order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-society-of-leopold"
+  ]
+ },
+ {
+  "id": "hh2-ritual-of-summoning",
+  "title": "Ritual of Summoning",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Theurgy rite for calling spirits.",
+  "claims": [
+   {
+    "text": "The rite lets a Theurgist summon spirits with an extended Charisma + Occult roll at difficulty 9; the successes needed depend on the spirit's power and the Storyteller's call.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 126,
+      "pdf": 127
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hedge-magic"
+  ]
+ },
+ {
+  "id": "hh2-us-government",
+  "title": "The Government's Stance",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What Washington admits to.",
+  "claims": [
+   {
+    "text": "Officially the United States Government neither deals with terrorists nor accepts that the supernatural exists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "The FBI will goad suspected terrorists into an attack and then move in at the last moment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "project-twilight"
+  ]
+ },
+ {
+  "id": "hh2-chaoscope",
+  "title": "Chaoscopes",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Devices that track the unnatural.",
+  "claims": [
+   {
+    "text": "Colonel Riley has trained five chaoscope operators for field work, trailing suspected negative bodies, and one mobile chaoscope has been tested.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-us-government"
+  ]
+ },
+ {
+  "id": "hh2-forensic-team",
+  "title": "Forensic Teams",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Requisitioned crime-scene help.",
+  "claims": [
+   {
+    "text": "A forensic team borrowed from a friendly intelligence agency gives results after several weeks; an urgent team processes the scene in six hours and reports in one to two days.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 156,
+      "pdf": 157
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-us-government"
+  ]
+ },
+ {
+  "id": "hh2-mafia",
+  "title": "The Mob",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Organized crime and its vampire masters.",
+  "claims": [
+   {
+    "text": "Organized crime reaches from drug sales to arms deals, assassinations and swaying governments.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   },
+   {
+    "text": "Italian mafia families have been infiltrated and used by vampires more than perhaps any other underworld group, ghouled, enslaved and mind-controlled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-underworld-allies"
+  ]
+ },
+ {
+  "id": "hh2-underworld-allies",
+  "title": "Underworld Allies",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Allies drawn from crime.",
+  "claims": [
+   {
+    "text": "For a hunter tied to crime, buying Allies brings hardened members of the underworld rather than law-abiding people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 151,
+      "pdf": 152
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-mafia"
+  ]
+ },
+ {
+  "id": "hh2-sense-influence",
+  "title": "Sense Influence",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A three-point Merit.",
+  "claims": [
+   {
+    "text": "The Merit lets a hunter buy Awareness and sense that someone is under supernatural control or a ghostly presence, with Perception + Awareness at difficulty 8.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 151,
+      "pdf": 152
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hunters"
+  ]
+ },
+ {
+  "id": "hh2-ikhwan-al-safa",
+  "title": "Ikhwan al-Safa",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A hunting order of the Middle East.",
+  "claims": [
+   {
+    "text": "The Ikhwan al-Safa is named with the Society of Leopold and the Judges as a religious order of vampire hunters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   },
+   {
+    "text": "Its scholars trace it to the Brethren of Sincerity of 10th century Basra, whose teachings survive in the Rasa'il Ikhwan al-Safa, a work of 52 epistles.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   },
+   {
+    "text": "Mehmet II is said to have taken most of what that sultan knew of vampires from those epistles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-society-of-leopold"
+  ]
+ },
+ {
+  "id": "hh2-akritai",
+  "title": "Akritai",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Orthodox border guards against the dead.",
+  "claims": [
+   {
+    "text": "The Akritai descend from a Byzantine military force set to guard the borders; the name comes from the Greek for border.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   },
+   {
+    "text": "They keep apart from the other hunting orders, with no fixed hierarchy, only regional groups, mostly in Eastern Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   },
+   {
+    "text": "Most are ordained priests or nuns of the Orthodox faith who give up family and goods to destroy vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   },
+   {
+    "text": "In 2011 the whole order fought at Domazlice in the Czech Republic and destroyed the seer Tryphosa at heavy cost, finding in the haven a copy of the ancient Book of Nod and a text titled Apostate Auguries, seemingly in the seer's own hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-society-of-leopold"
+  ]
+ },
+ {
+  "id": "hh2-knights-st-george",
+  "title": "Knights of St. George",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A crusading knighthood.",
+  "claims": [
+   {
+    "text": "The Resolute Knights of St. George were founded in Syria in the 11th century and by the 1400s had houses from Ireland to India.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 154,
+      "pdf": 155
+     }
+    ]
+   },
+   {
+    "text": "The order has long looked forward, taking in women from the 19th century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hh2",
+      "page": 154,
+      "pdf": 155
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hh2-society-of-leopold"
+  ]
+ }
+]

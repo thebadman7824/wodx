@@ -1,0 +1,163 @@
+[
+ {
+  "id": "wqd-padroni",
+  "title": "The Padroni",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "Gypsy masters of the caul.",
+  "claims": [
+   {
+    "text": "In Italy the handful who trusted in the caul's power valued knowing how to use it so highly that the Padroni came to require near-slave apprenticeships and complete loyalty from would-be students.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wqd",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The Maldonati family grew as rich as the feudal lords whose lands its wagons crossed; since nobles left Gypsy affairs alone, the abuse of apprentices went unchecked until a revolt in the thirteenth century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wqd",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wraiths",
+   "wqd-orphic-circle"
+  ]
+ },
+ {
+  "id": "wqd-paranormal-research-wing",
+  "title": "The Paranormal Research Wing",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Scientists who would turn ghosts into fuel.",
+  "claims": [
+   {
+    "text": "The Alternate Energy Group meets in Geneva every autumn to study new energy sources; its Paranormal Research Wing, radical scientists drawn mainly from Duke, Edinburgh and Berkeley, looks at industrial uses of psychic and ectoplasmic energy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wqd",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Funded by large conglomerates and obscure societies rather than governments, it seeks to turn ectoplasm into power for industry, destroying wraiths in the process.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wqd",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wraiths",
+   "the-shroud"
+  ]
+ },
+ {
+  "id": "wqd-orphic-circle",
+  "title": "The Orphic Circle",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The best-informed ghost-hunting society.",
+  "claims": [
+   {
+    "text": "No other ghost-hunting group knows as much about the Underworld as the Orphic Circle, but it can still be fooled, and Hierarchy leaders have started feeding it lies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wqd",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The Ebon Bench lets Puppeteers join its revels only after an oath to submit to experiments later; some say the revels are part of a great rite meant to tear the Shroud away.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wqd",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "the-shroud"
+  ]
+ },
+ {
+  "id": "wqd-bloo-moons",
+  "title": "The Bloo Moons",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A gang that baits Spectres with wraiths.",
+  "claims": [
+   {
+    "text": "The Bloo Moons draw wraiths into traps in the Tempest by fooling Enfants or spreading rumours, and they have learned to make the spectral scream that brings Spectres, and now and then Malfeans, to the bait.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wqd",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "A few members doubt the cruelty but go along under peer pressure; recruits must be streetwise, tough and Unhooded, and prove themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wqd",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spectres",
+   "wraiths"
+  ]
+ }
+]

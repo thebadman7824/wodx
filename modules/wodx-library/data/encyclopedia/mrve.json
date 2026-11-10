@@ -1,0 +1,402 @@
+[
+ {
+  "id": "mrve-creation",
+  "title": "The Verbena tale of creation",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Old Faith tells the birth of the Tellurian.",
+  "claims": [
+   {
+    "text": "In Verbena lore the One became Two, Goddess and God, and from their union came the Tellurian and the turning of the Great Wheel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Through humanity the Tellurian came to see and know itself, and because it cherished humankind, fragments of the One called the Pure Ones came down to dwell in people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "mrve-twisters"
+  ]
+ },
+ {
+  "id": "mrve-burning-times",
+  "title": "The Burning Times",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The witch hunts as the Verbena remember them.",
+  "claims": [
+   {
+    "text": "Secret Inquisitors, at times backed by Christian mages, were the worst danger to the Verbena.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Most people killed as witches knew little real magic beyond charms, herb-lore and midwifery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Only a handful of true Verbena died, but they were few to begin with, and each loss was felt as a wound to the Tree of Life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "mrcc-templar-fall"
+  ]
+ },
+ {
+  "id": "mrve-sacred-sites",
+  "title": "Verbena sacred places in the Americas",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Nodes and holy sites the Verbena prize.",
+  "claims": [
+   {
+    "text": "Gallows Hill in Salem, where accused witches were hanged, is a place of power, and public rituals there hide the odd real working.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Nodes lie in the Berkshires and Ozarks, and the Pacific Northwest keeps several, including sacred springs such as Breitenbush and Cougar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Verbena see the Amazon as a cradle of life and fight its destruction by the Syndicate, with help from Dreamspeakers and sorcerers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "syndicate",
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "mrve-gardeners",
+  "title": "Gardeners of the Tree",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Verbena traditionalists who keep the Old Ways.",
+  "claims": [
+   {
+    "text": "Gardeners claim a line back to the Aeduna and the Wyck, and their account is the accepted history of the Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Early Gardeners feared their family secrets would be diluted and wanted the Tradition kept to those with the gift in their blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They still admit chosen outsiders to renew the old families.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "dam-wyck",
+   "mrve-twisters"
+  ]
+ },
+ {
+  "id": "mrve-twisters",
+  "title": "Twisters of Fate",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Spinners who claim the oldest power of the Wyck.",
+  "claims": [
+   {
+    "text": "Verbena scholars think Wyck meant both wise and to twist or shape, fitting folk who bent reality to their will.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Twisters say the first of their kind were early shamans, wise women and healers who held shards of the Pure Ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Those shamans merged with the Aeduna and were long indistinguishable from other mages of the Old Faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "dam-wyck",
+   "mrve-gardeners"
+  ]
+ },
+ {
+  "id": "mrve-moon-seekers",
+  "title": "Moon-Seekers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The eclectic seekers of the Verbena.",
+  "claims": [
+   {
+    "text": "If Gardeners are the trunk and Twisters the roots, the Moon-Seekers are the leaves of the Tree, some say its fruits and nuts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Pagan visionaries who saw the Order of Reason as an enemy of all of them united the Old Faiths and may have saved them from the Burning Times.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Wandering Moon-Seekers gather wisdom from peoples across the world to enrich the Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "mrve-burning-times"
+  ]
+ },
+ {
+  "id": "mrve-lifeweavers",
+  "title": "Lifeweavers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wild Verbena who side with the predator.",
+  "claims": [
+   {
+    "text": "Lifeweavers see nature as beyond good and evil, simply what it is, and they identify most with nature's predators.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Other factions, chiefly the Gardeners, coined the name for Verbena who fit nowhere else; it remains a scatter of loners more than a group.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "In the Mythic Ages they were hermits of the wilds who warned off even fellow pagans, joining the Verbena only as the Order of Reason closed in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "mrve-gardeners"
+  ]
+ },
+ {
+  "id": "mrve-elements-blood",
+  "title": "Elements and blood in Verbena magic",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Common foci of the witches.",
+  "claims": [
+   {
+    "text": "Cords and threads stand for strands of fate, serve in fate spells and bind a spell's subject.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Earth, air, fire and water are used as symbols and as sympathetic links, usually tied to north, east, south and west, though some swap air and fire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Blood, the mage's own or a sacrifice's, is a strong focus because it carries life and links to its source.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrve",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "quintessence"
+  ]
+ }
+]

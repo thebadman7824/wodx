@@ -1,0 +1,240 @@
+[
+ {
+  "id": "bbgur-refusal",
+  "title": "The Gurahl Refusal",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "Why the werebears would not teach the Garou their greatest Gift.",
+  "claims": [
+   {
+    "text": "Gurahl tell that their first Great Council weighed what to teach the Garou and judged wolf Rage too hasty to trust with Gaia's greatest blessing, the power to bring back the dead.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The bears feared the Garou would use it again and again on fallen warriors and rot from within into Bane-wolves.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Spurned, the Garou told the other Changing Breeds that the solitary Gurahl were hoarding Gifts and had fallen to the Wyrm; old friends drew away, and when the Ice Age came the wolves blamed the bears for it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Werebears still gather at a Council of Autumn on the equinox.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-gurahl",
+   "war-of-rage"
+  ]
+ },
+ {
+  "id": "bbgur-great-grandparent",
+  "title": "The Great Grandparent",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The one werebear who always stays awake.",
+  "claims": [
+   {
+    "text": "Since most Gurahl withdrew to sleep in hidden realms, tradition keeps at least one awake, called Great Grandfather or Great Grandmother.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "That watcher roams the world urging protection of bears and keeping alive the ways of peoples who still honour Bear as a totem.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "In time the poisoned world sickens the watcher, who must return to the den to heal, first waking another and passing on all that was learned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "During the long war the bears chose to have few cubs, and most cubs born then went to fight and died young.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-gurahl",
+   "bbgur-refusal"
+  ]
+ },
+ {
+  "id": "bbgur-forest-walkers",
+  "title": "The Forest Walkers' Vow",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A legend of the werebears of the Pure Lands forests.",
+  "claims": [
+   {
+    "text": "Forest Walker Gurahl tell that in the Pure Lands their bear Kin grew smaller and darker for protection, and their human Kin stopped entering the woods, both fearing shadows that killed from the forest floor and the treetops.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "The elder Kari Woodsinger sent the werebears to search every tree and cave; after seven years of searching and seven of war they destroyed nests of Bane-ridden monsters.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Kari Woodsinger then pledged that the Gurahl would walk the forest paths from that day on to keep the horrors away, and Forest Walkers still keep that vow.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-gurahl",
+   "banes"
+  ]
+ },
+ {
+  "id": "bbgur-code-of-ursa",
+  "title": "The Code of Ursa",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gurahl customs of teaching, secrecy and mating.",
+  "claims": [
+   {
+    "text": "After the First Change each young Gurahl travels for a year or more with an elder who teaches history, custom and the Gifts and rites a werebear needs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "As Gaia's first-born, the Gurahl once taught the other Changing Breeds freely, though many still felt they gave too little.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Werebears hold that refusing to share Gaia's Breath set off the War of Rage, so they have kept their lore close since then, sharing only minor Gifts and lore, mostly with the Corax.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Gurahl bear no metis children, and a rite of their own helps each find a fitting mate even as their Kin dwindle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbgur",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-gurahl",
+   "war-of-rage",
+   "cb-corax"
+  ]
+ }
+]

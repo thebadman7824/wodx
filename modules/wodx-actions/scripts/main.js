@@ -55,6 +55,7 @@ import * as OXD from "./orpheus.js";
 import * as ORR from "./orpheus-rules.js";
 import * as ZXD from "./m20.js";
 import * as ZR from "./m20-rules.js";
+import * as CNR from "./consensus-rules.js";
 import * as CK from "./checks-rules.js";
 
 const MOD = "wodx-actions";
@@ -75,6 +76,10 @@ function registerSettings() {
     game.settings.register(MOD, "flavorText", { name: "Flavor text on action cards",
         hint: "Add one short line of description under the result of each action card, picked to fit what was attempted and how it went. Edit the lines in scripts/flavor.js.",
         scope: "world", config: true, type: String, default: L.oldSetting("vtda20-actions", "flavorText", "all"), choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
+    game.settings.register(MOD, "consensusEra", { name: "Consensus by era", hint: "Before 1450 there is no coincidental or vulgar split; from 1450 to 1699 magick is casual or vain, with Fortune Dice (Sorcerers Crusade); from 1700 Mage 20th. The years are a house rule.",
+        scope: "world", config: true, type: Boolean, default: true });
+    game.settings.register(MOD, "realityZones", { name: "Reality Zones (Mage 20th)", hint: "Zone: a place's accepted styles decide what is coincidental. One world: one Consensus everywhere. Free: the Storyteller rules each time.",
+        scope: "world", config: true, type: String, default: "world", choices: { zone: "The place decides", world: "One Consensus everywhere", free: "The Storyteller rules each time" } });
     s("spendResources", "Deduct Willpower and blood", "Update the character sheet when Willpower or blood is spent or gained.", Boolean, true);
     s("applyChanges", "Apply results to sheets", "Apply health, Road, Virtue, frenzy and blood results automatically. Off: results are reported only.", Boolean, true);
     s("showDice", "Show the dice in chat", "List each die face in result cards.", Boolean, true);
@@ -82,7 +87,7 @@ function registerSettings() {
     s("createMacros", "Create hotbar macros", "Create the WoDX Actions macros in the Macro directory if missing.", Boolean, true);
     s("profileMenu", "Menu follows the actor type",
         "The Actions menu shows the buttons for the actor's profile (Kindred, ghoul, mortal, Garou, mage, changeling, wraith...). Off: always the Kindred menu.", Boolean, true);
-    s("nightlyBlood", "Blood cost of rising", "Subtract one blood point from each vampire at New Night (p. 340).", Boolean, true);
+    s("nightlyBlood", "Blood cost of rising", "Subtract one blood point from each vampire at New Night (V20 printed p. 268).", Boolean, true);
     GX.registerSettings(s);
     KX.registerSettings(s);
     SX.registerSettings(s);
@@ -403,7 +408,6 @@ const btn = (action, label) => `<button type="button" class="vta-btn" data-actio
 function opts(entries, sel) {
     return entries.map(([v, l]) => `<option value="${esc(v)}" ${String(v) === String(sel) ? "selected" : ""}>${esc(l)}</option>`).join("");
 }
-const readForm = P.readForm;
 function rootOf(html) { return html instanceof HTMLElement ? html : (html?.[0] ?? html); }
 
 async function dialog(title, content, label, callback, { width = 460, render = null } = {}) {
@@ -740,12 +744,12 @@ async function resolveAction(actor, target, fd) {
     if (built.blocked) { ui.notifications.warn(built.blocked); return post(actor, `${actor.name}: ${esc(fd.desc || preset.label || "Action")}`, `<div class="vta-warn">${built.blocked}</div>`); }
     const wpCost = (fd.wp ? 1 : 0) + (fd.ignoreWounds ? 1 : 0);
     if (wpCost && !(await spendWillpower(actor, wpCost))) return null;
-    if (fd.ignoreWounds) await updateActor(actor, { "system.conditions.isignoringpain": true });
+    // Willpower ignores wound penalties for one turn (VtDA20 printed p. 339): this roll only, so no lasting state
 
     const title = `${actor.name}: ${esc(fd.desc || (preset.label ? preset.label.split(" (")[0].replace(/^Common: /, "") : "Action"))}`;
     const label = [pool.attributeLabel, pool.abilityLabel].filter(Boolean).join(" + ");
     if (fd.auto && built.autoSuccessAllowed && fd.mode === "simple") {
-        return post(actor, title, `<div class="vta-sec"><b>${label}</b> (${built.dice} dice vs ${built.difficulty}): automatic success (p. 323).</div>${preset.note ? `<div class="vta-note">${preset.note}</div>` : ""}`);
+        return post(actor, title, `<div class="vta-sec"><b>${label}</b> (${built.dice} dice vs ${built.difficulty}): automatic success (V20 Dark Ages p. 323).</div>${preset.note ? `<div class="vta-note">${preset.note}</div>` : ""}`);
     }
     const r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
     const rolls = [...helperRolls, r.roll];
@@ -897,7 +901,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
     return dialog("Rötschreck check", content, "Roll", async fd => {
         if (flag(actor, "golconda")) return post(actor, `${actor.name} faces the flame`, `<div class="vta-big good">Golconda: immune to Rötschreck.</div>`);
         if (actor.system?.conditions?.isfrenzy && flag(actor, "frenzyType") !== "fear")
-            return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (p. 357).</div>`);
+            return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (V20 Dark Ages p. 357).</div>`);
         const p = R.ROTSCHRECK_PROVOCATIONS[fd.prov];
         const diff = R.clampDifficulty((fd.prov === "custom" ? fd.diff : p.diff) + fd.mod);
         return beastRoll(actor, { kind: "fear", diff, prov: p.label, wp: fd.wp, total: 0 });
@@ -1019,13 +1023,26 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
 /*  Hunting & feeding (p. 334, 340-341)                               */
 /* ================================================================== */
 
+/** The vessel's blood: drink, drugs or disease (V20 pp. 295, 301-302). */
+function stateFields(sel = "clean") {
+    return `<div class="form-group"><label>In the vessel's blood</label><select name="vstate" data-fixed>${opts(Object.entries(R.VESSEL_STATES).map(([k, x]) => [k, x.label]), sel)}</select></div>
+      <div class="form-group"><label>Drinks, if drunk</label><input type="number" name="drinks" value="4" min="0" max="20"/></div>`;
+}
+
 export async function hunt({ actor: a } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const b = blood(actor), v = virtues(actor);
+    // WoDX Storyteller (0.12.0) keeps a hunting ground and heat on each scene; without it, the market and no heat
+    const scene = actor.getActiveTokens?.()[0]?.scene ?? canvas?.scene ?? null;
+    let here = null;
+    try { here = game.modules.get("wodx-storyteller")?.api?.upkeep?.huntHere?.(scene) ?? null; } catch (e) { here = null; }
+    const area = here?.area && R.HUNTING_GROUNDS[here.area] ? here.area : "market";
     const content = `<form>
       <p>${esc(actor.name)}: blood ${b.value}/${b.max}; hungry below ${7 - v.selfcontrol.value} (7 – ${v.selfcontrol.label})</p>
-      <div class="form-group"><label>Hunting ground</label><select name="area" data-fixed>${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), "market")}</select></div>
+      <div class="form-group"><label>Hunting ground</label><select name="area" data-fixed>${opts(Object.entries(R.HUNTING_GROUNDS).map(([k, g]) => [k, `${g.label} (${g.diff})`]), area)}</select></div>
+      ${here?.outbreak ? `<p class="vta-note"><b>${esc(here.outbreak.name)}.</b> ${esc(here.outbreak.note)} The sick are easy to find, and blood taken from them can carry the sickness to the next vessel.</p>` : ""}
+      ${here?.extra ? `<div class="form-group"><label>Heat here (${esc(here.band.name)})</label><input type="number" name="heat" value="${here.extra}" min="0"/></div>` : ""}
       ${poolSelectors(actor, "", { attr: "wits", ability: findAbility(actor, "streetwise")?.id ?? findAbility(actor, "subterfuge")?.id ?? "" })}
       <div class="form-group"><label>Fame / Domain / Herd</label>
         <input type="number" name="fame" value="${background(actor, "Fame")}" style="width:3.5em"/> <input type="number" name="domain" value="${background(actor, "Domain")}" style="width:3.5em"/> <input type="number" name="herd" value="${background(actor, "Herd")}" style="width:3.5em"/></div>
@@ -1033,33 +1050,36 @@ export async function hunt({ actor: a } = {}) {
       <div class="form-group"><label>Hours available</label><input type="number" name="hours" value="3" min="1"/></div>
       <div class="form-group"><label>Prey</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), "human")}</select></div>
       <div class="form-group"><label>Blood to take (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
+      ${stateFields(here?.outbreak ? "disease" : "clean")}
       <div class="form-group"><label><input type="checkbox" name="dieWorth"/> Storyteller option: prey yields one die's worth of blood</label></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
     </form>`;
-    return dialog("WoDX Hunt", content, "Hunt", fd => resolveHunt(actor, fd), { width: 500 });
+    return dialog("WoDX Hunt", content, "Hunt", fd => resolveHunt(actor, { ...fd, sceneId: scene?.id ?? null }), { width: 500 });
 }
 
 async function resolveHunt(actor, fd) {
     const pool = readPool(actor, fd.attr, fd.ability);
-    const hp = R.huntingPool({ area: fd.area, fame: fd.fame, domain: fd.domain, herd: fd.herd, inhuman: fd.inhuman });
+    const hp = R.huntingPool({ area: fd.area, fame: fd.fame, domain: fd.domain, herd: fd.herd, inhuman: (Number(fd.inhuman) || 0) + (Number(fd.heat) || 0) });
     const built = R.actionPool({ attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel,
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey, bonusDice: hp.bonusDice, baseDifficulty: hp.difficulty,
         woundPenalty: woundPenalty(actor) });
     const rolls = [];
-    let body = `<div class="vta-sub">${R.HUNTING_GROUNDS[fd.area].label}: difficulty ${hp.difficulty}${fd.fame || fd.domain ? ` (Fame/Domain –${fd.fame + fd.domain}, min 3)` : ""}${fd.herd ? `, Herd +${fd.herd} dice` : ""}</div>`;
-    let caught = false;
+    let body = `<div class="vta-sub">${R.HUNTING_GROUNDS[fd.area].label}: difficulty ${hp.difficulty}${fd.fame || fd.domain ? ` (Fame/Domain –${fd.fame + fd.domain}, min 3)` : ""}${fd.herd ? `, Herd +${fd.herd} dice` : ""}${Number(fd.heat) ? `, heat +${Number(fd.heat)}` : ""}</div>`;
+    let caught = false, botched = false;
     for (let h = 1; h <= Math.max(1, fd.hours); h++) {
         const r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty });
         rolls.push(r.roll);
         body += rollBlock(`Hour ${h}`, r, h === 1 ? built.parts : [], fd.specialty);
-        if (r.botch) { body += `<div class="vta-warn">Botch: a complication: witnesses, a rival's herd, the Watch, a hunter…</div>`; break; }
+        if (r.botch) { botched = true; body += `<div class="vta-warn">Botch: a complication: witnesses, a rival's herd, the Watch, a hunter…</div>`; break; }
         if (r.successes > 0) { caught = true; break; }
     }
+    // WoDX Storyteller adds heat to the place (a hunt, or more for a botch); the hook is all it hears
+    Hooks.callAll("wodxHunted", { actorId: actor.id, sceneId: fd.sceneId ?? null, caught, botch: botched });
     if (!caught) return post(actor, `${actor.name} hunts`, body + `<div class="vta-big">No prey this night${fd.hours > 1 ? " (time spent)" : ""}.</div>`, rolls);
     body += `<div class="vta-big good">Prey caught: ${R.VESSELS[fd.vessel].label}.</div>`;
     let take = fd.take;
     if (fd.dieWorth) { const d = await rollPool(1, 11); rolls.push(d.roll); take = d.faces[0] ?? 1; body += `<div class="vta-note">One die's worth of blood: ${take}.</div>`; }
-    const fed = await feedResolve(actor, { vesselType: fd.vessel, take, vesselActor: null, rolls });
+    const fed = await feedResolve(actor, { vesselType: fd.vessel, take, vesselActor: null, rolls, state: fd.vstate, drinks: fd.drinks });
     return post(actor, `${actor.name} hunts`, body + fed.html, rolls);
 }
 
@@ -1070,20 +1090,41 @@ export async function feed({ actor: a, vessel: t } = {}) {
     const vb = vessel ? blood(vessel) : null;
     const content = `<form>
       <p>${esc(actor.name)} feeds${vessel ? ` from <b>${esc(vessel.name)}</b> (blood ${vb.value})` : " (no target selected)"}</p>
-      <div class="form-group"><label>Vessel</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vessel && isVampire(vessel) ? "vampire" : "human")}</select></div>
+      <div class="form-group"><label>Vessel</label><select name="vessel" data-fixed>${opts(Object.entries(R.VESSELS).map(([k, x]) => [k, `${x.label} (${x.pool})`]), vessel && isVampire(vessel) ? "vampire" : vessel && P.detectProfile(vessel) === "fae" ? "fae" : "human")}</select></div>
       <div class="form-group"><label>Blood points to drink (0 = until sated)</label><input type="number" name="take" value="2" min="0"/></div>
       <div class="form-group"><label>Minutes the blood has been outside a living body</label><input type="number" name="cold" value="0" min="0"/></div>
+      ${stateFields(vessel?.flags?.[MOD]?.vesselState ?? "clean")}
     </form>`;
     return dialog("WoDX Feed", content, "Feed", async fd => {
         const rolls = [];
-        const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls });
+        const fed = await feedResolve(actor, { vesselType: fd.vessel, take: fd.take, vesselActor: vessel, cold: fd.cold, rolls, state: fd.vstate, drinks: fd.drinks });
         return post(actor, `${actor.name} feeds${vessel ? ` on ${esc(vessel.name)}` : ""}`, fed.html, rolls);
     });
 }
 
 /** Shared feeding: hunger check, amount, vessel risk, blood pool, Blood Oath. */
-async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rolls }) {
+async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rolls, state = "clean", drinks = 0 }) {
     let html = "";
+    // What is in the vessel's blood (V20 pp. 295, 301-302): a blood-borne disease may be spotted before drinking
+    const taint = R.VESSEL_STATES[state] && state !== "clean" ? state : null;
+    if (taint === "disease" && isVampire(actor)) {
+        const med = findAbility(actor, "medicine");
+        const spot = await rollPool(attr(actor, "intelligence") + num(med?.value), 7);
+        rolls.push(spot.roll);
+        html += rollBlock("Spotting the sickness: Intelligence + Medicine (7)", spot);
+        let out = R.diseaseOutcome(spot);
+        if (out.spotted) return { html: html + `<div class="vta-res good">${esc(actor.name)} tastes the sickness in time and does not drink. ${esc(R.VESSEL_STATES.disease.note)}</div>`, drunk: 0 };
+        if (out.carrier === null) {
+            const res = await rollPool(attr(actor, "stamina"), 6);
+            rolls.push(res.roll);
+            html += rollBlock("Resisting it: Stamina (6)", res);
+            out = R.diseaseOutcome(spot, res);
+        }
+        if (out.carrier) {
+            if (setting("applyChanges")) await updateActor(actor, { [`flags.${MOD}.carrier`]: { since: game.time?.worldTime ?? 0, what: "a blood-borne disease" } });
+            html += `<div class="vta-warn">${esc(actor.name)} now carries the sickness and can pass it to later vessels${out.why === "botch" ? " (a botch on spotting it)" : ""}.</div>`;
+        } else html += `<div class="vta-res">${esc(actor.name)} misses the sickness but throws it off.</div>`;
+    }
     const v = virtues(actor), b = blood(actor);
     const vessel = R.VESSELS[vesselType] ?? R.VESSELS.human;
     let vesselPool = vesselActor ? blood(vesselActor).value : vessel.pool;
@@ -1119,6 +1160,14 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         const ch = await changeBlood(actor, gain);
         html += `<div class="vta-res good">Blood pool ${ch.before} → ${ch.after}</div>`;
     }
+    if (taint && taint !== "disease" && drunk > 0 && isVampire(actor)) {
+        const pen = taint === "drunk" ? R.drinkPenalty(drinks) : 0;
+        html += `<div class="vta-note"><b>${esc(R.VESSEL_STATES[taint].label)}.</b> ${esc(R.VESSEL_STATES[taint].note)}${taint === "drunk" ? ` Now: −${pen} di${pen === 1 ? "e" : "ce"}.` : ""}</div>`;
+    }
+    const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
+    const high = faeVessel && isVampire(actor) ? R.faeBloodHigh(drunk) : null;
+    if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;
+    if (drunk > 0 && flag(actor, "carrier") && ["human", "child"].includes(vesselType)) html += `<div class="vta-warn">${esc(actor.name)} carries a blood-borne disease: this vessel may now have it (V20 p. 295).</div>`;
     // The vessel
     const vRemaining = vesselPool - drunk;
     if (vesselActor && setting("applyChanges")) await updateActor(vesselActor, { "system.advantages.bloodpool.temporary": Math.max(0, blood(vesselActor).value - drunk) });
@@ -1222,6 +1271,12 @@ async function resolveSpend(actor, fd) {
         const pend = flag(actor, "aggHealing") ?? 0;
         await setFlag(actor, "aggHealing", pend + healA);
         html += `<div class="vta-sec"><b>Aggravated:</b> ${healA * 5} blood committed; ${healA} level${healA === 1 ? "" : "s"} heal after a full day's rest. They will be removed at the next New Night.</div>`;
+        // V20: each level past the first in the same day also costs a Willpower point (V20 pdf 293 / p. 285)
+        const extraWp = healA > 1 && !FXD.isDA(null) ? healA - 1 : 0;
+        if (extraWp) {
+            await spendWillpower(actor, extraWp);
+            html += `<div class="vta-note">Each level past the first also costs a Willpower point: ${extraWp} spent (V20 p. 285).</div>`;
+        }
     }
     const turns = Math.ceil((healL + healB) / b.perTurn);
     if (turns > 1) html += `<div class="vta-note">At ${b.perTurn} blood per turn, healing takes ${turns} turns of concentration.</div>`;
@@ -1259,7 +1314,7 @@ async function resolveSpend(actor, fd) {
             if (setting("applyChanges")) await updateActor(t, { "system.advantages.bloodpool.temporary": Math.min(tb.max || 10, tb.value + fd.give) });
             html += `<div class="vta-sec"><b>Gives</b> ${fd.give} blood to ${esc(t.name)}.</div>`;
             html += await oathStep(t, actor, fd.give);
-            if (!isVampire(t)) html += `<div class="vta-note">A mortal who drinks Cainite blood becomes a ghoul (p. 399).</div>`;
+            if (!isVampire(t)) html += `<div class="vta-note">A mortal who drinks Cainite blood becomes a ghoul (V20 Dark Ages p. 399).</div>`;
         } else html += `<div class="vta-sec"><b>Gives</b> ${fd.give} blood (no target selected).</div>`;
     }
     const ch = await changeBlood(actor, -spent);
@@ -1567,7 +1622,7 @@ export async function newNight({ actors } = {}) {
         if (inTorpor) bits.push("in torpor");
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
-    return post(null, "A new night", `<ul>${lines.join("")}</ul>${setting("willpowerRecovery") === "off" ? "" : `<p class="wodx-quiet">Willpower: ${setting("willpowerRecovery") === "night" ? "one a night (VtDA20 p. 309)" : "all at the end of a story"}.</p>`}`);
+    return post(null, "A new night", `<ul>${lines.join("")}</ul>${setting("willpowerRecovery") === "off" ? "" : `<p class="wodx-quiet">Willpower: ${setting("willpowerRecovery") === "night" ? "one a night (VtDA20 printed p. 340)" : "all at the end of a story"}.</p>`}`);
 }
 
 /** The end of a story: Willpower returns in full (unless the setting is off). */
@@ -2118,11 +2173,11 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.15.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.5",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
-    m20Cast: withActor(a => zx().cast(a)), m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor(a => zx().counter(a)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR,
+    m20Cast: withActor(a => zx().cast(a)), m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor(a => zx().counter(a)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
     // Dark Ages mages (3.7.0)
     daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
     daCountermagic: withActor(a => mx().counter(a)), daGuide: withActor(a => mx().guide(a)), daCertamen: withActor(a => mx().certamen(a)),
@@ -2133,6 +2188,8 @@ const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, fren
     daMien: withActor(a => fx().mien(a)), daOath: withActor(a => fx().keepOath(a)), daRest: withActor(a => fx().rest(a)),
     daColdIron: withActor(a => fx().coldIron(a)), daFaeInfo: a => fx().info(resolveActor(a)), daFaeDaily: () => fx().daily(),
     daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,
+    /** Dark Ages fae soak for WoDX Combat: in the mien Stamina soaks lethal (DA:Fae p. 104); cold iron is soakable (p. 88). */
+    faeSoak: a => (a && FXD.isDA(a)) ? { lethal: !!fx().info(a).mien, coldIron: true } : null,
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
     c20Trigger: withActor(a => cx().trigger(a)), c20Epiphany: withActor(a => cx().epiphany(a)), c20Bedlam: withActor(a => cx().bedlam(a)),

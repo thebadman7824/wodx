@@ -1,0 +1,213 @@
+[
+ {
+  "id": "m2sor-nephites",
+  "title": "The Nephite Priesthood",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "victorian",
+   "wild-west",
+   "modern"
+  ],
+  "summary": "Latter-day sorcerers who claim secret arts handed down from the prophet Nephi.",
+  "claims": [
+   {
+    "text": "The Priesthood traces itself to Nephi, who in its telling led Lehi's family from Jerusalem to the New World in the seventh century BC.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "It holds that Nephi received hidden gifts in visions, such as command of the elements, speech with the dead, dream-lore, healing and the summoning of spirits, and passed them to a chosen few.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "These secrets were kept apart from the public church that Joseph Smith founded and Brigham Young led to the Salt Lake basin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-societies",
+   "sorc-path-weather"
+  ]
+ },
+ {
+  "id": "m2sor-thalhun",
+  "title": "Thal'hun",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sorcerers who say their power is the science of an alien race.",
+  "claims": [
+   {
+    "text": "The Thal'hun teach that there is no magic, only advanced science from ancient civilisations among the stars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Their lore tells of the Hui:xa of the world Barshm, whose own virus destroyed their biosphere; their priest-scientists moved part of the city Zoraster outside time and space, and the survivors became envoys to seek a worthy race.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-star-council",
+   "sorc-societies"
+  ]
+ },
+ {
+  "id": "m2sor-uzoma",
+  "title": "The Uzoma",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Yoruba babalawos called to sorcery by the orishas.",
+  "claims": [
+   {
+    "text": "The Uzoma claim they have always been part of the Yoruba, called by the orishas to be priests and sorcerers for the chiefs of holy Ife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "In the Americas the orisha faith joined with Christian saints to form Candomble, Vodoun, Macumba and others; at home, under Portuguese and British rule, the Uzoma went into hiding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "As colonial rule ended, the Uzoma began to come out of hiding and bring the people back to the orishas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-bataa",
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "m2sor-fenian",
+  "title": "The Fenian",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Irish clan of half-fae shapeshifters.",
+  "claims": [
+   {
+    "text": "The Fenian claim an unbroken line from the Tuatha De Danann; in old times they changed into beasts, had faerie sight, and became bards, warriors or seal-folk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Their allies include the Fianna, Old World kith and their own ancestral ghosts, and they once protected mortals from Wyrmspawn; fomori can smell the changing blood and feel driven to kill them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-sorcerers"
+  ]
+ },
+ {
+  "id": "m2sor-seven-thunders",
+  "title": "The Seven Thunders",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Secret holy commandos who strike at sorcerers with True Faith.",
+  "claims": [
+   {
+    "text": "The Seven Thunders, unlike the Society of Leopold, act in secret, through manipulation and sudden terror, armed with True Faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2sor",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-societies"
+  ]
+ }
+]

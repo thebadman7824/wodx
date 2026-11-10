@@ -1,5 +1,5 @@
 /**
- * WoDX Senses 0.3.0: what each player's own screen shows of their character's senses. Pure rules, harness-tested.
+ * WoDX Senses 0.4.0: what each player's own screen shows of their character's senses. Pure rules, harness-tested.
  *
  *   The screen   A character in frenzy sees a red edge round the screen; one in Rötschreck sees the colour drain
  *                from the map. Rötschreck wins when both are on. Each player can turn it off on their computer.
@@ -70,4 +70,34 @@ export function seenAfter(seenBy = [], results = []) {
   const set = new Set(seenBy);
   for ( const r of results ) if ( r.noticed && r.actorId ) set.add(r.actorId);
   return [...set];
+}
+
+/* ------------------------------------------------------------------ */
+/*  0.4.0: the character's state on screen                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * What a character's sheet says they feel, in order of weight. s: {kindred, blood, selfcontrol, woundPenalty,
+ * incapacitated, rage, ragePerm, garou, angst, willpower, wraith, paradox, mage, banality, changeling, willpowerPerm}.
+ * Returns [{id, words}], the first being the one the screen's edge shows.
+ *   Wounds      V20's wound penalties: −1, −2, −5, then Incapacitated.
+ *   Hunger      Kindred under the hunger line, blood below 7 − Self-Control (V20 p. 334, as WoDX Actions reads it).
+ *   The Shadow  A wraith whose Angst is above Willpower, when Catharsis may be tried (Wraith 20, as WoDX Actions reads it).
+ *   Willpower   None left to spend.
+ *   House rules (no single book line): Rage at its full rating of 5 or more; Paradox of 5 or more; Banality of 7 or more.
+ */
+export function stateEdges(s = {}) {
+  const n = v => Number(v) || 0, out = [];
+  const pen = Math.abs(n(s.woundPenalty));
+  if ( s.incapacitated ) out.push({id: "incap", words: "Incapacitated"});
+  else if ( pen >= 5 ) out.push({id: "wound3", words: "Crippled (−5)"});
+  if ( s.kindred && n(s.blood) < 7 - n(s.selfcontrol) ) out.push({id: "hunger", words: n(s.blood) <= 0 ? "Ravenous: no blood left" : "The Beast stirs: blood below the hunger line"});
+  if ( s.garou && n(s.ragePerm) >= 5 && n(s.rage) >= n(s.ragePerm) ) out.push({id: "rage", words: "Rage runs high"});
+  if ( s.wraith && n(s.angst) > n(s.willpower) ) out.push({id: "shadow", words: "The Shadow presses: Angst above Willpower"});
+  if ( s.mage && n(s.paradox) >= 5 ) out.push({id: "paradox", words: "Paradox builds"});
+  if ( s.changeling && n(s.banality) >= 7 ) out.push({id: "banality", words: "Banality closes in"});
+  if ( !s.incapacitated && pen >= 2 && pen < 5 ) out.push({id: "wound2", words: "Badly hurt (−2)"});
+  else if ( !s.incapacitated && pen === 1 ) out.push({id: "wound1", words: "Hurt (−1)"});
+  if ( n(s.willpowerPerm) > 0 && n(s.willpower) <= 0 && !out.some(e => e.id === "shadow") ) out.push({id: "nowill", words: "No Willpower left"});
+  return out;
 }

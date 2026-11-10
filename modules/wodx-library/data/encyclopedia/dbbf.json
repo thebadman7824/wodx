@@ -1,0 +1,204 @@
+[
+ {
+  "id": "dbbf-bone-flowers",
+  "title": "The Bone Flowers",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Followers of the Song of the Shadow.",
+  "claims": [
+   {
+    "text": "Masters of the emotionless Cold Mind, the Bone Flowers have served Korea's Green Courts, the uji of Japan and the Five August Courts, destroying some Kin-jin and shielding others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 7,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Apart from those who give themselves wholly to study, they keep their old roles as they wait for the Age of Sorrow: learning from other Dharmas, dealing with the dead and spirits, and practising stealth, spying and assassination.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 8,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Followers share the Dharma's beliefs and little else; they may differ in sex, origin and much more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 31,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-five-dharmas",
+   "kote-wheel-of-ages"
+  ]
+ },
+ {
+  "id": "dbbf-hong-kong-envoys",
+  "title": "Bone Flowers in Hong Kong",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Shadow's century of peace with the gweilo, and its end.",
+  "claims": [
+   {
+    "text": "For a century the Bone Flowers handled the Western factions of shen in Hong Kong, and dealings with the Kin-jin grew almost easy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 33,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "That uneasy peace fell apart in 1997, when the Quincunx resolved to seize Hong Kong from the Kin-jin by force.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 33,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbbf-bone-flowers",
+   "kotec-kin-jin-china"
+  ]
+ },
+ {
+  "id": "dbbf-senryo",
+  "title": "The Senryo",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The occupation of the Japanese Yin World.",
+  "claims": [
+   {
+    "text": "Local shen call the Japanese Yin World's state the Senryo: it is in effect under foreign occupation by the Chinese Yellow Springs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 34,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Bone Flower gaki have often tried to help Japanese ghosts get free, and the recent turmoil in the Yin World looks like a chance to release the ghosts of the ancestors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 34,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbbf-bone-flowers",
+   "kote-spirit-worlds",
+   "kotec-japan-gaki"
+  ]
+ },
+ {
+  "id": "dbbf-bishamon-shadow",
+  "title": "Bishamon Bone Flowers",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shadow followers of the traditionalist Japanese house.",
+  "claims": [
+   {
+    "text": "Bone Flowers of House Bishamon, like many of their uji, prefer the wilderness; in one region where cold Yin gathers, the Yin dragon lines are strong and clean, and the long winter nights leave them free to travel, study and hold long rites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 36,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-bishamon",
+   "dbbf-bone-flowers"
+  ]
+ },
+ {
+  "id": "dbbf-eight-sacred-steps",
+  "title": "The Eight Sacred Steps",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An old, well-known wu of the Bone Court.",
+  "claims": [
+   {
+    "text": "Bone Flower histories tell of three great wu made only of Shadow followers, still heroes to Kuei-jin, as well as wu whose stories serve as warnings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 42,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Only one of the Eight Sacred Steps followed a different Dharma: Chun Quan, a Devil-Tiger. They took their Second Breaths in Chongqing, learned the Bone Court's ways and brought back most of the relics found near Meru that the great Bone Court now holds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbbf",
+      "page": 44,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbbf-bone-flowers",
+   "kote-second-breath",
+   "kote-wan-xian"
+  ]
+ }
+]

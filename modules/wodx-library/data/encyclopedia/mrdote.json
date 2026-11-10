@@ -1,0 +1,336 @@
+[
+ {
+  "id": "mrdote-chin-ta",
+  "title": "The Chi'n Ta and the four societies",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The mages of the Middle Kingdom.",
+  "claims": [
+   {
+    "text": "Mages of the Middle Kingdom are called Chi'n Ta, Namebreakers or Lightning People, and like the Kuei-jin they see history as a turning wheel of ages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Four societies long kept a rough balance in Asia: the Akashic Brotherhood, the Wu Lung who opposed it, the Wu-Keng who placated the Yama Kings in secret, and the Five Metal Dragons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "That balance is gone; the Five Metal Dragons now dominate, the Brotherhood fights to survive, and the Wu Lung have had to seek its help.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "mrab-asia-today",
+   "kote-kuei-jin"
+  ]
+ },
+ {
+  "id": "mrdote-silk-accord",
+  "title": "The Warring States and the Silk Road",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mage rivalries in early imperial China.",
+  "claims": [
+   {
+    "text": "In the Warring States era, Chi'n Ta served feudal lords with divination, swordsmanship and war engines, while the Dragon Wizards split into countless cabals each seeking to unite China.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "In 190 BCE the Dalou'laoshi made the Silk Accord and prospered by trade with Daedaleans in Rome.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "When Akashic warriors led by Fan Fu took the Silk Road to force terms on the Wu Lung, the Stone People sent advisors and war machines; in 120 CE an Infernalist set a demon army loose on all sides.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrab-vajrapani",
+   "mrdote-chin-ta"
+  ]
+ },
+ {
+  "id": "mrdote-yellow-springs",
+  "title": "Fu Xia and the First Emperor",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Wu Lung put their candidate on the throne.",
+  "claims": [
+   {
+    "text": "The Wu Lung Fu Xia backed the boy-king Cheng, who united China as Qin Shihuang and, with Wu Lung urging, destroyed much of the scholarship of earlier ages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "When the aging emperor wanted an endless reign, the Wu Lung made Qin Shihuang Emperor of the Yellow Springs, lord of the Underworld, and Fu Xia became First Emperor of the Wu Lung.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "The Han dynasty that followed served as Fu Xia's voice for over 400 years and let the Wu Lung dominate Chinese society.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdote-chin-ta"
+  ]
+ },
+ {
+  "id": "mrdote-dragon-tools",
+  "title": "Wu Lung tools",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The instruments of Dragon Wizard magic.",
+  "claims": [
+   {
+    "text": "Wu Lung magic rests on Li, a discipline so upright that Heaven is said to bow to it, and most of its workers rely on ritual tools or gifts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Common tools include fu, paper charms brushed with characters that call forces, bind spirits or change joss; portraits that draw a god or ancestor into the image; and stores of coins, grain and paper.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Alchemists among them keep gunpowder, lead oxide and mercury to steer the cycles of creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdote-chin-ta"
+  ]
+ },
+ {
+  "id": "mrdote-akashic-theory",
+  "title": "The Brotherhood and the Metaphysic",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Akashic part in Tradition magical theory.",
+  "claims": [
+   {
+    "text": "Drawing on Buddhist thinkers, the Akashayana argued for a subjective reality while the Order of Hermes still held to Platonic forms and the four Greek elements.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Though the Brotherhood rarely joined debates on Paradox, it stands beside the Order of Hermes as a chief author of the attempted universal theory of magic, and its fighting skill earns it respect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "mrdote-wan-kuei",
+  "title": "Mages and the Wan Kuei",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Relations between Chi'n Ta and the Kuei-jin.",
+  "claims": [
+   {
+    "text": "Mages and Kuei-jin have long been wary rivals: mages reach in decades the power vampires seek for centuries, and pride on both sides makes it worse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Larger Chantries of the Middle Kingdom kept an elder skilled in dealing with the Wan Kuei; since the Avatar Storm that duty falls to younger mages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "The Vajrapani produce many demon hunters, and few of them live long.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "mrab-vajrapani"
+  ]
+ },
+ {
+  "id": "mrdote-zaibatsu",
+  "title": "The Zaibatsu and the Elemental Dragons",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Technocratic groups of East Asia.",
+  "claims": [
+   {
+    "text": "Early in the 20th century the Zaibatsu revealed itself as a distinct group, yet other mages wrote it off as the Japanese branch of the Technocracy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "Other Asian Technocratic bodies kept silent too; in the late 1970s a few Taiping Tianguo agents admitted aiding North Vietnamese forces on Syndicate orders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdote",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "mrdote-chin-ta"
+  ]
+ }
+]

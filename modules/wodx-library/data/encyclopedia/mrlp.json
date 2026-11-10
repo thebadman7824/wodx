@@ -1,0 +1,309 @@
+[
+ {
+  "id": "mrlp-first-devil-king",
+  "title": "The first Devil King",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Ahl-i-Batin became foes of the Nephandi.",
+  "claims": [
+   {
+    "text": "A Batini murshid, Ishaq al-Jannani, dealt with the Eaters of the Weak, later called Nephandi, went over to them, and as Ishaq al-Iblis became the first Devil King.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "The khanate under that rule, the Oasis of Eternal Bliss, became a hell on Earth, and from then on the Ahl-i-Batin were sworn and active enemies of the Nephandi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "To stop another khanate falling, the Batini created the office of Qutb in 109 CE to link and watch the minds of their students, and trained their first assassins against the Nephandi in 154 CE.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-devil-kings",
+   "dam-ahl-i-batin",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "mrlp-reprieve",
+  "title": "The Reprieve of 1979",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The year the Technocracy lost its grip on Iran.",
+  "claims": [
+   {
+    "text": "In 1979 the Shah's government fell and Technocratic agents were driven out of Iran, a turn the Batini call the Reprieve.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Some old Batini, among them Qutbs who had escaped a Technocratic killing campaign decades before, came out of Occultation to guide the Tradition again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "To guard this zone free of the Technocracy they made a temporary pact with Taftani wizards, who could roam Iran freely if they kept clear of big cities; training of new Qutbs began in Isfahan that October.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-ahl-i-batin",
+   "mrlp-first-devil-king",
+   "mrlp-taftani-atars"
+  ]
+ },
+ {
+  "id": "mrlp-khanates",
+  "title": "Batini khanates",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two schools of the Subtle Ones.",
+  "claims": [
+   {
+    "text": "The Subtle Ones earned their name by blending with those around them and adapting to change as dunes shift in a storm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The Ikhwan at-Tawhid of Makkah trains more than its share of assassins, stressing Correspondence, Life and Mind and strict self-mastery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The Darwushim of Baghdad are the most severe ascetics of the Tradition, wearing coarse wool, and some Batini see them as old-fashioned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-ahl-i-batin"
+  ]
+ },
+ {
+  "id": "mrlp-mount-qaf",
+  "title": "Mount Qaf",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The legendary home of the Batini.",
+  "claims": [
+   {
+    "text": "Mount Qaf held a physical form until the 19th century; allegory said it rose from the body of a huge slain beast, its roads the paths to Ascension and Unity at its peak.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "On its slopes stood the Sihr Maqamut, a Persian palace that served as Batini headquarters, and the Batini say the Traditions first met there to plan the Council.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Its Horizon Realm remains a distant inspiration to the Tradition rather than a true homeland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-ahl-i-batin",
+   "council-of-nine",
+   "m2hor-founding"
+  ]
+ },
+ {
+  "id": "mrlp-taftani-atars",
+  "title": "The Taftani and the three atars",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Weavers of the Middle East.",
+  "claims": [
+   {
+    "text": "Taftani hold that Truth shows three faces, clear thought, direct action and magic, and call the inner fire behind each an atar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "A Weaver who believes the bond to Truth is broken beyond repair must hand on goods and djinn servants to apprentices and then die in a public, usually fiery act called chinvat, the bridge over the abyss.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "The Taftani have almost no organization, and no courts, tribunals or police of their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrlp-taftani-craft"
+  ]
+ },
+ {
+  "id": "mrlp-taftani-craft",
+  "title": "Taftani poetry and craft",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Weavers work their magic.",
+  "claims": [
+   {
+    "text": "Long recitals of formal poetry let a Weaver enter a trance in which the chant is said to stitch words like threads into the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "Art made by a Truth-sensing mind can come alive, much as science does for the Sons of Ether, but only useful crafts count: glassblowing, pottery, metalwork and weaving.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Young Weavers learn two or three crafts and elders master a dozen; arts kept only for amusement, such as acting and painting, are thought decadent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrlp",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrlp-taftani-atars",
+   "society-of-ether"
+  ]
+ }
+]

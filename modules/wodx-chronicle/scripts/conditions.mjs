@@ -120,7 +120,7 @@ export const CORE_CONDITIONS = [
     summary: "Tied, staked or paralyzed: they are hit automatically, for the damage pool without a roll.",
     mods: {autoHit: true}},
   {id: "staked", name: "Staked", img: "icons/svg/sword.svg", source: `${VDA} pp. 13, 348`, lines: ["vampire"],
-    summary: "A wooden stake through the heart paralyzes a vampire (p. 13): completely immobilized until it is pulled out.",
+    summary: "A wooden stake through the heart paralyzes a vampire (V20 Dark Ages p. 13): completely immobilized until it is pulled out.",
     mods: {autoHit: true, noAction: true}},
   {id: "knockdown", name: "Knocked down", img: "icons/svg/falling.svg", source: `${VDA} p. 348`,
     summary: "On the ground. Standing is Dexterity + Athletics at difficulty 6: a failure loses the action; a success costs 2 Initiative next turn.",

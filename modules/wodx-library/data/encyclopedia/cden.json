@@ -1,0 +1,114 @@
+[
+ {
+  "id": "cden-kingdom-of-fate",
+  "title": "The kingdom of the Fates",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A hidden realm in the Silver Sea.",
+  "claims": [
+   {
+    "text": "On a great island in the Silver Sea lies a kingdom ringed by trackless desert, impassable mountains and a river of inky dark; it is said to blend the best of both Courts, home to heroes, sages and poets whose work in the world is done.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cden",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Its ruler, King Thelat, consults the Fates often, an honor few moirae can claim; most think Thelat an ancient sidhe lord, some think Thelat older still.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cden",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-dreaming",
+   "deep-dreaming",
+   "seelie-court",
+   "unseelie-court"
+  ]
+ },
+ {
+  "id": "cden-fir-bholg",
+  "title": "The fir-bholg",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kithain with Fomorian ties.",
+  "claims": [
+   {
+    "text": "Each fir-bholg must eat one particular raw food every week, such as fresh fish, carrion, oak roots or rainwater, a craving tied to Fomorian blood; deprived of it, a fir-bholg weakens and will do almost anything to get it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cden",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mythic-age",
+   "thallain"
+  ]
+ },
+ {
+  "id": "cden-naraka",
+  "title": "The naraka",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Changelings born of a Dreaming destroyed in 1999.",
+  "claims": [
+   {
+    "text": "In the summer of 1999 the Dreaming around Bangladesh was almost wiped out by fire; the naraka emerged into the Autumn World from that wasteland, the first thing they saw being Kali the destroyer, whom they took as mother.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cden",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "They wandered at first under Samvarta, the Doomsday Cloud, among corpses and ruins that held no disbelief, unaware of Banality's chill.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cden",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-dreaming",
+   "autumn-world",
+   "banality"
+  ]
+ }
+]

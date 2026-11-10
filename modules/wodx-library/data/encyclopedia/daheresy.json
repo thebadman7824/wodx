@@ -1,0 +1,335 @@
+[
+ {
+  "id": "daheresy-core-belief",
+  "title": "Heretical doctrine",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "What the Cainite Heresy teaches.",
+  "claims": [
+   {
+    "text": "Heretical doctrine comes mainly from the Euagetaematikon, but each believer stresses different parts, from attacks on a Church said to serve Satan to Gnostic metaphysics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Beneath it all lies one tenet every ghoul of the faith knows: the children of Caine are gods walking the earth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "In Heretical cosmology the false creator Ialdabaoth made Adam from mud, Sophia was both Lilith and Eve, Lilith bore Caine, and God marked Caine as a sign of favour after Abel’s death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The mark is read as the gift of spirit within matter, so the Cainites hold the store of spirit for the whole world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daheresy-eschatology"
+  ]
+ },
+ {
+  "id": "daheresy-eschatology",
+  "title": "The Heretical end times",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Heresy’s timetable for Gehenna.",
+  "claims": [
+   {
+    "text": "Counting from a creation date of 3761 B.C.E. and five stages of a thousand years each, Heretics expect the material world to end in 1239.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Then the Time of Gehenna comes, when the Blood of Caine thins and withdraws from the world, leaving it to crumble.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Most Heretics expect the Third Caine to appear in 1206 and dwell on earth for thirty-three years, like Christ.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daheresy-core-belief"
+  ]
+ },
+ {
+  "id": "daheresy-initiation",
+  "title": "Initiation into the Heresy",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How new members enter the faith.",
+  "claims": [
+   {
+    "text": "Some join by choice, through conversion or a corrupt bargain; others are made ghouls unawares by drinking wine laced with vitae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Sects loyal to the Crimson Curia follow the Liturgy of Childeric exactly, while others borrow local pagan or Cathar forms or the fancies of a Toreador domitor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Setite branches use cruel sexual initiation rites ending in a reward the novice craves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daheresy-schismatics",
+  "title": "Schismatics",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Heretical groups outside the main hierarchy.",
+  "claims": [
+   {
+    "text": "Many small groups grow beyond the reach of the Crimson Curia and its See of Nod, planted by human preachers, curious Toreador or rival clans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Heresiarchs tolerate them because souls are still bound to the Pleroma, and a purge might split the faith or reveal it to Rome.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daheresy-eschatologists"
+  ]
+ },
+ {
+  "id": "daheresy-eschatologists",
+  "title": "Eschatologists of Cappadocius",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Cappadocian faction devoted to the Heresy.",
+  "claims": [
+   {
+    "text": "These Graverobbers hold a more Christ-centred form of the Heresy and see themselves as the brood of both Caine and Christ.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "They treat giving vitae to mortals as a sacrament, and the most fanatical call themselves the only true Christians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "They wander the back roads of Europe holding mass revivals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daheresy-schismatics"
+  ]
+ },
+ {
+  "id": "daheresy-red-pentecost",
+  "title": "Red Pentecost",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Heretical rite of surrender to the Beast.",
+  "claims": [
+   {
+    "text": "In Red Pentecost, Heretics give themselves over wholly to the Beast and come back to their senses amid the slaughter they wrought.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Abbots, priors and knights alike are described waking bloodied beside victims they do not remember killing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daheresy-signs",
+  "title": "Recognising Heretical signs",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Rolls for spotting Heretical churches and symbols.",
+  "claims": [
+   {
+    "text": "Spotting a Heretical church from its decoration is a Perception + Theology roll, from difficulty 9 for a subtle shrine to 6 for a major Heretical centre.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Perception + Occult may spot Setite or Baali churches, which tend to be more blatant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Heretics greet each other with signs and countersigns; an outsider who does not know them is very unlikely to notice anything, at difficulty 10.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daheresy",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

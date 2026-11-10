@@ -1,0 +1,63 @@
+[
+ {
+  "id": "nbt2-cerro-wards",
+  "title": "Cerro’s lessons against wards",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What Bell learned for beating sorcery.",
+  "claims": [
+   {
+    "text": "Don Cerro kept quiet ties with several thaumaturges and learned some key ways of defeating sorcerous defences, which Cerro passed on to Theo Bell.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nbt2",
+      "page": 102,
+      "pdf": 104
+     },
+     {
+      "book": "cotn",
+      "page": 51,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cotn-theo-bell"
+  ]
+ },
+ {
+  "id": "nbt2-abranson",
+  "title": "Angus Abranson",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Minneapolis elder and old friend of Theo Bell.",
+  "claims": [
+   {
+    "text": "The novel The Overseer tells that Angus Abranson holds a seat on the Minneapolis primogen and has been a friend of Theo Bell since the two met in London about a hundred years ago.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "nbt2",
+      "page": 8,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cotn-theo-bell"
+  ]
+ }
+]

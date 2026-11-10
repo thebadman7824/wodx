@@ -1,0 +1,105 @@
+[
+ {
+  "id": "henoc-hunters-and-vampires",
+  "title": "Hunters and vampires",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the imbued bring to a fight with the undead.",
+  "claims": [
+   {
+    "text": "Hunters approach vampires with the same Dracula images everyone carries, and must sort real weaknesses from false ones, some of them planted to keep the undead hidden.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "henoc",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Whatever living people once knew of the undead, perhaps as late as the Inquisition, has faded to fragments, leaving hunters rumours and films to arm themselves with.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "henoc",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Hunters spot bloodsuckers on the street, in nightclubs and in posts of mortal authority, and suspect those they beat are only the youngest, while the eldest run schemes on scales of time no mortal can follow.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "henoc",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kindred",
+   "htr-imbued",
+   "htr-monsters",
+   "hemoon-hunters-and-werewolves"
+  ]
+ },
+ {
+  "id": "henoc-undead-reach",
+  "title": "How the undead use mortals",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Vampire influence over institutions, and over hunters themselves.",
+  "claims": [
+   {
+    "text": "Bloodsuckers can hold a quiet, firm grip on almost any mortal institution or undertaking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "henoc",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Vampires know mortal failings and fears well and play on them, and even hunters can end up as their pawns, used and then thrown away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "henoc",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Some undead take an interest in immortality's meaning and in seeking out hunters to work with, though the two sides stay strange to each other.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "henoc",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "henoc-hunters-and-vampires"
+  ]
+ }
+]

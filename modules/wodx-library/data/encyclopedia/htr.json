@@ -1,0 +1,1783 @@
+[
+ {
+  "id": "htr-imbued",
+  "title": "The Imbued",
+  "kind": "character",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ordinary people woken to the monsters around them.",
+  "claims": [
+   {
+    "text": "The imbued are hunters: people shown the real world, monsters and all, and given strange powers, it seems to oppose them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Some call themselves the chosen, in relation to the Heralds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "They know very little about themselves, why they were woken or what they face, so they argue and guess; the shared terms come from those talks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     },
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The common words were coined on the hidden hunter-net mailing list; isolated hunters do not know them and likely have their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-messengers",
+   "htr-edges",
+   "htr-creeds",
+   "hunters"
+  ]
+ },
+ {
+  "id": "htr-messengers",
+  "title": "The Messengers and the Heralds",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Whatever imbues the hunters.",
+  "claims": [
+   {
+    "text": "Messengers is a name for the forces thought to cause the imbuing; hunters of different cultures see them differently, but most think them good, or at least not evil.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Heralds is another name for the mysterious beings, likely many, thought to have empowered hunters; they are usually taken as agents of a higher power, often God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "To be touched is to be affected by the Messengers, whether hunter or bystander.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-imbuing-witnesses"
+  ]
+ },
+ {
+  "id": "htr-imbuing-witnesses",
+  "title": "Bystanders and Other Witnesses",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The people at an imbuing who do not become hunters.",
+  "claims": [
+   {
+    "text": "A bystander sees the supernatural at an imbuing but lacks the will to act; they remember the monsters afterward but have no edges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A pylon is a person at the scene who does not notice or respond to the monster; the term is unkind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A gawker sees edges or monstrous powers at work but cannot understand them. The defenseless, or the blind, are people with no idea of the truth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued"
+  ]
+ },
+ {
+  "id": "htr-creeds",
+  "title": "Creeds",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The approaches to the hunt that hunters see among themselves.",
+  "claims": [
+   {
+    "text": "Early hunter groups think the imbued share certain ways of hunting that could be set down as separate creeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Avengers above all want the supernatural wiped out; Defenders protect chosen people, places or things as much as they kill monsters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Innocents come to the hunt with open, unjaded minds; Judges weigh how best to do the most good, by their own lights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Martyrs will give themselves up for the cause; Redeemers look for worth among monsters instead of destroying them outright.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Visionaries take a thoughtful view of the hunt and assume little about the Heralds, monsters or what the chosen are for.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-conviction",
+   "htr-avengers",
+   "htr-defenders",
+   "htr-innocents",
+   "htr-judges",
+   "htr-martyrs",
+   "htr-redeemers",
+   "htr-visionaries"
+  ]
+ },
+ {
+  "id": "htr-edges",
+  "title": "Edges",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The powers of the imbued.",
+  "claims": [
+   {
+    "text": "An edge is any of the imbued's strange powers, also known as the stuff, or juice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Second sight, or the sight, is seeing monsters through force of will, even those that hide or disguise themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-conviction",
+   "htr-edges-innocence",
+   "htr-edges-martyrdom",
+   "htr-edges-redemption",
+   "htr-edges-vision",
+   "htr-edges-defense",
+   "htr-edges-judgment",
+   "htr-edges-vengeance",
+   "htr-risking-conviction",
+   "htr-gaining-edges"
+  ]
+ },
+ {
+  "id": "htr-the-word",
+  "title": "The Word",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunters' code of signs.",
+  "claims": [
+   {
+    "text": "The imbued gain a language of symbols they read and write as if they always knew it; many call it the Word.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Each sign carries a short message, such as a safe house, a vampire's turf, or a neighbourhood under a hunter's guard; one to three signs make a message.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The signs appear mostly as graffiti, as directions and warnings, and new hunters use them to find others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "No one has catalogued them, and so far neither monsters nor their human pawns seem to notice them; if the code were broken, hunters would be badly exposed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued"
+  ]
+ },
+ {
+  "id": "htr-monsters",
+  "title": "What Hunters Call Monsters",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The hunters' words for their enemy.",
+  "claims": [
+   {
+    "text": "Monster covers every inhuman creature that preys on people: rots, invisibles, bloodsuckers, skinchangers, ghosts, walking dead, witches and more; together they are the enemy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The Most Dangerous Game is the hunt itself, and also the enemy, prey able to fight back.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A puppet, or traitor, is a human pawn of the supernatural, knowing or not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The soulless are people who admire the supernatural or help it by doubtful behaviour; the word depends wholly on the speaker's morals, and some hunters call other hunters soulless.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "hunters"
+  ]
+ },
+ {
+  "id": "htr-hunter-slang",
+  "title": "Hunter Slang",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Words for kinds of hunter and ways of hunting.",
+  "claims": [
+   {
+    "text": "The hunt, or the mission, is the hunter's life: pursuing, tracking, studying and finally facing the supernatural.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Bait use themselves as lures; lurkers research online but stay out of the hunt, and are sneered at as wannabes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Gone fishing is said of hunters who flee the city for quiet countryside. A wacko takes the mission to extremes of sacrifice or loss.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "htr",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "A yokel trusts folk tales about monsters, often without testing them. The burden is humanity, above all those who would keep society's evils rather than risk change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "htr",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-creeds"
+  ]
+ },
+ {
+  "id": "htr-conviction",
+  "title": "Conviction and the Virtues",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A hunter's staying power, and the three aims of the hunt.",
+  "claims": [
+   {
+    "text": "Conviction measures a hunter's endurance for the hunt and is the store of energy spent on edges; the starting amount depends on the creed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Spending a point of Conviction lets the second sight find monsters hidden nearby, such as one using powers to disguise itself; anyone can see monsters that are not hiding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Second sight also marks every supernatural being as not human or not living; spirits in the material world look solid to the hunter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "The three Virtues are Mercy, Vision and Zeal. Mercy goes with Innocents, Martyrs and Redeemers; Vision with Visionaries; Zeal with Defenders, Judges and Avengers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "A creed is not a club or class a hunter joins but how that hunter sees and carries out the mission; the main Virtue shows what the hunter holds as the war's goal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-edges",
+   "htr-creeds",
+   "htr-reactive-conviction",
+   "htr-risking-conviction",
+   "htr-maxing-out",
+   "htr-virtue-roll"
+  ]
+ },
+ {
+  "id": "htr-avengers",
+  "title": "Avengers",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Zeal creed that wants every monster punished.",
+  "claims": [
+   {
+    "text": "Followers of Vengeance are mostly called Avengers, though punishers, executioners and slayers are also heard; in the American bible belt some call them soldiers of God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   },
+   {
+    "text": "They are driven to settle the score: evil has to pay and no deal with it is acceptable.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   },
+   {
+    "text": "Their known weakness is extremism, which may have drawn them to the hunt and may also end their part in it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-edges-vengeance",
+   "htr-judges"
+  ]
+ },
+ {
+  "id": "htr-defenders",
+  "title": "Defenders",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Zeal creed that guards home and loved ones.",
+  "claims": [
+   {
+    "text": "Defenders see themselves as unwilling fighters who still hold firm; they leave the chase to others and keep hearth and home safe above all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "They warn that a Defender who loses loved ones is likely to give in to anger and may become a danger in turn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "Their usual failing is retreat into isolation: fortifying a home is routine among hunters, but refusing to leave one out of fear is a sign to get help.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-edges-defense"
+  ]
+ },
+ {
+  "id": "htr-innocents",
+  "title": "Innocents",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Mercy creed that comes to the hunt without assumptions.",
+  "claims": [
+   {
+    "text": "Many Innocents are young, but age sets no limit; they take up the hunt with no fixed ideas about it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "More than other hunters they live in the present, without old grudges or plans for later, and like the other Mercy creeds they see kin in the monsters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Their weakness is guilt: when they must hurt someone, or help a friend do it, the guilt can stop them cold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-edges-innocence"
+  ]
+ },
+ {
+  "id": "htr-judges",
+  "title": "Judges",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Zeal creed that weighs each case.",
+  "claims": [
+   {
+    "text": "Judges stand between Avengers, who punish the guilty, and Defenders, who pick out what to save; they come forward when the thing cannot be allowed to go on but the greatest good is unclear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "Their weakness is indecision, which lets others push them aside; the opposite failing is megalomania, the belief that only the Judge knows what is right.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-edges-judgment",
+   "htr-avengers",
+   "htr-defenders"
+  ]
+ },
+ {
+  "id": "htr-martyrs",
+  "title": "Martyrs",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Mercy creed that gives itself up for others.",
+  "claims": [
+   {
+    "text": "Martyrs must destroy monsters yet know their prey has or once had human feelings; they lack the plain us and them view of Avengers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "For all that understanding they hunt with a fury close to self-destruction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "Their weakness is masochism: some keep on because they enjoy suffering, and are told their task is to hand out punishment, not to take it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-edges-martyrdom"
+  ]
+ },
+ {
+  "id": "htr-redeemers",
+  "title": "Redeemers",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Mercy creed that tries to save what it hunts.",
+  "claims": [
+   {
+    "text": "Redeemers reach first for peace; they are prized for healing the injured but often clash with hunters whose aims differ.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 152,
+      "pdf": 153
+     }
+    ]
+   },
+   {
+    "text": "Some try to understand their prey, hoping to calm haunting spirits or lift the curse or sickness behind a monster.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 152,
+      "pdf": 153
+     }
+    ]
+   },
+   {
+    "text": "Their weaknesses are a messianic streak that can lead them away from the hunt toward a purer calling, and greed, beginning with paid miracles for the rich.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-edges-redemption"
+  ]
+ },
+ {
+  "id": "htr-visionaries",
+  "title": "Visionaries",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Vision creed that seeks to understand.",
+  "claims": [
+   {
+    "text": "Visionaries take the arrival of the uncanny in their lives as proof that the world is bigger and stranger than they thought.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 154,
+      "pdf": 155
+     }
+    ]
+   },
+   {
+    "text": "They refuse to leap to conclusions or grab at half-made answers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 154,
+      "pdf": 155
+     }
+    ]
+   },
+   {
+    "text": "Other hunters call them Tunnel-Visionaries for fixing on small details and pet theories; addiction is another risk for those who chase understanding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-edges-vision"
+  ]
+ },
+ {
+  "id": "htr-edges-innocence",
+  "title": "Edges of Innocence",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mercy edges for hiding, seeing and holding monsters off.",
+  "claims": [
+   {
+    "text": "Hide: Wits + Mercy, difficulty 6; each monster present rolls Perception + Alertness, difficulty 6, to notice the hunter. A raging monster that passes over an obvious Innocent suggests Hide is at work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 148,
+      "pdf": 149
+     }
+    ]
+   },
+   {
+    "text": "Illuminate: Perception + Mercy. Monsters seem able to sense its use and can tell which person is behind it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 148,
+      "pdf": 149
+     }
+    ]
+   },
+   {
+    "text": "A radiating hunter (Stamina + Mercy, difficulty 6) raises the difficulty of any supernatural attack on the target by one per success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "Another edge costs one Conviction (Manipulation + Mercy, difficulty 5): each success makes an attacker spend a Willpower point to act against the hunter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "Blaze costs two Conviction (Strength + Mercy, difficulty 8) and turns a light source into lethal damage that depends on the light; it does not work with moonlight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-innocents",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "htr-edges-martyrdom",
+  "title": "Edges of Martyrdom",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mercy edges paid for with the hunter's own body.",
+  "claims": [
+   {
+    "text": "Demand lets the hunter perform a feat of great strength by marking a level of bashing damage on the hunter's own Health.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "Witness builds on second sight: the hunter knows the nature of creatures present and glimpses their ties to humankind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "One edge harms a target within the hunter's Mercy in yards (Manipulation + Mercy, difficulty 7).",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "Donate costs two Conviction (Mercy + the Attribute lent, difficulty 7): the hunter gives up points of that Attribute to another person for a time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 151,
+      "pdf": 152
+     }
+    ]
+   },
+   {
+    "text": "One edge forces a human limit on a supernatural being, such as making a dead thing need to breathe or a ghost take solid form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 151,
+      "pdf": 152
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-martyrs",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "htr-edges-redemption",
+  "title": "Edges of Redemption",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mercy edges that shield, heal and calm.",
+  "claims": [
+   {
+    "text": "One edge shields another person from harm (Wits + Mercy, difficulty 6, usually resisted by the attack roll); the hunter must see the danger, and it cannot stop an avalanche or a lightning bolt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 152,
+      "pdf": 153
+     }
+    ]
+   },
+   {
+    "text": "Another forces a creature to see people in human terms, bringing sorrow and loss; every success raises the difficulty of its next action by one (Manipulation + Mercy, difficulty 6).",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 152,
+      "pdf": 153
+     }
+    ]
+   },
+   {
+    "text": "Respire heals one health level per success (Stamina + Mercy, difficulty 6), and turned on a supernatural foe it draws energy out instead; even intangible foes are at risk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   },
+   {
+    "text": "Becalm costs one Conviction (Manipulation + Mercy, difficulty 7) and lasts minutes equal to successes; it stops only explosive or violent acts and binds the hunter and allies too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 154,
+      "pdf": 155
+     }
+    ]
+   },
+   {
+    "text": "One edge costs two Conviction (Charisma + Mercy, difficulty 8) and seals the material world off from every other realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 154,
+      "pdf": 155
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-redeemers",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "htr-edges-vision",
+  "title": "Edges of Vision",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Edges of insight, foresight and the past.",
+  "claims": [
+   {
+    "text": "Foresee: Intelligence + Vision, difficulty 7; each success grants one extra roll for a named action, keeping the best result.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "Pinpoint: Perception + Vision, difficulty 6; a success reveals one weakness of the creature watched. It does nothing to mortals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "Delve: Perception + Vision, difficulty 6; each success gives five minutes of viewing a place's past. Hearing as well costs two Conviction or two more difficulty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 156,
+      "pdf": 157
+     }
+    ]
+   },
+   {
+    "text": "One edge makes lethal damage count as bashing; it eases wounds but heals nothing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 157,
+      "pdf": 158
+     }
+    ]
+   },
+   {
+    "text": "Augur costs three Conviction; the Storyteller secretly rolls Intelligence + Vision, difficulty 8, and gives visions of likely futures at that spot.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 157,
+      "pdf": 158
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-visionaries",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "htr-edges-defense",
+  "title": "Edges of Defense",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Zeal edges that guard, heal and draw foes away.",
+  "claims": [
+   {
+    "text": "Ward: Stamina + Zeal, difficulty 6; a monster must beat those successes on a Stamina roll to come near, and the aura crackles on contact.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 157,
+      "pdf": 158
+     }
+    ]
+   },
+   {
+    "text": "Rejuvenate heals bashing levels at one per ten minutes and lethal ones by a chart, and the hunter can share the healing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "Brand needs a touch, perhaps a Dexterity + Brawl roll; ordinary people see the brand as an unsettling tattoo, and it does not work on objects or normal people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "Champion costs one Conviction (Appearance + Zeal) and needs the monster to keep the hunter in sight; it draws creatures off so others slip by or walk into an ambush, once per creature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "Burn costs two Conviction (Stamina + Zeal, difficulty 6) and lasts a turn per success; the hunter glows red and yellow and touching the hunter hurts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-defenders",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "htr-edges-judgment",
+  "title": "Edges of Judgment",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Zeal edges that see, hold and expose.",
+  "claims": [
+   {
+    "text": "Discern is used to identify a supernatural creature or to see clearly in the dark.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   },
+   {
+    "text": "Burden: the hunter glares (Stamina + Zeal) and holds the creature in place while it stays in view; travel to other realms or great speed may break free.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "A spoken curse (Wits + Zeal against the foe's Stamina + 2) blocks the creature's supernatural powers and functions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "Pierce costs one Conviction for a scene and senses lies; it can also give silent visions of what an object, person or place has met.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "Expose costs two Conviction (Zeal, difficulty 8), reaches farther with more successes and shows creatures for what they are; it is usable once a scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-judges",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "htr-edges-vengeance",
+  "title": "Edges of Vengeance",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Zeal edges for the fight.",
+  "claims": [
+   {
+    "text": "Cleave empowers a held melee weapon or makes one appear (Dexterity + Brawl or Melee to hit); only hunters and supernatural beings can see a manifested blade, and it never works on ranged weapons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 162,
+      "pdf": 163
+     },
+     {
+      "book": "htr",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   },
+   {
+    "text": "One edge, used by touching a target (Perception + Zeal, difficulty 6), leaves a trail the target cannot see without special senses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   },
+   {
+    "text": "A smolder cloud (Manipulation + Zeal, difficulty 7) fills about ten cubic feet and hides those inside from sight, smell, heat sense, most hearing and most supernatural awareness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   },
+   {
+    "text": "Another edge costs one Conviction and gives a pool equal to Zeal to share among Strength, Dexterity and the like.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   },
+   {
+    "text": "One more costs one Conviction (Dexterity + Zeal, difficulty 6), adds successes past the first to a lethal Strength pool and goes off with light, noise and a stench that scramble electronics within 20 feet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-avengers",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "htr-reactive-conviction",
+  "title": "Reacting with Conviction",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Spending Conviction when danger shows itself.",
+  "claims": [
+   {
+    "text": "As an option, the Storyteller may let hunters spend Conviction when warning signs appear, rather than at the start of each scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "The roll is Intelligence, Perception or Wits plus the primary Virtue, difficulty 6; the Storyteller picks the Attribute and may use Alertness, Awareness or Intuition in place of the Virtue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "The roll may be resisted by the creature's Stealth or its power, and the Storyteller may roll in secret.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Players should all know beforehand if this option is in use; hunters may still turn on the sight at will.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-conviction"
+  ]
+ },
+ {
+  "id": "htr-long-term-control",
+  "title": "Conviction Against Lasting Control",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What Conviction does to powers that last for days.",
+  "claims": [
+   {
+    "text": "If Conviction is spent while a hunter is under long-lasting mind or body control, the Storyteller chooses: either the control breaks for good, or the hunter is free only for that scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 134,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "The Storyteller may also let the spend reveal the hidden influence, so the hunter can seek help even if control returns later.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 134,
+      "pdf": 135
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-conviction",
+   "htr-virtue-roll"
+  ]
+ },
+ {
+  "id": "htr-virtue-roll",
+  "title": "Primary Virtue Rolls Against Great Foes",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Testing whether a hunter's defenses hold against an ancient monster.",
+  "claims": [
+   {
+    "text": "Against a mighty enemy the Storyteller may call for a primary Virtue roll before the protections work: difficulty 6 for a strong foe, perhaps 8 for a titanic one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 134,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "On a success the hunter sees the creature's inhumanity and the usual protections apply; Willpower cannot buy an automatic success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 134,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "On a failure the hunter is no better off than an ordinary mortal against that foe, and the Storyteller decides whether to allow later tries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 134,
+      "pdf": 135
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-conviction",
+   "htr-reactive-conviction"
+  ]
+ },
+ {
+  "id": "htr-risking-conviction",
+  "title": "Risking Conviction",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Betting Conviction on an edge roll.",
+  "claims": [
+   {
+    "text": "Edges that need Conviction to start are paid separately, and do not use up the one chance per scene to risk Conviction on a roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "If the boosted roll succeeds, the hunter keeps the points risked and gains one more; in a contest the hunter must win.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   },
+   {
+    "text": "If it fails, every point risked is lost; a hunter at zero Conviction is close to an ordinary person.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   },
+   {
+    "text": "On a botch the hunter loses all current Conviction, and the hunt may feel empty for a while.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-conviction",
+   "htr-maxing-out"
+  ]
+ },
+ {
+  "id": "htr-maxing-out",
+  "title": "Reaching Ten Conviction",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Turning a full store of Conviction into a Virtue.",
+  "claims": [
+   {
+    "text": "Conviction runs from 1 to 10; at 10 the player may trade it for one extra Virtue point, gained at once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "No other Virtue may rise above the primary Virtue, though it may equal it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-conviction",
+   "htr-risking-conviction"
+  ]
+ },
+ {
+  "id": "htr-gaining-edges",
+  "title": "Gaining Edges",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How hunters receive their powers.",
+  "claims": [
+   {
+    "text": "The Storyteller may let players choose edges at creation, or start them as plain people and grant a first edge after the prelude to match their reaction: violence might bring a weapon, scheming a stealthy power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "More edges come with more Virtue points; the Storyteller may let the player choose, or pick one and keep it hidden until a dramatic moment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-edges",
+   "htr-edge-appearances"
+  ]
+ },
+ {
+  "id": "htr-edge-appearances",
+  "title": "How Edges Look",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Who can see an edge at work.",
+  "claims": [
+   {
+    "text": "Hunters see the effects of their own and each other's edges, such as light from a fist, grey fog or wounds closing, and so do the monsters they fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "With a Conviction point spent, a hunter sees supernatural beings as they really are, including those hiding in plain sight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Ordinary people do not really grasp what they see, but hunters still cannot use edges openly without risk: people see the aftermath, and a beheading is still a beheading.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "htr",
+      "page": 146,
+      "pdf": 147
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-edges",
+   "htr-gaining-edges"
+  ]
+ }
+]

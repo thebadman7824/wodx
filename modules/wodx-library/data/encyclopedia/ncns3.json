@@ -1,0 +1,69 @@
+[
+ {
+  "id": "ncns3-sabbat-generals",
+  "title": "The generals of the 1999 Sabbat war",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Who led the East Coast offensive.",
+  "claims": [
+   {
+    "text": "The Sabbat offensive begun in mid-June 1999 took Atlanta, Washington and most cities between; three archbishops led it: Sascha Vykos (newly made archbishop in Washington), Borges (of Miami) and Francisco Polonia (of New York).",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ncns3",
+      "page": 5,
+      "pdf": 7
+     },
+     {
+      "book": "beckett",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Vykos owed much of that success to Parmenides, an Assamite assassin bound to Vykos’s will, and to a mysterious spy called Lucius.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ncns3",
+      "page": 5,
+      "pdf": 7
+     },
+     {
+      "book": "beckett",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Once stalled in Washington, the three generals began to quarrel among themselves.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ncns3",
+      "page": 96,
+      "pdf": 98
+     },
+     {
+      "book": "beckett",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bjd-washington",
+   "bjd-southern-crusade",
+   "bjd-vitel"
+  ]
+ }
+]

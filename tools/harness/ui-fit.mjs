@@ -435,7 +435,7 @@ game.world.id = worldId;
       const zm = mk("m20mage00000001", "Dr. Eleanor Vasquez-Albright, adept of House Tytalus", "Mage", {arete: {permanent: 4}, willpower: {permanent: 6, temporary: 6}}, [["av", {name: "Avatar", type: "Feature", system: {type: "wod.types.background", value: 3}}]]);
       zm.system.spheres = Object.fromEntries(["correspondence", "entropy", "forces", "life", "matter", "mind", "prime", "spirit", "time"].map((k, x) => [k, {value: (x % 4) + 1}]));
       zm.system.quintessence = {temporary: 5}; zm.system.paradox = {temporary: 3, permanent: 0};
-      tries.push(["Cast an Effect (Mage 20th)", () => ga.m20Cast({actor: A(zm)})], ["Paradox backlash", () => ga.m20Backlash({actor: A(zm)})], ["Countermagick", () => ga.m20Counter({actor: A(zm)})]);
+      tries.push(["Cast an Effect (Mage 20th)", () => ga.m20Cast({actor: A(zm)})], ["Paradox backlash", () => ga.m20Backlash({actor: A(zm)})], ["Countermagick", () => ga.m20Counter({actor: A(zm)})], ["Consensus here", () => ga.m20Place()]);
     }
     tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
@@ -464,10 +464,11 @@ game.world.id = worldId;
   const npc = [...game.actors.values()].find(a => a.type === "Vampire" && !a.hasPlayerOwner) ?? [...game.actors.values()][1];
   Object.assign(npc, {hasPlayerOwner: false, setFlag: async () => npc, unsetFlag: async () => npc, getFlag: () => undefined});
   const toks = Array.from({length: 9}, (_, k) => ({id: `npctok${k}`, name: `${npc.name} ${k}`, actor: npc, document: {hidden: false, disposition: -1}}));
-  const sceneMock = {getFlag: () => undefined, setFlag: async () => null, unsetFlag: async () => null};
+  const sceneMock = {id: "sceneMock", getFlag: () => undefined, setFlag: async () => null, unsetFlag: async () => null,
+    tokens: {contents: toks.map(t => ({id: t.id, name: t.name, actor: npc, hidden: false})), get: id => toks.find(t => t.id === id)}};
   const oldCanvas = globalThis.canvas;
   globalThis.canvas = {...(oldCanvas ?? {}), scene: sceneMock, tokens: {placeables: toks, get: id => toks.find(t => t.id === id), controlled: []}};
-  for ( const [label, fn] of [["NPC behaviour", () => npcApi.editBehavior(npc)], ["NPC panel", () => npcApi.openNpcPanel()]] ) {
+  for ( const [label, fn] of [["NPC behaviour", () => npcApi.editBehavior(npc)], ["NPC panel", () => npcApi.openNpcPanel()], ["Give an order", () => npcApi.orders.openOrders()]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
@@ -586,14 +587,96 @@ game.world.id = worldId;
     windows.push({name: "The Ledger", tag: lo.tag ?? "div", classes: ["application", ...(lo.classes ?? [])].join(" "), width: lo.position.width, height: lo.position.height,
       content: la.element.querySelector("section.window-content").innerHTML});
   }
+  // The rumour mill: twenty rumours, some known to many
+  {
+    await game.settings.set("wodx-storyteller", "rumours", Array.from({length: 20}, (_, i) => ({id: `ru${i}`, text: `They say the miller's wife walks the river road at night, rumour number ${i}, with a long tail to wrap`,
+      started: game.time.worldTime - 3600 * i, night: 100, knownBy: people.slice(0, 1 + (i % people.length)).map(p => p.id), quiet: i % 5 === 0 ? 3 : 0, ended: i % 7 === 0, log: []})));
+    const RApp = (await import(join(root, "modules/wodx-storyteller/scripts/rumours.mjs"))).RumoursApp;
+    const ra = new RApp({});
+    await ra.render({force: true});
+    const rop = RApp.DEFAULT_OPTIONS;
+    windows.push({name: "The rumour mill", tag: rop.tag ?? "div", classes: ["application", ...(rop.classes ?? [])].join(" "), width: rop.position.width, height: rop.position.height,
+      content: ra.element.querySelector("section.window-content").innerHTML});
+  }
+  // Dreams and visions: twelve waiting and twelve already dreamt, long titles
+  {
+    await game.settings.set("wodx-storyteller", "dreams", Array.from({length: 24}, (_, i) => ({id: `dr${i}`, actorId: people[i % people.length].id,
+      title: `The drowned bell under the river, a long title number ${i} to see the wrap`, text: "Water. A bell. Someone calling a name that is not yet yours.",
+      at: i % 4 ? game.time.worldTime + 86400 * i : null, released: i >= 12, releasedAt: i >= 12 ? game.time.worldTime - 3600 * i : null, journalId: null})));
+    const DApp = (await import(join(root, "modules/wodx-storyteller/scripts/dreams.mjs"))).DreamsApp;
+    const da = new DApp({});
+    await da.render({force: true});
+    const dop = DApp.DEFAULT_OPTIONS;
+    windows.push({name: "Dreams and visions", tag: dop.tag ?? "div", classes: ["application", ...(dop.classes ?? [])].join(" "), width: dop.position.width, height: dop.position.height,
+      content: da.element.querySelector("section.window-content").innerHTML});
+  }
+  // The Library window (no shelves in the mock: the empty state and its buttons)
+  {
+    const LibApp = (await import(join(root, "modules/wodx-library/scripts/shelves.mjs"))).LibraryApp;
+    const idx = Array.from({length: 40}, (_, i) => ({_id: `sh${i}`, uuid: `Compendium.world.wodx-shelf-vampire.JournalEntry.sh${i}`, name: `A Discipline with a long name to wrap, number ${i} (Dark Ages)`,
+      flags: {"wodx-library": {shelf: `k${i}`, book: "V20 Dark Ages", lines: ["vampire"], eras: ["dark-ages"]}}}));
+    const oldPacks = game.packs;
+    game.packs = new Map([["world.wodx-shelf-vampire", {collection: "world.wodx-shelf-vampire", metadata: {name: "wodx-shelf-vampire", packageType: "world"}, getIndex: async () => idx}]]);
+    const lb = new LibApp({});
+    await lb.render({force: true});
+    const lop = LibApp.DEFAULT_OPTIONS;
+    windows.push({name: "The Library", tag: lop.tag ?? "div", classes: ["application", ...(lop.classes ?? [])].join(" "), width: lop.position.width, height: lop.position.height,
+      content: lb.element.querySelector("section.window-content").innerHTML});
+    game.packs = oldPacks;
+  }
+  // The Paperdoll window, with a veil chosen so the longest form shows
+  {
+    const PD = await import(join(root, "modules/wodx-paperdoll/scripts/main.mjs"));
+    const actor = {id: "pd1", name: "Ada Brandt, a name long enough to wrap the title", isOwner: true, flags: {"wodx-paperdoll": {look: {seed: "Ada", clothes: {headwear: "fillet"}}}},
+      system: {health: {damage: {}}}, update: async () => {}};
+    const pa = new PD.PaperdollApp({id: "wodx-paperdoll-pd1", actor});
+    await pa.render({force: true});
+    const pop = PD.PaperdollApp.DEFAULT_OPTIONS;
+    windows.push({name: "Paperdoll", tag: pop.tag ?? "div", classes: ["application", ...(pop.classes ?? [])].join(" "), width: pop.position.width, height: pop.position.height,
+      content: pa.element.querySelector("section.window-content").innerHTML});
+  }
+  // The Storyteller's dashboard: with the ledger, rumours and dreams above filled in
+  {
+    const BApp = (await import(join(root, "modules/wodx-storyteller/scripts/dashboard.mjs"))).DashboardApp;
+    const ba = new BApp({});
+    await ba.render({force: true});
+    const bop = BApp.DEFAULT_OPTIONS;
+    windows.push({name: "The Storyteller's dashboard", tag: bop.tag ?? "div", classes: ["application", ...(bop.classes ?? [])].join(" "), width: bop.position.width, height: bop.position.height,
+      content: ba.element.querySelector("section.window-content").innerHTML});
+  }
   for ( const [label, fn] of [["Out on your own", () => st.openOnYourOwn(people[1].id)], ["Convene", () => st.conveneDialog({actorIds: [people[0].id]})],
     ["Beats", () => st.beatsDialog()], ["Beat editor", () => st.editBeat(st.beats()[1])], ["New beat", () => st.editBeat()], ["Travel places", () => st.placesDialog()],
-    ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()]] ) {
+    ["Tonight's summary", () => st.summaryDialog()], ["Between sessions", () => st.reportDialog()], ["End the session", () => st.endSessionDialog()],
+    ["Upkeep", () => st.upkeep.open()], ["Ties that need tending", () => st.upkeep.ties(people[0].id)], ["Hunting grounds", () => st.upkeep.grounds()], ["Money by era", () => st.upkeep.money.dialog()],
+    ["Change a long task", () => { const f = people[0].flags ??= {}; f["wodx-storyteller"] = {...(f["wodx-storyteller"] ?? {}), tasks: {t1: {kind: "craft", name: "A silver reliquary", started: 0}}}; return st.tasks.edit(people[0].id, "t1"); }],
+    ["New long task", () => st.tasks.edit(people[0].id)], ["Long tasks", () => st.tasks.open()],
+    ["Havens", () => st.havens.open()], ["Haven", () => st.havens.edit()],
+    ["Lasting changes", () => { const f = people[0].flags ??= {}; f["wodx-storyteller"] = {...(f["wodx-storyteller"] ?? {}), body: Array.from({length: 7}, (_, k) => ({id: `b${k}`, source: ["vicissitude", "metis", "visage", "scar"][k % 4], part: "face", what: `A long description of the change, the cheekbones drawn up and the jaw split along the old seam, number ${k}`, appearance: k % 2 ? -1 : 0, by: "Lord Vykos's own hand"}))}; return st.body.open(people[0]); }],
+    ["A lasting change", () => st.body.newDialog(people[0])],
+    ["Hardship on the road", () => st.hardship.open()],
+    ["The Gauntlet over time", () => (game.modules.get("wodx-otherworlds").api?.drift?.dialog ?? (() => import(join(root, "modules/wodx-otherworlds/scripts/drift.mjs")).then(m => m.driftDialog())))()]] ) {
     const n = captured.length;
     try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
   }
   api.DialogV2.wait = wait;
+}
+// Interactables: fill a container by place and era (the place picker, then the draw to review)
+{
+  const ix = game.modules.get("wodx-interactables").api;
+  const wait = api.DialogV2.wait, oldPacks = game.packs;
+  const gearItems = JSON.parse((await import("node:fs")).readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8")).items;
+  const idx = gearItems.map((g, k) => ({_id: `g${k}`, uuid: `Compendium.world.wodx-gear.Item.g${k}`, name: g.name, type: g.type, flags: g.flags, system: {conceal: g.system?.conceal}}));
+  game.packs = new Map([["world.wodx-gear", {collection: "world.wodx-gear", metadata: {name: "wodx-gear", packageType: "world"}, getIndex: async () => idx}]]);
+  let step = 0;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); step++; return step === 1 ? {place: "armory", count: "8"} : null; };
+  for ( const [label, fn] of [["Fill by place and era", () => ix.fill.open({flags: {"wodx-interactables": {kind: "chest"}}, update: async () => {}})]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length < n + 2 ) { console.error(`FAIL the ${label} windows were not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2.wait = wait;
+  game.packs = oldPacks;
 }
 // Interactables: the Interact window (eight doors, windows and walls, two containers, two traps, a clue, a lamp and a hiding place in reach, long names, the search button), the roll dialog, the WoDX part of a wall's and a tile's config
 {
@@ -726,6 +809,8 @@ game.world.id = worldId;
   chronMod.api.propose = async () => null;
   const Night = await import(join(root, "modules/wodx-storyteller/scripts/night.mjs"));
   const Jy = await import(join(root, "modules/wodx-otherworlds/scripts/journey.mjs"));
+  const Pre = await import(join(root, "modules/wodx-storyteller/scripts/prelude.mjs"));
+  const Ways = await import(join(root, "modules/wodx-otherworlds/scripts/ways.mjs"));
   try { Night.registerNightSettings(); } catch (e) { /* registered */ }
   try { Jy.registerJourneySettings(); } catch (e) { /* registered */ }
   const owMod = game.modules.get("wodx-otherworlds") ?? {active: true};
@@ -737,7 +822,7 @@ game.world.id = worldId;
   let answer = null;
   api.DialogV2.wait = async cfg => { captured.push(cfg); const a = answer; answer = null; return a; };
   const runs = [["Draw for the story", () => Night.drawChooser(), null], ["The night's draw", () => Night.nightDialog(), null],
-    ["A story aid", () => Night.aidDialog(), null], ["A story aid: the draw", () => Night.aidDialog(), {kind: "dream", actorId: null}],
+    ["A story aid", () => Night.aidDialog(), null], ["A prelude", () => Pre.preludeDialog(), null], ["Ways and realms", () => Ways.waysDialog(), null], ["A story aid: the draw", () => Night.aidDialog(), {kind: "dream", actorId: null}],
     ["An Otherworld journey", () => Jy.journeyDialog(), null], ["An Otherworld journey: the draw", () => Jy.journeyDialog(), {realm: "tempest", hours: 6, storm: true, tell: false}]];
   for ( const [label, fn, first] of runs ) {
     const n = captured.length;
@@ -814,6 +899,7 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-interactables/styles/wodx-interactables.css")).href,
   pathToFileURL(join(root, "modules/wodx-targeting/styles/wodx-targeting.css")).href,
   pathToFileURL(join(root, "modules/wodx-senses/styles/wodx-senses.css")).href,
+  pathToFileURL(join(root, "modules/wodx-paperdoll/styles/wodx-paperdoll.css")).href,
   pathToFileURL(join(root, "modules/wodx-atmosphere/styles/wodx-atmosphere.css")).href];
 const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.

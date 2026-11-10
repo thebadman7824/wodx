@@ -1,0 +1,301 @@
+[
+ {
+  "id": "dagrim-desederius",
+  "title": "Desederius, Pontifex Maximus",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The head of the Messianic Voices.",
+  "claims": [
+   {
+    "text": "Desederius of Rome is short and thin, with the build of a poorly fed child grown up; Desederius looks between 30 and 40 though 97 years old.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "The Pontifex is a cunning politician who sees no hypocrisy in the Church of the day and believes the Messianic Voices are touched by God and raised above other people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-messianic-voices"
+  ]
+ },
+ {
+  "id": "dagrim-mithraism",
+  "title": "Mithraic Voices",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "classical",
+   "dark-ages"
+  ],
+  "summary": "The followers of Mithras among the Messianic Voices.",
+  "claims": [
+   {
+    "text": "Mithraism is several faiths, not one: Persian Mithraism shares little with the Roman cult beyond Mithras as a war god, and has no image of the god killing a bull.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The cult of the risen Christ, open to women and to men outside the army and civil service, outgrew Mithraism, which was nearly dead by the time Constantine made Christianity the faith of the Empire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-messianic-voices",
+   "dagrim-islamic-voice"
+  ]
+ },
+ {
+  "id": "dagrim-islamic-voice",
+  "title": "Islamic Voices",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Muslim mages of the Messianic Voices.",
+  "claims": [
+   {
+    "text": "Islam reaches from the grandest rulers to the poorest beggars and, at its heart, encourages learning and debate for all, unlike the Roman Church, which leaves argument over the Will of God to the clergy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-messianic-voices",
+   "dam-ahl-i-batin"
+  ]
+ },
+ {
+  "id": "dagrim-hermetic-degrees",
+  "title": "Hermetic degrees",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How rank is counted in the Order of Hermes.",
+  "claims": [
+   {
+    "text": "Hermetic rank is a meritocracy of mystic power, measured in degrees.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 56,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "A Neophyte of the First Degree is little more than an indentured servant, doing chores while learning the mundane roots of the Ars Hermeticae: languages, mathematics, Hermetic history, literature and philosophy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 56,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "A Zelator of the Second Degree begins hedge magic and takes on important tasks for a mentor, whose judgment shapes how far the apprentice rises.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 56,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-order-of-hermes"
+  ]
+ },
+ {
+  "id": "dagrim-wheel-of-year",
+  "title": "The Wheel of the Year",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Festivals of the Old Faith.",
+  "claims": [
+   {
+    "text": "Litha on June 21st, also called Midsummer, is the longest day and the height of the light half of the year; Midsummer Night is a time when faeries and nature spirits roam.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 66,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Lammas or Lughnassad on August 1st is the first harvest, when the grain god falls with the grain so the people may live, earning it the name of the funeral games; Mabon is the second harvest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 66,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-old-faith"
+  ]
+ },
+ {
+  "id": "dagrim-northern-shamans",
+  "title": "Shamans beyond the north",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Spirit-Talkers fare across Europe.",
+  "claims": [
+   {
+    "text": "In the far north shamans hold places of honor, but most Europeans find spirit-seers unsettling and faintly diabolical and push them to the edges of villages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Villagers still slip out to the shaman's hut for answers about love and death, taking care not to be seen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Each Spirit-Talker Pillar stands for a great brood of spirits, from barely formed concepts upward, that favors Spirit-Talkers who show it due respect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-spirit-talkers"
+  ]
+ },
+ {
+  "id": "dagrim-apples-of-avalon",
+  "title": "The Red and White Apples of Avalon",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A wonder atop Glastonbury Tor.",
+  "claims": [
+   {
+    "text": "Two springs, the White and the Red, rise on Glastonbury Tor beside a small tree that bears red and white apples in every season.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 140,
+      "pdf": 142
+     }
+    ]
+   },
+   {
+    "text": "A visitor may pick only one apple ever; no one who has tried for a second has lived.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 140,
+      "pdf": 142
+     }
+    ]
+   },
+   {
+    "text": "The red apples are poisonous, causing great pain and visions with one bite, though not death by themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dagrim",
+      "page": 140,
+      "pdf": 142
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-old-faith",
+   "dam-stonehenge"
+  ]
+ }
+]

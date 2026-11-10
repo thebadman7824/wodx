@@ -1,0 +1,1649 @@
+[
+ {
+  "id": "sc-dark-fantastic",
+  "title": "The Dark Fantastic",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The world of the Sorcerers Crusade.",
+  "claims": [
+   {
+    "text": "History here bends on purpose: with history itself changing, exact dates matter less; if Joan of Arc escapes the fire, the date of the burning no longer matters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "It is also a secret history, much of it forgotten, hidden or destroyed in the five centuries that follow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Each magickal culture has its own words; the glossary gives only the terms magi share across the known world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-casual-vain",
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-council",
+  "title": "The Council of the Nine Mystick Traditions",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The new fellowship of mystick magi.",
+  "claims": [
+   {
+    "text": "The Council, or the Traditions, is a fellowship just forming among mysticks who want to keep the old ways of magick and follow the Path of Gold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Disparate is an insult for magi who will not take sides, and the name of groups that came to the Council but never joined.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Horizon is the border of God's Earth and Heaven, and the name of a vast Realm where the Traditions meet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Mysticks is a general name for magi who work open magick rather than science-magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "traditions",
+   "sc-order-of-reason",
+   "sc-ahl-i-batin",
+   "sc-akashic",
+   "sc-chakravanti",
+   "sc-choeur-celeste",
+   "sc-dream-speakers",
+   "sc-order-of-hermes",
+   "sc-seers-of-chronos",
+   "sc-solificati",
+   "sc-verbena",
+   "sc-council-words"
+  ]
+ },
+ {
+  "id": "sc-order-of-reason",
+  "title": "The Order of Reason",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The philosopher-scientists who reject magick.",
+  "claims": [
+   {
+    "text": "The Order of Reason is an international league of philosopher-scientists who reject magick for science and reason and seek Enlightenment for all humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Daedalean is a catch-all word for its members, after the Greek inventor Daedalus, one of the Order's patron saints.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A philosopher-scientist weaves effects from formulae and science and seldom calls it magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Artisans, capitalised, are magi who work through machines or sacred geometry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "sc-council",
+   "sc-artificers",
+   "sc-cabal-pure-thought",
+   "sc-celestial-masters",
+   "sc-craftmasons",
+   "sc-high-guild",
+   "sc-hippocratic-circle",
+   "sc-void-seekers",
+   "sc-ksirafai",
+   "sc-order-ranks"
+  ]
+ },
+ {
+  "id": "sc-paths",
+  "title": "The Paths of Gold, Thorns and Screams",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The three roads a sorcerer may walk.",
+  "claims": [
+   {
+    "text": "The Path of Gold is the road to Ascension, a state beyond power and limit, admired by many and walked by few.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     },
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Path of Thorns is the wizard's lot: a winding climb through temptation and blindness, in hope of the Zenith or the Path of Gold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Path of Screams is the road of Infernalists and Marauds, toward a debased or demented state.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Hubris is the deadly pride that ruins most sorcerers and those near them; the Fall is the loss of ideals, usually through Infernalism or Hubris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-casual-vain",
+  "title": "Casual and Vain Magick",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How belief decides what magick the age allows.",
+  "claims": [
+   {
+    "text": "Casual magick is the subtle kind and vain, or vulgar, magick the open kind; the Scourge is the price of magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     },
+     {
+      "book": "sc",
+      "page": 224,
+      "pdf": 241
+     }
+    ]
+   },
+   {
+    "text": "Magick is believable if it comes through accepted practice: a magus whose rites fit local belief can fly or change shape without offence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 224,
+      "pdf": 241
+     }
+    ]
+   },
+   {
+    "text": "The line moves by time and by place: new ideas shift it fast, and a stranger's magick is vain, so a European's Arts may be vain in distant lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 224,
+      "pdf": 241
+     },
+     {
+      "book": "sc",
+      "page": 225,
+      "pdf": 242
+     }
+    ]
+   },
+   {
+    "text": "Casual magick calls on divine or demonic favour, looks like an accident, uses prepared tools or takes time to prepare; anything inside medieval folklore should be casual.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 225,
+      "pdf": 242
+     }
+    ]
+   },
+   {
+    "text": "Difficulty is the highest Sphere plus 3 for casual, plus 4 for vain with no Sleeper present, plus 5 for vain with witnesses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 227,
+      "pdf": 244
+     },
+     {
+      "book": "sc",
+      "page": 228,
+      "pdf": 245
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-scourge",
+   "sc-dark-fantastic"
+  ]
+ },
+ {
+  "id": "sc-scourge",
+  "title": "The Scourge",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Fortune that rises to strike or bless a sorcerer.",
+  "claims": [
+   {
+    "text": "The Scourge is fortune, good or bad, that surrounds every sorcerer and at times rises to strike; some see it as God's punishment for altering Creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Any vain Effect earns a point of Scourge, even when it works.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 228,
+      "pdf": 245
+     }
+    ]
+   },
+   {
+    "text": "Each Arete roll adds a Fortune Die: a 1 on it is a Bane, a 10 a Boon, and either one spends the whole Scourge pool. One more Fortune Die is added per 5 points in the pool.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 232,
+      "pdf": 249
+     }
+    ]
+   },
+   {
+    "text": "To clear it, a magus meditates alone at least one day for each point in the pool.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 232,
+      "pdf": 249
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "sc-casual-vain"
+  ]
+ },
+ {
+  "id": "sc-otherworlds",
+  "title": "Otherworlds of the Age",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The spirit lands as magi of the Renaissance name them.",
+  "claims": [
+   {
+    "text": "Otherworlds are the spirit lands beyond the Common World: Heavens, Hells, elemental courts and stranger Realms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Contrarium is Heaven's dark mirror below the Earth's crust, holding Purgatory, the true Hells and the Shadowlands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Aethyrs are realms of higher awareness around the Earth; the Void, or Abyss, is the endless space around Creation, later the Deep Umbra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     },
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Gauntlet is the cold threshold between Matter and Spirit; the Penumbra lies just beyond it. Umbra is an uncommon word here.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     },
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Mist is the blindness most mortals live in, and the fog around the spirit worlds; Moonpaths are bridges through it guarded by moon spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "A Shallowing is a time or place where worlds overlap and a normal person could cross. Fragmenti and Vada are realms later called Shard and Shade Realms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     },
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "gauntlet"
+  ]
+ },
+ {
+  "id": "sc-terms",
+  "title": "Words of the Magi",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Shared terms from the Renaissance.",
+  "claims": [
+   {
+    "text": "The Daemon is the mystick self that wakes at Awakening, later called the Avatar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A consor is an unawakened associate with some rare talent; grog is a slighting word for a servant; an acolyte serves a magus from religious duty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A covenant is a Hermetic stronghold, or any settled magickal community. A cray is a wellspring where Creation's power pools.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Quintessence is the fifth essence through all Creation, also called Prima, Vis or Earth's Blood; tass is Quintessence in solid form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Trinity is change, order and decay together keeping Creation in motion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 10,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Fate, Fortune or Free Will is a great debate of the age, and all three play a part in magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 9,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-ahl-i-batin",
+  "title": "Ahl-i-Batin",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Arabian mystics of unity.",
+  "claims": [
+   {
+    "text": "The Ahl-i-Batin, or Batini, are Arabian mystics who weave the Web of Faith and seek unity for all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-akashic",
+  "title": "Akashic Brotherhood",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Mind and body masters from far lands.",
+  "claims": [
+   {
+    "text": "The Akashic Brotherhood are visitors from distant lands with fearsome arts of mind and combat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-chakravanti",
+  "title": "Chakravanti",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Mystics of the Wheel of death and rebirth.",
+  "claims": [
+   {
+    "text": "The Chakravanti, also called Euthanatoi, are forbidding mystics who ride the Wheel of death and rebirth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-choeur-celeste",
+  "title": "Choeur Celeste",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The Celestial Chorus.",
+  "claims": [
+   {
+    "text": "The Choeur Celeste, or Celestial Chorus, are Christian heretics drawn together by the song of God and the pull of a larger faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     },
+     {
+      "book": "sc",
+      "page": 129,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-dream-speakers",
+  "title": "Dream-speakers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Shamans of the spirit ways.",
+  "claims": [
+   {
+    "text": "The Dream-speakers are shamans from lands unknown to Europe, joined by their insight into the ways of spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-order-of-hermes",
+  "title": "Order of Hermes",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Proud wizards of protocol and Art.",
+  "claims": [
+   {
+    "text": "The Order of Hermes are proud wizards with elaborate rules of conduct and mighty Arts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   },
+   {
+    "text": "Umbrood, meaning shadow-children, is the Hermetic word for spirits of every kind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-seers-of-chronos",
+  "title": "Seers of Chronos",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Visionaries of appetite and prophecy.",
+  "claims": [
+   {
+    "text": "The Seers of Chronos, or Sahajiya, are strange visionaries known for carnal appetites and prophecies beyond the ordinary.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-solificati",
+  "title": "Solificati",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Alchemists of the Great Art.",
+  "claims": [
+   {
+    "text": "The Solificati are wealthy alchemists who pursue the Great Art of refining base matter into perfect spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-verbena",
+  "title": "Verbena",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Pagan witches.",
+  "claims": [
+   {
+    "text": "The Verbena are witches, both hunters and hunted, who keep their Pagan faiths alive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council"
+  ]
+ },
+ {
+  "id": "sc-artificers",
+  "title": "Artificers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Master craftsmen of the Order.",
+  "claims": [
+   {
+    "text": "The Artificers, also called Dalou'lanshi, are master craftsmen joined by mechanical invention.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-cabal-pure-thought",
+  "title": "Cabal of Pure Thought",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "True believers of the Order.",
+  "claims": [
+   {
+    "text": "The Cabal of Pure Thought, or Gabrielites, are true believers working for one world under God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-celestial-masters",
+  "title": "Celestial Masters",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Chartists of the heavens.",
+  "claims": [
+   {
+    "text": "The Celestial Masters, later known as Copernicans, chart and explore the heavens and what lies past them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   },
+   {
+    "text": "Their voyages into the Void they name In Profundum Expeditio, the journey into the endless.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason",
+   "sc-void-seekers"
+  ]
+ },
+ {
+  "id": "sc-craftmasons",
+  "title": "Craftmasons",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Masons of ancient secrets.",
+  "claims": [
+   {
+    "text": "The Craftmasons, also Lion Brothers or simply Masons, are hard workers with old secrets and iron will.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-high-guild",
+  "title": "High Guild",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The Grand Financiers.",
+  "claims": [
+   {
+    "text": "The High Guild, Grand Financiers or Guildsmen, hold that nothing happens without money, and they make things happen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-hippocratic-circle",
+  "title": "Hippocratic Circle",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Masters of healing and flesh.",
+  "claims": [
+   {
+    "text": "The Hippocratic Circle, or Cosians, master the healing arts and living flesh.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-void-seekers",
+  "title": "Void Seekers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Explorers of the far horizon.",
+  "claims": [
+   {
+    "text": "The Void Seekers, or Explorators, are explorers with their eyes on the eternal horizon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     },
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "A Skyrigger is a ship built to fly into the Heavens, and also the name for those who sail one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason",
+   "sc-celestial-masters"
+  ]
+ },
+ {
+  "id": "sc-ksirafai",
+  "title": "Ksirafai",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The Razors who do not exist.",
+  "claims": [
+   {
+    "text": "The Ksirafai are not counted among the Conventions; called Razors, they stay unknown even within the Order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "They are intriguers who set the Order's plans in motion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-order-ranks",
+  "title": "Ranks and Words of the Order",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The Order of Reason's own vocabulary.",
+  "claims": [
+   {
+    "text": "Brethren are the unenlightened companions and servants of the Order; a Mediator has reached Enlightenment but not yet mastered the Ars Praeclarus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "A Resplendent works the craft others call magick; a Magistrate is a ranking member; a Resplendent Honestus is high-born and high-ranked.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Each Convention has two Resplendent Maximi, one man and one woman, who sit for it on the Inner Circle, the Order's ruling council.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "A Guildhall is a Convention's chief lodge; a Lodge is a Daedalean covenant and workshop; a Machina is a powerful device; Viasilicos are crystals for talking between distant lodges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Enlightenment is the Order's word for Awakening; in theory anyone could reach it once plague, monsters and oppression are lifted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-council-words",
+  "title": "Words of the Council",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Terms among the Traditions.",
+  "claims": [
+   {
+    "text": "The Primi, the First, are the ten founders of the Council and the speakers for each group.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Promethian is a back-handed name for a member of the Order of Reason; Squama, after armour plates, is a plain insult for Daedaleans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Mastiga is a scornful word for a silly apprentice, a rash young magus, or a censor who errs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Order members call mysticks Superstitionists, and call night-folk and rival magi Dolores.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council",
+   "sc-order-ranks"
+  ]
+ },
+ {
+  "id": "sc-disparates",
+  "title": "The Disparate",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Magi outside both great sides.",
+  "claims": [
+   {
+    "text": "The Disparate are independent magi who walk their own Paths rather than join the Council or the Order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council",
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "sc-character-creation",
+  "title": "Making a Magus",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The steps for a Sorcerers Crusade character.",
+  "claims": [
+   {
+    "text": "Choose concept, society, Essence, Nature and Demeanor, and settle the style of magick, beliefs and history.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   },
+   {
+    "text": "Attributes are ranked 7, 5 and 3; Abilities 13, 9 and 5, none above 3 at this stage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   },
+   {
+    "text": "Advantages are 7 Background dots and 6 Sphere dots; Arete starts at 1, Willpower at 5, and there are 15 freebie points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-essences",
+   "sc-spheres",
+   "sc-backgrounds"
+  ]
+ },
+ {
+  "id": "sc-essences",
+  "title": "Essences of the Age",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The four kinds of mystick soul.",
+  "claims": [
+   {
+    "text": "Castellum souls are fortresses of order that slay dragons within and without; Furo souls are fiery and seek the divine in chaos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   },
+   {
+    "text": "Mare souls are deep as the sea, rooted in nature and eternity; Sussuro souls are laughing winds on an endless quest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 114,
+      "pdf": 131
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-character-creation",
+   "sc-terms"
+  ]
+ },
+ {
+  "id": "sc-spheres",
+  "title": "The Nine Spheres",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The parts of Creation a magus can master.",
+  "claims": [
+   {
+    "text": "Connection covers ties between people and places; Entropy, fate, fortune and decay; Forces, the elements.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Life gives insight into living things, Matter into solid material, and Mind into thought.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Prime commands Quintessence; Spirit covers the spirit world and its dwellers; Time covers past, present, future and the roads between.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "An Affinity Sphere is the element tied to a magus's personality and Awakening; Arete, the trait rolled to cast, measures enlightened will.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 12,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-character-creation",
+   "sc-casual-vain"
+  ]
+ },
+ {
+  "id": "sc-backgrounds",
+  "title": "Backgrounds of the Age",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Backgrounds open to magi.",
+  "claims": [
+   {
+    "text": "Arcane hides a magus from notice; Covenant is the cabal's meeting place or fellowship; Cray is a nearby wellspring of Quintessence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Daemon rates the power and personality of the mystick self; Destiny marks those fated for great deeds or great deaths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Others include Allies, Familiar, Influence, Library, Magickal Treasure, Mentor, Resources, Sanctum and Spies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-character-creation",
+   "sc-terms"
+  ]
+ },
+ {
+  "id": "sc-abilities",
+  "title": "Abilities of the Age",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Period skills.",
+  "claims": [
+   {
+    "text": "The basic list includes Artist, Instruction, Archery, Riding, Academics, Enigmas, Lore, Metaphysics and Occult.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Secondary Abilities include Dancing, Intrigue, Invention, Logic, Artillerist, Do, Fencing, Firearms, Torture, Cosmology, Hearth Wisdom, Herbalism, Moneylending, Poisons and Secret Code Language.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-character-creation"
+  ]
+ },
+ {
+  "id": "sc-faith-and-echoes",
+  "title": "True Faith and Echoes",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A pious Merit and a folkloric Flaw.",
+  "claims": [
+   {
+    "text": "True Faith is a Merit of 7 points or more that lets the pious work miracles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "Echoes is a Flaw worth 1 to 5 freebie points: folklore can and does hurt the magus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sc",
+      "page": 115,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-character-creation",
+   "sc-casual-vain"
+  ]
+ }
+]

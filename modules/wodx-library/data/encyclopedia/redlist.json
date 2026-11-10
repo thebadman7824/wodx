@@ -1,0 +1,788 @@
+[
+ {
+  "id": "rl-red-list",
+  "title": "The Red List",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "victorian",
+   "modern"
+  ],
+  "summary": "The Camarilla's most wanted.",
+  "claims": [
+   {
+    "text": "The Red List began as a private hit list kept by the Founders turned Justicars against enemies of the young Camarilla; only those involved knew of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "It names thirteen Anathema, judged on deeds alone, whatever their Clan or Generation; two Justicars bring each name and its evidence to a special conclave.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 15,
+      "pdf": 16
+     },
+     {
+      "book": "redlist",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A hunt on the List cannot be called off; only Final Death removes a name. About a hundred Anathema are said to have been named and destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "redlist",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Open places are usually filled within a year, but never just for the sake of filling them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "rl-alastors"
+  ]
+ },
+ {
+  "id": "rl-council-of-scales",
+  "title": "The Council of Scales",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "Students of Camarilla law.",
+  "claims": [
+   {
+    "text": "The Brujah Critias founded it in the sixteenth century as an occasional gathering of philosophers who studied the Traditions and Camarilla law.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "brujah"
+  ]
+ },
+ {
+  "id": "rl-trophy",
+  "title": "The Trophy",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The reward for destroying an Anathema.",
+  "claims": [
+   {
+    "text": "Each name has a sponsoring Trophy Clan, which sets terms, such as Sabine the Shadow being returned staked to the Toreador, and must accept the Anathema's end before paying.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Only one hunter receives the Trophy; others who refuse it stand beside the winner and receive quiet favours.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Clan boons vary and may include Clan lore, the Anathema's secrets, the breaking of a blood bond or high-level rituals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 26,
+      "pdf": 27
+     },
+     {
+      "book": "redlist",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The awarding conclave is a grand event that draws Kindred from hundreds of miles; the host Prince must provide vitae and havens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 19,
+      "pdf": 20
+     },
+     {
+      "book": "redlist",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "rl-mark"
+  ]
+ },
+ {
+  "id": "rl-mark",
+  "title": "The Mark of the Trophy",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The tattoo that binds an Alastor.",
+  "claims": [
+   {
+    "text": "A Justicar tattoos the victor in conclave with ink mixed with blood and ritually prepared; the bearer becomes an Alastor for good, and removing the mark is a crime against the Camarilla.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "A thaumaturge can track the wearer by spending a blood point and rolling Perception + Occult against the Alastor's current Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Some call it the Mark of the Beast, because Dylan Bruce has learned to twist the bond; deaths and corruption of Alastors by infernalists have risen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 19,
+      "pdf": 20
+     },
+     {
+      "book": "redlist",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-alastors"
+  ]
+ },
+ {
+  "id": "rl-alastors",
+  "title": "Alastors",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hunters of the Anathema.",
+  "claims": [
+   {
+    "text": "The first Alastors were Archons set to the List soon after it began; until lately few young Kindred knew they existed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Destroying an Anathema makes a vampire an Alastor; otherwise two Justicars must agree on a candidate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Alastors roam beyond Camarilla lands and die often; those who last a year are skilled and jaded. In Camarilla cities they may call on the Prince's aid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 26,
+      "pdf": 27
+     },
+     {
+      "book": "redlist",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "rl-mark"
+  ]
+ },
+ {
+  "id": "rl-rabbat",
+  "title": "Rabbat",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "modern"
+  ],
+  "summary": "An Anathema: the carrier of the Onyx Plague.",
+  "claims": [
+   {
+    "text": "A Nosferatu elder, once a beggar at the court of Temujin in Karakorum, Embraced by Sabanu, a childe of Baba Yaga, and kept as a plaything by the court.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "After the Khan's death Rabbat travelled west along the Silk Road.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "nosferatu"
+  ]
+ },
+ {
+  "id": "rl-narcisse",
+  "title": "Raymond Narcisse",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "An Anathema: hand of Caine's redemption.",
+  "claims": [
+   {
+    "text": "Once Father Raymond, a convert born in the West Indies, recruited from a Norman monastery for Pierre de l'Ancre's witch hunts in Labourd in the early 1600s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list"
+  ]
+ },
+ {
+  "id": "rl-shinsegawa",
+  "title": "Kyoko Shinsegawa",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "An Anathema: the former Scourge of San Francisco.",
+  "claims": [
+   {
+    "text": "A warrior and linguist who came to California around 1900 and served the Prince of San Francisco against the Sabbat and lawless Anarchs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "The 1906 earthquake woke the torpid Nosferatu elder Fa Chen Leong amid the fires, who attacked believing assassins had come.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list"
+  ]
+ },
+ {
+  "id": "rl-barrow",
+  "title": "Christopher Barrow",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Anathema: the only mortal on the List.",
+  "claims": [
+   {
+    "text": "A British occultist seen in New York and London who runs a chain of shops selling popular spell books while a back room holds rare tomes and journals by occultists, not all of them mortal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list"
+  ]
+ },
+ {
+  "id": "rl-swift",
+  "title": "Alex Swift",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "An Anathema: a savage military mastermind.",
+  "claims": [
+   {
+    "text": "A Virginian Confederate officer from 1861, friend to Stonewall Jackson, shot and left for dead at the Battle of Fisher's Hill.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list"
+  ]
+ },
+ {
+  "id": "rl-germaine",
+  "title": "Germaine",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "An Anathema: rebel voice of the damned.",
+  "claims": [
+   {
+    "text": "Embraced by the Brujah Critias during the French Revolution; the lover the Brujah kept, the Countess d'Adhemar, was a Toreador childe of Madame Guil.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Of all the current Anathema, Germaine may least deserve the place, named to shield certain elders.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "brujah"
+  ]
+ },
+ {
+  "id": "rl-santos",
+  "title": "Francisca Santos dos Rodrigues",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "An Anathema: an infernalist from Brazil.",
+  "claims": [
+   {
+    "text": "The newest name, added at the urging of the Brujah Justicar Manuela Cardoso Pinto; some Alastors doubt the evidence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Born in Santos, raised near Recife, and married into the Bandeirantes; Embraced within the last two or three centuries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "rotb-infernalists"
+  ]
+ },
+ {
+  "id": "rl-jocastian",
+  "title": "Ayisha Jocastian",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "An Anathema: destroyer of Traditions.",
+  "claims": [
+   {
+    "text": "A Turkish Cypriot born under Ottoman rule in the 1800s and among the best-known vampires of the modern era.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "A letter of Ayisha's travels, on Giovanni and Setite influence, appeared in the 1993 edition of the ancient Noddist scripture compiled by Aristotle de Laurent and Beckett.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list"
+  ]
+ },
+ {
+  "id": "rl-anatos",
+  "title": "Karen Anatos",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "An Anathema: self-proclaimed blood goddess.",
+  "claims": [
+   {
+    "text": "Once Lily Thorne, an American silent film actress who fell into a river while filming in the Black Forest in the late 1920s and was Embraced underwater by the Gangrel Methuselah Brunhilde.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Now based in Los Angeles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "gangrel"
+  ]
+ },
+ {
+  "id": "rl-valerius",
+  "title": "Valerius Maior",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "classical",
+   "modern"
+  ],
+  "summary": "An Anathema: the risen antitribu.",
+  "claims": [
+   {
+    "text": "A Roman slave scribe with one green and one blue eye who served the dark mage Varro, writing much of the work credited to that master.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The Tremere, who most want the capture, supplied most of what the Justicars know.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "tremere"
+  ]
+ },
+ {
+  "id": "rl-bruce",
+  "title": "Dylan Bruce",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "An Anathema: king among the profane.",
+  "claims": [
+   {
+    "text": "A Scot who dug shelters in London in the late 1930s for the Ventrue Gotsdam, who had the family build fortified havens across England and later sent Dylan to France with the British Expeditionary Force.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "The Justicars have set the Josians to find Bruce, who can corrupt the Mark of the Trophy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 19,
+      "pdf": 20
+     },
+     {
+      "book": "redlist",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "rotb-josians"
+  ]
+ },
+ {
+  "id": "rl-petaniqua",
+  "title": "Petaniqua",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "classical",
+   "modern"
+  ],
+  "summary": "An Anathema: Sabbat Inquisitor.",
+  "claims": [
+   {
+    "text": "A Malkavian antitribu Methuselah from ancient Greece, Embraced in the third century BCE, known by many names such as Myrtale, Olympias and Cybele, who hunts infernalists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 73,
+      "pdf": 74
+     }
+    ]
+   },
+   {
+    "text": "Named to the List partly for Sabbat rank; Petaniqua then hunted down another Anathema and claimed the Trophy to mock the Justicars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "rotb-sabbat-inquisition"
+  ]
+ },
+ {
+  "id": "rl-kemintiri",
+  "title": "Kemintiri",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient",
+   "modern"
+  ],
+  "summary": "An Anathema: first on the List.",
+  "claims": [
+   {
+    "text": "A Setite who was a priestess of Isis under Seti I, too impatient to wait decades for the cult's secret of eternal life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "Kemintiri has spent centuries infiltrating the Camarilla and is its most wanted enemy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "redlist",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rl-red-list",
+   "followers-of-set"
+  ]
+ }
+]

@@ -1,0 +1,429 @@
+[
+ {
+  "id": "dadevil-views-of-demons",
+  "title": "Views of demons in the Dark Medieval",
+  "kind": "lore",
+  "lines": [
+   "demon",
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How different folk see the fallen around the 13th century.",
+  "claims": [
+   {
+    "text": "The Church teaches that demons serve the Devil and steal souls; a few theologians, following Plato, call them go-betweens, and others say their temptations test humanity for God, though such views run against orthodoxy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Cainites tend to see demons as shadowy rivals who hunt innocent souls and care little for the black souls of vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Mages tend to treat demons as dangerous servants that can be summoned and bound.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dadevil-thralls"
+  ]
+ },
+ {
+  "id": "dadevil-thralls",
+  "title": "Thralls must damn themselves",
+  "kind": "lore",
+  "lines": [
+   "demon",
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How mortals come to serve demons.",
+  "claims": [
+   {
+    "text": "Demons may blackmail, deceive, threaten or torture, but they cannot force anyone into service; every thrall finally chooses the bargain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Like demons, thralls may seek the long road back to grace, but most never try.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Church hunters sort demon servants into three kinds: worshippers, direct servants, and summoners able to bring fiends up out of Hell.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dadevil-theistic-cults"
+  ]
+ },
+ {
+  "id": "dadevil-theistic-cults",
+  "title": "Demons posing as gods",
+  "kind": "lore",
+  "lines": [
+   "demon",
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Demons that take over established pagan worship.",
+  "claims": [
+   {
+    "text": "A demon that impersonates a local god inherits a ready-made cult and its rites, needing only a few thralls such as the existing priest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Rumours of gods walking among the faithful can spread the cult across several neighbouring villages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Such worship changes slowly, but the willingness of believers to bleed and die gives the demon a steady source of Resolve, and it suits demons bound to a demesne that cannot travel far.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dadevil-host-rules",
+  "title": "Demons as Dark Ages characters",
+  "kind": "mechanic",
+  "lines": [
+   "demon",
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Rules for demons and infernalists in Dark Ages games.",
+  "claims": [
+   {
+    "text": "Full rules let players and Storytellers create demons and mortal infernalists for Dark Ages games, with new and changed traits for the infernal host.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "The rules assume a demon wears a mortal host, with brief notes for Earthbound demons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dadevil-views-of-demons"
+  ]
+ },
+ {
+  "id": "dadevil-baali-origin",
+  "title": "The Baali as demons see them",
+  "kind": "lore",
+  "lines": [
+   "demon",
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The fallen’s view of the Baali bloodline.",
+  "claims": [
+   {
+    "text": "Cainite lore names the Baali as the first bloodline to break from the thirteen clans, and the clans blame one another for its origin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   },
+   {
+    "text": "The Baali claim to serve the Children, beings older than Christian myth, and scorn any link to Satan; demons find this as childish as Church exaggeration.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   },
+   {
+    "text": "As far as demons can tell, the founder came from an abandoned demon cult, perhaps one left over from the age of rebellion, discovered by one of the earliest vampires.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   },
+   {
+    "text": "Demons and Baali are often rivals or enemies, each caring more for its own power than for the other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dadevil-daimoinon-demons",
+   "dadevil-circle-red"
+  ]
+ },
+ {
+  "id": "dadevil-daimoinon-demons",
+  "title": "Daimoinon against the fallen",
+  "kind": "mechanic",
+  "lines": [
+   "demon",
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Baali powers work on demons and thralls.",
+  "claims": [
+   {
+    "text": "Demons resist with Resolve, and against infernal characters without that protection the difficulty is Resolve + 2; instead of panic, each success inflicts a point of temporary Torment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Essence of the Netherworld forces a struck demon or thrall to check for degeneration, and Psychomachia makes the victim’s Vice rule the scene, showing demons the monstrous face of their own Apocalyptic Form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "With five successes on severity, Curse tears a demon from a mortal host and bars it from being summoned back for the curse’s duration, though not from an Earthbound reliquary.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Hell-Born Investiture can grant 10 points of approved Arcana per purchase, fuelled by blood instead of Resolve, but never freedom from blood, sunlight or faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dadevil-tear-rift"
+  ]
+ },
+ {
+  "id": "dadevil-tear-rift",
+  "title": "Tear the Rift and summoning",
+  "kind": "power",
+  "lines": [
+   "demon",
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Elder Daimoinon powers for calling demons out of Hell.",
+  "claims": [
+   {
+    "text": "Tear the Rift costs three blood points and an Intelligence + Occult roll at difficulty 7 with a demon’s Celestial Name, or 5 with its True Name, dragging the demon out in a burst of fire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "A slower technique needs an hour and five points of the user’s vitae for a blood circle, then Intelligence + Occult against the demon’s Resolve + 5, or + 2 with a True Name; above 10 it is impossible and a botch bars that demon for good.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "The summoned demon is free of the Abyss’ pull only inside the circle or until sunlight touches the blood, and the technique gives no control; binding needs other magic or mortal acolytes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Glyphs painted in vitae on a willing or restrained host, reliquary or demesne, with an Intelligence + Occult roll at difficulty 8, lower the difficulty of the demon’s first possession by 1 per success; the technique costs 35 experience.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dadevil-daimoinon-demons"
+  ]
+ },
+ {
+  "id": "dadevil-circle-red",
+  "title": "The Circle of Red",
+  "kind": "faction",
+  "lines": [
+   "demon",
+   "mage"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "An order of demonologist mages.",
+  "claims": [
+   {
+    "text": "Its members, mages devoted to demon lore and diabolism, name themselves the Veneficti.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Built on twisting Judeo-Christian ideas such as sin, the order stands opposite the Messianic Voices.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Like the Baali, the Circle bargains with Hell on its own terms and is a rival rather than a servant of the fallen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dadevil",
+      "page": 143,
+      "pdf": 144
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

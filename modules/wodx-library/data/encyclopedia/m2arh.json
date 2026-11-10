@@ -1,0 +1,231 @@
+[
+ {
+  "id": "m2arh-familiars",
+  "title": "Familiars",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Spirit companions bound to a mage as partners, not servants.",
+  "claims": [
+   {
+    "text": "A familiar forms a magickal bond with a mage, trading knowledge and abilities for upkeep, company and Quintessence; it is not the mage's servant in any way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mages",
+   "quintessence",
+   "dam-familiars"
+  ]
+ },
+ {
+  "id": "m2arh-nephandi-dupes",
+  "title": "Dupes and slaves of the Nephandi",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The mortal tools of the Fallen.",
+  "claims": [
+   {
+    "text": "Nephandi prefer to steer Sleeper groups such as Satanists, neo-Nazis, the Klan, some secret societies and even some Masonic lodges, without open meddling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Hidden guides inside these groups slowly corrupt them toward Nephandic ends; dupes who ask too many questions vanish and become slaves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "mrbom-nephandi"
+  ]
+ },
+ {
+  "id": "m2arh-marauder-servants",
+  "title": "Servants of the Marauders",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortals drawn into a Marauder's madness.",
+  "claims": [
+   {
+    "text": "Spear-carriers, often dreamers and lovers of art or games, take bit parts in a Marauder's world until they believe in it; some fight as shock troops on the Gauntlet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Jesters are Sleepers who know of the Ascension War and work to make openings for the Marauders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "A Marauder has a familiar only if the Marauder's paradigm calls for one, and such familiars tend to be wildly outrageous or blend into the Marauder's Quiet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "marauders",
+   "mrbom-marauder-magic"
+  ]
+ },
+ {
+  "id": "m2arh-crossovers",
+  "title": "The Crossovers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A worldwide, cross-Tradition network of mages' companions.",
+  "claims": [
+   {
+    "text": "The Crossovers are loosely democratic and reach one another through a facilitator who runs the place they meet, often a bar, coffee house, motel or craft shop with Cross or Over in its name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Their openness leaves them exposed to Technocratic discovery and infiltration.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "m2arh-corpselight",
+  "title": "The Corpselight Connoisseurs",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Six Euthanatos consors who fear they have helped commit murder.",
+  "claims": [
+   {
+    "text": "All six serve Euthanatos mages and have come to suspect that what they were told was the release of spirits was murder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos"
+  ]
+ },
+ {
+  "id": "m2arh-red-flag",
+  "title": "Red Flag",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Vigilante companions sworn to end the Ascension War by killing all mages.",
+  "claims": [
+   {
+    "text": "Every member has lost someone to the Ascension War; they come from Tradition, Technocracy and Marauder circles alike, and hold Nephandi and their servants as prime targets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Red Flag believes ordinary people will be safe only once mages, werewolves, vampires and all others with supernatural power are gone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2arh",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mages",
+   "nephandi"
+  ]
+ }
+]

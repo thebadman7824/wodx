@@ -143,6 +143,11 @@ test("which hunter rules an era uses (B42)", () => {
   assert.equal(HR.hunterLine("modern", 1995), "hh2");
   assert.equal(HR.hunterLine("modern", 1999), "reckoning");
   assert.equal(HR.hunterLine("time-of-judgment"), "reckoning");
+  assert.equal(HR.hunterLine("modern", 2001, {futureBranch: true}), "hh2");
+  assert.equal(HR.hunterLine("future-darkness", 2022, {futureBranch: true}), "hh2");
+  assert.equal(HR.hunterLine("future-darkness", 2023, {futureBranch: true}), "reckoning");
+  assert.equal(HR.hunterLine("time-of-future-judgement", 2099, {futureBranch: true}), "reckoning");
+  assert.equal(HR.hunterLine("future-darkness"), "reckoning");
   assert.equal(HR.faithRules("dark-ages"), "da20");
   assert.equal(HR.faithRules("modern"), "hh2");
 });

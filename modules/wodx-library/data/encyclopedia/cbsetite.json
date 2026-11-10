@@ -1,0 +1,207 @@
+[
+ {
+  "id": "cbs-egypt",
+  "title": "The Setites in ancient Egypt",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "The clan's own chronicle of its rise and fall along the Nile.",
+  "claims": [
+   {
+    "text": "Setite chronicles from the Old Kingdom are always said to be kept at some other temple. The clan claims the civil wars that ended the Old Kingdom, when Setites are said to have ruled openly as nomarchs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Some temples teach that in the 18th century BC Set rode out of the Sinai with the Hyksos, who ruled Lower Egypt for 200 years, honoured the clan and built its greatest temple at Tanis. Other temples swear the Hyksos persecuted the Setites.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "When the Theban princes drove out the Hyksos and founded the New Kingdom, statues of Set were destroyed or recarved. The clan sacrificed half its number and temples so the rest could stay hidden.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "When Akhenaten called sorcerers to Amarna to fix the sun in the sky so that night would never come, the Setites of that age were deeply afraid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set",
+   "set",
+   "cbs-temples"
+  ]
+ },
+ {
+  "id": "cbs-temples",
+  "title": "The great Setite temples",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient",
+   "dark-ages",
+   "renaissance",
+   "victorian",
+   "modern"
+  ],
+  "summary": "Famous temples of the Followers of Set.",
+  "claims": [
+   {
+    "text": "Ombos is said to be the Founding Temple, set up by Set. Sultan Baybars destroyed it; Setites rebuilt it in secret in the 19th century, and magic hides it from all but invited guests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "The House of the Eclipse lies under Cairo. Its doctrine says Setites must kill the sun god Ra to become gods, and it is rumoured to hold the clan's greatest store of lore.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "The Red Temple of Thebes and the Garden of Asps under Memphis are nearly deserted, guarded by a few elder priests. The Crocodile Temple in the Faiyum keeps ghouled crocodiles; one, said to be over a thousand years old, gives oracles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "The Labyrinth of Bones under Tunis is tiled with human bones from Carthage's dead. A cave near Tangier is carved so the wind sings a hymn to Set, and a temple on London's Isle of Dogs leads the clan in Britain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Clan rumour says several Brujah Methuselahs dug out of Carthage lie staked in the Labyrinth of Bones.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set",
+   "cbb-carthage",
+   "cbs-egypt"
+  ]
+ },
+ {
+  "id": "cbs-tlacique",
+  "title": "The Tlacique",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "Setite cousins of pre-Columbian Mexico.",
+  "claims": [
+   {
+    "text": "The Tlacique claim descent from Tezcatlipoca and pushed every culture they ruled toward greater human sacrifice, believing the offerings kept the sun alive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "They misjudged the Spanish, then allied with the Sabbat against the Camarilla. The Sabbat copied their rites without their meaning, then all but destroyed them, baptising staked elders before diablerie.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Fewer than 200 Tlacique remain, scattered from Baja to Tierra del Fuego. Their old Path is lost, so most now follow Humanity, and ancillae set policy while elders teach Disciplines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Once drawn from the priestly caste, they now Embrace village sorcerers, shamans and rainmakers, and in the last 20 years native-rights guerrillas too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbsetite",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set",
+   "sabbat",
+   "mcbn-mexico-city"
+  ]
+ }
+]

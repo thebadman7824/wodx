@@ -1,0 +1,68 @@
+[
+ {
+  "id": "nrdm-bahari-gardeners",
+  "title": "The Bahari as gardeners of pain",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Lilith’s devotees see their work.",
+  "claims": [
+   {
+    "text": "The true Lilith cults, together called the Bahari, are tiny societies found among both the Damned and the living.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nrdm",
+      "page": 8,
+      "pdf": 6
+     },
+     {
+      "book": "blackhand",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Each Bahari counts as a fruit of the Dark Mother’s third and last garden, and tends crises in others, then nurses the survivors so they learn from the pain, whether through torture, planted intrigue or gentle healing.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nrdm",
+      "page": 16,
+      "pdf": 10
+     },
+     {
+      "book": "blackhand",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Destruction for its own sake is not a Bahari’s aim; pain is worthless unless the sufferer learns from it.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nrdm",
+      "page": 16,
+      "pdf": 10
+     },
+     {
+      "book": "blackhand",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-bahari",
+   "dc1-lamia"
+  ]
+ }
+]

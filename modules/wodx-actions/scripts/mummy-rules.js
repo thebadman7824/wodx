@@ -114,7 +114,7 @@ export function resurrectOutcome(r, { khat = 0, levels = 7, rollsThisYear = 0 } 
 /** Healing (p. 136): lethal heals on the mortal chart as if one level better (Bruised in 12 hours); aggravated at the mortal rate. */
 export const HEAL_LETHAL = ["12 hours", "one day", "three days", "one week", "one month", "one month and one week"];
 
-/** Mummy blood (p. 145): to a vampire each point counts twice and drains a Sekhem; to a Kuei-jin it is Yang. */
+/** Mummy blood (source not found in Mummy 2nd; treat as a house rule until a book is found): to a vampire each point counts twice and drains a Sekhem; to a Kuei-jin it is Yang. */
 export const bloodDrunk = points => ({ vampireGains: n(points) * 2, sekhemLost: n(points) });
 /** The Veil (p. 140): a mortal's reaction by Willpower, 1 to 10. */
 export const VEIL = ["", "catatonia", "panic", "disbelief", "berserk", "terror", "conciliatory", "controlled fear", "curiosity", "anger", "blasé"];

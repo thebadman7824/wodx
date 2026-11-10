@@ -465,3 +465,63 @@ test("a scene made fully dark stays pitch indoors at dawn and dusk", () => {
   assert.equal(R.lightLevel({indoor: false, part: "dusk", darkness: 1, moon: 0}), "pitch");
   assert.equal(R.lightLevel({indoor: true, part: "dusk", darkness: 1, lit: true}), "bright");
 });
+
+/* Senses 0.5.0: the quiet interface. */
+import * as QR from "../../modules/wodx-senses/scripts/quiet-rules.mjs";
+import {readFileSync as readQ} from "node:fs";
+test("difficulties in words, from V20's table, and only the difficulty changes", () => {
+  assert.equal(QR.difficultyWord(6), "standard");
+  assert.equal(QR.difficultyWord(3), "easy");
+  assert.equal(QR.difficultyWord(9), "extremely difficult");
+  assert.equal(QR.difficultyWord(2), "trivial");
+  assert.equal(QR.difficultyWord(10), "all but impossible");
+  assert.equal(QR.difficultyWord("x"), null);
+  assert.equal(QR.quietText("Difficulty: 7"), "Difficulty: challenging");
+  assert.equal(QR.quietText("Hurt (-1) · Difficulty: 6 · 3 successes"), "Hurt (-1) · Difficulty: standard · 3 successes");
+  assert.equal(QR.quietText("3 successes"), "3 successes");
+});
+test("the health level as a word", () => {
+  assert.equal(QR.healthWord(""), "Unhurt");
+  assert.equal(QR.healthWord(null), "Unhurt");
+  assert.equal(QR.healthWord("Mauled"), "Mauled");
+});
+test("the quiet interface is per player, has a hotkey and leaves the scene controls", () => {
+  const src = readQ(new URL("../../modules/wodx-senses/scripts/quiet.mjs", import.meta.url), "utf8");
+  assert.match(src, /scope: "client"/);
+  assert.match(src, /default: false/);
+  assert.match(src, /keybindings\?\.register/);
+  const css = readQ(new URL("../../modules/wodx-senses/styles/wodx-senses.css", import.meta.url), "utf8");
+  assert.match(css, /wsn-quiet #sidebar/);
+  assert.doesNotMatch(css, /wsn-quiet #scene-controls|wsn-quiet #controls/);
+  assert.deepEqual(QR.TUCKED.filter(s => /controls/.test(s)), []);
+});
+
+/* Senses 0.5.0: supernatural sight on the map. */
+import * as SR from "../../modules/wodx-senses/scripts/sight-rules.mjs";
+test("which sights a character has, and the button's order", () => {
+  assert.deepEqual(SR.sightsFor({auspex: 0, profile: "mortal"}), []);
+  assert.deepEqual(SR.sightsFor({auspex: 1, profile: "kindred"}), ["heightened"]);
+  assert.deepEqual(SR.sightsFor({auspex: 3, profile: "kindred"}), ["heightened", "aura"]);
+  assert.deepEqual(SR.sightsFor({heightenedGift: true, profile: "lupine"}), ["heightened"]);
+  assert.deepEqual(SR.sightsFor({profile: "wraith"}), ["lifesight"]);
+  assert.equal(SR.nextSight(null, ["heightened", "aura"]), "heightened");
+  assert.equal(SR.nextSight("heightened", ["heightened", "aura"]), "aura");
+  assert.equal(SR.nextSight("aura", ["heightened", "aura"]), null);
+  assert.equal(SR.nextSight("lifesight", ["heightened"]), "heightened");
+  assert.equal(SR.nextSight(null, []), null);
+});
+test("rings: auras by nature, the living warm under Lifesight, none under Heightened Senses", () => {
+  assert.equal(SR.ringFor("aura", "kindred").words, "pale");
+  assert.equal(SR.ringFor("aura", "mage").words, "sparkling");
+  assert.equal(SR.ringFor("aura", "unknown-kind").words, "living colours");
+  assert.equal(SR.ringFor("lifesight", "kindred"), null);
+  assert.ok(SR.ringFor("lifesight", "mortal"));
+  assert.equal(SR.ringFor("heightened", "mortal"), null);
+  for ( const k of SR.SIGHT_ORDER ) assert.match(SR.SIGHTS[k].filter, /\(/);
+});
+test("the sight is drawn per player, behind a client setting", () => {
+  const src = readQ(new URL("../../modules/wodx-senses/scripts/sight.mjs", import.meta.url), "utf8");
+  assert.match(src, /"sightMap", \{[\s\S]*?scope: "client"/);
+  assert.match(src, /setting\("sightMap"\) === false \? null/);
+  assert.match(src, /flags\.\$\{MOD\}\.sight/);
+});

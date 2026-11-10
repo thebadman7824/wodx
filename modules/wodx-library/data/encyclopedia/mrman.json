@@ -1,0 +1,270 @@
+[
+ {
+  "id": "mrman-rogue-council",
+  "title": "The Rogue Council",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An unseen group that signs its messages with a sphinx.",
+  "claims": [
+   {
+    "text": "Since the Reckoning, many mages call cowardice prudence and see waking the masses as a fool's hope; the Rogue Council's messages call them back to action.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "It argues for liberty over dogma and choice over Technocratic stasis, and it attacks autocratic Traditionalists as well as the Union.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "The Council itself does very little in the open; its readers do the acting, and its messages stir debate and inspire deeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "technocracy",
+   "mrdm2-rogue-council-search"
+  ]
+ },
+ {
+  "id": "mrman-missives",
+  "title": "Sphinx missives",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Rogue Council reaches mages.",
+  "claims": [
+   {
+    "text": "A missive may arrive as an unsigned letter bearing a sphinx, with no arcane trail to its author, paper or carriers even under divination.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Its creed runs on themes such as unity through diversity, Ascension through freedom, and exploring the path rather than building it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The same message often reaches many mages at once, from wandering scholars to young Virtual Adepts online.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrman-rogue-council",
+   "virtual-adepts"
+  ]
+ },
+ {
+  "id": "mrman-responses",
+  "title": "Answers to the Sphinx",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How mages react to the Rogue Council.",
+  "claims": [
+   {
+    "text": "Most mages act on a missive carefully, checking first and often consulting their elders; some are only waiting to see which way events turn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "No one knows if ignoring a missive brings punishment, though some who ignored them have died.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Many Tradition mages call the creed a reckless youthful call to anarchy, and some sages hold that outward struggle is mistaken for inner growth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Those most devoted to the new creed are mostly too young to know how harsh a Technocratic pogrom can be.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrman-rogue-council",
+   "m2gtech-pogrom"
+  ]
+ },
+ {
+  "id": "mrman-emissaries-guardians",
+  "title": "Emissaries and Guardians",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The split the Rogue Council opened.",
+  "claims": [
+   {
+    "text": "Mages who back the Rogue Council are called Emissaries and those against it Guardians; neither side is wholly right.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "About six months into the phenomenon, messages began naming cabals that had won victories against the Technocracy, along with field reports on Union methods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Quarrels over the Council's supposed creed grew into open enmity, and certamen between Emissaries and Guardians was common for a while.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrman-rogue-council",
+   "mrman-responses"
+  ]
+ },
+ {
+  "id": "mrman-union-reaction",
+  "title": "The Union and the transmissions",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Technocrats meet Rogue Council messages.",
+  "claims": [
+   {
+    "text": "The Technocracy tries to suppress the messages, and some Constructs order collectors of them caught or killed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Most front-line agents dismiss the transmissions as Deviant chatter, but a few cannot answer the questions they raise about Union projects.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Secret societies within the Union, among them the Harbingers of Avalon and the Friends of Courage, have long defied Control's orders on moral grounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrman",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "mrman-rogue-council",
+   "m2gtech-operatives"
+  ]
+ }
+]

@@ -1,0 +1,137 @@
+[
+ {
+  "id": "cbdt-mariana-trench",
+  "title": "The Mariana Trench",
+  "kind": "place",
+  "lines": [
+   "mage",
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ocean's deepest Grotto.",
+  "claims": [
+   {
+    "text": "The Mariana Trench, the deepest point of the planet's surface, holds the ocean's strongest Grotto; Void Engineer explorers first reached it in 1960, and a few squads and two Tradition cabals have gone down since.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbdt",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Some Tradition mages link it to the Umbral realm called the Chasm, which the Garou name the Abyss; Void Engineer teams there report hallucinations of vast drowned cities and monsters, none confirmed.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbdt",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers"
+  ]
+ },
+ {
+  "id": "cbdt-broken-chain",
+  "title": "The Broken Chain",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "victorian",
+   "great-war",
+   "modern"
+  ],
+  "summary": "Wraiths of the Middle Passage who hunt Thrall ships.",
+  "claims": [
+   {
+    "text": "Wraiths of enslaved people who died on the Middle Passage began riding the slave ships to reap the dead and seize crewmen who died aboard, then raided Stygian convoys.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbdt",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Now one of the best organized Renegade groups, the Broken Chain attacks only ships carrying Thralls, ignoring relic cargo; freed Thralls and captured ships go to camps on the African coast, where Artificers forge captured Hierarchy crews into repairs and weapons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbdt",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "soulforging",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "cbdt-merfolk",
+  "title": "The merfolk",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sea fae who claim the oldest lineage.",
+  "claims": [
+   {
+    "text": "Merfolk never take mortal hosts and breed only among themselves, claiming to be the sole heirs of the Tuatha de Danaan, dreamed before humans walked on land; asked how, they turn vague.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbdt",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Their society is matriarchal and feudal, built around avoiding humanity; they rarely draw Glamour from mortal dreams and fear Banality as death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbdt",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Each is bound to an Apsara, a sea creature such as a fish, seahorse, eel, shark, turtle, porpoise or even whale, which shapes house and standing: shark merfolk tend to be warriors, porpoise merfolk scholars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbdt",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "selkies",
+   "glamour",
+   "banality"
+  ]
+ }
+]

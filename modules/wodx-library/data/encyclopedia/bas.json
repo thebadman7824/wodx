@@ -1,0 +1,392 @@
+[
+ {
+  "id": "bas-xixia",
+  "title": "Xixia",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The waning kingdom of the northwest in the 1200s.",
+  "claims": [
+   {
+    "text": "Xixia, the smaller of the two northern kingdoms, has married into the Jin ruling house and bows to the Jin emperor; its armies have still beaten the Song more than once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Little of its land can be farmed, so its mixed Turk, Tibetan and Uighur people raise cattle and trade with the caravans that pass west from the Song and Jin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "bas-antoku-sword",
+  "title": "The Lost Sword of Antoku",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Imperial regalia lost with a drowned child emperor.",
+  "claims": [
+   {
+    "text": "The child emperor Antoku, grandson of Taira-no-Kiyomori, drowned when Minamoto forces sank the Taira boats in the bay at the end of the war, and one of the three imperial regalia, a sword, was lost with the drowned emperor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Several houses of Japanese Wan Kuei plan journeys into the Yin Realms to bring the blade back; magical or not, whoever handed it to a favoured mortal could win the court at Kyoto.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-japan-gaki",
+   "kote-spirit-worlds"
+  ]
+ },
+ {
+  "id": "bas-koryo-patrols",
+  "title": "Night Patrols of Koryo",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Watchmen of the Korean towns.",
+  "claims": [
+   {
+    "text": "Night Patrols guard many large towns of Koryo, and since a wu of akuma raped and murdered its way across Pyongyang, some patrols are made up entirely of the Children of Yi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Koryo's Wan Kuei watch those groups closely, and from far away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bas-shih",
+   "kote-yama-kings"
+  ]
+ },
+ {
+  "id": "bas-scarlet-phoenix",
+  "title": "Wan Kuei of the Scarlet Phoenix",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The southern courts that resist the Yellow Emperor.",
+  "claims": [
+   {
+    "text": "Wan Kuei of the Scarlet Phoenix wage a hidden war in the dusk against those who serve the Yellow Emperor, so that Han rule never takes their lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Great southern cities of the time include Sukhothai, centre of a rising kingdom, Angkor, capital of the Khmer, and Hue, centre of the Dai Viet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-courts",
+   "kotec-treaty-quincunx"
+  ]
+ },
+ {
+  "id": "bas-fu-yi",
+  "title": "Fu Yi, the Drowned Kingdom",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A coastal realm of the Wan Xian swallowed by the sea.",
+  "claims": [
+   {
+    "text": "Fu Yi was a great coastal kingdom of hundreds of thousands, whose Wan Xian rulers were philosopher-kings and warrior-poets who raised bridges, towers and spired temples.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "When the Wan Xian fought one another the sea rose and mountains fell. In the final year of the Third Age, on the fifth month's fifth day, Fu Yi went under the ocean, and its ghosts now live outside the mortal world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 45,
+      "pdf": 46
+     },
+     {
+      "book": "bas",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-wan-xian",
+   "kote-wheel-of-ages"
+  ]
+ },
+ {
+  "id": "bas-xiong-ren-war",
+  "title": "The Ferocious People and the Wan Xian",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the shapeshifters of the East turned on the vampires.",
+  "claims": [
+   {
+    "text": "The Xiong Ren, the Ferocious People, saw the Okuma bear-shifters gone forever, the Nagah nearly wiped out and dragon nests ravaged, and turned on the Wan Xian who had betrayed them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "Led by the Hakken general Chi You, the shapeshifter armies fought the Wan Xian to a standstill, before Gaia passed judgment on the Ten Thousand Demons and the Xiong Ren alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 136,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "Sample Xiong Ren keep Rage and Gnosis; to convert, Rage becomes P'o, Willpower becomes Hun and Gnosis splits into even Yin and Yang Chi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-wan-xian",
+   "kote-wall",
+   "bbnag-wani-sesha",
+   "bbmok-zhong-lung"
+  ]
+ },
+ {
+  "id": "bas-daityas",
+  "title": "The Daityas",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Eastern fae who chose the cities.",
+  "claims": [
+   {
+    "text": "Once survival was not their only worry, the surviving Daityas left the wild places to their enemies the Shinma and claimed the cities, serving neither Heaven nor Hell and walking among mortals as gods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 146,
+      "pdf": 147
+     }
+    ]
+   },
+   {
+    "text": "The prayers of temples and shrines give them ample Chi, so they guard the people and answer prayers in the old way; some simply grew fond of the humans who fought beside the hsien.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 146,
+      "pdf": 147
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kithain"
+  ]
+ },
+ {
+  "id": "bas-shih",
+  "title": "The Shih",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Wandering hunters of shen.",
+  "claims": [
+   {
+    "text": "The Shih trace their order to Yi, the Excellent Archer, who cursed the Wan Kuei to rot in sunlight; once an army, they have been a mendicant order for two thousand years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   },
+   {
+    "text": "A lone Shih wanders the Middle Kingdom with one or two disciples and acts only against shen who overstep their bounds, such as cannibal chih-mei and raging kuei ghosts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-weaknesses",
+   "bas-koryo-patrols"
+  ]
+ },
+ {
+  "id": "bas-cainite-view",
+  "title": "Wan Kuei Seen by Cainites",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the childer of Caine explain the Eastern vampires.",
+  "claims": [
+   {
+    "text": "To most Cainites of the period the Wan Kuei hold no mystery: they assume some of the Fourth Generation wandered far after the Second City fell and founded bloodlines with their own Disciplines.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 157,
+      "pdf": 158
+     }
+    ]
+   },
+   {
+    "text": "Anyone who has seen advanced Vicissitude finds the Godbody arts unsurprising, and Dragon Tear looks much like Valeren or a kind of Auspex; since nearly all Wan Kuei met in these centuries drink blood, the Dharmas are easy to take for Roads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 157,
+      "pdf": 158
+     }
+    ]
+   },
+   {
+    "text": "Salubri meet a cold but courteous welcome from Wan Kuei who study how their lore spread, and find Salubri Disciplines strange twists of their own heritage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bas",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caine",
+   "vicissitude",
+   "da-salubri",
+   "kote-kindred-disciplines",
+   "kote-five-dharmas"
+  ]
+ }
+]

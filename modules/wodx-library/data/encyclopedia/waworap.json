@@ -1,0 +1,250 @@
+[
+ {
+  "id": "waworap-zhyzhak",
+  "title": "Zhyzhak",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Warder of the Trinity Hive.",
+  "claims": [
+   {
+    "text": "Zhyzhak, a homid Ahroun of the Black Spiral Dancers at Rank 5, is a long favourite of the Green Dragon totem, the source of the Dancer’s monstrous strength.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "Zhyzhak rose quickly to Warder of the Trinity Hive Caern, a hive set inside the gut of a colossal Thunderwyrm the Dancers call Grammaw.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "In Crinos Zhyzhak stands ten feet tall in black fur, and always shouts rather than speaks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "Among Zhyzhak’s rites is the Rite of Arterial Introduction (level two), which lets new Dancers enter Grammaw’s bloodstream without being burned or confused.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waworap-voragg",
+  "title": "Voragg the Unbound",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Bane freed from a Rocky Mountains prison.",
+  "claims": [
+   {
+    "text": "Voragg has served the Wyrm for centuries, mostly while bound in a rock deep under the Rocky Mountains, where a Wendigo tribe sealed it after it troubled them in the late 1500s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "A construction worker named Hector Fritz broke it loose by jackhammering through a marked stone rather than report the find, and Voragg took over Hector body and soul.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Its master, the Eater-of-Souls, pays it no heed, and it now roams California at the nominal head of a fomori pack that has plans of its own for it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waworap-sister-judith",
+  "title": "Sister Judith Paws-of-Light",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Black Fury healer.",
+  "claims": [
+   {
+    "text": "Sister Judith is a metis Theurge of Rank 4 who serves first as a healer and keeps clear of local Garou politics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 9,
+      "pdf": 10
+     },
+     {
+      "book": "waworap",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Judith shows uncannily accurate foresight and a strong bond with the living land; tales say saplings rise from desert dust and leprosy is healed at a touch.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Light blazes from Judith’s white paws while working Gifts, and most Furies grant that Gaia favours this healer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waworap-mari-cabrah",
+  "title": "Mari Cabrah",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Black Fury Theurge and rival of Albrecht.",
+  "claims": [
+   {
+    "text": "Mari Cabrah is a homid Theurge of the Black Furies at Rank 3, with Pure Breed among the Backgrounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Mari and Lord Albrecht clash and later reconcile; by the time of their fight the two are about equal in power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waworap-sister-judith"
+  ]
+ },
+ {
+  "id": "waworap-jubati",
+  "title": "Jubati",
+  "kind": "character",
+  "lines": [
+   "werewolf",
+   "fera"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Amazonian Ragabash.",
+  "claims": [
+   {
+    "text": "Jubati, a homid Ragabash of Rank 2, counts Balam and Mokole among close allies and learns from a native elder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "Jubati carries Tsansti’s Blowgun, a level four fetish once owned by an Uktena hero: ten feet long, with a forty-yard range and a five-die damage pool used only to pierce armour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "In Lupus Jubati is a sleek wolf with reddish fur, and has a mild phobia of heavy machinery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waworap",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

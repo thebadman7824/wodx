@@ -1,0 +1,462 @@
+[
+ {
+  "id": "daeu-british-isles",
+  "title": "The British Isles in 1230",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Britain under the long shadow of Mithras and the Ventrue.",
+  "claims": [
+   {
+    "text": "Mithras, a Ventrue Methuselah of the Fourth Generation, holds London as prince and rules the Baronies of Avalon. Melusine of Winchester, a Toreador, is the chief rival.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Mithras came to Britain in AD 71, having taken over the cult of a Persian war god and posed as that god in the flesh.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Through the Roman centuries the cult spread among the legions and Mithras's favor made the Ventrue the strongest clan on the island, a hold that lasts in some form to the Anarch Revolt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Mithras is thought to have stirred up persecution of Christians and tried to use Constantine against the new faith. The attempt failed when the emperor took up Christianity instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Several barons, among them the lords of York and Carlisle, plot against Mithras.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-mithraic-mysteries",
+   "dac-bath",
+   "da-ventrue"
+  ]
+ },
+ {
+  "id": "daeu-france",
+  "title": "France in 1230",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Grand Court of Paris and the Courts of Love.",
+  "claims": [
+   {
+    "text": "Paris is the seat of the joint Toreador and Ventrue Grand Court. Geoffrey, a Ventrue, has led it as Prince of Paris since 1222, after overthrowing Alexander, Geoffrey's own sire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "The Toreador Courts of Love each have a queen or king: Toulouse, Poitou, Champagne and Blois among them. Salianna of Paris is their matriarch and an ally of Mithras and Hardestadt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Crusading armies in the south killed many of the Cainites of Toulouse, a warning to any vampire who feels safe far from the great powers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The Champagne Fairs are at their height and draw trade from all over Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-british-isles",
+   "da-toreador",
+   "da-ventrue"
+  ]
+ },
+ {
+  "id": "daeu-holy-roman-empire",
+  "title": "The Holy Roman Empire in 1230",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ventrue factions and the Black Cross in the German lands.",
+  "claims": [
+   {
+    "text": "A moderate Ventrue faction, the Antasians, watched over the crowning of Frederick II at Frankfurt in 1212.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "After the Children's Crusade of 1212, Giselher, Ventrue prince of Cologne, barred Clan Lasombra from the city. Giselher never proved the Magisters were behind it, but used the charge against rivals anyway.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Hardestadt rules the Fiefs of the Black Cross.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-ventrue",
+   "da-lasombra"
+  ]
+ },
+ {
+  "id": "daeu-iberia",
+  "title": "Iberia in 1230",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The shadow Reconquista between Christian and Muslim Cainites.",
+  "claims": [
+   {
+    "text": "Christian Cainites in Iberia fight their Muslim counterparts, the Ashirra, with little regard for clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "The Lions, young Cainites under the Brujah zealot Felipe, wage a shadow Reconquista and seek to wipe out every Ashirra on the peninsula. They even strike Christian Cainites they call traitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Al-Andalus, the Muslim south, is much reduced from its tenth-century height by the Reconquista and by quarrels among the Moors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-brujah",
+   "da-assamites"
+  ]
+ },
+ {
+  "id": "daeu-italy",
+  "title": "Italy in 1230",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "City republics ruled by shifting factions.",
+  "claims": [
+   {
+    "text": "Italy has no single tongue, coin, measure or even start of the year. What shared feeling there is splits for or against the Holy Roman Empire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Republics spread and limit power so no one family rules. A losing faction goes into exile in an allied city and plots its return, which makes a Cainite prince's task harder than swaying one count.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-italy",
+   "dac-rome",
+   "daeu-holy-roman-empire"
+  ]
+ },
+ {
+  "id": "daeu-hungary-east",
+  "title": "Hungary and the Slavic East in 1230",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ventrue princes pushing against the Tzimisce.",
+  "claims": [
+   {
+    "text": "Nova Arpad, Ventrue prince of Mediasch, claims the title Overlord of Hungary and wants to bring the Tzimisce of Transylvania under Ventrue rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 122,
+      "pdf": 123
+     }
+    ]
+   },
+   {
+    "text": "Geza Arpad, Ventrue prince of Esztergom, takes the title Archbishop. Esztergom loses ground to Buda-Pest, and Geza feuds with Prince Rikard.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 122,
+      "pdf": 123
+     }
+    ]
+   },
+   {
+    "text": "Grozny keeps the fallen city of Kiev and acts as its prince without the title.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 122,
+      "pdf": 123
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-tzimisce",
+   "da-ventrue"
+  ]
+ },
+ {
+  "id": "daeu-denmark",
+  "title": "Denmark in 1230",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A settled Christian kingdom that suits the Ventrue.",
+  "claims": [
+   {
+    "text": "Once thought as wild as the lands to its north, Denmark is now a devout Christian realm with an advanced view of government, and many Ventrue settle there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Valdemar took the throne in 1157 after a royal blood feud, then reformed the realm and drove off the raiders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-ventrue"
+  ]
+ },
+ {
+  "id": "daeu-latin-empire",
+  "title": "The Latin Empire",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The crusader state that replaced Byzantium in 1204.",
+  "claims": [
+   {
+    "text": "The crusaders took Byzantium in 1204 and set up a feudal Latin Empire, also called Romania, with the emperor above vassals such as the King of Thessalonica and the Prince of Achaia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "The Greek population scorns the Latins, and enemies on every side have left the empire a shadow of its start.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "The Toreador Methuselah Michael, the Patriarch of Constantinople, met Final Death in 1204, but that influence lingers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dac-constantinople",
+   "da-toreador"
+  ]
+ },
+ {
+  "id": "daeu-outremer",
+  "title": "Outremer in 1230",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The crusader lands of the Levant.",
+  "claims": [
+   {
+    "text": "Outremer has four main domains: the Kingdom of Jerusalem, Antioch-Tripoli, the Kingdom of Acre with Tyre, and the island of Cyprus. Nearly every resident owes at least token fealty to its overlord.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 175,
+      "pdf": 176
+     }
+    ]
+   },
+   {
+    "text": "Many Cainite lieges rule their Outremer vassals from as far as Constantinople or the Empire, and some vassals use the distance to work against them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daeu",
+      "page": 175,
+      "pdf": 176
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-latin-empire"
+  ]
+ }
+]

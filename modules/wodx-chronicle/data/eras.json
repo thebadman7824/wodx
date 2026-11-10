@@ -176,13 +176,14 @@
         "morality": "humanity-and-paths",
         "gauntletChart": "w20"
       },
-      "kit": "modern"
+      "kit": "modern",
+      "excludedByRule": "futureBranch"
     },
     {
       "id": "future-darkness",
       "name": "Future Darkness",
       "start": 2010,
-      "end": 2099,
+      "end": 2098,
       "requiresRule": "futureBranch",
       "basis": "V20, World of Future Darkness, Cyberpunk 2020",
       "switches": "Masquerade erosion; cyberware and Humanity cost; the Net; Technica; the Fourth Corporate War",
@@ -193,7 +194,32 @@
         "mage": "modern"
       },
       "ourCall": [
-        "The end year is open; 2099 is a placeholder"
+        "Ends on the eve of 2099, when the Time of Future Judgement begins"
+      ],
+      "rules": {
+        "firearms": true,
+        "morality": "humanity-and-paths",
+        "gauntletChart": "w20",
+        "cyberware": true
+      },
+      "kit": "future-darkness"
+    },
+    {
+      "id": "time-of-future-judgement",
+      "name": "Time of Future Judgement",
+      "start": 2099,
+      "end": 2099,
+      "requiresRule": "futureBranch",
+      "basis": "As Future Darkness",
+      "switches": "One Cascade of endings, chosen in Dated events",
+      "system": {
+        "mortal": "modern",
+        "vampire": "modern",
+        "werewolf": "modern",
+        "mage": "modern"
+      },
+      "ourCall": [
+        "House metaplot: the Time of Judgment endings retold for 2099, on the Future Darkness branch only"
       ],
       "rules": {
         "firearms": true,

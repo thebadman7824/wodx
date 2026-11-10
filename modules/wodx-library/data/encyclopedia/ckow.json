@@ -1,0 +1,43 @@
+[
+ {
+  "id": "ckow-second-shattering",
+  "title": "The Second Shattering",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How Banality reached the Nunnehi.",
+  "claims": [
+   {
+    "text": "Though other Nunnehi warned against it, the fae of the Algonquins and of the Southeastern peoples sent envoys to make terms with the faeries who had come over the ocean, hoping for peace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckow",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The European fae had shielded themselves after the Shattering by taking on a veneer of Banality as changelings; the Nunnehi had no such shield, and contact spread Banality among them like the diseases that ravaged their mortal peoples, weakening their ties to the Higher Hunting Grounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckow",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ctdpg-nunnehi",
+   "the-shattering",
+   "banality"
+  ]
+ }
+]

@@ -1,0 +1,15 @@
+.wodx-paperdoll-app .window-content { display: flex; flex-direction: column; overflow: hidden; }
+.wodx-paperdoll { display: flex; flex-direction: column; flex: 1; min-height: 0; gap: 0.5rem; }
+.wodx-paperdoll-cols { display: flex; gap: 0.75rem; flex: 1; min-height: 0; }
+.wodx-paperdoll-preview { flex: 0 0 280px; display: flex; flex-direction: column; gap: 0.4rem; }
+.wodx-paperdoll-pic { width: 256px; height: 256px; margin: 0 auto; }
+.wodx-paperdoll-pic img { width: 256px; height: 256px; border: none; display: block; }
+.wodx-paperdoll-form { flex: 1; min-height: 0; overflow-y: auto; padding-right: 0.25rem; }
+.wodx-paperdoll-form h3 { margin: 0.5rem 0 0.25rem; border-bottom: 1px solid var(--color-border-light-tertiary, #888); }
+.wodx-paperdoll .wodx-step { display: flex; flex-direction: row; align-items: center; gap: 0.5rem; margin: 0.15rem 0; }
+.wodx-paperdoll .wodx-step > label { flex: 0 0 6.5rem; }
+.wodx-paperdoll .wodx-step .form-fields { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 0.35rem; flex: 1; }
+.wodx-paperdoll .wodx-step button { flex: 0 0 2rem; min-width: 2rem; height: 1.8rem; line-height: 1.6rem; padding: 0; }
+.wodx-paperdoll .wodx-step-val { min-width: 5.5rem; text-align: center; }
+.wodx-paperdoll .wodx-footer { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+@media (max-width: 760px) { .wodx-paperdoll-cols { flex-direction: column; overflow-y: auto; } .wodx-paperdoll-preview { flex: 0 0 auto; } }

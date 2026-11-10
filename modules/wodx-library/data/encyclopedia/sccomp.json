@@ -1,0 +1,203 @@
+[
+ {
+  "id": "sccomp-timbuktu",
+  "title": "Timbuktu",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The university city of West Africa, caught between Mali and Songhai.",
+  "claims": [
+   {
+    "text": "Timbuktu and its University-Mosque of Sankore sit between fading Mali to the west and rising Songhai to the east; Tuareg tribesmen took the city from Mali's king, and Songhai kings now covet it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "Songhai folk are quick to see through mages who use their Arts to hide or to fake the local tongue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mreu-madzimbabwe"
+  ]
+ },
+ {
+  "id": "sccomp-songhai-faith",
+  "title": "Songhai belief and magic",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Village spirit-workers of the Songhai lands.",
+  "claims": [
+   {
+    "text": "Islam is strong among the Songhai, but most still keep the old faith; every village has sorko and witches, and mediums led by a zima, a spiritualist often possessed by powerful spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Mother's milk is held to pass on magical power, and the bonds between mothers, daughters and sisters run deep.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sccomp-timbuktu",
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "sccomp-aztec-empire",
+  "title": "The Aztec Empire before Cortes",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Tenochtitlan's realm at its height.",
+  "claims": [
+   {
+    "text": "By 1519 more than forty conquered provinces paid tribute to the emperor, who would soon need a Flower War, a battle fought only to take captives for sacrifice, if no new states could be found to conquer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   },
+   {
+    "text": "Quetzalcoatl was said to have gone to seek a bearded, white-skinned man; later priests changed the tale so that the god would return as one, and Cortes' arrival, with strange portents, put the empire's fate in Spanish hands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m2cf-aztec-legends",
+   "mrdm-aztec-sun"
+  ]
+ },
+ {
+  "id": "sccomp-ngoma",
+  "title": "Ngoma",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance",
+   "modern"
+  ],
+  "summary": "Wizard-priests of the Zimbabwe plain who interpret the spirits.",
+  "claims": [
+   {
+    "text": "Ngoma are part priest, part miracle-worker, solving the great riddles of the world to speak for the spirits; their true beginning as a group came with the move to the cities of the plain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "Many study nature for astrology and geomancy, others travel in dreams to far realms, and a few journey across Africa to meet other magi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mreu-madzimbabwe",
+   "m2stc-dust-witch"
+  ]
+ },
+ {
+  "id": "sccomp-lions-of-zion",
+  "title": "Lions of Zion",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Kabbalist guardians of Israel who call on the angels.",
+  "claims": [
+   {
+    "text": "The Lions draw secret names of angels and words of Creation from the Torah through Kabbalah, books like the Sepher Yetzirah, numerology and wordplay.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Calling the angels by their true names lets them wield God's power for defence, healing and righteous wrath.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccomp",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dc1-kabbalah",
+   "celestial-chorus"
+  ]
+ }
+]

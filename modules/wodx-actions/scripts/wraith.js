@@ -156,13 +156,12 @@ export function build(ctx) {
             if (n(fd.wp)) notes.push(`${fd.wp} Willpower`);
             let body = notes.length ? `<div class="vta-parts">${notes.map(esc).join(" · ")}</div>` : "";
             const rolls = [];
-            let faces = [], successes = 1;
+            let faces = [];
             if (a.r) {
                 const [at, sec] = a.r.split("+");
                 const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
                 const r = await rollPool(dice, fd.diff);
                 rolls.push(r.roll); faces = r.faces ?? [];
-                successes = r.botch ? 0 : r.successes;
                 body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : []);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }
@@ -194,7 +193,7 @@ export function build(ctx) {
         return dialog(`Passion: ${actor.name}`, content, "Roll", async fd => {
             const p = i.passions.find(x => x.id === fd.p); const item = actor.items.get(fd.p);
             if (!p || !item) return null;
-            if ((fd.how === "live" || fd.how === "second") && used[p.id] === sceneKey()) return ctx.notify(`${p.name} was already tapped this scene (p. 305).`);
+            if ((fd.how === "live" || fd.how === "second") && used[p.id] === sceneKey()) return ctx.notify(`${p.name} was already tapped this scene (Wraith 20th p. 305).`);
             let r, body = "", rolls = [];
             if (fd.how === "resolve") {
                 const orig = n(fd.orig) || p.value;
@@ -218,7 +217,7 @@ export function build(ctx) {
                 const out = W.neglectResult(p.value, r);
                 if (out.drop) await item.update({ "system.value": out.after });
                 body += `<div class="vta-res ${out.drop ? "bad" : "good"}">${out.drop ? `The Passion fades to ${out.after}.` : "The Passion holds."}</div>`;
-                if (out.harrowing) body += `<div class="vta-warn">A Passion lost: a fall into a Harrowing (p. 306).</div>${wbtn("harrowing", actor, "Harrowing", "passion")}`;
+                if (out.harrowing) body += `<div class="vta-warn">A Passion lost: a fall into a Harrowing (Wraith 20th p. 306).</div>${wbtn("harrowing", actor, "Harrowing", "passion")}`;
             } else {
                 const to = Math.max(1, p.value - (r.botch ? 0 : r.successes));
                 if (to < p.value) await item.update({ "system.value": to });
@@ -230,17 +229,17 @@ export function build(ctx) {
 
     async function fetter(actor) {
         const i = info(actor);
-        const content = `<form><p><b>${esc(actor.name)}</b>: Willpower ${i.willpower.temp}/${i.willpower.perm}. ${i.fetters.length ? "" : "<b>No Fetters: 1 Willpower a scene in the Shadowlands (p. 308).</b>"}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: Willpower ${i.willpower.temp}/${i.willpower.perm}. ${i.fetters.length ? "" : "<b>No Fetters: 1 Willpower a scene in the Shadowlands (Wraith 20th p. 308).</b>"}</p>
           ${i.fetters.length ? `<div class="form-group"><label>Fetter</label>${i.fetters.length > 5 ? searchBox("select[name=f]", "Search Fetters…", "Search Fetters") : ""}<select name="f" data-fixed>${i.fetters.map(f => `<option value="${f.id}">${esc(f.name)} (${f.value})</option>`).join("")}</select></div>` : ""}
           <div class="form-group"><label>What</label><select name="how" data-fixed><option value="scene">After a scene with it (6): Willpower</option><option value="slumber">Slumbered in it 8 hours (4): Willpower</option><option value="neglect">Neglect check (Storyteller, 9)</option><option value="lost">It is destroyed (a Harrowing)</option><option value="nofetter">A scene in the Shadowlands with no Fetters (1 Willpower)</option></select></div></form>`;
         return dialog(`Fetter: ${actor.name}`, content, "Go", async fd => {
-            if (fd.how === "nofetter") { if (!(await spendWillpower(actor, 1))) return null; await afterSpend(actor); return post(actor, `${actor.name}`, `<div class="vta-note">1 Willpower to stay in the Shadowlands this scene without Fetters (p. 308).</div>`); }
+            if (fd.how === "nofetter") { if (!(await spendWillpower(actor, 1))) return null; await afterSpend(actor); return post(actor, `${actor.name}`, `<div class="vta-note">1 Willpower to stay in the Shadowlands this scene without Fetters (Wraith 20th p. 308).</div>`); }
             const f = i.fetters.find(x => x.id === fd.f); const item = f ? actor.items.get(f.id) : null;
             if (!f || !item) return ctx.notify("Pick a Fetter.");
             if (fd.how === "lost") {
                 await item.update({ "system.value": 0 });
                 await ctx.logEvent?.(actor, `The Fetter “${f.name}” is destroyed.`, "fetter");
-                return post(actor, `${actor.name}: a Fetter lost`, `<div class="vta-warn">“${esc(f.name)}” is gone: a Harrowing at once (p. 308).</div>${wbtn("harrowing", actor, "Harrowing", "fetter")}`);
+                return post(actor, `${actor.name}: a Fetter lost`, `<div class="vta-warn">“${esc(f.name)}” is gone: a Harrowing at once (Wraith 20th p. 308).</div>${wbtn("harrowing", actor, "Harrowing", "fetter")}`);
             }
             const diff = fd.how === "slumber" ? 4 : fd.how === "scene" ? 6 : 9;
             const r = await rollPool(f.value, diff);
@@ -263,7 +262,7 @@ export function build(ctx) {
         const i = info(actor);
         const key = actor.getFlag(MOD, "memoriamSession");
         const session = sessionKey();
-        if (session && key === session) return ctx.notify("Memoriam is once a session (p. 115).");
+        if (session && key === session) return ctx.notify("Memoriam is once a session (Wraith 20th p. 115).");
         const r = await rollPool(i.memoriam, 8);
         const to = W.gainUpTo(i.pathos.temp, r.botch ? 0 : r.successes, i.pathos.max);
         if (to > i.pathos.temp) await P.adjust(actor, "pathos", to - i.pathos.temp);
@@ -382,7 +381,7 @@ export function build(ctx) {
                 return toGuide(actor, "Starting Angst", rollBlock(`Willpower ${i.willpower.perm}`, r) + `<p>Permanent Angst ${perm} (ones don't cancel; at least 1; p. 230).</p>`);
             }
             if (fd.act === "catharsis") {
-                if (!W.catharsisReady(i.angst.temp, i.willpower.temp)) return ctx.notify("Catharsis needs temporary Angst above Willpower (p. 230).");
+                if (!W.catharsisReady(i.angst.temp, i.willpower.temp)) return ctx.notify("Catharsis needs temporary Angst above Willpower (Wraith 20th p. 230).");
                 await P.adjust(actor, "angst", -1);
                 const s = await rollPool(i.angst.temp - 1, 6); const p = await rollPool(i.willpower.perm + i.eidolon, 6); rolls.push(s.roll, p.roll);
                 const who = W.catharsis(s.successes, p.successes);
@@ -404,7 +403,7 @@ export function build(ctx) {
                 if (!d) return ctx.notify("No Dark Passion on the sheet.");
                 const r = await rollPool(d.value, W.darkPassionDifficulty(fd.others)); rolls.push(r.roll);
                 if (!r.botch && r.successes) await P.adjust(actor, "angst", r.successes);
-                return toGuide(actor, `Dark Passion: ${d.name}`, rollBlock(`${esc(d.name)} (${d.value})`, r) + `<p>+${r.botch ? 0 : r.successes} temporary Angst (p. 235).</p>`);
+                return toGuide(actor, `Dark Passion: ${d.name}`, rollBlock(`${esc(d.name)} (${d.value})`, r) + `<p>+${r.botch ? 0 : r.successes} temporary Angst (Wraith 20th p. 235).</p>`);
             }
             if (fd.act === "thorn") {
                 const t = thorns.find(x => x.id === fd.thorn);

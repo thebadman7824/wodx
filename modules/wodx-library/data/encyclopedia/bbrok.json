@@ -1,0 +1,114 @@
+[
+ {
+  "id": "bbrok-wound",
+  "title": "Oversea's Wound",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The wereshark account of the moon and their auspices.",
+  "claims": [
+   {
+    "text": "Rokea say the moon is a wound in Oversea, the sky, healed by a glowing salve; the stars are smaller wounds seen when the great one is soothed.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbrok",
+      "page": 22,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "A wereshark born when the salve runs low, at the full moon, is a Brightwater warrior; one born when it is plentiful is a Darkwater scholar or innovator; those born between are Dimwater, who go their own way and often travel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrok",
+      "page": 22,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Their tale says Qyrl made the first lesser spawn from Oversea's blood, and Kun and C'et learned that new life needed Sea, Unsea and Oversea together; Kun then made the fishes, and on land the Great Kings, which built things before they died.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbrok",
+      "page": 22,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-rokea"
+  ]
+ },
+ {
+  "id": "bbrok-seas-soul",
+  "title": "Sea's Soul",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where young weresharks meet Sea.",
+  "claims": [
+   {
+    "text": "After its first long swim a young Rokea is guided by an elder to a Grotto and enters Sea's Soul, a spirit world reached as if diving into a perfect reflection.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrok",
+      "page": 38,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "There Sea speaks to each shark alone, naming its auspice, offering advice and teaching Gifts; reaching Sea's Soul from land is almost impossible.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrok",
+      "page": 38,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Darkwaters are credited with the Rite of the Black Shark and the first foretelling of a Small Wound, and some claim Mizuchi was one; most Rokea see Mizuchi and the Asian weresharks as traitors.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbrok",
+      "page": 38,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Rokea who spend time on land, swimming between, risk being hunted by their own kind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbrok",
+      "page": 38,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-rokea",
+   "bbrok-wound"
+  ]
+ }
+]

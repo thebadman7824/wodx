@@ -1,0 +1,82 @@
+[
+ {
+  "id": "sccl-night-folk",
+  "title": "Night-folk of the Renaissance",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How magi of the Crusade see the other beings of the night.",
+  "claims": [
+   {
+    "text": "Magi may meet vampyrs, werecreatures, ghosts and fae; vampyrs hold old lore but always want a price, and werewolves tend to see magi, like most humans, as little better than cattle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccl",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Wraiths are history without form and know many secrets of the past.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccl",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-dark-fantastic",
+   "sc-otherworlds"
+  ]
+ },
+ {
+  "id": "sccl-blood-oaths",
+  "title": "Blood Oaths and the magi",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How vampyr bonds have snared whole Covenants.",
+  "claims": [
+   {
+    "text": "A vampyr's blood can bind a mortal like a strong love spell, leaving a thrall who must obey even while hating the master.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccl",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Such Blood Oaths have tied magi, sometimes whole Covenants, into alliances with the undead and have eaten away at the courts of Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccl",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sccl-night-folk",
+   "mrbt-tremere-cost"
+  ]
+ }
+]

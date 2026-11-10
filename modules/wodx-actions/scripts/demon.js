@@ -215,7 +215,7 @@ export function build(ctx) {
     /* -- reaping and thralls ----------------------------------------- */
     async function reap(actor) {
         const i = info(actor);
-        const content = `<form><p>Reaping needs an act that makes one mortal believe: love or terror, not a glimpse (p. 250).</p>
+        const content = `<form><p>Reaping needs an act that makes one mortal believe: love or terror, not a glimpse (Demon: The Fallen p. 250).</p>
           <div class="form-group"><label>The mortal's Willpower</label><input type="number" name="mwp" min="1" max="10" value="3"/></div>
           <div class="form-group"><label><input type="checkbox" name="res"/> The act strikes the mortal's own beliefs or history (two points)</label></div>
           <div class="form-group"><label>How</label><input type="text" name="how" value=""/></div></form>`;
@@ -234,7 +234,7 @@ export function build(ctx) {
         const i = info(actor);
         const lines = i.thralls.map(t => `${t.name} | ${n(t.potential)} | ${n(t.offered)} | ${n(t.willpower)}${t.broken ? " | broken" : ""}`).join("\n");
         const content = `<form><p>One thrall a line: <b>name | Faith potential | Faith offered each dawn | Willpower</b> (add "| broken" for a pact the demon has broken).
-          A thrall can offer up to half the potential, rounded up; the rest buys gifts (p. 253).</p>
+          A thrall can offer up to half the potential, rounded up; the rest buys gifts (Demon: The Fallen p. 253).</p>
           <div class="form-group"><textarea name="t" rows="7" style="width:100%">${esc(lines)}</textarea></div>
           <p class="wodx-quiet">Potential: ${D.POTENTIAL.map((t, k) => `${k} ${esc(t)}`).join("; ")}.</p></form>`;
         return dialog(`Thralls: ${actor.name}`, content, "Save", async fd => {
@@ -251,7 +251,7 @@ export function build(ctx) {
     async function sin(actor) {
         const i = info(actor);
         const rows = D.SINS.filter(([row]) => D.sinCounts(i.torment.perm, row));
-        const content = `<form><p>At Torment ${i.torment.perm}, these acts still risk Torment (p. 159).</p>
+        const content = `<form><p>At Torment ${i.torment.perm}, these acts still risk Torment (Demon: The Fallen p. 159).</p>
           <div class="form-group"><label>The act</label><select name="row" data-fixed>${rows.map(([row, t]) => `<option value="${row}">${row}: ${esc(t)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Virtue</label><select name="v" data-fixed>${Object.entries(D.SIN_VIRTUE).map(([k, t]) => `<option value="${k}">${cap(k)} ${i.virtues[k]}: ${esc(t)}</option>`).join("")}</select></div></form>`;
         if (!rows.length) { notify(`${actor.name} is past sin.`); return null; }
@@ -265,7 +265,7 @@ export function build(ctx) {
     }
     async function kindness(actor) {
         const i = info(actor);
-        const content = `<form><p>A truly selfless act, with nothing to gain (p. 161). The Storyteller judges it.</p>
+        const content = `<form><p>A truly selfless act, with nothing to gain (Demon: The Fallen p. 161). The Storyteller judges it.</p>
           <div class="form-group"><label>Virtue</label><select name="v" data-fixed>${[["conscience", "a sacrifice because it is right"], ["conviction", "true to belief at great cost"], ["courage", "valor for another's sake"]].map(([k, t]) => `<option value="${k}">${cap(k)} ${i.virtues[k]}: ${t}</option>`).join("")}</select></div></form>`;
         return dialog(`An act of kindness: ${actor.name}`, content, "Roll", async fd => {
             const v = await rollPool(i.virtues[fd.v], 6), t = await rollPool(i.torment.perm, 6);
@@ -280,7 +280,7 @@ export function build(ctx) {
     /* -- healing, the holy, names, illusion --------------------------- */
     async function heal(actor) {
         const t = ctx.healthTrack(actor);
-        const content = `<form><p>${t.damage.bashing}B / ${t.damage.lethal}L / ${t.damage.aggravated}A. A full turn of stillness; one point a turn (p. 248).</p>
+        const content = `<form><p>${t.damage.bashing}B / ${t.damage.lethal}L / ${t.damage.aggravated}A. A full turn of stillness; one point a turn (Demon: The Fallen p. 248).</p>
           <div class="form-group"><label>Heal</label><select name="w" data-fixed><option value="bashing">all bashing (1 Faith)</option><option value="lethal">one lethal level (1 Faith)</option></select></div></form>`;
         return dialog(`Faith heals: ${actor.name}`, content, "Heal", async fd => {
             const out = D.faithHeal(t.damage, fd.w);
@@ -321,7 +321,7 @@ export function build(ctx) {
         });
     }
     async function illusion(actor) {
-        const content = `<form><p>Against another demon, the difficulty is its Faith or Torment, the higher (p. 171).</p>
+        const content = `<form><p>Against another demon, the difficulty is its Faith or Torment, the higher (Demon: The Fallen p. 171).</p>
           <div class="form-group"><label>The other demon's Faith</label><input type="number" name="f" min="0" max="10" value="0"/></div>
           <div class="form-group"><label>Its Torment</label><input type="number" name="t" min="0" max="10" value="0"/></div></form>`;
         return dialog(`See through illusion: ${actor.name}`, content, "Roll", async fd => {

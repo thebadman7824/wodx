@@ -1,0 +1,359 @@
+[
+ {
+  "id": "daveil-keening",
+  "title": "The Keening",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The holy sound that rose from Mecca in the Prophet’s time.",
+  "claims": [
+   {
+    "text": "As Muhammad embraced the role of Prophet, a sound heard only by Cainites began to spread from Mecca across Arabia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "It began as a faint whisper at dusk and swelled to a roar by noon, stealing Cainite sleep and wearing at their sanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "It grew stronger the nearer a vampire came to Mecca, and any Cainite who entered the city was consumed in blinding white flame.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Devout Muslim Cainites such as Suleiman endured it gladly as a sign of devotion to God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daibn-ashirra",
+   "daveil-hedayat-iman"
+  ]
+ },
+ {
+  "id": "daveil-road-bedouin",
+  "title": "Tariq el-Bedouin",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Road of the Nomad.",
+  "claims": [
+   {
+    "text": "Followers of the Road of the Nomad meet every challenge directly with courage and cunning, shun lavish havens, servants and ghouls, and prefer a wanderer’s nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   },
+   {
+    "text": "They are decisive to the point of impulse; cowardice is despised, though deception that succeeds is respected.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   },
+   {
+    "text": "Its sins run from choosing reason over instinct at the highest ratings, through owning more than one can carry and keeping a permanent lair, to breaking one’s word or refusing a challenge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 138,
+      "pdf": 139
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daveil-road-shaitan",
+  "title": "Tariq el-Shaitan",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Road of the Devil among Islamic Cainites.",
+  "claims": [
+   {
+    "text": "Followers revel in what their society forbids and try to corrupt the virtues of those around them with gifts and sweet words.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "A few go further, into outright devil worship; this is the variant held by elder Baali, who revere the Children.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "Its Virtues are Conviction, Instinct and Courage, and followers seldom hide their taste for luxury, though Ashirra zeal makes open degeneracy dangerous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daveil-road-umma"
+  ]
+ },
+ {
+  "id": "daveil-road-umma",
+  "title": "Tariq el-Umma",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Road of Community.",
+  "claims": [
+   {
+    "text": "Many of the Embraced cannot keep their faith in Heaven and Hell, whether through bitterness or because immortality makes an afterlife seem pointless.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   },
+   {
+    "text": "The Road of Community offers such Cainites a path of belonging instead.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daveil-road-shaitan"
+  ]
+ },
+ {
+  "id": "daveil-religious-prohibition",
+  "title": "Religious Prohibition and Outspoken Dhimmi",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Flaws for Cainites under Islam.",
+  "claims": [
+   {
+    "text": "Religious Prohibition is a Flaw for a Cainite who kept the faith: at 2 points the vampire feeds only on animals or blood drained by a ritual butcher.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "At 4 points the vampire feeds only in real need, with a blood pool of three or less, and may sink into self-loathing for nights afterwards.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "Outspoken Dhimmi, a 4-point Flaw, marks a Jew or Christian who openly champions that faith against the sharia and risks punishment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daveil-hedayat-iman",
+  "title": "Hedayat Iman, the Gifts of Faith",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ashirra sorcery rooted in prayer.",
+  "claims": [
+   {
+    "text": "An Ashirra must study with a teacher who knows a power or ritual, through prayer and inward focus taking days for a first-level power and years for a fifth-level ritual, and cannot learn one rated above Theology.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "Prayer is the centre of every Hedayat Iman power; the path is used mainly by the Haji, and only by them after the Mongol invasion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "Saut Allah, the Voice of God, has the caster lead others in prayer toward Mecca for at least an hour, then spend a blood point and roll Charisma + Leadership at difficulty 7, less one per hour of prayer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   },
+   {
+    "text": "Each success grants one listener a temporary Willpower point until dawn, never the caster; a botch costs each listener a Willpower point.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 161,
+      "pdf": 162
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daveil-keening"
+  ]
+ },
+ {
+  "id": "daveil-muslim-dead",
+  "title": "The Muslim dead of the Shadowlands",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "wraith"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Faithful ghosts under Stygian rule.",
+  "claims": [
+   {
+    "text": "Many devout Muslim ghosts are horrified that the afterlife is a wretched shadow of the living world and not the Paradise promised.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 223,
+      "pdf": 224
+     }
+    ]
+   },
+   {
+    "text": "The atheist European Stygian empire rules these lands, and Charon lets Christian ghosts travel the Byways freely between Necropoli.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 223,
+      "pdf": 224
+     }
+    ]
+   },
+   {
+    "text": "Many Muslim dead join the Renegades; a few, led by al-Alam, who died a martyr defending Jerusalem from the crusaders, aim to drive the Stygian Legionnaires from the Jerusalem Necropolis and found a Muslim kingdom of the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daveil",
+      "page": 223,
+      "pdf": 224
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

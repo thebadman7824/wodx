@@ -1,0 +1,337 @@
+[
+ {
+  "id": "mrnwo-mind-first",
+  "title": "Mind Procedures at the core",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the New World Order sees its own work.",
+  "claims": [
+   {
+    "text": "The NWO judges everything as an exercise of Mind Procedures and calls itself the master of psychological warfare.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Its Collegium of History is told to favour accounts that support the Union's mandate and to discourage awkward, unprovable views.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The Men in Black now prefer the name Black Suits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "mrnwo-black-suit-constructs",
+  "title": "Black Suit constructs",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Engineered agents of the NWO.",
+  "claims": [
+   {
+    "text": "After a run of UFO sightings and fears of another Roswell, the NWO and the Progenitors began a joint programme to build Black Suit constructs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The first generation altered Sleeper memories and quashed belief in aliens, and was built to self-destruct when the job was done.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Handlers of current constructs are now meant to be trusted friends rather than minders waiting to dispose of them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "progenitors"
+  ]
+ },
+ {
+  "id": "mrnwo-methodologies",
+  "title": "NWO Methodologies",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The four branches of the New World Order.",
+  "claims": [
+   {
+    "text": "The NWO grew top down from a few 18th and 19th century visionaries who sought one world government, and its Inner Circle applies Mind Procedures even to itself.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 51,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "An unspoken ranking puts the Ivory Tower above the other three Methodologies, which stand as equals, largely because of the order in which they were founded.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 51,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The Operatives do the dirty work of containing Reality Deviants and policing Technocrats who stray, and grew out of the First World War.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "The Watchers began as researchers of esoteric mysteries, repurposed to watch reality; many early agents were devoured by the things they studied.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 57,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "mrnwo-feed"
+  ]
+ },
+ {
+  "id": "mrnwo-feed",
+  "title": "The Feed",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The NWO's social media Methodology.",
+  "claims": [
+   {
+    "text": "The Watchers were stunned when the Internet took on a life of its own, with unsanctioned communities ignoring Mind Procedures and spreading primers on Reality Deviance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 59,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Under pressure from the Collegium of Information Technology, the Watchers gathered their social media Lensmen with a big budget and vague orders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 59,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "Those agents named themselves the Feed after one of the new technologies and found the Internet unlike any older medium.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 59,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "mrnwo-methodologies"
+  ]
+ },
+ {
+  "id": "mrnwo-lord-vargo",
+  "title": "Lord Vargo, Zeppelin Emperor",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Etherite would-be conqueror of the First World War era.",
+  "claims": [
+   {
+    "text": "As the First World War began, an Etherite styling itself Lord Vargo, Zeppelin Emperor, set out to conquer the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "The newly formed Operatives took on the campaign against Vargo and scored a decisive success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrnwo-methodologies",
+   "society-of-ether"
+  ]
+ },
+ {
+  "id": "mrnwo-scroll-of-thothmes",
+  "title": "The Scroll of Thothmes",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A disputed Egyptian relic of the Sacred Artisans.",
+  "claims": [
+   {
+    "text": "In 1923 Professor Donald Richardson claimed that a relic from the reign of Thothmes I described a secret society of Sacred Artisans, writing in a script only the Enlightened could read.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 66,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "A journal fragment said to belong to Skeleton Key Detective Crispin, found at a London auction, may support the theory.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 66,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "sc-artificers"
+  ]
+ },
+ {
+  "id": "mrnwo-q-division",
+  "title": "Q Division",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The NWO's gear makers.",
+  "claims": [
+   {
+    "text": "Q Division hands out equipment case by case with no fixed policy, so requests tangle in nepotism and red tape.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 79,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Agents who keep good relations with Q Division find doors open; those who do not may be refused upgrades.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrnwo",
+      "page": 79,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "mrnwo-methodologies"
+  ]
+ }
+]

@@ -1,0 +1,320 @@
+[
+ {
+  "id": "cbg-quell-the-herd",
+  "title": "Quell the Herd",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Animalism 6: smothering the Beasts of a crowd.",
+  "claims": [
+   {
+    "text": "Like Quell the Beast but on many targets at once: animals or people who can see or hear the Gangrel lose passion and will and turn listless for the duration.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 61,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "The roll is Strength + Intimidation at difficulty 7.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 61,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gangrel"
+  ]
+ },
+ {
+  "id": "cbg-stampede",
+  "title": "Stampede",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Animalism 7: turning a crowd to panic.",
+  "claims": [
+   {
+    "text": "The Gangrel sparks a blind panic that sends hundreds into flight; it works only on large groups that some ordinary cause has already stirred up, such as a predator's scent or a lost home game.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 62,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "It needs a crowd of roughly fifty agitated mortals in sight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 62,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbg-quell-the-herd"
+  ]
+ },
+ {
+  "id": "cbg-eyes-of-the-forest",
+  "title": "Eyes of the Forest",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Animalism 9: becoming one with a domain.",
+  "claims": [
+   {
+    "text": "The vampire sinks into the ground of a chosen domain and spreads through it; unlike Earth Meld the Gangrel cannot simply be dug out, and every animal and insect there serves as eyes and ears.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 64,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "It costs six blood points and lasts as long as the Gangrel wishes; tales of brooding forests and forbidding mountains grow from it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 64,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbg-quell-the-herd"
+  ]
+ },
+ {
+  "id": "cbg-sensory-shield",
+  "title": "Sensory Shield",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fortitude 6: senses that cannot be overwhelmed.",
+  "claims": [
+   {
+    "text": "For two blood points over a scene, spotlights, muzzle flash, explosions and pepper spray cannot blind or deafen the Gangrel, and pain is easier to bear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 64,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "While it lasts, the vampire's eyes, ears, nose and open wounds give off an eerie glow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 64,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbg-resilient-mind"
+  ]
+ },
+ {
+  "id": "cbg-resilient-mind",
+  "title": "Resilient Mind",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fortitude 7: a mind hardened against intrusion.",
+  "claims": [
+   {
+    "text": "On learning it, the Gangrel may shed centuries of tics and paranoia, and mental Disciplines grow harder to use against the vampire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 65,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "The price is that from then on any animal flaws the vampire gains must be physical ones; a Willpower roll at difficulty 7 is made on learning it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 65,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbg-sensory-shield"
+  ]
+ },
+ {
+  "id": "cbg-shape-revisited",
+  "title": "Shape of the Beast, Gangrel Version",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Protean 4 with two fixed forms.",
+  "claims": [
+   {
+    "text": "Only for Clan Gangrel: the vampire picks one fight form and one flight form when learning the power, and they can never change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 67,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "The Gangrel keeps personality, memories and skills and gains the animal's natural abilities; one blood point assumes either form.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 67,
+      "pdf": 63
+     },
+     {
+      "book": "cbgangrel",
+      "page": 68,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "protean",
+   "ww-mountain-lion"
+  ]
+ },
+ {
+  "id": "cbg-animal-swarm",
+  "title": "Animal Swarm",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Protean 7: dissolving into many small creatures.",
+  "claims": [
+   {
+    "text": "The Gangrel breaks into a swarm of rats, crows, scorpions or the like, steering them together or one by one, and can reform from any or all of them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 70,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Each creature carries one blood point, up to the vampire's current pool; blood in creatures that do not rejoin is lost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 70,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbg-mythic-form"
+  ]
+ },
+ {
+  "id": "cbg-mythic-form",
+  "title": "Mythic Form",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Protean 8: taking the shape of a legend.",
+  "claims": [
+   {
+    "text": "The Gangrel becomes a beast of myth drawn from personal tradition, such as a griffin for an ancient Scythian, a sphinx for an Egyptian or a thunderbird for a Native American, with the powers legend gives it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 71,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "It costs three blood points to begin the change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbgangrel",
+      "page": 71,
+      "pdf": 67
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbg-animal-swarm"
+  ]
+ }
+]

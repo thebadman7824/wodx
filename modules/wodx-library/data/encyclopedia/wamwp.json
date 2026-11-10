@@ -1,0 +1,195 @@
+[
+ {
+  "id": "wamwp-board-schism",
+  "title": "The schism on the Pentex Board",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A divided Board after three deaths.",
+  "claims": [
+   {
+    "text": "A small but fast-growing split runs through the Pentex Board of Directors after three members were killed by the claws of a single Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 4,
+      "pdf": 5
+     }
+    ]
+   },
+   {
+    "text": "No one knows which Wyrms the replacement members truly serve, so the whole Board has turned nervous and paranoid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 4,
+      "pdf": 5
+     }
+    ]
+   },
+   {
+    "text": "Pentex is like a many-armed kraken: a hard-won victory over it often turns out to have cut off only one tentacle tip, a subsidiary of a subsidiary.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 4,
+      "pdf": 5
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pentex",
+   "wamwp-monkeywrenchers",
+   "wamwp-enzo"
+  ]
+ },
+ {
+  "id": "wamwp-monkeywrenchers",
+  "title": "The Monkeywrenchers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Young Garou who strike at Pentex directly.",
+  "claims": [
+   {
+    "text": "Some Garou have at last put a name, and sometimes a face, to the enemy that hid behind Pentex, and young werewolves have rallied to fight it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 4,
+      "pdf": 5
+     }
+    ]
+   },
+   {
+    "text": "They are known as Monkeywrenchers, a name now spoken by Garou and Wyrm servants alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 4,
+      "pdf": 5
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wamwp-board-schism"
+  ]
+ },
+ {
+  "id": "wamwp-hines-plan",
+  "title": "The Hines Plan",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Pentex strips the humanity from its fomori.",
+  "claims": [
+   {
+    "text": "New fomori still hold mostly human aims and wishes, so Pentex works to change them quickly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Under the Hines Plan, now spreading to many Pentex sites, drugs and conditioning, including near-silent music piped through hidden speakers, wear away kindness, remorse and empathy and leave a sly intelligence; a fomor whose treatment fails is destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Most of these fomori are made surgically by Magadon, and they dig ant-farm warrens beneath their facilities; intruders must make Perception + Alertness rolls at difficulty 8 or get lost and lose dice on later Perception rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wasubs-magadon",
+   "fomori"
+  ]
+ },
+ {
+  "id": "wamwp-enzo",
+  "title": "Enzo Giovanni on the Board",
+  "kind": "character",
+  "lines": [
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Giovanni drawn into the Wyrm’s service.",
+  "claims": [
+   {
+    "text": "Enzo Giovanni won the third open seat on the Pentex Board by entirely legitimate means, through shifting vote deals and a smear campaign, with Kathryn Mollett as the only ally there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Mahsstrac, the Urge Wyrm of Power, sensed Enzo’s hunger for power and traded more of it for loyalty; Enzo is now almost wholly subservient, while ties to the clan weaken.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Pentex bought Irish Eyes Enterprises, nearly shutting the Giovanni out; the Venetian Giovanni have not yet branded Enzo a traitor and know nothing of the Wyrm’s hold on Pentex.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wamwp",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wamwp-board-schism"
+  ]
+ }
+]

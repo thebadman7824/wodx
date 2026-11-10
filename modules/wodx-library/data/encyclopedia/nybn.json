@@ -1,0 +1,198 @@
+[
+ {
+  "id": "nybn-new-york",
+  "title": "New York (Kindred city)",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A long-time Sabbat city taken by the Camarilla in the sect war.",
+  "claims": [
+   {
+    "text": "Kindred history in New York reaches back before Dutch New Amsterdam, and the city stayed in Sabbat hands until the sect war brought the Sabbat down there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "By one Sabbat veteran's count, New York in the late 1950s held perhaps 300 Cainites, half of them Lasombra and Tzimisce.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "camarilla",
+   "nybn-sect-war"
+  ]
+ },
+ {
+  "id": "nybn-otahyoni",
+  "title": "Otahyoni",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A Tzimisce bishop of early New York.",
+  "claims": [
+   {
+    "text": "In Cayuga, Otahyoni apparently means wolf. Otahyoni's brief tenure filled the sect with Kindred Embraced from the tribes of the Iroquois Confederacy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Many of the Sabbat's native-influenced rites, often credited to frontier Embraces in the West, have deeper roots among eastern tribes and Embraces like these.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Otahyoni's packs leaned toward secession from the sect, and Ecaterina is thought to have held a grudge.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tzimisce",
+   "sabbat"
+  ]
+ },
+ {
+  "id": "nybn-giovanni",
+  "title": "The Giovanni of New York",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Necromancers' grip on the city's trade.",
+  "claims": [
+   {
+    "text": "Through paid dispatchers, customs men and dock and ground crews, the Giovanni have watched what moves up the Hudson since the 1870s and through Idlewild, now Kennedy, airport since 1962.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "During the sect war the Giovanni smuggled Camarilla Kindred into the city and told the Sabbat nothing, which they called keeping the terms of their noncompetition agreement. The Giovanni are still the city's biggest Kindred power players along the waterfront.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The clan's ties to the Gambino crime family go back to 1921, when the Giovanni supplied Joe Masseria with fresh talent for a cut of the racket.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni",
+   "nybn-sect-war"
+  ]
+ },
+ {
+  "id": "nybn-sect-war",
+  "title": "The fall of Sabbat New York",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Camarilla campaign that broke the Sabbat's hold on New York.",
+  "claims": [
+   {
+    "text": "Jan Pieterzoon ran the front line: arranging with the Giovanni to slip Kindred into the city, timing the strike so attackers inside and outside New York hit together, and brokering a Setite deal to sell Sabbat buyers blood said to be a Methuselah's.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Word that vampire activity was rising brought the Inquisition and the Arcanum extra support in the city. Their hunters killed few vampires, but took out key pack members and drove others into hiding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Camarilla agents used burst gas mains to burn out Sabbat nests, and sympathetic police jailed the ghouls of Sabbat elders on real or invented charges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "nybn",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "sabbat",
+   "nybn-giovanni",
+   "followers-of-set"
+  ]
+ }
+]

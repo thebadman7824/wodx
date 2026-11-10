@@ -1,0 +1,192 @@
+[
+ {
+  "id": "bh-madame-guil",
+  "title": "Madame Guil",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A justicar and the archons sworn to that office.",
+  "claims": [
+   {
+    "text": "Madame Guil was born a French peasant and knew only hunger in youth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bloodyhearts",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "A justicar usually keeps 15 to 20 archons and countless informants, and Guil's chief archons are all blood bound to the justicar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bloodyhearts",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Guil has spent a century hunting anarchs to silence rumours of sympathy for them, and the strain has left Guil close to madness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bloodyhearts",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arc-archons",
+   "camarilla"
+  ]
+ },
+ {
+  "id": "bh-hafsa",
+  "title": "Hafsa, the Watcher",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Assamite raised for the clan who now serves Madame Guil.",
+  "claims": [
+   {
+    "text": "The Assamites sometimes take children at birth and raise them in the clan fortress for the Embrace; Hafsa was raised this way, taught only to fight, hunt and hide.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bloodyhearts",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Embraced, Hafsa learned hatred and did not stay loyal to the clan, and now serves as one of Guil's archons, sure that Guil is good.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bloodyhearts",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "bloodyhearts",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bh-madame-guil"
+  ]
+ },
+ {
+  "id": "bh-grabkrieg",
+  "title": "Das Buch von der Grabkrieg",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A medieval prophecy of the Jyhad's ages.",
+  "claims": [
+   {
+    "text": "Written in the early Middle Ages in German and an untranslated script like Linear A, it looks like a poor monastery manuscript in a single hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bloodyhearts",
+      "page": 57,
+      "pdf": 58
+     },
+     {
+      "book": "bloodyhearts",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Its seven cantos, in verse and prose, each cover one age of the world and its Jyhad; the author claims to live in the fourth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bloodyhearts",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Copies of Das Buch vom Grabkrieg survive: one original is kept in secret, and a fire-damaged copy lacking its second half also exists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "beckett",
+      "page": 4,
+      "pdf": 5
+     },
+     {
+      "book": "beckett",
+      "page": 510,
+      "pdf": 511
+     }
+    ],
+    "versions": [
+     {
+      "text": "Beckett hunts it as a lost tome.",
+      "refs": [
+       {
+        "book": "beckett",
+        "page": 12,
+        "pdf": 13
+       }
+      ]
+     },
+     {
+      "text": "The Tremere try to restrict it, but copies circulate in secret and many anarchs follow it.",
+      "refs": [
+       {
+        "book": "bloodyhearts",
+        "page": 57,
+        "pdf": 58
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "text": "It is studied alongside the notes on Gehenna of Doctor Mortius, a Tremere, and Diabolists read it to learn about the elders they hunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bloodyhearts",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bjd-grave-war",
+   "gehenna",
+   "jyhad"
+  ]
+ }
+]

@@ -1,0 +1,95 @@
+[
+ {
+  "id": "cnob-fior",
+  "title": "The Fior",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Trial by ordeal among the fae.",
+  "claims": [
+   {
+    "text": "Noble courts judge fairly but finally; since King David's reforms the accused may have counsel and may choose summary judgment or trial by Fior.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cnob",
+      "page": 32,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The Fior is an old noble custom of trial by ordeal, also used by many commoner courts and motleys, and not only in law: a suitor may be set a Fior by the one being courted. A graver crime demands a harder test, often one that makes the accused face the wrong done.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cnob",
+      "page": 32,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "high-king-david",
+   "courts"
+  ]
+ },
+ {
+  "id": "cnob-noble-politics",
+  "title": "Noble political leanings",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Reformers, Modernists and the Beltaine Blade.",
+  "claims": [
+   {
+    "text": "The Beltaine Blade gathers the most reactionary nobles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cnob",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Reformers want a constitutional monarchy, led by philosopher-kings and answerable to what the people want; King David and Queen Mab are leading examples, though Reformers differ a great deal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cnob",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Modernists, rare among sidhe, accept or even embrace the modern world, a risky course given sidhe frailty before Banality; House Scathach leans Modernist.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cnob",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "high-king-david",
+   "queen-mab",
+   "house-scathach",
+   "banality"
+  ]
+ }
+]

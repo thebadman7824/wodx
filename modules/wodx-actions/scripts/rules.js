@@ -48,7 +48,7 @@ export function actionPool(p) {
         dice = p.daytimeCap;
     }
     if (diff >= 10 && (p.multiIndex > 0 || p.retries > 0))
-        blocked = blocked || "Difficulty reaches 10 from multiple actions or retries: the action cannot be attempted (p. 322-323).";
+        blocked = blocked || "Difficulty reaches 10 from multiple actions or retries: the action cannot be attempted (V20 Dark Ages pp. 322–323).";
     dice = Math.max(0, dice);
     return { dice, difficulty: diff, parts, blocked, autoSuccessAllowed: dice >= diff };
 }
@@ -123,7 +123,7 @@ export const FRENZY_PROVOCATIONS = {
     tasteblood: { label: "Taste of blood when hungry", diff: 6 },
     loved: { label: "Loved one in danger", diff: 7 },
     humiliation: { label: "Outright public humiliation", diff: 8 },
-    hunger: { label: "Hunger on catching prey (p. 334)", diff: 6 },
+    hunger: { label: "Hunger on catching prey (V20 Dark Ages p. 334)", diff: 6 },
     atrocity: { label: "Urge to commit an atrocity (9 – Conscience/Conviction)", diff: null },
     custom: { label: "Other (set difficulty)", diff: 6 }
 };
@@ -172,10 +172,49 @@ export function generation(gen) { return GENERATIONS[Math.max(3, Math.min(13, ge
 
 export const VESSELS = {
     human: { label: "Average human", pool: 10 }, child: { label: "Child", pool: 5 },
-    vampire: { label: "Cainite (10+)", pool: 10 }, werewolf: { label: "Lupine", pool: 20 },
+    vampire: { label: "Cainite (10+)", pool: 10 }, werewolf: { label: "Lupine", pool: 20 }, fae: { label: "Changeling / fae", pool: 10 },
     cow: { label: "Cow / horse", pool: 5 }, dog: { label: "Dog", pool: 2 }, cat: { label: "Cat", pool: 1 },
     bird: { label: "Bird", pool: 0.5 }, rat: { label: "Bat / rat", pool: 0.25 }
 };
+
+/**
+ * What is in a vessel's blood (V20 pp. 295, 301-302). V20 Dark Ages has no rule of its own, so WoDX uses V20's in
+ * every era (house rule). Drugs touch a vampire far less than a mortal.
+ */
+export const VESSEL_STATES = {
+    clean: { label: "Nothing unusual" },
+    drunk: { label: "Drunk", note: "Alcohol: −1 die to Dexterity and Intelligence pools for every two drinks in the vessel's blood, fading by one die an hour (V20 p. 301)." },
+    stimulant: { label: "On cocaine, meth or speed", note: "A vampire with Celerity has one more dot of it for 10 − Stamina minutes (V20 p. 301)." },
+    hallucinogen: { label: "On a hallucinogen", note: "Pools drop by 1 to 3, with visions like Dementation's second level, as the Storyteller decides (V20 p. 301)." },
+    opiate: { label: "On heroin, morphine or barbiturates", note: "Lower Dexterity and Ability pools, and frenzy is easier to resist, as the Storyteller decides (V20 p. 302)." },
+    disease: { label: "Carrying a blood-borne disease", note: "Vampires take no harm from most sickness but carry blood-borne disease to later vessels (V20 p. 295)." }
+};
+
+/**
+ * Fae blood (house rule, every era): the Glamour in it is a potent drug to Kindred, bringing hallucinations and
+ * waking dreams. Each point drunk lasts a scene; pools drop by 1, by 2 from three points, by 3 from five. A Dark Ages
+ * fae's Court gift (VtDA20 p. 181) comes on top.
+ */
+export function faeBloodHigh(points) {
+    const p = Math.max(0, Math.floor(Number(points) || 0));
+    if (!p) return null;
+    const dice = p >= 5 ? 3 : p >= 3 ? 2 : 1;
+    return { dice, scenes: p, note: `Fae blood: the Glamour in it is a potent drug. For ${p} scene${p === 1 ? "" : "s"} the vampire hallucinates and walks in waking dreams, seeing the Dreaming's phantoms as real and unable to tell them from the world; every pool is ${dice} di${dice === 1 ? "e" : "ce"} smaller.` };
+}
+
+/** Alcohol's penalty: one die from Dexterity and Intelligence pools for every two drinks. */
+export function drinkPenalty(drinks) { return Math.floor(Math.max(0, Number(drinks) || 0) / 2); }
+
+/**
+ * Blood-borne disease (V20 p. 295): Intelligence + Medicine at 7 spots it. Missing it exposes the vampire, who resists
+ * with Stamina at 6; a botch on the spotting roll makes a carrier at once.
+ */
+export function diseaseOutcome(spot, resist = null) {
+    if (spot.botch) return { spotted: false, carrier: true, why: "botch" };
+    if (spot.successes > 0) return { spotted: true, carrier: false };
+    if (!resist) return { spotted: false, carrier: null };
+    return { spotted: false, carrier: !(resist.successes > 0), why: resist.successes > 0 ? "resisted" : "exposed" };
+}
 
 export const HUNTING_GROUNDS = {
     slums: { label: "Slums / the Circus", diff: 4 }, lower: { label: "Lower-class neighborhood", diff: 5 },

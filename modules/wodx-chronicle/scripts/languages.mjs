@@ -47,7 +47,7 @@ export function meritLanguagesOf(actor) {
 }
 
 /** The characters a user reads chat through: their assigned character and every actor they own. */
-function charactersOf(user) {
+export function charactersOf(user) {
   const out = new Set();
   if ( user?.character ) out.add(user.character);
   for ( const a of game.actors ?? [] ) if ( a.testUserPermission?.(user, "OWNER") && a.hasPlayerOwner ) out.add(a);

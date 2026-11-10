@@ -1,0 +1,1655 @@
+[
+ {
+  "id": "inq-shadow-inquisition",
+  "title": "The Shadow Inquisition",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The secret Church body that hunts supernatural evil.",
+  "claims": [
+   {
+    "text": "The Inquisition, also called the shadow or secret Inquisition, is a body inside the Catholic Church that seeks out and destroys supernatural evil.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Holy Office is its public face, dealing with ordinary heresy; most of its members know nothing of the shadow Inquisition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "An inquisitor is a member of the shadow Inquisition, usually though not always from one of the five orders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The game uses a real Inquisition with some dates moved, and is about how far faith and fanaticism push people, not about any real believers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inquisition",
+   "da-hunters",
+   "inq-orders",
+   "inq-council-of-faith"
+  ]
+ },
+ {
+  "id": "inq-council-of-faith",
+  "title": "Councils of Faith and the Grand Inquisitor",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Who rules the shadow Inquisition.",
+  "claims": [
+   {
+    "text": "A Council of Faith rules the inquisitors of a large city or region, holding trials and settling disputes between them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Supreme Council of Faith sits in Rome.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Grand Inquisitor heads the whole shadow Inquisition; so far in the Dark Medieval the only one has been Cardinal Battista Marzone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-shadow-inquisition"
+  ]
+ },
+ {
+  "id": "inq-orders",
+  "title": "The Five Orders",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The groups that supply the Inquisition's members.",
+  "claims": [
+   {
+    "text": "The Inquisition draws its members from five orders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Of the five orders, three are monastic, namely the Knights of Acre, the Red Order and the St. John sisterhood, and two are lay: the Oculi Dei and House Murnau.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "The Poor Knights of the Passion, whose full name also invokes the Cross of Acre, are a military order of monk-knights who fight the enemy in battle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "The Sisters of St. John are nuns, often gifted with the Holy Sight, who protect the weak; they lean on Social traits, and most have high Self-Control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "inquisitor",
+      "page": 135,
+      "pdf": 136
+     },
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Monks and nuns of the Red Order, properly the Order of St. Theodosius, are the masters of ritual Holy Art.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-oculi-dei",
+   "inq-house-of-murnau",
+   "inq-shadow-inquisition"
+  ]
+ },
+ {
+  "id": "inq-oculi-dei",
+  "title": "Oculi Dei",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Eyes of God, the Inquisition's spies.",
+  "claims": [
+   {
+    "text": "Known as the Eyes of God, the Oculi Dei form a secret Europe-wide society of lay brethren who collect intelligence on the enemy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     },
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Their curse, Anathemae, makes them grow jaded, then loathe and at last fear their own order, until they think it a conspiracy using them as pawns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "Their benefit is knowledge of hidden crimes and sins outside the Inquisition's remit, which they can use as blackmail.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-orders"
+  ]
+ },
+ {
+  "id": "inq-house-of-murnau",
+  "title": "The House of Murnau",
+  "kind": "faction",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Bavarian noble family pledged to the Inquisition.",
+  "claims": [
+   {
+    "text": "The House of Murnau is a Bavarian noble house promised as a whole to the Inquisition's service.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Its curse, Maledictio, brings strange curses and long streaks of bad luck, and often draws fiends to the cursed member.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   },
+   {
+    "text": "Its members have learned to use parts of their uncanny heritage, called Legacies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 137,
+      "pdf": 138
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-orders"
+  ]
+ },
+ {
+  "id": "inq-virtues",
+  "title": "Conviction, Piety and the Virtues",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The traits that measure an inquisitor's faith.",
+  "claims": [
+   {
+    "text": "Conviction is the sum of the primary superior Virtue and the basic Virtues that govern it, for example Conscience plus Faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Starting Piety is Conscience plus Self-Control; starting Willpower is Courage plus Zeal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "The game assumes the Dark Ages: Vampire core rules and does not repeat them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-blessings",
+   "inq-superior-virtues",
+   "inq-piety",
+   "inq-callousness",
+   "inq-spending-conviction"
+  ]
+ },
+ {
+  "id": "inq-blessings",
+  "title": "Blessings and Curses",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The God-given gifts of inquisitors and their price.",
+  "claims": [
+   {
+    "text": "Inquisitors wield powers given by God, and each order's gifts come with a curse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 19,
+      "pdf": 20
+     },
+     {
+      "book": "inquisitor",
+      "page": 137,
+      "pdf": 138
+     },
+     {
+      "book": "inquisitor",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "True Faith is not a trait here; the Gifts of Faith in Dark Ages: Vampire are simple versions of these Blessings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "To work out a True Faith rating, treat Servants as one dot, Acolytes as two and so on up the ranks, so no rank reaches True Faith 5.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-true-faith",
+   "inq-virtues",
+   "inq-endowments",
+   "inq-orisons",
+   "inq-holy-art",
+   "inq-curses"
+  ]
+ },
+ {
+  "id": "inq-terms",
+  "title": "Words of the Cloister",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Church terms used among inquisitors.",
+  "claims": [
+   {
+    "text": "Ascetic means self-denial as a religious life; eremitic means living as a solitary religious withdrawn from the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "A convent is a monastic community of men or women; a novice has entered one but not yet taken final vows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Oblation is offering oneself or a child to God as a monk or nun. An indulgence remits punishment for acts such as crusade or pilgrimage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-shadow-inquisition"
+  ]
+ },
+ {
+  "id": "inq-character-creation",
+  "title": "Making an Inquisitor",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The steps for building an inquisitor.",
+  "claims": [
+   {
+    "text": "Attributes start at one dot each, then 6, 4 and 3 more dots go to the primary, secondary and tertiary groups; Abilities get 11, 7 and 4, none above 3 at this stage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Every inquisitor needs Theology 1, and Latin is advised since it is often the shared tongue among inquisitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "The character takes one dot in the order's main Superior Virtue, then either an Acolyte-level Endowment with one Curse or the order's benefit with its drawback, plus one Orison.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Backgrounds get 5 dots and the basic Virtues 7; there are 21 bonus points, which cannot buy Endowments or Orisons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-endowments",
+   "inq-superior-virtues",
+   "inq-backgrounds"
+  ]
+ },
+ {
+  "id": "inq-superior-virtues",
+  "title": "Superior Virtues",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The three Virtues of the touched soul.",
+  "claims": [
+   {
+    "text": "Each Superior Virtue rests on a basic Virtue but goes far beyond it: Zeal grows from Courage, Wisdom from Self-Control and Faith from Conscience.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "Zeal is passion for doing God's work; Wisdom is God-given insight into the world; Faith is complete belief and the strength to keep to compassion and forgiveness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "Wisdom lets an inquisitor resist mind control by the Adversary's servants and recall traumatic events more clearly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "A new inquisitor has only one dot, in the order's main Superior Virtue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-virtues",
+   "inq-character-creation"
+  ]
+ },
+ {
+  "id": "inq-piety",
+  "title": "Piety",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Devotion to God and Church rather than to the Inquisition.",
+  "claims": [
+   {
+    "text": "Piety measures reverence for God and the Church, not loyalty to the Inquisition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "It begins at Conscience plus Self-Control and rises and falls much as a vampire's Road does, though its purpose differs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-hierarchy-of-sins",
+   "inq-callousness"
+  ]
+ },
+ {
+  "id": "inq-hierarchy-of-sins",
+  "title": "Hierarchy of Sins Against God",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The table of wrongs measured against Piety.",
+  "claims": [
+   {
+    "text": "At the top of the scale, impure or angry thoughts about another Christian count at 10, and any sexual act at 9.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "Further down come lying or breaking one's word, taking money, acting from anger or other sinful urges, and failing to try to teach a heretic or pagan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-piety"
+  ]
+ },
+ {
+  "id": "inq-spending-conviction",
+  "title": "Spending Conviction",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "What an inquisitor's Conviction buys.",
+  "claims": [
+   {
+    "text": "Conviction has three uses; the first is to power Blessings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "One point spent on a Virtue roll gives an automatic success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "Ordinary people have one point of Conviction; an inquisitor has more, on a scale of 1 to 10.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-virtues",
+   "inq-callousness"
+  ]
+ },
+ {
+  "id": "inq-callousness",
+  "title": "Callousness",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "When the mission matters more than God.",
+  "claims": [
+   {
+    "text": "An inquisitor becomes Callous when Conviction rises above Piety: devotion to the calling has overtaken devotion to God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   },
+   {
+    "text": "A Callous character loses sympathy for monsters and victims alike; every Empathy roll is at +2 difficulty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   },
+   {
+    "text": "The character's Impulse takes over: when it applies, the player rolls Conscience + Faith, difficulty 6, to resist it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   },
+   {
+    "text": "Ways out include working off the excess Conviction in the hunt, or gaining enough to trade 10 points for a new dot.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-piety",
+   "inq-spending-conviction",
+   "inq-orisons"
+  ]
+ },
+ {
+  "id": "inq-terror",
+  "title": "Terror Rolls",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Facing the openly supernatural.",
+  "claims": [
+   {
+    "text": "Meeting the plainly supernatural, such as a vampire showing its fangs, calls for a terror roll at difficulty 8 minus the Exposure Background.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   },
+   {
+    "text": "On a failure the character drops two dice from every pool until the scene ends or the threat goes away; on a botch the character flees.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   },
+   {
+    "text": "Fear powers such as Dread Gaze may be resisted with Courage + Zeal, difficulty 6.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 163,
+      "pdf": 164
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-backgrounds",
+   "inq-superior-virtues"
+  ]
+ },
+ {
+  "id": "inq-endowments",
+  "title": "Endowments",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Gifts of the Holy Ghost, by order.",
+  "claims": [
+   {
+    "text": "Inquisitors see their Endowments as gifts of the Holy Ghost, armour and weapons for the crusade; a new character picks one Acolyte-level Endowment from those of the order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "Choosing the order benefit instead means no starting Endowment, and taking a Blessing means also taking an Acolyte-level Curse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "The kinds are Benedictions (prayers through which God works), Investitures (God's power through the inquisitor's body), Legacies (the Murnau birthrights) and Psalms (God's word through the voice).",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Endowments above the inquisitor's current stage may be bought, but rushing ahead risks Curses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 174,
+      "pdf": 175
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-benedictions",
+   "inq-investitures",
+   "inq-psalms",
+   "inq-legacies",
+   "inq-curses"
+  ]
+ },
+ {
+  "id": "inq-benedictions",
+  "title": "Benedictions",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Endowments of prayer.",
+  "claims": [
+   {
+    "text": "Benedictions are inspired prayers and recitations through which the Lord's wonders are worked.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 176,
+      "pdf": 177
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-endowments"
+  ]
+ },
+ {
+  "id": "inq-investitures",
+  "title": "Investitures",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Endowments that work through the body.",
+  "claims": [
+   {
+    "text": "Investitures draw on the righteousness placed inside the inquisitor to work effects through the body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 179,
+      "pdf": 180
+     }
+    ]
+   },
+   {
+    "text": "One Investiture rolls Wisdom, difficulty 6, adding a dot of Wits per success; above Wits 5 the character can sense attacks coming and roll Wits + Alertness, difficulty 7, for extra dice to parry or dodge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 181,
+      "pdf": 182
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-endowments"
+  ]
+ },
+ {
+  "id": "inq-psalms",
+  "title": "Psalms",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Endowments of the spoken Word.",
+  "claims": [
+   {
+    "text": "Psalms carry the Word through the inquisitor's steady voice, bringing the Lord's message to believers and heretics alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 185,
+      "pdf": 186
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-endowments"
+  ]
+ },
+ {
+  "id": "inq-legacies",
+  "title": "Legacies",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The uncanny birthrights of House Murnau.",
+  "claims": [
+   {
+    "text": "Legacies are the strange inherited gifts of House Murnau.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "One lets a Murnau sense the heart of anyone approached for a scene (Perception + Wisdom, difficulty 7, and a point of Conviction), marking each as trustworthy or not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 183,
+      "pdf": 184
+     }
+    ]
+   },
+   {
+    "text": "A non-Murnau who tries to learn a Legacy adds one to the Curse roll, even those in the House by marriage or service.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 202,
+      "pdf": 203
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-house-of-murnau",
+   "inq-endowments"
+  ]
+ },
+ {
+  "id": "inq-orisons",
+  "title": "Orisons",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The smallest Blessings, given by grace alone.",
+  "claims": [
+   {
+    "text": "Orisons are the weakest Blessings but come only by God's favour; they cannot be learned or trained.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 174,
+      "pdf": 175
+     }
+    ]
+   },
+   {
+    "text": "They are tied to Conscience, Self-Control and Courage, so ordinary faithful sometimes show them, and an inquisitor may start with one from any group.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 174,
+      "pdf": 175
+     }
+    ]
+   },
+   {
+    "text": "Moral Compass (Perception + Conscience, difficulty 6) shows how badly those nearby have sinned, including Piety; five successes make pagans and heretics stand out. Near Callousness the character may pray to bank Conviction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 173,
+      "pdf": 174
+     },
+     {
+      "book": "inquisitor",
+      "page": 174,
+      "pdf": 175
+     }
+    ]
+   },
+   {
+    "text": "Noah's Favor costs a point of Conviction (Perception + Animal Ken, difficulty 6) to sense an animal's thoughts or calm it for the scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 173,
+      "pdf": 174
+     }
+    ]
+   },
+   {
+    "text": "The True Innocent lowers all Conscience rolls by one; for a point of Conviction, beings must pass a Willpower roll against the character's Piety to act against the character. It cannot be used while Callous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 173,
+      "pdf": 174
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-blessings",
+   "inq-callousness"
+  ]
+ },
+ {
+  "id": "inq-holy-art",
+  "title": "The Holy Art",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Theurgy of the Inquisition.",
+  "claims": [
+   {
+    "text": "Through the Holy Art inquisitors call on the Holy Spirit for blessings or help in danger, and it gives the whole body a backbone of strict ritual support.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     },
+     {
+      "book": "inquisitor",
+      "page": 189,
+      "pdf": 190
+     }
+    ]
+   },
+   {
+    "text": "Its three common paths are modelled on the Trinity; every path is a strict progression.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 189,
+      "pdf": 190
+     }
+    ]
+   },
+   {
+    "text": "A Red Order character who starts with the Art instead of the order benefit gets one dot in any path; Murnau and Oculi Dei must take Sophia Patris first, the Sisters Boni Spiritus, and the Knights Sedulitas Filius.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "Others may start with the Art only by spending bonus points, at the Storyteller's discretion; a dot costs 5 bonus points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     },
+     {
+      "book": "inquisitor",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-sophia-patris",
+   "inq-sedulitas-filius",
+   "inq-boni-spiritus",
+   "inq-orders"
+  ]
+ },
+ {
+  "id": "inq-sophia-patris",
+  "title": "Sophia Patris",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Path of the Father's Wisdom.",
+  "claims": [
+   {
+    "text": "Perhaps the most exclusive path, it reveals truths about others and the enemy, though such truths may cost the user's sanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 189,
+      "pdf": 190
+     }
+    ]
+   },
+   {
+    "text": "A practitioner becomes a living lie detector: each falsehood heard brings an unpleasant sensation, from a bad smell to nausea or pain behind the eye.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 190,
+      "pdf": 191
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-holy-art"
+  ]
+ },
+ {
+  "id": "inq-sedulitas-filius",
+  "title": "Sedulitas Filius",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The warrior's path.",
+  "claims": [
+   {
+    "text": "The path follows Christ's courage in the final hours and teaches what serving man and God truly means.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 190,
+      "pdf": 191
+     }
+    ]
+   },
+   {
+    "text": "Its invocations are quick: crossing oneself, a battle cry such as Deus vult, or gripping a Holy Relic; the usual roll is Strength + Sedulitas Filius.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 191,
+      "pdf": 192
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-holy-art",
+   "inq-holy-armaments"
+  ]
+ },
+ {
+  "id": "inq-boni-spiritus",
+  "title": "Boni Spiritus",
+  "kind": "power",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Gifts of the Spirit path.",
+  "claims": [
+   {
+    "text": "The path draws on the Holy Spirit, and its uses run from repelling the enemy to healing the fallen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 192,
+      "pdf": 193
+     }
+    ]
+   },
+   {
+    "text": "Its effects usually need simple prayers or gestures, such as a cross traced in the air or the rosary.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 192,
+      "pdf": 193
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-holy-art"
+  ]
+ },
+ {
+  "id": "inq-holy-armaments",
+  "title": "Holy Armaments",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Blessed weapons.",
+  "claims": [
+   {
+    "text": "Blessed weapons are rare; perhaps no more than ten theurgists in Christendom know the Forge of God ritus that makes them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 196,
+      "pdf": 197
+     }
+    ]
+   },
+   {
+    "text": "They still reach inquisitors across Europe, most often the Knights of Acre.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 196,
+      "pdf": 197
+     }
+    ]
+   },
+   {
+    "text": "A player building one, by the ritus or through the Holy Relics Background, picks properties from a list, such as aggravated damage to demons and other supernatural beings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 196,
+      "pdf": 197
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-sedulitas-filius",
+   "inq-backgrounds"
+  ]
+ },
+ {
+  "id": "inq-balm-of-gilead",
+  "title": "The Balm of Gilead",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A unique and ancient Anointing.",
+  "claims": [
+   {
+    "text": "Legend says it came from the fragrant oil of Christ's body when taken down from the Cross, which Joseph of Arimathea collected in a small vial shaped like a tear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 201,
+      "pdf": 202
+     }
+    ]
+   },
+   {
+    "text": "Before 1215 the vial was widely believed to have reached Cistercian monks near the start of the 12th century, though how it got there is unclear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 201,
+      "pdf": 202
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-holy-armaments"
+  ]
+ },
+ {
+  "id": "inq-curses",
+  "title": "Curses",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The price of divine gifts.",
+  "claims": [
+   {
+    "text": "Some see Curses as the cost of the power to serve; others as punishment for dealing with darkness. Either way they are part of daily life for inquisitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 201,
+      "pdf": 202
+     }
+    ]
+   },
+   {
+    "text": "There are five kinds: Anathemae, Interdictions, Maledictio, Stigmata and Visitations, each arranged by the stages Acolyte, Advocate and Judge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 201,
+      "pdf": 202
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-acquiring-curses",
+   "inq-interdictions",
+   "inq-blessings"
+  ]
+ },
+ {
+  "id": "inq-acquiring-curses",
+  "title": "Acquiring Curses",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The roll that decides whether a new Curse comes.",
+  "claims": [
+   {
+    "text": "A net roll of 0 or less brings no Curse and a point of Conviction; 1 to 3 brings nothing; 4 to 6 brings no Curse but costs two Conviction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 202,
+      "pdf": 203
+     }
+    ]
+   },
+   {
+    "text": "Higher results bring a new Curse of stage one, two or three, chosen to fit the situation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 202,
+      "pdf": 203
+     }
+    ]
+   },
+   {
+    "text": "Add one per Curse already held beyond stage one, one after a botched primary Virtue roll, and one when developing an Endowment in a new category; subtract one with a dot in every Superior Virtue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 202,
+      "pdf": 203
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-curses",
+   "inq-legacies"
+  ]
+ },
+ {
+  "id": "inq-interdictions",
+  "title": "Interdictions",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Curses that bind the inquisitor to a code.",
+  "claims": [
+   {
+    "text": "Interdictions are spiritual mandates that press a code of conduct on the inquisitor beyond existing vows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 205,
+      "pdf": 206
+     }
+    ]
+   },
+   {
+    "text": "Their sting is that they can be broken: keeping them rests mostly in the inquisitor's own hands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 206,
+      "pdf": 207
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-curses"
+  ]
+ },
+ {
+  "id": "inq-backgrounds",
+  "title": "Inquisitor Backgrounds",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Backgrounds open to inquisitors.",
+  "claims": [
+   {
+    "text": "Besides the usual Allies, Contacts, Influence, Mentor, Resources and Retainers, inquisitors can take Chapterhouse, Exposure, Flock, Holy Relics and Rank.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     },
+     {
+      "book": "inquisitor",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "Chapterhouse is a safe base whose dots can go to size, security and holiness: a small-town church with two stout locked doors and consecrated ground might take two for size, three for security and one for holiness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "Exposure is how far the character knew of the Devil's servants before joining; Flock is other Christians willing to help; Rank is standing among inquisitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 147,
+      "pdf": 148
+     },
+     {
+      "book": "inquisitor",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-terror",
+   "inq-holy-armaments"
+  ]
+ },
+ {
+  "id": "inq-disallowed",
+  "title": "Merits and Flaws Not Allowed",
+  "kind": "mechanic",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Vampire-only traits inquisitors cannot take.",
+  "claims": [
+   {
+    "text": "Vampire-only Merits and Flaws such as Eat Food, Blush of Health, 13th Generation and Prey Exclusion are barred, as are Apostate, Hunted and Outspoken Pagan or Heretic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   },
+   {
+    "text": "Traits about a sire are allowed but refer to the inquisitor's mentor instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "inquisitor",
+      "page": 167,
+      "pdf": 168
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inq-character-creation"
+  ]
+ }
+]

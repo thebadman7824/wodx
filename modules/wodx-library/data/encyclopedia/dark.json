@@ -1,0 +1,278 @@
+[
+ {
+  "id": "dark-path-of-chivalry",
+  "title": "The Path of Chivalry",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Paladins who see knighthood as their kind's salvation.",
+  "claims": [
+   {
+    "text": "The mortal age of chivalry is only beginning, yet some Cainites, called Paladins, have embraced its ideals as the salvation of their kind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "It is one of the newer paths of the Road of Kings and has spread fast through the Cainite courts of Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Nearly every Scion on the path hopes to join a knightly order; many such orders exist, most founded by Paladins or by Scions who saw their use, and some knights vow not to see the sun again until a duty is done, the freeing of the Holy Land being a favourite.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-kings",
+   "dahc-toreador-knights",
+   "tome-vampire-knights"
+  ]
+ },
+ {
+  "id": "dark-tyrants",
+  "title": "Tyrants of the Road of Kings",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Scions who want obedience without obligation.",
+  "claims": [
+   {
+    "text": "Tyrants grasp the worth of vassals and oaths of fealty but care little for responsibility or noblesse oblige.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "They mock the Paladins' ideals as foolish and naive and hold that the strong owe nothing to those beneath them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-kings",
+   "dark-path-of-chivalry"
+  ]
+ },
+ {
+  "id": "dark-merchant-scions",
+  "title": "Scions of the Counting House",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A rising faction that backs merchants and craftsmen.",
+  "claims": [
+   {
+    "text": "While princes fight for domains, a small faction of Scions is quietly growing by seeing the promise in Europe's new class of merchants and skilled craftsmen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "To them money-lending is a minor sin next to the damnation already laid on Caine's children, and a loan to a desperate prince buys real power.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-kings"
+  ]
+ },
+ {
+  "id": "dark-scion-cults",
+  "title": "Scion Cults",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Followings the Scions gather around a lord or a bloodline.",
+  "claims": [
+   {
+    "text": "Mithras, Prince of London and undead king of England, took over the Cult of Mithras long ago and wears the god's name and identity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Mithras holds none of the cult's beliefs, but it suits the Methuselah well for recruiting soldiers, the main focus of Mithras's attention.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Other Scion cults exist to preserve particular noble families or bloodlines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbi-mithraic-cults",
+   "dbi-mithras-rule",
+   "dac-mithraic-mysteries",
+   "da-road-of-kings"
+  ]
+ },
+ {
+  "id": "dark-oaths-of-fealty",
+  "title": "Oaths of Fealty",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "What a Scion owes a vassal and how a broken oath is felt.",
+  "claims": [
+   {
+    "text": "A liege's oath to a vassal is as sacred as the vassal's oath in return. A Scion who holds a vassal to an oath by the blood bond or Dominate becomes responsible for that vassal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Scions who treat others as pawns and discard them earn a bad name.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "When a vassal breaks an oath of fealty, the Storyteller secretly rolls the liege's Perception + Leadership against the oathbreaker's Willpower; more successes reveal more, from the bare fact of the betrayal up to the oathbreaker's whereabouts and identity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-kings",
+   "dark-tyrants"
+  ]
+ },
+ {
+  "id": "dark-assamite-viziers",
+  "title": "Assamite Viziers and the Road of Kings",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the road looks in Haqim's clan.",
+  "claims": [
+   {
+    "text": "Many of the Assamite vizier caste follow a form of the road that treats Haqim's teachings on gathering power and control as its core.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Some Assamite princes who rule openly follow the road much as Europeans do, but subtlety is so prized in the clan that even they temper it.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "dark",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dalc-laws-of-haqim",
+   "da-assamites",
+   "da-road-of-kings"
+  ]
+ }
+]

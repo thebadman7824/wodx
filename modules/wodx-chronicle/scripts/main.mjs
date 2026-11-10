@@ -3,6 +3,8 @@ import {registerSettings} from "./settings.mjs";
 import {makeCalendarClass, makeCalendarConfig, setReform, EPOCH_YEAR} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";
+import * as know from "./know.mjs";
+import * as knowRules from "./know-rules.mjs";
 import * as safety from "./safety.mjs";
 import {ClockApp, setDateDialog} from "./clock-app.mjs";
 import {HouseRulesApp} from "./house-rules-app.mjs";
@@ -21,6 +23,7 @@ import * as languages from "./languages.mjs";
 import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
 import * as church from "./church.mjs";
+import * as release from "./release.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -68,6 +71,8 @@ Hooks.once("init", () => {
   // Languages in chat
   languages.registerLanguageSettings();
   languages.registerLanguageHooks();
+  // Knowledge-gated handouts: @Know[Latin]{...} in journals
+  know.registerKnow();
 
   // Calendar: Julian, then Gregorian at the chosen reform
   let reform = "bohemia-1584";
@@ -128,6 +133,7 @@ Hooks.once("ready", async () => {
     openClock: () => ClockApp.open(),
     setDate: setDateDialog,
     eras, approvals, safety,
+    know: {render: know.render, traitsOf: know.traitsOf, passages: knowRules.passages, rules: knowRules},
     propose: approvals.propose,
     registerApprovalHandler: approvals.registerHandler,
     rule,
@@ -143,6 +149,7 @@ Hooks.once("ready", async () => {
     endScene: timed.endScene,
     theme,
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
+    release: {check: release.check, current: release.current},
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, rules: church.rules},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
@@ -163,6 +170,9 @@ Hooks.once("ready", async () => {
   }
   // Other WoDX modules wait for this: Foundry does not wait for an async ready hook to finish
   Hooks.callAll("wodxChronicleReady", api);
+
+  // Which WoDX build this server runs (GM only, so players' machines skip the extra reads)
+  if ( game.user.isGM ) release.announce().catch(err => console.error("WoDX | Release stamp could not be read", err));
 
   if ( isActiveGM() ) {
     await eras.checkEra();
@@ -192,6 +202,8 @@ Hooks.on("wodxSkipEnd", info => {
   if ( !info?.eraHandled ) eras.checkEra();
   events.checkEvents({label: info?.label || "the time skip"}).then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
+
+Hooks.on("renderSettings", (app, html) => { if ( active ) release.onRenderSettings(app, html); });
 
 Hooks.on("getSceneControlButtons", controls => {
   if ( !active ) return;
@@ -242,3 +254,6 @@ async function onSocket(message) {
       break;
   }
 }
+
+// A new session begun in WoDX Storyteller starts the count of NPC proposals again
+Hooks.on("updateSetting", s => { if ( s?.key === "wodx-storyteller.session" ) approvals.resetSession(); });

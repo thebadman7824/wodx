@@ -1,0 +1,232 @@
+[
+ {
+  "id": "w20kin-kinfolk-gifts",
+  "title": "Kinfolk learning Gifts",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What a Gift costs a Kinfolk.",
+  "claims": [
+   {
+    "text": "A Kinfolk earns a Gift through bargaining with Garou or spirits, practice, gifts, chiminage and sometimes a quest, and only then spends experience on it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "A Gift of the Kin’s own breed or tribe costs 15 points, with 5 more if it lies outside them and 5 more if a Garou teaches it instead of a spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Kin seldom get Gifts from outside their own breed or tribe, since breeds and tribes guard their Gifts closely; special need or a whole sept’s welfare can make an exception.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20kin-homestead-dedication",
+  "title": "Rite of Homestead Dedication",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level two Kinfolk rite for a new home.",
+  "claims": [
+   {
+    "text": "When Kinfolk gain a new home, this rite gives the building and its land to Gaia’s service, a weaker cousin of the Rite of Caern Building.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "It can be repeated at each stage, from buying the plot and breaking ground to the family’s first night inside.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Most versions walk a circle around the land and the house while calling on Gaia, the tribal totem and any spirits already tied to the place.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20kin-spirit-chasing",
+  "title": "Spirit Chasing",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A hedge magic Way of bonding with an animal or plant.",
+  "claims": [
+   {
+    "text": "A spirit chaser forms a bond with one kind of plant or animal, believing every living thing has a spirit, and learns by watching it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Unlike Gift teaching, no bargain is struck: the chaser observes the spirit, questions and copies it, then pleads in a private ritual for it to appear, which can take a long time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20kin-kin-fetch",
+  "title": "Kin-Fetches and breaking the bond",
+  "kind": "lore",
+  "lines": [
+   "werewolf",
+   "fera"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Garou release a fetch from a Kin who never Changes.",
+  "claims": [
+   {
+    "text": "Once it seems plain that a bonded Kin will never undergo the First Change, the werewolf relatives usually use a form of the Rite of Spirit Awakening to wipe the fetch brand and free the Kin-Fetch for other cubs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "Callow Kin who went through the Baptism of Fire must be handled more quietly, usually while drugged.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "Loosely organised Fera such as most Bastet rely on the practice even more, and the more nomadic a breed, the more it may lean on its own Baptism of Fire; Corax, for one, may bind a Kin-Fetch very early.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 101,
+      "pdf": 102
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20kin-locksmiths",
+  "title": "The Locksmiths",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Glass Walker Kinfolk network.",
+  "claims": [
+   {
+    "text": "The Locksmiths began in the late 1990s, founded by a Glass Walker called only Strangelove, as a network for Glass Walker Kinfolk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Garou and Kin worldwide use it to stay in touch and follow Pentex and other Wyrm-tainted firms, and it now runs a site on fracking and its natural and supernatural dangers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Its first projects were two large databases, the first a list of every known tainted product.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20kin",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

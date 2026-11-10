@@ -1,0 +1,202 @@
+[
+ {
+  "id": "wbol-eight-legions",
+  "title": "The eight Legions",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Stygia sorts the Western dead.",
+  "claims": [
+   {
+    "text": "Stygia's eight Legions in theory hold every soul of the Western dead, each under a Deathlord, and they have been the powers of Stygia since Charon disappeared.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The Legions have military and civilian sides that together keep Stygia running; if they fail, Oblivion is waiting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "gw-legion-orders",
+   "charon"
+  ]
+ },
+ {
+  "id": "wbol-warriors-of-lethe",
+  "title": "Warriors of Lethe",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Silent Legion's suicidal Spectre-hunters.",
+  "claims": [
+   {
+    "text": "Stygians picture the Silent Legion's soldiers as wild Warriors of Lethe charging into Maelstroms, but the Legion is among the smallest and cannot spare troops for suicide charges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Quiet Lord only grudgingly tolerates the Warriors of Lethe as an exception.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-silent-legion",
+   "whier-legion-orders"
+  ]
+ },
+ {
+  "id": "wbol-emerald-athletes",
+  "title": "Daredevils of the Emerald Legion",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Who ends up among the victims of chance.",
+  "claims": [
+   {
+    "text": "Extreme athletes make up a small, visible part of the Emerald Legion: skaters turn the Shadowlands into skate parks, BASE jumpers leap from Underworld landmarks with relic parachutes, and climbers scale Stygian towers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Large groups of recruits arrive together after earthquakes, hurricanes, crashes, shipwrecks and explosions, so the Legion mostly holds no grudge against any living foe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-emerald-legion"
+  ]
+ },
+ {
+  "id": "wbol-pauper-misfits",
+  "title": "Freaks and misfits of the Paupers",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Beggar Lord's strange charges.",
+  "claims": [
+   {
+    "text": "The Beggar Lord is known for taking in odd souls, on the view that useful wretches are better registered as Paupers than drifting into heresy or rebellion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Such souls tend to grasp reality poorly and resist their Shadows weakly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-beggar-lord",
+   "the-shadow"
+  ]
+ },
+ {
+  "id": "wbol-legion-companies",
+  "title": "Legion units",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Legions organize their soldiers.",
+  "claims": [
+   {
+    "text": "A cohort is the smallest unit sent out on its own, mostly on patrol or hunting Spectres; a company is four to six cohorts, 80 to 100 wraiths in all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "Companies handle long patrols, attacks on Renegade and Heretic strongholds and counterattacks on Spectres; each is led by a Regent who answers to the Provincial Overlord of Military Affairs, and most Provinces have one to three.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wbol",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wbol-eight-legions",
+   "spectres"
+  ]
+ }
+]

@@ -1,0 +1,242 @@
+[
+ {
+  "id": "sfbn-gold-rush",
+  "title": "San Francisco in the Gold Rush",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "wild-west"
+  ],
+  "summary": "How the boom of 1849 brought the Kindred west.",
+  "claims": [
+   {
+    "text": "In 1849 San Francisco grew from 900 people to 26,000, with another 100,000 passing through on the way to the hills.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "While the elders remained in Europe and along the Eastern Seaboard, the packed boomtown pulled in young vampires from all over the country: Camarilla neonates wanting their own domains, and Sabbat packs and anarchs looking for an untouched frontier.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "sabbat",
+   "anarchs"
+  ]
+ },
+ {
+  "id": "sfbn-chinatown",
+  "title": "Chinatown (San Francisco)",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern",
+   "victorian",
+   "wild-west"
+  ],
+  "summary": "The Kuei-jin domain in the city centre.",
+  "claims": [
+   {
+    "text": "Kindred who went hunting in Chinatown in the early years sometimes vanished. Rumours blamed mages, vampire-hunters, a pact with the Lupines or an unknown clan; the last came nearest the truth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Without the Chinese community the Kuei-jin could raise no Scarlet Screens in a strange land, so they destroyed anything that threatened it. Too few to risk open war with the Western vampires, they kept to Chinatown's shadows and gave the Kindred good reason to stay out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "sfbn-jebediah-hawthorne",
+  "title": "Prince Jebediah Hawthorne",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "wild-west",
+   "modern"
+  ],
+  "summary": "The first prince of Camarilla San Francisco.",
+  "claims": [
+   {
+    "text": "After the vigilance committee purged the city's politics, legitimate business thrived with the Camarilla close behind, and the Inner Circle recognized Jebediah Hawthorne as prince of the Domain of San Francisco.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Camarilla believed its strikes had broken the local Sabbat, but the Sabbat fell as much to its own infighting and scattered strength.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The city became the Camarilla's only solid victory in California, a bastion amid Sabbat and anarch power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "camarilla",
+   "prince",
+   "sfbn-gold-rush"
+  ]
+ },
+ {
+  "id": "sfbn-great-quake",
+  "title": "The 1906 earthquake",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The quake and fire that burned San Francisco, Chinatown included.",
+  "claims": [
+   {
+    "text": "The Kuei-jin say the Earth Dragon was restless. The quake lasted under a minute, and the fires it set burned some 28,000 buildings, all of Chinatown among them, while broken water mains left firefighters with buckets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "A few vampires died, frenzied by fear of fire or unable to flee without facing the sun. Some hid in the earth for nights, and one or two waited too long and sank into torpor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Some sires tell their childer that on still nights those buried Kindred can still be heard scratching below.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "sfbn-chinatown"
+  ]
+ },
+ {
+  "id": "sfbn-gaki-internment",
+  "title": "The internment of the gaki",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the Second World War did to San Francisco's Japanese Kuei-jin.",
+  "claims": [
+   {
+    "text": "When Japanese Americans were sent to camps, the city's gaki lost the mortals who sheltered them and could not move freely, since no one of Japanese descent was meant to remain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "A rare few slipped home to Japan by way of the Yellow Springs; the rest mostly fled to Chinatown, where Chinese Kuei-jin hosts treated them as slaves in revenge for Japan's invasion of China.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Japantown shrank from 30 blocks to six. Chinese Kuei-jin used the removals to destroy or subjugate many gaki, ignoring the rules of the Precepts of the War.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sfbn",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "sfbn-chinatown"
+  ]
+ }
+]

@@ -32,3 +32,6 @@
 .application.wodx-dialog .window-content { min-height: 0; }
 .application.wodx-dialog .dialog-content { flex: 1 1 auto; min-height: 0; max-height: 60vh; overflow-y: auto; }
 .application.wodx-dialog .form-footer { flex: none; }
+/* A Gauntlet that moves (0.7.0) */
+.wow-drift .wow-scroll { max-height: 50vh; overflow-y: auto; }
+.wow-drift table { width: 100%; }

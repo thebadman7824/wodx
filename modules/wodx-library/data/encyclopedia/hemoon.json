@@ -1,0 +1,121 @@
+[
+ {
+  "id": "hemoon-hunters-and-werewolves",
+  "title": "Hunters and werewolves",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the imbued know, and do not know, about shapechangers.",
+  "claims": [
+   {
+    "text": "Hunters meet werewolves armed with the same folklore and film images as everyone else, and must learn the hard way which legends hold and which were planted to keep the beasts hidden.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hemoon",
+      "page": 11,
+      "pdf": 12
+     },
+     {
+      "book": "hemoon",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Whatever real knowledge of man-beasts people once had, perhaps as far back as the Stone Age, has worn away to scraps.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hemoon",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Shapechangers turn up in the wilds, on the edges of towns and on city streets, and can work quietly inside human society or kill brutally outside it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hemoon",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Hunters suspect the werewolves they manage to beat are only the weakest or youngest, and that the strongest rule from dens no human has seen.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hemoon",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hunters-and-lupines",
+   "htr-imbued",
+   "htr-monsters"
+  ]
+ },
+ {
+  "id": "hemoon-pisgah-case",
+  "title": "The Pisgah case",
+  "kind": "event",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An FBI inquiry that turned up two hunters' taped talks.",
+  "claims": [
+   {
+    "text": "The FBI Special Affairs Department tied remains found at a site near Pisgah in western North Carolina to Charles Arthur Rawlings, a marriage counsellor who had gone missing with a spouse two months before.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hemoon",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Microcassettes in Rawlings's office held talks between Rawlings and a young woman, both apparently hunters; agents judged them deluded but noted the delusion was shared, which they read as a sign of something larger.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hemoon",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Special Affairs believed the tapes offered new insight into lycanthropes and a lead on an unsolved serial killer case.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hemoon",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hemoon-hunters-and-werewolves",
+   "hh2-us-government"
+  ]
+ }
+]

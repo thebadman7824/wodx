@@ -1,0 +1,65 @@
+[
+ {
+  "id": "hbjud-judging-monsters",
+  "title": "How Judges weigh monsters",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Judges decide, case by case, which creatures to spare.",
+  "claims": [
+   {
+    "text": "Judges see themselves as deciding the guilt or innocence of each supernatural being, gathering what they can from observation and chosen allies before ruling to condemn or spare.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbjud",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "A creature showing steady hatred or malice is put down, or condemned for others to finish; one showing remorse or disgust at its own state may be spared and even left for others to bring back toward humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbjud",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Because they judge individuals, Judges have no slang of their own and distrust labels for groups, even the idea of hunter creeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbjud",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Other hunters may be startled when an apparent Judge turns out to be an absent-minded Visionary or a militant Redeemer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbjud",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-judges",
+   "hbave-creeds-take-shape",
+   "hbinn-innocent-slang"
+  ]
+ }
+]

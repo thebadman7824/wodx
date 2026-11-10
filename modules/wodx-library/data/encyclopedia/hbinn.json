@@ -1,0 +1,126 @@
+[
+ {
+  "id": "hbinn-innocent-outlook",
+  "title": "The Innocent outlook",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Meeting the supernatural with empathy.",
+  "claims": [
+   {
+    "text": "Innocents answer the supernatural with compassion rather than outrage, holding that even the worst monster deserves some consideration, or the imbuing has no point.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbinn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Most other hunters dismiss Innocents as fools bound to get killed, while gladly taking any help they give.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbinn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "All imbued agree the other side's grip on humanity must be broken; they differ on how.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbinn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-innocents",
+   "hbave-creeds-take-shape"
+  ]
+ },
+ {
+  "id": "hbinn-innocent-slang",
+  "title": "Innocent slang",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gentler words that spread from the Vitalis list.",
+  "claims": [
+   {
+    "text": "Innocents dislike loaded words like hunt and bloodsucker, and their own terms spread slowly through the Vitalis list and hunter-net: the call or the voice for the imbuing, the plan for the mission, and the hidden or the other side for the supernatural.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbinn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A pup is a harmless creature that stays contained or fades if left alone; a bully enjoys causing fear or pain; a shark exploits an Innocent's trust to lure the imbued into a trap.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbinn",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "hbinn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "DADT, from don't ask, don't tell, is the Innocents' informal silence about harmless creatures around militant hunters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbinn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Labels for other imbued include burnout, game hunter, godhead, headshrinker, hometown hero, honcho and loner.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbinn",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "hbinn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-hunter-slang",
+   "hbave-avenger-slang",
+   "hbdef-defender-slang"
+  ]
+ }
+]

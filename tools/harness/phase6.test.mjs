@@ -259,6 +259,28 @@ test("damage entered by hand dazes too; outside a fight Dazed lasts the scene", 
   assert.equal(r2.dazed, false, "3 is not more than 3");
 });
 
+test("a caller can ask that a botched soak turns the damage aggravated (electrocution of a vampire)", async () => {
+  const C = game.wodxCombat;
+  ChatMessage.getSpeaker ??= () => ({alias: "test"});
+  CONFIG.sounds ??= {dice: ""};
+  await game.settings.set("wodx-combat", "autoApply", false);
+  const keep = globalThis.Roll;
+  let face = 1;
+  globalThis.Roll = class { constructor(f) { this.formula = f; } async evaluate() {
+    const n = Number(/^(\d+)d10/.exec(this.formula)?.[1] ?? 1); const res = Array.from({length: n}, () => ({result: face}));
+    this.dice = [{results: res, total: res.reduce((x, r) => x + r.result, 0)}]; this.total = this.dice[0].total; return this; } };
+  try {
+    const botched = await C.soakAndApply(makeActor("Wired Neonate"), {mode: "levels", amount: 2, type: "lethal", soak: true, soakBonus: 0, botchAggravated: true});
+    assert.equal(botched.message.flags["wodx-combat"].data.type, "aggravated");
+    assert.equal(botched.levels, 2);
+    const plain = await C.soakAndApply(makeActor("Wired Ancilla"), {mode: "levels", amount: 2, type: "lethal", soak: true, soakBonus: 0});
+    assert.equal(plain.message.flags["wodx-combat"].data.type, "lethal", "no flag: a soak never botches");
+    face = 9;
+    const held = await C.soakAndApply(makeActor("Wired Elder"), {mode: "levels", amount: 2, type: "lethal", soak: true, soakBonus: 0, botchAggravated: true});
+    assert.deepEqual([held.message.flags["wodx-combat"].data.type, held.levels], ["lethal", 0]);
+  } finally { globalThis.Roll = keep; }
+});
+
 test("WoDX Actions refuses to run beside vtda20-actions", async () => {
   // A fresh copy of the module, loaded as if vtda20-actions were still enabled
   game.modules.set("vtda20-actions", {active: true});

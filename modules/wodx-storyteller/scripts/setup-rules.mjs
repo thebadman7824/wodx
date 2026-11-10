@@ -93,6 +93,12 @@ export const PRIMERS = {
     storyteller: ["Old powers adapt or die. Cyberware costs Humanity. The Masquerade must survive cameras on every corner and minds that can be hacked.",
       "World of Future Darkness's bridge rules sit on top of V20; see the Chronicle Rules journal for what is switched on."]
   },
+  "time-of-future-judgement": {
+    players: ["The last year of the century. Every feed carries a new disaster, and each one seems to set off the next.",
+      "The old powers are out in the open, and they are failing."],
+    storyteller: ["The Future Darkness branch ends here. Pick one Cascade in Dated events: a chain of endings, each one the cause of the next, with most of every line's endings inside it.",
+      "Let the characters change where the chain breaks or holds. The Cascade's last event says how the world ends if nobody does."]
+  },
   "classical": {
     players: ["The ancient world: city-states and empires, temples to many gods, slaves and citizens, roads and legions.",
       "Omens, oracles and sacrifice are part of daily life."],
@@ -132,7 +138,7 @@ export const ROLLS_PAGE = `<h2>Rolls</h2>
 <table><thead><tr><th>Difficulty</th><th>How hard</th></tr></thead><tbody>
 <tr><td>3</td><td>Easy</td></tr><tr><td>4</td><td>Routine</td></tr><tr><td>5</td><td>Straightforward</td></tr><tr><td>6</td><td>Standard</td></tr>
 <tr><td>7</td><td>Challenging</td></tr><tr><td>8</td><td>Difficult</td></tr><tr><td>9</td><td>Extremely difficult</td></tr><tr><td>10</td><td>Nearly impossible</td></tr></tbody></table>
-<p class="wodx-quiet">V20 difficulty chart: pdf page 257, printed page 249.</p>
+<p class="wodx-quiet">V20 difficulty chart (pdf 257 / p. 249).</p>
 <table><thead><tr><th>Successes</th><th>Result</th></tr></thead><tbody>
 <tr><td>1</td><td>Marginal: it barely works</td></tr><tr><td>2</td><td>Moderate</td></tr><tr><td>3</td><td>Complete</td></tr><tr><td>4</td><td>Exceptional</td></tr><tr><td>5 or more</td><td>Phenomenal</td></tr></tbody></table>
 <ul>

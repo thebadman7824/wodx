@@ -1,0 +1,45 @@
+[
+ {
+  "id": "ncns4-moncada-madrid",
+  "title": "The strike on Monçada",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Lucita and the Assamites move on the Cardinal.",
+  "claims": [
+   {
+    "text": "In September 1999 Lucita went to Madrid, where the Cardinal Monçada kept a haven beneath the church of San Nicolás de las Servitas, while the Assamite Fatima gathered word of its defences.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ncns4",
+      "page": 16,
+      "pdf": 18
+     },
+     {
+      "book": "ncns4",
+      "page": 18,
+      "pdf": 20
+     },
+     {
+      "book": "ncns4",
+      "page": 31,
+      "pdf": 33
+     },
+     {
+      "book": "cblasombra",
+      "page": 97,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbl-lucita-after"
+  ]
+ }
+]

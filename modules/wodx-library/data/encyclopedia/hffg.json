@@ -1,0 +1,66 @@
+[
+ {
+  "id": "hffg-price-of-power",
+  "title": "The price of power",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the hunters who last longest drift toward madness.",
+  "claims": [
+   {
+    "text": "A hunter's early months are torment, and many do not survive them: they fall to beasts, become puppets of manipulators, or take their own lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hffg",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Those who endure, held by a grudge, deep sorrow and forgiveness, or a lofty vision, go deeper into the hunt and show new and stranger edges; whether these come as reward or as tools, the Messengers do not say.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hffg",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Immersion in the hunt pulls hunters away from who they were, and the most steadfast and capable tend toward madness as their minds and identities erode.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hffg",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Hunters at this extreme seem erratic, driven by aims lesser hunters cannot follow, and can end up as foes of other imbued when goals clash.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hffg",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-maxing-out",
+   "htr-gaining-edges",
+   "htr-messengers",
+   "hutop-hunter-dreams"
+  ]
+ }
+]

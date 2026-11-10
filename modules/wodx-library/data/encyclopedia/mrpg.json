@@ -1,0 +1,360 @@
+[
+ {
+  "id": "mrpg-after-anomaly",
+  "title": "The Progenitors after the Anomaly",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A support Convention in a fractured Union.",
+  "claims": [
+   {
+    "text": "Progenitors describe the Union after the Dimensional Anomaly as fractured and bleeding, with many colleagues wrongly declaring the Ascension War won.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "They see themselves as a back-room support Convention supplying drugs, medical care, the odd sidekick and a great many clones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Whispers in NWO halls speak of a brewing Technocratic civil war, made worse by the loss of the old alliances once kept in Horizon.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "technocracy",
+   "mrnwo-mind-first"
+  ]
+ },
+ {
+  "id": "mrpg-hippocratic-past",
+  "title": "The Hippocratic Circle's long past",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Progenitor memory from the Renaissance to 1914.",
+  "claims": [
+   {
+    "text": "The Renaissance let healers leave the shadows the Church had forced them into, and doctors were welcome at courts everywhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Life-extension work let leading Technocrats live for centuries; Reginald Proctor, extended in 1715, was the only one lost before the Anomaly, by suicide in 1914.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Racism and sexism took hold in the Circle in the 1700s, demeaning its women and its non-European forebears, now called the Aesculapians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "sc-hippocratic-circle"
+  ]
+ },
+ {
+  "id": "mrpg-micro-methodologies",
+  "title": "Progenitor micro-Methodologies",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Small groups that fill gaps in the Convention.",
+  "claims": [
+   {
+    "text": "Fields such as veterinary medicine, farming and ecology fall outside the main Methodologies and are covered by small, lightly funded groups.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The Shalihotran Society, named for the first known veterinarian, fights animal diseases such as BSE, West Nile and SARS where economies depend on livestock.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The Agronomists bring together Progenitors versed in botany and agriculture.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "mrpg-facade"
+  ]
+ },
+ {
+  "id": "mrpg-facade",
+  "title": "FACADE Engineers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The cloners of the Progenitors.",
+  "claims": [
+   {
+    "text": "FACADE Engineers make the clones used across every Convention and hold the keys to the long lives of nearly every Technocratic leader.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "That gives them almost any resource they ask for, yet they rarely abuse it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Their roots may lie in an Egyptian Cosian Circle around 300 AD that bred chimeras like the beast-headed gods of the Pharaohs.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "The letters of the name expand to Forced Adaption and Clone Alteration Developmental Eugenicists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "mrpg-genegineers"
+  ]
+ },
+ {
+  "id": "mrpg-genegineers",
+  "title": "Genegineers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Designers of life at the genetic level.",
+  "claims": [
+   {
+    "text": "Genegineers build whole creatures from scratch in the genes instead of stitching together parts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Their creations still suffer Rejection, so they build whole ecologies to sustain them rather than lock them away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "They trace their line to a 14th-century Hippocratic Circle school set up under the Order of Reason, counting Galvani and Mendel among past Geniuses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "mrpg-facade"
+  ]
+ },
+ {
+  "id": "mrpg-pharmacopoeists",
+  "title": "Pharmacopoeists",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Progenitors' drug makers, a house divided.",
+  "claims": [
+   {
+    "text": "One side develops medicines from penicillin to vaccines and cancer treatments, along with small comforts such as hair growth aids.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "The other runs street labs and illicit drug networks, a trade the Convention entered with good intentions but never kept clean.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "They claim an unbroken line to Cosian Apothecaries of the 4th century BCE trained by Hippocrates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "mrpg-facade"
+  ]
+ },
+ {
+  "id": "mrpg-applied-sciences",
+  "title": "Applied Sciences",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Progenitor field scientists and Damage Control.",
+  "claims": [
+   {
+    "text": "More than 90% of Progenitors fit the image of the lab researcher, but Applied Sciences go out to make the world better first-hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Its members, including Damage Control combat scientists, see their work as linking the Convention's labs to life outside them, not as hired muscle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrpg",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "mrpg-pharmacopoeists"
+  ]
+ }
+]

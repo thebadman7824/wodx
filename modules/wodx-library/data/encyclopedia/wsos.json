@@ -1,0 +1,193 @@
+[
+ {
+  "id": "wsos-tempest-ways",
+  "title": "Finding the way in the Tempest",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Direction and travel in the storm between realms.",
+  "claims": [
+   {
+    "text": "The Tempest is the endless storm-ocean dividing the realms of the dead; once a calm sea that Ferrymen crossed in reed boats, it changed for reasons no one now remembers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Direction and distance there are partly subjective, but places everyone agrees on can be reached along shared byways that work like highways or sea lanes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Travelers use roads, bridges, rail lines and waterways; Ferryman reed boats survive the worst storms, Stygia runs ships of Stygian metal and great railroads, and some wraiths own relic vehicles from chariots to motorcycles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "maelstroms",
+   "ferrymen",
+   "stygia"
+  ]
+ },
+ {
+  "id": "wsos-river-of-death",
+  "title": "The River of Death",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern",
+   "ancient"
+  ],
+  "summary": "The great channel through the Tempest.",
+  "claims": [
+   {
+    "text": "The River of Death was once the main path for souls going down into the Underworld; legends call it the Lady of Fate's tears, or the tears shed by and for the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Charon sailed it in a reed boat woven by the Lady of Fate and found at its delta the Sunless Sea and the Isle of Sorrows, where Stygia was built.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "It is the one byway the Tempest never cuts, and along it small communities of Renegades and Heretics too strange for their own sects hide in coves and islands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 27,
+      "pdf": 28
+     },
+     {
+      "book": "wsos",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "charon",
+   "lady-of-fate",
+   "stygia"
+  ]
+ },
+ {
+  "id": "wsos-grotesques",
+  "title": "Grotesques",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Vast hungry Malfeans of the Tempest.",
+  "claims": [
+   {
+    "text": "Grotesques are Malfeans grown huge and ever hungrier, attacking anything in their territory, sometimes trailed by Shades and served by lesser Malfeans for a share of the spoils.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The reptilian Grotesque Gorool threatened Stygia in the Fifth Great Maelstrom, wrecking much of its fleet until Charon drew it away and both sank in a whirlpool; whether either survived is unknown.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spectres",
+   "charon",
+   "maelstroms"
+  ]
+ },
+ {
+  "id": "wsos-tempest-gypsies",
+  "title": "Gypsies of the Tempest",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wanderers with moving Haunts.",
+  "claims": [
+   {
+    "text": "Tempest gypsies shift their mobile Haunts between the Shadowlands and the Tempest and enjoy the comforts of a Haunt wherever they go, using an art they refuse to teach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Most wraiths leave them alone out of fear of their powers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wsos",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wsos-tempest-ways",
+   "whaunts-haunts"
+  ]
+ }
+]

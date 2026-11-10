@@ -1,0 +1,228 @@
+[
+ {
+  "id": "wawwcomp-storm-umbra",
+  "title": "Why the Storm Umbra stays in the West",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Theories about the Storm Eater’s haunt.",
+  "claims": [
+   {
+    "text": "European Garou hold that the Umbra around the West is harsher than anywhere else on Earth because the Storm Eater and its storm-spirits never leave it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Some think the Storm Eater has already pierced the Membrane into the Deep Umbra; the newcomers prefer the idea that it lairs high in the Aetherial Realm, hammering at one point of the Membrane to join the Triat in the Heavens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "In that view its influence seeps down through the Middle Lands and Penumbra of the frontier only, and some Stargazers compare it to the distant sun that still warms the land.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20wwx-storm-eater",
+   "wawwcomp-spirit-gates"
+  ]
+ },
+ {
+  "id": "wawwcomp-spirit-gates",
+  "title": "Spirit Gates",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Portals across the Middle Lands.",
+  "claims": [
+   {
+    "text": "Spirit Gates are the safest and quickest way to cross the Middle Lands, but Garou seldom find one and cannot choose where it leads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Umbral storms do not disturb them unless a whole Realm is destroyed, as by a great Wyldstorm or the Storm Eater.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "None has ever been found in the Penumbra, though Theurges think any there would lie at the heart of strong Domains and lead to matching Realms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawwcomp-storm-umbra"
+  ]
+ },
+ {
+  "id": "wawwcomp-storm-walkers",
+  "title": "The Storm Walkers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Native shamans who followed the storms.",
+  "claims": [
+   {
+    "text": "When the first Umbral storms struck the Savage West, a council of native wise men sent its eight greatest shamans out separately to find the storms and calm them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "They came back a year later telling of a vision: the storms had risen to help the Pure Ones drive off the Wyrmcomers, and promised power and knowledge to those who followed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Whole tribes then set off after the storms with them, and none of those people returned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawwcomp-storm-umbra"
+  ]
+ },
+ {
+  "id": "wawwcomp-embraced-garou",
+  "title": "Embracing a Garou",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "What happens when a vampire tries to Embrace a werewolf.",
+  "claims": [
+   {
+    "text": "The player rolls Gnosis at difficulty 9: success means a quick, painless death, failure a slow and agonising one as the curse fights the Garou’s regeneration until the heart bursts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   },
+   {
+    "text": "Only a Garou truly cursed by Gaia, who botches the roll, rises as an Abomination, trapped in the deepest Harano and both mocked and feared by the Wyrm’s creatures.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 139,
+      "pdf": 140
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wawwcomp-frontier-gifts",
+  "title": "Frontier tribal Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Gifts of the Wild West tribes.",
+  "claims": [
+   {
+    "text": "Journey Home, a level four Get of Fenris Gift, takes all the user’s Gnosis (at least three) to step into the Umbra and come out at the place the Garou thinks of as home, however far.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Smoke Signals, a level two Silent Strider Gift taught by a Fire-spirit, sends a message across great distances as plumes of smoke by day or flickering lights by night, willed into being without a fire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcomp",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

@@ -1,0 +1,252 @@
+[
+ {
+  "id": "m2osg-orphans",
+  "title": "Orphans",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mages who Awaken alone, with no Tradition to teach them.",
+  "claims": [
+   {
+    "text": "Self-taught Awakenings happen at any age but most often in the teens and early adulthood, when stress and new experience pile up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Some orphans burn out in fire or madness; others end up homeless, jailed or committed because the world has no place for them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mages",
+   "hollow-ones"
+  ]
+ },
+ {
+  "id": "m2osg-darkling-past",
+  "title": "Darklings in the occult revival",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "How the Hollow Ones' forebears moved through the old occult societies.",
+  "claims": [
+   {
+    "text": "Darklings joined many occult societies in Britain, New England, France and Germany, rubbing shoulders with figures such as Crowley, Levi and Mathers, yet swore loyalty to no sect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "When the Order of Reason became the Technocratic Union in the mid-1800s, several were caught in the fighting, and the survivors passed on a warning to stay out of wizards' affairs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "m2osg-unseen-society",
+  "title": "The Unseen Society",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "A Darkling fellowship of equals founded at Hazelton manor.",
+  "claims": [
+   {
+    "text": "Gladys and Gardner founded the Society at Hazelton as a modern druids' grove where Darklings could meet without bowing to anyone; many small sects copied it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Hazelton later vanished from sight, moved or hidden by enchantment; it still appears now and then to wanderers or self-Awakened mages in need, but cannot be found by searching.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Gladys was killed by the Countessa d'Marque during the Second World War.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones"
+  ]
+ },
+ {
+  "id": "m2osg-status",
+  "title": "The Hollow Ones' status game",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Darklings judge one another by style.",
+  "claims": [
+   {
+    "text": "A cliquish circle may test a newcomer without warning; style counts as much as power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Los Angeles has two rival queens, Madelyne and Lady Zee, who both expect flashy displays; the Unseen Society prizes wicked wit and frowns on tacky magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones"
+  ]
+ },
+ {
+  "id": "m2osg-chapel-perilous",
+  "title": "Chapel Perilous",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Hollow One nightclub in a burned-out neighbourhood.",
+  "claims": [
+   {
+    "text": "The club takes up a vast former Catholic church, no longer consecrated, set between two burned-out apartment blocks, lit by black lights and draped with real giant spiderwebs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   },
+   {
+    "text": "It is known as the easiest place in the city to buy drugs, and the decaying Victorian streets around it are full of the scene's young.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones"
+  ]
+ },
+ {
+  "id": "m2osg-strange",
+  "title": "Strange",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Front man of the 1970s band Strange Therapy.",
+  "claims": [
+   {
+    "text": "Strange Therapy mixed glam and early punk with electric violin, and its singer, known only as Strange, wrote every song.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Before the recorded launch show of the second tour, Strange suffered crippling headaches and waking nightmares.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2osg",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones",
+   "marauders"
+  ]
+ }
+]

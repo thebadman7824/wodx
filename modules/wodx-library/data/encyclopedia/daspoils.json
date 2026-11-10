@@ -1,0 +1,313 @@
+[
+ {
+  "id": "daspoils-gunpowder",
+  "title": "Gunpowder and siege",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "werewolf",
+   "mage",
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Siege warfare around 1230.",
+  "claims": [
+   {
+    "text": "In the early 13th century Europe is only beginning to learn the principles of gunpowder; the first true cannon does not see battle until the early 14th century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Mages have already used magic to build such weapons, and several cannon were fired in the destruction of the Mistridge Covenant in 1210.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Defenders answer siege engines with boiling oil, heated sand and quicklime poured on attackers, and tables give damage for engines from rams and mangonels to trebuchets, Greek fire and the pot-de-fer, and soak and health for fortifications.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 33,
+      "pdf": 34
+     },
+     {
+      "book": "daspoils",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daspoils-mass-combat",
+  "title": "Mass battles",
+  "kind": "mechanic",
+  "lines": [
+   "vampire",
+   "werewolf",
+   "mage",
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Armies, troop types and commanders.",
+  "claims": [
+   {
+    "text": "Armies are built from units of troop types such as a thousand swordsmen, a hundred heavy cavalry, ten Cainite cavalry, fifty ghoul knights, a Garou pack of five or twenty-five Knights of Acre.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Each army has Maneuver, Melee, Ranged and Defence ratings drawn from its units.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Each battle turn runs between thirty minutes and three hours; as one begins, the two commanders make opposed Perception + Leadership rolls at difficulty 6, as do the commanders of each wing and the centre.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Net successes become bonus or penalty dice for the relevant units, and a botch gives the opponent two extra net successes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daspoils-soak-by-type",
+  "title": "Damage by kind of creature",
+  "kind": "mechanic",
+  "lines": [
+   "vampire",
+   "werewolf",
+   "mage",
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How different beings take battlefield damage.",
+  "claims": [
+   {
+    "text": "Mortals, including inquisitors and mages, soak bashing with Stamina and armour but need armour or magic against any lethal damage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Garou soak bashing and lethal with Stamina and aggravated damage in any form except Homid, and regenerate quickly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Silver can be soaked only by homid and lupus Garou in their breed forms, and unsoaked silver damage counts as lethal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daspoils-great-diseases",
+  "title": "The great killers",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "werewolf",
+   "mage",
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Diseases that dominate death in 1230.",
+  "claims": [
+   {
+    "text": "A few great diseases cause most deaths in 1230; some can empty a village in weeks, others leave victims wasted husks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Bubonic plague, carried by fleas, recurs over almost a thousand years, perhaps killing millions in the sixth century and returning in the mid-14th.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daspoils-inheritance",
+  "title": "Inheritance among the Damned",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "werewolf",
+   "mage",
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Cainites and others pass on what they hold.",
+  "claims": [
+   {
+    "text": "Cainites rarely plan for Final Death, so few customs let childer inherit anything.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Some Ventrue and Lasombra follow mortal inheritance law, and a few sires write wills, though that gives childer a motive to destroy them, a risk the blood oath only partly lowers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Other clans share more like families: the Ravnos, who seldom hold land, often spread their goods among their coteries without betrayal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "daspoils-supernatural-logistics",
+  "title": "Supernatural logistics",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "werewolf",
+   "mage",
+   "hunter"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "What armies of the supernatural need to keep going.",
+  "claims": [
+   {
+    "text": "Vampires need blood for themselves and more for their ghouls; an army is a moving blood supply, but hunting among armed men is risky and a herd can be lost in one battle or plague.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "A vampire can forage freely so long as no trace is left, or the carnage can pass for another massacre by soldiers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   },
+   {
+    "text": "Werewolves need Gnosis for their Gifts and spirit allies, and a war camp is a poor place for the meditation and rites that restore it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "daspoils",
+      "page": 94,
+      "pdf": 95
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

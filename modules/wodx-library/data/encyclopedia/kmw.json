@@ -1,0 +1,483 @@
+[
+ {
+  "id": "kmw-red-list",
+  "title": "The Red List",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Camarilla's most hunted Anathema, all under Blood Hunt.",
+  "claims": [
+   {
+    "text": "The Red List names some of the most cunning and dangerous Kindred ever called to a Blood Hunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 8,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Some Kindred on it are innocent of what they are hunted for.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 8,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-angelo",
+   "kmw-kemintiri"
+  ]
+ },
+ {
+  "id": "kmw-angelo",
+  "title": "Angelo, the Blood Brother",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Los Angeles gang leader brought into the Sabbat.",
+  "claims": [
+   {
+    "text": "During the 1966 riots in Los Angeles, after the Sabbat siege of the city, a nomad Sabbat pack watched a mortal gang led by a young drug-fuelled man named Angelo burn building after building.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-rabbat",
+  "title": "Rabbat",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An ancient Kindred whose mortal life ended in the Mongol conquest of China.",
+  "claims": [
+   {
+    "text": "Rabbat was already old when Genghis Khan's horde swept through the Chin Empire in the early 13th century, wiping out town after town in two years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Rabbat survived the massacres and was taken captive by the Mongols.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-genina",
+  "title": "Genina",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A former slave from the Ashanti, taken to the Caribbean.",
+  "claims": [
+   {
+    "text": "Genina was born into the Ashanti of West Africa in the mid 17th century and taken by Portuguese slavers at the age of five.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 26,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Sold in Jamaica and later moved to Haiti, Genina worked the sugar fields of the Cul-de-Sac Plain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 26,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-enkidu",
+  "title": "Enkidu",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Gangrel of ancient Ur.",
+  "claims": [
+   {
+    "text": "Around 2200 BC the Gangrel Antediluvian returned to Ur and raised a ziggurat to the moon that became a haven for the clan.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 32,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Enkidu was born to a poor family in a village outside the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 32,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-ossian",
+  "title": "Ossian",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Kindred who was once a Fianna Galliard, born of a fae mother.",
+  "claims": [
+   {
+    "text": "Five hundred years ago Ossian was a Fianna Garou, a recorder and poet of the tribe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Ossian's mother Sadhbh was one of the Seelie fae, turned into a fawn by the mage Fear Doirche and later freed by the Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-dylan",
+  "title": "Dylan",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Kindred whose story began in the London Blitz.",
+  "claims": [
+   {
+    "text": "On the night of October 10, 1940, bombs fell across more than 50 districts of London, while Dylan Bee sheltered in a trench by the Thames.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-ferox",
+  "title": "Ferox",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Kindred born to the Iceni in the age of Boudicca.",
+  "claims": [
+   {
+    "text": "Ferox was a secret child of Queen Boudicca of the Iceni by a commoner, kept hidden from King Prasutagus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Prasutagus, a client king of Rome, left half of the kingdom's wealth to Nero.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-alexis",
+  "title": "Alexis Danpai",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Russian noble of the age of Peter the Great.",
+  "claims": [
+   {
+    "text": "Alexis was born to a rich Russian family favoured by the tsar at the start of the 18th century and was chosen to study abroad under Peter the Great.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 56,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-germaine",
+  "title": "Germaine",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Kindred caught up in the French Revolution.",
+  "claims": [
+   {
+    "text": "When Louis XVI took the throne in 1774, the Toreador of the French court backed the status quo against reform.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 62,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-tariq",
+  "title": "Tariq",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Bedouin warrior who joined the Assamites.",
+  "claims": [
+   {
+    "text": "During the Seventh Crusade Tariq defended the Saracen city of Mansourah.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 68,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Tariq later gave service to the Old Man of the Mountain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 68,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-valerius",
+  "title": "Valerius Maior",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Roman soldier from the war against Antony and Cleopatra.",
+  "claims": [
+   {
+    "text": "Valerius served in one of the 19 legions that went over to Agrippa after the battle of Actium in 31 BC.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-petaniqua",
+  "title": "Petaniqua",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A princess of Epirus drawn to the cult of Cybele.",
+  "claims": [
+   {
+    "text": "Born a princess of Epirus under Macedonian sway, Petaniqua went looking for secret lore and joined the cult of Cybele on Samothrace, where Philip of Macedon was met.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 80,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ },
+ {
+  "id": "kmw-kemintiri",
+  "title": "Kemintiri",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Setite tied to the war between the cult of Isis and the Followers of Set.",
+  "claims": [
+   {
+    "text": "After Isis died, the cult of Isis, keepers of the Spell of Life, mourned for centuries until Horus rose again as a mummy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 86,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "The cult helped Horus destroy the Followers of Set across Egypt but feared Set's revenge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kmw",
+      "page": 86,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kmw-red-list"
+  ]
+ }
+]

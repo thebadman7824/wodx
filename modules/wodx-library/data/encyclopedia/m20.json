@@ -1,0 +1,1071 @@
+[
+ {
+  "id": "mages",
+  "title": "The Awakened",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mages: people who have woken to their power to remake reality.",
+  "claims": [
+   {
+    "text": "Awakened is the common word for mages, and also for other Night-Folk with paranormal gifts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Awakening is waking to one's power to rework reality and work True Magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "A Sleeper has not yet Awakened; a Sleepwalker has awareness and perhaps odd talents but no Sphere magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "arete",
+   "consensus",
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "avatar",
+  "title": "The Avatar",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A mage's guiding spirit within.",
+  "claims": [
+   {
+    "text": "An Awakened Avatar is the inner god that guides a mage and lets the mage rework reality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The Seeking is the Avatar-led inner quest for further enlightenment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mages",
+   "arete"
+  ]
+ },
+ {
+  "id": "arete",
+  "title": "Arete",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Enlightened Will: the measure of a mage's magickal excellence.",
+  "claims": [
+   {
+    "text": "Arete is the excellence and Enlightened Will that lets a mage change reality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "It is said ahr-eh-TAY or AIR-eh-tay; a knowing mage never says Arr-REET.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Raising Arete costs its current rating times eight in experience.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 253,
+      "pdf": 254
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "quintessence"
+  ]
+ },
+ {
+  "id": "consensus",
+  "title": "The Consensus",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Reality as most people agree it is.",
+  "claims": [
+   {
+    "text": "The Consensus is reality as most people agree on it; the Technocracy holds it to be humanity's ideal, safe state.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Consensual reality, or Earthly reality, is the world as most humans understand and experience it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Reality Zones are optional: they may set what is coincidental, be ignored in favour of a Technocratic world, or let players shift paradigms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 611,
+      "pdf": 612
+     }
+    ]
+   }
+  ],
+  "see": [
+   "coincidental-and-vulgar",
+   "technocracy",
+   "paradox"
+  ]
+ },
+ {
+  "id": "coincidental-and-vulgar",
+  "title": "Coincidental and Vulgar Magick",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Magick that hides inside chance, and magick that does not.",
+  "claims": [
+   {
+    "text": "Coincidental magick could pass as natural chance to an unbelieving witness; it works within the dominant paradigm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Within some reality zones, some kinds of magick are more coincidental than others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 611,
+      "pdf": 612
+     }
+    ]
+   }
+  ],
+  "see": [
+   "consensus",
+   "paradox"
+  ]
+ },
+ {
+  "id": "paradox",
+  "title": "Paradox",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The backlash of conflicting realities.",
+  "claims": [
+   {
+    "text": "Paradox is the force of clashing realities, raised when a mage works magick badly or pushes past the Consensus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Paradox can wall an offending mage into a small Paradox Realm, cut off from consensual reality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Marauders are not quite immune to Paradox: their madness shields them, and the backlash tends to strike others.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 238,
+      "pdf": 239
+     }
+    ]
+   }
+  ],
+  "see": [
+   "coincidental-and-vulgar",
+   "marauders"
+  ]
+ },
+ {
+  "id": "quintessence",
+  "title": "Quintessence",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Fifth Essence of Creation.",
+  "claims": [
+   {
+    "text": "Quintessence is the raw essence of Creation, also called Primal Force, shown in Patterns through Dynamism and Stasis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Tass is Quintessence in physical form, taking a shape suited to its source, such as toadstools in a glade or blood in a creature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Nodes are places where primal energy gathers, Quintessence rises and Tass forms; strong emotion, harmony or corruption often marks them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arete",
+   "paradox"
+  ]
+ },
+ {
+  "id": "ascension",
+  "title": "Ascension",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Transcendence, for the self and for humanity.",
+  "claims": [
+   {
+    "text": "Ascension is rising to a higher state, both for the mage alone and for humanity as a whole.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Few mages agree what Ascension looks like.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mages",
+   "council-of-nine",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "council-of-nine",
+  "title": "The Council of Nine Mystic Traditions",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The alliance of the nine mystic Traditions.",
+  "claims": [
+   {
+    "text": "The Council of Nine Mystic Traditions is the full name of the united Traditions, and also of their leadership.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "The Order of Hermes is the largest and most organised Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "celestial-chorus",
+   "cult-of-ecstasy",
+   "dreamspeakers",
+   "euthanatos",
+   "order-of-hermes",
+   "society-of-ether",
+   "verbena",
+   "virtual-adepts"
+  ]
+ },
+ {
+  "id": "akashayana",
+  "title": "Akashic Brotherhood",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "The Akashayana seek harmony in a chaotic world, training the body to cultivate the mind and the Sphere of Mind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 148,
+      "pdf": 149
+     }
+    ]
+   },
+   {
+    "text": "The Council often misreads them as peaceful warriors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 148,
+      "pdf": 149
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "celestial-chorus",
+  "title": "Celestial Chorus",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "The Chorus hears the voice of the Divine, the One, by whatever name, whose Song all beings can join to shape Creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "In Chorister teaching the Song holds many harmonies, and many creeds lead to it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "cult-of-ecstasy",
+  "title": "Cult of Ecstasy",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "Ecstatics teach five steps: surrender fear, focus intent, open, attune, and begin again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   },
+   {
+    "text": "A mentor and student bind themselves in a covenant called Diksham.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 153,
+      "pdf": 154
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "dreamspeakers",
+  "title": "Dreamspeakers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "The Dreamspeakers gather shamans from across the world to rebuild their roots.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   },
+   {
+    "text": "A technoshamanic movement is growing in the spirit side of the Digital Web.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 155,
+      "pdf": 156
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "euthanatos",
+  "title": "Euthanatos",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "The Euthanatoi count themselves guardians of the Wheel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 156,
+      "pdf": 157
+     }
+    ]
+   },
+   {
+    "text": "Mages of the good death are often cast as murderers, since the will to live is strong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 156,
+      "pdf": 157
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "order-of-hermes",
+  "title": "Order of Hermes",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "The Order of Hermes is the largest and best organised Tradition and shaped Western magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   },
+   {
+    "text": "Hermetics hold vast wealth, potent Wonders and great libraries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 158,
+      "pdf": 159
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "society-of-ether",
+  "title": "Society of Ether",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "Etherites claim descent from ancient Troy, with natural philosophy rooted among the pre-Socratic Greeks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   },
+   {
+    "text": "Few outside the Tradition accept the claim to Troy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "verbena",
+  "title": "Verbena",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "The Verbena see life as a vast cycle, a dance of elements no mage can escape.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   },
+   {
+    "text": "That view frightens most people, and many Verbena like it that way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 162,
+      "pdf": 163
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "virtual-adepts",
+  "title": "Virtual Adepts",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the Nine Mystic Traditions.",
+  "claims": [
+   {
+    "text": "Virtual Adepts hold that everything can be represented as information.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 164,
+      "pdf": 165
+     }
+    ]
+   },
+   {
+    "text": "Crack the code of a thing and you can change, improve or delete it, without touching it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 164,
+      "pdf": 165
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "technocracy",
+  "title": "The Technocratic Union",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Technocracy: the union of science-led mages that guards the Consensus.",
+  "claims": [
+   {
+    "text": "Capitalised, Technocracy is short for the Technocratic Union, and a Technocrat is one of its members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Some Technocrats hold religious faith; Iteration X's devotion to The Machine is a vision of God.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 184,
+      "pdf": 185
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "new-world-order",
+   "progenitors",
+   "syndicate",
+   "void-engineers",
+   "consensus"
+  ]
+ },
+ {
+  "id": "iteration-x",
+  "title": "Iteration X",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Convention of the Technocratic Union.",
+  "claims": [
+   {
+    "text": "Iteration X venerates The Machine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 184,
+      "pdf": 185
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy"
+  ]
+ },
+ {
+  "id": "new-world-order",
+  "title": "New World Order",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Convention of the Technocratic Union.",
+  "claims": [
+   {
+    "text": "The New World Order holds that the Masses are safest kept asleep, with deviance hidden and science predictable.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 188,
+      "pdf": 189
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy"
+  ]
+ },
+ {
+  "id": "progenitors",
+  "title": "Progenitors",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Convention of the Technocratic Union.",
+  "claims": [
+   {
+    "text": "The Progenitors would reshape organic life into a better strain by mastering and remaking its principles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 190,
+      "pdf": 191
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy"
+  ]
+ },
+ {
+  "id": "syndicate",
+  "title": "Syndicate",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Convention of the Technocratic Union.",
+  "claims": [
+   {
+    "text": "The Syndicate may be the most powerful group on Earth, though rumour paints its operatives as gangsters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 192,
+      "pdf": 193
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy"
+  ]
+ },
+ {
+  "id": "void-engineers",
+  "title": "Void Engineers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Convention of the Technocratic Union.",
+  "claims": [
+   {
+    "text": "The Void Engineers defend humanity against everything beyond the Gauntlet, from aliens to spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 194,
+      "pdf": 195
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy"
+  ]
+ },
+ {
+  "id": "hollow-ones",
+  "title": "Hollow Ones",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Orphaned mages outside both Council and Technocracy.",
+  "claims": [
+   {
+    "text": "A Hollow One keeps quiet about allies among the Bata'a, since bragging could cost those allies their lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 200,
+      "pdf": 201
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "nephandi",
+  "title": "Nephandi",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fallen mages of the Path of Descent.",
+  "claims": [
+   {
+    "text": "Nephandi are dark-reflection mages on the Path of Descent, known for corruption and deceit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Fallen rarely show themselves; outside their lowest ranks they seem to be someone or something else.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 630,
+      "pdf": 631
+     }
+    ]
+   }
+  ],
+  "see": [
+   "marauders",
+   "mages"
+  ]
+ },
+ {
+  "id": "marauders",
+  "title": "Marauders",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mages lost in their own reality.",
+  "claims": [
+   {
+    "text": "Marauders see reality so far from the Consensus that they live in their own reality wells.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Each Marauder lives out reality as that Marauder sees it, a case of Dynamism gone too far.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20",
+      "page": 628,
+      "pdf": 629
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "nephandi"
+  ]
+ }
+]

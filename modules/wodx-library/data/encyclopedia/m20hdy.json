@@ -1,0 +1,320 @@
+[
+ {
+  "id": "m20hdy-shapechanging",
+  "title": "Shapechanging",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Life magick that reshapes the caster or another creature.",
+  "claims": [
+   {
+    "text": "Reworking one's own body takes Life 3 for slight shifts, Life 4 for a whole new shape and Life 5 for a flawless change; working on another living being needs one Rank above that.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Taking a similar form yourself needs two successes and a very unlike form three; turning someone else needs four for a near shape and five or more for a wholly alien one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A botched Life transformation leaves horrible mutations, and the Storyteller may let even a failed roll leave hidden flaws that show up later.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arete",
+   "coincidental-and-vulgar"
+  ]
+ },
+ {
+  "id": "m20hdy-elementalism",
+  "title": "Psychic and spiritual elementalism",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Commanding matter and flame through will and the Spheres.",
+  "claims": [
+   {
+    "text": "Lifting or steering objects with Forces asks for steady concentration and a Willpower roll on top of the Arete roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "How vulgar a levitation is depends on the size of the thing, how openly it is done and whether some believable device seems to explain it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Controlling flames that already burn uses Mind 3 with Forces 2, and the Storyteller may charge a Willpower point for big or unlikely fires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Traditional elementalists treat the elements as living things that can be called up as entities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "coincidental-and-vulgar",
+   "m20hdy-shapechanging"
+  ]
+ },
+ {
+  "id": "m20hdy-sacrifice",
+  "title": "Quintessence through sacrifice",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Drawing raw magickal energy out of living offerings.",
+  "claims": [
+   {
+    "text": "Prime 3 lets a mage tear Quintessence from the Pattern of an unwilling living creature, an act that draws grim consequences.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "A creature of human size holds about 10 points, a small animal three to five, and a very large beast 15 or more.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Whoever takes in Quintessence from a living sacrifice also takes on the Resonance of the deed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Prime 4 can disintegrate an object given as an offering and Prime 5 a living being; this scatters the energy back into Creation instead of feeding the caster.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "quintessence",
+   "m20hdy-necrosynthesis"
+  ]
+ },
+ {
+  "id": "m20hdy-necrosynthesis",
+  "title": "Necrosynthesis",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A blatant death-magick that rots living flesh.",
+  "claims": [
+   {
+    "text": "Entropy 4 joined with Life 3 sends necrotic decay through a body for aggravated damage; adding Prime 2 can breed maggots inside the victim.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "A caster who uses it gains a dot of Jhor or Entropic Synergy Resonance and is likely to suffer a Morbidity Quiet at the next Paradox.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "m20hdy-lichedom",
+   "euthanatos"
+  ]
+ },
+ {
+  "id": "m20hdy-lichedom",
+  "title": "Lichedom",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A whispered rite of undying for necromancers.",
+  "claims": [
+   {
+    "text": "Mystic gossip tells of a damned working that leaves a necromancer in a state of living death.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "The lore is said to come from old Egyptian and Roman rites, later polished by rogue Hermetic practice, and to yield a thing that is at once mage, mortal, corpse and spirit and yet none of them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m20hdy-necrosynthesis",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "m20hdy-possession",
+  "title": "Spirit possession",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hosting, resisting and using a possessing spirit.",
+  "claims": [
+   {
+    "text": "Sleepers with Willpower 5 or less cannot throw out a possessing spirit and must wait for it to leave or be exorcised.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "Mages, other Night-Folk and strong-willed people can fight back with an extended, resisted Willpower roll to 10 successes, each side rolling against the other's Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "The host usually gets one try per day, with an extra chance when the spirit forces something truly unbearable.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "A mage can also use a bond with a possessing totem as the focus of an Effect, such as growing fangs through Wolf.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20hdy",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "dreamspeakers"
+  ]
+ }
+]

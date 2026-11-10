@@ -1,0 +1,75 @@
+[
+ {
+  "id": "hutop-hunter-dreams",
+  "title": "Dreams of a better world",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Whether scattered hunters can ever change the world.",
+  "claims": [
+   {
+    "text": "Most imbued barely grasp the world they woke to, and many go mad or die trying; the scattered few barely ripple a sea of supernatural beings, so their wins leave the wider world mostly unchanged.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hutop",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Human apathy and disbelief, the weight of supernatural influence and the creatures' own efforts to crush resistance all keep hunters' discoveries unheard.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hutop",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Small successive victories, or a little common ground found with monsters, can give some hunters hope of a better life for family, friends or a neighbourhood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hutop",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Reaching for more means coming out of hiding to link up with hunters elsewhere, which draws the eye of mortal authorities and powerful monsters and risks being condemned by a public blinded by monstrous lies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hutop",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Calling the hunt a grassroots movement would overstate it; it has almost no coordinated direction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hutop",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "hsg-hunters-unnoticed"
+  ]
+ }
+]

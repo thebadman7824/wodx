@@ -1,0 +1,321 @@
+[
+ {
+  "id": "m2gtech-enlightened-science",
+  "title": "Enlightened Science",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the Technocratic Union says its name means.",
+  "claims": [
+   {
+    "text": "Techno stands for tools and rational planning, cratic for a meritocracy of scientific skill, and Union for a body that includes every person on Earth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 38,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Those who grasp science best are held to lead and guard those who can only use its fruits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 38,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Inspired Science, reaching past known facts to new principles, is what sets a Technocrat apart from the Masses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 38,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "m20bos-union-ideals"
+  ]
+ },
+ {
+  "id": "m2gtech-ranks",
+  "title": "Ranks of the Union",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Citizens, agents, Supervisors and masters.",
+  "claims": [
+   {
+    "text": "Front-Line staff often include citizens capable of only minor Procedures; overeager ones are mocked as proles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 81,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "New Enlightened agents include reconditioned Reality Deviants and willing recruits, and each team answers to a Supervisor chosen for the mission's field.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 81,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Each Convention has its own Supervisor titles, such as Programmers in Iteration X, Chairmen in the Syndicate and Commanders among Void Engineers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 83,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "The highest masters form the Inner Circle, and masters can watch their agents through Control, a group mind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 83,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "m2gtech-conditioning"
+  ]
+ },
+ {
+  "id": "m2gtech-pogrom",
+  "title": "The Pogrom",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The policy that any mage outside the Union must die.",
+  "claims": [
+   {
+    "text": "For over a century a movement has pushed the Pogrom, holding that every mage not working for the Technocracy must be destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 86,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Not all Technocrats back it, but support swells whenever the supernatural grows overt or the Traditions score a big win.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 86,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "In 1997 a cabal tried to bring down a Horizon Construct, setting off days of slaughter on the Front Lines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 86,
+      "pdf": 89
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "m2gtech-ranks"
+  ]
+ },
+ {
+  "id": "m2gtech-conditioning",
+  "title": "Technocratic Conditioning",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The stages by which Control shapes a mind.",
+  "claims": [
+   {
+    "text": "Early stages instil rote phrases and make a subject accept minor Procedures from Control without resistance; a Procedure above two Sphere dots counts as major.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 90,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "A conditioned mage may undergo a Seeking showing the Ascension it would reach by joining the Technocracy, a vision many find disturbing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 90,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "At the Suspicion stage Control can mark people as allies or enemies to be watched, and can plant code words.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 90,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "m2gtech-ranks",
+   "mrnwo-mind-first"
+  ]
+ },
+ {
+  "id": "m2gtech-operatives",
+  "title": "NWO Operatives",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The covert arm of the Union in its older form.",
+  "claims": [
+   {
+    "text": "Men in Gray watch Reality Deviants, Men in Black kill them, and Men in White police the Union itself and are much feared.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 108,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "Operatives also comb government and business records, and whatever the FBI or CIA learns soon reaches the NWO.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 108,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "A secret World Advisory Council is rumoured to have agents seeded in global banking, the United Nations and leading national governments.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 108,
+      "pdf": 111
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "mrnwo-methodologies"
+  ]
+ },
+ {
+  "id": "m2gtech-genegineers",
+  "title": "Genegineers in the 1990s",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Progenitor Methodology that builds life from within.",
+  "claims": [
+   {
+    "text": "Genegineers were called Mutagenic Engineers until 1954.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 112,
+      "pdf": 115
+     }
+    ]
+   },
+   {
+    "text": "Unlike the surgical FACADE Engineers, they can build creatures from scratch or change them from the inside, giving Progenitor Constructs whole custom ecologies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 112,
+      "pdf": 115
+     }
+    ]
+   },
+   {
+    "text": "Botched creations can die horribly soon after birth, and most constructs are treated as second-class citizens in the Union.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2gtech",
+      "page": 112,
+      "pdf": 115
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "mrpg-genegineers",
+   "mrpg-facade"
+  ]
+ }
+]

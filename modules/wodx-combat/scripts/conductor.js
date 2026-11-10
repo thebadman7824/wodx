@@ -16,7 +16,6 @@ import * as CR from "./conductor-rules.js";
 
 const MOD = "wodx-combat";
 const SOCKET = `module.${MOD}`;
-const sleep = ms => new Promise(r => setTimeout(r, ms));
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const setting = k => game.settings.get(MOD, k);
 const chron = () => game.modules.get("wodx-chronicle")?.api;

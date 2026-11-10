@@ -1,0 +1,303 @@
+[
+ {
+  "id": "m2ta2-sanpietro",
+  "title": "Niccolo Sanpietro",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "A Florentine Grand Financier who armed the Papacy.",
+  "claims": [
+   {
+    "text": "Sanpietro gave money and Swiss mercenary Enforcers to the Papal States, adding to the Swiss Guards; when Giulio de' Medici became Pope Clement VII, the Medici held sway over Church and banks alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "mrsy-financiers"
+  ]
+ },
+ {
+  "id": "m2ta2-enforcers",
+  "title": "Syndicate Enforcers (first edition)",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Syndicate's strong arm in the criminal world.",
+  "claims": [
+   {
+    "text": "Enforcers run or assist crime syndicates, smugglers and street gangs in big cities, and trade in fear, punishing defaulters and guarding illicit markets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Other Conventions see the Enforcers as a goon squad, which leads rivals to underrate the Syndicate's true size.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "mrsy-enforcers"
+  ]
+ },
+ {
+  "id": "m2ta2-outsourcing",
+  "title": "Outsourcing",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Syndicate collects gear from the other Conventions.",
+  "claims": [
+   {
+    "text": "Other Conventions owe the Syndicate favours, and Disbursements has them repay part of that debt in hardware: NWO limousines, Iteration X software and Progenitor drugs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "The flow runs both ways, with Syndicate lab creations sent to other Conventions' agents.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate",
+   "mrsy-disbursements"
+  ]
+ },
+ {
+  "id": "m2ta2-simcoe",
+  "title": "John Eaton Simcoe",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Syndicate master of Diefenbakker's casino.",
+  "claims": [
+   {
+    "text": "In the 1950s Simcoe and other Syndicate members formed the Dominion Gaming Group, later DCG Ltd.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Simcoe runs the Diefenbakker's complex and sits on the Symposium that oversees Technocracy work in the Pacific Northwest, which in practice puts Simcoe in charge there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate"
+  ]
+ },
+ {
+  "id": "m2ta2-void-etherite-rivalry",
+  "title": "Void Engineers and the Sons of Ether",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An old grudge over the Deep Universe.",
+  "claims": [
+   {
+    "text": "The first journeys into the Deep Universe began before the Etherites left the Technocracy, and their defection led to a small skirmish in space.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 15,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "The two groups built the first craft for the Deep Universe together, then became fierce rivals; the Virtual Adepts' later departure stung the Void Engineers the same way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 15,
+      "pdf": 87
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "society-of-ether",
+   "virtual-adepts",
+   "mrvoid-origins"
+  ]
+ },
+ {
+  "id": "m2ta2-dark-side-base",
+  "title": "Dark Side Base",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Void Engineers' station on the Moon.",
+  "claims": [
+   {
+    "text": "The base relays and monitors the solar system and the Deep Universe posts, serves as the main laboratory Construct and training ground for the Border Corps.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 25,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "A Moon-based team made the Convention's greatest find, Autochthonia, the ordered machine world where Iteration X's great computer is said to sit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 25,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "mrvoid-bcd",
+   "mrix-the-computer"
+  ]
+ },
+ {
+  "id": "m2ta2-big-joke",
+  "title": "The Big Joke",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the other Conventions think the Void Engineers are harmless eccentrics.",
+  "claims": [
+   {
+    "text": "Elder Void Engineers keep up a long jest that makes the rest of the Union see them as space-show oddballs, which keeps the others from looking too closely.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 28,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers"
+  ]
+ },
+ {
+  "id": "m2ta2-pads",
+  "title": "Prime harvesting",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Void Engineers collect and clean Nodes.",
+  "claims": [
+   {
+    "text": "Harvesting and sanitising Nodes is one of the Convention's main duties, and Quintessence and Tass power most Technocratic gear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 40,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "Most Universal Vessels carry Prime Absorption Devices; much of the research came from old Electrodyne Engineer records, though the word Ether is never spoken.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta2",
+      "page": 40,
+      "pdf": 112
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "quintessence",
+   "mrse-electrodyne-tesla"
+  ]
+ }
+]

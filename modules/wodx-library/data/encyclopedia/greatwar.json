@@ -1,0 +1,1161 @@
+[
+ {
+  "id": "gw-twilight-era",
+  "title": "The Underworld after the Armistice",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The dead from November 1918 to the eve of the 1929 crash.",
+  "claims": [
+   {
+    "text": "The setting covers the years from Armistice Day, 11 November 1918, up to the night before the stock market crash of 1929.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Charon still rules the Empire in theory, though no one has seen Charon in years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Stygia has fallen to treachery, and the Dark Kingdom of Iron is close to collapse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Shadowlands are all but cut off from the Empire's heart, and every Necropolis stands alone among enemies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-fourth-maelstrom",
+   "gw-insurrection",
+   "stygia"
+  ]
+ },
+ {
+  "id": "gw-fourth-maelstrom",
+  "title": "The Fourth Great Maelstrom",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The psychic storm born of the Somme.",
+  "claims": [
+   {
+    "text": "The carnage of the Somme spawned the Fourth Great Maelstrom, which still rages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The storm lasts until the Shadow-eaten who make it up are beaten and the Nihils sealed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "A Maelstrom is a violent venting from the Tempest or Labyrinth into the Shadowlands, usually with Spectres.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "maelstroms",
+   "gw-twilight-era",
+   "spectres"
+  ]
+ },
+ {
+  "id": "gw-war-of-the-dead",
+  "title": "The War of the Dead",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "What wraiths mean by the Great War.",
+  "claims": [
+   {
+    "text": "Among wraiths the Great War means the Underworld conflict that follows the living one; the living war they call the War to End All Wars, or just the war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     },
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Ghosts of tanks, zeppelins and planes, drones re-running doomed charges and drifting clouds of poison gas fill the Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 14,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-fourth-maelstrom",
+   "gw-twilight-era"
+  ]
+ },
+ {
+  "id": "gw-insurrection",
+  "title": "The Insurrection",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The Grim Legion's grab for the Dark Empire.",
+  "claims": [
+   {
+    "text": "The Insurrection is the Grim Legion's attempt to take the Dark Empire of Iron.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Its supporters call themselves Imperialists of the New Stygian regime; opponents call them Insurrectionists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "A Loyalist is a wraith who fights against the Smiling Lord's side in the Insurrection.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Grim Legion traitors may already be inside a Citadel's walls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "gw-twilight-era",
+   "gw-night-of-short-chains",
+   "gw-grim-trials",
+   "gw-monitors-bargain",
+   "gw-stygian-trusts"
+  ]
+ },
+ {
+  "id": "gw-black-mask",
+  "title": "Black Mask and the Ministry of Intelligence",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The spy services of the Legions.",
+  "claims": [
+   {
+    "text": "The Black Mask is the Grim Legion's espionage order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Ministry of Intelligence is the Iron Legion's espionage order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Magisterium Veritatis is Stygia's secret police.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-insurrection",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "gw-legion-orders",
+  "title": "Orders of the Legions",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Some named orders and branches of the 1920s Legions.",
+  "claims": [
+   {
+    "text": "The Bleak Legion is not a real Legion at all but a Russian offshoot of the Silent Legion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Cataphractoi serve the Legion of Fate as its heavy cavalry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Penitent Legion's Flesh Corps fights with moliated Leviathans, as the Beast Corps uses barghests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hierarchy",
+   "gw-black-mask",
+   "gw-penitent-legion",
+   "gw-skeletal-legion",
+   "gw-emerald-legion",
+   "gw-silent-legion",
+   "gw-legion-of-fate",
+   "gw-beggar-lord",
+   "gw-iron-battalions",
+   "gw-death-and-legion"
+  ]
+ },
+ {
+  "id": "gw-breathless-dead",
+  "title": "The Breathless Dead",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Stygia's name for the dead of the Spanish Flu.",
+  "claims": [
+   {
+    "text": "Stygians call victims of the Spanish Flu the Breathless Dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-twilight-era",
+   "gw-skeletal-legion"
+  ]
+ },
+ {
+  "id": "gw-other-deadlands",
+  "title": "Other Deadlands",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The afterlives beyond Stygia drawn into the war.",
+  "claims": [
+   {
+    "text": "The age also sweeps up the souls of the Jade Empire, of the Bush of Ghosts and of the Indian afterlife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Bush of Ghosts is the African Deadlands, called the Dark Kingdom of Ivory in Stygia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Jade Kingdom is the Asian Deadlands; Yellow Springs is its term for China's Deadlands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     },
+     {
+      "book": "greatwar",
+      "page": 17,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Some travellers brave the Maelstrom to go home, or find themselves captive in afterlives not their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-jade-kingdom-terms",
+   "gw-twilight-era"
+  ]
+ },
+ {
+  "id": "gw-jade-kingdom-terms",
+  "title": "Words of the Far Deadlands",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Terms from the Jade Kingdom, the Bush of Ghosts and Swar.",
+  "claims": [
+   {
+    "text": "In the Jade Kingdom, hun is the intellect and spirit, the Psyche, which makes up half of a wraith's soul; a kuei is a malevolent spirit ruled by its p'o.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "In the Bush of Ghosts an ibambo is an African wraith, and a moriman is a spirit doctor who practises the Behest Arcanos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Stygians call the Arcanos practised by the Tvashtriya Displace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Yama is held to be lord of the Dead and judge of souls in the Indian afterlife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 17,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-other-deadlands"
+  ]
+ },
+ {
+  "id": "gw-generals-of-oblivion",
+  "title": "Generals of Oblivion",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Nephwracks in Oblivion's direct service.",
+  "claims": [
+   {
+    "text": "The Generals of Oblivion are a small band of Nephwracks who answer to Oblivion itself and side with or against Malfeans as they please.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Mutile is a common Spectre, called a Mortwight in the European Deadlands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "spectres",
+   "oblivion",
+   "gw-doppelgangers"
+  ]
+ },
+ {
+  "id": "gw-johnny-songbirds",
+  "title": "Johnny Songbirds",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Wandering Chanteurs of the age.",
+  "claims": [
+   {
+    "text": "Johnny Songbirds are itinerant Chanteurs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "guilds"
+  ]
+ },
+ {
+  "id": "gw-night-of-short-chains",
+  "title": "The Night of Short Chains",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The coup that unseated the Deathlord of Madness.",
+  "claims": [
+   {
+    "text": "During the Night of Short Chains, 250 Grim Guards back the Smiling Lord as the Laughing Lady is made to abdicate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 52,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Black Mask agents open the postern gate of the Seat of Succor, and the abdicated Deathlord is replaced by a Laughing Lady of the Grim Lord's choosing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-insurrection",
+   "gw-penitent-legion"
+  ]
+ },
+ {
+  "id": "gw-penitent-legion",
+  "title": "The Penitent Legion",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Keepers of those lost to madness.",
+  "claims": [
+   {
+    "text": "The Legion takes in those who die of madness, their own or another's; it is small but politically ambitious.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 52,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "The rightful Laughing Lady escapes into exile while the new one holds the mask of office, splitting the Legion between Imperialists and Loyalists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 52,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "It holds insanity to be Oblivion showing itself, watches its mad members closely through the Keepers, and spends much effort on the Shadow and on fighting Spectres.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 53,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-night-of-short-chains"
+  ]
+ },
+ {
+  "id": "gw-skeletal-legion",
+  "title": "The Skeletal Legion",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The Legion of the diseased.",
+  "claims": [
+   {
+    "text": "Of the three great Deathlords, the Skeletal Lord is held to be the most dangerous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 44,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The Legion is highly efficient and grows all through the war, yet the flood of new dead still overwhelms it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 45,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Influenza dead pour into its ranks, reaped by its functionaries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 39,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-breathless-dead"
+  ]
+ },
+ {
+  "id": "gw-emerald-legion",
+  "title": "The Emerald Legion",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The most conservative of the Legions.",
+  "claims": [
+   {
+    "text": "Its Anacreons work as tax farmers, and its regular army is perhaps the weakest of any Legion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 51,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "It first backs the Smiling Lord, expecting the coup to win, then abandons that cause and joins the Loyalists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 50,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-insurrection"
+  ]
+ },
+ {
+  "id": "gw-iron-battalions",
+  "title": "The Iron Battalions",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The Iron Legion's main fighting force.",
+  "claims": [
+   {
+    "text": "The Iron Battalions are the Iron Legion's premier troops, matched perhaps only by the Unlidded Eye's soldiers and the Cataphractoi who serve Fate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 47,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Grim Legion success in turning key figures in the Iron Legion's spy network causes the Iron Legion heavy early losses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 47,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-black-mask"
+  ]
+ },
+ {
+  "id": "gw-legion-of-fate",
+  "title": "The Legion of Fate",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The Lady of Fate's own Legion.",
+  "claims": [
+   {
+    "text": "Above all the Legion serves the Lady of Fate, who is usually taken to want what is best for the whole Underworld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 54,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "The Lady's seat, a vast mansion, stands on the Isle of Eurydice out in the Tempest, given by Charon in thanks for help during that reign.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 54,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-legion-orders"
+  ]
+ },
+ {
+  "id": "gw-silent-legion",
+  "title": "The Silent Legion",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The Legion of those who chose death.",
+  "claims": [
+   {
+    "text": "The Silent Legion is made up of individualists who chose their own way into the Underworld and bear that final free choice as their mark.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 57,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "It supplies many Pardoners, Oracles and volunteers for the Magisterium.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 57,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "The Warriors of Lethe are an elite unit of members who wish to end their existence but want to strike at Oblivion first.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 57,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-legion-orders"
+  ]
+ },
+ {
+  "id": "gw-beggar-lord",
+  "title": "The Beggar Lord",
+  "kind": "character",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Deathlord of the Paupers.",
+  "claims": [
+   {
+    "text": "No neutral in the Insurrection is paid better than the Beggar Lord.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 58,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Everyone in the Legion of Revelations spies for the Beggar Lord at some level, with strong networks in the Jade and Ivory Dark Kingdoms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 59,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "The Beggar Lord forbids those troops from entering the Labyrinth, so their knowledge of it is poor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 59,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Those who die of old age serve in the Legion of Paupers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 98,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-legion-orders"
+  ]
+ },
+ {
+  "id": "gw-death-and-legion",
+  "title": "How Death Picks a Legion",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The manner of death sets the Legion.",
+  "claims": [
+   {
+    "text": "Those taken by disease join the Skeletal Legion, the old serve the Beggar Lord among the Paupers, and victims of Despair or Madness join the Silent or Penitent Legion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 98,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Influenza was the deadliest killer of the period.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 98,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-legion-orders"
+  ]
+ },
+ {
+  "id": "gw-grim-trials",
+  "title": "Trials under the Grim Legion",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Justice for the war dead.",
+  "claims": [
+   {
+    "text": "Grim Legion Advocates try not only wraiths who murdered in life but those indirectly to blame, chiefly senior officers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Judges and juries favour the Grim Legion, so countless officers and leaders are branded killers and go to the forges after hasty hearings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-insurrection"
+  ]
+ },
+ {
+  "id": "gw-monitors-bargain",
+  "title": "The Monitors' Bargain",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "The Grim Legion's deal with extortionists.",
+  "claims": [
+   {
+    "text": "Before the rebellion the Grim Legion trades free rein under its rule for help from the Seven Families of the Monitors Guild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The deal pays off for the Grim Legion but ruins the Seven Families, who clash badly with the Loyalists of the Spooks' Guild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 49,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-insurrection"
+  ]
+ },
+ {
+  "id": "gw-stygian-trusts",
+  "title": "Stygian Trusts",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Money behind both sides.",
+  "claims": [
+   {
+    "text": "The Stygian Trusts fund both sides in the Grim Legion's rebellion, as they did in an earlier revolt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 61,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-insurrection"
+  ]
+ },
+ {
+  "id": "gw-airships",
+  "title": "Airships of the Dead",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Flying craft of the Legions.",
+  "claims": [
+   {
+    "text": "Airships serve as couriers and troop carriers for the Emerald Legion, the Victims of Mystery and the Legion of Fate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 83,
+      "pdf": 83
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-legion-orders"
+  ]
+ },
+ {
+  "id": "gw-doppelgangers",
+  "title": "Doppelgangers",
+  "kind": "character",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "Spectres hidden among the Restless.",
+  "claims": [
+   {
+    "text": "Thousands of Doppelgangers work in the Twilight Era, burrowing into every level of society; some spy for the Generals of Oblivion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 205,
+      "pdf": 205
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-generals-of-oblivion"
+  ]
+ },
+ {
+  "id": "gw-barcelona",
+  "title": "Barcelona",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war"
+  ],
+  "summary": "A Necropolis that fell without a fight.",
+  "claims": [
+   {
+    "text": "The Grim Legion takes Barcelona almost without a struggle and holds it more tightly than anywhere else.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "greatwar",
+      "page": 216,
+      "pdf": 216
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gw-insurrection"
+  ]
+ }
+]

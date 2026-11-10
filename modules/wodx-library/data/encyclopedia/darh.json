@@ -1,0 +1,237 @@
+[
+ {
+  "id": "darh-confirmation-of-blood",
+  "title": "The Confirmation of Blood",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The rite that marks a Cainite as one of the Faithful.",
+  "claims": [
+   {
+    "text": "The rite mirrors the Catholic sacrament of confirmation: a priest anoints the subject with holy chrism on the brow and in the mouth and prays that the Holy Spirit dwell in that heart for ever.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "The Faithful are very inward-looking, so this rite can decide whether a Cainite is believed to be a true fellow worshipper.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "It and the road's other rites are usually held in a real place of worship, though confession can be heard anywhere, often in a Confessor's own rooms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-heaven",
+   "da-true-faith"
+  ]
+ },
+ {
+  "id": "darh-synods",
+  "title": "Synods of the Road of Heaven",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Faithful keep in touch across Christendom.",
+  "claims": [
+   {
+    "text": "Each year at the Feast of the Epiphany a synod's high priest receives word from the road's elders on the state and direction of the road.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The letter often carries a summons, and the synod must then send an envoy, usually the high priest, to a special gathering whose time and place only the recipient is told.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-heaven",
+   "darh-confirmation-of-blood"
+  ]
+ },
+ {
+  "id": "darh-ashirra",
+  "title": "The Ashirra",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Muslim Cainites of the Islamic world.",
+  "claims": [
+   {
+    "text": "The Ashirra keep a Hierarchy of Sins much like the Road of Heaven's, built on the precepts of Islam.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They forbid Embracing anyone without that person's consent; devout Ashirra can justify almost any Embrace, but the spirit of the rule is usually kept, and wilful breaches are punished.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They call the hidden agents of ruin the agh, the arrogant ones; these are the sect's greatest worry, and many Ashirra are wary to the point of paranoia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-heaven",
+   "daeu-iberia",
+   "dav-low-clan-unrest",
+   "da-assamites"
+  ]
+ },
+ {
+  "id": "darh-diet-of-jerusalem",
+  "title": "The Diet of Jerusalem",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The truce that bound the Cainite princes of the Holy Land.",
+  "claims": [
+   {
+    "text": "This landmark accord gathered every ruling prince of the Holy Land, from as far as Cyprus and Tripoli, into a ten-year truce and pact of mutual aid.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "It was the idea of the Salubri Qawiyya el-Ghaduba, the Lioness of Jerusalem, who called it after almost single-handedly destroying the Tremere of Jerusalem.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-salubri",
+   "dahc-salubri-after-samiel",
+   "daeu-outremer"
+  ]
+ },
+ {
+  "id": "darh-penitents",
+  "title": "The Penitent Faithful",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Austere, mostly Low Clan Cainites devoted to atonement.",
+  "claims": [
+   {
+    "text": "While the High Clans fight over land and money, a small, mostly Low Clan faction holds that Cainites are damned by God and must atone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Even among the Faithful they are austere: unlife should be neither pleasant nor safe, and their state is both a test and a last chance to prove themselves to their Creator.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Not every follower of the Via Caeli sees the curse as a curse; some read their power as proof of God's favour and come to think themselves above humanity.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "darh",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-heaven"
+  ]
+ }
+]

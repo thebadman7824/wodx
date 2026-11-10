@@ -1,0 +1,220 @@
+[
+ {
+  "id": "manif-rogue-council",
+  "title": "The Rogue Council",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The unknown sender of calls to renewed struggle, also called the Sphinx.",
+  "claims": [
+   {
+    "text": "Soon after the Avatar Storm swallowed Horizon, an unknown sender began messaging mages across the world; it is called the Rogue Council or the Sphinx.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 18,
+      "pdf": 19
+     },
+     {
+      "book": "manif",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The messages favor no single Tradition and back no belief beyond a relentless pursuit of Ascension.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "No one knows who or what the Rogue Council really is.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "manif-transmissions",
+   "manif-reactions",
+   "manif-panopticon"
+  ]
+ },
+ {
+  "id": "manif-transmissions",
+  "title": "Rogue Council Transmissions",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Sphinx's messages arrive.",
+  "claims": [
+   {
+    "text": "Messages come by many unpredictable routes: ordinary mail, email, or even radio and television broadcasts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "No Correspondence, Time or Forces magic has traced a message to its source, and none carries a Pattern signature, which hints at very powerful senders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Most messages bear a sphinx emblem, seen on paper, as a shadow, as graffiti or in an advertisement; it fades away on the spot, though photographs of it stay clear.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Many messages are rousing calls to arms or accounts of wins and losses elsewhere in the struggle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "manif-rogue-council"
+  ]
+ },
+ {
+  "id": "manif-reactions",
+  "title": "Tradition Reactions to the Rogue Council",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Traditions view the Sphinx's call.",
+  "claims": [
+   {
+    "text": "Many Tradition mages fear the Sphinx will upset the established order, and dismiss its creed as a reckless, youthful urge toward anarchy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Others read its message as a call to Ascension that draws on the views of every Tradition at once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "After the Avatar Storm, some mages took the turmoil as proof that either the Technocracy had won or humanity had stopped caring.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "manif-rogue-council"
+  ]
+ },
+ {
+  "id": "manif-panopticon",
+  "title": "Panopticon",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A cross-Convention Technocratic Methodology formed to hunt the Rogue Council's followers.",
+  "claims": [
+   {
+    "text": "Panopticon formed less than a month after the first transmissions but took about six months to win the respect of Earth-based amalgams and Constructs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "It uses military ranks and draws soldiers from Iteration X BioMechanics, NWO Operatives, the Progenitors' Damage Control teams and the Border Corps of the Void Engineers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "It is standardizing field gear and codes across the Conventions and has brought HIT Marks back into use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "manif",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "manif-rogue-council"
+  ]
+ }
+]

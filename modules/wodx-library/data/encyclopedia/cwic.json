@@ -1,0 +1,83 @@
+[
+ {
+  "id": "cwic-urban-renewal-league",
+  "title": "The Urban Renewal League",
+  "kind": "faction",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Unseelie redcaps and nockers bent on rebuilding by force.",
+  "claims": [
+   {
+    "text": "The Urban Renewal League, mostly Unseelie redcaps and nockers, wants Unseelie rule, its own in particular, and sees the chaos of the war as license to remake society, breaking sidhe heads along the way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cwic",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Its name for violence and cruelty is such that freeholds in its path are simply abandoned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cwic",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "redcaps",
+   "nockers",
+   "unseelie-court"
+  ]
+ },
+ {
+  "id": "cwic-high-north-trod",
+  "title": "The High North Trod",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A secret road for commoner messengers.",
+  "claims": [
+   {
+    "text": "While other Concordian kingdoms kept Highsummer Night, the Kingdom of Apples forbade commoner gatherings, and revels met in secret if at all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cwic",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Commoner messengers carry broadsides and letters along the hidden High North Trod. It links the Green Mountain Duchy with the Back Bay's duchy and opens into the centre of Boston's Dreaming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cwic",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "trods",
+   "concordia"
+  ]
+ }
+]

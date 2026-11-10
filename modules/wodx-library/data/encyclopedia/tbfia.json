@@ -1,0 +1,206 @@
+[
+ {
+  "id": "tbfia-clans-of-stag",
+  "title": "The Clans of Stag",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical"
+  ],
+  "summary": "The old branches of the tribe across Europe.",
+  "claims": [
+   {
+    "text": "Fianna lore tells that Stag's children spread across Europe in many local clans that came to feel closer to their own region than to the tribe as a whole.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The greatest were the Hounds of the Horned One in Gaul; the Skysingers lived high in the Alps, and the Night Claws of the Balkans were said to slip back into the Impergium now and then.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The clan of the western isles was called the Fierce Ones, the Fianna; the name does not come from Fionn mac Cumhail, though Fionn was among the tribe's greatest Kin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Fianna chroniclers claim the word Garou reached human ears through their Gallic Kinfolk.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fianna"
+  ]
+ },
+ {
+  "id": "tbfia-silver-tara-pact",
+  "title": "The Pact of Silver Tara",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Fianna kept the Silver Fangs out of Ireland.",
+  "claims": [
+   {
+    "text": "When Normans crossed into Ireland, Silver Fangs came among them, and some Fianna talked of war to keep their island free of any Garou invader.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Silver Fang envoys came to Silver Tara and swore that their tribe would never claim any caern in Ireland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "In return, the Fianna high king promised that the tribe would stay out of human politics and let its Norman Kin do as they wished.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fianna",
+   "silver-fangs"
+  ]
+ },
+ {
+  "id": "tbfia-rome-and-the-isles",
+  "title": "Stag's Children and Rome",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical"
+  ],
+  "summary": "The Fianna view of the Roman centuries.",
+  "claims": [
+   {
+    "text": "In the tribe's chronology, the Warders of Men stopped Stag's children from purging Wyrm taint from Rome after Cisalpine Celts defeated the city.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "The same record has the White Howlers and their Kin wiping out the Ninth Legion, the White Howlers later falling to the Wyrm, and the Fenrir taking their first Fianna caern in Britain after the Romans left.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fianna",
+   "wda-warders-of-men",
+   "wda-white-howlers",
+   "get-of-fenris"
+  ]
+ },
+ {
+  "id": "tbfia-songkeepers",
+  "title": "The Songkeepers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fianna who keep the history of the whole Garou Nation.",
+  "claims": [
+   {
+    "text": "The Songkeepers keep alive the history of every tribe, not just the Fianna, so many of the best Galliards travel the world learning songs from other tribes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Fianna say their tribe divides more by the role each member plays than by opinion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "The tribe prizes laughter, since the passion that drives it also leaves it prone to despair and Harano.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfia",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fianna"
+  ]
+ }
+]

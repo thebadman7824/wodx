@@ -1,0 +1,106 @@
+[
+ {
+  "id": "hbave-creeds-take-shape",
+  "title": "How creeds take shape",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Creeds as an emerging hunter society.",
+  "claims": [
+   {
+    "text": "Hunters only sharpen their approach once wholly devoted to the hunt; then creeds begin to work as social groups, with Avenger knowing Avenger and Innocent knowing Innocent by shared aims.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbave",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "That may take months or years, slowed by the many edges hunters of every outlook seem to share.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbave",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Some hope recognised creeds will give the hunt its momentum; others fear the divisions will sink it in infighting and politics.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hbave",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-creeds",
+   "htr-avengers",
+   "htr-edges"
+  ]
+ },
+ {
+  "id": "hbave-avenger-slang",
+  "title": "Avenger slang",
+  "kind": "term",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Words spreading on the Avengers' firelight email list.",
+  "claims": [
+   {
+    "text": "Avengers on the firelight list call a ghoul a bruise, from the bluish pallor second sight can show, a vampire a fang, a shapechanger a flicker or lobo, and a witch a merlin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbave",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Rot means the undead in general, a stub is a shambler and a wisp a ghost; drones are people blind to monsters, and the wake-up is becoming imbued.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbave",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Hunter types get names too: a bullseye snipes, a demo likes explosives, a pyro favours fire and a shitkicker fights hand to hand; a Jones leads a personality cult whose members are echoes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbave",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-hunter-slang",
+   "htr-avengers",
+   "htrpg-bystanders"
+  ]
+ }
+]

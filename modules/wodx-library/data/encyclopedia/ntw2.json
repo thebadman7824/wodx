@@ -1,0 +1,37 @@
+[
+ {
+  "id": "ntw2-etrius-goratrix",
+  "title": "Etrius against Goratrix",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Tremere remember Goratrix’s expulsion.",
+  "claims": [
+   {
+    "text": "Tremere annals record that Etrius, head of the Council of Seven and held up as the model of loyalty, charged Goratrix with treason and had Goratrix cast out of the order.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntw2",
+      "page": 147,
+      "pdf": 147
+     },
+     {
+      "book": "dacults",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbtr-etrius",
+   "cbtr-goratrix",
+   "dacults-house-goratrix"
+  ]
+ }
+]

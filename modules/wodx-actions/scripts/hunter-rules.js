@@ -15,14 +15,17 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 /**
  * "inquisitor" (the Dark Ages and before), "hh2" (the Renaissance to 1998), "reckoning" (1999 on, the imbued).
  * era: a WoDX Chronicle era id (dark-ages, long-night, renaissance, victorian, wild-west, great-war, modern,
- * time-of-judgment, future-darkness, classical, living-gods); year: the in-world year, which decides inside "modern".
+ * time-of-judgment, future-darkness, time-of-future-judgement, classical, living-gods); year: the in-world year, which
+ * decides inside "modern". On the Future Darkness branch the first imbued wake in 2023, so mortal hunters (with
+ * chrome) keep The Hunters Hunted II rules from 1999 to 2022.
  */
-export function hunterLine(era, year = null) {
+export function hunterLine(era, year = null, {futureBranch = false} = {}) {
     const e = String(era ?? "").toLowerCase();
     const y = year === null || year === undefined || year === "" ? null : Number(year);
     if (["dark-ages", "long-night", "classical", "living-gods"].includes(e)) return "inquisitor";
     if (["renaissance", "victorian", "wild-west", "great-war"].includes(e)) return "hh2";
-    if (["time-of-judgment", "future-darkness"].includes(e)) return "reckoning";
+    if (futureBranch && Number.isFinite(y) && y >= 1500 && y < 2023 && ["modern", "future-darkness", ""].includes(e)) return "hh2";
+    if (["time-of-judgment", "future-darkness", "time-of-future-judgement"].includes(e)) return "reckoning";
     if (Number.isFinite(y)) return y < 1500 ? "inquisitor" : y < 1999 ? "hh2" : "reckoning";
     return /dark|medieval/.test(e) ? "inquisitor" : "reckoning";
 }

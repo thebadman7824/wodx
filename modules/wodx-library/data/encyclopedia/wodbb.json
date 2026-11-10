@@ -1,0 +1,118 @@
+[
+ {
+  "id": "wodbb-greater-beasts",
+  "title": "The greater beasts",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Creatures of myth, faded from the world but kept alive by belief.",
+  "claims": [
+   {
+    "text": "The greater beasts are the creatures of fable, from gryphons and unicorns to krakens and manticores, which have almost entirely left the mortal world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodbb",
+      "page": 16,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Where they came from matters less than that people believed in them; while that faith lasts, such beasts take their origin from humanity and can be found by anyone who looks hard enough.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodbb",
+      "page": 17,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Many are as intelligent and passionate as people, with long lives and goals that make little sense in human terms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodbb",
+      "page": 17,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m20gm-bygones"
+  ]
+ },
+ {
+  "id": "wodbb-cockatrice",
+  "title": "Cockatrice",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A venomous bird-serpent hatched from the last basilisk.",
+  "claims": [
+   {
+    "text": "The first cockatrice came from a rooster that ate the last basilisk; it kills with a glance, with its breath or with the incurable venom of its hooked serpent tail.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodbb",
+      "page": 18,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Cockatrices are sexless and breed by stinging a rooster, which lays the egg; as magic waned they began stinging other animals and even humans, who fall sick until the egg passes and suffer bad dreams ever after.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodbb",
+      "page": 18,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The last mortal record of one is a Warsaw church entry from 1587. Survivors now lurk in rural Chantries and unsettled Realms, where they plague mages in their sanctuaries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodbb",
+      "page": 18,
+      "pdf": 20
+     },
+     {
+      "book": "wodbb",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "One tale holds that Chimera cursed the cockatrice for twisting a riddle, and that it fled into the Wyrm's coils out of spite.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wodbb",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wodbb-greater-beasts"
+  ]
+ }
+]

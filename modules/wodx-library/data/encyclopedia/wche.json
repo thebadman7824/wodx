@@ -1,0 +1,221 @@
+[
+ {
+  "id": "wche-partition-accords",
+  "title": "The Partition Accords",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "The first Stygian answer to the souls of the Holocaust.",
+  "claims": [
+   {
+    "text": "Charon handed the vast wave of new souls to the Deathlords, who met their strongest Anacreons at a gathering called the Tempest Conference; none of the wraiths who had died in the Holocaust took part beyond the odd witness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The resulting Partition Accords split the newcomers evenly among the seven Deathlords, each group housed in its own ghetto inside a major Necropolis under chosen Anacreons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stygia",
+   "hierarchy",
+   "charon"
+  ]
+ },
+ {
+  "id": "wche-army-of-fire",
+  "title": "The Army of Fire",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "Resistance fighters who kept fighting after death.",
+  "claims": [
+   {
+    "text": "Many who died resisting the Nazis kept up the struggle in the Shadowlands, joining as Renegades to hunt for lost comrades and enemies, and accusing some Anacreons of sheltering former Nazis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "When its fighters found the walled-off Partition communities inside the Necropoli, they saw something far too familiar and led most of those wraiths away; the Legions mostly let them go, and the Accords collapsed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "wche-partition-accords"
+  ]
+ },
+ {
+  "id": "wche-covenant-of-the-millions",
+  "title": "The Covenant of the Millions",
+  "kind": "event",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "The pact that freed the Holocaust ghettos from Stygia.",
+  "claims": [
+   {
+    "text": "After the Accords failed, the Covenant of the Millions guaranteed full independence from Stygia to free ghettos of Holocaust wraiths; dozens of these Circles keep their doings closed to outsiders, which unsettles nearby Anacreons, some of whom had to give up territory to them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "The Ferrymen left their usual secrecy for these events, bringing the first of these wraiths to the notice of Charon and the Deathlords, then guiding the Army of Fire to the Partition communities and gathering scattered groups through the Tempest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Many free camps hold a Circle that seeks out those who fell to Oblivion and tries to help them toward Redemption.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ferrymen",
+   "wche-army-of-fire",
+   "spectres"
+  ]
+ },
+ {
+  "id": "wche-dybbuks",
+  "title": "Dybbuks",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "A name that Holocaust wraiths took back.",
+  "claims": [
+   {
+    "text": "In Jewish lore a dybbuk is the ghost of a wrongdoer who returns to possess the living.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   },
+   {
+    "text": "After the Covenant, Stygian wraiths used the word as a slur against Holocaust wraiths; some took offense, which widened the gap between the free ghettos and the Necropoli, while others adopted it with pride, and many now call themselves dybbuks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 38,
+      "pdf": 39
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wche-covenant-of-the-millions",
+   "wraiths"
+  ]
+ },
+ {
+  "id": "wche-theresienstadt",
+  "title": "Theresienstadt in the Shadowlands",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "A free Circle of healing in an old fortress town.",
+  "claims": [
+   {
+    "text": "In a seldom-visited part of the Shadowlands stands the citadel of Theresienstadt, home now to a free Circle of the dead, Jewish wraiths among them, who offer healing, sanctuary and remembrance and work to reunite scattered families.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "The first wraiths to come there had to fight off the Spectres pouring from the Nihil under the Small Fortress; as more souls arrived, they forced the Nihil down to its present size and drew up a charter for their Circle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wche",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wche-covenant-of-the-millions",
+   "spectres",
+   "maelstroms"
+  ]
+ }
+]

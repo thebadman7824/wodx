@@ -1,0 +1,174 @@
+[
+ {
+  "id": "scwp-pagan-outlook",
+  "title": "The Pagan outlook",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How the old faiths of Europe see life and the gods.",
+  "claims": [
+   {
+    "text": "The Pagan creeds grew from harsh lands and are practical: look after yourself and your people, take what is needed, and accept that the weak may not survive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Their gods are pitiless and hard to predict, seldom evil in the Christian sense of Satan but seldom loving; Pagans tend to be fatalists who hope for a full life, a good death and songs after it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-verbena",
+   "dam-old-faith"
+  ]
+ },
+ {
+  "id": "scwp-hidden-children",
+  "title": "The Hidden Children",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "An origin tale shared by Verbena and Dreamspeakers.",
+  "claims": [
+   {
+    "text": "Verbena grandmothers tell of the Hidden Children as a reminder of the heritage the Verbena share with the Dreamspeakers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "In the tale, before humanity existed there were the Pure Ones, beings of heavenly energy, who gathered the elemental essences and gave people their form and flesh.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-verbena",
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "scwp-baerwald",
+  "title": "Baerwald",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance"
+  ],
+  "summary": "A Pagan fief in the Black Forest.",
+  "claims": [
+   {
+    "text": "Sir Garland, a witch facing a heresy charge, fled through the realm of Spirit into the Black Forest, a wood said to house dark Fae and shapeshifters, and claimed a stretch of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Pagans gathered there as a refuge from persecution, and in 1317 Sir Garland declared the land a fief named Baerwald, an open insult to Rome and the Empire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The Church attacked it again and again, yet its people held out and lived there for more than a century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-verbena",
+   "inquisition"
+  ]
+ },
+ {
+  "id": "scwp-lady-nightshade",
+  "title": "Lady Nightshade",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A great figure of the Verbena Tradition.",
+  "claims": [
+   {
+    "text": "Lady Nightshade is counted the greatest of the Verbena and played a central part in founding the Tradition and keeping it alive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Lady Nightshade's story begins in Harrogate, England, at Midsummer of 1435.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scwp",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-verbena",
+   "verbena"
+  ]
+ }
+]

@@ -21,11 +21,13 @@
  */
 import * as R from "./senses-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {registerPerceptionSettings, setupPerception} from "./perception.mjs";
+import {registerPerceptionSettings, setupPerception, refreshScreen} from "./perception.mjs";
+import {registerQuiet, applyQuiet, quietCard} from "./quiet.mjs";
+import {registerSight, setupSight, cycleSight} from "./sight.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.3.0";
+const VERSION = "0.5.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -684,13 +686,17 @@ export async function openPlaceLines(scene = canvas?.scene) {
 Hooks.once("init", () => {
   registerSettings();
   registerPerceptionSettings();
+  registerQuiet(() => refreshScreen());
+  registerSight();
+  setupSight({powerDots});
   const perception = setupPerception({attrOf, abilityOf, powerDots, formOf, sightBlocked, esc, gmIds});
-  const api = {perception, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
+  const api = {perception, sight: {cycle: cycleSight}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
   game.modules.get(MOD).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {senses: api});
 });
 
 Hooks.once("ready", async () => {
+  applyQuiet();
   await loadTables();
   try { CAL = await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { CAL = null; }
   try { guessPlace = (await import("../../wodx-npc/scripts/routine-rules.mjs")).guessPlace; } catch (e) { guessPlace = null; }
@@ -723,6 +729,7 @@ Hooks.on("chatMessage", (log, message) => {
 Hooks.on("renderChatMessageHTML", (message, el) => {
   el = el?.[0] ?? el;
   if ( !el?.querySelectorAll ) return;
+  quietCard(el);
   el.querySelectorAll("button[data-wsn]").forEach(b => {
     const act = b.dataset.wsn;
     const gmOnly = ["send", "everyone", "add", "forget"].includes(act);

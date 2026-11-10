@@ -28,7 +28,7 @@ const PATH = { yin: "system.advantages.yinchi.temporary", yang: "system.advantag
 export const isKotE = actor => !!actor && actor.type === "Vampire" && actor.system?.settings?.variant === "kindredeast";
 
 export function build(ctx) {
-    const { post, rollPool, rollBlock, dialog, updateActor, spendWillpower, notify } = ctx;
+    const { post, rollPool, rollBlock, dialog, updateActor, notify } = ctx;
     const flag = a => a.getFlag(MOD, "kote") ?? {};
     const saveFlag = (a, patch) => ctx.setFlag(a, "kote", { ...flag(a), ...patch });
     const night = () => Math.floor(((game.time?.worldTime ?? 0) - 18 * 3600) / 86400);
@@ -82,11 +82,11 @@ export function build(ctx) {
                 await setChi(actor, { yin: res.yinChi, yang: res.yangChi });
                 body += `<div class="vta-res">${n(fd.k)} blood → +${gain.yin} Yin, +${gain.yang} Yang${res.wasted ? ` (${res.wasted} lost: ten is the most)` : ""}.</div>`;
             } else if (w === "flesh") {
-                const [ry, rg] = K.FLESH[fd.flesh], k = n(fd.k);
+                const [ry] = K.FLESH[fd.flesh], k = n(fd.k);
                 const y = Math.round(k * ry / 10), g = k - y;
                 gain = { yin: y, yang: g };
                 await setChi(actor, { yin: i.chi.yin + y, yang: i.chi.yang + g });
-                body += `<div class="vta-res">${k} ${k === 1 ? "level" : "levels"} of flesh → +${y} Yin, +${g} Yang; each a Health Level of the victim's.</div><div class="vta-note">Flesh-eating is a sure road to Dharmic degeneration (p. 137).</div>`;
+                body += `<div class="vta-res">${k} ${k === 1 ? "level" : "levels"} of flesh → +${y} Yin, +${g} Yang; each a Health Level of the victim's.</div><div class="vta-note">Flesh-eating is a sure road to Dharmic degeneration (Kindred of the East p. 137).</div>`;
             } else if (w === "breath") {
                 const me = await rollPool(i.v[fd.kind], 6), them = await rollPool(n(fd.sta), 6); rolls.push(me.roll, them.roll);
                 const k = Math.max(0, me.successes - them.successes);

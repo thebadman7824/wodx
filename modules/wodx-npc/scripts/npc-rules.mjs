@@ -70,7 +70,6 @@ export function scoreOptions(profile, state) {
   const enemies = (state.enemies ?? []).filter(e => e.visible !== false);
   const unseen = (state.enemies ?? []).length - enemies.length;
   const allies = state.allies ?? [];
-  const why = [];
   const fearHere = (e) => (e.fearSources ?? []).filter(f => (p.fears ?? []).includes(f));
   // Fear of the supernatural needs it to show: a Kindred who passes for human frightens no one until it does
   const anyFear = enemies.some(e => fearHere(e).length) || ((p.fears ?? []).includes("supernatural") && enemies.some(e => e.obvious));

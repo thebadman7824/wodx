@@ -262,7 +262,7 @@
 ### WoDX Actions 3.2.0 (Combat 3.4.1, Creation 0.4.2), 2026-11-07: the Actions suggestions (Ben's request)
 
 - **New data** (mechanics as codes, summaries in WoDX's own words, page references; no book text):
-  - `data/disciplines-daw.json`: 329 entries from VtDA20 pp. 188–316 — every Discipline and variant at levels 1–5 with roll, difficulty, cost, duration and a short summary; Celerity, Fortitude and Potence 1–5 as passive; Thaumaturgy, Koldunic and Necromancy path powers with their tradition's rule; 122 elder powers by name, level and page.
+  - `data/disciplines-daw.json`: 329 entries from VtDA20 pp. 188–316: every Discipline and variant at levels 1–5 with roll, difficulty, cost, duration and a short summary; Celerity, Fortitude and Potence 1–5 as passive; Thaumaturgy, Koldunic and Necromancy path powers with their tradition's rule; 122 elder powers by name, level and page.
   - `data/roads-daw.json`: nine Roads (Beast, Heaven, Humanity, Kings, Lilith, Metamorphosis, Sin, Bones, Yasa) and their Paths, with aura, Virtues, pages and paraphrased hierarchies of sins (rationales not reproduced).
 - **New features** (`scripts/kindred.js`, pure rules in `scripts/kindred-rules.js`):
   - Use a Discipline: powers from the sheet's dots and paths (search box), pool, difficulty from the target, blood and Willpower paid, a timed effect for its duration. The Forgetful Mind marks a witness as made to forget.
@@ -898,3 +898,315 @@ After the 7e, Interactables and Targeting deploy, three older gates failed in ro
 - kits-rules.mjs: ageFor({base, variants}, year) and cleanAges(variants).
 - main.mjs: flags.wodx-atmosphere.ages {base, variants}; setAge, applyAges (the map's own level, else the scene background); runs at ready, on a year change (after the clock settles, not during a skip), at the end of a skip and when an era is applied; the This scene part lists the years with Remove and adds one by year and file picker; api.ages.
 - Tests: one more in dawn-dread.test.mjs. Gate: tools/gate/gateages.mjs, 6 steps, a scene of its own; years are passed in, the clock never moves.
+
+## 2026-11-09: faces that age (Atmosphere 0.7.0, B271)
+
+- kits-rules.mjs: FACE_KINDS, faceKind(type, variant, set), apparentAge(face, year), faceStage(age), STAGE_WORDS, faceFor(face, year), agePixels(rgba, stage), agedName(actorId, which, stage, base), shortHash.
+- main.mjs: flags.wodx-atmosphere.face {born, kind, still, lost, variants, base {img, token}, made {img, token}, shown}; agedCopy (canvas pixels, webp, upload to worlds/<world>/wodx-faces), applyFace (a picture changed by hand becomes the new base; placed tokens follow), applyFaces, setFace (null stops and restores), setFaceAge; ageEverything runs places and faces together at ready, on a year change, after a skip and when an era is applied. A Faces that age part in the window with search boxes; api.faces.
+- Tests: five more in dawn-dread.test.mjs (757 pass). Gate: tools/gate/gatefaces.mjs, 8 steps, a character and scene of its own; years are passed in.
+
+## 2026-11-09: the looks of the other worlds (Otherworlds 0.5.0, B272)
+
+- journey-rules.mjs: LOOKS, NET_FILTER_ID, layerLookCss({layer, inNet, shroud, phase, looks, decay}), NET_SVG (grey, a Laplacian edge kernel, green and cyan).
+- journey.mjs: decayCss() (also lookCss) now gives the viewer's layer look; the Net's SVG filter is put in the page once; keepSway() eases the Dreaming's hue with a CSS transition while the viewer stands there; client setting "looks". main.mjs: jacking in or out redraws the look; api.lookCss, api.swaying.
+- Tests: one more in realms.test.mjs (758 pass). Gate: tools/gate/gatelooks.mjs, 7 steps, a scene and actor of its own.
+
+## 2026-11-09: queue relief (Chronicle 0.7.0, B273)
+
+- approvals-rules.mjs (new): NEVER_AUTO, isNpcType, routeProposal(type, {auto, cap, used}), bulkIds, cleanAuto.
+- approvals.mjs: addToQueue routes each proposal (auto, hold, queue) and returns which; decide takes {auto}; decideMany, releaseHeld, held, setAuto, types, npcCount, resetSession. The window: a tick box per entry, Approve the ticked, Reject the ticked, Tick all or none, the held-back note, and Approve on its own (a search box past eight kinds).
+- settings.mjs: autoApprove (world, hidden), npcCap (world, 0 to 100). main.mjs: a Storyteller session start resets the count.
+- Tests: two more in chronicle.test.mjs (760 pass). Gate: tools/gate/gatequeue.mjs, 7 steps; it puts back the queue, rules and cap.
+- (approvals-rules.mjs went into PR 84 by mistake ahead of the rest; nothing used it there.)
+
+## 2026-11-09: knowledge-gated handouts (Chronicle 0.8.0, B274); queue window fix
+
+- know-rules.mjs (new): KNOW_PATTERN, traitKey, parseNeeds, meets, view, passages. know.mjs (new): traitsOf (languages from the Languages window, dots from Abilities and any rated item), render, the @Know text enricher registered at init. languages.mjs exports charactersOf. api.know.
+- Queue window: Approve on its own is now a section of its own with a capped scroll box, not a closed details, so the UI fit can reach every box.
+- Tests: one more in chronicle.test.mjs (761 pass). Gate: tools/gate/gateknow.mjs, 7 steps.
+
+## 2026-11-09: dreams and visions you write (Storyteller 0.6.0, B275)
+
+- dreams-rules.mjs (new): DEFAULT_HOUR, normDream, normDreams, dueDreams, sortDreams, dreamHtml. dreams.mjs (new): the dreams world setting, saveDream, removeDream, releaseDream (journal in WoDX dreams, owners as observers, whispered card), checkDreams on the clock and after a skip, the Dreams and visions window (search boxes on every list). Reached from Draw for the story; api.dreams.
+- UI fit: the Dreams and visions window with 24 dreams. Tests: tools/harness/dreams.test.mjs (3). Gate: tools/gate/gatedreams.mjs, 6 steps.
+- Chronicle 0.8.1: traitsOf no longer spreads the Language Merits' count (a number, not names); the gate's step 3 threw on it.
+
+## 2026-11-09: a player codex (Storyteller 0.7.0, B276)
+
+- codex-rules.mjs (new): CODEX_FOLDER, codexName, codexPage (text dated, images kept, others linked), planReveal (add or change by source). codex.mjs (new): codexOf, reveal, revealDialog, a header control on journal sheets and an entry in the journal list's menu; api.codex.
+- Tests: tools/harness/codex.test.mjs (2). Gate: tools/gate/gatecodex.mjs, 6 steps.
+
+## 2026-11-09: the rumour network (Storyteller 0.8.0, B277)
+
+- rumour-rules.mjs (new): HEAT, QUIET_NIGHTS, MAX_NIGHTS, buildContacts, normRumour(s), live, spreadNight, nightsDue, firstTeller. rumours.mjs (new): the rumours setting and rumourNetwork switch, contacts (factions and scenes), startRumour, tick (on the clock, after a skip, or one night by hand), endRumour, removeRumour, heardBy, The rumour mill window. approveNight starts the night's rumour; Draw for the story opens the mill; api.rumours.
+- UI fit: The rumour mill with 20 rumours. Tests: tools/harness/rumours.test.mjs (4). Gate: tools/gate/gaterumours.mjs, 7 steps.
+
+## 2026-11-09: prelude and Embrace scene templates (Storyteller 0.9.0, B278)
+
+- prelude-rules.mjs (new): PRELUDES (eleven lines, three parts each), LINE_ORDER, lineFor(type, variant), hunterKind(year), composePrelude, preludeHtml. prelude.mjs (new): makePrelude({actorId, line, scene}) makes a Storyteller-only journal in WoDX preludes and, if asked, a bare night scene (not in navigation) with a note that opens it; preludeDialog (character list with a search box, fixed line list). Draw for the story gains A prelude. api.prelude {dialog, make, compose, lineFor, lines}.
+- UI fit: the prelude dialog. Tests: tools/harness/prelude.test.mjs (5). Gate: tools/gate/gateprelude.mjs, 7 steps.
+
+## 2026-11-09: the Storyteller's dashboard (Storyteller 0.10.0, B279)
+
+- dashboard-rules.mjs (new): whenLabel, partyRow, woundWords, sortParty, clocks, threads, consequences. dashboard.mjs (new): gather() and DashboardApp (id wodx-dashboard; four searchable lists, each with a button to its own window; redraws at most twice a second on actor, effect, token, clock and WoDX setting changes). Toolbar button wodxDashboard (order 117), a keybinding, api.dashboard {open, gather}. CSS caps each list so the window fits a 1280x720 screen.
+- UI fit: the dashboard. Tests: tools/harness/dashboard.test.mjs (6). Gate: tools/gate/gatedashboard.mjs, 7 steps.
+
+## 2026-11-09: adaptive sound (Atmosphere 0.8.0, B280)
+
+- adaptive-rules.mjs (new): TENSIONS, TENSION_LABELS, FRENZY_STATUSES, HUNT_STATUSES, tensionOf, moodFor, heartbeat, beatGap. kits-rules.mjs: a frenzy mood (music/frenzy in a kit folder). main.mjs: settings adaptive, tension (world) and heartbeat (client); tensionNow, adapt (acts only on a change), adaptSoon; combatStart and deleteCombat go through adapt when it is on, the old switch when off; effect hooks on players' characters; the heartbeat (Web Audio, two thumps a beat) follows the user's own character on updateActor and updateUser. api.adaptive {tension, adapt, heartbeat, update, playing, rules}.
+- Tests: tools/harness/adaptive.test.mjs (4). Gate: tools/gate/gateadaptive.mjs, 7 steps (music off while it runs).
+
+## 2026-11-09: printable props (Atmosphere 0.9.0, B281)
+
+- print-rules.mjs (new): PRINT_CSS, landscape, journalDoc, mapDoc, absoluteUrls. main.mjs: journalPrintHtml (text pages enriched with secrets off, image pages as pictures, the era fonts' @font-face rules copied in with absolute urls), scenePrintHtml, printHtml (a hidden frame, then the print window; dry builds only), printJournal, printScene; a header control on journal sheets and entries in the journal and scene directory menus, Storyteller only. api.print {journal, scene, journalHtml, sceneHtml, html}.
+- Tests: tools/harness/print.test.mjs (4). Gate: tools/gate/gateprint.mjs, 7 steps (never opens the print window).
+- Fix in the same PR (Atmosphere 0.9.0): the frenzy tension never fired in Foundry, since WoDX Chronicle's conditions are wodx-frenzy and wodx-rotschreck; tensionOf now drops the wodx- prefix, and gateadaptive toggles wodx-frenzy. rothenstein-wodx holds 11 started combats left by older gates, so gateadaptive's hunt step reads combat there (noted, not failed).
+
+## 2026-11-09: player immersion (B310-B315)
+
+- From the Player Immersion Study (approved by Ben 2026-11-09). Interactables 0.16.0 (carry-rules.mjs, carry.mjs), Senses 0.4.0 (stateEdges, stateOf), Chronicle 0.9.0 (reckoning-rules.mjs, house rule eraReckoning, the player clock), Storyteller 0.11.0 (letters-rules.mjs, letters.mjs, player button wodxLetters, socket req.letter), Atmosphere 0.10.0 (opening-rules.mjs, client setting openingCard, scene choice noCard, api.opening), NPC 0.7.0 (faces-rules.mjs, faces.mjs, world setting faces).
+- Tests: tools/harness/immersion.test.mjs (12); version pins moved in perception, phase7b, phase7c-runtime and phase7d tests. Full suite 801 pass. Gate: tools/gate/gateimmersion.mjs, 9 steps.
+
+## 2026-11-09: the Library's shelves, the manual and What's new (Library 0.2.0, B282)
+
+- shelf-rules.mjs (new): SHELVES, LINE_LABELS, ALL_ERAS, fromDisciplines, fromRoads, fromGifts, fromArcanoi, fromThorns, fromConditions, fromHouseRules, fromEras, buildShelves, fits, hashOf. shelves.mjs (new): sources, installShelves (made at ready when the shelf version rises; remade by hash), catalogue, LibraryApp (id wodx-library; line list, era filter, search), ensureManual, ensureChangelog. data/manual.mjs (new): MANUAL pages and CHANGES. Toolbar button wodxLibrary (order 116). api.library, api.manual, api.changelog.
+- Tests: tools/harness/library.test.mjs (5). Gate: tools/gate/gatelibrary.mjs, 6 steps.
+
+## 2026-11-09: ways and realms (Otherworlds 0.6.0, B283)
+
+- ways-rules.mjs (new): DEEP_REALMS, REALM_ORDER, WAY_KINDS, WAY_ORDER, endLayer, wayRegion, realmScene. ways.mjs (new): makeRealm, makeWay (refuses when a layer is missing), waysDialog. Toolbar button wodxWays (Storyteller, order 132); api.ways {make, realm, dialog, isRealm, rules}.
+- Tests: tools/harness/ways.test.mjs (3). Gate: tools/gate/gateways.mjs, 7 steps. UI fit: the Ways and realms dialog.
+
+## 2026-11-09: the Encyclopaedia Tenebrarum frame (Library 0.3.0, B284)
+
+- ency-rules.mjs (new): KINDS, TIERS, BANNED, checkEntry, checkAll, docId, toJournal, shingles, overlap, entryText. shelf-rules.mjs: the encyclopedia shelf and fromEncyclopedia. shelves.mjs: SHELF_VERSION 2, reads data/encyclopedia/index.json, keeps fixed ids.
+- tools/encyclopedia-check.mjs (new; --text dir for the eight-word overlap check, --sample n for page spot checks), run by tools/quality-check.sh.
+- Tests: tools/harness/encyclopedia.test.mjs (5). Gate: gatelibrary now expects five shelves and 0.3.0. No entries yet; the first edition follows.
+
+## 2026-11-09: Library 0.3.1, shelf install race
+
+- On the PC, gatelibrary failed at step 2 with "JournalEntry ... does not exist": the world's ready hook runs installShelves when the shelf version rises, and the gate's own install ran at the same moment, so both deleted the same old entries. installShelves now runs one at a time (a second call gets the first's result) and only deletes entries still in the pack.
+
+## 2026-11-09: simulated systems (Storyteller 0.12.0, Actions 3.17.0, B320-B323)
+
+- upkeep-rules.mjs (new, pure): nightsBetween, betweenPlan (deltas), TIE_KINDS, deriveTies, tieStatus, newlyDue, HEAT, HEAT_BANDS, addHeat, cooled, responseFor. upkeep.mjs (new): onSkip on wodxSkipEnd (one queue proposal, type wodx-storyteller.between; approve applies with an Undo card), checkTies once a game day and after a skip, tiesDialog, groundsDialog, addHeat on wodxHunted and on a "seen feeding" breach (type wodx-storyteller.heat starts a rumour). Toolbar button wodxUpkeep (Storyteller, order 121); api.upkeep. Settings betweenNights, ties, heat (world, on).
+- Actions 3.17.0: the Hunt opens on the scene's ground and adds the heat's difficulty; fires wodxHunted {actorId, sceneId, caught, botch}; players' hunts reach the Storyteller by socket (req.hunted).
+- Tests: tools/harness/upkeep.test.mjs (12). Gate: tools/gate/gateupkeep.mjs, 9 steps. UI fit: Upkeep, Ties that need tending, Hunting grounds.
+
+## 2026-11-09: a Gauntlet that moves, Banality drift, plague years (Otherworlds 0.7.0, Storyteller 0.13.0, Actions 3.17.1, B324-B327)
+
+- Otherworlds: drift-rules.mjs (new, pure: DRIFT_KINDS, addDrift, undoDrift, withDrift, banalityWithDrift), drift.mjs (new: scene flag drift, stepDrift, undoStep, driftDialog, map events propose type wodx-otherworlds.drift). placeOf adds the drift to the Gauntlet and the Banality rating; scene ratings are copied, not changed in place. api.drift.
+- Storyteller: tie kind caern; OUTBREAKS and outbreakFor; huntHere returns the outbreak; world setting plague; the Upkeep chooser opens The Gauntlet over time when Otherworlds is on.
+- Actions 3.17.1: the Hunt shows a plague year's note.
+- Tests: upkeep.test.mjs (+5). UI fit: The Gauntlet over time.
+
+## 2026-11-09: money by era, Consensus by era (Storyteller 0.14.0, Actions 3.18.0, B328-B331)
+
+- Book checks on the PC first (notes in project files, notes/book-checks-consensus-money.md): V20 and V20 Dark Ages Resources give no sums; Sorcerers Crusade casual and vain, the Scourge and Fortune Dice; M20 Reality Zones optional; the Dark Ages Mage core has no coincidental or vulgar split.
+- Storyteller 0.14.0: money-rules.mjs (new, pure: LIFESTYLE, livingAs, nextDrop, RAISE, COINS, coinsFor), money.mjs (new: actor flag money {away, neglected}, resourcesOf, moneyOf, monthly card, Money window from the Upkeep chooser). Settings money, moneyRegion. api.upkeep.money.
+- Actions 3.18.0: consensus-rules.js (new, pure: AGES, ageFor, WORDS, CRUSADE_EUROPE, styleFits, suggestKind, fortuneDice, readFortune, fortuneSize, purifyDays). The M20 Cast reads the age, names the kinds in the age's words, takes the caster's style and suggests the kind; in the Crusade it rolls the Fortune Dice and weekly shedding stops. New: Purify the Scourge, Consensus here (scene flag wodx-actions.consensus {styles}). Settings consensusEra, realityZones. api.consensus, m20Purify, m20Place.
+- Tests: consensus-money.test.mjs (9). UI fit: Money by era, Consensus here. Gate: tools/gate/gateconsensus.mjs (7 steps).
+
+## 2026-11-09: paperdoll tokens (WoDX Paperdoll 0.1.0, B340-B344)
+
+- New module wodx-paperdoll 0.1.0: vendor/dicebear-lorelei.mjs (DiceBear core 9.4.3 + Lorelei 9.4.2, bundled with esbuild, licence beside it), fit-rules.mjs (pure: measure() reads a key-coloured head, gives anchors), doll-rules.mjs (pure: PARTS, MOODS, healthLevel, moodFor, normalize, step, randomLook, loreleiOptions, hairFor, gown, headwear, filletBox, damageMarks, cropFor, compose, bakeKey), main.mjs (Paperdoll window from the sheet header, actor context menu; bake on the active GM's computer; updateActor hook rebakes on look, health or frenzy changes; api open, bake, bakeAll, schedule, settled, save, draw, anchorsFor, state, rules).
+- Flags: actor flags wodx-paperdoll.look (the look) and .baked (key of the picture on the token). Files: worlds/<world>/paperdoll/<key>.webp.
+- Settings: on, followHealth (world).
+- Library 0.3.2: a manual page "Your token's look" and a What's new line.
+- Tests: paperdoll.test.mjs (9, uses @resvg/resvg-js, now a harness dependency), paperdoll-app.test.mjs (3). UI fit: Paperdoll. Gate: tools/gate/gatepaperdoll.mjs.
+- Paperdoll 0.1.1: placed tokens are found through the actor's own list as well as by searching the scenes. gatepaperdoll: the ring step flips the frames setting to a value that changes the answer; the bake step records more detail. encyclopedia.test.mjs builds the check script's path with fileURLToPath (Windows).
+- Paperdoll 0.1.2: only Token documents with an id on a Scene are updated (0.1.1 sent an update without an _id); a failed token update no longer stops the bake.
+- Paperdoll 0.1.3: api.last() reports what the last bake found and updated on placed tokens; gatepaperdoll step 3 records it.
+- Paperdoll 0.1.4: a mood can set the eyes; "unconscious" (eyes variant19) at Incapacitated, ahead of frenzy (B345).
+- Paperdoll 0.1.4 also: placed tokens are updated with diff: false through game.scenes, and checked again 0.8 s later; a token that went back to its old picture gets the new one again (api.last().recheck lists them). The first gate runs showed the placed token returning to mystery-man after a successful update.
+- Paperdoll 0.4.0 also (B363): face-rules LIPS, contrast(), NEED, showing(); doll-rules inksOf() and inkHead() (lips grown from the mouth box that findEyes now returns), the colours stage; the window's Lips list.
+- Paperdoll 0.4.0 (B360-B362): SERIOUS lists and NEAREST in doll-rules (LORELEI keeps the full lists); face-rules modelling() under the skin mask; loreleiOptions features mode (FEATURE_KEY colours); fit-rules findEyes(px, build) on the features drawing and checkFeatures(px, A); stagesOf() for the six stages; main.mjs featuresFor() (cached by featureKey), draw() returns stages, bake logs them, the window names a failed one. bareLook()/withFace(): face outline from the bare face; measure() starts its rays below a fringe. damageLayers(): marks under the skin mask, bandage over. Sweep: 4 heads x 15 builds x every hair, eye, brow, nose, mouth and mood. Library 0.3.5.
+- Paperdoll 0.3.0 (B348-B350): compose() finishes every picture as an illuminated page (finishDefs, groundSvg, trim; the ring at insets of the frame width, round or square). loreleiOptions tints ink, lips, brows and nose, and a pupils mode draws magenta eyes; fit-rules findEyes() finds pupils and eye boxes; main.mjs eyesFor() keeps them by eyes variant. face-rules: EYES, irises(), AFFLICTIONS, affliction(). Look gains colors.eyes, face.affliction and style {ground, ring}; styleFor()/themeFor() pick the fitting ones by actor type. LOOK_VERSION 2. Library 0.3.4: manual and changes.
+- Paperdoll 0.2.0 (B346-B347): face-rules.mjs (pure) adds SKIN (38), HAIR (25), BUILD (15, scaled from the neck base at 490,815), AGES, CHEEKS, MARKS, SCARS, WHISKERS and skinLayers(). doll-rules: PARTS gains build, age, cheeks, marks, scar and the new beards; PART_NAMES, FACE_ORDER; keySvg() and measure(px, build) measure the scaled head; headLayers() puts the head and the new parts in the build's transform, the parts under a mask from Lorelei's drawing in mask colours (skin white, eye and teeth whites made black). fitKey includes the build.
+- Paperdoll 0.2.0 also: the placed-token bug. Manual checks on fresh clients showed the server keeps the new picture; the Storyteller's own copy of a newly placed token kept its old prepared texture though its stored data had the new one. bake() now calls reset() on such a token and redraws it (api.last().reset lists them); the 0.8 s recheck compares the stored data.
+- Tests: paperdoll.test.mjs 11 (3,000 random faces all differ; every new part checked to stay on visible skin and to show, across face shapes and builds). A wider sweep outside the suite: 1,800 checks over 4 face shapes, 3 builds, 3 hairs and 3 skin tones, none off the skin; only a forehead scar under a fringe is hidden, as it should be.
+
+## 2026-11-09: survival-game systems, first five (Storyteller 0.15.0, Combat 3.8.0, NPC 0.8.0, Actions 3.19.0, Interactables 0.16.1, B370-B377)
+
+From the Cataclysm study Ben approved (all eight fits; the poor fits are never to be considered). Book checks by the PC helper: /mnt/project-files/research/book-checks/survival-fits.md.
+- Storyteller 0.15.0, long tasks (tasks.mjs, tasks-rules.mjs): an extended action that rolls once each time an interval of game time passes (hour, night, week, month), on the active Storyteller's client, at most 60 rolls a clock change. Successes add up; a botch loses them and ruins delicate work (V20 pp. 251-252, V20 Dark Ages p. 324). Kinds fill in a starting point: make or mend, research, learn from a teacher, a fetish or talen (W20 pp. 213, 227-228), a wonder, something else. One card per character with Undo; a finished or ruined task is logged on the tracker. Actor flag wodx-storyteller.tasks. Player button Long tasks; Upkeep has it too.
+- Storyteller 0.15.0, havens (havens.mjs, haven-rules.mjs): scene flag wodx-storyteller.haven {name, owners, guests, security, known, note}. Rated by the owners' Domain (V20 pp. 112-113, V20 Dark Ages p. 180), Chantry or Sanctum (M20), Holdings (C20), Haunt (Wraith 20th); security no more than the Domain. Exposing a haven logs it with attention. The window counts the scene's locks and traps.
+- Interactables 0.16.1: picking, forcing, hacking, disarming and climbing on a haven's scene are harder by its security for anyone not an owner or guest.
+- Combat 3.8.0: house rule Count shots and reloads (off by default). A ranged weapon with a capacity loses a round each attack and refuses to fire empty; Reload (api, macro) fills it: one turn for a firearm (V20 p. 278), five for a crossbow (V20 p. 281), five less Archery in the Dark Ages (V20 Dark Ages p. 348).
+- NPC 0.8.0, followers take orders (orders.mjs, order-rules.mjs; module socket on): flags.wodx-npc.serves and .order. Follow, wait, guard, keep watch, go to the one targeted. The active Storyteller's client checks and carries out the order and pauses the routine; a hard order goes to the approval queue. Followers walk after the leader stops, never in a fight. Player button Give an order.
+- Actions 3.19.0, tainted vessels: Hunt and Feed ask what is in the vessel's blood. Drink, stimulants, hallucinogens and opiates add their V20 effect (p. 301-302); a blood-borne disease is spotted (Intelligence + Medicine, 7), resisted (Stamina, 6) or carried (flag wodx-actions.carrier), V20 p. 295. A plague year starts the choice on disease.
+- Tests: tasks, shots, orders, havens, vessels (.test.mjs). UI fit: Long tasks, New and Change a long task, Havens, Haven, Give an order. Gate: tools/gate/gatesurvival.mjs (7 steps).
+- Not built yet: bodies that change (priority 6), fill a container by place and era (priority 7). Hardship on the road waits: V20, V20 Dark Ages and Hunter have no exposure rules.
+
+## 2026-11-09: survival-game systems, last two (Storyteller 0.16.0, Interactables 0.17.0, B378-B381)
+- Storyteller 0.16.0, bodies that change (body.mjs, body-rules.mjs): actor flag wodx-storyteller.body, a list of lasting changes (source, part, what, Appearance, shows, by, note). The Storyteller adds them from the sheet's Lasting changes button; an Appearance change moves the sheet's dots at once and Undo or Remove puts them back. Nosferatu and Samedi stay at Appearance 0. The owner reads the list on their sheet. Sources cite V20 p. 241 on, V20 Dark Ages p. 268, W20 p. 74, Dark Ages: Werewolf p. 80, Wraith 20th pp. 195-198, Demon: The Fallen pp. 170-171. api.body.shown(actor) gives the changes that show, by part, for WoDX Paperdoll.
+- Interactables 0.17.0, fill a container by place and era (fill.mjs, fill-rules.mjs): a button in the tile config draws from the "WoDX · Gear by era" compendium for the chronicle's era and the kind of place, weighted by kind of thing; the Storyteller unticks, keeps or draws again, and the kept links go into the Inside list, saved with the config window. Heavy, ship, crew-served gear and parries are never drawn; cyberware only in a clinic; a box, drawers, strongbox or safe only takes what hides in a coat.
+- Tests: body, fill (.test.mjs). UI fit: Lasting changes, A lasting change, Fill by place and era, The draw. Gate: tools/gate/gatesurvival2.mjs.
+
+## 2026-11-09: moves out of turn (Combat 3.8.1, B351)
+
+- conductor-rules.js: TURN_MOVES and turnMove() (pure). main.js: setting turnMoves (world, default Off) and a preUpdateToken hook ahead of the movement count; a refused move warns the player and snaps back.
+- Tests: phase7b1.test.mjs (version 3.8.0, turnMove cases, hook order). Gate: tools/gate/gateturns.mjs (9 steps).
+
+## 2026-11-09: hardship on the road (Storyteller 0.17.0, Interactables 0.17.2, B382-B385)
+- Storyteller 0.17.0 (hardship.mjs, hardship-rules.mjs): setting "hardship", off by default. Actor flag wodx-storyteller.needs (last water, food, sleep, weather; tiredness), scene flag wodx-storyteller.weather (none, harsh, severe, deadly). As the clock moves the active Storyteller's client checks living player characters: weather rolls of Stamina at 6 once an hour to four times an hour (M20 p. 435, Sorcerers Crusade p. 208); thirst and hunger a Stamina roll a day from 6, +1 a day, without a roll past 1 day (water) or 3 days (food) a Stamina dot (M20 pp. 435-436); a day awake past the first a Stamina roll or tired, a die off every roll, up to 3 (HH2 p. 90, Wraith 20th pdf p. 355). Bashing goes through WoDX Combat; one card a character with Undo. The Hardship window (Upkeep) sets the weather and marks eating, drinking and sleep.
+- Interactables 0.17.2: setConcealed also waits for a token placed a moment ago on the scene in view to get its placeable (the filters console error in gate-interact).
+- Tests: hardship.test.mjs. UI fit: Hardship on the road. Gate: gatesurvival2 step 6.
+
+## 2026-11-09: lasting changes on the paperdoll (Paperdoll 0.5.0, B386)
+- doll-rules.mjs: changesToDraw (the record's changes that show, one per drawn part) and changeLayers (marks inside the face outline: a stitched seam on the cheek, brow ridges, tinted or glowing eyes, marks at the mouth, veins from the jaw, a tint over the face), laid under the health marks. bakeKey adds the changes only when there are some. main.mjs reads flags.wodx-storyteller.body straight from the flags and re-bakes when it changes.
+- Tests: paperdoll.test.mjs (4 new). Gate: gatepaperdoll on the PC when it is back, with a look at a token that has changes.
+## 2026-11-09: the Encyclopaedia's full form (Library 0.4.0, B285)
+- ency-rules.mjs: tiers rumour (Might be true) and open (Unknown); claim.versions (books that differ, each sourced); entry editions [{edition, text, refs}] and wodx {text, rule}. checkEntry checks every part; entryText (overlap) covers them. toJournal renders them; unchanged output for entries without them.
+- shelves.mjs: Shelf select in the Library window (data-fixed). CSS for tiers, versions, editions. Manual news line.
+- Tests: encyclopedia.test.mjs +4 (11 in all). Built in the cloud while the PC was off; deploy, gatelibrary, encydiag and UI fit wait for the PC.
+
+## 2026-11-09: a quiet interface and supernatural sight on the map (Senses 0.5.0, B286-B287)
+- quiet-rules.mjs / quiet.mjs: client setting quiet (off), keybinding quietToggle (Alt+Q), body class wsn-quiet hides #sidebar, #hotbar, #players; roll cards' "Difficulty: n" in words on this screen only; the state strip names the health level.
+- sight-rules.mjs / sight.mjs: actor flag wodx-senses.sight; token tool My sight (order 122) cycles the character's sights; client setting sightMap (on); board CSS filter and token rings on a PIXI layer, redrawn on control, canvas, token and actor changes.
+- Tests: senses.test.mjs +6. Gate: tools/gate/gatequiet.mjs (9 steps), queued for the PC. Built in the cloud while the PC was off.
+
+## 2026-11-09: fixes from the book checks of the hallucination audit (Actions 3.19.1, Chronicle 0.9.1)
+
+- The PC ran tools/audit/ref-audit.mjs (3,655 refs scored, 426 to read by hand; results in project files notes/ref-audit-2026-11-09-pc.md).
+- wodx-actions/data/fera.json: Ajaba Renown is Ferocity, Cunning and Obligation, and they start with Willpower 3 (W20 Changing Breeds printed pp. 49, 217). Ratkin can't take more than 2 dots of Resources. Rokea start with Willpower 4. The Camazotz Renown is a house rule, because the book gives none. The six breeds the book confirms no longer carry chk.
+- gifts-daw.json: Dolorous Stroke says that onlookers lose a die against the character for the scene. The chk mark is removed.
+- wodx-chronicle/data/events.mjs: Doissetep, the Week of Nightmares and the Avatar Storm have dateNotes, because M20 gives no days.
+- v20c-utgard was not in the V20 Companion text. Ben approved its removal, and it is gone from v20comp.json (Library data only).
+- Still open: pinning the bare page refs from the PC report.
+- Tests: 919 harness pass.
+
+### Interactables 0.18.0 and Combat 3.8.2, 2026-11-09: a live wire holds you (B387)
+- Ben asked for the live wire to roll pulling free at the book's difficulties. Walking onto a live wire now holds the character (shown on the card). **Pull free of the current** is Strength at 5 for a vampire and 9 for anyone else; cutting the power frees everyone; Undo for each.
+- A vampire's soak against the current can botch, and a botch makes the damage aggravated: WoDX Combat 3.8.2 adds the botchAggravated option to soakAndApply (off unless a caller asks).
+- Tests: 3 new (rules, runtime, Combat soak); 914 harness pass. Gate step 26 (the marksman on a live wire).
+
+### Paperdoll 0.6.0, 2026-11-09: redrawn mouths, fantastic skins, no white film (B396-B399)
+- Mouths drawn by WoDX (mouth-rules.mjs), placed from the nose and pupils found on the features drawing; 15 expressions; teeth follow the upper lip's curve; Lorelei's mouth hidden from the picture and counted as skin in the mask. New stage "mouth" in stagesOf. findEyes also returns the nose box.
+- 16 fantastic skins (SKIN_FANTASTIC) and fantasticChance by kind; randomLook takes the character's kind, and a look without one is unchanged.
+- Mauled and worse: the pallor is the skin drained to grey (was a fixed #d9d7cf wash). Paper grain over the figure removed.
+- Six grounds: rose, diaper, vine, lily, chequer, punched.
+- Checks: harness 922 pass; mouth sweep 10,800 placements (4 heads x 15 builds x 12 eyes x 15 expressions), none off the face. Samples in /mnt/project-files/paperdoll/mouths-0.6/. Deploy and gatepaperdoll wait for the PC.
+
+### Interactables 0.18.1, 2026-11-10: NPCs hear crashes and gallops
+- The gap left by responsive maps: events from watch points, mounts and climbs went out before the hearing check, so they named nobody who heard them. applyAsk now holds them (heldEvents) until the check, then sends each loud one with the hearers (releaseEvents); quiet ones go out with none. Approved with the rest of the responsive maps choices (Ben, 10 November 2026).
+- Tests: the botched flat out test now checks that the crash and the gallop carry the sergeant who heard them. Gate: gate-interact step 22 and gate-maps.
+
+## 2026-11-10: weak page refs read against the books (Actions 3.19.2)
+
+- The PC read all 425 refs that scored under 0.34 (notes/ref-audit-weak-2026-11-09.md): OK 374, WRONG PAGE 23, WRONG CLAIM 1, NOT IN BOOK 1, CAN'T TELL 26.
+- WRONG CLAIM fixed: a Willpower point ignores wound penalties for one turn (VtDA20 printed p. 339), not the scene. The roll dialog no longer sets the lasting ignoring-pain state, and the Willpower menu line says one turn.
+- Pages fixed: VtDA20 initiative p. 343, Fortitude p. 221, blood oath p. 342, regaining Willpower p. 340, frenzy p. 357, turn length p. 324, retrying p. 323; V20 blood use p. 268; DA:W Red Talons p. 81; DA: Mage Twilight pp. 139-140; the Encyclopaedia's dam-dynamic-magic (p. 97) and inq-backgrounds (adds p. 155).
+- Labelled house rules: the hunger line 7 - Self-Control, and Mummy blood (no source found).
+- Left for a look in the PDF: bh-grabkrieg, the Fount whispers on DA: Mage p. 87. The 26 CAN'T TELL rows are books with no text or image-only pages.
+- Tests: 927 harness pass.
+
+## 2026-11-10: release checks for the live server (Chronicle 0.10.0)
+
+- The live server runs on Linux, where file names are case-sensitive. New harness test path-case.test.mjs reads every path the system, the modules and the world files refer to (manifests, imports, template and asset paths, CSS urls, image paths inside the compendium packs) and fails when one differs in letter case from the file on disk, or when a folder holds two names that differ only in case. 2,661 paths checked: no case mismatches. Not in the repo at all (not case faults): the system's orpheus/Fudge.ttf font and data/demon and assets/data JSON in import-helpers.js, and the world background "Art of Vampire The Masquerade Summoning.jpg" in both repo world files.
+- Release stamp: release.json in the system and every wodx- module, marked export-subst in .gitattributes, so git archive writes the commit and its date. tools/release/stamp.mjs stamps a copy made any other way. Chronicle shows the build to the GM in the Settings sidebar, logs it, and warns when packages come from different commits.
+- Tests: 936 harness pass (9 new). Not gated in Foundry yet.
+
+
+## 2026-11-10: adopt a generated map (Interactables 0.19.0)
+
+- The farmstead generator (tools/mapgen/ddfarm.py, Dungeondraft edition) now also writes kessler-steading.wodx.json: 10 doors and shutters, 8 things (a locked chest, two box beds and three heaps of hay to hide in, the bread oven as a light, the well as a rope climb), the longhouse as a home and the barn as a workplace, and trigger regions on the track and the footbridge. A copy is in tools/mapgen/samples/.
+- Interactables 0.19.0: adopt-rules.mjs (read and check the file, place it on the scene, match the imported door walls, build the plan) and adopt.mjs (the scene's right-click menu: Adopt a generated map, and Undo the map adoption). B404.
+- Tests: 947 harness pass (11 new in adopt.test.mjs). Not gated in Foundry yet: the gate imports the farmstead with the Universal Battlemap Importer and adopts it in rothenstein-wodx.
+
+
+## 2026-11-10: a container's fill starts from where it sits (Interactables 0.20.0)
+
+- fill-rules.mjs: placeGuess and FROM_NPC_PLACE; fill.mjs: guessFor reads the container's Usual contents, then the place tags of the regions it sits in (smallest first), then the scene's tag, straight from the flags so it works with WoDX NPC off. The draw window shows where the guess came from. B405.
+- The tile config has a Usual contents field; the farmstead's file sets the chest to a home.
+- gateadopt step 4 also checks the chest's guess.
+- Tests: 949 harness pass (2 new).
+
+## 2026-11-10: Phase 9 done, the Encyclopaedia Tenebrarum filled line by line
+
+- 2045 entries in modules/wodx-library/data/encyclopedia, from the core books (first edition, PRs 107-132) and then each line's supplements, one book per PR, up to PR 431 (main 8df185c, bundle wodx-2026-11-10o). Order: Vampire (V20, Revised, Dark Ages), Werewolf, Kindred of the East, Mage (M20, Revised and 2nd, Sorcerers Crusade, Dark Ages Grimoire), Wraith, Changeling, Hunter, Demon, Mummy, Orpheus, general World of Darkness.
+- Every claim was checked against its page, and the overlap check across all book texts finds no 8-word run shared with any book. Older entries that met new texts were reworded.
+- Left out: fiction, gamebooks, adventures and Storyteller-only books, fan compilations, books without readable page numbers or with unusable OCR (Mummy: The Resurrection core), rules-only quick references, and all Mind's Eye Theatre material (Ben, 2026-11-10). Real-world ethnography and history pages were left out too.
+- Deployed to rothenstein-wodx; encydiag 4/4, 283 files 0 mismatched, release stamp 8df185c.
+
+## 2026-11-10: the Storyteller's hand (Storyteller 0.18.0, Chronicle 0.10.1)
+
+- From the Storyteller Conveniences study (https://claude.ai/artifact/PuoomdY22Me3psaqhJcSXc); Ben asked for all of it. B430-B436.
+- One new Storyteller button (a hand) opens: Before the players arrive, Rules at a glance, Call for a roll, Session timer, End of the night, Next session sheet, Scene kits, Quick extras, Character hooks, Absent tonight, Last time for the players. Players get a Downtime request button (a bed); Chronicle 0.10.1 lists it under Player toolbar buttons.
+- New files in wodx-storyteller/scripts: hand.mjs, between.mjs, and the rules glance-rules, callroll-rules, preflight-rules, wrapup-rules, prep-rules, kits-rules. Settings: timer, timerWarn, kits, absent. Approval type wodx-storyteller.downtime.
+- Waiting on the PC: each line's experience reasons and the books' ready-made extras (request sent to the PC helper); both are drafts in PENDING-REVIEW until then.
+- Tests: 971 harness pass (22 new in hand.test.mjs and between.test.mjs).
+
+## 2026-11-10: Storyteller 0.18.1 and 0.18.2, book lists for the hand
+
+- Experience reasons per line from the core books, with pages; the window shows them per character.
+- Quick extras: V20 and V20 Dark Ages dogs and wolves, the extras health rule and mortal soak on every card, sources on each; late weapons from the V20 charts (nightstick as a club).
+- The hooks board names V20 p. 267 for Willpower by Nature.
+- Fix: extras write Attribute totals too; gatehand sets the watcher's Perception total (the pool reads the total).
+- Gates on rothenstein-wodx with 0.18.1: gatehand 12 of 12, UI fit 747 ok. Tests: 971 pass.
+
+## 2026-11-10: the Encyclopaedia's full review, the unreached books and the narrative books
+
+- Full review of every entry (PRs 441-451): 5682 refs tested against their pages on squashed OCR text (key words, numbers, absolute words, 8-word overlap); 373 flagged refs read by hand; 9 wrong pages, 8 overstated claims and 1 claim not in its book fixed, 143 lines reworded. Open: the cbs-temples claim on staked Brujah Methuselahs can't be confirmed from the scan.
+- A walk of the book folders (/mnt/project-files/ency-left-out.md) found 116 books never reached; each is now added or skipped with a reason. Mummy: The Resurrection read with a column-aware OCR (tools-env\ocr-cols.py). A squashed-text overlap check (nsp-overlap.py) found 10 old Mummy runs the word check missed, now reworded.
+- Narrative books (Ben, 2026-11-10): facts from novels and anthologies went in only when a sourcebook entry backs them (57, tier implied, citing both books). The other 20 went to the Narrative Review Desk (https://claude.ai/artifact/2sH4gv1jC599dsEbX4ht2B). Ben accepted 16, added at tier rumour as "The novel ... tells that" (PR 478), and rejected 4. A desk note led to the sourcebook Esbat entry (PR 473), cross-linked with the Sabbat entries (PR 476).
+- Result: 2603 entries from 389 books.
+
+## Phase 10, polish: the rules-clash table (2026-11-10)
+- One table of rules that two or more lines rule differently: modules/wodx-chronicle/data/rules-clashes.mjs, written out to docs/RULES-CLASHES.md by tools/clashes/render.mjs (B500-B506). 28 rows: 15 settled, 1 fixed in code, 12 waiting on a page check on the PC.
+- Fixed: WoDX Combat soaked Dark Ages fae as C20, so a fae in the mien could not soak lethal and cold iron took all natural soak. Now DA:Fae pp. 104 and 88 apply in the Dark Ages (Combat 3.8.3, Actions 3.19.3; Chronicle 0.10.2 carries the table).
+- tools/harness/rules-clashes.test.mjs: every row whole, each house rule named in DECISIONS, the doc matches the data, and the fae soak.
+
+## 2026-11-10: Future Darkness metaplot in the chronicle (Chronicle 0.11.0)
+- The approved Future Darkness timelines are dated events: 1990 to winter 2025 and 2026 to 2098, 288 events on the branch only (data/future-events.mjs, built by tools/wofd/build-future-events.mjs from docs/research/wofd).
+- New era: Time of Future Judgement, 2099, on the branch only; Future Darkness now ends in 2098. The Time of Judgment (2004) is skipped when the branch is on (excludedByRule in era profiles) (B507).
+- Five Cascades for 2099 (The Seventh Storm, The Machine Ascendant, The Red Star, Lilith's Bargain, The Fomorian Night), each holding most of every line's endings, 130 events. The Storyteller picks one in Dated events; none fires until one is picked (B508).
+- Hunters on the branch: mortal hunter rules until 2022, the imbued from 2023 (Actions 3.19.4, Storyteller 0.18.3 preludes) (B509).
+- The 2099 era counts as Future Darkness for gear, the Library's shelves, clocks, keypads and people tables (Library 0.4.4, Interactables 0.20.1).
+- The fall of the Masquerade event moves to summer 2025, the house timeline's flood.
+- Tests: events, prelude, era resolution and hunter lines; 999 pass.
+- Page checks back from the PC (2026-11-10): every row settled (21 settled, 7 fixed, 0 open). Combat 3.8.4: demons and mummies soak by their own books, bites without fangs are bashing, Bonecraft talons are lethal and Vicissitude 1 no longer claws, Celerity adds nothing to Initiative. Actions 3.19.4: its old soak copy (which soaked a falling Garou as a mortal) now re-exports Combat's; V20's Willpower for each aggravated level past the first. B520-B524. Ben approved every PENDING-REVIEW row at 18:18 UTC.
+
+## Phase 10, polish: code review, first pass (2026-11-10)
+- ESLint (no-undef, unreachable, duplicate keys and cases, unsafe chaining) over every module and the fork. Modules: 1 real error class only, reads of another module's flags and settings that throw when that module is off: Sheets 0.6.1 and NPC 0.8.1 (Creation's lineage flag), Otherworlds 0.7.1 (Chronicle's journal flag and latitude). System 7.3.2-wodx.4: adding a bonus on a sheet threw, a PC-sheet ability with a specialty threw in the roll dialog, plus three wrong names in error paths.
+- 37 unused variables and helpers listed for the dead-code part.
+
+## Phase 10, polish: AI tells and dead code (2026-11-10)
+- AI-tell scan of module strings, docs and all 2603 encyclopaedia entries: stock phrases, placeholders, emoji, em-dashes. Few hits; most were game terms (the Tapestry, the Delve Edge). Seven encyclopaedia summaries built on "X at the heart of Y" were reworded, and one em-dash came out of this log. The text-cleanup test now fails on a list of stock phrases and on placeholder text in any module string.
+- Dead code: the 37 unused imports, helpers and locals that ESLint found are gone. WoDX Actions' core-rules.js kept a second copy of the dice and health rules; it now passes WoDX Combat's copy through (every name it uses was already in Combat 3.7.4, the version on Live). The two profiles.js files stay as identical copies by design (whichever module loads first registers them). Old migrations from the vtda20 flags are kept, since the Live world cannot be checked from here.
+- Versions: Actions 3.19.5, Chronicle 0.11.2, Combat 3.8.5, Creation 0.9.1, Interactables 0.20.2, Library 0.4.5, NPC 0.8.2, Otherworlds 0.7.2, Paperdoll 0.6.4, Storyteller 0.18.4. Harness 983/983.
+
+## Phase 10, polish: test-gap map (2026-11-10)
+- docs/TEST-GAPS.md, written by tools/harness/test-gaps.mjs: harness line coverage of every module file, the 18 files the harness never loads (window and hook files: Atmosphere and Library main, NPC faces and orders, Sheets main, most Storyteller windows) and the gates that name each module. Those files are covered by gates.
+- The weakest pure-rules file was Actions rules.js (76%). kindred-rules-core.test.mjs adds 7 tests for its helpers: resisted and extended rolls, teamwork, aura, Virtue and frenzy checks, hunting and feeding, healing, falling, lifting, oaths and diablerie.
+- Next: one full gate run on the PC with every module on, in every era.
+
+## Fae blood as a drug (2026-11-10)
+- Ben's ruling (B525): fae blood is a potent drug to Kindred in every era, with hallucinations and waking dreams for a scene a point drunk and pools 1 to 3 dice smaller. Actions 3.19.6: rules.js faeBloodHigh, a Changeling / fae vessel in the Feed window, a warning on the feeding card. Rules-clash row updated (Chronicle 0.11.3).
+- Phase 10 spelling pass: travellers, colour, grey, favour in the few prose strings that mixed spellings. gateevents now accepts a growing event list.
+- Language files: system 7.3.2-wodx.6 adds the missing sheet names, "Unnamed passion" and "Unnamed fetter" to en.json and points two templates at keys that exist. New harness test lang-keys.test.mjs fails on any fixed key the system or a module asks for that en.json lacks. Other languages fall back to English.
+
+## Phase 10, polish: page references (2026-11-10)
+- 70 bare page refs on cards and windows now name their book, in the files that cite one book: Demon: The Fallen, Dark Ages: Fae, Dark Ages: Mage, Dark Ages: Inquisitor, Kindred of the East, Mummy: The Resurrection, Hunter: The Reckoning, Wraith 20th, C20 and V20 Dark Ages (Actions, Combat, Creation, Chronicle conditions). "pdf page N, printed page M" is now "pdf N / p. M". page-refs.test.mjs keeps them pinned.
+- Left as they are: refs whose sentence already names the book (rules-clash rows, Otherworlds charts, the Storyteller's wonder note), data files whose Library shelf names the book, and the mixed-book files (Garou, the ghoul window, Sheets), where a wrong guess would be worse than a bare page.
+- Versions: Actions 3.19.7, Chronicle 0.11.4, Combat 3.8.6, Creation 0.9.2, Storyteller 0.18.5.
+
+## Phase 10, polish: docs match the code (2026-11-10)
+- Checked: every module version in MODULES.md against its module.json; every file, test and gate path the docs name exists; the settings the Storyteller's guide names exist. All matched.
+- Found: Actions, Senses and Storyteller load rule files straight from sibling folders that their module.json does not require. MODULES.md now says to install every WoDX module together (a sibling may be off, not missing), and cross-imports.test.mjs checks that each of the 109 cross-module imports finds its file and names.
+- Live release checklist: docs/LIVE-RELEASE-CHECKLIST.md (before, release, after), walked once as a dry run on the cloud side; nothing released.
+## 2026-11-10: everyday goods, more building types, the village and town generator (Interactables 0.21.0, Library 0.5.0)
+
+- Everyday goods by era: modules/wodx-library/data/goods.mjs, 160 goods (food, drink, kitchen things, cloth, tools, light, money, papers, things of faith, medicine, keepsakes, valuables, vices, gadgets), each with its first and last era and a weight for each fill place. Fill by place and era now draws gear, goods or both; a good goes in as a plain line of text. Goods work even before Gear by era is built. B570.
+- Map generators split into a shared part: tools/mapgen/ddcore.py (rooms and furnishing, the Dungeondraft writer, sidecar pieces, plan drawing) and buildings.py (12 building types: byre-house, barn, coop, cottage, smithy, tavern, chapel, house and shop, workshop, bakehouse, storehouse, guardhouse), each set down facing any of four ways. check_buildings.py furnishes every type facing every way under 60 seeds. The farmstead builds on them and gives the same files as before from seed 1197. B571.
+- tools/mapgen/ddtown.py: a village (about 20 households) or a small town (about 40 to 45) of the Dark Ages. Roads first, a market or green where they meet, the tavern and chapel on the market, trades by demand, homes out to the edges, kitchen gardens, woods around. The sidecar lists every door, chest, bed, hearth and the well, a region per building, the market and the streets, triggers where roads come in, and each building's household (roles only). Night ambient light by default. Samples: tools/mapgen/samples/hohenhausen and birbach (sidecar and plan); the Dungeondraft files are in project files maps/town-dd/. B572.
+- Adopt (Interactables 0.21.0) keeps each household on its building's region (flag household) for WoDX NPC to seed later, and shortens the region list in its summary. B573.
+- Tests: fill.test.mjs (4 new), adopt.test.mjs (4 new), mapgen.test.mjs (3 new; runs the generators when Python and the asset list are present).
+- Waiting: the real importer test (Ben exports a town from Dungeondraft once), the gate and the testbed deploy.
+- Phase 10 full gate run (PC job 3, f4c8d5d): 70 of 76 gates passed in full, the 12-era sweep and UI fit were clean, and load time was 4.45 s with every module on against 3.93 s with only the system and Chronicle. Gate fixes from it: gate6h and gate6n accept later Actions versions; gateperception waits for the frenzy overlay to fade; the combat check gates clean up their test combats, read their own card and return a pass count.
+
+## 2026-11-10: cities, and large places split into parts (map tools)
+- tools/mapgen/ddtown.py gains a city size (168 by 124 squares, 500 to 700 people, about 125 to 145 households) on a grid of back streets and cross lanes. B574.
+- --part N (64 by default) cuts any place wider or taller than N squares into a grid of smaller maps, so a slower computer loads one part at a time. Cuts run on whole squares and are moved to the nearby line that crosses the fewest buildings; a part reaches a little past its cut to hold any building whose middle is in it. Each part has its own Dungeondraft map and sidecar (only its own doors, features and households; edge trigger regions name the part next door), and <name>-parts.json lists every part, its origin, cut and neighbours. --part 0 keeps one map. B575.
+- Trees, garden bushes and market stalls are drawn once for the whole place, so two parts show the same things where they meet. Nearby lookups use buckets, so a city builds in under 20 seconds.
+- Village samples unchanged; Birbach sample redrawn (the street grid draws one more number); new city sample Rotheim (6 parts). Tests: 3 new or changed in mapgen.test.mjs, the Rotheim market part added to the adopt town tests. 1012 of 1012 pass.

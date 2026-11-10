@@ -68,15 +68,23 @@ export default {
       "id": "timeOfJudgment",
       "group": "timeline",
       "name": "Time of Judgment (2004)",
-      "hint": "Use the Time of Judgment profile in 2004, with one optional ending per line.",
+      "hint": "Use the Time of Judgment profile in 2004, with one optional ending per line. Skipped on the Future Darkness branch, which has its own in 2099.",
       "default": false,
       "source": "Era table: Time of Judgment"
+    },
+    {
+      "id": "eraReckoning",
+      "group": "timeline",
+      "name": "Players see time as the era tells it",
+      "hint": "A player's clock gives the church's hours before 1350, a striking clock's quarter hours until 1840, a 12-hour clock after that, and a 24-hour readout in Future Darkness. The Storyteller's clock keeps the exact minute.",
+      "default": true,
+      "source": "House rule: era timekeeping"
     },
     {
       "id": "futureBranch",
       "group": "timeline",
       "name": "Future Darkness branch",
-      "hint": "From 2010 the chronicle follows the Cyberpunk 2020 branch (World of Future Darkness). Off: the classic timeline continues under Modern rules.",
+      "hint": "From 2010 the chronicle follows the Cyberpunk 2020 branch (World of Future Darkness), to the Time of Future Judgement in 2099. Off: the classic timeline continues under Modern rules.",
       "default": false,
       "source": "Era table: Future Darkness"
     },

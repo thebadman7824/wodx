@@ -53,10 +53,14 @@ import {actionPool} from "../../wodx-actions/scripts/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerStateSettings, setupStates, publish} from "./states.mjs";
 import {setupLiving} from "./living.mjs";
+import {setupCarry} from "./carry.mjs";
+import {setupAdopt} from "./adopt.mjs";
+import * as Fill from "./fill.mjs";
+import * as FillRules from "./fill-rules.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.15.0";
+const VERSION = "0.20.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -174,7 +178,6 @@ function nearOnTile(doc, p, by = 4) {
 }
 const distanceToTile = (doc, p) => { const r = rectOf(doc); return Math.hypot(Math.max(r.x - p.x, 0, p.x - r.x - r.w), Math.max(r.y - p.y, 0, p.y - r.y - r.h)); };
 /** Where a noise at an object starts, as heard from a point. */
-const noiseFrom = (doc, p) => (Array.isArray(doc?.c) ? R.besideWall(doc.c, R.sideOf(doc.c, p) ?? "a", 4) : nearOnTile(doc, p));
 
 const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness", "investigation", "athletics", "dodge", "ride", "drive", "firearms", "archery", "melee", "brawl"];
 const TOOLS = /lock ?picks?|picklock|thieves'? tools|skeleton key|bump key|pick gun|lock gun|tension wrench/i;
@@ -393,10 +396,13 @@ export async function attempt(tok, wallId, opId, {fd = null} = {}) {
   // The pool, by WoDX Actions' rules: wounds, bonus dice, an untrained Skill, a Knowledge one can't use untrained
   const m = op.roll.ability ? ch.meta[op.roll.ability] ?? {} : {};
   const type = String(m.type ?? "").includes("knowledge") ? "knowledge" : String(m.type ?? "").includes("skill") ? "skill" : m.type ? "talent" : op.roll.skill ? "skill" : "talent";
+  // A haven's security makes breaking in harder for anyone who does not live there (WoDX Storyteller's record)
+  const haven = R.havenSecurity(canvas.scene?.flags?.["wodx-storyteller"]?.haven, actor?.id, op.id);
   const built = actionPool({attribute: ch[op.roll.attr] ?? 0, attributeLabel: op.roll.attrLabel, ability: op.roll.ability ? (ch.abilities[op.roll.ability] ?? 0) : 0,
     abilityLabel: op.roll.abilityLabel, abilityKey: op.roll.ability, abilityType: type, bonusDice: num(fd.bonus),
-    extraDiff: num(fd.extraDiff), baseDifficulty: op.roll.diff, woundPenalty: ch.woundPenalty, retries: 0});
+    extraDiff: num(fd.extraDiff) + haven, baseDifficulty: op.roll.diff, woundPenalty: ch.woundPenalty, retries: 0});
   if ( built.blocked ) { ui.notifications.warn(built.blocked); return null; }
+  if ( haven ) built.parts.push(`haven security +${haven}`);
   let wp = !!fd.willpower;
   if ( wp ) {
     const w = actor.system?.advantages?.willpower ?? {};
@@ -573,6 +579,8 @@ export async function applyAsk(msg) {
           body: `<p>Missed, still hidden there: ${esc(listWords(missed.map(x => x.n)))}.</p>`})});
       }
     }
+    // Events from watch points, mounts and climbs wait for the hearing check below, so NPCs who heard can react
+    heldEvents.set(doc.id, []);
     // Examining a clue: what the character learns goes to that player and the Storyteller only
     let whisper = null;
     if ( (op.id === "examine" || op.id === "look") && o.clue ) whisper = await clueReport(o, out, author, actor);
@@ -608,13 +616,14 @@ export async function applyAsk(msg) {
     if ( loudish && !here ) lines.push("Nobody's hearing was checked: the Storyteller is viewing another scene.");
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
+    releaseEvents(doc.id, heard.map(h => h.uuid));
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given,
       heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,
       damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? climbed?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed, moved: climbed?.moved ?? null, undone: false};
     const verdict = waiting ? "Waiting for the Storyteller" : {done: "Done", progress: "Headway", fail: "No luck", botch: "Botch"}[out.result] ?? "";
     await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
     return done;
-  } finally { busy.delete(msg.id); }
+  } finally { busy.delete(msg.id); releaseEvents(msg?.flags?.[MOD]?.ask ? objectIn(game.scenes.get(msg.flags[MOD].ask.scene), msg.flags[MOD].ask.wall)?.id : null, []); }
 }
 const titleOf = msg => (String(msg.content).match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "WoDX");
 function resultHtml(msg, done, verdict) {
@@ -859,6 +868,11 @@ export async function setConcealed(tokDoc, on) {
   const has = (CONFIG.statusEffects ?? []).some(e => e.id === "invisible");
   if ( has && typeof actor?.toggleStatusEffect === "function" ) {
     const now = !!actor.statuses?.has?.("invisible");
+    // A token placed a moment ago may not be drawn yet; core reads its mesh when the status is applied
+    // On the scene in view, a token placed a moment ago may have no placeable yet: wait for it too
+    const onView = !!tokDoc.parent && tokDoc.parent === globalThis.canvas?.scene;
+    const undrawn = () => (onView && !tokDoc.object) || [tokDoc.object, ...(actor.getActiveTokens?.() ?? [])].some(t => t && !t.mesh);
+    for ( let i = 0; i < 20 && undrawn(); i++ ) await new Promise(r => setTimeout(r, 25));
     if ( now !== on ) await actor.toggleStatusEffect("invisible", {active: on});
     return "status";
   }
@@ -1017,7 +1031,7 @@ export async function hazardOn(tokDoc, actor, o) {
     if ( combat?.soakAndApply ) {
       try {
         const res = await combat.soakAndApply(tokDoc.object ?? actor, {mode: hit.mode, amount: hit.amount, type: hit.type, fireSun: hit.fireSun, soakDiff: hit.soakDiff,
-          soak: true, fortBlood: "auto", soakBonus: 0});
+          soak: true, fortBlood: "auto", soakBonus: 0, ...(hit.botchAggravated ? {botchAggravated: true} : {})});
         damageMsg = res?.message?.id ?? null;
         lines.push(`${cap(what)}: soak and the result are on the WoDX Combat card${res?.levels ? ` (${res.levels} ${res.levels === 1 ? "level" : "levels"} after soak)` : ""}.`);
       } catch (e) { console.error(`${MOD} |`, e); lines.push(`${cap(what)}: roll soak and apply it by hand.`); }
@@ -1037,6 +1051,11 @@ export async function hazardCard(tokDoc, actor, doc, o, why = "enters") {
     const snap = {ds: null, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), hidden: !!doc.hidden};
     const hz = await hazardOn(tokDoc, actor, o);
     const lines = [why === "turn" ? `${actor.name} starts the turn in it.` : `${actor.name} walks into it.`, ...hz.lines];
+    // A live wire holds whoever touches it until they pull free or the power is cut
+    if ( o.kind === "shock" && o.live ) {
+      if ( !o.caught?.[actor.id] ) await doc.update({[`flags.${MOD}.caught.${actor.id}`]: true});
+      lines.push(`${actor.name} is held by the current: Pull free (Strength) or cut the power.`);
+    }
     Hooks.callAll("wodxInteractablesHazard", {scene: scene.id, tile: doc.id, token: tokDoc.uuid, kind: o.kind, why});
     const done = {result: "done", text: hz.text, noise: "silent", snap, hurt: 0, advanced: 0, worldTime: game.time.worldTime, waiting: false, lines, given: [],
       damageMsg: hz.damageMsg, undone: false};
@@ -1128,7 +1147,20 @@ export function peopleIn(target) {
     .map(t => ({name: t.name ?? t.actor?.name ?? "Someone", uuid: t.uuid, lasombra: /lasombra/i.test(String(t.actor?.system?.clan ?? ""))}));
 }
 /** A map event for other modules: the same shape as a card's (states.mjs), with what this result adds. */
+/** Map events held while a result is applied: doc id -> the calls waiting for who heard. */
+const heldEvents = new Map();
+function releaseEvents(docId, heard = []) {
+  if ( !docId || !heldEvents.has(docId) ) return;
+  const list = heldEvents.get(docId);
+  heldEvents.delete(docId);
+  for ( const [kind, args] of list ) {
+    // Only a loud moment (a crash, a fall, a gallop, a bell) has NPCs react; a quiet one is only passed on
+    try { mapEvent(kind, {...args, heard: args.heard?.length ? args.heard : (args.noise === "loud" ? heard : [])}); }
+    catch (e) { console.error(`${MOD} |`, e); }
+  }
+}
 export function mapEvent(kind, {scene, doc, tokDoc, noise = "silent", object = "", heard = [], supernatural = false, extra = {}} = {}) {
+  if ( doc?.id && heldEvents.has(doc.id) ) { heldEvents.get(doc.id).push([kind, {scene, doc, tokDoc, noise, object, heard, supernatural, extra}]); return null; }
   let objectName = null;
   try { objectName = doc ? R.nameOf(describeTile(doc) ?? {}) || null : null; } catch (e) { objectName = null; }
   return publish(kind, {scene, doc, tokDoc, noise, heard, supernatural, objectName, objectKind: object || null, extra});
@@ -1335,6 +1367,10 @@ function onRenderWallConfig(app, html) {
   wrap.innerHTML = configHtml(doc);
   const footer = form.querySelector("footer, .form-footer, .sheet-footer");
   if ( footer ) footer.before(wrap.firstElementChild); else form.appendChild(wrap.firstElementChild);
+  form.querySelector("[data-wix-fill]")?.addEventListener("click", ev => {
+    ev.preventDefault();
+    Fill.fillDialog(app.document ?? app.object, form.querySelector(`[name="flags.${MOD}.items"]`)).catch(e => console.error(`${MOD} |`, e));
+  });
   app.setPosition?.({height: "auto"});
 }
 /** The WoDX part of a tile's config window: a container. */
@@ -1368,6 +1404,8 @@ export function tileConfigHtml(doc) {
     ${field("Keypad or alarm", `<select name="${p}.electronic" data-fixed>${opt(R.ELECTRONIC, f.electronic)}</select>`, "Only in the modern eras.")}
     ${field("Key", `<input type="text" name="${p}.keyName" value="${esc(f.keyName)}" placeholder="Name of the key item">`)}
     ${field("Inside", `<textarea name="${p}.items" rows="4" placeholder="One item a line: its UUID, or its name in the Items directory">${esc(f.items)}</textarea>`, "Taking them gives the character a copy of each. Leave it empty and say what is inside yourself.")}
+    ${field("Usual contents", `<select name="${p}.fillPlace" data-fixed><option value="">As where it sits</option>${opt(FillRules.PLACES, doc?.flags?.[MOD]?.fillPlace)}</select>`, "The place Fill by place and era starts from. Blank: the place tag of the region or scene it sits in, else a home.")}
+    ${field("", `<button type="button" data-wix-fill>Fill by place and era…</button>`, "Draws from Gear by era for the chronicle's era, for you to check before anything goes in.")}
     <h4 class="wix-sub">Trap</h4>
     <p class="hint">A snare, pit, tripwire or spring blade. Hide the tile: it goes off when a character walks over it, and players see it once a search finds it.</p>
     ${field("Trap", `<input type="checkbox" name="${p}.trap"${t.trap ? " checked" : ""}>`, "A tile is a container or a trap; a container wins if both are ticked.")}
@@ -1466,7 +1504,7 @@ function onRenderTileConfig(app, html) {
 function onPreUpdateTile(doc, changes) {
   const f = changes?.flags?.[MOD];
   if ( !f || typeof f !== "object" ) return;
-  for ( const k of ["material", "lock", "keyName"] ) if ( f[k] === "" ) f[k] = null;
+  for ( const k of ["material", "lock", "keyName", "fillPlace"] ) if ( f[k] === "" ) f[k] = null;
   if ( "items" in f ) f.items = R.parseItems(f.items).join("\n");
   if ( "sacredItems" in f ) f.sacredItems = R.parseItems(f.sacredItems).join("\n");
   // A lock set on a closed container locks it
@@ -1539,9 +1577,11 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
+  game.modules.get(MOD).api.carry = setupCarry();
+  game.modules.get(MOD).api.adopt = setupAdopt();
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

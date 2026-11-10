@@ -1,0 +1,371 @@
+[
+ {
+  "id": "dacbn-antonius",
+  "title": "Antonius the Gaul",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ventrue Methuselah of the Trinity.",
+  "claims": [
+   {
+    "text": "Antonius, Embraced by the Ventrue Antediluvian centuries before, ruled as a warlord among the Gallic tribes and chose to join Rome when its legions arrived.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Antonius met Michael the Wanderer in the decades before Christ; the two became allies and lovers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "When Michael grew fascinated with Christianity, Antonius gave the counsel and support that made the Dream conceivable.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbn-trinity",
+   "dacbn-dracon"
+  ]
+ },
+ {
+  "id": "dacbn-dracon",
+  "title": "The Dracon",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Tzimisce Methuselah of the Trinity.",
+  "claims": [
+   {
+    "text": "The Dracon is said to be the first childe of the Tzimisce Antediluvian, and Michael never learned the Dracon’s true origins.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Holding to the clan’s creed of change, the Dracon sought to transform the world itself, raising and toppling kingdoms and faiths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "On a visit to Cyprus some time after A.D. 100, Michael met the Dracon, and the two were soon enthralled with each other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbn-trinity",
+   "dacbn-antonius"
+  ]
+ },
+ {
+  "id": "dacbn-trinity",
+  "title": "The Trinity and the family system",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Constantinople’s Cainites are organised.",
+  "claims": [
+   {
+    "text": "Outside the Latin Quarter, every Cainite in the city belongs to a family by Embrace or adoption, and family status brings both rights and duties.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "The Triumvirate set up the family system at the Second Council in A.D. 475 so the city would not decay as Rome had, giving each family a defined role.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Modelled on the Holy Trinity, the three founders cast themselves as Father, Son and Spirit, and their three broods together form the Trinity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Lesser families called scions hold status under one member of the Trinity in return for serving the Dream, and the Status Background measures place in this system rather than under a prince.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 62,
+      "pdf": 63
+     },
+     {
+      "book": "dacbn",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbn-antonius",
+   "dacbn-dracon",
+   "dacbn-michaelites"
+  ]
+ },
+ {
+  "id": "dacbn-michaelites",
+  "title": "The Michaelite Toreador",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Michael’s family of artisans.",
+  "claims": [
+   {
+    "text": "The Michaelites are organised in artisan guilds, each with a muse, a Cainite of exemplary skill who sponsors promising talent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "Many of Michael’s followers shared a blood oath with their sire and slowly fell into the same delusion that Michael is the Archangel Michael.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "The family is falling into chaos as Michael drifts in and out of torpor and Petronius struggles to hold its interests together.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Not since the Iconoclasm feud have the three great families been on such poor terms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbn-trinity",
+   "dacbn-magnus"
+  ]
+ },
+ {
+  "id": "dacbn-magnus",
+  "title": "The Magnus Orthodox Lasombra",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A three-member Lasombra family close to Michael.",
+  "claims": [
+   {
+    "text": "Before Michael came, Lasombra ruled Byzantium behind a pagan cult of Aphrodite and called themselves the oldest clan in the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Michael insists the family count exactly three members, though Magnus sometimes sires hidden childer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Magnus and the two known childer do not think Michael truly an angel but believe they can raise Michael to that state.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbn-michaelites"
+  ]
+ },
+ {
+  "id": "dacbn-1197",
+  "title": "Constantinople in 1197",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The city on the brink.",
+  "claims": [
+   {
+    "text": "Around 1197 the city stands at the edge of ruin, threatening to drag the Dream down with it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Recent arrivals include the Nosferatu Fra’ Raymond and brood from the Crusader States, hidden by the Malachite Nosferatu, and the Ventrue Basil of Thessalonika with the mad Caitiff prophet Stanislav.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "In the crowded Latin Quarter, newly arrived Cainites set themselves up as saints and gods, trading drops of vitae to small cults for total obedience.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbn-trinity"
+  ]
+ },
+ {
+  "id": "dacbn-green-man",
+  "title": "Khidre, the Green Man",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A figure of legend older than the city.",
+  "claims": [
+   {
+    "text": "Tales of Khidre, the Green Man, predate both Islam and Christianity, and Sufis honour Khidre as a saint who brings revelation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Khidre is said to be some kind of fae who rides a grey horse through the forests of Anatolia, seen only for an instant.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacbn",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

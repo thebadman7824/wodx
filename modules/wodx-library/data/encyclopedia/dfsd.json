@@ -1,0 +1,85 @@
+[
+ {
+  "id": "dfsd-exorcist-revelation",
+  "title": "Exorcists facing Revelation",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a demon hunter withstands a demon’s true form.",
+  "claims": [
+   {
+    "text": "A demon hunter with strong religious conviction, Christian or otherwise, may get a lower difficulty on Willpower rolls against a demon’s Revelation, or be spared the roll altogether.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dfsd",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   },
+   {
+    "text": "Some hunters never resist at all and stand frozen in awe or fall to worship, and many exorcists lose their reason at the sight before their war even begins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dfsd",
+      "page": 71,
+      "pdf": 72
+     },
+     {
+      "book": "dfsd",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-revelation"
+  ]
+ },
+ {
+  "id": "dfsd-demon-research",
+  "title": "Researching demons",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Finding usable lore on prayers and relics.",
+  "claims": [
+   {
+    "text": "Digging up prayers, blessed relics and reliable demon lore takes Intelligence + Research, or Intelligence + Occult at the Storyteller’s choice, and hours to weeks of work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dfsd",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "Difficulty depends on the sources: 6 or less with church ties and a rich demonology library, 7 for a large city library, 8 for a small town library or private collection, and 9 or 10 for the lies and rumours of the Internet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dfsd",
+      "page": 79,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dfsd-exorcist-revelation"
+  ]
+ }
+]

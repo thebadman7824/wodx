@@ -1,0 +1,416 @@
+{
+ "format": "wodx-map",
+ "version": 1,
+ "name": "Kessler steading",
+ "map": "kessler-steading.dungeondraft_map",
+ "cells": [
+  50,
+  36
+ ],
+ "seed": 1197,
+ "openings": [
+  {
+   "id": "house-door-0",
+   "label": "Longhouse door",
+   "c": [
+    19.0,
+    15,
+    20.0,
+    15
+   ],
+   "inside": [
+    19.0,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "house-door-1",
+   "label": "Longhouse door",
+   "c": [
+    19.0,
+    10,
+    20.0,
+    10
+   ],
+   "inside": [
+    19.0,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "house-double-4",
+   "label": "Longhouse double",
+   "c": [
+    21.5,
+    15,
+    23.5,
+    15
+   ],
+   "inside": [
+    19.0,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "house-window-5",
+   "label": "Longhouse window",
+   "c": [
+    14.0,
+    15,
+    15.0,
+    15
+   ],
+   "inside": [
+    19.0,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "house-window-6",
+   "label": "Longhouse window",
+   "c": [
+    13,
+    12.0,
+    13,
+    13.0
+   ],
+   "inside": [
+    19.0,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "house-window-7",
+   "label": "Longhouse window",
+   "c": [
+    15.0,
+    10,
+    16.0,
+    10
+   ],
+   "inside": [
+    19.0,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "house-window-8",
+   "label": "Longhouse window",
+   "c": [
+    22.5,
+    10,
+    23.5,
+    10
+   ],
+   "inside": [
+    19.0,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "barn-double-0",
+   "label": "Barn double",
+   "c": [
+    29.5,
+    15,
+    31.5,
+    15
+   ],
+   "inside": [
+    30.5,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "barn-window-1",
+   "label": "Barn window",
+   "c": [
+    30.0,
+    10,
+    31.0,
+    10
+   ],
+   "inside": [
+    30.5,
+    12.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "coop-door-0",
+   "label": "Coop door",
+   "c": [
+    21.5,
+    23,
+    22.5,
+    23
+   ],
+   "inside": [
+    22.0,
+    24.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  }
+ ],
+ "features": [
+  {
+   "id": "living-room-0",
+   "label": "Oven (Living room)",
+   "rect": [
+    15.8,
+    12.82,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "living-room-2",
+   "label": "Box bed (Living room)",
+   "rect": [
+    13.18,
+    12.82,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "living-room-3",
+   "label": "Box bed (Living room)",
+   "rect": [
+    13.18,
+    10.82,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "living-room-4",
+   "label": "Chest (Living room)",
+   "rect": [
+    14.18,
+    13.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "barn-floor-0",
+   "label": "Hay pile (Barn floor)",
+   "rect": [
+    31.32,
+    10.18,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 2,
+    "title": "Down in the hay"
+   }
+  },
+  {
+   "id": "barn-floor-1",
+   "label": "Hay pile (Barn floor)",
+   "rect": [
+    27.68,
+    10.18,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 2,
+    "title": "Down in the hay"
+   }
+  },
+  {
+   "id": "well",
+   "label": "Well",
+   "rect": [
+    24,
+    17,
+    1,
+    1
+   ],
+   "flags": {
+    "climb": true,
+    "climbKind": "rope",
+    "height": 25,
+    "depth": 25,
+    "title": "Down the well on the bucket rope"
+   }
+  },
+  {
+   "id": "rick",
+   "label": "Haystack",
+   "rect": [
+    34.8,
+    11.2,
+    2.2,
+    2.2
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 2,
+    "title": "Inside the haystack"
+   }
+  }
+ ],
+ "regions": [
+  {
+   "id": "house",
+   "label": "Longhouse",
+   "rect": [
+    13,
+    10,
+    12,
+    5
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "barn",
+   "label": "Barn",
+   "rect": [
+    27.5,
+    10,
+    6,
+    5
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "track-west",
+   "label": "Track into the steading",
+   "rect": [
+    8.5,
+    21.6,
+    2,
+    3.4
+   ],
+   "behaviors": [
+    {
+     "type": "trigger",
+     "system": {
+      "label": "the track into the steading",
+      "does": "note",
+      "who": "pcs"
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge",
+   "label": "Footbridge",
+   "rect": [
+    36.9,
+    15.2,
+    3,
+    2.4
+   ],
+   "behaviors": [
+    {
+     "type": "trigger",
+     "system": {
+      "label": "the footbridge over the brook",
+      "does": "note",
+      "who": "pcs"
+     }
+    }
+   ]
+  }
+ ]
+}

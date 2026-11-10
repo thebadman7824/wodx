@@ -1,0 +1,235 @@
+[
+ {
+  "id": "w20ratw-guardian-spirit",
+  "title": "Rite of the Guardian Spirit",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level four mystic rite that gives a sept its totem.",
+  "claims": [
+   {
+    "text": "The rite makes a spirit the totem of a whole sept; the details change with the spirit, but it always opens with a rich sacrifice to catch the spirit’s notice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Next, champions prove the sept’s worth to suit the spirit: ritual combat with a captured Bane for a Totem of War, a play of an old Garou victory for a Totem of Respect, or a formal debate on the Litany for a Totem of Wisdom or Cunning.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "A successful rite closes with a second, greater offering.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20ratw-caern-shrines"
+  ]
+ },
+ {
+  "id": "w20ratw-caern-shrines",
+  "title": "Caern shrines",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where a sept honours its spirits.",
+  "claims": [
+   {
+    "text": "Septs keep shrines to the totems of their tribes and packs, and some to further spirits of the local court too, gathered in one place or scattered across the caern.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "In old caerns some shrines honour spirits no living member remembers; wise septs keep worshipping there and guess at fitting offerings, while careless ones let them decay.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Every sept’s living area includes some place for public assembly, even if only a cleared dining hall.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20ratw-guardian-spirit"
+  ]
+ },
+ {
+  "id": "w20ratw-citys-pulse",
+  "title": "The City’s Pulse",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level two fetish, Gnosis 5.",
+  "claims": [
+   {
+    "text": "A water-current spirit bound into a stethoscope senses where a city’s life moves, since cities clog like arteries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Pressing it to a permanent building and rolling Perception + Streetwise at difficulty 6 shows whether the city’s roads, utilities or navigable waterways are blocked or cut, and roughly where.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20ratw-chernobyl",
+  "title": "The Chernobyl Exclusion Zone",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Wyrm victory reclaimed by animals.",
+  "claims": [
+   {
+    "text": "Animals have taken back the abandoned zone, among them close to two thousand wolves with few natural threats.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Garou see it as living in the shadow of a great Wyrm victory: the radiation remains, a simple wildfire can spread fresh fallout, and many animals carry mutations such as sterility.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Their numbers are up only because humans no longer hunt or fish there, and the radiation caps how much life the land can hold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20ratw-hearthfire",
+  "title": "Rite of the Hearthfire",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level one caern rite of the Nenets.",
+  "claims": [
+   {
+    "text": "Garou among the Nenets people, who are few, teach this rite to gifted Kinfolk: a fire and some quiet blessings make a small shelter from the elements.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "After building the fire, roll Wits + Rites at difficulty 7; success makes a bubble for three people plus one per success, lasting the night, keeping out snow, wind and rain and making the ground warm enough to sleep on.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "A level three version covers an area the size of a caern’s bawn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20ratw",
+      "page": 120,
+      "pdf": 121
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

@@ -1,0 +1,401 @@
+[
+ {
+  "id": "mrce-lakashim",
+  "title": "Lakashim",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The pulse of life that Ecstatics seek to ride.",
+  "claims": [
+   {
+    "text": "Ecstatics name the rhythm of living energy Lakashim and hold that it calls out to itself through other living channels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "In their teaching, fear comes from refusing life and clinging to ego, while kundalini longs to rise toward the divine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Euoi, the cry of the maenads, is taught as a wordless circle of sound with power of its own, much like a mantra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "mrce-ojas"
+  ]
+ },
+ {
+  "id": "mrce-shzar",
+  "title": "Sh'zar at the Grand Convocation",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the Cult's founder pressed for a seat among the Traditions.",
+  "claims": [
+   {
+    "text": "Hermetics call Sh'zar's stand at the Convocation a power grab aimed at the Order and at leading the new Traditions.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Ecstatics tell it otherwise: as one voice with a few followers, Sh'zar needed a full order behind the visions or committees would talk them away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Sh'zar's disciples travelled through dreams and timeless places across the world, and Tantric magicians in India saw Lakashim at work in their practice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "council-of-nine",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "mrce-sahajiya",
+  "title": "The Sahajiya era",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Cult from the 16th century to the Victorian age.",
+  "claims": [
+   {
+    "text": "As the Traditions settled, the Seers drew back to India and the Middle East and took the name Sahajiya, leaving western Europe to the Hermetics and the Chorus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "In Europe most of them lived as wandering seers and madmen, sheltered by beliefs that the insane were touched by God or demons, with Time sight to warn them off.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Spread in secret cells, the Sahajiya split along ideological lines, and Victorian morals and colonial pressure left them badly weakened.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "mrce-shzar"
+  ]
+ },
+ {
+  "id": "mrce-ojas",
+  "title": "Ojas",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Places where the world's illusion thins and pure potential leaks in.",
+  "claims": [
+   {
+    "text": "Ojas are spots in space where possibility breaks through; their energy, called Shakti or Kundalini, is held to build the universe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Hard exercise can strengthen them, sex can align them between partners so power flows, and Tantric postures can focus them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Ecstatics treat the spirit world as more truthful than the physical, since it mirrors the soul of people and land, cruel dreams and kind ones alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "mrce-lakashim"
+  ]
+ },
+ {
+  "id": "mrce-fellowship-of-pan",
+  "title": "Fellowship of Pan",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ecstatics devoted to human nature and wild joy.",
+  "claims": [
+   {
+    "text": "Their tale says the Fellowship began when humans and satyrs, born of human joy, embraced in the open countryside.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "They accept that people are capable of love and senseless violence, but think humanity leans to virtue and is purest when lost in art, love or drink.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Members are skilled at healing, calming tempers and inspiring others, and dance binds them in fellowship with humans, spirits and fae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "mrce-joybringers"
+  ]
+ },
+ {
+  "id": "mrce-dissidents",
+  "title": "Aghoris, Hagalaz and Acharne",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Cult's brutal, barely tolerated factions.",
+  "claims": [
+   {
+    "text": "Mainstream Cultists, Joybringers above all, find these groups repellent, yet hard times have made them a grim necessity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The Hagalaz answered Sh'zar's first call and stay loosely tied but fiercely loyal to their fellows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The Aghoris have walked the path for thousands of years; the Acharne joined after the First World War posing as an occult society before showing their true practices.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "mrce-shzar"
+  ]
+ },
+ {
+  "id": "mrce-modern-factions",
+  "title": "Modern Ecstatic factions",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the Cult keeps spawning and shedding groups.",
+  "claims": [
+   {
+    "text": "The Cult must stay on the edge of its time, so it constantly gives birth to new factions and drops old ones; Klubwerks, for one, set old ideas to modern subcultures.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Loose discipline in the new factions opens the way to addiction and careless use of foci, against the Cult's stress on self-control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "mrce-joybringers"
+  ]
+ },
+ {
+  "id": "mrce-joybringers",
+  "title": "Joybringers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The mainstream faction of the Cult.",
+  "claims": [
+   {
+    "text": "Joybringers grew out of the Cult of Bacchus after it lost ground to the ideas of Nietzsche, Freud, Darwin and Marx; mystics among the rest went to the Fellowship of Pan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "They follow the Code of Ananda closely and work with the homeless, the sick, refugees and prisoners, even urging generals toward non-lethal arms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Joybringers who fail to watch their indulgences risk becoming hooked on their own foci.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrce",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "mrce-fellowship-of-pan",
+   "mrce-modern-factions"
+  ]
+ }
+]

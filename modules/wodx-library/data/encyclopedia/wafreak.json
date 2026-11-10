@@ -1,0 +1,262 @@
+[
+ {
+  "id": "wafreak-fomor-basics",
+  "title": "Fomori as characters",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rules for playing a fomor.",
+  "claims": [
+   {
+    "text": "Fomori were born mortal, apart from supernatural fomori such as werewolves or vampires lastingly possessed by a Bane, and have no abilities beyond their Powers and Taints.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Unless a fomor buys Regeneration, it heals like a normal human, which can be fatal against Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Fomori cannot buy Numina because the Banes in their souls block such powers, with rare exceptions such as True Faith and the Brain Eaters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wafreak-powers",
+   "wafreak-supernatural-fomori"
+  ]
+ },
+ {
+  "id": "wafreak-powers",
+  "title": "Fomor Powers",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Selected Powers of the Wyrm’s servants.",
+  "claims": [
+   {
+    "text": "One mind-reading Power costs a Willpower point and Intelligence + Intimidation at difficulty 6, resisted by Willpower; one success reads surface thoughts, two recent memories, three or more anything the target knows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Molecular Weakening, 4 points, follows a successful hit with a Willpower point and Perception + Medicine or Repair at difficulty 8 to double the damage before soak.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Mouth of the Wyrm, 4 points, lets the fomor swallow something as big as a medium dog or a small person; a living victim suffocates and can cut its way out only with natural weapons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Nightmare Command, 3 points, twists a familiar sleeper’s dreams into terrors and can drive the victim to madness in weeks, but fails if the fomor is disturbed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wafreak-fomor-basics"
+  ]
+ },
+ {
+  "id": "wafreak-enticers",
+  "title": "Enticers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Seductive fomori made by Siren Cosmetics.",
+  "claims": [
+   {
+    "text": "Enticers can seduce any living creature through pheromones and images of perfection drawn from the prey’s mind, and prefer to set rivals fighting over them or lead them into ambush.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Without their powers they look human but for a row of barbed teeth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "They are said to come from a Pentex subsidiary, Siren Cosmetics, whose prize supply of special makeup or cologne transforms contest winners within about a month and leaves them addicted.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wafreak-supernatural-fomori",
+  "title": "Supernatural fomori",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Banes that possess werewolves, vampires and others.",
+  "claims": [
+   {
+    "text": "Possessing a supernatural host is much harder: Garou can fight Banes in the Umbra, Spirit mages can repel them, mummies have divided souls and psychics can shield themselves, while most vampires have no such defence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "The Bane makes a Gnosis roll against the host’s Willpower + 2, then needs twenty-four undisturbed hours and spends a permanent Willpower point, which also lowers the new fomor’s Willpower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "An unwilling host might be freed by death, by the Silver Lake for Garou, or perhaps by a vampire enduring the sun for a few minutes; a host who welcomed the Bane can never be separated from it short of killing both.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wafreak-fomor-basics"
+  ]
+ },
+ {
+  "id": "wafreak-action-bill",
+  "title": "Action Bill tattoos",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Pentex toys that turn children into fomori.",
+  "claims": [
+   {
+    "text": "Action Bill is a werewolf-killing TV hero on Pentex’s OmniTV, part of a campaign to unsettle society while blaming the Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Each temporary tattoo holds a fragment of a Bane; once three to five are on one child they cannot be removed and the Bane reassembles, slowly corrupting the child into a fomor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Child fomori hide until the Bane has full control, and Garou who rescue abused children can be in for nasty surprises.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafreak",
+      "page": 80,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wafreak-enticers"
+  ]
+ }
+]

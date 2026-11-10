@@ -81,7 +81,7 @@ export const MENUS = {
     mage: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
-            ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"]]],
+            ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"], ["api:m20Purify", "Purify the Scourge (Crusade)", "fa-praying-hands"], ["api:m20Place", "Consensus here (GM)", "fa-landmark"]]],
             ["Sorcery and Numina", [["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -220,7 +220,7 @@ export const EXTRA_PRESETS = {
 export const USES = {
     willpower: { title: "Willpower", uses: [
         ["Automatic success on a roll", 1, null, "One Willpower point = one automatic success (cannot be canceled by 1s). One per turn."],
-        ["Ignore wound penalties for the scene", 1, null, "VtDA20 p. 321."],
+        ["Ignore wound penalties for one turn", 1, null, "VtDA20 printed p. 339 (pdf 340)."],
         ["Resist Dominate / compulsion", 1, null, "Per the power; roll Willpower if the rule asks."],
         ["Regain Willpower (rest / ST award)", -1, null, "Cost -1 adds a point."]
     ] },
@@ -319,7 +319,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 const num = v => { const n = parseInt(v); return Number.isFinite(n) ? n : 0; };
 
 export function build(ctx) {
-    const { post, rollPool, rollBlock, resultLine, diceHtml, API, action, updateActor, willpower, attr, findAbility, setting } = ctx;
+    const { post, rollPool, rollBlock, API, action, updateActor, willpower, attr, findAbility, setting } = ctx;
 
     async function pay(actor, resId, cost) {
         if (!cost) return null;

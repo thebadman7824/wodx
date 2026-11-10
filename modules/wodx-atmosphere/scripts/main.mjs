@@ -16,10 +16,15 @@
  */
 import * as W from "./weather-rules.mjs";
 import * as K from "./kits-rules.mjs";
+import * as AR from "./adaptive-rules.mjs";
+import * as PR from "./print-rules.mjs";
+import * as OR from "./opening-rules.mjs";
+import {reckon} from "../../wodx-chronicle/scripts/reckoning-rules.mjs";
+import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.6.0";
+const VERSION = "0.10.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -63,10 +68,18 @@ function registerSettings() {
   world("muffleNew", {name: "Placed sounds are muffled by walls", hint: "A sound you place on a map is stopped by walls and heard muffled through them, like a sermon through the chapel door.", type: Boolean, default: true});
   world("themes", {name: "Personal themes", hint: "Each player character's own short motif plays for everyone at the start of their turn in a fight, or when you press Spotlight in the Atmosphere window.", type: Boolean, default: true});
   world("dawnPressure", {name: "Rötschreck pressure before dawn", hint: "House rule: in the last ten minutes before sunrise, Rötschreck rolls are 1 harder.", type: Boolean, default: true});
+  game.settings.register(MOD, "openingCard", {scope: "client", config: true, name: "A card when the scene changes",
+    hint: "The place, the date as the era tells it and, out of doors, the weather, for a few seconds when your view moves to another scene.", type: Boolean, default: true});
   game.settings.register(MOD, "cueVolume", {scope: "client", config: true, name: "Cue volume", type: Number, default: 0.5, range: {min: 0, max: 1, step: 0.05}});
   world("frames", {name: "Token frames", hint: "A ring or a square in the era's material round each token (iron, gilt, brass, chrome, neon).",
     type: String, default: "characters", choices: K.FRAME_WHO, onChange: () => redrawFrames()});
   game.settings.register(MOD, "framesHere", {scope: "client", config: true, name: "Show token frames", hint: "Turn the era's token frames off on this computer only.", type: Boolean, default: true, onChange: () => redrawFrames()});
+  world("adaptive", {name: "Music follows the tension", hint: "The era music moves with the table: the combat playlist in a fight, the frenzy playlist (or combat) when a player's character frenzies, tension while one hides or stalks, and back to your chosen mood when it is quiet.",
+    type: Boolean, default: true, onChange: () => adaptSoon({force: true})});
+  world("tension", {name: "Tension", hint: "Read the table, or hold one tension by hand until you set it back.", type: String, default: "auto",
+    choices: {auto: "Read the table", ...AR.TENSION_LABELS}, onChange: () => adaptSoon({force: true})});
+  game.settings.register(MOD, "heartbeat", {scope: "client", config: true, name: "Heartbeat when the blood runs low",
+    hint: "For your own character with a blood pool: a heartbeat that quickens and loudens as the blood runs out.", type: Boolean, default: true, onChange: () => updateHeart()});
   hidden("overrides", Object, {});
   hidden("applied", Object, {});
   hidden("playlists", Object, {});
@@ -295,6 +308,78 @@ export async function applyAmbience(scene = game.scenes.active) {
   return want;
 }
 
+/* ---- Adaptive sound: the music follows the tension; the heartbeat ---- */
+
+const isPCActor = a => !!a?.hasPlayerOwner && !/group/i.test(String(a?.type ?? ""));
+/** Every condition on the players' characters, as status ids. */
+function tableStatuses() {
+  const out = [];
+  for ( const a of all(game.actors) ) if ( isPCActor(a) ) out.push(...(a.statuses ?? []));
+  return out;
+}
+export function tensionNow() {
+  return AR.tensionOf({set: setting("tension") ?? "auto", combat: all(game.combats).some(c => c.started), statuses: tableStatuses()});
+}
+let lastTension = null;
+/** Play the mood for the tension when the tension has changed (or when forced). Returns the tension, or null when off. */
+export async function adapt({force = false} = {}) {
+  if ( !isActiveGM() || !setting("music") || !setting("adaptive") ) return null;
+  const t = tensionNow();
+  if ( t === lastTension && !force ) return t;
+  const first = lastTension === null && !force;
+  lastTension = t;
+  if ( first && t === "quiet" ) return t;
+  const kit = currentKit();
+  const mood = AR.moodFor(t, setting("mood") || "calm", m => !!playlistFor(kit, m));
+  if ( mood ) await playMood(mood, {remember: false});
+  AtmosphereApp.refresh();
+  return t;
+}
+let adaptTimer = null;
+function adaptSoon(opts = {}) { clearTimeout(adaptTimer); adaptTimer = setTimeout(() => adapt(opts).catch(e => console.warn(`${MOD} | adaptive`, e)), 300); }
+
+const heart = {timer: null, ctx: null, cur: null};
+function thump(ctx, volume, at) {
+  const osc = ctx.createOscillator(), gain = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(62, at);
+  osc.frequency.exponentialRampToValueAtTime(34, at + 0.16);
+  gain.gain.setValueAtTime(0.0001, at);
+  gain.gain.exponentialRampToValueAtTime(Math.max(0.001, volume), at + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.2);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(at);
+  osc.stop(at + 0.22);
+}
+function beat(volume) {
+  try {
+    const AC = globalThis.AudioContext ?? globalThis.webkitAudioContext;
+    if ( !AC ) return;
+    heart.ctx ??= new AC();
+    if ( heart.ctx.state === "suspended" ) heart.ctx.resume?.();
+    const t = heart.ctx.currentTime + 0.02;
+    thump(heart.ctx, volume, t);
+    thump(heart.ctx, volume * 0.7, t + 0.15);
+  } catch (e) { /* no sound on this computer */ }
+}
+/** The heartbeat for this player's own character, now. Returns {bpm, volume} or null. */
+export function heartbeatNow() {
+  const a = game.user?.character;
+  if ( !a || setting("heartbeat") === false ) return null;
+  const bp = a.system?.advantages?.bloodpool;
+  const hb = AR.heartbeat({blood: bp?.temporary, max: bp?.max, hasBlood: /vampire/i.test(String(a.type)) || !!a.system?.settings?.hasbloodpool});
+  return hb ? {...hb, volume: Math.min(1, Math.round(hb.volume * 2 * (Number(setting("cueVolume")) || 0.5) * 100) / 100)} : null;
+}
+export function updateHeart() {
+  const hb = heartbeatNow();
+  if ( JSON.stringify(hb) === JSON.stringify(heart.cur) ) return hb;
+  clearInterval(heart.timer);
+  heart.timer = null;
+  heart.cur = hb;
+  if ( hb && hb.volume > 0 ) heart.timer = setInterval(() => beat(hb.volume), AR.beatGap(hb.bpm));
+  return hb;
+}
+
 /** The file for a cue: the kit folder's own first, else the sound shipped with the module. */
 function cueSrc(cue) {
   const idx = setting("index") ?? {};
@@ -360,6 +445,138 @@ export async function applyAges({scenes = null, year = yearNow()} = {}) {
   return changed;
 }
 let agedYear = null;
+
+/* ------------------------------------------------------------------ */
+/*  Faces that age                                                     */
+/* ------------------------------------------------------------------ */
+
+const FACE_DIR = () => `worlds/${game.world.id}/wodx-faces`;
+const faceKindOf = (actor, face) => K.faceKind(actor?.type, actor?.system?.settings?.variant, face?.kind ?? "auto");
+const wild = src => !src || String(src).includes("*");
+function loadPicture(src) {
+  return new Promise((res, rej) => {
+    const i = new Image();
+    i.crossOrigin = "anonymous";
+    i.onload = () => res(i);
+    i.onerror = () => rej(new Error(`No picture could be read at ${src}`));
+    i.src = src;
+  });
+}
+/** An aged copy of a picture, written to the world's wodx-faces folder. Returns its path. */
+async function agedCopy(actor, which, src, stage) {
+  const img = await loadPicture(src);
+  const w = img.naturalWidth, h = img.naturalHeight;
+  if ( !w || !h ) throw new Error(`The picture at ${src} is empty`);
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d", {willReadFrequently: true});
+  ctx.drawImage(img, 0, 0);
+  const px = ctx.getImageData(0, 0, w, h);
+  K.agePixels(px.data, stage);
+  ctx.putImageData(px, 0, 0);
+  const blob = await new Promise(r => c.toBlob(r, "image/webp", 0.9));
+  if ( !blob ) throw new Error("The aged picture could not be made");
+  const FP = foundry.applications.apps.FilePicker.implementation;
+  for ( const dir of [`worlds/${game.world.id}`, FACE_DIR()] ) {
+    try { await FP.createDirectory("data", dir, {notify: false}); }
+    catch (err) { if ( !/exists/i.test(String(err?.message ?? err)) ) throw err; }
+  }
+  const name = K.agedName(actor.id, which, stage, src);
+  const result = await FP.upload("data", FACE_DIR(), new File([blob], name, {type: "image/webp"}), {}, {notify: false});
+  if ( result === false || result?.status === "error" ) throw new Error("The aged picture could not be written");
+  return result?.path ?? `${FACE_DIR()}/${name}`;
+}
+/** One character's portrait and token art for the chronicle's year. Returns {age, stage, img, token}, or null. */
+export async function applyFace(actor, year = yearNow()) {
+  const face = actor?.flags?.[MOD]?.face;
+  if ( !face || !active || !game.user.isGM || !Number.isFinite(year) ) return null;
+  const f = foundry.utils.deepClone(face);
+  const kind = faceKindOf(actor, f);
+  f.base ??= {};
+  f.made ??= {};
+  f.made.img ??= {};
+  f.made.token ??= {};
+  // A ghoul's age stands still from the day it is first counted, unless the Storyteller gave it
+  if ( kind === "ghoul" && (f.still === null || f.still === undefined || f.still === "") && !f.lost ) {
+    const a = K.apparentAge({...f, kind: "ages"}, year);
+    if ( a !== null ) f.still = a;
+  }
+  // A picture changed by hand becomes the new one to age from
+  const tok = actor.prototypeToken?.texture?.src ?? null;
+  const knownImg = [f.base.img, ...Object.values(f.made.img), ...(f.variants ?? []).map(v => v.img)].filter(Boolean);
+  if ( actor.img && (!f.base.img || !knownImg.includes(actor.img)) ) { f.base.img = actor.img; f.made.img = {}; }
+  const knownTok = [f.base.token, ...Object.values(f.made.token)].filter(Boolean);
+  if ( !wild(tok) && (!f.base.token || !knownTok.includes(tok)) ) { f.base.token = tok; f.made.token = {}; }
+  const {age, stage, img} = K.faceFor({...f, kind}, year);
+  let wantImg = img ?? f.base.img ?? actor.img, wantTok = f.base.token ?? tok;
+  if ( stage > 0 && f.filter !== false ) {
+    if ( !img && f.base.img ) wantImg = f.made.img[stage] ??= await agedCopy(actor, "img", f.base.img, stage);
+    if ( !wild(f.base.token) ) wantTok = f.made.token[stage] ??= await agedCopy(actor, "token", f.base.token, stage);
+  }
+  f.shown = {age, stage};
+  const up = {};
+  if ( wantImg && actor.img !== wantImg ) up.img = wantImg;
+  if ( !wild(wantTok) && tok !== wantTok ) up["prototypeToken.texture.src"] = wantTok;
+  if ( !foundry.utils.objectsEqual(f, face) ) up[`flags.${MOD}.face`] = f;
+  if ( Object.keys(up).length ) await actor.update(up);
+  // Placed tokens that show one of the character's pictures follow
+  const tokens = [f.base.token, ...Object.values(f.made.token)].filter(Boolean);
+  if ( !wild(wantTok) ) for ( const sc of all(game.scenes) ) {
+    const ups = [...(sc.tokens ?? [])].filter(t => t.actorId === actor.id && tokens.includes(t.texture?.src) && t.texture?.src !== wantTok)
+      .map(t => ({_id: t.id, "texture.src": wantTok}));
+    if ( ups.length ) await sc.updateEmbeddedDocuments("Token", ups);
+  }
+  return {age, stage, img: wantImg, token: wantTok};
+}
+/** Every character with a face that ages. Returns the ids changed. */
+export async function applyFaces({year = yearNow()} = {}) {
+  if ( !active || !isActiveGM() || !Number.isFinite(year) ) return [];
+  const changed = [];
+  for ( const a of all(game.actors) ) {
+    if ( !a.flags?.[MOD]?.face ) continue;
+    const before = [a.img, a.prototypeToken?.texture?.src].join("|");
+    try { await applyFace(a, year); } catch (e) { console.warn(`${MOD} | face of ${a.name}`, e); continue; }
+    if ( [a.img, a.prototypeToken?.texture?.src].join("|") !== before ) changed.push(a.id);
+  }
+  return changed;
+}
+/** Start, change or stop a character's aging. data null stops it and puts the pictures back. */
+export async function setFace(actor, data) {
+  if ( !actor || !game.user.isGM ) return null;
+  const face = actor.flags?.[MOD]?.face;
+  if ( data === null ) {
+    if ( !face ) return null;
+    const up = {};
+    if ( face.base?.img && actor.img !== face.base.img ) up.img = face.base.img;
+    const tok = actor.prototypeToken?.texture?.src;
+    if ( face.base?.token && tok !== face.base.token ) up["prototypeToken.texture.src"] = face.base.token;
+    const made = [...Object.values(face.made?.token ?? {})];
+    if ( Object.keys(up).length ) await actor.update(up);
+    await actor.unsetFlag(MOD, "face");
+    if ( face.base?.token ) for ( const sc of all(game.scenes) ) {
+      const ups = [...(sc.tokens ?? [])].filter(t => t.actorId === actor.id && made.includes(t.texture?.src)).map(t => ({_id: t.id, "texture.src": face.base.token}));
+      if ( ups.length ) await sc.updateEmbeddedDocuments("Token", ups);
+    }
+    return null;
+  }
+  const f = foundry.utils.deepClone(face ?? {});
+  for ( const k of ["born", "still"] ) if ( k in data ) { const v = Math.trunc(Number(data[k])); f[k] = data[k] === "" || data[k] === null || !Number.isFinite(v) ? null : v; }
+  if ( "kind" in data ) f.kind = K.FACE_KINDS[data.kind] ? data.kind : "auto";
+  if ( "lost" in data ) f.lost = !!data.lost;
+  if ( "filter" in data ) f.filter = data.filter !== false;
+  await actor.update({[`flags.${MOD}.face`]: f});
+  return applyFace(actor);
+}
+/** A hand-made picture of the character from an age on (img empty removes that age). */
+export async function setFaceAge(actor, age, img) {
+  const face = actor?.flags?.[MOD]?.face;
+  if ( !face || !game.user.isGM ) return null;
+  const rest = (face.variants ?? []).filter(v => Math.trunc(Number(v.from)) !== Math.trunc(Number(age)));
+  const variants = K.cleanAges(img ? [...rest, {from: age, img}] : rest);
+  await actor.update({[`flags.${MOD}.face.variants`]: variants});
+  return applyFace(actor);
+}
+const ageEverything = () => Promise.all([applyAges(), applyFaces()]).catch(e => console.warn(`${MOD} | ages`, e));
 
 /* ------------------------------------------------------------------ */
 /*  Personal themes                                                    */
@@ -595,6 +812,78 @@ export async function handoutDialog() {
   return j;
 }
 
+/* ---- Printable props: a journal or a scene's map, print-ready, through the browser's print window ---- */
+
+const printBase = () => { try { return new URL(foundry.utils.getRoute?.("/") ?? "/", globalThis.location?.href).href; } catch { return ""; } };
+/** The era fonts (WX ...) as @font-face rules with absolute urls, read from the stylesheets already loaded. */
+function eraFonts() {
+  const out = [];
+  for ( const sheet of [...(globalThis.document?.styleSheets ?? [])] ) {
+    let rules;
+    try { rules = sheet.cssRules; } catch { continue; }
+    for ( const r of [...(rules ?? [])] ) if ( r.type === 5 && /font-family:\s*["']?WX /.test(r.cssText) ) out.push(PR.absoluteUrls(r.cssText, sheet.href ?? globalThis.location?.href));
+  }
+  return out.join("\n");
+}
+const enrich = async (html, page) => {
+  const TE = foundry.applications?.ux?.TextEditor?.implementation ?? globalThis.TextEditor;
+  try { return await TE.enrichHTML(html, {relativeTo: page, secrets: false}); } catch { return html; }
+};
+/** A journal's printable page: its text pages enriched (Storyteller secrets left out), its image pages as pictures. */
+export async function journalPrintHtml(journal) {
+  const pages = [];
+  for ( const p of all(journal?.pages).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0)) ) {
+    if ( p.type === "text" ) pages.push({name: p.name, type: "text", html: await enrich(p.text?.content ?? "", p)});
+    else if ( p.type === "image" && p.src ) pages.push({name: p.name, type: "image", src: p.src});
+  }
+  return PR.journalDoc({title: journal?.name ?? "", pages, base: printBase(), styles: [`modules/${MOD}/styles/wodx-atmosphere.css`], fonts: eraFonts()});
+}
+/** A scene's map as drawn, ready to print. */
+export function scenePrintHtml(scene) {
+  const src = scene?.background?.src ?? scene?.img ?? "";
+  return PR.mapDoc({title: scene?.navName || scene?.name || "", src, width: scene?.width, height: scene?.height, base: printBase()});
+}
+/** Put the page in a hidden frame and open the print window (save as PDF from there). dry: build it only. Returns the frame. */
+export function printHtml(html, {dry = false} = {}) {
+  return new Promise(resolve => {
+    const f = document.createElement("iframe");
+    f.className = "wodx-print-frame";
+    f.setAttribute("aria-hidden", "true");
+    Object.assign(f.style, {position: "fixed", right: "0", bottom: "0", width: "0", height: "0", border: "0", visibility: "hidden"});
+    f.onload = () => {
+      if ( !dry ) {
+        try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { ui.notifications.warn("The print window could not open here."); }
+        setTimeout(() => f.remove(), 60000);
+      }
+      resolve(f);
+    };
+    f.srcdoc = html;
+    document.body.append(f);
+  });
+}
+export const printJournal = async (journal, opts) => journal ? printHtml(await journalPrintHtml(journal), opts) : null;
+export const printScene = (scene, opts) => {
+  if ( !scene ) return null;
+  if ( !(scene.background?.src ?? scene.img) ) { ui.notifications.warn(`${scene.name} has no map picture to print.`); return null; }
+  return printHtml(scenePrintHtml(scene), opts);
+};
+
+Hooks.on("getHeaderControlsJournalEntrySheet", (app, controls) => {
+  if ( !active || !game.user.isGM || controls.some(c => c.action === "wodxPrint") ) return;
+  const go = () => printJournal(app.document);
+  if ( app.options?.actions ) app.options.actions.wodxPrint = go;
+  controls.push({icon: "fa-solid fa-print", label: "Print or save as PDF", action: "wodxPrint", onClick: go});
+});
+const rowId = li => li?.dataset?.entryId ?? li?.[0]?.dataset?.entryId ?? li?.dataset?.documentId ?? li?.[0]?.dataset?.documentId;
+Hooks.on("getJournalEntryContextOptions", (app, options) => {
+  if ( !active ) return;
+  options.push({name: "Print or save as PDF", icon: '<i class="fa-solid fa-print"></i>', condition: () => game.user.isGM, callback: li => printJournal(game.journal.get(rowId(li)))});
+});
+Hooks.on("getSceneContextOptions", (app, options) => {
+  if ( !active ) return;
+  options.push({name: "Print the map", icon: '<i class="fa-solid fa-print"></i>', condition: () => game.user.isGM, callback: li => printScene(game.scenes.get(rowId(li)))});
+});
+
 /* ------------------------------------------------------------------ */
 /*  The Atmosphere window                                              */
 /* ------------------------------------------------------------------ */
@@ -628,7 +917,7 @@ async function buildDialog() {
   if ( r.missing ) {
     return wait({window: {title: "Build the era's playlists"}, position: {width: 520},
       content: `<p>There is no folder <code>${esc(r.folder)}</code> in the Data folder yet.</p>
-        <p>Make it, with <code>music/calm</code>, <code>music/tension</code>, <code>music/combat</code>, <code>music/sorrow</code> and <code>music/wonder</code>
+        <p>Make it, with <code>music/calm</code>, <code>music/tension</code>, <code>music/combat</code>, <code>music/sorrow</code>, <code>music/wonder</code> and <code>music/frenzy</code>
         for the moods, <code>ambience</code> for loops named after a kind of place or weather (tavern.ogg, street.ogg, rain.ogg), and
         <code>sounds</code> for dawn.ogg, dusk.ogg, notice.ogg, birds.ogg and cock.ogg. A credits.json there records each file's source and licence.</p>
         <p class="wodx-quiet">Or pick the world's own playlists for each mood in the Atmosphere window. The folder setting is "${esc(root)}".</p>`,
@@ -680,6 +969,31 @@ export function AtmosphereClass() {
           return new FP({type: "image", current: mapSrc(sc) ?? "", callback: async path => { await setAge(sc, from, path); AtmosphereApp.refresh(); }}).render(true);
         },
         dropAge: async (ev, t) => { await setAge(canvas?.scene, Number(t.dataset.from), ""); AtmosphereApp.refresh(); },
+        setFace: async () => {
+          const el = document.querySelector("#wodx-atmosphere");
+          const a = game.actors.get(el?.querySelector("select[name=faceActor]")?.value);
+          const born = el?.querySelector("input[name=faceBorn]")?.value;
+          if ( !a || !Number.isFinite(Number(born)) || born === "" ) return ui.notifications.warn("Choose a character and give the year of birth.");
+          try { await setFace(a, {born, kind: el.querySelector("select[name=faceKind]")?.value ?? "auto", still: el.querySelector("input[name=faceStill]")?.value ?? ""}); }
+          catch (e) { ui.notifications.warn(`The face could not be aged: ${e.message}`); }
+          AtmosphereApp.refresh();
+        },
+        faceLost: async (ev, t) => {
+          const a = game.actors.get(t.dataset.actor);
+          try { await setFace(a, {lost: !a?.flags?.[MOD]?.face?.lost}); } catch (e) { ui.notifications.warn(`The face could not be aged: ${e.message}`); }
+          AtmosphereApp.refresh();
+        },
+        faceStop: async (ev, t) => { await setFace(game.actors.get(t.dataset.actor), null); AtmosphereApp.refresh(); },
+        faceAt: async (ev, t) => {
+          const a = game.actors.get(t.dataset.actor);
+          const age = await foundry.applications.api.DialogV2.prompt({window: {title: `A picture of ${a?.name ?? "the character"} from an age`},
+            content: `<div class="form-group"><label>From the age of</label><input type="number" name="age" min="0" step="1" autofocus></div>`,
+            ok: {label: "Choose the picture", callback: (e, b) => b.form.elements.age.value}, rejectClose: false});
+          if ( age === null || age === undefined || age === "" || !Number.isFinite(Number(age)) ) return;
+          const FP = foundry.applications.apps.FilePicker.implementation;
+          return new FP({type: "image", current: a?.img ?? "", callback: async path => { await setFaceAge(a, Math.trunc(Number(age)), path); AtmosphereApp.refresh(); }}).render(true);
+        },
+        faceDropAt: async (ev, t) => { await setFaceAge(game.actors.get(t.dataset.actor), Number(t.dataset.age), ""); AtmosphereApp.refresh(); },
         clearTheme: async (ev, t) => { await setTheme(game.actors.get(t.dataset.actor), ""); AtmosphereApp.refresh(); }
       }
     };
@@ -714,6 +1028,7 @@ export function AtmosphereClass() {
         </section>
         <section><h3>This scene${sc ? `: ${esc(sc.navName || sc.name)}` : ""}</h3>
           ${sc ? `<div class="form-group"><label>Weather here</label><select name="outdoors" data-fixed>${opt({auto: `Decide for me (now ${isOutdoor(sc) ? "out of doors" : "indoors"})`, on: "Out of doors: weather shows", off: "Indoors: no weather"}, f.outdoors ?? "auto")}</select></div>
+          <div class="form-group"><label>Opening card</label><select name="noCard" data-fixed>${opt({show: "Show the place's card to players", hide: "No card for this scene"}, f.noCard ? "hide" : "show")}</select></div>
           <div class="form-group"><label>Follow the clock's light</label><input type="checkbox" name="followClock"${f.followClock ? " checked" : ""}></div>
           <div class="form-group"><label>Darkness at night (0 to 1)</label><input type="number" name="night" min="0" max="1" step="0.05" value="${Number.isFinite(Number(f.night)) && f.night !== undefined ? f.night : 0.9}"></div>
           ${(() => { const all = [...(sc.sounds ?? [])]; const n = all.filter(x => K.isMuffled(x)).length;
@@ -742,6 +1057,23 @@ export function AtmosphereClass() {
                 + (th?.src ? `<button type="button" data-action="spotlight" data-actor="${a.id}">Spotlight</button><button type="button" data-action="clearTheme" data-actor="${a.id}">Clear</button>` : "")
                 + `</td></tr>`; }).join("")}</tbody></table>`; })()}
         </section>
+        <section><h3>Faces that age</h3><p class="wodx-quiet">Portraits and token art age with the chronicle's year: from forty on, one step a decade, the colour fades. A ghoul keeps the age at which the blood was first drunk until cut off from it, then the years catch up. The undead, the Reborn and spirits do not age. A picture you choose for an age is used in place of the filter.</p>
+          ${(() => { const y = yearNow(), list = all(game.actors).filter(a => a.flags?.[MOD]?.face).sort((a, b) => a.name.localeCompare(b.name));
+            const everyone = all(game.actors).filter(a => a.type !== "Group").sort((a, b) => a.name.localeCompare(b.name));
+            const rows = list.map(a => { const fc = a.flags[MOD].face, kind = faceKindOf(a, fc), sh = K.faceFor({...fc, kind}, y);
+              const vs = (fc.variants ?? []).map(v => `<span class="watmo-chip">from ${v.from}: ${esc(String(v.img).split("/").pop())} <button type="button" data-action="faceDropAt" data-actor="${a.id}" data-age="${v.from}" aria-label="Remove">×</button></span>`).join(" ");
+              return `<tr><td>${esc(a.name)}</td><td>born ${fc.born ?? "?"}</td><td>${kind === "never" ? "does not age" : sh.age === null ? "?" : `looks ${sh.age}${kind === "ghoul" && !fc.lost ? " (the blood)" : ""}; ${esc(K.STAGE_WORDS[sh.stage])}`}${vs ? `<br>${vs}` : ""}</td><td>`
+                + (kind === "ghoul" ? `<button type="button" data-action="faceLost" data-actor="${a.id}">${fc.lost ? "Fed again" : "Cut off from the blood"}</button>` : "")
+                + `<button type="button" data-action="faceAt" data-actor="${a.id}">Picture at an age…</button><button type="button" data-action="faceStop" data-actor="${a.id}">Stop</button></td></tr>`; }).join("");
+            return (list.length > 5 ? searchBox("table.watmo-faces", "Search faces…", "Search faces") : "")
+              + (rows ? `<table class="watmo-fc watmo-faces"><tbody>${rows}</tbody></table>` : "")
+              + (everyone.length > 5 ? searchBox("select[name=faceActor]", "Search characters…", "Search characters") : "")
+              + `<div class="form-group"><label>Character</label><select name="faceActor"${everyone.length > 5 ? "" : " data-fixed"}>${everyone.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join("")}</select></div>
+              <div class="form-group"><label>Born in the year</label><input type="number" name="faceBorn" step="1"></div>
+              <div class="form-group"><label>Ages</label><select name="faceKind" data-fixed>${opt(K.FACE_KINDS, "auto")}</select></div>
+              <div class="form-group"><label>A ghoul's age when first fed (blank: the age now)</label><input type="number" name="faceStill" min="0" step="1"></div>
+              <div class="watmo-row"><button type="button" data-action="setFace"${everyone.length ? "" : " disabled"}><i class="fa-solid fa-hourglass-half"></i> Age this face</button></div>`; })()}
+        </section>
         <section><h3>Handouts</h3><p class="wodx-quiet">A journal page in the era's style, in the folder WoDX handouts.</p>
           <button type="button" data-action="handout"><i class="fa-solid fa-scroll"></i> New handout</button></section>`;
       return div;
@@ -761,6 +1093,7 @@ export function AtmosphereClass() {
       if ( !sc ) return;
       const save = async (key, value) => { await sc.update({[`flags.${MOD}.${key}`]: value}); if ( isActiveGM() ) await applyWeather({force: true, quiet: true}); this.render(); };
       el.querySelector("select[name=outdoors]")?.addEventListener("change", ev => save("outdoors", ev.target.value));
+      el.querySelector("select[name=noCard]")?.addEventListener("change", ev => save("noCard", ev.target.value === "hide"));
       el.querySelector("input[name=followClock]")?.addEventListener("change", ev => save("followClock", ev.target.checked));
       el.querySelector("input[name=night]")?.addEventListener("change", ev => save("night", Math.max(0, Math.min(1, Number(ev.target.value) || 0))));
     }
@@ -792,14 +1125,17 @@ Hooks.once("init", () => {
 /** Load the calendar and publish the API (at ready; the harness calls it by itself). */
 export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
-  const api = {version: VERSION, open: () => AtmosphereApp.open(),
+  const api = {version: VERSION, open: () => AtmosphereApp.open(), opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
       moonHidden: () => !!now()?.moonHidden},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
     themes: {play: playTheme, set: setTheme},
     ages: {set: setAge, apply: applyAges, picture: (scene, year) => K.ageFor(scene?.flags?.[MOD]?.ages ?? {}, year)},
+    faces: {set: setFace, at: setFaceAge, apply: applyFace, applyAll: applyFaces, year: () => yearNow(), show: (actor, year = yearNow()) => K.faceFor({...(actor?.flags?.[MOD]?.face ?? {}), kind: faceKindOf(actor, actor?.flags?.[MOD]?.face)}, year)},
     dread: {now: dread, rotschreck: dreadRotschreck, apply: applyDread, tick: dreadTick},
+    adaptive: {tension: tensionNow, adapt, heartbeat: heartbeatNow, update: updateHeart, playing: () => heart.cur, rules: AR},
+    print: {journal: printJournal, scene: printScene, journalHtml: journalPrintHtml, sceneHtml: scenePrintHtml, html: printHtml},
     handout: makeHandout, credits: writeCredits, rules: {W, K}};
   game.modules.get(MOD).api = api;
   return api;
@@ -814,8 +1150,10 @@ Hooks.once("ready", async () => {
     if ( !setting("lastKit") ) await setSetting("lastKit", currentKit());
     await applyWeather({quiet: false});
     agedYear = yearNow();
-    await applyAges().catch(e => console.warn(`${MOD} | ages`, e));
+    await ageEverything();
+    await adapt();
   }
+  updateHeart();
   Hooks.callAll("wodxAtmosphereReady", api);
 });
 
@@ -828,16 +1166,55 @@ Hooks.on("updateWorldTime", (time, delta) => {
   timeTimer = setTimeout(() => {
     applyWeather().catch?.(() => null);
     const y = yearNow();
-    if ( Number.isFinite(y) && y !== agedYear && !chron()?.isSkipping?.() ) { agedYear = y; applyAges({year: y}).catch(e => console.warn(`${MOD} | ages`, e)); }
+    if ( Number.isFinite(y) && y !== agedYear && !chron()?.isSkipping?.() ) { agedYear = y; ageEverything(); }
   }, 250);
 });
 let timeTimer = null;
-Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); applyAges().catch(e => console.warn(`${MOD} | ages`, e)); } });
-Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); applyAges().catch(e => console.warn(`${MOD} | ages`, e)); } });
+let lastCard = null;
+/** A scene's opening card, on this computer only; it fades by itself. */
+function openingCard(scene) {
+  let on = true;
+  try { on = game.settings.get(MOD, "openingCard") !== false; } catch (e) { on = true; }
+  if ( !OR.wantsCard(scene, {last: lastCard, on}) ) return;
+  lastCard = scene.id;
+  let told = null, dateLabel = "", lat = 50;
+  try { lat = game.settings.get("wodx-chronicle", "latitude"); } catch (e) { lat = 50; }
+  const t = describeTime(game.time.worldTime, lat);
+  dateLabel = `${t.dateLabel}, ${t.timeLabel}`;
+  let reck = true;
+  try { reck = game.settings.get("wodx-chronicle", "rule.eraReckoning") !== false; } catch (e) { reck = true; }
+  if ( reck ) {
+    let church = null, eraId = "";
+    try { church = chron()?.church?.on?.(t) ?? null; } catch (e) { church = null; }
+    try { eraId = chron()?.eras?.activeEra?.()?.profile?.id ?? ""; } catch (e) { eraId = ""; }
+    told = reckon(t, {church, eraId});
+  }
+  let weather = "";
+  try { weather = now()?.label ?? ""; } catch (e) { weather = ""; }
+  const lines = OR.cardLines(scene, {told, dateLabel, weather, outdoors: isOutdoor(scene)});
+  document.getElementById("watmo-opening")?.remove();
+  const el = document.createElement("div");
+  el.id = "watmo-opening";
+  el.setAttribute("aria-live", "polite");
+  for ( const [cls, text] of [["place", lines.place], ["when", lines.when], ["weather", lines.weather]] ) {
+    if ( !text ) continue;
+    const d = document.createElement("div");
+    d.className = `watmo-opening-${cls}`;
+    d.textContent = text;
+    el.appendChild(d);
+  }
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("shown"));
+  setTimeout(() => el.classList.remove("shown"), 5000);
+  setTimeout(() => el.remove(), 6500);
+}
+Hooks.on("wodxSkipEnd", () => { if ( active && isActiveGM() ) { applyWeather({force: true}); ageEverything(); } });
+Hooks.on("wodxEraApplied", () => { if ( active ) { onEraApplied().catch(e => console.warn(`${MOD} | era`, e)); redrawFrames(); ageEverything(); } });
 Hooks.on("refreshToken", token => { if ( active ) { try { drawFrame(token); } catch (e) { console.warn(`${MOD} | frame`, e); } } });
 Hooks.on("canvasReady", () => {
   if ( !active ) return;
   applyGrade();
+  try { openingCard(canvas.scene); } catch (e) { console.warn(`${MOD} | opening card`, e); }
   if ( isActiveGM() && canvas.scene ) { const d = now(); applySceneEffect(canvas.scene, d).then(() => applyLight(canvas.scene, d)).catch(e => console.warn(`${MOD} | scene`, e)); }
 });
 Hooks.on("updateScene", (scene, change) => {
@@ -852,17 +1229,30 @@ Hooks.on("updateCombat", (combat, change) => {
   if ( a?.hasPlayerOwner ) playTheme(a);
 });
 Hooks.on("combatStart", () => {
-  if ( !active || !isActiveGM() || !setting("music") || !playlistFor(currentKit(), "combat") ) return;
+  if ( !active || !isActiveGM() || !setting("music") ) return;
+  if ( setting("adaptive") ) return adaptSoon();
+  if ( !playlistFor(currentKit(), "combat") ) return;
   fights++;
   playMood("combat", {remember: false});
 });
 Hooks.on("deleteCombat", () => {
-  if ( !active || !isActiveGM() || !setting("music") || fights <= 0 ) return;
-  if ( all(game.combats).some(c => c.started) ) return;
+  if ( !active || !isActiveGM() || !setting("music") ) return;
+  if ( setting("adaptive") ) return adaptSoon();
+  if ( fights <= 0 || all(game.combats).some(c => c.started) ) return;
   fights = 0;
   const back = setting("mood") || "calm";
   if ( playlistFor(currentKit(), back) ) playMood(back);
 });
+// A condition comes or goes on a player's character: the tension may change; the player's own heartbeat may too
+const onEffect = effect => {
+  if ( !active ) return;
+  const a = effect?.parent;
+  if ( a?.hasPlayerOwner ) adaptSoon();
+};
+Hooks.on("createActiveEffect", onEffect);
+Hooks.on("deleteActiveEffect", onEffect);
+Hooks.on("updateActor", actor => { if ( active && actor?.id && actor.id === game.user?.character?.id ) updateHeart(); });
+Hooks.on("updateUser", (user, change) => { if ( active && user?.id === game.user?.id && "character" in (change ?? {}) ) updateHeart(); });
 // Something new in the approval queue: the Storyteller hears the notice cue
 let pending = null;
 Hooks.on("updateSetting", s => {

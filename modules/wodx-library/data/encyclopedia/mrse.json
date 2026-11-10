@@ -1,0 +1,401 @@
+[
+ {
+  "id": "mrse-electrodyne-tesla",
+  "title": "The Electrodyne Engineers and Tesla",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Sons of Ether remember Tesla's fate.",
+  "claims": [
+   {
+    "text": "The Electrodyne Engineers, nominally founded in London, drew members across the West while the Order of Reason was turning into the Technocracy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Tesla impressed the Engineers early and went to the United States to work beside Edison.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Etherites hold that Edison's company claimed credit for Tesla's alternating current work after campaigning against it, and that the Technocracy took what it wanted and then ruined Tesla.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "sc-artificers",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "mrse-paradigma",
+  "title": "Paradigma",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The founding text of the Sons of Ether.",
+  "claims": [
+   {
+    "text": "The Paris presses printed editions of Paradigma, and its loss to sabotage scattered the Tradition's shared language of Science.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "A modern team combined surviving editions with a fresh reading of the Kitab al-Alacir to rebuild the fullest record of the Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Joining means real risk: the Technocracy will try to wreck a new Scientist's public standing, and members are expected to defend one another.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "mrse-electrodyne-tesla"
+  ]
+ },
+ {
+  "id": "mrse-pulp",
+  "title": "Etherite pulp style",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why Sons of Ether dress like heroes from old serials.",
+  "claims": [
+   {
+    "text": "Other Traditions are puzzled by silver jumpsuits and needless Jacob's Ladders, but for Etherites the look is a deliberate choice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The pulp style speaks of strong ethics, rugged individuality and a time when bettering humanity was a common dream, a rebuke to Technocratic cynicism.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "mrse-adventurers"
+  ]
+ },
+ {
+  "id": "mrse-ethernauts",
+  "title": "Royal Ethernautical Society",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Explorers of Etherspace.",
+  "claims": [
+   {
+    "text": "Freed from the Order of Reason, Ethernauts charted Etherspace and laid the ground for Realms such as the Gernsback Continuum.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Etherspace offered a shortcut for raids on Void Engineer projects, leading to long battles around the Tass-rich Jovian moons that drained both sides.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "After the Reckoning closed the way to Etherspace, the Society turned to exploring lost places on Earth and to propulsion for mainstream use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "void-engineers"
+  ]
+ },
+ {
+  "id": "mrse-cri",
+  "title": "Cybernetic Research Institute",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Etherite mechanists, often wrongly called Cybernauts.",
+  "claims": [
+   {
+    "text": "The Institute was never just about computers, though its close work with the Virtual Adepts through the 1970s and 1980s led many to think so.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Former Electrodyne Engineers formed it in 1910, aiming to share research so the Masses could build their prototypes and so steal assembly-line power from the Union.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They use cybernetic in its older sense, meaning any mechanical control system.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "virtual-adepts"
+  ]
+ },
+ {
+  "id": "mrse-utopians",
+  "title": "The Utopian League",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Etherite idealists who shape the Tradition's politics.",
+  "claims": [
+   {
+    "text": "Proto-psychologists, historians and ethical Scientists formed the League after seeing the Cabal of Pure Thought suppress free energy, travel and health.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Some Cabal members joined them in protest at their own comrades.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "A 1905 symposium across Europe set down the Scientific Ethos, with the League charged to ease Etherite work into the Consensus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "sc-cabal-pure-thought",
+   "mrse-dissidents"
+  ]
+ },
+ {
+  "id": "mrse-adventurers",
+  "title": "Adventurers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Cliffhangers, the field Scientists of the Sons of Ether.",
+  "claims": [
+   {
+    "text": "Adventurers are no formal faction, but every Etherite knows them as Scientists who will not stay in the lab and often save the Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "They publish little, being too busy, so the faction's history is a string of personal tales.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The name was first pinned on Mathieu Hullebusch in 1909 for a flying-automaton bid to overthrow the colonial rulers of the Belgian Congo.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "mrse-pulp"
+  ]
+ },
+ {
+  "id": "mrse-dissidents",
+  "title": "Dissidents",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Mad Scientists of the Sons of Ether.",
+  "claims": [
+   {
+    "text": "Dissidents became a political faction in the First World War, when the Utopian Ethics Council censured or jailed weapon-makers and a minority refused to accept it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Since the Reckoning they have left self-imposed exile to form small like-minded groups, and the Utopians fear a grab for power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Dissidents research whatever they please, often one lifelong obsession, and some sell weapons to dictators.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrse",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "mrse-utopians"
+  ]
+ }
+]

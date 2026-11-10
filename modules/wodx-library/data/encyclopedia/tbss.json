@@ -1,0 +1,248 @@
+[
+ {
+  "id": "tbss-sutekh",
+  "title": "The Striders and Sutekh",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods",
+   "classical"
+  ],
+  "summary": "The Silent Striders' oldest enemy.",
+  "claims": [
+   {
+    "text": "Silent Strider stories say Sutekh, the Egyptian god Set, once walked openly among the ancient Egyptians; vampires disagree over whether Sutekh is a vampire or only made them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The Egyptian core of the tribe spent its history fighting Set's vampire spawn, which corrupted whole villages, while Striders on the steppe were busy elsewhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The tribe has long held Sutekh to be among the Wyrm's mightiest avatars on Gaia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silent-striders",
+   "followers-of-set"
+  ]
+ },
+ {
+  "id": "tbss-immortals",
+  "title": "The Striders and the Immortals",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical",
+   "modern"
+  ],
+  "summary": "What the tribe knows of the undying of Egypt.",
+  "claims": [
+   {
+    "text": "Striders have watched the souls of the immortals go to Duat when their bodies die and come back later in newborn bodies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Friendship with an immortal can be useful, but conservatives in other tribes see the immortals as blasphemers against Gaia's law.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silent-striders",
+   "mummies",
+   "amenti-and-duat"
+  ]
+ },
+ {
+  "id": "tbss-crusade-era",
+  "title": "The Striders in the Crusades",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The tribe's travels in the Dark Ages.",
+  "claims": [
+   {
+    "text": "The Crusades carried Wyrm creatures both ways between Europe and the Holy Land, and the Cult of Sutekh used the traffic to spread further into Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "The same traffic let the Striders spread their trade and travel networks into southeastern Europe, where they grew close to the Rroma, from whom much of their Kinfolk still comes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Around 1300 the wandering Caern of Long Voyages was thrown into an attack on a Zmei's servants in southern Russia and lost with its whole sept.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silent-striders",
+   "kinfolk"
+  ]
+ },
+ {
+  "id": "tbss-harbingers",
+  "title": "The Harbingers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Silent Striders who carry warnings of what is coming.",
+  "claims": [
+   {
+    "text": "The Harbingers are the tribe's second oldest camp; they say they began among the Seekers as the ones who brought back warnings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They gather prophecies such as the Prophecy of the Phoenix and tales of the Perfect Metis, and became a camp of their own after the tribe was driven from its homeland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Many septs dread a Harbinger's arrival, since death tends to follow, though so do battle and glory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silent-striders"
+  ]
+ },
+ {
+  "id": "tbss-owl",
+  "title": "Owl, Patron of the Striders",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The tribe totem of the Silent Striders.",
+  "claims": [
+   {
+    "text": "Legend says Owl became the tribe's patron when the first Garou dared the Dark Umbra, guiding the first Strider into the Underworld and back out.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Striders cannot reach their own ancestor spirits, but owl-spirits teach them the Gifts other tribes learn from ancestors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Sphinx and Falcon, the enemy of Sutekh, remain old friends of the tribe from its Egyptian days.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbss",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silent-striders",
+   "tbss-sutekh"
+  ]
+ }
+]

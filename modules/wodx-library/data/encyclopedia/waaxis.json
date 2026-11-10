@@ -1,0 +1,285 @@
+[
+ {
+  "id": "waaxis-anamae",
+  "title": "Anamae",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Personal spirit-friends of the Garou.",
+  "claims": [
+   {
+    "text": "Anamae are spirits bound to a single Garou, such as the Heart Guides the Unicorn grants every Garou and the Moonshadows that watch over them for Luna.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 30,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Most Garou never learn these spirits exist, but one who builds a bond with an anama gains a spirit that warns, advises, teaches and may fight beside the Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 30,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waaxis-pacts"
+  ]
+ },
+ {
+  "id": "waaxis-pacts",
+  "title": "Pacts with spirits",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Garou bargain with spirits and what follows a breach.",
+  "claims": [
+   {
+    "text": "A personal pact binds only one Garou and one spirit and works best as years of mutual trust and respect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 30,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "When a Garou does not know the right chiminage, it is wise to ask the spirit honestly what it wants; lying to spirits is always dangerous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 30,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "A wronged spirit usually turns hostile and warns its brood, but most forgive a breach given a good reason and chiminage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 33,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "A Garou who cannot keep a promise should tell the spirit early, since it may accept another task instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 33,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waaxis-anamae"
+  ]
+ },
+ {
+  "id": "waaxis-englings",
+  "title": "Englings",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Spirits sent by Gaia to be consumed.",
+  "claims": [
+   {
+    "text": "Englings are spirits Gaia sends to restore the spiritual strength of Gaia’s children; when one dies it gives its Gnosis to those who slew it, and it dies gladly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 33,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Some Incarna have Gafflings that serve the same purpose as physical or spiritual food.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 33,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "It is proper to thank Gaia and the Engling for the sacrifice, and no individual Engling is named in the Silver Record.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 33,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waaxis-weaver-naming",
+  "title": "The Weaver and Naming",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Garou view of science and the Weaver.",
+  "claims": [
+   {
+    "text": "Garou elders call science a work of the Weaver and the worst kind of Naming.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 20,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "In the tale, Gaia granted the Weaver the power of Naming, but the spider abused it, giving things grander names with less meaning until whatever it named grew rigid and dead.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 20,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Naming was meant to give life order and renew the Cycle, not to halt it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 20,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waaxis-totem-broods",
+  "title": "The broods of the totems",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How spirits gather under the great Incarna.",
+  "claims": [
+   {
+    "text": "The Umbra is dangerous for a lone Gaffling or Jaggling, so while many spirits stay unaligned, many seek an Incarna’s patronage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 40,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Even lesser Incarna ally with stronger spirits, which is how the great Tribal Totems gathered many followers over the ages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 40,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Each great totem is served by a brood, from mighty Jagglings and lesser Incarna to Gafflings spawned from the totem itself.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 40,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waaxis-ancestor-spirits",
+  "title": "Ancestor-spirits",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Meeting the spirits of forebears.",
+  "claims": [
+   {
+    "text": "Garou reach their ancestors through the Past Life Background, and can also meet them in their abodes in the Umbra, some of whose locations are closely kept secrets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 141,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "After the Rite of Passage, new Garou are often sent to study under an Ancestor-spirit, learning the past and the Gifts it can teach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waaxis",
+      "page": 141,
+      "pdf": 135
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waaxis-totem-broods"
+  ]
+ }
+]

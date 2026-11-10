@@ -1,0 +1,405 @@
+[
+ {
+  "id": "dals1-dark-hunter",
+  "title": "Dark Hunter",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "An Obtenebration power that sends a shadow after a quarry.",
+  "claims": [
+   {
+    "text": "The Lasombra rolls Stamina + Leadership at difficulty 8, feeds the new shadow 5 Blood Points and invests a Willpower point to give it some permanence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "It acts only when given a target, which needs something belonging to the quarry so it can learn the spiritual signature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "The Hunter shares its creator’s Attributes and Willpower but can use only Unseen Presence; it must travel every step of the way, and vanishes once its mission is done.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "It takes damage normally and from fire and sunlight, like a Night Shade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals1-tchernabog"
+  ]
+ },
+ {
+  "id": "dals1-tchernabog",
+  "title": "Tchernabog",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A ninth-level Obtenebration power that blots out the sun.",
+  "claims": [
+   {
+    "text": "Named from a Slavic word for black god, the power covers the whole sky from horizon to horizon in darkness for exactly one hour, for two Willpower points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Under it a vampire can walk at midday unharmed, and even torches and lanterns seem weak.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Only three Lasombra are known to have mastered it: Lasombra, Montano and a Greek Magister once called Boukephos, and none will teach it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals1-dark-hunter"
+  ]
+ },
+ {
+  "id": "dals1-shadow-combos",
+  "title": "Smothering Darkness and Shadowed Eyes",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Two Lasombra combination powers.",
+  "claims": [
+   {
+    "text": "Smothering Darkness (Obtenebration 2, Obfuscate 1) makes one moth-like shadow per success on Wits + Occult at difficulty 6; each flies to the nearest flame up to torch size and puts it out, costing 9 experience.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Shadowed Eyes (Obtenebration 3, Auspex 3) blinds a target with patches of darkness on Dexterity + Occult at difficulty 7, lasting from one turn to an hour or more by successes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The darkness covers every eye the victim has and can be removed only by plucking the eye out; a cosmetic version on the user’s own eyes can frighten onlookers into a Willpower roll at difficulty 5.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dals1-koldunic-sorcery",
+  "title": "Koldunic Sorcery",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The old blood magic of the Tzimisce.",
+  "claims": [
+   {
+    "text": "Once famed sorcerers, the Tzimisce have been eclipsed by the Tremere, and only a few ancients still practise Koldunic Sorcery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "It works like Thaumaturgy but has no tie to Hermetic magic; its own paths and rituals cannot mix with Tremere magic, though work with House Tytalus has produced Koldunic versions of some Hermetic paths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "It is not a clan Discipline: a Tzimisce with a mentor learns it at out-of-clan cost, and no Fiend would teach an outsider; the first path is Spirit Ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Rituals are cast with Intelligence + Hearth Wisdom at difficulty 4 plus the ritual level, usually need a Blood Point per level and sometimes sacred earth, and are seldom written down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals1-koldunic-rituals"
+  ]
+ },
+ {
+  "id": "dals1-koldunic-rituals",
+  "title": "Koldunic rituals",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Selected rituals of the koldun.",
+  "claims": [
+   {
+    "text": "Conjure Greater Demon, a level five ritual, calls a mighty entity of the Old Country that must be coaxed to serve and may destroy a sorcerer whose offer displeases it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Create Vozhd, level six, joins at least fifteen ghouls fed each other’s blood into a war ghoul through Vicissitude and an unbroken chant lasting the number of ghouls minus seven hours.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Dracul, level nine, needs Vicissitude 6 as well; it turns the Fiend into a dragon with tripled Strength, doubled Stamina, Class 4 hide and acid breath, and only two Tzimisce, among them the Dracon, are known to have used it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dals1-koldunic-sorcery"
+  ]
+ },
+ {
+  "id": "dals1-fiefdom-power",
+  "title": "A Tzimisce bound to the land",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A power that makes a Fiend lord of a small domain.",
+  "claims": [
+   {
+    "text": "Always active once learned, it centres on a fiefdom of no more than about ten miles’ radius; Dominate, Presence, Animalism and Koldunic Sorcery are one difficulty easier there against natives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The Fiend can sway the weather, shift landmarks to lose travellers and locate intruders with Intelligence + Hearth Wisdom rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The Fiend is bound to the land, never leaves willingly, and if driven out withers as if cut off from native soil.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dals1-vicissitude-six",
+  "title": "Sixth-level Vicissitude",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Entrail Saraband and the Living Testudo.",
+  "claims": [
+   {
+    "text": "Entrail Saraband costs a Blood Point and a health level as the bowels burst out to serve as whips, limbs or snares, granting extra dice for extra actions equal to Stamina.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The Living Testudo needs Strength 5: the Fiend lays open a restrained victim’s back and wields the body by its spine as a shield, reshaping its flesh into weapons while it lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dals1-inescapable-truth",
+  "title": "Aura of Inescapable Truth",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Ventrue combination power that forbids lies.",
+  "claims": [
+   {
+    "text": "With Dominate 4 and Presence 4, the Ventrue can make everyone within earshot unable to tell a deliberate lie; those who try choke on their words, though honest mistakes still come out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "The roll is Charisma + Leadership against the highest Willpower present, with a Willpower point per three targets, and like Dominate it touches only Cainites of weaker blood than the user.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "One success covers the next statement and five the rest of the scene; it costs 21 experience to learn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dals1",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

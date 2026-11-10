@@ -1,0 +1,54 @@
+[
+ {
+  "id": "hbred-redeemer-outlook",
+  "title": "Redeemers and the Triage list",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Saving what can be saved among the supernatural.",
+  "claims": [
+   {
+    "text": "Redeemers work to salvage the supernatural, sorting monsters into the penitent and the unremitting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbred",
+      "page": 20,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Their slang spreads mainly on the Triage email list; beasts there means irredeemable monsters, those that seem to enjoy using their powers and feeding their hungers to cause suffering.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbred",
+      "page": 20,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Redeemers form close bonds among themselves and keep their own relations with the other creeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbred",
+      "page": 20,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-redeemers",
+   "hbinn-innocent-outlook",
+   "hbave-creeds-take-shape"
+  ]
+ }
+]

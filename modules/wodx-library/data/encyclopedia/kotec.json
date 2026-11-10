@@ -1,0 +1,592 @@
+[
+ {
+  "id": "kotec-treaty-quincunx",
+  "title": "The Treaty of the Quincunx",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The 1304 pact that founded the Five August Courts.",
+  "claims": [
+   {
+    "text": "In 1304, ten years after Kublai Khan died, ancestors from three courts (Yellow Emperor, White Tiger and Black Tortoise) met at the Shaolin monastery near Changan and signed the Treaty of the Quincunx.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 7,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "The treaty dissolved what was left of the old Five August Courts and set up five new courts in their place, claiming authority over every Wan Kuei of the Middle Kingdom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 7,
+      "pdf": 8
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-courts",
+   "kote-fallen-courts",
+   "kote-wan-xian"
+  ]
+ },
+ {
+  "id": "kotec-bestowed-ancestor",
+  "title": "The Bestowed Ancestor",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The figurehead who speaks for the whole Quincunx.",
+  "claims": [
+   {
+    "text": "One ancestor, drawn by lot at a gathering of the Five August Courts, may speak for the entire Quincunx and the celestial bureaucracy is said to have chosen that ancestor.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "The post is mostly ceremonial, since real policy is settled at gatherings held every five years, but for remote and rural Kuei-jin the Bestowed Ancestor is often their only link to the central courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-treaty-quincunx",
+   "kote-great-principle"
+  ]
+ },
+ {
+  "id": "kotec-blood-court",
+  "title": "The Blood Court of Beijing",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Seat of the Five August Courts.",
+  "claims": [
+   {
+    "text": "The Blood Court in Beijing has been the seat of the Five August Courts since the treaty was drawn up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-treaty-quincunx"
+  ]
+ },
+ {
+  "id": "kotec-flesh-court",
+  "title": "The Flesh Court of Shanghai",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The eastern gate of the Quincunx, a court only in name.",
+  "claims": [
+   {
+    "text": "Since Japan invaded China in 1937, Shanghai and the provinces under the Flesh Court have fought a nightly war against Japanese akuma, and its rule has decayed into a loose oligarchy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "The Council of Dragons founded the Flesh Court as a defence against the Court of the Azure Dragon, which akuma had overrun.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 9,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-treaty-quincunx",
+   "kote-fallen-courts",
+   "kote-yama-kings"
+  ]
+ },
+ {
+  "id": "kotec-japan-gaki",
+  "title": "Kuei-jin of Japan",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The gaki and their dragon lines.",
+  "claims": [
+   {
+    "text": "Japanese Kuei-jin, the gaki, see themselves as keepers of the dragon lines and Chi wells that give the islands life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Japan's fast postwar growth and its taking up of Western ideas have set the two strongest houses against each other, not least over the few Cainites in the big cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "The bombings of Hiroshima and Nagasaki left a lasting decay in Japan's Chi lines.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "kote-chi",
+   "sfbn-gaki-internment"
+  ]
+ },
+ {
+  "id": "kotec-bishamon",
+  "title": "House Bishamon",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The traditionalist house of the Japanese gaki.",
+  "claims": [
+   {
+    "text": "Every lesser uji, or family, under Bishamon traces its line back to the first gaki of Japan; many of its ancestors were samurai or daimyo in life and still lead and fight within their uji.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "When Emperor Meiji opened Japan to foreigners, the Bishamon could not keep pace with the change, and they drew back into their private lairs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 13,
+      "pdf": 14
+     },
+     {
+      "book": "kotec",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-japan-gaki",
+   "kotec-genji"
+  ]
+ },
+ {
+  "id": "kotec-genji",
+  "title": "House Genji",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The modernist house of the Japanese gaki.",
+  "claims": [
+   {
+    "text": "The present House Genji is a creation of the Fifth Age: young Kuei-jin who backed the Meiji emperor and the new cosmopolitan life filled the roles the retreating Bishamon left behind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "They took the name of the first Genji, vampires who had driven out the Bishamon centuries before, and their power grew with Japan's rise in the late 1800s and early 1900s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-japan-gaki",
+   "kotec-bishamon"
+  ]
+ },
+ {
+  "id": "kotec-dhampyrs",
+  "title": "Dhampyrs",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Half-living children of Kuei-jin.",
+  "claims": [
+   {
+    "text": "Dhampyrs are born with dead blood and live between life and death: too strange for mortal society, and looked down on by Kuei-jin as half-people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Kuei-jin seldom sire a dhampyr by chance; each is raised in secret for some purpose, whether a political pawn, a go-between for two societies or a stand-in for love never had in life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "A dhampyr is as likely to be a Visionary, Rebel, Deviant or Loner as anything else, since such outsiders seldom fit tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "kote-souls"
+  ]
+ },
+ {
+  "id": "kotec-dhampyr-chi",
+  "title": "Dhampyr Chi",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a dhampyr uses and gains Chi.",
+  "claims": [
+   {
+    "text": "A dhampyr can spend only one point of Chi in a turn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "To steal Chi, a dhampyr must eat flesh; without the vampire's Dharmic insight, it cannot draw Chi from blood, breath or dragon nests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-dhampyrs",
+   "kote-chi"
+  ]
+ },
+ {
+  "id": "kotec-yulan-jin",
+  "title": "Yulan-jin, the Soul Jumpers",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kuei-jin who must take a new body each time they die.",
+  "claims": [
+   {
+    "text": "Some souls that escape Yomi are too torn by the winds of Hell to hold their own bodies, so they move from host to host in a cycle of death and return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "A host left behind is tainted by the departing soul and cannot be used again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "A Yulan-jin is built like any other Kuei-jin, with a few exceptions; their deeds and legends spread through the stories other Soul Jumpers carry.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "kote-second-breath",
+   "kote-yama-kings"
+  ]
+ },
+ {
+  "id": "kotec-soul-jump",
+  "title": "Changing Bodies",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What a Yulan-jin risks with each jump.",
+  "claims": [
+   {
+    "text": "Moving to a new body taxes memory: any Ability, though not a Virtue or Discipline, rated above the Yulan-jin's Willpower drops by one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "With fewer than three successes on the jump, the Soul Jumper also loses a permanent point of Willpower; each jump also costs a point of the current Dharma.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-yulan-jin",
+   "kote-dharma"
+  ]
+ },
+ {
+  "id": "kotec-kin-jin-china",
+  "title": "Kin-jin in China",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Western vampires fare in China.",
+  "claims": [
+   {
+    "text": "Neither the Camarilla nor the Sabbat has gained a foothold in the Chinese courts by talks or by force, and the few Kin-jin there are hunted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "The ancestors' spirit guardians and spies leave little hope of going unseen, so a Cainite in China survives only by hiding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-kuei-jin",
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "kotec-della-passaglia",
+  "title": "The della Passaglia Giovanni",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Western vampires most at home in Southeast Asia.",
+  "claims": [
+   {
+    "text": "The della Passaglia family of the Giovanni has married deep into local lines in Southeast Asia, runs trading concerns across Asia and does hidden business by way of Korea.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "Being kin to leading townsfolk, and even to some Kuei-jin, wins them a grudging acceptance, though the Kuei-jin would wipe them out given one good reason.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni",
+   "kotec-kin-jin-china"
+  ]
+ },
+ {
+  "id": "kotec-cathayans-west",
+  "title": "Cathayans in the West",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Kuei-jin push Cainites out of Western cities.",
+  "claims": [
+   {
+    "text": "A favoured Kuei-jin tactic is to show a Cainite's mortal allies what their patron truly is, so they turn on the vampire; it has already worked in several West Coast cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "With the Kin-jin gone, the Kuei-jin take over its influence, and they let its crude minions be destroyed along the way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "kotec",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kotec-kin-jin-china",
+   "sfbn-chinatown"
+  ]
+ }
+]

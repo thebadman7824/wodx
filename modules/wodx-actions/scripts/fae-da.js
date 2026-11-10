@@ -58,7 +58,7 @@ export const oathLine = o => `${F.OATHS[o.kind]?.label.split(" ")[0] ?? o.kind} 
 const lines = t => String(t ?? "").split(/\n+/).map(l => l.trim()).filter(Boolean);
 
 export function build(ctx) {
-    const { post, rollPool, rollBlock, dialog, setFlag, attr, background, traits, spendWillpower, notify } = ctx;
+    const { post, rollPool, rollBlock, dialog, setFlag, background, traits, spendWillpower, notify } = ctx;
 
     function info(actor) {
         const f = actor.getFlag(MOD, "daFae") ?? {};
@@ -143,7 +143,7 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="mien"${i.mien ? " checked" : ""}${i.O?.alwaysMien ? " disabled" : ""}/> In the fae mien now</label></div>
           <div class="form-group"><label>Rules on this sheet</label><select name="system" data-fixed>
             <option value=""${!i.f.system ? " selected" : ""}>Follow the era</option><option value="da"${i.f.system === "da" ? " selected" : ""}>Dark Ages: Fae</option><option value="c20"${i.f.system === "c20" ? " selected" : ""}>Changeling 20th</option></select></div>
-          <p class="wodx-quiet">${i.O ? `${esc(i.O.label)}: ${esc(i.O.birthright)}; frailty: ${esc(i.O.frailty)} (p. ${i.O.page}).` : "Origins: changeling, inanimae, firstborn (pp. 59–63)."} Cantrips: one per Dominion per Weaving dot. ${REF} pp. 86–115.</p>
+          <p class="wodx-quiet">${i.O ? `${esc(i.O.label)}: ${esc(i.O.birthright)}; frailty: ${esc(i.O.frailty)} (p. ${i.O.page}).` : "Origins: changeling, inanimae, firstborn (Dark Ages: Fae pp. 59–63)."} Cantrips: one per Dominion per Weaving dot. ${REF} pp. 86–115.</p>
         </form>`;
         return dialog(`Origin and Court: ${actor.name}`, content, "Save", async fd => {
             const origin = F.ORIGINS[fd.origin] ? fd.origin : null;
@@ -160,7 +160,7 @@ export function build(ctx) {
             await save(actor, { origin, court, mists, weaving, dominions, cantrips, lesser: lines(fd.lesser), greater: lines(fd.greater), echoes, oaths,
                 mien: origin && F.ORIGINS[origin].alwaysMien ? true : !!fd.mien, system: fd.system || null });
             const probs = F.cantripProblems(cantrips, { weaving: weaving.perm, dominions });
-            notify(`${actor.name}: ${origin ? F.ORIGINS[origin].label : "no Origin"}${court ? `, ${F.COURTS[court].label} Court` : ""} saved.${probs.length ? ` Check: ${probs.map(p => p.problem).join("; ")}.` : ""}${F.imbalance(mists.perm, weaving.perm) ? ` In ${F.imbalance(mists.perm, weaving.perm) === "mists" ? "Mists" : "Weaving"} imbalance (p. 102).` : ""}`);
+            notify(`${actor.name}: ${origin ? F.ORIGINS[origin].label : "no Origin"}${court ? `, ${F.COURTS[court].label} Court` : ""} saved.${probs.length ? ` Check: ${probs.map(p => p.problem).join("; ")}.` : ""}${F.imbalance(mists.perm, weaving.perm) ? ` In ${F.imbalance(mists.perm, weaving.perm) === "mists" ? "Mists" : "Weaving"} imbalance (Dark Ages: Fae p. 102).` : ""}`);
             return true;
         }, { width: 560 });
     }
@@ -172,7 +172,6 @@ export function build(ctx) {
     };
     const traitSelect = (actor, sel) => `<select name="trait" data-fixed>${traits(actor).map(t => `<option value="${t.key}"${t.key === sel ? " selected" : ""}>${esc(t.label)} ${t.value}</option>`).join("")}</select>`;
     const traitOf = (actor, key) => traits(actor).find(t => t.key === key) ?? { key, label: key || "the trait", value: 0 };
-    const timeText = (d, t) => [t.hour ? `its hour (${F.DOMINIONS[d].hour})` : null, t.season ? F.DOMINIONS[d].season : null].filter(Boolean).join(" and ");
 
     /* -------------------------------------------------------------- */
     /*  Cantrips                                                       */
@@ -214,14 +213,14 @@ export function build(ctx) {
             body += r.botch ? `<div class="vta-big bad">The cantrip twists: the Storyteller says how.</div>`
                 : r.successes ? `<div class="vta-big good">${esc(name)}: ${r.successes} success${r.successes === 1 ? "" : "es"}.</div><div class="vta-res">Level ${level} reaches ${esc(F.SCOPE[level] ?? "")}.</div>`
                 : `<div class="vta-big">${esc(name)} does not take.</div>`;
-            if (i.imbalance === "mists") body += `<div class="vta-note">Mists imbalance: cantrips come harder (p. 102).</div>`;
+            if (i.imbalance === "mists") body += `<div class="vta-note">Mists imbalance: cantrips come harder (Dark Ages: Fae p. 102).</div>`;
             if (c?.note) body += `<div class="vta-note">${esc(c.note)}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 120–121${F.DOMINIONS[dominion] ? `, ${F.DOMINIONS[dominion].page}` : ""}</div>`;
             const casts = actor.getFlag(MOD, "daFaeCasts");
             const key = `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}:${name}`;
             const count = casts?.key === key ? n(casts.n) + 1 : 1;
             await setFlag(actor, "daFaeCasts", { key, n: count });
-            if (count > 5) body += `<div class="vta-note">${count} castings of this cantrip this scene: overuse draws the fae toward the Locked state (p. 104).</div>`;
+            if (count > 5) body += `<div class="vta-note">${count} castings of this cantrip this scene: overuse draws the fae toward the Locked state (Dark Ages: Fae p. 104).</div>`;
             return post(actor, `${actor.name} casts ${name}`, body, [r.roll].filter(Boolean));
         }, { width: 520, render: root => aim(root, { actor, cast: { intent: "e" } }) });
     }
@@ -423,7 +422,7 @@ export function build(ctx) {
         const oaths = i.oaths.map((o, k) => ({ ...o, k })).filter(o => o.active !== false);
         if (!oaths.length) return notify(`${actor.name} keeps no active oath.`);
         const content = `<form><div class="form-group"><label>The oath kept</label><select name="o" data-fixed>${oaths.map(o => `<option value="${o.k}">${esc(oathLine(o))}</option>`).join("")}</select></div>
-          <p class="wodx-quiet">Each time the fae takes the time to keep their side, roll the oath's rating (6): a Weaving point per success (p. 102).</p></form>`;
+          <p class="wodx-quiet">Each time the fae takes the time to keep their side, roll the oath's rating (6): a Weaving point per success (Dark Ages: Fae p. 102).</p></form>`;
         return dialog(`Keep an oath: ${actor.name}`, content, "Roll", async fd => {
             const o = i.oaths[n(fd.o)];
             const r = await rollPool(o.rating, 6);
@@ -437,7 +436,7 @@ export function build(ctx) {
         if (!i) return null;
         const content = `<form><div class="form-group"><label>Days in a faerie realm</label><input type="number" name="days" min="0" max="30" value="1"/></div>
           ${i.holdings ? `<div class="form-group"><label>Hours resting in a holding that restores (1 an hour)</label><input type="number" name="hours" min="0" max="24" value="0"/></div>` : ""}
-          <p class="wodx-quiet">1 Mists and 1 Weaving a day in a faerie realm (p. 102).</p></form>`;
+          <p class="wodx-quiet">1 Mists and 1 Weaving a day in a faerie realm (Dark Ages: Fae p. 102).</p></form>`;
         return dialog(`Rest in a faerie realm: ${actor.name}`, content, "Rest", async fd => {
             const next = F.realmRest({ days: n(fd.days), hours: n(fd.hours), holdingRestores: !!i.holdings }, i);
             await save(actor, { mists: next.mists, weaving: next.weaving });
@@ -501,8 +500,8 @@ export function build(ctx) {
             }
             await actor.setFlag(MOD, "daFae", { ...f, ...patch });
             const warn = [];
-            if (i.hiddenDays !== null && F.hiddenRisk(i.hiddenDays, i.willpower)) warn.push(`hidden by the Mists ${i.hiddenDays} days, more than Willpower ${i.willpower}: the fae becomes Lost (p. 101)`);
-            if (n(patch.weavingStreak) > i.willpower) warn.push(`Weaving overspent ${patch.weavingStreak} days running, more than Willpower: the fae may become Locked (p. 102)`);
+            if (i.hiddenDays !== null && F.hiddenRisk(i.hiddenDays, i.willpower)) warn.push(`hidden by the Mists ${i.hiddenDays} days, more than Willpower ${i.willpower}: the fae becomes Lost (Dark Ages: Fae p. 101)`);
+            if (n(patch.weavingStreak) > i.willpower) warn.push(`Weaving overspent ${patch.weavingStreak} days running, more than Willpower: the fae may become Locked (Dark Ages: Fae p. 102)`);
             if (warn.length) await ChatMessage.create({ whisper: [...new Set([...gmIds(), ...game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER")).map(u => u.id)])],
                 content: `<div class="vta-card wodx-x"><div class="vta-body">${esc(actor.name)}: ${warn.map(esc).join("; ")}.</div></div>` });
         }

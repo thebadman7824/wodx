@@ -1,0 +1,362 @@
+[
+ {
+  "id": "wspg-eidolon-nature",
+  "title": "The Eidolon and Nature",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Eidolon relates to a wraith’s Nature.",
+  "claims": [
+   {
+    "text": "The Eidolon has no Archetype of its own; it reflects the wraith’s Nature in an idealised or true form, and a fortunate few catch sight of it while dreaming or in visions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Player and Storyteller choose the Eidolon’s Nature together and tell the Shadowguide, so the Shadow knows what it is fighting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Dots in the Eidolon Background can mark spiritual maturity, with Eidolon 5 meaning the wraith has fully matured.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wspg-gleanings"
+  ]
+ },
+ {
+  "id": "wspg-gleanings",
+  "title": "Gleanings",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Asking the Eidolon for guidance in a crisis.",
+  "claims": [
+   {
+    "text": "A Gleaning is one insight from the inner voice in a critical moment; a wraith without the Eidolon Background cannot have one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "It costs a Willpower point, with a Wits + Meditation roll: difficulty 6 in calm isolation, 7 when facing a foe such as a Legionnaire, 9 in combat or a Harrowing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "The Storyteller sets how useful the advice is by Eidolon rating, from a vague bad feeling at 1 to a clear warning of what will happen at 5.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "On a botch the player rolls the Eidolon against difficulty 6; failing that second roll costs a level of Eidolon for the rest of the session.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wspg-eidolon-nature"
+  ]
+ },
+ {
+  "id": "wspg-castigation-defence",
+  "title": "A Shadow under Castigation",
+  "kind": "mechanic",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ways a Shadow fights back while being Castigated.",
+  "claims": [
+   {
+    "text": "A Shadow may threaten to withhold Shadow Dice from then on, but a threat it fails to keep loses all force afterwards.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "It may feign humiliation and remorse, which can fool its own Psyche, though a skilled Castigator can judge its strength and force out partial truths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "A desperate Shadow with Shadow Call may summon Spectres so that everyone present has to fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "The Storyteller calls rolls only at the high points, such as lies against the Castigator; clever Shadow ploys can raise the difficulty by 1 and a fine purging can lower it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wspg-jade-po",
+  "title": "The p’o in the Yellow Springs",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the dead of the Dark Kingdom of Jade treat their Shadows.",
+  "claims": [
+   {
+    "text": "Among the Chinese dead, trouble with one’s p’o is kept secret, because gossip spreads fast and any sign of weakness costs face, rank and political hopes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Pardoners are rare in the Kingdom of Jade; going to a Castigator admits the p’o is out of control, and rumour of such trouble can see a wraith shunned as tainted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "To keep the p’o in check, most Chinese wraiths study some Way of the Soul, using it only in private.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wspg-castigation-defence"
+  ]
+ },
+ {
+  "id": "wspg-serviteurs",
+  "title": "Serviteurs and the Mait’Tete",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wraiths who work with their Shadow through Connaissance.",
+  "claims": [
+   {
+    "text": "Serviteurs borrow the senses and voice of the Mait’Tete, their Shadow, through the art of Connaissance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "A botch can leave a Serviteur without protection from the Baka being handled, and Baka are known to resent any attempt to steer them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wspg-eyes-of-abyss",
+   "wspg-langage"
+  ]
+ },
+ {
+  "id": "wspg-eyes-of-abyss",
+  "title": "Eyes of the Abyss",
+  "kind": "power",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Connaissance art that senses Oblivion.",
+  "claims": [
+   {
+    "text": "A Perception + Connaissance roll at difficulty 8 finds Spectres, Shades, Nihils, other Serviteurs and Shadow-dominated wraiths nearby; more successes cover a larger area.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "It was first used to find safer Byways through the Abyss by seeking the thinnest Oblivion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "It does not move the wraith; Argos is still needed, but successes on this roll come off the difficulty of a later Orienteering roll, never below 2.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wspg-serviteurs"
+  ]
+ },
+ {
+  "id": "wspg-langage",
+  "title": "Langage",
+  "kind": "power",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Connaissance art for speaking the tongue of Oblivion.",
+  "claims": [
+   {
+    "text": "With the Mait’Tete as interpreter, a Serviteur talks in the hidden tongue shared by Baka, Loa and Les Mysteres; it sounds like gibberish to those outside Oblivion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "The roll is Manipulation + Connaissance and reaches any spirit of Oblivion, including Spectres, Shadowguided wraiths and dormant Shadows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Successes set how long the translation lasts, from one turn for a single success upward.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wspg",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wspg-serviteurs"
+  ]
+ }
+]

@@ -11,7 +11,7 @@
 import {FIRE_HEAT as ACTIONS_FIRE_HEAT} from "../../wodx-actions/scripts/rules.js";
 import {holy as demonHoly} from "../../wodx-actions/scripts/demon-rules.js";
 
-export const TURN = 3; // seconds in a turn (V20 Dark Ages p. 322)
+export const TURN = 3; // seconds in a turn (V20 Dark Ages printed p. 324)
 export const MINUTE = 60;
 
 export const KINDS = {door: "Door", gate: "Gate", window: "Window", shutter: "Shutter", hatch: "Hatch"};
@@ -274,7 +274,7 @@ export const NOISES = {silent: "Silent", quiet: "Quiet", loud: "Loud"};
 export const EARSHOT = {silent: {open: 0, wall: 0}, quiet: {open: 5, wall: 0}, loud: {open: 30, wall: 10}};
 
 /** Eras with keypads, card readers and alarms. */
-const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness"]);
+const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"]);
 export function isModern({eraId = "", year = 0} = {}) { return MODERN_ERAS.has(eraId) || year >= 1970; }
 const DARK_AGE_ERAS = new Set(["dark-ages", "long-night", "classical", "living-gods"]);
 export function isDarkAge({eraId = "", year = 0} = {}) { return DARK_AGE_ERAS.has(eraId) || (year > 0 && year < 1450); }
@@ -448,6 +448,7 @@ export function describeHazard(f = {}) {
   return {
     hazard: true, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "closed",
     kind, size, heat, shock, dice, spilled, burning, live, cleared: !!f.cleared, pcsOnly: !!f.pcsOnly,
+    caught: kind === "shock" && f.caught && typeof f.caught === "object" && !Array.isArray(f.caught) ? f.caught : {},
     type: DAMAGE_TYPES[f.hazType] ? f.hazType : kind === "sharp" || kind === "shock" ? "lethal" : null,
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
@@ -468,7 +469,10 @@ export function hazardHit(o, ch = {}, careful = null) {
   }
   if ( o.kind === "shock" ) {
     const L = SHOCKS[o.shock].levels;
-    return {mode: "levels", amount: L, type: o.type, fireSun: false, soakDiff: 6, text: `is jolted by the current (${L} levels).`, notes: []};
+    // A vampire soaks it as usual, but a botched soak makes it aggravated (V20 core printed p. 295, pdf 303)
+    const vampire = ch.profile === "vampire";
+    return {mode: "levels", amount: L, type: o.type, fireSun: false, soakDiff: 6, botchAggravated: vampire, text: `is jolted by the current (${L} levels).`,
+      notes: [vampire ? "A botched soak makes it aggravated." : ""].filter(Boolean)};
   }
   const hits = careful && !careful.botch ? Math.max(0, Number(careful.successes) || 0) : 0;
   const dice = Math.max(0, o.dice - hits);
@@ -830,7 +834,13 @@ function hazardOptions(o, ch) {
   } else if ( o.kind === "sharp" ) {
     if ( !o.cleared ) out.push({id: "sweep", label: "Sweep a path clear", roll: null, seconds: MINUTE, noise: {success: "quiet"}, note: "Takes a minute; after that it is safe to cross."});
   } else if ( o.kind === "shock" ) {
-    out.push(o.live ? {id: "powerOff", label: "Cut the power", roll: null, seconds: TURN, noise: {success: "silent"}, note: "At the switch, the fuse box or the breaker."}
+    // Held by the current: Strength to pull free, 5 for a vampire, 9 for anyone else (V20 core printed p. 295, pdf 303)
+    if ( o.live && o.caught?.[ch.actorId ?? ""] ) {
+      const diff = ch.kind === "vampire" ? 5 : 9;
+      out.push({id: "pullFree", label: "Pull free of the current", roll: {attr: "strength", attrLabel: "Strength", ability: null, abilityLabel: "", dice: Number(ch.strength) || 0, diff, need: null},
+        seconds: TURN, noise: {success: "quiet", fail: "quiet", botch: "quiet"}, note: `Strength at ${diff}${ch.kind === "vampire" ? " (a vampire)" : ""}. Until then the current hurts again each turn.`});
+    }
+    out.push(o.live ? {id: "powerOff", label: "Cut the power", roll: null, seconds: TURN, noise: {success: "silent"}, note: "At the switch, the fuse box or the breaker. Frees anyone held."}
       : {id: "powerOn", label: "Turn the power back on", roll: null, seconds: TURN, noise: {success: "silent"}});
   }
   return out;
@@ -1109,7 +1119,7 @@ function resolveCore(o, option, rolls, {actorId = "", actorName = ""} = {}) {
       case "climbEasy": out.arrives = true; return done("climbs it.");
       case "letGo": out.falls = o.depth; flags.hanging = {...o.hanging, [actorId]: false}; return done("lets go, and falls.");
       case "desecrate": flags.desecrated = true; return done("desecrates it.");
-      case "powerOff": flags.live = false; return done("cuts the power.");
+      case "powerOff": flags.live = false; if ( o.caught && Object.keys(o.caught).length ) flags.caught = Object.fromEntries(Object.keys(o.caught).map(k => [k, false])); return done("cuts the power.");
       case "powerOn": flags.live = true; return done("turns the power back on.");
       case "cutFree": flags.holding = null; return done("cuts the snare and frees whoever it held.");
       case "smash": flags.broken = true; return done("breaks the pane.", {ds: "open"});
@@ -1193,6 +1203,10 @@ function resolveCore(o, option, rolls, {actorId = "", actorName = ""} = {}) {
       if ( roll.botch ) return Object.assign(out, {result: "botch", noise: noise.botch, burns: true, text: "fights the fire, and is burned."});
       if ( roll.successes > 0 ) { flags.burning = false; return Object.assign(out, {result: "done", noise: noise.success, text: "beats the fire out."}); }
       return Object.assign(out, {result: "fail", noise: noise.fail, text: "fights the fire, and it keeps burning."});
+    }
+    if ( id === "pullFree" ) {
+      if ( roll.successes > 0 && !roll.botch ) { flags.caught = {...o.caught, [actorId]: false}; return Object.assign(out, {result: "done", noise: noise.success, text: "pulls free of the current."}); }
+      return Object.assign(out, {result: roll.botch ? "botch" : "fail", noise: noise.fail, text: "can't let go of it."});
     }
     if ( id === "breakFree" ) {
       if ( roll.successes > 0 && !roll.botch ) { flags.holding = null; return Object.assign(out, {result: "done", noise: noise.success, text: "breaks free of the snare."}); }
@@ -1430,4 +1444,16 @@ export function cleanTarget(s = {}) {
   const o = describeTarget(s);
   const blank = v => v === "" || v === null || v === undefined;
   return {isTarget: !!s.isTarget, targetKind: o.kind, objBuild: o.build, bottles: blank(s.bottles) ? "" : o.count, smashed: o.broken};
+}
+
+/**
+ * A haven's security (WoDX Storyteller's haven record on the scene): each dot of security adds 1 to the difficulty
+ * of anyone who is not its owner or a guest breaking in (V20 pp. 112-113, Domain). Only breaking-in rolls count.
+ */
+export const INTRUDING = new Set(["pick", "smash", "hack", "disarm", "climb", "climbEasy"]);
+export function havenSecurity(haven, actorId, opId) {
+  if ( !haven || !INTRUDING.has(opId) ) return 0;
+  const inside = [...(haven.owners ?? []), ...(haven.guests ?? [])];
+  if ( actorId && inside.includes(actorId) ) return 0;
+  return Math.max(0, Math.min(5, Math.round(Number(haven.security) || 0)));
 }

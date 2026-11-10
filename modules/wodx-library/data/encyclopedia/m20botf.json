@@ -1,0 +1,381 @@
+[
+ {
+  "id": "m20botf-demons",
+  "title": "Demons, as the Fallen see them",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the word demon means among the Nephandi.",
+  "claims": [
+   {
+    "text": "Here demon means an Otherworldly being with built-in hostile aims, not only a Fallen Angel in the Christian sense.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "The Greek daimon once meant a spirit, even a helpful muse, and the Sanskrit deva named shining good beings; the darker sense grew as Christianity spread.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "The Fallen use the word for higher beings that humanity has cursed and spurned, and that resent humankind in return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi"
+  ]
+ },
+ {
+  "id": "m20botf-litanies",
+  "title": "Abyssal Litanies",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The written and spoken lore of the Nephandi.",
+  "claims": [
+   {
+    "text": "The Litanies gather legends, rites, spells, histories and debates, giving the Fallen a shared identity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The Heralds of Basilisk keep online archives where Litanies are gathered, translated and annotated, though no one can test how true they are.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Litanies often blend several tongues at once, Arabic, Latin, Greek, Sanskrit and English among the most common, with cuneiform and others besides.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "m20botf-demons"
+  ]
+ },
+ {
+  "id": "m20botf-barabbi",
+  "title": "Barabbi and the Fallen Disparates",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mages who turn from other factions to the Nephandi.",
+  "claims": [
+   {
+    "text": "Barabbi are Nephandi who began in other groups, and many of them started out among the Nine Traditions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Ambition, desperation, pride and revenge draw Disparates and unaligned mages toward the Cauls, since looser sects offer more freedom and more chances to Fall.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "The Disparate Alliance was formed in theory to fight the Nephandi, so it may punish Nephandic ties more harshly than any other faction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "sc-disparates",
+   "m20bos-alliance-law"
+  ]
+ },
+ {
+  "id": "m20botf-widderslainte",
+  "title": "Widderslainte",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "People reborn with a Nephandic Avatar.",
+  "claims": [
+   {
+    "text": "A widderslainte is a newborn whose Avatar was already Nephandic, a soul that keeps pushing its new life back toward the Fallen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Theories call such souls escaped Nephandi returning from the hells, alien minds, demonic urges or broken Avatar shards.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "A widderslainte child is not held to be a Nephandus, since a child lacks adult judgment, but one at grave risk of becoming one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "m20botf-old-sects",
+  "title": "Infernalists, K'llashaa and Malfeans",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The three classic faces of the Fallen.",
+  "claims": [
+   {
+    "text": "To most mages these three sects stand for all Nephandi, a view that is badly mistaken.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Infernalists are a cluster of demon-dealing cults and serve as the best-known face of the Fallen, though today many of them are unAwakened hangers-on.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Infernalists take old Nephandic titles in earnest; Sleeper members stay as servants and fodder unless they prove more useful, while Night-Folk allies rank far higher.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Malfeans hold that life is a lie and that decay and collapse are the last truth of the Void.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "m20botf-demons"
+  ]
+ },
+ {
+  "id": "m20botf-qlippoth",
+  "title": "The Qlippoth",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The dark mirror of the Kabbalistic Tree of Life.",
+  "claims": [
+   {
+    "text": "Where a Kabbalist climbs the Tree of Life toward God, a Qlippothic mystic descends through broken shells to become a god.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 100,
+      "pdf": 101
+     }
+    ]
+   },
+   {
+    "text": "The Qlippoth runs from Lilith, mother of demons, to Thaumiel, godhood through annihilation, beyond which occult lore speaks of a Black Diamond or Universe B.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 100,
+      "pdf": 101
+     }
+    ]
+   },
+   {
+    "text": "Daath, the Abyss or Door to Knowledge, is met twice on the Nephandic path: once in the Caul and again before the last three shells; few pass the second time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 105,
+      "pdf": 106
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "m20botf-cauls"
+  ]
+ },
+ {
+  "id": "m20botf-cauls",
+  "title": "Cauls",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The gateways through which mages Fall.",
+  "claims": [
+   {
+    "text": "Inside a Caul there is no time or distance; the mage is unmade by the Abyss and comes out remade as a vessel of the Void.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Nephandi call Cauls anti-Nodes, Flowers of Rebirth, fruits of Hell or alien beings; their true nature is unknown.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Mages cannot make a Caul alone, so the Fallen usually build their lairs around one that already exists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Physical disasters can harm a Caul's outer form, but that damage heals over time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20botf",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "m20botf-qlippoth"
+  ]
+ }
+]

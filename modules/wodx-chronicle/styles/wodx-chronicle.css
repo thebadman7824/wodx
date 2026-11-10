@@ -71,3 +71,12 @@
 .wodx-language.is-unknown { color: var(--color-text-subtle, #888); }
 .wodx-speaking { display: flex; align-items: center; gap: 4px; padding: 2px 0; font-size: var(--font-size-12, 12px); }
 .wodx-speaking input { flex: 1; min-width: 0; height: 24px; }
+
+/* Knowledge-gated handouts */
+.wodx-know-yes[title] { border-bottom: 1px dotted currentColor; cursor: help; }
+.wodx-know-no { font-style: italic; opacity: 0.85; cursor: help; }
+.wodx-know-no.wodx-know-script { filter: blur(0.6px); letter-spacing: 0.04em; }
+
+/* Queue relief: the kinds approved on their own, in a box of their own */
+.wodx-approvals .wodx-standing h3 { margin: 0.6em 0 0.2em; font-size: 1em; }
+.wodx-approvals .wodx-autolist { max-height: 11em; overflow-y: auto; }

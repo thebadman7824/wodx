@@ -1,0 +1,161 @@
+[
+ {
+  "id": "dcoa-devils-night",
+  "title": "The Devil's Night quake",
+  "kind": "event",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Los Angeles earthquake and riots that ended with a vision of Lucifer.",
+  "claims": [
+   {
+    "text": "Once the fallen saw how far Los Angeles reached into the world through its studios, demons from across the globe hurried there to enthrall officials, gang leaders and anyone with influence, and for a while their quiet scheming actually calmed the city's feuds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Two Earthbound then took root there: Enshagkushanna, and Manishtusu, the mad Lord of Murder, who settled in the South Central projects. Both had come hunting their old Prince, and their rival gangs fought a hidden war that the press took for ordinary gang violence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Belial, the Great Beast, secretly courted both and gave the signal: a 7.2 earthquake at rush hour on the night before Halloween, which cut power and water to most of the city. The Earthbound's servants then ran wild, feeding on the fear, and six days of riots followed despite the National Guard.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "On November 3, above a plaza near the wrecked City Hall, a blazing angel appeared before soldiers, rioters and news crews. The riots faded afterward and houses of worship filled. Mortals argued over what it meant; every demon knew it was the Morningstar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Since then, few fallen can resist the pull of Los Angeles, each wanting to ask Lucifer why the rebels were abandoned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-earthbound",
+   "dtf-the-fallen",
+   "dtf-faith"
+  ]
+ },
+ {
+  "id": "dcoa-infernal-court",
+  "title": "The infernal courts",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The feudal courts the fallen rebuilt after escaping the Abyss.",
+  "claims": [
+   {
+    "text": "In the rebellion Lucifer split the fallen into five legions, each under an archduke holding a fifth of the world; below came dukes over continents, barons over principalities, overlords over groups of cities, lords, and the fell knights who led the companies and held the bastions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Rank in the legions was never fixed the way it was in Heaven: lords and fell knights rose or fell often, though barons and overlords seldom lost their places.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Each local tyrant ran a court that served and protected its mortals and readied its troops for war. Five ministries did the work, and their heads formed the pentarchy, a council that advised the tyrant and spoke on succession.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "Still creatures of hierarchy, freed demons rebuilt courts quickly, some to make ready for masters still chained below, others to seize titles they never held. The courts are young, so ambitious newcomers can still climb.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "The five archdukes were Belial, Abaddon, Dagon, Asmodeus and Azrael. At some point they disappeared from the Pit, taken by powers no demon understands, and since then no demon that escaped has dared take the title.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "None of the fallen on earth is yet strong enough to call itself a duke, though in London, Paris, New York, Los Angeles and similar cities some demons have won the rank of baron by conquest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dcoa",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-the-fallen",
+   "dtf-factions",
+   "dtf-the-abyss"
+  ]
+ }
+]

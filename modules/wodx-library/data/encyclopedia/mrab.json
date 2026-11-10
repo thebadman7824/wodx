@@ -1,0 +1,491 @@
+[
+ {
+  "id": "mrab-meru",
+  "title": "Meru and the turning Wheel",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Akashic myth of a lost paradise at the centre of the Wheel.",
+  "claims": [
+   {
+    "text": "Akashic teaching holds that a few fully enlightened beings from an earlier cosmos made a home at the centre of the Wheel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Shambhala, Golconda and even Avalon are taken as faded memories of Meru, the paradise those sages built.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The cosmos is said to remake itself in human shape, with Pangu and Purusa as names for the divided Cosmic Body.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "mrab-sects"
+  ]
+ },
+ {
+  "id": "mrab-sects",
+  "title": "Akashic sects",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The many faces of the Brotherhood behind the monk image.",
+  "claims": [
+   {
+    "text": "The image of bald monks and martial artists hides a large and varied Tradition; outsiders mostly met its warriors and leaders, the Vajrapani and Kannagara.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Many Akashics stayed out of the Western war, finding raids on Technocratic Constructs foolish beside the quiet economic tactics of the Golden Dragons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "With the war for reality now fought mostly in shadow, the other Traditions prize the subtle methods the Brotherhood always used.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "mrab-shi-ren",
+   "mrab-li-hai",
+   "mrab-kannagara",
+   "mrab-jnani",
+   "mrab-vajrapani"
+  ]
+ },
+ {
+  "id": "mrab-shi-ren",
+  "title": "Shi-Ren",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Benevolent Aristocrats, or Jade Robes.",
+  "claims": [
+   {
+    "text": "The first Shi-Ren came from Western Chou nobles who lost power in the Warring States era and leaned toward Legalism.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 40,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Akashics urged such lords to seek deeper meaning in the laws they enforced, and won a small alliance of nobles weary of endless strife.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 40,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Shi-Ren influence faded under the Han and Tang, when the Wu Lung held sway, and many moved to Japan in the 7th century; the Mongol conquest later ruined those left behind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 40,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrab-sects",
+   "akashayana"
+  ]
+ },
+ {
+  "id": "mrab-li-hai",
+  "title": "Li-Hai",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Mohists, or Empty Vessels.",
+  "claims": [
+   {
+    "text": "The sect follows Mo-tzu, a pacifist skilled in war who defended small states and rejected the idea that some lives matter more to Heaven.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "At first the Kannagara would not accept Mohists as a sect, until a protest at Omei Shan called the 108 Burning Days won them recognition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Rivals call them the Mongrel Dharma, a name many Li-Hai take as praise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 42,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrab-sects",
+   "mrab-kannagara"
+  ]
+ },
+ {
+  "id": "mrab-kannagara",
+  "title": "Kannagara",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Phoenix Robes, keepers of the Elder Path.",
+  "claims": [
+   {
+    "text": "Kannagara trace their line to Meru, where the first Akasha's sermon is said to have Awakened the Garuda Valley people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Early contact with forerunners of the Euthanatos began as alliance and turned to conflict in the Himalayan War.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "After that war, the Brotherhood began to induct every member into the Kannagara for a time, and Chakravanti later let Kannagara monks follow Buddhism across their lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrab-meru",
+   "euthanatos",
+   "mrab-sects"
+  ]
+ },
+ {
+  "id": "mrab-jnani",
+  "title": "Jnani",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hermits, shamans and wandering sages of the Brotherhood.",
+  "claims": [
+   {
+    "text": "The Jnani are among the three oldest Akashic sects from the Garuda Valley, and their practice changes with each local culture.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "In the Himalayan War they used divination and spirit binding against Chakravanti necromancy, and learned much about karma in return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "In Tibet their blend with Bon shamanism set Jnani Bonpo against Kannagara who promoted Buddhism.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Jnani hermitages offered spirit help and charms to common people, which made them targets of Wu Lung and Dalou'laoshi purges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 46,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrab-sects",
+   "mrab-kannagara"
+  ]
+ },
+ {
+  "id": "mrab-vajrapani",
+  "title": "Vajrapani",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Warring Fists of the Brotherhood.",
+  "claims": [
+   {
+    "text": "When the Wu Lung broke the Shaolin Temple, Vajrapani joined many anti-Qing movements, often with the Shi-Ren.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Against Western imperialism some Warring Fists joined the Shi-Ren in the Golden Dragons, while others went to the Americas or into hiding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "The Second World War and the annexation of Korea split the sect; Chinese and Korean members still shun Japanese Vajrapani.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Today they recruit mainly through traditional martial arts schools with very harsh training.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrab-sects",
+   "mrab-shi-ren",
+   "mrab-do"
+  ]
+ },
+ {
+  "id": "mrab-do",
+  "title": "Do, the Way",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The secret holistic art of the Akashayana.",
+  "claims": [
+   {
+    "text": "Do is almost never taught outside the Brotherhood, and outsiders can only guess at it from the many disciplines it shaped.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 61,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "It springs from Meru's sages, who did every act, from gardening to war, with the same focus and sincerity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 61,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "The Vajrapani created Wu Chuan to guard the Jnani and Kannagara, and the Brotherhood taught diluted gate arts to common folk to keep its deadliest methods hidden.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 61,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "mrab-vajrapani",
+   "mrab-meru"
+  ]
+ },
+ {
+  "id": "mrab-asia-today",
+  "title": "The Brotherhood in modern Asia",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Pressures on the Akashayana in China, India and Japan.",
+  "claims": [
+   {
+    "text": "In China the Brotherhood must guard its dragon nests from Kuei-jin and shifters while monasteries are torn down for new building.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 24,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "In India relations with the Euthanatos have improved, yet only Buddhist and Jain Kannagara ascetics stay there long.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 24,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "In Japan the Zaibatsu turns dragon lines away from Akashic shrines and the kami have gone quiet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrab",
+      "page": 24,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "euthanatos",
+   "kote-courts"
+  ]
+ }
+]

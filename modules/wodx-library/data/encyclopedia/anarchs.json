@@ -1,0 +1,700 @@
+[
+ {
+  "id": "au-brujah-council",
+  "title": "The Brujah Council",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "Brujah rule behind the Soviet Union.",
+  "claims": [
+   {
+    "text": "After the Revolution the Council cut Russian elders off from their vessels and stole the native soil of many Russian Tzimisce; within a few years the old Kindred order was dead or fled.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "It replaced Princes with national rule by coterie; the Camarilla treated the USSR and its satellites as Free States in all but name, though the Council never called itself Anarch.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "For seventy years it funded revolution abroad, partly to keep the Camarilla busy; to Kindred the Cold War was one more front of the Jyhad.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah",
+   "au-russia-silence"
+  ]
+ },
+ {
+  "id": "au-russia-silence",
+  "title": "The Russian Silence",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The end of the Brujah Council.",
+  "claims": [
+   {
+    "text": "In 1985 the Council sought a normal footing with the Camarilla against unnamed threats; in 1990 all contact stopped, then all contact with any Kindred in Russia, and Tremere spying there failed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "From 1991 four archon teams went in, the last with a former Justicar, and none returned; the Camarilla now leaves Russia alone and hopes whatever is there stays put.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "With Soviet money gone, Anarchs in Latin America and Africa lost heavily through the 1990s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-brujah-council"
+  ]
+ },
+ {
+  "id": "au-favors",
+  "title": "Favours among Anarchs",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Prestation by another name.",
+  "claims": [
+   {
+    "text": "Anarchs trade favours just as other Kindred trade boons, but call them favours and hide their debts more than Camarilla Kindred do, because elder games carry a stigma.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "They prefer deals settled on the spot to debts called in later.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs"
+  ]
+ },
+ {
+  "id": "au-free-states",
+  "title": "Free States",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Anarch domains run by representation.",
+  "claims": [
+   {
+    "text": "Many domains claim the name; a true free state at least tries representative democracy, as Portland, Belfast and Santiago do, usually in dense cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Most have a charter or constitution; many have signed the Status Perfectus, and some declare the whole domain Elysium, banning violence among Kindred save self-defence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Some follow a presidential model and others a parliamentary one; small populations mean citizens know their representatives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Borders are porous: Camarilla Kindred slip in for secret deals or to leave unsanctioned childer seeking asylum, and much Camarilla and Sabbat diplomacy takes place on Anarch ground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "anarchs",
+   "au-domain-types"
+  ]
+ },
+ {
+  "id": "au-domain-types",
+  "title": "Kinds of Anarch Domain",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Anarch domains are run.",
+  "claims": [
+   {
+    "text": "Baronies have one unelected ruler with a few officers; many began as free states or communes and keep the title on paper. Barons are often younger and easier to shame than Princes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 48,
+      "pdf": 49
+     },
+     {
+      "book": "anarchs",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Dynasties follow a charismatic revolutionary's heir, whose reign always lives in the founder's shadow; dynasts are usually called Barons anyway.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Communes hold feeding rights in common or open them to anyone and rule by consensus or committee; they last best when bound by a shared faith or ideal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 49,
+      "pdf": 50
+     },
+     {
+      "book": "anarchs",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Frontier territories are so thinly settled they need no order at all; many there call themselves autarkis. Anocracies, like much of Los Angeles County, are fought over by rival gangs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-free-states",
+   "au-domain-types-2"
+  ]
+ },
+ {
+  "id": "au-domain-types-2",
+  "title": "Cults, Islands and Fifth Columns",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "More kinds of Anarch domain.",
+  "claims": [
+   {
+    "text": "Cult domains, most of them Noddist, merge belief and rule, sometimes with ancient titles such as ensi and sanga; unbelievers rank second, and few last long.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Islands are Anarch domains ringed by other sects; many become client states, while others serve as neutral ground for cross-sect business or a refuge for those not quite worth a Blood Hunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 50,
+      "pdf": 51
+     },
+     {
+      "book": "anarchs",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Squadrismo domains keep a real vote while a gang of uniformed thugs, secretly allied with the leaders, rules the streets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Fifth columns are Anarchs living under Camarilla or Sabbat rule who spread the cause by samizdat and private email lists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-domain-types"
+  ]
+ },
+ {
+  "id": "au-liberty-club",
+  "title": "The Liberty Club",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Boston's talking Anarchs.",
+  "claims": [
+   {
+    "text": "Led by the Toreador neonate Andrea Parker, the Club holds and crashes Ivory Tower gatherings to argue freedom, drawing many young Brujah Idealists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "It seeks change from inside the Camarilla rather than recruits; its question is why one obeys. The court tolerates it and many there do not see its members as Anarchs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-free-states"
+  ]
+ },
+ {
+  "id": "au-barony-of-angels",
+  "title": "The Barony of Angels",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Jeremy MacNeil's domain in Los Angeles.",
+  "claims": [
+   {
+    "text": "The California Free States stretch north from Mexico by way of San Diego and Los Angeles up toward San Francisco; holdings last only as long as one can keep them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Only the Barony of Angels downtown, founded by Jeremy MacNeil, goes undisputed; Anarchs may feed there freely while they keep the Masquerade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Faced with the Sabbat from Baja, Los Angeles and Orange County stand together, but turn on each other over trade at the ports.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-free-states"
+  ]
+ },
+ {
+  "id": "au-venezuela",
+  "title": "Venezuelan Anarchs",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Warlords of the drug trade.",
+  "claims": [
+   {
+    "text": "Some of the most violent Anarchs come to Venezuela to build empires on drug money; most reject every form of control, the Traditions included.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "There are no neutral grounds or shared laws; Barons raise private armies in slums and estates and stir up their neighbours' gangs to hide their own Masquerade breaches.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-domain-types"
+  ]
+ },
+ {
+  "id": "au-mombasa",
+  "title": "Mombasa",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Lasombra antitribu on the African coast.",
+  "claims": [
+   {
+    "text": "Lasombra antitribu Anarchs have held territory here for some three hundred years, using piracy as cover in their feud with the Sabbat Lasombra, whom they blame for betraying the Movement at Thorns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "They sell safe sea passage between Europe and Africa to any who can pay, pass what they learn of passengers to European Anarchs, and grow rich on the arms trade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra"
+  ]
+ },
+ {
+  "id": "au-solomons-haven",
+  "title": "Solomon's Haven",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A domain on the Deep Web.",
+  "claims": [
+   {
+    "text": "Built by Marciana Gollancz, a Spanish computer engineer who rules as the Baron Solomon under a secret identity, it claims over a thousand Kindred citizens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Any vampire may join with a verified account but must log in weekly; member lists are encrypted and wiped often.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   },
+   {
+    "text": "Members use it to extend Contacts and Communities and to pass documents and manifestos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 62,
+      "pdf": 63
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-free-states"
+  ]
+ },
+ {
+  "id": "au-shrecknet",
+  "title": "ShreckNet",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Nosferatu web and its successors.",
+  "claims": [
+   {
+    "text": "ShreckNet began as a joke name for secret Nosferatu hubs on the early military network; privatisation in 1995 and the boom in hubs shrank it to a vampire-only net across about thirty cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "After a 1999 scare over a bulletin board for monster hunters, the Camarilla set up a task force to watch the Internet; it now uses scores of vampires and thousands of servants and is still too small.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "ShreckNet 2.0 added a web kit and browser whose hidden page sections show only to Auspex or the secure browser; the Inner Circle rewarded its makers with boons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "After a Malkavian blogger's breach in 2000 many elders banned it, which in effect gave the Internet to the Anarchs and angered young Kindred of every sect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nosferatu"
+  ]
+ },
+ {
+  "id": "au-fangster",
+  "title": "Fangster",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Technomancy as freeware.",
+  "claims": [
+   {
+    "text": "In 2001 a coterie of Tremere defectors brought Technomancy lore to the Free States and, backed by the Red Question, released free programs with ritual effects built in, usable without any knowledge of Thaumaturgy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-shrecknet",
+   "tremere"
+  ]
+ },
+ {
+  "id": "au-armory",
+  "title": "Armory",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A new Background.",
+  "claims": [
+   {
+    "text": "Armory gives access to stored weapons with ammunition and upkeep; what counts as legal depends on the region, and the Storyteller may require Influence or Allies to keep it from seizure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "One dot is a good street armoury of legal arms; two can arm a gang of ten; three a small militia plus five people with grey-market arms; four is SWAT level with some military hardware.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Armory can be pooled like other Backgrounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "anarchs",
+      "page": 99,
+      "pdf": 100
+     }
+    ]
+   }
+  ],
+  "see": [
+   "au-free-states"
+  ]
+ }
+]

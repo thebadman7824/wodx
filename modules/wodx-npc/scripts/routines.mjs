@@ -995,7 +995,7 @@ export function build(ctx) {
         return {text: `${w.name} raises the alarm.${heard.length ? ` ${heard.map(h => h.name).join(", ")} hear it.` : " Nobody is within call."} ${sc.name} is on alarm for an hour.`, snap};
       }
       case "send": {
-        const scene = canvas.scene, places = listPlaces();
+        const scene = canvas.scene;
         const onHere = new Set(canvas.tokens.placeables.map(t2 => t2.actor?.id));
         const helpers = routineNpcs().filter(a => !onHere.has(a.id) && profileFor(a).template === "guard" && !downState(a)).slice(0, 2);
         if ( !helpers.length ) { await pause([w.actor]); return {text: `${w.name} sends for help, but no one of the watch is free.`, snap}; }

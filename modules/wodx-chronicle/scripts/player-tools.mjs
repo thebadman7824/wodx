@@ -19,7 +19,10 @@ export const PLAYER_TOOLS = [
   {name: "wodxJack", label: "Jack into the Net", module: "WoDX Otherworlds"},
   {name: "wodxCreation", label: "Spend experience", module: "WoDX Creation"},
   {name: "wodxFindMe", label: "Find my character", module: "WoDX Chronicle"},
-  {name: "wodxOnYourOwn", label: "Out on your own", module: "WoDX Storyteller"}
+  {name: "wodxOnYourOwn", label: "Out on your own", module: "WoDX Storyteller"},
+  {name: "wodxLetters", label: "Send a letter", module: "WoDX Storyteller"},
+  {name: "wodxDowntime", label: "Downtime request", module: "WoDX Storyteller"},
+  {name: "wodxTasks", label: "Long tasks", module: "WoDX Storyteller"}
 ];
 
 /** Does this player see this button? Pure. map: the playerTools setting. */

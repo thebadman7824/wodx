@@ -1,0 +1,1521 @@
+[
+ {
+  "id": "wda-garou",
+  "title": "The Garou in the Dark Medieval",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Werewolves of the thirteenth century: a race apart, sworn to Gaia, hidden from humankind.",
+  "claims": [
+   {
+    "text": "Werewolves are born, never made: neither a bite nor a curse turns a human or wolf into one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 16,
+      "pdf": 17
+     },
+     {
+      "book": "wtda",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "A Garou heals far faster than any beast, can smash an oak door, and a mail shirt will not stop its claws.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Spirits teach the Garou their Gifts, and every Garou owes a sacred duty to protect Gaia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The Garou hide because humans vastly outnumber them and open war would likely wipe them out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes",
+   "wda-silver",
+   "garou"
+  ]
+ },
+ {
+  "id": "wda-folk-belief",
+  "title": "What Mortals Believe of Werewolves",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The rumours of the age, and how little of them is true.",
+  "claims": [
+   {
+    "text": "Most people take werewolves for sorcerers who sold their souls to Satan, or for humans changed by some means.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Supposed ways to become one include a bite, drinking from a wolf's paw print, wolfsbane or belladonna, or birth under an eclipse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Of the common protections, only silver truly works; wolfsbane and the crucifix do not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Werewolves do not serve Satan and do not acknowledge the Devil; their faith is thousands of years older than Christianity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Werewolves are mortal: luck, skill or persistence can kill one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-silver",
+   "wda-garou"
+  ]
+ },
+ {
+  "id": "wda-silver",
+  "title": "Silver",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The lunar metal, the bane most feared by the Garou.",
+  "claims": [
+   {
+    "text": "Silver burns werewolves and they have little defence against it; one silver arrowhead can kill.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Few humans know of the weakness, and those who do can rarely afford enough silver for a weapon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-garou",
+   "wda-folk-belief"
+  ]
+ },
+ {
+  "id": "wda-impergium",
+  "title": "The Impergium Remembered",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The ancient culling of humans, and the regret it leaves.",
+  "claims": [
+   {
+    "text": "Thousands of years ago the Garou culled human numbers, until the gentler werewolves ended the practice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Factions in almost every tribe call ending it the worst mistake the Garou ever made, but humans are now too many and too settled to begin again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The Children of Gaia hold the Impergium itself to be the greatest failure of the Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "impergium",
+   "wda-children-of-gaia"
+  ]
+ },
+ {
+  "id": "wda-why-no-war",
+  "title": "Why the Garou Do Not Raze the Cities",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "What holds the werewolves back from war on humankind.",
+  "claims": [
+   {
+    "text": "Several tribes, the Children of Gaia, Bone Gnawers and Warders of Men above all, would fight such a war with all their strength.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Vampires love the cities and would likely side with humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "In open war humans would sooner or later learn the truth about silver.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-leeches",
+   "wda-silver"
+  ]
+ },
+ {
+  "id": "wda-eclipse-1230",
+  "title": "The Eclipse of 1230",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "In May 1230 a great eclipse stirs dread across the Garou Nation.",
+  "claims": [
+   {
+    "text": "In May of 1230 an eclipse darkens the sky so deeply that workers go home thinking night has come.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The Garou recall the Prophecies of Shadow, one of which came true when Constantinople fell.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "The Ten Tribes fear their own prophecy will be next; the mood is a calm before a storm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-prophecies",
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-prophecies",
+  "title": "The Prophecies of Shadow",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A cryptic forecast of calamity, first given to a Red Talon.",
+  "claims": [
+   {
+    "text": "The Prophecies of Shadow were first given to a Red Talon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "The Red Talons have pressed hardest to spread word of the visions to the other tribes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-eclipse-1230",
+   "wda-red-talons"
+  ]
+ },
+ {
+  "id": "wda-faith",
+  "title": "Werewolf Faith",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Garou live beside the spirits and need no faith to believe in them.",
+  "claims": [
+   {
+    "text": "A Garou questions Gaia and the spirits no more than breathing; even one raised in a church cannot deny the living spirit of the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "A werewolf who blends Garou truth with a human religion would be called a heretic in this age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Without Gaia a Garou would lose the Gifts, leave werewolf society and sink into Harano, a slow wasting despair.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Some Garou make war on the Church and the papal knightly orders; others wait for the age to pass.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "The Fenrir punish Odin-worship among their people, and in Poland the Shadow Lords curse the name Kupala.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-harano",
+   "wda-inquisition"
+  ]
+ },
+ {
+  "id": "wda-harano",
+  "title": "Harano",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The great despair that takes a Garou cut off from Gaia.",
+  "claims": [
+   {
+    "text": "A Garou without Gaia slides into Harano and wastes away alone and in pain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-faith"
+  ]
+ },
+ {
+  "id": "wda-kinfolk",
+  "title": "Kinfolk",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Humans and wolves with werewolf blood, through whom the Garou breed.",
+  "claims": [
+   {
+    "text": "Garou must breed with Kinfolk to reproduce.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "A tribe's human Kin usually live in one town or village near a caern; wolf Kin often range nearby.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kinfolk",
+   "wda-garou"
+  ]
+ },
+ {
+  "id": "wda-breeds",
+  "title": "Homid, Lupus and Metis",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Breeds in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "Homids are often more tolerant of humanity, though even they agree humans must be shielded from their own ignorance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Lupus are raised in wolf packs; their first frenzies are shorter and less wild, but they have no inborn respect for humans.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The few metis allowed to live grow up among the Garou, better prepared than any homid or lupus, yet scorned for life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "breeds",
+   "wda-first-change"
+  ]
+ },
+ {
+  "id": "wda-auspices",
+  "title": "Auspices",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The five moons of birth and the roles they bring.",
+  "claims": [
+   {
+    "text": "Ragabash, the tricksters, have little Rage but learn Gifts of misdirection and stealth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Theurges, of the crescent moon, walk the spirit paths, guard against others' magic and most know healing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Philodox of the half moon are judges and lawgivers who can command spirits.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Galliards of the gibbous moon keep the histories and often open the sacred rites with dance and song.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Ahroun of the full moon are spirit warriors, the embodiment of Gaia's Rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "auspices",
+   "wda-breeds"
+  ]
+ },
+ {
+  "id": "wda-first-change",
+  "title": "The First Change",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How a cub becomes a werewolf, and how the sept brings the cub home.",
+  "claims": [
+   {
+    "text": "The First Change comes at puberty, usually under stress, and the new werewolf usually flies into frenzy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Spirits and Kinfolk reach the local Garou near the time, and several werewolves come to fetch the cub.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Some septs force the Change by hunting and terrifying a cub on the full moon, which gave rise to the tale that a bite spreads lycanthropy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "After the Change, the cub is brought to a caern.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-breeds",
+   "wda-folk-belief"
+  ]
+ },
+ {
+  "id": "wda-black-furies",
+  "title": "Black Furies",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "The only all-female tribe, tracing descent from the Amazons; male children are exposed or given to other tribes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "They are strong in the Middle East and Byzantium and guard the females of every species.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Pegasus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-bone-gnawers",
+  "title": "Bone Gnawers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "Survivors tied to the lower classes and the growing urban poor, with little time for nobility.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "With the Warders they even keep caerns inside human settlements.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Rat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-children-of-gaia",
+  "title": "Children of Gaia",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "The peacemakers, who long for the days when all tribes were one and seek peaceful ways to hold back the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "They rarely turn other tribes away from their caerns, yet fight fiercely when pushed too far.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Unicorn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-fenrir",
+  "title": "Fenrir",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "The harsh northern tribe steeped in Norse ways, who prize deeds over politics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "They treat weakness in another tribe as a possible sign of taint.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Fenris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-fianna",
+  "title": "Fianna",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "Spread with their Celtic kin, strongest in the British Isles, passionate in love and war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Even the Silver Fangs defer to their lore of history; others fear their ties to the fae.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Stag.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-red-talons",
+  "title": "Red Talons",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "The wolf tribe, still watchful of any human who enters their lands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     },
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "They have pressed the Prophecies of Shadow on the other tribes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     },
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Griffin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     },
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-silent-striders",
+  "title": "Silent Striders",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "Jackal-like wandering nomads who carry word between the closed septs of Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Their Iberian Kin stand on both sides of the Reconquista war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Owl.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-silver-fangs",
+  "title": "Silver Fangs",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "The self-styled rulers and nobles of the Garou, now in slow decline.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Their Kin marry into Europe's noble houses, and other tribes whisper of madness among them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Falcon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-shadow-lords",
+  "title": "Shadow Lords",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "A menacing tribe that means to replace the Silver Fangs as rulers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Rumour says they deal with Leeches; they hold that the ends justify the means.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Grandfather Thunder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-warders-of-men",
+  "title": "Warders of Men",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A tribe of the Garou in the Dark Medieval.",
+  "claims": [
+   {
+    "text": "The tribe closest to humans, at home in cities, above all the Italian city-states.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "They study industry and invention, and some say they favour the Weaver over the Wyld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Their totem is Cockroach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-tribes"
+  ]
+ },
+ {
+  "id": "wda-tribes",
+  "title": "The Ten Tribes",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The tribes of the Dark Medieval Garou, each under its own totem.",
+  "claims": [
+   {
+    "text": "Galliards sing that all Garou were once one tribe; now there are many, and wars between them are not rare.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Some tribes are tied to human peoples, like the Fenrir and Fianna; others cross borders, like the Bone Gnawers and Warders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Each tribe honours its own totem spirit, which sets rules and teaches the tribe's Gifts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Garou of 1230 count Ten Tribes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-black-furies",
+   "wda-bone-gnawers",
+   "wda-children-of-gaia",
+   "wda-fenrir",
+   "wda-fianna",
+   "wda-red-talons",
+   "wda-silent-striders",
+   "wda-silver-fangs",
+   "wda-shadow-lords",
+   "wda-warders-of-men",
+   "wda-white-howlers"
+  ]
+ },
+ {
+  "id": "wda-white-howlers",
+  "title": "The Fall of the White Howlers",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How a Pictish tribe became the Black Spiral Dancers.",
+  "claims": [
+   {
+    "text": "The White Howlers were a great tribe living among Pictish Kin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "On the darkest night of Gaia's protectors the whole tribe went into a Wyrm pit, and none came back as they went in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "What climbed out were the Black Spiral Dancers, children of the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "The Fianna still feel the loss of the White Howlers keenly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-black-spiral-dancers",
+   "lost-tribes"
+  ]
+ },
+ {
+  "id": "wda-black-spiral-dancers",
+  "title": "Black Spiral Dancers",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Wyrm-worshipping Garou of the fouled caerns and the deep labyrinths.",
+  "claims": [
+   {
+    "text": "They worship the Wyrm from despoiled caerns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Their deep labyrinths wind between the Umbra and the physical world; humans reach only dead ends.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-white-howlers",
+   "black-spiral-dancers"
+  ]
+ },
+ {
+  "id": "wda-leeches",
+  "title": "Leeches",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The vampires, as the Garou see them.",
+  "claims": [
+   {
+    "text": "Leeches infest every city in Europe and hold great sway over human affairs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "In the Impergium humans turned to the undead for help, and the descendants of those beings still lurk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Being undying, they plan for the long term; a beaten vampire may return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "Leeches have worked their way into the Church and the Reconquista and led knights to slaughter towns of Kinfolk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-why-no-war",
+   "wda-shadow-lords"
+  ]
+ },
+ {
+  "id": "wda-inquisition",
+  "title": "The Inquisition",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Church hunters who have begun to seek out the Garou.",
+  "claims": [
+   {
+    "text": "The Children of Gaia fear the inquisitors who seem bent on finding and destroying the Garou, and ask who set them on that trail.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-faith",
+   "wda-leeches"
+  ]
+ },
+ {
+  "id": "wda-ireland",
+  "title": "Ireland",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The land where the Fianna rule among the Garou.",
+  "claims": [
+   {
+    "text": "In Ireland the Fianna live as their ancestors did, in magical caerns where faerie glamour and spirit gifts mingle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Many Fianna are better known for song and drink than for battle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wtda",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wda-fianna"
+  ]
+ }
+]

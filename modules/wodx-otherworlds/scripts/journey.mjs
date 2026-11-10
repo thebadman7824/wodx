@@ -5,6 +5,7 @@
  */
 import {MODULE_ID, placeOf} from "./ratings.mjs";
 import {tokenLayer} from "./twins.mjs";
+import {STATUS} from "./crossing.mjs";
 import * as J from "./journey-rules.mjs";
 import {JOURNEY_TABLES} from "../data/journey-tables.mjs";
 
@@ -17,6 +18,8 @@ const all = c => (c ? [...(c.contents ?? c)] : []);
 export function registerJourneySettings() {
   game.settings.register(MODULE_ID, "journeyCount", {scope: "world", config: false, type: Number, default: 0});
   game.settings.register(MODULE_ID, "decay", {name: "Shadowlands decay on the map", hint: "When your token stands in the Shadowlands, the map greys and rots by the local Shroud (lower Shroud, more decay).",
+    scope: "client", config: true, type: Boolean, default: true, onChange: () => applyDecay()});
+  game.settings.register(MODULE_ID, "looks", {name: "Looks of the other worlds", hint: "When your token stands in the Near Dreaming, its colours shimmer; when your character is jacked into the Net, the map shows as glowing lines.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => applyDecay()});
 }
 
@@ -46,7 +49,8 @@ let CAL = null;
 import("../../wodx-chronicle/scripts/calendar.mjs").then(m => { CAL = m; }).catch(() => { CAL = null; });
 export function moonNow() {
   if ( !CAL ) return null;
-  const lat = game.settings.get("wodx-chronicle", "latitude");
+  let lat;
+  try { lat = game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return null; }
   return CAL.describeTime(game.time.worldTime, lat)?.moon?.index ?? null;
 }
 
@@ -105,21 +109,51 @@ export async function journeyDialog() {
 
 /* ---- the Shadowlands' decay ---- */
 
-/** The decay for this client now: the controlled token's, when it stands in the Shadowlands. */
+/** The look for this client now: the controlled token's layer (the Shadowlands' decay, the Dreaming's shimmer, the Net's lines). */
+const flag = key => { try { return game.settings.get(MODULE_ID, key) !== false; } catch (e) { return true; } };
+const viewer = () => globalThis.canvas?.tokens?.controlled?.[0]?.document ?? null;
+const viewerLayer = t => t ? {layer: tokenLayer(t), inNet: !!t.actor?.statuses?.has?.(STATUS.net.id)} : {layer: "physical", inNet: false};
+let phase = 1;
 export function decayCss() {
-  let on = true;
-  try { on = game.settings.get(MODULE_ID, "decay"); } catch (e) { on = true; }
-  if ( !on ) return "";
-  const t = canvas?.tokens?.controlled?.[0]?.document;
-  if ( !t || tokenLayer(t) !== "shadowlands" ) return "";
+  const t = viewer();
+  if ( !t ) return "";
+  const {layer, inNet} = viewerLayer(t);
   let shroud = null;
-  try { shroud = placeOf(t)?.ratings?.shroud ?? null; } catch (e) { shroud = null; }
-  return J.decayCss(shroud);
+  if ( layer === "shadowlands" ) { try { shroud = placeOf(t)?.ratings?.shroud ?? null; } catch (e) { shroud = null; } }
+  if ( inNet && flag("looks") ) netFilter();
+  return J.layerLookCss({layer, inNet, shroud, phase, looks: flag("looks"), decay: flag("decay")});
 }
+export const lookCss = decayCss;
+/** The Net's SVG filter, put in the page once. */
+function netFilter() {
+  if ( document.getElementById(J.NET_FILTER_ID) ) return;
+  const holder = document.createElement("div");
+  holder.id = `${J.NET_FILTER_ID}-holder`;
+  holder.innerHTML = J.NET_SVG;
+  document.body.appendChild(holder);
+}
+/** The Dreaming's sway: the hue eases one way and back while the viewer stands there. */
+let sway = null;
+function keepSway() {
+  const {layer, inNet} = viewerLayer(viewer());
+  const want = layer === "dreaming" && !inNet && flag("looks");
+  const board = globalThis.document?.getElementById?.("board");
+  if ( want && !sway ) {
+    const half = J.LOOKS.dreaming.period / 2;
+    if ( board ) board.style.transition = `filter ${half}ms ease-in-out`;
+    sway = setInterval(() => { phase = -phase; applyDecay(); }, half);
+  } else if ( !want && sway ) {
+    clearInterval(sway); sway = null; phase = 1;
+    if ( board ) board.style.transition = "";
+  }
+  return want;
+}
+export const swaying = () => !!sway;
 
 /** Put it on the map: through WoDX Atmosphere's grade when that is on (the two filters join), else alone. */
 let last = null;
 export function applyDecay() {
+  keepSway();
   const atmo = game.modules.get("wodx-atmosphere");
   if ( atmo?.active && atmo.api?.kit?.grade ) { atmo.api.kit.grade(); return; }
   const board = document.getElementById("board");

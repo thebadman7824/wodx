@@ -1,0 +1,224 @@
+[
+ {
+  "id": "waways-lupus-origins",
+  "title": "Lupus views of wolf origins",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How wolf-born Garou see their ancestry.",
+  "claims": [
+   {
+    "text": "Lupus claim wolves were among the first of Gaia’s beasts and were always hunters, made by Gaia as they are now.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "They resent being reminded that raccoons and hyenas are distant kin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Some homids argue the forms follow an evolutionary line from human down to wolf, but cannot then explain the Hispo; others see a guiding intelligence behind the Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waways-two-legs",
+  "title": "Lupus and the upright forms",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why wolf-born Garou struggle on two legs.",
+  "claims": [
+   {
+    "text": "Newly Changed lupus must learn to walk upright, and find it far harder than homids find moving on four legs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Homids and metis choose forms tactically for each situation; lupus view the forms quite differently, and some elders sneer that homids yield to Gaia’s will while lupus must fight it to take an unnatural shape.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waways-breeding-rites",
+  "title": "Lupus breeding rites",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rites for tracking and shaping wolf litters.",
+  "claims": [
+   {
+    "text": "The Rite of Birth Time, level one, tells a Garou when a wolf will give birth, so lupus know when to go back and see whether a pup is Garou; homids find the rite disgusting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "The Rite of Pure Breeding, level two, judges whether mating a given wolf will pass on a chosen trait such as a larger litter or Garou heritage: one Gnosis and Intelligence + Primal-Urge at difficulty 7, or 9 for heritage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "A wolf that lacks the capacity for a trait will never breed for it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Over recent decades some lupus have tried a breeding programme to keep their lines strong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waways-find-water"
+  ]
+ },
+ {
+  "id": "waways-find-water",
+  "title": "Find Water",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A lupus level one Gift.",
+  "claims": [
+   {
+    "text": "The Gift finds any body of water within twenty miles on Perception + Survival at difficulty 6.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "One or two successes give the direction, three or four the distance, and five reveal whether the water is tainted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waways-breeding-rites"
+  ]
+ },
+ {
+  "id": "waways-toolstick",
+  "title": "Toolstick and Tool Talens",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A wooden fetish that becomes any tool.",
+  "claims": [
+   {
+    "text": "The Toolstick, level 3 and Gnosis 6, is a branch from a tree that turns into any tool, still wooden but as hard as steel, on Intelligence + Repair against its Gnosis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Tool Talens, Gnosis 3, are nuts, pebbles and bark from the wild, kept fifty to a sack, that become five nails or screws per success when used with it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waways",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

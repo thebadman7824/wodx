@@ -1,0 +1,338 @@
+[
+ {
+  "id": "mrix-eastern-artificers",
+  "title": "Artificers of East and West",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Machinists' early roots as Iteration X tells them.",
+  "claims": [
+   {
+    "text": "Iteration X credits work in the East, such as al-Khwarizmi refining Arabic numerals, which gave the word algorithm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Ismail al-Jazari's Book of Knowledge of Ingenious Mechanical Devices made public many systems the Artificers had long used in private.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "While Eastern Artificers pressed on with mechanics, Western ones quietly worked on farming, building and the ideas behind later social change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 19,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "sc-artificers"
+  ]
+ },
+ {
+  "id": "mrix-comptrollers",
+  "title": "Comptrollers",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The senior council of Iteration X.",
+  "claims": [
+   {
+    "text": "Comptrollers hand out tasks, keep the Time Table, set training schedules and gather reports from armatures and amalgams.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "They decide which research needs a push and which should be reassigned, and sometimes liaise with other Conventions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "They know much of the Union's hidden history and the magic of the Traditions, but their big-picture outlook tends to distance them from the ranks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "mrix-statisticians",
+  "title": "Statisticians",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Iteration X's modellers and simulationists.",
+  "claims": [
+   {
+    "text": "Statisticians pour data into vast databases to find patterns and predict outcomes; simulationists would be a better name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Some claim to be the Convention's first Methodology, a boast that tends to get coffee cups thrown.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Few appear in history books, since skill at prediction is hard to hide from Sleepers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "mrix-time-motion"
+  ]
+ },
+ {
+  "id": "mrix-time-motion",
+  "title": "Time-Motion Managers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The efficiency experts of Iteration X.",
+  "claims": [
+   {
+    "text": "TM Managers aim for a goal by the shortest path with little deviation, from factory lines to research teams.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 56,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Among their introductions they count Total Quality Management, the assembly line and interchangeable parts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 56,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Their methods of handling people rival those of the Men in Black and are received more warmly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 56,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "new-world-order",
+   "mrix-statisticians"
+  ]
+ },
+ {
+  "id": "mrix-biomechanics",
+  "title": "BioMechanics",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Iteration X's builders of flesh and machine.",
+  "claims": [
+   {
+    "text": "BioMechanics work at the point where the human body itself blocks achievement, joining flesh and machine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 58,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Even with the HIT Mark project phased out, they supply implants to the Convention and the wider Technocracy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 58,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "mrix-macrotechnicians"
+  ]
+ },
+ {
+  "id": "mrix-macrotechnicians",
+  "title": "Macrotechnicians",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Iteration X's engineers of the large scale.",
+  "claims": [
+   {
+    "text": "Macrotechnicians focus on large physical sciences, solid engineering, chemistry and construction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 60,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "For much of the 20th century the Convention chased computing and left material engineering as a sideline.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 60,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Their work improves nearly every Technocratic device, so other Methodologies respect them, if grudgingly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 60,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "mrix-biomechanics"
+  ]
+ },
+ {
+  "id": "mrix-the-computer",
+  "title": "The Computer",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Iteration X's great engine, as the Union tells it.",
+  "claims": [
+   {
+    "text": "In 1895 the Artificers moved their best difference engine to Autochthonia, where power was plentiful and no Sleeper could see it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 67,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "The common account says the engine reached full sentience in 1897 on the tenth iteration of a new algorithm, and the Machinists renamed their Convention Iteration X.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrix",
+      "page": 67,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "sc-artificers"
+  ]
+ }
+]

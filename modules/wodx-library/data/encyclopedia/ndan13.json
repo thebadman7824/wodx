@@ -1,0 +1,35 @@
+[
+ {
+  "id": "ndan13-eldest-return",
+  "title": "Whispers of the Eldest",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Rumours of the Tzimisce founder’s return.",
+  "claims": [
+   {
+    "text": "Tzimisce lords whispered that the Eldest had come back after long years to the mountains around Sarmizegetusa, where it had once dwelt for centuries.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ndan13",
+      "page": 218,
+      "pdf": 220
+     },
+     {
+      "book": "cbtzimisce",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbtz-kupalas-eve"
+  ]
+ }
+]

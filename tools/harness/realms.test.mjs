@@ -107,10 +107,30 @@ test("Otherworlds 0.4.0 is wired: tools, the api, the twins window and the statu
   assert.match(main, /registerRealmSettings\(\)/); assert.match(main, /setupRealms\(\)/);
   assert.match(app, /data-action="dreaming"/); assert.match(app, /data-action="trod"/);
   for ( const id of ["wodx-dreaming", "wodx-deep-umbra", "wodx-net"] ) assert.match(cross, new RegExp(id));
-  assert.equal(JSON.parse(readFileSync(new URL("../../modules/wodx-otherworlds/module.json", import.meta.url), "utf8")).version, "0.4.1");
+  assert.equal(JSON.parse(readFileSync(new URL("../../modules/wodx-otherworlds/module.json", import.meta.url), "utf8")).version, "0.7.2");
 });
 
 test("a refused Net or gateway returns nothing, so a caller can tell it from a done one", () => {
   const src = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/realms.mjs", import.meta.url), "utf8");
   assert.ok(!/return ui\.notifications\.warn\(/.test(src.replace(/\? \w+\([^)]*\) : ui\.notifications\.warn/g, "")));
+});
+
+/* WoDX Otherworlds 0.5.0: the looks of the other worlds. */
+test("each layer's look: decay in the Shadowlands, a swaying shimmer in the Dreaming, lines in the Net", () => {
+  assert.equal(J.layerLookCss({layer: "physical"}), "");
+  assert.equal(J.layerLookCss({layer: "penumbra"}), "", "the Penumbra's twin art is already silvered");
+  assert.equal(J.layerLookCss({layer: "shadowlands", shroud: 5}), J.decayCss(5));
+  assert.equal(J.layerLookCss({layer: "shadowlands", shroud: 5, decay: false}), "");
+  const a = J.layerLookCss({layer: "dreaming", phase: 1}), b = J.layerLookCss({layer: "dreaming", phase: -1});
+  assert.match(a, /hue-rotate\(28deg\)/);
+  assert.match(b, /hue-rotate\(-28deg\)/);
+  assert.match(J.layerLookCss({layer: "dreaming", phase: 9}), /hue-rotate\(28deg\)/);
+  assert.equal(J.layerLookCss({layer: "dreaming", looks: false}), "");
+  assert.equal(J.layerLookCss({layer: "shadowlands", inNet: true}), `url(#${J.NET_FILTER_ID})`, "the Net wins over the layer");
+  assert.equal(J.layerLookCss({inNet: true, looks: false}), "");
+  assert.match(J.NET_SVG, new RegExp(`<filter id="${J.NET_FILTER_ID}"`));
+  assert.match(J.NET_SVG, /feConvolveMatrix/);
+  const src = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/journey.mjs", import.meta.url), "utf8");
+  assert.match(src, /register\(MODULE_ID, "looks"/);
+  assert.match(src, /keepSway\(\)/);
 });

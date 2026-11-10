@@ -1,0 +1,219 @@
+[
+ {
+  "id": "bkw-weaver-wyrm",
+  "title": "The Weaver and the Wyrm",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the two corrupted powers of the Triat feed each other.",
+  "claims": [
+   {
+    "text": "Because the Wyrm is caught inside the Pattern Web, it hates the Weaver's works most yet finds them easiest to corrupt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Weaver often misses this, or takes what happens as serving its own plan: a world frozen in perfect, unchanging order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Almost everything has the Weaver's mark, since fixed form and substance are its work; even animals that use simple tools carry a trace of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A Wendigo Theurge of Newfoundland tells how the great auks were slaughtered and boiled for oil to fuel machines, men doing the Wyrm's work for the Weaver.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "triat",
+   "wyrm"
+  ]
+ },
+ {
+  "id": "bkw-machine",
+  "title": "The Machine and the Digital Web",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The newest and fastest-growing Weaver power.",
+  "claims": [
+   {
+    "text": "Computers and the Internet have sharpened the Onesong, the communion of Weaver-spirits, and a single spirit in the Pattern Web can now call swarms of Pattern Spiders in seconds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "The Digital Web is weaving itself into the Pattern Web, and both webs grow tighter each year.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Pattern Spiders work to calcify the Penumbra; if they succeed, the spirit world will choke on webbing and Earth will become one endless city.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "The Machine, a spirit that grew with human technology, is waking toward full awareness and may become a Celestine; Glass Walker Theurges argue whether it would help or rival Gaia.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "triat",
+   "glass-walkers",
+   "bkw-weaver-wyrm"
+  ]
+ },
+ {
+  "id": "bkw-weaver-spiders",
+  "title": "Spiders of the Weaver",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Some of the many spider-spirits that serve the Weaver.",
+  "claims": [
+   {
+    "text": "Guardian-Spiders look like clumps of webbing, defend and mend the Pattern Web to the death, and never leave its side.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Mind-Spiders spread the Web into Epiphs and Dream Realms in swarms of thousands that send other spirits fleeing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Nano-Spiders, too small to see unaided, first hatched only twenty or thirty years ago after long silence, and Weaver servants take them as a sign the Weaver may yet recover.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   }
+  ],
+  "see": [
+   "triat",
+   "bkw-machine"
+  ]
+ },
+ {
+  "id": "bkw-pentex-technocracy",
+  "title": "Pentex and the Technocracy",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rumours of a corrupt alliance.",
+  "claims": [
+   {
+    "text": "Leaks suggest some alliance between Pentex and a Technocracy special projects division, though far from a smooth one.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "Some say Pentex sought out the tech-mages to give the Wyrm a new way into the world; mages say both are small fish beside the Syndicate, and conspiracy buffs call it all a military front.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bkw",
+      "page": 90,
+      "pdf": 91
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pentex",
+   "technocracy",
+   "syndicate"
+  ]
+ }
+]

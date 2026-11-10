@@ -19,7 +19,6 @@ const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const REF = M.REF;
 const ATTRS = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];
-const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());
 
 export const isMummy = actor => !!actor && (actor.type === "Mummy" || !!actor.system?.settings?.hasbalance && !!actor.system?.settings?.hassekhem);
 
@@ -160,7 +159,7 @@ export function build(ctx) {
     async function offense(actor) {
         const i = info(actor);
         const rows = M.OFFENSES.filter(([row]) => M.offenseCounts(i.balance, row));
-        const content = `<form><p>At Balance ${i.balance}, these are offenses against Ma'at (p. 142). The judges weigh them at the next judgment; nothing is rolled now.</p>
+        const content = `<form><p>At Balance ${i.balance}, these are offenses against Ma'at (Mummy: The Resurrection p. 142). The judges weigh them at the next judgment; nothing is rolled now.</p>
           <div class="form-group"><label>The act</label><select name="row" data-fixed>${rows.map(([row, t]) => `<option value="${row}">${row}: ${esc(t)}</option>`).join("")}</select></div>
           <div class="form-group"><label>What happened</label><input type="text" name="what" value=""/></div>
           <p class="wodx-quiet">On record: ${i.offenses.length ? i.offenses.map(o => `${o.row} (${esc(o.what || "unnamed")})`).join("; ") : "none"}.</p></form>`;
@@ -199,7 +198,7 @@ export function build(ctx) {
         });
     }
     async function veil(actor) {
-        const content = `<form><p>A mortal who sees the supernatural reacts by Willpower (p. 140).</p><div class="form-group"><label>The mortal's Willpower</label><input type="number" name="w" min="1" max="10" value="3"/></div></form>`;
+        const content = `<form><p>A mortal who sees the supernatural reacts by Willpower (Mummy: The Resurrection p. 140).</p><div class="form-group"><label>The mortal's Willpower</label><input type="number" name="w" min="1" max="10" value="3"/></div></form>`;
         return dialog(`The Veil: ${actor.name}`, content, "Show", async fd => post(actor, "The Veil", `<div class="vta-res">Willpower ${n(fd.w)}: ${esc(M.veil(n(fd.w)))}.</div><div class="wodx-quiet">${REF} p. 140</div>`));
     }
     async function setup(actor) {

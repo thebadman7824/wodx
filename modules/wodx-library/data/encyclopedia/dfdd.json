@@ -1,0 +1,88 @@
+[
+ {
+  "id": "dfdd-thrall-creation",
+  "title": "Creating a thrall",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Building a mortal bound by a demon’s pact.",
+  "claims": [
+   {
+    "text": "Thralls use the demon procedure with fewer points: Attributes 6/4/3 over one free dot each, and Abilities 11/7/4 with none above 3 at this stage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dfdd",
+      "page": 60,
+      "pdf": 61
+     },
+     {
+      "book": "dfdd",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "They take 5 Background dots and 3 dots of Virtues over one free dot in each, a Faith potential of 1 and Torment 0.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dfdd",
+      "page": 60,
+      "pdf": 61
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-faith",
+   "dtf-torment",
+   "dtf-virtues"
+  ]
+ },
+ {
+  "id": "dfdd-exposure",
+  "title": "Exposure",
+  "kind": "mechanic",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A thrall’s past brushes with the supernatural.",
+  "claims": [
+   {
+    "text": "Exposure measures how much a thrall met the supernatural before the pact, from no contact at all through a fleeting accident to real study or even taking part in rituals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dfdd",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "When the Storyteller allows, the thrall may roll Wits + Exposure at difficulty 6 to draw on that past and understand what the pact is doing to them; a high Exposure does not by itself mean a high Faith potential.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dfdd",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dfdd-thrall-creation",
+   "dtf-faith"
+  ]
+ }
+]

@@ -31,3 +31,27 @@
 .wstory-setup .wstory-lines label { display: flex; align-items: center; gap: 0.35em; }
 .wstory-setup .form-group > label { flex: 0 0 14em; }
 .wstory-setup details { margin-top: 0.4em; }
+/* The Storyteller's dashboard: each list scrolls on its own so the window fits a small screen */
+.wodx-dashboard-app .window-content { overflow-y: auto; max-height: 85vh; }
+.wodx-dashboard-app .wstory-dash-list { max-height: 22vh; overflow-y: auto; }
+.wodx-dashboard-app .wstory-dash-row { padding: 2px 0; border-bottom: 1px solid rgba(127, 127, 127, 0.2); }
+.wodx-dashboard-app .wstory-dash-overdue strong { color: #b43c3c; }
+.wodx-dashboard-app .wstory-dash-name { display: inline; width: auto; padding: 0 4px; font-weight: bold; }
+/* Upkeep (0.12.0): ties and hunting grounds tables scroll inside the dialog */
+.wst-ties .wst-scroll, .wst-grounds .wst-scroll, .wst-money .wst-scroll { max-height: 50vh; overflow-y: auto; }
+.wst-ties table, .wst-grounds table { width: 100%; }
+.wst-ties td input[type=number], .wst-grounds td input[type=number] { display: inline-block; }
+/* The Storyteller's hand (0.18.0) */
+.wst-hand .wst-hand-list { display: grid; gap: 6px; }
+.wst-hand .wst-hand-list button { text-align: left; }
+.wst-glance .wst-glance-list section { margin-bottom: 10px; }
+.wst-glance .wst-glance-list ul { margin: 4px 0; padding-left: 18px; }
+.wst-preflight .wst-preflight-list { list-style: none; padding: 0; display: grid; gap: 6px; }
+.wst-preflight .wst-pf-ok i { color: #3c8a4b; }
+.wst-preflight .wst-pf-warn i { color: #b07d12; }
+.wst-preflight .wst-pf-fail i { color: #b03a3a; }
+.wst-preflight .wst-preflight-list button { display: inline; width: auto; padding: 0 6px; }
+.wst-hand .wst-scroll { max-height: 50vh; overflow-y: auto; }
+.wst-wrap-xp { width: 100%; }
+.wst-wrap-xp th { font-size: 0.8em; }
+.wst-call-who { max-height: 30vh; overflow-y: auto; }

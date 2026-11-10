@@ -1,0 +1,403 @@
+[
+ {
+  "id": "mrvoid-origins",
+  "title": "Void Seekers and Celestial Masters",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The two roots of the Void Engineers.",
+  "claims": [
+   {
+    "text": "The earliest Seekers of the Void were wanderers in every culture who valued fellowship above origin or creed and met strange beasts and spirits at the world's edges.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Those who stayed in the growing cities became the Celestial Masters, charting the skies and advising rulers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Swapping knowledge over a few centuries, the two groups formed the partnership that became the Convention.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "sc-void-seekers",
+   "sc-celestial-masters"
+  ]
+ },
+ {
+  "id": "mrvoid-marines",
+  "title": "Void Engineer Marines",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The militarised Convention after the Anomaly.",
+  "claims": [
+   {
+    "text": "In the Anomaly's early days whole amalgams, ships and Constructs were lost, so the Convention expanded its security arms and militarised many co-ops.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Everyone in the Convention now gets full combat training, down to the cleaning staff.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The Marines once played up a Terminator image as a joke; now they lead boarding actions on space hulks and assaults on enemy holds in earnest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "mrvoid-bcd"
+  ]
+ },
+ {
+  "id": "mrvoid-bcd",
+  "title": "Border Corps Division",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Patrols of the Near Universe.",
+  "claims": [
+   {
+    "text": "The BCD hunts threats in the Near Universe before they cross the Gauntlet: Nephandi, Marauders, alien minds and spirits maddened by the Anomaly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Nearly all its Marines also trained at a Void Engineer college and are scientists as well as fighters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "They serve as a model for post-Anomaly Technocrats, the Progenitors' Applied Sciences above all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "mrpg-applied-sciences",
+   "mrvoid-marines"
+  ]
+ },
+ {
+  "id": "mrvoid-efd",
+  "title": "Earth Frontier Division",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Explorers of Earth's hidden places.",
+  "claims": [
+   {
+    "text": "The EFD maps remote wilds and buried urban places such as old sewers and ruins under ice and sand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "It also explores legendary sites such as Fiddler's Green, Ker-Ys in Brittany and lost Mu with its imitators.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "It claims the Seekers as ancestors, people in every culture unwilling to spend their lives in one place.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "mrvoid-origins"
+  ]
+ },
+ {
+  "id": "mrvoid-nsc",
+  "title": "Neutralization Specialist Corps",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Convention's second line of defence on Earth.",
+  "claims": [
+   {
+    "text": "The NSC steps in when threats from beyond slip past the Convention's thinned defences and reach Earth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Its outlook echoes an early goal of the Order of Reason: stopping mages who traded with alien powers for knowledge and opened doors for them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "sc-order-of-reason",
+   "mrvoid-bcd"
+  ]
+ },
+ {
+  "id": "mrvoid-pdc",
+  "title": "Pan-Dimensional Corps",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Explorers of the Deep Universe.",
+  "claims": [
+   {
+    "text": "The PDC goes past the Spatial Horizon into the Deep Universe and sets up beachheads across the galaxy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Its prehistory starts with the Seeker Tychoides, who led early trips through the Gauntlet and found the Universe harsh and unforgiving.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "It was formed at the Grand Housecleaning to explore beyond a Horizon that then reached little past the Moon and to build Constructs nearby.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "mrvoid-efd"
+  ]
+ },
+ {
+  "id": "mrvoid-r-and-e",
+  "title": "Research & Execution",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Void Engineers who keep the home fires burning.",
+  "claims": [
+   {
+    "text": "R&E repairs gear and vessels and runs labs; 32.7% of its people stay home, down from about 55% before 1999.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "The rest serve in the field as ship engineers, Device specialists and researchers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Its roots lie with the Celestial Masters, who drew the first star charts and, ironically, horoscopes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "mrvoid-origins"
+  ]
+ },
+ {
+  "id": "mrvoid-anomaly",
+  "title": "The Dimensional Anomaly",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Avatar Storm as the Void Engineers lived it.",
+  "claims": [
+   {
+    "text": "The Anomaly struck at the end of June 1999, tearing across the Spatial Horizon like a hurricane with reality at its eye.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "It began to ease by New Year's Day 2000 and lessened again by autumn 2000, yet it never fully ended.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Everett Volumes, named for the man who founded the Many Worlds idea, cross dimensions and hold other timelines, such as one where Technocrats fight a Tradition tyranny.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrvoid",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "void-engineers",
+   "mrvoid-marines",
+   "mrsy-self-image"
+  ]
+ }
+]

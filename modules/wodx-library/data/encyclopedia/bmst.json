@@ -1,0 +1,321 @@
+[
+ {
+  "id": "bmst-blood-magic",
+  "title": "Blood Magic",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The many kinds of sorcery Kindred work through vitae.",
+  "claims": [
+   {
+    "text": "Thaumaturgy is the most common vampiric magic, but it was not the first kind of blood magic and is still not the only one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 12,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Thaumaturges hoard records, and most of them prove either unusable or unreliable.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 18,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A Kindred takes drunk blood straight into the body and can use it to fuel a ritual; a mortal who drinks blood only digests it, and its power is lost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 38,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bmst-early-magicians",
+   "bmst-sorceries"
+  ]
+ },
+ {
+  "id": "bmst-early-magicians",
+  "title": "Ancient Blood Magicians",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "ancient",
+   "mythic"
+  ],
+  "summary": "Blood magic in the earliest Kindred societies.",
+  "claims": [
+   {
+    "text": "When the Second City fell, survivors blamed the blood magicians, whose costly and secretive work made them easy targets.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 20,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Ugaritic records tell of blood magicians who tried to remake mortal society with spirit bindings and failed badly.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 23,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Many demons that Jewish and later Christian holy men drove out in Palestine gathered around the hidden graves of Middle Eastern blood magicians.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 23,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bmst-blood-magic"
+  ]
+ },
+ {
+  "id": "bmst-tremere-drive",
+  "title": "Why the Tremere Study Thaumaturgy",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Ambition and survival behind Tremere research.",
+  "claims": [
+   {
+    "text": "Kindred magi still spend great time and wealth on old texts and new sorceries, though the Discipline is young by Kindred reckoning.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Ambition and the need to survive drove Clan Tremere to master blood magic from its first nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bmst-blood-magic"
+  ]
+ },
+ {
+  "id": "bmst-curses",
+  "title": "Thaumaturgic Curses",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A path for laying curses, sought by younger Kindred against elders.",
+  "claims": [
+   {
+    "text": "Young Kindred facing Gehenna pursue a path that turns the weaknesses of the Embrace against their elders, which feeds elder paranoia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 75,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "Its weakest curse marks the victim with an unseen stigma: people avoid the victim and find the victim hard to take seriously, until the next sunset.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 78,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "A victim can throw off a curse by force of will, and the caster can lift a curse at any time, which makes it a bargaining chip.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 78,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bmst-blood-magic"
+  ]
+ },
+ {
+  "id": "bmst-sorceries",
+  "title": "Other Kindred Sorceries",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Assamite, Setite and koldunic sorcery as separate from Thaumaturgy.",
+  "claims": [
+   {
+    "text": "Assamite viziers learn Assamite sorcery, Setites their own magic and Tzimisce koldun koldunic sorcery, replacing the rough Thaumaturgy given to those clans in the core rules.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 100,
+      "pdf": 102
+     }
+    ]
+   },
+   {
+    "text": "These sorceries cost the same experience to raise as Thaumaturgy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 100,
+      "pdf": 102
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bmst-necromancy-theory"
+  ]
+ },
+ {
+  "id": "bmst-necromancy-theory",
+  "title": "Principles of Necromancy",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The theory behind Kindred necromancy.",
+  "claims": [
+   {
+    "text": "Necromancers hold that the deep revulsion around corpses and remains is what makes their magic work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 102,
+      "pdf": 104
+     }
+    ]
+   },
+   {
+    "text": "A second principle, Authority, arose in the third century and drew on the theurgy of Iamblichus, which ranked gods, heroes, ghosts, angels and demons in one order a magician could command.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 102,
+      "pdf": 104
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bmst-sorceries"
+  ]
+ },
+ {
+  "id": "bmst-gargoyles",
+  "title": "Gargoyles",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Winged Kindred made by Tremere sorcery.",
+  "claims": [
+   {
+    "text": "Gargoyles are Kindred created by sorcery and Old World vampire blood, built like the stone guardians of medieval buildings and able to fly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 135,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "The ritual is Level Five. It takes a large amount of vitae from two donors, each a Gangrel, Nosferatu or Tzimisce, plus a mortal who is transformed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 135,
+      "pdf": 137
+     }
+    ]
+   },
+   {
+    "text": "The Tremere use such creatures sparingly or in secret, since too many would draw notice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bmst",
+      "page": 134,
+      "pdf": 136
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bmst-tremere-drive"
+  ]
+ }
+]

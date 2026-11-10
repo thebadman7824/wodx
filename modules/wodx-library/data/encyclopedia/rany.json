@@ -1,0 +1,232 @@
+[
+ {
+  "id": "rany-caerns",
+  "title": "The Caerns of New York State",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Four caerns and two hidden holy sites.",
+  "claims": [
+   {
+    "text": "New York State holds four caerns: a small one on Goat Island at Niagara Falls, one in Central Park, one in the Sentinel Range of the Adirondacks, and the strongest in the Finger Lakes near Rochester.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Two more holy sites in the Catskills could become caerns but are guarded by faeries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The Goat Island sept is open, led by Bull Roarer, an Uktena of the Tuscarora reservation; Fianna won a share after helping free the falls from Wyrm agents who walled them off in the 19th century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Sixty years ago the Fianna removed an Uktena leader who tried to close the caern to outsider tribes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caern",
+   "fianna",
+   "uktena"
+  ]
+ },
+ {
+  "id": "rany-hand-of-gaia",
+  "title": "The Caern of the Hand of Gaia",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The great Finger Lakes caern near Rochester.",
+  "claims": [
+   {
+    "text": "Wendigo, Uktena and Croatan shamans raised the Caern of the Hand of Gaia to honour the Finger Lakes; after the Garou briefly lost it, a force of many tribes led by the Children of Gaia won it back and has kept it since.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Garou credit the caern for the region's long run of reformers, dreamers and visionaries.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Heaven, run by the Silver Fang Loba Carcassone and the Heaven pack, is a hidden chain of safe houses and vehicles across North America that spirits abused children to safety.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "The sept keeps small groups of Garou in Rochester and Syracuse who work with local citizens' groups.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caern",
+   "children-of-gaia",
+   "silver-fangs"
+  ]
+ },
+ {
+  "id": "rany-the-city",
+  "title": "The City",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Garou see New York City.",
+  "claims": [
+   {
+    "text": "Most Garou, apart from Glass Walkers and Bone Gnawers, call New York City simply The City and see it as the world's greatest Hellhole.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "It stands as the Weaver's greatest work on Earth, the richest pattern packed into the smallest space.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Its parks, Central Park above all, are powerful weavings of plant essence that cleanse the city's spirit, much as a wetland cleans water, and keep it from falling wholly to the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glass-walkers",
+   "bone-gnawers",
+   "triat"
+  ]
+ },
+ {
+  "id": "rany-sentinel",
+  "title": "The Caern of the Sentinel",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Adirondack caern fought over by two tribes.",
+  "claims": [
+   {
+    "text": "The Get of Fenris claim the Caern of the Sentinel in the Adirondacks; the Shadow Lords once took it with Uktena help but lost it again when the two could not agree on its use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Twenty-three Shadow Lords under the stern Sylvan-Ivanovich-Sylvan now mean to retake it alone and prove themselves the greatest tribe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "They base themselves in a deep cavern, once a tourist attraction, that they closed to humans with staged cave-ins.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rany",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "get-of-fenris",
+   "shadow-lords",
+   "caern"
+  ]
+ }
+]

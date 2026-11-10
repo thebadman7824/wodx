@@ -1,0 +1,217 @@
+[
+ {
+  "id": "scah-machinae",
+  "title": "Machinae",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The devices built by Enlightened craftsmen of the Renaissance.",
+  "claims": [
+   {
+    "text": "Machinae balance on the edge of plausibility, built by flawless logic and astrological design yet often fantastic in result.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Nearly all their makers belong to the Order of Reason, whose principles of mathematics, innovation and materialism they embody; only a few Disparate eccentrics build them otherwise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-artificers",
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "scah-artisan-ranks",
+  "title": "Daedalean craft ranks",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How the Order of Reason's craftsmen rank themselves.",
+  "claims": [
+   {
+    "text": "Artisans use apprentice everywhere, treat mediator, artisan and journeyman as one rank, and resplendent and master as another; Artificers add Facilitators, Magistrates, Grand Artisans and Epitomes because they span many cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The Craftmasons are both more democratic and more hierarchical, with 33 levels, and many refuse to see a real gap between Enlightened and ordinary Brethren.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-ranks",
+   "sc-craftmasons",
+   "sc-artificers"
+  ]
+ },
+ {
+  "id": "scah-ancient-masters",
+  "title": "Masters the Artisans honour",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "classical",
+   "dark-ages",
+   "renaissance"
+  ],
+  "summary": "The ancient and medieval inventors Daedaleans look back to.",
+  "claims": [
+   {
+    "text": "Some Artificers prefer Archytas of Tarentum, who built flying automatons, to Pythagoras; Archimedes, whose war machines held off Rome at Syracuse for three years, is held the greatest of the Greeks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "The Tower of the Winds in Athens, with its water-clocks and sundials, is seen as a building-sized Machina for the study of Time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Roger Bacon's influence among the High Artisans remains immense; the Craftmasons showed their strength in 1210 when they brought down Mistridge with cannon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-high-guild",
+   "sc-craftmasons",
+   "dam-mistridge"
+  ]
+ },
+ {
+  "id": "scah-lithuania",
+  "title": "Infernal Lithuania",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A pagan land where the powers of Hell hold sway.",
+  "claims": [
+   {
+    "text": "Lithuania's conversion was royal politics; bloody paganism stays strong, and the country holds off the Teutonic Knights by alliance with Poland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Appa Bloodax and the even worse Tezghul the Insane rank as senior chiefs, but their real power comes from Hell.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-kupala",
+   "m2stc-founding-wars"
+  ]
+ },
+ {
+  "id": "scah-ars-praeclarus",
+  "title": "Ars Praeclarus",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The Daedalean belief that reason can grasp all creation.",
+  "claims": [
+   {
+    "text": "The Ars Praeclarus is a philosophy put to work: the world can be analysed, knowing a thing gives power over it, and human reason can grasp everything.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Hermetic magi share the love of measurement and may be fussier still.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scah",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason",
+   "order-of-hermes"
+  ]
+ }
+]

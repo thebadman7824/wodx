@@ -1,0 +1,148 @@
+[
+ {
+  "id": "bosh-orphans",
+  "title": "Orphans",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Self-Awakened mages outside the Traditions.",
+  "claims": [
+   {
+    "text": "Some Orphans drift from Tradition to Tradition looking for a philosophy that makes sense, and they seldom find one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bosh",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   },
+   {
+    "text": "Many Orphans settle among the Hollow Ones, whose looser philosophy gives most of the gains of joining a Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bosh",
+      "page": 86,
+      "pdf": 87
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bosh-crafts",
+   "bosh-hollow-ones"
+  ]
+ },
+ {
+  "id": "bosh-crafts",
+  "title": "The Crafts",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Small mage groups outside the Nine Traditions.",
+  "claims": [
+   {
+    "text": "Smaller groups, called Crafts or Cliques, keep growing: among them the Children of Proteus, the Bata'a, the Sisters of Hippolyta, the Sculptors of Fate, the Children of Knowledge and the Fringe Walkers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bosh",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "The Children of Knowledge say no Tradition is older than theirs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bosh",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bosh-orphans"
+  ]
+ },
+ {
+  "id": "bosh-hollow-ones",
+  "title": "Hollow Ones Beliefs",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the Hollow Ones hold, by their own account.",
+  "claims": [
+   {
+    "text": "Hollow Ones rarely discuss their shared beliefs with other mages, and many deny that Ascension is real.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bosh",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "Their magic mirrors the occult as mass media portrays it, and some of them work without foci at all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bosh",
+      "page": 88,
+      "pdf": 89
+     }
+    ]
+   },
+   {
+    "text": "They feel an emptiness inside that nothing fills, and they want to learn for themselves what truth lies behind the legends of vampires and werewolves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bosh",
+      "page": 88,
+      "pdf": 89
+     },
+     {
+      "book": "bosh",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "Their punk bars and dance halls have become something like modern opium dens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bosh",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bosh-orphans",
+   "bosh-crafts"
+  ]
+ }
+]

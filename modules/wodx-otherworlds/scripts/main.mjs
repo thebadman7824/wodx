@@ -8,6 +8,10 @@ import {buildPenumbraPrototype} from "./prototype.mjs";
 import * as rules from "./rules.mjs";
 import * as journey from "./journey.mjs";
 import * as realms from "./realms.mjs";
+import * as ways from "./ways.mjs";
+import * as drift from "./drift.mjs";
+import * as driftRules from "./drift-rules.mjs";
+import * as waysRules from "./ways-rules.mjs";
 import * as realmsRules from "./realms-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -45,18 +49,20 @@ Hooks.once("ready", () => {
     crossShroud, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
     readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses,
     journey: {draw: journey.drawJourney, propose: journey.proposeJourney, approve: journey.approveJourney, rules: journey.J},
-    journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, applyDecay: journey.applyDecay,
+    journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, lookCss: journey.lookCss, applyDecay: journey.applyDecay, swaying: journey.swaying,
     realms: {rules: realmsRules, storm: realms.storm, shreddingWinds: realms.shreddingWinds, addDreamingLevel: realms.addDreamingLevel, makeTrod: realms.makeTrod,
       dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,
-      netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow}
+      netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
+    drift: {of: drift.driftOf, step: drift.stepDrift, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
+    ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {otherworlds: api});
   // Record the charts in Chronicle Rules once WoDX Chronicle has written that journal
   if ( game.users.activeGM?.isSelf ) setTimeout(() => writeChartsPage().catch(err => console.error("WoDX |", err)), 3000);
   // The year-and-a-day proposals go to WoDX Chronicle's approval queue
-  if ( game.modules.get("wodx-chronicle")?.api ) registerYearHandler();
-  else Hooks.once("wodxChronicleReady", () => registerYearHandler());
+  if ( game.modules.get("wodx-chronicle")?.api ) { registerYearHandler(); drift.registerDriftHandler(); }
+  else Hooks.once("wodxChronicleReady", () => { registerYearHandler(); drift.registerDriftHandler(); });
   journey.registerJourneys();
   journey.applyDecay();
 });
@@ -66,6 +72,10 @@ const decaySoon = (() => { let t = null; return () => { clearTimeout(t); t = set
 Hooks.on("controlToken", () => { if ( active ) decaySoon(); });
 Hooks.on("canvasReady", () => { if ( active ) decaySoon(); });
 Hooks.on("updateToken", (doc, change) => { if ( active && ("level" in change || "x" in change || "y" in change) && doc.object?.controlled ) decaySoon(); });
+// Jacking into the Net or out of it changes the look
+const netChange = e => { if ( active && e?.statuses?.has?.(STATUS.net.id) ) decaySoon(); };
+Hooks.on("createActiveEffect", netChange);
+Hooks.on("deleteActiveEffect", netChange);
 
 const skipping = () => !!game.modules.get("wodx-chronicle")?.api?.isSkipping?.();
 Hooks.on("updateWorldTime", () => {
@@ -74,6 +84,8 @@ Hooks.on("updateWorldTime", () => {
 Hooks.on("wodxSkipEnd", () => {
   if ( active ) checkYearAndDay().catch(err => console.error("WoDX |", err));
 });
+
+Hooks.on("wodxMapEvent", ev => { if ( active ) drift.onMapEvent(ev).catch(err => console.error("WoDX |", err)); });
 
 Hooks.on("wodxEraApplied", () => {
   if ( active && game.users.activeGM?.isSelf ) writeChartsPage().catch(err => console.error("WoDX |", err));
@@ -110,6 +122,10 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxDreaming = {
     name: "wodxDreaming", title: "A gateway to the Near Dreaming (Storyteller)", icon: "fa-solid fa-feather", order: 130,
     button: true, visible: game.user.isGM, onChange: () => realms.dreamingDialog()
+  };
+  tokens.tools.wodxWays = {
+    name: "wodxWays", title: "Ways and realms: trods, Moon Paths, airts, Anchorheads, Byways and realm scenes (Storyteller)", icon: "fa-solid fa-route", order: 132,
+    button: true, visible: game.user.isGM, onChange: () => ways.waysDialog()
   };
   tokens.tools.wodxOtherRolls = {
     name: "wodxOtherRolls", title: "Otherworld rolls: the Avatar Storm, the Opened Bridge, Wayfare, the Maelstrom, the Net", icon: "fa-solid fa-meteor", order: 131,

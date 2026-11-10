@@ -34,7 +34,7 @@ export function clampDifficulty(d) {
 }
 
 /**
- * Build the soak pool for one hit (VtDA20 p. 345 and Fortitude p. 218; W20, C20, Mage 20, Ghouls & Revenants).
+ * Build the soak pool for one hit (VtDA20 p. 345 and Fortitude printed p. 221; W20, C20, Mage 20, Ghouls & Revenants).
  * profile = soak model:
  *   vampire  – Stamina + Fortitude + armor vs bashing/lethal; Fortitude + armor vs aggravated.
  *   ghoul    – Stamina + Fortitude vs bashing and lethal (revenants, and ghouls after the third sip);
@@ -42,8 +42,12 @@ export function clampDifficulty(d) {
  *   mortal   – Stamina + armor vs bashing; armor only vs lethal/aggravated (mortals treat aggravated as lethal).
  *              Also used for mages, hunters and animals (Mage 20 p. 334: mages cannot soak lethal without protection).
  *   lupine   – Stamina vs everything, silver ("bane") leaves no natural soak (W20 p. 148). Also the generic
- *              supernatural model for demons, mummies and Exalted.
+ *              supernatural model for Exalted.
+ *   demon    – Stamina vs bashing; vs lethal only in the apocalyptic form (formOn); aggravated: armor only, unless a
+ *              power says otherwise (Demon: the Fallen pdf 172 / p. 171, pdf 248 / p. 247).
+ *   mummy    – Stamina vs bashing and lethal; aggravated: armor only (Hekau aside) (Mummy: the Resurrection pdf 130 / p. 136).
  *   fae      – mortal soak; cold iron ("bane") is aggravated with only a difficulty-10 slim chance (Balor), so no natural soak.
+ *              Dark Ages fae (DA:Fae): lethalSoak in the mien (p. 104) and baneSoak, cold iron soaked with Stamina (p. 88).
  *   wraith   – Stamina vs bashing and lethal, armor only vs aggravated (Spectre/Oblivion damage). House adaptation.
  *   spirit   – Stamina vs everything (ephemera; Essence is the health track). House adaptation.
  *   supernatural – legacy v1 name for lupine.
@@ -53,7 +57,8 @@ export function clampDifficulty(d) {
  * armorPiercing: dice of armor ignored; bypassArmor: attacker took +2 difficulty to ignore armor.
  */
 export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 0, armorPiercing = 0,
-                           bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bane = false, bonus = 0, aggSoak = true }) {
+                           bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bane = false, bonus = 0, aggSoak = true,
+                           lethalSoak = false, baneSoak = false, formOn = false }) {
     const notes = [];
     let effArmor = armor;
     if (fireOrSun && effArmor) { effArmor = 0; notes.push("armor does not protect against fire or sunlight"); }
@@ -80,15 +85,22 @@ export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 
             if (t === "aggravated" && !aggSoak) { sta = 0; fort = 0; notes.push("Dark Ages: no aggravated soak in Homid form (DA:W p. 102)"); }
             break;
         case "wraith":
+        case "mummy":
             if (t !== "aggravated") sta = stamina;
-            else notes.push("wraiths soak aggravated damage only with armor");
+            else notes.push(`${profile === "mummy" ? "mummies" : "wraiths"} soak aggravated damage only with armor (or a power that allows it)`);
+            break;
+        case "demon":
+            if (t === "bashing" || (t === "lethal" && formOn)) sta = stamina;
+            else notes.push(t === "lethal" ? "a demon soaks lethal damage only in the apocalyptic form" : "demons soak aggravated damage only with armor (or a power that allows it)");
             break;
         default: // mortal, fae
-            if (t === "bashing") sta = stamina;
-            else notes.push("lethal and aggravated damage can only be soaked by armor");
+            if (t === "bashing" || (lethalSoak && t === "lethal") || (baneSoak && bane)) sta = stamina;
+            else notes.push(lethalSoak ? "aggravated damage can only be soaked by armor" : "lethal and aggravated damage can only be soaked by armor");
+            if (lethalSoak && t === "lethal") notes.push("in the fae mien: Stamina soaks lethal damage (DA:Fae p. 104)");
+            if (baneSoak && bane) notes.push("Dark Ages fae: cold iron is soaked with Stamina (DA:Fae p. 88)");
             break;
     }
-    if (bane && (sta || fort)) { sta = 0; fort = 0; notes.push("bane: Stamina and Fortitude cannot soak this damage"); }
+    if (bane && !baneSoak && (sta || fort)) { sta = 0; fort = 0; notes.push("bane: Stamina and Fortitude cannot soak this damage"); }
     let autoSoak = 0;
     if (fortitudeBlood && fort > 0) {
         if (fireOrSun) notes.push("Fortitude blood auto-soak cannot be used against fire or sunlight");
@@ -210,12 +222,12 @@ export const MANEUVERS = {
     riposte: { label: "Riposte (+1 diff, +1 dmg, defender +2 diff; needs a successful defense this turn)", diff: 1, dmg: 1, dice: 0, defDiff: 2 },
     // ---- VtDA20 p. 346-348 (maneuvers that change the roll; unarmed forms are in UNARMED)
     disarm: { label: "Disarm (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Disarm: roll damage normally; if it beats the victim's Strength dots, the weapon flies a number of yards equal to the extra successes (VtDA20 p. 346)." },
-    sweep: { label: "Sweep (+1 diff, knockdown)", diff: 1, dmg: 0, dice: 0, note: "Sweep: the victim is knocked down. Standing needs Dexterity + Athletics diff 6; failing loses the action, success costs -2 Initiative (p. 348)." },
-    tackle: { label: "Tackle (+1 diff, +1 dmg, knockdown)", diff: 1, dmg: 1, dice: 0, note: "Tackle: both fighters roll Dexterity + Athletics diff 7 or fall; all actions next turn are at +1 difficulty (p. 347)." },
-    hold: { label: "Hold (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Hold: the victim is immobilized until their next action, when both roll resisted Strength + Brawl (p. 346)." },
-    stake: { label: "Stake (+3 diff)", diff: 3, dmg: 0, dice: 0, note: "Stake: three damage successes pierce the heart: vampires are immobilized (torpid-like) and mortals die (p. 347)." },
-    impale: { label: "Impale (+3 diff, archery)", diff: 3, dmg: 0, dice: 0, note: "Impale: as a stake, with a shaft through the heart (p. 349)." },
-    suppress: { label: "Suppressive fire (-2 diff, defender +2)", diff: -2, dmg: 0, dice: 0, defDiff: 2, note: "Suppressive Fire (3+ Archery): a target who advances defends at +2 difficulty (p. 349)." },
+    sweep: { label: "Sweep (+1 diff, knockdown)", diff: 1, dmg: 0, dice: 0, note: "Sweep: the victim is knocked down. Standing needs Dexterity + Athletics diff 6; failing loses the action, success costs -2 Initiative (V20 Dark Ages p. 348)." },
+    tackle: { label: "Tackle (+1 diff, +1 dmg, knockdown)", diff: 1, dmg: 1, dice: 0, note: "Tackle: both fighters roll Dexterity + Athletics diff 7 or fall; all actions next turn are at +1 difficulty (V20 Dark Ages p. 347)." },
+    hold: { label: "Hold (+1 diff, no damage)", diff: 1, dmg: 0, dice: 0, noDamage: true, note: "Hold: the victim is immobilized until their next action, when both roll resisted Strength + Brawl (V20 Dark Ages p. 346)." },
+    stake: { label: "Stake (+3 diff)", diff: 3, dmg: 0, dice: 0, note: "Stake: three damage successes pierce the heart: vampires are immobilized (torpid-like) and mortals die (V20 Dark Ages p. 347)." },
+    impale: { label: "Impale (+3 diff, archery)", diff: 3, dmg: 0, dice: 0, note: "Impale: as a stake, with a shaft through the heart (V20 Dark Ages p. 349)." },
+    suppress: { label: "Suppressive fire (-2 diff, defender +2)", diff: -2, dmg: 0, dice: 0, defDiff: 2, note: "Suppressive Fire (3+ Archery): a target who advances defends at +2 difficulty (V20 Dark Ages p. 349)." },
     // ---- House maneuvers (not from the book): Storyteller's option, added in v1.1.0 for the Rothenstein armory.
     lunge: { label: "Lunge [house] (+1 diff, +1 dmg, defender +1 diff; you are overextended)", diff: 1, dmg: 1, dice: 0, defDiff: 1, note: "Lunge: {name} is overextended and suffers +1 difficulty on defense until the next turn." },
     cleave: { label: "Overhead Cleave [house] (+2 diff, +3 dmg, no defense this turn)", diff: 2, dmg: 3, dice: 0, noDefense: true, note: "Overhead Cleave: {name} may not defend for the rest of the turn." },
@@ -389,3 +401,25 @@ export function expectedHarm({ atkDice, atkDiff, atkAuto = 0, defDice = 0, defDi
 
 /** How much worse each damage type is, for ranking attacks of equal expected levels against each other. */
 export const HARM_WEIGHT = { bashing: 1, lethal: 1.25, aggravated: 1.6 };
+
+/* ---------------- Shots and reloading (3.8.0, a house rule that starts off) ---------------- */
+
+/** A ranged weapon's shots: only weapons with a capacity on their sheet are counted (bows and slings never are). */
+export function shotsOf(clip) {
+    const max = Math.max(0, Math.round(Number(clip?.max) || 0));
+    const value = Math.max(0, Math.min(max, Math.round(Number(clip?.value) || 0)));
+    return { counted: max > 0, value, max, empty: max > 0 && value < 1 };
+}
+
+/**
+ * Turns to reload. A firearm takes one full turn with the character's concentration and can be part of a multiple
+ * action (V20 p. 278). A crossbow takes five turns (V20 p. 281); in the Dark Ages a mechanical bow takes five turns
+ * less one per dot of Archery (V20 Dark Ages p. 348), at least one (house rule).
+ */
+export function reloadTurns({ crossbow = false, darkAges = false, archery = 0 } = {}) {
+    if (!crossbow) return { turns: 1, ref: "V20 p. 278", multi: true };
+    if (darkAges) return { turns: Math.max(1, 5 - Math.max(0, Math.round(Number(archery) || 0))), ref: "V20 Dark Ages p. 348", multi: false };
+    return { turns: 5, ref: "V20 p. 281", multi: false };
+}
+
+export const isCrossbow = name => /crossbow|arbalest|arbalète|armbrust/i.test(String(name ?? ""));

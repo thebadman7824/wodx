@@ -1,4 +1,4 @@
-import {MODULE_ID, esc, rule, setting, setSetting} from "./util.mjs";
+import {esc, rule, setting, setSetting} from "./util.mjs";
 import {describeTime, getEngine, secondsToNextDusk, secondsToNextDawn, MONTHS, REFORMS} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";
@@ -8,6 +8,7 @@ import {HouseRulesApp} from "./house-rules-app.mjs";
 import {runEraTest} from "./era-test.mjs";
 import {searchBox} from "./search.mjs";
 import * as church from "./church.mjs";
+import {reckon} from "./reckoning-rules.mjs";
 
 const {ApplicationV2, DialogV2} = foundry.applications.api;
 
@@ -69,12 +70,14 @@ export class ClockApp extends ApplicationV2 {
     const moon = now.moon;
     const ch = church.on(now);
     const night = now.isNight ? "Night" : "Day";
+    // A player sees the date and hour the way the character would hear them told
+    const told = (!gm && rule("eraReckoning")) ? reckon(now, {church: ch, eraId: p?.id ?? ""}) : null;
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
     div.innerHTML = `
       <section class="wodx-clock-face ${now.isNight ? "is-night" : "is-day"}">
-        <div class="wodx-date">${esc(now.dateLabel)}</div>
-        <div class="wodx-time">${esc(now.timeLabel)} <span class="wodx-tag">${night}</span></div>
+        <div class="wodx-date">${esc(told?.date ?? now.dateLabel)}</div>
+        <div class="wodx-time">${esc(told?.time ?? now.timeLabel)} <span class="wodx-tag">${night}</span></div>
         <div class="wodx-quiet">${esc(now.calendarLabel)} calendar</div>
         <dl class="wodx-facts">
           <dt>Sunset</dt><dd>${esc(now.sunset)}</dd>

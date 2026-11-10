@@ -60,7 +60,8 @@ export function TrackerClass() {
           <td>${solo}${limit ? ` of ${limit}` : ""}</td>
           <td>${conv[a.id] ? `<span class="wodx-tag">in a called scene</span> <button type="button" data-action="release" data-id="${a.id}">Release</button>` : "Free"}</td></tr>`;
       }).join("");
-      const players = all(game.users).filter(u => !u.isGM).map(u => ({id: u.id, name: u.name}));
+      const away = new Set(C.absentIds());
+      const players = all(game.users).filter(u => !u.isGM && !away.has(u.id)).map(u => ({id: u.id, name: u.name}));
       const mark = C.setting("session") ?? {};
       const spot = W.spotlight(log, players, {since: Number.isFinite(mark.at) ? mark.at : null});
       const spotRows = spot.map(r => `<li><span class="wstory-spot-name">${esc(r.name)}</span>
@@ -194,6 +195,9 @@ export function answer(r, type) {
 export async function conveneDialog({actorIds = [], sceneId = null, reason = ""} = {}) {
   if ( !game.user.isGM ) return null;
   const people = C.pcs(), map = C.personalMap(), world = game.time.worldTime;
+  // A character whose player is away tonight starts unticked
+  const away = new Set(C.absentIds());
+  if ( away.size ) actorIds = actorIds.filter(id => { const a = game.actors.get(id); return !game.users.some(u => away.has(u.id) && a?.testUserPermission?.(u, "OWNER")); });
   const checks = people.map(a => `<li data-search-text="${esc(a.name)}"><label class="wstory-check"><input type="checkbox" name="a.${esc(a.id)}"${actorIds.includes(a.id) ? " checked" : ""}> ${esc(a.name)}</label>
     <span class="wodx-quiet">${esc(W.aheadLabel(W.personalOf(map[a.id], world) - world))}</span></li>`).join("");
   const content = `<form>

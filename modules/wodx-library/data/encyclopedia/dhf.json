@@ -1,0 +1,171 @@
+[
+ {
+  "id": "dhf-five-legions",
+  "title": "The five legions of the rebellion",
+  "kind": "faction",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "Lucifer's legions, joined by belief rather than by House.",
+  "claims": [
+   {
+    "text": "After the Fall, many Devils expected Lucifer to rebuild Heaven's ranking of the Houses. Instead, halting the march in the Valley of Tears, the Morningstar declared that deeds and ability, not House, would decide who led.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 13,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Lucifer formed the legions as armies, governments and creeds at once, each with its own ranks of dukes, barons and fell knights, and every demon chose the one that matched its beliefs. These were the first courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 13,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Crimson Legion, Lucifer's own, taught and guarded humanity. The Ebon Legion scorned mortals and fought Heaven for demons alone. The Iron Legion was a fighting legion too, but it fought to shield humans from Heaven's anger.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 13,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Silver Legion, half spies and half explorers, sought the secrets of Creation and of God. The Alabaster Legion kept apart from the war, guiding human souls into the afterlife and guarding them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 13,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Most Devils went to the Crimson Legion, a sizable share to the Ebon, and a few to the rest; the handful in the Alabaster Legion served in support of Slayers, a humbling role for born commanders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 13,
+      "pdf": 15
+     },
+     {
+      "book": "dhf",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "For centuries the war stayed measured, closer to duels of skill and argument than to mortal battle, until Caine killed Abel and the shock opened both humans and demons to violence and hatred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "At the Siege of Sagun, Ebon Legion Devils joined Devourers and Scourges in burning mortal towns and setting the citadel alight, winning still more command for themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 14,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dcoa-infernal-court",
+   "dtf-namaru",
+   "dtf-the-fall"
+  ]
+ },
+ {
+  "id": "dhf-heralds-in-creation",
+  "title": "The Heralds before the Fall",
+  "kind": "lore",
+  "lines": [
+   "demon"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "How the House of the Dawn watched over Creation from afar.",
+  "claims": [
+   {
+    "text": "The Heralds, purest of the angels, took no direct hand in building Creation, since touching the void or the young world would have marked them with imperfection and so spoiled the Divine Plan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "They directed and strengthened the other Houses from above, and this set the first celestial hierarchy, with the House of the Dawn at its head; they were also the stars set in the sky to watch and correct Creation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "When God forbade the angels to reveal themselves to humanity, the Heralds were troubled and argued over the reason, and the rebels among them followed Lucifer to Eden out of pride and out of compassion for humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 11,
+      "pdf": 13
+     },
+     {
+      "book": "dhf",
+      "page": 12,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Pride, the virtue that made the Devils great, is also the sin behind their fall: it gives them the conviction to lead and can harden into arrogance that blinds them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dhf",
+      "page": 12,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-namaru",
+   "dtf-the-fall",
+   "dhf-five-legions"
+  ]
+ }
+]

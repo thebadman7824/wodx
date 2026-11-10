@@ -1,0 +1,718 @@
+[
+ {
+  "id": "ww-taking-of-california",
+  "title": "The Taking of California",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The Camarilla's seizure of the West Coast from the Sabbat.",
+  "claims": [
+   {
+    "text": "Ever since Spanish monks came early in the 1700s, Old World undead have ruled the New World's mortals by murder and deceit, hidden behind the Masquerade.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Wresting California and the West Coast from the Lasombra counts as one of the Camarilla's greatest wins over the Sabbat, for its wealth, size and strategic value.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 33,
+      "pdf": 34
+     },
+     {
+      "book": "wildwest",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Neonates did most of the fighting, and the Brujah know the Anarch Movement carried it, though history credits the Camarilla.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "anarchs",
+   "ww-brujah-west"
+  ]
+ },
+ {
+  "id": "ww-brujah-west",
+  "title": "Brujah of the West",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Young Rabble with frontier dreams.",
+  "claims": [
+   {
+    "text": "The western Brujah are younger than most clans of the Camarilla; those Embraced in the 1800s barely know the old tragedies of their line.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "They believe New Carthage could rise overnight if the other clans would stop interfering, a dream that looked foolish until gold turned up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "brujah"
+  ]
+ },
+ {
+  "id": "ww-ventrue-west",
+  "title": "Ventrue and the Land",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The Clan of Kings on the frontier.",
+  "claims": [
+   {
+    "text": "The Ventrue hold that land is wealth, an Old World view of nobility; good land means many mortals who are easy to control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "London and Berlin are offered as such land, both held by entrenched Ventrue factions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ventrue"
+  ]
+ },
+ {
+  "id": "ww-lasombra-west",
+  "title": "Lasombra in the New World",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The Keepers as explorers.",
+  "claims": [
+   {
+    "text": "The Lasombra rival the Ventrue for power and wealth, demand respect and knowledge but use it for themselves, and count both warriors and mystics of the Abyss in their ranks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Of late they have turned explorers of the New World.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra",
+   "ww-taking-of-california"
+  ]
+ },
+ {
+  "id": "ww-assamites-caitiff",
+  "title": "Assamites and Caitiff on the Frontier",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Rare killers and a clanless posse.",
+  "claims": [
+   {
+    "text": "Few Assamites come West; some arrive alone to fulfil contracts, others hunt El Dorado, thinking it Third Enoch.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "The Caitiff have no standing in the Camarilla, but a clanless posse under Joseph Pander seems to be hardening into a clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "assamites",
+   "caitiff"
+  ]
+ },
+ {
+  "id": "ww-giovanni-ravnos",
+  "title": "Giovanni and Ravnos in the West",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Brokers and wanderers.",
+  "claims": [
+   {
+    "text": "The Giovanni use their links to the Catholic Church to stand between the Lasombra and the Camarilla, and so put down roots in places like Las Vegas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "The Ravnos find vice easily in the West, from medicine shows to gambling halls, and keep moving so few learn of a scheme until too late.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "giovanni",
+   "ravnos"
+  ]
+ },
+ {
+  "id": "ww-setites-west",
+  "title": "Setites of the West",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Serpents who see a second Cairo.",
+  "claims": [
+   {
+    "text": "Set rules the south, deserts and earthquakes among other things, and Setites hear the god in the San Andreas fault, so many go to California.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 75,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "They thrive in San Francisco and the boom towns, running businesses for hard-working single men to fund larger plans, and keep the sects out of these places where they can.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   },
+   {
+    "text": "The deep faith of the Mormons makes them hard for the Setites to corrupt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 77,
+      "pdf": 78
+     }
+    ]
+   }
+  ],
+  "see": [
+   "followers-of-set",
+   "set"
+  ]
+ },
+ {
+  "id": "ww-calafia",
+  "title": "The Cult of Calafia",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "A rumoured cult.",
+  "claims": [
+   {
+    "text": "Rumour tells of a Cult of Calafia that means to find and awaken Calafia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 144,
+      "pdf": 145
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ww-taking-of-california"
+  ]
+ },
+ {
+  "id": "ww-don-francisco",
+  "title": "Don Francisco",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "A Sabbat blood-cult leader.",
+  "claims": [
+   {
+    "text": "Don Francisco claims the title of Bishop and runs a blood cult built on bull sacrifice, a mark both of mortal authority and of Sabbat faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 145,
+      "pdf": 146
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat"
+  ]
+ },
+ {
+  "id": "ww-mountain-lion",
+  "title": "Mountain Lion Form",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "A western Protean form.",
+  "claims": [
+   {
+    "text": "Some western Gangrel take a cougar's shape in place of the wolf, better suited to the desert; scholars suspect it changes their temper too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 103,
+      "pdf": 104
+     }
+    ]
+   },
+   {
+    "text": "It works like Shape of the Beast: claws and teeth deal Strength +1 aggravated, speed doubles, tracking difficulty drops by 2, and any Discipline but Necromancy, Serpentis, Thaumaturgy or Vicissitude may be used.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 103,
+      "pdf": 104
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gangrel",
+   "protean"
+  ]
+ },
+ {
+  "id": "ww-two-gun",
+  "title": "Two-Gun Quickdraw",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "A Celerity power for fighting with both hands.",
+  "claims": [
+   {
+    "text": "For 4 blood points, drawing is reflexive for the scene and each attack action can strike two foes with no added penalty, one roll resolved against each.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "The vampire may not move between attacks, and two-handed weapons cannot be used; Brawl and Melee also work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "celerity",
+   "ww-celerity-firearms"
+  ]
+ },
+ {
+  "id": "ww-celerity-firearms",
+  "title": "Celerity and Firearms",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "How fast a vampire can shoot.",
+  "claims": [
+   {
+    "text": "A vampire with Celerity can fire about as fast as a skilled human hand, around six shots in a second, but the gun's action sets the limit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 98,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "celerity",
+   "ww-two-gun"
+  ]
+ },
+ {
+  "id": "ww-legendary-lawman",
+  "title": "Legendary Lawman",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "A Presence power that seats Majesty in a place.",
+  "claims": [
+   {
+    "text": "For 1 blood point and 1 Willpower, Majesty centres on the user's place of work, a Prince's seat or a sheriff's jail, and all inside count as having Majesty, present or not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Courage rolls against it use the user's Charisma + Intimidation, and breaking Majesty there ends the effect.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "presence"
+  ]
+ },
+ {
+  "id": "ww-riding",
+  "title": "Riding",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Horses on the frontier.",
+  "claims": [
+   {
+    "text": "Without riding, folk walk or wait for the coach; a rider gains freedom, often wealth through owning the horse, and access to paid work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "The Ride skill covers keeping the saddle and guiding the animal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ww-saloon"
+  ]
+ },
+ {
+  "id": "ww-disease",
+  "title": "Frontier Disease",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Sickness of the age.",
+  "claims": [
+   {
+    "text": "Dysentery could cause deadly dehydration within days, hit infants and the old hardest, and in bad cases left victims blue and hollow-eyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "Consumption, now called tuberculosis, was a highly contagious lung infection common in the West.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 121,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ww-untamed"
+  ]
+ },
+ {
+  "id": "ww-saloon",
+  "title": "The Saloon",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The frontier gathering place.",
+  "claims": [
+   {
+    "text": "Saloons ran from big creaking timber halls to tents and lean-tos where travellers found talk and whiskey.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "Within them cowboys might shoot it out, miners plan a stake and soldiers pass the time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 123,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "Bar fights in the World of Darkness are as quick and brutal as real ones; the thick glass of the era made a bottle to the head a heavy blow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ww-riding"
+  ]
+ },
+ {
+  "id": "ww-untamed",
+  "title": "The Untamed Wilderness",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Empty land beyond the walls.",
+  "claims": [
+   {
+    "text": "Disease and campaigns of genocide against native peoples emptied wide stretches before settlers came, so wild animals and growth spread.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   },
+   {
+    "text": "The result is a sense that everything past four walls is wild and deadly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 133,
+      "pdf": 134
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ww-disease"
+  ]
+ },
+ {
+  "id": "ww-spiritualism",
+  "title": "Spiritualism in the West",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The occult on the frontier.",
+  "claims": [
+   {
+    "text": "From the gold rush on, the West kept a running tradition of spiritualism, strongest in San Francisco, that lasted well past the frontier years.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Even the Luciferian Movement, Satanism included, became widespread by the 1900s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wildwest",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ww-setites-west"
+  ]
+ }
+]

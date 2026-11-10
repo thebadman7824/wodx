@@ -14,6 +14,7 @@
  *   getKind(actor)                         actor profile: kindred | ghoul | mortal | hunter | lupine | mage | fae | wraith | spirit | beast | demon | mummy | exalted
  *   setKind(actor, key|"auto")             override the detected profile (flag world.wodx.profile)
  *   pickKind(actor)                        dialog to choose the profile
+ *   reload({actor, weaponId})             fill a ranged weapon and post the turns it takes (house rule "Count shots")
  *   menu / macros keep working from v1.x
  */
 
@@ -23,6 +24,7 @@ import * as F from "./flavor.js";
 import * as L from "./legacy.js";
 import * as AU from "./auto.js";
 import * as CD from "./conductor.js";
+import * as CR from "./conductor-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -45,7 +47,7 @@ function registerSettings() {
         "Remove the Willpower and blood points spent in the attack and soak options from the character sheet.",
         Boolean, true);
     s("celerityDice", "Celerity adds dice to Dexterity rolls",
-        "Add Celerity dots to Dexterity-based attack, defense and Initiative pools.", Boolean, true);
+        "Add Celerity dots to Dexterity-based attack and defense pools (never to Initiative, V20 p. 142).", Boolean, true);
     s("potenceDice", "Potence adds dice to Strength damage",
         "Add Potence dots to Strength-based damage pools (blood spent turns them into automatic successes instead).",
         Boolean, true);
@@ -62,16 +64,23 @@ function registerSettings() {
         "Show the attacker/defender type selectors and the type-specific options (Rage, Glamour, Pathos, banes...) in the attack dialog.",
         Boolean, true);
     s("autoInitiative", "Roll initiative automatically",
-        "Roll everyone's initiative (d10 + Dexterity + Wits) when a fight starts, or at the start of every turn as VtDA20 does (p. 322).",
+        "Roll everyone's initiative (d10 + Dexterity + Wits) when a fight starts, or at the start of every turn as VtDA20 does (printed p. 343).",
         String, "round", { choices: { round: "Every turn", start: "When the fight starts", off: "Off" } });
     s("flavorText", "Flavor text on attack cards",
         "Add one short line of description under the dice of each attack card, picked to fit the outcome (miss, hit, heavy hit, soaked, botch). Edit the lines in scripts/flavor.js.",
         String, "all", { choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
+    game.settings.register(MOD, "countShots", { name: "Count shots and reloads (house rule)",
+        hint: "Each shot uses one round from a ranged weapon that has a capacity on its sheet; an empty weapon must be reloaded first (one turn for a firearm, V20 p. 278; a crossbow takes longer). Bows and slings are never counted.",
+        scope: "world", config: true, type: Boolean, default: false });
     s("movementLimit", "Movement in a fight",
         "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. Show the pace, or also stop a move past the running speed (the GM is never stopped).",
         String, "note", { choices: { note: "Show the pace", block: "Show it and stop moves past the running speed", off: "Off" } });
+    s("turnMoves", "Moves out of turn",
+        "In a fight, players move a character's token only on that character's turn (a character holding the action steps in first). The Storyteller can always move any token, for a dodge, a shove or a fall.",
+        String, "off", { choices: CR.TURN_MOVES });
 }
 const setting = k => game.settings.get(MOD, k);
+const countShots = () => { try { return !!game.settings.get(MOD, "countShots"); } catch (e) { return false; } };
 
 /** post the flavor line: inside the card for everyone, or as a separate whisper to the GMs */
 async function addFlavor(content, key, names, opts = {}) {
@@ -223,6 +232,7 @@ function weaponList(actor) {
             piercing: num(s.piercing),
             range: num(s.range),
             equipped: !!s.isequipped,
+            shots: i.type === "Ranged Weapon" ? R.shotsOf(s.clip) : null, crossbow: R.isCrossbow(i.name),
             desc: String(s.description || "").replace(/<[^>]+>/g, " ")
         });
     }
@@ -239,7 +249,13 @@ function weaponList(actor) {
                 type, dmgBonus: 1 + (k === "bite" ? nat.biteBonus : 0), secondaryId: "", minStr: 0, piercing: 0, desc: nat.note });
             continue;
         }
-        list.push({ id: `unarmed:${k}`, unarmed: true, ranged: false, ...u, secondaryId: "", minStr: 0, piercing: 0 });
+        const extra = {};
+        // Only fangs bite for aggravated damage (V20 pdf 284 / p. 276); anyone else bites as a punch does (house rule)
+        if (k === "bite" && getKind(actor) !== "kindred") Object.assign(extra, { type: "bashing", name: "Bite (no fangs: bashing)" });
+        // Protean 2 grows aggravated claws; Vicissitude's Bonecraft (3) grows talons that do lethal (V20 pdf 250 / p. 242)
+        if (k === "claw" && !(discipline(actor, "Protean") >= 2) && discipline(actor, "Vicissitude") >= 3)
+            Object.assign(extra, { type: "lethal", name: "Bone talons (Vicissitude, lethal)" });
+        list.push({ id: `unarmed:${k}`, unarmed: true, ranged: false, ...u, ...extra, secondaryId: "", minStr: 0, piercing: 0 });
     }
     return list;
 }
@@ -255,6 +271,17 @@ function weaponAbility(actor, w) {
 
 /** WoDX Actions' Werewolf and Fera helpers, when that module is on (Phase 6b). */
 function garouRules() { return game.wodxActions?.garouRules ?? null; }
+/** Soak options read from WoDX Actions: a demon's apocalyptic form {formOn}; a Dark Ages fae (DA:Fae pp. 88, 104) {lethalSoak, baneSoak}. */
+function soakOpts(actor, profile) {
+    if (profile === "demon") {
+        try { return { formOn: !!game.wodxActions?.demonInfo?.(actor)?.formOn }; } catch (e) { return {}; }
+    }
+    if (profile !== "fae") return {};
+    try {
+        const f = game.wodxActions?.faeSoak?.(actor);
+        return f ? { lethalSoak: !!f.lethal, baneSoak: !!f.coldIron } : {};
+    } catch (e) { return {}; }
+}
 
 /** How a bane metal in this attack hurts a shapechanger target; null when no bane applies. */
 function shifterBane(target, w, fd) {
@@ -601,7 +628,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const maneuver = maneuverTable()[fd.maneuver] ?? R.MANEUVERS.normal;
     const aKind = (fd.atkKind && fd.atkKind !== "auto") ? fd.atkKind : getKind(attacker);
     const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
-    const cel = discipline(attacker, "Celerity"), pot = discipline(attacker, "Potence");
+    const pot = discipline(attacker, "Potence");
 
     // ---- Automatic position, multiple actions, opponents and defense count (3.4.0)
     const autoNotes = resolveAutoOptions(attacker, target, fd, { attackerTok, targetTok });
@@ -621,8 +648,13 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         autoAtkNote = `Automatic attack: ${w.name} (expected health levels: ${shown})${out ? `. Not used: ${out}` : ""}`
             + (ignoredDistance ? `. Nothing reaches at the tokens' distance (${Math.round(distance)}): chosen as if in reach` : distance != null ? `. Distance ${Math.round(distance)}` : "") + ".";
     }
+    // ---- Shots (house rule): an empty weapon cannot fire
+    if (w?.ranged && w.shots?.empty && countShots()) {
+        const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(attacker) });
+        throw new Error(`${attacker.name}'s ${w.name} is empty. Reload it first (${t.turns} turn${t.turns === 1 ? "" : "s"}, ${t.ref}).`);
+    }
     // ---- Attack pool
-    const { attrKey, ab, minStrDiff } = attackBasics(attacker, w);
+    const { attrKey, ab } = attackBasics(attacker, w);
     // ---- Profile boosts (blood, Rage extra actions, house Glamour/Pathos/... dice)
     let boostDice = 0, rageAction = 0;
     const boostSpend = [];
@@ -657,6 +689,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
 
     const atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
     if (atk.roll) rolls.push(atk.roll);
+    if (w?.ranged && w.shots?.counted && countShots()) {
+        const left = await spendShot(attacker, w);
+        if (left !== null) log.push(`${w.name}: ${left} of ${w.shots.max} round${w.shots.max === 1 ? "" : "s"} left.`);
+    }
 
     // ---- Defense
     let def = null, defNote = "";
@@ -686,9 +722,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
 
     // ---- Damage
     let dmg = null, soak = null, outcome = null, armorBroken = false, dmgPool = null;
-    const fireSun = !!fd.fireSun;
     const dp = damageProfile(target, tKind, w, fd);
-    const { dmgType, bane, soakDiff, minLevels, sb } = dp;
+    const { dmgType, soakDiff, minLevels, sb } = dp;
     if (dp.note) log.push(dp.note);
     const fortChoice = fd.fortBlood;
     fd.fortBlood = resolveFortitude(target, fortChoice, dp, fd);
@@ -803,7 +838,8 @@ function soakPoolFor(target, profile, w, fd, dp) {
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
         armor: arm[dp.dmgType] ?? 0, armorPiercing: w.piercing, bypassArmor: fd.bypass,
         fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: fd.soakBonus,
-        aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true
+        aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
+        ...soakOpts(target, profile)
     });
 }
 
@@ -826,8 +862,9 @@ function tokenDistance(a, b, { reach = false } = {}) {
 function attackUsable(attacker, w, distance, reachD = distance) {
     const shifter = !!garouRules()?.isShifter?.(attacker);
     if (w.id === "unarmed:bite" && !w.natural) return "a bite needs a hold first (clinch, hold or tackle)";
-    if (w.id === "unarmed:claw" && !w.natural && !(discipline(attacker, "Protean") >= 2 || discipline(attacker, "Vicissitude") >= 1 || shifter))
-        return "no claws (Protean 2 or Vicissitude)";
+    if (w.id === "unarmed:claw" && !w.natural && !(discipline(attacker, "Protean") >= 2 || discipline(attacker, "Vicissitude") >= 3 || shifter))
+        return "no claws (Protean 2 or Vicissitude 3)";
+    if (w.ranged && w.shots?.empty && countShots()) return "empty: reload first";
     const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
     if (distance != null) {
         if (!w.ranged && !AU.inReach(reachD ?? distance, unit)) return "out of reach";
@@ -980,7 +1017,7 @@ async function resolveCounter(defender, victim, extra, weaponItem) {
     if (dmg.roll) rolls.push(dmg.roll);
     const profile = getProfile(victim);
     const arm = armor(victim);
-    const sp = R.soakPool({ profile, damageType: type, stamina: attr(victim, "stamina"), fortitude: discipline(victim, "Fortitude"), armor: arm[type] ?? 0 });
+    const sp = R.soakPool({ profile, damageType: type, stamina: attr(victim, "stamina"), fortitude: discipline(victim, "Fortitude"), armor: arm[type] ?? 0, ...soakOpts(victim, profile) });
     const soak = await rollPool(sp.dice, 6, { canBotch: false });
     if (soak.roll) rolls.push(soak.roll);
     const left = R.damageAfterSoak(dmg.successes, soak.successes, type, profile, { elder: isElder(victim) });
@@ -1009,7 +1046,7 @@ function attackCard(c) {
         L.push(`<div class="vtc-sec"><b>Defense</b> `);
         if (c.autoNote) L.push(`<div class="vtc-parts">${esc(c.autoNote)}</div>`);
         if (defNote) L.push(`<span class="vtc-warn">${defNote}</span>`);
-        else {
+        else if (def) {
             L.push(`${cap(def.type)} (Dexterity + ${def.abilityName}): <b>${def.dice}</b> dice, diff <b>${def.difficulty}</b>`);
             if (def.notes.length) L.push(`<div class="vtc-parts">${def.notes.join(" · ")}</div>`);
             L.push(diceHtml(def.faces, def.difficulty));
@@ -1064,7 +1101,7 @@ function attackCard(c) {
 
 function profileLabel(p) {
     return { vampire: "Cainite", ghoul: "ghoul / revenant", mortal: "mortal", lupine: "Garou / supernatural", supernatural: "supernatural",
-        fae: "changeling", wraith: "wraith", spirit: "spirit" }[p] ?? p;
+        fae: "changeling", wraith: "wraith", spirit: "spirit", demon: "demon", mummy: "mummy" }[p] ?? p;
 }
 
 function appliedHtml(actor, r) {
@@ -1194,12 +1231,17 @@ export async function soakAndApply(tok, fd) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
             armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
-            aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true });
+            aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...soakOpts(actor, profile) });
         if (sb) sp.notes.push(sb.note);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
-        soak = await rollPool(sp.dice, soakDiff, { canBotch: false, autoSuccesses: sp.autoSoak });
+        // A caller can ask that a botched soak turns the damage aggravated (electrocution of a vampire, V20 core printed p. 295, pdf 303)
+        soak = await rollPool(sp.dice, soakDiff, { canBotch: !!fd.botchAggravated, autoSuccesses: sp.autoSoak });
         if (soak.roll) rolls.push(soak.roll);
-        left = R.damageAfterSoak(dmgLevels, soak.successes, type, profile, { elder: isElder(actor) });
+        if (fd.botchAggravated && soak.botch) {
+            type = "aggravated";
+            sp.notes.push("Botched: the damage is aggravated");
+            left = { levels: dmgLevels, halved: false };
+        } else left = R.damageAfterSoak(dmgLevels, soak.successes, type, profile, { elder: isElder(actor) });
     }
     if (fd.chimerical && kind !== "fae") left = { levels: 0, halved: false };
     // Damage from one attack, entered by hand, dazes the same way (V20 Dark Ages p. 348)
@@ -1237,7 +1279,8 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         const a = c.actor;
         if (!a) continue;
         const dex = attr(a, "dexterity"), wits = attr(a, "wits");
-        const cel = setting("celerityDice") ? discipline(a, "Celerity") : 0;
+        // Celerity adds nothing to Initiative (V20 pdf 150 / p. 142)
+        const cel = 0;
         const wp = woundPenalty(a);
         const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0}`);
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
@@ -1253,7 +1296,7 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
     const extra = list.map(c => [c.name, freeActionsIn(c.actor, combat)]).filter(([, n]) => n > 0);
     const content = `<div class="vtc-card"><h3>Initiative${automatic ? `, turn ${combat.round || 1}` : ""}</h3><table class="vtc-init"><tr><th></th><th>d10</th><th>Dex+Wits</th><th>Total</th></tr>${lines.join("")}</table>
       ${extra.length ? `<div class="vtc-note">Extra actions declared: ${extra.map(([n, k]) => `${esc(n)} ${k}`).join(", ")}.</div>` : ""}
-      <div class="vtc-note">Actions are declared from lowest to highest initiative and resolved from highest to lowest (VtDA20 p. 322).${automatic ? " Rolled automatically (setting)." : ""}</div></div>`;
+      <div class="vtc-note">Actions are declared from lowest to highest initiative and resolved from highest to lowest (VtDA20 printed p. 343).${automatic ? " Rolled automatically (setting)." : ""}</div></div>`;
     const md = { speaker: ChatMessage.getSpeaker(), content, rolls };
     if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL;
     return ChatMessage.create(md);
@@ -1269,6 +1312,7 @@ const MACROS = [
     { name: "WoDX: Actor Type", img: "icons/svg/mystery-man.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.pickKind(a); else ui.notifications.warn('Select a token first.');" },
     { name: "WoDX: Initiative", img: "icons/svg/d20-highlight.svg", command: "game.wodxCombat.rollInitiative({ all: game.user.isGM && canvas.tokens.controlled.length === 0 });" },
     { name: "WoDX: Quick Attack", img: "icons/skills/melee/blade-tip-orange.webp", command: "game.wodxCombat.quickAttack();" },
+    { name: "WoDX: Reload", img: "icons/weapons/ammunition/bullets-cartridge-shell-gray.webp", command: "game.wodxCombat.reload();" },
     { name: "WoDX: Soak Policy", img: "icons/svg/shield.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.setSoakPolicy(a); else ui.notifications.warn('Select a token first.');" }
 ];
 
@@ -1294,7 +1338,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.7.7", movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.7", reload, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1333,6 +1377,30 @@ function movedThisRound(tok) {
     if (!f || f.tag !== tag) return null;
     return { yards: Number(f.yards) || 0, limits: movementFor(doc.actor) };
 }
+/** The fight this token is in, if one is running on its scene, with its combatant. */
+function fightOf(doc) {
+    const sid = doc.parent?.id;
+    for (const combat of game.combats?.contents ?? []) {
+        if (!combat.started || (combat.scene && combat.scene.id !== sid)) continue;
+        const c = combat.combatants.find(x => x.tokenId === doc.id && (!x.sceneId || x.sceneId === sid));
+        if (c) return { combat, c };
+    }
+    return null;
+}
+// Out of turn, a player's token stays put (3.8.1). Registered before the yards count, so a refused move is not counted.
+Hooks.on("preUpdateToken", (doc, changes, options) => {
+    if (OFF || game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
+    let mode;
+    try { mode = setting("turnMoves"); } catch (e) { return; }
+    if (mode !== "block") return;
+    const f = fightOf(doc);
+    const held = f ? f.c.getFlag(MOD, "held") : null;
+    const r = CR.turnMove({ mode, isGM: false, inFight: !!f, isCurrent: !!f && f.combat.combatant?.id === f.c.id,
+        held: !!held && held.combatId === f?.combat.id && held.round === f?.combat.round });
+    if (r.ok) return;
+    ui.notifications.warn(`${doc.name} cannot move now: ${r.why}.`);
+    return false;
+});
 Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
     if (OFF || !("x" in changes || "y" in changes) || options?.wodxMove === false) return;
     let mode;
@@ -1481,7 +1549,7 @@ export async function setSoakPolicy(actor) {
     if (!a) return null;
     const cur = soakPolicy(a);
     const r = await P.ask({ title: `Soak policy: ${a.name}`, width: 420, classes: ["vtc-dialog"],
-        content: `<form class="vtc-form"><p>When ${esc(a.name)} is hit and the attack dialog's Fortitude choice is Automatic, spend a blood point for automatic Fortitude soak (VtDA20 p. 218):</p>
+        content: `<form class="vtc-form"><p>When ${esc(a.name)} is hit and the attack dialog's Fortitude choice is Automatic, spend a blood point for automatic Fortitude soak (VtDA20 printed p. 221):</p>
           <div class="form-group"><label>Policy</label><select name="policy" data-fixed>${Object.entries(AU.SOAK_POLICIES).map(([k, v]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${esc(v)}</option>`).join("")}</select></div></form>`,
         buttons: [{ id: "ok", label: "Save", icon: "fas fa-check", default: true }, { id: "cancel", label: "Cancel" }] });
     if (!r || r.id !== "ok") return null;
@@ -1550,6 +1618,50 @@ function bindHints(root, { attacker, target, attackerTok, targetTok }) {
     form.addEventListener("change", upd);
     form.addEventListener("input", upd);
     upd();
+}
+
+/* ---- Shots and reloading (3.8.0) ---- */
+
+function darkAgesNow() {
+    try { const y = Number(L.chronicle()?.eras?.currentYear?.()); return Number.isFinite(y) && y > 0 && y < 1450; } catch (e) { return false; }
+}
+function archeryOf(actor) {
+    try { return Math.max(num(ability(actor, "archery").value), num(secondaryAbility(actor, null, "Archery")?.value)); } catch (e) { return 0; }
+}
+
+/** One round used; returns the rounds left, or null when nothing was counted. */
+async function spendShot(actor, w) {
+    const item = actor.items.get(w.id);
+    if (!item || !(actor.isOwner || game.user.isGM)) return null;
+    const sh = R.shotsOf(item.system?.clip);
+    if (!sh.counted) return null;
+    const left = Math.max(0, sh.value - 1);
+    await item.update({ "system.clip.value": left });
+    return left;
+}
+
+/** Reload a ranged weapon: fill it to capacity and post how many turns it takes. */
+export async function reload({ actor: a = null, weaponId = null } = {}) {
+    const { attacker: actor } = resolveTokens(a, null);
+    if (!actor) return ui.notifications.warn("WoDX Combat: select your token (or assign a character) first.");
+    const guns = weaponList(actor).filter(w => w.ranged && w.shots?.counted);
+    if (!guns.length) return ui.notifications.info(`${actor.name} has no weapon that takes rounds.`);
+    let w = guns.find(x => x.id === weaponId) ?? (guns.length === 1 ? guns[0] : null);
+    if (!w) {
+        const r = await P.ask({ title: `Reload: ${actor.name}`, width: 420, classes: ["vtc-dialog"],
+            content: `<div class="form-group"><label>Weapon</label><select name="weapon" data-fixed>${guns.map(g => `<option value="${g.id}">${g.name} (${g.shots.value}/${g.shots.max})</option>`).join("")}</select></div>`,
+            buttons: [{ id: "reload", label: "Reload", default: true }, { id: "cancel", label: "Cancel" }] });
+        if (!r || r.id !== "reload") return null;
+        w = guns.find(x => x.id === r.data.weapon);
+    }
+    if (!w) return null;
+    const item = actor.items.get(w.id);
+    if (!item) return null;
+    const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(actor) });
+    await item.update({ "system.clip.value": w.shots.max });
+    const how = t.turns === 1 ? "one full turn, with concentration; it can be one of several actions" : `${t.turns} turns`;
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="vtc-card"><b>${actor.name} reloads ${w.name}</b> (${w.shots.max} round${w.shots.max === 1 ? "" : "s"}): ${how} (${t.ref}).</div>` });
+    return { weapon: w.id, turns: t.turns, rounds: w.shots.max };
 }
 
 /**

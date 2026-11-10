@@ -1,0 +1,246 @@
+[
+ {
+  "id": "tbfur-titans",
+  "title": "The Furies and the Titans",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "classical",
+   "modern"
+  ],
+  "summary": "How the Black Furies remember the age before Olympus.",
+  "claims": [
+   {
+    "text": "Black Fury legend calls the reign of the Titans a time of peace, when the Titans held male and female, sky and earth in balance and kept Gaia's laws much as the Furies did.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "After the sky-gods cast the Titans down, the Furies had little love for the Olympians, though Luna is said to have walked among them as Artemis and spoken for the tribe.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-furies"
+  ]
+ },
+ {
+  "id": "tbfur-south-america",
+  "title": "Black Furies in South America",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "How the tribe came south with European settlers.",
+  "claims": [
+   {
+    "text": "Spanish and Portuguese missionaries brought the Furies to South America, most of them nuns of the Order of Our Merciful Mother, while Freebooters came after Latin settlers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "They were among the first Garou to meet the werecats of the Amazon, to build Kinfolk networks there and to warn the Western Concordat that the jungle was being destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Few tribes keep the peace with the rainforest's shapeshifters as reliably, though Freebooters still clash with the werecats over wild ground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-furies",
+   "cb-bastet"
+  ]
+ },
+ {
+  "id": "tbfur-amazons-of-diana",
+  "title": "Amazons of Diana",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The largest Black Fury camp among the young.",
+  "claims": [
+   {
+    "text": "The Amazons of Diana are warriors before they are avengers, and they make up the biggest faction among young Black Furies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "They are quickest to defend the tribe's honour and lead its assaults, though some conservative elders look down on them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Older Furies teach that an inner circle of the camp cares more for protection and prevention than for aggression.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-furies"
+  ]
+ },
+ {
+  "id": "tbfur-bacchantes",
+  "title": "The Bacchantes",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Black Furies who punish the worst violators of Gaia's law.",
+  "claims": [
+   {
+    "text": "The Bacchantes see themselves as the Vengeance of Gaia and claim the oldest traditions of the tribe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Instead of chasing the Wyrm's most obvious works, they strike at the people behind the worst crimes against Gaia, far from human eyes; the larger attacks tend to pass for natural disasters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "When a sept is threatened by something like a Nexus Crawler or a pack of vampires, they fight beside the Amazons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-furies",
+   "tbfur-amazons-of-diana"
+  ]
+ },
+ {
+  "id": "tbfur-freebooters",
+  "title": "The Freebooters",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A shrinking Black Fury camp that seeks new wild places.",
+  "claims": [
+   {
+    "text": "The Freebooters search for Wyld places that can be dedicated to Gaia and made into caerns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The camp shrinks faster than any other because so little wild land remains; the Temple of Artemis is smaller still.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "A small group within the camp holds that a new body for Gaia must be found in a safe place in the Umbra, and the camp may split over it.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "tbfur",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-furies",
+   "tbfur-south-america"
+  ]
+ }
+]

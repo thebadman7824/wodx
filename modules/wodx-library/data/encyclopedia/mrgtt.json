@@ -1,0 +1,352 @@
+[
+ {
+  "id": "mrgtt-craftmasons-rise",
+  "title": "The Craftmasons and the road to the Council",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the Traditions first came together.",
+  "claims": [
+   {
+    "text": "By the 14th century mage affairs across Europe and Asia were in chaos, and the idea of a Council of Nine grew from that confusion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "At the heart of the Order of Reason stood the Craftmasons, engineers and reformers who wanted order in Europe and an end to the monsters preying on people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "The egalitarian Craftmasons came to loathe the elitist Order of Hermes and gathered allies against it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "dam-craftmasons",
+   "sc-order-of-reason"
+  ]
+ },
+ {
+  "id": "mrgtt-mistridge-horizon",
+  "title": "Mistridge, the dragons and Horizon",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The battle that won the Hermetics their sway over the Council.",
+  "claims": [
+   {
+    "text": "When the Order of Reason struck, the Hermetics called up more than a dozen dragons bound by pact, and the beasts mauled the artificers' army.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 115,
+      "pdf": 116
+     }
+    ]
+   },
+   {
+    "text": "That rescue explains the Order of Hermes' outsize say in Council policy and why the others tolerate it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 115,
+      "pdf": 116
+     }
+    ]
+   },
+   {
+    "text": "The mystics then built Horizon, a realm in the spirit world fed by Nodes worldwide, where the Council and the Nine Traditions were formalised.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 115,
+      "pdf": 116
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dam-mistridge",
+   "order-of-hermes",
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "mrgtt-balamob",
+  "title": "The Balamob",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mayan jaguar priests brought to the new Convocation.",
+  "claims": [
+   {
+    "text": "The Balamob hold blood and other bodily fluids sacred as the sap of the world tree, and bloodletting lets the priest reach Xibalba.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 122,
+      "pdf": 123
+     }
+    ]
+   },
+   {
+    "text": "Each initiate meets a wayob, a companion spirit that guides and guards and, for the Awakened, is the Avatar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 122,
+      "pdf": 123
+     }
+    ]
+   },
+   {
+    "text": "Known for jaguar shapeshifting, divination and astrology, most live among the Maya of southern Mexico and Guatemala and often clash with local armies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 122,
+      "pdf": 123
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "dreamspeakers",
+   "avatar"
+  ]
+ },
+ {
+  "id": "mrgtt-ranks",
+  "title": "Ranks of Tradition mages",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Master, Archmage and Oracle.",
+  "claims": [
+   {
+    "text": "Masters are the teachers and leaders of mage society, often holding power in a Chantry or Tradition; most Council Heralds, Justices and Executioners are Masters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   },
+   {
+    "text": "Archmage is the highest rank and is now very rare.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   },
+   {
+    "text": "Whether Oracles are Ascended Archmages is still argued.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 160,
+      "pdf": 161
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "mrgtt-staff-of-heralds"
+  ]
+ },
+ {
+  "id": "mrgtt-chantries",
+  "title": "Chantries and cults",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why mages band together.",
+  "claims": [
+   {
+    "text": "A Chantry may be a coven, a lodge, a software studio, an assassins' guild or a rock band; being solitary carries no shame, but groups bring real advantages.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 215,
+      "pdf": 216
+     }
+    ]
+   },
+   {
+    "text": "A cult of followers adds successes to rituals when all of it gathers, from three for 13-17 members up to five for 23-27.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 215,
+      "pdf": 216
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "mrgtt-sanctum"
+  ]
+ },
+ {
+  "id": "mrgtt-sanctum",
+  "title": "Sanctum",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A personal space shaped to a mage's paradigm.",
+  "claims": [
+   {
+    "text": "A Sanctum takes shape slowly, needing five or more years of work for each dot, and fits only its owner's paradigm, an apprentice's or one shared directly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 222,
+      "pdf": 223
+     }
+    ]
+   },
+   {
+    "text": "Its protection covers only effects cast inside; an effect reaching out, such as by Correspondence, takes full Paradox and likely unravels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 222,
+      "pdf": 223
+     }
+    ]
+   },
+   {
+    "text": "A mage could stay unaging inside a Sanctum yet age quickly after leaving.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 222,
+      "pdf": 223
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "m20bos-resonance-synergy"
+  ]
+ },
+ {
+  "id": "mrgtt-staff-of-heralds",
+  "title": "The Staff of Heralds",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Wonder made to prove a messenger's standing.",
+  "claims": [
+   {
+    "text": "A few great Wonders belong to all the Traditions and matter more as symbols of unity than for their power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 274,
+      "pdf": 275
+     }
+    ]
+   },
+   {
+    "text": "Early Heralds carried word between Chantries; phones have made this rare except when an item must be carried or a message proven genuine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 274,
+      "pdf": 275
+     }
+    ]
+   },
+   {
+    "text": "The Euthanatos made a staff that channelled Fate so the Council could mark its Heralds in a way even a novice could read.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrgtt",
+      "page": 274,
+      "pdf": 275
+     }
+    ]
+   }
+  ],
+  "see": [
+   "euthanatos",
+   "council-of-nine",
+   "mrgtt-ranks"
+  ]
+ }
+]

@@ -2,11 +2,10 @@
  * WoDX Otherworlds 0.4.0, in Foundry: the Near Dreaming level and its trods, the Avatar Storm by date, Disembodiment,
  * the Net, the moon's roads and the rolls that go with them, and each client's layer sound. Rules in realms-rules.mjs.
  */
-import {MODULE_ID, placeOf} from "./ratings.mjs";
-import {STATUS, applyLocally, worldOf} from "./crossing.mjs";
+import {MODULE_ID} from "./ratings.mjs";
+import {STATUS, applyLocally} from "./crossing.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
 import * as RR from "./realms-rules.mjs";
-import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const num = v => Number(v) || 0;
@@ -244,7 +243,7 @@ export async function netContest({a, b, programA = 0, programB = 0, protectA = 0
     content: card("Net combat", `<p><strong>${esc(a?.name)}</strong>: Intelligence + Computer ${pa.pool} at 6 ${diceLine(ra.dice)}${pa.auto ? `, +${pa.auto} from the program` : ""}: ${x.a}.</p>
       <p><strong>${esc(nameB)}</strong>: ${pb.pool} at 6 ${diceLine(rb.dice)}${pb.auto ? `, +${pb.auto} from the program` : ""}: ${x.b}.</p>
       <p><b>${who ? `${esc(who)} wins: ${x.damageDice} damage dice, soaked with ${x.soakPool} (Wits and protection)` : "Neither gains ground."}</b></p>
-      <p class="wodx-quiet">World of Future Darkness, scan p. 9.</p>`)});
+      <p class="wodx-quiet">World of Future Darkness p. 22 (pdf 9).</p>`)});
   return x;
 }
 

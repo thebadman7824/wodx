@@ -1,0 +1,370 @@
+[
+ {
+  "id": "mcbn-mexico-city",
+  "title": "Mexico City (Sabbat city)",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The largest city in the world and the Sabbat's great stronghold in the New World.",
+  "claims": [
+   {
+    "text": "Mexico City held the largest mortal population in the New World and the greatest store of power for the Sabbat to use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Mariano Pomposo, census taker of the Black Hand, puts the undead population at up to 500, gathered in dozens of packs and factions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Most of the city sits on waterlogged lake sediment. The ground sinks slowly, tilting buildings, and a haven dug too deep may flood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "A Sabbat chronicler of the city boasts of 500 Cainites among seventeen million mortals, yet argues that the city's violence shapes the Sabbat more than the Sabbat shapes the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "true-black-hand"
+  ]
+ },
+ {
+  "id": "mcbn-aztec-gods",
+  "title": "The blood gods of Tenochtitlan",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Undead beings worshipped as Aztec gods, and their destruction by the Sabbat.",
+  "claims": [
+   {
+    "text": "Huitzilopochtli, Tlaloc, Toci and Tezcatlipoca grew gluttonous on the blood of the Flower Wars, mock battles staged to keep the altars supplied with captives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Tezcatlipoca seemed Lasombra, but with a command of shadow never seen before; a captured priest claimed the inner temple was dark enough to keep that being awake by day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "When Cortes sacked the city, the pack Nigrum Triste had ghouls set Huitzilopochtli's temple ablaze by day. The burns sent Huitzilopochtli into torpor, and the pack took four nights to stake and diablerize the so-called god, without ever learning what it was.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Tlaloc escaped into the lake. After a great storm drowned the city, the Sabbat, led by its koldun, hunted Tlaloc for a year, trapped the creature behind an earthen dam, hardened the remains into clay, shattered them and burned the pieces.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 17,
+      "pdf": 18
+     },
+     {
+      "book": "mcbn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "During an eclipse on 23 August 1691, tendrils of shadow impaled Lasombra in their crypts, and three died. Goratrix and the Tremere antitribu later claimed to have destroyed Tezcatlipoca with a ritual using the black ichor from the wounds; they showed no proof, but Tezcatlipoca was never seen again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "lasombra",
+   "tome-koldunism",
+   "diablerie"
+  ]
+ },
+ {
+  "id": "mcbn-aztec-fiends",
+  "title": "The Aztec Fiends",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "How Aztec priests entered the Sabbat through the Tzimisce, by that clan's account.",
+  "claims": [
+   {
+    "text": "The Lasombra refused to Embrace Indians and tied themselves to the New World through the Church. The Tzimisce and the Gangrel and Nosferatu antitribu allied with Aztec and other tribes instead, and Embraced Aztec priests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "By Tzimisce telling, Aztec Fiends refined the Sabbat's blood rites into the Vaulderie, began the Blood Feasts in honour of the Flower War banquets, and devised the rituals Mirror of Second Sight, Blood Rush and Eyes of the Night Hawk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Through the 1700s the Lasombra and Tzimisce fought a war of pawns inside the colonial Church, Lasombra backing Spanish-born priests and the Tzimisce stirring up creole ones, until armed priests clashed and the army stepped in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tzimisce",
+   "vaulderie",
+   "antitribu",
+   "lasombra"
+  ]
+ },
+ {
+  "id": "mcbn-melinda-galbraith",
+  "title": "Melinda Galbraith",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Toreador antitribu of Mexico City who rose to claim the Sabbat regency.",
+  "claims": [
+   {
+    "text": "After a great flood left the Mexico City Sabbat scattered, Melinda Galbraith forced the survivors to stay and face Tlaloc rather than abandon the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "During the Second Sabbat Civil War Galbraith became first among Gorchist's consistory in Mexico City, and the consistory backed Galbraith's claim to the regency. The order of the Porfirio Diaz years helped secure it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "mcbn-second-sabbat-civil-war"
+  ]
+ },
+ {
+  "id": "mcbn-second-sabbat-civil-war",
+  "title": "The Second Sabbat Civil War",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian",
+   "wild-west"
+  ],
+  "summary": "The nineteenth-century war within the Sabbat over who would lead it.",
+  "claims": [
+   {
+    "text": "The war broke out in Mexico City when the Ravnos blamed for Gorchist's destruction proved to be antitribu, not Camarilla agents, and the local factions turned on each other.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Several regents claimed the Sabbat at once: the Lasombra put forward Archbishop Moncada, the Tzimisce grudgingly backed Vladimir Rustovitch, and Archbishop Pierson of Detroit held the claim for eight nights before a pack drained it away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "mcbn-melinda-galbraith"
+  ]
+ },
+ {
+  "id": "mcbn-pulque",
+  "title": "Pulque",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The cactus liquor of the Valley of Mexico and its Sabbat uses.",
+  "claims": [
+   {
+    "text": "Pulque is a thick green drink fermented from cactus sap, which Aztec priests gave to victims before sacrifice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Many Mexico City Sabbat drink it only through mortals they have filled with the liquor and then drained. One pack of thaumaturges impales victims on cactus spines and ferments the bloody sap into a drink that gives Cainites euphoria but no nourishment, and is soon vomited up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sabbat",
+   "mcbn-mexico-city"
+  ]
+ },
+ {
+  "id": "mcbn-speaking-stone",
+  "title": "The speaking stone",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "renaissance",
+   "modern"
+  ],
+  "summary": "An Aztec monolith buried somewhere beneath Mexico City.",
+  "claims": [
+   {
+    "text": "A great stone outside Tenochtitlan was said to foretell Moctezuma's ruin. A century later the Sabbat Cainite Hector de Velasco dug it up and had the pack carry it into their underground haven.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Decades spent listening to the stone thinned the pack's blood and their skin blackened and cracked, and they died. Allies buried the chamber and told no one where it lay.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "On some nights in the Plaza Garibaldi, homeless people press their ears to the ground to hear the stone murmuring below.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mcbn",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mcbn-mexico-city",
+   "mcbn-aztec-gods"
+  ]
+ }
+]

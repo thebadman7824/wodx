@@ -1,0 +1,212 @@
+[
+ {
+  "id": "dbrc-cranes-today",
+  "title": "The Cranes in Tense Times",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Resplendent Cranes hold to the old ways.",
+  "claims": [
+   {
+    "text": "In tense nights the Resplendent Cranes still cling to the ancient ways, valuing obedience to law and elders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 8,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "They keep stressing the schooling of new Kuei-jin, both in scripture and tenets and in the means to fight the corruption around them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 8,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-five-dharmas",
+   "kote-great-principle"
+  ]
+ },
+ {
+  "id": "dbrc-crane-jina",
+  "title": "Crane Jina as Teachers",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "When a Crane is ready to teach.",
+  "claims": [
+   {
+    "text": "A Crane is ready to teach on reaching ling and becoming jina, having grasped righteousness well enough to know a place within the laws of Heaven and live without strain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 21,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Old tales tell of one great master taking many pupils.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 21,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbrc-cranes-today",
+   "kote-dharma"
+  ]
+ },
+ {
+  "id": "dbrc-crane-sects",
+  "title": "Crane Sects",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Way of the Resplendent Crane is organized.",
+  "claims": [
+   {
+    "text": "Elder mandarins run the sects, younger mandarins lead temple services with jina assisting, and Running Monkeys report to everyone with little say; rank in a sect follows enlightenment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 32,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Several sects depart from the Blood Court's Shining Ice Guardian orthodoxy yet stay accepted within the Dharma, stressing other tenets without rejecting the rest; their disputes have still led to shadow wars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 33,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The Eight Lotuses Blooming sect traces its tradition to the Southern Song, when Neo-Confucianism arose.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 33,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbrc-cranes-today",
+   "kotec-blood-court"
+  ]
+ },
+ {
+  "id": "dbrc-yellow-moon",
+  "title": "The Yellow Moon",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A small Crane sect born of a heresy charge.",
+  "claims": [
+   {
+    "text": "When three great mandarins brought an innovation the core of the Dharma disliked, the ancestors stripped them of their posts for heresy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 36,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "The three founded their own sect, the Yellow Moon, which for a long time had no other members; they studied texts, memorized koans and debated contentedly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 36,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbrc-crane-sects"
+  ]
+ },
+ {
+  "id": "dbrc-cooling-hearth",
+  "title": "The Sisters of the Cooling Hearth",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "One of the oldest Crane wu.",
+  "claims": [
+   {
+    "text": "Among the oldest Crane wu, the Sisters of the Cooling Hearth admit only female, gender-neutral or androgynous members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 42,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "They do not welcome males, though they will advise groups of male Kuei-jin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbrc",
+      "page": 42,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbrc-crane-sects",
+   "kote-courts"
+  ]
+ }
+]

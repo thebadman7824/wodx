@@ -141,3 +141,43 @@ Step 3 of the design note.
 - [x] Mounts and vehicles (0.11.0, deployed; 0.13.0 fixes the cart following)
 - [x] Step 2: climbing, ledges and jumps (0.13.1, deployed)
 - [x] Step 3: targets on tiles (0.14.0, deployed)
+
+## 0.18.0: a live wire holds you (2026-11-09)
+- [x] Rules: Pull free of the current (Strength 5 for a vampire, 9 otherwise); cutting the power frees everyone; a vampire's botched soak is aggravated (B387)
+- [x] Runtime: walking onto a live wire holds the character; Undo
+- [x] WoDX Combat 3.8.2: botchAggravated on soakAndApply
+- [x] Harness tests (3 new)
+- [ ] Gate step 26 in rothenstein-wodx
+- [ ] Deployed
+
+
+## 0.19.0: adopt a generated map (2026-11-10)
+- [x] Sidecar file from the farmstead generator (doors, shutters, chest, beds, hay, oven, well, places, triggers)
+- [x] Rules: read and check the file, cells to pixels, match the imported door walls, plan, summary (B404)
+- [x] Runtime: Adopt a generated map and Undo the map adoption on the scene's right-click menu, Storyteller only
+- [x] Harness tests (11 new)
+- [x] Gate in rothenstein-wodx: gateadopt 8/8 (2026-11-10 05:21Z, on a scene built to the farmstead's size)
+- [x] Deployed to rothenstein-wodx (main 69dffa8)
+
+
+## 0.20.0: a container's fill starts from where it sits (2026-11-10)
+- [x] Rules: first guess from the container's own setting, its region's place tag, the scene's tag (B405)
+- [x] Runtime: Usual contents field in the tile config; the draw window says where the guess came from
+- [x] Farmstead file sets the chest to a home
+- [x] Harness tests (2 new)
+- [x] Gate (gateadopt 8/8, step 4 fill guess home) in rothenstein-wodx
+- [x] Deployed to rothenstein-wodx (main c452df7)
+
+
+## 0.21.0: everyday goods, more building types, villages and towns (2026-11-10)
+- [x] WoDX Library 0.5.0: data/goods.mjs, 160 everyday goods with their eras and a weight for each fill place (B570)
+- [x] Fill by place and era draws gear, goods or both; goods go in as plain lines (B570)
+- [x] tools/mapgen/ddcore.py (shared rooms, furnishing, writer, sidecar pieces) and buildings.py: 12 building types, set down facing any way (B571)
+- [x] The farmstead now builds on them, byte for byte the same map and sidecar from seed 1197
+- [x] tools/mapgen/ddtown.py: a village or small town of the Dark Ages, with households (B572)
+- [x] Adopt keeps each household on its building's region; the summary stays short on a big map (B573)
+- [x] ddtown.py: a city size, and --part splits a large place into smaller maps that join at trigger regions (B574, B575)
+- [x] Harness tests (11 new: 4 goods, 4 town sidecars, 3 generator runs)
+- [ ] Real importer test of a town (waits on Ben exporting one from Dungeondraft, as the farmstead does)
+- [ ] Gate in rothenstein-wodx: fill draws goods; adopt the village sidecar on a scene of its size
+- [ ] Deployed

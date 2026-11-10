@@ -1,0 +1,328 @@
+[
+ {
+  "id": "cop-primogen",
+  "title": "The Primogen",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Clan elders who sit on a Camarilla city's council.",
+  "claims": [
+   {
+    "text": "Unlike justicars, archons, sheriffs or scourges, primogen have few fixed duties beyond speaking for their clans, a duty read in many ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "A primogen keeps the office as long as the right Kindred are content, or the discontented lack the power to act.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "The primogen leads the clan politically, represents it on the council, advises it, marshals it in battle and punishes its lightest offences.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "All real power a primogen holds comes from the clan, so keeping the clan satisfied matters most.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cop-elder-councils",
+   "cop-whip"
+  ]
+ },
+ {
+  "id": "cop-elder-councils",
+  "title": "Origin of the Councils",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "renaissance"
+  ],
+  "summary": "How elder councils arose during the Long Night.",
+  "claims": [
+   {
+    "text": "When elder coteries took a region together, they could split it, pick one of them as prince, or share rule as a council.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Split domains were often too small to defend and reunited, and choosing one ruler rarely happened without bloodshed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Shared rule proved workable, to the surprise of the elders themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cop-primogen"
+  ]
+ },
+ {
+  "id": "cop-whip",
+  "title": "Whip and Steward",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The assistants who serve a primogen.",
+  "claims": [
+   {
+    "text": "The whip keeps a primogen informed on clan matters, tries to keep council meetings moving, and runs errands.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "In large cities a steward keeps the council chambers, tracks the primogen's schedule and decides who may see them; often the whip does both jobs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cop-primogen"
+  ]
+ },
+ {
+  "id": "cop-salons",
+  "title": "Elder Salons",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Contests elders stage to fight boredom.",
+  "claims": [
+   {
+    "text": "Elders always look for challenges that do not risk their own unlives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Scavenger hunt salons, where elders gather and race to find rare objects, alone, in teams or through agents, are not unusual.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "cop-hiltz",
+  "title": "Frank Hiltz",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The lone Malkavian of Jackson Hole, Wyoming.",
+  "claims": [
+   {
+    "text": "No other Malkavian lives in Jackson Hole, so Frank Hiltz holds the clan seat on its primogen council alone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Holding no power beyond a single vote, Frank Hiltz has never been acknowledged by clan elders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cop-primogen"
+  ]
+ },
+ {
+  "id": "cop-influence",
+  "title": "Primogen and Influence",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How primogen gain mortal influence through their clans.",
+  "claims": [
+   {
+    "text": "A primogen who takes influence from an underling is thought pitiful and is ruined socially if the harpies learn of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Trading contacts and influence with clanmates is accepted and can help both sides.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Ideal mortal contacts keep late hours, are easy to reach, live alone and have a secret to hide.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "cop-unattached",
+  "title": "Unattached Councils",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rare councils whose members do not represent clans.",
+  "claims": [
+   {
+    "text": "Members of an unattached council sit for knowledge or influence rather than as clan voices.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "The city's Kindred have little say, a formal vote is unheard of, and the prince usually chooses alone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "Such councils are rare.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cop",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cop-primogen"
+  ]
+ }
+]

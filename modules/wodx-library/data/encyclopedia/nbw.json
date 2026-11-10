@@ -1,0 +1,30 @@
+[
+ {
+  "id": "nbw-van-nuys",
+  "title": "Jochen van Nuys",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Prince of San Francisco, as one story tells it.",
+  "claims": [
+   {
+    "text": "The anthology The Beast Within tells that Jochen van Nuys keeps a prince's court in San Francisco and has searched without success for a Setite temple there ever since word spread that the Setite Jean-Claude had come to the city.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "nbw",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sfbn-chinatown"
+  ]
+ }
+]

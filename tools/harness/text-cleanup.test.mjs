@@ -49,3 +49,18 @@ test("in-game text doesn't echo the project's own instructions: no decision numb
     if (ECHO.test(s)) bad.push(`${f.slice(root.length + 1)}: ${s.match(new RegExp(`.{0,50}(${ECHO.source}).{0,30}`))?.[0]}`);
   assert.deepEqual(bad, []);
 });
+
+// Stock phrases that read as machine-written (Phase 10 scan). Game terms such as the Tapestry or the Delve Edge are not on the list.
+const STOCK = /\b(it'?s worth noting|it is worth noting|it is important to note|in conclusion|furthermore,|moreover,|a testament to|cannot be overstated|plays? an? (key|crucial|vital|pivotal) role|seamless(ly)?|embark(s|ed)? on|delve[sd]? into|deep dive|the very fabric of|ever-evolving|a myriad of|plethora|rich tapestry|nestled|bustling|in today'?s world|navigat(e|ing) the complexities|whether you'?re)\b/i;
+// Unfinished text
+const PLACEHOLDER = /\b(lorem ipsum|TODO|FIXME|TBD|placeholder text|insert (name|text) here)\b/;
+
+test("in-game text and the encyclopaedia have no stock machine phrases or placeholders", () => {
+  const bad = [];
+  for (const f of files) for (const s of strings(readFileSync(f, "utf8"))) {
+    if (STOCK.test(s)) bad.push(`${f.slice(root.length + 1)}: ${s.match(new RegExp(`.{0,40}(${STOCK.source}).{0,20}`, "i"))?.[0]}`);
+    else if (PLACEHOLDER.test(s)) bad.push(`${f.slice(root.length + 1)}: ${s.slice(0, 80)}`);
+  }
+  assert.deepEqual(bad, []);
+});
+

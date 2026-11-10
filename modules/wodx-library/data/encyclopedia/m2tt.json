@@ -1,0 +1,164 @@
+[
+ {
+  "id": "m2tt-doc-eon",
+  "title": "Doc Eon",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Etherite inventor said to have come from the future.",
+  "claims": [
+   {
+    "text": "Doc Eon left behind several devices, among them a highly vulgar machine that winds time back a moment while everyone keeps the memory of what happened.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2tt",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Doc Eon went back into the future, where some say the inventor came from in the first place.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2tt",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "mrse-pulp"
+  ]
+ },
+ {
+  "id": "m2tt-etherite-heroes",
+  "title": "Etherite heroes in effigy",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Famous names of the Sons of Ether, as shown in a trapped exhibit.",
+  "claims": [
+   {
+    "text": "An Etherite exhibit of heroes shows Czar Vargo and the Etherships, Colonel Arno Valiant's deep-space balloon team, Professor Thunder with a tyrannosaur, Lorenzo Golo and Baron Brimstone fighting Garou in the Wild West.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2tt",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Each figure is also a trap that punishes visitors who seem hostile or Technocratic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2tt",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "mrse-ethernauts",
+   "mrse-adventurers"
+  ]
+ },
+ {
+  "id": "m2tt-mercer",
+  "title": "Dr. Paulinus Mercer",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "victorian",
+   "modern"
+  ],
+  "summary": "A violinist whose 1907 Paris concert with Isadora Duncan bent reality.",
+  "claims": [
+   {
+    "text": "In 1907 Mercer played while the Ecstatic dancer Isadora Duncan performed in Paris; witnesses saw the hall flicker into a Greek temple and the light of Olympus, and some of the crowd went mad or rioted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2tt",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "The police stopped the pair from performing in public again, but they caused a sensation in the smoking rooms of the first Sons of Ether.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2tt",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cult-of-ecstasy",
+   "society-of-ether"
+  ]
+ },
+ {
+  "id": "m2tt-mini-vac",
+  "title": "Rolling Thunder's Mini-vac",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Dreamspeaker device for trapping small spirits.",
+  "claims": [
+   {
+    "text": "Rolling Thunder built the Mini-vac in a Minnesota cabin and uses it to catch troublesome minor spirits and release them where they can do no harm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2tt",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "The Tradition's elders disapprove and treat the few copies in circulation as banned; against strong spirits the device only angers them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2tt",
+      "page": 84,
+      "pdf": 85
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "mrds-spirit-touched"
+  ]
+ }
+]

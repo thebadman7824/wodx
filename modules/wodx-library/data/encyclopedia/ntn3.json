@@ -1,0 +1,126 @@
+[
+ {
+  "id": "ntn3-caribou-crossing",
+  "title": "The Sept of Caribou Crossing",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A northern holy site with Uktena Bane Tenders.",
+  "claims": [
+   {
+    "text": "Caribou Crossing is a holy site of the Red Talons in the Canadian north, about two weeks’ run beyond Sky Pines; because of its dark past, a pack of Uktena Bane Tenders guards it alongside the Talons.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "ntn3",
+      "page": 73,
+      "pdf": 73
+     },
+     {
+      "book": "ntn3",
+      "page": 87,
+      "pdf": 87
+     },
+     {
+      "book": "tbuk",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tbuk-binders"
+  ]
+ },
+ {
+  "id": "ntn3-sky-pines",
+  "title": "Sky Pines",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Red Talon caern in Canada, as one novel tells it.",
+  "claims": [
+   {
+    "text": "The Tribe Novel Red Talons and Fianna tells that Sky Pines is a Red Talon caern in Canada, where the great moon howler Heard-by-Gaia is among the most honoured Garou.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ntn3",
+      "page": 73,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "red-talons"
+  ]
+ },
+ {
+  "id": "ntn3-jarlsdottir",
+  "title": "Karin Jarlsdottir",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Leader of the Sept of the Anvil-Klaiven, as the novels tell it.",
+  "claims": [
+   {
+    "text": "The Tribe Novel Red Talons and Fianna tells that Karin Jarlsdottir, a homid Get of Fenris born under the half-moon, is a judge of real standing who is well thought of even among the Red Talons of Canada.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ntn3",
+      "page": 10,
+      "pdf": 10
+     }
+    ]
+   }
+  ],
+  "see": [
+   "ntn2-anvil-klaiven",
+   "get-of-fenris"
+  ]
+ },
+ {
+  "id": "ntn3-cries-havoc",
+  "title": "Cries Havoc",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Child of Gaia who joined a Get sept, as one novel tells it.",
+  "claims": [
+   {
+    "text": "The Tribe Novel Red Talons and Fianna tells that Cries Havoc, a Child of Gaia envoy from the Sept of the Dawn, answered for the death of the Get warrior Arne Wyrmsbane by paying a symbolic life-price and then taking Arne's place in the Get sept.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ntn3",
+      "page": 16,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "children-of-gaia",
+   "ntn2-anvil-klaiven"
+  ]
+ }
+]

@@ -13,3 +13,19 @@ button.wsn-offer { display: block; margin-top: 4px; font-size: 0.8em; line-heigh
 #wodx-senses-screen.wsn-frenzy { box-shadow: inset 0 0 14vmin 3vmin rgba(150, 0, 0, 0.55); }
 #wodx-senses-screen.wsn-rotschreck { box-shadow: inset 0 0 18vmin 4vmin rgba(225, 225, 215, 0.35); }
 body.wsn-drained #board { filter: saturate(0.15) brightness(0.92); }
+
+/* 0.4.0: the character's state on screen (each player can turn it off); no animation, for slow machines */
+#wodx-senses-screen.wsn-state-incap { box-shadow: inset 0 0 30vmin 10vmin rgba(0, 0, 0, 0.75); }
+#wodx-senses-screen.wsn-state-wound3 { box-shadow: inset 0 0 22vmin 6vmin rgba(40, 0, 0, 0.6); }
+#wodx-senses-screen.wsn-state-wound2 { box-shadow: inset 0 0 14vmin 3vmin rgba(40, 0, 0, 0.4); }
+#wodx-senses-screen.wsn-state-wound1 { box-shadow: inset 0 0 9vmin 1vmin rgba(40, 0, 0, 0.25); }
+#wodx-senses-screen.wsn-state-hunger { box-shadow: inset 0 0 12vmin 2vmin rgba(110, 0, 10, 0.45); }
+#wodx-senses-screen.wsn-state-rage { box-shadow: inset 0 0 12vmin 2vmin rgba(170, 60, 0, 0.4); }
+#wodx-senses-screen.wsn-state-shadow { box-shadow: inset 0 0 16vmin 4vmin rgba(30, 0, 45, 0.55); }
+#wodx-senses-screen.wsn-state-paradox { box-shadow: inset 0 0 12vmin 2vmin rgba(150, 190, 255, 0.3); }
+#wodx-senses-screen.wsn-state-banality { box-shadow: inset 0 0 14vmin 3vmin rgba(120, 120, 120, 0.4); }
+#wodx-senses-screen.wsn-state-nowill { box-shadow: inset 0 0 8vmin 1vmin rgba(90, 90, 90, 0.3); }
+#wodx-senses-state { position: fixed; top: 6px; left: 50%; transform: translateX(-50%); z-index: 61; pointer-events: none; padding: 2px 10px; border-radius: 4px; background: rgba(0, 0, 0, 0.45); color: #e8dcc8; font-size: 0.85rem; max-width: 70vw; text-align: center; }
+
+/* The quiet interface: panels tucked away on this player's screen; Alt+Q brings them back */
+body.wsn-quiet #sidebar, body.wsn-quiet #hotbar, body.wsn-quiet #players { display: none !important; }
