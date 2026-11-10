@@ -997,6 +997,12 @@
    "title": "Technocracy Assembled, Volume 2",
    "short": "TA2",
    "edition": "First edition"
+  },
+  {
+   "id": "m2tt",
+   "title": "The Technomancer's Toybox",
+   "short": "TT",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1165,6 +1171,7 @@
   "mrcrafts.json",
   "m2hota.json",
   "m2ta1.json",
-  "m2ta2.json"
+  "m2ta2.json",
+  "m2tt.json"
  ]
 }
