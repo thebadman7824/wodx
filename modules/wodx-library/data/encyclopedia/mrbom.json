@@ -1,0 +1,304 @@
+[
+ {
+  "id": "mrbom-nephandi",
+  "title": "The Nephandi's aim",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What sets the Fallen apart from other mages.",
+  "claims": [
+   {
+    "text": "A Nephandus is an Awakened soul who chose, in this life or an earlier one, to serve darkness and the Void, and that choice cannot be undone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 15,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "All of them work toward the end of Creation; they seek neither to rule the world nor to reunite Prime.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 15,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "They count Traditions and Conventions as equally hostile, though they will pretend to side with either when it serves them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 15,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "m20botf-cauls"
+  ]
+ },
+ {
+  "id": "mrbom-lone-fallen",
+  "title": "Widderslainte who Awaken alone",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Fallen souls found by no Nephandus.",
+  "claims": [
+   {
+    "text": "Some widderslainte Awaken without any Nephandus finding them; many burn out in cruel experiments that take others with them, while a few learn alone and grow very dangerous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 31,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "A handful are taken in by kind or ally-hungry Tradition mages and may live inside a Tradition for a long time, but their nature always wins out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 31,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m20botf-widderslainte",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "mrbom-qlippothic",
+  "title": "Qlippothic magic",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Spheres turned inside out.",
+  "claims": [
+   {
+    "text": "Nephandi call on the Qlippothic Spheres, the dark mirror of the usual nine, which gives their magic a crueler and more brutal cast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 34,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Qlippothic Correspondence reasons that if all things are linked, destroying one wounds the rest; its users tear holes in space or devour the gap between two places to cross it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 34,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m20botf-qlippoth",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "mrbom-labyrinths",
+  "title": "Abandoned Labyrinths",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Old Nephandi strongholds left on Earth.",
+  "claims": [
+   {
+    "text": "Most Nephandi were driven past the Horizon in 1945, leaving centuries of building behind; a few strongholds were found and burned, but most never were.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 38,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "These Labyrinths now sit decaying in jungles and other harsh places, their guardians loose and their wards fading, and one by one their builders are coming back.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 38,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Every Labyrinth has some maze-like feature, whether to baffle attackers or in echo of the great Labyrinth of the Dark Umbra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 38,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "mrbom-nephandi"
+  ]
+ },
+ {
+  "id": "mrbom-marauder-magic",
+  "title": "Marauder magic",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why mad mages are so dangerous.",
+  "claims": [
+   {
+    "text": "Marauders reshape the world around them with vulgar magic and suffer none of the Paradox that binds other mages, so they can outmatch Tradition mages of equal skill.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 56,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Their helpers tend to be goblins, twisted mutants or other strangely reshaped beings and spirit creatures.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 56,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "marauders"
+  ]
+ },
+ {
+  "id": "mrbom-infernal-kin",
+  "title": "Infernalists among the monsters",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Damned beings that are not human.",
+  "claims": [
+   {
+    "text": "Some vampires, shapeshifters and other creatures also serve demons and dark gods, but they rarely ally with human or Awakened Infernalists, since many serve rival masters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 93,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Infernal vampires treat mortal Infernalists as disposable pawns, and damned shapeshifters often seem closer to the Nephandi, many of them warped or maddened.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 93,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-infernalists",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "mrbom-union-umbrood",
+  "title": "The Union and the Umbrood",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Technocrats meet spirits.",
+  "claims": [
+   {
+    "text": "The Technocracy nearly always calls Umbrood aliens or extra-dimensional threats and meets them with hostility, which the spirits return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 122,
+      "pdf": 116
+     }
+    ]
+   },
+   {
+    "text": "Its standing order is to subjugate them before they can subjugate humanity, and the Void Engineers hold most of the Union's knowledge of such beings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrbom",
+      "page": 122,
+      "pdf": 116
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "void-engineers",
+   "mrsw-lesser-spirits"
+  ]
+ }
+]
