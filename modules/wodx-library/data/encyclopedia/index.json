@@ -793,6 +793,12 @@
    "title": "Tradition Book: Cult of Ecstasy (Revised)",
    "short": "TB:CoE",
    "edition": "Revised"
+  },
+  {
+   "id": "mrds",
+   "title": "Tradition Book: Dreamspeakers (Revised)",
+   "short": "TB:DS",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -927,6 +933,7 @@
   "m20gm.json",
   "mrab.json",
   "mrcc.json",
-  "mrce.json"
+  "mrce.json",
+  "mrds.json"
  ]
 }

@@ -1,0 +1,398 @@
+[
+ {
+  "id": "mrds-spirit-touched",
+  "title": "The spirit-touched",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "People who brush against spirits without fully Awakening.",
+  "claims": [
+   {
+    "text": "Many people begin by hearing dead relatives, meeting grown-up versions of childhood imaginary friends or seeing visions; untrained, such gifts usually worsen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Most of the spirit-touched never learn to control what they sense, even with help, and some Dreamspeakers work as counsellors to aid them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "A would-be Dreamspeaker taught by spirits instead of a human mentor often arrives with odd notions about the Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "mrds-independents"
+  ]
+ },
+ {
+  "id": "mrds-baruti",
+  "title": "Baruti",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Storytellers, wandering keepers of lost tales.",
+  "claims": [
+   {
+    "text": "Baruti tell that in an age before the Gauntlet, wanderers worked magic and kept old tales, and a few survived the great change.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Their early aim of keeping the Age of Sorrows remembered widened into saving the tales of every lost people and vanished place.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Once the settled world gave up shamanism, Baruti in its realms became troubadours, messengers and wandering holy folk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "mrds-keepers"
+  ]
+ },
+ {
+  "id": "mrds-independents",
+  "title": "Independent Dreamspeakers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shamans Awakened by spirits rather than teachers.",
+  "claims": [
+   {
+    "text": "Other Traditions expect mad spirit-Awakened mages to turn Marauder, but Awakening often cures the madness or at least stops it from getting worse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Unlike Orphans, Independents all drift to the Dreamspeakers in time, pushed by their spirit mentors or found by the Tradition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "marauders"
+  ]
+ },
+ {
+  "id": "mrds-ghost-wheel",
+  "title": "Ghost Wheel Society",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Urban shamans and spirit hagglers.",
+  "claims": [
+   {
+    "text": "When farming and cities arose, most shamans withdrew to the wilds, but a few learned the spirits of towns, fields and human works.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Skilled at striking bargains with spirits, they grew just as skilled at bargaining with and fooling Sleepers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "By the Hellenistic and T'ang eras they had spread across the Old World as fortune tellers and con artists; rivals call them Wheelers or Thieves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "mrds-red-spear"
+  ]
+ },
+ {
+  "id": "mrds-keepers",
+  "title": "Keepers of the Sacred Flame",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shamans who save the ways of conquered peoples.",
+  "claims": [
+   {
+    "text": "The Keepers hold that shamans of defeated peoples can keep some traditions alive while living with the loss.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Some spirits suggest the practice is older than modern humans, reaching back to Neanderthal magic.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "One strand traces to the first century, when a Pompeii merchant and linear spirit-worker named Flavius Longinus Didacus lived through the eruption.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "mrds-baruti"
+  ]
+ },
+ {
+  "id": "mrds-red-spear",
+  "title": "Red Spear Society",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Spirit Warriors at the heart of the Dreamspeakers.",
+  "claims": [
+   {
+    "text": "Insofar as the Dreamspeakers form one Tradition at all, it is mostly through the Red Spears.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Seneca shaman Walking Hawk followed a vision to the Convocation and travelled widely to rally other spirit masters to unity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Walking Hawk's followers took the name Brotherhood of the Unseen Face, collecting the world's masks and totems to show the truth beneath them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "mrds-solitaries",
+  "title": "Solitaries",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shamans who withdraw from society.",
+  "claims": [
+   {
+    "text": "Withdrawal is as old as society itself and appears in the earliest accounts of shamans and in cave art.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "It grows common both in hard times and in times of plenty, since well-fed people seek less guidance and frustrated shamans may leave.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Shamanism is practised for a tribe or community rather than for oneself, and frustration at a tribe that will not listen is a common reason to leave.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "mrds-paradigm",
+  "title": "Walking between the worlds",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Dreamspeaker view of magic and the Umbra.",
+  "claims": [
+   {
+    "text": "Dreamspeakers can work magic because they live in the material realm and the Umbra at once and can act in each.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "The spirit lands are also lands of the dead; the shades who keep ties to the living dwell in the Dark Umbra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Becoming a shaman always involves a symbolic death and rebirth into both realms, and cutting oneself off from either world brings harm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrds",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "orph-shades"
+  ]
+ }
+]
