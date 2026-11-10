@@ -1869,6 +1869,36 @@
       "edition": "Dark Ages"
     },
     {
+      "id": "dallal",
+      "title": "Liege, Lord, and Lackey",
+      "short": "LL&L",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dapillars",
+      "title": "Three Pillars",
+      "short": "Three Pillars",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "datbn",
+      "title": "Transylvania by Night",
+      "short": "TbN",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daveil",
+      "title": "Veil of Night",
+      "short": "Veil of Night",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dawind",
+      "title": "Wind from the East",
+      "short": "Wind from the East",
+      "edition": "Dark Ages"
+    },
+    {
       "id": "wawor",
       "title": "A World of Rage",
       "short": "A World of Rage",
@@ -2199,6 +2229,11 @@
     "daspoils.json",
     "daknight.json",
     "dathief.json",
+    "dallal.json",
+    "dapillars.json",
+    "datbn.json",
+    "daveil.json",
+    "dawind.json",
     "wawor.json",
     "waaxis.json",
     "waausp.json"
