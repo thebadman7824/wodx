@@ -2065,6 +2065,12 @@
       "title": "Tribe Novel: Silent Striders & Black Furies",
       "short": "Tribe Novel 2",
       "edition": "Novel"
+    },
+    {
+      "id": "ntn3",
+      "title": "Tribe Novel: Red Talons & Fianna",
+      "short": "Tribe Novel 3",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2411,6 +2417,7 @@
     "wawwcore.json",
     "cblod.json",
     "wofd.json",
-    "ntn2.json"
+    "ntn2.json",
+    "ntn3.json"
   ]
 }

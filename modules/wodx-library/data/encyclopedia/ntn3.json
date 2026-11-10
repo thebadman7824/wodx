@@ -1,0 +1,40 @@
+[
+ {
+  "id": "ntn3-caribou-crossing",
+  "title": "The Sept of Caribou Crossing",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A northern holy site with Uktena Bane Tenders.",
+  "claims": [
+   {
+    "text": "Caribou Crossing is a holy site of the Red Talons in the Canadian north, about two weeks’ run beyond Sky Pines; because of its dark past, a pack of Uktena Bane Tenders guards it alongside the Talons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ntn3",
+      "page": 73,
+      "pdf": 73
+     },
+     {
+      "book": "ntn3",
+      "page": 87,
+      "pdf": 87
+     },
+     {
+      "book": "tbuk",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tbuk-binders"
+  ]
+ }
+]
