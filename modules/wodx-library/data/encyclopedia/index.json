@@ -2077,6 +2077,12 @@
       "title": "Tribe Novel: Bone Gnawers & Stargazers",
       "short": "Tribe Novel 4",
       "edition": "Novel"
+    },
+    {
+      "id": "ntn5",
+      "title": "Tribe Novel: Children of Gaia & Uktena",
+      "short": "Tribe Novel 5",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2425,6 +2431,7 @@
     "wofd.json",
     "ntn2.json",
     "ntn3.json",
-    "ntn4.json"
+    "ntn4.json",
+    "ntn5.json"
   ]
 }
