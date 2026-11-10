@@ -1,0 +1,292 @@
+[
+ {
+  "id": "dsbh-tal-mahe-ra",
+  "title": "The Tal'mahe'Ra Behind the Hand",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The death-cult of mages that stands behind the Black Hand.",
+  "claims": [
+   {
+    "text": "The Tal'mahe'Ra traded with Kindred for the secrets of vampirism, giving victims, havens, weapons and ghouls for little in return, and in time admitted vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 13,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Its mages were surprised that Kindred knew even less about death than they did.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 13,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Over centuries the cult studied vampirism through dissection, torture and magickal analysis.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 13,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Betrayal of its secrets is punished more harshly than anything the Sabbat or the archons do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 21,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dsbh-hands",
+   "dsbh-enoch"
+  ]
+ },
+ {
+  "id": "dsbh-honorable-accord",
+  "title": "The Hand and Honorable Accord",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where the Sabbat Path of Honorable Accord came from.",
+  "claims": [
+   {
+    "text": "The Black Hand gave the Path of Honorable Accord to the Sabbat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 21,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Most Hand members do not follow it, believing it gets in the way of their true loyalties.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 21,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dsbh-tal-mahe-ra"
+  ]
+ },
+ {
+  "id": "dsbh-andeleon",
+  "title": "Andeleon and the Vicissitude Plague",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How Vicissitude is said to have spread through the Tzimisce like a disease.",
+  "claims": [
+   {
+    "text": "Andeleon spread the disease of Vicissitude among the Tzimisce, and some claim even the torpid Antediluvian was not safe.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 29,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Only a few elders hid in their castles out of reach of their clanmates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 29,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Some say the Black Hand bears part of the blame for the Inquisition.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 29,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dsbh-tal-mahe-ra"
+  ]
+ },
+ {
+  "id": "dsbh-hands",
+  "title": "The Sabbat Hand and the False Hand",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The branches of the Black Hand and its pawns.",
+  "claims": [
+   {
+    "text": "The Black Hand inside the Sabbat is more active and less conservative than the Camarilla Black Hand, and keeps rituals from Camarilla and Eastern members.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 45,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Its seraphim welcome Gehenna and are building an army for that night.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 45,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "They already command the largest organized body of pawns, the False Hand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 45,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dsbh-tal-mahe-ra"
+  ]
+ },
+ {
+  "id": "dsbh-enoch",
+  "title": "The Black Citadel of Enoch",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Underworld stronghold of the Tal'mahe'Ra.",
+  "claims": [
+   {
+    "text": "Much of the holding lies behind walls of black marble 10 feet thick and 100 feet high, with a bronze gate believed to bear the seal of Caine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 93,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "The walls were rebuilt after the city was retaken, to keep out Oblivion-driven monsters, and slave wraiths guard them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 93,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Inside stands a re-created First City, at best a reflection of the original.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 93,
+      "pdf": 92
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dsbh-tal-mahe-ra"
+  ]
+ },
+ {
+  "id": "dsbh-chatterlings",
+  "title": "Chatterlings",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mortals raised in the Underworld to serve the Hand.",
+  "claims": [
+   {
+    "text": "Chatterlings are mortals raised from early childhood in the Underworld and trained to surpass ordinary humans in body and mind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 121,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "They often fail to understand the living world but are very dangerous and almost all are fanatical.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dsbh",
+      "page": 121,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dsbh-enoch"
+  ]
+ }
+]

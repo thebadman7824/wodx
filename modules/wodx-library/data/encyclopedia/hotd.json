@@ -1,0 +1,289 @@
+[
+ {
+  "id": "hotd-havens",
+  "title": "Havens of the Final Nights",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A survey of unusual places where Kindred make their lairs.",
+  "claims": [
+   {
+    "text": "Not every sire supplies a childe with wealth or a home; childer left on their own must find a haven themselves, and many come out stronger for it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "A haven gives safety and stability, but some Kindred cannot stay shut away and look for security while travelling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hotd-parker",
+   "hotd-glass-house",
+   "hotd-constantinos",
+   "hotd-carl-vinson"
+  ]
+ },
+ {
+  "id": "hotd-parker",
+  "title": "Eric Parker",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A young Setite who built a haven without help from a sire.",
+  "claims": [
+   {
+    "text": "Eric Parker was a casino dealer in life, gifted at keeping losing gamblers at the tables.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Eric Parker is offered as an example of a childe who made a way without a wealthy sire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hotd-havens"
+  ]
+ },
+ {
+  "id": "hotd-glass-house",
+  "title": "The Glass House",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The haven of a former stage illusionist.",
+  "claims": [
+   {
+    "text": "Jesse Van Reginald, who lives there, came of age around the middle of the 20th century admiring stage magicians such as Blackstone, Dunninger and Houdini, and learned the craft alone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The haven borrows from stage illusion, using hidden hinged mirrors of the kind once used to make a caged elephant seem to vanish.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hotd-havens"
+  ]
+ },
+ {
+  "id": "hotd-house-of-storms",
+  "title": "The House of Storms",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A haven whose owner is drawn to the young.",
+  "claims": [
+   {
+    "text": "Its resident, Kathryn Green, made a fortune in the 1987 stock market crash by buying while others sold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   },
+   {
+    "text": "The haven is built around the pull that youth exerts on the old and worn out.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 37,
+      "pdf": 38
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hotd-havens"
+  ]
+ },
+ {
+  "id": "hotd-constantinos",
+  "title": "Conrad Constantinos",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A wandering Ravnos with a haven on the move.",
+  "claims": [
+   {
+    "text": "Conrad Constantinos is a Ravnos loner and nomad, moving from city to city out of wanderlust and hunger.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Nearly a century of unlife has made Conrad Constantinos well able to fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hotd-havens"
+  ]
+ },
+ {
+  "id": "hotd-tara-sunshine",
+  "title": "Miss Tara Sunshine",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Brujah with a haven devoted to watching desire.",
+  "claims": [
+   {
+    "text": "The Brujah known as Miss Tara Sunshine was once Tabitha Somerset, raised on a father's estate in Victorian New England.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "The haven plays on the modern taste for watching rather than taking part, which mirrors how Kindred must hold back among mortals.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hotd-havens"
+  ]
+ },
+ {
+  "id": "hotd-carl-vinson",
+  "title": "USS Carl Vinson",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An aircraft carrier that hides an Assamite.",
+  "claims": [
+   {
+    "text": "A carrier holds a crew of over 6,000 and works like a small town at sea.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "A vampire can survive aboard only through excellent concealment, since odd behaviour among officers would quickly be noticed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Burak, a 900-year-old Ottoman Turk, former Sufi and Assamite ascetic of strong will, makes a lair in the ship's depths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hotd",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hotd-havens"
+  ]
+ }
+]

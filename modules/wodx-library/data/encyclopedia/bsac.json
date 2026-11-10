@@ -1,0 +1,498 @@
+[
+ {
+  "id": "bsac-schools",
+  "title": "Schools of Blood Magic",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Four old traditions of Thaumaturgy that owe nothing to Clan Tremere.",
+  "claims": [
+   {
+    "text": "Clan Tremere likes to claim it invented Thaumaturgy, but several older blood-sorcery traditions still thrive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The four covered in depth are Akhu of Egypt, Dur-An-Ki of the Middle East, Sadhana of India and Wanga of the Caribbean and South America.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Further traditions noted are Necromancy and Koldunic rituals, Nahuallotl of a Native American lineage, and talismans that seem to form on their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bsac-akhu",
+   "bsac-dur-an-ki",
+   "bsac-sadhana",
+   "bsac-wanga",
+   "bsac-nahuallotl"
+  ]
+ },
+ {
+  "id": "bsac-akhu",
+  "title": "Akhu",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Egyptian blood sorcery kept by the Followers of Set.",
+  "claims": [
+   {
+    "text": "Most Kindred know it as Setite Sorcery, but its own practitioners call it Akhu, and Setites are not the only ones who use it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Ancient Egyptians held magic to be a legitimate, morally neutral art, with priests also serving as magicians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Mummy Hekau grew from the same roots, so the two arts still look alike after thousands of years apart.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Interest in Akhu among the Tremere rose in the 19th century once hieroglyphs could be read, and many who studied it went over to the Setites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "In 1930 the Council of Seven forbade any study of Akhu, then allowed it again in 1973, persuaded by the Pontifex of Antioch, who argued the clan had to know the Serpents' magic to defend against it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-setite-sorcery",
+   "bsac-schools"
+  ]
+ },
+ {
+  "id": "bsac-dur-an-ki",
+  "title": "Dur-An-Ki and the Ashipu",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The demon-binding blood magic of the Middle East and its sorcerers.",
+  "claims": [
+   {
+    "text": "The Sumerian name is taken to mean master of heaven and earth, and its sorcerers call themselves ashipu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "It began in Mesopotamia and absorbed practices from neighbouring cultures, the mystery cults, Christianity and later Islam.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Every Middle Eastern clan has its own blood magicians, not only the Assamite sorcerers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The Assamite schism drove many sorcerers into Western cities, and several cities have seen magical feuds between Assamite and Tremere sorcerers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-dur-an-ki",
+   "bsac-yacine"
+  ]
+ },
+ {
+  "id": "bsac-yacine",
+  "title": "Madame Yacine",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Malkavian sorceress of Lyon allied with House Tremere.",
+  "claims": [
+   {
+    "text": "In 1974 the French Tremere won over Madame Yacine, a Malkavian practitioner living among the Algerian community of Lyon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The Tremere argued that joining the clan was impossible for a Malkavian, but an alliance with the House was not.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Madame Yacine has since become a primogen of Lyon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bsac-dur-an-ki"
+  ]
+ },
+ {
+  "id": "bsac-sadhana",
+  "title": "Sadhana",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The blood magic of India and its rakta-sadhus.",
+  "claims": [
+   {
+    "text": "Two of the major vampire clans of India teach blood magic to many members, and other vampires there study it too.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "The Tremere who reached India with the early modern trading ventures found a tradition as strong as theirs and far older.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Practitioners borrow mortal terms: they are sadhus who pursue Sadhana and gain powers called siddhis, and add the prefix rakta, blood, to set themselves apart.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "The oldest known blood magic of India follows the Brahmin model of long, exacting sacrificial rites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bsac-schools"
+  ]
+ },
+ {
+  "id": "bsac-wanga",
+  "title": "Wanga",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Caribbean blood magic rooted in Afro-Caribbean faith.",
+  "claims": [
+   {
+    "text": "Among mortals wanga means a harmful charm or spell; Kindred use the word for the whole magical system.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Its practitioners are called wangateurs as a neutral term.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Wanga is a religious practice, and the caster must truly believe in the God and spirits it calls on, though True Faith is not needed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "A caster without that faith adds 1 to the difficulty of every Wanga roll and always counts one die as a 1, so an ordinary failure becomes a botch.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Interest in Wanga is growing as more Kindred look for something to believe in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bsac-schools"
+  ]
+ },
+ {
+  "id": "bsac-nahuallotl",
+  "title": "Nahuallotl",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The blood sorcery of the Tlacique, practised by the nahualli.",
+  "claims": [
+   {
+    "text": "Tlacique blood sorcerers are called nahualli.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "One power wounds a target in line of sight from a distance; the victim cannot resist with Willpower but may soak the lethal damage, and the pool is Intelligence plus the successes on the Willpower roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "A stronger form strikes as many targets in one turn as the caster has Intelligence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   },
+   {
+    "text": "For paths the caster's own blood is offering enough, but rituals demand a life, and the strongest demand a human one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 89,
+      "pdf": 90
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bsac-tlacique",
+   "cbs-tlacique"
+  ]
+ },
+ {
+  "id": "bsac-tlacique",
+  "title": "The Tlacique",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A bloodline of Mexico that other clans believe extinct.",
+  "claims": [
+   {
+    "text": "The Tlacique claim descent from Tezcatlipoca, the Jaguar, a god of the night sky, of smoke and obsidian mirrors, and of sorcery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "When the Conquistadors arrived they ruled openly as gods, and their sorcerers took the blood of sacrifices atop the pyramids.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Other native Kindred in Mexico then included Gangrel and Nosferatu, but the Tlacique held the most sway.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Other clans have forgotten them, but the Tlacique have neither forgotten nor forgiven the invaders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bsac",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cbs-tlacique",
+   "bsac-nahuallotl"
+  ]
+ }
+]
