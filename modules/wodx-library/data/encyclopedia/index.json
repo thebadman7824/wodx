@@ -1693,6 +1693,12 @@
    "title": "Clanbook: Salubri",
    "short": "DA CB Salubri",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "daheresy",
+   "title": "The Cainite Heresy",
+   "short": "Cainite Heresy",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -1977,6 +1983,7 @@
   "dabic.json",
   "dacbbaali.json",
   "dacbcapp.json",
-  "dacbsal.json"
+  "dacbsal.json",
+  "daheresy.json"
  ]
 }
