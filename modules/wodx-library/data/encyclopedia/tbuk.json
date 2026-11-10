@@ -1,0 +1,196 @@
+[
+ {
+  "id": "tbuk-binders",
+  "title": "The Binders of Great Banes",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The old Uktena duty of holding great evils captive.",
+  "claims": [
+   {
+    "text": "Uktena lore tells of songs of power and the secret names of great Banes, which gave the tribe a hold over them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "With the Croatan, the Uktena drew the worst evils to chosen places and bound them, some lulled into sleep and some tied with cords of earth energy, each with guardians set to watch it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "The tribe took Kin from human nations that suited it but lived apart from them, teaching its Kin to honour the Mother and leaving the making of chiefs to those Kin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "banes"
+  ]
+ },
+ {
+  "id": "tbuk-middle-brother",
+  "title": "Mourning Middle Brother",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Uktena remember the loss of the Croatan.",
+  "claims": [
+   {
+    "text": "Uktena call the Croatan Middle Brother, the Wendigo Younger Brother and themselves Older Brother.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "When the Croatan made their last stand, their caerns were shut to the other two tribes, and afterward no trace of the defenders was found in body, spirit or as ancestors.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The Uktena then took up the Croatan burden, reopening the lost caerns they could find, hiding those they could not guard, and keeping watch over most of the hidden prisons of great Banes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Each winter the tribe sings a song for the Croatan, and the brothers drifted apart: Younger Brother into Rage, Older Brother into the hunt for secrets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "wendigo",
+   "tbuk-binders"
+  ]
+ },
+ {
+  "id": "tbuk-spirals",
+  "title": "Uktena and the Black Spirals",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Early Uktena dealings with the fallen tribe.",
+  "claims": [
+   {
+    "text": "Uktena tellers say the Black Spiral Dancers reached the Pure Lands with the Wyrmcomers and at first offered the Uktena sympathy and support against the newcomer tribes.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Some Uktena played along only to learn what the Spirals believed and could do, never letting them near a caern, and destroyed them later; other Garou often distrust the Uktena for that knowledge.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "black-spiral-dancers"
+  ]
+ },
+ {
+  "id": "tbuk-kin-dilemma",
+  "title": "The Uktena Kinfolk Dilemma",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A modern quarrel over the tribe's Kin.",
+  "claims": [
+   {
+    "text": "Many Uktena Kin come from peoples whose cultures were broken by conquest, yet the tribe's Kin kept fragments of their old lore.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Today the tribe argues over whether to let its Kin chase mainstream comfort, risking that lore, or keep them close to the land on a harder edge of survival.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbuk",
+      "page": 28,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "kinfolk"
+  ]
+ }
+]
