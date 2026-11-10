@@ -1,0 +1,196 @@
+[
+ {
+  "id": "mrftlv-vegas",
+  "title": "Las Vegas, city of control",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How mages see Las Vegas.",
+  "claims": [
+   {
+    "text": "To Tradition mages, Las Vegas shows the Technocracy as a power of control more than of science, from the secrets kept at Area 51 to the cameras watching every casino table.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Yet the city's lights and spectacle still open the imagination, and mages roused by the Rogue Council see a chance to gamble on a great stake.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "The city was formally founded in 1905, and federal interest in the area began with surveys ahead of the Hoover Dam.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "mrman-rogue-council"
+  ]
+ },
+ {
+  "id": "mrftlv-hoover-dam",
+  "title": "Hoover Dam",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Etherite triumph the Union claimed.",
+  "claims": [
+   {
+    "text": "Sons of Ether, with the Utopians loudest among them, put their designs and building methods to work on the dam.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "It rose while the Technocracy was busy brushing Etherite discoveries off as pulp fiction, so its success stung the Inner Circle; the Union later took it over.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Power lines ran some 200 miles from California, and a whole town, Boulder City, was built for about 5,000 workers and their families before work began.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "mrse-utopians",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "mrftlv-black-pyramid",
+  "title": "The Black Pyramid Chantry",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The mixed Tradition Chantry under the Luxor.",
+  "claims": [
+   {
+    "text": "The Luxor's pyramid is a weak Node, and a loose group of Tradition mages holds mystic sway over it with wards against the Technocracy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Their Chantry meets in the Sun Chamber beneath the hotel under the Hermetic Malcolm Henry, who tries more to build agreement than to rule.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Visiting mages may use its ritual rooms for news or Tass, but only with references and after a watched waiting period.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m1boc-mixed-chantries",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "mrftlv-area-51",
+  "title": "Area 51",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The secret test site near Nellis Air Force Base.",
+  "claims": [
+   {
+    "text": "A Technocratic commission works from hidden corners of Nellis Air Force Base, drawing on a strong Node and laboratory, and even the base's commanding general knows little of its work.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Some say the Union studies captured alien hardware there; others say the stories only mask human-made secret projects.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrftlv",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "void-engineers"
+  ]
+ }
+]
