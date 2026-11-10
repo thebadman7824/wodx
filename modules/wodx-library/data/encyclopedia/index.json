@@ -967,6 +967,12 @@
    "title": "The Bitter Road",
    "short": "BR",
    "edition": "Revised"
+  },
+  {
+   "id": "mrsth",
+   "title": "Mage Storytellers Handbook",
+   "short": "MSH",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1130,6 +1136,7 @@
   "mrftlv.json",
   "mrbom.json",
   "mrfdf.json",
-  "mrbr.json"
+  "mrbr.json",
+  "mrsth.json"
  ]
 }
