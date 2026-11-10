@@ -1946,7 +1946,7 @@
     ]
    },
    {
-    "text": "Tzimisce prefer communal havens shared with their packs.",
+    "text": "Members of the clan tend to keep one haven in common with the rest of their pack.",
     "tier": "stated",
     "refs": [
      {
@@ -1957,7 +1957,7 @@
     ]
    },
    {
-    "text": "A Tzimisce must rest near two handfuls of earth from a place important in mortal life.",
+    "text": "Each Tzimisce sleeps beside at least two fistfuls of soil taken from somewhere that mattered before the Embrace.",
     "tier": "stated",
     "refs": [
      {
