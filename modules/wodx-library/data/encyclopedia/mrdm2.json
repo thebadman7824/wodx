@@ -1,0 +1,262 @@
+[
+ {
+  "id": "mrdm2-rogue-council-search",
+  "title": "The Sphinx and the hunt for lost magic",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why mages began seeking surviving old ways around 2000.",
+  "claims": [
+   {
+    "text": "With the Avatar Storm raging, Masters missing and the Technocracy entrenched, the Traditions look to old arts that still have living keepers somewhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 10,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Those keepers are few and often hide, either despising the modern world or guarding powers that rivals want buried.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 10,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The Rogue Council, signing as the Sphinx, sends clues urging mages to seek these survivors; the Technocracy receives messages too, and some fear the aim is open war between the two sides.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "technocracy",
+   "mrdm-buried-arts"
+  ]
+ },
+ {
+  "id": "mrdm2-moko",
+  "title": "Moko",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Maori facial markings among Awakened and Sleepers.",
+  "claims": [
+   {
+    "text": "Maori moko record a wearer's rank, trade, family line and skill; a tohunga, the Maori word for a mage, bears marks that show whether the bearer is Initiate, Adept or Master.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 15,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Moko are cut with a fine chisel of greenstone or albatross bone, leaving grooves in the skin as well as color.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 15,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdm2-rogue-council-search"
+  ]
+ },
+ {
+  "id": "mrdm2-runes-seidr",
+  "title": "Seidr and rune magic",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Two Norse magical arts.",
+  "claims": [
+   {
+    "text": "Seidr workers use a brewing cauldron for poisons, potions, herbal work and sympathetic magic, the cauldron standing for the churning wyrd they seek to steer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "Rune workers usually carve their own set of the 24 Elder Futhark runes in ash, stone or antler, or use an inherited set; casting a few for divination is the most basic use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 95,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "mrdm2-rogue-council-search"
+  ]
+ },
+ {
+  "id": "mrdm2-picts",
+  "title": "The Picts in mage lore",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What scholars of the Awakened say of the northern Britons.",
+  "claims": [
+   {
+    "text": "Little is known of the Picts beyond Roman reports and Celtic tales of northern clans hostile to Rome, and their origin is disputed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 122,
+      "pdf": 124
+     }
+    ]
+   },
+   {
+    "text": "Their royal line passed through the mother: a king's sister bore the next heir, a custom some tie to a bargain for Irish brides.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 122,
+      "pdf": 124
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wh-picts"
+  ]
+ },
+ {
+  "id": "mrdm2-etruscans",
+  "title": "The Etruscans",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The old masters of central Italy.",
+  "claims": [
+   {
+    "text": "The Etruscans are said to have come from Lydia after the Trojan War and founded a league of 12 city-states, among them Tarchna and Veii.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 141,
+      "pdf": 143
+     }
+    ]
+   },
+   {
+    "text": "For over a millennium they led Italy, and Romans later called Etruria the source of every superstition; their own founding of Rome brought about their fall.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 141,
+      "pdf": 143
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdm2-hammer-charun"
+  ]
+ },
+ {
+  "id": "mrdm2-hammer-charun",
+  "title": "The Hammer of Charun",
+  "kind": "power",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Etruscan relic of death.",
+  "claims": [
+   {
+    "text": "In Roman arenas a figure dressed as Charun came out with a hammer to end the dying, and an echo survives in the rite of tapping a dead Pope's brow with a small silver hammer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "Some ask whether Charun was truly a demon of death or a mage who made the hammer and was later remembered as the death-god because the hammer worked so well.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   },
+   {
+    "text": "The hammer is steeped in Entropy and grants authority over the Charontes, the spirits that serve it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrdm2",
+      "page": 146,
+      "pdf": 148
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdm2-etruscans",
+   "euthanatos"
+  ]
+ }
+]

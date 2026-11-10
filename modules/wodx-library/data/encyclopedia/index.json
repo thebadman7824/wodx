@@ -913,6 +913,12 @@
    "title": "Dead Magic",
    "short": "DM",
    "edition": "Revised"
+  },
+  {
+   "id": "mrdm2",
+   "title": "Dead Magic 2: Secrets and Survivors",
+   "short": "DM2",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1067,6 +1073,7 @@
   "m2bow.json",
   "m1boc.json",
   "m2hor.json",
-  "mrdm.json"
+  "mrdm.json",
+  "mrdm2.json"
  ]
 }
