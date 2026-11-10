@@ -1,0 +1,494 @@
+[
+ {
+  "id": "mrcrafts-crafts",
+  "title": "Crafts",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Magickal societies that stand outside both the Traditions and the Technocracy.",
+  "claims": [
+   {
+    "text": "Among them are the Bata'a, Children of Knowledge, Hem-Ka Sobk, Kopa Loei, Sisters of Hippolyta, Templars, Wu-Keng and Wu Lung.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 3,
+      "pdf": 4
+     }
+    ]
+   },
+   {
+    "text": "Crafts are smaller schools of magick, each rooted in one culture or faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 10,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "mrcrafts-bataa-chain",
+  "title": "Ronde des Ames",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Bata'a network of local links across the Caribbean and beyond.",
+  "claims": [
+   {
+    "text": "Bata'a power centres on the Caribbean, Central America, the southern United States, above all Louisiana, and parts of New York City, with small ties in Africa. Other societies are warned once to keep out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Each community that follows voodoo, Santeria or a related faith has at least one link to the Chain of Souls, kept by a Marassa couple who advise their cousins and keep a hounfour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Seven Rangi run their own networks and quarrel much as Hermetic Houses do. Marie Laveau is said to have once united the factions in peace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 24,
+      "pdf": 25
+     },
+     {
+      "book": "mrcrafts",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sorc-bataa"
+  ]
+ },
+ {
+  "id": "mrcrafts-children-of-knowledge",
+  "title": "Children of Knowledge",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Alchemists descended from the old Solificati.",
+  "claims": [
+   {
+    "text": "Twelve survivors of the Solificati kept the old name and their research after the Tradition collapsed, sheltered by friends in the Order of Hermes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Heylel's betrayal split the alchemists: some praised it as self-sacrifice, others called it corruption, and the rift helped bring the Solificati down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Many alchemists who defected to the Order of Reason helped give rise to the Electrodyne and Difference Engineers, ancestors of the Sons of Ether and Virtual Adepts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-solificati",
+   "mrbt-house-solificati",
+   "society-of-ether",
+   "virtual-adepts"
+  ]
+ },
+ {
+  "id": "mrcrafts-hem-ka-sobk",
+  "title": "Hem-Ka Sobk",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Egyptian priest-mages of the crocodile god Sobk.",
+  "claims": [
+   {
+    "text": "Sobk, the crocodile god of the Faiyum and Kom Ombo, is linked with Osiris in funeral rites and with Set in cruelty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "The chief reader, the Kheri hebtep, speaks for Sobk to the people, helped by the Sunu, cannibal mages who serve as penance for crimes done before Awakening.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "All members carry ritual scars, the Nuta Akha-t, through which Sobk grants their spells; they hold that their power comes from service, not from within.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Sobk is real and sleeps hidden; the Sunu spend hours each day watching over the sleeping god.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 53,
+      "pdf": 54
+     },
+     {
+      "book": "mrcrafts",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mages"
+  ]
+ },
+ {
+  "id": "mrcrafts-kopa-loei",
+  "title": "Kopa Loei",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hawaiian mages of ho'omana who keep the land's mana flowing.",
+  "claims": [
+   {
+    "text": "Their magick is called ho'omana, making mana. Ali'i move mana to keep the land fertile, and wayfinders steer small boats across the ocean with Correspondence and Forces.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Their slang calls Technocrats empty souls and calls vulgar magick by the word for breaking kapu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 66,
+      "pdf": 67
+     }
+    ]
+   },
+   {
+    "text": "Many work for native sovereignty and the return of kapu; some families are said to be kin to sharks and perhaps to the Rokea.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "paradox"
+  ]
+ },
+ {
+  "id": "mrcrafts-sisters-of-hippolyta",
+  "title": "Sisters of Hippolyta",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Women healers and diviners who live in shared conclaves.",
+  "claims": [
+   {
+    "text": "Sisters live in isolated conclaves with shared rule, but many work outside as doctors, teachers or programmers and bring skills home.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Their magick is healing and intuitive divination, done as ritual and family celebration, and stronger in a group than alone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Conclaves keep careful records of blood ties, and each Sister is judged by the deeds of mother and mentors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 81,
+      "pdf": 82
+     }
+    ]
+   },
+   {
+    "text": "Witch-hunters broke up the conclaves in the Middle Ages; only in the late Renaissance did the Sisters cautiously rejoin the wider world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena"
+  ]
+ },
+ {
+  "id": "mrcrafts-templar-craft",
+  "title": "Templars as a Craft",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Knights of Christ as allies, then rivals, of the Cabal of Pure Thought.",
+  "claims": [
+   {
+    "text": "The Templars and the Cabal of Pure Thought were covert allies, with the Knights as the Cabal's strong arm; ties to the future Celestial Chorus caused friction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Templars did not study magick as such; a Knight was gifted or not, and many famous Knights had no power at all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "In 1307 Philip the Fair had the French Templars arrested for heresy; some say vampire advisors or Batini with grudges pushed the king.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrcc-templar-fall",
+   "sc-cabal-pure-thought",
+   "celestial-chorus",
+   "tome-templars"
+  ]
+ },
+ {
+  "id": "mrcrafts-wu-keng",
+  "title": "Wu-Keng",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Chinese peasant wizards bound by a pact to serve demons for 3,000 years.",
+  "claims": [
+   {
+    "text": "To win back their honour, a group of Wu swore to serve local demons for 3,000 years; Ku of the Thousand Tears spoke for the Feng-tu.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "Each mage swore to one of fifty spirits, which made a jade bracelet from the mage's soul; whoever holds it, the juk ak, owns that servant.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "Members may not use magick that works on souls or on time. Their plots behind the scenes helped bring the first unification of China.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 113,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "The term of service ends within the coming decade, and the Wu-Keng expect to win.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdote-wan-kuei"
+  ]
+ },
+ {
+  "id": "mrcrafts-wu-lung",
+  "title": "Wu Lung",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Dragon wizards of the old Chinese imperial court.",
+  "claims": [
+   {
+    "text": "The Wu Lung are a Magickal Bureaucracy under a Dragon Emperor-Wizard and Phoenix Empress, with one minister per Sphere; the Tiger Lord leads their forces.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 127,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "They helped the Qing emperor storm the Shaolin Temple, breaking Akashic power in China; the two groups have been foes since.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   },
+   {
+    "text": "The Technocracy, the Japanese invasion of the 1930s and Communist rule have left the Wu Lung greatly weakened.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrcrafts",
+      "page": 129,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "mrab-sects",
+   "technocracy"
+  ]
+ }
+]

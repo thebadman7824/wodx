@@ -973,6 +973,12 @@
    "title": "Mage Storytellers Handbook",
    "short": "MSH",
    "edition": "Revised"
+  },
+  {
+   "id": "mrcrafts",
+   "title": "The Book of Crafts",
+   "short": "BoC",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1137,6 +1143,7 @@
   "mrbom.json",
   "mrfdf.json",
   "mrbr.json",
-  "mrsth.json"
+  "mrsth.json",
+  "mrcrafts.json"
  ]
 }
