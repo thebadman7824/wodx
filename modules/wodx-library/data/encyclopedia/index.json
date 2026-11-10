@@ -1537,6 +1537,12 @@
    "title": "Hunter: First Contact",
    "short": "HtR FC",
    "edition": "First edition"
+  },
+  {
+   "id": "hhw",
+   "title": "Hunter: Holy War",
+   "short": "HtR HW",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1795,6 +1801,7 @@
   "hbmar.json",
   "hbred.json",
   "hbvis.json",
-  "hfc.json"
+  "hfc.json",
+  "hhw.json"
  ]
 }
