@@ -1,0 +1,123 @@
+[
+ {
+  "id": "cench-kinain-glamour",
+  "title": "The kinain's spark",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What faerie blood gives the kinain.",
+  "claims": [
+   {
+    "text": "Kinain are only dimly aware of the Dreaming and have no fae mien or contact with chimera unless enchanted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cench",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Their faerie heritage gives them a small spark of Glamour, never more than their faerie blood allows, and they have few ways to gain more, being too far from the true Dreaming; many trade on artistry, letting changelings share the Glamour their work creates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cench",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "enchanted-and-kinain",
+   "glamour"
+  ]
+ },
+ {
+  "id": "cench-tokens",
+  "title": "Faerie tokens",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts that carry enchantment.",
+  "claims": [
+   {
+    "text": "A token can enchant whoever accepts it, even someone other than the intended recipient; mortals who know fae ways, such as some Autumn People and superstitious country folk, refuse any gift from a possible faerie, and the old warning against faerie food and gifts rests on fact.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cench",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "enchanted-and-kinain",
+   "cench-kinain-glamour"
+  ]
+ },
+ {
+  "id": "cench-fae-and-mages",
+  "title": "Changelings and mages",
+  "kind": "lore",
+  "lines": [
+   "changeling",
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the Kithain keep away from mages.",
+  "claims": [
+   {
+    "text": "Tradition mages fight Banality in their own way, but most Kithain avoid mages, finding them power-hungry and their feuds too tangled to join.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cench",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "The Technocracy is Banality made flesh to most fae, who avoid technomancers at all costs; the Technocracy wants to learn about the fae, perhaps by letting the Progenitors dissect a few.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cench",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Mages can be enchanted like mortals, though their magick lets them try to resist.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cench",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "banality",
+   "enchanted-and-kinain"
+  ]
+ }
+]
