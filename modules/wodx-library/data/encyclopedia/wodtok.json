@@ -1,0 +1,81 @@
+[
+ {
+  "id": "wodtok-imperial-palace",
+  "title": "The Imperial Palace, Tokyo",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Tokyo's neutral ground of balanced Chi, where the Kuei-jin ancestor keeps court.",
+  "claims": [
+   {
+    "text": "Dragon lines converge on the Imperial Palace grounds in such balance that Tokyo's shen treat the compound as a shared preserve; they visit, but none tries to claim it for fear of spoiling the harmony and the Chi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodtok",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Hakari, the Kuei-jin ancestor of Tokyo, rules from the private Imperial quarters of the nishinomaru, and the city's hengeyokai come quietly to its gardens to commune with the natural forces there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodtok",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Tokyo's supernatural powers stay mostly within Central Tokyo, where the old palace sits a short walk from the Ginza and Kanda commercial districts, and not all their dealings there are friendly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodtok",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-chi",
+   "kote-courts"
+  ]
+ },
+ {
+  "id": "wodtok-stock-exchange",
+  "title": "Tokyo Stock Exchange",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A trading floor where Syndicate mages draw on the global economy.",
+  "claims": [
+   {
+    "text": "Syndicate mages haunt the Tokyo Stock Exchange north of Nihonbashi Bridge, working Entropy on its trades and drawing Quintessence from the swings of the world market.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodtok",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "syndicate"
+  ]
+ }
+]
