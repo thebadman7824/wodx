@@ -1,0 +1,175 @@
+[
+ {
+  "id": "frbn-hegemony",
+  "title": "The Toreador Hegemony",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Prince of Paris rules the Kindred of all France.",
+  "claims": [
+   {
+    "text": "The chief difference between the French and American Camarilla is the Hegemony, a rule the Prince of Paris forced on the provincial rulers from the late seventeenth century, often likened to absolute monarchy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 8,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Under the Hegemony only François Villon bears the title of Prince; the rulers of other fiefs are Marquises, vassals of Paris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 8,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "Toreador rulers in the south kept the princely title until the Revolution swept them away; after the Restoration the Paris Toreador spread the Hegemony over every fief.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 8,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "The Prince of Paris vetoes any Keeper of Elysium who is not Toreador, so the clan holds every Elysium in France.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 10,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "frbn-offices",
+   "frbn-fiefs"
+  ]
+ },
+ {
+  "id": "frbn-offices",
+  "title": "Offices of a French Fief",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The posts that serve a Marquis.",
+  "claims": [
+   {
+    "text": "Besides the Marquis, the Legate and the Primogen, every French fief has a Seneschal, a Provost and a Keeper of Elysium; France is the only land where all three are found everywhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 9,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The Seneschal, also called Regent, is the Marquis's first adviser and stands in when the Marquis answers a summons from the Prince; the choice must be approved by Paris through the Legate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 9,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The Provost works much like an American sheriff, seeing that the Marquis's rulings and the Traditions are obeyed and leading investigations and Blood Hunts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 9,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "frbn-hegemony"
+  ]
+ },
+ {
+  "id": "frbn-fiefs",
+  "title": "The Fiefs of France",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Regional domains under the Hegemony.",
+  "claims": [
+   {
+    "text": "The Paris fief covers the city and its suburbs, a great Toreador stronghold ruling over the arts, theater and fashion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "The Normandy fief spans Rouen, Caen and Le Havre and holds between nine and eighteen vampires in all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 8,
+      "pdf": 10
+     }
+    ]
+   },
+   {
+    "text": "The northern fief of Lille, Roubaix and Tourcoing was long run by the Ventrue and now answers to a Brujah Marquis, after more than a century of strife between factions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Marseille is the oldest fief in France, founded by Brujah and Toreador who came from Greece.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "frbn",
+      "page": 11,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "frbn-hegemony"
+  ]
+ }
+]
