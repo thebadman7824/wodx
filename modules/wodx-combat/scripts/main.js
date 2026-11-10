@@ -1046,7 +1046,7 @@ function attackCard(c) {
         L.push(`<div class="vtc-sec"><b>Defense</b> `);
         if (c.autoNote) L.push(`<div class="vtc-parts">${esc(c.autoNote)}</div>`);
         if (defNote) L.push(`<span class="vtc-warn">${defNote}</span>`);
-        else {
+        else if (def) {
             L.push(`${cap(def.type)} (Dexterity + ${def.abilityName}): <b>${def.dice}</b> dice, diff <b>${def.difficulty}</b>`);
             if (def.notes.length) L.push(`<div class="vtc-parts">${def.notes.join(" · ")}</div>`);
             L.push(diceHtml(def.faces, def.difficulty));
@@ -1338,7 +1338,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.5", reload, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.7", reload, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
