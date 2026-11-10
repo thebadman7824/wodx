@@ -1,0 +1,82 @@
+[
+ {
+  "id": "cie1-caer-llanwedd",
+  "title": "Caer Llanwedd",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Duchess's freehold in San Francisco.",
+  "claims": [
+   {
+    "text": "Inside Caer Llanwedd a glowing green moss carpets every flat surface, dotted with softly shining golden bell flowers; by the Duchess's law every visitor removes footwear at the gates, and refusing is a grave insult.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cie1",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "A pool there bears a mosaic of the Kithain fleeing Earth just before the trods closed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cie1",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "freeholds",
+   "the-shattering"
+  ]
+ },
+ {
+  "id": "cie1-ferry-building",
+  "title": "The Ferry Building",
+  "kind": "place",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A San Francisco landmark seen through Glamour.",
+  "claims": [
+   {
+    "text": "To mortals the old Ferry Building is a quaint relic of the days when thousands crossed it daily; to fae eyes, chimerical footsteps with no bodies still cross its floors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cie1",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "The nearby wharves, once busy with gold and supplies, stand nearly empty since shipping moved to Oakland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cie1",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "chimera",
+   "cie1-caer-llanwedd"
+  ]
+ }
+]

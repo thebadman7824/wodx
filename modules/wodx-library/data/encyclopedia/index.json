@@ -1333,6 +1333,12 @@
    "title": "Freeholds and Hidden Glens",
    "short": "FHG",
    "edition": "First edition"
+  },
+  {
+   "id": "cie1",
+   "title": "Immortal Eyes: The Toybox",
+   "short": "IE1",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1557,6 +1563,7 @@
   "cdan.json",
   "cench.json",
   "cfool.json",
-  "cfhg.json"
+  "cfhg.json",
+  "cie1.json"
  ]
 }
