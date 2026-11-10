@@ -619,6 +619,12 @@
    "title": "Book of the Wyld",
    "short": "Book of the Wyld",
    "edition": "Revised"
+  },
+  {
+   "id": "raap",
+   "title": "Rage Across Appalachia",
+   "short": "RA Appalachia",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -724,6 +730,7 @@
   "bbrok.json",
   "bbnag.json",
   "bkw.json",
-  "bkwy.json"
+  "bkwy.json",
+  "raap.json"
  ]
 }

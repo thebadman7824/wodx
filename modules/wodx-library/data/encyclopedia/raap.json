@@ -1,0 +1,155 @@
+[
+ {
+  "id": "raap-outsiders",
+  "title": "Outsider Tribes in Appalachia",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "How the Glass Walkers and Children of Gaia came to the mountains.",
+  "claims": [
+   {
+    "text": "As timber and coal companies bought up the Appalachian forests and railroads pushed in after the Civil War, Glass Walkers came with their Kin to steer the growth of mountain towns toward harmony with the wild.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Most of their hopes failed, partly through the Wyrm's meddling and partly because the Garou already there saw them as one more unwanted outside force.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "The Children of Gaia had been in the mountains since their Kin came with the first missionaries to the Cherokee, and met less hostility because they deferred to the resident Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glass-walkers",
+   "children-of-gaia"
+  ]
+ },
+ {
+  "id": "raap-grandfather-mountain",
+  "title": "Grandfather Mountain Caern",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A caern hidden on a famous North Carolina peak.",
+  "claims": [
+   {
+    "text": "A caern lies in a forest clearing on the quieter southern face of Grandfather Mountain, whose older name honours the great bird spirit Tanawha.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "A warded trail that only Garou and Kinfolk can follow runs from the summit to the caern's heart, a jagged rock the elders call Gaia's Gift.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Rites that strengthen the caern totems keep the mountain's Umbral reflection close to its old-growth state before white settlement, though a sadness hangs over places lost in the physical world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caern"
+  ]
+ },
+ {
+  "id": "raap-seven-clans",
+  "title": "The Sept of the Seven Clans",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The oldest surviving caern of the southeastern Appalachians.",
+  "claims": [
+   {
+    "text": "Uktena who came with the Eastern Cherokee to the Qualla Boundary in the Smoky Mountains opened a caern there, now the oldest still standing in the southeastern Appalachians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "The sept splits its leadership into seven posts honouring the seven Cherokee clans: Bird, Paint, Deer, Wolf, Blue, Long Hair and Wild Potato.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Its Garou chiefly work to keep their Kin strong and tribal ways alive; a small wolf colony tended by a trusted Kinfolk is the sept's best-kept secret.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raap",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "caern",
+   "kinfolk"
+  ]
+ }
+]
