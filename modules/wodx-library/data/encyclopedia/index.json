@@ -889,6 +889,12 @@
    "title": "The Spirit Ways",
    "short": "SW",
    "edition": "Revised"
+  },
+  {
+   "id": "m2bow",
+   "title": "Beyond the Barriers: The Book of Worlds",
+   "short": "BoW",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -1039,6 +1045,7 @@
   "mrgtt.json",
   "m2gtech.json",
   "mrit.json",
-  "mrsw.json"
+  "mrsw.json",
+  "m2bow.json"
  ]
 }
