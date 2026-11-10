@@ -1,0 +1,203 @@
+[
+ {
+  "id": "hkbn-hong-kong",
+  "title": "Hong Kong by Night",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hong Kong as a city of Kuei-jin, Kin-jin and hengeyokai.",
+  "claims": [
+   {
+    "text": "For about 1500 years Hong Kong was a backwater ruled from Canton, its villages farming and fishing while Canton grew into a great trading city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 17,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Its population has passed six million, and rents rise with the towers of the Central district.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 26,
+      "pdf": 29
+     }
+    ]
+   },
+   {
+    "text": "Hunters stalk the crowds for supernatural prey while the hunted search for Chi, the life force they need.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 32,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "The harbour takes millions of tons of raw sewage each day, to the dismay of the hengeyokai.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 26,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hkbn-terms",
+   "hkbn-chun"
+  ]
+ },
+ {
+  "id": "hkbn-terms",
+  "title": "Hong Kong Terms",
+  "kind": "term",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Local words used among the city's supernatural folk.",
+  "claims": [
+   {
+    "text": "Gweilo, ghost man, is a Chinese word for Westerners, once an insult and now a common label for non-Asians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 8,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "Hengeyokai are the shapeshifters of the East.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 8,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "A hong is a major company, a godown a warehouse, and a hukou a permit fixing where someone must live.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 8,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hkbn-hong-kong"
+  ]
+ },
+ {
+  "id": "hkbn-chun",
+  "title": "Anguo Chun",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Kuei-jin who seeks to rule the Cathayans of Hong Kong.",
+  "claims": [
+   {
+    "text": "Anguo Chun holds that the mortals of the city must be taught proper values in the old ways, with the care of fine calligraphy, and that Kuei-jin must stop following barbarian ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 57,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "In this view any Kin-jin still in Hong Kong stays at its own peril.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 57,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Chun recently left Kowloon to live in the Central District.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 57,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hkbn-hong-kong"
+  ]
+ },
+ {
+  "id": "hkbn-lantau",
+  "title": "Lantau Island",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The large outer island of Hong Kong.",
+  "claims": [
+   {
+    "text": "Lantau holds the Yin Hing Monastery, known for its Buddhist statues and paintings, and a Trappist house sworn to silence that lodges visitors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 52,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Its main town, Tai O, is home to many Tanka boat people who have moved onto land.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hkbn",
+      "page": 52,
+      "pdf": 55
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hkbn-hong-kong"
+  ]
+ }
+]

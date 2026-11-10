@@ -1729,6 +1729,12 @@
       "title": "The Kindred Most Wanted",
       "short": "KMW",
       "edition": "First edition"
+    },
+    {
+      "id": "hkbn",
+      "title": "Hong Kong by Night",
+      "short": "HKbN",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2019,6 +2025,7 @@
     "wspg.json",
     "cap.json",
     "coti.json",
-    "kmw.json"
+    "kmw.json",
+    "hkbn.json"
   ]
 }
