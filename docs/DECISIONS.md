@@ -403,3 +403,6 @@ No building, wing or garden may touch a street, road or alley band; the generato
 
 ## B582. Burgage plots (2026-11-10)
 Houses get long plots behind them, by ward: slum 4 to 7 squares deep, market, administration and gate 10 to 14, craftsmen 10 to 16, merchant 12 to 18, patriciate and outside the gates 14 to 20, villages 16 to 24 (a house rule). Chapels, guardhouses and barns get none. Two frontages are not built back to back closer than 16 squares (villages 24) except in slum and craftsmen wards, which keep their courts.
+
+## B583. Rivers (2026-11-10)
+Organic places may have a river: villages half the time, towns 60%, cities 75% (a house rule). It runs across the whole map beside the market, never through it, and flows from one end to the other so later steps can tell upstream from downstream. Every way crossing it gets a bridge; a watermill takes the frontage nearest the water and the washing place sits upstream of the town's middle.
