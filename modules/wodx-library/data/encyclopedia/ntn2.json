@@ -69,5 +69,62 @@
   "see": [
    "tbsl-judges-of-doom"
   ]
+ },
+ {
+  "id": "ntn2-anvil-klaiven",
+  "title": "Sept of the Anvil-Klaiven",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Get of Fenris sept in the far north, as one novel tells it.",
+  "claims": [
+   {
+    "text": "The Tribe Novel Silent Striders and Black Furies tells that the Sept of the Anvil-Klaiven is a Get of Fenris caern on harsh arctic ice in Scandinavia, led by Karin Jarlsdottir; only Garou who called the sept home lie in its graveyard, the Graves of the Hallowed Heroes, and its Gatekeeper opens moon bridges from the Hill of Lamentations.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ntn2",
+      "page": 25,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "get-of-fenris",
+   "ntn3-jarlsdottir"
+  ]
+ },
+ {
+  "id": "ntn2-owls-rest",
+  "title": "Owl's Rest",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A lost caern of memory, as one novel tells it.",
+  "claims": [
+   {
+    "text": "The Tribe Novel Silent Striders and Black Furies tells that Owl's Rest was a small caern of memory found by the Roving Wind pack; warriors of the Sept of the Night Sky cleared the Weaver's growth from it and its pathstone tied it to stronger caerns, but the Wyrm's forces overran it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ntn2",
+      "page": 31,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tbsl-judges-of-doom"
+  ]
  }
 ]

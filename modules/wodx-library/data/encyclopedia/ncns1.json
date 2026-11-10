@@ -36,5 +36,44 @@
   "see": [
    "bjd-southern-crusade"
   ]
+ },
+ {
+  "id": "ncns1-atlanta",
+  "title": "Atlanta Before the Fall",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Atlanta's Kindred before the Sabbat took the city.",
+  "claims": [
+   {
+    "text": "The novel The Fall of Atlanta tells that Prince Benison ruled Atlanta before the city fell, and that the city police were under the prince's control.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ncns1",
+      "page": 172,
+      "pdf": 174
+     }
+    ]
+   },
+   {
+    "text": "The same novel tells that Atlanta's elders were at war with the city's anarchs, who followed the Brujah Thelonious and the Ventrue Benjamin, whose sire Eleanor was the prince's wife.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ncns1",
+      "page": 195,
+      "pdf": 197
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bjd-southern-crusade"
+  ]
  }
 ]
