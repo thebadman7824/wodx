@@ -1136,3 +1136,11 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - New files in wodx-storyteller/scripts: hand.mjs, between.mjs, and the rules glance-rules, callroll-rules, preflight-rules, wrapup-rules, prep-rules, kits-rules. Settings: timer, timerWarn, kits, absent. Approval type wodx-storyteller.downtime.
 - Waiting on the PC: each line's experience reasons and the books' ready-made extras (request sent to the PC helper); both are drafts in PENDING-REVIEW until then.
 - Tests: 971 harness pass (22 new in hand.test.mjs and between.test.mjs).
+
+## 2026-11-10: Storyteller 0.18.1 and 0.18.2, book lists for the hand
+
+- Experience reasons per line from the core books, with pages; the window shows them per character.
+- Quick extras: V20 and V20 Dark Ages dogs and wolves, the extras health rule and mortal soak on every card, sources on each; late weapons from the V20 charts (nightstick as a club).
+- The hooks board names V20 p. 267 for Willpower by Nature.
+- Fix: extras write Attribute totals too; gatehand sets the watcher's Perception total (the pool reads the total).
+- Gates on rothenstein-wodx with 0.18.1: gatehand 12 of 12, UI fit 747 ok. Tests: 971 pass.
