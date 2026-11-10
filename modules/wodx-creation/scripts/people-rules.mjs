@@ -15,6 +15,8 @@ export const COMMON = {
   "early-modern": ["alertness", "athletics", "awareness", "brawl", "empathy", "intimidation", "subterfuge", "stealth", "survival", "melee", "craft", "etiquette"],
   industrial: ["alertness", "athletics", "awareness", "brawl", "empathy", "intimidation", "subterfuge", "stealth", "streetwise", "melee", "craft", "etiquette", "firearms"],
   modern: ["alertness", "athletics", "awareness", "brawl", "empathy", "intimidation", "subterfuge", "stealth", "streetwise", "drive", "computer", "etiquette"],
+  "mid-century": ["alertness", "athletics", "awareness", "brawl", "empathy", "intimidation", "subterfuge", "stealth", "streetwise", "drive", "firearms", "etiquette"],
+  future: ["alertness", "athletics", "awareness", "brawl", "empathy", "intimidation", "subterfuge", "stealth", "streetwise", "drive", "computer", "technology"],
   ancient: ["alertness", "athletics", "awareness", "brawl", "empathy", "intimidation", "subterfuge", "stealth", "survival", "melee", "craft", "etiquette"]
 };
 const STRONG_WILLED = new Set(["Survivor", "Fanatic", "Martyr", "Autocrat", "Director", "Penitent", "Traditionalist"]);

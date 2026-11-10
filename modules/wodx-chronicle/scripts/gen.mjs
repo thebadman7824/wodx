@@ -16,7 +16,7 @@ export function registerGenSettings() {
   game.settings.register(MODULE_ID, "genSeed", {scope: "world", config: false, type: String, default: ""});
   game.settings.register(MODULE_ID, "peopleCulture", {
     name: "Where the chronicle's people come from",
-    hint: "Names and people the generators make. Each era gives its own names (medieval, early modern, industrial, modern).",
+    hint: "Names and people the generators make. Each era gives its own names (medieval, early modern, industrial, mid-century, modern, future).",
     scope: "world", config: true, type: String, choices: CULTURES, default: "bohemia", onChange: () => { cache = null; }
   });
   for ( const h of ["createRollTable", "updateRollTable", "deleteRollTable", "createTableResult", "updateTableResult", "deleteTableResult"] ) Hooks.on(h, () => { cache = null; });
@@ -44,11 +44,13 @@ export async function ensureSeed() {
 /** Where and when the chronicle is: the era group the tables are written for, and the people's culture. */
 export function context() {
   const eras = game.modules.get(MODULE_ID)?.api?.eras;
-  const profile = eras?.activeEra?.()?.profile;
+  const active = eras?.activeEra?.();
+  const profile = active?.profile;
   const region = (() => { try { return game.settings.get(MODULE_ID, "region"); } catch { return "europe"; } })();
   let culture = game.settings.get(MODULE_ID, "peopleCulture");
   if ( region === "americas" && culture === "bohemia" ) culture = "american";
-  return {eraId: profile?.id ?? null, era: G.ERA_GROUP[profile?.id] ?? "medieval", culture, year: eras?.currentYear?.() ?? null};
+  const year = eras?.currentYear?.() ?? null;
+  return {eraId: profile?.id ?? null, era: G.eraGroupFor(profile?.id, profile?.prologue || active?.locked ? null : year), culture, year};
 }
 
 /** A generator module registers its tables. */

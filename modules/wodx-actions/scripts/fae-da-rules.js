@@ -325,5 +325,5 @@ export function faeBlood(origin, court) {
 /** Mind powers (p. 181): Dominate (and like powers) fail on a fae with Day or Night at least the vampire's rating. */
 export const mindShield = (dominions = {}, power = 0) => Math.max(n(dominions.day), n(dominions.night)) >= n(power) && n(power) > 0;
 
-/** True in a Dark Ages chronicle (the era profile's id). */
-export const isDarkAgesEra = id => id === "dark-ages";
+/** True in a Dark Ages chronicle (the era profile's id): the Dark Ages and the Long Night, which keeps its books. */
+export const isDarkAgesEra = id => id === "dark-ages" || id === "long-night";

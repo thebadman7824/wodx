@@ -39,7 +39,8 @@ export async function loadData() {
 
 /** The era's Arcanoi (B43): Wraith: The Great War's in the Great War profile, Wraith 20th's elsewhere. */
 export function eraId() { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } }
-export function library() { return (W.libraryFor(eraId()) === "gw" ? DATA.gw : DATA.w20) ?? DATA.w20; }
+function yearNow() { try { return game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { return null; } }
+export function library() { return (W.libraryFor(eraId(), yearNow()) === "gw" ? DATA.gw : DATA.w20) ?? DATA.w20; }
 const bookOf = lib => (lib === DATA.gw ? "Wraith: The Great War" : "Wraith 20th");
 
 /** Is this a wraith (or a Spectre's Psyche)? */

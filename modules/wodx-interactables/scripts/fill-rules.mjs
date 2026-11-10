@@ -10,6 +10,9 @@
  * the WoDX NPC place tag of the region it sits in, else the scene's tag, else a home. The Storyteller can change it.
  */
 
+/** An era that draws another's gear, as WoDX Library's Gear by era has it: 2099 is Future Darkness's last year. */
+export const ERA_LIKE = {"time-of-future-judgement": "future-darkness"};
+
 /** What kind of thing an item of Gear by era is, or null when it never goes in a container. */
 export function categoryOf(item) {
   const f = item?.flags?.["wodx-library"] ?? {};
@@ -71,7 +74,7 @@ export function candidates(items, {era = null, place = "home", container = "ches
   for ( const it of items ?? [] ) {
     const cat = categoryOf(it);
     if ( !cat || !w[cat] ) continue;
-    if ( era && !(it.flags?.["wodx-library"]?.eras ?? []).includes(era) ) continue;
+    if ( era && !(it.flags?.["wodx-library"]?.eras ?? []).some(e => e === era || e === ERA_LIKE[era]) ) continue;
     if ( !fits(it, container) ) continue;
     out.push({item: it, weight: w[cat], cat});
   }

@@ -198,7 +198,8 @@ export const reaperPathos = memoriam => n(memoriam) + 2;
 /* ------------------------------------------------------------------ */
 
 /** The Great War profile uses Wraith: The Great War's arts (Kinesis in place of Inhabit); every other era Wraith 20th's. */
-export const libraryFor = era => (String(era ?? "") === "great-war" ? "gw" : "w20");
+/** The Great War book's Arcanoi in its own years only: after 1918 (no era book until 1990) Wraith 20th's serve again. */
+export const libraryFor = (era, year = null) => (String(era ?? "") === "great-war" && !(Number(year) > 1918) ? "gw" : "w20");
 /**
  * A Maelstrom by force (Wraith: The Great War p. 87): damage dice a scene to the exposed, how often aggravated,
  * outdoor difficulty, and what armor and haunts do. Force 0 = no storm.
