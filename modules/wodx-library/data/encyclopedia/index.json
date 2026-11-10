@@ -625,6 +625,12 @@
    "title": "Rage Across Appalachia",
    "short": "RA Appalachia",
    "edition": "2nd"
+  },
+  {
+   "id": "raau",
+   "title": "Rage Across Australia",
+   "short": "RA Australia",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -731,6 +737,7 @@
   "bbnag.json",
   "bkw.json",
   "bkwy.json",
-  "raap.json"
+  "raap.json",
+  "raau.json"
  ]
 }
