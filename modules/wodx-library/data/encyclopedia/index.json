@@ -1969,6 +1969,12 @@
       "title": "Kinfolk: Unsung Heroes",
       "short": "Kinfolk: Unsung Heroes",
       "edition": "Revised"
+    },
+    {
+      "id": "wapast",
+      "title": "Past Lives",
+      "short": "Past Lives",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2299,6 +2305,7 @@
     "waguard.json",
     "wahammer.json",
     "wahenge.json",
-    "wakinfolk.json"
+    "wakinfolk.json",
+    "wapast.json"
   ]
 }
