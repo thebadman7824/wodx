@@ -1501,6 +1501,12 @@
    "title": "Hunter Book: Hermit",
    "short": "HB Hermit",
    "edition": "First edition"
+  },
+  {
+   "id": "hbinn",
+   "title": "Hunter Book: Innocent",
+   "short": "HB Innocent",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1753,6 +1759,7 @@
   "heul.json",
   "hbave.json",
   "hbdef.json",
-  "hbher.json"
+  "hbher.json",
+  "hbinn.json"
  ]
 }
