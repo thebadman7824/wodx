@@ -14,3 +14,5 @@ Reviewed by Ben on two pages; verdicts live in each page's database (collection 
   Ben, 2026-11-10 15:02Z: option A on all 30, no notes. Settled list: rules-settled-2026-11-10.md.
 - Round 3 part 1, 2025 to 2099, draft 2026-11-10e (future-desk-2026-11-10e.js): https://claude.ai/artifact/UF57mjxjeYkrK8kWL27Ru8
   Three scenarios per line from the 2025 flood to the eve of 2099. Waiting for Ben. Part 2 (the 2099 endings) waits for the PC's summaries of the ending books.
+- Round 3 part 2, Time of Future Judgement, draft 2026-11-10f (ftj-desk-2026-11-10f.js): https://claude.ai/artifact/U2AcAFjmya1EjwSwEfhFpA
+  35 cards, one per ending in the original ending books (summaries in ending-books-summaries.md), retold for 2099. Waiting for Ben.
