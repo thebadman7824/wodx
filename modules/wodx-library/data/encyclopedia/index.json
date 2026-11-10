@@ -1801,6 +1801,12 @@
       "title": "Constantinople by Night",
       "short": "CbN",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dadevil",
+      "title": "Devil's Due",
+      "short": "Devil's Due",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2103,6 +2109,7 @@
     "dacbcapp.json",
     "dacbsal.json",
     "daheresy.json",
-    "dacbn.json"
+    "dacbn.json",
+    "dadevil.json"
   ]
 }
