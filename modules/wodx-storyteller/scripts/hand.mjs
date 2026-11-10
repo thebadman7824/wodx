@@ -282,14 +282,23 @@ export async function wrapUpDialog() {
   const have = {chronicle: !!C.chron()?.endScene, npc: !!C.npc()?.endSession, creation: !!api("wodx-creation")?.award};
   const steps = WR.steps(have);
   const pcs = C.pcs();
-  const reasons = WR.reasonsFor(null, {story: true});
-  const head = reasons.map(r => `<th title="${esc(r.label)}">${esc(r.label.split(/[:,]/)[0])} (${r.xp})</th>`).join("");
-  const rows = pcs.map(a => `<tr data-search-item data-search-text="${esc(a.name)}"><td>${esc(a.name)}</td>${reasons.map(r =>
-    `<td><input type="checkbox" name="xp.${a.id}.${r.key}"${r.auto ? " checked" : ""} aria-label="${esc(`${a.name}: ${r.label}`)}"></td>`).join("")}
+  let year = null;
+  try { year = C.chron()?.eras?.currentYear?.() ?? null; } catch (e) { year = null; }
+  const early = Number.isFinite(Number(year)) && year !== null && Number(year) < 1500;
+  const lineOf = a => lineFor(a.type, variantOf(a));
+  const own = new Map(pcs.map(a => [a.id, WR.reasonsFor(lineOf(a), {story: true, early})]));
+  const lines = [...new Set(pcs.map(lineOf))];
+  const reasons = WR.columnsFor(lines, {story: true, early});
+  const refs = [...new Set(lines.map(l => `${cap(l)}: ${WR.lineReasons(l, {early}).ref}`))];
+  const head = reasons.map(r => `<th title="${esc(r.label)}">${esc(r.label.split(/[:,(]/)[0].trim())} (${r.xp})</th>`).join("");
+  const rows = pcs.map(a => `<tr data-search-item data-search-text="${esc(a.name)}"><td>${esc(a.name)}</td>${reasons.map(r => own.get(a.id).some(x => x.key === r.key)
+    ? `<td><input type="checkbox" name="xp.${a.id}.${r.key}"${r.auto ? " checked" : ""} aria-label="${esc(`${a.name}: ${r.label}`)}"></td>`
+    : `<td class="wodx-quiet" title="Not in this character's book">·</td>`).join("")}
     <td><input type="number" name="extra.${a.id}" value="0" style="width:4em" aria-label="${esc(`${a.name}: extra points`)}"></td></tr>`).join("");
   const content = `<form><p>The steps run in this order. Untick any you want to skip.</p>
     <ul data-fixed>${steps.map(s => `<li><label><input type="checkbox" name="step.${s.key}" checked> ${esc(s.label)}</label></li>`).join("")}</ul>
     ${have.creation && pcs.length ? `<h3>Experience</h3><p class="wodx-quiet">Tick what each character earned; the story-end columns are for the last session of a story. Nothing is given unless the experience step is ticked.</p>
+      <ul class="wodx-quiet" data-fixed>${refs.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
       ${pcs.length > 6 ? searchBox(".wst-wrap-xp tbody", "Find a character…", "Search characters") : ""}
       <div class="wst-scroll"><table class="wst-wrap-xp"><thead><tr><th>Character</th>${head}<th>Extra</th></tr></thead><tbody>${rows}</tbody></table></div>` : ""}
     <p class="wodx-quiet">Afterwards: back up the world from Foundry's Setup screen (Worlds, the world's menu, Back up), or on the server's own schedule.</p></form>`;
@@ -303,9 +312,10 @@ export async function wrapUpDialog() {
     let given = 0;
     for ( const a of pcs ) {
       const ticked = Object.entries(d.xp?.[a.id] ?? {}).filter(([, v]) => v).map(([k]) => k);
-      const amount = WR.totalFor(ticked, reasons, d.extra?.[a.id]);
+      const mine = own.get(a.id);
+      const amount = WR.totalFor(ticked, mine, d.extra?.[a.id]);
       if ( !amount ) continue;
-      await api("wodx-creation").award([a], amount, WR.noteFor(ticked, reasons, num(d.extra?.[a.id])));
+      await api("wodx-creation").award([a], amount, WR.noteFor(ticked, mine, num(d.extra?.[a.id])));
       given++;
     }
     done.push(`experience for ${given} character${given === 1 ? "" : "s"}`);

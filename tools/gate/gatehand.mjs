@@ -66,7 +66,7 @@ export async function run() {
     const a1 = await Actor.create({name: "WoDX gate: watcher", type: "Mortal", ownership: own});
     const a2 = await Actor.create({name: "WoDX gate: second", type: "Mortal", ownership: own});
     made.actors.push(a1.id, a2.id);
-    await a1.update({"system.attributes.perception.value": 4, "system.abilities.alertness.value": 2});
+    await a1.update({"system.attributes.perception.value": 4, "system.attributes.perception.total": 4, "system.abilities.alertness.value": 2});
     const open = await H.call({label: "Gate: notice", pools: [["perception", "alertness"]], diff: 6, mode: "open", actorIds: [a1.id, a2.id]});
     const st = open?.flags?.[MOD]?.call;
     const w = st?.answers?.find(x => x.actorId === a1.id);
