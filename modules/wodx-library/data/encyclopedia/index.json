@@ -1435,6 +1435,12 @@
    "title": "Kithbook: Trolls",
    "short": "KB Trolls",
    "edition": "Second edition"
+  },
+  {
+   "id": "ckbog",
+   "title": "Kithbook: Boggans",
+   "short": "KB Boggans",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1676,6 +1682,7 @@
   "ckred.json",
   "cksat.json",
   "ckslu.json",
-  "cktrol.json"
+  "cktrol.json",
+  "ckbog.json"
  ]
 }

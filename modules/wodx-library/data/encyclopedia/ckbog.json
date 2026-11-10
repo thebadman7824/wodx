@@ -1,0 +1,44 @@
+[
+ {
+  "id": "ckbog-households",
+  "title": "Boggan households after the Shattering",
+  "kind": "event",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "How boggans held on as freeholds faded.",
+  "claims": [
+   {
+    "text": "As balefires and freeholds faded, scattered fae and changelings drew together around the few that remained; those cut off in dead stretches of the Autumn World by closing trods could only band together and hunker down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckbog",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Households whose sidhe stayed, or who kept faith without them, fortified what balefires they had and ran things as before; those abandoned by their leaders, or disgusted by them, gathered instead in motleys.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ckbog",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "boggans",
+   "households-and-motleys",
+   "the-shattering",
+   "freeholds"
+  ]
+ }
+]
