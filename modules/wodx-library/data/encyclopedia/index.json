@@ -1531,6 +1531,12 @@
    "title": "Hunter Book: Visionary",
    "short": "HB Visionary",
    "edition": "First edition"
+  },
+  {
+   "id": "hfc",
+   "title": "Hunter: First Contact",
+   "short": "HtR FC",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1788,6 +1794,7 @@
   "hbjud.json",
   "hbmar.json",
   "hbred.json",
-  "hbvis.json"
+  "hbvis.json",
+  "hfc.json"
  ]
 }

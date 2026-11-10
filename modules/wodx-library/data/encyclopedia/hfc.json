@@ -1,0 +1,69 @@
+[
+ {
+  "id": "hfc-hunters-and-agencies",
+  "title": "Hunters and the aware agencies",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the imbued and older monster-hunting groups cross paths.",
+  "claims": [
+   {
+    "text": "Hunters are not the only people who know the truth: groups tied to old religions or governments have studied the creatures of the night for a long time and keep working on ways to fight them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hfc",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Mostly neither side knows of the other, since both are few, wary and careful to stay hidden; shared aims such as probing a haunting or tracking a vampire's pawn can still bring them together.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hfc",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A hunter's online questions can tip off watchful operatives, and an attack on a blood pawn already under government watch can put hunters in front of agents.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hfc",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Groups hunters may meet include the Society of Leopold's Inquisition, government bureaus of Project Twilight, the Arcanum, the Dauntain who turned on their own fae kind, and small covert circles such as the Orphic Circle, the Benandanti and a branch of the NSA.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hfc",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inquisition",
+   "project-twilight",
+   "arcanum",
+   "hh2-society-of-leopold",
+   "dauntain",
+   "wqd-orphic-circle",
+   "hewd-ichmail"
+  ]
+ }
+]
