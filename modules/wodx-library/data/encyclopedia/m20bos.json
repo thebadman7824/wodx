@@ -1,0 +1,739 @@
+[
+ {
+  "id": "m20bos-trinkets",
+  "title": "Trinkets",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Minor enchanted objects that hold no working Sphere Effect.",
+  "claims": [
+   {
+    "text": "A Trinket has odd properties set into it when made, yet it does not use the Spheres afterward; the name is only a handy label, not one mages use.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "Life, Matter and Forces can grow, toughen or retune an ordinary object, and Quintessence can consecrate it, turning it into a small Wonder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   },
+   {
+    "text": "A Trinket is built of one or two plain materials and does one simple job, such as silence or turning bullets; a gun can qualify, but a car or a computer cannot.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 149,
+      "pdf": 150
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m20bos-wonders-paradox",
+   "quintessence"
+  ]
+ },
+ {
+  "id": "m20bos-wonders-paradox",
+  "title": "Wonders and Paradox",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How magickal devices draw Paradox.",
+  "claims": [
+   {
+    "text": "Wonders reshape reality, so they can build Paradox; how much depends on whether the use looks coincidental or vulgar and whether Sleepers see it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "A machine makes strange results easier to accept in mass-media cultures, so technological Wonders often pass as coincidence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   },
+   {
+    "text": "Some symbols, like a priest raising a cross, are so rooted in public belief that they may count as coincidental in the right setting.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 150,
+      "pdf": 151
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "coincidental-and-vulgar",
+   "m20bos-trinkets"
+  ]
+ },
+ {
+  "id": "m20bos-resonance-synergy",
+  "title": "Resonance and Synergy",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a mage's energetic signatures combine.",
+  "claims": [
+   {
+    "text": "When Resonance and Synergy share a flavour their dots add together, when they clash the smaller is taken from the larger, and when unrelated the one that fits the moment supplies the pool.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Resonance colours the people, places and Backgrounds around a mage, such as Allies, Chantry, Sanctum, Totem and Avatar.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   },
+   {
+    "text": "Resonance can decide whose magick counts as coincidental and whose as vulgar inside a Sanctum, Chantry or Realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 132,
+      "pdf": 133
+     }
+    ]
+   }
+  ],
+  "see": [
+   "avatar",
+   "m20bos-wonders-paradox"
+  ]
+ },
+ {
+  "id": "m20bos-sect-feuds",
+  "title": "Chantry and sect feuds",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The grudges that split mage groups.",
+  "claims": [
+   {
+    "text": "Feuds can cross factions, like a Hermetic House against a Progenitor lab, or sit inside one, like two Etherite collectives at odds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "Rival alchemist sects have quarrelled for centuries over which of them may claim the name Solificati.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   },
+   {
+    "text": "A mage who offends a whole sect within a larger group faces +2 difficulty on social rolls with its members, though they stop short of murder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "progenitors",
+   "order-of-hermes"
+  ]
+ },
+ {
+  "id": "m20bos-paradigm-consciousness",
+  "title": "Paradigm: consciousness first",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The belief that mind, not matter, is what is real.",
+  "claims": [
+   {
+    "text": "Followers point to pain, colour and memory as real yet without material form, and to the Digital Web as proof that the physical is not all there is.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 191,
+      "pdf": 192
+     }
+    ]
+   },
+   {
+    "text": "The view tends to draw the Mercurial edge of the Virtual Adepts, esoteric Etherites and tech-minded Ecstatics.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 191,
+      "pdf": 192
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "society-of-ether",
+   "cult-of-ecstasy"
+  ]
+ },
+ {
+  "id": "m20bos-paradigm-threshold",
+  "title": "Paradigm: the coming threshold",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The creed that the present world is ending and a new one will follow.",
+  "claims": [
+   {
+    "text": "Believers read the shift as End Times, a Singularity, a leap in human evolution, the return of the Ancestors or the close of the Kali Yuga.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 192,
+      "pdf": 193
+     }
+    ]
+   },
+   {
+    "text": "Western alchemists frame it as dissolution, separation and conjunction, so the creed is strong among Solificati of the Order of Hermes and the Disparates.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 192,
+      "pdf": 193
+     }
+    ]
+   }
+  ],
+  "see": [
+   "order-of-hermes",
+   "ascension"
+  ]
+ },
+ {
+  "id": "m20bos-ancestor-veneration",
+  "title": "Ancestor veneration",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Honouring the dead for their favour and protection.",
+  "claims": [
+   {
+    "text": "The honoured dead are held to guard descendants who tend them and to bring bad luck when ignored.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 193,
+      "pdf": 194
+     }
+    ]
+   },
+   {
+    "text": "It stands between a paradigm and a practice: shrines, daily homage, feast days such as Dia de Muertos, offerings, and keeping their memory safe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 193,
+      "pdf": 194
+     }
+    ]
+   },
+   {
+    "text": "Such rites may serve as Fetters for ancestral ghosts, while using necromancy on one's own forebears is thought a grave wrong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 193,
+      "pdf": 194
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dreamspeakers",
+   "euthanatos"
+  ]
+ },
+ {
+  "id": "m20bos-paradigm-no-limits",
+  "title": "Paradigm: no limits",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Approaching every boundary without fear in order to become divine.",
+  "claims": [
+   {
+    "text": "Drawn from the Sanskrit idea of aghora, the devotee meets all limits without terror and so knows Creation as a god does.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 194,
+      "pdf": 195
+     }
+    ]
+   },
+   {
+    "text": "Nephandi hold this view, but a few Akashayana and Chakravanti walk it in deep secrecy, and Gnostic and Hermetic antinomian practice echoes it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 194,
+      "pdf": 195
+     }
+    ]
+   },
+   {
+    "text": "The Technocracy loathes it, while Traditions and Disparates put up with milder forms so long as the mage causes no trouble.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 194,
+      "pdf": 195
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "akashayana",
+   "euthanatos"
+  ]
+ },
+ {
+  "id": "m20bos-paradigm-feral",
+  "title": "Paradigm: back to the wild",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The creed that civilisation weakens humanity.",
+  "claims": [
+   {
+    "text": "Extreme Verbenae, Dreamspeakers and Kopa Loei hold it, along with some anarcho-primitivist Ecstatics and Adepts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 195,
+      "pdf": 196
+     }
+    ]
+   },
+   {
+    "text": "Adherents keep tools and clothing to the barest minimum and shun cars, computers and other high technology.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 195,
+      "pdf": 196
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "dreamspeakers"
+  ]
+ },
+ {
+  "id": "m20bos-paradigm-evolved",
+  "title": "Paradigm: the evolved elite",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The belief that the Enlightened have outgrown ordinary humans.",
+  "claims": [
+   {
+    "text": "It runs from old racial and caste claims, the Thule Society among them, to modern transhumanist and mutant theories.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 196,
+      "pdf": 197
+     }
+    ]
+   },
+   {
+    "text": "Many Progenitors and Virtual Adepts, above all the Mercurial Elite, credit their gifts to being evolved or upgraded beyond the herd.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 196,
+      "pdf": 197
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "virtual-adepts",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "m20bos-council-justice",
+  "title": "Justice in the Council of Nine",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the Traditions police their own.",
+  "claims": [
+   {
+    "text": "The Council keeps its loose-cannon members in check through protocols and penalties that are often applied unevenly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 212,
+      "pdf": 213
+     }
+    ]
+   },
+   {
+    "text": "Gilgul shatters a guilty mage's Awakened soul into fragments and ends that Awakening for good, even if the body lives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 219,
+      "pdf": 220
+     }
+    ]
+   },
+   {
+    "text": "Debate over the Ascension Warrior has left Council mages unsure that Gilgul is final, since shattered souls may rejoin in one body.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 219,
+      "pdf": 220
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "m20bos-union-justice"
+  ]
+ },
+ {
+  "id": "m20bos-union-justice",
+  "title": "Discipline in the Technocratic Union",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Infractions and penalties among Technocrats.",
+  "claims": [
+   {
+    "text": "Charges against an operative are ranked primary, secondary and tertiary, and the primary one weighs most in judging intent and penalty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 225,
+      "pdf": 226
+     }
+    ]
+   },
+   {
+    "text": "Abuse of Office covers misuse of rank or reckless hypertech near the Masses; Collaboration covers close ties with Reality Deviants that lack sanction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 225,
+      "pdf": 226
+     }
+    ]
+   },
+   {
+    "text": "Penalties include Forfeiture of Union Backgrounds, demotion, reassignment far from home, and reworking of the offender's loved ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 229,
+      "pdf": 230
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "m20bos-council-justice"
+  ]
+ },
+ {
+  "id": "m20bos-union-ideals",
+  "title": "The Union's ideals",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What visionary Technocrats still strive for.",
+  "claims": [
+   {
+    "text": "Beyond clones and weapons, Technocratic labs chase clean power, medicine, lasting farming, better materials and utopian forms of government.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 233,
+      "pdf": 234
+     }
+    ]
+   },
+   {
+    "text": "Such Technocrats point to lighting, easy travel, steady food supplies and stable states as the Union's gifts to the world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 233,
+      "pdf": 234
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "m20bos-union-justice"
+  ]
+ },
+ {
+  "id": "m20bos-alliance-law",
+  "title": "Law of the Disparate Alliance",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Courts and protectorates among the Crafts.",
+  "claims": [
+   {
+    "text": "The Crafts kept apart for centuries, care little for ideas of Ascension and dislike anyone who tries to rule their world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 233,
+      "pdf": 234
+     }
+    ]
+   },
+   {
+    "text": "Each member group names eight Wise Hearts, and at least one per group must be young or weak as a reminder of what justice owes the small.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 234,
+      "pdf": 235
+     }
+    ]
+   },
+   {
+    "text": "An accused Ally gets three Advocates from the Wise Hearts, one for the accused, one for the victims and one for the Alliance, normally drawn from other groups.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 234,
+      "pdf": 235
+     }
+    ]
+   },
+   {
+    "text": "Sleepers placed under a Craft's protection are off limits to other Crafts, and the protecting Craft must police them; the idea works better on paper than in practice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 235,
+      "pdf": 236
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-disparates",
+   "m20bos-sect-feuds"
+  ]
+ },
+ {
+  "id": "m20bos-mad-fellowships",
+  "title": "Fellowships of the Mad",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Loose bands of Marauders.",
+  "claims": [
+   {
+    "text": "Marauders reshape reality simply by being present and have no shared laws, leaders or ranks, so they are no true faction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 243,
+      "pdf": 244
+     }
+    ]
+   },
+   {
+    "text": "The Umbral Underground tries to weaken the Consensus by wrecking Technocratic and Nephandic operations.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 244,
+      "pdf": 245
+     }
+    ]
+   },
+   {
+    "text": "Most Bai Dai groups had died out by the twenty-first century; by 2017 only the Hemlock Court, the Fire of the Mahdi, the Maenads and the Flowers of Camaxtli remain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 245,
+      "pdf": 246
+     }
+    ]
+   },
+   {
+    "text": "God's Left Hand, also called the Chaioth ha-Quadesh, rose around the millennium as a fierce cult of religious madness armed with magick and hypertech.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m20bos",
+      "page": 245,
+      "pdf": 246
+     }
+    ]
+   }
+  ],
+  "see": [
+   "marauders",
+   "nephandi"
+  ]
+ }
+]
