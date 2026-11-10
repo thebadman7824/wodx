@@ -1,0 +1,202 @@
+[
+ {
+  "id": "das-road-of-desire",
+  "title": "The Road of Desire",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages",
+   "classical"
+  ],
+  "summary": "The Via Desideratio, root of the Road of Sin.",
+  "claims": [
+   {
+    "text": "The road was first set out in a work called On Hunger and Its Satisfaction and named the Via Desideratio, the Road of Desire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "It began small and spread slowly; Tanit-baal-Sahar, Camilla and their little circle of seekers were its first teachers and students at once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-sin",
+   "dac-camilla"
+  ]
+ },
+ {
+  "id": "das-setites-and-desire",
+  "title": "The Setites and the Road of Desire",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why the Hierophants argued over the new road.",
+  "claims": [
+   {
+    "text": "The Via Desideratio stripped out the worship of the Lord of Storms but kept Setite teachings that treat personal freedom, desire and satisfaction as holy aims.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "When Setite Hierophants and their priests learned of it, a long dispute followed over whether the road was blasphemous, heretical or both, and how its creator should be dealt with.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "das-road-of-desire",
+   "da-setites"
+  ]
+ },
+ {
+  "id": "das-patricians",
+  "title": "Patrician Ventrue",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ventrue who walk the Road of Sin with Roman pride.",
+  "claims": [
+   {
+    "text": "Few Ventrue remember the clan's nights on the Road of Desire fondly, but those who do bear the name Patrician with pride; most are survivors of the Roman era or their childer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Tzimisce sires have little patience for leftover human sentiment in their childer and hurry them through the road's initiation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-sin",
+   "da-ventrue",
+   "da-tzimisce"
+  ]
+ },
+ {
+  "id": "das-path-of-the-devil",
+  "title": "The Path of the Devil",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Adversaries, more self-driven than pleasure-seeking.",
+  "claims": [
+   {
+    "text": "The Path of the Devil is more about the self than about pleasure; its followers are called Adversaries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Comfort is welcome and cruelty to a stubborn enemy is not ruled out, but Adversaries generally think a whole existence given to pleasure is a waste.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "das",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-sin"
+  ]
+ },
+ {
+  "id": "das-cults-of-blood",
+  "title": "Cults of Blood",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why Sinners gather mortal followings.",
+  "claims": [
+   {
+    "text": "Sinners build cults of blood partly to feed and partly to find and train worthy candidates for the Embrace.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Few can resist a Sinner who wants them, yet Sinners prefer a hard pursuit, finding a worthy opponent worn down all the sweeter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "das",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-sin"
+  ]
+ }
+]
