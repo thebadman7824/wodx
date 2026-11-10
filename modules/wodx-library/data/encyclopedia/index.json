@@ -877,6 +877,12 @@
    "title": "Guide to the Technocracy",
    "short": "GttTech",
    "edition": "2nd"
+  },
+  {
+   "id": "mrit",
+   "title": "The Infinite Tapestry",
+   "short": "IT",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1025,6 +1031,7 @@
   "mrsy.json",
   "mrvoid.json",
   "mrgtt.json",
-  "m2gtech.json"
+  "m2gtech.json",
+  "mrit.json"
  ]
 }

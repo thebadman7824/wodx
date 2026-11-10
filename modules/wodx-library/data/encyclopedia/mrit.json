@@ -1,0 +1,363 @@
+[
+ {
+  "id": "mrit-beyond-horizon",
+  "title": "The ether, the Far Horizon and the Void",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The outer reaches of the Umbra as mages know them.",
+  "claims": [
+   {
+    "text": "Etherships, mostly built by the Sons of Ether, cross the True Horizon; Technocratic faster-than-light tries in hyperspace always draw Paradox, so most Umbral craft fly near light speed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "The sea of ether ends at the Far Horizon, a barrier of hazards echoing the asteroid belt, whose once-charted paths are now chaotic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Past it lies the Void, the Deep Umbra or Deep Universe, full of alien powers on which human belief has no hold.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "mrvoid-pdc",
+   "um-membrane-deep-umbra"
+  ]
+ },
+ {
+  "id": "mrit-storm-views",
+  "title": "Readings of the Avatar Storm",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How different mages explain the Storm.",
+  "claims": [
+   {
+    "text": "Some argue the Storm lashed back at mages who crowded the Near Umbra with vain Horizon Realms and drained Earth of Quintessence.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Many Marauders read it as the return of chaos, tearing apart all that was built in the Near Umbra.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Avatar Storm always punishes mages who cross Earth's Gauntlet, while other dimensional barriers are free of it except for roving storms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "mrvoid-anomaly",
+   "marauders"
+  ]
+ },
+ {
+  "id": "mrit-shallowings",
+  "title": "Shallowings",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Thin spots where the Gauntlet nearly vanished.",
+  "claims": [
+   {
+    "text": "Long ago the Gauntlet was far weaker, and the Order of Hermes named the spots where it almost failed Shallowings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "They were dangerous for what came through and prized because even mages poor at spirit magic could cross.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Human fear, apathy and disbelief have since thickened the Gauntlet until Shallowings are nearly gone, though a few open at certain times.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gauntlet",
+   "umbra"
+  ]
+ },
+ {
+  "id": "mrit-crossing",
+  "title": "Crossing the Gauntlet",
+  "kind": "mechanic",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rules for stepping into the Otherworlds.",
+  "claims": [
+   {
+    "text": "Any barrier between dimensions is a pericarp; Earth's is the one written with a capital G.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Most barriers yield to Spirit 3 and Stepping Sideways: roll Arete against the Gauntlet's strength, with successes setting how long the crossing takes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "A botch can trap the mage or send the mage somewhere worse, such as a Zone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gauntlet",
+   "arete",
+   "mrit-storm-views"
+  ]
+ },
+ {
+  "id": "mrit-penumbra",
+  "title": "The Penumbra",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The spirit shadow closest to Earth.",
+  "claims": [
+   {
+    "text": "Dreams, daydreams and odd minds can brush the Periphery, and mages can glimpse it on purpose with Mind or Spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The Penumbra keeps roughly earthly space and distance, so Penumbral London sits across a Penumbral Channel from Penumbral France, all under a moonlit twilight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "It has three aspects matching the three layers of Realms within the Horizon; most travellers land in the Astral Penumbra by default.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "mrit-crossing"
+  ]
+ },
+ {
+  "id": "mrit-alder-bole",
+  "title": "The Alder Bole",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The World Tree that links every Umbra.",
+  "claims": [
+   {
+    "text": "The Alder Bole, also called Mount Qaf, runs through all Umbrae: its crown among the Astral Realms, its trunk in the Middle Umbra and its roots in the Low Umbra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "It is hard to find, but once reached, moving between layers is easy if one does not care where one ends up.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Since the Reckoning and the Storm, gateways and guides to the Afterworlds have become rare, and many doors to the Middle Umbra are one-way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "mrit-penumbra"
+  ]
+ },
+ {
+  "id": "mrit-shard-realms",
+  "title": "Shard Realms",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Worlds that mirror the sun, moon and planets.",
+  "claims": [
+   {
+    "text": "Each Shard Realm reflects a body of the solar system and is ruled by one of the Nine Spheres, making that Sphere's magic easier and often coincidental there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Shard Realms were once reached through Shade Realms on the Horizon, but since the Storm those portals have turned treacherous or misleading.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Crossing the First Horizon needs Spirit 5, and some vanished Masters and Oracles are said to linger beyond it as ephemeral beings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrit",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "mrit-beyond-horizon",
+   "coincidental-and-vulgar"
+  ]
+ }
+]
