@@ -487,6 +487,12 @@
    "title": "Tribebook: Bone Gnawers (Revised)",
    "short": "TB Bone Gnawers",
    "edition": "Revised"
+  },
+  {
+   "id": "tbcog",
+   "title": "Tribebook: Children of Gaia (Revised)",
+   "short": "TB Children of Gaia",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -570,6 +576,7 @@
   "vac.json",
   "dahum.json",
   "tbfur.json",
-  "tbgn.json"
+  "tbgn.json",
+  "tbcog.json"
  ]
 }
