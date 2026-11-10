@@ -1639,6 +1639,12 @@
    "title": "Mummy: The Resurrection",
    "short": "MtR",
    "edition": "Third edition"
+  },
+  {
+   "id": "hbway",
+   "title": "Hunter Book: Wayward",
+   "short": "HB Wayward",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1914,6 +1920,7 @@
   "wodbb.json",
   "woddhx.json",
   "wod1.json",
-  "mtr.json"
+  "mtr.json",
+  "hbway.json"
  ]
 }
