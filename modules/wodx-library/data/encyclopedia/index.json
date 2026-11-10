@@ -2089,6 +2089,12 @@
       "title": "Sunset Empires",
       "short": "SE",
       "edition": "Revised"
+    },
+    {
+      "id": "berbn",
+      "title": "Berlin by Night",
+      "short": "BbN",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2439,6 +2445,7 @@
     "wawwcore.json",
     "cblod.json",
     "wofd.json",
-    "sune.json"
+    "sune.json",
+    "berbn.json"
   ]
 }
