@@ -883,6 +883,12 @@
    "title": "The Infinite Tapestry",
    "short": "IT",
    "edition": "Revised"
+  },
+  {
+   "id": "mrsw",
+   "title": "The Spirit Ways",
+   "short": "SW",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1032,6 +1038,7 @@
   "mrvoid.json",
   "mrgtt.json",
   "m2gtech.json",
-  "mrit.json"
+  "mrit.json",
+  "mrsw.json"
  ]
 }
