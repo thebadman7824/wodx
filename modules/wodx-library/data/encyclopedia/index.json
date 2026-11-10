@@ -1027,6 +1027,12 @@
    "title": "Digital Web",
    "short": "DW",
    "edition": "First edition"
+  },
+  {
+   "id": "m2sor",
+   "title": "Sorcerer: The Hedge Wizard's Handbook",
+   "short": "HWH",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1200,6 +1206,7 @@
   "m2osg.json",
   "m2arh.json",
   "m2fp.json",
-  "m2dw.json"
+  "m2dw.json",
+  "m2sor.json"
  ]
 }
