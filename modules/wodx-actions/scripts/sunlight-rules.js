@@ -4,7 +4,7 @@
  * No Foundry calls here, so the harness can test it.
  *
  * Sunlight damage: VtDA20 p. 359 (intensity sets the soak difficulty, exposure the levels a turn, aggravated; only
- * Fortitude soaks; the blood auto-soak doesn't work against it, p. 218). Rötschreck from sunlight p. 357.
+ * Fortitude soaks; the blood auto-soak doesn't work against it, VtDA20 printed p. 221). Rötschreck from sunlight p. 357.
  * The sun's position is ordinary astronomy (declination by day of year, hour angle by local solar time).
  */
 

@@ -309,7 +309,7 @@ export function rankPools(choices, difficulty = 6, { untrained = true } = {}) {
 /*  Willpower and prestation                                           */
 /* ------------------------------------------------------------------ */
 
-/** Willpower recovery: "night" one a night (VtDA20 p. 309), "story" all at a story's end, "off". */
+/** Willpower recovery: "night" one a night (VtDA20 printed p. 340), "story" all at a story's end, "off". */
 export function willpowerAfter(mode, temp, perm, event) {
     const t = n(temp), p = n(perm);
     if (mode === "off" || t >= p) return t;
