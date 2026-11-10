@@ -493,6 +493,12 @@
    "title": "Tribebook: Children of Gaia (Revised)",
    "short": "TB Children of Gaia",
    "edition": "Revised"
+  },
+  {
+   "id": "tbfia",
+   "title": "Tribebook: Fianna (Revised)",
+   "short": "TB Fianna",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -577,6 +583,7 @@
   "dahum.json",
   "tbfur.json",
   "tbgn.json",
-  "tbcog.json"
+  "tbcog.json",
+  "tbfia.json"
  ]
 }
