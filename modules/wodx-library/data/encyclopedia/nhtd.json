@@ -1,0 +1,62 @@
+[
+ {
+  "id": "nhtd-rfd-and-pigment",
+  "title": "Radio Free Death and Pigment on the street",
+  "kind": "lore",
+  "lines": [
+   "orpheus"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How ordinary people meet the ghost broadcast.",
+  "claims": [
+   {
+    "text": "Radio Free Death is a local legend: on a television it shows as a blurred head while words fade in and out, and one broadcast warned of a spectre haunting Orpheus.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nhtd",
+      "page": 78,
+      "pdf": 78
+     },
+     {
+      "book": "nhtd",
+      "page": 80,
+      "pdf": 80
+     },
+     {
+      "book": "orpheus",
+      "page": 263,
+      "pdf": 264
+     }
+    ]
+   },
+   {
+    "text": "Some Pigment users take the pills before a Radio Free Death broadcast, believing the drug lets them see ghosts.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nhtd",
+      "page": 11,
+      "pdf": 11
+     },
+     {
+      "book": "nhtd",
+      "page": 18,
+      "pdf": 18
+     },
+     {
+      "book": "orpheus",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "orph-radio-free-death",
+   "orph-pigment"
+  ]
+ }
+]

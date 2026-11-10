@@ -2299,6 +2299,12 @@
       "title": "Year of the Scarab 3: Land of the Dead",
       "short": "Year of the Scarab 3",
       "edition": "Novel"
+    },
+    {
+      "id": "nhtd",
+      "title": "Haunting the Dead (Orpheus anthology)",
+      "short": "Haunting the Dead",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2684,6 +2690,7 @@
     "npp2.json",
     "nhw2.json",
     "nhw3.json",
-    "nysc3.json"
+    "nysc3.json",
+    "nhtd.json"
   ]
 }
