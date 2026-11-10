@@ -2221,6 +2221,12 @@
       "title": "Clan Novel Trilogy: Tremere 2, Widow’s Weeds",
       "short": "Tremere Trilogy 2",
       "edition": "Novel"
+    },
+    {
+      "id": "nmi",
+      "title": "A Morbid Initiation (Victorian Age novel)",
+      "short": "A Morbid Initiation",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2593,6 +2599,7 @@
     "nbt1.json",
     "nls2.json",
     "nbt2.json",
-    "ntw2.json"
+    "ntw2.json",
+    "nmi.json"
   ]
 }

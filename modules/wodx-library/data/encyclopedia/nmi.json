@@ -1,0 +1,45 @@
+[
+ {
+  "id": "nmi-ducheski-england",
+  "title": "The Ducheski in Victorian England",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "A revenant family inside English society.",
+  "claims": [
+   {
+    "text": "In the Victorian era Ducheski family members moved openly in English society: one heir’s large dowry and inheritance rescued an old but impoverished viscounty through marriage, and relatives included Thomas Ducheski and Gareth Ducheski, a solicitor with offices in Durham and London.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nmi",
+      "page": 23,
+      "pdf": 12
+     },
+     {
+      "book": "nmi",
+      "page": 28,
+      "pdf": 16
+     },
+     {
+      "book": "nmi",
+      "page": 29,
+      "pdf": 17
+     },
+     {
+      "book": "gr",
+      "page": 93,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gr-ducheski"
+  ]
+ }
+]
