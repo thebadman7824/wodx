@@ -1,0 +1,297 @@
+[
+ {
+  "id": "wacity-gauntlet-ratings",
+  "title": "Urban Gauntlet ratings",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How strong the Gauntlet runs in city places.",
+  "claims": [
+   {
+    "text": "Typical ratings run from 9 in a microchip clean room or a court clerk’s office, through 8 in an inner-city slum or intensive care unit and 7 in a playground or church, to 6 in a large park, art museum or maternity ward.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "A typical urban caern has a Gauntlet of 5, a powerful one 4.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wacity-trapped-gauntlet"
+  ]
+ },
+ {
+  "id": "wacity-trapped-gauntlet",
+  "title": "Trapped Gauntlets",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Barriers that strike Garou crossing them.",
+  "claims": [
+   {
+    "text": "A trapped Gauntlet strikes any Garou who steps sideways, rolling the local Gauntlet rating to hit for a base of one lethal level.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "The Gnosis roll to step sideways serves as a dodge, and whatever damage remains is soaked with Willpower rather than Stamina.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   },
+   {
+    "text": "If a whole pack crosses at once, every member takes a separate attack but uses the leader’s Gnosis result to dodge.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 74,
+      "pdf": 75
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wacity-gauntlet-ratings"
+  ]
+ },
+ {
+  "id": "wacity-burgermen",
+  "title": "Burgermen",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Minor fomori of the O’Tolley’s chain.",
+  "claims": [
+   {
+    "text": "Like goblins, burgermen change far less than true fomori, and their powers rarely trouble a Crinos Garou, though they can make mischief for Kinfolk investigating a franchise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Mindless work at O’Tolley’s erodes some employees’ will, costing a point of Willpower each month.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "They are meant as dark comic relief, to be used only where they will not spoil a chronicle’s mood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wacity-pleasant-homes",
+  "title": "Pleasant Homes",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Planned communities with a dark side.",
+  "claims": [
+   {
+    "text": "Pleasant Homes gated communities with strict covenants are famed as clean, safe places to raise a family, and their residents do better at work, school and health.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Critics call them elitist; residents can be evicted for breaking covenants or failing to pay dues.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   },
+   {
+    "text": "Their arrival in a city splits the tribes on whether to help or hinder them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wacity-city-gifts",
+  "title": "City Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "New Gifts for urban Garou.",
+  "claims": [
+   {
+    "text": "New Gifts include Climb Like an Ape, Stench and the City, Rooftop Sprint, Gaia’s Toolbox, Weaver’s Eyes, Encrypt, Overclock, Call the City’s Wolves and Beast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 112,
+      "pdf": 113
+     },
+     {
+      "book": "wacity",
+      "page": 113,
+      "pdf": 114
+     },
+     {
+      "book": "wacity",
+      "page": 114,
+      "pdf": 115
+     }
+    ]
+   },
+   {
+    "text": "Web Walker, a level three Gift taught by any Weaver-spirit or one with the Scale charm, costs two Gnosis and Charisma + Science at difficulty 7.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 113,
+      "pdf": 114
+     }
+    ]
+   },
+   {
+    "text": "With Web Walker the Garou travels the Pattern Web as if on a moon bridge without drawing hostile Weaver-spirits, though the strands may not go where the Garou wants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 113,
+      "pdf": 114
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wacity-urban-rite"
+  ]
+ },
+ {
+  "id": "wacity-urban-rite",
+  "title": "A rite for city traffic",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A minor rite that speeds a car through town.",
+  "claims": [
+   {
+    "text": "The ritemaster rolls a toy car resembling the vehicle across its dashboard while murmuring to the spirits, then rolls Charisma + Rituals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "Each success lowers the difficulty of moving through traffic by 1, to a minimum of 2, or simply speeds the trip if the Storyteller prefers to narrate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "It helps only with getting through streets quickly, not with stunts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wacity",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wacity-city-gifts"
+  ]
+ }
+]

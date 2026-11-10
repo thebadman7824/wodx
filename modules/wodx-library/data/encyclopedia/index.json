@@ -1915,6 +1915,12 @@
       "title": "Book of Auspices",
       "short": "Book of Auspices",
       "edition": "Revised"
+    },
+    {
+      "id": "wacity",
+      "title": "Book of the City",
+      "short": "Book of the City",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2236,6 +2242,7 @@
     "dawind.json",
     "wawor.json",
     "waaxis.json",
-    "waausp.json"
+    "waausp.json",
+    "wacity.json"
   ]
 }
