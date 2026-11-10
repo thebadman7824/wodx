@@ -805,6 +805,12 @@
    "title": "Tradition Book: Euthanatos (Revised)",
    "short": "TB:Eu",
    "edition": "Revised"
+  },
+  {
+   "id": "mrho",
+   "title": "Tradition Book: Hollow Ones (Revised)",
+   "short": "TB:HO",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -941,6 +947,7 @@
   "mrcc.json",
   "mrce.json",
   "mrds.json",
-  "mreu.json"
+  "mreu.json",
+  "mrho.json"
  ]
 }
