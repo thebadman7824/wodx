@@ -1879,6 +1879,12 @@
       "title": "Three Pillars",
       "short": "Three Pillars",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "datbn",
+      "title": "Transylvania by Night",
+      "short": "TbN",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2194,6 +2200,7 @@
     "daknight.json",
     "dathief.json",
     "dallal.json",
-    "dapillars.json"
+    "dapillars.json",
+    "datbn.json"
   ]
 }
