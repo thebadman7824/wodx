@@ -1,0 +1,166 @@
+[
+ {
+  "id": "tbrt-uncounted-vote",
+  "title": "The Uncounted Vote",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The Red Talon account of how the Impergium ended.",
+  "claims": [
+   {
+    "text": "Red Talons teach that during the Impergium they culled humans without breeding with them, while other tribes formed around the humans they bred with.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "When the Silver Fangs called a great moot to end the Impergium and agree a Litany, every tribe had to approve each tenet, but the great wolves were not yet seen as a tribe and their vote was never counted.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "A Full Moon named Fells-Trees demanded to know why the wolves had not been asked and how the humans would now be kept in check.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "red-talons",
+   "impergium",
+   "litany"
+  ]
+ },
+ {
+  "id": "tbrt-breeds",
+  "title": "Red Talons and the Breeds",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why the tribe has no homid members.",
+  "claims": [
+   {
+    "text": "The Red Talons have no homid Garou; nearly all of the tribe holds that human-born werewolves lack a wolf's instinct and lean on easily fooled reason.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "The tribe treats this as a mark of purity, though having no human Kin leaves it able to defend its lands only by violence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "Metis are not formally part of the tribe and are given to other tribes, though in recent years a handful have been accepted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 35,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "The Talons will not let their wolf Kin sire cubs for tribes such as the Bone Gnawers or Glass Walkers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "red-talons",
+   "kinfolk"
+  ]
+ },
+ {
+  "id": "tbrt-predator-kings",
+  "title": "Lodge of the Predator Kings",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Red Talons who want every human dead.",
+  "claims": [
+   {
+    "text": "The Lodge of the Predator Kings wants every human on the planet gone, with no compromise and no human Kin; it believes humanity's chance to redeem itself has passed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Most of the worst rumours about the Red Talons trace back to this camp, and its open slaughter makes the tribe a target for hunters of every kind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Its members expect to lose and no longer care about the consequences, which makes them very dangerous.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbrt",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "red-talons"
+  ]
+ }
+]
