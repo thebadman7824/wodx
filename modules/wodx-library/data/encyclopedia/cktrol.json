@@ -1,0 +1,42 @@
+[
+ {
+  "id": "cktrol-leander",
+  "title": "Leander, the troll chronicler",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "ancient"
+  ],
+  "summary": "The first name in troll history.",
+  "claims": [
+   {
+    "text": "Troll history begins with Leander, as central to trolls as Homer to the Greeks: a stout, scarred graybeard who was not a troll, of whom no one recalls a youth or a death; the oldest copies of Leander's song date to the late Bronze Age.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cktrol",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "A rare few trolls claim clear memories of Leander, and sightings of Leander are a favorite troll tale.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cktrol",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   }
+  ],
+  "see": [
+   "trolls",
+   "mythic-age"
+  ]
+ }
+]
