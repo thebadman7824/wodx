@@ -2257,6 +2257,12 @@
       "title": "Dark Ages Clan Novel 11: Tremere",
       "short": "DA Clan Novel 11",
       "edition": "Novel"
+    },
+    {
+      "id": "ndan9",
+      "title": "Dark Ages Clan Novel 9: Toreador",
+      "short": "DA Clan Novel 9",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2635,6 +2641,7 @@
     "ndan5.json",
     "ndan13.json",
     "ndan1.json",
-    "ndan11.json"
+    "ndan11.json",
+    "ndan9.json"
   ]
 }
