@@ -1267,3 +1267,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Mortal and PC sheets no longer print the whole actor to the console on every redraw.
 - All 12 line sheet templates wrap the Core tab in `{{#unless wodxCore}}`; WoDX Sheets sets `wodxCore` when it draws the book's sheet. B601.
 - Harness: sheet-speed.test.mjs. Gate: tools/gate/gatesheetspeed.mjs (redraw times, saves per change, totals follow, Core tab with and without a WoDX sheet).
+
+## 2026-11-10: sheet extras (WoDX Sheets 0.7.0), not yet deployed
+- Ben asked for all nine suggested sheet features. On every WoDX sheet: in-play strip; Possessions tab (containers, stacks with split and merge, concealment sizes, out-of-era flags, value for the time, money by era, search and filter, give, leave on the map); Ties tab (domitor and ghouls filled in from the lineage); Storyteller's notes in a Storyteller-only journal; search on long power lists; History window with Undo; Print. B602-B606.
+- Pure parts in extras-rules.mjs and extras-html.mjs; harness sheet-extras.test.mjs. Full suite 1042 pass.
+- Sample shown to Ben before any testbed deploy: https://claude.ai/artifact/UcwShGByyLddqUGKWYRD9d
