@@ -1723,6 +1723,12 @@
       "title": "Children of the Inquisition",
       "short": "CotI",
       "edition": "First edition"
+    },
+    {
+      "id": "kmw",
+      "title": "The Kindred Most Wanted",
+      "short": "KMW",
+      "edition": "First edition"
     }
   ],
   "files": [
@@ -2012,6 +2018,7 @@
     "wlbd.json",
     "wspg.json",
     "cap.json",
-    "coti.json"
+    "coti.json",
+    "kmw.json"
   ]
 }
