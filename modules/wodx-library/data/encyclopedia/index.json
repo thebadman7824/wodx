@@ -721,6 +721,12 @@
    "title": "Half-Damned: Dhampyr",
    "short": "Half-Damned",
    "edition": "Revised era"
+  },
+  {
+   "id": "dbbf",
+   "title": "Dharma Book: Bone Flowers",
+   "short": "DB Bone Flowers",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -843,6 +849,7 @@
   "kks.json",
   "khow.json",
   "ksw.json",
-  "khd.json"
+  "khd.json",
+  "dbbf.json"
  ]
 }
