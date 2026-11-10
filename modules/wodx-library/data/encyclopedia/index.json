@@ -2173,6 +2173,12 @@
       "title": "Rites of Renown (W20)",
       "short": "W20 Rites of Renown",
       "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "ncns1",
+      "title": "Clan Novel Saga 1: The Fall of Atlanta",
+      "short": "Clan Novel Saga 1",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2537,6 +2543,7 @@
     "npeih.json",
     "nsosm.json",
     "npt.json",
-    "nror.json"
+    "nror.json",
+    "ncns1.json"
   ]
 }
