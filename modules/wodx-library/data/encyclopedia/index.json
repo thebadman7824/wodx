@@ -451,6 +451,12 @@
    "title": "Dark Ages: Road of Kings",
    "short": "DA Road of Kings",
    "edition": "Revised"
+  },
+  {
+   "id": "dab",
+   "title": "Dark Ages: Road of the Beast",
+   "short": "DA Road of the Beast",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -528,6 +534,7 @@
   "w20sd.json",
   "w20wh.json",
   "darh.json",
-  "dark.json"
+  "dark.json",
+  "dab.json"
  ]
 }

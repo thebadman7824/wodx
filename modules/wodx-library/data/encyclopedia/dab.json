@@ -1,0 +1,215 @@
+[
+ {
+  "id": "dab-feral-hunt",
+  "title": "The Feral Way of the Hunt",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How followers of the Road of the Beast are taught to kill.",
+  "claims": [
+   {
+    "text": "Ferals feel no remorse for their prey. A strike should be fast and hard, the hunt short, and the prey taken whole once brought down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "They hold that the Beast is not fed by half a kill or a few sips from a willing thrall; it wants the prey's life-blood, taken quickly and cleanly in the hunt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-the-beast"
+  ]
+ },
+ {
+  "id": "dab-ferals-and-other-roads",
+  "title": "Ferals and the Other Roads",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why the Beast's followers distrust faith and philosophy.",
+  "claims": [
+   {
+    "text": "Ferals face the Beast directly rather than seeking answers from a God or Devil who plainly does not care.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "They see the other roads as ways for Cainites to distract themselves from their true nature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Because Ferals respect strength, powerful Cainites on other roads earn their regard, though they are thought impressive but misguided.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-the-beast",
+   "da-roads"
+  ]
+ },
+ {
+  "id": "dab-path-of-the-hunter",
+  "title": "The Path of the Hunter",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ferals who live by instinct and divide the world into hunters and prey.",
+  "claims": [
+   {
+    "text": "Followers explore the Beast's predatory side, set reason aside and let instinct guide them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "They split the world into hunters, fellow predators who deserve respect, and prey, who deserve only contempt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Its ethics teach that the Beast exists to serve the hunt and should be mastered like a hunting animal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-the-beast",
+   "dab-feral-hunt"
+  ]
+ },
+ {
+  "id": "dab-via-einherjar",
+  "title": "The Road of the Slain",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Via Einherjar of the northern Gangrel.",
+  "claims": [
+   {
+    "text": "Gangrel of the north follow the Road of the Slain, or Via Einherjar, which closely resembles the Road of the Beast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-the-beast",
+   "da-gangrel",
+   "wda-fenrir"
+  ]
+ },
+ {
+  "id": "dab-iberian-ferals",
+  "title": "Muslim Ferals of Iberia",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Brujah and Banu Haqim raiders of the taifa kingdoms.",
+  "claims": [
+   {
+    "text": "A band of Brujah and Banu Haqim, Muslim by birth and Ferals by choice, is spread across the taifa kingdoms of southern Iberia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "They say they only defend their lands, but they meet every few weeks to plan and carry out raids on their Christian enemies; other Ferals distrust them for clinging so closely to their faith.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dab",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "darh-ashirra",
+   "daeu-iberia",
+   "da-brujah",
+   "da-assamites"
+  ]
+ }
+]
