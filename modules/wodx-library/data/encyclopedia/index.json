@@ -1519,6 +1519,12 @@
    "title": "Hunter Book: Martyr",
    "short": "HB Martyr",
    "edition": "First edition"
+  },
+  {
+   "id": "hbred",
+   "title": "Hunter Book: Redeemer",
+   "short": "HB Redeemer",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1774,6 +1780,7 @@
   "hbher.json",
   "hbinn.json",
   "hbjud.json",
-  "hbmar.json"
+  "hbmar.json",
+  "hbred.json"
  ]
 }
