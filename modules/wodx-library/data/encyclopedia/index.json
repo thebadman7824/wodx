@@ -1807,6 +1807,12 @@
       "title": "Devil's Due",
       "short": "Devil's Due",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dahot",
+      "title": "House of Tremere",
+      "short": "House of Tremere",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2110,6 +2116,7 @@
     "dacbsal.json",
     "daheresy.json",
     "dacbn.json",
-    "dadevil.json"
+    "dadevil.json",
+    "dahot.json"
   ]
 }

@@ -1,0 +1,331 @@
+[
+ {
+  "id": "dahot-thaumaturgy-early",
+  "title": "Early Thaumaturgy",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The state of Tremere blood magic in the early 13th century.",
+  "claims": [
+   {
+    "text": "In the two centuries since Tremere and the founders became vampires, most of their work has gone into recovering their magic as the new blood art called Thaumaturgy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "They are still adapting Hermetic arts and rituals to it, with little true invention beyond the blood-centred Rego Vitae path.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Within a few decades the House breaks with the Order of Hermes for good, losing the great Hermetic libraries, and from the mid-13th century Thaumaturgy goes its own way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dahot-rego-magica"
+  ]
+ },
+ {
+  "id": "dahot-rego-magica",
+  "title": "Rego Magica",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A rare path for turning Hermetic techniques into blood magic.",
+  "claims": [
+   {
+    "text": "Tremere, Goratrix and Etrius created the path to convert Hermetic techniques into Thaumaturgy, and Tremere keeps knowledge of it tightly held to stop juniors inventing paths their master does not know.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "It also gives strong weapons against enemy magi; the Inner Circle knows of it, though not all of them can use it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Rego Magica and Perdo Magica are offered only at the Storyteller’s discretion, and Perdo Magica is the more widely known.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dahot-ritual-research"
+  ]
+ },
+ {
+  "id": "dahot-ritual-research",
+  "title": "Researching new rituals",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How thaumaturges create rituals at Ceoris.",
+  "claims": [
+   {
+    "text": "After at least thirty hours a week of research, the thaumaturge rolls Intelligence + Occult at difficulty 5 and then performs the new ritual; normally Rego Magica must exceed the ritual’s level by at least 2.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "Depending on both rolls, the ritual may be impossible to create, may be retried later, or may work without the creator fully understanding it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "A new ritual is known only to its maker until taught or written down, and a written copy can be stolen; Ceoris researchers share secrets only to seal alliances, settle feuds or pay debts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   },
+   {
+    "text": "Several researchers can pool their efforts: each subtracts 1 from Rego Magica and the results are added, with one researcher making the rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 109,
+      "pdf": 110
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dahot-bronze-head",
+  "title": "The bronze head",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Tremere ritual that pulps a prisoner’s brain for answers.",
+  "claims": [
+   {
+    "text": "The ritual builds a speaking bronze head that draws memories from a prisoner, even long-buried or magically hidden ones, regardless of the victim’s will.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "The ritualist rolls Intelligence + Occult against the victim’s Stamina + Fortitude at difficulty 9, and each net success gives one useful piece of information.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "Mortals and ghouls without Fortitude die; a vampire needs three successes on Stamina + Fortitude at difficulty 9 to end in torpor, five to be merely Incapacitated, and ghouls need five just to live.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   },
+   {
+    "text": "Each head has a cold little persona of its own; the one at Ceoris, Paracelsus, fawns on its maker Mendacamina.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 116,
+      "pdf": 117
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dahot-gargoyle-creation",
+  "title": "Creating Gargoyles",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The ritual for stitching Gargoyles from Cainites.",
+  "claims": [
+   {
+    "text": "The thaumaturge sews together parts of Cainites into a humanoid form, each part lending traits according to old medical lore, such as the heart for courage and the eyes for perception.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "The roll is Intelligence + Occult at difficulty 9, plus one for each donor after the first, or 4 less with an unliving womb; a single success creates a Gargoyle character.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "The ritual costs 5 blood points for each Cainite used, plus 5 more for a fertile Gargoyle, and no Gargoyle can be made beautiful.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "The Tremere stop making Gargoyles after the slave revolt and later promise never to revive the art, though the instructions are hidden rather than destroyed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dahot-malign-humors"
+  ]
+ },
+ {
+  "id": "dahot-malign-humors",
+  "title": "Malign Humors",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Rituals that brew temporary enhancements for Gargoyles.",
+  "claims": [
+   {
+    "text": "Virstania Malgorzata and Goratrix devised rituals for magical humors that boost Gargoyles for a time but exact a price afterwards.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Each humor needs exotic ingredients suited to its nature, such as a venomous snake for a humor granting a poisonous bite.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "The humor cannot simply be drunk: a machine drains much of the Gargoyle’s vitae, mixes it with the humor and returns it by transfusion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahot",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dahot-gargoyle-creation"
+  ]
+ }
+]
