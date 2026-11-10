@@ -10,6 +10,7 @@
  *   V20 Dark Ages p. 345, pdf 346); ghouls soak lethal too (V20 Dark Ages p. 400, pdf 401).
  *   Animals are the books' own stat blocks. Neither book has ready-made guards, thugs, police or soldiers, so the
  *   people are a house rule: a trained mortal with 2 to 3 in what the role does, armed from the weapon charts.
+ *   W20 prints no Kinfolk stat blocks (only Kinfolk creation, pdf 381 on), so Kinfolk extras are built as mortals.
  */
 
 const str = (v, n = 120) => String(v ?? "").trim().slice(0, n);
@@ -64,9 +65,9 @@ export const EXTRAS = [
   {key: "manatarms", label: "Man-at-arms", eras: "early", attrs: A(3, 3, 3, 2, 2, 2, 2, 2, 3), abilities: {melee: 3, brawl: 2, dodge: 2, alertness: 2, athletics: 2, ride: 1}, weapon: {name: "Broadsword", damage: "Strength + 2", kind: "lethal"}, armor: 2, willpower: 5, ref: `${HOUSE}; weapon ${DA_WEAPONS}`},
   {key: "bandit", label: "Bandit", eras: "early", attrs: A(3, 3, 2, 2, 2, 2, 2, 2, 3), abilities: {melee: 2, brawl: 2, stealth: 2, alertness: 2, archery: 1}, weapon: {name: "Dagger", damage: "Strength + 1", kind: "lethal"}, willpower: 3, ref: `${HOUSE}; weapon ${DA_WEAPONS}`},
   {key: "peasant", label: "Angry villager", eras: "early", attrs: A(2, 2, 3, 1, 1, 2, 2, 1, 2), abilities: {brawl: 1, melee: 1, alertness: 1}, weapon: {name: "Club", damage: "Strength + 2", kind: "bashing"}, willpower: 3, ref: `${HOUSE}; weapon ${DA_WEAPONS}`},
-  {key: "police", label: "Police officer", eras: "late", attrs: A(2, 3, 3, 2, 2, 2, 3, 2, 3), abilities: {alertness: 2, brawl: 2, firearms: 2, drive: 2, intimidation: 2, investigation: 1}, weapon: {name: "Pistol", damage: "4", kind: "lethal"}, armor: 0, willpower: 5, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
+  {key: "police", label: "Police officer", eras: "late", attrs: A(2, 3, 3, 2, 2, 2, 3, 2, 3), abilities: {alertness: 2, brawl: 2, firearms: 2, drive: 2, intimidation: 2, investigation: 1}, weapon: {name: "Light pistol", damage: "4", kind: "lethal"}, armor: 0, willpower: 5, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
   {key: "thug", label: "Street thug", eras: "late", attrs: A(3, 2, 3, 2, 2, 2, 2, 2, 2), abilities: {brawl: 3, melee: 2, streetwise: 2, intimidation: 2, firearms: 1}, weapon: {name: "Knife", damage: "Strength + 1", kind: "lethal"}, willpower: 3, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
-  {key: "guard", label: "Security guard", eras: "late", attrs: A(3, 2, 3, 2, 2, 2, 3, 2, 2), abilities: {alertness: 3, brawl: 2, firearms: 1, security: 2}, weapon: {name: "Nightstick", damage: "Strength + 1", kind: "bashing"}, willpower: 4, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
+  {key: "guard", label: "Security guard", eras: "late", attrs: A(3, 2, 3, 2, 2, 2, 3, 2, 2), abilities: {alertness: 3, brawl: 2, firearms: 1, security: 2}, weapon: {name: "Nightstick (as a club)", damage: "Strength + 2", kind: "bashing"}, willpower: 4, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
   {key: "soldier", label: "Soldier", eras: "late", attrs: A(3, 3, 3, 2, 2, 2, 3, 2, 3), abilities: {firearms: 3, brawl: 2, dodge: 2, alertness: 2, athletics: 2, survival: 1}, weapon: {name: "Rifle", damage: "8", kind: "lethal"}, armor: 2, willpower: 5, ref: `${HOUSE}; weapons ${V20_WEAPONS}`},
   {key: "ghoul", label: "Ghoul servant", eras: "any", attrs: A(3, 2, 3, 2, 2, 2, 2, 2, 2), abilities: {brawl: 2, melee: 2, alertness: 2, intimidation: 1}, weapon: {name: "Fists or a blade", damage: "Strength + 1", kind: "lethal"}, willpower: 4, blood: 3, soakLethal: true, ref: `${HOUSE}; ghoul rules V20 p. 497 (pdf 505), V20 Dark Ages p. 400 (pdf 401)`},
   // V20 Dark Ages animals (pp. 397-399, pdf 398-400)
