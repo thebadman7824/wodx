@@ -1201,6 +1201,12 @@
    "title": "Midnight Express",
    "short": "ME",
    "edition": "First edition"
+  },
+  {
+   "id": "wris",
+   "title": "The Risen",
+   "short": "Risen",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1403,6 +1409,7 @@
   "wdil.json",
   "wqd.json",
   "wna.json",
-  "wme.json"
+  "wme.json",
+  "wris.json"
  ]
 }

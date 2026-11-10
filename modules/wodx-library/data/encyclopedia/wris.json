@@ -1,0 +1,129 @@
+[
+ {
+  "id": "wris-risen",
+  "title": "The Risen",
+  "kind": "faction",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Wraiths who return to their own bodies.",
+  "claims": [
+   {
+    "text": "The Risen are wraiths back in their own corpses: the wounds that killed them show as heavy scars, lost limbs stay lost, and they have no breath, pulse or warmth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wris",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "A would-be Risen needs a willing Shadow, a usable body and a Conduit to pass through.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wris",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wraiths",
+   "the-shadow",
+   "whaunts-children-of-flesh"
+  ]
+ },
+ {
+  "id": "wris-persephone",
+  "title": "Persephone",
+  "kind": "character",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The first of the dead said to cross back.",
+  "claims": [
+   {
+    "text": "Once a wraith called Persephone found a way back into the living world, many more followed, more than the Deathlords like to admit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wris",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "It is said Persephone grew madder with each crossing between worlds; those who claim to have met Persephone describe a young figure with the light of madness in the eyes.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wris",
+      "page": 20,
+      "pdf": 21
+     },
+     {
+      "book": "wris",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wris-risen",
+   "hierarchy"
+  ]
+ },
+ {
+  "id": "wris-factions-on-risen",
+  "title": "Factions and the Risen",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Renegades and Heretics use the walking dead.",
+  "claims": [
+   {
+    "text": "Renegades see the Risen as dangerous to the Hierarchy and useful as agents among the living, and many Risen carry out some favor for a Renegade leader.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wris",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Every Heretic cult holds a strong view of the Risen; the Path of the United Being teaches that a wraith must reunite with its body and overcome death to Transcend.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wris",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "renegades",
+   "heretics",
+   "transcendence"
+  ]
+ }
+]
