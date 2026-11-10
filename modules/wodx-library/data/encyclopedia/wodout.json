@@ -1,0 +1,122 @@
+[
+ {
+  "id": "wodout-ronin",
+  "title": "Ronin",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Garou cast out of, or walking away from, their tribes.",
+  "claims": [
+   {
+    "text": "A Ronin is a werewolf outside Garou society, whether thrown out for failing a pack, defying elders or breaking the Litany, or leaving by choice because the old ways no longer fit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodout",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "The rule for the cast-out is simple: no aid and no company. Only other outcasts and the odd caern Warder will speak with one, and more Ronin roam now than ever before.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodout",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Garou name a disgraced Ronin by adding -lurf to the old name, marking one who has lost honor and the right to that name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodout",
+      "page": 48,
+      "pdf": 49
+     }
+    ]
+   },
+   {
+    "text": "Self-exiles who announce their leaving keep a little honor, though they still trade favor for favor; some tribes call those who leave in Harano a Steppenwolf, a lone wolf of the steppes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodout",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Some Ronin, called Hyenas, take bounty work from septs, bringing back strays dead or alive along with every fetish the target carried; any Ronin who falls to the Wyrm is hunted down by the tribe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodout",
+      "page": 51,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Ronin who drift too far from their own nature are said to find the Umbra harder to enter, and some to forget how to change at all.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wodout",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wodout-waydown",
+  "title": "The Waydown",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A San Francisco meeting place for Hollow Ones, in an old church.",
+  "claims": [
+   {
+    "text": "The Waydown, in a disused San Francisco church, is where young Hollow Ones are sent to learn about the group; its regulars say every Hollow One turns up there sooner or later, and they test newcomers before answering questions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodout",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   },
+   {
+    "text": "Its regulars insist the Hollow Ones are no Tradition, since there is nothing formal to join, and they fear spies from Marauders and Nephandi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodout",
+      "page": 69,
+      "pdf": 70
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hollow-ones"
+  ]
+ }
+]

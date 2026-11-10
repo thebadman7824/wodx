@@ -1609,6 +1609,12 @@
    "title": "World of Darkness: Hong Kong",
    "short": "Hong Kong",
    "edition": "First edition"
+  },
+  {
+   "id": "wodout",
+   "title": "Outcasts: A Players Guide to Pariahs",
+   "short": "Outcasts",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1879,6 +1885,7 @@
   "mtrpg.json",
   "wod2.json",
   "wodtok.json",
-  "wodhk.json"
+  "wodhk.json",
+  "wodout.json"
  ]
 }
