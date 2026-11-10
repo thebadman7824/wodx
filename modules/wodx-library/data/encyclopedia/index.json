@@ -985,6 +985,12 @@
    "title": "Halls of the Arcanum",
    "short": "HotA",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2ta1",
+   "title": "Technocracy Assembled, Volume 1",
+   "short": "TA1",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1151,6 +1157,7 @@
   "mrbr.json",
   "mrsth.json",
   "mrcrafts.json",
-  "m2hota.json"
+  "m2hota.json",
+  "m2ta1.json"
  ]
 }

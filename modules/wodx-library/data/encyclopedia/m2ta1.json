@@ -1,0 +1,356 @@
+[
+ {
+  "id": "m2ta1-ix-ranks",
+  "title": "Iteration X and the Masses",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Iteration X uses technicians and ordinary people.",
+  "claims": [
+   {
+    "text": "Technicians such as mechanics and electricians learn basic principles to keep civilisation running; keeping their numbers small makes the Masses depend on technology.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Ordinary people count for little alone, but the Convention recruits the most violent of them into paramilitary groups to break up enemy power bases.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Apprentices are usually recruited around the age of twenty, young enough to shape and old enough to use at once.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "mrix-comptrollers"
+  ]
+ },
+ {
+  "id": "m2ta1-time-motion",
+  "title": "Time-Motion Managers (first edition)",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Iteration X builders obsessed with efficiency.",
+  "claims": [
+   {
+    "text": "Time-Motion Managers design and oversee the building of the Technocracy's machines in fully automated factories.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The mechanical clock began with Benedictine monks around 1200 to time prayers; some say it also served Time magick.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "As the Technocracy rose in the 15th and 16th centuries, the Managers' mechanics drew in the makers of industrial machines, firearms and buildings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrix-time-motion",
+   "iteration-x"
+  ]
+ },
+ {
+  "id": "m2ta1-cyber-tooth",
+  "title": "Cyber-tooth Tiger",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Iteration X hunting beast of flesh and machine.",
+  "claims": [
+   {
+    "text": "The beast is a twelve-foot great cat over half a ton in weight, with laser barrels for eyes, diamond-coated fangs and cybernetic legs with retractable claws.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "Holographic camouflage hides it, and heat and motion sensors help it track prey at night; it can tell when a target is armed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "iteration-x",
+   "m20hdy-shapechanging"
+  ]
+ },
+ {
+  "id": "m2ta1-nwo-watchers",
+  "title": "Watchers and Surveyors",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The top of the New World Order pyramid.",
+  "claims": [
+   {
+    "text": "Surveyors oversee the whole war, merging telescope, space station and scout ship data with Intelligence Analysts and working with the Void Engineers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 30,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Rumours of mind-control satellites persist.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 30,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "void-engineers",
+   "mrnwo-methodologies"
+  ]
+ },
+ {
+  "id": "m2ta1-nwo-devices",
+  "title": "New World Order devices",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Surveillance and escape gear of the Men in Black.",
+  "claims": [
+   {
+    "text": "A Green Dome manar watches a whole city from a safe house; an orbital station covers an even larger area.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 55,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "Men in Black travel in black Spectre Limousines, and the Gray Men have similar cars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 55,
+      "pdf": 128
+     }
+    ]
+   },
+   {
+    "text": "Schroedinger's Closet lets an agent step into a building and travel to a Horizon realm, leaving any later Paradox to strike the empty building.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 57,
+      "pdf": 130
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "mrnwo-black-suit-constructs"
+  ]
+ },
+ {
+  "id": "m2ta1-nwo-schism",
+  "title": "Ivory Tower and the field",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The gap between New World Order theorists and the operatives who fight.",
+  "claims": [
+   {
+    "text": "Administrators and scholars debate Ascension safe in the Ivory Tower, while field operatives face a world full of monsters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 62,
+      "pdf": 135
+     }
+    ]
+   },
+   {
+    "text": "San Francisco is overrun with supernatural beings; the staff of its Divisidero safe house blend with the local culture rather than look like black-suited agents.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 62,
+      "pdf": 135
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "mrnwo-mind-first"
+  ]
+ },
+ {
+  "id": "m2ta1-facade",
+  "title": "FACADE Engineers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Progenitors who reshape bodies, and claim the old myths as their work.",
+  "claims": [
+   {
+    "text": "FACADE stands for Forced Adaptation and Clone Alteration Developmental Eugenicists; they adapt humans to new environments.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 16,
+      "pdf": 161
+     }
+    ]
+   },
+   {
+    "text": "They claim that early Egyptian Progenitors built the animal-headed beings later taken for gods, and that Greek ones made centaurs, the Minotaur and merfolk.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 16,
+      "pdf": 161
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "mrpg-facade"
+  ]
+ },
+ {
+  "id": "m2ta1-cephalopoid",
+  "title": "Cephalopoid",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A squid or octopus joined to a human brain and face.",
+  "claims": [
+   {
+    "text": "Built from a large octopus or squid, a cephalopoid has human wits and a face under its mantle; it cannot speak but may write with its tentacles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 51,
+      "pdf": 196
+     }
+    ]
+   },
+   {
+    "text": "Progenitors use them as scouts and guards on marine missions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ta1",
+      "page": 51,
+      "pdf": 196
+     }
+    ]
+   }
+  ],
+  "see": [
+   "progenitors",
+   "mrpg-genegineers"
+  ]
+ }
+]
