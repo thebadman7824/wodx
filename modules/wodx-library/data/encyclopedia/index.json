@@ -547,6 +547,12 @@
    "title": "Tribebook: Uktena (Revised)",
    "short": "TB Uktena",
    "edition": "Revised"
+  },
+  {
+   "id": "tbwen",
+   "title": "Tribebook: Wendigo (Revised)",
+   "short": "TB Wendigo",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -640,6 +646,7 @@
   "tbss.json",
   "tbsf.json",
   "tbsg.json",
-  "tbuk.json"
+  "tbuk.json",
+  "tbwen.json"
  ]
 }
