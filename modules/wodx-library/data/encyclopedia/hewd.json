@@ -1,0 +1,123 @@
+[
+ {
+  "id": "hewd-hunters-online",
+  "title": "Hunters online",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hunter-net and its mailing list as both tool and weakness.",
+  "claims": [
+   {
+    "text": "Imbued trade field reports and warnings by email and on hunter-net lists, where good information travels fast but so do flame wars, smears and false leads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hewd",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Monsters can hide in plain sight online, posing as hunters or informants and steering the chosen toward weak foes, raging ones or traps.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hewd",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued",
+   "htr-hunter-slang"
+  ]
+ },
+ {
+  "id": "hewd-ichmail",
+  "title": "Ichmail and the Orphic Circle",
+  "kind": "character",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A dead thing that joined the hunter list.",
+  "claims": [
+   {
+    "text": "A being calling itself Ichmail, by its own account one of the dead, began writing to the online hunter community and spoke of something called the Orphic Circle.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hewd",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The poster Oracle171 later sent messages describing an unearthly exploration of Ichmail's Orphic Circle.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "hewd",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Hunters must weigh anything the dead tell them about ghosts, zombies or the purpose of the imbued, since it comes from the very things they fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hewd",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hewd-hunters-online",
+   "wraiths",
+   "orph-ghosts"
+  ]
+ },
+ {
+  "id": "hewd-haiti-restless-dead",
+  "title": "Haiti's restless dead",
+  "kind": "place",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Field reports of a walking-dead threat in Haiti.",
+  "claims": [
+   {
+    "text": "The hunter Shaka74 posted a series of field reports while investigating a menace of restless dead in Haiti.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hewd",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "hewd-hunters-online",
+   "bjd-samedi-haiti"
+  ]
+ }
+]

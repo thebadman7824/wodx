@@ -1471,6 +1471,12 @@
    "title": "Hunter: The Spellbound",
    "short": "HtR Spell",
    "edition": "First edition"
+  },
+  {
+   "id": "hewd",
+   "title": "Hunter: The Walking Dead",
+   "short": "HtR WD",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1718,6 +1724,7 @@
   "heinf.json",
   "hemoon.json",
   "henoc.json",
-  "hespell.json"
+  "hespell.json",
+  "hewd.json"
  ]
 }
