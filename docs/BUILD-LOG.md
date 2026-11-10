@@ -1151,3 +1151,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - A walk of the book folders (/mnt/project-files/ency-left-out.md) found 116 books never reached; each is now added or skipped with a reason. Mummy: The Resurrection read with a column-aware OCR (tools-env\ocr-cols.py). A squashed-text overlap check (nsp-overlap.py) found 10 old Mummy runs the word check missed, now reworded.
 - Narrative books (Ben, 2026-11-10): facts from novels and anthologies went in only when a sourcebook entry backs them (57, tier implied, citing both books). The other 20 went to the Narrative Review Desk (https://claude.ai/artifact/2sH4gv1jC599dsEbX4ht2B). Ben accepted 16, added at tier rumour as "The novel ... tells that" (PR 478), and rejected 4. A desk note led to the sourcebook Esbat entry (PR 473), cross-linked with the Sabbat entries (PR 476).
 - Result: 2603 entries from 389 books.
+
+## Phase 10, polish: the rules-clash table (2026-11-10)
+- One table of rules that two or more lines rule differently: modules/wodx-chronicle/data/rules-clashes.mjs, written out to docs/RULES-CLASHES.md by tools/clashes/render.mjs (B500-B506). 28 rows: 15 settled, 1 fixed in code, 12 waiting on a page check on the PC.
+- Fixed: WoDX Combat soaked Dark Ages fae as C20, so a fae in the mien could not soak lethal and cold iron took all natural soak. Now DA:Fae pp. 104 and 88 apply in the Dark Ages (Combat 3.8.3, Actions 3.19.3; Chronicle 0.10.2 carries the table).
+- tools/harness/rules-clashes.test.mjs: every row whole, each house rule named in DECISIONS, the doc matches the data, and the fae soak.

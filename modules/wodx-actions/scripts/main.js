@@ -2165,7 +2165,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.3",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2180,6 +2180,8 @@ const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, fren
     daMien: withActor(a => fx().mien(a)), daOath: withActor(a => fx().keepOath(a)), daRest: withActor(a => fx().rest(a)),
     daColdIron: withActor(a => fx().coldIron(a)), daFaeInfo: a => fx().info(resolveActor(a)), daFaeDaily: () => fx().daily(),
     daFaeButton: (msg, what) => fx().onButton(msg, what), faeRules: FXD,
+    /** Dark Ages fae soak for WoDX Combat: in the mien Stamina soaks lethal (DA:Fae p. 104); cold iron is soakable (p. 88). */
+    faeSoak: a => (a && FXD.isDA(a)) ? { lethal: !!fx().info(a).mien, coldIron: true } : null,
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
     c20Trigger: withActor(a => cx().trigger(a)), c20Epiphany: withActor(a => cx().epiphany(a)), c20Bedlam: withActor(a => cx().bedlam(a)),
