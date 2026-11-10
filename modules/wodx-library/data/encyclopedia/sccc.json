@@ -1,0 +1,235 @@
+[
+ {
+  "id": "sccc-white-tower",
+  "title": "The White Tower of Languedoc",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The great fortress of the Order of Reason.",
+  "claims": [
+   {
+    "text": "Few may pass the Seven Rings, the outer works and three inner fortress walls around the White Tower; standing openly at its doors implies courage and the trust of a high Resplendent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "The three inner walls are castles in their own right, holding kitchens and stables; outside them stand eight halls, one for each Convention and one left empty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "A palisade, an earth rampart and a ditch circle the hill, making seven rings that stand for the seven Conventions, and learned Daedaleans count the tower walls as an eighth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-order-of-reason",
+   "scor-lodges"
+  ]
+ },
+ {
+  "id": "sccc-paracelsians",
+  "title": "Paracelsians and Elementalists",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The great medical quarrel of the Order.",
+  "claims": [
+   {
+    "text": "The ideas of Paracelsus are fought over more fiercely than those of Copernicus, since they attack the old theory of four elements behind medicine.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Elementalists hold that sickness comes from an imbalance of the four humors; Paracelsians teach that each organ works as an alchemist dividing pure from impure, and illness follows when an organ fails at it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-hippocratic-circle",
+   "sccc-white-tower"
+  ]
+ },
+ {
+  "id": "sccc-cabot-grange",
+  "title": "Lord Cabot's Grange",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A Council of Nine stronghold in England.",
+  "claims": [
+   {
+    "text": "The Cabots have ruled the Grange for centuries; it has a square moat, an herb garden, a hedge maze laid out to Lord Cabot's own design and a walk between rose beds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   },
+   {
+    "text": "A single wooden bridge, gated and guarded at all hours, crosses the moat and can be taken apart in minutes if a siege looms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 85,
+      "pdf": 86
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-council",
+   "mrgtt-chantries"
+  ]
+ },
+ {
+  "id": "sccc-lickspittle-players",
+  "title": "The Lickspittle Players",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A traveling troupe and independent covenant.",
+  "claims": [
+   {
+    "text": "Most of the Players come from England; they work north as far as Britain and the Low Countries in summer and take their wagons south to the Mediterranean when frost comes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Lords sometimes invite them to perform for the nobility, but their usual audiences are laborers, craftsmen and merchants.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Karl Gertzwein, son of a Baltic sea captain, trained briefly as an Explorator of the Order of the Grail before joining the Players at Nice and becoming their playwright.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-disparates",
+   "scor-guilds"
+  ]
+ },
+ {
+  "id": "sccc-koraghissis",
+  "title": "Koraghissis",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A small island chantry of Disparate mages.",
+  "claims": [
+   {
+    "text": "Koraghissis is a small island with a good spring, olive trees and gardens enough for a small community, which trades for food with larger islands a day's sail away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "It is a subtle Cray; al-Khanan sometimes draws Tass from it as plain-looking beach sand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   },
+   {
+    "text": "About a dozen Disparate mages of mixed power live there in whitewashed cottages, a few holding laboratories and libraries, and members come and go freely.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "sccc",
+      "page": 131,
+      "pdf": 132
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-disparates",
+   "mrgtt-chantries"
+  ]
+ }
+]
