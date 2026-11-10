@@ -26,4 +26,6 @@ Reviewed by Ben on two pages; verdicts live in each page's database (collection 
 - Last check, draft 2026-11-10i (last-check-2026-11-10i.js): https://claude.ai/artifact/1W6NgSUA1ZqbfKroXuSpFv
   8 cards (z01-z08). Ben, 2026-11-10 17:03Z: all OK except z06, where the Nephandi find the Net in 2059.
 - Timeline 2026 to 2098, second draft 2026-11-10j (timeline-2026-11-10j.js), same page as draft h.
-  Ben, 2026-11-10 17:10Z: fill the 2092-2098 gap. Third draft 2026-11-10k (timeline-2026-11-10k.js) spreads the end states over 2093-2098. Waiting for Ben.
+  Ben, 2026-11-10 17:10Z: fill the 2092-2098 gap. Third draft 2026-11-10k (timeline-2026-11-10k.js) spreads the end states over 2093-2098.
+  APPROVED by Ben 2026-11-10 17:16Z with no fixes: canon 2026-2098.
+- Time of Future Judgement, second draft 2026-11-10l (ftj-desk-2026-11-10l.js), same page as draft f: checked against the approved timeline. Waiting for Ben.
