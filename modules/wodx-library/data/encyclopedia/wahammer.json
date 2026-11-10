@@ -1,0 +1,229 @@
+[
+ {
+  "id": "wahammer-fetish-levels",
+  "title": "Fetish levels",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What each level of fetish means.",
+  "claims": [
+   {
+    "text": "Level four fetishes have unusual, potent effects over time or devastating single effects, and level four weapons give even other Garou pause; they often become part of the bearer’s name.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Level five fetishes are the greatest of the great, able to work miracles; they are often tribal treasures that can overshadow their owners.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Level six fetishes are never made by Garou at will; Incarnae create them from trusted servants, parts of themselves or their own surrender, and helping create one is the aim of a whole chronicle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wahammer-making-fetishes"
+  ]
+ },
+ {
+  "id": "wahammer-making-fetishes",
+  "title": "Making a fetish",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Preparing the parts and the maker.",
+  "claims": [
+   {
+    "text": "The maker gathers and prepares both the physical object and the spirit; the plainer or uglier the object offered, the less likely a spirit is to accept it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Self-preparation can use the Rite of Cleansing, and the Storyteller may make the later Rite of the Fetish 1 easier for every success beyond the fetish’s level.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Whoever performs the cleansing must know that rite, and once the spirit is contacted the maker must fully commit to the design.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wahammer-cursed-fetishes",
+  "title": "Cursed fetishes",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How fetishes turn against their bearers.",
+  "claims": [
+   {
+    "text": "No fixed rules decide when a fetish becomes cursed; generally it happens when the fetish has plainly been mistreated, at the Storyteller’s judgment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Spirits forced into a fetish rebel far more readily than those properly asked for help.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Corruption is another cause, as with a lost klaive found in the bones of a long-dead Wyrm-beast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wahammer-fetish-levels"
+  ]
+ },
+ {
+  "id": "wahammer-sun-whip",
+  "title": "Sun Whip",
+  "kind": "term",
+  "lines": [
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level three fetish against vampires.",
+  "claims": [
+   {
+    "text": "A Sun Whip is a bullwhip woven with gold nuggets and a heavy nugget at the tip, bound with a sunlight or fire spirit; Gnosis 7.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "When activated it glows, and on striking a vampire bursts into sunlight or flame, dealing Strength + 4 aggravated damage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 65,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wahammer-fetish-levels"
+  ]
+ },
+ {
+  "id": "wahammer-sword-of-sun",
+  "title": "The Sword of the Sun",
+  "kind": "term",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A legendary Silent Strider klaive.",
+  "claims": [
+   {
+    "text": "In the legend, the Silent Strider Ahroun Inihue returned to Egypt in the reign of Mentuhotep III to find husband and son drained by a Wyrm-serpent.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Inihue had left them a charm bearing the signs of Helios, Luna and Owl and promised it would keep them safe, but it was not a promise Inihue had the power to make.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wahammer",
+      "page": 119,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wahammer-fetish-levels"
+  ]
+ }
+]

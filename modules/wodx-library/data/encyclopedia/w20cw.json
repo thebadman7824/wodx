@@ -1,0 +1,242 @@
+[
+ {
+  "id": "w20cw-partial-transformation",
+  "title": "Partial transformation",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Shifting only part of the body.",
+  "claims": [
+   {
+    "text": "Besides moving between the five forms, a werewolf can change only some body parts, or carry one trait of a form into another; it takes hard concentration and can hurt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Typical uses are hidden claws or fangs in Homid until a guarded target is close, a wolf’s night sight or scenting snout on a human face, or human colour vision for a Lupus.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Many Garou never bother, since a full shift is easier; those who use it want subtlety, or wear clothing that is not dedicated and would be lost in a full change.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Kailindo fighters depend on quick partial changes to boost their combat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20cw-gnosis-levels",
+  "title": "High and low Gnosis",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An optional rule for strong or weak spiritual energy.",
+  "claims": [
+   {
+    "text": "One optional way to play it: a Gnosis of 8 or more counts as high, and 3 or less as low.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "With high Gnosis, each point past seven takes one off the difficulty of spirit rolls (a fetish or a sideways step, say); low Gnosis raises them by one per point below four.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Difficulties changed this way stay between 3 and 9, and each troupe may decide whether to use the rule at all.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20cw-deny-the-birthright",
+  "title": "Deny the Birthright",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level three metis Gift.",
+  "claims": [
+   {
+    "text": "Taught almost only within the Society of Erichthonius and thought heretical by most Garou, the Gift lets a metis set aside the inborn deformity for a time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "It leaves battle scars and deformities caused by Gifts or other powers untouched.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "Only an ancestor-spirit who was metis in life can teach it, and a level five form that moves the deformity onto another Garou is rumoured.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 59,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20cw-hibernation",
+  "title": "Hibernation",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level four Gift of Bear.",
+  "claims": [
+   {
+    "text": "Only Bear or one of Bear’s avatars teaches this rare Gift, which lets a werewolf sink into a dormancy that holds off hunger and other bodily needs and stops ageing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 151,
+      "pdf": 152
+     }
+    ]
+   },
+   {
+    "text": "The werewolf needs a quiet, dark place and eight undisturbed hours; the roll is Stamina + Survival at difficulty 7, spending at least one Gnosis and one Willpower that do not return while asleep.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 151,
+      "pdf": 152
+     }
+    ]
+   },
+   {
+    "text": "A botch throws the Garou straight into frenzy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 151,
+      "pdf": 152
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "w20cw-rite-of-succession",
+  "title": "Rite of Succession",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level three rite for taking a sept post.",
+  "claims": [
+   {
+    "text": "The rite marks a Garou taking up a post of authority in the sept, with the whole sept gathered as witnesses while the ritemaster lists the newcomer’s deeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   },
+   {
+    "text": "The successor kills a fitting human or animal sacrifice before the ritemaster, everyone eats a portion, and the ritemaster claws a glyph into one of its bones as a token of the new office.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20cw",
+      "page": 159,
+      "pdf": 160
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

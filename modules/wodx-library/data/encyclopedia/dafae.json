@@ -937,7 +937,7 @@
   "summary": "How strong a cantrip can be.",
   "claims": [
    {
-    "text": "Each Dominion has five levels; the higher the level, the stronger its cantrips.",
+    "text": "Every Dominion runs from one to five, and its cantrips grow stronger with each step.",
     "tier": "stated",
     "refs": [
      {

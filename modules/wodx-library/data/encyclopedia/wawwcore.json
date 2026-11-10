@@ -1,0 +1,227 @@
+[
+ {
+  "id": "wawwcore-storm-eater-birth",
+  "title": "The Storm Eater reborn",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "How a bound Bane became a fusion of Weaver and Wyrm.",
+  "claims": [
+   {
+    "text": "Few Garou know of the Storm Eater, and fewer recall when its Uktena binders chained it; once it had fed on Wyld energy until it grew vast, then lay dormant for ages unable to call its minions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 63,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "In the 1830s the Europeans’ seizure of too many Uktena and Wendigo caerns weakened the seals, and the Bane slipped out and began feeding again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 63,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "Its stirring woke a mighty Weaver-spirit drawn by its size, and the two merged into a new entity that burst into the High Umbra; its spawn carry traits of both parents.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 63,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "European Garou have alienated the natives who might remember the Bane’s binding, and the native tribes are too pressed defending their lands to hunt it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 63,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": [
+   "w20wwx-storm-eater",
+   "wawwcomp-storm-umbra"
+  ]
+ },
+ {
+  "id": "wawwcore-croatan-bunyip",
+  "title": "The lost tribes of the frontier era",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The Croatan’s sacrifice and the Bunyip’s fading.",
+  "claims": [
+   {
+    "text": "The Croatan, one of the three first tribes of the Pure Lands, lived along the eastern seaboard until the Eater-of-Souls came with the Roanoke colonists; they and all their Kinfolk gave their lives in a rite that drove it from the physical world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 57,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "The Uktena and Wendigo still mourn them and fear the spread of Wyrm-tainted settlers means a similar end for themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 57,
+      "pdf": 60
+     }
+    ]
+   },
+   {
+    "text": "In Australia the Bunyip dwindle as settlers take their land and hunt their thylacine Kin, and before the century ends they will be gone.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 57,
+      "pdf": 60
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawwcore-storm-eater-birth"
+  ]
+ },
+ {
+  "id": "wawwcore-frontier-caerns",
+  "title": "Caerns on the frontier",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Who holds the power sites of the Savage West.",
+  "claims": [
+   {
+    "text": "Caerns in or near towns usually fall to the Iron Riders or Bone Gnawers, the tribes most at ease among humans; people avoid such places without knowing why and call them haints.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 43,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "A few urban caerns exist among settled Uktena Kinfolk, kept as special kivas or sweat lodges inside the community and reserved for spirit messengers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 43,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wawwcore-get-in-the-west",
+  "title": "The Get of Fenris in the West",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "How the Get see the Pure Ones and the frontier.",
+  "claims": [
+   {
+    "text": "The Get hold that only the strongest deserve to survive, and blame the Uktena and Wendigo for growing too weak to keep the Wyrm or the Get off their land.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 119,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "They favour the cold north, which recalls their homelands and pits them directly against the Wendigo.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 119,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wawwcore-croatan-bunyip"
+  ]
+ },
+ {
+  "id": "wawwcore-staredown",
+  "title": "Staredown (Wild West)",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "A level two Gift for the stand-off.",
+  "claims": [
+   {
+    "text": "With only a look into a target’s eyes, the Garou makes the target flinch, often drop the gun and flee in terror.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 140,
+      "pdf": 143
+     }
+    ]
+   },
+   {
+    "text": "Used on a Garou, it makes the target freeze in place instead of running; a Ram-spirit is one teacher.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wawwcore",
+      "page": 140,
+      "pdf": 143
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

@@ -1,0 +1,254 @@
+[
+ {
+  "id": "watrailmx-sabbat-mexico",
+  "title": "The Sabbat drive into Mexico",
+  "kind": "faction",
+  "lines": [
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Vampires seeking a homeland south of the border.",
+  "claims": [
+   {
+    "text": "Tired of being held back by the Camarilla, Sabbat from both South and North America have begun moving toward Mexico to carve out a homeland of their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "No council started the movement; it simply began, and the leaders agreed the war had come but have made few real plans beyond it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "They create soldiers as needed and mourn none who die, seeing survivors as proven equals and themselves as a superior race.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "watrailmx-boot-hill-gang",
+   "watrailmx-bone-gnawers"
+  ]
+ },
+ {
+  "id": "watrailmx-boot-hill-gang",
+  "title": "The Boot Hill Gang",
+  "kind": "faction",
+  "lines": [
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The most successful Sabbat pack in Mexico.",
+  "claims": [
+   {
+    "text": "The Boot Hill Gang roams Mexico and beyond, robbing banks, starting riots, raising lynch mobs and levelling towns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Most of its members lost packmates to werewolves, so they hunt and kill Garou as a personal vendetta and carry plenty of silver bullets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "watrailmx-sabbat-mexico"
+  ]
+ },
+ {
+  "id": "watrailmx-cities",
+  "title": "Supernatural Mexico’s cities",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Who holds which towns.",
+  "claims": [
+   {
+    "text": "San Luis Potosi is guarded by Technocratic orders and is home to the Weeping Moon society’s only open Mexican lodge; though the two are rivals, both aim to wipe out shapeshifters and vampires.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "In Tampico the Sabbat are winning, but Mokole have quietly moved in to work with the remaining Uktena, unknown to the region’s Shadow Lords.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Guadalajara’s people believe in a guardian angel; in truth it is the ancient Malinche, one of the Xibalba, who has simply chosen not to die.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "watrailmx-xibalba"
+  ]
+ },
+ {
+  "id": "watrailmx-bone-gnawers",
+  "title": "Garou tribes in Mexico",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "How the tribes stand south of the border.",
+  "claims": [
+   {
+    "text": "Bone Gnawers on both sides of the border are among the largest groups of European Garou in the West and the most determined to stop the Sabbat, taking its Embrace of the poor as a personal insult.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Black Furies, strongest in the Freebooter camp, seek adventure, treasure and the legendary Amazons who left Greece long ago.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Children of Gaia packs work to keep tensions between the other tribes from exploding.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "watrailmx-xibalba",
+  "title": "The Xibalba",
+  "kind": "faction",
+  "lines": [
+   "werewolf",
+   "mummy"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "The Reborn of Mesoamerica.",
+  "claims": [
+   {
+    "text": "The Xibalba are Reborn who die and always return, and think of each death as their life’s winter, with spring sure to follow.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "They cannot change shape and have no great strength, but use their own alchemies, crafted amulets and, for some, command over spirits of the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Some believe their gods chose them to guard old traditions; others think they are gods themselves, and each works out a separate destiny with only a few shared rules.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 91,
+      "pdf": 92
+     }
+    ]
+   },
+   {
+    "text": "Their foes include the Flayed Ones, Children of Xipe Totec who serve Mictlan, wear stolen skins and drip blood when revealed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watrailmx",
+      "page": 95,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": [
+   "watrailmx-cities"
+  ]
+ }
+]
