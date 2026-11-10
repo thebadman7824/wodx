@@ -817,6 +817,12 @@
    "title": "Tradition Book: Order of Hermes (Revised)",
    "short": "TB:OoH",
    "edition": "Revised"
+  },
+  {
+   "id": "mrse",
+   "title": "Tradition Book: Sons of Ether (Revised)",
+   "short": "TB:SoE",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -955,6 +961,7 @@
   "mrds.json",
   "mreu.json",
   "mrho.json",
-  "mroh.json"
+  "mroh.json",
+  "mrse.json"
  ]
 }
