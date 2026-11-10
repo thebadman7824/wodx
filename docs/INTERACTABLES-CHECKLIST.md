@@ -165,5 +165,5 @@ Step 3 of the design note.
 - [x] Runtime: Usual contents field in the tile config; the draw window says where the guess came from
 - [x] Farmstead file sets the chest to a home
 - [x] Harness tests (2 new)
-- [ ] Gate (gateadopt step 4) in rothenstein-wodx
-- [ ] Deployed
+- [x] Gate (gateadopt 8/8, step 4 fill guess home) in rothenstein-wodx
+- [x] Deployed to rothenstein-wodx (main c452df7)
