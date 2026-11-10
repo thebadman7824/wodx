@@ -31,4 +31,5 @@ Reviewed by Ben on two pages; verdicts live in each page's database (collection 
 - Time of Future Judgement, second draft 2026-11-10l (ftj-desk-2026-11-10l.js), same page as draft f: checked against the approved timeline.
   APPROVED by Ben 2026-11-10 17:43Z: all 35 OK. Ben asked for five 'Cascades': one disaster feeding the next, covering each line.
 - Cascades, draft 2026-11-10m (cascades-2026-11-10m.js): https://claude.ai/artifact/4EGLK6U3LKaNNDWrYzj1xz
+- Cascades, draft 2026-11-10n (cascades-2026-11-10n.js, built by cascades2-build.js): same page. Ben asked for most of each line's endings inside every Cascade, so each of the five now holds 25 of the 35 (Vampire 3/4, Werewolf 3/4, Mage 3/5, Wraith 2/2, Changeling 3/5, Demon 2/3, Hunter 2/3, KotE 2/3, Mummy 3/4, Orpheus 2/2). Waiting for review.
   Five chains (k1-k5), every line in each, all 35 endings used across them. Waiting for Ben.
