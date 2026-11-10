@@ -1951,6 +1951,12 @@
       "title": "Guardians of the Caerns",
       "short": "Guardians of the Caerns",
       "edition": "Second edition"
+    },
+    {
+      "id": "wahammer",
+      "title": "Hammer and Klaive",
+      "short": "Hammer and Klaive",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2278,6 +2284,7 @@
     "wacroatan.json",
     "wafreak.json",
     "wafrontier.json",
-    "waguard.json"
+    "waguard.json",
+    "wahammer.json"
   ]
 }
