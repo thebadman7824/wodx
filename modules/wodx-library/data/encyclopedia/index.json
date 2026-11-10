@@ -1507,6 +1507,12 @@
    "title": "Hunter Book: Innocent",
    "short": "HB Innocent",
    "edition": "First edition"
+  },
+  {
+   "id": "hbjud",
+   "title": "Hunter Book: Judge",
+   "short": "HB Judge",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1760,6 +1766,7 @@
   "hbave.json",
   "hbdef.json",
   "hbher.json",
-  "hbinn.json"
+  "hbinn.json",
+  "hbjud.json"
  ]
 }
