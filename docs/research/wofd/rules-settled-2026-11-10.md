@@ -65,3 +65,17 @@ Ben chose option A, the recommended one, on all 30 cards of the Rules Desk (draf
 
 - **g29 Braindance projection.** A flatline rig works like Orpheus's crucible projection, with the rig's quality as a bonus to the roll and a risk of real death on a botch. (Orpheus pages need a check on the PC.)
 - **g30 Projectors with chrome.** Cyberware stays with the body; the projected self has none. (House rule throughout.)
+
+## Book checks (PC, 2026-11-10)
+
+Printed page first, then the pdf page. The settled rules stand; these pin them to the books.
+
+- **g06.** V20 has twelve Paths (Chapter Seven, from p. 313). Metamorphosis exists, seeks to go beyond vampirism, mostly Tzimisce (p. 331, pdf 339). Other Path books not checked.
+- **g11, g12.** M20 Enhancements come as cyborg, biomod or genegineered; each dot costs a point of permanent Paradox or a Genetic Flaw (pp. 312-313, pdf 313-314). M20 has no own-body coincidence rule, so g11 is a house rule laid on the usual vulgar test. Mage Revised not checked.
+- **g14.** The Net is ridden with Inhabit, chiefly Wire Rider (4 dots, 2 Pathos, Dexterity + Inhabit, difficulty 7; Wraith 20th p. 174, pdf 239). Misfire and Claim the Shell cover single devices (pp. 173-174, pdf 238-239).
+- **g15.** Riding a braindance uses Puppetry's Skinride (1 dot, 1 Pathos, Strength + Puppetry) against the viewer; full control is Rein in the Mind (4 dots, 4 Pathos, Stamina + Puppetry). Wraith 20th pp. 213-214 (pdf 278-279).
+- **g16.** Shroud table on p. 284 (pdf 349). The book's floor of 4 still holds in the glassed lands: 2 lower than normal, never below 4 (p. 283, pdf 348).
+- **g21.** Second Sight costs 1 Conviction for the scene and has no roll by default (Hunter: The Reckoning pp. 132-133, pdf 133-134). The +1 per implant applies to the optional warning-signs roll (Perception or Wits + primary Virtue, difficulty 6) when the table uses it; without that rule, chrome does not affect Second Sight.
+- **g26.** Yin-heavy Kuei-jin are corpselike (Kindred of the East p. 88, pdf 80); Yang-heavy ones have warm flesh and seem to breathe (p. 140, pdf 128). Matches the card.
+- **g27.** Dharma falls on a failed acts-of-blindness roll, Virtue against P'o, difficulty permanent Willpower (pp. 52-53, pdf 46-48). The card's "next Dharma roll" is that roll.
+- **g29.** Orpheus "crucible" projection is the sleepers' kind: the body is held in suspension and cannot return until revived (Orpheus p. 122, pdf 123). Skimmers ripcord back for 1 bashing (p. 95, pdf 96). The core book has no botch result for projecting, so the rig's botch risk of real death is a house rule.
