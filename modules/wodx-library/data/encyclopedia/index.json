@@ -1819,6 +1819,12 @@
       "title": "Iberia by Night",
       "short": "IbN",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "inqcomp",
+      "title": "Dark Ages: Inquisitor Companion",
+      "short": "Inquisitor Companion",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2124,6 +2130,7 @@
     "dacbn.json",
     "dadevil.json",
     "dahot.json",
-    "daibn.json"
+    "daibn.json",
+    "inqcomp.json"
   ]
 }
