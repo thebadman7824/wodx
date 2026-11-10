@@ -1,0 +1,330 @@
+[
+ {
+  "id": "datbn-ancient-masters",
+  "title": "The land’s ancient masters",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The old Tzimisce of Transylvania.",
+  "claims": [
+   {
+    "text": "In their ancestral strongholds, Ancient Tzimisce kept apart from the mortal world, contemplating the horror within; the eldest sometimes walked among people and were worshipped as gods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Endless experiments on the mortals they bred brought them knowledge but never understanding of humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Their temples lay in cave mazes of the eastern Carpathian range, and the Methuselah Yorak made the grandest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "datbn-cathedral-of-flesh",
+   "datbn-metamorphosists"
+  ]
+ },
+ {
+  "id": "datbn-cathedral-of-flesh",
+  "title": "The Cathedral of Flesh",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Yorak’s shrine of living sculpture.",
+  "claims": [
+   {
+    "text": "Yorak’s ghoul servants abducted mortals for the Methuselah to feed on, breed and finally shape into elaborate sculptures across the walls of a meditation chamber.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "This is how the Cathedral of Flesh, close to the pass of the Red Tower, came to be.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 14,
+      "pdf": 15
+     },
+     {
+      "book": "datbn",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   }
+  ],
+  "see": [
+   "datbn-ancient-masters"
+  ]
+ },
+ {
+  "id": "datbn-metamorphosists",
+  "title": "The Black Churches",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Spiritualist temples of the earliest Transylvanian Tzimisce.",
+  "claims": [
+   {
+    "text": "The first Fiends in Transylvania were mystics, holding hidden rites contemplating the nature of abomination, having left human ways far behind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "By day their servants raised stone buildings above ground, while by night many-armed things dug tunnels beneath; these Black Churches still stand in many parts of Transylvania.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "Vampire artisans finished the shrines below, raising uneven stone walls and, in the grander temples, walls made from sacrificed victims.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   }
+  ],
+  "see": [
+   "datbn-ancient-masters"
+  ]
+ },
+ {
+  "id": "datbn-tremere-tzimisce-war",
+  "title": "The Tremere-Tzimisce war",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the conflict over Transylvania began.",
+  "claims": [
+   {
+    "text": "The Tzimisce resented Tremere chantries on lands they claimed, raiding the magi’s villages, supplies and sometimes the chantries themselves.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "At first Hermetic wards held off the worst raids, and some regions were warded against the Tzimisce and their ghouls altogether, so the Fiends swore to find a way around the wizards’ magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   },
+   {
+    "text": "Their chance came around the year 1000, when the Order of Hermes noticed reality itself shifting and disturbing the workings of magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 124,
+      "pdf": 125
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "datbn-shaagra",
+  "title": "Shaagra, Methuselah of Prague",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A fifth-generation Tzimisce who once led a Slavic tribe.",
+  "claims": [
+   {
+    "text": "Shaagra was mother goddess, war leader and shaman of a Slavic tribe, leading it west out of servitude and making a favourite granddaughter, Libussa, its ruler.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 115,
+      "pdf": 116
+     }
+    ]
+   },
+   {
+    "text": "Passing through an ancient Tzimisce’s land, the tribe served that lord for a time; impressed, the elder Embraced Shaagra, bound the new childe by blood oath and sent Shaagra to claim new territory.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 115,
+      "pdf": 116
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "datbn-vladimir-rustovitch",
+  "title": "Vladimir Rustovitch",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Tzimisce voivode holding out against the Tremere.",
+  "claims": [
+   {
+    "text": "Once a Bratovitch revenant, Vladimir took both Cainite status and the sire’s estate through effort, might and some treachery.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Vladimir has beaten jealous siblings and rival voivodes in Trials by War, and the growing fiefdom resists the Tremere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Placed between western Hungary and war-torn Transylvania, Vladimir is strong enough to make Cainites of both sides respect the old traditions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 117,
+      "pdf": 118
+     }
+    ]
+   }
+  ],
+  "see": [
+   "datbn-tremere-tzimisce-war"
+  ]
+ },
+ {
+  "id": "datbn-princes",
+  "title": "Princes of Prague and Buda-Pest",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ventrue princes of two eastern cities.",
+  "claims": [
+   {
+    "text": "Rudolf Brandl, Prince of Prague, was the third son of a German noble house, trained as a knight and readied for the Church in case no landed marriage came.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 102,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Vencel Rikard, Prince of Buda-Pest, came to the city among Bavarian knights invited to guard King Geza and was Embraced by Bulscu as a reward for service.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 105,
+      "pdf": 106
+     }
+    ]
+   },
+   {
+    "text": "Vencel cares most for keeping power, profiting from trade and keeping peace in a city where clans might go to war, and means to make Buda-Pest the greatest city of the region.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "datbn",
+      "page": 105,
+      "pdf": 106
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

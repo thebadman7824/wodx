@@ -1867,6 +1867,36 @@
       "title": "The Ashen Thief",
       "short": "Ashen Thief",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dallal",
+      "title": "Liege, Lord, and Lackey",
+      "short": "LL&L",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dapillars",
+      "title": "Three Pillars",
+      "short": "Three Pillars",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "datbn",
+      "title": "Transylvania by Night",
+      "short": "TbN",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daveil",
+      "title": "Veil of Night",
+      "short": "Veil of Night",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dawind",
+      "title": "Wind from the East",
+      "short": "Wind from the East",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2180,6 +2210,11 @@
     "darop.json",
     "daspoils.json",
     "daknight.json",
-    "dathief.json"
+    "dathief.json",
+    "dallal.json",
+    "dapillars.json",
+    "datbn.json",
+    "daveil.json",
+    "dawind.json"
   ]
 }
