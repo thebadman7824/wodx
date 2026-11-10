@@ -1867,6 +1867,12 @@
       "title": "The Ashen Thief",
       "short": "Ashen Thief",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "dallal",
+      "title": "Liege, Lord, and Lackey",
+      "short": "LL&L",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2180,6 +2186,7 @@
     "darop.json",
     "daspoils.json",
     "daknight.json",
-    "dathief.json"
+    "dathief.json",
+    "dallal.json"
   ]
 }
