@@ -1021,6 +1021,12 @@
    "title": "The Fragile Path: Testaments of the First Cabal",
    "short": "FP",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2dw",
+   "title": "Digital Web",
+   "short": "DW",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1193,6 +1199,7 @@
   "m2tt.json",
   "m2osg.json",
   "m2arh.json",
-  "m2fp.json"
+  "m2fp.json",
+  "m2dw.json"
  ]
 }

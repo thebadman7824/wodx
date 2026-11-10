@@ -1,0 +1,189 @@
+[
+ {
+  "id": "m2dw-digital-web",
+  "title": "The Digital Web",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A realm of thought built by mages' will and reached through computers.",
+  "claims": [
+   {
+    "text": "The Digital Web, or Net, has no physical form; it exists in mages' minds, threaded through every plane as strands of unformed Pattern.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "Some say the strands are tied to the Weaver and join every piece of high-tech electronics.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   },
+   {
+    "text": "A mage projects consciousness in through a computer and, with enough skill, can shape empty Web into a personal space and invite others in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 11,
+      "pdf": 12
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "mrva-new-madrid"
+  ]
+ },
+ {
+  "id": "m2dw-adept-rebellion",
+  "title": "The Adepts' break with the Union",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "How Virtual Adepts turned computers toward the Masses.",
+  "claims": [
+   {
+    "text": "Technocratic backing let Dr. Bell found a company, and research into switches for the telephone network led to vacuum tubes and transistors.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The Union set the Virtual Adepts to build the first electric computers under brutal deadlines; sickened by the World War, the Adepts took free information to the Masses instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "virtual-adepts",
+   "mrva-turing",
+   "technocracy"
+  ]
+ },
+ {
+  "id": "m2dw-restricted",
+  "title": "Restricted sectors",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Sealed-off parts of the Digital Web.",
+  "claims": [
+   {
+    "text": "Technocratic zones look like sharp, pixelated geometry, patrolled by killer programs and Union agents.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   },
+   {
+    "text": "Syndicate corporate networks and NWO government and phone systems are sealed, as are Virtual Adept Chantries; Iteration X has closed every route to Autochthonia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 34,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "syndicate",
+   "new-world-order",
+   "iteration-x",
+   "m2ta2-dark-side-base"
+  ]
+ },
+ {
+  "id": "m2dw-spys-demise",
+  "title": "The Spy's Demise",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A neutral club in the Net where even Technocrats are welcome.",
+  "claims": [
+   {
+    "text": "The Demise is a standing truce zone in the Ascension War, open to Tradition and Technocracy mages alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "Conduits from nearly every grid sector feed Sleeper chat rooms into it; patrons spy on those rooms, and the staff turn the Quintessence Sleepers spend online into Tass drinks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 54,
+      "pdf": 55
+     }
+    ]
+   },
+   {
+    "text": "Its Cathedral room, said to be the work of a Celestial Chorus mage, hosts debates between Tradition and Technocracy on God and Ascension.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dw",
+      "page": 56,
+      "pdf": 57
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m2dw-digital-web",
+   "celestial-chorus"
+  ]
+ }
+]
