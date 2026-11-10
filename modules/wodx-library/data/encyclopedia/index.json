@@ -1591,6 +1591,12 @@
    "title": "Mummy: The Resurrection Players Guide",
    "short": "Mummy Players Guide",
    "edition": "First edition"
+  },
+  {
+   "id": "wod2",
+   "title": "A World of Darkness, Second Edition",
+   "short": "WoD 2e",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1858,6 +1864,7 @@
   "deb.json",
   "dhf.json",
   "dpg.json",
-  "mtrpg.json"
+  "mtrpg.json",
+  "wod2.json"
  ]
 }
