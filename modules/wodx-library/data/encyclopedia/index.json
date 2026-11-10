@@ -559,6 +559,12 @@
    "title": "Breedbook: Bastet (Revised)",
    "short": "BB Bastet",
    "edition": "Revised"
+  },
+  {
+   "id": "bbnuw",
+   "title": "Breedbook: Nuwisha (Revised)",
+   "short": "BB Nuwisha",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -654,6 +660,7 @@
   "tbsg.json",
   "tbuk.json",
   "tbwen.json",
-  "bbbas.json"
+  "bbbas.json",
+  "bbnuw.json"
  ]
 }
