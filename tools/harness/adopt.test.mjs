@@ -232,7 +232,7 @@ test("adopt: wired into Interactables, Storyteller only, short lists marked", ()
 
 /* Town generator sidecars (tools/mapgen/ddtown.py; Interactables 0.21.0 keeps households on their buildings) */
 const F = await import(join(root, "modules/wodx-interactables/scripts/fill-rules.mjs"));
-const TOWNS = ["hohenhausen", "birbach", "rotheim-b2"].map(n => [n, readFileSync(join(root, `tools/mapgen/samples/${n}.wodx.json`), "utf8")]);
+const TOWNS = ["hohenhausen", "birbach", "rotheim-b2", "schondorf"].map(n => [n, readFileSync(join(root, `tools/mapgen/samples/${n}.wodx.json`), "utf8")]);
 
 test("adopt: the village and town sidecars read cleanly, households and all", () => {
   for ( const [n, text] of TOWNS ) {
@@ -287,4 +287,19 @@ test("adopt: a household whose building is not on the map is left out in plain w
   assert.equal(got.data.regions[0].household.people[0].role, "smith");
   assert.equal(got.errors.length, 2);
   assert.match(got.errors[0], /not a place on the map/);
+});
+
+test("adopt: a turned thing keeps its turn, and an outlined region becomes a polygon", () => {
+  const sc = A.parseSidecar({format: "wodx-map", version: 1, cells: [20, 20],
+    features: [{id: "c", label: "Chest", rect: [4, 4, 1, 1], rotation: 405, flags: {container: true, kind: "chest"}}],
+    regions: [{id: "h", label: "House", rect: [2, 2, 6, 6], points: [2, 4, 6, 2, 8, 6, 4, 8], place: {kind: "home"}},
+      {id: "bad", label: "Bad", rect: [1, 1, 2, 2], points: [1, 1, 900, 1, 2, 2], place: {kind: "home"}}]});
+  assert.equal(sc.data.features[0].rotation, 45);
+  const fr = {x0: 100, y0: 50, size: 100, distance: 5};
+  assert.equal(A.tileData(sc.data.features[0], fr).rotation, 45);
+  const r = A.regionData(sc.data.regions[0], fr).data.shapes[0];
+  assert.equal(r.type, "polygon");
+  assert.deepEqual(r.points, [300, 450, 700, 250, 900, 650, 500, 850]);
+  assert.equal(A.regionData(sc.data.regions[1], fr).data.shapes[0].type, "rectangle");
+  assert.match(sc.errors.join(" "), /bad: its outline is not a shape on the map/);
 });

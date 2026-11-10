@@ -573,12 +573,18 @@ def main():
     ap.add_argument("--name")
     ap.add_argument("--part", type=int, default=PART, help="the largest side of one map, in squares; 0 keeps one map")
     ap.add_argument("--assets", default="/mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt")
+    ap.add_argument("--layout", choices=("organic", "grid"), default="organic", help="organic: winding streets, wards and walls (organic.py); grid: straight streets")
+    ap.add_argument("--walls", choices=("random", "yes", "no"), default="random", help="organic layout only: a curtain wall round the town")
     ap.add_argument("--day", action="store_true")
     ap.add_argument("--out", default=".")
     a = ap.parse_args()
     if a.part and a.part < 24: raise SystemExit("--part must be 24 squares or more (or 0 for one map)")
     C.init(a.seed, a.assets)
-    t = Town(a.seed, a.size, a.name, not a.day).make()
+    if a.layout == "organic":
+        import organic
+        t = organic.OrganicTown(a.seed, a.size, a.name, not a.day, {"random": None, "yes": True, "no": False}[a.walls]).make()
+    else:
+        t = Town(a.seed, a.size, a.name, not a.day).make()
     base = slug(t.name)
     parts = t.parts(a.part)
     index = {"format": "wodx-map-parts", "version": 1, "name": t.name, "kind": t.size, "seed": a.seed, "whole": [t.cols, t.rows],
@@ -601,7 +607,7 @@ def main():
     t.plan_svg(f"{a.out}/{base}-plan.svg", parts)
     kinds = {}
     for b in t.blds: kinds[b.label.split(" (")[0]] = kinds.get(b.label.split(" (")[0], 0) + 1
-    print(f"ok: {t.name}, {t.cfg['label']}, {t.population()} people in {len(t.households)} households (aimed at {t.pop_target})"
+    print(f"ok: {t.name}, {'walled ' if getattr(t, 'wall', None) else ''}{t.cfg['label']}, {t.population()} people in {len(t.households)} households (aimed at {t.pop_target})"
           + (f", in {len(parts)} parts" if len(parts) > 1 else ""))
     print("  " + ", ".join(f"{k} {v}" for k, v in sorted(kinds.items())))
     print(f"  {totals[0]} walls, {totals[1]} portals, {totals[2]} objects, {len(t.gardens)} gardens")

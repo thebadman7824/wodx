@@ -9,6 +9,8 @@
  *   features  tiles over chests, beds, hay, an oven, a well: containers, hiding places, lights and climbs
  *   regions   places for NPC routines (a home, a workplace) and trigger regions where a track comes in
  *   households  (0.21.0, a town generator's) who lives in each building, roles only: kept on that building's region
+ *   (0.22.0) a feature may carry a rotation in degrees, and a region an outline (points), for an organic town whose
+ *   buildings are turned to face winding streets
  * Positions in the sidecar are grid cells from the map's top-left corner, so the scale the map was imported at does
  * not matter. Everything made is marked with the sidecar's id for it: adopting again skips what is already there, and
  * Undo removes what was made and puts the door walls back as they were.
@@ -72,7 +74,9 @@ export function parseSidecar(input) {
     const light = kinds[0] === "light" && plain(f.light) ? {dim: Math.max(0, Math.min(60, Number(f.light.dim) || 3)), bright: Math.max(0, Math.min(60, Number(f.light.bright) || 1)),
       color: /^#[0-9a-fA-F]{6}$/.test(String(f.light.color ?? "")) ? f.light.color : "#ff9a3c", on: f.light.on !== false} : null;
     const clean = Object.fromEntries(Object.entries(flags).filter(([k, v]) => /^[A-Za-z]{1,30}$/.test(k) && ["string", "number", "boolean"].includes(typeof v)));
-    features.push({id: f.id, label: String(f.label ?? f.id).slice(0, 80), rect: f.rect.map(Number), flags: clean, light});
+    // 0.22.0: a thing turned with its building (organic towns): degrees about its middle; the rect is its unturned size
+    const rotation = Number.isFinite(num(f.rotation)) ? ((f.rotation % 360) + 360) % 360 : 0;
+    features.push({id: f.id, label: String(f.label ?? f.id).slice(0, 80), rect: f.rect.map(Number), rotation, flags: clean, light});
   }
   const regions = [];
   for ( const r of Array.isArray(d.regions) ? d.regions : [] ) {
@@ -84,7 +88,15 @@ export function parseSidecar(input) {
       errors.push(`${r.id}: a behaviour of an unknown type was left out.`); return false;
     }).map(b => ({type: b.type, system: plain(b.system) ? b.system : {}}));
     if ( !place && !behaviors.length ) { errors.push(`${r.id}: it is neither a place nor has a behaviour, so it was left out.`); continue; }
-    regions.push({id: r.id, label: String(r.label ?? r.id).slice(0, 80), rect: r.rect.map(Number), place, behaviors});
+    // 0.22.0: an outline for a turned building or a winding street, as x, y pairs in squares; the rect stays as its box
+    let points = null;
+    if ( r.points !== undefined ) {
+      const ok = Array.isArray(r.points) && r.points.length >= 6 && r.points.length % 2 === 0 && r.points.length <= 400
+        && r.points.every(v => Number.isFinite(num(v))) && r.points.every((v, i) => (i % 2 ? v >= -1 && v <= cells[1] + 1 : v >= -1 && v <= cells[0] + 1));
+      if ( ok ) points = r.points.map(Number);
+      else errors.push(`${r.id}: its outline is not a shape on the map, so its box was used.`);
+    }
+    regions.push({id: r.id, label: String(r.label ?? r.id).slice(0, 80), rect: r.rect.map(Number), points, place, behaviors});
   }
   // 0.21.0: a town's households (roles only), each kept on its building's region for WoDX NPC to seed later
   const households = [];
@@ -165,7 +177,7 @@ export function openingFlags(o, c, fr) {
 export function tileData(f, fr) {
   const [x, y] = px(fr, f.rect[0], f.rect[1]);
   return {x: Math.round(x), y: Math.round(y), width: Math.max(1, Math.round(f.rect[2] * fr.size)), height: Math.max(1, Math.round(f.rect[3] * fr.size)),
-    hidden: false, texture: {src: null}, flags: {[MOD]: {...f.flags, adoptId: f.id}}};
+    rotation: f.rotation ?? 0, hidden: false, texture: {src: null}, flags: {[MOD]: {...f.flags, adoptId: f.id}}};
 }
 
 /** The light for a light feature, centred on it. Radii are in squares in the sidecar and in scene units here. */
@@ -183,7 +195,9 @@ export function regionData(r, fr, types = new Set()) {
   const behaviors = r.behaviors.filter(b => (types.has(BEHAVIORS[b.type]) ? true : (skipped.push(b.type), false)))
     .map(b => ({type: BEHAVIORS[b.type], name: b.system.label ? String(b.system.label).slice(0, 80) : r.label, system: b.system}));
   const data = {name: r.label, color: r.place ? "#7a6a4f" : "#9b3b3b",
-    shapes: [{type: "rectangle", x: Math.round(x), y: Math.round(y), width: Math.round(r.rect[2] * fr.size), height: Math.round(r.rect[3] * fr.size), rotation: 0, hole: false}],
+    shapes: [r.points
+      ? {type: "polygon", points: r.points.flatMap((v, i, a) => (i % 2 ? [] : px(fr, v, a[i + 1]).map(Math.round))), hole: false}
+      : {type: "rectangle", x: Math.round(x), y: Math.round(y), width: Math.round(r.rect[2] * fr.size), height: Math.round(r.rect[3] * fr.size), rotation: 0, hole: false}],
     behaviors, flags: {[MOD]: {adoptId: r.id, ...(r.household ? {household: r.household} : {})}, ...(r.place ? {[NPC]: {place: r.place}} : {})}};
   return {data, skipped};
 }

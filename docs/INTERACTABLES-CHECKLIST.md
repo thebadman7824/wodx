@@ -181,3 +181,11 @@ Step 3 of the design note.
 - [ ] Real importer test of a town (waits on Ben exporting one from Dungeondraft, as the farmstead does)
 - [ ] Gate in rothenstein-wodx: fill draws goods; adopt the village sidecar on a scene of its size
 - [ ] Deployed
+
+## 0.22.0: organic towns (2026-11-10)
+- [x] tools/mapgen/layout.py: a port of the Medieval Fantasy City Generator's layout steps (patches, junctions, wall and gates, streets and roads, wards), CC0 (B576)
+- [x] tools/mapgen/organic.py: buildings turned in 15 degree steps to face winding streets, blocks cut into lots with alleys, by ward (B577); now the default layout of ddtown.py
+- [x] Adopt reads a feature's rotation and a region's outline (points) (B578)
+- [x] Tests: organic villages, towns and a city across seeds, an organic town in parts, rotation and outlines in adopt
+- [ ] Testbed deploy and gate of 0.22.0
+- [ ] A castle or citadel (the original can add one; WoDX has no castle building yet)
