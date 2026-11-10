@@ -1999,6 +1999,12 @@
       "title": "Tales from the Trail: Mexico",
       "short": "Tales from the Trail: Mexico",
       "edition": "Wild West"
+    },
+    {
+      "id": "w20cw",
+      "title": "Changing Ways (W20)",
+      "short": "W20 Changing Ways",
+      "edition": "V20"
     }
   ],
   "files": [
@@ -2334,6 +2340,7 @@
     "wapossess.json",
     "watwilight.json",
     "wasubs.json",
-    "watrailmx.json"
+    "watrailmx.json",
+    "w20cw.json"
   ]
 }
