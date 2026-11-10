@@ -727,6 +727,12 @@
    "title": "Dharma Book: Bone Flowers",
    "short": "DB Bone Flowers",
    "edition": "Revised era"
+  },
+  {
+   "id": "dbrc",
+   "title": "Dharma Book: Resplendent Crane",
+   "short": "DB Resplendent Crane",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -850,6 +856,7 @@
   "khow.json",
   "ksw.json",
   "khd.json",
-  "dbbf.json"
+  "dbbf.json",
+  "dbrc.json"
  ]
 }
