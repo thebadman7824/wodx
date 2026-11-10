@@ -439,6 +439,12 @@
    "title": "Tribebook: White Howlers (W20)",
    "short": "W20 White Howlers",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "darh",
+   "title": "Dark Ages: Road of Heaven",
+   "short": "DA Road of Heaven",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -514,6 +520,7 @@
   "dahc.json",
   "w20umbra.json",
   "w20sd.json",
-  "w20wh.json"
+  "w20wh.json",
+  "darh.json"
  ]
 }
