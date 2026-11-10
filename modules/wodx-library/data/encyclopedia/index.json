@@ -991,6 +991,12 @@
    "title": "Technocracy Assembled, Volume 1",
    "short": "TA1",
    "edition": "First edition"
+  },
+  {
+   "id": "m2ta2",
+   "title": "Technocracy Assembled, Volume 2",
+   "short": "TA2",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1158,6 +1164,7 @@
   "mrsth.json",
   "mrcrafts.json",
   "m2hota.json",
-  "m2ta1.json"
+  "m2ta1.json",
+  "m2ta2.json"
  ]
 }
