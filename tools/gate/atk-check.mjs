@@ -15,8 +15,10 @@ export async function run() {
         for (const [a, t] of [[W, M], [M, W]]) {
             const n = game.messages.size;
             await game.wodxCombat.attack({ attacker: a, target: t });
-            const t0 = Date.now(); while (game.messages.size === n && Date.now() - t0 < 8000) await new Promise(r => setTimeout(r, 100));
-            const c = game.messages.contents.at(-1)?.content ?? "";
+            // the attack card, not whatever was posted last (a wound or effect card can follow it)
+            const card = () => game.messages.contents.slice(n).find(m => /Automatic attack:/.test(m.content));
+            const t0 = Date.now(); while (!card() && Date.now() - t0 < 8000) await new Promise(r => setTimeout(r, 100));
+            const c = card()?.content ?? "";
             const plan = game.wodxCombat.bestAttack(a, t, { defense: "auto" });
             out.steps.push({ attacker: a.name, opened, note: (c.match(/Automatic attack:[^<]*/) ?? [""])[0], defense: (c.match(/Automatic defense:[^<]*/) ?? [""])[0],
                 plans: plan.plans.map(p => [p.w.name, p.valid, p.valid ? +p.expectedLevels.toFixed(2) : p.why]), distance: plan.distance });
@@ -24,5 +26,8 @@ export async function run() {
     } finally { Hooks.off("renderDialogV2", h); }
     const file = new File([JSON.stringify(out, null, 1)], "atk-check.json", { type: "application/json" });
     await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
-    return out.steps.map(s => s.note.slice(0, 80)).join(" | ");
+    const pass = out.steps.filter(s => s.note).length;
+    out.summary = `${pass}/${out.steps.length}`;
+    console.log("atk-check", out.summary, out.steps.map(s => s.note.slice(0, 80)).join(" | "));
+    return out.summary;
 }

@@ -63,7 +63,7 @@ export async function run() {
                 { specialties: { foundation: "Control", pillars: { primus: "Wards" } } });
             rival = await makeMage(folder, "Ragnhild Blood-Oath (6n, Valdaerman)", "valdaermen", 3, { fara: 2, forlog: 3, galdrar: 2, hjaldar: 4 });
             const era = game.modules.get("wodx-chronicle").api.eras.activeEra()?.profile?.id;
-            ok("versions, the era and the new actions", /^3\.15\./.test(A().version) && !!A().daCountermagic && !!A().daGuide && !!A().daCertamen && A().daCountermagic !== A().daCounter && era === "dark-ages",
+            ok("versions, the era and the new actions", !foundry.utils.isNewerVersion("3.15.0", A().version) && !!A().daCountermagic && !!A().daGuide && !!A().daCertamen && A().daCountermagic !== A().daCounter && era === "dark-ages",
                 { actions: A().version, era });
         });
         await step("the menu offers Countermagic, Using the Art and Certámen, and the fae keep their own Counter", async () => {

@@ -1203,3 +1203,4 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Adopt (Interactables 0.21.0) keeps each household on its building's region (flag household) for WoDX NPC to seed later, and shortens the region list in its summary. B573.
 - Tests: fill.test.mjs (4 new), adopt.test.mjs (4 new), mapgen.test.mjs (3 new; runs the generators when Python and the asset list are present).
 - Waiting: the real importer test (Ben exports a town from Dungeondraft once), the gate and the testbed deploy.
+- Phase 10 full gate run (PC job 3, f4c8d5d): 70 of 76 gates passed in full, the 12-era sweep and UI fit were clean, and load time was 4.45 s with every module on against 3.93 s with only the system and Chronicle. Gate fixes from it: gate6h and gate6n accept later Actions versions; gateperception waits for the frenzy overlay to fade; the combat check gates clean up their test combats, read their own card and return a pass count.
