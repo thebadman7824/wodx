@@ -262,7 +262,7 @@
   "summary": "The powers of the imbued.",
   "claims": [
    {
-    "text": "An edge is any of the strange powers of the imbued, also called the stuff, or juice.",
+    "text": "An edge is any of the imbued's strange powers, also known as the stuff, or juice.",
     "tier": "stated",
     "refs": [
      {
@@ -1089,7 +1089,7 @@
     ]
    },
    {
-    "text": "Another makes a creature face people in human terms, bringing sorrow and loss; each success adds one to the difficulty of its next action (Manipulation + Mercy, difficulty 6).",
+    "text": "Another forces a creature to see people in human terms, bringing sorrow and loss; every success raises the difficulty of its next action by one (Manipulation + Mercy, difficulty 6).",
     "tier": "stated",
     "refs": [
      {

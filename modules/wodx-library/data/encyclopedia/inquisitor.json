@@ -185,7 +185,7 @@
     ]
    },
    {
-    "text": "The Order of St. Theodosius, the Red Order, is monks and nuns who have mastered the Holy Art of ritual.",
+    "text": "The Order of St. Theodosius, the Red Order, is made up of monks and nuns who are masters of the ritual Holy Art.",
     "tier": "stated",
     "refs": [
      {
@@ -823,7 +823,7 @@
     ]
    },
    {
-    "text": "If it fails the character loses two dice from all pools until the scene ends or the threat is gone; a botch makes the character run from it.",
+    "text": "On a failure the character drops two dice from every pool until the scene ends or the threat goes away; on a botch the character flees.",
     "tier": "stated",
     "refs": [
      {
@@ -1152,7 +1152,7 @@
   "summary": "Theurgy of the Inquisition.",
   "claims": [
    {
-    "text": "The Holy Art lets inquisitors ask the Holy Spirit for blessings or aid in danger, and gives the whole body a backbone of strict ritual support.",
+    "text": "Through the Holy Art inquisitors call on the Holy Spirit for blessings or help in danger, and it gives the whole body a backbone of strict ritual support.",
     "tier": "stated",
     "refs": [
      {
@@ -1305,7 +1305,7 @@
   "summary": "The Gifts of the Spirit path.",
   "claims": [
    {
-    "text": "Drawing on the Holy Spirit, the path ranges from driving back the enemy to healing those struck down.",
+    "text": "The path draws on the Holy Spirit, and its uses run from repelling the enemy to healing the fallen.",
     "tier": "stated",
     "refs": [
      {
@@ -1395,7 +1395,7 @@
   "summary": "A unique and ancient Anointing.",
   "claims": [
    {
-    "text": "Legend holds it was made from the fragrant oil of Christ's body when taken down from the Cross, gathered by Joseph of Arimathea in a small tear-shaped vial.",
+    "text": "Legend says it came from the fragrant oil of Christ's body when taken down from the Cross, which Joseph of Arimathea collected in a small vial shaped like a tear.",
     "tier": "stated",
     "refs": [
      {
@@ -1406,7 +1406,7 @@
     ]
    },
    {
-    "text": "Before 1215 the vial was widely thought to have passed to Cistercian monks around the start of the 12th century, though few can say how.",
+    "text": "Before 1215 the vial was widely believed to have reached Cistercian monks near the start of the 12th century, though how it got there is unclear.",
     "tier": "stated",
     "refs": [
      {
@@ -1584,11 +1584,6 @@
     "text": "Chapterhouse is a safe base whose dots can go to size, security and holiness: a small-town church with two stout locked doors and consecrated ground might take two for size, three for security and one for holiness.",
     "tier": "stated",
     "refs": [
-     {
-      "book": "inquisitor",
-      "page": 147,
-      "pdf": 148
-     },
      {
       "book": "inquisitor",
       "page": 155,
