@@ -697,6 +697,12 @@
    "title": "The Thousand Hells",
    "short": "Thousand Hells",
    "edition": "Revised era"
+  },
+  {
+   "id": "kks",
+   "title": "Killing Streets",
+   "short": "Killing Streets",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -815,6 +821,7 @@
   "dawots.json",
   "kotec.json",
   "bas.json",
-  "k1000h.json"
+  "k1000h.json",
+  "kks.json"
  ]
 }
