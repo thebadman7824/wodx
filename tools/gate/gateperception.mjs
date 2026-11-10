@@ -61,7 +61,8 @@ export async function run() {
     const drained = document.body.classList.contains("wsn-drained");
     await cainite.toggleStatusEffect("wodx-frenzy", {active: false}); await cainite.toggleStatusEffect("wodx-rotschreck", {active: false});
     // the overlay fades out before it is removed: wait up to 3 s
-    const isGone = () => !document.getElementById("wodx-senses-screen") && !document.body.classList.contains("wsn-drained");
+    // the element itself can stay for the state edges (the quiet interface always names the health level): only the frenzy and Rotschreck looks must go
+    const isGone = () => !/wsn-(frenzy|rotschreck)/.test(document.getElementById("wodx-senses-screen")?.className ?? "") && !document.body.classList.contains("wsn-drained");
     for ( let t = 0; t < 30 && !isGone(); t++ ) await sleep(100);
     const gone = isGone();
     ok("3. screen", /wsn-frenzy/.test(red) && /wsn-rotschreck/.test(pale) && drained && gone, {red, pale, drained, gone});
