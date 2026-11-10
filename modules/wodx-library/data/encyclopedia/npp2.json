@@ -1,0 +1,52 @@
+[
+ {
+  "id": "npp2-imbuing",
+  "title": "The moment of imbuing",
+  "kind": "lore",
+  "lines": [
+   "hunter",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the imbued remember being woken.",
+  "claims": [
+   {
+    "text": "Every imbued shares the same shock of first seeing a monster for what it is, but how each one reacts in that moment, from fear and rage to something else, differs widely.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "npp2",
+      "page": 158,
+      "pdf": 158
+     },
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The word imbuing, passed among hunters, can feel far too tidy to those who lived through it, who recall it as a violent, sickening jolt.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "npp2",
+      "page": 180,
+      "pdf": 180
+     },
+     {
+      "book": "htr",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-imbued"
+  ]
+ }
+]

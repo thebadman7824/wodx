@@ -2275,6 +2275,12 @@
       "title": "The Book of Nod",
       "short": "Book of Nod",
       "edition": "Second edition"
+    },
+    {
+      "id": "npp2",
+      "title": "Predator & Prey 2: Judge",
+      "short": "Predator & Prey 2",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2656,6 +2662,7 @@
     "ndan11.json",
     "ndan9.json",
     "nerc.json",
-    "nbon.json"
+    "nbon.json",
+    "npp2.json"
   ]
 }
