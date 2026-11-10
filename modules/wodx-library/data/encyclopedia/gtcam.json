@@ -108,7 +108,7 @@
     ]
    },
    {
-    "text": "Justicars rule on the Traditions across the whole sect, and only another justicar may challenge one. A justicar may call a conclave at any time.",
+    "text": "Justicars rule on the Traditions across the whole sect, and only another justicar may challenge one. Any justicar can call a conclave whenever they choose.",
     "tier": "stated",
     "refs": [
      {
@@ -622,7 +622,7 @@
   "summary": "The sect's great assembly, called by a justicar.",
   "claims": [
    {
-    "text": "Only a justicar may call a conclave, and they come rarely and at no fixed time. The former Gangrel justicar's septennial New Orleans party was a known exception.",
+    "text": "Only a justicar may call a conclave, and conclaves are rare and follow no schedule. A known exception was the party the former Gangrel justicar held in New Orleans every seven years.",
     "tier": "stated",
     "refs": [
      {
