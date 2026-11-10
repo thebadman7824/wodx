@@ -715,6 +715,12 @@
    "title": "Shadow War",
    "short": "Shadow War",
    "edition": "Revised era"
+  },
+  {
+   "id": "khd",
+   "title": "Half-Damned: Dhampyr",
+   "short": "Half-Damned",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -836,6 +842,7 @@
   "k1000h.json",
   "kks.json",
   "khow.json",
-  "ksw.json"
+  "ksw.json",
+  "khd.json"
  ]
 }
