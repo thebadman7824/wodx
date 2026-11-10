@@ -535,6 +535,12 @@
    "title": "Tribebook: Silver Fangs (Revised)",
    "short": "TB Silver Fangs",
    "edition": "Revised"
+  },
+  {
+   "id": "tbsg",
+   "title": "Tribebook: Stargazers (Revised)",
+   "short": "TB Stargazers",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -626,6 +632,7 @@
   "tbrt.json",
   "tbsl.json",
   "tbss.json",
-  "tbsf.json"
+  "tbsf.json",
+  "tbsg.json"
  ]
 }
