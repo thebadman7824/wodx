@@ -2197,6 +2197,30 @@
       "title": "Clan Novel Saga 4: End Games",
       "short": "Clan Novel Saga 4",
       "edition": "Novel"
+    },
+    {
+      "id": "nbt1",
+      "title": "Clan Novel Trilogy: Brujah 1, Slave Ring",
+      "short": "Brujah Trilogy 1",
+      "edition": "Novel"
+    },
+    {
+      "id": "nls2",
+      "title": "Clan Novel Trilogy: Lasombra 2, Shadows",
+      "short": "Lasombra Trilogy 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "nbt2",
+      "title": "Clan Novel Trilogy: Brujah 2, The Overseer",
+      "short": "Brujah Trilogy 2",
+      "edition": "Novel"
+    },
+    {
+      "id": "ntw2",
+      "title": "Clan Novel Trilogy: Tremere 2, Widow’s Weeds",
+      "short": "Tremere Trilogy 2",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2565,6 +2589,10 @@
     "ncns1.json",
     "ncns2.json",
     "ncns3.json",
-    "ncns4.json"
+    "ncns4.json",
+    "nbt1.json",
+    "nls2.json",
+    "nbt2.json",
+    "ntw2.json"
   ]
 }

@@ -1,0 +1,40 @@
+[
+ {
+  "id": "nbt1-cerro-schooling",
+  "title": "Don Cerro’s schooling of Theo Bell",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Bell’s Victorian education under a Spanish sire.",
+  "claims": [
+   {
+    "text": "Theo Bell’s sire, the Spaniard Don Cerro, took the young childe to Victorian London and taught Bell to read Kindred society, starting with the English habit of hiding every feeling.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nbt1",
+      "page": 35,
+      "pdf": 37
+     },
+     {
+      "book": "nbt1",
+      "page": 36,
+      "pdf": 38
+     },
+     {
+      "book": "cotn",
+      "page": 51,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cotn-theo-bell"
+  ]
+ }
+]

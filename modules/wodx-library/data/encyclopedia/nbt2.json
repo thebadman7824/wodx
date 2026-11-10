@@ -1,0 +1,35 @@
+[
+ {
+  "id": "nbt2-cerro-wards",
+  "title": "Cerro’s lessons against wards",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What Bell learned for beating sorcery.",
+  "claims": [
+   {
+    "text": "Don Cerro kept quiet ties with several thaumaturges and learned some key ways of defeating sorcerous defences, which Cerro passed on to Theo Bell.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "nbt2",
+      "page": 102,
+      "pdf": 104
+     },
+     {
+      "book": "cotn",
+      "page": 51,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cotn-theo-bell"
+  ]
+ }
+]
