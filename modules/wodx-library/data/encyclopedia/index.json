@@ -1123,6 +1123,12 @@
    "title": "Dark Ages: Mage Grimoire",
    "short": "DAMG",
    "edition": "First edition"
+  },
+  {
+   "id": "wr20bo",
+   "title": "Book of Oblivion",
+   "short": "BoO",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -1312,6 +1318,7 @@
   "scsw.json",
   "scwp.json",
   "sccc.json",
-  "dagrim.json"
+  "dagrim.json",
+  "wr20bo.json"
  ]
 }
