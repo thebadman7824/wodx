@@ -66,7 +66,7 @@
   "summary": "The changelings as a people, the faerie souls of the Dreaming who now live in mortal flesh, sorted into kith.",
   "claims": [
    {
-    "text": "There are thirteen kith in all: boggans, clurichaun, eshu, nockers, piskies, pooka, redcaps, satyrs, selkies, two kinds of sidhe, sluagh and trolls.",
+    "text": "The thirteen kith are the sidhe (who come in two kinds), trolls, sluagh, selkies, satyrs, redcaps, pooka, piskies, nockers, eshu, clurichaun and boggans.",
     "tier": "stated",
     "refs": [
      {
@@ -298,6 +298,11 @@
       "book": "c20",
       "page": 108,
       "pdf": 109
+     },
+     {
+      "book": "c20",
+      "page": 37,
+      "pdf": 38
      }
     ]
    }
@@ -1826,13 +1831,8 @@
     "refs": [
      {
       "book": "c20",
-      "page": 64,
-      "pdf": 65
-     },
-     {
-      "book": "c20",
-      "page": 73,
-      "pdf": 74
+      "page": 65,
+      "pdf": 66
      }
     ]
    },
@@ -1903,11 +1903,6 @@
       "book": "c20",
       "page": 73,
       "pdf": 74
-     },
-     {
-      "book": "c20",
-      "page": 81,
-      "pdf": 82
      }
     ]
    }
@@ -3221,7 +3216,7 @@
   "summary": "The schools of faerie magic, from Chicanery and Primal to Sovereign and Wayfare.",
   "claims": [
    {
-    "text": "There are eighteen Arts: Autumn, Chicanery, Chronos, Contract, Dragon's Ire, Legerdemain, Metamorphosis, Naming, Oneiromancy, Primal, Pyretics, Skycraft, Soothsay, Sovereign, Spring, Summer, Wayfare and Winter.",
+    "text": "The eighteen Arts are the four seasonal Arts (Spring, Summer, Autumn, Winter) plus Wayfare, Sovereign, Soothsay, Skycraft, Pyretics, Primal, Oneiromancy, Naming, Metamorphosis, Legerdemain, Dragon's Ire, Contract, Chronos and Chicanery.",
     "tier": "stated",
     "refs": [
      {
@@ -3703,7 +3698,7 @@
   "summary": "Traits such as Chimera, Dreamers, Holdings, Remembrance, Retinue, Title and Treasures.",
   "claims": [
    {
-    "text": "The Backgrounds are Chimera, Contacts, Dreamers, Holdings, Mentor, Remembrance, Resources, Retinue, Title and Treasures, and they can be pooled.",
+    "text": "The Backgrounds are Title, Treasures, Chimera, Dreamers, Remembrance, Contacts, Holdings, Mentor, Resources and Retinue, and players may pool them.",
     "tier": "stated",
     "refs": [
      {

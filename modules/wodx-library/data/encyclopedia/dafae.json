@@ -12,7 +12,7 @@
   "summary": "Firstborn, changelings and inanimae.",
   "claims": [
    {
-    "text": "An origin is one of the three races of fae: inanimae, changelings and firstborn.",
+    "text": "An origin is one of the fae's three races: changelings, inanimae and firstborn.",
     "tier": "stated",
     "refs": [
      {
@@ -279,7 +279,7 @@
   "summary": "The balance of order and chaos in fae magic.",
   "claims": [
    {
-    "text": "The Mists are the magical energy of Creation; fae use them both for magic and to hide from mortals.",
+    "text": "The Mists are Creation's magical energy. Fae draw on them for magic and also to stay hidden from mortals.",
     "tier": "stated",
     "refs": [
      {
@@ -595,7 +595,7 @@
     ]
    },
    {
-    "text": "No firstborn took the field; inanimae led squads of changelings and enslaved mortals.",
+    "text": "No firstborn fought; inanimae commanded squads made up of changelings and enslaved mortals.",
     "tier": "stated",
     "refs": [
      {
