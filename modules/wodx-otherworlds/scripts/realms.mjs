@@ -244,7 +244,7 @@ export async function netContest({a, b, programA = 0, programB = 0, protectA = 0
     content: card("Net combat", `<p><strong>${esc(a?.name)}</strong>: Intelligence + Computer ${pa.pool} at 6 ${diceLine(ra.dice)}${pa.auto ? `, +${pa.auto} from the program` : ""}: ${x.a}.</p>
       <p><strong>${esc(nameB)}</strong>: ${pb.pool} at 6 ${diceLine(rb.dice)}${pb.auto ? `, +${pb.auto} from the program` : ""}: ${x.b}.</p>
       <p><b>${who ? `${esc(who)} wins: ${x.damageDice} damage dice, soaked with ${x.soakPool} (Wits and protection)` : "Neither gains ground."}</b></p>
-      <p class="wodx-quiet">World of Future Darkness, scan p. 9.</p>`)});
+      <p class="wodx-quiet">World of Future Darkness p. 22 (pdf 9).</p>`)});
   return x;
 }
 
