@@ -25,4 +25,5 @@ Reviewed by Ben on two pages; verdicts live in each page's database (collection 
   Ben, 2026-11-10 16:54Z: d3's clinic fire moved to 2079 and d1's Earthbound call to 2068 (done in the build); the Nephandi find the Net earlier; the two mummy copy dates to be deconflicted; one more deconfliction pass asked for.
 - Last check, draft 2026-11-10i (last-check-2026-11-10i.js): https://claude.ai/artifact/1W6NgSUA1ZqbfKroXuSpFv
   8 cards (z01-z08). Ben, 2026-11-10 17:03Z: all OK except z06, where the Nephandi find the Net in 2059.
-- Timeline 2026 to 2098, second draft 2026-11-10j (timeline-2026-11-10j.js), same page as draft h. Waiting for Ben.
+- Timeline 2026 to 2098, second draft 2026-11-10j (timeline-2026-11-10j.js), same page as draft h.
+  Ben, 2026-11-10 17:10Z: fill the 2092-2098 gap. Third draft 2026-11-10k (timeline-2026-11-10k.js) spreads the end states over 2093-2098. Waiting for Ben.
