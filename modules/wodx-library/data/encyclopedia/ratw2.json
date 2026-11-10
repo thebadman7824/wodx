@@ -1,0 +1,130 @@
+[
+ {
+  "id": "ratw2-siegfried-laws",
+  "title": "The Laws of Vancouver",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How Prince Siegfried rules the Kindred of Vancouver.",
+  "claims": [
+   {
+    "text": "No Kindred in Vancouver may attack or provoke the Garou, who far outnumber the vampires there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw2",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "No feud between Kindred is tolerated inside the city; enforcing this drove the anarchs south to Seattle.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw2",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "No clan or other vampire body may meet in the city, so Vancouver has no clan leaders, no Camarilla representatives and no Primogen, only the prince, though some clans are rumoured to meet in secret.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw2",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "No childe may be Embraced within the city, which keeps any ambitious vampire from building a power bloc.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw2",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The Camarilla leaves Vancouver alone because the city keeps the Masquerade so well.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw2",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kindred",
+   "camarilla",
+   "masquerade"
+  ]
+ },
+ {
+  "id": "ratw2-vancouver-haven",
+  "title": "Vancouver, a Haven City",
+  "kind": "place",
+  "lines": [
+   "vampire",
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Kindred and Garou in modern Vancouver.",
+  "claims": [
+   {
+    "text": "Vancouver's Kindred declared the city a safe haven where killing another vampire or a vessel is forbidden, though feeding is allowed; killing Garou was never banned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw2",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "From the first, Garou saw the newcomers as creatures of the Wyrm, and the vampires saw the werewolves as an infestation in an otherwise ideal city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw2",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Several old vampires gained sway over major local businesses, including forestry firms, while Richard Daly, a rich and influential businessman who leads the Glass Walkers, became a key figure of Garou Vancouver from the early 1970s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw2",
+      "page": 45,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kindred",
+   "glass-walkers",
+   "ratw2-siegfried-laws"
+  ]
+ }
+]
