@@ -1486,10 +1486,15 @@ test("runtime: a passenger who walks away gets off; a botched flat out throws th
   try {
     assert.equal(await api.carryAboard(tokNpc.document, scene, {x: 3250, y: 1350}, {x: 3450, y: 1350}), "off");
     assert.equal(horseTile.document.flags[MOD].riders.length, 0);
+    const npcAt = [tokNpc.document.x, tokNpc.document.y];
+    tokNpc.document.x = 3400; tokNpc.document.y = 1300; // the sergeant, a few yards off, hears the gallop and the fall
     faces = [1, 2, 2, 2, 2];
     const msg = await api.attempt(tokPc, "horse1", "flatOut", {fd: {}});
+    [tokNpc.document.x, tokNpc.document.y] = npcAt;
     const d = msg.flags[MOD].done;
     assert.equal(d.result, "botch");
+    assert.ok(d.heard.includes(tokNpc.document.uuid), "the sergeant heard it");
+    assert.ok(events.filter(e => e.kind === "crash" || e.kind === "ride").every(e => e.heard.includes(tokNpc.document.uuid)), "the loud moments carry who heard them");
     assert.equal(horseTile.document.flags[MOD].driver, null);
     assert.ok(d.lines.some(l => /rolls the fall/.test(l)));
     assert.equal(events.at(-1).kind, "crash");
