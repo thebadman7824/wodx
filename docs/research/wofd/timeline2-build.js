@@ -43,6 +43,8 @@ const O={
 'o2|2045':'One Free State recognises ghosts as legal persons and keeps projection legal, becoming the capital of death tourism (y11).',
 'o2|2089':'The firm collapses when the last state that tolerated it turns on it after a Spectral attack on its own projectors (y11).',
 };
+// Ben's date moves, run h (2026-11-10 16:54Z)
+const MOVE={'d3|2068':'2079','d1|2079':'2068'};
 const EXTRA=[
 ['2027','Hunter · Night City','The registry, the Hunter Act and its deputies share one city: deputies police unregistered Kindred (y02).'],
 ['2039','Hunter · Lyon','The burning of a changeling freehold in Lyon splits the imbued; the Merciful walk out of the crusade (y12).'],
@@ -51,7 +53,7 @@ const EXTRA=[
 const ev=[];
 for(const s of SCEN){ if(DROP.has(s.id)) continue;
  const tag=s.line+(REGION[s.id]?' · '+REGION[s.id]:'');
- for(const [y,t] of s.beats){ const k=s.id+'|'+y; ev.push([y,tag,(O[k]||t)+' ('+s.id+')']); delete O[k]; }
+ for(const [y,t] of s.beats){ const k=s.id+'|'+y; ev.push([MOVE[k]||y,tag,(O[k]||t)+' ('+s.id+')']); delete O[k]; }
  ev.push(['2098',tag,s.fall+' ('+s.id+')']);
 }
 if(Object.keys(O).length) throw new Error('unused overrides '+Object.keys(O));

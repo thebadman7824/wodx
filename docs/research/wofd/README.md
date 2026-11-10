@@ -21,4 +21,7 @@ Reviewed by Ben on two pages; verdicts live in each page's database (collection 
   19 clashes (y01-y19) among the 27 kept scenarios, with regions for v1-w3 on y01.
   Ben, 2026-11-10 16:26Z: all 19 joins accepted.
 - Timeline 2026 to 2098, draft 2026-11-10h (timeline-2026-11-10h.js, built by timeline2-build.js): https://claude.ai/artifact/1qzrBEbTtHQNko1Y7no3rC
-  52 year cards, 138 events. Waiting for Ben.
+  52 year cards, 138 events.
+  Ben, 2026-11-10 16:54Z: d3's clinic fire moved to 2079 and d1's Earthbound call to 2068 (done in the build); the Nephandi find the Net earlier; the two mummy copy dates to be deconflicted; one more deconfliction pass asked for.
+- Last check, draft 2026-11-10i (last-check-2026-11-10i.js): https://claude.ai/artifact/1W6NgSUA1ZqbfKroXuSpFv
+  8 cards (z01-z08). Waiting for Ben.
