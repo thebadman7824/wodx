@@ -18,4 +18,7 @@ Reviewed by Ben on two pages; verdicts live in each page's database (collection 
 - Round 3 part 2, Time of Future Judgement, draft 2026-11-10f (ftj-desk-2026-11-10f.js): https://claude.ai/artifact/U2AcAFjmya1EjwSwEfhFpA
   35 cards, one per ending in the original ending books (summaries in ending-books-summaries.md), retold for 2099. ON HOLD (Ben 16:07Z) until the 2025-2099 timeline settles; may need a rewrite.
 - Round 3 clashes, draft 2026-11-10g (conflict-desk-2026-11-10g.js): https://claude.ai/artifact/AwbbEhCiaoz5bsPChrgTfA
-  19 clashes (y01-y19) among the 27 kept scenarios, with regions for v1-w3 on y01. Waiting for Ben.
+  19 clashes (y01-y19) among the 27 kept scenarios, with regions for v1-w3 on y01.
+  Ben, 2026-11-10 16:26Z: all 19 joins accepted.
+- Timeline 2026 to 2098, draft 2026-11-10h (timeline-2026-11-10h.js, built by timeline2-build.js): https://claude.ai/artifact/1qzrBEbTtHQNko1Y7no3rC
+  52 year cards, 138 events. Waiting for Ben.
