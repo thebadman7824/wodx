@@ -1229,3 +1229,9 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Ben: buildings must never stand on a path or road, since NPCs with daily rounds will walk them. A check over 15 towns found 218 overlaps, almost all with alleys: the old test measured only a building's corners against each way, so an alley could cross a long wall between them. One market tavern also moved when its variant would not furnish.
 - organic.py now measures whole walls against every way band (geom.seg_poly_dist), checks gardens too, re-finds a spot for a plain tavern or chapel, and stops with an error if any building or garden is on a way (check_ways), as the farmstead generator does. After the fix: 0 overlaps over the same 15 towns. B581.
 - Samples schondorf and linberg redrawn.
+
+## 2026-11-10: burgage plots (map tools)
+- Ben approved every recommendation in the Claude Doc "Town planning lessons for the map generator"; this is the first. Houses on a frontage now get a plot: a strip of land in the house's own frame, as wide as its share of the frontage, running back to the ward's plot depth or until it meets another plot, a building or a way. Behind the house is a yard, then a garden or croft to the back fence. Fences run along the sides and back, open to the street. B582.
+- A frontage that would stand back to back with one already built in the same block, closer than 16 squares (20 to 24 in villages, outside the gates and in rich wards), is left as yards. Slum and craftsmen wards still build on alleys and back to back, packing their yards into courts. Towns come out a little less dense (Rotheim city seed 9: 161 households, was 186).
+- Each plot is a sidecar region "Yard of the <building>" (place home, private, owner the building). Plots are checked against every way like buildings.
+- Samples schondorf and linberg redrawn.

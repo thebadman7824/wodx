@@ -8,7 +8,7 @@
   120,
   133
  ],
- "population": 184,
+ "population": 170,
  "parts": [
   {
    "id": "A1",
@@ -19,21 +19,21 @@
     0
    ],
    "cells": [
-    68,
-    46
+    67,
+    56
    ],
    "cut": [
     0,
     0,
     64,
-    46
+    56
    ],
    "neighbours": {
     "south": "B1",
     "east": "A2"
    },
-   "households": 10,
-   "population": 42
+   "households": 11,
+   "population": 46
   },
   {
    "id": "A2",
@@ -45,20 +45,20 @@
    ],
    "cells": [
     56,
-    47
+    61
    ],
    "cut": [
     64,
     0,
     56,
-    46
+    56
    ],
    "neighbours": {
     "south": "B2",
     "west": "A1"
    },
-   "households": 5,
-   "population": 17
+   "households": 7,
+   "population": 35
   },
   {
    "id": "B1",
@@ -66,25 +66,25 @@
    "sidecar": "linberg-b1.wodx.json",
    "origin": [
     0,
-    41
+    55
    ],
    "cells": [
     64,
-    54
+    36
    ],
    "cut": [
     0,
-    46,
+    56,
     64,
-    45
+    32
    ],
    "neighbours": {
     "north": "A1",
     "south": "C1",
     "east": "B2"
    },
-   "households": 10,
-   "population": 33
+   "households": 5,
+   "population": 27
   },
   {
    "id": "B2",
@@ -92,25 +92,25 @@
    "sidecar": "linberg-b2.wodx.json",
    "origin": [
     63,
-    42
+    56
    ],
    "cells": [
     57,
-    49
+    32
    ],
    "cut": [
     64,
-    46,
     56,
-    45
+    56,
+    32
    ],
    "neighbours": {
     "north": "A2",
     "south": "C2",
     "west": "B1"
    },
-   "households": 10,
-   "population": 40
+   "households": 4,
+   "population": 14
   },
   {
    "id": "C1",
@@ -118,24 +118,24 @@
    "sidecar": "linberg-c1.wodx.json",
    "origin": [
     0,
-    85
+    84
    ],
    "cells": [
     66,
-    48
+    49
    ],
    "cut": [
     0,
-    91,
+    88,
     64,
-    42
+    45
    ],
    "neighbours": {
     "north": "B1",
     "east": "C2"
    },
-   "households": 11,
-   "population": 47
+   "households": 13,
+   "population": 44
   },
   {
    "id": "C2",
@@ -151,16 +151,16 @@
    ],
    "cut": [
     64,
-    91,
+    88,
     56,
-    42
+    45
    ],
    "neighbours": {
     "north": "B2",
     "west": "C1"
    },
    "households": 1,
-   "population": 5
+   "population": 4
   }
  ]
 }

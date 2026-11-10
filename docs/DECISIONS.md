@@ -400,3 +400,6 @@ Busy wards build their frontages as rows of houses almost touching, with wings o
 
 ## B581. Ways stay clear (2026-11-10)
 No building, wing or garden may touch a street, road or alley band; the generator stops rather than write a town that breaks this, because townsfolk on scheduled rounds will walk every way.
+
+## B582. Burgage plots (2026-11-10)
+Houses get long plots behind them, by ward: slum 4 to 7 squares deep, market, administration and gate 10 to 14, craftsmen 10 to 16, merchant 12 to 18, patriciate and outside the gates 14 to 20, villages 16 to 24 (a house rule). Chapels, guardhouses and barns get none. Two frontages are not built back to back closer than 16 squares (villages 24) except in slum and craftsmen wards, which keep their courts.
