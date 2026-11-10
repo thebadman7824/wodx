@@ -13,7 +13,7 @@
   "claims": [
    {
     "text": "Tzimisce lords whispered that the Eldest had come back after long years to the mountains around Sarmizegetusa, where it had once dwelt for centuries.",
-    "tier": "rumour",
+    "tier": "implied",
     "refs": [
      {
       "book": "ndan13",

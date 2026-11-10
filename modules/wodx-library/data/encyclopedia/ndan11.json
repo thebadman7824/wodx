@@ -13,7 +13,7 @@
   "claims": [
    {
     "text": "Rumour at Ceoris holds that Goratrix writes secretly to the Telyavs, whose standing with the chantry is shaky, as a way to keep Etrius off balance.",
-    "tier": "rumour",
+    "tier": "implied",
     "refs": [
      {
       "book": "ndan11",
