@@ -1219,6 +1219,12 @@
    "title": "Ends of Empire",
    "short": "EoE",
    "edition": "First edition"
+  },
+  {
+   "id": "wdkj",
+   "title": "Dark Kingdom of Jade",
+   "short": "DKJ",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1424,6 +1430,7 @@
   "wme.json",
   "wris.json",
   "wmed.json",
-  "weoe.json"
+  "weoe.json",
+  "wdkj.json"
  ]
 }
