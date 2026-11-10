@@ -207,6 +207,7 @@ def wall_with_portals(points, texture, openings, loop):
     for kind, ox, oy, _ in openings:
         for si, ((ax, ay), (bx, by)) in enumerate(zip(pts, pts[1:])):
             L = math.hypot(bx - ax, by - ay)
+            if L < 1e-9: continue
             t = ((ox - ax) * (bx - ax) + (oy - ay) * (by - ay)) / (L * L)
             px_, py_ = ax + t * (bx - ax), ay + t * (by - ay)
             if 0 < t < 1 and math.hypot(px_ - ox, py_ - oy) < .01:
