@@ -1573,6 +1573,12 @@
    "title": "Demon: Earthbound",
    "short": "Earthbound",
    "edition": "First edition"
+  },
+  {
+   "id": "dhf",
+   "title": "Demon: Houses of the Fallen",
+   "short": "Houses of the Fallen",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1837,6 +1843,7 @@
   "hutop.json",
   "hffg.json",
   "dcoa.json",
-  "deb.json"
+  "deb.json",
+  "dhf.json"
  ]
 }
