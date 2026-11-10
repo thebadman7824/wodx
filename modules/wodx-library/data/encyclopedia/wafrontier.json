@@ -1,0 +1,254 @@
+[
+ {
+  "id": "wafrontier-gifts",
+  "title": "Gifts of the Savage West",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "New Gifts for Werewolf: The Wild West.",
+  "claims": [
+   {
+    "text": "New Gifts include Shape Smoke, Shed, Cousin’s Coat, Fool’s Gold, Strength of Vision, Iron Claws, Dispel the Golden Waste, Firewater Kiss, Mark of the Enemy, Brand of Suspicion, Faceless Stranger, Dramatic Entrance, Buffalo Hide, Hawk’s Guidance and Burning Tumbleweeds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 7,
+      "pdf": 8
+     },
+     {
+      "book": "wafrontier",
+      "page": 8,
+      "pdf": 9
+     },
+     {
+      "book": "wafrontier",
+      "page": 9,
+      "pdf": 10
+     },
+     {
+      "book": "wafrontier",
+      "page": 10,
+      "pdf": 11
+     },
+     {
+      "book": "wafrontier",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Iron Claws, a level two Gift taught by an earth elemental, costs a Rage point and a touch to an iron object; for the scene claw attacks gain a die of damage and deal aggravated damage to anything vulnerable to iron.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "That makes the Garou a bane of the fae of the West, whether Nunnehi or Kithain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wafrontier-corax-sun",
+  "title": "Raven and the hiding Sun",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "A Wild West telling of why Garou tolerate the Corax.",
+  "claims": [
+   {
+    "text": "In the tale, Helios sulked when Luna divided the Garou into auspices and hid behind the sky, leaving the world dark and letting creatures of the night grow bold.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Raven looked up while everyone else searched below and sent the Corax after the Sun with a mirror, so that Helios would see a bright world and come out again.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "For that service the Garou cut the talkative Corax some slack, though ravens grow angry at anyone else spilling their secrets.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wafrontier-vampyrs",
+  "title": "Vampyrs on the frontier",
+  "kind": "lore",
+  "lines": [
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "How western Garou see the walking dead.",
+  "claims": [
+   {
+    "text": "Western Garou call vampires vampyrs, corpses risen from Boot Hill and burning with hunger for blood, like those of English penny dreadfuls.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Many Garou of the West see them as damned things back from Hell until Judgment Day, and their duty as sending them back.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Vampires are said to fear the Garou, who can smell their wickedness and catch them unawares.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wafrontier-western-magick",
+  "title": "Magick in the Savage West",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf",
+   "mage"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "What counts as coincidental on the frontier.",
+  "claims": [
+   {
+    "text": "Paradox backlashes in the West are spectacular rather than small Flaws.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Native shamanism, Christian miracles and infernal witchcraft count as coincidental throughout the West, while technomagick is left to the Storyteller since wild surges make the same Effect vulgar one day and coincidental the next.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Muslim mages are almost wholly out of luck there, Wu Lung rites backfire until permanent Chinatowns take hold, and Gulf voodoo finds fertile ground.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wafrontier-western-wraiths",
+  "title": "Wraiths of the West",
+  "kind": "lore",
+  "lines": [
+   "werewolf",
+   "wraith"
+  ],
+  "eras": [
+   "wild-west"
+  ],
+  "summary": "Ghosts on the frontier.",
+  "claims": [
+   {
+    "text": "So many people die on the frontier with unfinished business that the West holds far more ghosts than its settlers would suggest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The Shadowlands of the West are lawless, and Stygian soldiers are neither welcome nor safe there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wafrontier",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

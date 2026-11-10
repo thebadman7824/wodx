@@ -1939,6 +1939,12 @@
       "title": "Freak Legion: A Player's Guide to Fomori",
       "short": "Freak Legion",
       "edition": "Second edition"
+    },
+    {
+      "id": "wafrontier",
+      "title": "Frontier Secrets",
+      "short": "Frontier Secrets",
+      "edition": "Wild West"
     }
   ],
   "files": [
@@ -2264,6 +2270,7 @@
     "wacity.json",
     "wacaern.json",
     "wacroatan.json",
-    "wafreak.json"
+    "wafreak.json",
+    "wafrontier.json"
   ]
 }
