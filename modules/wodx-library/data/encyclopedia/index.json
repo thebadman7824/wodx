@@ -589,6 +589,12 @@
    "title": "Breedbook: Mokole (Revised)",
    "short": "BB Mokole",
    "edition": "Revised"
+  },
+  {
+   "id": "bbana",
+   "title": "Breedbook: Ananasi (Revised)",
+   "short": "BB Ananasi",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -689,6 +695,7 @@
   "bbcor.json",
   "bbgur.json",
   "bbrat.json",
-  "bbmok.json"
+  "bbmok.json",
+  "bbana.json"
  ]
 }

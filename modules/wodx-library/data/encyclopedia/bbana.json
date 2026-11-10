@@ -1,0 +1,229 @@
+[
+ {
+  "id": "bbana-aspects",
+  "title": "Aspects and Factions of the Ananasi",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the werespiders order themselves.",
+  "claims": [
+   {
+    "text": "Each Ananasi follows an aspect, the Triat member it emulates: Tenere for the Weaver, Hatar for the Wyrm and Kumoti for the Wyld.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Each also has a faction, Myrmidon for warriors, Viskr for wizards and Wyrsta for the third path, so that three aspects and three factions make nine cabals.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Werespiders call the Weaver Grandmother Spider and say it once ruled them; their Great Mother is Queen Ananasa.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Anansi was the first and wisest of them, and some say Anansi still lives; in the First War the Ananasi wiped out the insect shapechangers entirely.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 15,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ananasi"
+  ]
+ },
+ {
+  "id": "bbana-krapina",
+  "title": "Krapina and Ananasa's Web",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The first great death and the link that binds the werespiders.",
+  "claims": [
+   {
+    "text": "Ananasi recall that at Krapina, in what became Yugoslavia, the Neanderthal werespiders obeyed their Great Mother and devoured the whole town over five days, then fed on each other until all in that region died.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 28,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "They call this the first great death and believe it cleared the way for a second birth; a third, the Great Birth, is yet to come.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 28,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Over ten thousand years the surviving Ananasi spread from Africa around the world, each staying linked to the next; this chain, Ananasa's Web, lets every werespider know what the others do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 28,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The colony that settled eastern Asia broke from the Web, took the name Kumo and follows the Wyrm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 28,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ananasi",
+   "bbana-aspects"
+  ]
+ },
+ {
+  "id": "bbana-war-of-rage",
+  "title": "The Spider's War of Rage",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The Ananasi claim to have lit the War of Rage.",
+  "claims": [
+   {
+    "text": "Ananasi say the Garou used them as an example while enforcing the Impergium and tried to destroy their Kinfolk.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 31,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "By their own account the werespiders struck back by warning the other Fera that they would be next, fanning the flames until all of them were at war with the Garou.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 31,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Their tale says Anansi found Queen Ananasa in Malfeas, sealed inside a vast opal that also shields the Queen from the Wyrm, and that the Queen asked not for freedom but for a way to speak with the werespiders again.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 31,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ananasi",
+   "war-of-rage",
+   "impergium"
+  ]
+ },
+ {
+  "id": "bbana-malum",
+  "title": "The Malum",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Hatar werespiders who spread havoc.",
+  "claims": [
+   {
+    "text": "The Malum, the Wyrsta faction of the Hatar aspect, serve destruction by stirring up riots, terror and unrest, seldom starting trouble but always feeding it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 80,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "They have tipped off Garou about Pentex, and Pentex about Garou, caring only that both sides suffer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 80,
+      "pdf": 80
+     }
+    ]
+   },
+   {
+    "text": "More often they work on crowds: the right rumour or shout can turn a sports match into a bloodbath or pin a crime on a hate group.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "bbana",
+      "page": 80,
+      "pdf": 80
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ananasi",
+   "bbana-aspects",
+   "pentex"
+  ]
+ }
+]
