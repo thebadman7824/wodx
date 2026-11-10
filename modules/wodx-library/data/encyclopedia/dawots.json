@@ -1,0 +1,206 @@
+[
+ {
+  "id": "dawots-einherjar",
+  "title": "The Einherjar",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Norse Kindred of Scandinavia.",
+  "claims": [
+   {
+    "text": "Scandinavian vampires, called einherjar or vargr, are Embraced for courage, hardiness and ferocity, and keep the old ways while gathering warriors who will not bow to Christendom.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "They make homes in frozen woods and lonely isles, and some still sail the sea lanes; when the sun sets for the whole northern winter, they raid by darkness for glory, gold and blood.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Vargr society has a strange democracy of its own and fierce loyalty to its jarls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-gangrel"
+  ]
+ },
+ {
+  "id": "dawots-thralls",
+  "title": "Thralls of the North",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Bondsmen in Norse society and their use to the einherjar.",
+  "claims": [
+   {
+    "text": "Norse thralls are property with no blood price, though their owners can claim compensation; their children are born thralls, and freedom can be granted or bought.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Thralls serve as the occasional human sacrifice and as food for hungry einherjar, and a vampire with silver can simply buy them from a farmer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "Anyone can fall into thralldom through debt, war or shipwreck; slavery fades quickly in Iceland and ends in Scandinavia with Christianity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dawots-einherjar"
+  ]
+ },
+ {
+  "id": "dawots-norse-faith",
+  "title": "Norse Faith and the Second Sight",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Norse see their gods and fate.",
+  "claims": [
+   {
+    "text": "To ordinary Norse the Aesir and Vanir are distant, fearsome warriors to be appeased and emulated, not powers behind daily life; even the gods cannot escape the fate the Norns decree.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "A Norse seer with the second sight perceives spirits, talks with them and traces the Norns' threads of fate, but also foresee their own unavoidable deaths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The faithful among the Norse revere all the gods, even when honouring one patron above the rest.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "true-faith"
+  ]
+ },
+ {
+  "id": "dawots-clans-north",
+  "title": "Assamites and Brujah of the North",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Two clans among the Norse vampires.",
+  "claims": [
+   {
+    "text": "A few Norse raiders in the Middle East from the 700s, or Varangian guards in Constantinople, may have been Embraced by Assamites; such vampires hunt the vargr and jarls of the North.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "Norse who do not take up the clan's beliefs make Khayyin a giant, a jotun, who tricked Haquim and stole the power to make false einherjar.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   },
+   {
+    "text": "After the Gangrel, the Brujah are probably the most common Norse vampires, found mostly in new trading towns such as Bergen and Schleswig; the bond of jarl and huskarl reminds them of lost Carthage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dawots",
+      "page": 57,
+      "pdf": 58
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-assamites",
+   "da-brujah",
+   "da-gangrel",
+   "cbb-carthage",
+   "caine"
+  ]
+ }
+]
