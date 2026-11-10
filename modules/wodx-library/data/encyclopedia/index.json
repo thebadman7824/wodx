@@ -691,6 +691,12 @@
    "title": "Blood and Silk",
    "short": "Blood and Silk",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "k1000h",
+   "title": "The Thousand Hells",
+   "short": "Thousand Hells",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -808,6 +814,7 @@
   "ratw2.json",
   "dawots.json",
   "kotec.json",
-  "bas.json"
+  "bas.json",
+  "k1000h.json"
  ]
 }
