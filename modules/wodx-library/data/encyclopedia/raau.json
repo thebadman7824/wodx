@@ -1,0 +1,220 @@
+[
+ {
+  "id": "raau-bunyip",
+  "title": "The Bunyip",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "The lost Garou tribe of Australia.",
+  "claims": [
+   {
+    "text": "The Bunyip were a Garou tribe that would not share their kin's hatred of the other Changing Breeds, believing violence fed the Wyrm, above all the Beast-of-War.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "They withdrew into the Penumbra and after long wandering came out in Australia, where their rites sealed the Dreamtime so no moon bridge could reach the land until other Garou later seized its caerns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Because Australia's peoples never suffered the Impergium, Aboriginal people of pure descent do not suffer the Delirium, and those close to their spiritual traditions resist it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "The Bunyip took thylacines as wolf-Kin and made strong pacts with native spirits, and over the centuries drew back into the Penumbra to watch over the land.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "delirium",
+   "impergium",
+   "raau-rainbow-serpent"
+  ]
+ },
+ {
+  "id": "raau-rainbow-serpent",
+  "title": "The Rainbow Serpent",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The greatest Incarna of Australia.",
+  "claims": [
+   {
+    "text": "The Rainbow Serpent, called Ngalyod, Imberombera, Borlung and other names, is the greatest Incarna of Australia; no one knows its gender.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "Some tales say its coils carved the outback's mountains and rivers; another says it swallowed all life to keep it safe until Kookaburra speared it and life flowed back across the land.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   },
+   {
+    "text": "From its spilt blood, the tale goes, the Serpent made the Bunyip; it dwells in the permanent waterholes of the Dreamtime, still mourns its lost children and has not forgiven the Garou.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 106,
+      "pdf": 107
+     }
+    ]
+   }
+  ],
+  "see": [
+   "raau-bunyip"
+  ]
+ },
+ {
+  "id": "raau-protectorates",
+  "title": "Uktena Protectorates of Australia",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Caerns the Uktena took after the War of Tears.",
+  "claims": [
+   {
+    "text": "Uluru, a vast rock sacred in Aboriginal dreaming, was once a powerful Bunyip caern and is now claimed by the Uktena, who hope to learn its secrets.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "The Katajuta Protectorate's caern lies in the Olgas rock formation, and its sept is closed, with power held by the Uktena.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "The Uktena also took the remote Kimberley after the War of Tears; it holds the Purnululu Caern deep in the Bungle Bungle Range and another at the Wolf Creek meteorite crater, a favourite of Uktena Skywalkers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "raau-bunyip",
+   "caern"
+  ]
+ },
+ {
+  "id": "raau-stargazers",
+  "title": "Stargazers of Australia",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A tribe broken by the War of Tears.",
+  "claims": [
+   {
+    "text": "Luther Gazes-Inward, the first Stargazer in Australia, landed at Sydney Town in 1790, and the tribe hoped to learn from the Aboriginal peoples and the Bunyip, who would not speak with them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "The Stargazers argued against the War of Tears, saying the true taint lay in Garou Rage, but at last joined the fighting in the belief that it was the start of the Apocalypse.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Shamed when it was not, they withdrew to the Eungella Protectorate, where no more than six remain, mostly old; many teeter on the edge of Harano and some have joined the Black Spiral Dancers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raau",
+      "page": 83,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stargazers",
+   "wda-harano",
+   "black-spiral-dancers",
+   "raau-bunyip"
+  ]
+ }
+]
