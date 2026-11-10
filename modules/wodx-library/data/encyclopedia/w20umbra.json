@@ -1,0 +1,587 @@
+[
+ {
+  "id": "um-gauntlet-cities",
+  "title": "The Gauntlet and the Cities",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why crossing is easy at a caern and hard downtown.",
+  "claims": [
+   {
+    "text": "Werewolves can cross between worlds because they are both flesh and spirit; the Gauntlet makes crossing hard but possible.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Packs cross often where it is thin, in the few unspoiled wilds and at caerns; crossing is far more draining in smoggy city centres and industrial zones where it is strong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "Weaver-spirits spin webs over the wall between worlds, thickening it and threatening to seal some regions off entirely; Gaian creatures fight this hardening.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "gauntlet",
+   "umbra",
+   "caern"
+  ]
+ },
+ {
+  "id": "um-dream-zone",
+  "title": "The Dream Zone",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The realm built from the shared dreams of humans and shapeshifters.",
+  "claims": [
+   {
+    "text": "The Dream Zone is a great domain made from the shared dreams of humans and shapeshifters, where archetypes are as solid as earth and symbols matter more than literal meaning.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "It sits on the edge between the Near and Deep Umbra, where neither Moon Bridges nor the Pattern Web can reach; any Spirit Gates that once led there are long lost to the Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra"
+  ]
+ },
+ {
+  "id": "um-abyss",
+  "title": "The Abyss",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Near Realm of nothingness that swallows the lost.",
+  "claims": [
+   {
+    "text": "Humans sometimes find themselves in the Abyss with no idea how they came there. Few survive, and survivors are often warped, but if rescued they can be cleansed and sent home.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Spirits entering the Abyss must materialize and become physically vulnerable; one forced into Slumber falls where it stands and risks further harm or final death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra"
+  ]
+ },
+ {
+  "id": "um-arcadia-gateway",
+  "title": "Arcadia Gateway",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Near Realm that remembers the Fair Folk.",
+  "claims": [
+   {
+    "text": "Arcadia is too alien and fleeting to exist in the Near Realms, but few doubt that Arcadia Gateway is linked to the fae homeland.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Some hold that the Realm is a true road to Arcadia if a hero can find the door; others think there is no door, only clues left by the fae who once lived there.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "arcadia"
+  ]
+ },
+ {
+  "id": "um-atrocity",
+  "title": "The Atrocity Realm",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Every act of cruelty, given form.",
+  "claims": [
+   {
+    "text": "Outside Malfeas, few Realms bear the Wyrm's taint like the Atrocity Realm; many Theurges think it grew from the psychic residue of brutality, torture and degradation in the physical world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The horrors it replays all mirror real events, from a dictator's massacres to one abused spouse's suffering; cruelty done by shapeshifters, half spirit themselves, stains it more deeply than human cruelty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 52,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "wyrm"
+  ]
+ },
+ {
+  "id": "um-battleground",
+  "title": "The Battleground",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Realm of war and its Signpost.",
+  "claims": [
+   {
+    "text": "The Battleground's wars are experiments and do not change history, any more than a strategy game would.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Every visit begins at the Signpost, whose form depends on the visitor: a wooden signpost, an obelisk of hieroglyphs, a touch-screen terminal and so on. It points down the two paths into the Realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "A traveller following signs of war and bloodshed from the Penumbra passes through a shadowy place of abandoned tents and discarded guns and gear on the way in.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra"
+  ]
+ },
+ {
+  "id": "um-cyberrealm",
+  "title": "The CyberRealm",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Weaver's city of glass and concrete.",
+  "claims": [
+   {
+    "text": "Most of the CyberRealm is one huge web-shaped city of glass, plastic and concrete whose towers run for miles.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   },
+   {
+    "text": "The few Banes there can show travellers routes to or from the Scar, or to darker realms beyond.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 58,
+      "pdf": 59
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "triat"
+  ]
+ },
+ {
+  "id": "um-erebus",
+  "title": "Erebus",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gaia's purgatory of molten silver.",
+  "claims": [
+   {
+    "text": "Erebus embodies Gaia's wrath and serves as the Garou Nation's purgatory, feared and honoured for the punishment and purification it gives.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "A Garou with shame or guilt that nothing else can clear may be drawn there; its rivers of molten silver can burn away even the worst Wyrm taint, at great pain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 61,
+      "pdf": 62
+     }
+    ]
+   },
+   {
+    "text": "Some Fera trade rumours of other atonement realms, such as Corax caged in white-hot gold on a great tree; these tales have no basis, yet explorers still seek them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "garou"
+  ]
+ },
+ {
+  "id": "um-legendary-realm",
+  "title": "The Legendary Realm",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Where the Garou's great deeds are remembered, and now their defeats.",
+  "claims": [
+   {
+    "text": "The Realm keeps the memory of shapeshifters' past glories, and it has darkened as their tales have darkened with the Apocalypse near.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "As Wyrm servants beat the Garou in the physical world, those disasters echo in the Legendary Realm and let a shard of Malfeas leak through. A few Get of Fenris murmur that the cause is the remembering of the defeats, not the defeats themselves.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "botw-roads-to-malfeas"
+  ]
+ },
+ {
+  "id": "um-pangaea",
+  "title": "Pangaea",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The primordial Realm of the Wyld's first world.",
+  "claims": [
+   {
+    "text": "Many Moon Bridges reach Pangaea, but the Wyld makes them unpredictable and dangerous, and Banes wait at known entrances to prey on wounded Garou seeking its healing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Powerful Glens in the physical world open straight onto Pangaea, and now and then a huge sauropod spirit forces its way into the physical world and does terrible harm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 70,
+      "pdf": 71
+     }
+    ]
+   },
+   {
+    "text": "Blind, leathery troglodytes live deep in its mountain caves and treat visitor, foe and food alike; their moaning song warns other tribes away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 72,
+      "pdf": 73
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "caern"
+  ]
+ },
+ {
+  "id": "um-summer-country",
+  "title": "Summer Country",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Realm where new life is tested.",
+  "claims": [
+   {
+    "text": "Its Garden of Delight is a bright, swampy nursery where life arises unbidden and is tested at once by fierce competition.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   },
+   {
+    "text": "The fittest creatures born there incarnate in the physical world as new parts of Earth's ecosystem.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 76,
+      "pdf": 77
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra"
+  ]
+ },
+ {
+  "id": "um-wolfhome",
+  "title": "Wolfhome",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Realm of farms, suburbs and danger for the Fera.",
+  "claims": [
+   {
+    "text": "The land looks like a blend of rustic English countryside and generic suburbia, with small suburbs, farms and hidden laboratories.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   },
+   {
+    "text": "Fera are treated as dangerous near settlements: Mokole might hide in the Town's sewers but otherwise keep to the Countryside, and Rokea are forced into bull shark form to live in its landlocked rivers and lakes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 78,
+      "pdf": 79
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "cb-mokole",
+   "cb-rokea"
+  ]
+ },
+ {
+  "id": "um-membrane-deep-umbra",
+  "title": "The Membrane and the Deep Umbra",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The barrier at the edge of the Near Umbra, and what lies past it.",
+  "claims": [
+   {
+    "text": "The Membrane separates the Near Umbra from the Deep Umbra much as the Gauntlet separates the physical world from the spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   },
+   {
+    "text": "In the Deep Umbra the real sun, stars, planets and moon take bodily form, and so do the Triat; in some ways it is as physical as the material world.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "Time runs strangely there: a brief stay there, from moments to a couple of days, can match a far longer span elsewhere.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "Nuwisha say a door to every Realm exists in Coyote's Realm, including the Deep Umbra, the Dark Umbra, the Astral and the Dream Zone.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "w20umbra",
+      "page": 92,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "umbra",
+   "triat",
+   "cb-nuwisha"
+  ]
+ }
+]
