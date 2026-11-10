@@ -685,6 +685,12 @@
    "title": "Kindred of the East Companion",
    "short": "KotE Companion",
    "edition": "Revised"
+  },
+  {
+   "id": "bas",
+   "title": "Blood and Silk",
+   "short": "Blood and Silk",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -801,6 +807,7 @@
   "ratw1.json",
   "ratw2.json",
   "dawots.json",
-  "kotec.json"
+  "kotec.json",
+  "bas.json"
  ]
 }
