@@ -1190,3 +1190,7 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - 70 bare page refs on cards and windows now name their book, in the files that cite one book: Demon: The Fallen, Dark Ages: Fae, Dark Ages: Mage, Dark Ages: Inquisitor, Kindred of the East, Mummy: The Resurrection, Hunter: The Reckoning, Wraith 20th, C20 and V20 Dark Ages (Actions, Combat, Creation, Chronicle conditions). "pdf page N, printed page M" is now "pdf N / p. M". page-refs.test.mjs keeps them pinned.
 - Left as they are: refs whose sentence already names the book (rules-clash rows, Otherworlds charts, the Storyteller's wonder note), data files whose Library shelf names the book, and the mixed-book files (Garou, the ghoul window, Sheets), where a wrong guess would be worse than a bare page.
 - Versions: Actions 3.19.7, Chronicle 0.11.4, Combat 3.8.6, Creation 0.9.2, Storyteller 0.18.5.
+
+## Phase 10, polish: docs match the code (2026-11-10)
+- Checked: every module version in MODULES.md against its module.json; every file, test and gate path the docs name exists; the settings the Storyteller's guide names exist. All matched.
+- Found: Actions, Senses and Storyteller load rule files straight from sibling folders that their module.json does not require. MODULES.md now says to install every WoDX module together (a sibling may be off, not missing), and cross-imports.test.mjs checks that each of the 109 cross-module imports finds its file and names.
