@@ -523,6 +523,12 @@
    "title": "Tribebook: Shadow Lords (Revised)",
    "short": "TB Shadow Lords",
    "edition": "Revised"
+  },
+  {
+   "id": "tbss",
+   "title": "Tribebook: Silent Striders (Revised)",
+   "short": "TB Silent Striders",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -612,6 +618,7 @@
   "tbfen.json",
   "tbgw.json",
   "tbrt.json",
-  "tbsl.json"
+  "tbsl.json",
+  "tbss.json"
  ]
 }
