@@ -1,0 +1,167 @@
+[
+ {
+  "id": "m2cf-aztec-legends",
+  "title": "Legends of Tenochtitlan",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "ancient",
+   "renaissance",
+   "modern"
+  ],
+  "summary": "Old stories of the gods who led the Aztecs.",
+  "claims": [
+   {
+    "text": "The Aztecs came from Aztlan, a city in a lake far to the northwest; the mage Quetzalcoatl, the Feathered Serpent, is said to have led them in peace for ages before leaving with a promise to return.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2cf",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The tale goes on that Huitzilopoctli walked out of the sea and claimed the Aztecs and demanded their worship.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2cf",
+      "page": 14,
+      "pdf": 15
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrdm-aztec-sun",
+   "mrcrafts-crafts"
+  ]
+ },
+ {
+  "id": "m2cf-great-quake",
+  "title": "The Mexico City earthquake of 1985",
+  "kind": "event",
+  "lines": [
+   "mage",
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A disaster that set the city's supernatural factions against one another.",
+  "claims": [
+   {
+    "text": "The quake of 19 September 1985 damaged over 4,000 buildings and killed more than 9,000 people.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2cf",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Garou, Kindred and mages have blamed each other, Pentex and demons, but no supernatural cause has been found, and tension between the ruling factions has grown ever since.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2cf",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m2cf-aztec-legends"
+  ]
+ },
+ {
+  "id": "m2cf-pentex-mexico",
+  "title": "Pentex in Mexico City",
+  "kind": "faction",
+  "lines": [
+   "mage",
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Wyrm's corporation among the city's rich and poor.",
+  "claims": [
+   {
+    "text": "Senior Pentex executives in Mexico City are paid lavishly and live like royalty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2cf",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Factory workers earn a pittance for twelve-hour days, are picked for desperation and low morals, and are exposed every day to subliminal corruption.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2cf",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pentex",
+   "m2cf-great-quake"
+  ]
+ },
+ {
+  "id": "m2cf-inquisition-mexico",
+  "title": "The Inquisition in Mexico City",
+  "kind": "faction",
+  "lines": [
+   "mage",
+   "werewolf",
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Witch-hunters based at the city's great cathedral.",
+  "claims": [
+   {
+    "text": "About a dozen witch-hunters work from the Latin Cross Cathedral; the mortal Inquisitors all hold strong True Faith, which has kept them alive.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2cf",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Records on the Kindred and Awakened of North America are said to lie buried beneath the Sagrario beside the cathedral, sinking slowly into the old lake bed.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2cf",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "sc-cabal-pure-thought"
+  ]
+ }
+]
