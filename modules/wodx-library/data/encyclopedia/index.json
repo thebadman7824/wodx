@@ -385,6 +385,12 @@
    "title": "Dark Ages: Vampire",
    "short": "DA:V",
    "edition": "Revised"
+  },
+  {
+   "id": "dacomp",
+   "title": "Dark Ages Companion",
+   "short": "DA Companion",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -451,6 +457,7 @@
   "cbventrue.json",
   "cbsetite.json",
   "daeu.json",
-  "dav.json"
+  "dav.json",
+  "dacomp.json"
  ]
 }
