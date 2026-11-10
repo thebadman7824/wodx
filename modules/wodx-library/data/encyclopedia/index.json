@@ -1075,6 +1075,12 @@
    "title": "The Artisan's Handbook",
    "short": "AH",
    "edition": "First edition"
+  },
+  {
+   "id": "sccomp",
+   "title": "The Sorcerers Crusade Companion",
+   "short": "SCC",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1256,6 +1262,7 @@
   "m2stc.json",
   "m2cf.json",
   "m2dp.json",
-  "scah.json"
+  "scah.json",
+  "sccomp.json"
  ]
 }
