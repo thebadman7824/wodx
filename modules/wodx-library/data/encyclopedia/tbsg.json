@@ -1,0 +1,187 @@
+[
+ {
+  "id": "tbsg-klaital",
+  "title": "Klaital's Shame",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "A Stargazer tale about why the tribe buries its Rage.",
+  "claims": [
+   {
+    "text": "One Stargazer telling holds that Klaital did not try to halt an old massacre of humans but led it, striking first.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Ashamed afterward, Klaital washed in a river, walked away from the other Garou, and spent the rest of that life learning to hold Rage sealed inside.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "Tellers say this is why Stargazers keep their anger buried and stand apart from other tribes, and they argue over whether that path is wise.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stargazers"
+  ]
+ },
+ {
+  "id": "tbsg-going-east",
+  "title": "The Stargazers Go East",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The tribe's split from the Garou Nation in the modern nights.",
+  "claims": [
+   {
+    "text": "Many Stargazers have left the Garou Nation and now count themselves only among the Beast Courts of Asia, though a smaller number stay with Western packs and caerns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The tribe was already few before many died at Shigalu; some believe only a couple hundred remain, and many have fallen to Harano.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Stargazers still call themselves a hopeful tribe, trusting that the Wheel turns and what dies is born again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Most Stargazers are born in the East, and with breeding now centred there, more will be.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stargazers",
+   "wda-harano"
+  ]
+ },
+ {
+  "id": "tbsg-songgao",
+  "title": "Songgao Mountain",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The site of the great Stargazer moot in China.",
+  "claims": [
+   {
+    "text": "China holds more Stargazers than any other land, some fled from Tibet and many born there among the Beast Courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Once a year, soon after the new year, the tribe meets atop Songgao Mountain to share legends and settle quarrels, usually by contests of complex games and only rarely by claw.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Other shapechangers and Garou of other tribes are not welcome at the gathering.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Legend says a rock there shaped like a sleeping dragon would split open to release an unmarked metis child if every living Stargazer gathered at once, and that metis would be healed of deformity from then on.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Chambers under the White Dragon Temple in Jiangsu are also dear to the tribe; a Stargazer from Dongting Lake is said to have taught the monks there a form of Tai Chi based on the wind.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbsg",
+      "page": 50,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stargazers",
+   "tbsg-going-east"
+  ]
+ }
+]
