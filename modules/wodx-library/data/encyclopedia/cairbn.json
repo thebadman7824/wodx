@@ -1,0 +1,171 @@
+[
+ {
+  "id": "cairbn-city",
+  "title": "Cairo's Undead Melting Pot",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A huge city open to Kindred of every sect.",
+  "claims": [
+   {
+    "text": "Cairo counts some 200 known vampires and is open to Kindred whatever their sect, and a safe haven for the clanless.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 9,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "The city is Camarilla ground more in name than in fact; the label holds mostly because the Sabbat does not openly contest it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 9,
+      "pdf": 11
+     }
+    ]
+   },
+   {
+    "text": "By old edict any vampire may enjoy the prince's welcome and protection, so long as the newcomer presents properly on arrival.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 9,
+      "pdf": 11
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cairbn-bey",
+   "cairbn-khittas"
+  ]
+ },
+ {
+  "id": "cairbn-bey",
+  "title": "Mukhtar Bey",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The long-reigning Prince of Cairo.",
+  "claims": [
+   {
+    "text": "Mukhtar Bey has held the domain since first claiming it in 1406.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 74,
+      "pdf": 76
+     }
+    ]
+   },
+   {
+    "text": "Under Ottoman rule Mukhtar Bey spread influence beyond Egypt and came to be called Prince of Cairo, partly to please the rulers' new European allies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 44,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The prince's strictest law guards the Mogamma: no vampire under the prince's authority may meddle with the state or local government or its officers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 51,
+      "pdf": 53
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cairbn-city",
+   "cairbn-khittas"
+  ]
+ },
+ {
+  "id": "cairbn-khittas",
+  "title": "The Khittas",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The quarters of Cairo held by Kindred families.",
+  "claims": [
+   {
+    "text": "Only part of the city is khitta-held; the busy downtown core, called Free Cairo, is where most immigrant vampires live.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 49,
+      "pdf": 51
+     },
+     {
+      "book": "cairbn",
+      "page": 51,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The prince does not usually force khitta residents to accept strangers into their domains.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "Visitors with the prince's leave to stay may feed discreetly in the open remainder of the city.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 51,
+      "pdf": 53
+     }
+    ]
+   },
+   {
+    "text": "The Assamite Antara built a khitta when the Abbasid capital rose, as a base for the clan's growth in Egypt.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cairbn",
+      "page": 39,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cairbn-bey",
+   "cairbn-city"
+  ]
+ }
+]

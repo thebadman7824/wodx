@@ -1,0 +1,177 @@
+[
+ {
+  "id": "berbn-divided",
+  "title": "Berlin's Two Princes",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A city reunited by day and still split by night.",
+  "claims": [
+   {
+    "text": "By night Kindred still guard a border that no longer exists for mortals, fighting over hunting grounds, havens and which prince truly rules Berlin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "The East Berlin Kindred fight to win back what they once held, while the West Berliners fight to keep what they gained.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "For decades the two princes ran separate domains, rarely acting against each other but always watching.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "berbn-gustav",
+   "berbn-wall"
+  ]
+ },
+ {
+  "id": "berbn-gustav",
+  "title": "Gustav Breidenstein",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Ventrue Prince of Berlin, who held the city with strict laws.",
+  "claims": [
+   {
+    "text": "Gustav ruled Berlin for more than sixty years, and in that time none dared break the laws.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 8,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "Gustav joined the Camarilla along with the few other Kindred in the area as soon as the chance came.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Gustav's dislike of other clans led to a war with the Toreador, settled when the prince offered formal apologies and sacrificed three of the prince's own childer before an assembly of Cainites.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "The Brujah who ruled Eastern Europe have vanished, and Gustav knows no help will come from them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "berbn-divided",
+   "berbn-wall"
+  ]
+ },
+ {
+  "id": "berbn-wall",
+  "title": "Baba Yaga and the Fall of the Wall",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How a waking Methuselah shook Berlin.",
+  "claims": [
+   {
+    "text": "Baba Yaga stirred from torpor in 1990 and set out to bring the eastern lands back under the Nosferatu elder's control.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Before Baba Yaga woke, the Berlin Nosferatu fed Gustav false reports and stirred up mortal dissent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Even Gustav was caught off guard when the crossing points opened on November 9, 1989; hoping to win back lost ground, the prince let the Wall come down from June 13, 1990.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "With the eastern Brujah gone, the magical barriers between the two halves of the city have fallen as well.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "berbn",
+      "page": 128,
+      "pdf": 129
+     }
+    ]
+   }
+  ],
+  "see": [
+   "berbn-gustav",
+   "berbn-divided"
+  ]
+ }
+]
