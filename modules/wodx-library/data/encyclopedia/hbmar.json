@@ -1,0 +1,65 @@
+[
+ {
+  "id": "hbmar-martyr-outlook",
+  "title": "The Martyr outlook",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Suffering with a purpose, and an eye on the end.",
+  "claims": [
+   {
+    "text": "Martyrs chase personal causes and carry guilt over their own actions further than most imbued, and that colours how they understand the call.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbmar",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "They do not leap into death at every chance; they suffer for a purpose and choose how.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbmar",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Many are so caught up in their causes that they brush other hunters aside, while others try to show fellow imbued the light of a cause by teaching or by example.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbmar",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   },
+   {
+    "text": "Martyrs expect to lay down their lives sooner or later, and that fatalism makes them think hard about the future rather than ignore it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "hbmar",
+      "page": 18,
+      "pdf": 19
+     }
+    ]
+   }
+  ],
+  "see": [
+   "htr-martyrs",
+   "hbdef-defender-outlook",
+   "hbave-creeds-take-shape"
+  ]
+ }
+]

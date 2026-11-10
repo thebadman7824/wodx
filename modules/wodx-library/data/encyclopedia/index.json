@@ -1513,6 +1513,12 @@
    "title": "Hunter Book: Judge",
    "short": "HB Judge",
    "edition": "First edition"
+  },
+  {
+   "id": "hbmar",
+   "title": "Hunter Book: Martyr",
+   "short": "HB Martyr",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1767,6 +1773,7 @@
   "hbdef.json",
   "hbher.json",
   "hbinn.json",
-  "hbjud.json"
+  "hbjud.json",
+  "hbmar.json"
  ]
 }
