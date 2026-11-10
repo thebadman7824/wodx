@@ -1,0 +1,65 @@
+[
+ {
+  "id": "wod1-hunt-club",
+  "title": "The Hunt Club",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Young diablerists who stalk elder Kindred across the British Isles.",
+  "claims": [
+   {
+    "text": "For about thirty years, Kindred of the sixth to ninth generations have vanished across the British Isles, leaving bloodless remains and hunting tokens such as a riding crop, a red hunting cap or a fox tail in their havens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod1",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The Hunt Club is a loose coterie of brash young Cainites who commit diablerie both for the power of elder blood and for the thrill of chasing the most dangerous prey there is; lately they warn victims in advance, and their chosen quarry keeps getting older.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod1",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "No formal Blood Hunt has been called in London, where Mithras is missing, but every other fief and coterie in the isles treats membership as a capital crime.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wod1",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "A persistent rumour ties the club to Count Zaroff, a Caitiff and former Russian big-game hunter under Blood Hunt in much of Europe, unseen since being driven out of Berlin.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wod1",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "bjd-mithras",
+   "vav-london",
+   "caitiff"
+  ]
+ }
+]
