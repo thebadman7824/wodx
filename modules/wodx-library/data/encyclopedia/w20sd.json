@@ -1,0 +1,177 @@
+[
+ {
+  "id": "sd-mnemosyne",
+  "title": "Mnemosyne, Incarna of Memory",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern",
+   "classical",
+   "dark-ages"
+  ],
+  "summary": "The spirit who remembers the whole Near Umbra.",
+  "claims": [
+   {
+    "text": "Mnemosyne keeps no single home; the Incarna roams the whole Near Umbra, taking in all it holds, and knows every corner, hidden niche and lost realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Mnemosyne forgets nothing except by choice. A thing Mnemosyne chooses to forget sees its spiritual image drift toward the Abyss, where it may be lost for good.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Mokole are tied to Mnemosyne through Mnesis and the Mnetics.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "um-abyss",
+   "cb-mokole",
+   "umbra"
+  ]
+ },
+ {
+  "id": "sd-mesoamerican-fera",
+  "title": "Fera of Mesoamerica",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The shapeshifters of the Maya, Aztec and Inca lands before the Garou came.",
+  "claims": [
+   {
+    "text": "Ananasi worked among the Maya, quietly fostering astronomy, mathematics and writing, which are Weaver tools.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "Maya expansion kept pushing into Mokole lands, and the Mokole struck back hard; seeing how the Camazotz gained power through human influence, the werejaguars looked to rising nations further north for the same.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 111,
+      "pdf": 112
+     }
+    ]
+   },
+   {
+    "text": "The Fera of the region waged a hidden war for dominance in the jungles and city streets, and that endless strife helped the Garou overrun them quickly later.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   },
+   {
+    "text": "The Ananasi did best of all by avoiding fights with other shapeshifters and steering human empires, urging Aztec rulers and advisers to build bigger cities and expand.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 112,
+      "pdf": 113
+     }
+    ]
+   }
+  ],
+  "see": [
+   "cb-ananasi",
+   "cb-mokole",
+   "cb-bastet",
+   "war-of-rage"
+  ]
+ },
+ {
+  "id": "sd-second-war-of-rage",
+  "title": "The Second War of Rage",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The Garou conquest of the New World's Fera.",
+  "claims": [
+   {
+    "text": "Garou stories tell of a War of Rage in which werewolves, sure that they alone kept Gaia's charge against the Weaver and the Wyrm, made war on Fera they judged to be failing their duty.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 7,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "When the Garou followed European colonists to the Americas, a Second War of Rage broke out against the native Fera, alongside human genocide of those Fera's families and Kinfolk.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 8,
+      "pdf": 9
+     },
+     {
+      "book": "w20sd",
+      "page": 110,
+      "pdf": 111
+     }
+    ]
+   },
+   {
+    "text": "Ratkin in Spain laughed at a human seeking money to reach India and China by sailing west, having more urgent worries of their own about crowded cities.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "w20sd",
+      "page": 113,
+      "pdf": 114
+     }
+    ]
+   }
+  ],
+  "see": [
+   "war-of-rage",
+   "sd-mesoamerican-fera",
+   "cb-ratkin"
+  ]
+ }
+]

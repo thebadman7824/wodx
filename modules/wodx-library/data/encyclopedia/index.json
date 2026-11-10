@@ -427,6 +427,12 @@
    "title": "Umbra: The Velvet Shadow (W20)",
    "short": "W20 Umbra",
    "edition": "20th Anniversary companion"
+  },
+  {
+   "id": "w20sd",
+   "title": "Shattered Dreams (W20)",
+   "short": "W20 Shattered Dreams",
+   "edition": "20th Anniversary companion"
   }
  ],
  "files": [
@@ -500,6 +506,7 @@
   "botw.json",
   "dalc.json",
   "dahc.json",
-  "w20umbra.json"
+  "w20umbra.json",
+  "w20sd.json"
  ]
 }
