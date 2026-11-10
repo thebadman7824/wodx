@@ -14,7 +14,7 @@
   "claims": [
    {
     "text": "Stargazers who have left the Garou Nation say the West gave up on them as much as the reverse: they hold that the war cannot be won without Bastet, Corax, Kitsune, Gurahl and the other Fera, whom the Western tribes have driven away.",
-    "tier": "stated",
+    "tier": "implied",
     "refs": [
      {
       "book": "ntn4",
@@ -30,7 +30,7 @@
    },
    {
     "text": "Stargazers feel a kinship with the Bagheera werepanthers, since both favour careful thought over open war.",
-    "tier": "stated",
+    "tier": "implied",
     "refs": [
      {
       "book": "ntn4",

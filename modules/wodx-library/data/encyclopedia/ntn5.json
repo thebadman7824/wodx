@@ -14,7 +14,7 @@
   "claims": [
    {
     "text": "The Croatan, the third of the Pure tribes in North America before the Europeans, perished to the last in the destruction of a mighty Bane at Roanoke.",
-    "tier": "stated",
+    "tier": "implied",
     "refs": [
      {
       "book": "ntn5",
@@ -30,7 +30,7 @@
    },
    {
     "text": "The Uktena have long worked to make amends to the Gurahl for the War of Rage, when Garou hunted and slaughtered the other shapeshifters.",
-    "tier": "stated",
+    "tier": "implied",
     "refs": [
      {
       "book": "ntn5",
