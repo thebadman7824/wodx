@@ -1297,6 +1297,12 @@
    "title": "Pour l'Amour et Liberte: The Book of Houses 2",
    "short": "BoH2",
    "edition": "First edition"
+  },
+  {
+   "id": "cbolh",
+   "title": "The Book of Lost Houses: The Second Coming",
+   "short": "BoLH",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1515,6 +1521,7 @@
   "ctdpg.json",
   "cbdt.json",
   "cboh1.json",
-  "cboh2.json"
+  "cboh2.json",
+  "cbolh.json"
  ]
 }

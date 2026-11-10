@@ -1,0 +1,135 @@
+[
+ {
+  "id": "cbolh-jalendrel",
+  "title": "Jalendrel of House Beaumayn",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "mythic",
+   "dark-ages"
+  ],
+  "summary": "A visionary knight of House Beaumayn.",
+  "claims": [
+   {
+    "text": "Jalendrel became one of the great knights of the age, famed for courage and for compassion toward commoners, mortal and fae; at Jalendrel's passing into the Dreaming, stars fell and blue flowers grew where they struck.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbolh",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Wise folk say that when those blue flowers bloom again, Jalendrel will return to lead the house against the evils foretold in old prophecy.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "cbolh",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Like House Liam, with whom it often shared lands, Beaumayn grew fond of mortals before the Sundering.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbolh",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-beaumayn",
+   "house-liam",
+   "the-sundering"
+  ]
+ },
+ {
+  "id": "cbolh-aesin-volva",
+  "title": "The Volva and mothers of House Aesin",
+  "kind": "lore",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Roles within House Aesin.",
+  "claims": [
+   {
+    "text": "The Volva of House Aesin are honored seers skilled in cantrips and soothsaying, who carry a wooden staff given at their inauguration.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbolh",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Mothers raise the house's childlings and introduce newborn Aesin to its ways.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbolh",
+      "page": 39,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-aesin",
+   "cantrips"
+  ]
+ },
+ {
+  "id": "cbolh-queen-ragnelf",
+  "title": "Queen Ragnelf",
+  "kind": "character",
+  "lines": [
+   "changeling"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The ruler of House Aesin.",
+  "claims": [
+   {
+    "text": "Ragnelf took the throne of House Aesin after Ingirun died and rebuilt a strong house from a family broken by war; Ragnelf is known for kindness and for treating the mind as the sharpest weapon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbolh",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "House Aesin has had few dealings with mortal wizards, regarding them as an intriguing threat.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "cbolh",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "house-aesin",
+   "cbolh-aesin-volva"
+  ]
+ }
+]
