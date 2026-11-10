@@ -1,0 +1,263 @@
+[
+ {
+  "id": "scinf-zarathustra",
+  "title": "Zarathustra and the first Adversary",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "classical",
+   "ancient",
+   "renaissance"
+  ],
+  "summary": "How Persian dualism gave the Devil a single face.",
+  "claims": [
+   {
+    "text": "The Persian prophet Zarathustra, later called Zoroaster, set two warring gods against the Vedic pantheons: Ahura Mazda in the heavens and Angra Manyu, or Ahriman, the proud enemy who works through lies and demons.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Before this teaching, evil had no single leader, and the Hebrew Satan served God more than opposed God; with Ahriman came an everlasting Hell where devils punish fallen souls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "The sect faded under Christianity and Islam, yet its ideas shaped both faiths and left marks on Judaism and Hinduism.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "inquisition"
+  ]
+ },
+ {
+  "id": "scinf-witch-craze",
+  "title": "The witch craze",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Renaissance fear of devil-worship and how Infernalists use it.",
+  "claims": [
+   {
+    "text": "Religious strife and social upheaval feed both real Satanic sects and the fear of them; by the end of the age millions, most of them blameless, go to torture, rope or fire.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Heresies such as the Pastoureaux, Free Spirits and flagellants rise against a corrupt Church, which answers with Papal bulls and Inquisitions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "Some sects, the Nephandi among them, turn the Inquisitions on rival cults while keeping their own work hidden.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": [
+   "inquisition",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "scinf-gatekeepers",
+  "title": "The Gatekeepers",
+  "kind": "faction",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "ancient",
+   "classical",
+   "dark-ages",
+   "renaissance"
+  ],
+  "summary": "An ancient Infernal sect of Egypt and the Near East.",
+  "claims": [
+   {
+    "text": "The Gatekeepers rose in Egypt and spread north into Greece and Rome as that empire weakened, until wars with the Mt. Ossa Calyx, the Collegium Praecepti and Hermetic houses scattered them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "In a later age of Devil-Kings their caliphs and witch-priests ruled cities across Arabia and Persia for close to 600 years, until the armies of Mohammed ended that rule; many temples and catacombs below those cities were never found.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   },
+   {
+    "text": "For about 800 years since, the sect has kept quiet and moved into the Frankish lands, Italy above all, alongside the Nephandi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 96,
+      "pdf": 97
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "scinf-cauls"
+  ]
+ },
+ {
+  "id": "scinf-cauls",
+  "title": "Cauls in the Crusade",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "The soul-inverting wombs of the Nephandi.",
+  "claims": [
+   {
+    "text": "A Caul inverts the soul of whoever passes through it, and there is no coming back; a person must enter willingly, and those forced inside mostly die in agony.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "Some reincarnationists hope a Nephandus might be redeemed in a later life, while others point to the widderslainte, souls born already Fallen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   },
+   {
+    "text": "One theory holds that Cauls are bridges to the Outer Dark.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 97,
+      "pdf": 98
+     }
+    ]
+   }
+  ],
+  "see": [
+   "the-caul",
+   "m20botf-cauls",
+   "nephandi"
+  ]
+ },
+ {
+  "id": "scinf-infernal-ranks",
+  "title": "Ranks of the Infernal",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "A rough order of the powers of darkness.",
+  "claims": [
+   {
+    "text": "Infernalists themselves disagree on Hell's order; cautious Christian counts give more than half a million Fallen angels.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "A working ladder runs from the Absolute and the Primal Emanations down through the Deep Lords of Misrule, the Gods of this World, arch-dukes, lords and minor lords, to tempters, servitors, war-demons, servelings, Infernal hosts and finally human cultists.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   },
+   {
+    "text": "Many Renaissance occult scholars draw up new orders or throw such ladders out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "scinf",
+      "page": 104,
+      "pdf": 105
+     }
+    ]
+   }
+  ],
+  "see": [
+   "m20botf-demons",
+   "tome-demons"
+  ]
+ }
+]
