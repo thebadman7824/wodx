@@ -59,7 +59,7 @@ import * as FillRules from "./fill-rules.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.18.0";
+const VERSION = "0.18.1";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -579,6 +579,8 @@ export async function applyAsk(msg) {
           body: `<p>Missed, still hidden there: ${esc(listWords(missed.map(x => x.n)))}.</p>`})});
       }
     }
+    // Events from watch points, mounts and climbs wait for the hearing check below, so NPCs who heard can react
+    heldEvents.set(doc.id, []);
     // Examining a clue: what the character learns goes to that player and the Storyteller only
     let whisper = null;
     if ( (op.id === "examine" || op.id === "look") && o.clue ) whisper = await clueReport(o, out, author, actor);
@@ -614,13 +616,14 @@ export async function applyAsk(msg) {
     if ( loudish && !here ) lines.push("Nobody's hearing was checked: the Storyteller is viewing another scene.");
     if ( heard.length ) lines.push(`Heard by ${heard.map(h => `${h.name}${h.likely ? ` (likely: ${h.likely})` : ""}`).join(", ")}.`);
     Hooks.callAll("wodxInteractablesNoise", {scene: scene.id, wall: doc.id, token: tokDoc.uuid, noise: out.noise, heard: heard.map(h => h.uuid)});
+    releaseEvents(doc.id, heard.map(h => h.uuid));
     const done = {result: out.result, text: out.text, noise: out.noise, snap, hurt, advanced, worldTime: game.time.worldTime, waiting, lines, given,
       heard: heard.map(h => h.uuid), alarm: !!out.alarm || !!out.patch?.flags?.alarm,
       damageMsg: sprung?.damageMsg ?? burned?.damageMsg ?? climbed?.damageMsg ?? null, whisper: whisper?.id ?? null, revealed, moved: climbed?.moved ?? null, undone: false};
     const verdict = waiting ? "Waiting for the Storyteller" : {done: "Done", progress: "Headway", fail: "No luck", botch: "Botch"}[out.result] ?? "";
     await msg.update({[`flags.${MOD}.ask.state`]: "done", [`flags.${MOD}.done`]: done, content: resultHtml(msg, done, verdict)});
     return done;
-  } finally { busy.delete(msg.id); }
+  } finally { busy.delete(msg.id); releaseEvents(msg?.flags?.[MOD]?.ask ? objectIn(game.scenes.get(msg.flags[MOD].ask.scene), msg.flags[MOD].ask.wall)?.id : null, []); }
 }
 const titleOf = msg => (String(msg.content).match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? "WoDX");
 function resultHtml(msg, done, verdict) {
@@ -1144,7 +1147,20 @@ export function peopleIn(target) {
     .map(t => ({name: t.name ?? t.actor?.name ?? "Someone", uuid: t.uuid, lasombra: /lasombra/i.test(String(t.actor?.system?.clan ?? ""))}));
 }
 /** A map event for other modules: the same shape as a card's (states.mjs), with what this result adds. */
+/** Map events held while a result is applied: doc id -> the calls waiting for who heard. */
+const heldEvents = new Map();
+function releaseEvents(docId, heard = []) {
+  if ( !docId || !heldEvents.has(docId) ) return;
+  const list = heldEvents.get(docId);
+  heldEvents.delete(docId);
+  for ( const [kind, args] of list ) {
+    // Only a loud moment (a crash, a fall, a gallop, a bell) has NPCs react; a quiet one is only passed on
+    try { mapEvent(kind, {...args, heard: args.heard?.length ? args.heard : (args.noise === "loud" ? heard : [])}); }
+    catch (e) { console.error(`${MOD} |`, e); }
+  }
+}
 export function mapEvent(kind, {scene, doc, tokDoc, noise = "silent", object = "", heard = [], supernatural = false, extra = {}} = {}) {
+  if ( doc?.id && heldEvents.has(doc.id) ) { heldEvents.get(doc.id).push([kind, {scene, doc, tokDoc, noise, object, heard, supernatural, extra}]); return null; }
   let objectName = null;
   try { objectName = doc ? R.nameOf(describeTile(doc) ?? {}) || null : null; } catch (e) { objectName = null; }
   return publish(kind, {scene, doc, tokDoc, noise, heard, supernatural, objectName, objectKind: object || null, extra});

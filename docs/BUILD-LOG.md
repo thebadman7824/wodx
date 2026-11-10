@@ -1088,6 +1088,9 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Six grounds: rose, diaper, vine, lily, chequer, punched.
 - Checks: harness 922 pass; mouth sweep 10,800 placements (4 heads x 15 builds x 12 eyes x 15 expressions), none off the face. Samples in /mnt/project-files/paperdoll/mouths-0.6/. Deploy and gatepaperdoll wait for the PC.
 
+### Interactables 0.18.1, 2026-11-10: NPCs hear crashes and gallops
+- The gap left by responsive maps: events from watch points, mounts and climbs went out before the hearing check, so they named nobody who heard them. applyAsk now holds them (heldEvents) until the check, then sends each loud one with the hearers (releaseEvents); quiet ones go out with none. Approved with the rest of the responsive maps choices (Ben, 10 November 2026).
+- Tests: the botched flat out test now checks that the crash and the gallop carry the sergeant who heard them. Gate: gate-interact step 22 and gate-maps.
 
 ## 2026-11-10: weak page refs read against the books (Actions 3.19.2)
 
