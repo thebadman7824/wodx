@@ -162,12 +162,16 @@ export function hashOf(o) {
 /**
  * What one shelf needs, given the entries it should hold (`mine`) and the documents it has (`docs`), both carrying
  * flags[mod].shelf and flags[mod].hash. New keys are created, changed ones remade (old id removed, new doc created),
- * and module-made documents whose key is no longer in the source are removed. Documents without a shelf key are left alone.
+ * and module-made documents whose key is no longer in the source, or that repeat another's key, are removed. Documents without a shelf key are left alone.
  */
 export function syncPlan(mine, docs, mod) {
-  const have = new Map(docs.filter(d => d.flags?.[mod]?.shelf).map(d => [d.flags[mod].shelf, d]));
-  const create = [], remove = [];
-  let remade = 0, kept = 0, stale = 0;
+  const have = new Map(), create = [], remove = [];
+  let remade = 0, kept = 0, stale = 0, extra = 0;
+  // Two module-made documents with one key: keep the first, remove the rest (otherwise the sync picks one at random)
+  for ( const d of docs.filter(x => x.flags?.[mod]?.shelf) ) {
+    if ( have.has(d.flags[mod].shelf) ) { remove.push(d.id ?? d._id); extra++; }
+    else have.set(d.flags[mod].shelf, d);
+  }
   for ( const d of mine ) {
     const old = have.get(d.flags[mod].shelf);
     have.delete(d.flags[mod].shelf);
@@ -176,5 +180,5 @@ export function syncPlan(mine, docs, mod) {
     else kept++;
   }
   for ( const old of have.values() ) { remove.push(old.id ?? old._id); stale++; }
-  return {create, remove, remade, kept, stale};
+  return {create, remove, remade, kept, stale: stale + extra, extra};
 }
