@@ -47,8 +47,7 @@
    }
   ],
   "see": [
-   "watwilight-fbi-sad",
-   "watwilight-nsa"
+   "watwilight-fbi-sad"
   ]
  },
  {
@@ -149,60 +148,7 @@
     ]
    }
   ],
-  "see": [
-   "watwilight-nsa"
-  ]
- },
- {
-  "id": "watwilight-nsa",
-  "title": "The NSA",
-  "kind": "faction",
-  "lines": [
-   "werewolf",
-   "hunter"
-  ],
-  "eras": [
-   "modern"
-  ],
-  "summary": "The National Security Agency and the supernatural.",
-  "claims": [
-   {
-    "text": "The NSA was founded in secret in the winter of 1952 by a seven-page order from President Truman whose contents have never been made public.",
-    "tier": "stated",
-    "refs": [
-     {
-      "book": "watwilight",
-      "page": 43,
-      "pdf": 44
-     }
-    ]
-   },
-   {
-    "text": "Built from the Armed Forces Security Agency and other services, it has become the most powerful and secretive intelligence agency in the world, with little congressional oversight.",
-    "tier": "stated",
-    "refs": [
-     {
-      "book": "watwilight",
-      "page": 43,
-      "pdf": 44
-     }
-    ]
-   },
-   {
-    "text": "Its Domestic Intelligence Bureau was compromised by supernatural powers.",
-    "tier": "stated",
-    "refs": [
-     {
-      "book": "watwilight",
-      "page": 43,
-      "pdf": 44
-     }
-    ]
-   }
-  ],
-  "see": [
-   "watwilight-fbi-sad"
-  ]
+  "see": []
  },
  {
   "id": "watwilight-garou-dilemma",
