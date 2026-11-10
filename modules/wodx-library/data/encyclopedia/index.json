@@ -1273,6 +1273,12 @@
    "title": "Changeling: The Dreaming 20th Anniversary Book of Freeholds",
    "short": "C20BoF",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "ctdpg",
+   "title": "Changeling: The Dreaming Player's Guide",
+   "short": "CtDPG",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1487,6 +1493,7 @@
   "wgpp.json",
   "wgsan.json",
   "wgso.json",
-  "c20bof.json"
+  "c20bof.json",
+  "ctdpg.json"
  ]
 }
