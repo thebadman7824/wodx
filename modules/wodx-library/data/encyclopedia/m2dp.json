@@ -1,0 +1,55 @@
+[
+ {
+  "id": "m2dp-street-mages",
+  "title": "Street mages",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Mages who live and work in the urban underworld.",
+  "claims": [
+   {
+    "text": "An Awakened gang member may stay on the streets to settle territory and end turf killings, to turn a gang toward something useful, or just to protect friends.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dp",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "Street people know nothing of magick but have their own ways of dealing with outsiders who threaten them, and a mage who relies on power and attitude alone soon finds trouble.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dp",
+      "page": 63,
+      "pdf": 64
+     }
+    ]
+   },
+   {
+    "text": "A street mage's Avatar often wears the city's face: a dragon or samurai for an Akashic who fights gangs, neon and data for a Virtual Adept, brick and oily reflections for a Hollow One.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2dp",
+      "page": 64,
+      "pdf": 65
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mages",
+   "avatar",
+   "hollow-ones",
+   "m2osg-orphans"
+  ]
+ }
+]
