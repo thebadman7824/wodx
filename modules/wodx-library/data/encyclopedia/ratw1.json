@@ -1,0 +1,234 @@
+[
+ {
+  "id": "ratw1-moon-bridges",
+  "title": "Kinds of Moon Bridge",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How caerns link to one another.",
+  "claims": [
+   {
+    "text": "A caern's totem governs its moon bridges, deciding whether a bridge may connect and able to draw on the caern's Gnosis to raise a barrier against one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Ordinary bridges open with both totems' consent and rarely go astray; yearly performance of the Rite of the Opened Bridge keeps them sound.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "In war, the Rite of Luna's Spear forces a bridge through a caern totem's defences, at greater risk of landing somewhere strange.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Wild bridges, opened by the reckless or desperate, are capricious and can strand travellers in endless loops or dump them through a Hellhole into Malfeas.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "caern",
+   "totems"
+  ]
+ },
+ {
+  "id": "ratw1-miria",
+  "title": "Miria, the Bygone Visions Caern",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Black Fury island caern of Siren's Rock.",
+  "claims": [
+   {
+    "text": "The Bygone Visions Sept holds Siren's Rock, the island of Miria, with its Dreamscape Glen and Visions Pool; only four Furies and a few rotating guards live there, led by Iona Kinslayer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Shadow Lords have been barred from the island since their treachery in 1868, and Get of Fenris of both sexes since 1967, when Get women seeking sanctuary opened a moon bridge for their kin to seize it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "Men may not visit at all; a would-be visitor contacts the Argassi strega, passes tests of courage, honour and wisdom, and is ferried over, with no more than five guests a month.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "black-furies",
+   "bkwy-thresholds",
+   "shadow-lords",
+   "get-of-fenris"
+  ]
+ },
+ {
+  "id": "ratw1-brugh-na-boinne",
+  "title": "Brugh na Boinne",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "ancient",
+   "modern"
+  ],
+  "summary": "The Fianna caern at Newgrange in Ireland.",
+  "claims": [
+   {
+    "text": "At Brugh na Boinne, around the passage tomb of Newgrange, the Umbra and physical world are so alike that stepping sideways is barely felt; animal spirits roam, and the Stag in person is sometimes seen.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "A manifestation of Dana is its totem, and only one moon bridge can open from its three centres at a time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "Fianna songs tell how, over four thousand years ago, Garou and the faerie Tuatha de Danann drove the Wyrm from Ireland by defeating the Fir Bolg fomori, then built the caern together to explore the Umbra.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   },
+   {
+    "text": "No one knows why the faeries left, though they left trods in the Umbra and a gateway to Arcadia near the Fianna homeland.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 49,
+      "pdf": 50
+     }
+    ]
+   }
+  ],
+  "see": [
+   "fianna",
+   "fomori",
+   "arcadia",
+   "um-arcadia-gateway"
+  ]
+ },
+ {
+  "id": "ratw1-modoribashi",
+  "title": "The Ichijyo Modoribashi Caern",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Caern of the Homeland on a Kyoto bridge.",
+  "claims": [
+   {
+    "text": "A Caern of the Homeland sits at the Ichijyo Modoribashi Bridge in central Kyoto, open only to Hakken, Nine-Tails werefoxes and a few chosen human On-Myo sorcerers; various Shinto kami serve as totems.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "Humans cross it every day without knowing, so most rites are held in the shrine beside the bridge or beneath it on moonless nights.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   },
+   {
+    "text": "The caern is bound to the culture and history of Japan; its Gauntlet is so thin that one can speak with any god, spirit or demon willing to listen, and even devout humans may draw insight from it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "ratw1",
+      "page": 87,
+      "pdf": 88
+     }
+    ]
+   }
+  ],
+  "see": [
+   "shadow-lords",
+   "cb-kitsune",
+   "caern"
+  ]
+ }
+]
