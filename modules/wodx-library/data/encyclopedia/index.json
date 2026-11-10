@@ -481,6 +481,12 @@
    "title": "Tribebook: Black Furies (Revised)",
    "short": "TB Black Furies",
    "edition": "Revised"
+  },
+  {
+   "id": "tbgn",
+   "title": "Tribebook: Bone Gnawers (Revised)",
+   "short": "TB Bone Gnawers",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -563,6 +569,7 @@
   "das.json",
   "vac.json",
   "dahum.json",
-  "tbfur.json"
+  "tbfur.json",
+  "tbgn.json"
  ]
 }
