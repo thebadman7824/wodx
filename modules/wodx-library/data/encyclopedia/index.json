@@ -1351,6 +1351,12 @@
    "title": "Immortal Eyes: Court of All Kings",
    "short": "IE3",
    "edition": "First edition"
+  },
+  {
+   "id": "cinan",
+   "title": "Inanimae: The Secret Way",
+   "short": "Inan",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1578,6 +1584,7 @@
   "cfhg.json",
   "cie1.json",
   "cie2.json",
-  "cie3.json"
+  "cie3.json",
+  "cinan.json"
  ]
 }
