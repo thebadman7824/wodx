@@ -84,3 +84,34 @@ test("Wraith: the Great War Arcanoi serve 1914 to 1918 only, not the years after
   assert.equal(WR.libraryFor("great-war", 1950), "w20");
   assert.equal(WR.libraryFor("modern", 1995), "w20");
 });
+
+test("the bridge eras: the Age of Reason (1601 to 1836) and Mid-century (1919 to 1989) get content of their own or borrow it", async () => {
+  const {readFileSync} = await import("node:fs");
+  const R = await import("../../modules/wodx-chronicle/scripts/era-resolve.mjs");
+  const K = await import("../../modules/wodx-atmosphere/scripts/kits-rules.mjs");
+  const Setup = await import("../../modules/wodx-storyteller/scripts/setup-rules.mjs");
+  const H = await import("../../modules/wodx-actions/scripts/hunter-rules.js");
+  const T = await import("../../modules/wodx-chronicle/scripts/theme.mjs");
+  const data = JSON.parse(readFileSync(new URL("../../modules/wodx-chronicle/data/eras.json", import.meta.url)));
+  const {profiles} = R.mergeProfiles(data.profiles);
+  const at = y => R.resolveEra(profiles, y);
+  assert.equal(at(1700).profile.id, "age-of-reason"); assert.equal(at(1700).interlude, false);
+  assert.equal(at(1950).profile.id, "mid-century"); assert.equal(at(1950).interlude, false);
+  const byId = Object.fromEntries(profiles.map(p => [p.id, p]));
+  // Rules copy the era before
+  assert.deepEqual(byId["age-of-reason"].system, byId.renaissance.system);
+  assert.deepEqual(byId["mid-century"].system, byId["great-war"].system);
+  assert.equal(byId["mid-century"].rules.morality, byId["great-war"].rules.morality);
+  for ( const id of ["age-of-reason", "mid-century"] ) {
+    assert.equal(K.kitFor(byId[id]), id);
+    assert.ok(K.kitChain(id).length >= 2, `${id} borrows sounds`);
+    assert.ok(Setup.PRIMERS[id], `${id} primer`);
+    assert.equal(H.hunterLine(id, null), "hh2");
+    assert.equal(T.KIT_TONE[id], "light");
+    assert.ok(S.fits({lines: ["all"], eras: [byId[id].like]}, {era: id}), `${id} shelves borrow`);
+    assert.equal(F.ERA_LIKE[id], byId[id].like);
+  }
+  assert.equal(G.eraGroupFor("age-of-reason", 1700), "early-modern");
+  assert.equal(G.eraGroupFor("mid-century", 1950), "mid-century");
+  assert.equal(G.eraGroupFor("mid-century", null), "mid-century");
+});

@@ -15,8 +15,8 @@ export const VERSION = "0.4.0";
 
 /** The paper each era kit is printed on. */
 export const KIT_TONE = {
-  "dark-ages": "light", "long-night": "light", "renaissance": "light", "classical": "light", "living-gods": "light",
-  "victorian": "light", "wild-west": "light", "great-war": "light",
+  "dark-ages": "light", "long-night": "light", "renaissance": "light", "age-of-reason": "light", "classical": "light", "living-gods": "light",
+  "victorian": "light", "wild-west": "light", "great-war": "light", "mid-century": "light",
   "modern": "dark", "time-of-judgment": "dark", "future-darkness": "dark", "time-of-future-judgement": "dark"
 };
 export const LOOKS = {era: "The era's own look", light: "Light paper, the era's type", dark: "Dark paper, the era's type", plain: "Plain (Foundry's own look)"};

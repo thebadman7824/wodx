@@ -23,7 +23,7 @@ export function hunterLine(era, year = null, {futureBranch = false} = {}) {
     const e = String(era ?? "").toLowerCase();
     const y = year === null || year === undefined || year === "" ? null : Number(year);
     if (["dark-ages", "long-night", "classical", "living-gods"].includes(e)) return "inquisitor";
-    if (["renaissance", "victorian", "wild-west", "great-war"].includes(e)) return "hh2";
+    if (["renaissance", "age-of-reason", "victorian", "wild-west", "great-war", "mid-century"].includes(e)) return "hh2";
     if (futureBranch && Number.isFinite(y) && y >= 1500 && y < 2023 && ["modern", "future-darkness", ""].includes(e)) return "hh2";
     if (["time-of-judgment", "future-darkness", "time-of-future-judgement"].includes(e)) return "reckoning";
     if (Number.isFinite(y)) return y < 1500 ? "inquisitor" : y < 1999 ? "hh2" : "reckoning";

@@ -9,8 +9,8 @@
  */
 
 /** Chronicle's eras in the order goods pass through them. The Wild West runs beside the Victorian era. */
-export const ERAS = ["living-gods", "classical", "dark-ages", "long-night", "renaissance", "victorian", "wild-west",
-  "great-war", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
+export const ERAS = ["living-gods", "classical", "dark-ages", "long-night", "renaissance", "age-of-reason", "victorian", "wild-west",
+  "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
 
 /** What kind of thing each good is, with a plain label for the draw window. */
 export const KINDS = {

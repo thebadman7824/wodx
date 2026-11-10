@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "notes": "Years are inclusive. 'system' picks the upstream ability set each line gets at creation (worldofdarkness eraMortal/eraVampire/eraWerewolf/eraMage). Upstream has no Dark Ages or Renaissance set for Mage, so mages before 1837 use its Victorian set; that and the Great War mapping are house rules, marked 'ourCall'. 'rules.gauntletChart' names the WoDX Otherworlds chart: Dark Ages: Werewolf before 1601, the Wyld West book for the Wild West, and W20 (the basis book) for the Victorian age onward.",
+  "notes": "Years are inclusive. 'system' picks the upstream ability set each line gets at creation (worldofdarkness eraMortal/eraVampire/eraWerewolf/eraMage). Upstream has no Dark Ages or Renaissance set for Mage, so mages before 1837 use its Victorian set; that and the Great War mapping are house rules, marked 'ourCall'. 'rules.gauntletChart' names the WoDX Otherworlds chart: Dark Ages: Werewolf before 1601, the Wyld West book for the Wild West, and W20 (the basis book) for the Victorian age onward. Two bridge eras cover the years no era book does: the Age of Reason (1601 to 1836) and Mid-century (1919 to 1989). Their rules copy the era before; 'like' names the era whose content a module borrows where it has none of its own.",
   "profiles": [
     {
       "id": "dark-ages",
@@ -72,6 +72,32 @@
       "kit": "renaissance"
     },
     {
+      "id": "age-of-reason",
+      "name": "Age of Reason",
+      "start": 1601,
+      "end": 1836,
+      "basis": "No era book: the Renaissance's rules carry on (V20 Dark Ages rules with period setting), with W20's Gauntlet",
+      "switches": "Flintlocks and powdered wigs; the Order of Reason becomes the Technocracy; witch trials fade, revolutions follow",
+      "system": {
+        "mortal": "darkages",
+        "vampire": "darkages",
+        "werewolf": "darkages",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "A bridge era: no book covers these years, so the Renaissance's rules and ability sets carry on",
+        "The Gauntlet uses W20's chart from 1601, as the chart note says",
+        "Mage uses upstream's Victorian ability set"
+      ],
+      "rules": {
+        "firearms": "early",
+        "morality": "roads",
+        "gauntletChart": "w20"
+      },
+      "kit": "age-of-reason",
+      "like": "renaissance"
+    },
+    {
       "id": "victorian",
       "name": "Victorian",
       "start": 1837,
@@ -136,6 +162,30 @@
         "gauntletChart": "w20"
       },
       "kit": "great-war"
+    },
+    {
+      "id": "mid-century",
+      "name": "Mid-century",
+      "start": 1919,
+      "end": 1989,
+      "basis": "No era book: the Great War's rules carry on (each line's 20th book)",
+      "switches": "Wireless, cinema and the motor car; another world war and the Fifth Great Maelstrom in 1945; the Cold War",
+      "system": {
+        "mortal": "victorian",
+        "vampire": "victorian",
+        "werewolf": "victorian",
+        "mage": "victorian"
+      },
+      "ourCall": [
+        "A bridge era: no book covers these years, so the Great War's rules and ability sets carry on until the modern era begins in 1990"
+      ],
+      "rules": {
+        "firearms": true,
+        "morality": "humanity-and-paths",
+        "gauntletChart": "w20"
+      },
+      "kit": "mid-century",
+      "like": "great-war"
     },
     {
       "id": "modern",

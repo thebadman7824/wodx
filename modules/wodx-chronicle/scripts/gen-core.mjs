@@ -148,6 +148,6 @@ export function eraGroupFor(profileId, year = null) {
 /** Era profiles gathered into the groups the people tables are written for. */
 export const ERA_GROUP = {
   "dark-ages": "medieval", "long-night": "medieval", "classical": "ancient", "living-gods": "ancient",
-  "renaissance": "early-modern", "victorian": "industrial", "wild-west": "industrial", "great-war": "industrial",
+  "renaissance": "early-modern", "age-of-reason": "early-modern", "mid-century": "mid-century", "victorian": "industrial", "wild-west": "industrial", "great-war": "industrial",
   "modern": "modern", "time-of-judgment": "modern", "future-darkness": "future", "time-of-future-judgement": "future"
 };
