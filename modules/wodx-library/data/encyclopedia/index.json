@@ -445,6 +445,12 @@
    "title": "Dark Ages: Road of Heaven",
    "short": "DA Road of Heaven",
    "edition": "Revised"
+  },
+  {
+   "id": "dark",
+   "title": "Dark Ages: Road of Kings",
+   "short": "DA Road of Kings",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -521,6 +527,7 @@
   "w20umbra.json",
   "w20sd.json",
   "w20wh.json",
-  "darh.json"
+  "darh.json",
+  "dark.json"
  ]
 }
