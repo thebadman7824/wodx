@@ -2101,6 +2101,12 @@
       "title": "Songs of the Sun and Moon (W20)",
       "short": "W20 Songs of the Sun and Moon",
       "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "npt",
+      "title": "The Poison Tree (W20)",
+      "short": "W20 The Poison Tree",
+      "edition": "20th Anniversary companion"
     }
   ],
   "files": [
@@ -2453,6 +2459,7 @@
     "ntn5.json",
     "ntn7.json",
     "npeih.json",
-    "nsosm.json"
+    "nsosm.json",
+    "npt.json"
   ]
 }
