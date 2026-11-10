@@ -1,0 +1,139 @@
+[
+ {
+  "id": "dbtd-thrashing-dragons",
+  "title": "The Thrashing Dragons",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Followers of the passionate Dharma.",
+  "claims": [
+   {
+    "text": "Thrashing Dragons are hungry, passionate vampires drawn to battle, scandal and bearing children, which many Resplendent Cranes and Devil-Tigers find distasteful.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtd",
+      "page": 6,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Dharma is not hunted as a cult, but its members often stand at a disadvantage in the courts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtd",
+      "page": 6,
+      "pdf": 15
+     }
+    ]
+   },
+   {
+    "text": "The Dharma does little capturing and training of chih-mei, leaving Devil-Tigers and Thousand Whispers to teach new vampires survival before the Dragons take over their schooling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtd",
+      "page": 38,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-five-dharmas"
+  ]
+ },
+ {
+  "id": "dbtd-black-earth-boy",
+  "title": "Black Earth Boy",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A bodhisattva of the Thrashing Dragons.",
+  "claims": [
+   {
+    "text": "Black Earth Boy, mighty and full of childlike joy and a terrible foe of darkness, rose to the Hundred Clouds at the turn of the Fourth Age, during the Mongol conquest of the Southern Song.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtd",
+      "page": 18,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbtd-thrashing-dragons",
+   "kote-wheel-of-ages"
+  ]
+ },
+ {
+  "id": "dbtd-shout-of-anger",
+  "title": "Shout of Anger",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The voice of the Dragons in the Golden Courts.",
+  "claims": [
+   {
+    "text": "The Golden Courts' Dragons have had no bodhisattvas, but a penanggalan called Shout of Anger is said to be close to that state and speaks for the faith when the Golden Courts must make their view known.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dbtd",
+      "page": 20,
+      "pdf": 29
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbtd-thrashing-dragons",
+   "kks-penanggalan"
+  ]
+ },
+ {
+  "id": "dbtd-spirit-walkers",
+  "title": "Dragons Among the Spirits",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Thrashing Dragons who walk the Yang courts.",
+  "claims": [
+   {
+    "text": "Some Dragons walk the Yang courts, leading spirit servants on red silk leashes and dining with the lesser princes of the Yang World; for all their manners, they treat shen as props and scenery on the road to enlightenment.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbtd",
+      "page": 33,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbtd-thrashing-dragons",
+   "kote-spirit-worlds"
+  ]
+ }
+]

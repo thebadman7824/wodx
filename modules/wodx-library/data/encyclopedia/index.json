@@ -739,6 +739,12 @@
    "title": "Dharma Book: Thousand Whispers",
    "short": "DB Thousand Whispers",
    "edition": "Revised era"
+  },
+  {
+   "id": "dbtd",
+   "title": "Dharma Book: Thrashing Dragons",
+   "short": "DB Thrashing Dragons",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -864,6 +870,7 @@
   "khd.json",
   "dbbf.json",
   "dbrc.json",
-  "dbtw.json"
+  "dbtw.json",
+  "dbtd.json"
  ]
 }
