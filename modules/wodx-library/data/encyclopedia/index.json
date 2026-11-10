@@ -1189,6 +1189,12 @@
    "title": "The Quick and the Dead",
    "short": "QD",
    "edition": "First edition"
+  },
+  {
+   "id": "wna",
+   "title": "Necropolis: Atlanta",
+   "short": "NA",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1389,6 +1395,7 @@
   "wdr.json",
   "wsos.json",
   "wdil.json",
-  "wqd.json"
+  "wqd.json",
+  "wna.json"
  ]
 }
