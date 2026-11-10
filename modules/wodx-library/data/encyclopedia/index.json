@@ -1603,6 +1603,12 @@
    "title": "World of Darkness: Tokyo",
    "short": "Tokyo",
    "edition": "First edition"
+  },
+  {
+   "id": "wodhk",
+   "title": "World of Darkness: Hong Kong",
+   "short": "Hong Kong",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1872,6 +1878,7 @@
   "dpg.json",
   "mtrpg.json",
   "wod2.json",
-  "wodtok.json"
+  "wodtok.json",
+  "wodhk.json"
  ]
 }

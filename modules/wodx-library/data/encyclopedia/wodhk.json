@@ -1,0 +1,104 @@
+[
+ {
+  "id": "wodhk-sleeping-dragons",
+  "title": "The sleeping dragons of Hong Kong",
+  "kind": "lore",
+  "lines": [
+   "vampire",
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Dragons asleep under the hills feed Hong Kong's Chi, and the shen fight over it.",
+  "claims": [
+   {
+    "text": "Places of very strong Chi in Hong Kong are called dragon nests, limbs, heads or hearts; whether they serve as caerns, haunts, havens or freeholds, every kind of shen contests them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodhk",
+      "page": 29,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Dragons sank into the earth long ago and still breathe in their sleep; that breath runs through the ground as dragon lines, charged with Chi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodhk",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Nine dragons sleep under Kowloon, but the hills around their bodies have been levelled, so they bleed Chi slowly into the soil. Greedy shen gather to feed on it, and a few try in vain to stop the drain.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodhk",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Seven more dragons lie beneath Hong Kong Island, where mortals terrace and build on their flanks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodhk",
+      "page": 30,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-chi"
+  ]
+ },
+ {
+  "id": "wodhk-midnight-express",
+  "title": "Necropolis Hong Kong and the Midnight Express",
+  "kind": "place",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Stygian outpost in Jade Kingdom lands, reached by train.",
+  "claims": [
+   {
+    "text": "Necropolis Hong Kong, a Stygian outpost, depends on the Kowloon railway station, where the Midnight Express arrives on its regular run from Stygia and lets Western wraiths travel into lands the Dark Kingdom of Jade mostly rules.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wodhk",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Since the handover to China, many wraiths wonder whether the Jade Emperor will let the outpost go on.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wodhk",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stygia",
+   "gw-jade-kingdom-terms"
+  ]
+ }
+]
