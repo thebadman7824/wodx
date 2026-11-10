@@ -406,3 +406,18 @@ Houses get long plots behind them, by ward: slum 4 to 7 squares deep, market, ad
 
 ## B583. Rivers (2026-11-10)
 Organic places may have a river: villages half the time, towns 60%, cities 75% (a house rule). It runs across the whole map beside the market, never through it, and flows from one end to the other so later steps can tell upstream from downstream. Every way crossing it gets a bridge; a watermill takes the frontage nearest the water and the washing place sits upstream of the town's middle.
+
+## B584. Dirty trades by place (2026-11-10)
+About three in ten workshops follow the trades that stink (tanner, dyer, butcher, fuller, chandler), and they take the workshops furthest downstream, by or outside the wall, or furthest from the market. Clean trades take the rest.
+
+## B585. A wealth gradient (2026-11-10)
+Rich within about a third of the town's reach from the market (sooner in rich wards), poor beyond three quarters of it, in slums, outside the gates and beside the dirty trades. Walls: stone and timber, timber and plaster, or plain timber; rich houses get boarded floors. A house rule.
+
+## B586. Landmarks (2026-11-10)
+A market cross by the market well, public wells at the busier junctions away from the market (towns 2, cities 6), never on a way, and a tower each side of each gate.
+
+## B587. Suburbs outside the gates (2026-11-10)
+A walled town's fields at a gate become a suburb 85% of the time, with an inn and (in towns and cities) an almshouse among the cottages and smithies.
+
+## B588. Fire history (2026-11-10)
+Villages 20%, towns 40%, cities 60% have had one great fire: one block rebuilt in stone, with one burned-out plot left among the new houses.

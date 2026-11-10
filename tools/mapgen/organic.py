@@ -44,7 +44,7 @@ MIX = {   # (type, weight) by ward; a house rule
     "administration": [("guardhouse", 1), ("townhouse", 4)],
     "military": [("guardhouse", 3), ("storehouse", 1), ("smithy", 1), ("cottage", 2)],
     "gate": [("tavern", 1), ("storehouse", 2), ("smithy", 1), ("cottage", 3), ("guardhouse", 1)],
-    "gate-out": [("cottage", 3), ("smithy", 1), ("workshop", 1), ("byre-house", 2)],
+    "gate-out": [("cottage", 4), ("smithy", 1), ("workshop", 1.5), ("byre-house", 1.5), ("tavern", 1), ("storehouse", .5)],
     "church": [("cottage", 3), ("townhouse", 1)],
     "village": [("cottage", 5), ("byre-house", 3), ("workshop", 1), ("smithy", .5), ("bakehouse", .4)],
 }
@@ -62,6 +62,9 @@ PLOT_DEPTH = {   # how far a house's plot runs back from the street, in squares,
     "administration": (10, 14), "military": (6, 9), "gate": (10, 14), "gate-out": (14, 20), "church": (10, 15), "village": (16, 24),
 }
 NO_PLOT = {"chapel", "guardhouse", "barn"}
+DIRTY_TRADES = ["tanner", "dyer", "butcher", "fuller", "chandler"]     # smell, blood, lye and tallow: kept downstream or out by the wall
+CLEAN_TRADES = ["carpenter", "cooper", "weaver", "potter", "cobbler", "wheelwright", "turner", "basket maker"]
+WEALTH_WALL = {"rich": "StoneWood_Ashen_A.png", "middling": "PlasterWood_Ashen_A.png", "poor": "Wood_Ashen_A.png"}
 COURTS = {"slum", "craftsmen"}   # wards that build on alleys and back to back, packing yards into courts
 BACK_TO_BACK = {"village": 24, "gate-out": 22, "patriciate": 20}   # the least depth for two frontages back to back, else 16
 TERRACED = {"merchant": 1, "market": 1, "administration": .8, "gate": .6, "craftsmen": .6, "slum": .5}   # chance a frontage is a row
@@ -118,7 +121,7 @@ class OrganicTown(T.Town):
         self.ways()
         self.roads = []                                       # the grid generator's road rects: none here
         self.blds, self.gardens, self.households, self.notes = [], [], [], []
-        self.plots, self.frontages = [], {}
+        self.plots, self.frontages, self.burned = [], {}, []
         self.bgrid, self.ggrid = T.Grid(), T.Grid()
         self.count = {}
 
@@ -176,26 +179,43 @@ class OrganicTown(T.Town):
         h = self.river_half = self.cfg["rhalf"]
         mr = max(math.dist((self.xc, self.yc), q) for q in self.market_poly)
         town_r = max(math.dist((self.xc, self.yc), q) for q in self.outline) if self.outline else 30
-        th = R.uniform(0, math.pi)
-        u, n = (math.cos(th), math.sin(th)), (-math.sin(th), math.cos(th))
-        amp, wave, ph = R.uniform(2, 6), R.uniform(35, 70), R.uniform(0, 2 * math.pi)
-        off = R.choice((-1, 1)) * R.uniform(mr + h + 4, max(mr + h + 5, town_r * .55))
         far = math.hypot(self.cols, self.rows)
-        for _ in range(12):
-            pts = []
-            for k in range(int(2 * far / 2) + 1):
-                t = -far + k * 2
-                w = off + amp * math.sin(t / wave * 2 * math.pi + ph)
-                pts.append((self.xc + u[0] * t + n[0] * w, self.yc + u[1] * t + n[1] * w))
-            if min(G.seg_dist(q, a, b) for q in self.market_poly for a, b in zip(pts, pts[1:])) > h + 3: break
-            off *= 1.15
-        else: return
+        cands = []
+        for _ in range(10):                                   # several courses; the one that runs along the fewest ways wins
+            th = R.uniform(0, math.pi)
+            u, n = (math.cos(th), math.sin(th)), (-math.sin(th), math.cos(th))
+            amp, wave, ph = R.uniform(2, 6), R.uniform(35, 70), R.uniform(0, 2 * math.pi)
+            off = R.choice((-1, 1)) * R.uniform(mr + h + 4, max(mr + h + 5, town_r * .55))
+            for _ in range(12):
+                pts = []
+                for k in range(int(far) + 1):
+                    t = -far + k * 2
+                    w = off + amp * math.sin(t / wave * 2 * math.pi + ph)
+                    pts.append((self.xc + u[0] * t + n[0] * w, self.yc + u[1] * t + n[1] * w))
+                if min(G.seg_dist(q, a, b) for q in self.market_poly for a, b in zip(pts, pts[1:])) > h + 3: break
+                off *= 1.15
+            else: continue
+            cands.append(pts)
+        if not cands: return
+        self.river_cands = cands
+        pts = cands[0]
         self.river_v = pts                                    # the flow runs from the first point to the last
 
     def lay_river(self):
         """The river's line, its banks kept clear, and bridges where a way crosses it."""
-        pts = self.river_line = self.river_v
         h = self.river_half
+        def along(pts):
+            """How much of the ways would lie in the water: squares of way within the river's band, less the crossings."""
+            n = 0
+            for a, b, hh, k in self.segs:
+                L_ = math.dist(a, b)
+                for i in range(int(L_) + 1):
+                    q = (a[0] + (b[0] - a[0]) * i / max(L_, 1), a[1] + (b[1] - a[1]) * i / max(L_, 1))
+                    if abs(q[0] - self.xc) > self.cols or abs(q[1] - self.yc) > self.rows: continue
+                    if min(G.seg_dist(q, p_, q_) for p_, q_ in zip(pts, pts[1:])) < h + hh: n += 1
+            return n
+        pts = min(getattr(self, "river_cands", [self.river_v]), key=along)
+        self.river_v = self.river_line = pts
         for a, b in zip(pts, pts[1:]):
             sg = (a, b, h + .4, "river")                     # in the way grid (so nothing is built on it), not a way
             self.seg_grid.add((min(a[0], b[0]) - h, min(a[1], b[1]) - h, abs(b[0] - a[0]) + 2 * h, abs(b[1] - a[1]) + 2 * h), sg)
@@ -289,6 +309,7 @@ class OrganicTown(T.Town):
         if not self.off_ways(polys, (x, y, w, h), .25): return False
         if self.wall and any(G.seg_dist(q, self.wall[i - 1], self.wall[i]) < 1.4 for q in pts for i in range(len(self.wall))): return False
         if any(G.separation(poly, self.market_poly) < .3 for poly in polys): return False
+        if any(G.separation(poly, q) < .3 for poly in polys for q in self.burned): return False
         return True
 
     def off_ways(self, polys, box, clear):
@@ -372,7 +393,11 @@ class OrganicTown(T.Town):
                 tdef = B.variant(tk, R, sides=not row)
                 spot = self.try_at(tk, e["A"], e["u"], e["in"], t, sb + R.uniform(0, .25 if row else .4), gap, blk, tdef)
                 if spot:
-                    b = self.put(tk, self.label_for(tk), spot)
+                    lab = self.label_for(tk)
+                    if ward == "gate-out" and tk == "tavern": lab = "Inn"
+                    if ward == "gate-out" and tk == "cottage" and self.count.get("hospital", 0) < {"village": 0, "town": 1, "city": 2}[self.size]:
+                        lab = "Almshouse"; self.count["hospital"] = self.count.get("hospital", 0) + 1
+                    b = self.put(tk, lab, spot)
                     if not b: continue
                     b.lot = blk
                     tt = [(q[0] - e["A"][0]) * e["u"][0] + (q[1] - e["A"][1]) * e["u"][1] for q in spot[3]]
@@ -505,11 +530,26 @@ class OrganicTown(T.Town):
             pr = self.put("cottage", "Priest's house", s, {"priest": True})
         if self.river_line: self.put_mill(blocks)
         self.count["tavern"] = 1
+        # fire history: now and then a great fire took one block; it was rebuilt in stone, all but one plot left in ash
+        self.fire_p = None
+        hot = [p for p, blk, kinds in blocks.values() if p["ward"] in ("craftsmen", "merchant", "market", "slum", "village")]
+        if hot and R.random() < {"village": .2, "town": .4, "city": .6}[self.size]: self.fire_p = R.choice(hot)
         order = ["gate", "merchant", "market", "administration", "church", "military", "patriciate", "craftsmen", "village", "slum", "gate-out"]
         for ward in order:
             for p, blk, kinds in blocks.values():
                 if p["ward"] != ward: continue
                 self.lots(blk, kinds, ward)                    # cuts the alleys through a big block
+                if p is self.fire_p:
+                    es0 = [e for e in self.edges_of(blk, kinds) if e["len"] > 9]
+                    if es0:
+                        for _ in range(10):
+                            e0 = R.choice(es0)
+                            g0 = R.uniform(1, e0["len"] - 7)
+                            g1 = g0 + R.uniform(4, 6)
+                            A, u, inw = e0["A"], e0["u"], e0["in"]
+                            q = G.clip_convex([(A[0] + u[0] * g0, A[1] + u[1] * g0), (A[0] + u[0] * g1, A[1] + u[1] * g1),
+                                               (A[0] + u[0] * g1 + inw[0] * 5, A[1] + u[1] * g1 + inw[1] * 5), (A[0] + u[0] * g0 + inw[0] * 5, A[1] + u[1] * g0 + inw[1] * 5)], blk)
+                            if q and self.plot_free(q, None): self.burned.append(q); break
                 es = self.edges_of(blk, kinds)
                 es.sort(key=lambda e: (e["kind"] != "main", -e["len"]))
                 done = []
@@ -529,12 +569,77 @@ class OrganicTown(T.Town):
                 s2 = self.try_at("barn", e["A"], e["u"], e["in"], end + 2, *SPACING["farm"], blk)
                 if s2: self.put("barn", "Barn", s2)
                 break
+        if self.fire_p:
+            for b in self.blds:
+                if G.inside(b.centre, self.fire_p["poly"]): b.rebuilt = True
         self.make_plots()
         for b in self.blds:
             if getattr(b, "plot", None) or b.type not in ("cottage", "byre-house", "townhouse"): continue
             if R.random() < .8: self.garden_behind(b)
+        self.place_trades()
+        self.wealth()
         self.people()
+        for h in self.households:
+            b = next(x for x in self.blds if x.key == h["building"])
+            h["wealth"] = getattr(b, "wealth", "middling")
+            if b.label == "Almshouse":                          # the hospital outside the gate: its keeper and the poor it shelters
+                h["trade"] = "almshouse keeper"
+                h["people"] = [{"role": "almshouse keeper"}] + [{"role": "almsman"}] * self.R.randint(2, 5)
+            if b.label == "Inn": h["trade"] = "innkeeper"; h["people"][0] = {"role": "innkeeper"}
         if not any(b.type == "cottage" for b in self.blds): self.notes.append("no cottages")
+
+    def town_r(self):
+        return max(math.dist((self.xc, self.yc), q) for q in self.outline) if self.outline else 30
+
+    def place_trades(self):
+        """The trades that stink (tanning, dyeing, butchering, fulling, tallow) go where a town put them: downstream
+        on the river, else against the wall or out past it, else as far from the market as may be. The clean trades
+        take the rest."""
+        shops = [b for b in self.blds if b.type == "workshop" and "miller" not in b.label]
+        if not shops: return
+        rr = self.town_r()
+        mid = None
+        if self.river_line:
+            mid = min(range(len(self.river_line)), key=lambda k: math.dist(self.river_line[k], (self.xc, self.yc)))
+        def dirt(b):
+            x, y = b.centre
+            sc = math.dist((x, y), (self.xc, self.yc)) / rr
+            if mid is not None:
+                k = min(range(len(self.river_line)), key=lambda k: math.dist(self.river_line[k], (x, y)))
+                if k > mid and self.river_dist((x, y)) < 14: sc += 3 - self.river_dist((x, y)) / 7
+            if self.wall:
+                dw = min(G.seg_dist((x, y), self.wall[i - 1], self.wall[i]) for i in range(len(self.wall)))
+                if dw < 7 or not G.inside((x, y), self.wall): sc += 1.5
+            return sc
+        ranked = sorted(shops, key=dirt, reverse=True)
+        n_dirty = max(1, round(len(shops) * .3)) if len(shops) > 1 else 0
+        for i, b in enumerate(ranked):
+            trade = DIRTY_TRADES[i % len(DIRTY_TRADES)] if i < n_dirty else CLEAN_TRADES[(i - n_dirty) % len(CLEAN_TRADES)]
+            b.label = f"Workshop ({trade})"
+            b.dirty = i < n_dirty
+
+    def wealth(self):
+        """Rich by the market and in the rich wards, poor at the walls, in the slums, by the dirty trades and outside
+        the gates. Rich houses are stone below and timber above, with boarded floors; middling ones timber and
+        plaster; poor ones plain timber on bare earth."""
+        rr = self.town_r()
+        ward_of = {}
+        for p in self.patches:
+            for b in self.blds:
+                if b.key not in ward_of and G.inside(b.centre, p["poly"]): ward_of[b.key] = p.get("ward")
+        dirty = [b for b in self.blds if getattr(b, "dirty", False)]
+        for b in self.blds:
+            if b.type in ("chapel", "guardhouse", "barn", "storehouse", "smithy"): continue
+            w = ward_of.get(b.key)
+            r = math.dist(b.centre, (self.xc, self.yc)) / rr
+            r += {"patriciate": -.3, "merchant": -.2, "market": -.15, "administration": -.1, "slum": .4, "gate-out": .3, "farm": .3}.get(w, 0)
+            if any(math.dist(b.centre, d.centre) < 10 for d in dirty if d is not b): r += .2
+            b.wealth = "rich" if r < .35 else "poor" if r > .75 else "middling"
+            if b.type in ("byre-house",): continue                  # a farmhouse keeps its own walls
+            b.wall_tex = "Stone_A.png" if getattr(b, "rebuilt", False) else WEALTH_WALL[b.wealth]
+            if b.wealth == "rich":
+                for rm in b.rooms:
+                    if rm.floor == "earth" and rm.name not in ("Byre", "Store", "Shed", "Lean-to"): rm.floor = "planks"
 
     def make_plots(self):
         """Burgage plots: each house on a frontage gets a strip of land running back from the street, as wide as its
@@ -611,6 +716,7 @@ class OrganicTown(T.Town):
         for _, o in self.bgrid.near(bb, .5):
             if o is not own and any(G.separation(poly, hb) < .05 for hb in o.hulls): return False
         if any(G.separation(poly, q["poly"]) < -.01 for q in self.plots if q["b"] is not own and overlaps(q["rect"], bb, .1)): return False
+        if any(G.separation(poly, q) < .1 for q in getattr(self, "burned", [])): return False
         return self.off_ways([poly], bb, 0)
 
     def garden_behind(self, b):
@@ -640,12 +746,51 @@ class OrganicTown(T.Town):
             if G.inside((x, y), self.market_poly) and G.edge_dist((x, y), self.market_poly) > 1.5: return (x, y)
         return (cx, cy)
 
+    def cross_spot(self):
+        """The market cross: a landmark in the open market, a few squares from the well."""
+        wx, wy = self.well
+        for r in (3.5, 3, 4.5, 2.5):
+            for k in range(12):
+                a = k * math.pi / 6
+                q = (wx + r * math.cos(a), wy + r * math.sin(a))
+                if G.inside(q, self.market_poly) and G.edge_dist(q, self.market_poly) > 2: return q
+        return None
+
+    def node_wells(self):
+        """A public well by the busier junctions away from the market, one to each quarter of the town, set back off
+        the ways so they stay clear; each is a landmark and a meeting place."""
+        want = {"village": 0, "town": 2, "city": 6}[self.size]
+        if not want: return []
+        deg = {}
+        for a, b, h, k in self.segs:
+            for q in (a, b): deg[(round(q[0], 3), round(q[1], 3))] = deg.get((round(q[0], 3), round(q[1], 3)), 0) + 1
+        nodes = [q for q, n in deg.items() if n >= 3 and self.in_town(q) and G.poly_dist(q, self.market_poly) > 10]
+        self.R.shuffle(nodes)
+        out = []
+        for q in sorted(nodes, key=lambda q: -deg[q]):
+            if len(out) >= want: break
+            if any(math.dist(q, w) < 22 for w in out + [self.well]): continue
+            for r in (2.4, 2.9, 3.4):
+                spot = None
+                for k in range(16):
+                    a = k * math.pi / 8
+                    w = (q[0] + r * math.cos(a), q[1] + r * math.sin(a))
+                    box = box_corners(w[0], w[1], 0, 1.6, 1.6)
+                    bb = G.bbox(box)
+                    if not self.off_ways([box], bb, .1): continue
+                    if any(G.separation(box, hb) < .5 for _, o in self.bgrid.near(bb, 1) for hb in o.hulls): continue
+                    if any(G.separation(box, g["poly"]) < .2 for _, g in self.ggrid.near(bb, 1)): continue
+                    if any(G.separation(box, pl["poly"]) < 0 for pl in self.plots if overlaps(pl["rect"], bb, .2)): continue
+                    spot = w; break
+                if spot: out.append(spot); break
+        return out
+
     def market_things(self):
         R = self.R
         out = []
         wx, wy = self.well
         mx, my, mw, mh = self.market
-        taken = [box_corners(wx, wy, 0, 2.4, 2.4)]
+        taken = [box_corners(wx, wy, 0, 2.4, 2.4)] + ([box_corners(*self.cross, 0, 2, 2)] if self.cross else [])
         for _ in range(400):
             if len(out) >= self.cfg["stalls"]: break
             x, y = R.uniform(mx, mx + mw), R.uniform(my, my + mh)
@@ -663,6 +808,9 @@ class OrganicTown(T.Town):
         if any(G.poly_dist((x, y), g["poly"]) < rad * .6 for _, g in self.ggrid.near(pt, rad + 1)): return False
         if self.way_dist(x, y, rad + 2) < rad * .5 + .3: return False
         if G.poly_dist((x, y), self.market_poly) < rad + .5: return False
+        if any(math.dist((x, y), w) < rad * .6 + 1.2 for w in self.more_wells): return False
+        if any(G.poly_dist((x, y), q) < rad * .6 for q in self.burned): return False
+        if getattr(self, "washing", None) and math.dist((x, y), self.washing["at"]) < rad * .6 + 2: return False
         if self.wall and min(G.seg_dist((x, y), self.wall[i - 1], self.wall[i]) for i in range(len(self.wall))) < rad * .6 + 1: return False
         return True
 
@@ -689,6 +837,12 @@ class OrganicTown(T.Town):
             for k, a in enumerate(R.sample(["Box_Crate_Wood_Ashen_A1_1x1.webp", "Sack_Brown_E_Wheat_1x1.webp", "Barrel_Wood_Ashen_A_1x1.webp", "Sack_Brown_E_Grains_1x1.webp"], 2)):
                 dx, dy = -.65 + k * 1.3, .9
                 out.append((a, x + dx * math.cos(th) - dy * math.sin(th), y + dx * math.sin(th) + dy * math.cos(th), th + R.uniform(-.3, .3), .75, 100, .4))
+        for q in self.burned:                                 # charred timbers left where the fire took the houses
+            bx, by, bw_, bh_ = G.bbox(q)
+            for _ in range(6):
+                x, y = R.uniform(bx, bx + bw_), R.uniform(by, by + bh_)
+                if G.inside((x, y), q) and G.edge_dist((x, y), q) > .6:
+                    out.append(("Firewood_Stacked_A_1x1.webp", x, y, R.uniform(0, 6.3), R.uniform(.7, 1.1), 100, .5))
         if self.washing:
             (x, y), th = self.washing["at"], self.washing["th"]
             for dx, a, sc in ((-.8, "Trough_Wood_Ashen_Water_A_2x1.webp", 1), (.9, "Bucket_Wood_Ashen_A_1x1.webp", .8), (1.5, "Barrel_Wood_Ashen_A_1x1.webp", .8)):
@@ -737,6 +891,8 @@ class OrganicTown(T.Town):
                 return (a[0] + (b[0] - a[0]) * d / L_, a[1] + (b[1] - a[1]) * d / L_) if L_ > d else a
             pts[0] = cut(pts[0], pts[1]); pts[-1] = cut(pts[-1], pts[-2])
             runs.append(pts)
+            for a, b in ((pts[0], pts[1]), (pts[-1], pts[-2])):    # a tower each side of the gate, clear of the street
+                towers.append(cut(a, b, 1.1))
         return runs, towers
 
     # ------------------------------------------------------------ Dungeondraft, one part
@@ -748,8 +904,9 @@ class OrganicTown(T.Town):
         for b in self.blds:
             if not overlaps(b.rect, win): continue
             ops = [(k, x, y, None) for k, x, y, _ in b.openings_world()]
-            walls.append(wall_with_portals(b.outline, b.t["wall"], ops, True))
-            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], b.t["wall"], ops, False))
+            wt = getattr(b, "wall_tex", None) or b.t["wall"]
+            walls.append(wall_with_portals(b.outline, wt, ops, True))
+            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False))
             for r in b.rooms:
                 if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
                 for it, cx, cy, rot in b.items_world(r):
@@ -781,10 +938,11 @@ class OrganicTown(T.Town):
             if T.inside(tx, ty, win, 1.5):
                 ring = [(tx + 1.1 * math.cos(a * math.pi / 6), ty + 1.1 * math.sin(a * math.pi / 6)) for a in range(12)]
                 walls.append(wall_with_portals(ring, "Stone_A.png", [], True))
-        wx, wy = self.well
-        if T.inside(wx, wy, win, .6):
-            ring = [(wx + .5 * math.cos(a * math.pi / 6), wy + .5 * math.sin(a * math.pi / 6)) for a in range(12)]
-            walls.append(wall_with_portals(ring, "Stone_A.png", [], True))
+        for wx, wy in [self.well] + self.more_wells:
+            if T.inside(wx, wy, win, .6):
+                ring = [(wx + .5 * math.cos(a * math.pi / 6), wy + .5 * math.sin(a * math.pi / 6)) for a in range(12)]
+                walls.append(wall_with_portals(ring, "Stone_A.png", [], True))
+        if self.cross and T.inside(*self.cross, win, 1): objects.append(obj("Pillar_Marble_White_A1_1x1.webp", *self.cross, 0, 1.2, 100))
         for asset, x, y, rot, sc, layer, reach in self.deco:
             if T.inside(x, y, win, reach): objects.append(obj(asset, x, y, rot, sc, layer=layer))
         C.set_origin(0, 0)
@@ -866,6 +1024,9 @@ class OrganicTown(T.Town):
                 piece = piece[::step] + ([piece[-1]] if (len(piece) - 1) % step else [])
                 rs = region_shape(G.buffer_line(piece, self.river_half))
                 if rs: regions.append({"id": f"river-{j + 1}", "label": "The river", "rect": rs[0], "points": rs[1], "place": {"kind": "other"}})
+        for k, q in enumerate(self.burned):
+            rs = region_shape(q)
+            if rs: regions.append({"id": f"burned-{k + 1}", "label": "A burned-out plot", "rect": rs[0], "points": rs[1], "place": {"kind": "other"}})
         if self.washing:
             rs = region_shape(self.washing["poly"])
             if rs: regions.append({"id": "washing-place", "label": "The washing place", "rect": rs[0], "points": rs[1], "place": {"kind": "other"}})
@@ -877,10 +1038,13 @@ class OrganicTown(T.Town):
             b = pl["b"]
             if rs: regions.append({"id": pl["id"], "label": f"Yard of the {b.label.lower()}", "rect": rs[0], "points": rs[1],
                                    "place": {"kind": "home" if b.t["place"] in ("home", None) else b.t["place"], "owner": b.key, "private": True}})
-        wx, wy = self.well
-        if T.inside(wx, wy, win):
-            features.append({"id": "well", "label": "Well", "rect": [round(wx - .5 - ox, 3), round(wy - .5 - oy, 3), 1, 1],
-                             "flags": {"climb": True, "climbKind": "rope", "height": 30, "depth": 30, "title": "Down the well on the bucket rope"}})
+        for k, (wx, wy) in enumerate([self.well] + self.more_wells):
+            if T.inside(wx, wy, win):
+                features.append({"id": "well" if k == 0 else f"well-{k + 1}", "label": "Well" if k == 0 else "Public well", "rect": [round(wx - .5 - ox, 3), round(wy - .5 - oy, 3), 1, 1],
+                                 "flags": {"climb": True, "climbKind": "rope", "height": 30, "depth": 30, "title": "Down the well on the bucket rope"}})
+        if self.cross and T.inside(*self.cross, win):
+            cx_, cy_ = self.cross
+            regions.append({"id": "market-cross", "label": "The market cross", "rect": [round(cx_ - 1 - ox, 3), round(cy_ - 1 - oy, 3), 2, 2], "place": {"kind": "market"}})
         m = region_shape(self.market_poly)
         if m: regions.append({"id": "market", "label": "Village green" if self.size == "village" else "Market", "rect": m[0], "points": m[1], "place": {"kind": "market"}})
         for k, line in enumerate(self.road_lines):
@@ -933,6 +1097,7 @@ class OrganicTown(T.Town):
             o.append(f'<line x1="{a[0] * s:.1f}" y1="{a[1] * s:.1f}" x2="{b[0] * s:.1f}" y2="{b[1] * s:.1f}" stroke="#c9b48a" stroke-width="{2 * h * s:.1f}" stroke-linecap="round"/>')
         if self.river_line:
             o.append(f'<polyline points="{" ".join(map(f, self.river_line))}" fill="none" stroke="#7fa7c9" stroke-width="{2 * self.river_half * s:.1f}" stroke-linejoin="round"/>')
+        for q in self.burned: o.append(f'<polygon points="{" ".join(map(f, q))}" fill="#6d6259" stroke="#333"/>')
         if self.washing: o.append(f'<polygon points="{" ".join(map(f, self.washing["poly"]))}" fill="#cfe0ee" stroke="#456"/>')
         for br in self.bridges: o.append(f'<polygon points="{" ".join(map(f, self.bridge_poly(br)))}" fill="#a07a4c" stroke="#5a3d1e"/>')
         o.append(f'<polygon points="{" ".join(map(f, self.market_poly))}" fill="#d8c9a3" stroke="#8a7650" stroke-dasharray="3 2"/>')
@@ -944,7 +1109,8 @@ class OrganicTown(T.Town):
         for run in runs: o.append(f'<polyline points="{" ".join(map(f, run))}" fill="none" stroke="#444" stroke-width="{.6 * s}"/>')
         for t in towers: o.append(f'<circle cx="{t[0] * s:.1f}" cy="{t[1] * s:.1f}" r="{1.1 * s}" fill="#666"/>')
         for b in self.blds:
-            o.append(f'<polygon points="{" ".join(map(f, b.outline))}" fill="#fffdf8" stroke="#333" stroke-width="2"/>')
+            fill = {"rich": "#fff4d8", "poor": "#efe9e0"}.get(getattr(b, "wealth", ""), "#fffdf8")
+            o.append(f'<polygon points="{" ".join(map(f, b.outline))}" fill="{fill}" stroke="{"#555" if getattr(b, "rebuilt", False) else "#333"}" stroke-width="{3 if getattr(b, "rebuilt", False) else 2}"/>')
             for a, c in b.partitions_world(): o.append(f'<line x1="{a[0] * s:.1f}" y1="{a[1] * s:.1f}" x2="{c[0] * s:.1f}" y2="{c[1] * s:.1f}" stroke="#333"/>')
             for r in b.rooms:
                 for it, cx, cy, rot in b.items_world(r):
@@ -953,8 +1119,8 @@ class OrganicTown(T.Town):
             for kind, x, y, seg in b.openings_world():
                 o.append(f'<line x1="{seg[0] * s:.1f}" y1="{seg[1] * s:.1f}" x2="{seg[2] * s:.1f}" y2="{seg[3] * s:.1f}" stroke="{C.OPENING_COLOURS[kind]}" stroke-width="3"/>')
             o.append(f'<text x="{b.cx * s:.1f}" y="{b.cy * s:.1f}" text-anchor="middle" font-size="{6 if s > 8 else 4}" fill="#123">{b.label.split(" (")[0]}</text>')
-        wx, wy = self.well
-        o.append(f'<circle cx="{wx * s}" cy="{wy * s}" r="{.5 * s}" fill="#8db3d9" stroke="#333"/>')
+        for wx, wy in [self.well] + self.more_wells: o.append(f'<circle cx="{wx * s:.1f}" cy="{wy * s:.1f}" r="{.5 * s}" fill="#8db3d9" stroke="#333"/>')
+        if self.cross: o.append(f'<rect x="{(self.cross[0] - .4) * s:.1f}" y="{(self.cross[1] - .4) * s:.1f}" width="{.8 * s}" height="{.8 * s}" fill="#ddd" stroke="#333"/>')
         for _, x, y, th in self.stalls: o.append(f'<polygon points="{" ".join(map(f, box_corners(x, y, th, 2.6, 1.8)))}" fill="none" stroke="#a30" stroke-dasharray="2 2"/>')
         for pt in parts:
             if not pt["id"]: continue
@@ -971,6 +1137,8 @@ class OrganicTown(T.Town):
         self.lay_out()
         self.washing = self.washing_spot() if self.river_line else None
         self.well = self.well_spot()
+        self.cross = self.cross_spot()
+        self.more_wells = self.node_wells()
         self.stalls = self.market_things()
         ch = next(b for b in self.blds if b.type == "chapel")
         self.stocks = ch.world(ch.lw / 2 + 2.2, ch.lh + .8)
