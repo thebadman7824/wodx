@@ -2293,6 +2293,12 @@
       "title": "The Horizon War 3: War in Heaven",
       "short": "Horizon War 3",
       "edition": "Novel"
+    },
+    {
+      "id": "nysc3",
+      "title": "Year of the Scarab 3: Land of the Dead",
+      "short": "Year of the Scarab 3",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2677,6 +2683,7 @@
     "nbon.json",
     "npp2.json",
     "nhw2.json",
-    "nhw3.json"
+    "nhw3.json",
+    "nysc3.json"
   ]
 }
