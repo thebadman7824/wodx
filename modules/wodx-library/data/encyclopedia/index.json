@@ -1885,6 +1885,12 @@
       "title": "Transylvania by Night",
       "short": "TbN",
       "edition": "Dark Ages"
+    },
+    {
+      "id": "daveil",
+      "title": "Veil of Night",
+      "short": "Veil of Night",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2201,6 +2207,7 @@
     "dathief.json",
     "dallal.json",
     "dapillars.json",
-    "datbn.json"
+    "datbn.json",
+    "daveil.json"
   ]
 }
