@@ -1,0 +1,236 @@
+[
+ {
+  "id": "tbcog-last-allmoot",
+  "title": "The Last Allmoot",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "When the Children of Gaia were asked to give up their camps.",
+  "claims": [
+   {
+    "text": "The Half Moon True Silverheels saw the tribe split into nine quarrelling camps, among them Demeter's Daughters, the Imminent Strike, the Angels in the Garden and the Patient Deed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "True called what became known as the Last Allmoot at the Hand of Gaia Caern and urged every Child of Gaia to set the camps aside before the Apocalypse came.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   },
+   {
+    "text": "True also asked members to teach the Gifts and rites they had from camp spirits to any worthy tribemate, whatever camp they came from.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 15,
+      "pdf": 16
+     }
+    ]
+   }
+  ],
+  "see": [
+   "children-of-gaia"
+  ]
+ },
+ {
+  "id": "tbcog-diggers",
+  "title": "The Diggers",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "renaissance"
+  ],
+  "summary": "Children of Gaia behind a commune of the English poor.",
+  "claims": [
+   {
+    "text": "Children of Gaia tell how their tribe stood behind the Diggers' colony at St. George's Hill, which grew as the Bone Gnawers sent Kin from the London slums.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The colonists worked common wasteland to feed and house the poor; when landowners sent thugs, Brightness Falls talked the Garou out of Rage, which would only have ended in slaughter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Winstanley ended life as a Quaker, and that congregation later became the Forest Brethren; the colonies themselves lived on, forgotten by historians, in the lost green lanes of England.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "children-of-gaia",
+   "bone-gnawers"
+  ]
+ },
+ {
+  "id": "tbcog-tree-of-battles",
+  "title": "Tree-of-Battles",
+  "kind": "character",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Gaian herald in the Age of Chivalry.",
+  "claims": [
+   {
+    "text": "In an age when most tribes revelled in war, Tree-of-Battles was a Child of Gaia whom the Silver Fangs trusted for deep knowledge of Garou and spirit lore.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Tree-of-Battles served the Fangs as a herald at battles and tourneys.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "children-of-gaia",
+   "silver-fangs"
+  ]
+ },
+ {
+  "id": "tbcog-lagash",
+  "title": "The Sacred Peace of Lagash",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "A tale of Sumer told by the Children of Gaia.",
+  "claims": [
+   {
+    "text": "In tribal memory, the Children of Gaia learned the Rite of the Sacred Peace from spirits in ancient Sumer, where cities fought over water and rivers.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "When a king of Lagash taxed the people into ruin and seized temple and caern lands, the sept rose and put Urukagina the Reformer, one of the tribe's Kinfolk, in power.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Urukagina cut the taxes, returned lands to the temples, protected widows and orphans and swore the oath of sacred peace in the caern on temple land, though the peace did not last.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "children-of-gaia"
+  ]
+ },
+ {
+  "id": "tbcog-patient-deed",
+  "title": "The Patient Deed",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "wild-west",
+   "modern"
+  ],
+  "summary": "A Children of Gaia camp of peacemakers.",
+  "claims": [
+   {
+    "text": "Many of the Patient Deed stood down when True Silverheels called for the camps to end, remembering protests of the 1960s that had gone badly.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   },
+   {
+    "text": "Members of the tribe argue that the camp's work is far older: it reached out to the Uktena and Wendigo in the Old West and earlier tried to mend old feuds in Turkey, the Middle East and North Africa.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbcog",
+      "page": 36,
+      "pdf": 37
+     }
+    ]
+   }
+  ],
+  "see": [
+   "children-of-gaia",
+   "tbcog-last-allmoot",
+   "uktena",
+   "wendigo"
+  ]
+ }
+]
