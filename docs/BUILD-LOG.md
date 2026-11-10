@@ -1249,3 +1249,10 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Suburbs: gate wards outside the walls are now likely (85%), with inns and an almshouse (its keeper and almsmen) as well as cottages, smiths and workshops. B587.
 - Fire history: villages 20%, towns 40%, cities 60% have had a great fire in one block. One burned-out plot is left with charred timbers (sidecar region burned-N) and the block's houses were rebuilt in stone. B588.
 - Samples schondorf and linberg redrawn.
+
+## 2026-11-10: lighter sheet saves and redraws (fork 7.3.2-wodx.7, WoDX Sheets 0.6.2)
+- From the character sheet review (https://claude.ai/artifact/9HMVrBciCtp9WQCAZiDSrW), steps 1 and 2.
+- After-save recompute: only the client that made the change runs it, and it writes the changed values only (module/scripts/wodx-save.js, `systemChanges`). The item-change recompute does the same. B600.
+- Mortal and PC sheets no longer print the whole actor to the console on every redraw.
+- All 12 line sheet templates wrap the Core tab in `{{#unless wodxCore}}`; WoDX Sheets sets `wodxCore` when it draws the book's sheet. B601.
+- Harness: sheet-speed.test.mjs. Gate: tools/gate/gatesheetspeed.mjs (redraw times, saves per change, totals follow, Core tab with and without a WoDX sheet).

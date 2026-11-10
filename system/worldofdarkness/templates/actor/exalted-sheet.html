@@ -41,6 +41,7 @@
 
 				<!-- Core Normal -->
 				<div class="tab core sheet-inner-area" data-group="primary" data-tab="core">
+					{{#unless wodxCore}}{{!-- WoDX fork: WoDX Sheets draws its own Core tab here --}}
 					
 					<!-- Core Attributes -->
 					<div class="sheet-area flex-columns">
@@ -56,6 +57,7 @@
 					<div class="sheet-area flex-columns">
 						{{> "systems/worldofdarkness/templates/actor/parts/stats.html"}}
 					</div>
+					{{/unless}}
 				</div>
 
 				{{> "systems/worldofdarkness/templates/actor/parts/power.html"}}

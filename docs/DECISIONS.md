@@ -421,3 +421,9 @@ A walled town's fields at a gate become a suburb 85% of the time, with an inn an
 
 ## B588. Fire history (2026-11-10)
 Villages 20%, towns 40%, cities 60% have had one great fire: one block rebuilt in stone, with one burned-out plot left among the new houses.
+
+## B600. One client recomputes after a save (2026-11-10)
+The system's after-save recompute (totals, wound levels, movement) runs only on the client that made the change, and writes back only the values it changed instead of the whole character. Before, the Storyteller's and the owning player's browsers could both write the full actor after each change.
+
+## B601. No double Core tab (2026-11-10)
+When WoDX Sheets shows a line's printed sheet, the system skips drawing its own Core tab, which was thrown away before. The system's layout is unchanged when no WoDX sheet applies.

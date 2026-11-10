@@ -313,6 +313,7 @@ function wodxSheet(Base, type) {
       if (!id) return data;
       if (id === "faeDA" && data.actor.system.listdata?.settings) data.actor.system.listdata.settings.haschimericalhealth = false;
       data.wodx = viewFor(id, this.actor);
+      data.wodxCore = true; // the system skips drawing its own Core tab, which _renderInner replaces
       return data;
     }
     async _renderInner(data) {
