@@ -2005,6 +2005,12 @@
       "title": "Changing Ways (W20)",
       "short": "W20 Changing Ways",
       "edition": "V20"
+    },
+    {
+      "id": "w20kin",
+      "title": "Kinfolk (W20)",
+      "short": "W20 Kinfolk",
+      "edition": "20th Anniversary companion"
     }
   ],
   "files": [
@@ -2341,6 +2347,7 @@
     "watwilight.json",
     "wasubs.json",
     "watrailmx.json",
-    "w20cw.json"
+    "w20cw.json",
+    "w20kin.json"
   ]
 }
