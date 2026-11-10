@@ -23,6 +23,8 @@ export async function run() {
     out.cleared = stale.length;
     const n0 = game.messages.size;
     const combat = await Combat.create({ scene: sc.id, active: true });
+    // Earlier check gates leave their own test combats active: make this one the combat in view, so the turn counts read it
+    await combat.activate(); await sleep(300);
     await combat.createEmbeddedDocuments("Combatant", [{ tokenId: tW.id, sceneId: sc.id, actorId: W.id }, { tokenId: tM.id, sceneId: sc.id, actorId: M.id }]);
     await combat.startCombat(); await sleep(2500);
     const t1 = Date.now(); while (!game.messages.contents.slice(n0).some(m => /Initiative/.test(m.content)) && Date.now() - t1 < 8000) await sleep(100);
