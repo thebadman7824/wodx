@@ -1,0 +1,163 @@
+[
+ {
+  "id": "dahum-golconda-belief",
+  "title": "Golconda on the Road of Humanity",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A dangerous hope some Prodigals hold.",
+  "claims": [
+   {
+    "text": "Some Prodigals believe Golconda is the end of the Road of Humanity, a journey that closes in understanding rather than blood and ashes; others on the road call this a dangerous heresy.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dahum",
+      "page": 22,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-golconda",
+   "da-road-of-humanity"
+  ]
+ },
+ {
+  "id": "dahum-byzantine-cradle",
+  "title": "The Greek Cradle of the Road",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Why Prodigals look to the Byzantine lands.",
+  "claims": [
+   {
+    "text": "Many Brujah and Toreador Prodigals hold that the lands once ruled by Greece gave birth to the formal Road of Humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahum",
+      "page": 37,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "The Byzantine successor states, the western ones above all, are still thought good ground for the road, and Michael the Patriarch's reign is remembered as proof of how high Cainites can rise.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahum",
+      "page": 37,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-humanity",
+   "cbt-byzantium",
+   "dahc-obertus-dream"
+  ]
+ },
+ {
+  "id": "dahum-path-of-community",
+  "title": "The Path of Community",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Prodigals who put society above the single soul.",
+  "claims": [
+   {
+    "text": "The Path of Community places the many above the one: society is what saves, and society is what Cainite sins wrong most.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahum",
+      "page": 53,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "The knights of the Twilight Order keep a rite of their own, the Vigil for the Lost, a solemn remembrance of the dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahum",
+      "page": 53,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-humanity"
+  ]
+ },
+ {
+  "id": "dahum-prodigals-and-scions",
+  "title": "Prodigals and Scions",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Where the Road of Humanity parts from the Road of Kings.",
+  "claims": [
+   {
+    "text": "War is the sport of kings and much else rulers do is morally doubtful by the road's measure, so a Prodigal could rarely live as a Scion does and keep Humanity.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahum",
+      "page": 44,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "The key difference is that the Scion will hold control at others' cost, which the Prodigal will not.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "dahum",
+      "page": 44,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Truly monstrous breaches of the Via Humanitatis tend to hand the offender to the Beast quickly, unless the Cainite is spiritually ready to leave the road for another.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dahum",
+      "page": 33,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-road-of-humanity",
+   "da-road-of-kings",
+   "dark-tyrants"
+  ]
+ }
+]

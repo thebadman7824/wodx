@@ -469,6 +469,12 @@
    "title": "Victorian Age Companion",
    "short": "VA Companion",
    "edition": "Revised"
+  },
+  {
+   "id": "dahum",
+   "title": "Dark Ages: Road of Humanity",
+   "short": "DA Road of Humanity",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -549,6 +555,7 @@
   "dark.json",
   "dab.json",
   "das.json",
-  "vac.json"
+  "vac.json",
+  "dahum.json"
  ]
 }
