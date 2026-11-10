@@ -30,8 +30,9 @@ export async function run() {
     // A headless client can keep its combat tracker on an older fight: point the tracker at this one as well
     const view = () => game.combat?.id === combat.id;
     out.viewTries = [];
-    if ( !view() ) { try { await ui.combat?.initialize?.({combat, render: false}); } catch (e) { out.viewTries.push(`initialize: ${e.message}`); } out.viewTries.push(`initialize ${view()}`); }
+    // Assigning viewed is the current way; initialize({combat}) is deprecated (gone in Foundry 15), so it is only the fallback
     if ( !view() ) { try { ui.combat.viewed = combat; } catch (e) { out.viewTries.push(`viewed=: ${e.message}`); } out.viewTries.push(`viewed= ${view()}`); }
+    if ( !view() ) { try { await ui.combat?.initialize?.({combat, render: false}); } catch (e) { out.viewTries.push(`initialize: ${e.message}`); } out.viewTries.push(`initialize ${view()}`); }
     if ( !view() ) { try { await combat.update({active: true}); await ui.combat?.render?.(); } catch (e) { out.viewTries.push(`render: ${e.message}`); } out.viewTries.push(`render ${view()}`); }
     out.inView = view();
     out.viewedId = game.combat?.id ?? null;
@@ -58,7 +59,7 @@ export async function run() {
     const hints = game.wodxCombat.attackHints(M, W, { weapon: "auto", maneuver: "normal", defense: "auto", flank: "auto", multi: "auto", defIndex: "auto", oppAuto: true }, { attackerTok: tM.object, targetTok: tW.object });
     out.steps.push({ name: "suggestions", pass: hints.length > 0, hints });
     await combat.delete();
-    try { await ui.combat?.initialize?.({render: false}); } catch { /* the tracker picks its own fight again */ }
+    try { ui.combat.viewed = null; } catch { /* the tracker picks its own fight again */ }
     // put the other test combats back as they were
     if (others.length) await Combat.updateDocuments(others.map(_id => ({ _id, active: true })));
     out.summary = `${out.steps.filter(s => s.pass).length}/${out.steps.length}`;
