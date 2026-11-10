@@ -1,0 +1,126 @@
+[
+ {
+  "id": "rahe-phoebe",
+  "title": "Phoebe, the Lambent Lady",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Incarna of Luna who lights the Aetherial Realm.",
+  "claims": [
+   {
+    "text": "Phoebe, also called Sokhta, is an Incarna of Luna and patron of the Stargazers, who call Phoebe the Lambent Lady; this Incarna fills half the sky of the Aetherial Realm.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rahe",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Garou build moon bridges and moon paths from that silvery light; Phoebe may appear as a human, a cat, a wolf or a sphere of moonsilver.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rahe",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Phoebe is said to be Luna's daughter, and many Stargazers believe Incarnae are facets of their Celestines in forms mortal minds can bear.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "rahe",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Phoebe's roads are clearest and safest at the full moon, though the Incarna is then at its most warlike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rahe",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": [
+   "stargazers",
+   "um-membrane-deep-umbra"
+  ]
+ },
+ {
+  "id": "rahe-zarok",
+  "title": "Zarok, the Crowned Ruler",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Planetary Incarna of Jupiter.",
+  "claims": [
+   {
+    "text": "Zarok, the Crowned Ruler, dwells in Jupiter and reigns over the Umbral solar system; red, white and yellow stand for passion, self-sacrifice and spiritual zeal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rahe",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Zarok embodies authority at its best, power granted by consent after tests of worth rather than seized.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rahe",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Zarok is patron of the ninth lunar month and of the Philodox, and favours the Silver Fangs above other tribes for their long tradition of leadership.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rahe",
+      "page": 71,
+      "pdf": 72
+     }
+    ]
+   },
+   {
+    "text": "Zarok's realm is all air in coloured bands that each turn at their own speed, so visitors must fly and attune to one band at a time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "rahe",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "silver-fangs",
+   "rahe-phoebe"
+  ]
+ }
+]

@@ -655,6 +655,12 @@
    "title": "Rage Across the Amazon",
    "short": "RA Amazon",
    "edition": "First edition"
+  },
+  {
+   "id": "rahe",
+   "title": "Rage Across the Heavens",
+   "short": "RA Heavens",
+   "edition": "2nd"
   }
  ],
  "files": [
@@ -766,6 +772,7 @@
   "raeg.json",
   "rany.json",
   "raru.json",
-  "raam.json"
+  "raam.json",
+  "rahe.json"
  ]
 }
