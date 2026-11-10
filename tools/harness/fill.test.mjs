@@ -125,3 +125,42 @@ test("goods: names are plain text, gender-neutral, with no long dashes", () => {
     assert.ok(!/[<>]/.test(g.name), g.name);
   }
 });
+
+/* Era item lists: every good is tagged with category, era and value, and the tags agree with the books' eras */
+test("goods: every good carries category, era and value tags", () => {
+  const ids = new Set();
+  for ( const g of G.GOODS ) {
+    assert.ok(G.SUBS[g.sub], `${g.name}: sub ${g.sub}`);
+    assert.equal(g.tags.category, `${g.kind}/${g.sub}`, g.name);
+    assert.ok(g.tags.era.length, `${g.name}: no era tag`);
+    assert.ok(g.from <= g.to && g.to <= 2099, `${g.name}: years ${g.from}-${g.to}`);
+    for ( const e of g.eras ) assert.ok(Number.isInteger(g.values[e]) && g.values[e] >= 0 && g.values[e] <= 5, `${g.name}: value in ${e}`);
+    assert.ok(G.VALUES[g.value], `${g.name}: value ${g.value}`);
+    assert.ok(G.SOURCES[g.source], `${g.name}: source ${g.source}`);
+    assert.ok(!ids.has(g.id), `${g.id}: twice`);
+    ids.add(g.id);
+  }
+  for ( const [k, [kind, , v, s]] of Object.entries(G.SUBS) ) {
+    assert.ok(G.KINDS[kind], `${k}: kind ${kind}`);
+    assert.ok(G.VALUES[v] && G.SOURCES[s], k);
+    assert.ok(G.GOODS.some(g => g.sub === k), `${k}: no goods`);
+  }
+});
+
+test("goods: era years match Chronicle, and every era from 1197 on has every kind of good", () => {
+  for ( const p of JSON.parse(src("modules/wodx-chronicle/data/eras.json")).profiles ) {
+    if ( p.start == null ) continue;
+    assert.deepEqual(G.ERA_YEARS[p.id], [p.start, p.end], p.id);
+  }
+  for ( const e of G.ERAS.filter(e => G.ERA_YEARS[e][0] >= 1197) )
+    for ( const k of Object.keys(G.KINDS) ) assert.ok(G.GOODS.some(g => g.kind === k && g.eras.includes(e)), `${e} has no ${k}`);
+});
+
+test("goods: a value can change over the centuries", () => {
+  const nutmeg = G.GOODS.find(g => g.name === "a whole nutmeg");
+  assert.equal(nutmeg.values["dark-ages"], 3);
+  assert.equal(nutmeg.values["victorian"], 0);
+  const bible = G.GOODS.find(g => g.name === "a family Bible with names inside the cover");
+  assert.deepEqual([bible.values.renaissance, bible.values.victorian, bible.values.modern], [4, 2, 1]);
+  assert.equal(G.valueAt(bible, 1700), 2);
+});

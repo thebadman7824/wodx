@@ -293,3 +293,6 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-10 | Organic towns: no castle or citadel, which the original can add. | Left out until WoDX has a castle building (B576). | Add a castle type to buildings.py and a citadel ward to layout.py. |
 | 2026-11-10 | How often an organic-town building gets a wing or lean-to. | 60% (B579). | Change chance in variant() in buildings.py. |
 | 2026-11-10 | Which wards build terraced rows, and how often. | Market and merchant always, administration 80%, gate and craftsmen 60%, slum 50% (B580). | Change TERRACED in organic.py. |
+| 2026-11-10 | Value scale for era goods. | Six tiers, Trifle to Treasure, against a working wage of the time, with the Resources rating that buys each (B591). | Change VALUES and the rows in modules/wodx-library/data/goods.mjs. |
+| 2026-11-10 | Goods used only between Chronicle's eras (1601-1836, 1919-1989). | Dropped the tricorne hat and goldsmith's note; wig and valve radio re-dated into eras (B592). | Add the rows back once Chronicle has eras for those years. |
+| 2026-11-10 | Each good's category, years and value tier. | Set from history and the book anchors; Ben marks each on the Item Review Desk (B590-B592). | Apply the desk's Fix and Cut marks to goods.mjs. |
