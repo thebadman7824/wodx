@@ -553,6 +553,12 @@
    "title": "Tribebook: Wendigo (Revised)",
    "short": "TB Wendigo",
    "edition": "Revised"
+  },
+  {
+   "id": "bbbas",
+   "title": "Breedbook: Bastet (Revised)",
+   "short": "BB Bastet",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -647,6 +653,7 @@
   "tbsf.json",
   "tbsg.json",
   "tbuk.json",
-  "tbwen.json"
+  "tbwen.json",
+  "bbbas.json"
  ]
 }
