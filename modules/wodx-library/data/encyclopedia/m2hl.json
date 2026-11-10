@@ -1,0 +1,297 @@
+[
+ {
+  "id": "m2hl-czar-vargo",
+  "title": "Czar Vargo's demand",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "The Etherite conqueror's failed ultimatum to the nations.",
+  "claims": [
+   {
+    "text": "Vargo's fleet demanded that every national government hand over its arsenal; only a desperate Technocratic attack with steam robots and mutant soldiers drove the airships off past the Horizon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "The New World Order wiped the attempt from the record, and Void Engineers have since reported sighting the fleet in the Deep Umbra.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mrnwo-lord-vargo",
+   "m2tt-etherite-heroes"
+  ]
+ },
+ {
+  "id": "m2hl-najjda-bantu",
+  "title": "Najjda Bantu",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "renaissance",
+   "victorian",
+   "wild-west",
+   "modern"
+  ],
+  "summary": "An African Chorus archmage who sits on the Primi Council.",
+  "claims": [
+   {
+    "text": "Najjda left the Council during the slave trade, later helped found the Underground Railroad and fought the Confederacy, then went home to drive out European settlers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   },
+   {
+    "text": "After the Ahl-i-Batin left the Council, allies brought Najjda back to Horizon; over 300 years old, Najjda names the One as a goddess, Bau-Hatt, and can take animal forms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 21,
+      "pdf": 22
+     }
+    ]
+   }
+  ],
+  "see": [
+   "celestial-chorus",
+   "m2hor-council-seats"
+  ]
+ },
+ {
+  "id": "m2hl-raging-eagle",
+  "title": "Raging Eagle",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An Akashic master of the Scales of the Dragon who remembers many lives.",
+  "claims": [
+   {
+    "text": "Raging Eagle's past lives reach back to the Himalayan War; in this life the master trained in Colorado in the most destructive arts of Do.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Raging Eagle believes death will come in any fight lasting more than a week, and is prone to deep Quiets and sudden moods.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "akashayana",
+   "mreu-himalayan-war"
+  ]
+ },
+ {
+  "id": "m2hl-sam-haine",
+  "title": "Sam Haine",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Verbena wanderer called the Changing Man.",
+  "claims": [
+   {
+    "text": "No one knows this Verbena's true name; Sam Haine is a pun on Samhain, and the Changing Man's face is never the same.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "Sam Haine gathers mythic pieces of reality for safekeeping in Verbena Horizon Realms and loves to debunk the false occult lore the Syndicate spreads.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 22,
+      "pdf": 23
+     }
+    ]
+   }
+  ],
+  "see": [
+   "verbena",
+   "syndicate"
+  ]
+ },
+ {
+  "id": "m2hl-john-courage",
+  "title": "Secret Agent John Courage",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Man in Black who fights everyone and keeps escaping.",
+  "claims": [
+   {
+    "text": "Courage tops the Technocracy's hit list, yet many rank-and-file agents admire Courage and let the agent slip away.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "No one knows why Courage does what Courage does, only that wherever trouble starts, Courage is close by.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "new-world-order",
+   "mrnwo-black-suit-constructs"
+  ]
+ },
+ {
+  "id": "m2hl-jodi-blake",
+  "title": "Jodi Blake",
+  "kind": "character",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A shape-shifting Nephandus tempter.",
+  "claims": [
+   {
+    "text": "Jodi Blake rarely looks the same twice and is said to be a barabbi from a Tradition; even other Nephandi distrust Jodi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   },
+   {
+    "text": "More than forty mages are said to have fallen through Jodi's manipulation.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 26,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "m20botf-barabbi"
+  ]
+ },
+ {
+  "id": "m2hl-seattle-chantry",
+  "title": "The Seattle Chantry under Pike Place",
+  "kind": "place",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A Tradition Chantry hidden beneath Seattle's market.",
+  "claims": [
+   {
+    "text": "A Chantry lies hidden under Pike Place Market, while the Technocracy has deeply infiltrated Seattle, above all through a local aircraft maker.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 29,
+      "pdf": 30
+     }
+    ]
+   },
+   {
+    "text": "Its members stay loyal to the founder, Rudolfo Ouspensky, though rivalries are growing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "The way in is a shabby curio shop deep in the market called the Conjurer's Cubbyhole, marked by a garish poster of Rudolfo, King of Magic.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2hl",
+      "page": 32,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "technocracy"
+  ]
+ }
+]
