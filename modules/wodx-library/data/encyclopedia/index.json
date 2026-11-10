@@ -2083,6 +2083,12 @@
       "title": "Tribe Novel: Children of Gaia & Uktena",
       "short": "Tribe Novel 5",
       "edition": "Novel"
+    },
+    {
+      "id": "ntn7",
+      "title": "Tribe Novel: Black Spiral Dancers & Wendigo",
+      "short": "Tribe Novel 7",
+      "edition": "Novel"
     }
   ],
   "files": [
@@ -2432,6 +2438,7 @@
     "ntn2.json",
     "ntn3.json",
     "ntn4.json",
-    "ntn5.json"
+    "ntn5.json",
+    "ntn7.json"
   ]
 }
