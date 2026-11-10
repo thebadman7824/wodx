@@ -1,0 +1,123 @@
+[
+ {
+  "id": "heinf-hunters-and-demons",
+  "title": "Hunters and the infernal",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What the imbued face once the Fallen walk the world.",
+  "claims": [
+   {
+    "text": "Rebel angels who sided with humanity lost their war with Heaven and were cast into the Abyss; for ages only the odd spirit got out, called up by a reckless sorcerer or cultist striking a pact.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "heinf",
+      "page": 11,
+      "pdf": 12
+     },
+     {
+      "book": "heinf",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Now the gates of Hell have cracked and a horde has come up to Earth, and while hunters know no more than anyone else about what devils truly are, they can see them for what they are.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "heinf",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Hunters bring no better weapons or lore against demons than against other creatures, yet where vampires and walking corpses threatened lives, these beings may threaten Creation itself.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "heinf",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "What hunters learn of demons comes from confused imbued and from the deceivers themselves, so every so-called revelation about their origins and aims is doubtful.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "heinf",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dtf-the-fallen",
+   "dtf-the-abyss",
+   "dtf-pacts",
+   "htr-imbued",
+   "htr-monsters"
+  ]
+ },
+ {
+  "id": "heinf-demon-faces",
+  "title": "Faces demons show hunters",
+  "kind": "lore",
+  "lines": [
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The different ways the returned Fallen meet the imbued.",
+  "claims": [
+   {
+    "text": "Some demons come back into human lives as lost and bewildered as any newly chosen hunter, which can stir sympathy in the imbued.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "heinf",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Others claim to want to do good for humanity now that they have a second chance, and hunters cannot tell whether such kindness is real or a lie.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "heinf",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   },
+   {
+    "text": "Still others work their way deep into modern life, playing on weakness and fear to draw people into pacts for rewards in this life.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "heinf",
+      "page": 12,
+      "pdf": 13
+     }
+    ]
+   }
+  ],
+  "see": [
+   "heinf-hunters-and-demons",
+   "dtf-pacts"
+  ]
+ }
+]
