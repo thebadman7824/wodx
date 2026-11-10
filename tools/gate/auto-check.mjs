@@ -8,6 +8,8 @@ export async function run() {
     // Fit and healthy for the test, so the second attack still has dice
     await M.update({ "system.attributes.dexterity.value": 3, "system.abilities.melee.value": 2, "system.health.damage.bashing": 0, "system.health.damage.lethal": 0, "system.health.damage.aggravated": 0, "system.settings.isupdated": false });
     await W.update({ "system.health.damage.bashing": 0, "system.health.damage.lethal": 0, "system.health.damage.aggravated": 0, "system.settings.isupdated": false });
+    // A "dead" status left by an earlier gate makes automatic initiative skip a fighter: clear it on both
+    for ( const a of [M, W] ) if ( a.statuses?.has?.("dead") ) await a.toggleStatusEffect("dead", {active: false});
     await sleep(1500);
     // Put Miller next to Wilhelm, behind him (Wilhelm faces up the screen: rotation 180)
     const g = sc.grid.size;
