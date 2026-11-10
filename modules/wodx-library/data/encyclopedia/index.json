@@ -745,6 +745,12 @@
    "title": "Dharma Book: Thrashing Dragons",
    "short": "DB Thrashing Dragons",
    "edition": "Revised era"
+  },
+  {
+   "id": "dbdt",
+   "title": "Dharma Book: Devil Tigers",
+   "short": "DB Devil Tigers",
+   "edition": "Revised era"
   }
  ],
  "files": [
@@ -871,6 +877,7 @@
   "dbbf.json",
   "dbrc.json",
   "dbtw.json",
-  "dbtd.json"
+  "dbtd.json",
+  "dbdt.json"
  ]
 }

@@ -1,0 +1,144 @@
+[
+ {
+  "id": "dbdt-three-imperatives",
+  "title": "Passion, Pain and Righteousness",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The three tenets of the Devil-Tigers.",
+  "claims": [
+   {
+    "text": "However they differ on the road to the Hundred Clouds, all Devil-Tigers hold three great imperatives central to their Dharma: Passion, Pain and Righteousness.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbdt",
+      "page": 18,
+      "pdf": 27
+     }
+    ]
+   }
+  ],
+  "see": [
+   "kote-five-dharmas",
+   "kote-dharma"
+  ]
+ },
+ {
+  "id": "dbdt-sagacious-devils",
+  "title": "The August Body of Sagacious Devils",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Devil-Tigers' testing body.",
+  "claims": [
+   {
+    "text": "One of three traditional Devil-Tiger institutions, the August Body is an independent board that certifies each Devil-Tiger's competence through demanding tests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbdt",
+      "page": 14,
+      "pdf": 23
+     }
+    ]
+   },
+   {
+    "text": "It traces its roots to the confusion after the Dharma system was founded and the Five Emperors banned large Devil-Tiger churches.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbdt",
+      "page": 34,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbdt-three-imperatives",
+   "kotec-treaty-quincunx"
+  ]
+ },
+ {
+  "id": "dbdt-ban-ren-guei",
+  "title": "Ban Ren Guei",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Half-demon people bred by Devil-Tigers.",
+  "claims": [
+   {
+    "text": "Ban Ren Guei, the half-demon people, are born of a succubus-like Bane and a sleeping mortal; they come into the world as bakemono, wicked by birth and loyal to the master of the Bane that bore them, or to the Devil-Tiger who caused their making.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbdt",
+      "page": 14,
+      "pdf": 23
+     },
+     {
+      "book": "dbdt",
+      "page": 26,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbdt-sagacious-devils",
+   "bbmok-zhong-lung"
+  ]
+ },
+ {
+  "id": "dbdt-brigand-societies",
+  "title": "Societies of Brigands",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The vanished third leg of Devil-Tiger society.",
+  "claims": [
+   {
+    "text": "The third traditional institution, the Society of Brigands and Decadent Dynasty Toppling Devils, was a series of mobs of low-born jina and disciples that rose in times of great unrest, when shen could act more openly; it is not expected to return.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbdt",
+      "page": 37,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Devil-Tiger bodhisattvas, some of them Sagacious Devils, would sometimes proclaim such a rising after careful ethical and astrological reckoning.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dbdt",
+      "page": 37,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dbdt-sagacious-devils"
+  ]
+ }
+]
