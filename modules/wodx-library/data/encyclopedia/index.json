@@ -1741,6 +1741,12 @@
       "title": "Encyclopaedia Vampirica",
       "short": "EncV",
       "edition": "Revised"
+    },
+    {
+      "id": "cchand",
+      "title": "Caine's Chosen: The Black Hand",
+      "short": "CC:BH",
+      "edition": "Revised"
     }
   ],
   "files": [
@@ -2033,6 +2039,7 @@
     "coti.json",
     "kmw.json",
     "hkbn.json",
-    "encv.json"
+    "encv.json",
+    "cchand.json"
   ]
 }
