@@ -865,6 +865,12 @@
    "title": "Convention Book: Void Engineers (M20)",
    "short": "CB:VE",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "mrgtt",
+   "title": "Guide to the Traditions",
+   "short": "GttT",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -1011,6 +1017,7 @@
   "mrnwo.json",
   "mrpg.json",
   "mrsy.json",
-  "mrvoid.json"
+  "mrvoid.json",
+  "mrgtt.json"
  ]
 }
