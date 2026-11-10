@@ -853,6 +853,12 @@
    "title": "Convention Book: Progenitors (M20)",
    "short": "CB:Pg",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "mrsy",
+   "title": "Convention Book: Syndicate (M20)",
+   "short": "CB:Sy",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -997,6 +1003,7 @@
   "mrva.json",
   "mrix.json",
   "mrnwo.json",
-  "mrpg.json"
+  "mrpg.json",
+  "mrsy.json"
  ]
 }
