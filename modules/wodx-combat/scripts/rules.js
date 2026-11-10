@@ -34,7 +34,7 @@ export function clampDifficulty(d) {
 }
 
 /**
- * Build the soak pool for one hit (VtDA20 p. 345 and Fortitude p. 218; W20, C20, Mage 20, Ghouls & Revenants).
+ * Build the soak pool for one hit (VtDA20 p. 345 and Fortitude printed p. 221; W20, C20, Mage 20, Ghouls & Revenants).
  * profile = soak model:
  *   vampire  – Stamina + Fortitude + armor vs bashing/lethal; Fortitude + armor vs aggravated.
  *   ghoul    – Stamina + Fortitude vs bashing and lethal (revenants, and ghouls after the third sip);

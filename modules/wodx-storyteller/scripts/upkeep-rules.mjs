@@ -2,7 +2,7 @@
  * Between nights and the ties that need tending, the pure part. No Foundry in here.
  *
  * Between nights: when the clock skips days, what those nights cost and give back. Rising costs a vampire one blood
- * a night (VtDA20 p. 340), Willpower comes back one a night under that house rule (VtDA20 p. 309). Healing over the
+ * a night (VtDA20 p. 340), Willpower comes back one a night under that house rule (VtDA20 printed p. 340). Healing over the
  * skip is WoDX Actions' own (it heals with the clock), so it is only noted here.
  *
  * Ties: what a character has to keep up. A ghoul's drink from the domitor (V20 Dark Ages p. 399), a wraith's Fetters

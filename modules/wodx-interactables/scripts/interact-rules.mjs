@@ -11,7 +11,7 @@
 import {FIRE_HEAT as ACTIONS_FIRE_HEAT} from "../../wodx-actions/scripts/rules.js";
 import {holy as demonHoly} from "../../wodx-actions/scripts/demon-rules.js";
 
-export const TURN = 3; // seconds in a turn (V20 Dark Ages p. 322)
+export const TURN = 3; // seconds in a turn (V20 Dark Ages printed p. 324)
 export const MINUTE = 60;
 
 export const KINDS = {door: "Door", gate: "Gate", window: "Window", shutter: "Shutter", hatch: "Hatch"};

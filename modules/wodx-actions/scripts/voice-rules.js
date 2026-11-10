@@ -8,11 +8,11 @@
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 
 export const KINDS = {
-    beast: { label: "The Beast", lines: ["kindred", "ghoul"], book: "V20 Dark Ages pp. 341–346 (frenzy, Rötschreck); Ghouls and Revenants p. 42" },
+    beast: { label: "The Beast", lines: ["kindred", "ghoul"], book: "V20 Dark Ages p. 357 (frenzy, Rötschreck); Ghouls and Revenants p. 42" },
     shadow: { label: "The Shadow", lines: ["wraith"], book: "Wraith 20th pp. 224–245" },
     rage: { label: "Rage", lines: ["lupine"], book: "Dark Ages: Werewolf / W20 frenzy" },
     impulse: { label: "The Impulse", lines: ["hunter"], book: "Dark Ages: Inquisitor p. 162; Hunter: The Reckoning p. 131" },
-    gift: { label: "The Gift (the Avatar)", lines: ["mage"], book: "Dark Ages: Mage pp. 87, 139–140 (Twilight, the Fount's whispers); Mage 20th pp. 338–339 (the Avatar, Seekings)" },
+    gift: { label: "The Gift (the Avatar)", lines: ["mage"], book: "Dark Ages: Mage pp. 139–140 (Twilight, the Fount's whispers); Mage 20th pp. 338–339 (the Avatar, Seekings)" },
     mists: { label: "The Mists and the Weave", lines: ["fae"], book: "Dark Ages: Fae pp. 101–104 (imbalance, Lost and Locked); Changeling 20th (Banality, Bedlam)" },
     spite: { label: "Spite", lines: ["orpheus"], book: "Orpheus pp. 192–193 (Spite against the starting Vitality; the Spectres' call)" },
     torment: { label: "The Torment", lines: ["demon"], book: "Demon: The Fallen pp. 159–162 (the Hierarchy of Sins, Torment), 169–170 (high-Torment effects and powers)" }
@@ -28,7 +28,7 @@ const lvl = i => LEVELS[Math.max(0, Math.min(3, i))];
 
 /**
  * How hard the voice presses, from the sheet. d: the line's numbers (below). Returns {value, max, level, text}.
- *   beast:   {blood, max, selfcontrol} — the hunger line is 7 − Self-Control (V20 Dark Ages p. 345: below it, hunger
+ *   beast:   {blood, max, selfcontrol} — the hunger line is 7 − Self-Control (a house rule; hunger frenzy is V20 Dark Ages printed p. 357: below it, hunger
  *            can call frenzy); WoDX reading: half the pool is stirring, the line + 1 rising, under the line breaking.
  *   shadow:  {angst, willpower} — Angst above Willpower allows Catharsis (Wraith 20th p. 230): breaking; within one
  *            rising; half of Willpower stirring.

@@ -87,7 +87,7 @@ function registerSettings() {
     s("createMacros", "Create hotbar macros", "Create the WoDX Actions macros in the Macro directory if missing.", Boolean, true);
     s("profileMenu", "Menu follows the actor type",
         "The Actions menu shows the buttons for the actor's profile (Kindred, ghoul, mortal, Garou, mage, changeling, wraith...). Off: always the Kindred menu.", Boolean, true);
-    s("nightlyBlood", "Blood cost of rising", "Subtract one blood point from each vampire at New Night (p. 340).", Boolean, true);
+    s("nightlyBlood", "Blood cost of rising", "Subtract one blood point from each vampire at New Night (V20 printed p. 268).", Boolean, true);
     GX.registerSettings(s);
     KX.registerSettings(s);
     SX.registerSettings(s);
@@ -745,7 +745,7 @@ async function resolveAction(actor, target, fd) {
     if (built.blocked) { ui.notifications.warn(built.blocked); return post(actor, `${actor.name}: ${esc(fd.desc || preset.label || "Action")}`, `<div class="vta-warn">${built.blocked}</div>`); }
     const wpCost = (fd.wp ? 1 : 0) + (fd.ignoreWounds ? 1 : 0);
     if (wpCost && !(await spendWillpower(actor, wpCost))) return null;
-    if (fd.ignoreWounds) await updateActor(actor, { "system.conditions.isignoringpain": true });
+    // Willpower ignores wound penalties for one turn (VtDA20 printed p. 339): this roll only, so no lasting state
 
     const title = `${actor.name}: ${esc(fd.desc || (preset.label ? preset.label.split(" (")[0].replace(/^Common: /, "") : "Action"))}`;
     const label = [pool.attributeLabel, pool.abilityLabel].filter(Boolean).join(" + ");
@@ -1614,7 +1614,7 @@ export async function newNight({ actors } = {}) {
         if (inTorpor) bits.push("in torpor");
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
-    return post(null, "A new night", `<ul>${lines.join("")}</ul>${setting("willpowerRecovery") === "off" ? "" : `<p class="wodx-quiet">Willpower: ${setting("willpowerRecovery") === "night" ? "one a night (VtDA20 p. 309)" : "all at the end of a story"}.</p>`}`);
+    return post(null, "A new night", `<ul>${lines.join("")}</ul>${setting("willpowerRecovery") === "off" ? "" : `<p class="wodx-quiet">Willpower: ${setting("willpowerRecovery") === "night" ? "one a night (VtDA20 printed p. 340)" : "all at the end of a story"}.</p>`}`);
 }
 
 /** The end of a story: Willpower returns in full (unless the setting is off). */

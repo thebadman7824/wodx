@@ -64,7 +64,7 @@ function registerSettings() {
         "Show the attacker/defender type selectors and the type-specific options (Rage, Glamour, Pathos, banes...) in the attack dialog.",
         Boolean, true);
     s("autoInitiative", "Roll initiative automatically",
-        "Roll everyone's initiative (d10 + Dexterity + Wits) when a fight starts, or at the start of every turn as VtDA20 does (p. 322).",
+        "Roll everyone's initiative (d10 + Dexterity + Wits) when a fight starts, or at the start of every turn as VtDA20 does (printed p. 343).",
         String, "round", { choices: { round: "Every turn", start: "When the fight starts", off: "Off" } });
     s("flavorText", "Flavor text on attack cards",
         "Add one short line of description under the dice of each attack card, picked to fit the outcome (miss, hit, heavy hit, soaked, botch). Edit the lines in scripts/flavor.js.",
@@ -1278,7 +1278,7 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
     const extra = list.map(c => [c.name, freeActionsIn(c.actor, combat)]).filter(([, n]) => n > 0);
     const content = `<div class="vtc-card"><h3>Initiative${automatic ? `, turn ${combat.round || 1}` : ""}</h3><table class="vtc-init"><tr><th></th><th>d10</th><th>Dex+Wits</th><th>Total</th></tr>${lines.join("")}</table>
       ${extra.length ? `<div class="vtc-note">Extra actions declared: ${extra.map(([n, k]) => `${esc(n)} ${k}`).join(", ")}.</div>` : ""}
-      <div class="vtc-note">Actions are declared from lowest to highest initiative and resolved from highest to lowest (VtDA20 p. 322).${automatic ? " Rolled automatically (setting)." : ""}</div></div>`;
+      <div class="vtc-note">Actions are declared from lowest to highest initiative and resolved from highest to lowest (VtDA20 printed p. 343).${automatic ? " Rolled automatically (setting)." : ""}</div></div>`;
     const md = { speaker: ChatMessage.getSpeaker(), content, rolls };
     if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL;
     return ChatMessage.create(md);
@@ -1531,7 +1531,7 @@ export async function setSoakPolicy(actor) {
     if (!a) return null;
     const cur = soakPolicy(a);
     const r = await P.ask({ title: `Soak policy: ${a.name}`, width: 420, classes: ["vtc-dialog"],
-        content: `<form class="vtc-form"><p>When ${esc(a.name)} is hit and the attack dialog's Fortitude choice is Automatic, spend a blood point for automatic Fortitude soak (VtDA20 p. 218):</p>
+        content: `<form class="vtc-form"><p>When ${esc(a.name)} is hit and the attack dialog's Fortitude choice is Automatic, spend a blood point for automatic Fortitude soak (VtDA20 printed p. 221):</p>
           <div class="form-group"><label>Policy</label><select name="policy" data-fixed>${Object.entries(AU.SOAK_POLICIES).map(([k, v]) => `<option value="${k}" ${k === cur ? "selected" : ""}>${esc(v)}</option>`).join("")}</select></div></form>`,
         buttons: [{ id: "ok", label: "Save", icon: "fas fa-check", default: true }, { id: "cancel", label: "Cancel" }] });
     if (!r || r.id !== "ok") return null;

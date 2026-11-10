@@ -174,7 +174,7 @@ export async function firstChangeDialog() {
       li.dataset.start = from ? "1" : "";
     }
     items.sort((x, y) => (y.dataset.start === "1") - (x.dataset.start === "1")).forEach(li => ul.appendChild(li));
-    form.querySelector(".wodx-fc-notes").textContent = [st.lupusOnly && f.breed.value !== "lupus" ? "Red Talons are lupus only (DA:W p. 84)." : "", ...st.notes].filter(Boolean).join(" ");
+    form.querySelector(".wodx-fc-notes").textContent = [st.lupusOnly && f.breed.value !== "lupus" ? "Red Talons are lupus only (DA:W p. 81)." : "", ...st.notes].filter(Boolean).join(" ");
   };
   const result = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog"],

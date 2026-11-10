@@ -1091,3 +1091,12 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 ### Interactables 0.18.1, 2026-11-10: NPCs hear crashes and gallops
 - The gap left by responsive maps: events from watch points, mounts and climbs went out before the hearing check, so they named nobody who heard them. applyAsk now holds them (heldEvents) until the check, then sends each loud one with the hearers (releaseEvents); quiet ones go out with none. Approved with the rest of the responsive maps choices (Ben, 10 November 2026).
 - Tests: the botched flat out test now checks that the crash and the gallop carry the sergeant who heard them. Gate: gate-interact step 22 and gate-maps.
+
+## 2026-11-10: weak page refs read against the books (Actions 3.19.2)
+
+- The PC read all 425 refs that scored under 0.34 (notes/ref-audit-weak-2026-11-09.md): OK 374, WRONG PAGE 23, WRONG CLAIM 1, NOT IN BOOK 1, CAN'T TELL 26.
+- WRONG CLAIM fixed: a Willpower point ignores wound penalties for one turn (VtDA20 printed p. 339), not the scene. The roll dialog no longer sets the lasting ignoring-pain state, and the Willpower menu line says one turn.
+- Pages fixed: VtDA20 initiative p. 343, Fortitude p. 221, blood oath p. 342, regaining Willpower p. 340, frenzy p. 357, turn length p. 324, retrying p. 323; V20 blood use p. 268; DA:W Red Talons p. 81; DA: Mage Twilight pp. 139-140; the Encyclopaedia's dam-dynamic-magic (p. 97) and inq-backgrounds (adds p. 155).
+- Labelled house rules: the hunger line 7 - Self-Control, and Mummy blood (no source found).
+- Left for a look in the PDF: bh-grabkrieg, the Fount whispers on DA: Mage p. 87. The 26 CAN'T TELL rows are books with no text or image-only pages.
+- Tests: 927 harness pass.

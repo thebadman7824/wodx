@@ -220,7 +220,7 @@ export const EXTRA_PRESETS = {
 export const USES = {
     willpower: { title: "Willpower", uses: [
         ["Automatic success on a roll", 1, null, "One Willpower point = one automatic success (cannot be canceled by 1s). One per turn."],
-        ["Ignore wound penalties for the scene", 1, null, "VtDA20 p. 321."],
+        ["Ignore wound penalties for one turn", 1, null, "VtDA20 printed p. 339 (pdf 340)."],
         ["Resist Dominate / compulsion", 1, null, "Per the power; roll Willpower if the rule asks."],
         ["Regain Willpower (rest / ST award)", -1, null, "Cost -1 adds a point."]
     ] },

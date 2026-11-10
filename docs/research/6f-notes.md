@@ -626,7 +626,7 @@ the book gives numbers; the rest is the scope the Storyteller judges by.
   halves Spheres (but the affinity Sphere) for a story arc or more; tools are shed again about one per arc (p. 339).
 - **Dark Ages: Mage:** no Avatar Trait. Its pressures are Twilight (figments and voices that urge the mage deeper,
   or warn them back; pp. 139–140) and Fount (very high Fount mages hear whispers when channelling much Quintessence;
-  p. 87). Arcane Madness (p. 92) and Witchwalk are the Flaws that feed it.
+  p. 87, unconfirmed: the PC check found it only on pdf 92-93 and 140-141). Arcane Madness (p. 92) and Witchwalk are the Flaws that feed it.
 - **WoDX reading for the voice layer:** in Dark Ages chronicles the mage's voice is "the Gift": its pressure rises with
   temporary Twilight and with Quintessence spent past the Fount's turn limit, and it speaks as Twilight's figments
   (Median and deeper) or Fount's whispers. Its proposals: a Twilight-coloured perception the player plays, an urge to
