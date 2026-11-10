@@ -1,0 +1,195 @@
+[
+ {
+  "id": "tbwen-siberian-war",
+  "title": "The Siberian War",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "A Wendigo memory of war with the Get of Fenris.",
+  "claims": [
+   {
+    "text": "Wendigo tales say that at the height of the Impergium some Get of Fenris began killing Wendigo Kinfolk in Siberia, and the Wendigo answered in kind.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "The fighting spread across the tundra as open war, and some Russian ghost stories are said to be garbled memories of it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "Neither tribe recalls how it ended; most guess it faded along with the Impergium itself.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wendigo",
+   "get-of-fenris",
+   "impergium"
+  ]
+ },
+ {
+  "id": "tbwen-south",
+  "title": "Wendigo in the South",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Old Wendigo ties to the Fera and to South America.",
+  "claims": [
+   {
+    "text": "Wendigo say they mostly ignored the Fera of the north and sometimes hunted Wyrm beasts beside them, fighting them only over prey or places of power.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   },
+   {
+    "text": "South America was the exception, where some hold that the War of Rage never truly ended; the Uktena fought most there, sometimes glad of Wendigo help and sometimes calling them intruders.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 17,
+      "pdf": 18
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wendigo",
+   "fera",
+   "uktena"
+  ]
+ },
+ {
+  "id": "tbwen-storm-eater",
+  "title": "The Fall of the Storm Eater",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "victorian"
+  ],
+  "summary": "The great rite of 1889 as the Wendigo tell it.",
+  "claims": [
+   {
+    "text": "The Storm Eater, a blend of Weaver and Wyrm, was destroyed in 1889 by a rite the Pure Ones and Wyrmcomers found together; the Wendigo say its exact form is now lost.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "One great hero of each of the thirteen tribes gave up life willingly to power the weapon, and the Wendigo hero was Spear of Winter of the north.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The rite ran from one full moon to the next and killed many of the Theurges who led it; cleansing the Umbra afterward took far longer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Rumour holds the Dust Bowl was the beast's dying breath and that storms of Tornado Alley are its offspring.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wendigo"
+  ]
+ },
+ {
+  "id": "tbwen-wounded-knee",
+  "title": "Wounded Knee",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A place the Wendigo avoid.",
+  "claims": [
+   {
+    "text": "Wendigo say a strange energy lingers at Wounded Knee Creek, perhaps a pit reaching toward the Abyss.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   },
+   {
+    "text": "Some believe another great Wyrm beast, as dreadful as Eater of Souls, will one day rise from beneath it, and advise keeping well clear.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbwen",
+      "page": 30,
+      "pdf": 31
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wendigo"
+  ]
+ }
+]
