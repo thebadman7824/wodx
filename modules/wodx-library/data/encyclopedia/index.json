@@ -1195,6 +1195,12 @@
    "title": "Necropolis: Atlanta",
    "short": "NA",
    "edition": "First edition"
+  },
+  {
+   "id": "wme",
+   "title": "Midnight Express",
+   "short": "ME",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -1396,6 +1402,7 @@
   "wsos.json",
   "wdil.json",
   "wqd.json",
-  "wna.json"
+  "wna.json",
+  "wme.json"
  ]
 }
