@@ -71,3 +71,11 @@ test("shelf sync removes entries that left the source, remakes changed ones, kee
   assert.equal(p.kept, 1); assert.equal(p.remade, 1); assert.equal(p.stale, 1);
   assert.ok(!p.remove.includes("X"), "documents the module did not make are left alone");
 });
+
+test("shelf sync keeps one document per key and removes the extra copies", () => {
+  const M = "wodx-library";
+  const doc = (shelf, hash, id) => ({id, flags: {[M]: {shelf, hash}}});
+  const p = S.syncPlan([doc("a", "1"), doc("b", "2")], [doc("a", "1", "A1"), doc("a", "1", "A2"), doc("b", "2", "B1"), doc("b", "old", "B2")], M);
+  assert.deepEqual(p.remove.sort(), ["A2", "B2"]);
+  assert.equal(p.create.length, 0); assert.equal(p.kept, 2); assert.equal(p.extra, 2);
+});
