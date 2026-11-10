@@ -1,0 +1,111 @@
+[
+ {
+  "id": "m2ini-initiations",
+  "title": "Tradition initiations",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How each Tradition welcomes a new apprentice.",
+  "claims": [
+   {
+    "text": "Many apprentices are inducted without noticing; some Verbena students learn they belong only at their first gathering, and Ecstatics let initiates find their own way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ini",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "The Chorus holds an investiture into its priesthood. Dreamspeaker rites run from a short talk with the spirits to days of vision quest, fasting, sweat lodge and scarring that set the initiate apart from the community.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ini",
+      "page": 32,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Euthanatos initiation stresses the moral weight of their work, sometimes with a visit to the Underworld; Hermetic apprentices must pass a set test of endurance and social skill.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ini",
+      "page": 32,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Etherites count a member as a full scientist when a creation or theory wins acceptance, for example a good review in Paradigma; Verbena use blood rites and scarring; Virtual Adepts must win the notice of the Elite with daring stunts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ini",
+      "page": 33,
+      "pdf": 35
+     }
+    ]
+   }
+  ],
+  "see": [
+   "council-of-nine",
+   "verbena",
+   "cult-of-ecstasy",
+   "celestial-chorus",
+   "dreamspeakers",
+   "euthanatos",
+   "order-of-hermes",
+   "society-of-ether",
+   "virtual-adepts"
+  ]
+ },
+ {
+  "id": "m2ini-union-recruiting",
+  "title": "How the Union recruits",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Technocracy's own account of finding new operatives.",
+  "claims": [
+   {
+    "text": "Most recruits are Empowered scientists or operatives already in contact with the Union, spotted by sympathisers in institutes, schools, clubs and firms after a breakthrough.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ini",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   },
+   {
+    "text": "Newly Empowered people who cling to superstition are approached to join, or handed to Psychological Operatives to be set right.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "m2ini",
+      "page": 31,
+      "pdf": 33
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "m2gtech-conditioning"
+  ]
+ }
+]

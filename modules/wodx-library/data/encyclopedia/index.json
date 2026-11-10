@@ -1033,6 +1033,12 @@
    "title": "Sorcerer: The Hedge Wizard's Handbook",
    "short": "HWH",
    "edition": "Second edition"
+  },
+  {
+   "id": "m2ini",
+   "title": "Initiates of the Art",
+   "short": "IotA",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1207,6 +1213,7 @@
   "m2arh.json",
   "m2fp.json",
   "m2dw.json",
-  "m2sor.json"
+  "m2sor.json",
+  "m2ini.json"
  ]
 }
