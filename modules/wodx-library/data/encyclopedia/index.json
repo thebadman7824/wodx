@@ -475,6 +475,12 @@
    "title": "Dark Ages: Road of Humanity",
    "short": "DA Road of Humanity",
    "edition": "Revised"
+  },
+  {
+   "id": "tbfur",
+   "title": "Tribebook: Black Furies (Revised)",
+   "short": "TB Black Furies",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -556,6 +562,7 @@
   "dab.json",
   "das.json",
   "vac.json",
-  "dahum.json"
+  "dahum.json",
+  "tbfur.json"
  ]
 }
