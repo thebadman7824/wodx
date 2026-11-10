@@ -1375,6 +1375,12 @@
    "title": "Land of Eight Million Dreams",
    "short": "L8MD",
    "edition": "Second edition"
+  },
+  {
+   "id": "cnob",
+   "title": "Nobles: The Shining Host",
+   "short": "Nobles",
+   "edition": "Second edition"
   }
  ],
  "files": [
@@ -1606,6 +1612,7 @@
   "cinan.json",
   "ckow.json",
   "ciotm.json",
-  "cl8m.json"
+  "cl8m.json",
+  "cnob.json"
  ]
 }
