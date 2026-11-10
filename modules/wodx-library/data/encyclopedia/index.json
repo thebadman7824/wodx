@@ -649,6 +649,12 @@
    "title": "Rage Across Russia",
    "short": "RA Russia",
    "edition": "First edition"
+  },
+  {
+   "id": "raam",
+   "title": "Rage Across the Amazon",
+   "short": "RA Amazon",
+   "edition": "First edition"
   }
  ],
  "files": [
@@ -759,6 +765,7 @@
   "raau.json",
   "raeg.json",
   "rany.json",
-  "raru.json"
+  "raru.json",
+  "raam.json"
  ]
 }
