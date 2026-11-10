@@ -291,3 +291,5 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-10 | Default town layout: organic (winding streets, wards, walls) or the straight-street grid? | Organic (B577). | Run ddtown.py with --layout grid. |
 | 2026-11-10 | Size of an organic town: how many squares to each unit of the original's plan? | 1.6, so a small town is about 120 squares across and 65 households, a city about 170 by 225 and 230 households (B577). | Change "scale" in ORGANIC in organic.py. |
 | 2026-11-10 | Organic towns: no castle or citadel, which the original can add. | Left out until WoDX has a castle building (B576). | Add a castle type to buildings.py and a citadel ward to layout.py. |
+| 2026-11-10 | How often an organic-town building gets a wing or lean-to. | 60% (B579). | Change chance in variant() in buildings.py. |
+| 2026-11-10 | Which wards build terraced rows, and how often. | Market and merchant always, administration 80%, gate and craftsmen 60%, slum 50% (B580). | Change TERRACED in organic.py. |

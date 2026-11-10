@@ -1217,3 +1217,10 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - tools/mapgen/organic.py: on that plan, blocks shrink back from streets and the wall, big blocks are cut with alleys, and WoDX's furnished buildings stand side by side along every frontage, turned to face it in 15 degree steps (Angled in buildings.py furnishes each in its own frame first). Ward mixes, spacing and trade caps are house rules. The tavern and chapel take the market first; farms stand by the roads outside. Map size follows the layout (1.6 squares a unit). Now the default; --layout grid keeps the straight-street generator, --walls yes/no/random. B577.
 - Interactables 0.22.0: Adopt reads a feature's rotation (tile rotation) and a region's outline (polygon shape). B578.
 - Samples: schondorf (organic village), linberg (walled organic town, 6 parts). Tests: 2 new in mapgen.test.mjs, 1 new in adopt.test.mjs, schondorf added to the adopt town tests.
+
+## 2026-11-10: less blocky buildings (map tools)
+- Ben found organic towns' buildings still very blocky. tools/mapgen/buildings.py gains variant(): a building may be stretched at one end or the front, and may gain a wing or lean-to at the back or either side (a kitchen, store, shed, workshop or byre to suit the type), so houses come out as L, T and U shapes as well as boxes. The joining wall gets a doorway (or keeps a door already there), windows it covers go, and the new room is furnished. A variant that won't furnish is skipped. B579.
+- Terraced rows: in the market, merchant, administration, gate, craftsmen and slum wards most frontages are built as a row, side wings left off, houses almost touching with the end windows that face each other dropped. B580.
+- Outlines with wings go through to the sidecar and the plan; collisions use each part of the building. ddcore skips zero-length wall pieces.
+- Not done yet: fitting back and side walls to an odd-shaped plot; left for the burgage plot work suggested in the planning research (Claude Doc "Town planning lessons for the map generator").
+- Samples schondorf and linberg redrawn. Test: organic homes must include some with more than four corners.

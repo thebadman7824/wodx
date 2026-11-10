@@ -391,3 +391,9 @@ Every building is a furnished WoDX type turned to face its street, in 15 degree 
 
 ## B578. Turned things and outlined regions in the WoDX map file (2026-11-10)
 A feature may carry rotation (degrees about its middle; its rect is its unturned size) and a region points (an outline in squares, its rect kept as the box). Adopt turns the tile and draws the region as a polygon; a bad outline falls back to the box with a note.
+
+## B579. Varied building shapes (2026-11-10)
+In organic towns a building may be stretched a little, and 60% of the time gains one wing or lean-to (back, east or west side) with a fitting room inside. The wing joins by a door or doorway. Variants that leave no room for the furniture are dropped and the plain type is used.
+
+## B580. Terraced rows (2026-11-10)
+Busy wards build their frontages as rows of houses almost touching, with wings only at the back: market and merchant always, administration 80%, gate and craftsmen 60%, slum 50% (a house rule). Facing end windows are dropped.

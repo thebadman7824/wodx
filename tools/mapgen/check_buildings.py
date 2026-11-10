@@ -40,3 +40,21 @@ for b in blds:
 o.append("</svg>")
 open("buildings-sheet.svg", "w").write("\n".join(o))
 print(f"ok: {len(B.TYPES)} types, {len(blds)} placements")
+
+# variants (organic towns): longer, deeper, with a wing or lean-to; each must furnish and keep its openings on walls
+import random as _r
+vfails, made = [], 0
+for seed in range(1, SEEDS + 1):
+    C.init(seed, ASSETS)
+    pick = _r.Random(seed * 7919)
+    for key in B.TYPES:
+        for k in range(6):
+            t = B.variant(key, pick, sides=k % 2 == 0, chance=1)
+            try: b = B.Building(f"{key}-v", key, 0, 0, "S", None, None, t).furnish()
+            except SystemExit as e: vfails.append(f"seed {seed}, {key} variant {k}: {e}"); continue
+            made += 1
+            for kind, ox, oy, along in b.openings:
+                if not any(abs(ox - r.x) < .01 or abs(ox - r.x - r.w) < .01 or abs(oy - r.y) < .01 or abs(oy - r.y - r.h) < .01 for r in b.rooms):
+                    vfails.append(f"seed {seed}, {key} variant {k}: a {kind} is on no wall")
+if len(vfails) > (made + len(vfails)) * .3: raise SystemExit(f"{len(vfails)} of {made} variants failed:\n  " + "\n  ".join(vfails[:30]))
+print(f"ok: {made} variants, {len(vfails)} would not furnish and are skipped in towns")

@@ -57,6 +57,7 @@ LOT = {   # the smallest lot, in square squares, by ward
     "slum": 60, "craftsmen": 80, "merchant": 80, "market": 80, "patriciate": 140, "administration": 90, "military": 90,
     "gate": 90, "gate-out": 150, "church": 90, "village": 170,
 }
+TERRACED = {"merchant": 1, "market": 1, "administration": .8, "gate": .6, "craftsmen": .6, "slum": .5}   # chance a frontage is a row
 CAPS = {"village": {"smithy": 1, "bakehouse": 1, "tavern": 1, "guardhouse": 0, "storehouse": 1},
         "town": {"smithy": 2, "bakehouse": 2, "tavern": 2, "guardhouse": 2, "storehouse": 3},
         "city": {"smithy": 4, "bakehouse": 5, "tavern": 4, "guardhouse": 5, "storehouse": 7}}
@@ -160,22 +161,26 @@ class OrganicTown(T.Town):
         return best
 
     # ------------------------------------------------------------ setting buildings down
-    def free(self, poly, gap, blk=None):
-        x, y, w, h = G.bbox(poly)
+    def free(self, polys, gap, blk=None):
+        """polys: the building as convex pieces (its main range and any wing)."""
+        pts = [q for poly in polys for q in poly]
+        x, y, w, h = G.bbox(pts)
         if x < 1.5 or y < 1.5 or x + w > self.cols - 1.5 or y + h > self.rows - 1.5: return False
-        if blk is not None and not all(G.inside(q, blk) for q in poly): return False
+        if blk is not None and not all(G.inside(q, blk) for q in pts): return False
         for _, b in self.bgrid.near((x, y, w, h), gap + .5):
-            if G.separation(poly, b.corners) < gap: return False
+            if any(G.separation(poly, hb) < gap for poly in polys for hb in b.hulls): return False
         for _, g in self.ggrid.near((x, y, w, h), .8):
-            if G.separation(poly, g["poly"]) < .4: return False
-        if any(G.seg_dist(q, a, c) < hh + .25 for q in poly for _, (a, c, hh, k) in self.seg_grid.near((x, y, w, h), 2)): return False
-        if self.wall and any(G.seg_dist(q, self.wall[i - 1], self.wall[i]) < 1.4 for q in poly for i in range(len(self.wall))): return False
-        if G.separation(poly, self.market_poly) < .3: return False
+            if any(G.separation(poly, g["poly"]) < .4 for poly in polys): return False
+        if any(G.seg_dist(q, a, c) < hh + .25 for q in pts for _, (a, c, hh, k) in self.seg_grid.near((x, y, w, h), 2)): return False
+        if self.wall and any(G.seg_dist(q, self.wall[i - 1], self.wall[i]) < 1.4 for q in pts for i in range(len(self.wall))): return False
+        if any(G.separation(poly, self.market_poly) < .3 for poly in polys): return False
         return True
 
-    def try_at(self, type_key, A, u, inward, t, setback, gap, blk):
-        """A building of a type with its front on the block edge from A along u, starting t along it; or None."""
-        lw, lh = B.TYPES[type_key]["size"]
+    def try_at(self, type_key, A, u, inward, t, setback, gap, blk, tdef=None):
+        """A building of a type (or a variant of one, tdef) with its front on the block edge from A along u, starting
+        t along it; or None."""
+        tdef = tdef or B.TYPES[type_key]
+        lw, lh = tdef["size"]
         n = (-inward[0], -inward[1])
         th = snap(math.atan2(-n[0], n[1]))
         nf = (-math.sin(th), math.cos(th))
@@ -186,13 +191,18 @@ class OrganicTown(T.Town):
         sh = setback - dmin
         cx, cy = cx + inward[0] * sh, cy + inward[1] * sh
         cs = box_corners(cx, cy, th, lw, lh)
-        if not self.free(cs, gap, blk): return None
-        return (cx, cy, th, cs)
+        c, s_ = math.cos(th), math.sin(th)
+        wd = lambda x, y: (cx + (x - lw / 2) * c - (y - lh / 2) * s_, cy + (x - lw / 2) * s_ + (y - lh / 2) * c)
+        polys = [[wd(x, y), wd(x + w, y), wd(x + w, y + h), wd(x, y + h)] for x, y, w, h in tdef.get("parts") or [(0, 0, lw, lh)]]
+        if not self.free(polys, gap, blk): return None
+        return (cx, cy, th, cs, tdef)
 
     def put(self, type_key, label, spot, extra=None):
-        cx, cy, th, _ = spot
-        self.count[type_key] = self.count.get(type_key, 0) + 1
-        b = B.Angled(f"{type_key}-{self.count[type_key]}", type_key, cx, cy, th, label, extra).furnish()
+        cx, cy, th, _, tdef = spot
+        n = self.count.get(type_key, 0) + 1
+        try: b = B.Angled(f"{type_key}-{n}", type_key, cx, cy, th, label, extra, tdef).furnish()
+        except SystemExit: return None                     # a variant whose rooms will not furnish: try another
+        self.count[type_key] = n
         self.blds.append(b)
         self.bgrid.add(b.rect, b)
         return b
@@ -230,19 +240,29 @@ class OrganicTown(T.Town):
     def fill_edge(self, e, ward, blk):
         R = self.R
         sb, gap = SPACING[ward]
+        row = ward in TERRACED and R.random() < TERRACED[ward]     # a terraced row: walls against walls
+        if row: gap = .05
         t = R.uniform(.2, 1.0)
+        prev = None
         while t < e["len"] - 3:
             placed = False
             for tk in dict.fromkeys((self.choose(ward), "cottage", "workshop")):
                 if tk not in dict(MIX[ward]) and tk != "cottage": continue
-                spot = self.try_at(tk, e["A"], e["u"], e["in"], t, sb + R.uniform(0, .4), gap, blk)
+                tdef = B.variant(tk, R, sides=not row)
+                spot = self.try_at(tk, e["A"], e["u"], e["in"], t, sb + R.uniform(0, .25 if row else .4), gap, blk, tdef)
                 if spot:
                     b = self.put(tk, self.label_for(tk), spot)
+                    if not b: continue
                     b.lot = blk
+                    if row and prev and min(G.separation(prev.hulls[0], b.hulls[0]), 9) < .25:
+                        ax = (math.cos(b.theta), math.sin(b.theta))
+                        left = (prev.cx - b.cx) * ax[0] + (prev.cy - b.cy) * ax[1] < 0
+                        b.drop_side("W" if left else "E"); prev.drop_side("E" if left else "W")
+                    prev = b
                     t = max((q[0] - e["A"][0]) * e["u"][0] + (q[1] - e["A"][1]) * e["u"][1] for q in spot[3]) + gap + R.uniform(0, .6 if ward != "slum" else .2)
                     placed = True
                     break
-            if not placed: t += .5
+            if not placed: t += .5; prev = None
 
     def lots(self, blk, kinds, ward):
         """A block cut into lots, as the original does: each piece split across its longest side, a little off the
@@ -268,7 +288,7 @@ class OrganicTown(T.Town):
                 ch = G.chord(poly, p, (-nrm[1], nrm[0]))
                 if ch:
                     band = G.buffer_line(list(ch), gap / 2)
-                    if any(G.separation(band, o.corners) < .2 for _, o in self.bgrid.near(G.bbox(band), 1)): gap = 0.0
+                    if any(G.separation(band, hb) < .2 for _, o in self.bgrid.near(G.bbox(band), 1) for hb in o.hulls): gap = 0.0
                     else: alleys.append((ch[0], ch[1], gap / 2))
                 else: gap = 0.0
             p1 = G.half_plane(poly, p, nrm, gap / 2)
@@ -320,11 +340,12 @@ class OrganicTown(T.Town):
     def best_spot(self, type_key, edges, blkfor, want="middle"):
         """The spot nearest the market (or farthest) on any of the edges, for one special building."""
         best = None
+        tdef = B.variant(type_key, self.R)
         for e, blk, ward in edges:
             sb, gap = SPACING.get(ward, (.6, .8))
             t = .3
             while t < e["len"] - 2:
-                s = self.try_at(type_key, e["A"], e["u"], e["in"], t, sb, gap, blk)
+                s = self.try_at(type_key, e["A"], e["u"], e["in"], t, sb, gap, blk, tdef)
                 if s:
                     d = math.hypot(s[0] - self.xc, s[1] - self.yc)
                     if best is None or d < best[0]: best = (d, s)
@@ -344,14 +365,14 @@ class OrganicTown(T.Town):
         facing = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in plaza_edges(p, blk, kinds)]
         s = self.best_spot("tavern", facing, None)
         if not s: raise SystemExit("no room for the tavern on the market")
-        tavern = self.put("tavern", "Tavern", s)
+        tavern = self.put("tavern", "Tavern", s) or self.put("tavern", "Tavern", s[:4] + (B.TYPES["tavern"],))
         church = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["ward"] == "church" for e in self.edges_of(blk, kinds)]
         s = self.best_spot("chapel", church, None) or self.best_spot("chapel", facing, None)
         if not s:
             any_e = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in self.edges_of(blk, kinds)]
             s = self.best_spot("chapel", any_e, None)
         if not s: raise SystemExit("no room for the chapel")
-        chapel = self.put("chapel", "Chapel", s)
+        chapel = self.put("chapel", "Chapel", s) or self.put("chapel", "Chapel", s[:4] + (B.TYPES["chapel"],))
         near = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in self.edges_of(blk, kinds)
                 if math.dist(e["mid"], chapel.centre) < 30]
         s = self.best_spot("cottage", sorted(near, key=lambda x: math.dist(x[0]["mid"], chapel.centre))[:4], None)
@@ -391,7 +412,7 @@ class OrganicTown(T.Town):
         if blk is None or not all(G.inside(q, blk) for q in poly): return None
         x, y, w, h = G.bbox(poly)
         for _, o in self.bgrid.near((x, y, w, h), 1):
-            if o is not b and G.separation(poly, o.corners) < .5: return None
+            if o is not b and any(G.separation(poly, hb) < .5 for hb in o.hulls): return None
         for _, g in self.ggrid.near((x, y, w, h), 1):
             if G.separation(poly, g["poly"]) < .5: return None
         g = {"id": f"{b.key}-garden", "rect": (x, y, w, h), "poly": poly, "of": b.key, "b": b, "d": d}
@@ -426,7 +447,7 @@ class OrganicTown(T.Town):
 
     def tree_ok(self, x, y, rad):
         pt = (x, y, 0, 0)
-        if any(G.poly_dist((x, y), b.corners) < rad * .7 + .5 for _, b in self.bgrid.near(pt, rad + 1)): return False
+        if any(G.poly_dist((x, y), hb) < rad * .7 + .5 for _, b in self.bgrid.near(pt, rad + 1) for hb in b.hulls): return False
         if any(G.poly_dist((x, y), g["poly"]) < rad * .6 for _, g in self.ggrid.near(pt, rad + 1)): return False
         if self.way_dist(x, y, rad + 2) < rad * .5 + .3: return False
         if G.poly_dist((x, y), self.market_poly) < rad + .5: return False
@@ -508,7 +529,7 @@ class OrganicTown(T.Town):
         for b in self.blds:
             if not overlaps(b.rect, win): continue
             ops = [(k, x, y, None) for k, x, y, _ in b.openings_world()]
-            walls.append(wall_with_portals(b.corners, b.t["wall"], ops, True))
+            walls.append(wall_with_portals(b.outline, b.t["wall"], ops, True))
             for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], b.t["wall"], ops, False))
             for r in b.rooms:
                 if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
@@ -607,7 +628,7 @@ class OrganicTown(T.Town):
                     f["rotation"] = round(math.degrees(rot) % 360, 2)
                     features.append(f)
             if b.t["place"]:
-                rs = region_shape(b.corners)
+                rs = region_shape(b.outline)
                 regions.append({"id": b.key, "label": b.label, "rect": rs[0], "points": rs[1], "place": {"kind": b.t["place"]}})
         wx, wy = self.well
         if T.inside(wx, wy, win):
@@ -625,7 +646,8 @@ class OrganicTown(T.Town):
         if self.wall:
             for k, g in enumerate(self.gates):
                 if not T.inside(g[0], g[1], win): continue
-                rect = [round(g[0] - 1.5 - ox, 3), round(g[1] - 1.5 - oy, 3), 3, 3]
+                rect = T.clip((g[0] - 1.5, g[1] - 1.5, 3, 3), win)     # a gate by a part's edge keeps to its own map
+                if not rect: continue
                 regions.append({"id": f"gate-{k + 1}", "label": f"The {dirs(g)} gate", "rect": rect,
                                 "behaviors": [{"type": "trigger", "system": {"label": f"the {dirs(g)} gate of {self.name}", "does": "note", "who": "pcs"}}]})
         whole = (0, 0, self.cols, self.rows)
@@ -668,7 +690,7 @@ class OrganicTown(T.Town):
         for run in runs: o.append(f'<polyline points="{" ".join(map(f, run))}" fill="none" stroke="#444" stroke-width="{.6 * s}"/>')
         for t in towers: o.append(f'<circle cx="{t[0] * s:.1f}" cy="{t[1] * s:.1f}" r="{1.1 * s}" fill="#666"/>')
         for b in self.blds:
-            o.append(f'<polygon points="{" ".join(map(f, b.corners))}" fill="#fffdf8" stroke="#333" stroke-width="2"/>')
+            o.append(f'<polygon points="{" ".join(map(f, b.outline))}" fill="#fffdf8" stroke="#333" stroke-width="2"/>')
             for a, c in b.partitions_world(): o.append(f'<line x1="{a[0] * s:.1f}" y1="{a[1] * s:.1f}" x2="{c[0] * s:.1f}" y2="{c[1] * s:.1f}" stroke="#333"/>')
             for r in b.rooms:
                 for it, cx, cy, rot in b.items_world(r):

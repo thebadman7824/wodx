@@ -124,6 +124,8 @@ test("mapgen: organic villages, towns and cities come out whole, and the samples
       for ( const k of ["home", "church", "tavern", "market", "street"] ) assert.ok(kinds.has(k), `${size} ${seed}: no ${k}`);
       // turned buildings: their outlines are kept, and some things are turned with them
       assert.ok(got.data.regions.some(r => r.points && r.place?.kind === "home"), `${size} ${seed}: no outlines`);
+      // varied shapes: some homes have wings or lean-tos, so their outlines have more than four corners
+      assert.ok(got.data.regions.some(r => r.points?.length > 4 && r.place?.kind === "home"), `${size} ${seed}: every home a plain box`);
       assert.ok(got.data.features.some(f => f.rotation % 90 !== 0), `${size} ${seed}: nothing turned off the square`);
     }
   }
