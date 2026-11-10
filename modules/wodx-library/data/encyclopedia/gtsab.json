@@ -302,7 +302,8 @@
   "see": [
    "coterie",
    "antitribu",
-   "tome-templars"
+   "tome-templars",
+   "gtsab-esbat"
   ]
  },
  {
@@ -598,6 +599,12 @@
     ]
    }
   ],
-  "see": []
+  "see": [
+   "sabbat",
+   "vaulderie",
+   "rotb-auctoritas",
+   "gtsab-pack-ranks",
+   "coterie"
+  ]
  }
 ]

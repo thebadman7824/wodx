@@ -838,7 +838,8 @@
   ],
   "see": [
    "sabbat",
-   "blood-bond"
+   "blood-bond",
+   "gtsab-esbat"
   ]
  },
  {
@@ -992,7 +993,8 @@
    "vaulderie",
    "lasombra",
    "tzimisce",
-   "camarilla"
+   "camarilla",
+   "gtsab-esbat"
   ]
  },
  {
@@ -2176,7 +2178,8 @@
   ],
   "see": [
    "sabbat",
-   "vaulderie"
+   "vaulderie",
+   "gtsab-esbat"
   ]
  },
  {
