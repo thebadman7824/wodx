@@ -1675,6 +1675,12 @@
    "title": "Dark Ages: British Isles Casualties",
    "short": "DABI Casualties",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "dacbbaali",
+   "title": "Clanbook: Baali (Dark Ages)",
+   "short": "DA CB Baali",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -1956,6 +1962,7 @@
   "wspg.json",
   "cap.json",
   "dacults.json",
-  "dabic.json"
+  "dabic.json",
+  "dacbbaali.json"
  ]
 }
