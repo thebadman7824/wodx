@@ -1,0 +1,227 @@
+[
+ {
+  "id": "mrsth-permanent-paradox",
+  "title": "Permanent Paradox",
+  "kind": "term",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Paradox that will not fade.",
+  "claims": [
+   {
+    "text": "A mage who rewrites the Pattern for good in a way reality rejects, such as with some cybernetic changes, carries Paradox that never drains away and worsens every backlash.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 12,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Prime cannot remove it; it fades only if the mage undoes the cause or the Consensus comes to accept the change as normal.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 12,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "paradox",
+   "consensus"
+  ]
+ },
+ {
+  "id": "mrsth-upheavals",
+  "title": "The upheavals before the Reckoning",
+  "kind": "event",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Blows that reshaped the Awakened world around 1997 to 1999.",
+  "claims": [
+   {
+    "text": "Doissetep, in the Umbral reflection of Mars within the Shard Realm of Forces, exploded when it fell to attackers; Porthos Fitz-Empress contained the worst of the blast.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 34,
+      "pdf": 36
+     }
+    ]
+   },
+   {
+    "text": "After Doissetep fell, the Digital Web suffered a brief White Out that wiped many sectors; when it reset, Sleepers had caught up, and the Web was no longer an untouched frontier.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 34,
+      "pdf": 36
+     }
+    ]
+   }
+  ],
+  "see": [
+   "mroh-doissetep",
+   "m1boc-doissetep",
+   "mrbt-flambeau-2000"
+  ]
+ },
+ {
+  "id": "mrsth-science-magic",
+  "title": "Beyond science against magic",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "How the modern Traditions see science.",
+  "claims": [
+   {
+    "text": "Many mages once thought the Council stood against science, an idea that came partly from Technocratic propaganda; the Sons of Ether and the spread of technomagic wore it down.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "The fall of Horizon removed some anti-scientific Masters and let younger mages bring technomagic forward.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   },
+   {
+    "text": "Today's Traditionalists see their ideas as able to live beside science, giving Sleepers' lives meaning beyond Technocratic order; that, not science itself, is the real quarrel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 50,
+      "pdf": 52
+     }
+    ]
+   }
+  ],
+  "see": [
+   "society-of-ether",
+   "technocracy",
+   "council-of-nine"
+  ]
+ },
+ {
+  "id": "mrsth-amalgams",
+  "title": "Amalgams under Control",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why Tradition mages still fight the Union.",
+  "claims": [
+   {
+    "text": "Many amalgams capture, spy on or kill mages under Control's orders, run unethical experiments, silence dissidents and meddle with the press, whatever their own beliefs.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   },
+   {
+    "text": "For every amalgam torn over its orders, at least one does them without a qualm; how hard the Union strikes depends on a mage's threat and sway over the Masses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 49,
+      "pdf": 51
+     }
+    ]
+   }
+  ],
+  "see": [
+   "technocracy",
+   "mrman-union-reaction"
+  ]
+ },
+ {
+  "id": "mrsth-descent",
+  "title": "Descent",
+  "kind": "lore",
+  "lines": [
+   "mage"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Nephandi goal, in two forms.",
+  "claims": [
+   {
+    "text": "Nephandi seek individual Descent, wearing away the self in service to their masters, and mass Descent, the slow ruin of the Tellurian.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "They favor the easy path, feeding nihilism in culture, politics and technology and letting dupes lead themselves to ruin; grand schemes smack of ego, the vice they condemn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Marauders, by contrast, take Dynamic ideals to excess, living their own paradigm so fully that they deny the rest of reality.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "mrsth",
+      "page": 54,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": [
+   "nephandi",
+   "marauders",
+   "mrbom-nephandi"
+  ]
+ }
+]
