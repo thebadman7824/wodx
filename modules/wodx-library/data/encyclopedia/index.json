@@ -595,6 +595,12 @@
    "title": "Breedbook: Ananasi (Revised)",
    "short": "BB Ananasi",
    "edition": "Revised"
+  },
+  {
+   "id": "bbrok",
+   "title": "Breedbook: Rokea (Revised)",
+   "short": "BB Rokea",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -696,6 +702,7 @@
   "bbgur.json",
   "bbrat.json",
   "bbmok.json",
-  "bbana.json"
+  "bbana.json",
+  "bbrok.json"
  ]
 }
