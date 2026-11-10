@@ -1,0 +1,661 @@
+[
+ {
+  "id": "dc1-laibon",
+  "title": "The Laibon",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Cainites of Africa, known to Europe only through travelers' tales.",
+  "claims": [
+   {
+    "text": "Travelers describe the Laibon as Children of Caine who live in the far south of Africa, beyond the Moorish kingdoms, and who know nothing of Christ.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 66,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "By these accounts the Laibon do not claim descent from Caine. They name earth spirits as their forebears, and they speak of the spirit world and an ancestor called Kamiri wa Itherero.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 66,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "They are said to hunt and work as shamans, guarding and healing the peoples they live among, and to know a magic that lets them master the Beast instead of fearing it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 66,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Setites call them Sphinxes for their love of riddles. A few Assamites, Setites and Ravnos have visited them, and a Laibon is said to serve the Lasombra prince of Genoa as a sentinel.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 66,
+      "pdf": 40
+     }
+    ]
+   },
+   {
+    "text": "Very few Laibon speak any European tongue; a handful have learned some Latin.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 66,
+      "pdf": 40
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dav-midnight-crescent",
+   "da-setites"
+  ]
+ },
+ {
+  "id": "dc1-lamia",
+  "title": "The Lamia",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A bloodline of Cappadocian childer devoted to Lilith, the Dark Mother.",
+  "claims": [
+   {
+    "text": "The Cappadocians say Lamia was a high priestess of Lilith whom Lazarus of Clan Cappadocian Embraced in the priestess's own temple. Japheth later brought Lamia into the clan.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 70,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Lazarus has not spoken to Lamia since the night of the Embrace, and tales say something Lamia whispered that night still frightens the Cappadocian.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 70,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Where the Cappadocians go, the Lamia follow. They serve as the clan's guards, and the Cappadocians defer to them on matters of the Dark Mother.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 70,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Lamia take any Road, though many prefer the Road of Bones. Their Disciplines are Deimos, Mortis and Potence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 71,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Their curse is a plague they call the Seed of Lilith. Anyone they feed on rolls Stamina (difficulty 6 for women, 8 for men) or catches a pox that kills in a few days; vampires who drink Lamia blood become carriers instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 71,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Because of the plague most princes ban Lamia or confine them to leper villages. Gentler Lamia feed on corpses and burn the bodies.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 71,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "They keep a priestly hierarchy in which women usually hold the higher ranks. They are strongest in southern Europe and the Holy Land and almost absent from the north, and they often lair in cemeteries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 71,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Sires and childer form tight family groups that often lead mortal cults of Lilith or ride out as night knights guarding cultists and Cappadocians.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 71,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-cappadocians",
+   "bh-bahari",
+   "da-road-of-bones"
+  ]
+ },
+ {
+  "id": "dc1-lazarene-knights",
+  "title": "The Order of Saint Lazarus",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Leper knights of the Holy Land, quietly tied to Clan Nosferatu.",
+  "claims": [
+   {
+    "text": "The Order of Saint Lazarus began as a nonmilitary order of hospitals and hospices for pilgrims, with special care for lepers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 144,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "After Jerusalem fell in 1098, leprous knights from other orders were placed in its charge, and by the end of that year it had become a chivalric order.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 144,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "The knights count themselves already dead and call themselves the living dead. Their ferocity earns respect from the leper king Baldwin IV and from Salah el-Din.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 144,
+      "pdf": 118
+     }
+    ]
+   },
+   {
+    "text": "Most of its men-at-arms die at Gaza in 1244, and its time in the Holy Land is ending during the 13th century.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 145,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Clan Nosferatu sees itself as the order's patron. Many Lazarene troops drink Nosferatu vitae, which helps explain their famed bravery, and the best leper knights may be Embraced.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 145,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Two masters of the order, Fra' Gerard and Fra' Raymond, were Embraced by the Nosferatu. Fra' Raymond dwells in Constantinople; Fra' Gerard has been seen at Saint Jean d'Acre.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 145,
+      "pdf": 119
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-nosferatu",
+   "dac-constantinople",
+   "daeu-outremer"
+  ]
+ },
+ {
+  "id": "dc1-templars",
+  "title": "The Knights Templar",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The richest and most disciplined of the crusading orders, and a favorite of the Ventrue.",
+  "claims": [
+   {
+    "text": "The order formed after a Muslim attack on pilgrims in 1119, when nine knights swore oaths, rode to Jerusalem and were quartered in the old Temple of Solomon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 145,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Its Latin Rule dates to 1128 and binds the knights to poverty, chastity and obedience, along with rules for conduct on and off the field.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 145,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Templars are among the best disciplined and wealthiest fighters of the age. Because breaking ranks means expulsion, they are often set to guard the rear of crusader armies against Seljuk flanking attacks.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 145,
+      "pdf": 119
+     }
+    ]
+   },
+   {
+    "text": "Money put in Templar hands is held to be safe, and the Ventrue prize the order's wealth, arms and independence from the Lasombra-ridden Church.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 146,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Ventrue look to the Templars for childer and use some of their houses as safe stops between Europe and Jerusalem, though the strong faith in other houses keeps Cainites out.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 146,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Each knight carries the same arms by the Rule: a straight two-edged sword, a short spiked Turkish mace, a long dagger and two knives, with mail and a curved triangular shield, and no more than three horses.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 146,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "tome-templars",
+   "arc-templars",
+   "da-ventrue"
+  ]
+ },
+ {
+  "id": "dc1-hospitallers-teutonic",
+  "title": "The Hospitallers and the Teutonic Knights",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Two more of the great knightly orders.",
+  "claims": [
+   {
+    "text": "The Hospitallers began around 1080 caring for pilgrims bound for Jerusalem and were recognized by the Holy See in 1113. By the end of the 12th century their main task is the defense of Palestine and Syria.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 146,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Large endowments in Western Europe fund the Hospitallers' work in the East, a structure that lets the order outlast the loss of the Holy Land in 1291.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 146,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "Hospitallers and Templars feud bitterly, setting the rivalry aside only against the Saracens.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 146,
+      "pdf": 120
+     }
+    ]
+   },
+   {
+    "text": "The Teutonic Knights recruit almost only from German-speaking lands. In Prussia, Livonia and for a time Hungary they set up working governments of their own.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 146,
+      "pdf": 120
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dc1-templars",
+   "dc1-lazarene-knights",
+   "daeu-holy-roman-empire"
+  ]
+ },
+ {
+  "id": "dc1-kabbalah",
+  "title": "Kabbalah",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Jewish mystical study, and why Cainites almost never master it.",
+  "claims": [
+   {
+    "text": "The name Kabbalah comes into use in the 12th century for the leading schools of Jewish mystical thought. It has many versions and no single complete text.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 147,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "Its core question is why a perfect God made an imperfect world. It maps creation as ten emanations, the sephirot, arranged as the Tree of Emanations and shadowed by destructive shells called Qlippoth.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 147,
+      "pdf": 121
+     }
+    ]
+   },
+   {
+    "text": "Kabbalists study within city communities of skilled peers, not alone. Because the study is religious, students are very likely to have True Faith, and masters are said to work healing wonders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 148,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "Almost no Cainite can master it: the study is open only to Jewish men who read Hebrew, scripture forbids drinking blood, and the texts are kept in houses of worship with high Faith ratings.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 148,
+      "pdf": 122
+     }
+    ]
+   },
+   {
+    "text": "Amulets and seals are the one part of Kabbalistic magic known to outsiders.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 148,
+      "pdf": 122
+     }
+    ]
+   }
+  ],
+  "see": [
+   "da-true-faith"
+  ]
+ },
+ {
+  "id": "dc1-white-monks",
+  "title": "The White Monks",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Church's own hidden order of magicians.",
+  "claims": [
+   {
+    "text": "The Church divides magic in two: goetia, which Rome approves, and maleficium, which comes from the Devil and includes necromancy and prophecy. Alchemy, astrology and chirurgy are judged case by case.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 125,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "The Simonites, or White Monks, take strange children young and raise them in the colleges of Rome and Ravenna as both churchmen and magi. Children without the gift become their helpers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 125,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "Their schools rise in rank from the Vestamentari, who only support others' workings, through the Exorcists, Liturgists and Sanctified, to the Farae, who wield every magic open to those without True Magick.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 125,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dc1-infernal-path"
+  ]
+ },
+ {
+  "id": "dc1-celtic-paganism",
+  "title": "The old Celtic faith",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The gods and festivals still honored in the pagan corners of the British Isles.",
+  "claims": [
+   {
+    "text": "Pockets of paganism survive across Europe, mostly hidden or dressed as Christian practice, while a few places remain beyond the Church's reach.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 129,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "The Celts saw themselves as children of Danu, the earth mother, and also honored Bridget, Lugh, Manannan mac Lir, the Morrigan and Cernunnos, along with local gods of wells, caves and hills.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 129,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "Druids led their rites in sacred groves and wrote in ogham, a tree-named script. It is not the same as the Lhiannan Discipline of that name, though the two have much in common.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 129,
+      "pdf": 103
+     }
+    ]
+   },
+   {
+    "text": "The four great festivals are Samhain, Imbolc, Beltaine and Lughnasadh. Rome slaughtered the British druids, and in Ireland they held on until Christianity arrived.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 129,
+      "pdf": 103
+     }
+    ]
+   }
+  ],
+  "see": [
+   "daeu-british-isles",
+   "dam-stonehenge"
+  ]
+ },
+ {
+  "id": "dc1-infernal-path",
+  "title": "Supplicium: the fall into damnation",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How dealings with Hell drag a character from a chosen Road toward the Via Diabolis.",
+  "claims": [
+   {
+    "text": "Pride, despair and dark longings are the usual doors to Hell. Demons may first frustrate a character's plans and then offer a way to recover what was lost.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 164,
+      "pdf": 138
+     }
+    ]
+   },
+   {
+    "text": "Demons can take many shapes, including mortals or vampires, and can deal with a character to the very end without being recognized.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 165,
+      "pdf": 139
+     }
+    ]
+   },
+   {
+    "text": "A Supplicium begins whenever a character makes a pact with a demon, rises in Dark Thaumaturgy, gains an infernal investment or otherwise opens to Hell.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 165,
+      "pdf": 139
+     }
+    ]
+   },
+   {
+    "text": "During a Supplicium the character's old Road and the infernal taint fight over the soul, and each fall moves the character toward the Via Diabolis until even the strongest is damned.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacomp",
+      "page": 165,
+      "pdf": 139
+     }
+    ]
+   }
+  ],
+  "see": [
+   "rotb-infernalists",
+   "da-roads"
+  ]
+ }
+]
