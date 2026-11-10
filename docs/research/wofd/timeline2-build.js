@@ -70,11 +70,43 @@ Object.assign(O,{
 });
 MOVE['m3|2084']='2059';
 const TAGO={'h1|2036':'Hunter · Free States, Pacific Rim'};
+
+// Second draft (run j) notes, 2026-11-10 17:10Z: spread the eve lines over 2093-2098.
+const FALL={
+wr3:['2093','The Tempest closes around the last Shadowlands. Wraiths call what is left an island in a storm, and every one of them says the next Maelstrom will be the last.'],
+c1:['2093','The last freehold Balefires outside the wastes go out. The Dreaming is almost gone from the waking world, kept by a few oathcircles, and the fae who remain feel the Endless Winter closing (z07).'],
+k2:['2093','With the Asian nests spent, starving Kuei-jin lose the struggle with their P\'o. Hungry Dead hunt the arcologies by night.'],
+o1:['2093','Projectors are a hunted underclass in every state that banned them. Those who still go out report that something in the storm has learned their names.'],
+v2:['2094','The Catholic cities are nearly empty of Kindred and the wastes are full of them. Vampires everywhere start to dream of the ones who sleep beneath the glass, and the dreams are hungry.'],
+w3:['2094','Theurges in the waste septs report that the moon over the glass looks wrong. The wild is small, fierce and besieged.'],
+d3:['2094','The Fallen split for good between those who seek redemption and those who seek ruin. The Reconcilers wait to learn whether anyone above heard them pray.'],
+mu2:['2094','False mummies made with stolen Ba now sit on a dozen corp boards. The true mummies stop hiding and begin preparing to settle the account.'],
+v3:['2095','In the dead zones a vampire with more than a trace of Caine\'s blood is now a rarity. Every sign the Book of Nod gave for the last nights runs on the newsfeeds.'],
+w1:['2095','The preserve Garou are split between those inside the system and those who burned their contracts. In the preserves the Wyrm\'s servants now hold more caerns than Gaia\'s (z08).'],
+h2:['2095','The crusade rules a belt of cities from Rome to Hamburg. Its own inquisitors whisper that its leaders no longer cast reflections.'],
+wr2:['2095','Netwatch counts more dead in the Net than living users. Wraiths say the Void now has a door that opens on every screen.'],
+o2:['2095','The death-tourism state is a nation of the dead in all but name, and its citizens are frightened of the next storm.'],
+v1:['2096','The registry states hold more registered Kindred than ever, all bound by paper as well as blood. The oldest unregistered ones start to sleep less and dream of their sires.'],
+w2:['2096','In the four great megacities the spirit world and the streets barely touch. Glass Walkers warn that the Weaver is close to severing them for good.'],
+m3:['2096','The Net is the largest Horizon realm there has ever been. Adepts and Nephandi alike feel its Avatar, if it has one, close to waking.'],
+d2:['2096','The Sorter has grown nearly as strong as an Earthbound. Heaven\'s servants and hell\'s are both waiting to see which side it takes.'],
+k3:['2096','The Kuei-jin are divided over the teachers, and the student\'s teachers are told the Wheel has noticed.'],
+m1:['2097','The Free States and Night City are one push away from belief in magic or belief in machines, and both the Traditions and the Union mean to use them to push the rest of the world (z08).'],
+h1:['2097','The hunt is a licensed trade with unions and quotas. Hunters who still hear the Messengers say the voices have begun counting down.'],
+d1:['2097','The Fallen hold more worshippers than any church. The walls of the Abyss crack under so many prayers aimed at the wrong ears.'],
+mu1:['2097','The mummies are trusted by millions, and their oldest dreams are of the serpent Apophis turning in its sleep.'],
+c2:['2097','What is left of the Dreaming lives mostly in the Net, in the last large freeholds among the dream market\'s ruins, and no one knows if they will survive (z07).'],
+wr1:['2097','The dead and the living talk every night, and the Labyrinth below is louder than it has ever been.'],
+k1:['2098','The Sixth Age is plain to everyone. The Kuei-jin must choose whether to serve the end or stand against it.'],
+h3:['2098','The last Accords collapse, and for the first time in years every imbued hears the Messengers speak at once.'],
+o3:['2098','Life and death are close to being one country, and the Underworld\'s storms can reach the waking world.'],
+};
+for(const k of ['c1|2098','c2|2098','w1|2098','m1|2098']) delete O[k];
 const ev=[];
 for(const s of SCEN){ if(DROP.has(s.id)) continue;
  const tag=s.line+(REGION[s.id]?' · '+REGION[s.id]:'');
  for(const [y,t] of s.beats){ const k=s.id+'|'+y; ev.push([MOVE[k]||y,TAGO[k]||tag,(O[k]||t)+' ('+s.id+')']); delete O[k]; }
- {const k=s.id+'|2098';ev.push(['2098',tag,(O[k]||s.fall)+' ('+s.id+')']);delete O[k];}
+ {const f=FALL[s.id]; if(!f) throw new Error('no fall '+s.id); ev.push([f[0],tag,f[1]+' ('+s.id+')']);}
 }
 if(Object.keys(O).length) throw new Error('unused overrides '+Object.keys(O));
 for(const e of EXTRA) ev.push(e);
