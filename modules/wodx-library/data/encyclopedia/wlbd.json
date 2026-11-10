@@ -1,0 +1,383 @@
+[
+ {
+  "id": "wlbd-love-passions",
+  "title": "Love Passions after death",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What happens to wraiths whose Passions centre on a living lover.",
+  "claims": [
+   {
+    "text": "Wraiths with a Passion for a mortal often keep watch over that person, sometimes guarding, sometimes tormenting, most often just observing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Eventually the mortal dies, and the wraith may wait for the lover to arrive on the far side only to find the beloved never crosses over.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "The grief of being shut out of the living world turns many wraiths to anger, the shadow trade or poltergeist violence, and many Spectres are said to have started as heartbroken ghosts.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Some Restless take ghostly lovers to ease such loss; most of these matches fail, though a few last for centuries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wlbd-legendary-lovers"
+  ]
+ },
+ {
+  "id": "wlbd-romance-scale",
+  "title": "Romance in a chronicle",
+  "kind": "lore",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Epic and small-scale love stories among the dead.",
+  "claims": [
+   {
+    "text": "An epic romance suits a larger troupe and needs at least one wraith of real power whose Passions sway events around them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "Smaller romances, such as one ghost fixated on a single living person, suit troupes of three or fewer, though a love triangle can draw in more characters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   },
+   {
+    "text": "A forbidden match across factions, such as a Heretic with a Legionnaire, brings trouble on the lovers and their Circles alike.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 24,
+      "pdf": 25
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wlbd-white-box",
+  "title": "The white box",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A ghost-hunting device that damages wraiths.",
+  "claims": [
+   {
+    "text": "A white box sends out an electromagnetic pulse that harms the Corpus of every wraith within about a hundred feet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Each round it runs, every wraith in range takes one automatic wound level, and nearby unshielded electronics flicker.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "It runs for at most ten rounds before needing a recharge, and ghost hunters switch it on and off as they sweep a building.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   },
+   {
+    "text": "Wraiths usually go after these devices with the Inhabit Arcanos.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 33,
+      "pdf": 34
+     }
+    ]
+   }
+  ],
+  "see": [
+   "arcanoi"
+  ]
+ },
+ {
+  "id": "wlbd-wedding-bands",
+  "title": "Wedding bands",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level 4 Artifact that binds two lovers.",
+  "claims": [
+   {
+    "text": "When two lovers both accept these rings, the pair can share thoughts across great distances and see each other in the mind.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "Once accepted, the rings stay on until one of the couple is lost to Oblivion.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wlbd-love-passions"
+  ]
+ },
+ {
+  "id": "wlbd-bitter-rose",
+  "title": "The Bitter Rose",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level 3 Artifact that senses love and hate Passions.",
+  "claims": [
+   {
+    "text": "For one point of Pathos the rosebud opens near someone with strong love Passions and tells the holder what those Passions are and how strong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "If the wraith beside it nurses deep hatred instead, thorns prick the holder, costing a level of Corpus but revealing the hatred.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "It never responds to the holder’s own Passions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wlbd-chalice-venus",
+  "title": "Chalice of Venus",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level 3 Artifact that stores the Pathos of love.",
+  "claims": [
+   {
+    "text": "Drinking from the cup grants 4 points of love Pathos, but a drinker who fails a Willpower roll at difficulty 8 falls helplessly in love within a day.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "An empty chalice refills by sitting near lovers in the grip of emotion, one hour for each point it gathers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wlbd-strauss-anklet",
+  "title": "The Strauss Anklet",
+  "kind": "term",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "A level 2 relic said to bind two souls.",
+  "claims": [
+   {
+    "text": "This gold anklet is said to bind two mortals so that while one lives, that one serves as the other’s Fetter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   },
+   {
+    "text": "The bond holds in the Shadowlands and beyond, and some believers in reincarnation whisper that it carries into the next life.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 67,
+      "pdf": 68
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "wlbd-legendary-lovers",
+  "title": "Legendary wraiths of love",
+  "kind": "character",
+  "lines": [
+   "wraith"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Famous lovers and their fates among the Restless.",
+  "claims": [
+   {
+    "text": "Abelard and Heloise met again briefly in the Shadowlands before Heloise reportedly Transcended; Abelard then founded a Heretic movement teaching that only love brings salvation, and it has spread to Stygia.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Mortals say Anne Boleyn haunts the Tower of London, but many Restless claim the dead queen serves the Quiet Lord as an Anacreon in southern England, ruling those who died in despair.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Legend says Tristan fell to the Shadow from grief, led Shades against Stygia, and finally slew Isolde, by then a Pardoner serving the Hierarchy, with a single darksteel blow.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "wlbd",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wlbd-love-passions"
+  ]
+ }
+]
