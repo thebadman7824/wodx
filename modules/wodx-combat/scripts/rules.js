@@ -44,6 +44,7 @@ export function clampDifficulty(d) {
  *   lupine   – Stamina vs everything, silver ("bane") leaves no natural soak (W20 p. 148). Also the generic
  *              supernatural model for demons, mummies and Exalted.
  *   fae      – mortal soak; cold iron ("bane") is aggravated with only a difficulty-10 slim chance (Balor), so no natural soak.
+ *              Dark Ages fae (DA:Fae): lethalSoak in the mien (p. 104) and baneSoak, cold iron soaked with Stamina (p. 88).
  *   wraith   – Stamina vs bashing and lethal, armor only vs aggravated (Spectre/Oblivion damage). House adaptation.
  *   spirit   – Stamina vs everything (ephemera; Essence is the health track). House adaptation.
  *   supernatural – legacy v1 name for lupine.
@@ -53,7 +54,8 @@ export function clampDifficulty(d) {
  * armorPiercing: dice of armor ignored; bypassArmor: attacker took +2 difficulty to ignore armor.
  */
 export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 0, armorPiercing = 0,
-                           bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bane = false, bonus = 0, aggSoak = true }) {
+                           bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bane = false, bonus = 0, aggSoak = true,
+                           lethalSoak = false, baneSoak = false }) {
     const notes = [];
     let effArmor = armor;
     if (fireOrSun && effArmor) { effArmor = 0; notes.push("armor does not protect against fire or sunlight"); }
@@ -84,11 +86,13 @@ export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 
             else notes.push("wraiths soak aggravated damage only with armor");
             break;
         default: // mortal, fae
-            if (t === "bashing") sta = stamina;
-            else notes.push("lethal and aggravated damage can only be soaked by armor");
+            if (t === "bashing" || (lethalSoak && t === "lethal") || (baneSoak && bane)) sta = stamina;
+            else notes.push(lethalSoak ? "aggravated damage can only be soaked by armor" : "lethal and aggravated damage can only be soaked by armor");
+            if (lethalSoak && t === "lethal") notes.push("in the fae mien: Stamina soaks lethal damage (DA:Fae p. 104)");
+            if (baneSoak && bane) notes.push("Dark Ages fae: cold iron is soaked with Stamina (DA:Fae p. 88)");
             break;
     }
-    if (bane && (sta || fort)) { sta = 0; fort = 0; notes.push("bane: Stamina and Fortitude cannot soak this damage"); }
+    if (bane && !baneSoak && (sta || fort)) { sta = 0; fort = 0; notes.push("bane: Stamina and Fortitude cannot soak this damage"); }
     let autoSoak = 0;
     if (fortitudeBlood && fort > 0) {
         if (fireOrSun) notes.push("Fortitude blood auto-soak cannot be used against fire or sunlight");

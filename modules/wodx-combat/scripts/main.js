@@ -265,6 +265,14 @@ function weaponAbility(actor, w) {
 
 /** WoDX Actions' Werewolf and Fera helpers, when that module is on (Phase 6b). */
 function garouRules() { return game.wodxActions?.garouRules ?? null; }
+/** Dark Ages fae soak (DA:Fae pp. 88, 104), from WoDX Actions: {lethalSoak, baneSoak}, or nothing outside the Dark Ages rules. */
+function faeSoakOpts(actor, profile) {
+    if (profile !== "fae") return {};
+    try {
+        const f = game.wodxActions?.faeSoak?.(actor);
+        return f ? { lethalSoak: !!f.lethal, baneSoak: !!f.coldIron } : {};
+    } catch (e) { return {}; }
+}
 
 /** How a bane metal in this attack hurts a shapechanger target; null when no bane applies. */
 function shifterBane(target, w, fd) {
@@ -822,7 +830,8 @@ function soakPoolFor(target, profile, w, fd, dp) {
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
         armor: arm[dp.dmgType] ?? 0, armorPiercing: w.piercing, bypassArmor: fd.bypass,
         fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: fd.soakBonus,
-        aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true
+        aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
+        ...faeSoakOpts(target, profile)
     });
 }
 
@@ -1214,7 +1223,7 @@ export async function soakAndApply(tok, fd) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
             armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
-            aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true });
+            aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...faeSoakOpts(actor, profile) });
         if (sb) sp.notes.push(sb.note);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
         // A caller can ask that a botched soak turns the damage aggravated (electrocution of a vampire, V20 core printed p. 295, pdf 303)
@@ -1320,7 +1329,7 @@ Hooks.once("init", () => {
     CD.registerConductorSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.1", reload, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.3", reload, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

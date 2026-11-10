@@ -317,3 +317,24 @@ A scene kit runs only steps whose module is on, in a fixed order (clock, scene, 
 
 ## B437. Book lists for experience and extras (2026-11-10)
 The end-of-night window shows each character only their own line's experience reasons; the columns are every reason any character at the table uses, and a box a character's book lacks is a dot. In a Dark Ages era vampires and ghouls use V20 Dark Ages, which leaves the amount to the Storyteller, so the V20 list stands in as a house rule. Quick extras take the four-level extras rule (V20 p. 284, V20 Dark Ages p. 351) and mortal soak; animals are the books' stat blocks by era; people are a house rule armed from the weapon charts. Extras also write each Attribute's total, since a roll's pool reads the total.
+
+## B500. Rules that clash between lines (2026-11-10)
+Phase 10 opens with one table of the rules that two or more lines rule differently: modules/wodx-chronicle/data/rules-clashes.mjs, written out as docs/RULES-CLASHES.md. Each row is settled by the rules basis (V20, then Revised or 2nd edition, then the rest) or, where the books leave it open, by a house rule logged here and in PENDING-REVIEW. Rows whose page has not been read yet are marked check, with the question for the PC. The crossover referee will read this table. House rule for a hit between two lines: the attacker's book sets the damage type dealt; the target's book sets the soak, the halving and what the wound does, and banes belong to the target. Extra actions from any line (Celerity, Rage, the Time Sphere) resolve in one pass after the normal turns, highest Initiative first, as the turn conductor already does.
+
+## B501. Dark Ages fae soak (2026-11-10)
+WoDX Combat soaked every fae as C20 says, so a Dark Ages fae in the mien could not soak lethal damage and cold iron took away all natural soak, although DA:Fae gives both (pp. 104, 88) and the Actions fae window already said so. Now a Dark Ages fae (the sheet's own choice, an Origin, or the era) soaks lethal with Stamina in the mien and soaks cold iron with Stamina in any form; every other fae soaks as before. Chimerical damage and Banality follow C20 from its era and DA:Fae in the Dark Ages.
+
+## B502. One Willpower rule for the whole table (2026-11-10)
+The lines differ on a nightly Willpower point and on refilling at the end of a story. House rule: the chronicle's Willpower setting (a point a night, at the end of the story, or off) applies to every line alike, and acting by Nature gives a point back (V20 p. 267).
+
+## B503. One line's mind powers on another (2026-11-10)
+House rule until the pages are read: the target's book decides whether a mind power can touch it (a fae's Day or Night against Dominate, DA:Fae p. 181; a hunter's Conviction); otherwise the power works by its own book.
+
+## B504. Experience for a trait from another line (2026-11-10)
+House rule: a trait from another line, such as a Kinfolk's Gift or a mortal's Numina, costs what the book that teaches it charges an outsider. With no such price, it costs what the buyer's own chart charges for its nearest trait.
+
+## B505. Corpus and Essence in a fight (2026-11-10)
+House adaptation, already in the code: in the combat window the seven health levels stand in for a wraith's Corpus and a spirit's Essence.
+
+## B506. Two possessors in one body (2026-11-10)
+House rule: the one already inside holds the body. A newcomer (a demon, a wraith's Puppetry, a spirit) must win a resisted Willpower roll against it, difficulty 6 each; a tie keeps the first.
