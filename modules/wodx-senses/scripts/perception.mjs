@@ -190,7 +190,7 @@ export async function whoSees(token) {
   const intruder = {dexterity: H.attrOf(t, "dexterity"), stealth: H.abilityOf(t, "stealth"), manipulation: H.attrOf(t, "manipulation"), subterfuge: H.abilityOf(t, "subterfuge"),
     sneaking: !!t.statuses?.has?.("wodx-sneaking") || !!token.document.flags?.["wodx-npc"]?.sneaking || t.statuses?.has?.(INVISIBLE()),
     obfuscate: t.statuses?.has?.("wodx-obfuscated") ? Math.max(1, H.powerDots(t, /^obfuscate$/i)) : 0};
-  const book = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id === "dark-ages" ? "v20da" : "v20"; } catch (e) { return "v20da"; } })();
+  const book = (() => { try { return ["dark-ages", "long-night"].includes(game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id) ? "v20da" : "v20"; } catch (e) { return "v20da"; } })();
   const watchers = (canvas.tokens?.placeables ?? []).filter(w => w.actor?.hasPlayerOwner && w.id !== token.id && !w.document.hidden);
   const results = watchers.map(w => {
     const a = w.actor;

@@ -78,6 +78,14 @@ export function firstChangeData(mortal, {breed, auspice, tribe, rage, gnosis, wi
   };
 }
 
+/** The upstream Werewolf ability set for an era profile: its system.werewolf, else by id as before. */
+export function werewolfSet(profile) {
+  const set = profile?.system?.werewolf;
+  if ( ["darkages", "victorian", "modern"].includes(set) ) return set;
+  const id = profile?.id;
+  return ["dark-ages", "long-night"].includes(id) ? "darkages" : id === "victorian" ? "victorian" : "modern";
+}
+
 /** GM: the First Change. Returns the new Werewolf. */
 export async function firstChange(mortal, {breed = "homid", auspice = "ragabash", tribe = "fianna", rage, gnosis, willpower, renown, gifts = [],
   time = game.time.worldTime, moveTokens = true} = {}) {
@@ -87,8 +95,8 @@ export async function firstChange(mortal, {breed = "homid", auspice = "ragabash"
   if ( !A?.garouRules ) throw new Error("The First Change needs WoDX Actions (its Werewolf rules and Gift library).");
   await A.garouRules.loadData?.();
   const st = startingTraits({breed, auspice, tribe});
-  const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id;
-  const eraKey = ["dark-ages", "long-night"].includes(era) ? "darkages" : era === "victorian" ? "victorian" : "modern";
+  // The era profile names the Werewolf ability set (the Renaissance keeps the Dark Ages set, the Wild West and the Great War the Victorian one)
+  const eraKey = werewolfSet(game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile);
   const built = firstChangeData(mortal, {breed, auspice, tribe, rage: rage ?? st.rage, gnosis: gnosis ?? st.gnosis,
     willpower: willpower ?? Math.max(st.willpower, Number(mortal.system?.advantages?.willpower?.permanent) || 0), renown: renown ?? st.renown, eraKey});
   const wolf = await Actor.create(built.create);

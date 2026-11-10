@@ -6,6 +6,8 @@
  */
 const T = (id, name, lines, era = null) => ({id, name, era, results: lines.map(l => (Array.isArray(l) ? {text: l[0], weight: l[1]} : {text: l, weight: 1}))});
 const MED = ["medieval", "ancient"], EM = ["early-modern"], IND = ["industrial"], MOD = ["modern"];
+// 1919 to 1989, between the Great War and the modern era; and the World of Future Darkness (2010 on, the future branch)
+const MID = ["mid-century"], FUT = ["future"];
 
 /* ---- the time of night: how a draw opens ---- */
 const hours = [
@@ -79,7 +81,35 @@ const town = [
     "Someone is spray-painting a sign on a wall that a Kindred would recognise.",
     ["A Kindred's retainer pulls up in a dark car and asks the characters to get in.", 2],
     ["A hunter with a crossbow in a sports bag is asking the doorman about closing time.", 2]
-  ], MOD)
+  ], MOD),
+  T("night.encounter.town", "Encounter in town (mid-century)", [
+    "A police call box on the corner, its lamp flashing, and no one comes to answer it.",
+    "A late tram rattles past, lit and empty but for the conductor.",
+    "A dance hall lets out, and the band packs its instruments on the pavement.",
+    "Someone has sat on the same bench reading the same newspaper three nights running.",
+    "The cinema's last showing ends and the crowd blinks out into the rain.",
+    "Someone in a parked car is writing down number plates.",
+    "A telephone box rings as the characters pass, and keeps ringing.",
+    "Plain-clothes police steer someone from a doorway into a black car.",
+    "A jazz club behind an unmarked door, the music spilling out each time it opens.",
+    "A queue has formed outside a shop that will not open for hours.",
+    ["A Kindred of the Camarilla keeps a box at the theatre, and the characters have been seen from it.", 2],
+    ["A Society of Leopold priest is asking the night porter about guests who never come down to breakfast.", 2]
+  ], MID),
+  T("night.encounter.town", "Encounter in town (future)", [
+    "A Netwatch drone drops to head height and holds there, lens turning.",
+    "Corporate security checks idents at a gate between two districts.",
+    "A braindance parlour's sign flickers; a customer stumbles out, still half in someone else's memories.",
+    "A street doctor works on a chrome arm under a tarp, the patient awake and watching.",
+    "Every ad-screen on the street switches at once to the same face.",
+    "A gang with matching cyberoptics watches the characters from an overpass.",
+    "A food stall serves synthetic noodles to a queue of shift workers at three in the morning.",
+    "An autocab pulls up for the characters, though no one called it.",
+    "Riot police in powered armour clear a square, and nobody says why.",
+    "Rain hisses on a neon sign, and under it someone is selling something in sealed bags.",
+    ["A Kindred holds court in a penthouse bar above the ad-screens, and has noticed the characters.", 2],
+    ["A hunter with a smart rifle and eyes that see body heat is watching the door.", 2]
+  ], FUT)
 ];
 
 /* ---- encounters in the wilds and on the roads ---- */
@@ -133,7 +163,31 @@ const wilds = [
     "A wind farm's blades turning slow and silent with every red light out.",
     ["A Garou pack on the move, in human shape, in a battered van.", 2],
     ["A logging company's fresh clear-cut, and the spirits of the place are furious.", 2]
-  ], MOD)
+  ], MOD),
+  T("night.encounter.wilds", "Encounter in the wilds (mid-century)", [
+    "A lorry with no lights in a lay-by, its engine ticking as it cools.",
+    "The barrier at a level crossing comes down, and no train comes.",
+    "Searchlights sweep the hills from a border post.",
+    "An empty farmhouse, the family's things still on the table.",
+    "A motorcycle and sidecar on its side in a ditch, one wheel turning.",
+    "A dam's spillway roars in the dark; the keeper's hut is lit.",
+    "Hikers' tents by a lake, one of them torn open.",
+    "A bus stalled on a mountain road, the driver gone for help hours ago.",
+    ["A Garou sept guards the old forest the new road was meant to cut through.", 2],
+    ["A Pentex chemical works, and the river below it runs a strange colour.", 2]
+  ], MID),
+  T("night.encounter.wilds", "Encounter in the wilds (future)", [
+    "A dead zone where the Net drops out, and every device the characters carry goes quiet.",
+    "A convoy of armoured trucks in corporate colours, gun drones riding escort.",
+    "A burned-out town at the edge of the sprawl, nomad families camped in the ruins.",
+    "Floodwater over the old highway, a car roof just showing.",
+    "A crashed delivery drone in the trees, its cargo still blinking.",
+    "The wall of a corporate enclave: searchlights, and a sign promising lethal force.",
+    "A dust storm over the dead fields, and someone walking through it with no mask.",
+    "A solar farm whose panels have turned to follow the moon.",
+    ["A Garou caern behind a corporate fence the pack never agreed to.", 2],
+    ["An Endron arcology glows on the horizon, and the spirits of the land have fled from it.", 2]
+  ], FUT)
 ];
 
 /* ---- the Penumbra and the Shadowlands (era-free; the place's own past shows through) ---- */
@@ -216,7 +270,31 @@ const rumours = [
     "{{person}} was seen getting into a car with diplomatic plates.",
     "Something is living in the tunnels under {{place}}, the urban explorers say.",
     "A protest at {{place}} turned violent and no one can say who started it."
-  ], MOD)
+  ], MOD),
+  T("night.rumour", "Rumours (mid-century)", [
+    "A wireless at {{place}} picks up voices on a wavelength nobody broadcasts on.",
+    "{{person}} came home from the war and has not eaten in company since.",
+    "The secret police keep a file on everyone who drinks at {{place}}.",
+    "{{person}} has a new car, and no one knows where the money came from.",
+    "A newsreel shot at {{place}} shows someone in the crowd who died years before.",
+    "Children dare each other to spend a night at {{place}}.",
+    "The new housing blocks at {{place}} went up over an old graveyard.",
+    "{{person}} was seen burning papers in the yard at three in the morning.",
+    "The night staff at the hospital will not go down to the old wing.",
+    "Someone at {{place}} pays in coins that went out of use generations ago."
+  ], MID),
+  T("night.rumour", "Rumours (future)", [
+    "A braindance recorded at {{place}} has one more person in it than anyone remembers.",
+    "{{person}} sold an eye to a clinic and bought it back with someone else's money.",
+    "Netwatch scrubbed every feed from {{place}} last night.",
+    "A corp bought {{place}} through three shell companies and started digging.",
+    "{{person}} pays for everything in cash, which no one has used in years.",
+    "The trams near {{place}} keep stopping at a station that was bricked up long ago.",
+    "A clinic at {{place}} fits chrome to people who have no pulse.",
+    "{{person}} posts the same message on every feed at four in the morning, then deletes it.",
+    "The water at {{place}} has tasted of copper since the corp moved in.",
+    "Nomads say the old roads past {{place}} are walked by the dead."
+  ], FUT)
 ];
 
 /* ---- story aids: dreams, visions, auguries, foreshadowings ---- */
@@ -232,7 +310,13 @@ const symbols = [
     "a lighthouse in a city street"], IND),
   T("aid.symbol", "Symbols (modern)", ["a phone ringing in an empty room", "a screen of static that shows a face", "a car with no headlights", "a lift that only goes down",
     "a security camera turning to follow", "a neon sign spelling a name", "a subway map with one stop too many", "a glass of milk turning red",
-    "a power line humming a tune", "a child's drawing of the characters"], MOD)
+    "a power line humming a tune", "a child's drawing of the characters"], MOD),
+  T("aid.symbol", "Symbols (mid-century)", ["a wireless playing a dead singer's new song", "a gas mask on a child's coat peg", "a ration book with the characters' names in it",
+    "a searchlight pointing at the ground", "a newsreel running backward", "a tram with no driver", "a telephone with its cord cut, still ringing",
+    "a red star melting like wax", "a jukebox that plays only one record", "a suitcase left on an empty platform"], MID),
+  T("aid.symbol", "Symbols (future)", ["a chrome eye weeping", "a feed of static that spells a name", "a drone circling a grave", "a hologram of a saint flickering out",
+    "a braindance chip warm to the touch", "an empty arcology lit on every floor", "a cable growing like a vine", "a sky with no stars behind the ad-screens",
+    "a barcode on a newborn's wrist", "rain falling upward past the neon"], FUT)
 ];
 const frames = [
   T("aid.dream", "Dreams", [
