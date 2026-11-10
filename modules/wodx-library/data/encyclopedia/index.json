@@ -1945,6 +1945,12 @@
       "title": "Frontier Secrets",
       "short": "Frontier Secrets",
       "edition": "Wild West"
+    },
+    {
+      "id": "waguard",
+      "title": "Guardians of the Caerns",
+      "short": "Guardians of the Caerns",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -2271,6 +2277,7 @@
     "wacaern.json",
     "wacroatan.json",
     "wafreak.json",
-    "wafrontier.json"
+    "wafrontier.json",
+    "waguard.json"
   ]
 }
