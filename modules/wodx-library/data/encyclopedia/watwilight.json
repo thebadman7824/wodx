@@ -1,0 +1,256 @@
+[
+ {
+  "id": "watwilight-agents",
+  "title": "Paraintelligence agents",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf",
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Building government agents who hunt the supernatural.",
+  "claims": [
+   {
+    "text": "Agents are built with Attributes 6/4/3, Abilities 11/7/4, three Background dots, Willpower 3 and 21 freebie points, which can buy Numina, Merits and Flaws.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "Every paraintelligence agent must take at least one dot each of Firearms, Investigation and Occult, and also receives Allies 3, Influence 2 and Resources 2.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   },
+   {
+    "text": "A player chooses the agent’s agency, such as the FBI, the NSA or the CIA, and a faction within it, or plays a double agent.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 16,
+      "pdf": 17
+     }
+    ]
+   }
+  ],
+  "see": [
+   "watwilight-fbi-sad",
+   "watwilight-nsa"
+  ]
+ },
+ {
+  "id": "watwilight-silver-bullets",
+  "title": "Silver bullets",
+  "kind": "term",
+  "lines": [
+   "werewolf",
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Rank 3 equipment for agents.",
+  "claims": [
+   {
+    "text": "Silver bullets are neither hard nor costly to make, but few agents carry them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Many paraintelligence divisions still treat silver against werewolves as a theory, and department heads fear embarrassing questions if police or press discovered such rounds.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Agents may requisition them only when the facts of a case justify it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "watwilight-agents"
+  ]
+ },
+ {
+  "id": "watwilight-fbi-sad",
+  "title": "FBI Special Affairs Department",
+  "kind": "faction",
+  "lines": [
+   "werewolf",
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The FBI’s hidden supernatural division.",
+  "claims": [
+   {
+    "text": "The Special Affairs Department is thought to date from the end of the Truman years, but its roots go back to the 1930s.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Its founder, Charles Horner, was a young federal agent working Chicago gangland cases with Eliot Ness when a vampire attacked and left Horner for dead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   },
+   {
+    "text": "Horner survived and from then on pursued every case that hinted at the supernatural.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 27,
+      "pdf": 28
+     }
+    ]
+   }
+  ],
+  "see": [
+   "watwilight-nsa"
+  ]
+ },
+ {
+  "id": "watwilight-nsa",
+  "title": "The NSA",
+  "kind": "faction",
+  "lines": [
+   "werewolf",
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The National Security Agency and the supernatural.",
+  "claims": [
+   {
+    "text": "The NSA was founded in secret in the winter of 1952 by a seven-page order from President Truman whose contents have never been made public.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Built from the Armed Forces Security Agency and other services, it has become the most powerful and secretive intelligence agency in the world, with little congressional oversight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Its Domestic Intelligence Bureau was compromised by supernatural powers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "watwilight-fbi-sad"
+  ]
+ },
+ {
+  "id": "watwilight-garou-dilemma",
+  "title": "The Garou dilemma",
+  "kind": "lore",
+  "lines": [
+   "werewolf",
+   "hunter"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why werewolves have little hold on human institutions.",
+  "claims": [
+   {
+    "text": "Compared with vampires and mages, werewolves hold the weakest grip on humanity’s ruling institutions.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Mighty as individuals, they are nearly powerless as a social force, and few show interest in taking hold of government, industry, religion or the media.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   },
+   {
+    "text": "Instead they wage an increasingly desperate rearguard war against the advance of Wyrm and Weaver that comes with human progress.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "watwilight",
+      "page": 55,
+      "pdf": 56
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

@@ -1981,6 +1981,12 @@
       "title": "Possessed: A Player's Guide",
       "short": "Possessed",
       "edition": "Revised"
+    },
+    {
+      "id": "watwilight",
+      "title": "Project Twilight",
+      "short": "Project Twilight",
+      "edition": "Second edition"
     }
   ],
   "files": [
@@ -2313,6 +2319,7 @@
     "wahenge.json",
     "wakinfolk.json",
     "wapast.json",
-    "wapossess.json"
+    "wapossess.json",
+    "watwilight.json"
   ]
 }
