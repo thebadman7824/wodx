@@ -463,6 +463,12 @@
    "title": "Dark Ages: Road of Sin",
    "short": "DA Road of Sin",
    "edition": "Revised"
+  },
+  {
+   "id": "vac",
+   "title": "Victorian Age Companion",
+   "short": "VA Companion",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -542,6 +548,7 @@
   "darh.json",
   "dark.json",
   "dab.json",
-  "das.json"
+  "das.json",
+  "vac.json"
  ]
 }
