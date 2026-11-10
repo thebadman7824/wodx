@@ -1,0 +1,442 @@
+[
+ {
+  "id": "dacbcapp-road-bones",
+  "title": "Sins on the Road of Bones",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The hierarchy of sins for Cappadocians on the Road of the Bones.",
+  "claims": [
+   {
+    "text": "At the gentlest end, showing fear of death or failing to study a death can prompt a Conviction roll for a high-rated follower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Lower down come refusing a chance to kill, refusing to feed while hungry, frenzy and keeping insight from a fellow follower.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "The worst failings are letting compassion decide, acting out of self-sacrifice, needlessly stopping a death and showing disgust at death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbcapp-giovanni-lineage",
+  "title": "Giovanni Lineage",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A 2-point Merit for the newly Embraced Giovanni.",
+  "claims": [
+   {
+    "text": "The clan has lately Embraced leading members of the Venetian Giovanni family, necromancer-merchants with insight into a craft that may become a true Discipline.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "A character with this Merit may learn Necromancy as an extra clan Discipline but begins no lower than 11th generation.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Giovanni characters cannot take Prescience or Mad Visions; those traits are oddly missing among them.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbcapp-necromancy"
+  ]
+ },
+ {
+  "id": "dacbcapp-prescience-horrific",
+  "title": "Prescience and Horrific Appearance",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Merit and a Flaw found among the Graverobbers.",
+  "claims": [
+   {
+    "text": "Prescience, a 3-point Merit, gives brief, dim glimpses of a fixed future, such as whether someone can be trusted, handled by the Storyteller; they are not possible futures but murky pieces of what will come.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "Horrific Appearance, a 3-point Flaw, heightens the clan’s corpselike look: skin flakes away, flesh may rot off nose and ears, and a smell of the grave hangs about.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   },
+   {
+    "text": "A Cappadocian with this Flaw has Appearance 0, which can never be raised.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbcapp-reapers-passing",
+  "title": "Reaper’s Passing",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A sixth-level Mortis power that brings a mortal close to death.",
+  "claims": [
+   {
+    "text": "With a touch, a Blood Point and a Manipulation + Medicine roll against the target’s Willpower, the Cappadocian gives a living target a near-death crisis such as a seizure or loss of breath.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "One success causes slight discomfort and five a massive heart attack that may leave lasting mental scars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "It does not touch vampires; on a botch the user is laid low for the scene by visions of a gruesome Final Death.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbcapp-lepers-gait"
+  ]
+ },
+ {
+  "id": "dacbcapp-lepers-gait",
+  "title": "The Leper’s Gait",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A seventh-level Mortis power that rots a limb.",
+  "claims": [
+   {
+    "text": "The Cappadocian touches the target, spends a Willpower point and rolls Stamina + Medicine against the target’s Willpower, needing more successes than the target’s Stamina.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "The chosen limb becomes useless at once and falls away after days equal to the target’s Stamina; used on a mortal’s head it kills.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "On a vampire the effect ends at the next rising, though a vampire struck in the head cannot feed or use Disciplines until then; a botch strikes the user’s own limb.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbcapp-reapers-passing"
+  ]
+ },
+ {
+  "id": "dacbcapp-illness-resilience",
+  "title": "The Illness Unveiled and Blessed Resilience",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Combination and high Fortitude powers of the clan.",
+  "claims": [
+   {
+    "text": "The Illness Unveiled, from Auspex 2 and Fortitude 7, works like Soulsight but reveals any disease the subject has and can cure it by lending some of the user’s Fortitude, limited by what the Cappadocian knows.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 41,
+      "pdf": 42
+     }
+    ]
+   },
+   {
+    "text": "Blessed Resilience saves the vampire from Final Death automatically, drawing lost body parts back to crawl into place and healing to Mauled, as long as enough Willpower remains.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "The price is one dot lost forever from every Attribute, and catastrophic harm such as a volcano still destroys the vampire; it costs 36 experience to learn.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbcapp-necromancy",
+  "title": "Early Necromancy",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The young Discipline of the Giovanni.",
+  "claims": [
+   {
+    "text": "Necromancy has only just appeared, held by the Giovanni and a very few other Cappadocians, and is known only to the third level.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "The Venetian merchants guard it closely, teaching only basics to some Cappadocian sires, and Storytellers are told not to give it to non-Giovanni characters.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbcapp-giovanni-lineage",
+   "dacbcapp-tragedy-revealed",
+   "dacbcapp-call-host"
+  ]
+ },
+ {
+  "id": "dacbcapp-tragedy-revealed",
+  "title": "The Tragedy Revealed",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The first level of early Necromancy.",
+  "claims": [
+   {
+    "text": "Holding the skull or brain of someone recently dead, the necromancer rolls Perception + Occult at difficulty 8, or 10 if the remains are more than a fortnight old.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   },
+   {
+    "text": "Each success sharpens the vision, from a vague sense of the death at one to the cause, the killer and the scene in perfect detail at five; a botch gives false information.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 42,
+      "pdf": 43
+     },
+     {
+      "book": "dacbcapp",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "It fails on anyone who had reached Golconda.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 42,
+      "pdf": 43
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbcapp-necromancy"
+  ]
+ },
+ {
+  "id": "dacbcapp-call-host",
+  "title": "Call Forth the Host and Corporeal Home",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The second and third levels of early Necromancy.",
+  "claims": [
+   {
+    "text": "Summoning a spirit needs its name, a piece of its corpse and a fifteen-minute rite in silence; Golconda vampires and those who held True Faith in life cannot be called.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "The roll is Charisma + Occult against the spirit’s Willpower, repeated whenever the spirit tries to slip free after a question; a botch brings a lying, malign spirit instead.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   },
+   {
+    "text": "Corporeal Home binds a summoned spirit into a container such as a box or locket after eight hours of concentration and an Intelligence + Occult roll, holding it for a week, with each renewal harder by one.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbcapp",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbcapp-necromancy"
+  ]
+ }
+]

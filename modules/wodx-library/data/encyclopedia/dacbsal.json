@@ -1,0 +1,416 @@
+[
+ {
+  "id": "dacbsal-blooding-powers",
+  "title": "Powers of the blooding",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Abilities unlocked by the warrior Salubri ritual.",
+  "claims": [
+   {
+    "text": "Only warriors who went through a true blooding according to the Code of Samiel gain its powers; corrupted versions of the rite unlock nothing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Each power of the blooding costs 7 experience points.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Valeren is split into two paths, a structure otherwise seen only in Tremere Thaumaturgy.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 43,
+      "pdf": 44
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbsal-trackers-mark",
+   "dacbsal-blessing-name"
+  ]
+ },
+ {
+  "id": "dacbsal-trackers-mark",
+  "title": "Tracker’s Mark",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A blooding power that reads and follows spilled blood.",
+  "claims": [
+   {
+    "text": "With the prey’s blood on finger or tongue, the warrior rolls Perception + Awareness at difficulty 6; each success yields one fact such as generation, age, occupation or whether the target is a diablerist.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Tasting rather than touching the blood lowers the difficulty by 1, and the difficulty drops by another 1 for each generation the target stands above 8th.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Following a blood trail uses Perception + Survival at difficulty 6, each success covering one scene before a new roll.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Some warriors say blood that was stolen from their line burns or smells of rotting hay, which helps in tracking Tremere and Baali.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbsal-blooding-powers"
+  ]
+ },
+ {
+  "id": "dacbsal-blessing-name",
+  "title": "Blessing of the Name",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A blooding power that calls on the warrior’s angel.",
+  "claims": [
+   {
+    "text": "The warrior invokes the angel whose name the warrior bears, and the third eye opens to bathe everything in hard golden light that can terrify foes or rally a weary army.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Dirt vanishes and rusted armour shines; witnesses later agree only that they saw a marvel, never on what it was.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbsal-blooding-powers"
+  ]
+ },
+ {
+  "id": "dacbsal-peacemaker",
+  "title": "Peacemaker",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A healer’s power that calms a room.",
+  "claims": [
+   {
+    "text": "Under its aura even mortal enemies can talk through a dispute, and Brujah suffer +2 difficulty on rolls of aggression.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Anyone wishing to insult or lash out must roll Willpower at difficulty 8 or subside into confusion; gentle Natures are least affected.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "It works best in a small room; two more Willpower points let it fill a hall or sanctuary as strongly, and afterwards some parties regret deals made under its influence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbsal-king-davids-blessing",
+  "title": "King David’s Blessing",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Healing through music, also called Rayzeel’s Song.",
+  "claims": [
+   {
+    "text": "Rayzeel is said to have created it to lift Saulot from despair after the Baali Wars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "The healer sings or plays and rolls Charisma + Music at difficulty 7; each success lowers the difficulty of a following healing roll by one, to no lower than 4, or 5 against a Derangement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 45,
+      "pdf": 46
+     },
+     {
+      "book": "dacbsal",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Played to help another healer, each success adds a die to that healer’s roll, up to five dice.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Failure adds +1 to later attempts and a botch +2, may cause a level of damage, and can draw spirits that feed on discord.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbsal-sword-righteous",
+  "title": "Sword of the Righteous",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Valeren power that sets a blade alight with holy fire.",
+  "claims": [
+   {
+    "text": "The warrior coats the blade in personal blood, taking a health level of damage, and rolls Strength + Occult at difficulty 7.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "On success golden flames burn until the scene ends, adding two dice of aggravated damage and imposing +1 difficulty on anyone attacking the wielder.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Lesser powers of shadow cannot smother the flames.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbsal-watching-heavens-gate",
+  "title": "Watching the Passage and Heaven’s Gate",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "High healer powers tied to death.",
+  "claims": [
+   {
+    "text": "Watching the Passage lets a Salubri draw on the echoes left by someone who accepted Ending the Watch, merging with the spirit for a Willpower point and a Perception + Empathy roll; it can heal the Salubri but consumes the departed’s essence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 46,
+      "pdf": 47
+     },
+     {
+      "book": "dacbsal",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "It works only within a week of the death, and a botch deals aggravated damage and may draw a hostile spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Heaven’s Gate returns the soul to a body dead no more than ten minutes, for 2 Willpower and a Willpower roll at difficulty 8; unless the body is mended the person soon dies again.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbsal-merits-flaws",
+  "title": "Salubri Merits and Flaws",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Traits for a hunted clan.",
+  "claims": [
+   {
+    "text": "Scent of the Other, a 1-point Merit, makes others slow to accept that the character is Salubri and quick to explain away odd behaviour.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Protected, a 2 to 5 point Merit, gives shelter from the Tremere hunt, ranging from a watchful mortal or ghoul to a powerful elder, a church or monastery with Faith, or a mortal lord and retinue.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   },
+   {
+    "text": "Warrens is a 3-point Merit for hiding places; Sight Beyond Sight is a 5-point Merit for occasional visions through the third eye, and Visible Eye a 5-point Flaw for a third eye that will not close.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbsal",
+      "page": 47,
+      "pdf": 48
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbsal-blooding-powers"
+  ]
+ }
+]

@@ -1759,6 +1759,48 @@
       "title": "Anarch Cookbook",
       "short": "AnCB",
       "edition": "First edition"
+    },
+    {
+      "id": "dacults",
+      "title": "Ashen Cults",
+      "short": "Ashen Cults",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dabic",
+      "title": "Dark Ages: British Isles Casualties",
+      "short": "DABI Casualties",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dacbbaali",
+      "title": "Clanbook: Baali (Dark Ages)",
+      "short": "DA CB Baali",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dacbcapp",
+      "title": "Clanbook: Cappadocian",
+      "short": "DA CB Cappadocian",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dacbsal",
+      "title": "Clanbook: Salubri",
+      "short": "DA CB Salubri",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "daheresy",
+      "title": "The Cainite Heresy",
+      "short": "Cainite Heresy",
+      "edition": "Dark Ages"
+    },
+    {
+      "id": "dacbn",
+      "title": "Constantinople by Night",
+      "short": "CbN",
+      "edition": "Dark Ages"
     }
   ],
   "files": [
@@ -2054,6 +2096,13 @@
     "encv.json",
     "cchand.json",
     "dsbh.json",
-    "ancb.json"
+    "ancb.json",
+    "dacults.json",
+    "dabic.json",
+    "dacbbaali.json",
+    "dacbcapp.json",
+    "dacbsal.json",
+    "daheresy.json",
+    "dacbn.json"
   ]
 }

@@ -1,0 +1,390 @@
+[
+ {
+  "id": "dabic-dagda",
+  "title": "The Dagda and the Morrigan",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Early Cainite rulers of Ireland.",
+  "claims": [
+   {
+    "text": "About five centuries before Christ a vampire calling itself the Dagda claimed Ireland, made no childer, and forced the few other Cainites there to submit or die; some call it a Ventrue childe of Mithras.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 2,
+      "pdf": 2
+     }
+    ]
+   },
+   {
+    "text": "In the second century before Christ a Brujah blood witch remembered as the Morrigan fled war in Greece to Ireland; after long fighting the two split the island north and south and met twice a year to settle disputes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 2,
+      "pdf": 2
+     }
+    ]
+   },
+   {
+    "text": "Druids driven from Gaul later hunted the lesser vampires and slew the Morrigan, so the Dagda killed most of them and Embraced three as childer.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 2,
+      "pdf": 2
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dabic-connachta"
+  ]
+ },
+ {
+  "id": "dabic-connachta",
+  "title": "The Connachta",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Dagda’s druid childer.",
+  "claims": [
+   {
+    "text": "As the Dagda slept more, three druid childer known as the Lords of Connacht ran the domain and tested newcomers’ loyalty.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 2,
+      "pdf": 2
+     }
+    ]
+   },
+   {
+    "text": "They never forgave the murder of their fellow druids, and about fifty years after Christ’s death they ambushed and slew their sire while it hunted.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 2,
+      "pdf": 2
+     }
+    ]
+   },
+   {
+    "text": "One of them is said to have taken the Dagda’s soul along with its blood.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 2,
+      "pdf": 2
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dabic-dagda"
+  ]
+ },
+ {
+  "id": "dabic-clans-isles",
+  "title": "The clans in the Isles",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Where the clans stand in the Fiefs of Avalon.",
+  "claims": [
+   {
+    "text": "Only the Holy Roman Empire outranks the Isles as a Ventrue stronghold in the princes’ wars, and every Ventrue there pays homage to Mithras, lord of London.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 6,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "Many Toreador look to the French courts, among them Melusine d’Anjou, the self-styled Queen of Winchester and Mithras’ rival.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 6,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "Lucius of the Cainite Heresy watches over the Heresy’s interests in Lincoln, and Mithras detests the Lasombra, so few of them stay.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 6,
+      "pdf": 6
+     }
+    ]
+   },
+   {
+    "text": "Mithras welcomes the Assamites as old allies; a small coterie under the vizier Hassan of the Bloody Hand stays in Bristol as guests.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 6,
+      "pdf": 6
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dabic-tremere-isles",
+  "title": "The Tremere in the Isles",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Low Clan the Isles despise most.",
+  "claims": [
+   {
+    "text": "Mithras openly loathes the Tremere, which makes rival Melusine’s alliance with them all the more bitter.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "The Usurpers keep chantries in County Clare and in Durham and have agents in Oxford and Cambridge seeking recruits and hidden Hermetic magi.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "Several Hermetic chantries in the Isles are marked for plunder, though the Massasa War burns less fiercely here than in eastern Europe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dabic-matthew-lindisfarne",
+  "title": "Matthew of Lindisfarne",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Perhaps the only Salubri in the Isles.",
+  "claims": [
+   {
+    "text": "Matthew is a warrior turned ascetic whose writings on calming the Beast are prized by followers of the Road of Heaven.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "A cell of the shadow Inquisition at Lindisfarne has no idea the gentle old monk is Cainite, and Matthew helps those inquisitors whenever possible.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "Mithras respects Matthew’s reputation, which also shields the Salubri from Tremere killers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dabic-ravnos-isles",
+  "title": "The Ravnos in the Isles",
+  "kind": "faction",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Wandering Ravnos of Britain.",
+  "claims": [
+   {
+    "text": "The Ravnos of the Isles travel the roads as peddlers, workmen, thieves and entertainers, and seem to be very few.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   },
+   {
+    "text": "These western Ravnos have little to do with their kin in the East, keep to themselves and stay out of the War of Princes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 7,
+      "pdf": 7
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dabic-hauntings",
+  "title": "Haunted places of the Isles",
+  "kind": "place",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Ghost tales told across Britain and Ireland.",
+  "claims": [
+   {
+    "text": "A castle lies beneath Lough Gur, where the sorcerer Gerald Desmond rises every seven years on a silver-shod white horse; whoever seizes the rein may claim the grimoires.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 8,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "Cornish wreckers drowned in storms are said to walk on stormy nights hunting the treasure hidden in their caves, which turns to salt water unless a priest blesses it.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 8,
+      "pdf": 8
+     }
+    ]
+   },
+   {
+    "text": "Bramber Castle in Sussex is said to hold the ghosts of three de Braose children starved by King John and of Lady Maud de Hurst, murdered in 1210.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 8,
+      "pdf": 8
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dabic-fae-demons",
+  "title": "Fae and demons in Britain",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Common belief about the fae courts and demons.",
+  "claims": [
+   {
+    "text": "Folk say the Unseelie Court shelters blood-drinkers, flesh-eaters, redcaps and warriors whose elfshot kills any human it touches, while the Seelie Court guards the innocent.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "The Welsh fae, the Tylwyth Teg, are said to love horses and always to wear green, even in disguise.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   },
+   {
+    "text": "In parts of Ireland the demon Cromm Cruach is still worshipped and appears as a living golden head.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dabic",
+      "page": 9,
+      "pdf": 9
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]

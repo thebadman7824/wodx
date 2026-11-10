@@ -1,0 +1,415 @@
+[
+ {
+  "id": "dacbbaali-moloch",
+  "title": "Moloch and the scattering",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "The Baali elder who favoured patience.",
+  "claims": [
+   {
+    "text": "Moloch, quieter than Nergal, saw the sleeping ancient Children as tools but feared that waking them would bring disaster, and pressed for slow, hidden schemes.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "Moloch’s tongue burned like acid at a touch, and the few who crossed the elder and lived bore the scars.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "After Mashkan-shapir fell the Baali scattered across Mesopotamia, southern Arabia and the North African coast, hiding in Sidon and Tripoli, holding Wabar and staying in Ashur on the Tigris.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   },
+   {
+    "text": "The D’habi changed allegiance from Nergal to the Baali and serve the bloodline as a revenant family.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 20,
+      "pdf": 21
+     }
+    ]
+   }
+  ],
+  "see": [
+   "dacbbaali-assamite-curse"
+  ]
+ },
+ {
+  "id": "dacbbaali-assamite-curse",
+  "title": "The curse on the Assamites",
+  "kind": "event",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Baali answered the Assamite purge.",
+  "claims": [
+   {
+    "text": "In a single week the united Assamites wiped out twelve Baali nests across Arabia and breaking Baali hold over Baghdad, Yathrib, Acre and Sidon.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The Assamites left loaves of unleavened bread after each raid as a signature.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The six mightiest nests gathered over a pit of organs in Damascus and, after months of rites and some two hundred mortal sacrifices, bound the Decani to curse the Assamites of Alamut.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   },
+   {
+    "text": "The curse turned the Assamite practice of Amaranth into a ravenous craving that won them fear and hatred rather than thanks for their war.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 25,
+      "pdf": 26
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbbaali-apostate",
+  "title": "Apostate",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A 2-point Merit for Baali of converted blood.",
+  "claims": [
+   {
+    "text": "Many in the bloodline are not Baali by birth but converts from other lines, or close descendants of converts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "An Apostate may swap Obfuscate or Presence for one Discipline of the ancestral clan; Daimoinon cannot be swapped.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Apostates pass more easily as members of other clans, but can never hold leadership in the bloodline.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbbaali-auras",
+  "title": "Infernal and Unholy Aura",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Two traits tied to True Faith.",
+  "claims": [
+   {
+    "text": "Unholy Aura, a 7-point Merit, lets a Baali stand firm against most displays of True Faith because the spiritual stench is so strong.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 44,
+      "pdf": 45
+     }
+    ]
+   },
+   {
+    "text": "Infernal Aura, a 3-point Flaw, makes the Baali flee True Faith and lets anyone with True Faith within a mile sense the Baali’s presence and direction.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbbaali-flaws",
+  "title": "Baali Flaws",
+  "kind": "mechanic",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Marks and burdens of the infernalists.",
+  "claims": [
+   {
+    "text": "Lord of Flies, a 2-point Flaw, draws an endless cloud of vermin that never leaves and cannot be dispersed.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 44,
+      "pdf": 45
+     },
+     {
+      "book": "dacbbaali",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Carrion Comfort, a 3-point Flaw, means feeding only on cold blood from corpses, gaining one Blood Point fewer than normal each time.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   },
+   {
+    "text": "Touched from Beyond, a 1 to 4 point Flaw, brings Devil’s marks such as stench, warty hide or useless extra limbs that can be hidden but never removed, on top of any marks from demonic Investments.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 45,
+      "pdf": 46
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbbaali-glimpse-gulf",
+  "title": "Glimpse the Gulf Beyond",
+  "kind": "power",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A Daimoinon power that cracks open reality.",
+  "claims": [
+   {
+    "text": "The Baali spends a Willpower point and rolls Stamina + Occult at difficulty 7 against the target’s Willpower at difficulty 7.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "One net success costs the target a Willpower point and a die on all rolls for the scene; two bring a Rotschreck check; three risk unconsciousness; four risk an hour of catatonia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   },
+   {
+    "text": "Five or more may leave the target permanently witless unless a Willpower roll succeeds, and Willpower driven to zero can leave a Derangement.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 46,
+      "pdf": 47
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbbaali-sleepers",
+  "title": "The Sleepers stir",
+  "kind": "lore",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "Baali fears about the waking of the ancient Children.",
+  "claims": [
+   {
+    "text": "Many old Baali orders have left the Levant for Europe or the far East, though the land between the Tigris and Euphrates remains their true home.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Too many true names have leaked into the world, bringing the Sleepers nearer to waking than at any time since the first tribe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Strange plagues are taken as proof that Namtaru is waking, and the others are feared to follow; some Baali seek the oldest true names to control them, others hope worship will spare them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "In Europe, young members of the bloodline who call themselves Mephisto shout names that echo between worlds in their ignorance.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "dacbbaali-mariah",
+  "title": "Ma-ri-ah",
+  "kind": "character",
+  "lines": [
+   "vampire"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "A solitary Baali in Byzantine politics.",
+  "claims": [
+   {
+    "text": "Ma-ri-ah, called Mary, has turned toward Byzantium and its fragile ties with the Western Church.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "Some call this elder a traitor who destroyed the sire; others say Ma-ri-ah is no Baali but an agent of the Setites or Tremere.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   },
+   {
+    "text": "A fragment of an Eblaite tablet claims Ma-ri-ah has risen beyond mortal and Cainite limits to become a dark, hungry goddess in flesh.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "dacbbaali",
+      "page": 68,
+      "pdf": 69
+     }
+    ]
+   }
+  ],
+  "see": []
+ }
+]
