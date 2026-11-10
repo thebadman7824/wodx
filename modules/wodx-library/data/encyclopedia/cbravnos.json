@@ -74,7 +74,7 @@
   "summary": "Why illusions now turn on their makers.",
   "claims": [
    {
-    "text": "Since the Week, Chimerstry no longer behaves as before; theories blame the Antediluvian's death or a last curse laid on the clan as it died.",
+    "text": "Chimerstry has worked differently ever since the Week of Nightmares; some Ravnos blame the founder's destruction, others a dying curse on the whole clan.",
     "tier": "open",
     "refs": [
      {
@@ -85,7 +85,7 @@
     ]
    },
    {
-    "text": "A Ravnos who spends the last temporary Willpower point to make an illusion begins to show the effects of The Haunting, the Dementation power.",
+    "text": "Using up the final point of temporary Willpower on an illusion leaves the Ravnos suffering as if struck by The Haunting from Dementation.",
     "tier": "stated",
     "refs": [
      {
@@ -96,7 +96,7 @@
     ]
    },
    {
-    "text": "Further overuse brings full-sensory hallucinations at any time, worst under stress, which grow until they threaten the Ravnos; once aware of one, the player may spend a Willpower point to end it.",
+    "text": "Pushing on past that point brings visions affecting every sense, at any hour and most often in tense moments, and they worsen until they become dangerous; a player who spots one can pay a Willpower point to dispel it.",
     "tier": "stated",
     "refs": [
      {
