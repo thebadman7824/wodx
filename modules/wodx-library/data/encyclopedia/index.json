@@ -571,6 +571,12 @@
    "title": "Breedbook: Corax (Revised)",
    "short": "BB Corax",
    "edition": "Revised"
+  },
+  {
+   "id": "bbgur",
+   "title": "Breedbook: Gurahl (Revised)",
+   "short": "BB Gurahl",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -668,6 +674,7 @@
   "tbwen.json",
   "bbbas.json",
   "bbnuw.json",
-  "bbcor.json"
+  "bbcor.json",
+  "bbgur.json"
  ]
 }
