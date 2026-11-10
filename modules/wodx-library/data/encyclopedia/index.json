@@ -1699,6 +1699,12 @@
    "title": "The Cainite Heresy",
    "short": "Cainite Heresy",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "dacbn",
+   "title": "Constantinople by Night",
+   "short": "CbN",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -1984,6 +1990,7 @@
   "dacbbaali.json",
   "dacbcapp.json",
   "dacbsal.json",
-  "daheresy.json"
+  "daheresy.json",
+  "dacbn.json"
  ]
 }
