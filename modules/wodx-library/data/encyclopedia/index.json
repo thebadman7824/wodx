@@ -1945,6 +1945,108 @@
       "title": "Frontier Secrets",
       "short": "Frontier Secrets",
       "edition": "Wild West"
+    },
+    {
+      "id": "waguard",
+      "title": "Guardians of the Caerns",
+      "short": "Guardians of the Caerns",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wahammer",
+      "title": "Hammer and Klaive",
+      "short": "Hammer and Klaive",
+      "edition": "Revised"
+    },
+    {
+      "id": "wahenge",
+      "title": "Hengeyokai: Shapeshifters of the East",
+      "short": "Hengeyokai",
+      "edition": "Revised"
+    },
+    {
+      "id": "wakinfolk",
+      "title": "Kinfolk: Unsung Heroes",
+      "short": "Kinfolk: Unsung Heroes",
+      "edition": "Revised"
+    },
+    {
+      "id": "wapast",
+      "title": "Past Lives",
+      "short": "Past Lives",
+      "edition": "Revised"
+    },
+    {
+      "id": "wapossess",
+      "title": "Possessed: A Player's Guide",
+      "short": "Possessed",
+      "edition": "Revised"
+    },
+    {
+      "id": "watwilight",
+      "title": "Project Twilight",
+      "short": "Project Twilight",
+      "edition": "Second edition"
+    },
+    {
+      "id": "wasubs",
+      "title": "Subsidiaries: A Guide to Pentex",
+      "short": "Subsidiaries",
+      "edition": "Revised"
+    },
+    {
+      "id": "watrailmx",
+      "title": "Tales from the Trail: Mexico",
+      "short": "Tales from the Trail: Mexico",
+      "edition": "Wild West"
+    },
+    {
+      "id": "w20cw",
+      "title": "Changing Ways (W20)",
+      "short": "W20 Changing Ways",
+      "edition": "V20"
+    },
+    {
+      "id": "w20kin",
+      "title": "Kinfolk (W20)",
+      "short": "W20 Kinfolk",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "w20ratw",
+      "title": "Rage Across the World (W20)",
+      "short": "W20 Rage Across the World",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "w20wwx",
+      "title": "Wyld West Expansion Pack (W20)",
+      "short": "W20 Wyld West",
+      "edition": "20th Anniversary companion"
+    },
+    {
+      "id": "waworap",
+      "title": "Rage: Warriors of the Apocalypse",
+      "short": "Warriors of the Apocalypse",
+      "edition": "Second edition"
+    },
+    {
+      "id": "waways",
+      "title": "Ways of the Wolf",
+      "short": "Ways of the Wolf",
+      "edition": "First edition"
+    },
+    {
+      "id": "wawwcomp",
+      "title": "Werewolf: The Wild West Companion",
+      "short": "Wild West Companion",
+      "edition": "Wild West"
+    },
+    {
+      "id": "wawwcore",
+      "title": "Werewolf: The Wild West",
+      "short": "Werewolf: The Wild West",
+      "edition": "Wild West"
     }
   ],
   "files": [
@@ -2271,6 +2373,23 @@
     "wacaern.json",
     "wacroatan.json",
     "wafreak.json",
-    "wafrontier.json"
+    "wafrontier.json",
+    "waguard.json",
+    "wahammer.json",
+    "wahenge.json",
+    "wakinfolk.json",
+    "wapast.json",
+    "wapossess.json",
+    "watwilight.json",
+    "wasubs.json",
+    "watrailmx.json",
+    "w20cw.json",
+    "w20kin.json",
+    "w20ratw.json",
+    "w20wwx.json",
+    "waworap.json",
+    "waways.json",
+    "wawwcomp.json",
+    "wawwcore.json"
   ]
 }

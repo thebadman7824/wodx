@@ -1,0 +1,205 @@
+[
+ {
+  "id": "waguard-lesser-offices",
+  "title": "Lesser sept offices",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Minor posts young Garou can hold.",
+  "claims": [
+   {
+    "text": "Most lesser offices suit player characters because a sept can spare their holders now and then without losing strength.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 71,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "A Garou may hold two or three minor offices, or one alongside a greater office, and elders often give them to young Garou to ease others’ burdens and teach responsibility.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 71,
+      "pdf": 66
+     }
+    ]
+   },
+   {
+    "text": "The Caller of the Wyld invokes the sept’s totems at a moot, both the caern totem and the totems of every tribe present.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 71,
+      "pdf": 66
+     }
+    ]
+   }
+  ],
+  "see": []
+ },
+ {
+  "id": "waguard-metis-birth",
+  "title": "The birth of a metis",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "What follows when a Garou breaks the Litany.",
+  "claims": [
+   {
+    "text": "Some mothers carrying a metis seek to end the pregnancy through Kinfolk or trusted packmates, and some go to desperate lengths.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 87,
+      "pdf": 81
+     }
+    ]
+   },
+   {
+    "text": "Most werewolves who break the Litany part ways quickly, so a metis seldom has two parents raising it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 87,
+      "pdf": 81
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waguard-metis-deformities"
+  ]
+ },
+ {
+  "id": "waguard-metis-deformities",
+  "title": "Metis deformities",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Optional deformities for metis characters.",
+  "claims": [
+   {
+    "text": "Hairless gives +1 difficulty to Social rolls in every form but Homid and bars dots in Pure Breed; Hooves and Horns also give +1 Social difficulty, though antlers may win Fianna respect for Stag and a single horn may impress the Children of Gaia.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 102,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Hard of Hearing gives +2 difficulty to Perception rolls involving sound, while full deafness removes hearing entirely and may impair speech.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 102,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Hemophilia stops the metis regenerating at all in combat, so healing needs a Gift such as Mother’s Touch.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 102,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "A Human Face in every form brings +1 Social difficulty and may get the metis mistaken for a fomor or Black Spiral; Hunchback adds +1 to both Social and Dexterity rolls.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 102,
+      "pdf": 96
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waguard-metis-gifts"
+  ]
+ },
+ {
+  "id": "waguard-metis-gifts",
+  "title": "Metis Gifts",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "New Gifts for metis Garou.",
+  "claims": [
+   {
+    "text": "New Gifts include Wriggle, Frozen Form, Badger’s Heart and Twist of Fate.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 105,
+      "pdf": 99
+     },
+     {
+      "book": "waguard",
+      "page": 106,
+      "pdf": 100
+     }
+    ]
+   },
+   {
+    "text": "Wriggle, taught by a Cockroach spirit, costs a Gnosis point and lets the metis squeeze into any space at least half its body size, in any form, for the scene.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 105,
+      "pdf": 99
+     }
+    ]
+   },
+   {
+    "text": "Frozen Form, taught by any aerial spirit, draws on the metis’ years spent fixed in Crinos.",
+    "tier": "implied",
+    "refs": [
+     {
+      "book": "waguard",
+      "page": 105,
+      "pdf": 99
+     }
+    ]
+   }
+  ],
+  "see": [
+   "waguard-metis-deformities"
+  ]
+ }
+]

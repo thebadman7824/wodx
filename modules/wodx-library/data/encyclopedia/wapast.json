@@ -1,0 +1,229 @@
+[
+ {
+  "id": "wapast-ancestor-gifts",
+  "title": "Learning from ancestor-spirits",
+  "kind": "mechanic",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts taught by the spirits of forebears.",
+  "claims": [
+   {
+    "text": "Learning a Gift from an ancestor-spirit works like learning from another werewolf: it costs one more experience point but takes a little less than a lunar month.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Gifts of the lost tribes and breeds run to level five, but levels four and five are hard to master without the tribe’s totem, so they cost 1.25 times as much; a level four Bunyip Gift costs 25 experience and a level five 30.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wapast-ancestor-fetishes",
+   "wapast-lost-gifts"
+  ]
+ },
+ {
+  "id": "wapast-ancestor-fetishes",
+  "title": "Ancestors bound in fetishes",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Why Theurges rarely bind ancestor-spirits.",
+  "claims": [
+   {
+    "text": "Garou seldom bind ancestor-spirits into fetishes out of respect; putting a grandmother in a tool, perhaps forever, is shocking.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Ancestors also give fewer powers the Garou lack and are less tied to ideals like strength or speed, and losing one to a Black Spiral Dancer would be a disaster.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   },
+   {
+    "text": "Exceptions include the Apeskin, which needs a homid ancestor, shrines and stone altars housing wise ancestors, and some revered grand klaives bound with both an ancestor and a war-spirit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 82,
+      "pdf": 84
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wapast-ancestor-gifts"
+  ]
+ },
+ {
+  "id": "wapast-lost-gifts",
+  "title": "Gifts of the Lost",
+  "kind": "power",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Gifts of extinct tribes and breeds.",
+  "claims": [
+   {
+    "text": "The lost Gifts cover the Bunyip, Croatan and White Howlers among the tribes, and extinct breeds such as the Apis, the Camazotz and the Grondr.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 83,
+      "pdf": 85
+     },
+     {
+      "book": "wapast",
+      "page": 85,
+      "pdf": 87
+     },
+     {
+      "book": "wapast",
+      "page": 87,
+      "pdf": 89
+     },
+     {
+      "book": "wapast",
+      "page": 90,
+      "pdf": 92
+     },
+     {
+      "book": "wapast",
+      "page": 92,
+      "pdf": 94
+     },
+     {
+      "book": "wapast",
+      "page": 94,
+      "pdf": 96
+     }
+    ]
+   },
+   {
+    "text": "Bunyip’s Spell, a level one Gift, freezes a target met eye to eye for one turn per success on an opposed Willpower roll, a way to defend against humans without killing.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 83,
+      "pdf": 85
+     }
+    ]
+   },
+   {
+    "text": "White Fire, a level five White Howler Gift and the last link to their sacred bone-fires, costs a Gnosis point and Dexterity + Occult at difficulty 6 for a stream of white fire dealing six dice of aggravated damage plus one per extra success.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 89,
+      "pdf": 91
+     }
+    ]
+   },
+   {
+    "text": "Hathor’s Blessing, a level three Apis Gift, promotes fertility and even raises the chance of a shapeshifter breeding true, at the cost of part of the giver’s spiritual essence.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 91,
+      "pdf": 93
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wapast-ancestor-gifts",
+   "wapast-camazotz"
+  ]
+ },
+ {
+  "id": "wapast-camazotz",
+  "title": "Camazotz ancestor-spirits",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The lost werebats and their leanings.",
+  "claims": [
+   {
+    "text": "Some Camazotz Gifts enhanced the strengths of bats, and a fallen Bat totem afterwards passed versions of them on to the Spiral Dancers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "A Camazotz ancestor-spirit might favour metis, Ragabash and Theurges, and Bone Gnawers, Silent Striders, Uktena or Stargazers.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   },
+   {
+    "text": "Most hate the Shadow Lords, though some look kindly on the Children of the Bat camp.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "wapast",
+      "page": 92,
+      "pdf": 94
+     }
+    ]
+   }
+  ],
+  "see": [
+   "wapast-lost-gifts"
+  ]
+ }
+]
