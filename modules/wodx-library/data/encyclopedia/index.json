@@ -859,6 +859,12 @@
    "title": "Convention Book: Syndicate (M20)",
    "short": "CB:Sy",
    "edition": "20th Anniversary"
+  },
+  {
+   "id": "mrvoid",
+   "title": "Convention Book: Void Engineers (M20)",
+   "short": "CB:VE",
+   "edition": "20th Anniversary"
   }
  ],
  "files": [
@@ -1004,6 +1010,7 @@
   "mrix.json",
   "mrnwo.json",
   "mrpg.json",
-  "mrsy.json"
+  "mrsy.json",
+  "mrvoid.json"
  ]
 }
