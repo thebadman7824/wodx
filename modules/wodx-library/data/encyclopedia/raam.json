@@ -1,0 +1,191 @@
+[
+ {
+  "id": "raam-first-comers",
+  "title": "The First Comers to the Amazon",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "How Garou found the rainforest already occupied.",
+  "claims": [
+   {
+    "text": "When the Pure Ones crossed the Bering land bridge, the Wendigo kept to the north and plains, the Croatan to the east coast and southern swamps, and the Uktena to the west coast and deserts.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Only the restless Uktena kept going until they reached the Amazon; few stayed, but their human Kin loved the land and settled there.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "The Uktena found native peoples already living in harmony with the jungle, and later learned of the Balam and Mokole, who had come long before with those peoples while fleeing the War of Rage.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "Mokole call the river the heart and bloodstream of the land, and say there has always been an Amazon.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "wendigo",
+   "cb-mokole",
+   "war-of-rage"
+  ]
+ },
+ {
+  "id": "raam-amazon-war",
+  "title": "The Amazon War",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "The Garou campaign against Pentex in the rainforest.",
+  "claims": [
+   {
+    "text": "The Hollow Heart Caern is the Garou's main base in the Amazon War, holding medical and supply camps and the War Council, and every Garou bound for the jungle arrives there first.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "The Garou took the dormant Hollow Heart from the Balam Matua, who fled and swore fealty to the Balam elder Black Claw for help against them, reviving an old feud that Pentex exploited.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Other caerns woken for the war, such as the Sky River Caern and the Caern of Rain Spirits, are mostly open to all tribes; the commander Golgol called Garou from around the world to the fight.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 19,
+      "pdf": 20
+     }
+    ]
+   },
+   {
+    "text": "Garou forces are organised in packs of about five, Wargs of three packs, Moons of about forty-five and Wards of a caern with two Moons, and hold Battle, Victory and Council moots besides ordinary ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 40,
+      "pdf": 41
+     }
+    ]
+   }
+  ],
+  "see": [
+   "pentex",
+   "caern"
+  ]
+ },
+ {
+  "id": "raam-codajas",
+  "title": "The Caern near Codajas",
+  "kind": "place",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "An embattled Uktena caern on the Amazon.",
+  "claims": [
+   {
+    "text": "Upriver from Codajas lies a small Uktena caern of the Elements, one of the few tended before the war, which can call rain spirits to drench nearby enemy camps.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Early Pentex raids left it in shambles, and the forest around it has been burned or stripped, yet its keepers treat it as if it were still pure.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Few native Uktena remain, so it relies on outsiders: only Uktena or Wendigo may live there, though others may visit.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Its totem, King Thunder, commands many elementals and has stalled more than one Pentex assault with storms.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "raam",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "uktena",
+   "pentex",
+   "raam-amazon-war"
+  ]
+ }
+]
