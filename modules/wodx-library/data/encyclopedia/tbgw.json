@@ -1,0 +1,195 @@
+[
+ {
+  "id": "tbgw-refugees",
+  "title": "The Refugees Among Humans",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "living-gods"
+  ],
+  "summary": "A Glass Walker myth of the tribe's beginning.",
+  "claims": [
+   {
+    "text": "A myth from southern Europe tells that when the Wyrm first struck at Gaia, Garou who would not fight their own kind fled to the humans and lived in human shape alone.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   },
+   {
+    "text": "In the tale, the refugees despaired until they watched frightened humans survive by breeding herds, planting seeds and storing rainwater, and learned from them.",
+    "tier": "rumour",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 13,
+      "pdf": 14
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glass-walkers"
+  ]
+ },
+ {
+  "id": "tbgw-monastery-caerns",
+  "title": "Monastery Caerns",
+  "kind": "lore",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "dark-ages"
+  ],
+  "summary": "How the Warders of Men hid in the medieval Church.",
+  "claims": [
+   {
+    "text": "Monastic life gave the tribe a rare chance to keep caerns away from the cities, and many were built at the edges of monasteries.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "Garou posing as monks gained an edge in feudal society, since monasteries held land, farms and schooling.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   },
+   {
+    "text": "The Warders hid their Gaia worship behind saints: the spirit later called Clashing Boom-Boom was known as the Archangel Michael, and the Golden Wheels honoured Matthew the Apostle; elsewhere they wore Islamic trappings in the same way.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 23,
+      "pdf": 24
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glass-walkers",
+   "wda-warders-of-men"
+  ]
+ },
+ {
+  "id": "tbgw-cyber-dogs",
+  "title": "The Cyber Dogs",
+  "kind": "event",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "great-war",
+   "modern"
+  ],
+  "summary": "A Weaver-bent pack that nearly took over the tribe.",
+  "claims": [
+   {
+    "text": "Glass Walkers call the decades of the World Wars and after the Shifting Century, when four camps took turns leading the tribe.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "Late in the century a brilliant pack called the Cyber Dogs built a camp around itself, using cybernetic fetishes and calling Weaver spirits at moots in place of Gaian ones.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   },
+   {
+    "text": "At the end of 1999, Elizabeth Genereader of the Random Interrupts told the tribe by video link that the Cyber Dogs had experimented on unwilling lupus Garou.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 31,
+      "pdf": 32
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glass-walkers",
+   "tbgw-random-interrupts"
+  ]
+ },
+ {
+  "id": "tbgw-random-interrupts",
+  "title": "The Random Interrupts",
+  "kind": "faction",
+  "lines": [
+   "werewolf"
+  ],
+  "eras": [
+   "modern"
+  ],
+  "summary": "Glass Walker hackers remade into the tribe's leading camp.",
+  "claims": [
+   {
+    "text": "Elizabeth Genereader reshaped the Random Interrupts into the dominant Glass Walker camp, though destructive hackers who wage computer war on the Wyrm remain part of it.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "The camp plans to link every Glass Walker caern to the tribe's network, GWnet.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   },
+   {
+    "text": "Its One Thousand Bane Project, begun by Chantelle Aldiss, studies many Banes with tech-fetishes in the hope of finding a numerical picture of the Wyrm; critics say the ten-year wait is fiddling while Rome burns.",
+    "tier": "stated",
+    "refs": [
+     {
+      "book": "tbgw",
+      "page": 53,
+      "pdf": 54
+     }
+    ]
+   }
+  ],
+  "see": [
+   "glass-walkers",
+   "tbgw-cyber-dogs"
+  ]
+ }
+]

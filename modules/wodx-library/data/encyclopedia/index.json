@@ -505,6 +505,12 @@
    "title": "Tribebook: Get of Fenris (Revised)",
    "short": "TB Get of Fenris",
    "edition": "Revised"
+  },
+  {
+   "id": "tbgw",
+   "title": "Tribebook: Glass Walkers (Revised)",
+   "short": "TB Glass Walkers",
+   "edition": "Revised"
   }
  ],
  "files": [
@@ -591,6 +597,7 @@
   "tbgn.json",
   "tbcog.json",
   "tbfia.json",
-  "tbfen.json"
+  "tbfen.json",
+  "tbgw.json"
  ]
 }
