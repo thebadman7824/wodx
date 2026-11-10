@@ -1669,6 +1669,12 @@
    "title": "Ashen Cults",
    "short": "Ashen Cults",
    "edition": "Dark Ages"
+  },
+  {
+   "id": "dabic",
+   "title": "Dark Ages: British Isles Casualties",
+   "short": "DABI Casualties",
+   "edition": "Dark Ages"
   }
  ],
  "files": [
@@ -1949,6 +1955,7 @@
   "wlbd.json",
   "wspg.json",
   "cap.json",
-  "dacults.json"
+  "dacults.json",
+  "dabic.json"
  ]
 }
