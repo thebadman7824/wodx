@@ -1362,3 +1362,9 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - modules/wodx-actions/scripts/effects-rules.js (pure): KEYWORDS (19), spheresFor, needFor, spend, durationFor, outcome, route, leanOf, wardStands.
 - effects.js (Foundry): the keyword fieldset in the Mage 20th Cast window (ticking a keyword raises the Sphere choices), the card's "What it does" list, the active Storyteller's client applying automatic items on createChatMessage (Combat soak and damage, healing, Quintessence, Chronicle timed effects and conditions, token light, elevation and vision), one Undo button from snapshots, queued items sent to the approval queue (type wodx-actions.effect). World setting "Magic that applies itself".
 - Tests: tools/harness/effects.test.mjs (8). Gate: tools/gate/gateeffects.mjs.
+
+## 2026-11-11: Mage keywords, moves, areas and saved rotes (Actions 3.23.0)
+- The rest of item 2 and item 3 of "Magic that applies itself" (B764).
+- effects-rules.js: Move outcome and route, AREA, inArea, areaRadius, area in needFor and spend, roteFrom, keepRote.
+- effects.js: Move and Place the area buttons on the card for the Storyteller (pickPoint: the next click on the map), placeArea makes a Region flagged with the effect, the active Storyteller works it on whoever enters (updateToken), areas end with their duration (updateWorldTime) or at the end of the scene (wodxEndScene), Undo removes the Region and what it did. Saved rotes in the Cast window (a list with a search box past five, Save as a rote named).
+- Tests: effects.test.mjs (9). Gate gateeffects.mjs now 10 steps.

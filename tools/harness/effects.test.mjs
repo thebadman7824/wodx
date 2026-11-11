@@ -32,8 +32,8 @@ test("the need: largest feat, one more per extra keyword, two on someone else, p
 });
 
 test("the spend: extra targets, then duration, the rest to strength; short rolls drop from the end", () => {
-  assert.deepEqual(E.spend(1, 2, {}), {ok: false, targets: 0, duration: 0, strength: 0, dropped: ["the Effect"]});
-  assert.deepEqual(E.spend(6, 2, {targets: 1, duration: 1}), {ok: true, targets: 1, duration: 1, strength: 4, dropped: []});
+  assert.deepEqual(E.spend(1, 2, {}), {ok: false, area: false, targets: 0, duration: 0, strength: 0, dropped: ["the Effect"]});
+  assert.deepEqual(E.spend(6, 2, {targets: 1, duration: 1}), {ok: true, area: false, targets: 1, duration: 1, strength: 4, dropped: []});
   const short = E.spend(3, 2, {targets: 1, duration: 2});
   assert.equal(short.targets, 1); assert.equal(short.duration, 0);
   assert.deepEqual(short.dropped, ["2 duration steps"]);
@@ -91,11 +91,43 @@ test("every keyword has a label, a Sphere floor, a feat and a plain description"
 
 test("the Mage 20th cast uses the keywords and posts a card the Storyteller's client applies", () => {
   const m20 = src("modules/wodx-actions/scripts/m20.js");
-  assert.match(m20, /EF\.fieldset\(i\.spheres\)/); assert.match(m20, /EF\.wire\(root/); assert.match(m20, /kind: "effects"/);
+  assert.match(m20, /EF\.fieldset\(i\.spheres, EF\.rotesOf\(actor\)\)/); assert.match(m20, /EF\.wire\(root/); assert.match(m20, /kind: "effects"/);
   const fx = src("modules/wodx-actions/scripts/effects.js");
   assert.match(fx, /createChatMessage/); assert.match(fx, /isActiveGM\(\)/); assert.match(fx, /setDamage/);
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.22.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.23.0");
+});
+
+test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
+  const mv = E.outcome("move", E.spend(2, 2, {}));
+  assert.equal(mv.kind, "move");
+  assert.equal(E.route("move", {self: true, count: 1, need: 2}, mv), "auto");
+  assert.equal(E.route("move", {self: false, playerCharacter: true, count: 1, need: 2}, mv), "queue");
+  // an area costs two more successes, and only for keywords that can be areas
+  assert.equal(E.needFor(["harm"], {plan: {area: true}}), 5);
+  assert.equal(E.needFor(["mend"], {plan: {area: true}}), 2);
+  const a = E.spend(6, 3, {area: true});
+  assert.equal(a.area, true); assert.equal(a.strength, 4);
+  const short = E.spend(4, 3, {area: true});
+  assert.equal(short.area, false); assert.deepEqual(short.dropped, ["the area"]);
+  assert.equal(E.outcome("harm", a, {spheres: ["forces"]}).area, E.AREA.feet);
+  assert.equal(E.outcome("mend", a).area, undefined);
+  assert.equal(E.areaRadius({size: 100, distance: 5}), 300);
+  assert.equal(E.inArea({x: 100, y: 100}, {x: 0, y: 0, radius: 150}), true);
+  assert.equal(E.inArea({x: 300, y: 0}, {x: 0, y: 0, radius: 150}), false);
+  // rotes: named, one per name, sorted, capped
+  const r = E.roteFrom(" Fire Bolt ", {keywords: ["harm", "nope"], used: [{sphere: "forces", level: 3}, {sphere: "prime", level: 0}], plan: {targets: 1, area: true}, ctx: {fire: true, curse: false}, kind: "vulgar", feat: 3});
+  assert.deepEqual(r, {name: "Fire Bolt", keywords: ["harm"], spheres: {forces: 3}, plan: {targets: 1, duration: 0, area: true}, ctx: {fire: true}, kind: "vulgar", feat: 3});
+  assert.equal(E.roteFrom("  "), null);
+  let list = E.keepRote([], r);
+  list = E.keepRote(list, {...r, name: "fire bolt", feat: 4});
+  list = E.keepRote(list, {...r, name: "Ward"});
+  assert.deepEqual(list.map(x => [x.name, x.feat]), [["fire bolt", 4], ["Ward", 3]]);
+  for ( let i = 0; i < 50; i++ ) list = E.keepRote(list, {...r, name: `R${String(i).padStart(2, "0")}`});
+  assert.equal(list.length, E.ROTES_MAX);
+  const fx = src("modules/wodx-actions/scripts/effects.js");
+  assert.match(fx, /updateToken/); assert.match(fx, /wodxEndScene/); assert.match(fx, /createEmbeddedDocuments\("Region"/);
+  assert.match(src("modules/wodx-actions/scripts/m20.js"), /EF\.saveRote/);
 });
