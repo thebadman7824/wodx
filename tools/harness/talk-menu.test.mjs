@@ -129,10 +129,10 @@ test("the Foundry side: answers decided on the Storyteller's client, the toolbar
   assert.match(m, /tokens\.tools\.wodxTalk = /);
   assert.match(m, /talkAsk: data\.talkAsk \? true : null/);
   assert.match(m, /openTalk: talk\.openTalk/);
-  assert.equal(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.11.0");
+  assert.equal(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.12.0");
 });
 
-/* NPC 0.11.0 + Chronicle 0.15.0: talk lines that test the NPC's attitude and a won social roll */
+/* NPC 0.12.0 + Chronicle 0.15.0: talk lines that test the NPC's attitude and a won social roll */
 test("talk lines can test the NPC's attitude and a persuasion by that NPC", () => {
   const sheet = `[the toll] attitude >= welcome => Waves the cart through.
 [the toll] persuaded => Agrees to look the other way, once.

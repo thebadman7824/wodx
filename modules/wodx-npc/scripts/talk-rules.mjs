@@ -184,3 +184,69 @@ export function addLearned(learned = [], add = []) {
   return out.slice(-300);
 }
 export const dropLearned = (learned = [], drop = []) => { const d = new Set((drop ?? []).map(normTopic)); return (learned ?? []).map(normTopic).filter(t => t && !d.has(t)); };
+
+/* ------------------------------------------------------------------ */
+/*  Stock talk (NPC 0.11.0): what anyone says before the Storyteller has written a line                     */
+/* ------------------------------------------------------------------ */
+
+/** The span of years stock talk speaks for. branch: "future" on the Future Darkness branch. */
+export function eraBand(year, branch = "") {
+  const y = Number(year);
+  if ( branch === "future" && y >= 2026 ) return "future";
+  if ( !Number.isFinite(y) ) return "modern";
+  if ( y < 1500 ) return "medieval";
+  if ( y < 1800 ) return "earlymodern";
+  if ( y < 1900 ) return "nineteenth";
+  if ( y < 1980 ) return "twentieth";
+  if ( y < 2026 ) return "modern";
+  return "future";
+}
+
+/** How the NPC regards the character, from a step of -3 to +3. */
+export function regardOf(step) {
+  const n = Math.round(Number(step) || 0);
+  return n <= -3 ? "hate" : n <= -1 ? "dislike" : n <= 1 ? "neutral" : n === 2 ? "like" : "love";
+}
+
+/**
+ * The step to use: the NPC's own attitude toward the character when it is set, else the standing of the NPC's
+ * factions toward them (the mean, rounded toward zero), else 0.
+ */
+export function stepFor({attitude = null, standings = []} = {}) {
+  if ( Number.isFinite(Number(attitude)) && attitude !== null && attitude !== "" ) return Math.max(-3, Math.min(3, Math.round(Number(attitude))));
+  const v = (standings ?? []).map(Number).filter(Number.isFinite);
+  if ( !v.length ) return 0;
+  return Math.max(-3, Math.min(3, Math.trunc(v.reduce((a, b) => a + b, 0) / v.length)));
+}
+
+/** A steady pick: the same seed gives the same line, so a person does not change their greeting on every click. */
+export function hashSeed(...parts) {
+  let h = 2166136261;
+  for ( const ch of parts.join("|") ) { h ^= ch.codePointAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  return h >>> 0;
+}
+export const pickLine = (list, seed = 0) => ((list ?? []).length ? list[seed % list.length] : null);
+
+/**
+ * A stock line. kind: greet, none, rumours, news, work, directions. stock: the data (data/stock-talk.mjs).
+ * rumour: the text of a rumour the NPC has heard (for rumours). Returns {say, rumour} or null.
+ */
+export function stockLine(kind, {stock, era = "modern", regard = "neutral", seed = 0, rumour = null} = {}) {
+  if ( !stock ) return null;
+  const say = text => (text ? {say: text, rumour: null} : null);
+  if ( kind === "greet" ) return say(pickLine(stock.GREET?.[era]?.[regard], seed));
+  if ( kind === "none" ) return say(pickLine(stock.NONE?.[regard], seed));
+  if ( kind === "work" ) return regard === "hate" ? say(pickLine(stock.NONE?.hate, seed)) : say(pickLine(stock.WORK?.[era], seed));
+  if ( kind === "directions" ) return say(pickLine(stock.DIRECTIONS?.[regard], seed));
+  if ( kind === "news" ) return regard === "hate" ? say(pickLine(stock.NONE?.hate, seed)) : say(pickLine(stock.NEWS?.[era], seed));
+  if ( kind === "rumours" ) {
+    if ( regard === "hate" || (regard === "dislike" && !rumour) ) return say(pickLine(stock.RUMOUR_REFUSE?.[regard], seed));
+    if ( rumour ) {
+      const lead = pickLine(stock.RUMOUR_LEAD?.[regard], seed) ?? "\"{rumour}\"";
+      const words = String(rumour).trim().replace(/^"|"$/g, "");
+      return {say: lead.replace("{rumour}", words), rumour};
+    }
+    return say(pickLine(stock.GOSSIP?.[era], seed));
+  }
+  return null;
+}

@@ -1,7 +1,7 @@
 import * as AT from "./attitude-rules.mjs";
 
 /**
- * WoDX NPC 0.11.0: each NPC's attitude toward each character (attitude-rules.mjs has the rules). The NPC's world actor
+ * WoDX NPC 0.12.0: each NPC's attitude toward each character (attitude-rules.mjs has the rules). The NPC's world actor
  * holds it, so every token of that NPC shares it. Changes go through WoDX Chronicle's approval queue as
  * "wodx-npc.attitude" (the Storyteller can approve that type automatically); the Storyteller's own changes apply at once.
  */

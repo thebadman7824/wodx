@@ -55,6 +55,6 @@ test("orders: wiring; the Storyteller's client acts; hard orders queue; a fight 
   assert.match(m, /orders\.registerSettings\(\)/);
   assert.match(m, /tools\.wodxOrders = \{[^}]*visible: true/);
   const j = JSON.parse(src("modules/wodx-npc/module.json"));
-  assert.equal(j.version, "0.11.0");
+  assert.equal(j.version, "0.12.0");
   assert.equal(j.socket, true);
 });

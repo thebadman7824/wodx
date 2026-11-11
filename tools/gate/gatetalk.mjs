@@ -13,7 +13,8 @@
  *   7. too far away: refused
  *   8. the window opens for a targeted NPC and a topic button answers in it; with nobody targeted it opens for the nearest
  *   9. Undo on the Storyteller's card takes back what was taught
- *  10. every other WoDX module still answers
+ *  10. stock talk: a stranger with no sheet greets and answers work; passes on a rumour it heard; off means silence
+ *  11. every other WoDX module still answers
  * Result: Data/wodx-gate/gatetalk-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -137,6 +138,31 @@ export async function run() {
       document.querySelector(`[data-message-id="${msg?.id}"] button.wnpc-talk-undo`)?.click();
       const gone = await until(() => !(pc().flags?.[MOD]?.topics ?? []).includes("the night porter"));
       ok("undo what was taught", !!msg && gone, {topics: pc().flags?.[MOD]?.topics});
+    });
+    await step("stock talk: greeting, work, a rumour from the network, and off", async () => {
+      const [stranger] = await Actor.create([{name: "WoDX gate: Talk stranger", type: "Mortal"}]);
+      actors.push(stranger);
+      await scene.createEmbeddedDocuments("Token", [{name: "stranger", actorId: stranger.id, x: G * 6, y: G * 6}]);
+      const sTok = scene.tokens.find(t => t.actorId === stranger.id);
+      const sreq = {sceneId: scene.id, npcTokenId: sTok.id, meTokenId: meTok.id};
+      const stockBefore = game.settings.get(MOD, "stockTalk");
+      await game.settings.set(MOD, "stockTalk", true);
+      const m = await talk().serve("menu", sreq, asUser);
+      const w = await talk().serve("ask", {...sreq, topic: "work"}, asUser);
+      const st = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null;
+      let rum = null, r = null;
+      if ( st?.rumours?.start ) {
+        rum = await st.rumours.start({text: "WoDX gate rumour: the ferry runs at midnight.", tellers: [stranger.id]});
+        r = await talk().serve("ask", {...sreq, topic: "rumours"}, asUser);
+      }
+      await game.settings.set(MOD, "stockTalk", false);
+      const off = await talk().serve("ask", {...sreq, topic: "work"}, asUser);
+      await game.settings.set(MOD, "stockTalk", stockBefore);
+      if ( rum ) await st.rumours.remove(rum.id);
+      const heard = pc().flags?.[MOD]?.heard ?? [];
+      ok("stock talk: greeting, work, a rumour from the network, and off", m.ok && /^".+"$/.test(m.menu.greet) && w.ok && /^".+"$/.test(w.said)
+        && (!st || (/ferry runs at midnight/.test(r?.said ?? "") && heard.includes(rum.id))) && off.ok && !off.said,
+        {greet: m.menu.greet, work: w.said, rumour: r?.said, heard: heard.length, off: off.said});
     });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-otherworlds", "wodx-storyteller"];

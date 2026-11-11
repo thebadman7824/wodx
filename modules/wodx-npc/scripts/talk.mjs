@@ -13,6 +13,7 @@
  *   setting wodx-npc.sharedTalk {key: text}  shared sheets: household:<name>, faction:<key>, scene:<id>, everyone
  */
 import * as TK from "./talk-rules.mjs";
+import * as STOCK from "../data/stock-talk.mjs";
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -30,6 +31,8 @@ export function build(ctx) {
     game.settings.register(MOD, "talkReach", {name: "Talking distance, in squares", hint: "How close a character must stand to talk (1: side by side).",
       scope: "world", config: true, type: Number, default: 2, range: {min: 1, max: 10, step: 1}});
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
+    game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "When nothing you wrote fits, NPCs greet, gossip, pass on rumours they have heard and talk of news, work and the way, in words suited to the era and to how they regard the character. Your lines always come first.",
+      scope: "world", config: true, type: Boolean, default: true});
   }
 
   /* ---------------- Who is talking to whom ---------------- */
@@ -71,7 +74,7 @@ export function build(ctx) {
     const codex = game.journal?.find(j => j.flags?.["wodx-storyteller"]?.codex === actor.id);
     return {learned: actor.flags?.[MOD]?.topics ?? [], codex: codex ? [...codex.pages].map(p => p.name) : []};
   }
-  // The NPC goes with the check, so a line can test the NPC's attitude and "persuaded" means by this NPC (0.11.0)
+  // The NPC goes with the check, so a line can test the NPC's attitude and "persuaded" means by this NPC (0.12.0)
   const checker = (actor, token, npc = null) => { const W = chron()?.when; return W?.check ? when => W.check(when, {actor, token, npc}).ok : null; };
   function displayName(npcTok, user) {
     const mine = game.actors.filter(a => a.hasPlayerOwner && a.testUserPermission?.(user, "OWNER")).map(a => a.id);
@@ -91,11 +94,61 @@ export function build(ctx) {
     return {scene, npcTok, me};
   }
 
+  /* ---------------- Stock talk (0.11.0) ---------------- */
+
+  const stockOn = npc => !!setting("stockTalk") && !savedProfile(npc).noStock;
+  const asked = new Map(); // how often each topic was asked of this NPC by this character, so stock lines vary
+  /** Era, regard and a steady seed for one NPC and one character. */
+  function stockCtx(r, kind) {
+    const npc = baseActor(r.npcTok), pc = baseActor(r.me);
+    let year = null, branch = "";
+    try { const c = chron()?.when?.context?.({actor: pc}); year = c?.year ?? null; branch = c?.branch ?? ""; } catch (e) { /* no calendar */ }
+    let att = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.step ?? null;
+    // NPC 0.12.0: the attitude track, which seeds a first meeting from the household or faction
+    try { const o = game.modules.get(MOD)?.api?.attitude?.of?.(npc, pc); if ( o?.met ) att = o.step; } catch (e) { /* keep the saved step */ }
+    let standings = [];
+    try {
+      const people = game.modules.get(MOD)?.api?.factions?.peopleOf?.(pc.id) ?? {};
+      standings = factionKeysOf(npc).map(k => people[k]).filter(v => v !== undefined);
+    } catch (e) { standings = []; }
+    const step = TK.stepFor({attitude: att, standings});
+    const key = `${npc?.id}|${pc?.id}|${kind}`;
+    const n = asked.get(key) ?? 0;
+    if ( kind !== "greet" ) asked.set(key, n + 1);
+    const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+    return {era: TK.eraBand(year, branch), regard: TK.regardOf(step), step, seed: TK.hashSeed(npc?.id, pc?.id, kind, day) + n};
+  }
+  /** A rumour this NPC has heard that this character has not had from anyone yet. */
+  function rumourFor(r) {
+    const st = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null;
+    const npc = baseActor(r.npcTok), pc = baseActor(r.me);
+    const told = new Set(pc?.flags?.[MOD]?.heard ?? []);
+    try { return (st?.rumours?.heardBy?.(npc.id) ?? []).filter(x => !x.ended && !told.has(x.id)).at(-1) ?? null; } catch (e) { return null; }
+  }
+  /** The stock line for a topic, or null. Local topics get their own; anything else gets a brush-off. */
+  function stockAnswer(r, topic) {
+    if ( !stockOn(r.npcTok.actor) ) return null;
+    const kind = TK.LOCAL[topic] ? topic : "none";
+    const c = stockCtx(r, kind);
+    const rum = kind === "rumours" && c.regard !== "hate" ? rumourFor(r) : null;
+    const hit = TK.stockLine(kind, {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, rumour: rum?.text ?? null});
+    return hit ? {kind: "stock", say: hit.say, when: "", then: TK.parseThen(""), rumourId: hit.rumour ? rum.id : null} : null;
+  }
+
   function menuOf(r, user) {
     const chain = chainOf(r.npcTok.actor, r.scene);
     const menu = TK.menuFor(chain, knownOf(baseActor(r.me)));
     const g = TK.greetFor(chain, checker(r.me.actor, r.me, r.npcTok.actor));
-    return {name: displayName(r.npcTok, user), me: r.me.name, greet: g?.say ?? "", ...menu};
+    let greet = g?.say ?? "";
+    if ( !greet && stockOn(r.npcTok.actor) ) { const c = stockCtx(r, "greet"); greet = TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed})?.say ?? ""; }
+    return {name: displayName(r.npcTok, user), me: r.me.name, greet, ...menu};
+  }
+
+  /** The line to say: the Storyteller's own (a topic line, then their "none" line), and only then stock talk. */
+  function lineFor(r, topic, chain, check) {
+    const ans = TK.answerFor(topic, chain, check);
+    if ( ans ) return ans.line;
+    return stockAnswer(r, topic);
   }
 
   /** The Storyteller's client answers a request. kind: menu or ask. */
@@ -110,10 +163,11 @@ export function build(ctx) {
     if ( !TK.canAsk(topic, menu) ) return {ok: false, why: "They do not follow you.", menu};
     const chain = chainOf(r.npcTok.actor, r.scene), check = checker(r.me.actor, r.me, r.npcTok.actor);
     if ( savedProfile(r.npcTok.actor).talkAsk && !user.isGM ) {
-      await askFirstCard(r, user, topic, TK.answersFor(topic, chain, check), TK.answerFor(topic, chain, check));
+      const fb = lineFor(r, topic, chain, check);
+      await askFirstCard(r, user, topic, TK.answersFor(topic, chain, check), fb ? {line: fb} : null);
       return {ok: true, waiting: true, menu};
     }
-    const said = await deliver(r, user, topic, TK.answerFor(topic, chain, check)?.line ?? null);
+    const said = await deliver(r, user, topic, lineFor(r, topic, chain, check));
     return {ok: true, ...said, menu: menuOf(r, user)};
   }
 
@@ -124,6 +178,7 @@ export function build(ctx) {
     const before = actor.flags?.[MOD]?.topics ?? [];
     const taught = (line?.then?.teach ?? []).filter(t => !TK.knowsTopic(t, {learned: before}));
     if ( taught.length ) await actor.update({[`flags.${MOD}.topics`]: TK.addLearned(before, taught)});
+    if ( line?.rumourId ) await actor.update({[`flags.${MOD}.heard`]: [...new Set([...(actor.flags?.[MOD]?.heard ?? []), line.rumourId])].slice(-200)});
     const notes = [];
     for ( const c of line?.then?.codex ?? [] ) { const n = await giveCodex(actor, c); if ( n ) notes.push(n); }
     if ( line?.then?.run && chron()?.when?.run ) await chron().when.run(line.then.run, {actor, token: r.me, scene: r.scene, label: r.npcTok.name});
@@ -134,7 +189,7 @@ export function build(ctx) {
       + `${taught.length ? `<button type="button" class="wnpc-talk-undo">Undo what was taught</button>` : ""}</div></div>`;
     const aloud = !!line?.then?.aloud;
     await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, content, ...(aloud ? {} : {whisper: [...new Set([user.id, ...gmIds()])]}),
-      flags: {[MOD]: {talk: {actor: actor.id, taught, topic}}}});
+      flags: {[MOD]: {talk: {actor: actor.id, taught, topic, stock: line?.kind === "stock", rumour: line?.rumourId ?? null}}}});
     return {said: say, taught, notes, none: !line};
   }
 
@@ -336,6 +391,10 @@ export function build(ctx) {
     });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const html = el?.[0] ?? el;
+      if ( msg.flags?.[MOD]?.talk?.stock && game.user.isGM ) {
+        const body = html?.querySelector?.(".wnpc-talk-card .vta-body");
+        if ( body && !body.querySelector(".wnpc-stock-tag") ) body.insertAdjacentHTML("beforeend", `<p class="wodx-quiet wnpc-stock-tag">Stock talk${msg.flags[MOD].talk.rumour ? ", passing on a rumour from the network" : ""}. Write a line on their talk sheet to say something else.</p>`);
+      }
       if ( msg.flags?.[MOD]?.talk ) html?.querySelectorAll?.("button.wnpc-talk-undo").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoTaught(msg).catch(e => console.error(`${MOD} | talk`, e)); });

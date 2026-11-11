@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.11.0: how one NPC regards one character. The pure parts, so the harness can test them.
+ * WoDX NPC 0.12.0: how one NPC regards one character. The pure parts, so the harness can test them.
  *
  * The steps are the faction standing steps (-3 Hunted to +3 Honoured). The first time a character deals with an NPC,
  * the attitude is taken from the character's standing with the NPC's household (a faction of that name or key), else the

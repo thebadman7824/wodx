@@ -133,8 +133,8 @@ test("mapgen: organic villages, towns and cities come out whole, and the samples
 
 test("mapgen: a town on a river has its banks clear, bridges, water gates, a mill and a washing place", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-r-"));
-  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--river", "yes", "--walls", "yes", "--assets", ASSETS, "--out", dir], dir);
-  const s = JSON.parse(readFileSync(join(dir, "haselberg.wodx.json"), "utf8"));
+  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "2", "--part", "0", "--river", "yes", "--walls", "yes", "--assets", ASSETS, "--out", dir], dir);
+  const s = JSON.parse(readFileSync(join(dir, "schondorf.wodx.json"), "utf8"));   // seed 1's river crosses no way, so it needs no bridge
   assert.deepEqual(A.parseSidecar(s).errors, []);
   const ids = s.regions.map(r => r.id);
   assert.ok(ids.includes("river-1"), "no river");
@@ -163,7 +163,7 @@ test("mapgen: a town grown to a later year has that era's layers and era id", {s
   run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--walls", "yes", "--river", "yes", "--assets", ASSETS, "--out", d2], d2);
   const m = JSON.parse(readFileSync(join(d2, "haselberg.wodx.json"), "utf8"));
   assert.equal(m.era, "dark-ages");
-  assert.ok(!m.regions.some(r => r.area));
+  assert.ok(!m.regions.some(r => r.area && !["brook", "sinkhole", "oxbow", "old-loop"].includes(r.area)));   // the land's own areas are not era layers
 });
 
 test("mapgen: an organic town splits into parts that fit together, and its sample matches", {skip}, () => {
@@ -223,6 +223,31 @@ for seed in range(12):
     for i in range(len(pts)):
         for j in range(i + gap, len(pts)):
             assert math.dist(pts[i], pts[j]) >= 2 * B - 1e-6, (seed, i, j)
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8"}), /ok/);
+});
+
+test("mapgen: towns stand in real landforms: worn by water, brooks run downhill, the town's ground is buildable, bridges are few", {skip}, () => {
+  const code = `
+import math, sys
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, organic as O, land as LAND
+for kind, seed, river in (("hills", 3, True), ("upland", 3, True), ("mountain", 3, True), ("karst", 4, False), ("plain", 2, True)):
+    C.R.seed(seed)
+    t = O.OrganicTown(seed, "town", river=river, land=kind)
+    L = t.land
+    assert L.kind == kind and L.z, kind
+    assert 0 <= min(L.z) and L.zmax <= LAND.KINDS[kind]["relief"] * 1.05, (kind, L.zmax)
+    for st in t.streams:                                  # water never runs uphill
+        a, b = st["line"][0], st["line"][-1]
+        assert L.z_at(*a) >= L.z_at(*b) - 1.0, (kind, a, b)
+        assert not any(t.in_town(q) for q in st["line"]), kind
+    xs = [L.slope(i, j) for j in range(0, t.rows, 3) for i in range(0, t.cols, 3) if t.in_town((i, j))]
+    assert sum(x > O.SLOPE_MAX + .08 for x in xs) / len(xs) < .2, (kind, "too steep in town")
+    if kind == "karst": assert t.sinks, "karst without sinkholes"
+    if river and t.bridges:
+        ps = [b["at"] for b in t.bridges]                 # no two bridges close together: each one is needed
+        assert all(math.dist(p, q) > 60 * .5 for i, p in enumerate(ps) for q in ps[i + 1:]), (kind, ps)
 print("ok")`;
   assert.match(execFileSync(py, ["-c", code], {encoding: "utf8"}), /ok/);
 });
