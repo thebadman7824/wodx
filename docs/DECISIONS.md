@@ -433,6 +433,20 @@ The system's after-save recompute (totals, wound levels, movement) runs only on 
 ## B601. No double Core tab (2026-11-10)
 When WoDX Sheets shows a line's printed sheet, the system skips drawing its own Core tab, which was thrown away before. The system's layout is unchanged when no WoDX sheet applies.
 
+## B602. Sheet extras on every WoDX sheet (2026-11-10)
+WoDX Sheets 0.7.0 adds, in the book's layout and the system's alike: an in-play strip on every tab, a Possessions tab in place of Gear, a Ties tab, the Storyteller's notes, search boxes on long power lists, a History window with Undo, and a Print button.
+
+## B603. Containers and stacks (2026-11-10)
+A container is an item with the system's own "is container" switch on. Items record their container (flags.wodx-sheets.in) and count (qty). A container takes things up to a V20 concealment size (pocket, jacket, trench coat or cloak, any). Given, looted or left things take their contents with them. Things left on the map become an open Interactables box at the token, holding world copies in a "things left on maps" item folder.
+
+## B604. Money by era (2026-11-10)
+Coins in use by year for the German lands (default), England or the United States, a world setting. Coins of account are listed but never carried. From 2050 every list uses the eurodollar, borrowed from Cyberpunk 2020 for the World of Future Darkness (house rule).
+
+## B605. Storyteller's notes stay off players' computers (2026-11-10)
+They live in one journal entry only the Storyteller owns, a page per character, so Foundry never sends them to players.
+
+## B606. Sheet history is kept in memory (2026-11-10)
+The History window lists this session's edits on that computer only, so recording costs no saves. A reload clears it.
 ## B620. One language for "Only when" (2026-11-10)
 From the RPG Builder review (https://claude.ai/artifact/MvqiV7QLsQP3KJcd6uukXz), approved by Ben 2026-11-10. Any map piece that asks who, when and in what state uses the same short tests, held in WoDX Chronicle (when-rules.mjs): one test a line or separated by ";", every line must pass, "not" turns a line round, "any of:" or "2 of:" opens a group. The tests cover every era: era, year, before and from, hour, night, moon, church feast, fast and season, the Future Darkness branch. Who: player or not, kind (WoDX Combat's kinds, with the books' names accepted), clan, tribe, Tradition and the other sheet fields, faction, name. State: pools and ratings with a comparison, wounds by health level name, frenzy, Rötschreck, Obfuscate, any WoDX condition. Has: an item, a codex page. A list with a mistake never passes, so a typo cannot open a door.
 

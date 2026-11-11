@@ -1268,6 +1268,10 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - All 12 line sheet templates wrap the Core tab in `{{#unless wodxCore}}`; WoDX Sheets sets `wodxCore` when it draws the book's sheet. B601.
 - Harness: sheet-speed.test.mjs. Gate: tools/gate/gatesheetspeed.mjs (redraw times, saves per change, totals follow, Core tab with and without a WoDX sheet).
 
+## 2026-11-10: sheet extras (WoDX Sheets 0.7.0), not yet deployed
+- Ben asked for all nine suggested sheet features. On every WoDX sheet: in-play strip; Possessions tab (containers, stacks with split and merge, concealment sizes, out-of-era flags, value for the time, money by era, search and filter, give, leave on the map); Ties tab (domitor and ghouls filled in from the lineage); Storyteller's notes in a Storyteller-only journal; search on long power lists; History window with Undo; Print. B602-B606.
+- Pure parts in extras-rules.mjs and extras-html.mjs; harness sheet-extras.test.mjs. Full suite 1042 pass.
+- Sample shown to Ben before any testbed deploy: https://claude.ai/artifact/UcwShGByyLddqUGKWYRD9d
 ## 2026-11-10: the RPG Builder ideas (Chronicle 0.14.0, NPC 0.9.0, Interactables 0.23.0, Atmosphere 0.11.0, Storyteller 0.20.0)
 - From the RPG Builder review (https://claude.ai/artifact/MvqiV7QLsQP3KJcd6uukXz), every idea, approved by Ben 2026-11-10 23:18Z.
 - WoDX Chronicle: scripts/when-rules.mjs (the language, pure) and scripts/when.mjs (the world and character read into a context; outcomes; the Storyteller's checker). API: game.wodx.chronicle.when.check / run / context / checker. B620, B621.
