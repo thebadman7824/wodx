@@ -40,10 +40,12 @@ test("shop rows: take and add keep counts in the Inside text", () => {
 test("barter and what a trader gives", () => {
   assert.deepEqual(TR.barter(100, 60), {owe: 40, even: false});
   assert.equal(TR.barter(50, 80).owe, -30);
-  const price = {sell: 50, fence: 25};
+  const price = {each: 100, sell: 50, fence: 25};
   assert.equal(TR.offerFor(price), 50);
   assert.equal(TR.offerFor(price, {lifted: true}), 25);
   assert.equal(TR.offerFor(null), 0);
+  assert.equal(TR.offerFor({each: 1, sell: 0, fence: 0}), 1);
+  assert.equal(TR.offerFor({each: 0, sell: 0, fence: 0}), 0);
 });
 
 test("tradeable leaves out traits and powers", () => {

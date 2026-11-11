@@ -76,4 +76,9 @@ export function barter(want, offer) {
 }
 
 /** What a trader gives for a thing: the sell price, or the fence's for something stolen (lifted). */
-export const offerFor = (price, { lifted = false } = {}) => (price ? (lifted ? price.fence : price.sell) : 0);
+export const offerFor = (price, { lifted = false } = {}) => {
+    if (!price) return 0;
+    const v = lifted ? price.fence : price.sell;
+    // House rule: a thing with a price fetches at least the smallest coin (cheap goods round their half price down to nothing)
+    return (price.each ?? 0) > 0 ? Math.max(1, Math.round(Number(v) || 0)) : 0;
+};
