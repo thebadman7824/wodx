@@ -220,6 +220,9 @@ await states.secondBreathDialog();
   globalThis.canvas = {...(old ?? {}), tokens: {...(old?.tokens ?? {}), controlled: [traveller]}};
   await realms.dreamingDialog();
   await realms.rollsDialog();
+  // The Realm maps window (Otherworlds 0.11.0 adds the Extra keywords field)
+  const rmaps = await import(join(root, "modules/wodx-otherworlds/scripts/realm-maps.mjs"));
+  await rmaps.realmMapsDialog();
   globalThis.canvas = old;
   api.DialogV2.wait = wait;
 }

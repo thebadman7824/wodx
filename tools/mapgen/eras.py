@@ -16,6 +16,7 @@ import ddtown as T
 import buildings as B
 import eratypes as E
 import cddatypes as CD
+import firstgroup as FG
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ERAS = os.path.join(HERE, "..", "..", "modules", "wodx-chronicle", "data", "eras.json")
@@ -451,6 +452,7 @@ def layer_docklands(t):
 REBUILDS = [(1450, "renaissance", .30), (1601, "age-of-reason", .30), (1837, "victorian", .25), (1919, "mid-century", .12),
             (1990, "modern", .08), (2010, "future-darkness", .15)]
 KEEP = {"chapel", "town-hall", "tenement", "mill", "panel-block", "dept-store", "culture-house", "hypermarket", "capsule-tower", "vertical-farm", "school"}
+KEEP |= set(FG.TYPES) | set(CD.CDDA_TYPES)                  # public buildings stay up once built
 
 
 def types_for(year, upto, role):
@@ -599,10 +601,24 @@ def _place_blocks(t, tk, n, where):
 SCALE = {"village": 0, "town": 1, "city": 2, "metropolis": 5}
 
 
+def older_forms(t, y0, k):
+    """The first group's older forms (firstgroup.py): each goes up once, in the first era layer after its first
+    year, and stays. A synagogue only where the town has a Jewish quarter."""
+    upto = min(t.year, next((y for y, e, _ in REBUILDS if y > y0), 2099) - 1)
+    t.older = getattr(t, "older", set())
+    for tk, per, where in FG.PLACES:
+        if tk in t.older or FG.TYPES[tk]["built"][0] > upto: continue
+        t.older.add(tk)
+        if tk == "old-synagogue" and t.blds and not in_quarter(t, t.blds[0]): continue
+        n = int(per * k) + (t.R.random() < per * k % 1)
+        if n: place_blocks(t, tk, n, where)
+
+
 def layer_era(t, y0, era, share):
     k = SCALE[t.size]
     rebuild(t, y0, era, share)
     y = t.year
+    if k: older_forms(t, y0, k)
     if era == "renaissance" and k and not any(b.type == "town-hall" for b in t.blds): place_blocks(t, "town-hall", 1, "core")
     if era == "age-of-reason" and y >= 1700 and k: place_blocks(t, "manufactory", k, "edge")
     if era == "victorian":
@@ -634,7 +650,7 @@ def civic_set(t, k):
     t.civic_done = True
     have = {b.type.rstrip("-0123456789") for b in t.blds}
     for kind, per, where in CIVIC:
-        n = int(per * k + .5) or (1 if t.R.random() < per * k else 0)
+        n = int(per * k) + (t.R.random() < per * k % 1)
         variants = [v for v in CD.CDDA_TYPES if v == kind or (v.startswith(kind + "-") and v[len(kind) + 1:].isdigit())]
         if not n or not variants or kind in have: continue
         tk = t.R.choice(variants)
@@ -650,7 +666,7 @@ FUNCS = {"brick": layer_brick, "quays": layer_quays, "courts": layer_courts, "wa
 def grow(t, year):
     """Applies every layer up to the year, in order. Records what was done in t.layers."""
     t.year, t.era_ways, t.era_areas, t.layers = year, [], [], []
-    t.gone, t.civic_done = [], False
+    t.gone, t.civic_done, t.older = [], False, set()
     steps = sorted([(y, 1, name) for y, name in LAYERS] + [(y, 0, (y, e, sh)) for y, e, sh in REBUILDS], key=lambda s_: (s_[0], s_[1]))
     for y, kind, what in steps:
         if year < y: break

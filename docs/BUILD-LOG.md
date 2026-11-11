@@ -1433,12 +1433,18 @@ Ben asked for each otherworld map to be checked against how the books describe t
 
 ## 2026-11-11: present-day buildings from Cataclysm's layouts (B666, B667)
 Ben approved the first group of building types from the Cataclysm: Dark Days Ahead review (https://claude.ai/artifact/QQjdofxZQKFhsBW8TEWtvL) and asked for its building code to be used where it helps. tools/mapgen/cdda.py reads Cataclysm's map data (one character a metre, 24 to a tile, with palettes) and turns a layout into a WoDX building type: rooms cut into rectangles, inner walls, doors and windows, a traced outline for buildings that are not boxes, and the squares each piece of furniture stands on. 21 layouts convert: two banks, a bar, two libraries, a funeral home, a museum, an art gallery, three police stations, two churches, a country church, a synagogue, a cathedral, a warehouse, two music clubs, a hospital and a sewer pumping station. tools/mapgen/cddatypes.py loads them (cdda_types.json) and furnishes them with Tyger's modern pieces. Towns grown to 1960 or later get a police station, bank, library, bar, funeral home, warehouse and pumping station, and some get a music club, museum, gallery or hospital. The layouts keep Cataclysm's CC BY-SA 3.0 licence; the credit is in each type and in tools/mapgen/CDDA-CREDIT.md. A new harness test checks the credit, that every door and window is on a wall, that each type furnishes, and that a 2005 town has them.
+
+## 2026-11-11: older forms of hospitals, gaols, banks and the rest (B668)
+19 older forms of the first group's kinds, drawn from Moravian models (tools/mapgen/firstgroup.py), from the lazar house and charnel house of the Dark Ages to the grand hotel and dance hall of the 1870s and 1880s. Towns grown through the eras put each up once and keep it; a 1900 small town now has its gaol, lazar house, general hospital, cemetery chapel, savings bank, gendarmerie, coffeehouse and the like. The plans page shows them with their era. A new harness test checks they furnish and that a 1900 town has them.
 ## 2026-11-11: one effect keyword roster (WoDX Actions 3.30.0, B781)
 - Ben approved the keyword coverage review. effects-rules.js KEYWORDS: 34 keywords (15 new), POOLS, BOOSTS, KINDS, resistOf, passive.
 - Widened Harm, Charge or Drain, Mend, Ward, Fear, Sway; the Cast window gains the matching options and choice lists; Undo restores a pool.
 - Ten Dark Ages rotes and six path powers carry their keyword (still the Storyteller's call).
 - Page check queued: /mnt/project-files/jobs/keyword-roster-book-check-2026-11-11.md (122 Dark Ages powers, then eight lines' power lists).
 
+
+## 2026-11-11: map keywords for realm maps (B745)
+Ben found the realms too alike and asked for map keywords. Otherworlds 0.11.0: 22 keywords (forest, marsh, peaks, caves, sea, ash, ice, chasm, stars, ruins, towers, machines, web, tombs, gardens, fire, rot, storm, shifting, nihil, bones, crystal), each a cell step and a drawn mark; every realm has two to four; island form, caverns and a square city follow from the keywords; the age and some eras add keywords; an Extra keywords field in the Realm maps window, kept on the scene for redraws; the scene note lists them. Five new harness tests (realms sharing keywords share marks, unrelated ones share none, other seeds differ).
 ## 2026-11-11: the Storyteller's effect and saved rituals (WoDX Actions 3.31.0, B782)
 - Token tools button "Apply an effect or ritual" (Storyteller only): any keyword, strength, length, area, options, casting time, note; card applies with Undo.
 - Summon places tokens of a chosen actor where the Storyteller clicks; Make gives a chosen item; Undo deletes both.

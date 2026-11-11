@@ -235,3 +235,74 @@ test("realm maps are wired: a Storyteller toolbar button, the api, a searchable 
   assert.match(ui, /searchBox\("select\[name=realm\]"/);
   assert.match(ui, /searchBox\("select\[name=scene\]"/);
 });
+
+/* ---- 0.11.0: map keywords. Realms that share features share the look; the seed keeps them apart. */
+const marksOf = m => new Set(m.decor.map(d => d.k));
+const sameCells = (a, b) => a.cells.every((row, y) => row.every((t, x) => b.cells[y]?.[x] === t));
+
+test("map keywords: every realm draws with two to four known keywords, and every keyword is used", () => {
+  const used = new Set();
+  for ( const id of RM.REALM_ORDER ) {
+    const k = RM.parseKeys(RM.REALMS[id].keys);
+    assert.equal(k.length, RM.REALMS[id].keys.length, `${id}: every keyword known`);
+    assert.ok(k.length >= 2 && k.length <= 4, `${id}: two to four keywords`);
+    k.forEach(x => used.add(x.key));
+    RM.realmKeys(id, 2095, {future: true}).forEach(x => used.add(x.key)); // the ages add some (the Endless Winter's ice)
+    for ( const e of RM.REALMS[id].eras ) assert.equal(RM.parseKeys(e.keys ?? []).length, (e.keys ?? []).length, `${id}: era keywords known`);
+  }
+  assert.deepEqual([...used].sort(), Object.keys(RM.KEYWORDS).sort());
+  for ( const [k, v] of Object.entries(RM.KEYWORDS) ) assert.ok(v.label && v.about && typeof v.step === "function", k);
+});
+
+test("map keywords: written as a list, with weight 1 to 3; unknown words are dropped", () => {
+  assert.deepEqual(RM.parseKeys("forest:2, Ruins  bogus fire:9"), [{key: "forest", n: 2}, {key: "ruins", n: 1}, {key: "fire", n: 3}]);
+  assert.deepEqual(RM.parseKeys(["tombs", "tombs:2"]), [{key: "tombs", n: 2}]);
+  // The age adds its own: a Great Maelstrom year storms, the Endless Winter freezes
+  assert.ok(RM.realmKeys("labyrinth", 1916).some(k => k.key === "storm"));
+  assert.ok(RM.realmKeys("pangaea", 2095, {future: true}).some(k => k.key === "ice" && k.n === 2));
+  assert.ok(!RM.realmKeys("pangaea", 2095).some(k => k.key === "ice"));
+});
+
+test("map keywords: each one leaves its mark on the map, the same kind of mark in every realm", () => {
+  const cellOnly = new Set(["chasm", "gardens"]);
+  for ( const key of Object.keys(RM.KEYWORDS) ) for ( const realm of ["pangaea", "stygia", "tempest"] ) {
+    const plain = RM.generate({realm, seed: 11, year: 1600}), with2 = RM.generate({realm, seed: 11, year: 1600, keys: [`${key}:2`]});
+    assert.ok(with2.keys.includes(`${key}:2`) || with2.keys.includes(`${key}:3`), `${key} in ${realm}: listed`);
+    const mine = with2.decor.filter(d => d.key === key);
+    if ( !cellOnly.has(key) && !(key === "stars" && realm === "pangaea") ) assert.ok(mine.length > 0 || !sameCells(plain, with2), `${key} in ${realm}: marks or cells`);
+    else assert.ok(!sameCells(plain, with2) || mine.length > 0, `${key} in ${realm}: changes the cells`);
+    assert.match(RM.realmNote(with2), new RegExp(`Drawn with: .*${RM.KEYWORDS[key].label.replace(/[()]/g, ".")}`), `${key}: on the note`);
+  }
+});
+
+test("map keywords: realms with the same features look alike, but no two are the same", () => {
+  const st = RM.generate({realm: "stygia", seed: 5, year: 1700}), dk = RM.generate({realm: "dark-kingdom", seed: 5, year: 1700});
+  for ( const k of ["tower", "grave"] ) assert.ok(marksOf(st).has(k) && marksOf(dk).has(k), `the two Underworld cities share ${k}s`);
+  assert.ok(!sameCells(st, dk));
+  const pa = RM.generate({realm: "pangaea", seed: 5, year: 1700}), sc = RM.generate({realm: "summer-country", seed: 5, year: 1700});
+  assert.ok(marksOf(pa).has("tree") && marksOf(sc).has("tree") && marksOf(pa).has("reed") && marksOf(sc).has("reed"), "the wild realms share woods and reeds");
+  // Unrelated realms share no marks
+  const ae = RM.generate({realm: "aetherial", seed: 5, year: 1700}), ma = RM.generate({realm: "malfeas", seed: 5, year: 1700});
+  assert.equal([...marksOf(ae)].filter(k => marksOf(ma).has(k)).length, 0);
+  // The same realm and keywords from another seed: the same look, another map
+  const st2 = RM.generate({realm: "stygia", seed: 6, year: 1700});
+  assert.deepEqual([...marksOf(st2)].sort(), [...marksOf(st)].sort());
+  assert.ok(!sameCells(st, st2));
+});
+
+test("map keywords: some change the layout itself (island form, caverns, a square city)", () => {
+  const cx = 20, ys = RM.generate({realm: "yellow-springs", seed: 5, year: 1600, size: "medium"});
+  const street = ys.cells.filter(r => [RM.T.path].includes(r[cx + 5])).length;
+  assert.ok(street > ys.rows * 0.6, `a straight street five cells from the heart (${street})`);
+  const st = RM.generate({realm: "stygia", seed: 5, year: 1600});
+  assert.ok(st.cells.filter(r => r[cx + 5] === RM.T.path).length < street, "Stygia keeps its web");
+  // Caverns: no three-wide grid maze, so walkable cells meet in open runs
+  const lab = RM.generate({realm: "labyrinth", seed: 5, year: 1600}), at = RM.generate({realm: "atrocity", seed: 5, year: 1600});
+  // A cut maze keeps a pillar of rock at every third cell; grown caverns do not
+  const pillarsOpen = m => { let n = 0; for ( let y = 3; y < m.rows - 1; y += 3 ) for ( let x = 3; x < m.cols - 1; x += 3 ) if ( RM.walkable(m.cells[y][x]) ) n++; return n; };
+  assert.ok(pillarsOpen(lab) > pillarsOpen(at) + 10, `the Labyrinth's caverns are grown, not cut (${pillarsOpen(lab)} to ${pillarsOpen(at)})`);
+  // Island forms: square terraces for a Horizon Realm differ from the plain round islands
+  const hz = RM.generate({realm: "horizon-realm", seed: 5, year: 1600}), hz0 = RM.generate({realm: "horizon-realm", seed: 5, year: 1600, keys: []});
+  assert.ok(hz.keys.includes("gardens") && hz0.keys.includes("gardens"));
+  assert.ok(RM.svg(hz, {cell: 10}).includes("<g "), "the marks are drawn");
+});
