@@ -23,6 +23,7 @@ export const SOURCES = {
     frenzy: "Frenzy",
     attack: "An attack outside a fight",
     outcome: "A door or region outcome",
+    rivalry: "Rivals come to blows",
     hand: "The Storyteller"
 };
 
@@ -65,6 +66,17 @@ export function planStart(fights = [], ids = []) {
     const have = new Set(use?.tokenIds ?? []);
     const add = want.filter(id => !have.has(id));
     return {use: use?.id ?? null, add, start: !running, already: want.filter(id => have.has(id))};
+}
+
+/**
+ * Combat 3.10.0 (B822): each token's side in a fight that rivals started. sides: {tokenId: "a"|"b"} for the people
+ * named; kin: {namedId: [kin token ids]}. Kin stand with whoever brought them, unless already placed.
+ */
+export function sidesWithKin(sides = null, kin = {}) {
+    if (!sides) return null;
+    const out = { ...sides };
+    for (const [id, list] of Object.entries(kin ?? {})) for (const k of list ?? []) if (out[id] && !out[k]) out[k] = out[id];
+    return out;
 }
 
 /** Nothing to do: everyone named is in the running fight already, or fewer than two people are named. */

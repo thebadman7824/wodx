@@ -5,7 +5,7 @@ import * as AT from "./attitude-rules.mjs";
  * holds it, so every token of that NPC shares it. Changes go through WoDX Chronicle's approval queue as
  * "wodx-npc.attitude" (the Storyteller can approve that type automatically); the Storyteller's own changes apply at once.
  */
-export function build({MOD, chron, savedProfile, factions}) {
+export function build({MOD, chron, savedProfile, factions, rivalry = null}) {
   const TYPE = `${MOD}.attitude`;
   /** The world actor behind an actor or token (an unlinked token's NPC shares one attitude). */
   const worldOf = a => {
@@ -21,7 +21,15 @@ export function build({MOD, chron, savedProfile, factions}) {
   function seedFor(npc, charId) {
     let standing = {};
     try { standing = factions?.peopleOf?.(charId) ?? {}; } catch (e) { standing = {}; }
-    return AT.seedFrom({household: savedProfile(npc)?.household ?? "", factions: factionNamesOf(npc)}, standing);
+    const seed = AT.seedFrom({household: savedProfile(npc)?.household ?? "", factions: factionNamesOf(npc)}, standing);
+    if ( seed.from || !rivalry ) return seed;
+    // NPC 0.16.0 (B823): nothing from household or faction; a rival side the NPC recognises sets the first meeting
+    try {
+      const ch = game.actors.get(charId);
+      const r = ch ? rivalry.seedFor(npc, ch) : null;
+      if ( r ) return r;
+    } catch (e) { /* no rivalry */ }
+    return seed;
   }
   /** How the NPC regards the character now: {step, word, met, from}. */
   function of(npcLike, charLike) {

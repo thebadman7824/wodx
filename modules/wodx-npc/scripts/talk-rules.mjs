@@ -362,7 +362,7 @@ export function moreLine(kind, {more, era = "modern", regard = "neutral", seed =
   if ( !more ) return null;
   const w = warmthOf(regard), [k, a, b] = String(kind).split(":");
   if ( k === "farewell" ) return pickLine(more.FAREWELL?.[era]?.[w], seed);
-  if ( k === "cry" ) return a === "hurt" ? pickLine(more.CRY_HURT, seed) : pickLine(more.CRY_ALARM?.[era], seed);
+  if ( k === "cry" ) return a === "hurt" ? pickLine(more.CRY_HURT, seed) : a === "threat" ? pickLine(more.CRY_THREAT?.[era], seed) : pickLine(more.CRY_ALARM?.[era], seed);
   if ( k === "bark" ) return pickLine([...(more.BARK_ERA?.[era]?.[a] ?? []), ...(more.BARK?.[a] ?? [])], seed);
   if ( k === "trade" ) {
     if ( a === "open" ) return pickLine(more.TRADE?.open?.[w], seed);
