@@ -310,3 +310,22 @@ export const SENSE_LOSS = {blind: "sight", deaf: "sound"};
 
 /** Senses channels a trait opens (house reading of V20 Medium and Deathsight; channel lines are in WoDX Senses). */
 export const SENSE_CHANNELS = {medium: "restless", deathsight: "deathsight"};
+
+/**
+ * Step 5 (Chronicle 0.20.0): how a trait moves an NPC's first regard for the character (pattern P7), read by WoDX NPC
+ * when the two first meet. delta: steps on NPC attitude (-3 Hunted to +3 Honoured). againstKinds: only NPCs of these
+ * kinds react (the Masquerade flaws unsettle mortals, not other Kindred). House readings of V20 core pp. 480-495 printed.
+ */
+export const ATTITUDE = {
+  "friendly-face": {delta: 1},
+  "harmless": {delta: 1},
+  "inoffensive-to-animals": {delta: 1, againstKinds: ["beast"]},
+  "disfigured": {delta: -1, againstKinds: ["mortal"]},
+  "deformity": {delta: -1, againstKinds: ["mortal"]},
+  "monstrous": {delta: -2, againstKinds: ["mortal"]},
+  "smell-of-the-grave": {delta: -1, againstKinds: ["mortal"]},
+  "glowing-eyes": {delta: -1, againstKinds: ["mortal"]},
+  "eerie-presence": {delta: -1, againstKinds: ["mortal"]},
+  "lord-of-the-flies": {delta: -1, againstKinds: ["mortal"]},
+  "cold-breeze": {delta: -1, againstKinds: ["mortal"]}
+};

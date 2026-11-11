@@ -28,7 +28,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.18.1";
+const VERSION = "0.19.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -189,6 +189,8 @@ export function readFight(tok, combat = game.combat) {
       selfcontrol: num(adv.virtues?.selfcontrol?.permanent) || 3, rage: num(adv.rage?.temporary), rageMax: num(adv.rage?.permanent),
       hasPowers: actor.items.some(i => i.type === "Power"), inFrenzy: !!s.conditions?.isfrenzy || !!chron()?.conditions?.hasCondition?.(actor, "frenzy"),
       rotschreck: !!chron()?.conditions?.hasCondition?.(actor, "rotschreck"),
+      // A Fear keyword from WoDX Actions (Traits With Teeth step 5): the NPC keeps away and flees
+      afraid: !!(actor?.effects ?? []).find?.(e => !e.disabled && e.flags?.["wodx-chronicle"]?.timed?.key === "wodx-effect-fear" && e.name === "Afraid"),
       delirious: kind === "mortal" && E.some(e => e.visible && e.fearSources.includes("crinos")), onGround: onOwnGround(actor)},
     enemies: E, allies: AL, offstageAllies: offstage.length, witnesses: witnessesOf(tok, combat),
     bestAttackDice: Math.max(0, ...visiblePlans.map(p => p.atkDice ?? 0)),
@@ -203,6 +205,7 @@ export function planTurn(tok, combat = game.combat) {
   const profile = profileFor(actor);
   const fight = readFight(tok, combat);
   let options = NR.scoreOptions(profile, fight.state);
+  if ( fight.state.self.afraid && !fight.state.self.rotschreck ) options.unshift({action: "flee", score: 98, why: "Afraid: a power has filled them with fear of the caster"});
   if ( fight.state.self.rotschreck ) options.unshift({action: "flee", score: 99, why: "Rötschreck: the Red Fear drives them from fire or sunlight"});
   const topAttack = options.find(o => o.action === "attack" || o.action === "shoot");
   options = options.map(o => {
