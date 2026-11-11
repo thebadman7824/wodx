@@ -301,7 +301,8 @@ export function listen(sheet, root) {
     const a = ev.target.closest(".wodx-act"); if ( !a ) return;
     ev.preventDefault(); ev.stopPropagation();
     const it = itemOf(a), act = a.dataset.act, F = it?.flags?.[MOD] ?? {};
-    if ( act === "fold" ) { a.closest(".wodx-poss-row")?.nextElementSibling?.classList.toggle("wodx-folded"); return; }
+    if ( act === "fold" ) { const row = a.closest(".wodx-poss-row"); row?.parentElement?.querySelector(`:scope > .wodx-poss-contents[data-in="${row.dataset.wodxItem}"]`)?.classList.toggle("wodx-folded"); return; }
+    if ( act === "desc" ) { const row = a.closest(".wodx-poss-row"), d = row?.parentElement?.querySelector(`:scope > .wodx-poss-desc[data-desc-of="${row.dataset.wodxItem}"]`); if ( d ) { d.hidden = !d.hidden; a.setAttribute("aria-expanded", String(!d.hidden)); } return; }
     if ( act === "open" ) return it?.sheet?.render(true);
     if ( !editable ) return;
     switch ( act ) {

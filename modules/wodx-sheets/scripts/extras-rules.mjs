@@ -210,7 +210,7 @@ export function possessions(items, {look = () => ({}), era = null, year = 0} = {
       id: it.id, name: it.name, qty: qtyOf(it), kind: groupOf(it), depth, isContainer: isContainer(it),
       holds: isContainer(it) ? CONCEAL[holdsOf(it)].label : "", era: st, eraNote: st && st !== "ok" ? ERA_NOTE[st] : "",
       value: tier === null ? "" : TIERS[Math.max(0, Math.min(5, tier))], equipped: !!(it.system?.isequipped || it.system?.isactive),
-      contents: kids, count: kids.reduce((n, k) => n + 1 + k.count, 0)
+      desc: plainDesc(it.system?.description), contents: kids, count: kids.reduce((n, k) => n + 1 + k.count, 0)
     };
   };
   // Anything whose container is gone is loose again
@@ -220,6 +220,11 @@ export function possessions(items, {look = () => ({}), era = null, year = 0} = {
   return {groups, count: list.length, outOfEra: list.filter(i => { const s = eraStatus(look(i)?.eraInfo ?? null, era, year); return s && s !== "ok" && !isKept(i); }).length};
 }
 const byName = (a, b) => a.name.localeCompare(b.name);
+/** An item's description as plain text for the Possessions fold (0.8.2), cut at 600 characters. */
+export function plainDesc(html) {
+  const t = String(html ?? "").replace(/<br\s*\/?>|<\/p>/gi, " ").replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, " ").trim();
+  return t.length > 600 ? `${t.slice(0, 597)}...` : t;
+}
 
 /* -------------------------------------------------------------- */
 /*  The in-play strip                                              */

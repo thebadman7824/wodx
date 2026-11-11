@@ -1509,3 +1509,7 @@ Ben approved the ownership proposal (all five parts). Numbered 0.27.0 because ma
 - Interactables: sends wodxItemsTaken after a take; the Interact window marks what is yours or someone's.
 - Tests: ownership.test.mjs (rules, every era), ownership-foundry.test.mjs (the Foundry side on stand-ins).
 - Still to do: the building kit maps (a PC job: one map per kit key, exported from Dungeondraft and imported as scenes flagged wodx-storyteller.kit).
+
+## 2026-11-11: Description folds in Possessions (Sheets 0.8.2, B610)
+
+The Possessions tab shows each item's description in a fold under its row, closed by default, opened with an info button by the name.

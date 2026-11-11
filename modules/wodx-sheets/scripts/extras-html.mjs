@@ -32,8 +32,8 @@ function rowHtml(r, editable) {
     </span>` : "";
   const head = `<div class="wodx-poss-row${r.isContainer ? " is-container" : ""}${r.eraNote ? " off-era" : ""}" data-search-item data-wodx-item="${esc(r.id)}" draggable="${editable}"${pad}>
     ${r.isContainer ? `<a class="wodx-act wodx-fold" data-act="fold" title="Open or close"><i class="fa-solid fa-caret-down"></i></a>` : `<span class="wodx-fold-pad"></span>`}
-    ${qty}<a class="wodx-poss-name wodx-act" data-act="open">${esc(r.name)}</a>${r.equipped ? ` <i class="fa-solid fa-hand wodx-quiet" title="In hand or worn"></i>` : ""}
-    ${box}${value}${era}${tools}</div>`;
+    ${qty}<a class="wodx-poss-name wodx-act" data-act="open">${esc(r.name)}</a>${r.desc ? ` <a class="wodx-act wodx-desc-fold" data-act="desc" title="Show or hide the description" aria-expanded="false"><i class="fa-solid fa-circle-info"></i></a>` : ""}${r.equipped ? ` <i class="fa-solid fa-hand wodx-quiet" title="In hand or worn"></i>` : ""}
+    ${box}${value}${era}${tools}</div>${r.desc ? `<div class="wodx-poss-desc" data-desc-of="${esc(r.id)}" hidden${pad ? ` style="padding-left:${r.depth * 18 + 32}px"` : ""}>${esc(r.desc)}</div>` : ""}`;
   const kids = r.contents.length ? `<div class="wodx-poss-contents" data-in="${esc(r.id)}">${r.contents.map(k => rowHtml(k, editable)).join("")}</div>`
     : r.isContainer ? `<div class="wodx-poss-contents wodx-quiet" data-in="${esc(r.id)}" style="padding-left:${(r.depth + 1) * 18 + 20}px">Empty. Drag things here.</div>` : "";
   return head + kids;

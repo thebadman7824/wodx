@@ -89,3 +89,17 @@ test("examine: names and descriptions say plainly what a thing is; origin and hi
   assert.ok(pass.some(l => /forgery/.test(l.text) && l.secret));
   assert.ok(!pass.some(l => l.text === "Nothing about it is false."));
 });
+
+test("examine: a possession's description sits in a fold under its row that starts closed (Sheets 0.8.2)", async () => {
+  const R = await imp("modules/wodx-sheets/scripts/extras-rules.mjs");
+  const H = await imp("modules/wodx-sheets/scripts/extras-html.mjs");
+  assert.equal(R.plainDesc("<p>A thin gold coin &amp; more.</p>"), "A thin gold coin & more.");
+  assert.equal(R.plainDesc("x".repeat(700)).length, 600);
+  const items = [{id: "i1", name: "a gold dinar", type: "Item", system: {description: "<p>A thin gold coin.</p>"}, flags: {}},
+    {id: "i2", name: "a spade", type: "Item", system: {description: ""}, flags: {}}];
+  const view = R.possessions(items);
+  const html = H.possessionsHtml(view, {money: {coins: [], inUse: ["Pfennig"], carried: 0, bank: 0}});
+  assert.match(html, /data-act="desc"[^>]*aria-expanded="false"/);
+  assert.match(html, /<div class="wodx-poss-desc" data-desc-of="i1" hidden>A thin gold coin\.<\/div>/);
+  assert.equal((html.match(/data-act="desc"/g) ?? []).length, 1, "no fold for an item with no description");
+});

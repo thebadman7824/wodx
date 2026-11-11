@@ -439,6 +439,9 @@ Every item sheet has an Examine button: the description, then the facts WoDX kee
 ## B609. Plain names; origins and secrets on a closer look (2026-11-11)
 Ben (16:48Z): qualifiers such as "Chinese" or "from a Muslim mint" move into examining; a description says plainly what a thing is, and origin or special features come out when the player looks closer. 67 goods are renamed (a gold dinar, a square-holed copper coin, a pair of gaming dice, a passport in a plastic sleeve) and keep their old ids, so marks, stock lists and older items still find them (goods.mjs RENAMED). Descriptions lose origins and hidden facts; each good can carry details (goods-text.mjs DETAIL_RAW) that a closer look opens: special features at 1 success, origin at 2, what is false or hidden at 3. Library 0.7.1.
 
+## B610. Descriptions fold on the Possessions tab (2026-11-11)
+Ben worried that descriptions would clutter the inventory. On WoDX Sheets' Possessions tab, an item with a description shows a small info button beside its name; the description sits in a fold under the row, closed whenever the sheet opens, and the button opens or closes it. Items with no description show no button. The container fold now opens only its own contents. Sheets 0.8.2.
+
 ## B582. Burgage plots (2026-11-10)
 Houses get long plots behind them, by ward: slum 4 to 7 squares deep, market, administration and gate 10 to 14, craftsmen 10 to 16, merchant 12 to 18, patriciate and outside the gates 14 to 20, villages 16 to 24 (a house rule). Chapels, guardhouses and barns get none. Two frontages are not built back to back closer than 16 squares (villages 24) except in slum and craftsmen wards, which keep their courts.
 
