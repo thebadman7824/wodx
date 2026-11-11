@@ -642,8 +642,8 @@ async function ambushFirst({ attacker, attackerTok, target, targetTok, fd }) {
         attackerFighting: fighting(aDoc), targetFighting: fighting(tDoc) };
     if (!AM.isAmbush(s)) return true;
     const book = darkAgesNow() ? "v20da" : "v20";
-    const ar = await rollPool(attr(attacker, "dexterity") + ability(attacker, "stealth"), AM.DIFFICULTY);
-    const tr = await rollPool(attr(target, "perception") + ability(target, "alertness"), AM.DIFFICULTY);
+    const ar = await rollPool(attr(attacker, "dexterity") + ability(attacker, "stealth").value, AM.DIFFICULTY);
+    const tr = await rollPool(attr(target, "perception") + ability(target, "alertness").value, AM.DIFFICULTY);
     const out = AM.ambushOutcome(ar.botch ? 0 : ar.successes, tr.botch ? 0 : tr.successes, book);
     if (!out.defend) fd.defense = "none";
     if (out.bonusDice) fd.extraDice = (Number(fd.extraDice) || 0) + out.bonusDice;
@@ -1380,7 +1380,7 @@ Hooks.once("init", () => {
     ST.registerStartSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.11.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.11.1", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

@@ -77,6 +77,7 @@ export async function run() {
       ok("hunts: a card", res?.done === "suggested" && f?.source === "rivalry" && f?.sides?.[wolf.id] && f.sides[wolf.id] !== f.sides[leech.id], {done: res?.done, why: f?.why, sides: f?.sides});
     });
     await step("start the fight", async () => {
+      await until(() => document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-go`), 4000);
       const el = document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-go`);
       if ( el ) el.click();
       await until(() => fightsHere().some(c => c.started), 6000);
@@ -123,7 +124,7 @@ export async function run() {
       const p2 = npcApi().openRivalries();
       await until(() => document.querySelector(".wnpc-rivals"), 4000);
       const r = document.querySelectorAll(".wnpc-rivals input[type='checkbox']").length;
-      document.querySelector(".wodx-npc-dialog button[data-action='cancel']")?.click();
+      document.querySelector(".wnpc-rivals")?.closest(".application")?.querySelector("button[data-action='cancel']")?.click();
       await p2;
       ok("windows", b && r >= 60, {behaviour: b, rows: r});
     });
