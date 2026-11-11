@@ -74,7 +74,7 @@ D = {
 'wawwcore-storm-eater-birth':(1830,1839,'1830s','wawwcore',65,1),
 'wawor-shadow-curtain':(1990,1993,'early 1990s','wawor',72,1),
 'wawor-death-of-baba-yaga':(1998,None,'1998','wawor',77,0),
-'whier-anacreon-revolts':(1931,None,'from 1 February 1931','whier',44,0),
+'whier-anacreon-revolts':(1931,None,'from 1 February 1931; most Necropoli drift away after Charon is lost in 1945','whier',44,0),
 'wda-eclipse-1230':(1230,None,'May 1230','wtda',19,0),
 'cbs-egypt':(-1799,-1600,'18th century BC, then 200 years of Hyksos rule','cbsetite',None,1),
 'daf-war-of-seasons':(300,399,'ended in the 300s AD','dafae',25,1),

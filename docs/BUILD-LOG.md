@@ -1518,3 +1518,6 @@ Ben asked for the ambush rule, then a Live release. Combat 3.11.0: ambush-rules.
 
 ## 2026-11-11: Dungeondraft to Foundry in one click
 Ben asked for one-click mapmaking with our Dungeondraft assets and chose a Dungeondraft mod plus a PC watcher. tools/ddmod/: the WoDX Export mod (export this map, or every map in its folder, as Universal VTT at 100 px a square), wodx-watch.ps1 (stages each new export under Data\wodx-maps and runs the import), and tools/gate/mapimport.mjs (scene, walls, doors, lights, then Adopt, rothenstein-wodx only). Universal VTT, not PNG, because the WoDX file holds openings but not plain walls. New harness test mapimport.test.mjs. The mod is untried in Dungeondraft yet.
+
+## 2026-11-11: The approved era timelines agree with each other
+Ben approved all 291 timeline cards and asked for a deconfliction. docs/research/era-timelines/deconflict.py reads every card beside the others on the same subject and the dated tables in Chronicle, Otherworlds and NPC, and writes timeline-approved-2026-11-11.json (289 cards: 5 edited, 2 dropped). Encyclopaedia: the Fragile Path entry loses its 1330 start for the Ascension War, the Lupine War entry gets a WoDX note on Lodin, the Anacreon revolts date is reworded (Library 0.7.2). Rivalries: Anarch Revolt 1381-1492, Accordance War 1969-1973 (NPC 0.18.2). Report DECONFLICT-2026-11-11.md; decision B861.
