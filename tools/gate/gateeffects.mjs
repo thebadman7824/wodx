@@ -1,5 +1,5 @@
 /**
- * Mage effect keywords gate (WoDX Actions 3.25.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Mage effect keywords gate (WoDX Actions 3.26.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateeffects.mjs?${Date.now()}`)).run()
  * Makes a caster and a target actor, applies keyword results straight through the apply step, undoes them,
  * posts one keyword card for the Storyteller's client to apply, then deletes what it made.
@@ -14,6 +14,7 @@
  *   9. an area works on a token inside it once, on one standing outside only when it walks in, and Undo removes it
  *  10. a rote is saved as a Rote item on the caster, replaced by name, and forgotten
  *  12. a held card waits; countermagick cuts its successes, then a reflected counter turns it on the caster
+ *  13. a Dark Ages rote's card: Verdant Slumber hurts, Self Possession is a timed effect, a summoning stays the Storyteller's
  *  11. a Rote item opens the WoDX Cast window filled in (a Mage 20th era), or is left to the system's dialog (Dark Ages)
  * Result: Data/wodx-gate/gateeffects-result.json.
  */
@@ -44,7 +45,7 @@ export async function run() {
 
     await step("1 api, setting, on here", async () => {
       const mode = game.settings.get(MOD, "effectsApply");
-      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.25.0", {mode});
+      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.26.0", {mode});
     });
 
     await step("2 Harm and Undo", async () => {
@@ -187,6 +188,21 @@ export async function run() {
       await fx().undo(m.flags?.[MOD]?.undo ?? []);
       await target.update({"system.quintessence.temporary": q0});
       ok("12 countermagick on a card", waited && cut && back, {waited, a, b});
+    });
+    await step("13 a Dark Ages rote", async () => {
+      const DA = game.modules.get(MOD).api.daMageRules ?? (await import(`/modules/${MOD}/scripts/mage-da-rules.js?${Date.now()}`));
+      const rote = id => DA.ROTES.find(r => r.id === id);
+      const before = dmg(caster);
+      const harm = game.modules.get(MOD).api.effects.daPlan(caster, rote("verdantslumber"), 2);
+      const recs = [];
+      for ( const it of harm?.items ?? [] ) if ( it.route === "auto" ) recs.push(await fx().apply(it, caster.name));
+      const hurt = sum(dmg(caster)) > sum(before) || recs.some(r => r?.health);
+      const ward = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-selfpossess"), 2);
+      const wr = ward.items[0]?.route === "auto" ? await fx().apply(ward.items[0], caster.name) : null;
+      const timed = !!(wr?.effect && fromUuidSync(wr.effect));
+      const st = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-72names"), 4).items.every(i => i.route === "st");
+      await fx().undo([...recs, wr].filter(Boolean));
+      ok("13 a Dark Ages rote", hurt && timed && st && sum(dmg(caster)) === sum(before), {hurt, timed, st, routes: harm?.items?.map(i => i.route)});
     });
     if ( toks.length ) await scene.deleteEmbeddedDocuments("Token", toks.map(t => t.id)).catch(() => {});
   } catch (e) { R.errors.push(e.message); }

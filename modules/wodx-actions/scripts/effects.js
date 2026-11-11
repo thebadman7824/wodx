@@ -6,6 +6,7 @@
  * World setting "Magic that applies itself": Automatic (on, except in the Live world), On, Off. Rules: effects-rules.js.
  */
 import * as E from "./effects-rules.js";
+import * as DAE from "./mage-da-effects.js";
 export { E };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -187,6 +188,34 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
   // A target who is a mage may counter first: the card waits for countermagick or the Storyteller's Apply now
   const hold = isOn() && !t.self && t.docs.some(d => E.canCounter((d?.actor ?? d)?.system));
   return {items, html, base, need: E.needFor(form.keywords, {self: t.self, feat, plan: form.plan}), got, recipe, hold};
+}
+
+/**
+ * A Dark Ages rote's card items (3.26.0): what the rote does with its successes, on the caster or the targets, routed as
+ * any keyword result. Returns {items, html}.
+ */
+export function daPlan(actor, rote, successes) {
+  const results = DAE.daOutcomes(rote, successes);
+  if ( !results.length ) return {items: [], html: ""};
+  const t = targetsOf(actor);
+  const own = actor?.getActiveTokens?.()?.[0]?.document ?? actor;
+  const items = [];
+  for ( const r of results ) {
+    const k = DAE.targetCount(r.who, successes, t.self ? 0 : t.docs.length);
+    const docs = r.who === "self" || !k ? [own] : t.docs.slice(0, k);
+    const self = r.who === "self" || t.self;
+    for ( const d of docs ) {
+      const a = d?.actor ?? d;
+      let route = !isOn() ? "off" : r.st ? "st" : E.route(r.key, {self, playerCharacter: !!a?.hasPlayerOwner, count: docs.length, need: 0}, r.out);
+      if ( r.ask && route === "auto" ) route = "queue";
+      if ( route === "auto" && r.out.kind === "move" ) route = "pick";
+      items.push({key: r.key, out: r.out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route});
+    }
+  }
+  const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply", pick: "goes where the Storyteller clicks"};
+  const html = `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
+    `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul></div>`;
+  return {items, html};
 }
 
 /** The card's list, written from its flags (so countermagick can change it). */

@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.25.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.26.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -160,4 +160,38 @@ test("3.25.0: countermagick takes successes off the card; reflected, the rest la
   assert.match(fx, /data\.hold \|\| !isActiveGM\(\)/); assert.match(fx, /kind === "counter"/); assert.match(fx, /export async function applyCounter/);
   const m20 = src("modules/wodx-actions/scripts/m20.js");
   assert.match(m20, /kind: "counter", card: card\.id/); assert.match(m20, /recipe: fx\.recipe, hold: fx\.hold/);
+});
+
+test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it to the Storyteller", async () => {
+  const M = await import(join(root, "modules/wodx-actions/scripts/mage-da-rules.js"));
+  const D = await import(join(root, "modules/wodx-actions/scripts/mage-da-effects.js"));
+  assert.equal(M.ROTES.length, 97);
+  for ( const r of M.ROTES ) {
+    const spec = D.DA_EFFECTS[r.id];
+    assert.ok(spec, `no entry for ${r.id}`);
+    assert.ok(E.KEYWORDS[spec.kw], `${r.id}: unknown keyword ${spec.kw}`);
+    assert.ok(["harm", "timed", "condition", "move", "note", "st"].includes(spec.kind), r.id);
+    const outs = D.daOutcomes(r, 3);
+    assert.ok(outs.length >= 1, r.id);
+    for ( const o of outs ) assert.ok(o.out.label && o.out.text && ["damage", "timed", "condition", "move", "note"].includes(o.out.kind), r.id);
+  }
+  assert.equal(Object.keys(D.DA_EFFECTS).length, 97);
+  const by = id => M.ROTES.find(r => r.id === id);
+  // damage straight from the rote's own system
+  assert.deepEqual(D.daOutcomes(by("verdantslumber"), 2).map(o => [o.out.levels, o.out.type]), [[2, "aggravated"]]);
+  assert.deepEqual(D.daOutcomes(by("g-tearsallah"), 3).map(o => [o.out.levels, o.out.type]), [[3, "lethal"], [3, "bashing"]]);
+  assert.equal(D.daOutcomes(by("shatteringvoid"), 2)[0].ask, true);
+  // lengths: the p. 103 ladder, the scene, to dawn, per success
+  assert.deepEqual(D.daDuration(1).timed, {kind: "rounds", rounds: 1});
+  assert.equal(D.daDuration(4).timed.seconds, 30 * 86400);
+  assert.equal(D.daDuration(6).timed, null);
+  assert.deepEqual(D.daOutcomes(by("g-glamour"), 2)[0].out.timed, {kind: "night"});
+  assert.deepEqual(D.daOutcomes(by("g-antics"), 3)[0].out.timed, {kind: "rounds", rounds: 6});
+  assert.equal(D.daOutcomes(by("g-skogarmathur"), 2)[0].out.timed.seconds, 14 * 86400);
+  assert.equal(D.daOutcomes(by("g-battlesmite"), 2)[0].out.condition, "blinded");
+  assert.equal(D.daOutcomes(by("g-72names"), 4)[0].st, true);
+  assert.deepEqual(D.daOutcomes(by("verdantslumber"), 0), []);
+  assert.deepEqual([D.targetCount("self", 3, 2), D.targetCount("one", 3, 2), D.targetCount("each", 3, 5), D.targetCount("each", 3, 2), D.targetCount("all", 1, 4)], [0, 1, 3, 2, 4]);
+  const da = src("modules/wodx-actions/scripts/mage-da.js");
+  assert.match(da, /EF\.daPlan\(actor, rote, out\.successes\)/); assert.match(da, /kind: "effects", caster: actor\.name, items: fxItems/);
 });

@@ -1379,3 +1379,9 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - Item 5 of "Magic that applies itself". B766.
 - effects-rules.js: countered, canCounter. effects.js: the card's recipe and hold, applyCounter (undo, cut, work out again, reflect), the Countermagick and Apply now buttons, the list redrawn from the flags. m20.js: counter(actor, {card}) posts a counter result the active Storyteller applies to the card.
 - Tests: effects.test.mjs (11). Gate gateeffects.mjs 12 steps.
+
+## 2026-11-11: The Dark Ages rotes on the table (Actions 3.26.0)
+- Item 6 of "Magic that applies itself". B767.
+- modules/wodx-actions/scripts/mage-da-effects.js (pure): DA_EFFECTS for all 97 rotes, daDuration (p. 103 ladder), lastsFor, daOutcomes, targetCount.
+- effects.js daPlan; mage-da.js posts a successful rote's card with the same items, so the active Storyteller applies them with Undo, queues the rest and lists the Storyteller's calls.
+- Tests: effects.test.mjs (12). Gate gateeffects.mjs 13 steps.
