@@ -1440,5 +1440,5 @@ Ben approved the first group of building types from the Cataclysm: Dark Days Ahe
 - Page check queued: /mnt/project-files/jobs/keyword-roster-book-check-2026-11-11.md (122 Dark Ages powers, then eight lines' power lists).
 
 
-## 2026-11-11: map keywords for realm maps (B740)
+## 2026-11-11: map keywords for realm maps (B745)
 Ben found the realms too alike and asked for map keywords. Otherworlds 0.11.0: 22 keywords (forest, marsh, peaks, caves, sea, ash, ice, chasm, stars, ruins, towers, machines, web, tombs, gardens, fire, rot, storm, shifting, nihil, bones, crystal), each a cell step and a drawn mark; every realm has two to four; island form, caverns and a square city follow from the keywords; the age and some eras add keywords; an Extra keywords field in the Realm maps window, kept on the scene for redraws; the scene note lists them. Five new harness tests (realms sharing keywords share marks, unrelated ones share none, other seeds differ).
