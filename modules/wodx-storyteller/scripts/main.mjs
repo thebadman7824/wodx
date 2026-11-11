@@ -38,6 +38,7 @@ import * as Dash from "./dashboard.mjs";
 import * as PreludeRules from "./prelude-rules.mjs";
 import * as Hand from "./hand.mjs";
 import * as Between from "./between.mjs";
+import * as Teleport from "./teleport.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -74,6 +75,8 @@ Hooks.once("init", () => {
   Hand.registerHandKeys();
   Between.registerBetweenSettings();
   Between.registerBetweenTools();
+  Teleport.registerTeleportKeys();
+  Teleport.registerTeleportHooks();
   game.keybindings?.register?.(C.MOD, "downtime", {name: "Downtime request", editable: [], onDown: () => { Between.downtimeDialog(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "dashboard", {name: "The Storyteller's dashboard", editable: [], onDown: () => { Dash.DashboardApp.open(); return true; }, restricted: true});
@@ -121,6 +124,7 @@ Hooks.once("ready", () => {
       extras: Between.makeExtras, extrasDialog: Between.extrasDialog, hooks: Between.hooksFor, hooksDialog: Between.hooksDialog, willpowerForNature: Between.willpowerForNature,
       absent: Between.absentMap, setAbsent: Between.setAbsent, absentDialog: Between.absentDialog, recapDraft: Between.recapDraft, postRecap: Between.postRecap, recapDialog: Between.recapDialog,
       downtime: Between.requestDowntime, downtimeDialog: Between.downtimeDialog},
+    teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
     draw: Night.drawChooser, nightRules: Night.N
   };
   const mod = game.modules.get(C.MOD);
@@ -200,6 +204,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Hand.handDialog()};
   tokens.tools.wodxDowntime = {name: "wodxDowntime", title: "Downtime request (what your character does between sessions)", icon: "fa-solid fa-bed", order: 124,
     button: true, visible: true, onChange: () => Between.downtimeDialog()};
+  tokens.tools.wodxTeleport = {name: "wodxTeleport", title: "Teleport the selected tokens (then click the map; Alt+Shift+P sends them to the cursor)", icon: "fa-solid fa-person-through-window", order: 125,
+    button: true, visible: game.user.isGM, onChange: () => Teleport.arm()};
   tokens.tools.wodxDraw = {name: "wodxDraw", title: "Draw for the story (tonight, a story aid, an Otherworld journey)", icon: "fa-solid fa-dice-d20", order: 119,
     button: true, visible: game.user.isGM, onChange: () => Night.drawChooser()};
 });

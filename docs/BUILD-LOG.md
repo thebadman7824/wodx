@@ -1280,3 +1280,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - New test: a town grown to 1950 has a railway, station, ring road, quay and suburb, era mid-century; the medieval town has none.
 - Known gaps: every building is still a medieval type (no later building packs), and towns lose houses to the new ways rather than growing denser.
 - Sample linberg redrawn.
+
+## 2026-11-11: teleport to the cursor (Storyteller 0.21.0)
+- Storyteller-only token toolbar button: press it, then click the map, and the selected tokens jump there (right click or Escape cancels). Key Alt+Shift+P sends them to the cursor at once.
+- Jumps use a displacement move (no walls, no path, no animation), snapped to the grid unless gridless, kept inside the scene. A group keeps its shape around the point. Elevation and level unchanged.
+- teleport-rules.mjs (where each token lands) with teleport.test.mjs; api game.wodx.storyteller.teleport.
