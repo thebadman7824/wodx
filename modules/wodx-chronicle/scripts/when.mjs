@@ -21,7 +21,7 @@ export const eraIds = () => eras.profiles().map(p => String(p.id).toLowerCase())
 
 /** The world now: year, era, hour, night, moon, church day, Future Darkness branch. */
 export function worldContext(time = game.time.worldTime) {
-  const out = {};
+  const out = {time: Number(time)};
   try {
     const d = describeTime(time, setting("latitude"));
     Object.assign(out, {year: d.year, hour: d.hour, night: !!d.isNight, moon: d.moon?.name ?? "", date: d.dateLabel});
@@ -71,6 +71,8 @@ export function actorContext(actor) {
   const path = adv.path ?? {};
   return {
     pc: !!actor.hasPlayerOwner, name: actor.name ?? "", kind, fields, factions, standing,
+    // Won social rolls (WoDX Actions' "With this person"), read off the flags so it works with Actions off
+    sways: Array.isArray(actor.flags?.["wodx-actions"]?.sways) ? actor.flags["wodx-actions"].sways : [],
     items: [...(actor.items ?? [])].map(i => i.name),
     codex: codex ? [...(codex.pages ?? [])].map(p => p.name) : [],
     conditions: [...conds],
@@ -84,10 +86,19 @@ export function actorContext(actor) {
   };
 }
 
-/** The full context for a check. opts: {actor, token, scene, time}. */
-export function contextFor({actor = null, token = null, scene = null, time} = {}) {
+/** The NPC a check is about (a talk line, a social roll): its id, name and attitude toward the character. */
+export function npcContext(npc, actor) {
+  const n = npc?.actor ?? npc;
+  if ( !n?.id ) return null;
+  let attitude = null;
+  try { attitude = api("wodx-npc")?.attitude?.of?.(n, actor)?.step ?? null; } catch (e) { attitude = null; }
+  return {id: n.id, name: n.name ?? "", attitude};
+}
+
+/** The full context for a check. opts: {actor, token, scene, time, npc}. */
+export function contextFor({actor = null, token = null, scene = null, time, npc = null} = {}) {
   const a = actor ?? token?.actor ?? null;
-  return {...worldContext(time ?? game.time.worldTime), actor: actorContext(a), scene: scene?.name ?? token?.parent?.name ?? canvas?.scene?.name ?? ""};
+  return {...worldContext(time ?? game.time.worldTime), actor: actorContext(a), npc: a ? npcContext(npc, a) : null, scene: scene?.name ?? token?.parent?.name ?? canvas?.scene?.name ?? ""};
 }
 
 /** Check an "Only when" text. Returns when-rules' {ok, failed, unknown, problems}. */

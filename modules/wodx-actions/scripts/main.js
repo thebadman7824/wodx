@@ -57,6 +57,8 @@ import * as ZXD from "./m20.js";
 import * as ZR from "./m20-rules.js";
 import * as CNR from "./consensus-rules.js";
 import * as CK from "./checks-rules.js";
+import * as SOR from "./social-rules.js";
+import * as SOD from "./social.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -528,7 +530,7 @@ const PRESETS = {
     seduction: { label: "Seduction → use the Seduction action", redirect: "seduction" }
 };
 
-Object.assign(PRESETS, PM.EXTRA_PRESETS, CK.asPresets());
+Object.assign(PRESETS, PM.EXTRA_PRESETS, CK.asPresets(), SOR.PRESETS);
 
 /** The pool a list of [attribute, ability] pairs gives this character (common checks and preset alternatives). */
 function pickPool(actor, pools) {
@@ -1797,7 +1799,7 @@ async function diablerieStep(actor, victim, html = "", msg = null) {
 /*  Seduction (p. 339)                                                 */
 /* ================================================================== */
 
-export async function seduction({ actor: a, target: t } = {}) {
+export async function seduction({ actor: a, target: t, onDone = null } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const target = targetActor(t);
@@ -1823,11 +1825,18 @@ export async function seduction({ actor: a, target: t } = {}) {
             const r = await rollPool(dice, R.clampDifficulty(diff + aura));
             rolls.push(r.roll);
             html += rollBlock(`${name}: ${cap(at)} + ${cap(ab)}`, r, [`difficulty ${diff}${aura ? ` ${aura > 0 ? "+" : ""}${aura} aura` : ""}`, carry ? `+${carry} carried` : ""].filter(Boolean));
-            if (!r.successes) { html += `<div class="vta-big bad">${r.botch ? botch : fail}</div>`; return post(actor, `${actor.name}: seduction`, html, rolls); }
+            if (!r.successes) {
+                html += `<div class="vta-big bad">${r.botch ? botch : fail}</div>`;
+                const m = await post(actor, `${actor.name}: seduction`, html, rolls);
+                try { await onDone?.(r.botch ? "botch" : "lose"); } catch (e) { console.error(e); }
+                return m;
+            }
             carry = Math.max(0, r.successes - 1);
         }
         html += `<div class="vta-big good">Enamored: the subject agrees to go somewhere private.</div>`;
-        return post(actor, `${actor.name}: seduction`, html, rolls);
+        const m = await post(actor, `${actor.name}: seduction`, html, rolls);
+        try { await onDone?.("win"); } catch (e) { console.error(e); }
+        return m;
     });
 }
 
@@ -1874,6 +1883,13 @@ function fx() {
     return FXE ??= FXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, findAbility, spendWillpower, notify: m => ui.notifications.warn(m),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
+}
+
+let SOE = null;
+/** "With this person" (3.20.0): dealing with one NPC face to face. */
+function sox() {
+    return SOE ??= SOD.build({ R, PRESETS, pickPool, readPool, woundPenalty, setting, road, rollPool, rollBlock, post, opponentPool, esc, dialog, opts,
+        willpower, spendWillpower, seduction, menu, resolveActor });
 }
 
 let CXE = null;
@@ -2171,9 +2187,9 @@ async function createMacros() {
     }
 }
 
-const API = { menu, action, quickCheck, checks: CK, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
+const API = { menu, action, quickCheck, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.19.5",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.20.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

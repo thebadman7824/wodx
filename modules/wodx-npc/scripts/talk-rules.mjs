@@ -234,7 +234,7 @@ export const pickLine = (list, seed = 0) => ((list ?? []).length ? list[seed % l
 export function stockLine(kind, {stock, era = "modern", regard = "neutral", seed = 0, rumour = null, voice = null} = {}) {
   if ( !stock ) return null;
   const say = text => (text ? {say: text, rumour: null} : null);
-  // voice (0.12.0): {greet, none, gossip} lines of the kind of person they are, mixed with the era's own
+  // voice (0.13.0): {greet, none, gossip} lines of the kind of person they are, mixed with the era's own
   // voice.only: children, beggars and drunks keep to their own lines
   const mix = (v, list) => (voice?.only && (v ?? []).length ? v : [...(v ?? []), ...(list ?? [])]);
   if ( kind === "greet" ) return say(pickLine(mix(voice?.greet?.[warmthOf(regard)], stock.GREET?.[era]?.[regard]), seed));
@@ -255,7 +255,7 @@ export function stockLine(kind, {stock, era = "modern", regard = "neutral", seed
 }
 
 /* ------------------------------------------------------------------ */
-/*  More stock talk (NPC 0.12.0): what a person notices, voices, small talk, memory, farewells, barks            */
+/*  More stock talk (NPC 0.13.0): what a person notices, voices, small talk, memory, farewells, barks            */
 /* ------------------------------------------------------------------ */
 
 /** Hate and dislike are cold; like and love are warm. */

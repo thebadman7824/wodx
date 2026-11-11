@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.12.0: the topic menu. A player targets someone the Storyteller plays (or nobody, for the nearest in reach), stands close, and presses Talk
+ * WoDX NPC 0.13.0: the topic menu. A player targets someone the Storyteller plays (or nobody, for the nearest in reach), stands close, and presses Talk
  * (the token tools, or Talk in WoDX Actions). A window lists what this person can be asked; the player picks a
  * topic and the person answers with a line the Storyteller wrote (talk-rules.mjs has the format and the rules).
  *
@@ -13,7 +13,7 @@
  *   setting wodx-npc.sharedTalk {key: text}  shared sheets: household:<name>, faction:<key>, scene:<id>, everyone
  *   flags.wodx-npc.talked   {pcId: worldTime}  on an NPC: when each character last talked to them (0.12.0)
  *
- * 0.12.0 adds more stock talk: what a mortal notices about the character, voices for kinds of people, small talk on
+ * 0.13.0 adds more stock talk: what a mortal notices about the character, voices for kinds of people, small talk on
  * feasts, fasts and weather, rumours about the character, debts in the Ledger, remembering the last visit, farewells,
  * remarks while about a routine, cries of alarm and pain, and trade and social-roll lines for WoDX Actions (stock()).
  */
@@ -82,7 +82,8 @@ export function build(ctx) {
     const codex = game.journal?.find(j => j.flags?.["wodx-storyteller"]?.codex === actor.id);
     return {learned: actor.flags?.[MOD]?.topics ?? [], codex: codex ? [...codex.pages].map(p => p.name) : []};
   }
-  const checker = (actor, token) => { const W = chron()?.when; return W?.check ? when => W.check(when, {actor, token}).ok : null; };
+  // The NPC goes with the check, so a line can test the NPC's attitude and "persuaded" means by this NPC (0.12.0)
+  const checker = (actor, token, npc = null) => { const W = chron()?.when; return W?.check ? when => W.check(when, {actor, token, npc}).ok : null; };
   function displayName(npcTok, user) {
     const mine = game.actors.filter(a => a.hasPlayerOwner && a.testUserPermission?.(user, "OWNER")).map(a => a.id);
     return F.nameFor({name: npcTok.name, flags: npcTok.actor?.flags?.[MOD] ?? {}, mine, gm: user.isGM, on: !!setting("faces"), playerOwned: false});
@@ -110,7 +111,9 @@ export function build(ctx) {
     const npc = baseActor(r.npcTok), pc = baseActor(r.me);
     let year = null, branch = "", wc = {};
     try { wc = chron()?.when?.context?.({actor: pc}) ?? {}; year = wc.year ?? null; branch = wc.branch ?? ""; } catch (e) { /* no calendar */ }
-    const att = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.step ?? null;
+    let att = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.step ?? null;
+    // NPC 0.12.0: the attitude track, which seeds a first meeting from the household or faction
+    try { const o = game.modules.get(MOD)?.api?.attitude?.of?.(npc, pc); if ( o?.met ) att = o.step; } catch (e) { /* keep the saved step */ }
     let standings = [];
     try {
       const people = game.modules.get(MOD)?.api?.factions?.peopleOf?.(pc.id) ?? {};
@@ -190,7 +193,7 @@ export function build(ctx) {
     const menu = TK.menuFor(chain, knownOf(baseActor(r.me)));
     const out = {name: displayName(r.npcTok, user), me: r.me.name, ...menu};
     if ( !withGreet ) return out;
-    const g = TK.greetFor(chain, checker(r.me.actor, r.me));
+    const g = TK.greetFor(chain, checker(r.me.actor, r.me, r.npcTok.actor));
     let greet = g?.say ?? "";
     if ( stockOn(r.npcTok.actor) ) {
       const c = stockCtx(r, "greet"), a = asidesOf(r, c);
@@ -220,7 +223,7 @@ export function build(ctx) {
     if ( kind === "menu" ) { await noteTalked(r).catch(() => null); return {ok: true, menu}; }
     const topic = TK.normTopic(p.topic);
     if ( !TK.canAsk(topic, menu) ) return {ok: false, why: "They do not follow you.", menu};
-    const chain = chainOf(r.npcTok.actor, r.scene), check = checker(r.me.actor, r.me);
+    const chain = chainOf(r.npcTok.actor, r.scene), check = checker(r.me.actor, r.me, r.npcTok.actor);
     if ( savedProfile(r.npcTok.actor).talkAsk && !user.isGM ) {
       const fb = lineFor(r, topic, chain, check);
       await askFirstCard(r, user, topic, TK.answersFor(topic, chain, check), fb ? {line: fb} : null);
@@ -233,7 +236,7 @@ export function build(ctx) {
   /** Goodbye: the Storyteller's [farewell] line if one fits, else a stock one. Whispered like any answer. */
   async function farewell(r, user) {
     const chain = chainOf(r.npcTok.actor, r.scene);
-    let line = TK.answerFor("farewell", chain, checker(r.me.actor, r.me));
+    let line = TK.answerFor("farewell", chain, checker(r.me.actor, r.me, r.npcTok.actor));
     line = line && !line.none ? line.line : null;
     if ( !line && stockOn(r.npcTok.actor) ) {
       const c = stockCtx(r, "farewell");
@@ -455,7 +458,7 @@ export function build(ctx) {
     return clean;
   }
 
-  /* ---------------- Remarks and cries (0.12.0) ---------------- */
+  /* ---------------- Remarks and cries (0.13.0) ---------------- */
 
   const lastBark = new Map(); // actor id -> real time of their last remark
   let recent = []; // real times of the last remarks anywhere, so a jump in time does not flood the scene
