@@ -28,6 +28,7 @@ import * as KR from "../../wodx-actions/scripts/kote-rules.js";
 import * as UR from "../../wodx-actions/scripts/mummy-rules.js";
 import * as CR from "../../wodx-actions/scripts/c20-rules.js";
 import * as SR from "./sheet-rules.mjs";
+import * as X from "./extras.mjs";
 
 const MOD = "wodx-sheets", ACT = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -319,8 +320,10 @@ function wodxSheet(Base, type) {
     async _renderInner(data) {
       const html = await super._renderInner(data);
       const id = this.wodxId;
-      if (!id) return html;
       const el = html.find ? html : $(html);
+      // The extras (strip, Possessions, Ties, notes, search) come on every WoDX sheet, in either layout
+      try { await X.decorate(this, el); } catch (e) { console.error("WoDX Sheets | extras", e); }
+      if (!id) return html;
       const core = el.find(".tab.core");
       if (core.length) core.html(await foundry.applications.handlebars.renderTemplate(`modules/${MOD}/templates/core.hbs`, data));
       // The header mirrors the Bio tab's own controls: the same options, the same value, the same lock
@@ -347,7 +350,18 @@ function wodxSheet(Base, type) {
     }
     activateListeners(html) {
       super.activateListeners(html);
+      try { X.listen(this, html[0] ?? html); } catch (e) { console.error("WoDX Sheets | extras", e); }
       if (this.wodxId) listeners(this, html[0] ?? html);
+    }
+    async _onDropItem(event, data) {
+      const before = new Set(this.actor.items.map(i => i.id));
+      const r = await super._onDropItem(event, data);
+      const made = this.actor.items.find(i => !before.has(i.id));
+      if (made && data?.wodx?.actor && data.wodx.actor !== this.actor.id) {
+        await made.update({ [`flags.${MOD}.in`]: null });
+        await X.afterDrop(this.actor, made, data);
+      }
+      return r;
     }
   };
 }
@@ -423,6 +437,7 @@ const LABELS = {
 const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
 
 Hooks.once("init", async () => {
+  X.setup();
   game.settings.register(MOD, "sheetLook", {
     name: "Sheet look",
     hint: "WoDX gives each line's sheets their own fonts, paper and section rules, in light and dark mode. The system's look brings back the fonts and banners that come with the World of Darkness system.",
@@ -440,5 +455,5 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.6.1", rules: SR, sheetFor, viewFor };
+  game.modules.get(MOD).api = { version: "0.7.0", extras: X, rules: SR, sheetFor, viewFor };
 });

@@ -348,6 +348,8 @@ A good habit for a first live session: leave everything on Suggest, and switch o
 
 **Slow computers.** A player whose map stutters can, on their own computer: set Performance Mode to Low and Maximum Framerate to 30, turn off Light Source Animation and Token Vision Animation (Configure Settings, Core), and set **Scene video effects** to Hide (WoDX Chronicle). Hide pauses the looping fog, embers and snow tiles for that player only; the scene doesn't change.
 
+**Teleporting a token.** Select one or more tokens (characters or NPCs), press **Teleport** on the token toolbar, then click the map where they should go. Right click or Escape cancels. Alt+Shift+P does the same at once, sending the selected tokens to wherever the cursor is (change the key in Configure Controls). The tokens jump through walls, snap to the grid, keep their places around one another, and never land outside the scene. Only the Storyteller has the button and the key.
+
 **Light touch.** If the table wants fewer interruptions, set NPCs in combat, routines and factions to Off for the night, and set Dawn and dusk to Off or "New Night automatically".
 
 ## Known quirks

@@ -1276,6 +1276,10 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - All 12 line sheet templates wrap the Core tab in `{{#unless wodxCore}}`; WoDX Sheets sets `wodxCore` when it draws the book's sheet. B601.
 - Harness: sheet-speed.test.mjs. Gate: tools/gate/gatesheetspeed.mjs (redraw times, saves per change, totals follow, Core tab with and without a WoDX sheet).
 
+## 2026-11-10: sheet extras (WoDX Sheets 0.7.0), not yet deployed
+- Ben asked for all nine suggested sheet features. On every WoDX sheet: in-play strip; Possessions tab (containers, stacks with split and merge, concealment sizes, out-of-era flags, value for the time, money by era, search and filter, give, leave on the map); Ties tab (domitor and ghouls filled in from the lineage); Storyteller's notes in a Storyteller-only journal; search on long power lists; History window with Undo; Print. B602-B606.
+- Pure parts in extras-rules.mjs and extras-html.mjs; harness sheet-extras.test.mjs. Full suite 1042 pass.
+- Sample shown to Ben before any testbed deploy: https://claude.ai/artifact/UcwShGByyLddqUGKWYRD9d
 ## 2026-11-10: the RPG Builder ideas (Chronicle 0.14.0, NPC 0.9.0, Interactables 0.23.0, Atmosphere 0.11.0, Storyteller 0.20.0)
 - From the RPG Builder review (https://claude.ai/artifact/MvqiV7QLsQP3KJcd6uukXz), every idea, approved by Ben 2026-11-10 23:18Z.
 - WoDX Chronicle: scripts/when-rules.mjs (the language, pure) and scripts/when.mjs (the world and character read into a context; outcomes; the Storyteller's checker). API: game.wodx.chronicle.when.check / run / context / checker. B620, B621.
@@ -1285,6 +1289,12 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 ## 2026-11-10: part lines that miss the market and houses; era layers (map tools)
 - Part lines are planned before any building goes down, along streets and round the market, which now stays whole on one map. A house a line passes over is drawn whole on its own part only, and the plan shows the line stepping round it. B650.
 - Era layers: ddtown.py --year grows the medieval town through every later age up to that year (eras.py). Railway (track path), station with a stone platform, quays and embankments in stone, ring road on the old wall line, courts, cemetery, park, boulevards, suburbs, bomb sites or car parks, offices in old warehouses. Sidecar era from Chronicle's eras.json; new regions tagged with an area kind. B651.
+- Site maps: ddsite.py makes a castle (curtain wall, towers, gatehouse, moat, keep, hall and bailey buildings), a drift mine (pithead yard, adit, railed haulage gallery, working faces, sump, shaft) or an arcology deck (atrium and lift core, corridors, housing, hydroponics, commons and services quarters, maglev). Samples in /mnt/project-files/maps/site-samples/. B652.
 - New test: a town grown to 1950 has a railway, station, ring road, quay and suburb, era mid-century; the medieval town has none.
 - Known gaps: every building is still a medieval type (no later building packs), and towns lose houses to the new ways rather than growing denser.
 - Sample linberg redrawn.
+
+## 2026-11-11: teleport to the cursor (Storyteller 0.21.0)
+- Storyteller-only token toolbar button: press it, then click the map, and the selected tokens jump there (right click or Escape cancels). Key Alt+Shift+P sends them to the cursor at once.
+- Jumps use a displacement move (no walls, no path, no animation), snapped to the grid unless gridless, kept inside the scene. A group keeps its shape around the point. Elevation and level unchanged.
+- teleport-rules.mjs (where each token lands) with teleport.test.mjs; api game.wodx.storyteller.teleport.

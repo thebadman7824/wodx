@@ -175,3 +175,20 @@ test("mapgen: an organic town splits into parts that fit together, and its sampl
   const gates = idx.parts.flatMap(p => JSON.parse(readFileSync(join(dir, p.sidecar), "utf8")).regions.filter(r => r.id.startsWith("gate-")));
   assert.ok(gates.length >= 2, "a walled town has gates");
 });
+
+test("mapgen: castle, mine and arcology deck sites come out whole, and their sidecars adopt", {skip}, () => {
+  const dir = mkdtempSync(join(tmpdir(), "wodx-s-"));
+  for ( const kind of ["castle", "mine", "arcology"] ) for ( const seed of [1, 3, 1197] ) {
+    const out = run([join(gen, "ddsite.py"), "--kind", kind, "--seed", String(seed), "--assets", ASSETS, "--out", dir], dir);
+    const base = out.match(/^ok: ([^,]+),/m)?.[1];
+    assert.ok(base, out);
+    const f = readdirSync(dir).find(n => n.endsWith(".wodx.json") && n.startsWith(slug(base).replace(/-+$/, "")));
+    const sc = JSON.parse(readFileSync(join(dir, f), "utf8"));
+    assert.equal(sc.kind, kind);
+    assert.deepEqual(A.parseSidecar(sc).errors, [], `${kind} ${seed}`);
+    assert.ok(sc.households.length >= (kind === "arcology" ? 20 : 3), `${kind} ${seed} households`);
+    if ( kind === "castle" ) for ( const id of ["keep-1", "hall-1", "gatehouse-1", "bailey", "moat", "drawbridge"] ) assert.ok(sc.regions.some(r => r.id === id), id);
+    if ( kind === "mine" ) for ( const a of ["gallery", "stope", "shaft", "sump"] ) assert.ok(sc.regions.some(r => r.area === a), a);
+    if ( kind === "arcology" ) { assert.equal(sc.era, "future-darkness"); for ( const a of ["park", "corridor", "transit"] ) assert.ok(sc.regions.some(r => r.area === a), a); }
+  }
+});
