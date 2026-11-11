@@ -799,3 +799,24 @@ A faction may name player characters as its owners. On "Its players give the ord
 
 ## B860. Hardship weather thresholds follow M20 (2026-11-11)
 The book check found that M20 p. 435 (pdf p. 436) names what is truly dangerous: below freezing, above about 120°F (49°C), ice storms and hurricane winds. Milder weather gets narration and penalties only. B840's thresholds now follow it: below freezing or 49°C is harsh (a roll an hour); -10°C, or below freezing with a gale, heavy snow or sleet, or 52°C is severe; -20°C, or -10°C with a gale or heavy snow, or 55°C is deadly. A gale or heavy rain above freezing, and heat under 49°C, no longer harm. How often the harm comes is still the Storyteller's call (house rule). A found body's card now names the book roll for examining it, Intelligence + Medicine (HH2 p. 94, pdf p. 95).
+
+## B850. Owning things and places (2026-11-11)
+Ben approved the ownership proposal (2026-11-11, 14:19Z). WoDX Storyteller 0.27.0 keeps one owner record, flags.wodx-storyteller.owner, on an item, a container tile, a scene or a Region: an actor uuid, a faction ("faction:<id>") or a name only. Taking from someone else's container (WoDX Interactables sends wodxItemsTaken) marks the things stolen from their owner; they stay marked until they land back on the owner's sheet or the Storyteller marks them fenced or given. A player sees only "yours" or "someone's" on the Interact window. Owning adds no Background dots by itself.
+
+## B851. How a place is held, by age (2026-11-11)
+owner-rules.mjs TENURES lists the forms of holding through Moravian history (fief, peasant holding, burgher house, the Church, land tables, rent, deed, personal property, state allotment, land registry, corporate lease, a front), each open for its years. A new holding takes defaultTenure for its year and kind. tradeRightAt says who may keep a workshop: anyone before 1300, guild masters to 1859, licence holders after, nobody privately 1948-1989.
+
+## B852. Recipes from the goods list (2026-11-11)
+craft-rules.mjs turns any good into a long task: its category names the craft, the workshop by year and the materials; its value tier the goal and roll time. Nothing is made before its first year; after its last year only hand crafts can still make it, one difficulty harder. Materials come out of the maker's things or are bought at the start. Extra successes make good, fine or masterwork pieces.
+
+## B853. Putting up a building (2026-11-11)
+build-rules.mjs holds 41 kinds of building from the cottage to the vertical farm, with years, place kind, method and worth, keyed to the map generator's types. A build is a long task in stages; each stage is paid for as it starts, and the work waits when the money runs out. When the last stage is done a Region tagged with the place kind and its owner appears on the scene, and when the building kit has a map for the kind (a scene flagged wodx-storyteller.kit), a copy becomes the building's own scene.
+
+## B854. Holdings on pay day (2026-11-11)
+Each holding (a scene or Region with an owner and a property entry) has a worth, an upkeep and an income from its kind and the wage of the year, or the Storyteller's own figures. The month's pay day pays them with the allowance.
+
+## B855. Workshops keep their markets supplied (2026-11-11)
+Working places with a goods category (a smithy tools, a tavern drink, a mill cloth) lift their market's supply of it once a month.
+
+## B856. NPC factions build (2026-11-11)
+A faction may propose a building once a month (the approval queue); approved, its leader runs the build, rolling the faction's Resources + Retainers, and the finished place joins the faction's places. Builds for a faction can also be started from the Put up a building window.

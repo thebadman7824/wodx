@@ -1498,3 +1498,14 @@ Ben asked for examination and descriptions on items, as in Cataclysm DDA. All 79
 ## 2026-11-11: Plain item names, details on a closer look (Library 0.7.1, B609)
 
 Ben asked that names and descriptions say only what a thing is. 67 goods renamed with their ids kept; origins and hidden features moved into per-good details opened by Look closer. The desk shows each good's details and its old name.
+## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.27.0, Interactables 0.24.2, B850-B856)
+
+Ben approved the ownership proposal (all five parts). Numbered 0.27.0 because main took 0.25.0 (hardship weather, bodies) and the markets branch 0.26.0. Built on the markets branch, since it needs the goods list and the purse.
+- owner-rules.mjs: owner records, stolen marks, name matching for older place tags, Moravian holding forms by year, the right to trade.
+- craft-rules.mjs: a recipe for any good in the year, materials, quality. build-rules.mjs: 41 kinds of building, methods and stages, worth, upkeep, income, kit keys.
+- owners.mjs: theft marks from wodxItemsTaken, holdings and pay day, Make something, Put up a building, finished buildings as Regions (and kit scenes), workshops feeding markets, faction builds through the approval queue. Toolbar button "Property and building"; api.owners.
+- tasks: a build task's stages and stage costs (Undo puts the purse and the place back); a recipe's quality on the item.
+- Chronicle 0.18.2: Property and building is in the list of player buttons the Storyteller can hide.
+- Interactables: sends wodxItemsTaken after a take; the Interact window marks what is yours or someone's.
+- Tests: ownership.test.mjs (rules, every era), ownership-foundry.test.mjs (the Foundry side on stand-ins).
+- Still to do: the building kit maps (a PC job: one map per kit key, exported from Dungeondraft and imported as scenes flagged wodx-storyteller.kit).

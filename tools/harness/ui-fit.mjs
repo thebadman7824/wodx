@@ -679,6 +679,7 @@ game.world.id = worldId;
     ["Change a long task", () => { const f = people[0].flags ??= {}; f["wodx-storyteller"] = {...(f["wodx-storyteller"] ?? {}), tasks: {t1: {kind: "craft", name: "A silver reliquary", started: 0}}}; return st.tasks.edit(people[0].id, "t1"); }],
     ["New long task", () => st.tasks.edit(people[0].id)], ["Long tasks", () => st.tasks.open()],
     ["Havens", () => st.havens.open()], ["Haven", () => st.havens.edit()],
+    ["Property and building", () => st.owners.open()], ["Make something", () => st.owners.craft()], ["Put up a building", () => st.owners.build()],
     ["Lasting changes", () => { const f = people[0].flags ??= {}; f["wodx-storyteller"] = {...(f["wodx-storyteller"] ?? {}), body: Array.from({length: 7}, (_, k) => ({id: `b${k}`, source: ["vicissitude", "metis", "visage", "scar"][k % 4], part: "face", what: `A long description of the change, the cheekbones drawn up and the jaw split along the old seam, number ${k}`, appearance: k % 2 ? -1 : 0, by: "Lord Vykos's own hand"}))}; return st.body.open(people[0]); }],
     ["A lasting change", () => st.body.newDialog(people[0])],
     ["Hardship on the road", () => st.hardship.open()],

@@ -33,11 +33,16 @@ export const KINDS = {
     ref: "The Rite of the Fetish: Wits + Rituals at difficulty 10, 2 less for each permanent Gnosis spent; talens come from the Rite of Binding, one more for each extra success (W20 pp. 213, 227-228)."},
   wonder: {label: "Make a wonder or talisman", attr: "intelligence", ability: "occult", diff: 7, interval: "week", goal: 10, delicate: true, house: true,
     ref: "Dark Ages: Mage gives no general rule for making a wonder; a creature part lowers the difficulty by 2 (p. 191)."},
+  build: {label: "Put up a building", attr: "dexterity", ability: "crafts", diff: 6, interval: "week", goal: 6, delicate: false, house: true,
+    ref: "Built in stages, each an extended action; workers each add a die and each stage is paid for as it starts (house rule)."},
   other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
+const strs = v => (Array.isArray(v) ? v.map(x => String(x).slice(0, 120)).filter(Boolean).slice(0, 20) : []);
+const stagesOf = v => (Array.isArray(v) ? v.slice(0, 8).map(x => ({name: String(x?.name ?? "").slice(0, 60) || "Work",
+  goal: Math.max(1, Math.round(n(x?.goal) || 1)), cost: Math.max(0, Math.round(n(x?.cost)))})) : []);
 const clampDiff = d => Math.max(2, Math.min(10, Math.round(n(d) || 6)));
 
 /** A task as stored on the actor flag wodx-storyteller.tasks[id]. */
@@ -56,7 +61,13 @@ export function normTask(t = {}) {
     status: ["open", "paused", "done", "ruined"].includes(t.status) ? t.status : "open",
     note: String(t.note ?? ""), log: Array.isArray(t.log) ? t.log.slice(-20) : [],
     needs: String(t.needs ?? "").slice(0, 1000).trim(), workshop: WORKSHOPS[t.workshop] ? t.workshop : "", makes: String(t.makes ?? "").slice(0, 120).trim(),
-    made: !!t.made, waits: String(t.waits ?? "").slice(0, 200)
+    made: !!t.made, waits: String(t.waits ?? "").slice(0, 200),
+    // 0.27.0: recipes from the goods list, buildings in stages, who it is for
+    good: String(t.good ?? "").slice(0, 80), materials: strs(t.materials), spent: strs(t.spent), quality: String(t.quality ?? "").slice(0, 20),
+    building: String(t.building ?? "").slice(0, 40), stages: stagesOf(t.stages), stage: Math.max(0, Math.round(n(t.stage))),
+    paidStage: Number.isFinite(Number(t.paidStage)) ? Math.round(Number(t.paidStage)) : -1, workers: Math.max(0, Math.min(10, Math.round(n(t.workers)))),
+    owner: t.owner && typeof t.owner === "object" ? {...t.owner} : null, scene: String(t.scene ?? "").slice(0, 60), cost: Math.max(0, Math.round(n(t.cost))),
+    faction: String(t.faction ?? "").slice(0, 60), place: String(t.place ?? "").slice(0, 160)
   };
 }
 
@@ -127,7 +138,11 @@ export function stepTask(task, roll, at) {
   } else {
     t.total += Math.max(0, n(roll.successes));
     t.log.push({at, s: Math.max(0, n(roll.successes))});
-    if ( t.total >= t.goal ) t.status = "done";
+    if ( t.total >= t.goal ) {
+      // 0.27.0: a building moves to its next stage; only the last one finishes it
+      if ( t.stages.length && t.stage < t.stages.length - 1 ) { t.stage += 1; t.goal = t.stages[t.stage].goal; t.total = 0; }
+      else t.status = "done";
+    }
   }
   t.log = t.log.slice(-20);
   return t;
