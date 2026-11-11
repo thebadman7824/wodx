@@ -89,3 +89,35 @@ test("Only when: attitude and persuaded tests", () => {
   // No NPC in the check: a bare test cannot be answered
   assert.ok(!W.checkWhen(W.parseWhen("fooled"), {...ctx, npc: null}).ok);
 });
+
+test("lift and plant: what fits a pocket, who notices, what the hand finds, coins and pockets by era", () => {
+  const items = [
+    {id: "a", name: "silver ring", type: "Item", flags: {"wodx-sheets": {conceal: "P"}}},
+    {id: "b", name: "letter", type: "Item", flags: {"wodx-sheets": {conceal: "J"}}},
+    {id: "c", name: "sack of grain", type: "Item", flags: {"wodx-sheets": {conceal: "N"}}},
+    {id: "d", name: "knife", type: "Melee Weapon", system: {conceal: "P"}},
+    {id: "e", name: "sword", type: "Melee Weapon", system: {}},
+    {id: "f", name: "satchel", type: "Item", system: {iscontainer: true}},
+    {id: "g", name: "mail shirt", type: "Armor"},
+    {id: "h", name: "bronze coin", type: "Item", flags: {"wodx-sheets": {coin: {denom: "d"}, qty: 7}}},
+    {id: "i", name: "trinket", type: "Item"}
+  ];
+  assert.deepEqual(SR.liftable(items).map(i => i.id), ["a", "b", "d", "h", "i"]);
+  assert.deepEqual(SR.liftOutcome({successes: 2}, {successes: 2}), {done: true, noticed: false, net: 0});
+  assert.deepEqual(SR.liftOutcome({successes: 1}, {successes: 2}), {done: false, noticed: true, net: -1});
+  assert.deepEqual(SR.liftOutcome({successes: 0}, {successes: 0}), {done: false, noticed: false, net: 0});
+  assert.equal(SR.liftOutcome({successes: 0, botch: true}, {successes: 0}).noticed, true);
+  const small = SR.liftable(items);
+  assert.equal(SR.liftPick(small, 2, "b").id, "b");
+  assert.equal(SR.liftPick(small, 1, "b", 0).id, "a", "one success: the first thing the hand finds");
+  assert.equal(SR.coinShare(100, 1), 10);
+  assert.equal(SR.coinShare(100, 2), 25);
+  assert.equal(SR.coinShare(100, 5), 50);
+  assert.equal(SR.coinShare(3, 1), 1);
+  assert.equal(SR.coinShare(0, 3), 0);
+  assert.match(SR.pocketsIn(1197), /belt/);
+  assert.match(SR.pocketsIn(1750), /coat/);
+  assert.match(SR.pocketsIn(1995), /wallet/);
+  assert.match(SR.pocketsIn(2090), /cred chip/);
+  assert.ok(SR.PRESETS.liftNpc.opp.needMore);
+});
