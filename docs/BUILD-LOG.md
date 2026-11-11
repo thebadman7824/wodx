@@ -1346,3 +1346,7 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - scripts/referee-rules.mjs (pure): profileOf (the shared Combat profile flag first), bookOf (Dark Ages books up to the Long Night), casesFor (True Faith first, fallbacks only when nothing particular fits), testFor (Generation, Faith, Day or Night, Willpower, countermagick, Wits + Occult, Auspex against Obfuscate as WoDX NPC reads it, witnesses, possession), successes.
 - scripts/referee.mjs (Foundry): the referee window (selected token and first target fill it in; every case listed with a search box), rolls whispered to the Storyteller, a tool in the Storyteller's hand, key binding "The crossover referee", api.referee (open, ask, roll, sheetOf, cases).
 - Tests: tools/harness/referee.test.mjs (11). UI fit: the referee window added. Gate: tools/gate/gatereferee.mjs.
+
+## 2026-11-11: The referee's book checks (Chronicle 0.17.1)
+- B761. From the PC lookups: changeling and wraith Dominate settled as house rules; Auspex against hiding that is not a Discipline (V20 p. 142) for wraiths, mages, fae and the rest; ghouling Garou, ghosts and mages (Ghouls: Fatal Addiction p. 23); imbued second sight (Hunter Players Guide p. 58), drafts until the HtR core is read.
+- isReckoning() in referee-rules.mjs mirrors WoDX Actions' hunterLine(); the harness checks the two agree for every era. referee.test.mjs now 12 tests.

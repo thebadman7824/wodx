@@ -4,7 +4,7 @@
  * with the ruling, what the two sheets work out to, the pages, and a roll button where the books give a roll.
  * Rolls go to the Storyteller alone. The rules are in referee-rules.mjs and data/crossover.mjs.
  */
-import {MODULE_ID, esc} from "./util.mjs";
+import {MODULE_ID, esc, rule} from "./util.mjs";
 import {searchBox} from "./search.mjs";
 import * as R from "./referee-rules.mjs";
 import CLASHES from "../data/rules-clashes.mjs";
@@ -47,12 +47,15 @@ export function sheetOf(actor) {
 }
 
 const eraId = () => { try { return eras.activeEra()?.profile?.id ?? ""; } catch (e) { return ""; } };
+const reckoningNow = (era = eraId()) => {
+  try { return R.isReckoning(era, eras.currentYear(), {futureBranch: !!rule("futureBranch")}); } catch (e) { return R.isReckoning(era); }
+};
 
 /** Ask the referee from code: the cases and what they work out to for two actors. */
 export function ask(power, actor, target, {rating = 0, era = eraId()} = {}) {
   const a = sheetOf(actor), t = sheetOf(target);
   const book = R.bookOf(era);
-  return R.referee({power, from: a.profile ?? "mortal", to: t.profile ?? "mortal", book, actorFaith: a.faith, targetFaith: t.faith},
+  return R.referee({power, from: a.profile ?? "mortal", to: t.profile ?? "mortal", book, actorFaith: a.faith, targetFaith: t.faith, reckoning: reckoningNow(era)},
     {actor: a, target: t, rating});
 }
 
@@ -109,7 +112,8 @@ export class RefereeApp extends ApplicationV2 {
     const q = this.query, era = eraId(), book = R.bookOf(era);
     const a = this.actor && R.profileOf(this.actor) === q.from ? sheetOf(this.actor) : {profile: q.from};
     const t = this.target && R.profileOf(this.target) === q.to ? sheetOf(this.target) : {profile: q.to};
-    const results = R.referee({power: q.power, from: q.from, to: q.to, book, actorFaith: a.faith, targetFaith: t.faith}, {actor: a, target: t, rating: q.rating});
+    const results = R.referee({power: q.power, from: q.from, to: q.to, book, actorFaith: a.faith, targetFaith: t.faith, reckoning: reckoningNow(era)},
+      {actor: a, target: t, rating: q.rating});
     this.rolls = [];
     const opt = (map, sel) => Object.entries(map).map(([k, v]) => `<option value="${esc(k)}"${k === sel ? " selected" : ""}>${esc(v)}</option>`).join("");
     const card = ({case: c, test}) => {
