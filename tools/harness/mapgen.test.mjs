@@ -79,7 +79,7 @@ function checkParts(dir, base, size) {
   }
   assert.equal(cutArea, W * H, `${base}: the cuts do not tile the whole`);
   assert.equal(pop, idx.population);
-  assert.ok(hh >= (size === "city" ? 90 : 30), `${base}: ${hh} households`);
+  assert.ok(hh >= (size === "city" ? 90 : 25), `${base}: ${hh} households`);   // even parts keep houses off the lines, at some cost (B653)
   return idx;
 }
 
@@ -174,6 +174,18 @@ test("mapgen: an organic town splits into parts that fit together, and its sampl
   assert.deepEqual(idx, JSON.parse(readFileSync(join(gen, "samples/linberg-parts.json"), "utf8")), "linberg changed: run ddtown.py again into samples");
   const gates = idx.parts.flatMap(p => JSON.parse(readFileSync(join(dir, p.sidecar), "utf8")).regions.filter(r => r.id.startsWith("gate-")));
   assert.ok(gates.length >= 2, "a walled town has gates");
+  // even parts: widths and heights differ by at most one square, and every house stands wholly inside its own part
+  const ws = new Set(idx.parts.map(p => p.cut[2])), hs = new Set(idx.parts.map(p => p.cut[3]));
+  assert.ok(Math.max(...ws) - Math.min(...ws) <= 1 && Math.max(...hs) - Math.min(...hs) <= 1, `uneven parts ${[...ws]} ${[...hs]}`);
+  for ( const p of idx.parts ) {
+    const sc = JSON.parse(readFileSync(join(dir, p.sidecar), "utf8"));
+    const [cx, cy, cw, ch] = p.cut;
+    for ( const h of sc.households ) {
+      const r = sc.regions.find(q => q.id === h.building);
+      const [x, y, w, hh] = r.rect, X = x + p.origin[0], Y = y + p.origin[1];
+      assert.ok(X >= cx - 1e-6 && Y >= cy - 1e-6 && X + w <= cx + cw + 1e-6 && Y + hh <= cy + ch + 1e-6, `${p.id} ${h.building} crosses a part line`);
+    }
+  }
 });
 
 test("mapgen: castle, mine and arcology deck sites come out whole, and their sidecars adopt", {skip}, () => {
