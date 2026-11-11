@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.24.0: markets (the living economy, first build; Ben approved the study 2026-11-11). Pure rules.
+ * WoDX Storyteller 0.26.0: markets (the living economy, first build; Ben approved the study 2026-11-11). Pure rules.
  *
  * A market belongs to a settlement: the scenes that make it up, a price index and a supply level for each goods
  * category, and its traders. A trader is an NPC (whose purse is the till) and a container tile with a stock list.

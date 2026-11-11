@@ -574,7 +574,7 @@ export async function applyAsk(msg) {
       given = got.ids;
       lines.push(got.names.length ? `${actor.name} takes ${listWords(got.names)}.` : "There is nothing there that WoDX could hand over: the Storyteller says what was inside.");
       if ( got.missing.length ) lines.push(`Not found, so not handed over: ${got.missing.join(", ")}.`);
-      // 0.24.1: WoDX Storyteller marks what was taken as stolen when the container is someone else's
+      // 0.24.2: WoDX Storyteller marks what was taken as stolen when the container is someone else's
       if ( given.length ) Hooks.callAll("wodxItemsTaken", {actor, items: given, doc, scene: doc.parent});
     }
     // Hiding: into the place and out of sight; coming out; searching the place

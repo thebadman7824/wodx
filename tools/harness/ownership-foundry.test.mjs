@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* The Foundry side of ownership (Storyteller 0.26.0) against small stand-ins for Foundry's documents */
+/* The Foundry side of ownership (Storyteller 0.27.0) against small stand-ins for Foundry's documents */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));

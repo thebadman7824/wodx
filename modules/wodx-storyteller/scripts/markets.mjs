@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.24.0: markets, the living economy's first build (rules in market-rules.mjs).
+ * WoDX Storyteller 0.26.0: markets, the living economy's first build (rules in market-rules.mjs).
  *
  *   World setting wodx-storyteller.markets = {v, markets: [{id, name, scenes, index, supply, note, traders}]}.
  *   Prices (api.upkeep.money.price) read the market of the trader's tile or of the scene in view.

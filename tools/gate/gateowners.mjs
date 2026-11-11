@@ -1,5 +1,5 @@
 /**
- * Ownership gate (WoDX Storyteller 0.26.0, Interactables 0.24.1), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Ownership gate (WoDX Storyteller 0.27.0, Interactables 0.24.2), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateowners.mjs?${Date.now()}`)).run()
  * Makes its own scene "WoDX gate: Owners" with one Region and one tile, two actors; views the scene, then goes back
  * to the scene it started on and deletes everything it made. The world clock is not moved.

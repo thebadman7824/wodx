@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.26.0: who owns what, holdings and their upkeep, making things from a recipe, putting up a
+ * WoDX Storyteller 0.27.0: who owns what, holdings and their upkeep, making things from a recipe, putting up a
  * building, and the workshops that feed the markets. The rules are in owner-rules.mjs, craft-rules.mjs and
  * build-rules.mjs.
  *

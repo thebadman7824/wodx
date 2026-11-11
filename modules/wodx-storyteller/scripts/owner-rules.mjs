@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.26.0: who owns a thing or a place, and how a place is held in each age. No Foundry calls here.
+ * WoDX Storyteller 0.27.0: who owns a thing or a place, and how a place is held in each age. No Foundry calls here.
  *
  * One owner record sits on an item, a container (a tile), a scene or a Region: flags.wodx-storyteller.owner.
  *   {id, kind, name, held, since, stolen, takenBy, takenAt, note}

@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.26.0: putting up a building. No Foundry calls here.
+ * WoDX Storyteller 0.27.0: putting up a building. No Foundry calls here.
  *
  * A building is a long task in stages (groundwork, walls, roof, fitting out), each an extended action of its own
  * (V20 pp. 251-252; V20 Dark Ages p. 324) on Dexterity + Crafts. Hired hands, retainers and allied NPCs each add a

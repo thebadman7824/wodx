@@ -23,9 +23,9 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxPlaceAlarm | npc | npc (remarks and cries) |
 | wodxRegisterMigrations | chronicle | chronicle |
 | wodxSensesGather | senses | senses |
+| wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxShroudCrossing | otherworlds | storyteller |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
-| wodxStockFilter | interactables | storyteller (a market thins or fills a trader's stock draw by its supply) |
 | wodxXCard | chronicle | actions |
 
 ## Extension points (sent, nobody listens yet)
@@ -35,12 +35,12 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | Hook | Sent by | Carries |
 |---|---|---|
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
+| wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
 | wodxDreamingGate | otherworlds | a crossing through a Dreaming gateway |
 | wodxEventUndone | chronicle | a dated event taken back |
 | wodxFightStarted | combat | a fight the starter set up: {combat, source, tokens, created} |
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
-| wodxStockDrawn | interactables | a container's stock list was drawn afresh |
 | wodxSocial | actions | a social act on one NPC and its outcome |
 | wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |

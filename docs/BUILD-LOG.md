@@ -1305,7 +1305,7 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Jumps use a displacement move (no walls, no path, no animation), snapped to the grid unless gridless, kept inside the scene. A group keeps its shape around the point. Elevation and level unchanged.
 - teleport-rules.mjs (where each token lands) with teleport.test.mjs; api game.wodx.storyteller.teleport.
 
-## 2026-11-11: Real money by era (Storyteller 0.23.0, B598)
+## 2026-11-11: Real money by era (Storyteller 0.26.0, B598)
 - money-rules.mjs: monies by region and year (Moravia default; German, English, American, French), monthly wages, allowance ladder x1.5, prices from goods value tiers, selling, fencing, credit, haggling, savings carried across a change of money.
 - money.mjs: a purse per actor (carried, bank, debt, log, undo), pay day each month on the Storyteller's monthly card, pay/receive/transfer/price/cashIn in the Storyteller API (api.money), carried and bank editable in the Money by era window.
 - Item Review Desk shows each good's price in Moravia by era.
@@ -1318,7 +1318,7 @@ NPCs now have things to say before the Storyteller writes a line (B664, B665). A
 
 Ben asked how the Actions menu could drive dealing with NPCs (design: https://claude.ai/artifact/Ted6jfh7nS7smhvqJsBvsf), then to build it as recommended. Part A: "With this person" in every line's Act group opens a window on the targeted NPC (or the nearest in talking reach): Talk opens WoDX NPC's topic window, and Persuade, Fast-talk, Deceive, Intimidate quietly, Threaten openly, Question them and Bribe are resisted rolls from V20's social systems (pp. 265-266). Charm or seduce runs the three-stage Seduction; Use a power opens the line's menu with the NPC targeted. The NPC's roll is a blind whisper to the Storyteller (B672). Each NPC now has its own attitude toward each character (B670), seeded from household or faction standing at the first meeting and moved by how the characters treat that NPC; it shifts social difficulties and goes through the approval queue when a player's roll moves it. A won roll leaves a sway note for an hour, and Chronicle's "Only when" lists gain "attitude >= welcome" and "persuaded [by <name>]" (B674). Book notes: docs/research/social-book-checks.md. Tests: social.test.mjs, talk-menu.test.mjs. Parts B (lift and plant), C (trade on the Storyteller's money) and D (seduction feeding) follow.
 
-## 2026-11-11: Markets, the living economy's first build (Storyteller 0.24.0, Interactables 0.23.2, B599)
+## 2026-11-11: Markets, the living economy's first build (Storyteller 0.26.0, Interactables 0.24.1, B599)
 
 Ben approved the living economy study's recommendations. Built steps 1 and 2: markets per settlement with a price index and supply per goods category, set by hand in a Markets window (Upkeep, Storyteller only); all prices read the index. Traders link an NPC and a stock container to a market; a stock draw is thinned or filled by supply and paid from the NPC's purse at half price. Interactables fires wodxStockFilter and wodxStockDrawn around a stock draw. New rules file market-rules.mjs, window markets.mjs, tests markets.test.mjs. The weekly market turn is not built yet.
 ## 2026-11-11: Dealing with NPCs, parts B and D: lift and plant, seduction and feeding (Actions 3.21.0)
@@ -1485,9 +1485,9 @@ gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight 
 - Standing that spills over (B841), calls to passers-by (B842), a clue's first look fills the codex (B843), bodies left behind (B844). All house rules, all off by default.
 - Harness: passing-world.test.mjs.
 
-## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.26.0, Interactables 0.24.1, B850-B856)
+## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.27.0, Interactables 0.24.2, B850-B856)
 
-Ben approved the ownership proposal (all five parts). Numbered 0.26.0 because main took 0.25.0 for hardship weather and bodies. Built on the markets branch, since it needs the goods list and the purse.
+Ben approved the ownership proposal (all five parts). Numbered 0.27.0 because main took 0.25.0 (hardship weather, bodies) and the markets branch 0.26.0. Built on the markets branch, since it needs the goods list and the purse.
 - owner-rules.mjs: owner records, stolen marks, name matching for older place tags, Moravian holding forms by year, the right to trade.
 - craft-rules.mjs: a recipe for any good in the year, materials, quality. build-rules.mjs: 41 kinds of building, methods and stages, worth, upkeep, income, kit keys.
 - owners.mjs: theft marks from wodxItemsTaken, holdings and pay day, Make something, Put up a building, finished buildings as Regions (and kit scenes), workshops feeding markets, faction builds through the approval queue. Toolbar button "Property and building"; api.owners.
