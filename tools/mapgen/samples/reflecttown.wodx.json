@@ -12,7 +12,7 @@
  "layout": "organic",
  "walled": false,
  "era": "mid-century",
- "population": 1014,
+ "population": 1049,
  "openings": [
   {
    "id": "chapel-1-double-0",
@@ -1455,6 +1455,106 @@
    }
   },
   {
+   "id": "sgraffito-house-1-double-0",
+   "label": "Sgraffito house double",
+   "c": [
+    144.708,
+    46.163,
+    145.708,
+    47.895
+   ],
+   "inside": [
+    149.038,
+    43.663
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-1-window-1",
+   "label": "Sgraffito house window",
+   "c": [
+    143.458,
+    43.998,
+    143.958,
+    44.864
+   ],
+   "inside": [
+    149.038,
+    43.663
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-1-door-4",
+   "label": "Sgraffito house door",
+   "c": [
+    150.154,
+    43.596,
+    150.654,
+    44.462
+   ],
+   "inside": [
+    149.038,
+    43.663
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-1-window-5",
+   "label": "Sgraffito house window",
+   "c": [
+    153.118,
+    40.73,
+    153.618,
+    41.596
+   ],
+   "inside": [
+    149.038,
+    43.663
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-1-window-6",
+   "label": "Sgraffito house window",
+   "c": [
+    153.569,
+    44.511,
+    152.703,
+    45.011
+   ],
+   "inside": [
+    149.038,
+    43.663
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
    "id": "sgraffito-house-7-double-0",
    "label": "Sgraffito house double",
    "c": [
@@ -2566,6 +2666,106 @@
    "inside": [
     112.289,
     78.984
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-13-double-0",
+   "label": "Sgraffito house double",
+   "c": [
+    149.967,
+    32.421,
+    148.553,
+    31.007
+   ],
+   "inside": [
+    146.432,
+    35.956
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-13-window-1",
+   "label": "Sgraffito house window",
+   "c": [
+    151.735,
+    34.189,
+    151.028,
+    33.482
+   ],
+   "inside": [
+    146.432,
+    35.956
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-13-door-4",
+   "label": "Sgraffito house door",
+   "c": [
+    145.371,
+    36.31,
+    144.664,
+    35.603
+   ],
+   "inside": [
+    146.432,
+    35.956
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-13-window-5",
+   "label": "Sgraffito house window",
+   "c": [
+    143.25,
+    39.846,
+    142.543,
+    39.138
+   ],
+   "inside": [
+    146.432,
+    35.956
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-13-window-6",
+   "label": "Sgraffito house window",
+   "c": [
+    141.836,
+    36.31,
+    142.543,
+    35.603
+   ],
+   "inside": [
+    146.432,
+    35.956
    ],
    "barInside": true,
    "flags": {
@@ -4035,6 +4235,266 @@
    }
   },
   {
+   "id": "tenement-2-double-0",
+   "label": "Courtyard tenement double",
+   "c": [
+    101.224,
+    51.477,
+    99.492,
+    52.477
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-door-1",
+   "label": "Courtyard tenement door",
+   "c": [
+    104.256,
+    49.727,
+    103.39,
+    50.227
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-door-2",
+   "label": "Courtyard tenement door",
+   "c": [
+    97.327,
+    53.727,
+    96.461,
+    54.227
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-window-3",
+   "label": "Courtyard tenement window",
+   "c": [
+    105.814,
+    48.827,
+    104.948,
+    49.327
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-window-4",
+   "label": "Courtyard tenement window",
+   "c": [
+    102.697,
+    50.627,
+    101.831,
+    51.127
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-window-5",
+   "label": "Courtyard tenement window",
+   "c": [
+    98.886,
+    52.827,
+    98.02,
+    53.327
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-window-6",
+   "label": "Courtyard tenement window",
+   "c": [
+    95.768,
+    54.627,
+    94.902,
+    55.127
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-door-8",
+   "label": "Courtyard tenement door",
+   "c": [
+    107.323,
+    56.039,
+    106.823,
+    55.173
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-door-9",
+   "label": "Courtyard tenement door",
+   "c": [
+    100.394,
+    60.039,
+    99.894,
+    59.173
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-door-10",
+   "label": "Courtyard tenement door",
+   "c": [
+    105.291,
+    59.521,
+    104.425,
+    60.021
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-window-11",
+   "label": "Courtyard tenement window",
+   "c": [
+    106.791,
+    62.119,
+    105.925,
+    62.619
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-window-12",
+   "label": "Courtyard tenement window",
+   "c": [
+    110.671,
+    55.838,
+    110.171,
+    54.972
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tenement-2-window-13",
+   "label": "Courtyard tenement window",
+   "c": [
+    98.546,
+    62.838,
+    98.046,
+    61.972
+   ],
+   "inside": [
+    103.358,
+    57.173
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
    "id": "school-1-double-0",
    "label": "School double",
    "c": [
@@ -4406,126 +4866,6 @@
    "inside": [
     87.302,
     156.563
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-door-0",
-   "label": "Ba\u0165a house door",
-   "c": [
-    142.958,
-    43.132,
-    143.458,
-    43.998
-   ],
-   "inside": [
-    146.873,
-    44.913
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-door-1",
-   "label": "Ba\u0165a house door",
-   "c": [
-    145.958,
-    48.328,
-    146.458,
-    49.194
-   ],
-   "inside": [
-    146.873,
-    44.913
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-window-2",
-   "label": "Ba\u0165a house window",
-   "c": [
-    143.858,
-    44.691,
-    144.358,
-    45.557
-   ],
-   "inside": [
-    146.873,
-    44.913
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-window-3",
-   "label": "Ba\u0165a house window",
-   "c": [
-    145.058,
-    46.769,
-    145.558,
-    47.635
-   ],
-   "inside": [
-    146.873,
-    44.913
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-window-4",
-   "label": "Ba\u0165a house window",
-   "c": [
-    147.788,
-    41.498,
-    148.288,
-    42.364
-   ],
-   "inside": [
-    146.873,
-    44.913
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-window-5",
-   "label": "Ba\u0165a house window",
-   "c": [
-    149.788,
-    44.962,
-    150.288,
-    45.828
-   ],
-   "inside": [
-    146.873,
-    44.913
    ],
    "barInside": true,
    "flags": {
@@ -8587,6 +8927,80 @@
    "rotation": 45.0
   },
   {
+   "id": "sgraffito-house-1-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    152.256,
+    42.329,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "sgraffito-house-1-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    152.439,
+    41.28,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "sgraffito-house-1-black-kitchen-0",
+   "label": "Hearth (Black kitchen)",
+   "rect": [
+    147.655,
+    40.994,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "sgraffito-house-1-front-room-0",
+   "label": "Chest (Front room)",
+   "rect": [
+    145.057,
+    42.494,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
    "id": "sgraffito-house-7-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
@@ -9349,6 +9763,80 @@
     "fillPlace": "home"
    },
    "rotation": 120.0
+  },
+  {
+   "id": "sgraffito-house-13-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    141.444,
+    36.371,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 315.0
+  },
+  {
+   "id": "sgraffito-house-13-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    142.651,
+    35.456,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 315.0
+  },
+  {
+   "id": "sgraffito-house-13-black-kitchen-0",
+   "label": "Hearth (Black kitchen)",
+   "rect": [
+    147.346,
+    37.323,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 225.0
+  },
+  {
+   "id": "sgraffito-house-13-front-room-0",
+   "label": "Chest (Front room)",
+   "rect": [
+    149.467,
+    35.202,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 225.0
   },
   {
    "id": "sgraffito-house-14-back-room-0",
@@ -10321,6 +10809,132 @@
    "rotation": 45.0
   },
   {
+   "id": "tenement-2-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    101.653,
+    51.226,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "tenement-2-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    105.672,
+    48.906,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "tenement-2-flat-0",
+   "label": "Box bed (Flat)",
+   "rect": [
+    107.922,
+    52.303,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "tenement-2-flat-2",
+   "label": "Hearth (Flat)",
+   "rect": [
+    106.251,
+    53.19,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "tenement-2-back-flat-0",
+   "label": "Bed (Back flat)",
+   "rect": [
+    106.891,
+    58.383,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "tenement-2-corner-flat-0",
+   "label": "Box bed (Corner flat)",
+   "rect": [
+    96.975,
+    58.623,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "tenement-2-corner-flat-2",
+   "label": "Hearth (Corner flat)",
+   "rect": [
+    98.145,
+    57.87,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 150.0
+  },
+  {
    "id": "storehouse-6-store-0",
    "label": "Crates (Store)",
    "rect": [
@@ -10403,7 +11017,7 @@
     "room": 1,
     "title": "Behind the crates"
    },
-   "rotation": 195.0
+   "rotation": 285.0
   },
   {
    "id": "dept-store-1-stock-room-1",
@@ -10420,7 +11034,7 @@
     "room": 1,
     "title": "Behind the crates"
    },
-   "rotation": 285.0
+   "rotation": 195.0
   },
   {
    "id": "dept-store-1-stock-room-2",
@@ -10443,8 +11057,8 @@
    "id": "dept-store-1-stock-room-3",
    "label": "Crates (Stock room)",
    "rect": [
-    66.952,
-    138.07,
+    68.459,
+    140.172,
     1.0,
     1.0
    ],
@@ -10460,8 +11074,8 @@
    "id": "dept-store-1-stock-room-4",
    "label": "Crates (Stock room)",
    "rect": [
-    61.079,
-    138.195,
+    60.821,
+    139.161,
     1.0,
     1.0
    ],
@@ -10471,7 +11085,7 @@
     "room": 1,
     "title": "Behind the crates"
    },
-   "rotation": 195.0
+   "rotation": 285.0
   },
   {
    "id": "cottage-41-cottage-0",
@@ -10499,8 +11113,8 @@
    "id": "cottage-41-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    180.051,
-    101.485,
+    180.729,
+    104.016,
     1.0,
     2.0
    ],
@@ -10515,8 +11129,8 @@
    "id": "cottage-41-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    180.568,
-    103.417,
+    180.051,
+    101.485,
     1.0,
     2.0
    ],
@@ -10531,8 +11145,8 @@
    "id": "cottage-41-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    178.955,
-    101.761,
+    179.897,
+    105.277,
     1.0,
     1.0
    ],
@@ -10565,26 +11179,10 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 255.0
-  },
-  {
-   "id": "cottage-42-cottage-2",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    167.349,
-    119.755,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
    "rotation": 165.0
   },
   {
-   "id": "cottage-42-cottage-3",
+   "id": "cottage-42-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
     166.671,
@@ -10600,11 +11198,27 @@
    "rotation": 165.0
   },
   {
+   "id": "cottage-42-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    167.349,
+    119.755,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 165.0
+  },
+  {
    "id": "cottage-42-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    167.502,
-    116.963,
+    168.444,
+    120.479,
     1.0,
     1.0
    ],
@@ -10637,14 +11251,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 240.0
+   "rotation": 330.0
   },
   {
    "id": "cottage-43-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    42.574,
-    11.576,
+    40.287,
+    12.896,
     1.0,
     2.0
    ],
@@ -10659,8 +11273,8 @@
    "id": "cottage-43-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    40.842,
-    12.576,
+    42.556,
+    11.586,
     1.0,
     2.0
    ],
@@ -10675,8 +11289,8 @@
    "id": "cottage-43-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    43.517,
-    12.709,
+    40.354,
+    14.512,
     1.0,
     1.0
    ],
@@ -10709,10 +11323,26 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 330.0
+   "rotation": 240.0
   },
   {
    "id": "cottage-44-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    47.335,
+    19.212,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "cottage-44-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
     45.066,
@@ -10728,27 +11358,11 @@
    "rotation": 240.0
   },
   {
-   "id": "cottage-44-cottage-3",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    47.353,
-    19.202,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
-   "rotation": 240.0
-  },
-  {
    "id": "cottage-44-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    48.286,
-    20.318,
+    45.133,
+    22.138,
     1.0,
     1.0
    ],
@@ -10759,7 +11373,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 240.0
+   "rotation": 330.0
   },
   {
    "id": "cottage-45-cottage-0",
@@ -10781,7 +11395,7 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 150.0
+   "rotation": 60.0
   },
   {
    "id": "cottage-45-cottage-2",
@@ -10853,10 +11467,26 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 150.0
+   "rotation": 60.0
   },
   {
    "id": "cottage-46-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    56.832,
+    18.836,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-46-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
     59.101,
@@ -10872,27 +11502,11 @@
    "rotation": 60.0
   },
   {
-   "id": "cottage-46-cottage-3",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    56.815,
-    18.846,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
-   "rotation": 60.0
-  },
-  {
    "id": "cottage-46-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    55.882,
-    18.73,
+    59.034,
+    16.91,
     1.0,
     1.0
    ],
@@ -10925,14 +11539,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 225.0
+   "rotation": 315.0
   },
   {
    "id": "cottage-47-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    52.535,
-    31.184,
+    54.402,
+    29.317,
     1.0,
     2.0
    ],
@@ -10947,8 +11561,8 @@
    "id": "cottage-47-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    54.402,
-    29.317,
+    52.535,
+    31.184,
     1.0,
     2.0
    ],
@@ -10975,7 +11589,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 315.0
+   "rotation": 225.0
   },
   {
    "id": "cottage-48-cottage-0",
@@ -10997,14 +11611,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 45.0
+   "rotation": 135.0
   },
   {
    "id": "cottage-48-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    65.306,
-    24.472,
+    63.439,
+    26.339,
     1.0,
     2.0
    ],
@@ -11019,8 +11633,8 @@
    "id": "cottage-48-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    63.454,
-    26.325,
+    64.854,
+    24.925,
     1.0,
     2.0
    ],
@@ -11047,7 +11661,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 135.0
+   "rotation": 45.0
   },
   {
    "id": "cottage-49-cottage-0",
@@ -11069,14 +11683,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 315.0
+   "rotation": 225.0
   },
   {
    "id": "cottage-49-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    63.531,
-    38.146,
+    63.517,
+    38.16,
     1.0,
     2.0
    ],
@@ -11091,8 +11705,8 @@
    "id": "cottage-49-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    61.665,
-    40.013,
+    62.103,
+    39.575,
     1.0,
     2.0
    ],
@@ -11107,8 +11721,8 @@
    "id": "cottage-49-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    62.018,
-    41.574,
+    64.592,
+    39.0,
     1.0,
     1.0
    ],
@@ -11191,7 +11805,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 315.0
+   "rotation": 225.0
   },
   {
    "id": "cottage-51-cottage-0",
@@ -11251,8 +11865,8 @@
    "id": "cottage-51-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    73.186,
-    55.69,
+    73.2,
+    55.705,
     1.0,
     1.0
    ],
@@ -11263,7 +11877,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 315.0
+   "rotation": 225.0
   },
   {
    "id": "well",
@@ -11788,6 +12402,29 @@
    }
   },
   {
+   "id": "sgraffito-house-1",
+   "label": "Sgraffito house",
+   "rect": [
+    143.208,
+    38.565,
+    11.66,
+    10.196
+   ],
+   "points": [
+    151.868,
+    38.565,
+    154.868,
+    43.761,
+    146.208,
+    48.761,
+    143.208,
+    43.565
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
    "id": "sgraffito-house-7",
    "label": "Sgraffito house",
    "rect": [
@@ -12012,6 +12649,29 @@
     84.815,
     107.191,
     81.815
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "sgraffito-house-13",
+   "label": "Sgraffito house",
+   "rect": [
+    140.775,
+    30.3,
+    11.314,
+    11.314
+   ],
+   "points": [
+    145.018,
+    41.613,
+    140.775,
+    37.371,
+    147.846,
+    30.3,
+    152.089,
+    34.542
    ],
    "place": {
     "kind": "home"
@@ -12273,6 +12933,29 @@
    }
   },
   {
+   "id": "tenement-2",
+   "label": "Courtyard tenement",
+   "rect": [
+    94.296,
+    48.477,
+    18.124,
+    17.392
+   ],
+   "points": [
+    112.421,
+    58.869,
+    100.296,
+    65.869,
+    94.296,
+    55.477,
+    106.421,
+    48.477
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
    "id": "school-1",
    "label": "School",
    "rect": [
@@ -12337,29 +13020,6 @@
     160.013,
     82.791,
     157.942
-   ],
-   "place": {
-    "kind": "home"
-   }
-  },
-  {
-   "id": "bata-house-2",
-   "label": "Ba\u0165a house",
-   "rect": [
-    142.708,
-    40.199,
-    8.33,
-    9.428
-   ],
-   "points": [
-    147.038,
-    40.199,
-    151.038,
-    47.127,
-    146.708,
-    49.627,
-    142.708,
-    42.699
    ],
    "place": {
     "kind": "home"
@@ -13862,46 +14522,6 @@
    "area": "park"
   },
   {
-   "id": "car-park-4",
-   "label": "Car park (built over a bomb site)",
-   "rect": [
-    98.688,
-    52.502,
-    9.342,
-    9.342
-   ],
-   "points": [
-    108.029,
-    57.173,
-    107.403,
-    59.508,
-    105.694,
-    61.218,
-    103.358,
-    61.844,
-    101.023,
-    61.218,
-    99.313,
-    59.508,
-    98.688,
-    57.173,
-    99.313,
-    54.838,
-    101.023,
-    53.128,
-    103.358,
-    52.502,
-    105.694,
-    53.128,
-    107.403,
-    54.838
-   ],
-   "place": {
-    "kind": "other"
-   },
-   "area": "car-park"
-  },
-  {
    "id": "landing-1",
    "label": "River stairs",
    "rect": [
@@ -14934,6 +15554,33 @@
    "wealth": "poor"
   },
   {
+   "id": "sgraffito-house-1-household",
+   "building": "sgraffito-house-1",
+   "label": "Sgraffito house household",
+   "trade": "labourer",
+   "people": [
+    {
+     "role": "labourer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "poor"
+  },
+  {
    "id": "sgraffito-house-7-household",
    "building": "sgraffito-house-7",
    "label": "Sgraffito house household",
@@ -15181,6 +15828,24 @@
     }
    ],
    "wealth": "rich"
+  },
+  {
+   "id": "sgraffito-house-13-household",
+   "building": "sgraffito-house-13",
+   "label": "Sgraffito house household",
+   "trade": "labourer",
+   "people": [
+    {
+     "role": "labourer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "poor"
   },
   {
    "id": "sgraffito-house-14-household",
@@ -15564,6 +16229,228 @@
    "wealth": "rich"
   },
   {
+   "id": "tenement-2-household",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "widowed spinner",
+   "people": [
+    {
+     "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "elder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-2",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-3",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-4",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "shopkeeper",
+   "people": [
+    {
+     "role": "shopkeeper"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-5",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-6",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "shopkeeper",
+   "people": [
+    {
+     "role": "shopkeeper"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-7",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-8",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "shopkeeper",
+   "people": [
+    {
+     "role": "shopkeeper"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-9",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-10",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-11",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "tenement-2-household-12",
+   "building": "tenement-2",
+   "label": "Courtyard tenement household",
+   "trade": "clerk",
+   "people": [
+    {
+     "role": "clerk"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
    "id": "school-1-household-1",
    "building": "school-1",
    "label": "School household",
@@ -15630,61 +16517,19 @@
    "id": "bata-house-1-household-2",
    "building": "bata-house-1",
    "label": "Ba\u0165a house household",
-   "trade": "nurse",
+   "trade": "driver",
    "people": [
     {
-     "role": "nurse"
+     "role": "driver"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
     }
    ],
    "wealth": "middling"
-  },
-  {
-   "id": "bata-house-2-household",
-   "building": "bata-house-2",
-   "label": "Ba\u0165a house household",
-   "trade": "labourer",
-   "people": [
-    {
-     "role": "labourer"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "poor"
-  },
-  {
-   "id": "bata-house-2-household-2",
-   "building": "bata-house-2",
-   "label": "Ba\u0165a house household",
-   "trade": "shopkeeper",
-   "people": [
-    {
-     "role": "shopkeeper"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "poor"
   },
   {
    "id": "dept-store-1-household",
@@ -15711,13 +16556,13 @@
    "id": "culture-house-1-household-1",
    "building": "culture-house-1",
    "label": "House of culture household",
-   "trade": "nurse",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "nurse"
+     "role": "pensioner"
     },
     {
-     "role": "child"
+     "role": "partner"
     },
     {
      "role": "child"
@@ -15732,13 +16577,19 @@
    "id": "panel-block-1-household-1",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "teacher",
    "people": [
     {
-     "role": "driver"
+     "role": "teacher"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -15748,6 +16599,21 @@
   },
   {
    "id": "panel-block-1-household-2",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-1-household-3",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "student",
@@ -15763,21 +16629,6 @@
     },
     {
      "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-1-household-3",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "clerk",
-   "people": [
-    {
-     "role": "clerk"
-    },
-    {
-     "role": "partner"
     },
     {
      "role": "child"
@@ -15796,6 +16647,9 @@
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -15804,19 +16658,13 @@
    "id": "panel-block-1-household-5",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "teacher",
    "people": [
     {
-     "role": "factory hand"
+     "role": "teacher"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -15838,6 +16686,9 @@
     },
     {
      "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -15846,13 +16697,16 @@
    "id": "panel-block-1-household-7",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "driver",
    "people": [
     {
-     "role": "nurse"
+     "role": "driver"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -15861,10 +16715,10 @@
    "id": "panel-block-1-household-8",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "student",
    "people": [
     {
-     "role": "clerk"
+     "role": "student"
     },
     {
      "role": "partner"
@@ -15882,13 +16736,13 @@
    "id": "panel-block-1-household-9",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "teacher"
+     "role": "factory hand"
     },
     {
-     "role": "child"
+     "role": "partner"
     },
     {
      "role": "child"
@@ -15903,10 +16757,10 @@
    "id": "panel-block-1-household-10",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "nurse",
    "people": [
     {
-     "role": "factory hand"
+     "role": "nurse"
     },
     {
      "role": "partner"
@@ -15918,13 +16772,19 @@
    "id": "panel-block-1-household-11",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "student",
    "people": [
     {
-     "role": "teacher"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -15936,16 +16796,13 @@
    "id": "panel-block-1-household-12",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "nurse",
    "people": [
     {
-     "role": "teacher"
+     "role": "nurse"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -15954,19 +16811,13 @@
    "id": "panel-block-1-household-13",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "nurse"
+     "role": "factory hand"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -15978,16 +16829,13 @@
    "id": "panel-block-1-household-14",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "driver"
+     "role": "pensioner"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -15999,19 +16847,13 @@
    "id": "panel-block-1-household-15",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "clerk",
    "people": [
     {
-     "role": "nurse"
+     "role": "clerk"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -16023,10 +16865,10 @@
    "id": "panel-block-1-household-16",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "student",
    "people": [
     {
-     "role": "pensioner"
+     "role": "student"
     },
     {
      "role": "partner"
@@ -16047,13 +16889,16 @@
    "id": "panel-block-1-household-17",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "driver",
    "people": [
     {
-     "role": "clerk"
+     "role": "driver"
     },
     {
-     "role": "partner"
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16065,16 +16910,10 @@
    "id": "panel-block-1-household-18",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "student"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
+     "role": "factory hand"
     },
     {
      "role": "child"
@@ -16086,13 +16925,10 @@
    "id": "panel-block-1-household-19",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "nurse",
    "people": [
     {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
+     "role": "nurse"
     },
     {
      "role": "child"
@@ -16104,13 +16940,10 @@
    "id": "panel-block-1-household-20",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "student"
-    },
-    {
-     "role": "partner"
+     "role": "factory hand"
     },
     {
      "role": "child"
@@ -16122,13 +16955,19 @@
    "id": "panel-block-1-household-21",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "teacher",
    "people": [
     {
-     "role": "pensioner"
+     "role": "teacher"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16137,13 +16976,10 @@
    "id": "panel-block-1-household-22",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "driver",
    "people": [
     {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
+     "role": "driver"
     },
     {
      "role": "child"
@@ -16155,10 +16991,10 @@
    "id": "panel-block-1-household-23",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "driver",
    "people": [
     {
-     "role": "teacher"
+     "role": "driver"
     },
     {
      "role": "partner"
@@ -16180,9 +17016,6 @@
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16191,13 +17024,16 @@
    "id": "panel-block-1-household-25",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "nurse",
    "people": [
     {
-     "role": "clerk"
+     "role": "nurse"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16216,9 +17052,6 @@
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16237,12 +17070,6 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16251,13 +17078,19 @@
    "id": "panel-block-1-household-28",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "driver",
    "people": [
     {
-     "role": "factory hand"
+     "role": "driver"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16269,13 +17102,16 @@
    "id": "panel-block-1-household-29",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "student",
    "people": [
     {
-     "role": "driver"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16288,12 +17124,6 @@
    "people": [
     {
      "role": "nurse"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -16312,6 +17142,15 @@
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16320,13 +17159,19 @@
    "id": "panel-block-1-household-32",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "student",
    "people": [
     {
-     "role": "pensioner"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16336,51 +17181,6 @@
   },
   {
    "id": "panel-block-1-household-33",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-1-household-34",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "factory hand",
-   "people": [
-    {
-     "role": "factory hand"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-1-household-35",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "factory hand",
-   "people": [
-    {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-1-household-36",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "teacher",
@@ -16404,19 +17204,46 @@
    "wealth": "middling"
   },
   {
-   "id": "panel-block-1-household-37",
+   "id": "panel-block-1-household-34",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "clerk"
+     "role": "factory hand"
     },
     {
      "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-1-household-35",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
     },
     {
-     "role": "child"
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-1-household-36",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -16428,13 +17255,31 @@
    "wealth": "middling"
   },
   {
+   "id": "panel-block-1-household-37",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
    "id": "panel-block-1-household-38",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "clerk",
    "people": [
     {
-     "role": "pensioner"
+     "role": "clerk"
     },
     {
      "role": "partner"
@@ -16455,10 +17300,10 @@
    "id": "panel-block-1-household-39",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "clerk",
    "people": [
     {
-     "role": "driver"
+     "role": "clerk"
     },
     {
      "role": "partner"
@@ -16473,13 +17318,16 @@
    "id": "panel-block-1-household-40",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "student",
    "people": [
     {
-     "role": "teacher"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16491,10 +17339,16 @@
    "id": "panel-block-1-household-41",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "teacher",
    "people": [
     {
-     "role": "factory hand"
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16516,15 +17370,6 @@
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16533,13 +17378,16 @@
    "id": "panel-block-1-household-43",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "teacher",
    "people": [
     {
-     "role": "clerk"
+     "role": "teacher"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16548,13 +17396,10 @@
    "id": "panel-block-1-household-44",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "nurse",
    "people": [
     {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
+     "role": "nurse"
     },
     {
      "role": "child"
@@ -16566,13 +17411,16 @@
    "id": "panel-block-1-household-45",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "driver",
    "people": [
     {
-     "role": "teacher"
+     "role": "driver"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16584,22 +17432,13 @@
    "id": "panel-block-1-household-46",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "nurse",
    "people": [
     {
-     "role": "teacher"
+     "role": "nurse"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16608,13 +17447,16 @@
    "id": "panel-block-1-household-47",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "student",
    "people": [
     {
-     "role": "clerk"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16629,13 +17471,19 @@
    "id": "panel-block-1-household-48",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "factory hand"
+     "role": "pensioner"
     },
     {
-     "role": "partner"
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16644,13 +17492,16 @@
    "id": "panel-block-2-household-1",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "clerk",
    "people": [
     {
-     "role": "driver"
+     "role": "clerk"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16662,10 +17513,10 @@
    "id": "panel-block-2-household-2",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "nurse",
    "people": [
     {
-     "role": "factory hand"
+     "role": "nurse"
     },
     {
      "role": "partner"
@@ -16680,10 +17531,10 @@
    "id": "panel-block-2-household-3",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "student"
+     "role": "factory hand"
     },
     {
      "role": "partner"
@@ -16701,19 +17552,13 @@
    "id": "panel-block-2-household-4",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "clerk",
    "people": [
     {
-     "role": "teacher"
+     "role": "clerk"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16722,16 +17567,13 @@
    "id": "panel-block-2-household-5",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "teacher",
    "people": [
     {
-     "role": "pensioner"
+     "role": "teacher"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -16743,10 +17585,16 @@
    "id": "panel-block-2-household-6",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "teacher",
    "people": [
     {
-     "role": "clerk"
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16762,12 +17610,6 @@
    "people": [
     {
      "role": "factory hand"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16776,13 +17618,22 @@
    "id": "panel-block-2-household-8",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "student",
    "people": [
     {
-     "role": "clerk"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16795,6 +17646,12 @@
    "people": [
     {
      "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16803,10 +17660,10 @@
    "id": "panel-block-2-household-10",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "teacher"
+     "role": "pensioner"
     },
     {
      "role": "partner"
@@ -16821,13 +17678,19 @@
    "id": "panel-block-2-household-11",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "clerk"
+     "role": "pensioner"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -16839,10 +17702,10 @@
    "id": "panel-block-2-household-12",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "factory hand"
+     "role": "pensioner"
     },
     {
      "role": "partner"
@@ -16857,16 +17720,10 @@
    "id": "panel-block-2-household-13",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "teacher",
    "people": [
     {
-     "role": "clerk"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
+     "role": "teacher"
     },
     {
      "role": "child"
@@ -16878,10 +17735,10 @@
    "id": "panel-block-2-household-14",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "student",
    "people": [
     {
-     "role": "factory hand"
+     "role": "student"
     },
     {
      "role": "partner"
@@ -16902,16 +17759,13 @@
    "id": "panel-block-2-household-15",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "clerk",
    "people": [
     {
-     "role": "student"
+     "role": "clerk"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -16920,10 +17774,10 @@
    "id": "panel-block-2-household-16",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "teacher",
    "people": [
     {
-     "role": "nurse"
+     "role": "teacher"
     },
     {
      "role": "partner"
@@ -16938,13 +17792,13 @@
    "id": "panel-block-2-household-17",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "student",
    "people": [
     {
-     "role": "factory hand"
+     "role": "student"
     },
     {
-     "role": "partner"
+     "role": "child"
     },
     {
      "role": "child"
@@ -16959,6 +17813,69 @@
    "id": "panel-block-2-household-18",
    "building": "panel-block-2",
    "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-2-household-19",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "clerk",
+   "people": [
+    {
+     "role": "clerk"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-2-household-20",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-2-household-21",
+   "building": "panel-block-2",
+   "label": "Panel block household",
    "trade": "clerk",
    "people": [
     {
@@ -16971,58 +17888,13 @@
    "wealth": "middling"
   },
   {
-   "id": "panel-block-2-household-19",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-2-household-20",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "nurse",
-   "people": [
-    {
-     "role": "nurse"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-2-household-21",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "nurse",
-   "people": [
-    {
-     "role": "nurse"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
    "id": "panel-block-2-household-22",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "nurse"
+     "role": "factory hand"
     },
     {
      "role": "partner"
@@ -17047,12 +17919,6 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17061,19 +17927,13 @@
    "id": "panel-block-2-household-24",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "teacher"
+     "role": "factory hand"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -17092,6 +17952,15 @@
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17100,19 +17969,13 @@
    "id": "panel-block-2-household-26",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "teacher",
    "people": [
     {
-     "role": "factory hand"
+     "role": "teacher"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17121,19 +17984,13 @@
    "id": "panel-block-2-household-27",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "student",
    "people": [
     {
-     "role": "pensioner"
+     "role": "student"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17149,15 +18006,6 @@
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17166,10 +18014,10 @@
    "id": "panel-block-2-household-29",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "student",
    "people": [
     {
-     "role": "pensioner"
+     "role": "student"
     },
     {
      "role": "partner"
@@ -17190,19 +18038,10 @@
    "id": "panel-block-2-household-30",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "driver",
    "people": [
     {
-     "role": "nurse"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "driver"
     }
    ],
    "wealth": "middling"
@@ -17211,10 +18050,13 @@
    "id": "panel-block-2-household-31",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "teacher",
    "people": [
     {
-     "role": "pensioner"
+     "role": "teacher"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -17230,33 +18072,6 @@
    "people": [
     {
      "role": "driver"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-2-household-33",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-2-household-34",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
     },
     {
      "role": "partner"
@@ -17268,13 +18083,61 @@
    "wealth": "middling"
   },
   {
+   "id": "panel-block-2-household-33",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-2-household-34",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
    "id": "panel-block-2-household-35",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "clerk",
    "people": [
     {
-     "role": "driver"
+     "role": "clerk"
     },
     {
      "role": "partner"
@@ -17289,10 +18152,13 @@
    "id": "panel-block-2-household-36",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "driver",
    "people": [
     {
-     "role": "student"
+     "role": "driver"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -17307,10 +18173,10 @@
    "id": "panel-block-2-household-37",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "clerk",
    "people": [
     {
-     "role": "pensioner"
+     "role": "clerk"
     },
     {
      "role": "partner"
@@ -17331,16 +18197,13 @@
    "id": "panel-block-2-household-38",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "student",
    "people": [
     {
-     "role": "driver"
+     "role": "student"
     },
     {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "partner"
     },
     {
      "role": "child"
@@ -17352,19 +18215,13 @@
    "id": "panel-block-2-household-39",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "nurse",
    "people": [
     {
-     "role": "student"
+     "role": "nurse"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -17376,13 +18233,19 @@
    "id": "panel-block-2-household-40",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "student"
+     "role": "factory hand"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -17394,13 +18257,16 @@
    "id": "panel-block-2-household-41",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "clerk",
    "people": [
     {
-     "role": "teacher"
+     "role": "clerk"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -17412,13 +18278,10 @@
    "id": "panel-block-2-household-42",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "driver",
    "people": [
     {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
+     "role": "driver"
     }
    ],
    "wealth": "middling"
@@ -17427,10 +18290,10 @@
    "id": "panel-block-2-household-43",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "teacher"
+     "role": "factory hand"
     },
     {
      "role": "partner"
@@ -17451,10 +18314,10 @@
    "id": "panel-block-2-household-44",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "clerk",
    "people": [
     {
-     "role": "pensioner"
+     "role": "clerk"
     },
     {
      "role": "partner"
@@ -17466,13 +18329,16 @@
    "id": "panel-block-2-household-45",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "driver",
    "people": [
     {
-     "role": "pensioner"
+     "role": "driver"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17481,13 +18347,10 @@
    "id": "panel-block-2-household-46",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "driver",
    "people": [
     {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
+     "role": "driver"
     },
     {
      "role": "child"
@@ -17499,19 +18362,10 @@
    "id": "panel-block-2-household-47",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "student",
    "people": [
     {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "student"
     }
    ],
    "wealth": "middling"
@@ -17520,10 +18374,10 @@
    "id": "panel-block-2-household-48",
    "building": "panel-block-2",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "clerk",
    "people": [
     {
-     "role": "nurse"
+     "role": "clerk"
     },
     {
      "role": "partner"
@@ -17538,25 +18392,10 @@
    "id": "panel-block-3-household-1",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "pensioner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-3-household-2",
-   "building": "panel-block-3",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
+     "role": "factory hand"
     },
     {
      "role": "partner"
@@ -17568,7 +18407,37 @@
    "wealth": "middling"
   },
   {
+   "id": "panel-block-3-household-2",
+   "building": "panel-block-3",
+   "label": "Panel block household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
    "id": "panel-block-3-household-3",
+   "building": "panel-block-3",
+   "label": "Panel block household",
+   "trade": "clerk",
+   "people": [
+    {
+     "role": "clerk"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-3-household-4",
    "building": "panel-block-3",
    "label": "Panel block household",
    "trade": "factory hand",
@@ -17584,27 +18453,6 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-3-household-4",
-   "building": "panel-block-3",
-   "label": "Panel block household",
-   "trade": "teacher",
-   "people": [
-    {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17613,10 +18461,10 @@
    "id": "panel-block-3-household-5",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "teacher",
    "people": [
     {
-     "role": "clerk"
+     "role": "teacher"
     },
     {
      "role": "partner"
@@ -17637,19 +18485,10 @@
    "id": "panel-block-3-household-6",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "factory hand"
     }
    ],
    "wealth": "middling"
@@ -17658,13 +18497,19 @@
    "id": "panel-block-3-household-7",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "driver",
    "people": [
     {
-     "role": "teacher"
+     "role": "driver"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -17676,13 +18521,10 @@
    "id": "panel-block-3-household-8",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "driver",
    "people": [
     {
-     "role": "student"
-    },
-    {
-     "role": "partner"
+     "role": "driver"
     },
     {
      "role": "child"
@@ -17694,13 +18536,19 @@
    "id": "panel-block-3-household-9",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "student",
    "people": [
     {
-     "role": "pensioner"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -17712,13 +18560,16 @@
    "id": "panel-block-3-household-10",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "nurse",
    "people": [
     {
-     "role": "student"
+     "role": "nurse"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17727,10 +18578,10 @@
    "id": "panel-block-3-household-11",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "nurse",
    "people": [
     {
-     "role": "teacher"
+     "role": "nurse"
     },
     {
      "role": "partner"
@@ -17742,10 +18593,10 @@
    "id": "panel-block-3-household-12",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "teacher"
+     "role": "factory hand"
     },
     {
      "role": "partner"
@@ -17757,10 +18608,16 @@
    "id": "panel-block-3-household-13",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "clerk",
    "people": [
     {
-     "role": "factory hand"
+     "role": "clerk"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -17775,10 +18632,10 @@
    "id": "panel-block-3-household-14",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "teacher",
    "people": [
     {
-     "role": "clerk"
+     "role": "teacher"
     },
     {
      "role": "partner"
@@ -17800,9 +18657,6 @@
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17811,13 +18665,16 @@
    "id": "panel-block-3-household-16",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "student",
    "people": [
     {
-     "role": "pensioner"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -17832,10 +18689,10 @@
    "id": "panel-block-3-household-17",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "student",
    "people": [
     {
-     "role": "nurse"
+     "role": "student"
     }
    ],
    "wealth": "middling"
@@ -17862,13 +18719,16 @@
    "id": "panel-block-3-household-19",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "driver",
    "people": [
     {
-     "role": "teacher"
+     "role": "driver"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -17877,19 +18737,13 @@
    "id": "panel-block-3-household-20",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "clerk",
    "people": [
     {
-     "role": "teacher"
+     "role": "clerk"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -17901,10 +18755,13 @@
    "id": "panel-block-3-household-21",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "nurse",
    "people": [
     {
-     "role": "student"
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -17916,19 +18773,13 @@
    "id": "panel-block-3-household-22",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "nurse",
    "people": [
     {
-     "role": "teacher"
+     "role": "nurse"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -17950,12 +18801,63 @@
     },
     {
      "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
   },
   {
    "id": "panel-block-3-household-24",
+   "building": "panel-block-3",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-3-household-25",
+   "building": "panel-block-3",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-3-household-26",
+   "building": "panel-block-3",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-3-household-27",
    "building": "panel-block-3",
    "label": "Panel block household",
    "trade": "factory hand",
@@ -17968,63 +18870,6 @@
     },
     {
      "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-3-household-25",
-   "building": "panel-block-3",
-   "label": "Panel block household",
-   "trade": "teacher",
-   "people": [
-    {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-3-household-26",
-   "building": "panel-block-3",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-3-household-27",
-   "building": "panel-block-3",
-   "label": "Panel block household",
-   "trade": "teacher",
-   "people": [
-    {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
     },
     {
      "role": "child"
@@ -18045,7 +18890,7 @@
      "role": "factory hand"
     },
     {
-     "role": "partner"
+     "role": "child"
     },
     {
      "role": "child"
@@ -18057,22 +18902,13 @@
    "id": "panel-block-3-household-29",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "student",
    "people": [
     {
-     "role": "driver"
+     "role": "student"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18081,19 +18917,13 @@
    "id": "panel-block-3-household-30",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "nurse",
    "people": [
     {
-     "role": "student"
+     "role": "nurse"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -18105,22 +18935,10 @@
    "id": "panel-block-3-household-31",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "student"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "factory hand"
     }
    ],
    "wealth": "middling"
@@ -18129,19 +18947,13 @@
    "id": "panel-block-3-household-32",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "driver",
    "people": [
     {
-     "role": "teacher"
+     "role": "driver"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -18160,15 +18972,6 @@
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18177,10 +18980,13 @@
    "id": "panel-block-3-household-34",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "teacher",
    "people": [
     {
-     "role": "pensioner"
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
     }
    ],
    "wealth": "middling"
@@ -18189,16 +18995,13 @@
    "id": "panel-block-3-household-35",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "clerk",
    "people": [
     {
-     "role": "nurse"
+     "role": "clerk"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -18210,10 +19013,10 @@
    "id": "panel-block-3-household-36",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "nurse",
    "people": [
     {
-     "role": "factory hand"
+     "role": "nurse"
     },
     {
      "role": "partner"
@@ -18228,13 +19031,19 @@
    "id": "panel-block-3-household-37",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "clerk",
    "people": [
     {
-     "role": "nurse"
+     "role": "clerk"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -18246,10 +19055,16 @@
    "id": "panel-block-3-household-38",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "student"
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -18264,13 +19079,16 @@
    "id": "panel-block-3-household-39",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "driver"
+     "role": "pensioner"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18279,19 +19097,13 @@
    "id": "panel-block-3-household-40",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "nurse"
+     "role": "factory hand"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18321,10 +19133,13 @@
    "id": "panel-block-3-household-42",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "teacher",
    "people": [
     {
-     "role": "student"
+     "role": "teacher"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18333,16 +19148,13 @@
    "id": "panel-block-3-household-43",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "teacher",
    "people": [
     {
-     "role": "driver"
+     "role": "teacher"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -18367,6 +19179,9 @@
     },
     {
      "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18375,10 +19190,10 @@
    "id": "panel-block-3-household-45",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "driver",
    "people": [
     {
-     "role": "teacher"
+     "role": "driver"
     },
     {
      "role": "partner"
@@ -18399,13 +19214,13 @@
    "id": "panel-block-3-household-46",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "factory hand"
+     "role": "pensioner"
     },
     {
-     "role": "partner"
+     "role": "child"
     },
     {
      "role": "child"
@@ -18417,13 +19232,16 @@
    "id": "panel-block-3-household-47",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "driver"
+     "role": "pensioner"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18432,16 +19250,13 @@
    "id": "panel-block-3-household-48",
    "building": "panel-block-3",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "student",
    "people": [
     {
-     "role": "factory hand"
+     "role": "student"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18468,19 +19283,13 @@
    "id": "panel-block-4-household-2",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "clerk",
    "people": [
     {
-     "role": "factory hand"
+     "role": "clerk"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18495,9 +19304,6 @@
      "role": "nurse"
     },
     {
-     "role": "partner"
-    },
-    {
      "role": "child"
     }
    ],
@@ -18507,16 +19313,13 @@
    "id": "panel-block-4-household-4",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "nurse"
+     "role": "pensioner"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18525,10 +19328,10 @@
    "id": "panel-block-4-household-5",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "driver"
+     "role": "pensioner"
     },
     {
      "role": "partner"
@@ -18543,16 +19346,13 @@
    "id": "panel-block-4-household-6",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "student",
    "people": [
     {
-     "role": "nurse"
+     "role": "student"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -18564,10 +19364,10 @@
    "id": "panel-block-4-household-7",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "teacher",
    "people": [
     {
-     "role": "driver"
+     "role": "teacher"
     },
     {
      "role": "partner"
@@ -18577,6 +19377,36 @@
   },
   {
    "id": "panel-block-4-household-8",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-9",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-10",
    "building": "panel-block-4",
    "label": "Panel block household",
    "trade": "teacher",
@@ -18589,33 +19419,9 @@
     },
     {
      "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-4-household-9",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "clerk",
-   "people": [
-    {
-     "role": "clerk"
     },
     {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-4-household-10",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "clerk",
-   "people": [
-    {
-     "role": "clerk"
+     "role": "child"
     },
     {
      "role": "child"
@@ -18633,6 +19439,9 @@
      "role": "clerk"
     },
     {
+     "role": "partner"
+    },
+    {
      "role": "child"
     }
    ],
@@ -18642,16 +19451,10 @@
    "id": "panel-block-4-household-12",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
+     "role": "factory hand"
     },
     {
      "role": "child"
@@ -18670,6 +19473,9 @@
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18678,10 +19484,13 @@
    "id": "panel-block-4-household-14",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "teacher"
+     "role": "factory hand"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18690,16 +19499,43 @@
    "id": "panel-block-4-household-15",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "nurse",
    "people": [
     {
-     "role": "driver"
+     "role": "nurse"
     }
    ],
    "wealth": "middling"
   },
   {
    "id": "panel-block-4-household-16",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-17",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-18",
    "building": "panel-block-4",
    "label": "Panel block household",
    "trade": "factory hand",
@@ -18712,39 +19548,6 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-4-household-17",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-4-household-18",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18753,10 +19556,10 @@
    "id": "panel-block-4-household-19",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "clerk",
    "people": [
     {
-     "role": "driver"
+     "role": "clerk"
     },
     {
      "role": "child"
@@ -18766,6 +19569,72 @@
   },
   {
    "id": "panel-block-4-household-20",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-21",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-22",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "clerk",
+   "people": [
+    {
+     "role": "clerk"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-23",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-24",
    "building": "panel-block-4",
    "label": "Panel block household",
    "trade": "student",
@@ -18783,85 +19652,13 @@
    "wealth": "middling"
   },
   {
-   "id": "panel-block-4-household-21",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-4-household-22",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-4-household-23",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "teacher",
-   "people": [
-    {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-4-household-24",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "teacher",
-   "people": [
-    {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
    "id": "panel-block-4-household-25",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "driver"
-    },
-    {
-     "role": "child"
+     "role": "pensioner"
     },
     {
      "role": "child"
@@ -18873,22 +19670,10 @@
    "id": "panel-block-4-household-26",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "nurse"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "pensioner"
     }
    ],
    "wealth": "middling"
@@ -18904,6 +19689,9 @@
     },
     {
      "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18912,19 +19700,13 @@
    "id": "panel-block-4-household-28",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "student",
    "people": [
     {
-     "role": "clerk"
+     "role": "student"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -18936,16 +19718,13 @@
    "id": "panel-block-4-household-29",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "nurse",
    "people": [
     {
-     "role": "driver"
+     "role": "nurse"
     },
     {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "partner"
     },
     {
      "role": "child"
@@ -18957,13 +19736,13 @@
    "id": "panel-block-4-household-30",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "student",
    "people": [
     {
-     "role": "clerk"
+     "role": "student"
     },
     {
-     "role": "partner"
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -18972,13 +19751,16 @@
    "id": "panel-block-4-household-31",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "driver"
+     "role": "factory hand"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -18997,12 +19779,36 @@
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
   },
   {
    "id": "panel-block-4-household-33",
+   "building": "panel-block-4",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-4-household-34",
    "building": "panel-block-4",
    "label": "Panel block household",
    "trade": "clerk",
@@ -19015,27 +19821,6 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-4-household-34",
-   "building": "panel-block-4",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19044,13 +19829,16 @@
    "id": "panel-block-4-household-35",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "driver"
+     "role": "pensioner"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -19062,10 +19850,13 @@
    "id": "panel-block-4-household-36",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "clerk",
    "people": [
     {
-     "role": "teacher"
+     "role": "clerk"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -19083,7 +19874,7 @@
      "role": "driver"
     },
     {
-     "role": "child"
+     "role": "partner"
     },
     {
      "role": "child"
@@ -19098,13 +19889,19 @@
    "id": "panel-block-4-household-38",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "nurse",
    "people": [
     {
-     "role": "factory hand"
+     "role": "nurse"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19113,10 +19910,13 @@
    "id": "panel-block-4-household-39",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "student"
+     "role": "pensioner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19129,9 +19929,6 @@
    "people": [
     {
      "role": "pensioner"
-    },
-    {
-     "role": "partner"
     }
    ],
    "wealth": "middling"
@@ -19140,13 +19937,16 @@
    "id": "panel-block-4-household-41",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "student",
    "people": [
     {
-     "role": "nurse"
+     "role": "student"
     },
     {
-     "role": "partner"
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -19158,16 +19958,13 @@
    "id": "panel-block-4-household-42",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "student",
    "people": [
     {
-     "role": "clerk"
+     "role": "student"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -19179,10 +19976,10 @@
    "id": "panel-block-4-household-43",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "nurse",
    "people": [
     {
-     "role": "teacher"
+     "role": "nurse"
     },
     {
      "role": "partner"
@@ -19218,13 +20015,22 @@
    "id": "panel-block-4-household-45",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "teacher",
    "people": [
     {
-     "role": "factory hand"
+     "role": "teacher"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19233,10 +20039,10 @@
    "id": "panel-block-4-household-46",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "teacher",
    "people": [
     {
-     "role": "factory hand"
+     "role": "teacher"
     },
     {
      "role": "partner"
@@ -19251,19 +20057,10 @@
    "id": "panel-block-4-household-47",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "clerk",
    "people": [
     {
-     "role": "student"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "clerk"
     },
     {
      "role": "child"
@@ -19275,13 +20072,16 @@
    "id": "panel-block-4-household-48",
    "building": "panel-block-4",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "driver",
    "people": [
     {
-     "role": "factory hand"
+     "role": "driver"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -19293,10 +20093,16 @@
    "id": "panel-block-5-household-1",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "student"
+     "role": "pensioner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -19308,16 +20114,13 @@
    "id": "panel-block-5-household-2",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "student",
    "people": [
     {
-     "role": "factory hand"
+     "role": "student"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -19332,10 +20135,13 @@
    "id": "panel-block-5-household-3",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "driver",
+   "trade": "nurse",
    "people": [
     {
-     "role": "driver"
+     "role": "nurse"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -19350,10 +20156,10 @@
    "id": "panel-block-5-household-4",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "nurse",
    "people": [
     {
-     "role": "clerk"
+     "role": "nurse"
     },
     {
      "role": "partner"
@@ -19368,13 +20174,16 @@
    "id": "panel-block-5-household-5",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "student",
    "people": [
     {
-     "role": "clerk"
+     "role": "student"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19383,13 +20192,16 @@
    "id": "panel-block-5-household-6",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "teacher",
    "people": [
     {
-     "role": "nurse"
+     "role": "teacher"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19398,13 +20210,16 @@
    "id": "panel-block-5-household-7",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "student",
+   "trade": "teacher",
    "people": [
     {
-     "role": "student"
+     "role": "teacher"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19413,10 +20228,10 @@
    "id": "panel-block-5-household-8",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "student",
    "people": [
     {
-     "role": "factory hand"
+     "role": "student"
     },
     {
      "role": "child"
@@ -19431,10 +20246,19 @@
    "id": "panel-block-5-household-9",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "student",
    "people": [
     {
-     "role": "teacher"
+     "role": "student"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -19444,54 +20268,6 @@
   },
   {
    "id": "panel-block-5-household-10",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-11",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "nurse",
-   "people": [
-    {
-     "role": "nurse"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-12",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-13",
    "building": "panel-block-5",
    "label": "Panel block household",
    "trade": "student",
@@ -19509,7 +20285,88 @@
    "wealth": "middling"
   },
   {
+   "id": "panel-block-5-household-11",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-12",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-13",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
    "id": "panel-block-5-household-14",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-15",
    "building": "panel-block-5",
    "label": "Panel block household",
    "trade": "teacher",
@@ -19524,7 +20381,7 @@
    "wealth": "middling"
   },
   {
-   "id": "panel-block-5-household-15",
+   "id": "panel-block-5-household-16",
    "building": "panel-block-5",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -19534,30 +20391,6 @@
     },
     {
      "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-16",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19573,15 +20406,6 @@
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19590,10 +20414,19 @@
    "id": "panel-block-5-household-18",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "pensioner"
+     "role": "factory hand"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19602,13 +20435,22 @@
    "id": "panel-block-5-household-19",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "clerk"
+     "role": "factory hand"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -19617,13 +20459,19 @@
    "id": "panel-block-5-household-20",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "nurse",
    "people": [
     {
-     "role": "pensioner"
+     "role": "nurse"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -19633,84 +20481,6 @@
   },
   {
    "id": "panel-block-5-household-21",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "clerk",
-   "people": [
-    {
-     "role": "clerk"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-22",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "factory hand",
-   "people": [
-    {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-23",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-24",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "factory hand",
-   "people": [
-    {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-25",
    "building": "panel-block-5",
    "label": "Panel block household",
    "trade": "student",
@@ -19731,19 +20501,82 @@
    "wealth": "middling"
   },
   {
-   "id": "panel-block-5-household-26",
+   "id": "panel-block-5-household-22",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "clerk",
+   "trade": "teacher",
    "people": [
     {
-     "role": "clerk"
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-23",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-24",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
     },
     {
      "role": "partner"
     },
     {
      "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-25",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-26",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -19755,10 +20588,10 @@
    "id": "panel-block-5-household-27",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "nurse",
    "people": [
     {
-     "role": "pensioner"
+     "role": "nurse"
     },
     {
      "role": "partner"
@@ -19770,10 +20603,10 @@
    "id": "panel-block-5-household-28",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "clerk",
    "people": [
     {
-     "role": "factory hand"
+     "role": "clerk"
     },
     {
      "role": "partner"
@@ -19788,10 +20621,10 @@
    "id": "panel-block-5-household-29",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "factory hand",
+   "trade": "nurse",
    "people": [
     {
-     "role": "factory hand"
+     "role": "nurse"
     },
     {
      "role": "child"
@@ -19809,6 +20642,156 @@
    "id": "panel-block-5-household-30",
    "building": "panel-block-5",
    "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-31",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "student",
+   "people": [
+    {
+     "role": "student"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-32",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-33",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-34",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-35",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "clerk",
+   "people": [
+    {
+     "role": "clerk"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-36",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-37",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-38",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "factory hand",
+   "people": [
+    {
+     "role": "factory hand"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-39",
+   "building": "panel-block-5",
+   "label": "Panel block household",
    "trade": "student",
    "people": [
     {
@@ -19824,7 +20807,130 @@
    "wealth": "middling"
   },
   {
-   "id": "panel-block-5-household-31",
+   "id": "panel-block-5-household-40",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-41",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "clerk",
+   "people": [
+    {
+     "role": "clerk"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-42",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-43",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-44",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-45",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-46",
+   "building": "panel-block-5",
+   "label": "Panel block household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "panel-block-5-household-47",
    "building": "panel-block-5",
    "label": "Panel block household",
    "trade": "clerk",
@@ -19848,304 +20954,22 @@
    "wealth": "middling"
   },
   {
-   "id": "panel-block-5-household-32",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "teacher",
-   "people": [
-    {
-     "role": "teacher"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-33",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-34",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-35",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-36",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-37",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "teacher",
-   "people": [
-    {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-38",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "factory hand",
-   "people": [
-    {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-39",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "factory hand",
-   "people": [
-    {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-40",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-41",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-42",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-43",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-44",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-45",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "factory hand",
-   "people": [
-    {
-     "role": "factory hand"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-46",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "teacher",
-   "people": [
-    {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "panel-block-5-household-47",
-   "building": "panel-block-5",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
    "id": "panel-block-5-household-48",
    "building": "panel-block-5",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "nurse"
+     "role": "factory hand"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -20157,13 +20981,19 @@
    "id": "cottage-41-household",
    "building": "cottage-41",
    "label": "Suburban house household",
-   "trade": "teacher",
+   "trade": "engine driver",
    "people": [
     {
-     "role": "teacher"
+     "role": "engine driver"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -20175,10 +21005,10 @@
    "id": "cottage-42-household",
    "building": "cottage-42",
    "label": "Suburban house household",
-   "trade": "factory hand",
+   "trade": "engine driver",
    "people": [
     {
-     "role": "factory hand"
+     "role": "engine driver"
     },
     {
      "role": "partner"
@@ -20193,13 +21023,22 @@
    "id": "cottage-43-household",
    "building": "cottage-43",
    "label": "Suburban house household",
-   "trade": "teacher",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "teacher"
+     "role": "factory hand"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -20208,13 +21047,16 @@
    "id": "cottage-44-household",
    "building": "cottage-44",
    "label": "Suburban house household",
-   "trade": "teacher",
+   "trade": "shopkeeper",
    "people": [
     {
-     "role": "teacher"
+     "role": "shopkeeper"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -20223,13 +21065,16 @@
    "id": "cottage-45-household",
    "building": "cottage-45",
    "label": "Suburban house household",
-   "trade": "teacher",
+   "trade": "nurse",
    "people": [
     {
-     "role": "teacher"
+     "role": "nurse"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -20244,16 +21089,13 @@
    "id": "cottage-46-household",
    "building": "cottage-46",
    "label": "Suburban house household",
-   "trade": "shopkeeper",
+   "trade": "factory hand",
    "people": [
     {
-     "role": "shopkeeper"
+     "role": "factory hand"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -20262,10 +21104,10 @@
    "id": "cottage-47-household",
    "building": "cottage-47",
    "label": "Suburban house household",
-   "trade": "shopkeeper",
+   "trade": "clerk",
    "people": [
     {
-     "role": "shopkeeper"
+     "role": "clerk"
     },
     {
      "role": "child"
@@ -20277,10 +21119,10 @@
    "id": "cottage-48-household",
    "building": "cottage-48",
    "label": "Suburban house household",
-   "trade": "factory hand",
+   "trade": "nurse",
    "people": [
     {
-     "role": "factory hand"
+     "role": "nurse"
     },
     {
      "role": "partner"
@@ -20301,12 +21143,6 @@
      "role": "clerk"
     },
     {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
      "role": "child"
     },
     {
@@ -20319,13 +21155,19 @@
    "id": "cottage-50-household",
    "building": "cottage-50",
    "label": "Suburban house household",
-   "trade": "engine driver",
+   "trade": "clerk",
    "people": [
     {
-     "role": "engine driver"
+     "role": "clerk"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -20337,22 +21179,13 @@
    "id": "cottage-51-household",
    "building": "cottage-51",
    "label": "Suburban house household",
-   "trade": "factory hand",
+   "trade": "nurse",
    "people": [
     {
-     "role": "factory hand"
+     "role": "nurse"
     },
     {
      "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -20475,6 +21308,12 @@
     "dirty": true,
     "rebuilt": false
    },
+   "sgraffito-house-1": {
+    "type": "sgraffito-house",
+    "wealth": "poor",
+    "dirty": false,
+    "rebuilt": false
+   },
    "sgraffito-house-7": {
     "type": "sgraffito-house",
     "wealth": "rich",
@@ -20532,6 +21371,12 @@
    "sgraffito-house-12": {
     "type": "sgraffito-house",
     "wealth": "rich",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "sgraffito-house-13": {
+    "type": "sgraffito-house",
+    "wealth": "poor",
     "dirty": false,
     "rebuilt": false
    },
@@ -20601,6 +21446,12 @@
     "dirty": false,
     "rebuilt": false
    },
+   "tenement-2": {
+    "type": "tenement",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
    "school-1": {
     "type": "school",
     "wealth": null,
@@ -20616,12 +21467,6 @@
    "bata-house-1": {
     "type": "bata-house",
     "wealth": "middling",
-    "dirty": false,
-    "rebuilt": false
-   },
-   "bata-house-2": {
-    "type": "bata-house",
-    "wealth": "poor",
     "dirty": false,
     "rebuilt": false
    },
@@ -24430,6 +25275,52 @@
     ]
    },
    {
+    "id": "gone-arcade-house-6",
+    "label": "Arcaded house",
+    "type": "arcade-house",
+    "year": 1919,
+    "why": "rebuild-mid-century",
+    "rect": [
+     145.14,
+     50.808,
+     9.867,
+     13.403
+    ],
+    "points": [
+     155.007,
+     62.399,
+     148.246,
+     64.211,
+     145.14,
+     52.62,
+     151.901,
+     50.808
+    ]
+   },
+   {
+    "id": "gone-sgraffito-house-13",
+    "label": "Sgraffito house",
+    "type": "sgraffito-house",
+    "year": 1919,
+    "why": "rebuild-mid-century",
+    "rect": [
+     140.775,
+     30.3,
+     11.314,
+     11.314
+    ],
+    "points": [
+     145.018,
+     41.613,
+     140.775,
+     37.371,
+     147.846,
+     30.3,
+     152.089,
+     34.542
+    ]
+   },
+   {
     "id": "gone-sgraffito-house-13",
     "label": "Sgraffito house",
     "type": "sgraffito-house",
@@ -24519,6 +25410,37 @@
      60.473,
      162.637,
      64.716
+    ]
+   },
+   {
+    "id": "gone-cottage-4",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1919,
+    "why": "rebuild-mid-century",
+    "rect": [
+     108.002,
+     44.359,
+     10.117,
+     7.348
+    ],
+    "points": [
+     112.323,
+     51.708,
+     111.676,
+     49.293,
+     108.778,
+     50.069,
+     108.002,
+     47.171,
+     110.899,
+     46.395,
+     110.77,
+     45.912,
+     116.565,
+     44.359,
+     118.118,
+     50.155
     ]
    },
    {
@@ -25102,29 +26024,6 @@
      50.95,
      78.496,
      55.193
-    ]
-   },
-   {
-    "id": "gone-tenement-2",
-    "label": "Courtyard tenement",
-    "type": "tenement",
-    "year": 1940,
-    "why": "blitz",
-    "rect": [
-     94.296,
-     48.477,
-     18.124,
-     17.392
-    ],
-    "points": [
-     112.421,
-     58.869,
-     100.296,
-     65.869,
-     94.296,
-     55.477,
-     106.421,
-     48.477
     ]
    }
   ]

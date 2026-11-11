@@ -40,7 +40,7 @@ export async function run() {
     await scene.view();
     await until(() => canvas.ready && canvas.scene?.id === scene.id, 10000);
     actors = await Actor.create([{name: "WoDX gate: Social NPC", type: "Mortal"}, {name: "WoDX gate: Social PC", type: "Mortal"}]);
-    const npcA = actors.find(a => a.name.endsWith("NPC")), pcA = actors.find(a => a.name.endsWith("PC"));
+    const npcA = actors.find(a => a.name === "WoDX gate: Social NPC"), pcA = actors.find(a => a.name === "WoDX gate: Social PC");
     await scene.createEmbeddedDocuments("Token", [{name: "npc", actorId: npcA.id, x: G * 5, y: G * 5}, {name: "pc", actorId: pcA.id, actorLink: true, x: G * 6, y: G * 5}]);
     npcTok = scene.tokens.find(t => t.actorId === npcA.id); meTok = scene.tokens.find(t => t.actorId === pcA.id);
     await until(() => npcTok.object && meTok.object);
