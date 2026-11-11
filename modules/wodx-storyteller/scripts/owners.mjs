@@ -372,7 +372,7 @@ export async function factionBuildsMonth(rng = Math.random) {
   const cap = {3: 120, 4: 600, 5: Infinity};
   for ( const f of fa.state().factions ?? [] ) {
     const res = num(f.assets?.resources);
-    if ( f.dormant || res < 3 || !f.leader || building.has(f.id) || rng() >= 1 / 6 ) continue;
+    if ( f.dormant || f.owners?.length || res < 3 || !f.leader || building.has(f.id) || rng() >= 1 / 6 ) continue;
     const kinds = B.buildingsAt(yearNow()).filter(b => b.value <= cap[res] && b.value >= 12);
     if ( !kinds.length ) continue;
     const pick = kinds[Math.floor(rng() * kinds.length)];

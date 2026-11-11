@@ -17,14 +17,18 @@ const F = await imp("modules/wodx-npc/scripts/faction-rules.mjs");
 const TK = await imp("modules/wodx-npc/scripts/talk-rules.mjs");
 const IR = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
 
-test("hardship: Atmosphere's day sets how harsh it is", () => {
+test("hardship: Atmosphere's day sets how harsh it is (M20 p. 435: below freezing or above 49°C)", () => {
   assert.equal(H.severityFromDay(null), "none");
-  assert.equal(H.severityFromDay({tempDay: 18, tempNight: 10, precip: "rain", intensity: "light", wind: "breeze"}), "none");
-  assert.equal(H.severityFromDay({tempDay: 2, tempNight: -4, precip: "none", wind: "calm"}), "harsh");
-  assert.equal(H.severityFromDay({tempDay: 0, tempNight: -5, precip: "snow", intensity: "moderate", wind: "wind"}), "severe");
+  assert.equal(H.severityFromDay({tempDay: 18, tempNight: 10, precip: "rain", intensity: "heavy", wind: "gale"}), "none", "a wet gale above freezing is penalties only");
+  assert.equal(H.severityFromDay({tempDay: 38, tempNight: 24, precip: "none", wind: "calm"}), "none", "a hot day below 49°C is penalties only");
+  assert.equal(H.severityFromDay({tempDay: 10, tempNight: 3, precip: "none", wind: "calm", deepSnow: true}), "none");
+  assert.equal(H.severityFromDay({tempDay: 2, tempNight: -1, precip: "none", wind: "calm"}), "harsh");
+  assert.equal(H.severityFromDay({tempDay: 0, tempNight: -4, precip: "snow", intensity: "heavy", wind: "wind"}), "severe");
+  assert.equal(H.severityFromDay({tempDay: 1, tempNight: -2, precip: "sleet", intensity: "moderate", wind: "wind"}), "severe", "an ice storm");
+  assert.equal(H.severityFromDay({tempDay: -6, tempNight: -12, precip: "none", wind: "calm"}), "severe");
   assert.equal(H.severityFromDay({tempDay: -8, tempNight: -14, precip: "snow", intensity: "heavy", wind: "gale"}), "deadly");
-  assert.equal(H.severityFromDay({tempDay: 36, tempNight: 22, precip: "none", wind: "calm"}), "severe");
-  assert.equal(H.severityFromDay({tempDay: 10, tempNight: 6, precip: "none", wind: "calm", deepSnow: true}), "severe");
+  assert.equal(H.severityFromDay({tempDay: -15, tempNight: -22, precip: "none", wind: "calm"}), "deadly");
+  assert.equal(H.severityFromDay({tempDay: 50, tempNight: 30, precip: "none", wind: "calm"}), "harsh");
   assert.equal(H.AUTO, "auto");
   const s = src("modules/wodx-storyteller/scripts/hardship.mjs");
   assert.match(s, /H\.severityFromDay\(skyFor\(scene\)\)/);
@@ -55,6 +59,7 @@ test("bodies: what each era learns", () => {
   assert.match(RM.findings(1925, "fresh").identity, /Fingerprints/);
   assert.match(RM.findings(1999, "bones").identity, /whatever is left/);
   assert.match(RM.findings(2040, "fresh", "drained").who, /scanners/);
+  assert.match(RM.EXAMINE, /Intelligence \+ Medicine/);
   assert.equal(RM.findings(1999, "rotting", "drained").drained, "");
   assert.ok(RM.heatDue({}, "fresh"));
   assert.ok(!RM.heatDue({heated: true}, "fresh"));
