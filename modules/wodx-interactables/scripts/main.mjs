@@ -43,6 +43,9 @@
  *   Targets    A tile marked as a target (rings, bottles in a row, a practice dummy, something to break): shoot it with
  *              each ranged weapon on the sheet at WoDX Combat's range bands, throw at it, strike or break it within
  *              reach; rings score by successes on a scoreboard on the tile; fragile things break on a hit (0.14.0).
+ *   Chases     The Storyteller runs a chase from the Storyteller's hand: the quarry and the pursuers roll each turn, on
+ *              foot, mounted or in the vehicles of the year, over the ground the chase crosses; a catch can start a
+ *              fight through WoDX Combat (chase.mjs, chase-rules.mjs; 0.26.0).
  * The settings for each wall live in flags.wodx-interactables, set in the WoDX part of the wall's config window; a
  * container's live in the same flags on its tile, set in the WoDX part of the tile's config window.
  * Plain doors need no setup: a locked door with no grade has a good lock, and the build follows the material.
@@ -58,10 +61,11 @@ import {setupAdopt} from "./adopt.mjs";
 import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
 import * as Stock from "./stock.mjs";
+import {setupChase} from "./chase.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.25.0";
+const VERSION = "0.26.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -1695,6 +1699,7 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.adopt = setupAdopt();
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
+  game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf});
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

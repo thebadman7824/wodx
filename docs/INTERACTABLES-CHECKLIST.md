@@ -189,3 +189,11 @@ Step 3 of the design note.
 - [x] Tests: organic villages, towns and a city across seeds, an organic town in parts, rotation and outlines in adopt
 - [ ] Testbed deploy and gate of 0.22.0
 - [ ] A castle or citadel (the original can add one; WoDX has no castle building yet)
+
+## 0.26.0: chases and pursuit (2026-11-11)
+- [x] Rules: pursuit roll, head start, speed edge, ways by year, ground, flat out, botches, breaking sight, getting away (B910-B915)
+- [x] Runtime: the Chase window in the Storyteller's hand, turn cards, Undo, damage, Start a fight
+- [x] Harness tests (13 new)
+- [ ] Book check on the PC: V20 core pursuit, vehicle chart and collisions, Revised pursuit
+- [ ] Gate gatechase in rothenstein-wodx
+- [ ] Deployed

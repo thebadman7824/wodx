@@ -1581,3 +1581,10 @@ Ben asked for a bug check of everything done so far. The harness passed 1,286 of
 ## 2026-11-11: trait effects, step 11 (Chronicle 0.24.0, B891)
 - New data/trait-lines.mjs: LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS (335 rows), made from trait-book-checks.md and notes/trait-effects-draft.md. trait-effects.mjs joins them and widens shared V20 entries; BOOKS_DONE lists the books.
 - Tests: trait-lines.test.mjs (2). Gate: gatetraits step 23.
+
+## 2026-11-11: chases and pursuit (Interactables 0.26.0, B910-B915)
+- Master Plan, Lines and eras that meet: chases and pursuit (priority 2, with Interactables).
+- New scripts/chase-rules.mjs (pure): WAYS by year, GROUNDS, speedOf, edge, headStart, rollFor, newChase, playTurn, standing, crash and thrown dice.
+- New scripts/chase.mjs: the Chase window (setup: quarry, pursuers with a search box, ground, lead measured or typed, night; each turn: ground, way and flat out per racer, breaking sight), the turn cards (players in words, the Storyteller's with dice, totals, Undo, damage, Start a fight), the state in the scene flag wodx-interactables.chase, the hook wodxChase. A token at the reins of a mount tile starts on it. Running speed from WoDX Combat's movementFor.
+- In the Storyteller's hand as "A chase"; API game.modules.get("wodx-interactables").api.chase.
+- Tests: chase.test.mjs (13). Gate: tools/gate/gatechase.mjs.
