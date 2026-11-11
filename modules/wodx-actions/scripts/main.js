@@ -60,6 +60,7 @@ import * as CNR from "./consensus-rules.js";
 import * as CK from "./checks-rules.js";
 import * as SOR from "./social-rules.js";
 import * as SOD from "./social.js";
+import * as TH from "./trait-hooks.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -73,6 +74,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 /* ================================================================== */
 
 function registerSettings() {
+    TH.registerTraitSetting();
     // A new setting starts from the choice made in vtda20-actions, if there was one (nothing is written)
     const s = (key, name, hint, type, def) =>
         game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: L.oldSetting("vtda20-actions", key, def) });
@@ -576,6 +578,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       <div class="form-group"><label><input type="checkbox" name="ignoreWounds"/> Spend Willpower to ignore wound penalties (${woundPenalty(actor)})</label></div>
+      ${TH.ticksHtml(actor, esc)}
       <div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${rd.name} ${rd.value}: ${R.auraModifier(rd.value) >= 0 ? "+" : ""}${R.auraModifier(rd.value)})</label></div>
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label><input type="checkbox" name="auto"/> Take an automatic success if pool ≥ difficulty</label></div>
@@ -659,6 +662,7 @@ export async function quickCheck({ actor: a, check = "notice" } = {}) {
       <div class="form-group"><label>Bonus dice / extra difficulty</label><input type="number" name="bonus" value="0" style="width:4em"/> <input type="number" name="extraDiff" value="0" style="width:4em"/></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
+      ${TH.ticksHtml(actor, esc)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
       <p class="vta-note">For a roll against someone, an extended roll or teamwork, use Any roll. Wound penalties apply.</p>
@@ -684,7 +688,8 @@ export async function quickCheck({ actor: a, check = "notice" } = {}) {
         return resolveAction(actor, target, {
             preset: `check-${c.key}`, attr: pick.attr, ability: pick.abilityId, diff: num(fd.diff) || c.diff, mode: "simple",
             bonus: num(fd.bonus), extraDiff: num(fd.extraDiff), multi: 0, retries: 0, specialty: !!fd.specialty, wp: !!fd.wp,
-            ignoreWounds: false, aura: false, daytime: !!fd.daytime, auto: false, desc: fd.desc || c.label.split(" (")[0]
+            ignoreWounds: false, aura: false, daytime: !!fd.daytime, auto: false, desc: fd.desc || c.label.split(" (")[0],
+            ...Object.fromEntries(Object.entries(fd).filter(([k]) => k.startsWith("tag-")))
         });
     }, { render, width: 460 });
 }
@@ -735,7 +740,11 @@ async function resolveAction(actor, target, fd) {
         const t = R.teamwork(typed, fd.helperLimit || Infinity);
         teamDice = t.dice; overflow = t.overflow;
     }
+    // Merits and flaws: tags from the pool and preset, plus any the player ticked (voice, risky, first meeting, a sense)
+    const ticked = TH.TICKS.filter(t => fd[`tag-${t.key}`]).map(t => t.key);
+    const tm = TH.traitMods(actor, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...ticked], { target });
     const built = R.actionPool({
+        traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
         ability: pool.ability, abilityLabel: pool.abilityLabel,
         abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
@@ -882,8 +891,9 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
         let diff = p?.diff ?? fd.diff;
         if (fd.prov === "atrocity") diff = 9 - v.conscience.value;
         if (fd.prov === "custom") diff = fd.diff;
-        diff = R.clampDifficulty(diff + fd.mod);
-        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, total: 0 });
+        const tm = TH.traitMods(actor, ["frenzy"]);
+        diff = R.clampDifficulty(diff + fd.mod + tm.diff);
+        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, total: 0, traitDice: tm.dice, traitParts: tm.parts });
     });
 }
 
@@ -917,9 +927,9 @@ async function beastRoll(actor, d, msg = null) {
     const virtueVal = fear ? v.courage.value : v.selfcontrol.value;
     const vp = R.virtuePool(virtueVal, { road: rd.value || 10, blood: b.value, bloodLimited: !fear && isVampire(actor) });
     if (d.wp && !(await spendWillpower(actor, 1))) d.wp = false;
-    const r = await rollPool(vp.dice, d.diff, { willpower: d.wp });
+    const r = await rollPool(Math.max(0, vp.dice + (d.traitDice || 0)), d.diff, { willpower: d.wp });
     const vLabel = fear ? "Courage" : v.selfcontrol.label;
-    let body = `<div class="vta-sub">${esc(d.prov)}</div>` + rollBlock(vLabel, r, vp.caps.length ? [`capped by ${vp.caps.join(" and ")}`] : []);
+    let body = `<div class="vta-sub">${esc(d.prov)}</div>` + rollBlock(vLabel, r, [...(vp.caps.length ? [`capped by ${vp.caps.join(" and ")}`] : []), ...(d.traitParts || [])]);
     let state = null, enter = false, data = null;
     if (d.kind === "instinct") {
         const res = R.instinctResult(r);
