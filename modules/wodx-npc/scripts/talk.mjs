@@ -39,6 +39,10 @@ export function build(ctx) {
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
     game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "When nothing you wrote fits, NPCs greet, gossip, pass on rumours they have heard and talk of news, work and the way, in words suited to the era and to how they regard the character. Your lines always come first.",
       scope: "world", config: true, type: Boolean, default: true});
+    game.settings.register(MOD, "passGreet", {name: "NPCs call out to passers-by (house rule)", hint: "When a player's character walks within talking distance, an NPC may greet them out loud, once a day of game time. Only greet lines marked aloud on a talk sheet are used; otherwise a stock greeting.",
+      scope: "world", config: true, type: Boolean, default: false});
+    game.settings.register(MOD, "passChance", {name: "Chance an NPC calls out", hint: "From 0 (never) to 1 (every time someone passes, once a day).",
+      scope: "world", config: true, type: Number, default: 0.5, range: {min: 0, max: 1, step: 0.05}});
     game.settings.register(MOD, "barks", {name: "NPCs remark and cry out", hint: "With stock talk on, NPCs say a word as they go about their routine, cry out when a place is raised or when they are hurt. Speech bubbles only, or in the chat as well.",
       scope: "world", config: true, type: String, default: "bubble", choices: {bubble: "Speech bubbles", chat: "Speech bubbles and chat", off: "Off"}});
   }
@@ -516,6 +520,34 @@ export function build(ctx) {
     if ( tok ) bark(tok, "cry:hurt", {gap: 20000}).catch(e => console.error(`${MOD} | barks`, e));
   }
 
+  /* ---------------- A call as someone passes (0.16.0) ---------------- */
+
+  const passed = new Map(); // "npcId|pcId" -> world time of the last call
+  /** A player's character moved: one NPC within talking distance may greet them out loud. */
+  async function onPass(tokDoc, changes) {
+    if ( !isActiveGM() || !setting("passGreet") || !("x" in (changes ?? {}) || "y" in (changes ?? {})) ) return null;
+    const pc = baseActor(tokDoc);
+    if ( !pc?.hasPlayerOwner || tokDoc.hidden || game.combat?.started && game.combat.scene?.id === tokDoc.parent?.id ) return null;
+    const scene = tokDoc.parent, t = game.time?.worldTime ?? 0;
+    const near = (scene?.tokens?.contents ?? []).filter(n => n.id !== tokDoc.id && !n.hidden && n.actor && !n.actor.hasPlayerOwner && barkOK(baseActor(n))
+      && baseActor(n)?.flags?.[MOD]?.where?.activity !== "sleep" && reachOK(tokDoc, n, scene));
+    for ( const n of near ) {
+      const npc = baseActor(n), key = `${npc.id}|${pc.id}`;
+      const ok = TK.mayCallOut({last: passed.get(key) ?? npc.flags?.[MOD]?.talked?.[pc.id] ?? null, now: t, chance: Number(setting("passChance") ?? 0.5), roll: Math.random()});
+      passed.set(key, t);
+      if ( !ok ) continue;
+      const r = {npcTok: n, me: tokDoc, scene};
+      const sheet = TK.greetFor(chainOf(npc, scene), checker(pc, tokDoc, npc));
+      let plain = "";
+      if ( stockOn(npc) ) { const c = stockCtx(r, "greet"); plain = TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || ""; }
+      const text = TK.passingLine(sheet, plain);
+      if ( !text ) continue;
+      await say(n, text);
+      return text; // one call a step, so a crowd does not all speak at once
+    }
+    return null;
+  }
+
   /**
    * A stock line for other modules (WoDX Actions trades and social rolls), coloured by how the NPC regards the
    * character. kind: trade:open, trade:tooDear, trade:fair, trade:haggleWin, trade:haggleLose, trade:refuse,
@@ -544,6 +576,7 @@ export function build(ctx) {
       });
     });
     Hooks.on("updateActor", (actor, changes) => { if ( changes?.flags?.[MOD]?.where ) onWhere(actor, changes); });
+    Hooks.on("updateToken", (doc, changes) => { onPass(doc, changes).catch(e => console.error(`${MOD} | passing`, e)); });
     Hooks.on("wodxPlaceAlarm", a => { try { onAlarm(a); } catch (e) { console.error(`${MOD} | barks`, e); } });
     Hooks.on("wodxDamageApplied", actor => { try { onHurt(actor); } catch (e) { console.error(`${MOD} | barks`, e); } });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
@@ -564,5 +597,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, rules: TK, lines: MORE};
+  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, onPass, rules: TK, lines: MORE};
 }

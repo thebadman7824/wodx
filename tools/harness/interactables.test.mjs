@@ -378,7 +378,7 @@ test("clues: the Storyteller's text in four parts; more successes show more; a p
   assert.equal(R.resolve(o, op, [{successes: 0, botch: true}], {actorId: "pc1"}).examine, -1);
   assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 2}).length, 0);
   assert.equal(R.searchFinds([R.describeClue({need: 3})], {successes: 3}).length, 1);
-  assert.deepEqual(R.cleanClue({clue: 1, clueKind: "rune", need: 9, title: "  T  "}), {clue: true, clueKind: "document", title: "T", need: 5, found: false, text0: "", text1: "", text2: "", text3: ""});
+  assert.deepEqual(R.cleanClue({clue: 1, clueKind: "rune", need: 9, title: "  T  "}), {clue: true, clueKind: "document", title: "T", need: 5, found: false, text0: "", text1: "", text2: "", text3: "", codexPage: "", codexAt: 0});
 });
 
 test("light sources: light or put out with no roll; a lantern can be broken; one tied to no light says so", () => {

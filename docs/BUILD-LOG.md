@@ -1465,3 +1465,7 @@ Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 
 
 ## 2026-11-11: fight on sight reads where tokens stand (NPC 0.15.1)
 gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight check ran 0.9 s after a move and read the token as drawn, still walking from 38 yards off, so the guard was out of range. It now reads the document's resting place for range and walls, and watchFoes returns why each pair was skipped (the gate records it). Ambush book check (PC): V20 printed p. 274 (pdf 282), Dexterity + Stealth against Perception + Alertness, a win gives one free attack with the extra successes as dice, a tie lets the ambusher go first but the target may defend, anyone already fighting cannot be ambushed; V20 Dark Ages printed p. 345, the same roll, a win gives one free action the target cannot oppose, no margin bonus. Not built yet.
+## 2026-11-11: Games by Hyper ideas (Storyteller 0.25.0, NPC 0.16.0, Interactables 0.24.0)
+- Reviewed the Games by Hyper template docs for ideas. Two of the six picks were already built (Atmosphere's weather by season and era; place alarms carried by era), so those became a link (hardship follows the sky, B840) and nothing.
+- Standing that spills over (B841), calls to passers-by (B842), a clue's first look fills the codex (B843), bodies left behind (B844). All house rules, all off by default.
+- Harness: passing-world.test.mjs.

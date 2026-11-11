@@ -26,7 +26,18 @@ export function registerHardshipSettings() {
 
 export const living = a => !!a && isPC(a) && H.isLiving(a.type, a.system?.clan);
 export const needsOf = a => H.normNeeds(a?.flags?.[MOD]?.needs, now());
-export const weatherOf = scene => (H.WEATHER[scene?.flags?.[MOD]?.weather] ? scene.flags[MOD].weather : "none");
+/** The setting on the scene: one of WEATHER, or "auto" (the default) to follow WoDX Atmosphere. */
+export const weatherSetOn = scene => { const w = scene?.flags?.[MOD]?.weather; return H.WEATHER[w] ? w : H.AUTO; };
+/** Atmosphere's day for an outdoor scene, or null (Atmosphere off, its weather off, or indoors). */
+function skyFor(scene) {
+  try {
+    const A = game.modules.get("wodx-atmosphere");
+    if ( !A?.active || !scene || A.api?.weather?.isOutdoor?.(scene) === false ) return null;
+    return A.api?.weather?.now?.() ?? null;
+  } catch (e) { return null; }
+}
+/** How harsh the weather is on a scene now: the Storyteller's choice, else the sky's (Storyteller 0.25.0). */
+export const weatherOf = scene => { const w = weatherSetOn(scene); return w === H.AUTO ? H.severityFromDay(skyFor(scene)) : w; };
 const stamina = a => { const s = a?.system?.attributes?.stamina; return Math.max(1, num(s?.total ?? s?.value) || 1); };
 
 async function rollStamina(a, diff) {
@@ -129,7 +140,7 @@ export async function setOff(a, off) {
 
 export async function setWeather(scene, severity) {
   if ( !game.user.isGM || !scene ) return null;
-  const sev = H.WEATHER[severity] ? severity : "none";
+  const sev = H.WEATHER[severity] || severity === H.AUTO ? severity : H.AUTO;
   await scene.update({[`flags.${MOD}.weather`]: sev});
   // Weather counts from now, not from whenever the characters last met some
   if ( sev !== "none" ) for ( const a of game.actors.filter(living) ) if ( scene.tokens.some(k => k.actorId === a.id) ) {
@@ -156,7 +167,7 @@ export async function hardshipDialog() {
   };
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, render: wire, position: {width: 760}, window: {title: "Hardship on the road"}, classes: ["wodx-dialog", "wst-hardship"],
     content: `<p>${setting("hardship") ? "Checked as game time passes." : "Off in the settings: nothing is checked until it is turned on."} Days without water, food and sleep, for living characters only.</p>
-      ${scene ? `<div class="form-group"><label>Weather on ${esc(scene.navName || scene.name)}</label><select name="weather" data-fixed>${Object.entries(H.WEATHER).map(([k, v]) => `<option value="${k}"${k === weatherOf(scene) ? " selected" : ""}>${esc(v.label)}</option>`).join("")}</select></div>` : ""}
+      ${scene ? `<div class="form-group"><label>Weather on ${esc(scene.navName || scene.name)}</label><select name="weather" data-fixed>${[[H.AUTO, `${H.AUTO_LABEL}: ${H.WEATHER[weatherOf(scene)].label.split(":")[0].toLowerCase()} now`], ...Object.entries(H.WEATHER).map(([k, v]) => [k, v.label])].map(([k, l]) => `<option value="${k}"${k === weatherSetOn(scene) ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></div>` : ""}
       ${list.length > 5 ? searchBox("table.wst-hardship-t", "Search characters…", "Search characters") : ""}<div class="wst-scroll"><table class="wst-hardship-t"><thead><tr><th>Character</th><th>Water</th><th>Food</th><th>Sleep</th><th></th></tr></thead><tbody>${rows || "<tr><td colspan='5'>No living player characters.</td></tr>"}</tbody></table></div>
       <p class="hint">A Stamina roll resists each turn of bad weather and each day without water or food; past a day a dot without water, or three days a dot without food, it hurts without a roll (M20 pp. 435-436). Willpower can hold off hunger a day a point: mark them as having eaten.</p>`,
     buttons: [{action: "save", label: "Set the weather", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "check", label: "Check now"}, {action: "close", label: "Close"}]});
