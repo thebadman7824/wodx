@@ -1317,3 +1317,6 @@ Ben approved every recommendation of the open world study (B700 to B709). Travel
 - Chronicle: media-rules.mjs.
 - Tests: open-world-era.test.mjs.- Creation 0.10.1: townsfolk with no birth year are spread over thirty years of age in Pass the Years, and their heirs start ticked when they die of age (B710, B711). The study had said mortals never age; Pass the Years already ages everyone, so this is the part that was missing.
 
+## 2026-11-11: Dealing with NPCs, testbed fixes (Actions 3.21.1)
+
+The second testbed run of gatesocial found two faults and UI fit one. Lift and plant moved items on the world actor while the window listed the token's own pockets, so on an unlinked NPC token the thief got a copy and the NPC kept the original; the move now goes by actor uuid, so the token that was robbed is the one that loses the item. A won social roll stored the token's name as the NPC's name (an unlinked token's actor carries the token's name), so "persuaded by <NPC name>" failed; the note now holds the world actor's name and the token's. The With this person window refused a call of the form {actor, token} unless the actor was a real Actor, so UI fit never saw it; it now takes any options object with a token. gatesocial step 8 now reads the token's own actor.

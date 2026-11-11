@@ -12,6 +12,12 @@ export function build(ctx) {
     const npcApi = () => game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api : null;
     const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
     const tokenOf = t => t?.object ?? t ?? null;
+    /** The name "persuaded by <name>" matches: the world actor's name (an unlinked token's actor takes the token's name), plus the token's own. */
+    const npcNameOf = (npc, name) => {
+        const base = (npc?.isToken ? npc.token?.baseActor : null) ?? game.actors?.get?.(npc?.id) ?? npc;
+        const names = [...new Set([base?.name, npc?.name, name].filter(Boolean))];
+        return names.join(" / ");
+    };
     const reach = () => { try { return Number(game.settings.get("wodx-npc", "talkReach")) || 2; } catch (e) { return 2; } };
 
     /** The NPC to deal with: the token given, else the one target, else the nearest NPC in reach. */
@@ -37,7 +43,8 @@ export function build(ctx) {
     async function withPerson(arg = {}) {
         const TokenClass = globalThis.foundry?.canvas?.placeables?.Token;
         const isToken = !!arg?.documentName || (TokenClass && arg instanceof TokenClass);
-        const opt = arg?.actor instanceof Actor && !isToken ? arg : { token: arg };
+        // Options ({actor, token} or {token}) unless a token itself was given
+        const opt = !isToken && arg && (arg.actor instanceof Actor || "token" in arg || "target" in arg) ? arg : { token: arg };
         const meTok = canvas.tokens?.controlled?.[0] ?? null;
         const actor = opt.actor ?? resolveActor(null);
         if (!actor) { ui.notifications.warn("WoDX Actions: select your character's token first."); return null; }
@@ -156,7 +163,7 @@ export function build(ctx) {
     async function after(actor, npc, name, act, res, why = "") {
         const now = game.time.worldTime;
         if (res.result === "win" && act.sway && actor.isOwner) {
-            const list = SR.addSway(actor.flags?.["wodx-actions"]?.sways, { kind: act.sway, npc: npc.id, npcName: name === npc.name ? name : `${npc.name} / ${name}` }, now);
+            const list = SR.addSway(actor.flags?.["wodx-actions"]?.sways, { kind: act.sway, npc: npc.id, npcName: npcNameOf(npc, name) }, now);
             await actor.update({ "flags.wodx-actions.sways": list });
         }
         const move = SR.attitudeMove(act, res.result);
@@ -188,7 +195,9 @@ export function build(ctx) {
     }
     /** Carry out a lift or plant: the item and any coins. data: {from, to, item, qty, coins}. */
     async function applyLift(d) {
-        const from = game.actors.get(d.from), to = game.actors.get(d.to);
+        // Uuids, so an unlinked token's own actor (its own pockets) is the one that changes
+        const get = id => { if (!id) return null; try { const a = fromUuidSync(id); if (a instanceof Actor) return a; } catch (e) { /* an id */ } return game.actors.get(id) ?? null; };
+        const from = get(d.from), to = get(d.to);
         if (!from || !to) return null;
         const made = d.item ? await moveItem(from, to, d.item, d.qty) : null;
         if (d.coins && money()?.transfer) { try { await money().transfer(from, to, d.coins, { note: "lifted" }); } catch (e) { console.warn("WoDX Actions | coins", e); } }
@@ -280,7 +289,7 @@ export function build(ctx) {
                 + `${rollBlock(`${esc(name)} (${esc(op.label)})`, them)}<p>${esc(res.noticed ? "Noticed." : res.done ? `Not noticed: ${got || "nothing"} ${key === "lift" ? "taken" : "planted"}.` : "Nothing happened.")}</p>`
                 + `${!game.user.isGM && (got || res.noticed) ? `<p class="vta-note">The change waits in the approval queue.</p>` : ""}</div></div>`
         });
-        const data = { from: key === "lift" ? npc.id : actor.id, to: key === "lift" ? actor.id : npc.id, item: item?.id ?? null, qty: 1, coins };
+        const data = { from: key === "lift" ? npc.uuid : actor.uuid, to: key === "lift" ? actor.uuid : npc.uuid, item: item?.id ?? null, qty: 1, coins };
         if (item || coins) await proposeOrApply("wodx-actions.lift", `${actor.name} ${key === "lift" ? "lifts" : "plants"} ${got} ${key === "lift" ? "from" : "on"} ${npc.name}`, data, applyLift);
         if (res.noticed) {
             await proposeOrApply("wodx-actions.caught", `${npc.name} caught ${actor.name} ${key === "lift" ? "stealing" : "planting something"}`, { npc: npc.id, char: actor.id, scene: npcTok.document?.parent?.id ?? canvas.scene?.id, what: key }, applyCaught);
