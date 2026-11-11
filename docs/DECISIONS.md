@@ -606,3 +606,14 @@ The greeting is the Storyteller's [greet] line, else a stock one (a remembered v
 
 ## B742. Remarks and cries, with limits (2026-11-11)
 World setting "NPCs remark and cry out": speech bubbles (default), bubbles and chat, or off. A remark comes one time in three when an NPC's routine moves to a new activity, at most once in 90 seconds per NPC and two in any 10 seconds anywhere. A place alarm makes one or two awake mortals there cry out; a hurt mortal or ghoul NPC cries out. "Quiet" in the behaviour window stops one NPC; "No stock talk" stops all of it for them.
+## B734. Umbral twins from the town generator (2026-11-11)
+Ben approved (04:27Z) the recommended next step: a map made by the WoDX town generator is reflected in its Penumbra and Shadowlands levels. The generator's file beside the map (name.wodx.json) now records what each place means (type, wealth, dirty trade, rebuilt) and the buildings later ages pulled down, with the year and why. WoDX Otherworlds 0.9.0 reads it and puts one overlay tile on each twin level and regions for the marks that matter in play. A scene with no twin levels gets plain tinted ones. Rules in reflect-rules.mjs.
+
+## B735. What the Penumbra shows (2026-11-11)
+Churches, chapels and the market cross loom; taverns and markets less so. Rich wards, workshops, the railway, offices and quays carry the Weaver's webbing, thicker by age (0.2 before 1500, 0.45 to 1850, 0.7 to 1950, then 0.9; full on the future branch after 2025). Dirty trades, burned plots, bomb sites and neglected graveyards sour toward the Wyrm. Brooks, parks and river banks grow with the Wyld. Poor back lots are faint. W20 pdf 314-317 / p. 312-315 gives spiritual weight, webs along streets, Blights and neglected graveyards; that loved places loom, and all the strengths, are house rules.
+
+## B736. What the Shadowlands show (2026-11-11)
+Buildings later ages pulled down stand again as relics from the year they went; burned houses and the street before the bombs do too. Churches and cemeteries thin the Shroud (one lower, house rule). Dirty trades rot fastest. Bomb sites may open a Nihil. Wraith 20th pdf 85 / p. 20. A map grown to a later age is never read as an earlier year.
+
+## B737. Page checks for the realm catalogue (2026-11-11)
+The page lookups came back and the realm entries now cite them: Flux, the Summer Country and Wolfhome (Umbra: The Velvet Shadow), Autochthonia (Iteration X pdf 69 / p. 67), the Far Shores as an archipelago the empire forbids voyages to (Wraith 20th pdf 84 / p. 91), Stygia's dates (Charon lost in the Fifth Great Maelstrom of 1945, pdf 86 / p. 93) and the Yellow Springs under Yu Huang (pdf 498 / p. 433). Stygia and the Far Shores after the Sixth Great Maelstrom stay house rules: Wraith 20th is set before it.

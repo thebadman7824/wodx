@@ -1328,3 +1328,10 @@ Ben asked for building designs for each era, informed by real or speculative mod
 ## 2026-11-11: More stock talk (NPC 0.14.0)
 
 Ben asked for every kind of NPC line suggested after the stock talk library (B740-B742). About 500 new lines in data/stock-talk-more.mjs, wired in: greetings now carry one aside (a wound, a debt, what the character is, a rumour about them, small talk on the feast, fast, weather or season), a remembered visit replaces a stock hello, and Goodbye says a farewell. Voices for thirteen kinds of people come from the behaviour window or from faction and household names. NPCs remark as their routine changes and cry out on alarms and when hurt, as speech bubbles by default. api.talk.stock(kind, {npc, pc}) gives WoDX Actions trade and social-roll lines. Harness 1125 pass (stock-talk-more.test.mjs, 6 tests).
+
+## 2026-11-11: Umbral twins from the town generator (Otherworlds 0.9.0)
+- tools/mapgen: eras.py records each building a later age pulls down (t.gone, with year and why); organic.py writes an "umbral" block into the sidecar (year, places by type, wealth, dirty trade, rebuilt, and the gone list). Sample reflecttown.wodx.json (grown to 1960) added; schondorf.wodx.json regenerated with only the new block.
+- modules/wodx-otherworlds/scripts/reflect-rules.mjs (pure): marks for each layer, the webbing by age, an overlay SVG, region shapes, a short summary.
+- reflect.mjs (Foundry): reflectScene, undoReflection, reflectDialog; plain twin levels when none exist; toolbar button "Reflect a generated town map" (Storyteller); api.reflect.
+- realm-maps-rules.mjs: page refs from the PC lookups (B737).
+- Tests: tools/harness/reflect.test.mjs (7). Gate: tools/gate/gatereflect.mjs (8 steps).
