@@ -74,7 +74,8 @@ export function build(ctx) {
     const codex = game.journal?.find(j => j.flags?.["wodx-storyteller"]?.codex === actor.id);
     return {learned: actor.flags?.[MOD]?.topics ?? [], codex: codex ? [...codex.pages].map(p => p.name) : []};
   }
-  const checker = (actor, token) => { const W = chron()?.when; return W?.check ? when => W.check(when, {actor, token}).ok : null; };
+  // The NPC goes with the check, so a line can test the NPC's attitude and "persuaded" means by this NPC (0.12.0)
+  const checker = (actor, token, npc = null) => { const W = chron()?.when; return W?.check ? when => W.check(when, {actor, token, npc}).ok : null; };
   function displayName(npcTok, user) {
     const mine = game.actors.filter(a => a.hasPlayerOwner && a.testUserPermission?.(user, "OWNER")).map(a => a.id);
     return F.nameFor({name: npcTok.name, flags: npcTok.actor?.flags?.[MOD] ?? {}, mine, gm: user.isGM, on: !!setting("faces"), playerOwned: false});
@@ -102,7 +103,9 @@ export function build(ctx) {
     const npc = baseActor(r.npcTok), pc = baseActor(r.me);
     let year = null, branch = "";
     try { const c = chron()?.when?.context?.({actor: pc}); year = c?.year ?? null; branch = c?.branch ?? ""; } catch (e) { /* no calendar */ }
-    const att = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.step ?? null;
+    let att = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.step ?? null;
+    // NPC 0.12.0: the attitude track, which seeds a first meeting from the household or faction
+    try { const o = game.modules.get(MOD)?.api?.attitude?.of?.(npc, pc); if ( o?.met ) att = o.step; } catch (e) { /* keep the saved step */ }
     let standings = [];
     try {
       const people = game.modules.get(MOD)?.api?.factions?.peopleOf?.(pc.id) ?? {};
@@ -135,7 +138,7 @@ export function build(ctx) {
   function menuOf(r, user) {
     const chain = chainOf(r.npcTok.actor, r.scene);
     const menu = TK.menuFor(chain, knownOf(baseActor(r.me)));
-    const g = TK.greetFor(chain, checker(r.me.actor, r.me));
+    const g = TK.greetFor(chain, checker(r.me.actor, r.me, r.npcTok.actor));
     let greet = g?.say ?? "";
     if ( !greet && stockOn(r.npcTok.actor) ) { const c = stockCtx(r, "greet"); greet = TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed})?.say ?? ""; }
     return {name: displayName(r.npcTok, user), me: r.me.name, greet, ...menu};
@@ -158,7 +161,7 @@ export function build(ctx) {
     if ( kind === "menu" ) return {ok: true, menu};
     const topic = TK.normTopic(p.topic);
     if ( !TK.canAsk(topic, menu) ) return {ok: false, why: "They do not follow you.", menu};
-    const chain = chainOf(r.npcTok.actor, r.scene), check = checker(r.me.actor, r.me);
+    const chain = chainOf(r.npcTok.actor, r.scene), check = checker(r.me.actor, r.me, r.npcTok.actor);
     if ( savedProfile(r.npcTok.actor).talkAsk && !user.isGM ) {
       const fb = lineFor(r, topic, chain, check);
       await askFirstCard(r, user, topic, TK.answersFor(topic, chain, check), fb ? {line: fb} : null);
