@@ -18,6 +18,16 @@ const yearOf = time => getEngine().timeToDate(Number(time) || 0).year;
 const loc = key => (typeof key === "string" && key.startsWith("wod.") ? (game.i18n?.localize?.(key) ?? key) : key);
 const dateLabel = time => { try { return describeTime(time).dateLabel; } catch { return ""; } };
 
+/** An NPC who keeps a WoDX NPC routine or belongs to a household: one of the town's people (read by flags, not getFlag). */
+export const townsfolk = actor => !actor?.hasPlayerOwner && !!(actor?.flags?.["wodx-npc"]?.routine?.on || actor?.flags?.["wodx-npc"]?.behavior?.household);
+/** The age taken for a character with no birth year: the usual adult, spread for townsfolk by a seed from their id. */
+export function assumedAgeOf(actor, town = townsfolk(actor)) {
+  if ( !town || !(MORTAL.townSpread > 0) ) return MORTAL.assumedAge;
+  let h = 2166136261;
+  for ( const ch of String(actor?.id ?? actor?.name ?? "") ) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  return MORTAL.assumedAge + (h % MORTAL.townSpread);
+}
+
 /** The world time `years` years after `from`, on the same date (a day earlier if that date does not exist). */
 export function addYears(from, years) {
   const engine = getEngine();
@@ -105,12 +115,15 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
     const born = Number.isFinite(Number(c.bornYear)) && c.bornYear !== null && c.bornYear !== undefined ? Number(c.bornYear) : null;
 
     if ( line === "mortal" ) {
-      const ageEnd = born !== null ? toYear - born : MORTAL.assumedAge + years;
-      notes.push(born !== null ? `Ages ${years} years (${fromYear - born} → ${ageEnd})` : `Ages ${years} years (birth year not set; taken as ${MORTAL.assumedAge} now)`);
+      const town = townsfolk(actor);
+      const assumed = assumedAgeOf(actor, town);
+      const ageEnd = born !== null ? toYear - born : assumed + years;
+      notes.push(born !== null ? `Ages ${years} years (${fromYear - born} → ${ageEnd})` : `Ages ${years} years (birth year not set; taken as ${assumed} now)`);
       if ( ageEnd >= MORTAL.mayDieAt ) {
         const certain = ageEnd >= MORTAL.diesAt;
         add("death", certain ? "Dies of age" : "May die of age", `${ageEnd} years old by ${toYear}${certain ? "" : "; tick if they die"} (house rule)`, certain);
-        add("heir", "An heir inherits", "A new sheet, \"Heir of …\", copied from this one: Backgrounds and belongings, not experience (house rule)", false);
+        // Townsfolk leave an heir who keeps the routine, the household and the places, so the town stays staffed (B711)
+        add("heir", "An heir inherits", `A new sheet, "Heir of …", copied from this one: Backgrounds and belongings, not experience${town ? "; keeps the routine, household and places" : ""} (house rule)`, certain && town);
       }
     }
 

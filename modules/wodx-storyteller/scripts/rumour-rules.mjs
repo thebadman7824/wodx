@@ -32,6 +32,8 @@ export function normRumour(r = {}) {
     knownBy: [...new Set((r.knownBy ?? []).filter(Boolean).map(String))],
     quiet: Math.max(0, Math.trunc(Number(r.quiet) || 0)),
     ended: !!r.ended,
+    big: !!r.big,
+    twists: Math.max(0, Math.trunc(Number(r.twists) || 0)),
     log: Array.isArray(r.log) ? r.log.slice(-40) : []
   };
 }
@@ -40,19 +42,26 @@ export const live = r => !r.ended && r.quiet < QUIET_NIGHTS;
 
 /**
  * One night of one rumour: every knower (in order) tells up to `heat` contacts who have not heard, picked with rand.
+ * heat comes from the age's media (wodx-chronicle media-rules.mjs); Infinity tells every contact. twist: the chance a
+ * telling changes the tale, counted on the rumour for the Storyteller (0: garbling off).
  * Returns the rumour after the night and the ids who heard it new.
  */
-export function spreadNight(rumour, contacts, rand, {heat = HEAT} = {}) {
+export function spreadNight(rumour, contacts, rand, {heat = HEAT, twist = 0} = {}) {
   const r = normRumour(rumour);
   if ( !live(r) ) return {rumour: r, heard: []};
   const knows = new Set(r.knownBy);
   const heard = [];
-  for ( const teller of [...r.knownBy].sort() ) {
+  // A flood (heat Infinity: big news in the age of the papers) goes on through those who just heard, the same night
+  const queue = [...r.knownBy].sort();
+  for ( let q = 0; q < queue.length; q++ ) {
+    const teller = queue[q];
     const fresh = (contacts?.[teller] ?? []).filter(id => !knows.has(id));
     for ( let k = 0; k < heat && fresh.length; k++ ) {
       const i = Math.floor(rand() * fresh.length);
       const [id] = fresh.splice(i, 1);
       knows.add(id); heard.push(id);
+      if ( heat === Infinity ) queue.push(id);
+      if ( twist > 0 && rand() < twist ) r.twists += 1;
     }
   }
   r.knownBy = [...knows];
