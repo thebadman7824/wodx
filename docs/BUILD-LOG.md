@@ -1439,3 +1439,8 @@ Ben approved the first group of building types from the Cataclysm: Dark Days Ahe
 - Ten Dark Ages rotes and six path powers carry their keyword (still the Storyteller's call).
 - Page check queued: /mnt/project-files/jobs/keyword-roster-book-check-2026-11-11.md (122 Dark Ages powers, then eight lines' power lists).
 
+## 2026-11-11: the Storyteller's effect and saved rituals (WoDX Actions 3.31.0, B782)
+- Token tools button "Apply an effect or ritual" (Storyteller only): any keyword, strength, length, area, options, casting time, note; card applies with Undo.
+- Summon places tokens of a chosen actor where the Storyteller clicks; Make gives a chosen item; Undo deletes both.
+- Rituals saved by name in the world setting stRituals; api.effects.storyteller, rituals, saveRitual, forgetRitual, stItems.
+

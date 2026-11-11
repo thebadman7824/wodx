@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.30.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.31.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -326,4 +326,31 @@ test("Actions 3.30.0: every listed power reads the shared roster", async () => {
   assert.equal(P.keywordsOf("disc", "necromancy-the-graves-decay-rigor-mortis").keywords[0], "hold");
   assert.ok(P.keywordsOf("disc", sets.disc.find(p => p.d === "Potence").id).passive);
   assert.equal(P.keywordsOf("disc", "nope"), null);
+});
+
+test("Actions 3.31.0: the Storyteller's effect and saved rituals", () => {
+  // Strength keywords read the chosen length; the others last as chosen too
+  const o = E.stOutcomes(["harm", "light", "ward", "nope"], {strength: 4, step: 3, ctx: {against: "spirits"}});
+  assert.deepEqual(o.map(x => x.key), ["harm", "light", "ward"]);
+  assert.equal(o[0].out.levels, E.outcome("harm", {ok: true, strength: 4, duration: 0}, {}).levels);
+  assert.equal(o[1].out.duration, o[2].out.duration);
+  assert.equal(o[2].out.against, "spirits"); assert.equal(o[2].out.dice, 4);
+  assert.equal(E.stOutcomes(["harm"], {strength: 99})[0].out.levels, E.stOutcomes(["harm"], {strength: E.ST_STRENGTH_MAX})[0].out.levels);
+  assert.ok(E.stOutcomes(["ward"], {area: true})[0].out.area);
+  // Rituals: named, keywords checked, choice lists and the summoned actor kept
+  assert.equal(E.ritualFrom("", {keywords: ["ward"]}), null);
+  assert.equal(E.ritualFrom("Nothing", {keywords: ["nope"]}), null);
+  const r = E.ritualFrom("Rite of the Hearth", {keywords: ["ward", "banish"], strength: 3, step: 4, ctx: {against: "spirits", summonActor: "Actor.abcdefghij0123456789", fire: false}, takes: "one hour"});
+  assert.deepEqual(r.ctx, {against: "spirits", summonActor: "Actor.abcdefghij0123456789"});
+  assert.equal(r.takes, "one hour");
+  const list = E.keepRitual(E.keepRitual([], r), {...r, strength: 5});
+  assert.equal(list.length, 1); assert.equal(list[0].strength, 5);
+  // The window, its toolbar button, Summon and Make on the sheet, and Undo for what they made
+  const fx = src("modules/wodx-actions/scripts/effects.js");
+  assert.match(fx, /export async function storytellerEffect\(/); assert.match(fx, /tokens\.tools\.wodxStEffect/);
+  assert.match(fx, /register\(MOD, "stRituals"/); assert.match(fx, /case "summon":/); assert.match(fx, /case "give":/);
+  assert.match(fx, /for \( const u of r\.made \?\? \[\] \)/); assert.match(fx, /\$\{optionsHtml\(\)\}/);
+  assert.match(fx, /if \( !a && o\?\.kind !== "summon" \)/);
+  const main = src("modules/wodx-actions/scripts/main.js");
+  assert.match(main, /storyteller: EFX\.storytellerEffect/);
 });
