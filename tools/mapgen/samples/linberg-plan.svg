@@ -890,17 +890,18 @@
 <polygon points="400.1,371.1 391.0,386.8 380.1,380.5 389.2,364.8" fill="none" stroke="#a30" stroke-dasharray="2 2"/>
 <polygon points="348.5,487.3 353.3,504.9 341.1,508.1 336.4,490.6" fill="none" stroke="#a30" stroke-dasharray="2 2"/>
 <polygon points="309.5,445.1 325.3,454.2 319.0,465.1 303.2,456.0" fill="none" stroke="#a30" stroke-dasharray="2 2"/>
-<rect x="0" y="0" width="413" height="350" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
+<polyline points="210.0,0.0 210.0,216.3 166.3,216.3 166.3,309.6 210.0,309.6 210.0,326.4 213.8,326.4 213.8,372.6 210.0,372.6 210.0,516.6 205.3,516.6 205.3,596.7 210.0,596.7 210.0,705.7 194.3,705.7 194.3,775.3 210.0,775.3 210.0,931.0" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
+<polyline points="567.0,0.0 567.0,189.8 559.1,189.8 559.1,274.0 567.0,274.0 567.0,296.1 560.3,296.1 560.3,373.8 567.0,373.8 567.0,373.8 581.5,373.8 581.5,390.2 567.0,390.2 567.0,390.2 551.6,390.2 551.6,438.4 567.0,438.4 567.0,561.5 570.9,561.5 570.9,600.7 567.0,600.7 567.0,931.0" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
+<polyline points="0.0,280.0 166.3,280.0 166.3,309.6 259.6,309.6 259.6,280.0 317.1,280.0 317.1,259.0 391.3,259.0 391.3,280.0 497.1,280.0 497.1,254.1 549.6,254.1 549.6,280.0 613.7,280.0 613.7,265.7 682.2,265.7 682.2,280.0 840.0,280.0" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
+<polyline points="0.0,623.0 11.8,623.0 11.8,633.7 85.9,633.7 85.9,623.0 377.4,623.0 377.4,636.5 436.4,636.5 436.4,623.0 840.0,623.0" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
 <text x="6" y="22" font-size="20" font-weight="bold" fill="#7a1fa2">A1</text>
-<rect x="413" y="0" width="427" height="350" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
-<text x="419" y="22" font-size="20" font-weight="bold" fill="#7a1fa2">A2</text>
-<rect x="0" y="350" width="413" height="266" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
-<text x="6" y="372" font-size="20" font-weight="bold" fill="#7a1fa2">B1</text>
-<rect x="413" y="350" width="427" height="266" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
-<text x="419" y="372" font-size="20" font-weight="bold" fill="#7a1fa2">B2</text>
-<rect x="0" y="616" width="413" height="315" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
-<text x="6" y="638" font-size="20" font-weight="bold" fill="#7a1fa2">C1</text>
-<rect x="413" y="616" width="427" height="315" fill="none" stroke="#7a1fa2" stroke-width="3" stroke-dasharray="10 6"/>
-<text x="419" y="638" font-size="20" font-weight="bold" fill="#7a1fa2">C2</text>
-<text x="6" y="923" font-size="12" font-weight="bold">Linberg, a walled small town of 142 people in 35 households, in 6 parts</text>
+<text x="216" y="22" font-size="20" font-weight="bold" fill="#7a1fa2">A2</text>
+<text x="573" y="22" font-size="20" font-weight="bold" fill="#7a1fa2">A3</text>
+<text x="6" y="302" font-size="20" font-weight="bold" fill="#7a1fa2">B1</text>
+<text x="216" y="302" font-size="20" font-weight="bold" fill="#7a1fa2">B2</text>
+<text x="573" y="302" font-size="20" font-weight="bold" fill="#7a1fa2">B3</text>
+<text x="6" y="645" font-size="20" font-weight="bold" fill="#7a1fa2">C1</text>
+<text x="216" y="645" font-size="20" font-weight="bold" fill="#7a1fa2">C2</text>
+<text x="573" y="645" font-size="20" font-weight="bold" fill="#7a1fa2">C3</text>
+<text x="6" y="923" font-size="12" font-weight="bold">Linberg, a walled small town of 142 people in 35 households, in 9 parts</text>
 </svg>
