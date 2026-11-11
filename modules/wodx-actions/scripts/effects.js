@@ -8,6 +8,7 @@
 import * as E from "./effects-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
+import { ask } from "./profiles.js";
 export { E };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -75,7 +76,13 @@ export function fieldset(known = {}, rotes = []) {
     <div class="form-group"><label>Extra targets</label><input type="number" name="kw-targets" min="0" max="10" value="0"/></div>
     <div class="form-group"><label>Duration steps (a turn, a scene, a day, a story, six months)</label><input type="number" name="kw-duration" min="0" max="4" value="0"/></div>
     <div class="form-group"><label><input type="checkbox" name="kw-area"/> An area, ${E.AREA.feet} feet around a spot (+${E.AREA.cost} successes; works on whoever enters)</label></div>
-    <div class="form-group"><label>Options</label><div class="form-fields wodx-kw-opts" data-fixed>
+    ${optionsHtml()}
+    <div class="form-group"><label>Save as a rote named</label><input type="text" name="kw-save" maxlength="60" placeholder="Leave empty to not save"/></div></fieldset>`;
+}
+
+/** The keyword options and choice lists, shared by the Cast window and the Storyteller's effect (3.31.0). */
+export function optionsHtml() {
+  return `<div class="form-group"><label>Options</label><div class="form-fields wodx-kw-opts" data-fixed>
       <label><input type="checkbox" name="kw-fire"/> Fire or lightning</label>
       <label><input type="checkbox" name="kw-prime"/> Charged with Prime 2 and a Quintessence</label>
       <label><input type="checkbox" name="kw-curse"/> Fortune as a curse</label>
@@ -92,8 +99,7 @@ export function fieldset(known = {}, rotes = []) {
       <label><input type="checkbox" name="kw-derange"/> Mend a derangement or scar</label></div></div>
     <div class="form-group"><label>Pool (Charge, Drain or Mend)</label><select name="kw-pool" data-fixed><option value="">(Quintessence, or health for Mend)</option>${Object.entries(E.POOLS).filter(([k]) => k !== "quintessence").map(([k, P]) => `<option value="${k}">${esc(P.label)}</option>`).join("")}</select></div>
     <div class="form-group"><label>Boost or Sap works on</label><select name="kw-boost" data-fixed>${Object.entries(E.BOOSTS).map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
-    <div class="form-group"><label>Kind (Harm's damage, or what a Ward stands against)</label><select name="kw-of" data-fixed>${E.KINDS.map(k => `<option value="${k}">${k === "any" ? "(any)" : k}</option>`).join("")}</select></div>
-    <div class="form-group"><label>Save as a rote named</label><input type="text" name="kw-save" maxlength="60" placeholder="Leave empty to not save"/></div></fieldset>`;
+    <div class="form-group"><label>Kind (Harm's damage, or what a Ward stands against)</label><select name="kw-of" data-fixed>${E.KINDS.map(k => `<option value="${k}">${k === "any" ? "(any)" : k}</option>`).join("")}</select></div>`;
 }
 
 const CTX_BOXES = {fire: "kw-fire", primeCharged: "kw-prime", curse: "kw-curse", slow: "kw-slow", dark: "kw-dark", drain: "kw-drain", aggravated: "kw-agg",
@@ -298,9 +304,9 @@ const tokenOf = d => (d?.documentName === "Token" ? d : actorOf(d)?.getActiveTok
 /** Apply one item. Returns an undo record, or {note} when nothing could change. */
 export async function applyItem(item, casterName = "the caster") {
   const d = docOf(item.target), a = actorOf(d), o = item.out;
-  if ( !a ) return {note: `${item.name}: not found`};
+  if ( !a && o?.kind !== "summon" ) return {note: `${item.name}: not found`};
   const C = combat(), T = chron();
-  const health = foundry.utils.deepClone(a.system?.health?.damage ?? {});
+  const health = foundry.utils.deepClone(a?.system?.health?.damage ?? {});
   switch ( o.kind ) {
     case "damage":
       if ( !C ) return {note: "WoDX Combat is off: apply the damage by hand"};
@@ -338,6 +344,24 @@ export async function applyItem(item, casterName = "the caster") {
       const cap = P.cap ? n(foundry.utils.getProperty(a, P.cap)) : Infinity;
       await a.update({[P.path]: Math.max(0, Math.min(cap || Infinity, was + n(o.points)))});
       return {uuid: a.uuid, pool: {path: P.path, value: was}};
+    }
+    case "summon": {
+      // The Storyteller's effect (3.31.0): tokens of a chosen actor where the Storyteller clicks
+      const src = o.actor ? fromUuidSync(o.actor) : null;
+      const scene = canvas?.scene;
+      if ( !src || !scene || !item.at ) return {note: `${o.label}: no actor or no spot to place it`};
+      const size = scene.grid?.size ?? 100, count = Math.max(1, Math.min(12, n(o.count) || 1));
+      const proto = (await src.getTokenDocument()).toObject();
+      const docs = Array.from({length: count}, (_, i) => ({...proto, x: Math.round(item.at.x - size / 2 + (i % 4) * size), y: Math.round(item.at.y - size / 2 + Math.floor(i / 4) * size)}));
+      const made = await scene.createEmbeddedDocuments("Token", docs);
+      return {made: made.map(t => t.uuid)};
+    }
+    case "give": {
+      const src = o.item ? fromUuidSync(o.item) : null;
+      if ( !src ) return {note: `${o.label}: no item chosen`};
+      const data = src.toObject(); delete data._id;
+      const [made] = await a.createEmbeddedDocuments("Item", [data]);
+      return {made: made ? [made.uuid] : []};
     }
     case "light": {
       const tok = tokenOf(d);
@@ -462,6 +486,7 @@ export async function undo(records = []) {
       if ( r.health && a && C?.setDamage ) await C.setDamage(a, r.health);
       if ( Number.isFinite(r.quint) && a ) await a.update({"system.quintessence.temporary": r.quint});
       if ( r.pool?.path && a ) await a.update({[r.pool.path]: n(r.pool.value)});
+      for ( const u of r.made ?? [] ) await fromUuidSync(u)?.delete?.();
       if ( r.effect ) await fromUuidSync(r.effect)?.delete?.();
       if ( r.token ) {
         const tok = fromUuidSync(r.token.uuid);
@@ -547,6 +572,13 @@ export function setup() {
     name: "Magic that applies itself", hint: "Mage 20th castings with effect keywords change health, Quintessence, timed effects, light, height and place on their own, with Undo; areas work on whoever enters; the rest goes to the approval queue. Automatic: on, except in the Live world.",
     scope: "world", config: true, type: String, default: "auto", choices: {auto: "Automatic", on: "On", off: "Off"}
   });
+  game.settings.register(MOD, "stRituals", {scope: "world", config: false, type: Array, default: []});
+  Hooks.on("getSceneControlButtons", controls => {
+    const tokens = controls.tokens ?? controls.token;
+    if ( !tokens?.tools || !game.user.isGM ) return;
+    tokens.tools.wodxStEffect = {name: "wodxStEffect", title: "Apply an effect or ritual (keywords, with Undo)", icon: "fa-solid fa-wand-sparkles", order: 118,
+      button: true, visible: true, onChange: () => storytellerEffect()};
+  });
   Hooks.on("createChatMessage", msg => { onCard(msg).catch(e => console.error("WoDX | effects", e)); });
   Hooks.on("updateToken", (tok, change) => { onMove(tok, change).catch(e => console.error("WoDX | effect areas", e)); });
   Hooks.on("updateWorldTime", () => { expireAreas().catch(e => console.error("WoDX | effect areas", e)); });
@@ -606,4 +638,108 @@ export function setup() {
 /** The approval queue's handler for queued keyword results (called once WoDX Chronicle is ready). */
 export function registerHandler(api) {
   api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", approve: async entry => { await applyItem(entry.data?.item, entry.data?.caster); }});
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  The Storyteller's effect (3.31.0, B782)                            */
+/* ------------------------------------------------------------------ */
+
+/** The world's saved rituals (the Storyteller's own keyword sets). */
+export function ritualsOf() {
+  try { return (game.settings.get(MOD, "stRituals") ?? []).filter(r => r?.name); } catch (e) { return []; }
+}
+export async function saveRitual(r) {
+  if ( !r || !game.user.isGM ) return ritualsOf();
+  const list = E.keepRitual(ritualsOf(), r);
+  await game.settings.set(MOD, "stRituals", list);
+  return list;
+}
+export async function forgetRitual(name) {
+  const key = String(name ?? "").toLowerCase();
+  await game.settings.set(MOD, "stRituals", ritualsOf().filter(r => r.name.toLowerCase() !== key));
+}
+
+const STEPS = ["a turn", "a scene", "a day", "a story", "six months"];
+
+/** The window's form. picks: world actors and items for Summon and Make. */
+function stContent(rituals, picks) {
+  const opts = (list, none) => `<option value="">${none}</option>${list.map(x => `<option value="${esc(x.uuid)}">${esc(x.name)}</option>`).join("")}`;
+  return `<form class="wodx-st-effect"><p class="hint">Applies on the targeted tokens (or the selected ones), with no roll. For a ritual or rite the players made up, or a power with no list yet. Everything it changes can be undone from its card.</p>
+    ${rituals.length ? `<div class="form-group"><label>A saved ritual</label>${rituals.length > 5 ? searchBox("select[name=st-ritual]", "Search rituals…", "Search rituals") : ""}<select name="st-ritual"><option value="">(none)</option>${rituals.map((r, i) => `<option value="${i}">${esc(r.name)}</option>`).join("")}</select></div>` : ""}
+    <fieldset class="wodx-keywords"><legend>What it does (keywords)</legend><div class="wodx-kw-list" data-fixed>${Object.entries(E.KEYWORDS).map(([k, K]) =>
+      `<label class="wodx-kw" title="${esc(K.does)}"><input type="checkbox" name="kw-${k}"/> ${esc(K.label)}</label>`).join("")}</div></fieldset>
+    <div class="form-group"><label>Strength (as successes, 1 to ${E.ST_STRENGTH_MAX})</label><input type="number" name="st-strength" min="1" max="${E.ST_STRENGTH_MAX}" value="3"/></div>
+    <div class="form-group"><label>Lasts</label><select name="st-step" data-fixed>${STEPS.map((l, i) => `<option value="${i + 1}"${i === 1 ? " selected" : ""}>${l}</option>`).join("")}</select></div>
+    <div class="form-group"><label><input type="checkbox" name="kw-area"/> An area, ${E.AREA.feet} feet around a spot (works on whoever enters)</label></div>
+    ${optionsHtml()}
+    <div class="form-group"><label>Summon brings</label>${picks.actors.length > 5 ? searchBox("select[name=st-actor]", "Search actors…", "Search actors") : ""}<select name="st-actor">${opts(picks.actors, "(the Storyteller places it by hand)")}</select><input type="number" name="st-count" min="1" max="12" value="1" title="How many"/></div>
+    <div class="form-group"><label>Make gives</label>${picks.items.length > 5 ? searchBox("select[name=st-item]", "Search items…", "Search items") : ""}<select name="st-item">${opts(picks.items, "(nothing on the sheet)")}</select></div>
+    <div class="form-group"><label>Takes (casting time, shown on the card)</label><input type="text" name="st-takes" maxlength="60" placeholder="for example: one hour"/></div>
+    <div class="form-group"><label>Note on the card</label><input type="text" name="st-note" maxlength="300"/></div>
+    <div class="form-group"><label><input type="checkbox" name="st-whisper" checked/> Card for Storytellers only</label></div>
+    <div class="form-group"><label>Save as a ritual named</label><input type="text" name="st-save" maxlength="60" placeholder="Leave empty to not save"/></div></form>`;
+}
+
+/** Fill the window in from a saved ritual. */
+function stFill(root, r) {
+  const set = (name, v) => { const el = root.querySelector(`[name="${name}"]`); if ( !el ) return; if ( el.type === "checkbox" ) el.checked = !!v; else el.value = String(v ?? ""); };
+  for ( const k of Object.keys(E.KEYWORDS) ) set(`kw-${k}`, (r.keywords ?? []).includes(k));
+  set("st-strength", r.strength ?? 1); set("st-step", r.step ?? 2); set("kw-area", r.area); set("st-note", r.note); set("st-takes", r.takes);
+  for ( const [k, name] of Object.entries(CTX_BOXES) ) set(name, r.ctx?.[k]);
+  for ( const [k, name] of Object.entries(CTX_SELECTS) ) if ( typeof r.ctx?.[k] === "string" ) set(name, r.ctx[k]);
+  set("st-actor", r.ctx?.summonActor ?? ""); set("st-item", r.ctx?.makeItem ?? "");
+}
+
+/**
+ * Card items for the Storyteller's effect. form: read(fd) plus {strength, step, actor, count, item}. docs: target
+ * token documents. Everything applies on the Storyteller's own say: auto, or a click on the map for Move, Summon and
+ * areas.
+ */
+export function stItems(form, docs) {
+  const results = E.stOutcomes(form.keywords, {strength: form.strength, step: form.step, ctx: form.ctx, area: !!form.plan?.area});
+  const items = [];
+  for ( const {key, out} of results ) {
+    if ( key === "summon" && form.actor ) {
+      items.push({key, out: {...out, kind: "summon", actor: form.actor, count: form.count, text: `${form.count > 1 ? `${form.count} of ` : ""}${form.actorName}, placed where the Storyteller clicks`}, target: null, name: "a spot on the map", route: "pick"});
+      continue;
+    }
+    if ( out.area ) { items.push({key, out, target: null, name: "an area", caster: null, route: "area"}); continue; }
+    for ( const d of docs ) {
+      let o = out;
+      if ( key === "make" && form.item ) o = {...out, kind: "give", item: form.item, text: `${form.itemName} into ${d.name}'s inventory`};
+      items.push({key, out: o, target: d.uuid, name: d.name, route: o.kind === "move" ? "pick" : "auto"});
+    }
+  }
+  return items;
+}
+
+/** Open the Storyteller's effect window and post its card, which the Storyteller's client applies. */
+export async function storytellerEffect() {
+  if ( !game.user.isGM ) return ui.notifications?.warn?.("Only the Storyteller can apply effects this way.");
+  const rituals = ritualsOf();
+  const byName = c => [...(c ?? [])].map(x => ({uuid: x.uuid, name: x.name})).sort((a, b) => a.name.localeCompare(b.name));
+  const picks = {actors: byName(game.actors), items: byName(game.items)};
+  const r = await ask({title: "Apply an effect or ritual", content: stContent(rituals, picks), width: 560,
+    buttons: [{id: "ok", label: "Apply", icon: "fa-solid fa-wand-sparkles", default: true}, {id: "no", label: "Cancel", icon: "fa-solid fa-xmark"}],
+    onRender: root => root?.querySelector?.('[name="st-ritual"]')?.addEventListener("change", ev => { const x = rituals[n(ev.currentTarget.value)]; if ( ev.currentTarget.value !== "" && x ) stFill(root, x); })});
+  if ( !r || r.id !== "ok" ) return null;
+  const fd = r.data, base = read(fd);
+  if ( !base.keywords.length ) return ui.notifications?.warn?.("Tick at least one keyword.");
+  const pick = (list, u) => list.find(x => x.uuid === u)?.name ?? "";
+  const form = {...base, strength: n(fd["st-strength"]) || 1, step: n(fd["st-step"]) || 2, actor: fd["st-actor"] || "", actorName: pick(picks.actors, fd["st-actor"]),
+    count: Math.max(1, Math.min(12, n(fd["st-count"]) || 1)), item: fd["st-item"] || "", itemName: pick(picks.items, fd["st-item"])};
+  const docs = (game.user.targets?.size ? [...game.user.targets] : canvas?.tokens?.controlled ?? []).map(t => t.document).filter(Boolean);
+  const needsTarget = form.keywords.some(k => !(k === "summon" && form.actor)) && !form.plan.area;
+  if ( needsTarget && !docs.length ) return ui.notifications?.warn?.("Target or select the tokens it works on first.");
+  const name = String(fd["st-save"] ?? "").trim();
+  if ( name ) await saveRitual(E.ritualFrom(name, {...form, ctx: {...form.ctx, ...(form.actor ? {summonActor: form.actor} : {}), ...(form.item ? {makeItem: form.item} : {})}, area: form.plan.area, note: fd["st-note"], takes: fd["st-takes"]}));
+  const items = stItems(form, docs);
+  const title = name || (fd["st-ritual"] !== "" && rituals[n(fd["st-ritual"])]?.name) || "The Storyteller's effect";
+  const extra = [fd["st-takes"] ? `Takes ${esc(fd["st-takes"])}.` : "", fd["st-note"] ? esc(fd["st-note"]) : ""].filter(Boolean).join(" ");
+  const word = {auto: "applies", pick: "goes where the Storyteller clicks", area: "waits for the Storyteller to place it"};
+  const content = `<div class="wodx-card"><h3>${esc(title)}</h3>${extra ? `<p>${extra}</p>` : ""}<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
+    `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(i.out.text)}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul></div></div>`;
+  return ChatMessage.create({content, speaker: {alias: title}, whisper: fd["st-whisper"] ? game.users.filter(u => u.isGM).map(u => u.id) : [],
+    flags: {[MOD]: {kind: "effects", caster: title, items}}});
 }

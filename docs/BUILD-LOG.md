@@ -1445,3 +1445,8 @@ Ben approved the first group of building types from the Cataclysm: Dark Days Ahe
 
 ## 2026-11-11: map keywords for realm maps (B745)
 Ben found the realms too alike and asked for map keywords. Otherworlds 0.11.0: 22 keywords (forest, marsh, peaks, caves, sea, ash, ice, chasm, stars, ruins, towers, machines, web, tombs, gardens, fire, rot, storm, shifting, nihil, bones, crystal), each a cell step and a drawn mark; every realm has two to four; island form, caverns and a square city follow from the keywords; the age and some eras add keywords; an Extra keywords field in the Realm maps window, kept on the scene for redraws; the scene note lists them. Five new harness tests (realms sharing keywords share marks, unrelated ones share none, other seeds differ).
+## 2026-11-11: the Storyteller's effect and saved rituals (WoDX Actions 3.31.0, B782)
+- Token tools button "Apply an effect or ritual" (Storyteller only): any keyword, strength, length, area, options, casting time, note; card applies with Undo.
+- Summon places tokens of a chosen actor where the Storyteller clicks; Make gives a chosen item; Undo deletes both.
+- Rituals saved by name in the world setting stRituals; api.effects.storyteller, rituals, saveRitual, forgetRitual, stItems.
+

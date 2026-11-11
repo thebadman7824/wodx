@@ -430,3 +430,42 @@ export function countered(successes, counter, mode = "self") {
 
 /** Is a target a mage who could counter (Arete 1 or more)? data: the actor's system data. */
 export const canCounter = system => n(system?.advantages?.arete?.permanent) > 0;
+
+/* ------------------------------------------------------------------ */
+/*  The Storyteller's effect (3.31.0): any keyword, for any line       */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The Storyteller applies keywords straight, with no roll: for a ritual or rite of the players' own making, a power
+ * not on any list yet, or a documented ritual before its page check. strength: 1 to 10. step: the p. 504 ladder,
+ * 1 a turn, 2 a scene, 3 a day, 4 a story, 5 six months. Returns [{key, out}].
+ */
+export const ST_STRENGTH_MAX = 10;
+export function stOutcomes(keywords = [], {strength = 1, step = 2, ctx = {}, area = false} = {}) {
+  const str = Math.max(1, Math.min(ST_STRENGTH_MAX, n(strength) || 1));
+  const st = Math.max(1, Math.min(5, n(step) || 2));
+  const out = [];
+  for ( const key of keywords ) {
+    const K = KEYWORDS[key];
+    if ( !K ) continue;
+    // Strength keywords take the step as duration; the others read duration from strength, so it is set to 1
+    const got = K.strength ? {ok: true, strength: str, duration: st - 1, targets: 0, area}
+      : {ok: true, strength: 1, duration: st - 1, targets: 0, area};
+    const o = outcome(key, got, ctx);
+    if ( o ) out.push({key, out: {...o, source: "the Storyteller"}});
+  }
+  return out;
+}
+
+/** A ritual of the Storyteller's own: a named keyword set, kept in the world (B782). */
+export const RITUALS_MAX = 60;
+export function ritualFrom(name, {keywords = [], strength = 1, step = 2, ctx = {}, area = false, note = "", takes = ""} = {}) {
+  const nm = String(name ?? "").trim().slice(0, 60);
+  const ks = keywords.filter(k => KEYWORDS[k]);
+  if ( !nm || !ks.length ) return null;
+  return {name: nm, keywords: ks, strength: Math.max(1, Math.min(ST_STRENGTH_MAX, n(strength) || 1)), step: Math.max(1, Math.min(5, n(step) || 2)),
+    ctx: Object.fromEntries(Object.entries(ctx).filter(([, v]) => v === true || (typeof v === "string" && v && v.length <= 80))),
+    area: !!area, note: String(note ?? "").trim().slice(0, 300), takes: String(takes ?? "").trim().slice(0, 60)};
+}
+/** Keep a ritual: one per name, sorted, at most RITUALS_MAX. */
+export const keepRitual = (list = [], r) => (r ? keepRote(list, r).slice(0, RITUALS_MAX) : list);

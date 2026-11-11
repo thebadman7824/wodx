@@ -1,5 +1,5 @@
 /**
- * Mage effect keywords gate (WoDX Actions 3.30.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Mage effect keywords gate (WoDX Actions 3.31.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateeffects.mjs?${Date.now()}`)).run()
  * Makes a caster and a target actor, applies keyword results straight through the apply step, undoes them,
  * posts one keyword card for the Storyteller's client to apply, then deletes what it made.
@@ -16,6 +16,7 @@
  *  12. a held card waits; countermagick cuts its successes, then a reflected counter turns it on the caster
  *  13. a Dark Ages rote's card: Verdant Slumber hurts, Self Possession is a timed effect, a summoning stays the Storyteller's
  *  15. the shared roster (3.30.0): Drain on a Willpower pool, Boost as a timed effect, both undone; power labels
+ *  16. the Storyteller's effect (3.31.0): Ward, Make into an inventory and Summon on the map, all undone
  *  11. a Rote item opens the WoDX Cast window filled in (a Mage 20th era), or is left to the system's dialog (Dark Ages)
  * Result: Data/wodx-gate/gateeffects-result.json.
  */
@@ -234,6 +235,26 @@ export async function run() {
       const back = Number(target.system?.advantages?.willpower?.temporary) === 5 && !(r2?.effect && fromUuidSync(r2.effect));
       const label = fx().keywordsOf?.("gift", "beast-speech")?.keywords?.[0] === "speak" && fx().keywordCounts?.().free < 10;
       ok("15 the shared roster: a pool, Boost and the power labels", drained < 5 && boosted && back && label && Object.keys(E.KEYWORDS).length === 34, {drained, boosted, back, label});
+    });
+    await step("16 the Storyteller's effect: Ward, Make and Summon with Undo", async () => {
+      const gift = await Item.create({name: "WoDX gate: made thing", type: "Feature"});
+      const tok = (target.getActiveTokens?.()?.[0]?.document) ?? target;
+      const form = {keywords: ["ward", "make", "summon"], plan: {targets: 0, duration: 0, area: false}, ctx: {}, strength: 3, step: 2,
+        item: gift.uuid, itemName: gift.name, actor: target.uuid, actorName: target.name, count: 2};
+      const items = fx().stItems(form, [tok]);
+      const routes = items.map(i => i.route).join(",");
+      const recs = [];
+      for ( const it of items.filter(i => i.route === "auto") ) recs.push(await fx().apply(it, "the Storyteller"));
+      const given = target.items.some(i => i.name === gift.name);
+      const warded = recs.some(r => r?.effect && fromUuidSync(r.effect));
+      const sc = canvas?.scene;
+      const sum = items.find(i => i.out.kind === "summon");
+      const placed = sc && sum ? await fx().apply({...sum, at: {x: 300, y: 300}}, "the Storyteller") : null;
+      const made = placed?.made?.length ?? 0;
+      await fx().undo([...recs, placed].filter(Boolean));
+      const clean = !target.items.some(i => i.name === gift.name) && !(placed?.made ?? []).some(u => fromUuidSync(u));
+      await gift.delete();
+      ok("16 the Storyteller's effect: Ward, Make and Summon with Undo", given && warded && (!sc || made === 2) && clean && routes === "auto,auto,pick", {given, warded, made, clean, routes});
     });
     if ( toks.length ) await scene.deleteEmbeddedDocuments("Token", toks.map(t => t.id)).catch(() => {});
   } catch (e) { R.errors.push(e.message); }
