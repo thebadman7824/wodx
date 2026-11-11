@@ -1588,3 +1588,7 @@ Ben asked for a bug check of everything done so far. The harness passed 1,286 of
 - New scripts/chase.mjs: the Chase window (setup: quarry, pursuers with a search box, ground, lead measured or typed, night; each turn: ground, way and flat out per racer, breaking sight), the turn cards (players in words, the Storyteller's with dice, totals, Undo, damage, Start a fight), the state in the scene flag wodx-interactables.chase, the hook wodxChase. A token at the reins of a mount tile starts on it. Running speed from WoDX Combat's movementFor.
 - In the Storyteller's hand as "A chase"; API game.modules.get("wodx-interactables").api.chase.
 - Tests: chase.test.mjs (13). Gate: tools/gate/gatechase.mjs.
+
+## 2026-11-11: chases follow the book check (Interactables 0.26.1)
+- From /mnt/project-files/chase-book-check.md: refs narrowed (V20 core pr 261-262, V20 Dark Ages pr 335); keeping sight is the Storyteller's Perception call at +1 a success of lead (the Stealth roll is gone); a pursuer's botch loses the quarry; cars and motorcycles get safe and top speeds and a Maneuver cap by year (V20 chart from 1990); crashes and falls from the saddle roll as falling (pr 296); Garou forms change running speed (W20 pr 269); a rider who catches someone gets charge dice (V20 Dark Ages pr 398). B910-B915 rewritten.
+- Tests: chase.test.mjs (14).

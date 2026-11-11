@@ -1,30 +1,39 @@
 /**
  * WoDX Interactables 0.26.0: chases and pursuit. Pure rules, no Foundry, so the harness can test them.
  *
- * A chase is an extended, resisted roll (V20 Dark Ages pursuit, the dramatic systems of pp. 332-339; V20 core runs it
- * the same way). The quarry starts with one free success for every 2 yards of lead on foot, or every 10 yards mounted
- * or in a vehicle. Each turn every racer rolls and adds the successes to a running total. A pursuer whose total passes
- * the quarry's has caught up. The rest are house rules (B910 to B915), kept plain:
+ * A chase is the books' pursuit (V20 core printed pp. 261-262; V20 Dark Ages printed p. 335): an extended roll each
+ * turn, the totals racing. The quarry starts with one free success for every 2 yards of lead on foot, or every 10 yards
+ * on horseback or in a vehicle. A pursuer whose total passes the quarry's has caught up. To keep the quarry in sight,
+ * the Storyteller may call a Perception roll (at most once a turn), +1 difficulty for every success the quarry leads
+ * by; a failure, or a botch on the chase roll, and that pursuer has lost the quarry. A quarry's botch is a stumble or a
+ * dead end. Driving: going fast to lose pursuers is +3, and a driver's pool cannot exceed the vehicle's Maneuver
+ * (V20 core printed pp. 258-259); riding fast is +3, rough ground +1 (V20 Dark Ages printed p. 335). The rest are house
+ * rules (B911 to B915), kept plain:
  *
- *   speed edge   the faster racer gains free successes each turn, one per 10 yards a turn faster, three at most (B911);
+ *   speed edge   the faster racer gains free successes each turn, one per 10 yards a turn faster, three at most; the
+ *                book would skip the roll when one side is plainly faster (B911);
  *   ground       each kind of ground adds difficulty, caps the speed of hooves and wheels, and shuts some ways out (B912);
- *   flat out     +3 difficulty (the books' "fast while losing pursuers"), half as fast again for the edge; a botch flat
- *                out on a mount or in a vehicle throws the rider or crashes (B913);
- *   out of sight with a lead of 3 or more and cover about, the quarry may try Dexterity + Stealth against each pursuer's
- *                Perception + Alertness; a pursuer must score more to keep sight (B914);
- *   away         a lead of 10 successes, or no pursuer left, and the quarry is away (B915).
+ *   flat out     +3 difficulty; a motor vehicle goes 30 mph past its safe speed (the book's +1 a 10 mph over it, not
+ *                stacked on the +3), anything else half as fast again; a botch on a mount or in a vehicle is a fall or a
+ *                crash, rolled as falling damage (V20 core printed p. 296): a die of bashing a 10 mph, ten at most,
+ *                lethal at ten (B913);
+ *   away         with no Perception roll called, a lead of 10 successes over everyone, or no pursuer left (B915).
  *
- * Speeds are yards in a three-second turn. Running comes from WoDX Combat (20 + 3 x Dexterity, with Celerity and
- * wounds); the rest are house figures by year, kept to Moravia's dates as the travel rules are: bicycles from 1885,
- * motor cars from 1900, motorcycles and motorboats from 1910, and faster ones on the Future Darkness branch.
+ * Speeds are yards in a three-second turn (1 mph is about 1.47 yards a turn). Running comes from WoDX Combat
+ * (20 + 3 x Dexterity, V20 core printed p. 258, with Celerity and wounds), times the Garou form (W20 printed p. 269).
+ * Cars and motorcycles have a safe and a top speed and a Maneuver by year, from the V20 vehicle chart for the modern
+ * years and house figures before; the rest are house figures by year, kept to Moravia's dates as the travel rules are:
+ * bicycles from 1885, motor cars from 1900, motorcycles and motorboats from 1910, faster ones on the Future Darkness branch.
  */
 
 export const TURN_SECONDS = 3;
 export const FLAT_OUT = 3;
 export const EDGE_PER = 10;
 export const EDGE_MAX = 3;
-export const SIGHT_LEAD = 3;
 export const AWAY_LEAD = 10;
+export const YD_PER_MPH = 1.47;
+/** Motor vehicles flat out: this many mph past the safe speed (the book's +1 difficulty a 10 mph, kept within the +3). */
+export const OVER_SAFE = 30;
 
 const band = (y, steps) => { let v = steps[0][1]; for ( const [from, s] of steps ) if ( y >= from ) v = s; return v; };
 
@@ -43,9 +52,10 @@ export const WAYS = {
   bicycle:   {label: "By bicycle", pool: ["dexterity", "athletics"], wheels: true, light: true, mounted: true, from: 1885, thrown: true,
     speed: y => band(y, [[1885, 20], [1950, 25]])},
   car:       {label: "By car", pool: ["dexterity", "drive"], wheels: true, motor: true, mounted: true, mount: "car", from: 1900,
-    speed: y => band(y, [[1900, 30], [1920, 50], [1940, 70], [1960, 90], [1990, 110], [2040, 130]])},
+    // [from year, safe mph, top mph, Maneuver]: the V20 chart's sedan and luxury sedan from 1990 and 2040, house figures before
+    chart: [[1900, 20, 30, 3], [1920, 35, 55, 4], [1940, 50, 80, 4], [1960, 60, 100, 5], [1990, 70, 120, 5], [2040, 85, 155, 7]]},
   motorbike: {label: "By motorcycle", pool: ["dexterity", "drive"], wheels: true, light: true, motor: true, mounted: true, mount: "motorbike", from: 1910, thrown: true,
-    speed: y => band(y, [[1910, 40], [1930, 70], [1960, 100], [2040, 130]])},
+    chart: [[1910, 25, 45, 5], [1930, 45, 80, 6], [1960, 65, 110, 7], [1990, 75, 130, 7], [2040, 90, 160, 8]]},
   motorboat: {label: "By motorboat", pool: ["dexterity", "drive"], water: true, motor: true, mounted: true, mount: "motorboat", from: 1910,
     speed: y => band(y, [[1910, 20], [1950, 35], [2040, 45]])}
 };
@@ -80,6 +90,25 @@ export function wayOpen(way, year) {
 export function waysIn(year) {
   return Object.entries(WAYS).filter(([id]) => wayOpen(id, year)).map(([id, W]) => ({id, label: W.label}));
 }
+/** A motor vehicle's chart row in a year: {safe, top (mph), maneuver}, or null for a way without one. */
+export function chartOf(way, year) {
+  const c = WAYS[way]?.chart;
+  if ( !c ) return null;
+  const y = Number(year) || 2000;
+  let row = c[0];
+  for ( const r of c ) if ( y >= r[0] ) row = r;
+  return {safe: row[1], top: row[2], maneuver: row[3]};
+}
+
+/** Garou forms on foot (W20 printed p. 269): Hispo half as fast again, Lupus twice as fast, Crinos +2 yards on all fours. */
+export function formRun(run, form) {
+  const r = Math.max(0, Number(run) || 0);
+  if ( form === "lupus" ) return r * 2;
+  if ( form === "hispo" ) return Math.round(r * 1.5);
+  if ( form === "crinos" ) return r + 2;
+  return r;
+}
+
 /** The way a token starts on: the mount it holds the reins of, if any and if open in the year; else on foot. */
 export function wayFromMount(kind, year) {
   const id = Object.keys(WAYS).find(k => WAYS[k].mount && WAYS[k].mount === kind);
@@ -92,8 +121,13 @@ export function wayFromMount(kind, year) {
  */
 export function speedOf(r, ground, year) {
   const W = WAYS[r.way] ?? WAYS.foot, G = GROUNDS[groundKind(ground)];
-  let yards = W.speed ? W.speed(Number(year) || 2000) : Math.max(0, Number(r.run) || 0);
-  if ( r.flatOut ) yards = Math.round(yards * 1.5);
+  const ch = chartOf(r.way, year);
+  let yards;
+  if ( ch ) yards = Math.round(Math.min(ch.top, ch.safe + (r.flatOut ? OVER_SAFE : 0)) * YD_PER_MPH);
+  else {
+    yards = W.speed ? W.speed(Number(year) || 2000) : Math.max(0, Number(r.run) || 0);
+    if ( r.flatOut ) yards = Math.round(yards * 1.5);
+  }
   let cap = null;
   if ( W.hooves && G.cap.hooves ) cap = G.cap.hooves;
   if ( W.wheels && W.light && (G.cap.light ?? G.cap.wheels) ) cap = G.cap.light ?? G.cap.wheels;
@@ -119,8 +153,8 @@ export function headStart(yards, way = "foot") {
 }
 
 /**
- * The roll a racer makes this turn. r: {way, flatOut, dice: {attr dots, ability dots by key}}. Returns
- * {attr, ability, diff, parts}. night: a dark night; year: for the lamps.
+ * The roll a racer makes this turn. r: {way, flatOut}. Returns {attr, ability, diff, parts, cap} (cap: the most dice, a
+ * motor vehicle's Maneuver; null for none). night: a dark night; year: for the lamps and the chart.
  */
 export function rollFor(r, ground, {night = false, year = 0} = {}) {
   const W = WAYS[r.way] ?? WAYS.foot, G = GROUNDS[groundKind(ground)];
@@ -131,7 +165,8 @@ export function rollFor(r, ground, {night = false, year = 0} = {}) {
   if ( r.flatOut ) { diff += FLAT_OUT; parts.push(`flat out +${FLAT_OUT}`); }
   const dark = night && (W.hooves || W.wheels) && (Number(year) || 0) < LIT_FROM;
   if ( dark ) { diff += 1; parts.push("unlit at night +1"); }
-  return {attr: W.pool[0], ability: W.pool[1], diff: Math.min(10, diff), parts};
+  const ch = chartOf(r.way, year);
+  return {attr: W.pool[0], ability: W.pool[1], diff: Math.min(10, diff), parts, cap: ch ? ch.maneuver : null};
 }
 
 /**
@@ -139,19 +174,22 @@ export function rollFor(r, ground, {night = false, year = 0} = {}) {
  * The quarry's head start goes into its total.
  */
 export function newChase({quarry, pursuers = [], ground = "streets", night = false, year = 0}) {
-  const q = {...quarry, way: WAYS[quarry.way] ? quarry.way : "foot", flatOut: false, hide: false, total: headStart(quarry.lead, quarry.way)};
+  const q = {...quarry, way: WAYS[quarry.way] ? quarry.way : "foot", flatOut: false, total: headStart(quarry.lead, quarry.way)};
   const ps = pursuers.map(p => ({...p, way: WAYS[p.way] ? p.way : "foot", flatOut: false, total: 0, out: null}));
-  return {v: 1, turn: 0, ground: groundKind(ground), night: !!night, year: Number(year) || 0, quarry: q, pursuers: ps, status: "running", log: []};
+  return {v: 2, turn: 0, ground: groundKind(ground), night: !!night, year: Number(year) || 0, quarry: q, pursuers: ps, status: "running", sight: false, log: []};
 }
 
 /** The quarry's lead over one pursuer, in successes (negative: caught up). */
 export const leadOver = (st, p) => st.quarry.total - p.total;
+/** The difficulty of a pursuer's Perception roll to keep sight, from the lead as the turn starts: 6, +1 for each success
+ *  the quarry leads by (V20 core printed p. 262), +1 more where there is cover about (house rule, B914); 10 at most. */
+export const sightDiff = (st, p) => Math.min(10, 6 + Math.max(0, leadOver(st, p)) + (GROUNDS[groundKind(st.ground)].cover ? 1 : 0));
 const live = st => st.pursuers.filter(p => !p.out);
 
 /**
- * One turn. rolls: {[racerId]: {successes, botch}} for the quarry and every pursuer still in it; sight: {[pursuerId]:
- * {successes, botch}} for the pursuers' Perception + Alertness when the quarry tries to break sight, plus
- * rolls[quarryId].stealth: {successes, botch} for the quarry's Dexterity + Stealth.
+ * One turn. rolls: {[racerId]: {successes, botch}} for the quarry and every pursuer still in it. When the Storyteller
+ * calls for sight (st.sight), rolls[pursuerId].sight: {successes, botch} is each pursuer's Perception roll at
+ * sightDiff, rolled after the chase roll; no success, and that pursuer has lost the quarry.
  * Returns {state (a new copy), events: [{kind, who, text}]}. kinds: edge, stuck, botch, thrown, crash, caught, lost, away, hidden.
  */
 export function playTurn(st0, rolls = {}) {
@@ -166,7 +204,7 @@ export function playTurn(st0, rolls = {}) {
   if ( !qGo ) ev.push({kind: "stuck", who: q.id, text: `${q.name} cannot go on ${GROUNDS[st.ground].label.toLowerCase()} ${WAYS[q.way].label.toLowerCase()}.`});
   else if ( qr.botch ) {
     qBotch = true;
-    ev.push(botchEvent(q, qSpeed));
+    ev.push(botchEvent(q, qSpeed, year, true));
     q.total = 0;
   } else q.total += Number(qr.successes) || 0;
   // Each pursuer
@@ -179,8 +217,10 @@ export function playTurn(st0, rolls = {}) {
     }
     const pSpeed = speedOf(p, st.ground, year).yards;
     if ( pr.botch ) {
-      ev.push(botchEvent(p, pSpeed));
-      p.out = "botch";
+      // A pursuer's botch loses the quarry at once (V20 core printed p. 262); on a mount or in a vehicle, a fall or a crash
+      const b = botchEvent(p, pSpeed, year);
+      ev.push(b.kind === "botch" ? {...b, kind: "lost", text: `${p.name} stumbles and loses ${q.name}.`} : b);
+      p.out = b.kind === "botch" ? "lost" : "botch";
       continue;
     }
     p.total += Number(pr.successes) || 0;
@@ -205,16 +245,15 @@ export function playTurn(st0, rolls = {}) {
     st.log.push({turn: st.turn, events: ev});
     return {state: st, events: ev};
   }
-  // Breaking sight
-  if ( q.hide && qGo && !qBotch && GROUNDS[st.ground].cover ) {
-    const minLead = Math.min(...chasers.map(p => leadOver(st, p)));
-    if ( chasers.length && minLead >= SIGHT_LEAD ) {
-      const s = rolls[q.id]?.stealth ?? {successes: 0, botch: false};
-      const keep = chasers.filter(p => { const r = rolls[p.id]?.sight ?? {successes: 0}; return !s.botch && !r.botch ? r.successes > s.successes : !!s.botch; });
-      for ( const p of chasers ) if ( !keep.includes(p) ) { p.out = "lost"; ev.push({kind: "lost", who: p.id, text: `${p.name} loses sight of ${q.name}.`}); }
-      if ( !keep.length ) ev.push({kind: "hidden", who: q.id, text: `${q.name} slips out of sight.`});
+  // Keeping sight: the Storyteller called a Perception roll this turn; a pursuer who scores nothing has lost the quarry
+  if ( st.sight && chasers.length ) {
+    for ( const p of chasers ) {
+      const r = rolls[p.id]?.sight ?? {successes: 0, botch: false};
+      if ( r.botch || !(Number(r.successes) > 0) ) { p.out = "lost"; ev.push({kind: "lost", who: p.id, text: `${p.name} loses sight of ${q.name}.`}); }
     }
+    if ( !live(st).length ) ev.push({kind: "hidden", who: q.id, text: `${q.name} slips out of sight.`});
   }
+  st.sight = false;
   const still = live(st);
   if ( !still.length ) {
     st.status = "away";
@@ -228,17 +267,23 @@ export function playTurn(st0, rolls = {}) {
   return {state: st, events: ev};
 }
 
-/** A botch: on foot a stumble that loses the ground made; on a mount thrown, in a vehicle a crash. */
-function botchEvent(r, yards) {
-  const W = WAYS[r.way] ?? WAYS.foot;
-  if ( W.motor && !W.thrown ) return {kind: "crash", who: r.id, dice: crashDice(yards), text: `${r.name} crashes ${W.label.toLowerCase()}: ${crashDice(yards)} dice of lethal damage, soaked as usual, and the chase ends for them.`};
-  if ( W.thrown ) return {kind: "thrown", who: r.id, dice: thrownDice(yards), text: `${r.name} is thrown: ${thrownDice(yards)} ${thrownDice(yards) === 1 ? "die" : "dice"} of bashing damage, and the chase ends for them.`};
+/** A botch: on foot a stumble or a dead end; thrown from a mount or a bicycle; a crash in a vehicle. */
+function botchEvent(r, yards, year, quarry = false) {
+  const W = WAYS[r.way] ?? WAYS.foot, d = crashDice(yards), type = crashType(yards);
+  const dice = `${d} ${d === 1 ? "die" : "dice"} of ${type} damage, rolled as a fall`;
+  if ( W.motor && !W.thrown ) return {kind: "crash", who: r.id, dice: d, type, text: `${r.name} crashes ${W.label.toLowerCase()}: ${dice}, and the chase ends for them.`};
+  if ( W.thrown || W.hooves ) return {kind: "thrown", who: r.id, dice: d, type, text: `${r.name} is thrown: ${dice}, and the chase ends for them.`};
   if ( r.way !== "foot" ) return {kind: "botch", who: r.id, text: `${r.name} loses control ${W.label.toLowerCase()} and comes to a stop.`};
-  return {kind: "botch", who: r.id, text: `${r.name} stumbles and falls.`};
+  return {kind: "botch", who: r.id, text: quarry ? `${r.name} stumbles, or runs into a dead end.` : `${r.name} stumbles and falls.`};
 }
-/** House figures (B913): a crash is a die of lethal for each 15 yards a turn, ten at most; thrown, one die for each 20 yards, at least one. */
-export const crashDice = yards => Math.max(1, Math.min(10, Math.floor((Number(yards) || 0) / 15)));
-export const thrownDice = yards => Math.max(1, Math.min(6, Math.floor((Number(yards) || 0) / 20)));
+/** A crash or a fall from the saddle, as falling (V20 core printed p. 296): a die of bashing for each 10 mph, one to ten;
+ *  ten dice are lethal, as a fall of 100 feet. House reading of the book (B913). */
+export const crashDice = yards => Math.max(1, Math.min(10, Math.floor((Number(yards) || 0) / YD_PER_MPH / 10)));
+export const crashType = yards => (crashDice(yards) >= 10 ? "lethal" : "bashing");
+
+/** A rider who catches someone at speed: +1 damage die for each turn spent building speed, five at most (V20 Dark Ages
+ *  printed p. 398). For the first blow of the fight. */
+export const chargeDice = (st, p) => (WAYS[p?.way]?.hooves ? Math.min(5, Math.max(0, Number(st?.turn) || 0)) : 0);
 
 /** How it stands, in words for the players: no numbers. */
 export function standing(st, p) {

@@ -28,6 +28,12 @@ test("speeds: running from the sheet, cars faster by era, the ground holds hoove
   assert.equal(C.speedOf({way: "foot", run: 26}, "open", 1999).yards, 26);
   assert.ok(C.speedOf({way: "car"}, "road", 1910).yards < C.speedOf({way: "car"}, "road", 1970).yards);
   assert.ok(C.speedOf({way: "car"}, "road", 2045).yards > C.speedOf({way: "car"}, "road", 1995).yards);
+  // A 1990s sedan: 70 mph safe, about 100 yards a turn; flat out 30 mph past it, never past the top speed
+  assert.equal(C.speedOf({way: "car"}, "road", 1995).yards, 103);
+  assert.equal(C.speedOf({way: "car", flatOut: true}, "road", 1995).yards, 147);
+  assert.equal(C.speedOf({way: "car", flatOut: true}, "road", 1905).yards, 44);
+  assert.deepEqual(C.chartOf("car", 1995), {safe: 70, top: 120, maneuver: 5});
+  assert.equal(C.chartOf("horse", 1300), null);
   assert.deepEqual(C.speedOf({way: "car"}, "streets", 1970), {yards: 40, capped: true});
   assert.deepEqual(C.speedOf({way: "horse"}, "crowd", 1300), {yards: 10, capped: true});
   assert.equal(C.speedOf({way: "motorbike"}, "rough", 1970).yards, 15);
@@ -48,7 +54,7 @@ test("the head start and the speed edge", () => {
 });
 
 test("the roll: Dexterity + Athletics on foot, Ride mounted, Drive in a car; ground, flat out and unlit nights add difficulty", () => {
-  assert.deepEqual(C.rollFor({way: "foot"}, "streets"), {attr: "dexterity", ability: "athletics", diff: 6, parts: []});
+  assert.deepEqual(C.rollFor({way: "foot"}, "streets"), {attr: "dexterity", ability: "athletics", diff: 6, parts: [], cap: null});
   assert.equal(C.rollFor({way: "horse"}, "open").ability, "ride");
   assert.equal(C.rollFor({way: "car"}, "crowd", {year: 1970}).diff, 8);
   assert.equal(C.rollFor({way: "foot"}, "crowd").diff, 7);
@@ -58,6 +64,8 @@ test("the roll: Dexterity + Athletics on foot, Ride mounted, Drive in a car; gro
   assert.equal(C.rollFor({way: "foot"}, "open", {night: true, year: 1300}).diff, 6);
   assert.equal(C.rollFor({way: "boat"}, "water").attr, "stamina");
   assert.equal(C.rollFor({way: "car", flatOut: true}, "rough", {night: true, year: 1300}).diff, 10);
+  assert.equal(C.rollFor({way: "car"}, "road", {year: 1995}).cap, 5);
+  assert.equal(C.rollFor({way: "foot"}, "road").cap, null);
 });
 
 test("a turn: totals grow, a pursuer whose total passes the quarry's catches up", () => {
@@ -88,6 +96,7 @@ test("a lead of ten and the quarry is away; a faster quarry pulls away by itself
 
 test("a car runs a runner down on the road, but cannot follow indoors", () => {
   const st = chase({ps: [{way: "car"}], year: 1975, ground: "road", q: {lead: 0}});
+  assert.equal(C.speedOf(st.pursuers[0], "road", 1975).yards, 88);
   let r = C.playTurn(st, {q: S(2), p0: S(0)});
   assert.equal(r.state.pursuers[0].total, 3);
   assert.equal(r.state.status, "caught");
@@ -102,40 +111,57 @@ test("the quarry's edge counts once, against the fastest pursuer", () => {
   assert.equal(r.state.quarry.total, 1);
 });
 
-test("botches: a stumble on foot loses the ground made; thrown from a horse; a car crashes", () => {
+test("botches: the quarry stumbles; a pursuer loses the quarry; thrown from a horse; a car crashes, rolled as a fall", () => {
   let r = C.playTurn(chase(), {q: B, p0: S(1)});
   assert.equal(r.state.quarry.total, 0);
   assert.equal(r.state.status, "caught");
+  r = C.playTurn(chase({ps: [{}, {}]}), {q: S(1), p0: B, p1: S(0)});
+  assert.equal(r.state.pursuers[0].out, "lost");
+  assert.ok(r.events.some(e => e.kind === "lost" && e.who === "p0"));
   r = C.playTurn(chase({ps: [{way: "horse"}], year: 1300, ground: "open"}), {q: S(1), p0: B});
   const e = r.events.find(x => x.kind === "thrown");
   assert.ok(e && e.dice >= 1);
   assert.equal(r.state.pursuers[0].out, "botch");
   r = C.playTurn(chase({ps: [{way: "car"}], year: 1975, ground: "road"}), {q: S(1), p0: B});
   const c = r.events.find(x => x.kind === "crash");
-  assert.equal(c.dice, C.crashDice(90));
+  assert.equal(c.dice, C.crashDice(88));
+  assert.equal(c.dice, 5);
+  assert.equal(c.type, "bashing");
   assert.equal(C.crashDice(300), 10);
-  assert.equal(C.thrownDice(5), 1);
+  assert.equal(C.crashType(300), "lethal");
+  assert.equal(C.crashDice(5), 1);
 });
 
-test("breaking sight needs a lead of three and cover; a pursuer must score more to keep sight", () => {
-  let st = chase({q: {lead: 8}, ps: [{}, {}]});
-  st.quarry.hide = true;
-  let r = C.playTurn(st, {q: {...S(0), stealth: S(2)}, p0: {...S(0), sight: S(3)}, p1: {...S(0), sight: S(2)}});
+test("keeping sight: a Perception roll the Storyteller calls, +1 difficulty a success of lead, a failure loses the quarry", () => {
+  const st = chase({q: {lead: 8}, ps: [{}, {}], ground: "open"});
+  assert.equal(C.sightDiff(st, st.pursuers[0]), 10);
+  const near = chase({q: {lead: 4}, ground: "streets"});
+  assert.equal(C.sightDiff(near, near.pursuers[0]), 9);
+  assert.equal(C.sightDiff(chase({q: {lead: 0}, ground: "open"}), chase().pursuers[0]), 6);
+  st.sight = true;
+  let r = C.playTurn(st, {q: S(0), p0: {...S(0), sight: S(1)}, p1: {...S(0), sight: S(0)}});
   assert.equal(r.state.pursuers[0].out, null);
   assert.equal(r.state.pursuers[1].out, "lost");
   assert.equal(r.state.status, "running");
-  r = C.playTurn(st, {q: {...S(0), stealth: S(3)}, p0: {...S(0), sight: S(1)}, p1: {...S(0), sight: S(0)}});
+  assert.equal(r.state.sight, false);
+  r = C.playTurn(st, {q: S(0), p0: {...S(0), sight: B}, p1: {...S(0), sight: S(0)}});
   assert.equal(r.state.status, "away");
   assert.ok(r.events.some(e => e.kind === "hidden"));
-  // No cover on open fields
-  const open = {...st, ground: "open"};
-  r = C.playTurn(open, {q: {...S(0), stealth: S(5)}, p0: {...S(0), sight: S(0)}, p1: {...S(0), sight: S(0)}});
-  assert.equal(r.state.status, "running");
-  // Not enough lead
-  const near = chase({q: {lead: 2}});
-  near.quarry.hide = true;
-  r = C.playTurn(near, {q: {...S(0), stealth: S(5)}, p0: {...S(0), sight: S(0)}});
-  assert.equal(r.state.pursuers[0].out, null);
+  // Not called: nobody rolls for sight and nobody is lost
+  r = C.playTurn({...st, sight: false}, {q: S(0), p0: S(0), p1: S(0)});
+  assert.ok(r.state.pursuers.every(p => !p.out));
+});
+
+test("Garou forms run faster; a rider who catches someone charges in", () => {
+  assert.equal(C.formRun(26, "lupus"), 52);
+  assert.equal(C.formRun(26, "hispo"), 39);
+  assert.equal(C.formRun(26, "crinos"), 28);
+  assert.equal(C.formRun(26, "homid"), 26);
+  const st = chase({ps: [{way: "horse"}], year: 1300, ground: "open"});
+  st.turn = 7;
+  assert.equal(C.chargeDice(st, st.pursuers[0]), 5);
+  assert.equal(C.chargeDice({turn: 2}, {way: "horse"}), 2);
+  assert.equal(C.chargeDice(st, {way: "car"}), 0);
 });
 
 test("standing words carry no numbers", () => {

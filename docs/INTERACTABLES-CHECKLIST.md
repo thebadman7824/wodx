@@ -194,6 +194,7 @@ Step 3 of the design note.
 - [x] Rules: pursuit roll, head start, speed edge, ways by year, ground, flat out, botches, breaking sight, getting away (B910-B915)
 - [x] Runtime: the Chase window in the Storyteller's hand, turn cards, Undo, damage, Start a fight
 - [x] Harness tests (13 new)
-- [ ] Book check on the PC: V20 core pursuit, vehicle chart and collisions, Revised pursuit
-- [ ] Gate gatechase in rothenstein-wodx
-- [ ] Deployed
+- [x] Book check on the PC: V20 core pursuit, vehicle chart and collisions (Revised has no text on the PC); rules aligned in 0.26.1
+- [x] Gate gatechase in rothenstein-wodx (0.26.0 at ee234c8: gatechase 8/8, gate-interact 26/26, UI fit 783 ok, bundle wodx-2026-11-11z20)
+- [x] Deployed 0.26.0 to rothenstein-wodx
+- [ ] Deploy and gate 0.26.1 (the book-check changes)

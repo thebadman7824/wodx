@@ -54,9 +54,12 @@ function mountOf(tokDoc) {
   }
   return null;
 }
+/** The Garou form a sheet is in (the system's shapes), or "homid". */
+const formOf = actor => { const sh = actor?.system?.shapes ?? {}; return ["glabro", "crinos", "hispo", "lupus"].find(k => sh[k]?.isactive) ?? "homid"; };
 const runOf = actor => {
-  try { const m = game.wodxCombat?.movementFor?.(actor); if ( m && Number.isFinite(m.run) ) return m.run; } catch (e) { /* WoDX Combat is off */ }
-  return 20 + 3 * attrOf(actor, "dexterity");
+  let run = 20 + 3 * attrOf(actor, "dexterity");
+  try { const m = game.wodxCombat?.movementFor?.(actor); if ( m && Number.isFinite(m.run) ) run = m.run; } catch (e) { /* WoDX Combat is off */ }
+  return C.formRun(run, formOf(actor));
 };
 const racerOf = (tokDoc, year) => ({id: tokDoc.id, uuid: tokDoc.uuid, actorId: tokDoc.actor?.id ?? "", name: tokDoc.name,
   npc: !tokDoc.actor?.hasPlayerOwner, way: C.wayFromMount(mountOf(tokDoc), year), run: runOf(tokDoc.actor)});
@@ -134,7 +137,7 @@ async function turnDialog(scene, st) {
   const content = `<p class="wodx-quiet">Turn ${st.turn + 1}. Each racer rolls; a pursuer whose total passes the quarry's catches up. A lead of ${C.AWAY_LEAD} and the quarry is away.</p>
     <div class="wodx-field"><label>Ground this turn</label><select name="ground">${opt(grounds, st.ground)}</select></div>
     <table class="wix-chase"><tbody>${row(st.quarry, true)}${live.map(p => row(p, false)).join("")}</tbody></table>
-    <label class="wix-check"><input type="checkbox" name="hide"> ${esc(st.quarry.name)} tries to break sight (a lead of ${C.SIGHT_LEAD}, and cover about)</label>
+    <label class="wix-check"><input type="checkbox" name="sight"> Call for sight: each pursuer rolls Perception + Alertness to keep ${esc(st.quarry.name)} in view, +1 difficulty a success of lead (${esc(live.map(p => `${p.name} ${C.sightDiff(st, p)}`).join(", "))})</label>
     <label class="wix-check"><input type="checkbox" name="night"${st.night ? " checked" : ""}> At night</label>`;
   const r = await foundry.applications.api.DialogV2.wait({
     window: {title: `The chase: ${st.quarry.name}`, resizable: true}, classes: ["wodx-dialog", "wix-dialog"], position: {width: 620, height: "auto"}, content,
@@ -151,18 +154,19 @@ async function turnDialog(scene, st) {
     if ( r.fd[`way.${x.id}`] && C.wayOpen(r.fd[`way.${x.id}`], st.year) ) x.way = r.fd[`way.${x.id}`];
     x.flatOut = !!r.fd[`flat.${x.id}`];
   }
-  next.quarry.hide = !!r.fd.hide;
+  next.sight = !!r.fd.sight;
   return rollTurn(scene, next, {dialog: true});
 }
 
 /** Roll one pool for a racer: {successes, botch, dice, diff, faces, parts, roll}. */
-async function rollPool(actor, attr, ability, diff, parts0 = []) {
+async function rollPool(actor, attr, ability, diff, parts0 = [], cap = null) {
   const ab = ability ? abilityOf(actor, ability) : {dots: 0, type: "talent"};
   const built = actionPool({attribute: attrOf(actor, attr), attributeLabel: attr[0].toUpperCase() + attr.slice(1), ability: ab.dots,
     abilityLabel: ability ? ability[0].toUpperCase() + ability.slice(1) : "", abilityKey: ability || null, abilityType: ab.type,
     baseDifficulty: diff, woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty)});
   if ( built.blocked ) return {successes: 0, botch: false, dice: 0, diff, faces: [], parts: [built.blocked], roll: null};
   const d = clampDifficulty(built.difficulty);
+  if ( cap !== null && built.dice > cap ) { built.dice = cap; built.parts.push(`Maneuver ${cap}: the most dice`); }
   const roll = new Roll(`${Math.max(0, built.dice)}d10`);
   await roll.evaluate();
   const faces = roll.dice[0]?.results?.map(x => x.result) ?? [];
@@ -178,27 +182,20 @@ export async function rollTurn(scene, st = stateOf(scene), {dialog = false} = {}
     const actor = scene.tokens.get(x.id)?.actor ?? game.actors.get(x.actorId);
     if ( !actor ) { rolls[x.id] = {successes: 0, botch: false}; continue; }
     const p = C.rollFor(x, st.ground, {night: st.night, year: st.year});
-    const res = await rollPool(actor, p.attr, p.ability, p.diff, p.parts);
+    const res = await rollPool(actor, p.attr, p.ability, p.diff, p.parts, p.cap);
     rolls[x.id] = res;
     if ( res.roll ) all.push(res.roll);
     lines.push(`<p><b>${esc(x.name)}</b>: ${esc(C.WAYS[x.way].label)}, ${res.dice} dice at ${res.diff}${res.parts.length ? ` (${esc(res.parts.join(", "))})` : ""}: ${res.botch ? "a botch" : `${res.successes} success${res.successes === 1 ? "" : "es"}`} <span class="wodx-quiet">[${res.faces.join(" ")}]</span></p>`);
   }
-  // Breaking sight: the quarry's Dexterity + Stealth against each pursuer's Perception + Alertness
-  if ( st.quarry.hide ) {
-    const qa = scene.tokens.get(st.quarry.id)?.actor;
-    if ( qa ) {
-      const s = await rollPool(qa, "dexterity", "stealth", 6);
-      rolls[st.quarry.id].stealth = s;
-      if ( s.roll ) all.push(s.roll);
-      lines.push(`<p>${esc(st.quarry.name)} tries to break sight: Dexterity + Stealth, ${s.botch ? "a botch" : `${s.successes}`}.</p>`);
-      for ( const p of st.pursuers.filter(x => !x.out) ) {
-        const pa = scene.tokens.get(p.id)?.actor;
-        if ( !pa ) continue;
-        const r = await rollPool(pa, "perception", "alertness", 6);
-        rolls[p.id].sight = r;
-        if ( r.roll ) all.push(r.roll);
-        lines.push(`<p>${esc(p.name)} watches: Perception + Alertness, ${r.botch ? "a botch" : `${r.successes}`}.</p>`);
-      }
+  // Keeping sight: the Storyteller called a Perception roll, +1 difficulty for each success the quarry leads by
+  if ( st.sight ) {
+    for ( const p of st.pursuers.filter(x => !x.out) ) {
+      const pa = scene.tokens.get(p.id)?.actor;
+      if ( !pa ) continue;
+      const r = await rollPool(pa, "perception", "alertness", C.sightDiff(st, p));
+      rolls[p.id].sight = r;
+      if ( r.roll ) all.push(r.roll);
+      lines.push(`<p>${esc(p.name)} keeps watch: Perception + Alertness, ${r.dice} dice at ${r.diff}: ${r.botch ? "a botch" : `${r.successes} success${r.successes === 1 ? "" : "es"}`}.</p>`);
     }
   }
   const {state, events} = C.playTurn(st, rolls);
@@ -209,9 +206,11 @@ export async function rollTurn(scene, st = stateOf(scene), {dialog = false} = {}
   await ChatMessage.create({speaker: {alias: "WoDX"}, content: card(`The chase, turn ${state.turn}`, words + stand)});
   const hurt = events.filter(e => e.kind === "crash" || e.kind === "thrown");
   const buttons = [`<button type="button" class="wix-chase-undo">Undo this turn</button>`]
-    .concat(hurt.map(e => `<button type="button" class="wix-chase-hurt" data-who="${esc(e.who)}" data-dice="${e.dice}" data-type="${e.kind === "crash" ? "lethal" : "bashing"}">Damage for ${esc(nameOf(state, e.who))}</button>`))
+    .concat(hurt.map(e => `<button type="button" class="wix-chase-hurt" data-who="${esc(e.who)}" data-dice="${e.dice}" data-type="${esc(e.type ?? "bashing")}">Damage for ${esc(nameOf(state, e.who))}</button>`))
     .concat(state.status === "caught" ? [`<button type="button" class="wix-chase-fight">Start a fight</button>`] : []);
-  const totals = `<p class="wodx-quiet">Totals: ${esc(state.quarry.name)} ${state.quarry.total}; ${state.pursuers.map(p => `${esc(p.name)} ${p.total}${p.out ? ` (${esc(p.out)})` : ""}`).join("; ")}.</p>`;
+  const charge = state.status === "caught" ? state.pursuers.filter(p => (state.caughtBy ?? []).includes(p.id) && C.chargeDice(state, p))
+    .map(p => `<p>${esc(p.name)} rides in at speed: +${C.chargeDice(state, p)} damage dice on the first blow (mounted combat, V20 Dark Ages p. 398).</p>`).join("") : "";
+  const totals = charge + `<p class="wodx-quiet">Totals: ${esc(state.quarry.name)} ${state.quarry.total}; ${state.pursuers.map(p => `${esc(p.name)} ${p.total}${p.out ? ` (${esc(p.out)})` : ""}`).join("; ")}.</p>`;
   await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), rolls: all, sound: all.length ? CONFIG.sounds?.dice : undefined,
     content: card(`The chase, turn ${state.turn} (Storyteller)`, lines.join("") + words + totals + `<div class="wodx-buttons">${buttons.join("")}</div>`),
     flags: {[MOD]: {chaseTurn: {scene: scene.id, turn: state.turn, prev: st}}}});
