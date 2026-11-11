@@ -5,6 +5,7 @@
  *
  * Wounds are the health-track index (0 unhurt, 1 Bruised … 6 Crippled, 7 Incapacitated).
  */
+import * as TK from "./talk-rules.mjs";
 
 /** Temperament weights (0–2) and thresholds, per template. WoDX's readings of each line's usual conduct. */
 export const TEMPLATES = {
@@ -396,16 +397,11 @@ export function withPhase(profile, phase) {
  *   Grumbles about the price of salt.
  * Before "=>" is a WoDX Chronicle "Only when" list about the character they talk to (";" between tests); a line with
  * no "=>" is always there. Only the Storyteller sees it. WoDX writes none of it: these are the Storyteller's words.
+ * Lines that start with a [topic] are also answers on the player's topic menu (NPC 0.10.0, talk-rules.mjs).
  */
 export function parseTalk(text) {
-  const out = [];
-  for ( const raw of String(text ?? "").split(/\r?\n/) ) {
-    const line = raw.trim();
-    if ( !line || line.startsWith("#") ) continue;
-    const k = line.indexOf("=>");
-    out.push(k >= 0 ? {when: line.slice(0, k).trim(), say: line.slice(k + 2).trim()} : {when: "", say: line});
-  }
-  return out.filter(l => l.say);
+  // NPC 0.10.0: lines in [brackets] are topic-menu lines (talk-rules.mjs); they show here with their topic
+  return TK.parseSheet(text).lines;
 }
 
 /** The lines that apply. check: when-text => boolean; null: no one to check against (every line, marked). */

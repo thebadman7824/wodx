@@ -1,6 +1,7 @@
 /**
  * WoDX NPC 0.8.0: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
- * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs).
+ * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -17,11 +18,12 @@ import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
+import {build as buildTalk} from "./talk.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.9.0";
+const VERSION = "0.10.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -569,8 +571,9 @@ export async function editBehavior(actor) {
     </fieldset>
     <fieldset><legend>Fears</legend>${Object.entries(FEARS).map(([k, l]) => `<label class="wnpc-check"><input type="checkbox" name="fear-${k}"${p.fears.includes(k) ? " checked" : ""}/> ${l}</label>`).join("")}</fieldset>
     <fieldset><legend>Talk sheet (only you see it)</legend>
-    <textarea name="talk" rows="3" style="width:100%" placeholder="carries bishop's seal => Opens the archive and names the night porter.">${esc(saved.talk ?? "")}</textarea>
-    <p class="wodx-quiet">Your own notes on what they will say or do, one a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to show a line only when it fits. The HUD's speech button shows the lines for the targeted character.</p></fieldset>
+    <textarea name="talk" rows="4" style="width:100%" placeholder="[the abbot] carries bishop's seal => Opens the archive and names the night porter. | teach the night porter">${esc(saved.talk ?? "")}</textarea>
+    <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
+    <label class="wnpc-check"><input type="checkbox" name="talkAsk"${saved.talkAsk ? " checked" : ""}/> Ask me first: when a player asks them something, you pick the answer</label></fieldset>
     <fieldset><legend>Phases (first that fits is used)</legend>
     <textarea name="phases" rows="3" style="width:100%" placeholder="Cornered: wounds >= mauled => aggression 2, caution 0, fleeAt 8">${esc(saved.phases ?? "")}</textarea>
     <p class="wodx-quiet">One a line: a name, a colon, WoDX Chronicle tests (; between them), =&gt;, then changes: template, ${Object.keys(TRAITS).join(", ")}, fleeAt, tactics, fears.</p></fieldset>
@@ -585,7 +588,7 @@ export async function editBehavior(actor) {
   if ( data === "routine" ) return routines.editRoutine(actor);
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
-    household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 4000) || null};
+    household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null};
   const ph = NR.parsePhases(out.phases);
   if ( ph.problems.length ) ui.notifications.warn(`Phases: ${ph.problems.join(" ")}`);
   for ( const k of [...Object.keys(TRAITS), "fleeAt"] ) out[k] = data[k] === "" || data[k] === null || data[k] === undefined ? null : Number(data[k]);
@@ -601,7 +604,7 @@ export async function showTalk(actor) {
   const target = [...(game.user.targets ?? [])].find(t => t.actor && t.actor.id !== actor.id)?.actor ?? null;
   const W = chron()?.when;
   const lines = NR.talkFor(NR.parseTalk(savedProfile(actor).talk), target && W?.check ? when => W.check(when, {actor: target}).ok : null);
-  const body = lines.length ? `<ul>${lines.map(l => `<li>${esc(l.say)}${l.when && l.fits === null ? ` <span class="wodx-quiet">(if ${esc(l.when)})</span>` : ""}</li>`).join("")}</ul>` : "<p>Nothing on the sheet fits.</p>";
+  const body = lines.length ? `<ul>${lines.map(l => `<li>${l.kind && l.kind !== "note" ? `<b>${esc(l.topic ?? l.kind)}:</b> ` : ""}${esc(l.say)}${l.when && l.fits === null ? ` <span class="wodx-quiet">(if ${esc(l.when)})</span>` : ""}</li>`).join("")}</ul>` : "<p>Nothing on the sheet fits.</p>";
   return foundry.applications.api.DialogV2.prompt({window: {title: `Talk sheet: ${actor.name}`}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 420},
     content: `<p class="wodx-quiet">${target ? `For ${esc(target.name)}.` : "No character is targeted, so every line shows, with what it needs."}</p>${body}`, ok: {label: "Close"}, rejectClose: false});
 }
@@ -632,11 +635,12 @@ export async function openNpcPanel() {
       dlg.element.querySelectorAll("[data-routine]").forEach(b => b.addEventListener("click", () => routines.editRoutine(canvas.tokens.get(b.dataset.routine)?.actor)));
     },
     buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object},
-      {action: "places", label: "Places…", callback: () => "places"}, {action: "cancel", label: "Close"}],
+      {action: "places", label: "Places…", callback: () => "places"}, {action: "talk", label: "Shared talk…", callback: () => "talk"}, {action: "cancel", label: "Close"}],
     rejectClose: false
   });
   if ( !data || data === "cancel" ) return null;
   if ( data === "places" ) return routines.openPlaces();
+  if ( data === "talk" ) return talk.editShared();
   await game.settings.set(MOD, "mode", data.world);
   if ( data.scene ) await canvas.scene.setFlag(MOD, "mode", data.scene); else await canvas.scene.unsetFlag(MOD, "mode");
   if ( data.routineScene ) await canvas.scene.setFlag(MOD, "routineMode", data.routineScene); else await canvas.scene.unsetFlag(MOD, "routineMode");
@@ -658,6 +662,9 @@ factions.hooks();
 const orders = buildOrders({MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor});
 orders.hooks();
 Faces.registerFaceHooks();
+/* 0.10.0: the topic menu */
+const talk = buildTalk({MOD, esc, isActiveGM, chron, savedProfile});
+talk.hooks();
 
 Hooks.once("init", () => {
   registerSettings();
@@ -665,11 +672,12 @@ Hooks.once("init", () => {
   factions.registerSettings();
   orders.registerSettings();
   Faces.registerFaceSettings();
+  talk.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers};
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, talk, openTalk: talk.openTalk};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -738,6 +746,8 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
 Hooks.on("getSceneControlButtons", controls => {
   const tokens = controls.tokens ?? controls.token;
   if ( !tokens?.tools ) return;
+  tokens.tools.wodxTalk = {name: "wodxTalk", title: "Talk to the person you target, or the nearest one in reach", icon: "fa-solid fa-comments", order: 108,
+    button: true, visible: true, onChange: () => talk.openTalk()};
   tokens.tools.wodxOrders = {name: "wodxOrders", title: "Give an order (to a follower who serves your character)", icon: "fa-solid fa-bullhorn", order: 109,
     button: true, visible: true, onChange: () => orders.openOrders()};
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
