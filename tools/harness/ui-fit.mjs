@@ -476,6 +476,23 @@ game.world.id = worldId;
   globalThis.canvas = oldCanvas;
   api.DialogV2.wait = wait;
 }
+// NPC 0.10.0: the topic menu (24 topics of long names, a long answer log) and the shared talk sheets
+{
+  const npcApi = game.modules.get("wodx-npc").api;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const ask = Array.from({length: 24}, (_, k) => `the abbot of the Church of St. Aegidius and the cloister ${k}`);
+  const log = Array.from({length: 8}, (_, k) => ({topic: ask[k], say: "Says the abbot walks the cloister after Compline, and that no one goes near the crypt after dark, not since the fire. ".repeat(2), taught: k % 2 ? [ask[k + 1]] : []}));
+  const state = {menu: {name: "Father Ludovic of the Church of St. Aegidius", greet: "Nods without looking up from the ledger.", ask, local: ["news", "rumours", "work", "directions"]}, log, waiting: false};
+  for ( const [label, fn] of [["Talk", () => api.DialogV2.wait({window: {title: `Talk: ${state.menu.name}`, resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog", "wnpc-talk-window"],
+      position: {width: 400, height: "auto"}, content: `<div class="wnpc-talk-wrap">${npcApi.talk.talkHtml(state)}</div>`, buttons: [{action: "close", label: "Goodbye", default: true}]})],
+    ["Shared talk sheets", () => npcApi.talk.editShared()]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2.wait = wait;
+}
 // Phase 7c: the Places window (211 scenes, 40 of them tagged, 9 regions in view), an NPC's routine and matching owners
 {
   const npcApi = game.modules.get("wodx-npc").api;

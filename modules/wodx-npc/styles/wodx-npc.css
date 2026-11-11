@@ -35,3 +35,14 @@
 .wodx-npc-dialog .wnpc-faction-form table select, .wodx-npc-dialog .wnpc-faction-form table input[type=text] { max-width: 14em; }
 .wodx-npc-dialog .wnpc-faction-form textarea { width: 100%; }
 .wodx-npc-dialog .wnpc-members, .wodx-npc-dialog .wnpc-held, .wodx-npc-dialog .wnpc-standing { max-height: 24vh; }
+
+/* NPC 0.10.0: the topic menu */
+.wnpc-talk-window .window-content { overflow-y: auto; max-height: 85vh; }
+.wnpc-talk h4 { margin: 0.6em 0 0.2em; }
+.wnpc-talk-greet { font-style: italic; }
+.wnpc-talk-log { max-height: 16em; overflow-y: auto; }
+.wnpc-talk-said { border-left: 2px solid var(--color-border-light-tertiary, #888); padding-left: 0.5em; margin-bottom: 0.4em; }
+.wnpc-talk-said p { margin: 0.1em 0; }
+.wnpc-talk-ask, .wnpc-talk-local { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3em; }
+.wnpc-talk-ask li, .wnpc-talk-local li { margin: 0; }
+.wnpc-talk-ask button, .wnpc-talk-local button { width: auto; padding: 0 0.6em; }
