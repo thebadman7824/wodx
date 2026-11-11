@@ -45,6 +45,69 @@ test("every realm in every era: arrival, ways out, landmarks and reachable hazar
   }
 });
 
+test("each realm's map matches its description: every landmark and danger once, and the realm's own shape", () => {
+  for ( const id of RM.REALM_ORDER ) for ( const year of [1250, 1700, 1999] ) {
+    const m = RM.generate({realm: id, seed: 3, year}), R = RM.REALMS[id];
+    const lm = m.regions.filter(r => r.kind === "landmark").map(r => r.label);
+    assert.deepEqual([...lm].sort(), [...R.landmarks].sort(), `${id} ${year}: every landmark once`);
+    const hz = m.regions.filter(r => r.kind === "hazard").map(r => r.label);
+    const sp = R.map ?? {}, want = new Set([...RM.realmEra(id, year).hazards, sp.river?.hazard, sp.reaches, sp.debris?.label].filter(Boolean));
+    assert.deepEqual([...hz].sort(), [...want].sort(), `${id} ${year}: every danger once`);
+    assert.equal(m.regions.filter(r => r.kind === "exit").length, 2, `${id} ${year}: a way back and a way on`);
+  }
+  const cellsOf = (m, t) => m.cells.flat().filter(c => c === t).length;
+  // The Tempest and the Far Shores: islands in the storm sea, not the void (The Sea of Shadows pdf 20 / p. 19)
+  for ( const id of ["tempest", "far-shores"] ) { const m = RM.generate({realm: id, seed: 2, year: 1700}); assert.equal(cellsOf(m, RM.T.void), 0, id); assert.ok(cellsOf(m, RM.T.water) > 200, id); }
+  assert.ok(RM.generate({realm: "far-shores", seed: 2, year: 1700}).regions.length >= 9);
+  // Stygia: walled on its island, the harbour on the Sea of Shadows is where travellers land
+  const st = RM.generate({realm: "stygia", seed: 2, year: 1700}), arr = st.regions.find(r => r.kind === "arrival");
+  assert.equal(arr.label, "The harbour on the Sea of Shadows");
+  assert.ok([[0, 1], [0, -1], [1, 0], [-1, 0], [0, 2]].some(([dx, dy]) => [RM.T.water, RM.T.shallow].includes(st.cells[arr.at.y + dy]?.[arr.at.x + dx])), "the harbour is on the water");
+  const cx = Math.floor(st.cols / 2), cy = Math.floor(st.rows / 2);
+  assert.equal(st.regions.find(r => r.label === "the Onyx Tower").at.x, cx);
+  assert.equal(st.regions.find(r => r.label === "the Onyx Tower").at.y, cy);
+  // The Battleground: the Signpost, and from it exactly two paths
+  for ( const year of [1250, 1700, 1916, 2040] ) {
+    const b = RM.generate({realm: "battleground", seed: 4, year, future: true}), sp = b.regions.find(r => r.kind === "arrival");
+    assert.equal(sp.label, "The Signpost");
+    // Walk the ring of cells two steps out from the Signpost and count the openings in it
+    const {x, y} = sp.at, ring = [];
+    for ( let dx = -2; dx <= 2; dx++ ) ring.push([dx, -2]);
+    for ( let dy = -1; dy <= 2; dy++ ) ring.push([2, dy]);
+    for ( let dx = 1; dx >= -2; dx-- ) ring.push([dx, 2]);
+    for ( let dy = 1; dy >= -1; dy-- ) ring.push([-2, dy]);
+    const open = ring.map(([dx, dy]) => RM.walkable(b.cells[y + dy]?.[x + dx] ?? RM.T.solid));
+    const runs = open.filter((v, i) => v && !open[(i + open.length - 1) % open.length]).length;
+    assert.equal(runs, 2, `battleground ${year}: two paths from the Signpost`);
+  }
+  assert.ok(cellsOf(RM.generate({realm: "battleground", seed: 4, year: 1250}), RM.T.hazard) < cellsOf(RM.generate({realm: "battleground", seed: 4, year: 1916}), RM.T.hazard), "no craters before cannon");
+  // Erebus' river of molten silver and Duat's river of the dead cross the map
+  for ( const id of ["erebus", "duat"] ) { const m = RM.generate({realm: id, seed: 5, year: 1500}); assert.ok(m.cells.every(row => true) && [0, m.cols - 1].every(x => m.cells.some(row => row[x] === RM.T.water)), id); }
+  // Malfeas and the Scar: the black train's line runs to the edge
+  for ( const id of ["malfeas", "scar"] ) {
+    const m = RM.generate({realm: id, seed: 5, year: 1950}), st2 = m.regions.find(r => /black train|Last Junction/.test(r.label)).at;
+    const edge = [st2.x, st2.y, m.cols - 1 - st2.x, m.rows - 1 - st2.y].indexOf(Math.min(st2.x, st2.y, m.cols - 1 - st2.x, m.rows - 1 - st2.y));
+    const line = edge === 0 ? m.cells[st2.y].slice(0, st2.x) : edge === 2 ? m.cells[st2.y].slice(st2.x + 1) : m.cells.slice(edge === 1 ? 0 : st2.y + 1, edge === 1 ? st2.y : undefined).map(r => r[st2.x]);
+    assert.ok(line.every(c => c === RM.T.path), `${id}: the line`);
+  }
+  // Enoch's five spires stand in a curve over the city; Yomi's hells ring Ti Yu at the heart
+  const en = RM.generate({realm: "enoch", seed: 5, year: 1500});
+  assert.equal(en.regions.filter(r => / spire$/.test(r.label)).length, 5);
+  assert.equal(en.regions.find(r => r.kind === "exit" && /Labyrinth/.test(r.label))?.kind, "exit");
+  const yo = RM.generate({realm: "yomi", seed: 5, year: 1500}), ti = yo.regions.find(r => /Ti Yu/.test(r.label)).at;
+  assert.ok(Math.abs(ti.x - Math.floor(yo.cols / 2)) <= 1 && Math.abs(ti.y - Math.floor(yo.rows / 2)) <= 1);
+  // The Aetherial Realm: Phoebe fills half the sky, the Wyrm Reaches rot along its top
+  const ae = RM.generate({realm: "aetherial", seed: 5, year: 1500});
+  assert.match(RM.svg(ae), /url\(#moon\)/);
+  assert.ok(ae.regions.some(r => r.label === "Wyrm Reaches rot" && r.rect[1] < ae.rows * 0.3));
+  // Sectors of the Digital Web and Autochthonia are all joined
+  for ( const id of ["digital-web", "autochthonia"] ) {
+    const m = RM.generate({realm: id, seed: 5, year: 2000}), seen = RM.reach(m.cells, m.regions.find(r => r.kind === "arrival").at);
+    const ground = []; m.cells.forEach((row, y) => row.forEach((c, x) => { if ( c === RM.T.ground ) ground.push(`${x},${y}`); }));
+    assert.ok(ground.every(k => seen.has(k)), `${id}: every sector reached`);
+  }
+});
+
 test("the same seed and year give the same map; another seed or era gives another", () => {
   const a = RM.generate({realm: "stygia", seed: 42, year: 1600}), b = RM.generate({realm: "stygia", seed: 42, year: 1600});
   assert.deepEqual(a, b);
