@@ -1335,3 +1335,7 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - reflect.mjs (Foundry): reflectScene, undoReflection, reflectDialog; plain twin levels when none exist; toolbar button "Reflect a generated town map" (Storyteller); api.reflect.
 - realm-maps-rules.mjs: page refs from the PC lookups (B737).
 - Tests: tools/harness/reflect.test.mjs (7). Gate: tools/gate/gatereflect.mjs (8 steps).
+
+## 2026-11-11: Future Darkness events moved to Moravia (Chronicle 0.16.1)
+- Eight World of Future Darkness events put Rothenstein in the Rhineland or centred the Rhineland (2044, 2058, 2081, the 2099 Seventh Maelstrom and four cascade beats). The sources in docs/research/wofd now name Moravia, and data/future-events.mjs was rebuilt with tools/wofd/build-future-events.mjs.
+- The source also takes the spelling pass's "favours", so the rebuild changes nothing else.

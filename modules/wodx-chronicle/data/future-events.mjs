@@ -2232,7 +2232,7 @@ export default {
     "wraith"
    ],
    "name": "Wraith",
-   "summary": "The Dark Kingdom of Iron's heirs fortify the Shadowlands of the Rhineland and Rothenstein, the failing Hierarchy's last fortress.",
+   "summary": "The Dark Kingdom of Iron's heirs fortify the Shadowlands of Moravia and Rothenstein, the failing Hierarchy's last fortress.",
    "source": "House metaplot: the Future Darkness timeline"
   },
   {
@@ -2431,7 +2431,7 @@ export default {
     "hunter"
    ],
    "name": "Hunter: Catholic Europe",
-   "summary": "The crusade reaches the Rhineland. Rothenstein's old families, who hid Kindred for centuries, are tried as collaborators.",
+   "summary": "The crusade reaches Moravia. Rothenstein's old families, who hid Kindred for centuries, are tried as collaborators.",
    "source": "House metaplot: the Future Darkness timeline"
   },
   {
@@ -2717,7 +2717,7 @@ export default {
     "wraith"
    ],
    "name": "Wraith",
-   "summary": "The Hierarchy's legions break everywhere but the Rhineland. The dead govern themselves in a hundred Necropoli.",
+   "summary": "The Hierarchy's legions break everywhere but Moravia. The dead govern themselves in a hundred Necropoli.",
    "source": "House metaplot: the Future Darkness timeline"
   },
   {
@@ -3237,7 +3237,7 @@ export default {
     "wraith"
    ],
    "name": "The Seventh Storm: The last Maelstrom",
-   "summary": "The Seventh Maelstrom takes the Rhineland, the Hierarchy's last fortress, and throws thousands of the dead into the Skinlands.",
+   "summary": "The Seventh Maelstrom takes Moravia, the Hierarchy's last fortress, and throws thousands of the dead into the Skinlands.",
    "source": "House metaplot: Time of Future Judgement, retelling the original ending (Ends of Empire pp. 148-151, pdf 149-152)",
    "dateNote": "Each Cascade runs through 2099 in this order; the months are a house rule."
   },
@@ -3942,7 +3942,7 @@ export default {
     "wraith"
    ],
    "name": "The Machine Ascendant: The last Maelstrom",
-   "summary": "The Serpent wakes the Tempest. The Seventh Maelstrom takes the Rhineland.",
+   "summary": "The Serpent wakes the Tempest. The Seventh Maelstrom takes Moravia.",
    "source": "House metaplot: Time of Future Judgement, retelling the original ending (Ends of Empire pp. 148-151, pdf 149-152)",
    "dateNote": "Each Cascade runs through 2099 in this order; the months are a house rule."
   },
@@ -4332,7 +4332,7 @@ export default {
     "wraith"
    ],
    "name": "The Red Star: The last Maelstrom",
-   "summary": "The Earthbound war wakes the Tempest. The Seventh Maelstrom takes the Rhineland.",
+   "summary": "The Earthbound war wakes the Tempest. The Seventh Maelstrom takes Moravia.",
    "source": "House metaplot: Time of Future Judgement, retelling the original ending (Ends of Empire pp. 148-151, pdf 149-152)",
    "dateNote": "Each Cascade runs through 2099 in this order; the months are a house rule."
   },
@@ -4722,7 +4722,7 @@ export default {
     "wraith"
    ],
    "name": "Lilith's Bargain: The last Maelstrom",
-   "summary": "The Seventh Maelstrom takes the Rhineland.",
+   "summary": "The Seventh Maelstrom takes Moravia.",
    "source": "House metaplot: Time of Future Judgement, retelling the original ending (Ends of Empire pp. 148-151, pdf 149-152)",
    "dateNote": "Each Cascade runs through 2099 in this order; the months are a house rule."
   },
@@ -5112,7 +5112,7 @@ export default {
     "wraith"
    ],
    "name": "The Fomorian Night: The last Maelstrom",
-   "summary": "The war in the Labyrinth wakes the Tempest. The Seventh Maelstrom takes the Rhineland.",
+   "summary": "The war in the Labyrinth wakes the Tempest. The Seventh Maelstrom takes Moravia.",
    "source": "House metaplot: Time of Future Judgement, retelling the original ending (Ends of Empire pp. 148-151, pdf 149-152)",
    "dateNote": "Each Cascade runs through 2099 in this order; the months are a house rule."
   },

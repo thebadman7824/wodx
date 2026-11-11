@@ -1,6 +1,6 @@
 const SCEN=[
 {line:"Cascades",id:"k1",title:"The Seventh Storm",pitch:"The dead go first. The Tempest that began under the glass in 1997 breaks loose, and every disaster after it rides the storm out of the Underworld and into the living world.",beats:[
-["1 · Wraith (wj1)","The Seventh Maelstrom takes the Rhineland, the Hierarchy's last fortress, and throws thousands of the dead into the Skinlands."],
+["1 · Wraith (wj1)","The Seventh Maelstrom takes Moravia, the Hierarchy's last fortress, and throws thousands of the dead into the Skinlands."],
 ["2 · Orpheus (oj1)","To keep the rebel Malfeans off her greatest anchor in the storm, Grandmother turns a Spectre hive inside out under Night City. The Maelstrom pours up through the projection parlours."],
 ["3 · Mummy (mj4)","Eurydice uses the breach to finish what seventy years of projection began and tears the Shroud down."],
 ["4 · Mummy (mj1)","With the Shroud gone, the Serpent's power fills Eurydice, and Apophis rises against the Duat's last defenders."],
@@ -61,6 +61,6 @@ fall:"Caine lives or dies by the characters' hands, and the corps Lilith owns in
 ["7 · Mummy (mj4)","The dead of the camps and the Earthbound war crowd the Shroud past bearing. Eurydice tears it down, and the living world and the Underworld become one."],
 ["8 · Werewolf (wa4)","The Fomorians strike Luna, the light that kept their kind banished. Fimbulwinter falls and the Wyrm's hordes join them out of the deep glass."],
 ["9 · Orpheus (oj2)","With the Shroud gone, the Spectre war spills into the open. Projectors and the legal dead go into the Labyrinth for the relic that can turn it."],
-["10 · Wraith (wj1)","The war in the Labyrinth wakes the Tempest. The Seventh Maelstrom takes the Rhineland and blows the last of the dead into the winter."]],
+["10 · Wraith (wj1)","The war in the Labyrinth wakes the Tempest. The Seventh Maelstrom takes Moravia and blows the last of the dead into the winter."]],
 fall:"If the Casque is won, the Dreaming survives and the old powers fall back to sleep. If it is lost, the Endless Winter closes over everything else.",refs:"Endings cj1, vg4, kj1, ma1, hj1, dj1, mj4, wa4, oj2, wj1."}
 ];

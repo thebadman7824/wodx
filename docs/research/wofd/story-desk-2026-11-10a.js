@@ -59,7 +59,7 @@ refs:"CP2020 pp. 176-179; WoFD pp. 16, 18 (pdf 3, 5); Ascension pp. 201-204 (pdf
 ["1994","Hermetic houses buy into the corps during the crash. Magi become hidden owners of executives alongside Ventrue and Tremere (WoFD p. 16, pdf 3)."],
 ["1996","The Order sets rules for its corporate houses: no open magic, no Sleeper witnesses (WoFD p. 18, pdf 5)."],
 ["2004","The First Corporate War is in part a Hermetic and Tremere quarrel over Trans-World Air (CP2020 p. 178)."],
-["2016","Magi trade a bloodless form of Awakening the Flesh for favors, never money (WoFD p. 20, pdf 7)."],
+["2016","Magi trade a bloodless form of Awakening the Flesh for favours, never money (WoFD p. 20, pdf 7)."],
 ["2020","Tremere puppets fill mid and upper corp levels. Old grudges over the Order's lost house harden into a feud fought through shares and assassins (WoFD p. 17, pdf 4)."]],
 fall:"2024: a Hermetic and Tremere duel in a Night City arcology atrium is caught by a hundred cameras. Paradox strikes the mage; the vampire burns in the sprinklers' backlash. Neither side can buy the footage back.",
 refs:"WoFD pp. 16-20 (pdf 3-7); CP2020 p. 178 (pdf 181)."},
