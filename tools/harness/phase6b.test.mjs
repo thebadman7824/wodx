@@ -335,6 +335,18 @@ test("a dialog's radio buttons read as the one that is checked (Learn a Gift)", 
   assert.equal(PC.readForm(el).gift, "b");
 });
 
+test("the two copies of the shared profiles file agree on everything game.wodx.profiles offers", async () => {
+  const A = await import(join(root, "modules/wodx-actions/scripts/profiles.js"));
+  const C = await import(join(root, "modules/wodx-combat/scripts/profiles.js"));
+  assert.equal(A.SHARED_VERSION, C.SHARED_VERSION);
+  assert.deepEqual(A.PROFILES, C.PROFILES);
+  assert.deepEqual(A.RES, C.RES);
+  for ( const f of ["detectProfile", "setProfile", "pickProfile", "resource", "adjust", "canAfford", "profileLabel", "profileSoak", "worldFlag", "setWorldFlag"] ) {
+    assert.equal(typeof A[f], "function", f);
+    assert.equal(A[f].toString(), C[f].toString(), `${f} is the same in both copies`);
+  }
+});
+
 test("losing the wolf: no Rage and no Willpower leaves only the breed form", async () => {
   reset();
   const a = garou("Lost", {rage: [0, 3], wp: [0, 4], form: "crinos"});

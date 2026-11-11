@@ -73,3 +73,22 @@ export function resolveEra(profiles, year, {region = "europe", rules = {}} = {})
   const earliest = [...usable].sort((a, b) => a.start - b.start)[0];
   return {profile: earliest, interlude: true};
 }
+
+/**
+ * The spans of years no era book covers, and the era whose rules each keeps (resolveEra's interludes, joined up).
+ * @param {object[]} profiles
+ * @param {object} [options]  region and rules as for resolveEra; from and to: the years to look over.
+ * @returns {{from: number, to: number, keeps: string}[]}  keeps: the kept profile's name ("" for none).
+ */
+export function interludeSpans(profiles, {region = "europe", rules = {}, from = 1197, to = 2099} = {}) {
+  const out = [];
+  let cur = null;
+  for ( let y = from; y <= to; y++ ) {
+    const r = resolveEra(profiles, y, {region, rules});
+    const keeps = r.interlude ? (r.profile?.name ?? "") : null;
+    if ( keeps !== null && cur && cur.keeps === keeps && cur.to === y - 1 ) cur.to = y;
+    else if ( keeps !== null ) out.push(cur = {from: y, to: y, keeps});
+    else cur = null;
+  }
+  return out;
+}

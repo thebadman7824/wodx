@@ -1398,3 +1398,14 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - effects-rules.js ERA_RULES, eraRules, crusadeLevels, CRUSADE_MULT; outcome reads ctx.age for damage, healing and Quintessence. effects.js plan takes {age}; m20.js passes the chronicle's age, uses it for the plain damage line, and hides reflect in the Crusade.
 - Page check: /mnt/project-files/crusade-effects-book-check.md (printed and pdf pages).
 - Tests: effects.test.mjs (14).
+
+## 2026-11-11: fixes from the design document review
+- Light-touch mode holds every proposal (Chronicle 0.17.2, B790): approvals-rules.mjs routeProposal takes lightTouch; approvals.mjs reads the house rule; the held note names why; the hint and the clock notice say what happens.
+- Years between eras on the Chronicle Rules journal (B791): era-resolve.mjs interludeSpans; eras.mjs passes the spans to journals.mjs.
+- The two shared profiles.js copies: headers say what differs (the Actions copy's line look); a harness test keeps everything game.wodx.profiles offers the same in both.
+- docs/HOOKS.md lists every hook, who sends and who hears it, with the nine unheard ones as extension points; hooks.test.mjs fails when a new hook is sent and not listed. Atmosphere's header no longer says Senses hears wodxWeather.
+- Version numbers dropped from the main file headers of Atmosphere, Interactables, NPC, Senses, Sheets, Storyteller and Targeting (module.json holds the version).
+- MODULES.md: Senses 0.5.1, the broken Chronicle fragment, the title date. STORYTELLER-GUIDE.md: names the build Live runs now and points to the running guide; step 1 no longer says seven modules.
+- Otherworlds 0.9.1: the module.json reason says Chronicle must be installed even when off.
+- Not changed here: the Moravian coins wait on PR 506 (goods and money), which holds them.
+
