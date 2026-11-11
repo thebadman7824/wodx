@@ -123,7 +123,8 @@ async function treat(actor, item, good) {
 
 async function light(actor, item, good, refuel = false) {
   const tok = tokenOf(actor);
-  const carry = inter()?.carry;
+  const c = inter()?.carry;
+  const carry = typeof c === "function" ? c : c?.carry;
   if ( !tok || !carry ) return ui.notifications.warn("Put the character's token on the map first.");
   const kind = refuel ? U.refuelOf(good) : U.lightOf(good);
   if ( refuel ) {
