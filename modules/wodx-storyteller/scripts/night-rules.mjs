@@ -107,5 +107,6 @@ export function fragments({entries = [], scenes = [], actors = [], actor = null,
 /** A plain-text summary of a night, for the queue's detail and the log. */
 export function nightText(n) {
   const enc = n.encounters.map(e => `${e.label}: ${e.text}`).join(" ");
-  return `${n.opening} ${enc}${n.rumour ? ` Rumour: ${n.rumour}` : ""}`.trim();
+  const pulls = (n.pulls ?? []).filter(p => p.text).map(p => ` ${p.name} (${p.actorName}): ${p.text}`).join("");
+  return `${n.opening} ${enc}${n.rumour ? ` Rumour: ${n.rumour}` : ""}${pulls}`.trim();
 }

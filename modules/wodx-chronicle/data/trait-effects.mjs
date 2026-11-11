@@ -339,3 +339,80 @@ export const HANDLED = {
   "light-sleeper": "wakes at once by day, with no Road cap on the dice",
   "prey-exclusion": "a reminder on every feeding card"
 };
+
+/**
+ * Step 7 (Chronicle 0.22.0): traits that go off when the character walks into something on the map (pattern P4), read
+ * by WoDX Interactables when a token moves. words: a tile or region whose name or title holds one of these sets it
+ * off; fromName: the words come from the item's own name in brackets, as in "Phobia (rats)". stop: a player's move is
+ * held at the edge (the Storyteller's own moves go through, with the card). roll: what the card asks for. House
+ * readings of V20 core printed pp. 486-495.
+ */
+export const TRIGGERS = {
+  "cant-cross-running-water": {words: ["running water", "river", "stream", "brook", "creek", "millrace", "ford"], stop: true,
+    text: "cannot cross the running water here without a bridge or being carried over it"},
+  "garlic": {words: ["garlic"], stop: true, text: "is driven back by the reek of garlic"},
+  "crosses": {words: ["crucifix", "cross", "calvary", "rood"], stop: true, text: "recoils from the cross",
+    roll: "Willpower, difficulty 9, to hold ground; touching it costs a health level"},
+  "light-sensitive": {words: ["sunlit", "daylight", "floodlight", "spotlight", "bonfire"], stop: false, text: "is hurt and dazzled by the bright light"},
+  "phobia": {fromName: true, stop: false, text: "comes face to face with what they fear", roll: "Courage, or flee from it"}
+};
+
+/**
+ * Step 7: traits that put something in the night's draw (pattern P8), read by WoDX Storyteller. chance: the share of
+ * nights it turns up (house rule); text: the line for the Storyteller, {{name}} the character. aid: a story aid
+ * (WoDX Storyteller's aids) drawn for the character instead of a line.
+ */
+export const PULLS = {
+  "arrival": {chance: 0.25, text: "Someone in the city still asks why {{name}} came here, and who sent them."},
+  "enemy": {chance: 0.25, text: "{{name}}'s enemy makes a move against them tonight, through others if not in person."},
+  "hunted": {chance: 0.33, text: "A hunter has picked up {{name}}'s trail and is closer tonight than last night."},
+  "hunted-like-a-dog": {chance: 0.33, text: "Others of the line have word of where {{name}} sleeps and send someone to look."},
+  "clan-enmity": {chance: 0.2, text: "Members of the clan that hates {{name}} cross their path and make trouble."},
+  "overextended": {chance: 0.2, text: "One of {{name}}'s many obligations calls for attention tonight, at the worst time."},
+  "blood-hunted": {chance: 0.33, text: "Someone who knows of the blood hunt on {{name}} sees them and spreads the word."},
+  "red-list": {chance: 0.33, text: "An archon or a hunter of the Red List is in the area asking after {{name}}."},
+  "beacon-of-the-unholy": {chance: 0.25, text: "A priest, a dog or a child marks {{name}} as wrong and will not be quiet about it."},
+  "haunted": {chance: 0.33, text: "The ghost that follows {{name}} makes itself known: a cold room, a broken glass, a name whispered."},
+  "oracular-ability": {chance: 0.25, aid: "augury"}
+};
+
+/**
+ * Step 7: traits that open a Ledger entry for the character (pattern P10), read by WoDX Storyteller. kind and size are
+ * the Ledger's own; dir "to" means the debt or boon is owed to the character, "from" by them. dueNights: a secret's
+ * reveal clock, in nights from the day the entry is opened (house rule; the Storyteller moves it in the Ledger).
+ */
+export const LEDGER = {
+  "prestigious-sire": {kind: "boon", size: "trivial", dir: "to", what: "A favour owed for the sake of the sire's good name."},
+  "boon": {kind: "boon", size: "minor", dir: "to", what: "A boon owed to the character (set its size to match the merit)."},
+  "mole": {kind: "debt", dir: "to", what: "An informant inside a rival group who passes word to the character."},
+  "dark-secret": {kind: "consequence", dueNights: 180, what: "The character's secret comes out unless they keep it buried."},
+  "infamous-sire": {kind: "debt", dir: "from", what: "Old grudges against the sire that others mean to collect from the childe."},
+  "sires-resentment": {kind: "consequence", dueNights: 120, what: "The sire works against the character in some way that comes to light."},
+  "masquerade-breaker": {kind: "consequence", dueNights: 90, what: "Word of the old breach reaches someone who wants it answered."},
+  "old-flame": {kind: "consequence", dueNights: 120, what: "The old flame turns up, and their side is not the character's."},
+  "rival-sires": {kind: "debt", dir: "from", what: "Two sires each say the character owes them; both mean to collect."},
+  "narc": {kind: "debt", dir: "from", what: "The authorities expect information in return for leaving the character alone."},
+  "sleeping-with-the-enemy": {kind: "consequence", dueNights: 120, what: "The forbidden tie is found out unless it stays hidden."}
+};
+
+/**
+ * Step 7: traits that should bite at a given moment (pattern P11). WoDX sends the Storyteller one card a moment for
+ * each character, through the approval queue: approve and it goes in the log, dismiss and nothing happens. on: feed
+ * (feeding), social (a social act on an NPC), fight (a fight starts), night (the night's draw is approved). text: the
+ * reminder, in WoDX's own words; the book page is added from the table.
+ */
+export const PROMPTS = {
+  "eat-food": {on: ["social"], text: "can eat and drink at the table to pass as mortal, and must be rid of it later"},
+  "infectious-bite": {on: ["feed"], text: "the bite may sicken the vessel unless the wound is closed"},
+  "addiction": {on: ["night"], text: "craves the substance tonight; without it, penalties until fed"},
+  "common-sense": {on: ["fight", "social"], text: "the player is owed a word of warning before a foolish step"},
+  "impatient": {on: ["social"], text: "waiting or a long negotiation tests the character's patience"},
+  "soft-hearted": {on: ["fight"], text: "seeing someone suffer may shake the character (difficulty 8 to act against it)"},
+  "victim-of-the-masquerade": {on: ["feed"], text: "feeding sits badly with someone who will not accept what they are"},
+  "conspicuous-consumption": {on: ["feed"], text: "the flaw's demand when feeding"},
+  "guilt-wracked": {on: ["feed", "fight"], text: "guilt over harm done to a mortal (difficulty 7)"},
+  "flashbacks": {on: ["fight"], text: "violence may set off a flashback"},
+  "failure": {on: ["fight", "social"], text: "the flaw's curse on a moment that matters"},
+  "cursed": {on: ["night"], text: "the curse may show itself tonight"},
+  "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
+};

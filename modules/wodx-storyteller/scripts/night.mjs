@@ -73,13 +73,26 @@ export async function drawNight({jdn = null, part = null, nonce = 0} = {}) {
   const n = N.composeNight({randFor: k => g.random(`night:${jdn}:${k}`, nonce), tables, part, layers: layersInPlay(), vars: {places: f.places, people: f.people}});
   let weather = "";
   try { weather = game.modules.get("wodx-atmosphere")?.api?.weather?.on?.(jdn)?.label ?? ""; } catch (e) { weather = ""; }
-  return {...n, jdn, nonce, date: jdn === at.jdn ? at.label : "", weather, era: ctx.eraId};
+  return {...n, pulls: pullsFor(g, jdn, nonce), jdn, nonce, date: jdn === at.jdn ? at.label : "", weather, era: ctx.eraId};
+}
+
+/** Chronicle 0.22.0: what the player characters' merits and flaws bring into the night (Hunted, Haunted, Oracular Ability). */
+function pullsFor(g, jdn, nonce) {
+  const T = chron()?.traits;
+  if ( !T?.pulls ) return [];
+  const out = [];
+  for ( const a of all(game.actors).filter(isPC) ) {
+    const rand = g.random(`night:${jdn}:pull:${a.id}`, nonce);
+    try { for ( const p of T.pulls(a, rand) ) out.push({actorId: a.id, actorName: a.name, ...p}); } catch (e) { /* no traits */ }
+  }
+  return out;
 }
 
 function nightHtml(n) {
   return `<p class="wodx-quiet">${esc(n.date || "")}${n.date ? ", " : ""}${esc(n.partLabel)}${n.weather ? `. ${esc(n.weather)}` : ""}</p>
     <p>${esc(n.opening)}</p><ul>${n.encounters.map(e => `<li><b>${esc(e.label)}:</b> ${esc(e.text)}</li>`).join("")}</ul>
-    ${n.rumour ? `<p><b>A rumour:</b> ${esc(n.rumour)}</p>` : ""}`;
+    ${n.rumour ? `<p><b>A rumour:</b> ${esc(n.rumour)}</p>` : ""}
+    ${(n.pulls ?? []).length ? `<p><b>From the characters' flaws and merits:</b></p><ul>${n.pulls.map(p => `<li><b>${esc(p.name)}</b> (${esc(p.actorName)}): ${esc(p.text || `a story aid is drawn for ${p.actorName}`)}</li>`).join("")}</ul>` : ""}`;
 }
 
 export async function proposeNight(n) {
@@ -93,6 +106,9 @@ export async function approveNight(n) {
   await appendPage(NIGHTS, n.date || `Night ${n.jdn}`, nightHtml(n), "nights");
   // The night's rumour starts going round
   if ( n.rumour && setting("rumourNetwork") !== false ) await game.modules.get(MOD)?.api?.rumours?.start?.({text: n.rumour});
+  // Chronicle 0.22.0: a trait that brings a story aid draws it (into the queue), and the night's flaws are asked about
+  for ( const p of (n.pulls ?? []).filter(x => x.aid) ) { try { await drawAid({kind: p.aid, actorId: p.actorId}).then(a => a && proposeAid(a)); } catch (e) { /* no aid */ } }
+  try { await chron()?.traits?.prompt?.(all(game.actors).filter(isPC), "night", {at: `${n.jdn}`}); } catch (e) { /* no traits */ }
 }
 
 async function appendPage(name, pageName, html, kind) {

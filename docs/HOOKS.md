@@ -14,6 +14,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | interactables |
+| wodxFightStarted | combat | chronicle (flaws that bite when a fight starts) |
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |
@@ -25,6 +26,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxSensesGather | senses | senses |
 | wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxShroudCrossing | otherworlds | storyteller |
+| wodxSocial | actions | chronicle (flaws that bite on a social act) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxXCard | chronicle | actions |
 
@@ -38,10 +40,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
 | wodxDreamingGate | otherworlds | a crossing through a Dreaming gateway |
 | wodxEventUndone | chronicle | a dated event taken back |
-| wodxFightStarted | combat | a fight the starter set up: {combat, source, tokens, created} |
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
-| wodxSocial | actions | a social act on one NPC and its outcome |
 | wodxTrade | actions | a trade with one NPC: mode, what changed hands, and the money |
 | wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |

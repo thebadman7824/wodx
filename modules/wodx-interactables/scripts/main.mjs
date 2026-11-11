@@ -61,7 +61,7 @@ import * as Stock from "./stock.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.24.0";
+const VERSION = "0.25.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -103,6 +103,10 @@ function registerSettings() {
   });
   game.settings.register(MOD, "hazards", {
     name: "Hazards hurt", hint: "A live hazard tile (fire, broken glass, a live wire) hurts a character who walks into it, and in combat one who starts a turn in it. Off: hazards can still be put out or cleared, but never hurt by themselves.",
+    scope: "world", config: true, type: Boolean, default: true
+  });
+  game.settings.register(MOD, "traitTriggers", {
+    name: "Flaws go off on the map", hint: "A character with Can't Cross Running Water, Garlic, Crosses, Light-Sensitive or a Phobia who walks into a tile or region named for it gets a card, and a player's move is held where it began when the flaw stops them.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "noise", {
@@ -963,13 +967,16 @@ export function trapsOnPath(scene, a, b, {npc = false} = {}) {
 }
 const springing = new Set();
 /** Active GM: a token moved. Any trap on its way goes off, with a card and an Undo. */
-export async function onTokenMoved(tokDoc, changes = {}) {
+export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = false} = {}) {
   const scene = tokDoc.parent, actor = tokDoc.actor;
   // Where the move ends: Foundry 14 can call the hook before the document shows the new place, so the change wins
   const pos = {x: num(changes?.x ?? tokDoc.x), y: num(changes?.y ?? tokDoc.y)};
   const to = centerAt(tokDoc, pos), from = lastSeen.get(tokDoc.uuid) ?? to;
   lastSeen.set(tokDoc.uuid, to);
-  if ( !actor || !scene || !isActiveGM() ) return [];
+  if ( !actor || !scene || !isActiveGM() || held ) return [];
+  // WoDX Chronicle 0.22.0: a flaw set off by something on the way (running water, garlic, a cross, what a Phobia names)
+  const tr = await traitTriggers(tokDoc, actor, scene, from, to, pos, userId);
+  if ( tr?.hold ) return [tr.msg];
   await carryAboard(tokDoc, scene, from, to, pos);
   // Walking out of a hiding place ends the hiding
   for ( const doc of tilesOf(scene) ) {
@@ -979,7 +986,7 @@ export async function onTokenMoved(tokDoc, changes = {}) {
       await setConcealed(tokDoc, false);
     }
   }
-  const cards = [];
+  const cards = tr?.msg ? [tr.msg] : [];
   if ( setting("hazards") !== false ) {
     for ( const {doc, o} of hazardsOnPath(scene, from, to, {npc: !actor.hasPlayerOwner}) ) cards.push(await hazardCard(tokDoc, actor, doc, o, "enters"));
   }
@@ -1018,6 +1025,55 @@ async function springCard(tokDoc, actor, doc, o) {
   const dice = faces.length ? `<div class="vta-dice">${faces.map(f => `<span class="vta-die ${f === 1 ? "one" : f >= R.TRAP_GRADES[o.grade].diff ? "hit" : "miss"}">${f}</span>`).join("")}</div>` : "";
   const stub = {content: cardHtml({title, dice}), speaker: {alias: actor.name}};
   return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tokDoc}), content: resultHtml(stub, done, "A trap"), flags: {[MOD]: {ask, done}}});
+}
+
+/* ------------------------------------------------------------------ */
+/*  Merits and flaws set off on the map (WoDX Chronicle 0.22.0, P4)     */
+/* ------------------------------------------------------------------ */
+
+/** The names of what a move from a to b walks into: tile titles and region names, not counting where it began. */
+export function labelsOnPath(scene, a, b) {
+  const out = [];
+  for ( const doc of tilesOf(scene) ) {
+    const t = describeTile(doc)?.title || doc.flags?.[MOD]?.title || "";
+    const r = rectOf(doc);
+    if ( t && !inRect(a, r) && segHitsRect(a, b, r) ) out.push(t);
+  }
+  const regions = scene?.regions?.contents ?? [...(scene?.regions?.values?.() ?? [])];
+  const steps = 12;
+  for ( const reg of regions ) {
+    const name = String(reg.name ?? "");
+    if ( !name || typeof reg.testPoint !== "function" ) continue;
+    const at = p => { try { return reg.testPoint({x: p.x, y: p.y, elevation: 0}); } catch (e) { return false; } };
+    if ( at(a) ) continue;
+    for ( let i = 1; i <= steps; i++ ) {
+      const p = {x: a.x + (b.x - a.x) * i / steps, y: a.y + (b.y - a.y) * i / steps};
+      if ( at(p) ) { out.push(name); break; }
+    }
+  }
+  return out;
+}
+async function traitTriggers(tokDoc, actor, scene, from, to, pos, userId) {
+  if ( setting("traitTriggers") === false ) return null;
+  let list = [];
+  try { list = game.modules.get("wodx-chronicle")?.api?.traits?.triggers?.(actor) ?? []; } catch (e) { list = []; }
+  if ( !list.length || (from.x === to.x && from.y === to.y) ) return null;
+  const R7 = game.modules.get("wodx-chronicle")?.api?.traits?.rules;
+  const hit = R7?.triggered?.(list, labelsOnPath(scene, from, to)) ?? [];
+  if ( !hit.length ) return null;
+  // A player's move is held where it began; the Storyteller's own moves go through, with the card
+  const byGM = !!game.users.get(userId)?.isGM;
+  const hold = hit.some(t => t.stop) && !byGM;
+  if ( hold ) {
+    const g = scene.grid?.size ?? 100;
+    const back = {x: Math.round(from.x - num(tokDoc.width || 1) * g / 2), y: Math.round(from.y - num(tokDoc.height || 1) * g / 2)};
+    await tokDoc.update(back, {wodxHeld: true, animate: false});
+  }
+  const owners = game.users.filter(u => !u.isGM && actor.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  const lines = hit.map(t => `<li><b>${esc(t.name)}</b>: ${esc(actor.name)} ${esc(t.text)}.${t.roll ? ` ${esc(t.roll)}.` : ""} <small>(${esc(t.book)} p. ${t.page})</small></li>`).join("");
+  const msg = await ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tokDoc}), whisper: [...gmIds(), ...owners],
+    content: `<div class="vta-card"><h3>${esc(actor.name)}${hold ? " stops" : ""}</h3><ul>${lines}</ul>${hold ? "<p class=\"wodx-quiet\">The move is held where it began. The Storyteller can move the token on.</p>" : ""}</div>`});
+  return {msg, hold};
 }
 
 /* ------------------------------------------------------------------ */
@@ -1632,7 +1688,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();
@@ -1652,7 +1708,7 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
     b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoCard(msg).catch(e => console.error(`${MOD} |`, e)).finally(() => { b.disabled = false; }); });
   });
 });
-Hooks.on("updateToken", (doc, changes) => { if ( ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes).catch(e => console.error(`${MOD} |`, e)); });
+Hooks.on("updateToken", (doc, changes, options, userId) => { if ( ("x" in (changes ?? {}) || "y" in (changes ?? {})) && isActiveGM() ) onTokenMoved(doc, changes, {userId, held: !!options?.wodxHeld}).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("updateCombat", (combat, changes) => { if ( ("turn" in (changes ?? {}) || "round" in (changes ?? {})) && combat?.started && isActiveGM() ) onTurnStart(combat).catch(e => console.error(`${MOD} |`, e)); });
 Hooks.on("canvasReady", () => { lastSeen.clear(); for ( const t of canvas.scene?.tokens?.contents ?? [] ) lastSeen.set(t.uuid, centerOf(t, canvas.scene)); });
 Hooks.on("createToken", doc => lastSeen.set(doc.uuid, centerOf(doc, doc.parent)));

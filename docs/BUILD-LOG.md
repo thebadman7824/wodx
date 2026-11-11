@@ -1554,3 +1554,11 @@ Ben asked for a bug check of everything done so far. The harness passed 1,286 of
 ## 2026-11-11: Dealing with NPCs, part C: trade (Actions 3.36.0)
 
 "With this person" gains Trade once WoDX Storyteller's money is on (B895-B897). Buy, sell or barter with the NPC at the prices the era goods list and the local market give; a trader sells from the shop container their market lists, anyone else from what they carry, and the NPC's purse is the till. A haggle roll (Manipulation + Finance, Commerce in the Dark Ages, difficulty 6) moves the price a tenth per success, up to three tenths. Hostile NPCs refuse; distrusted ones deal a tenth worse. Lifted things carry a stolen mark and fetch the fence's price. Social and trade cards now add a stock line from WoDX NPC, coloured by attitude. New trade-rules.js and trade.js; harness trade.test.mjs; gatesocial step 10 buys a good and sells it back.
+
+## 2026-11-11: trait effects, step 7 (Chronicle 0.22.0, Actions 3.37.0, Storyteller 0.29.0, Interactables 0.25.0, B887)
+- Chronicle data: TRIGGERS, PULLS, LEDGER, PROMPTS. trait-rules: bracketWords, triggersOf, triggered, pullsOf, ledgerOf, promptsOn; describe names them. traits.mjs: triggers, pulls, ledgerFor, prompt (queue type wodx-chronicle.traitPrompt), listens to wodxSocial and wodxFightStarted.
+- Interactables: labelsOnPath (tile titles, region names), traitTriggers in onTokenMoved (holds a player's move; option wodxHeld), setting traitTriggers.
+- Storyteller: night pulls (seeded per character), the aid for Oracular Ability, night prompts on approval; Ledger syncTraits (setting ledgerTraits remembers ids).
+- Actions: feeding prompt.
+- docs/HOOKS.md: wodxSocial and wodxFightStarted now heard. Tests: trait-moments.test.mjs (6). Gate: gatetraits step 19.
+

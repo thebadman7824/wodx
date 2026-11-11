@@ -10,9 +10,9 @@
  * kind that cannot hold it is matched but marked wrongKind: it does nothing until fixed. Mixed kinds count as both
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
-import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED} from "../data/trait-effects.mjs";
+import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS} from "../data/trait-effects.mjs";
 
-export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED};
+export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS};
 
 /** A name with case, accents, quotes, spaces and punctuation taken out: "Can’t Cross Running Water" -> "cantcrossrunningwater". */
 export const normName = s => String(s ?? "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
@@ -215,6 +215,64 @@ export function attitudeSeed(view, npcKind = null, idx = index()) {
   return {delta: Math.max(-2, Math.min(2, delta)), names};
 }
 
+/* ---- Step 7 (Chronicle 0.22.0): triggers on the map, the night's draw, the Ledger, prompts ---- */
+
+const working = (view, idx) => traitsOf(view, idx).matched.filter(m => !m.wrongKind);
+const plain = s => String(s ?? "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const hasWord = (text, w) => { const p = plain(w); return !!p && ` ${plain(text)} `.includes(` ${p} `); };
+/** The words in brackets in an item's name: "Phobia (rats, fire)" gives ["rats", "fire"]. */
+export const bracketWords = name => (String(name ?? "").match(/\(([^)]*)\)/)?.[1] ?? "").split(/[,;/]| or /).map(w => w.trim()).filter(Boolean);
+
+/** The map triggers a character carries (P4): [{key, name, words, stop, text, roll, page}]. */
+export function triggersOf(view, idx = index()) {
+  const out = [];
+  for ( const m of working(view, idx) ) {
+    const T = TRIGGERS[m.key];
+    if ( !T ) continue;
+    const words = T.fromName ? bracketWords(m.name) : T.words;
+    if ( !words?.length ) continue;
+    out.push({key: m.key, name: m.entry.name, words, stop: !!T.stop, text: T.text, roll: T.roll ?? "", page: m.entry.page, book: m.entry.book});
+  }
+  return out;
+}
+/** Which of a character's triggers a name on the map sets off (labels: tile titles, region names). */
+export function triggered(triggers = [], labels = []) {
+  const names = labels.filter(Boolean);
+  return triggers.filter(t => t.words.some(w => names.some(n => hasWord(n, w))));
+}
+
+/** What a character's traits put in the night's draw (P8). rand: () => 0..1, one call per trait. [{key, name, text, aid}]. */
+export function pullsOf(view, rand, charName = "", idx = index()) {
+  const out = [];
+  for ( const m of working(view, idx) ) {
+    const P = PULLS[m.key];
+    if ( !P || !(rand() < P.chance) ) continue;
+    out.push({key: m.key, name: m.entry.name, text: P.text ? P.text.replaceAll("{{name}}", charName || "the character") : "", aid: P.aid ?? null});
+  }
+  return out;
+}
+
+/** The Ledger entries a character's traits call for (P10), as WoDX Storyteller Ledger entries with a fixed id. */
+export function ledgerOf(view, {id = "", name = "", now = 0, day = 86400} = {}, idx = index()) {
+  const out = [];
+  for ( const m of working(view, idx) ) {
+    const L = LEDGER[m.key];
+    if ( !L ) continue;
+    const me = {id, name}, them = {id: null, name: ""};
+    out.push({id: `trait-${id}-${m.key}`.slice(0, 64), kind: L.kind, size: L.size ?? null,
+      from: L.dir === "to" ? them : me, to: L.dir === "to" ? me : them,
+      what: `${m.entry.name}: ${L.what}`, made: now, due: L.dueNights ? now + L.dueNights * day : null,
+      notes: `From the ${m.entry.kind} on the character sheet (${m.entry.book} p. ${m.entry.page}). Name the other side here.`});
+  }
+  return out;
+}
+
+/** The prompts a moment calls for (P11): [{key, name, text}] for on = feed, social, fight or night. */
+export function promptsOn(view, on, idx = index()) {
+  return working(view, idx).filter(m => PROMPTS[m.key]?.on?.includes(on))
+    .map(m => ({key: m.key, name: m.entry.name, text: `${PROMPTS[m.key].text} (${m.entry.book} p. ${m.entry.page})`}));
+}
+
 /** Book names with no entry, for the coverage test: names = [{name, kind, book}]. Only books in BOOKS_DONE count. */
 export function missing(names = [], idx = index()) {
   return names.filter(n => BOOKS_DONE.includes(n.book) && !matchFeature({name: n.name, kind: n.kind}, idx));
@@ -246,7 +304,11 @@ export function describe(m) {
     ...(SENSE_LOSS[k] ? [`no ${SENSE_LOSS[k]} in WoDX Senses`] : []), ...(SENSE_CHANNELS[k] ? ["a channel of its own in WoDX Senses"] : []),
     ...(SHOWS[k] ? ["others nearby can sense it (WoDX Senses)"] : []),
     ...(ATTITUDE[k] ? [`a first meeting with an NPC ${ATTITUDE[k].delta > 0 ? "warmer" : "colder"}${ATTITUDE[k].againstKinds ? ` (${ATTITUDE[k].againstKinds.join(", ")} only)` : ""}`] : []),
-    ...(HANDLED[k] ? [HANDLED[k]] : [])];
+    ...(HANDLED[k] ? [HANDLED[k]] : []),
+    ...(TRIGGERS[k] ? [`goes off on the map (${TRIGGERS[k].fromName ? "what the name says in brackets" : TRIGGERS[k].words.slice(0, 3).join(", ")})${TRIGGERS[k].stop ? ", and holds a player's move" : ""}`] : []),
+    ...(PULLS[k] ? [`turns up in the night's draw about one night in ${Math.round(1 / PULLS[k].chance)}`] : []),
+    ...(LEDGER[k] ? [`a ${LEDGER[k].kind} in the Ledger`] : []),
+    ...(PROMPTS[k] ? [`a card to the Storyteller (${PROMPTS[k].on.join(", ")})`] : [])];
   const live = ways.length ? ways.join("; ") : "no automatic effect yet";
   return `${pats}. ${live}. ${e.book} p. ${e.page}`;
 }
