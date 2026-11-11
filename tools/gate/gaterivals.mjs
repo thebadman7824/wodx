@@ -1,5 +1,5 @@
 /**
- * Rivalries gate (WoDX NPC 0.17.0, Combat 3.10.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Rivalries gate (WoDX NPC 0.18.0, Combat 3.10.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gaterivals.mjs?${Date.now()}`)).run()
  * Makes its own scene "WoDX gate: Rivals" (gridded, 100 px, 5 ft), a Garou NPC and a Kindred NPC (both Hostile
  * disposition), and puts every setting it touches back, deletes what it made and goes back to the scene it started on.

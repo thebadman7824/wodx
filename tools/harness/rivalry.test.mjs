@@ -6,7 +6,7 @@ import * as NR from "../../modules/wodx-npc/scripts/npc-rules.mjs";
 import * as R from "../../modules/wodx-npc/scripts/routine-rules.mjs";
 import * as S from "../../modules/wodx-combat/scripts/start-rules.js";
 
-/* Natural rivalries and more NPC behaviour (WoDX NPC 0.17.0, Combat 3.10.0) */
+/* Natural rivalries and more NPC behaviour (WoDX NPC 0.18.0, Combat 3.10.0) */
 
 const side = (line, sheet = {}, more = {}) => RV.sidesOf({line, sheet, ...more});
 const garou = side("lupine", {tribe: "Shadow Lords"});

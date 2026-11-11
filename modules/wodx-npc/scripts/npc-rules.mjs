@@ -29,7 +29,7 @@ export const TEMPLATES = {
     fleeAt: 5, frenzyProne: false, fears: [], tactics: ["power"]},
   beast: {label: "Beast or creature", line: "beast", aggression: 1.2, caution: 0.6, cunning: 0.2, loyalty: 0.3, cowardice: 0.6, berserk: 0.4, power: 0,
     fleeAt: 4, frenzyProne: false, fears: ["fire"], tactics: ["melee"]},
-  // NPC 0.17.0 (B824): the rival kinds' own temperaments. WoDX readings of each line's usual conduct, house rules.
+  // NPC 0.18.0 (B824): the rival kinds' own temperaments. WoDX readings of each line's usual conduct, house rules.
   sabbat: {label: "Sabbat pack Cainite", line: "kindred", aggression: 1.5, caution: 0.4, cunning: 0.7, loyalty: 1.3, cowardice: 0.2, berserk: 1.1, power: 1,
     fleeAt: 5, frenzyProne: true, fears: ["fire", "sunlight", "faith"], tactics: ["melee", "power", "pack"]},
   sheriff: {label: "Sheriff or enforcer", line: "kindred", aggression: 1.1, caution: 0.9, cunning: 1, loyalty: 1.4, cowardice: 0.2, berserk: 0.5, power: 1.2,

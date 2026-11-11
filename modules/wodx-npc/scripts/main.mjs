@@ -1,7 +1,7 @@
 /**
  * WoDX NPC (the version is in module.json): NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
- * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.17.0, rivalry.mjs).
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.18.0, rivalry.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -16,6 +16,7 @@ import * as NR from "./npc-rules.mjs";
 import * as RR from "./routine-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
+import {build as buildFounding} from "./founding.mjs";
 import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
@@ -27,7 +28,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.17.0";
+const VERSION = "0.18.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -138,13 +139,13 @@ const yardsBetween = (a, b) => {
   try { return canvas.grid.measurePath([a.center, b.center]).distance / unitsPerYard(); } catch (e) { return null; }
 };
 
-/** NPC 0.17.0: mortals near the fight who are not in it, for the masquerade tactic. */
+/** NPC 0.18.0: mortals near the fight who are not in it, for the masquerade tactic. */
 function witnessesOf(tok, combat) {
   const inFight = new Set((combat?.combatants?.contents ?? []).map(c => c.tokenId));
   return canvas.tokens.placeables.filter(t => t.actor && t.id !== tok.id && !inFight.has(t.id) && !t.document.hidden
     && (C()?.getKind?.(t.actor) ?? "mortal") === "mortal" && (yardsBetween(tok, t) ?? 99) <= 30).length;
 }
-/** NPC 0.17.0: is the NPC on a place its faction holds (the scene, as WoDX NPC factions hold places)? */
+/** NPC 0.18.0: is the NPC on a place its faction holds (the scene, as WoDX NPC factions hold places)? */
 function onOwnGround(actor) {
   try {
     const st = factions?.state?.(), holder = st && canvas?.scene ? st.factions.find(f => (f.places ?? []).includes(canvas.scene.uuid)) : null;
@@ -707,6 +708,10 @@ routines.hooks();
 /* Phase 7d: factions and domains, on top of 7c's places */
 const factions = buildFactions({MOD, esc, gmIds, isActiveGM, chron, routines});
 factions.hooks();
+/* 0.17.0: founding factions in play, and factions the players run */
+const founding = buildFounding({MOD, esc, gmIds, isActiveGM}, factions);
+factions.setFounding(founding);
+founding.hooks();
 /* 0.8.0: followers who take orders */
 const orders = buildOrders({MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor});
 orders.hooks();
@@ -715,7 +720,7 @@ Faces.registerFaceHooks();
 const talk = buildTalk({MOD, esc, isActiveGM, chron, savedProfile});
 talk.hooks();
 /* 0.12.0: each NPC's attitude toward each character */
-/* 0.17.0: natural rivalries between kinds of NPC */
+/* 0.18.0: natural rivalries between kinds of NPC */
 const rivalry = buildRivalry({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile, factions, routines, yardsBetween, obvious, hiddenByObfuscate});
 rivalry.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry});
@@ -732,7 +737,7 @@ Hooks.once("init", () => {
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
-    factions, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
+    factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows};
   game.modules.get(MOD).api = api;
 });
@@ -825,8 +830,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
-  tokens.tools.wodxFactions = {name: "wodxFactions", title: "WoDX factions (faction turns, hunting grounds, rumours)", icon: "fa-solid fa-chess-rook", order: 112,
-    button: true, visible: game.user.isGM, onChange: () => factions.openFactions()};
+  tokens.tools.wodxFactions = {name: "wodxFactions", title: game.user.isGM ? "WoDX factions (faction turns, hunting grounds, rumours)" : "Your factions (found one, or give orders to one you run)", icon: "fa-solid fa-chess-rook", order: 112,
+    button: true, visible: true, onChange: () => factions.openFactions()};
 });
 Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !game.user.isGM ) return;

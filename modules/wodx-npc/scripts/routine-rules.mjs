@@ -196,7 +196,7 @@ Object.assign(PRESETS, {
 });
 
 /**
- * NPC 0.17.0 (B825): the rival kinds' hours, and more people of the town. WoDX readings, house rules. Hours that
+ * NPC 0.18.0 (B825): the rival kinds' hours, and more people of the town. WoDX readings, house rules. Hours that
  * change with the age have an `ages` entry; the rest keep their first hours in every age.
  */
 const night = {when: "night"}, day = {when: "day"};

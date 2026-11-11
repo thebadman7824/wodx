@@ -5,7 +5,7 @@ import * as Faces from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**
- * WoDX NPC 0.17.0 (B820 to B825): natural rivalries on the map. rivalry-rules.mjs has the rules. When an NPC moves,
+ * WoDX NPC 0.18.0 (B820 to B825): natural rivalries on the map. rivalry-rules.mjs has the rules. When an NPC moves,
  * the active Storyteller checks it against the other NPCs in sight: rival sides in this year, each knowing what the
  * other is, then a flashpoint roll. A fight goes through WoDX Combat's starter (source "rivalry"), with each token's
  * side, so two NPCs of one disposition can fight each other. Rivalry also seeds an NPC's first meeting with a

@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.17.0 (B820 to B825): natural rivalries between kinds of NPC. The pure parts, so the harness can test them.
+ * WoDX NPC 0.18.0 (B820 to B825): natural rivalries between kinds of NPC. The pure parts, so the harness can test them.
  *
  *   Sides      what an NPC is: its line, clan, sect, tribe, Tradition, creed, court, kith, house and factions.
  *   Rivalries  dated pairs of sides and how each regards the other in a year, on the -3 to +3 scale that faction

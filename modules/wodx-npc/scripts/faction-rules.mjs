@@ -50,7 +50,35 @@ export const SPHERES = {
     legal: "Legal", media: "Media", occult: "Occult", police: "Police", political: "Political", street: "Street", transport: "Transportation",
     underworld: "Underworld", university: "University"}
 };
-export const spheresFor = morality => (morality === "roads" ? SPHERES.roads : SPHERES.modern);
+/**
+ * NPC 0.17.0: the spheres by period, so a faction's sway follows the age from 1197 to the Future Darkness. The keys
+ * carry over where a power lasts (the Church is "church" in every age), so dots held in one age keep their meaning in
+ * the next. The periods and the sphere names between the Dark Ages and the modern list are a house rule (B830).
+ */
+SPHERES.early = {church: "The Church", crown: "Crown, court and law", guild: "Guilds, banks and trade", military: "Armies and garrisons",
+  folk: "Villages and the commons", underworld: "The underworld", university: "Universities and learned societies", occult: "Occult"};
+SPHERES.industrial = {bureaucracy: "Bureaucracy", church: "Church", finance: "Banks and finance", health: "Health", society: "High society",
+  industry: "Mills, mines and industry", legal: "Legal", media: "The press", occult: "Occult", police: "Police", political: "Political",
+  street: "Street", transport: "Railways and shipping", underworld: "Underworld", university: "University"};
+SPHERES.future = {...SPHERES.modern, media: "Media and the networks", net: "The Net and data", transport: "Transport and the orbital lines"};
+/** The periods, by the last year each covers (B830). */
+export const PERIODS = [["medieval", 1450, "roads"], ["early", 1799, "early"], ["industrial", 1913, "industrial"], ["modern", 2022, "modern"], ["future", Infinity, "future"]];
+export const periodOf = year => (PERIODS.find(([, last]) => Number(year) <= last) ?? PERIODS[PERIODS.length - 1])[0];
+/** The spheres for an era: by the year where it is known, else by the era's morality (Roads: the Dark Ages list). */
+export function spheresFor(morality, year) {
+  if ( Number.isFinite(Number(year)) && year !== null && year !== "" ) return SPHERES[(PERIODS.find(([, last]) => Number(year) <= last) ?? PERIODS[4])[2]];
+  return morality === "roads" ? SPHERES.roads : SPHERES.modern;
+}
+/** Every sphere name of every age, for a faction that holds sway from another age. */
+export const sphereName = k => SPHERES.future[k] ?? SPHERES.industrial[k] ?? SPHERES.early[k] ?? SPHERES.roads[k] ?? SPHERES.modern[k] ?? k;
+/** What each kind of faction is called in each period; the keys stay the same (B830). */
+const KIND_WORDS = {
+  early: {mortal: "Mortal power (a council, a prince, a family)", guild: "A guild, a bank or a trading house", mercenaries: "Soldiers, a regiment or mercenaries"},
+  industrial: {mortal: "Mortal power (a council, a ministry, a family)", guild: "A union, a company or a trade", folk: "The townsfolk or the working poor", mercenaries: "Soldiers, police or a militia"},
+  modern: {mortal: "Mortal power (a council, a government office, a family)", guild: "A company, a corporation or a union", folk: "The neighbourhood or the street", church: "A church or a religious order", mercenaries: "Soldiers, police or private security"},
+  future: {mortal: "Mortal power (a council, a government office, a family)", guild: "A corporation or a union", folk: "The neighbourhood or the street", church: "A church or a religious order", mercenaries: "Soldiers, police or private security"}
+};
+export const kindsFor = year => ({...KINDS, ...(KIND_WORDS[periodOf(year ?? 1197)] ?? {})});
 
 /** Hunting areas and their difficulty (V20 p. 260; V20 Dark Ages p. 334). */
 export const AREAS = {
@@ -114,8 +142,19 @@ export function normFaction(f = {}) {
     leader: f.leader || null, members: uniq(f.members), places: uniq(f.places),
     goals: (f.goals ?? []).filter(g => MOVES[g?.move]).map(g => ({move: g.move, sphere: g.sphere || null, target: g.target || null, place: g.place || null, note: String(g.note ?? "").slice(0, 200)})),
     assets: {herd: dot(a.herd), resources: dot(a.resources), status: dot(a.status), retainers: dot(a.retainers), contacts: dot(a.contacts), domain, security, influence},
-    standing, people: normPeople(f.people), guard: Number(f.guard) || 0, notes: String(f.notes ?? "").slice(0, 2000)
+    standing, people: normPeople(f.people), guard: Number(f.guard) || 0, notes: String(f.notes ?? "").slice(0, 2000),
+    // NPC 0.17.0: who runs it, when it began and ended, and what it came from
+    owners: uniq(f.owners), run: f.run === "orders" ? "orders" : "auto", orders: normOrders(f.orders),
+    founded: yearOrNull(f.founded), ended: yearOrNull(f.ended), dormantBy: ["year", "event", "ended"].includes(f.dormantBy) ? f.dormantBy : null,
+    risesOn: f.risesOn ? String(f.risesOn).slice(0, 60) : null, endsOn: f.endsOn ? String(f.endsOn).slice(0, 60) : null,
+    fromEvent: f.fromEvent ? String(f.fromEvent).slice(0, 60) : null, parent: f.parent ? String(f.parent) : null, absorbedBy: f.absorbedBy ? String(f.absorbedBy) : null
   };
+}
+const yearOrNull = v => (v === null || v === undefined || String(v).trim() === "" || !Number.isFinite(Number(v)) ? null : Math.round(Number(v)));
+/** A player-run faction's orders for its next turn: one of the six moves, with its aim. */
+export function normOrders(o) {
+  if ( !o || !MOVES[o.move] ) return null;
+  return {move: o.move, target: o.target || null, sphere: o.sphere || null, place: o.place || null, by: o.by ? String(o.by).slice(0, 60) : null};
 }
 
 /* ------------------------------------------------------------------ */
@@ -436,7 +475,7 @@ export function resolveMove(state, f, choice, rand, leaders = {}, ctx = {}) {
  * changing hands, a new member, someone found by hunters, a breach reaching the Prince or hunters, and anything that
  * touches a player character.
  */
-export const BIG_OPS = new Set(["place", "found", "member", "stage"]);
+export const BIG_OPS = new Set(["place", "found", "member", "stage", "faction-add", "faction-remove"]);
 export function sizeOf(changes, {pcActors = new Set(), state = null} = {}) {
   for ( const c of changes ) {
     if ( BIG_OPS.has(c.op) ) return "big";
@@ -531,6 +570,29 @@ export function applyChanges(state, changes, {ids = () => Math.random().toString
         break;
       }
       case "found": applied.push(c); break; // a report for the Storyteller; the world changes only by their hand
+      case "faction-add": {
+        const nf = normFaction(c.faction);
+        if ( !nf.id || fac(nf.id) ) break;
+        s.factions.push(nf);
+        inverse.unshift({op: "faction-remove", id: nf.id}); applied.push(c);
+        break;
+      }
+      case "faction-remove": {
+        const i = s.factions.findIndex(f => f.id === c.id); if ( i < 0 ) break;
+        const [f] = s.factions.splice(i, 1);
+        inverse.unshift({op: "faction-add", faction: clone(f)}); applied.push(c);
+        break;
+      }
+      case "faction-set": {
+        const f = fac(c.faction); if ( !f ) break;
+        const was = {};
+        for ( const k of SETTABLE ) if ( c.set && k in c.set ) was[k] = clone(f[k] ?? null);
+        if ( !Object.keys(was).length ) break;
+        const next = normFaction({...f, ...Object.fromEntries(Object.keys(was).map(k => [k, c.set[k]]))});
+        for ( const k of Object.keys(was) ) f[k] = next[k];
+        inverse.unshift({op: "faction-set", faction: f.id, set: was}); applied.push(c);
+        break;
+      }
       case "breach": {
         const b = normBreach({id: c.id ?? ids(), severity: c.severity, place: c.place, faction: c.faction, by: c.by ?? null, event: c.event, started: now, lastStep: now, lastFed: now});
         s.breaches.push(b);
@@ -608,19 +670,40 @@ export function turnsDue(last, now, {days = TURN_DAYS, cap = TURN_CAP} = {}) {
  *   seedKey: the key for the seeded streams, such as "turn:5"
  *   streamFor(key): a seeded random stream (WoDX Chronicle's gen.random)
  */
-export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], pcActors = new Set(), spheres = SPHERES.roads, turn = 0, now = 0, ids} = {}) {
+export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], pcActors = new Set(), spheres = SPHERES.roads, turn = 0, now = 0, ids,
+  year = null, gone = new Set(), alive = null, splits = false, name = null} = {}) {
   let work = clone(state);
   const results = [];
-  const order = work.factions.filter(f => !f.dormant).sort((a, b) => b.assets.status - a.assets.status || a.name.localeCompare(b.name));
+  const order = work.factions.filter(f => activeIn(f, year)).sort((a, b) => b.assets.status - a.assets.status || a.name.localeCompare(b.name));
+  const quiet = (f, move, text) => ({faction: f.id, move, target: null, sphere: null, place: null, pool: 0, difficulty: 0, dice: [], net: 0, botch: false, defence: null, won: false, changes: [], text});
   for ( const f0 of order ) {
     const f = work.factions.find(x => x.id === f0.id);
     const rand = streamFor(`${seedKey}:${f.id}`);
-    const choice = pickMove(work, f, rand, {turn, spheres, since: now - TURN_DAYS * 86400});
+    // NPC 0.17.0: a faction its players run on orders waits for them; their orders are spent on the turn (B835)
+    let choice;
+    if ( f.owners.length && f.run === "orders" ) {
+      if ( !f.orders ) { const q = quiet(f, "wait", `${f.name} waits for its players' orders.`); q.size = "small"; results.push(q); continue; }
+      const o = f.orders, t = o.target ? work.factions.find(x => x.id === o.target && x.id !== f.id && !x.dormant) : null;
+      choice = {move: o.move, target: t?.id ?? null, sphere: o.sphere, place: o.place, goal: null};
+      if ( MOVES[o.move].rival && !t ) choice = {...choice, move: "recruit", target: null};
+      if ( o.move === "expand" && o.place && !t ) choice.target = holderOf(work, o.place)?.id ?? null;
+    } else choice = pickMove(work, f, rand, {turn, spheres, since: now - TURN_DAYS * 86400});
     const r = resolveMove(work, f, choice, rand, leaders, {turn, places, spheres, rand2: streamFor(`${seedKey}:${f.id}:defence`)});
+    if ( f.orders ) r.changes.push({op: "faction-set", faction: f.id, set: {orders: null}});
     r.size = sizeOf(r.changes, {pcActors, state: work});
     results.push(r);
     // Only small results shape what later factions see: a big one waits for the Storyteller
     if ( r.size === "small" ) work = applyChanges(work, r.changes, {ids, now}).state;
+    // A strained faction may split (B833); always a big change, its own card
+    if ( splits ) {
+      const g = work.factions.find(x => x.id === f.id);
+      const ch = splinterChanges(work, g, {rand: streamFor(`${seedKey}:${f.id}:split`), newId: ids, year, name, alive,
+        leaderGone: !!g.leader && gone.has(g.leader), botched: r.botch});
+      if ( ch.length ) {
+        const q = quiet(g, "split", `${g.name} splits: ${ch[0].faction.name}.`);
+        q.changes = ch; q.size = "big"; results.push(q);
+      }
+    }
   }
   return results;
 }
@@ -742,6 +825,164 @@ export function untendedLoss(f, decades) {
   return out;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Founding, splitting, ending and absorbing (NPC 0.17.0)             */
+/* ------------------------------------------------------------------ */
+
+/** The Backgrounds a founder can pledge to a new faction (Domain security starts at 0). */
+export const PLEDGE_KEYS = ["herd", "resources", "status", "retainers", "contacts", "domain", "influence"];
+
+/**
+ * A new faction from its founders' own Backgrounds. Each founder pledges up to the dots they hold; the faction's rating
+ * in each Background is the sum of the pledges, to 5. Pooling follows the books' shared Backgrounds (a pack's Totem in
+ * W20, a cabal's Chantry in M20); a faction has no shared pool rule of its own, so this is a house rule (B831). The
+ * founders' sheets are not changed: the founding card lists the pledges for the Storyteller to mark.
+ *   spec: {id, name, kind, leader, members, places, secret, owners, run, sphere (where pledged Influence goes), notes, year}
+ *   founders: [{id, has: {herd, ..., influence}, pledge: {herd, ..., influence}}]
+ * Returns {faction, pledged: [{id, key, dots}]}.
+ */
+export function foundFaction(spec = {}, founders = []) {
+  const sum = {};
+  const pledged = [];
+  for ( const p of founders ) {
+    for ( const k of PLEDGE_KEYS ) {
+      const give = Math.min(dot(p.pledge?.[k]), dot(p.has?.[k]));
+      if ( !give ) continue;
+      sum[k] = (sum[k] ?? 0) + give;
+      pledged.push({id: p.id, key: k, dots: give});
+    }
+  }
+  const capped = k => Math.min(MAX_DOTS, sum[k] ?? 0);
+  const sphere = spec.sphere || null;
+  const assets = {herd: capped("herd"), resources: capped("resources"), status: capped("status"), retainers: capped("retainers"),
+    contacts: capped("contacts"), domain: capped("domain"), security: 0, influence: sphere && capped("influence") ? {[sphere]: capped("influence")} : {}};
+  const ids = uniq([spec.leader, ...(spec.members ?? []), ...founders.map(p => p.id)]);
+  const faction = normFaction({id: spec.id, name: spec.name || "A new faction", kind: spec.kind || "other", leader: spec.leader || founders[0]?.id || null,
+    members: ids, places: spec.places ?? [], secret: spec.secret, owners: spec.owners ?? [], run: spec.run, assets, founded: spec.year ?? null, notes: spec.notes ?? ""});
+  return {faction, pledged};
+}
+
+/** Is a faction in the world at a year? Dormant ones are not; nor one not yet founded or already ended. */
+export function activeIn(f, year) {
+  if ( !f || f.dormant ) return false;
+  if ( !Number.isFinite(Number(year)) || year === null ) return true;
+  if ( f.founded !== null && f.founded !== undefined && f.founded > year ) return false;
+  if ( f.ended !== null && f.ended !== undefined && f.ended <= year ) return false;
+  return true;
+}
+
+/**
+ * The year moved (a skip, an era jump, a skip back): factions the Storyteller dated wake or sleep by their years.
+ * Only factions put to sleep by their years wake again; one the Storyteller made dormant stays so.
+ */
+export function yearChanges(state, year) {
+  const out = [];
+  if ( !Number.isFinite(Number(year)) ) return out;
+  for ( const f of state.factions ) {
+    const dated = (f.founded !== null && f.founded !== undefined) || (f.ended !== null && f.ended !== undefined);
+    if ( !dated ) continue;
+    const inYears = (f.founded === null || f.founded <= year) && (f.ended === null || f.ended > year);
+    if ( !f.dormant && !inYears ) out.push({op: "faction-set", faction: f.id, set: {dormant: true, dormantBy: "year"}});
+    else if ( f.dormant && f.dormantBy === "year" && inYears ) out.push({op: "faction-set", faction: f.id, set: {dormant: false, dormantBy: null}});
+  }
+  return out;
+}
+
+/** A faction comes to an end: it sleeps, its places are free, and the year is kept for the record. */
+export function disbandChanges(state, id, year = null) {
+  const f = state.factions.find(x => x.id === id);
+  if ( !f ) return [];
+  return [...f.places.map(p => ({op: "place", place: p, from: f.id, to: null})),
+    {op: "faction-set", faction: f.id, set: {dormant: true, dormantBy: "ended", ended: Number.isFinite(Number(year)) && year !== null ? Math.round(year) : f.ended}}];
+}
+
+/**
+ * One faction folds into another: its people join the winner, its places pass to it, and the winner gains half of the
+ * loser's dots in each Background (rounded down, to 5). The loser ends. House rule (B832).
+ */
+export function absorbChanges(state, loserId, winnerId, year = null) {
+  const lose = state.factions.find(x => x.id === loserId), win = state.factions.find(x => x.id === winnerId);
+  if ( !lose || !win || lose.id === win.id ) return [];
+  const out = [];
+  for ( const a of uniq([lose.leader, ...lose.members]) ) if ( !win.members.includes(a) ) out.push({op: "member", faction: win.id, actor: a});
+  for ( const p of lose.places ) out.push({op: "place", place: p, from: lose.id, to: win.id});
+  for ( const k of ["herd", "resources", "status", "retainers", "contacts", "domain"] ) {
+    const gain = Math.floor(lose.assets[k] / 2);
+    if ( gain ) out.push({op: "bg", faction: win.id, key: k, delta: gain});
+  }
+  for ( const [k, v] of Object.entries(lose.assets.influence) ) if ( Math.floor(v / 2) ) out.push({op: "bg", faction: win.id, key: "influence", sphere: k, delta: Math.floor(v / 2)});
+  out.push({op: "faction-set", faction: lose.id, set: {dormant: true, dormantBy: "ended", absorbedBy: win.id, ended: Number.isFinite(Number(year)) && year !== null ? Math.round(year) : lose.ended}});
+  return out;
+}
+
+/** How likely a strained faction is to split at a turn: one chance in six (house rule, B833). */
+export const SPLIT_CHANCE = 1 / 6;
+/**
+ * Is a faction strained? Its leader is gone (dead, in torpor, or none while it has members), it botched this turn, or a
+ * live rumour of severity 3 or more is blamed on it.
+ */
+export function strained(state, f, {leaderGone = false, botched = false} = {}) {
+  if ( leaderGone || botched ) return true;
+  return state.breaches.some(b => b.state === "live" && b.faction === f.id && b.severity >= 3);
+}
+/**
+ * A breakaway: a strained faction with at least three people besides its leader may split. The first of them leads the
+ * new faction and takes a third of the others (the last listed), a dot of each Background the old one has two or more
+ * of, and a dot of its strongest sphere; the two stand at -2 to each other. House rule (B833). Returns the changes, or
+ * [] when it holds together. ctx: {rand, newId, year, name(actorId)}
+ */
+export function splinterChanges(state, f, {rand = Math.random, newId = () => Math.random().toString(36).slice(2, 12), year = null, name = null, leaderGone = false, botched = false, alive = null} = {}) {
+  if ( !f || f.dormant || f.owners?.length ) return [];
+  const people = f.members.filter(a => a !== f.leader && (!alive || alive.has(a)));
+  if ( people.length < 3 || !strained(state, f, {leaderGone, botched}) ) return [];
+  if ( rand() >= SPLIT_CHANCE ) return [];
+  const lead = people[0], rest = people.slice(1), take = rest.slice(rest.length - Math.floor(rest.length / 3));
+  const id = newId();
+  const assets = {herd: 0, resources: 0, status: 0, retainers: 0, contacts: 0, domain: 0, security: 0, influence: {}};
+  const out = [];
+  for ( const k of ["herd", "resources", "status", "retainers", "contacts", "domain"] ) if ( f.assets[k] >= 2 ) { assets[k] = 1; out.push({op: "bg", faction: f.id, key: k, delta: -1}); }
+  const top = topSphere(f);
+  if ( top && f.assets.influence[top] >= 2 ) { assets.influence[top] = 1; out.push({op: "bg", faction: f.id, key: "influence", sphere: top, delta: -1}); }
+  const who = name?.(lead) ?? "A member";
+  const nf = normFaction({id, name: `${who}'s breakaway from ${f.name}`.slice(0, 120), kind: f.kind, secret: f.secret, leader: lead, members: [lead, ...take], assets,
+    standing: {[f.id]: -2}, founded: Number.isFinite(Number(year)) && year !== null ? year : null, parent: f.id, notes: `Broke away from ${f.name}.`});
+  return [{op: "faction-add", faction: nf}, ...out, ...[lead, ...take].map(a => ({op: "member", faction: f.id, actor: a, remove: true})),
+    {op: "standing", faction: f.id, other: id, delta: -2}];
+}
+
+/**
+ * New powers a dated event may bring to the domain, offered to the Storyteller through the queue and never applied by
+ * themselves. Each answers an event in WoDX Chronicle's list (data/events.mjs), whose source gives the book; the local
+ * faction it suggests is a house rule (B834).
+ */
+export const EVENT_POWERS = {
+  camarilla: {kind: "kindred", name: "Camarilla loyalists", secret: true, note: "Elders of the domain who take up the new sect."},
+  thorns: {kind: "kindred", name: "A Sabbat pack", secret: true, note: "Kindred who refused the Convention of Thorns and keep to the Sword of Caine."},
+  "grand-convocation": {kind: "mages", name: "A Tradition cabal", secret: true, note: "Willworkers who answer to the new Council of Nine."},
+  technocracy: {kind: "mages", name: "Technocratic agents", secret: true, note: "The Order of Reason, now the Technocratic Union, sets a watch on the domain."},
+  "second-anarch-revolt": {kind: "kindred", name: "An Anarch gang", secret: true, note: "Young Kindred who will not bow to the elders."},
+  reckoning: {kind: "hunters", name: "A cell of the imbued", secret: false, note: "Mortals who woke to see the monsters and hunt them."}
+};
+/**
+ * What a dated event does to the factions: those set to rise on it wake (founded that year), those set to end on it
+ * sleep (ended that year), and the event may offer a new power. Returns {changes, offer} where offer is a faction
+ * record or null.
+ */
+export function eventChanges(state, eventId, year = null, {newId = () => Math.random().toString(36).slice(2, 12)} = {}) {
+  const changes = [];
+  const y = Number.isFinite(Number(year)) && year !== null ? Math.round(year) : null;
+  for ( const f of state.factions ) {
+    if ( f.risesOn === eventId && f.dormant ) changes.push({op: "faction-set", faction: f.id, set: {dormant: false, dormantBy: null, founded: y ?? f.founded}});
+    if ( f.endsOn === eventId && !f.dormant ) changes.push({op: "faction-set", faction: f.id, set: {dormant: true, dormantBy: "event", ended: y ?? f.ended}});
+  }
+  const p = EVENT_POWERS[eventId];
+  const offer = p && !state.factions.some(f => f.fromEvent === eventId) ? normFaction({id: newId(), name: p.name, kind: p.kind, secret: p.secret, founded: y, fromEvent: eventId, notes: p.note}) : null;
+  return {changes, offer};
+}
+
+/** The fields a faction-set change may touch. */
+export const SETTABLE = ["dormant", "dormantBy", "ended", "founded", "absorbedBy", "owners", "run", "orders", "leader"];
+
 /** A change in a sentence, for cards and the queue. names: {faction(id), place(id), actor(id)}. */
 export function describeChange(c, names = {}) {
   const fn = id => names.faction?.(id) ?? "a faction", pn = id => names.place?.(id) ?? "a place", an = id => names.actor?.(id) ?? "someone";
@@ -756,6 +997,18 @@ export function describeChange(c, names = {}) {
     case "place": return c.to ? `${pn(c.place)} passes to ${fn(c.to)}${c.from ? ` from ${fn(c.from)}` : ""}` : `${pn(c.place)} is no longer held`;
     case "member": return c.remove ? `${an(c.actor)} leaves ${fn(c.faction)}` : `${an(c.actor)} joins ${fn(c.faction)}`;
     case "found": return `${fn(c.faction)} finds ${an(c.actor)} of ${fn(c.target)}`;
+    case "faction-add": return `A new faction: ${c.faction?.name ?? "unnamed"}`;
+    case "faction-remove": return `${fn(c.id)} is struck from the record`;
+    case "faction-set": {
+      const set = c.set ?? {}, bits = [];
+      if ( set.absorbedBy ) bits.push(`folds into ${fn(set.absorbedBy)}`);
+      else if ( set.dormant === true ) bits.push(set.dormantBy === "ended" || set.dormantBy === "event" ? "comes to an end" : "falls quiet");
+      else if ( set.dormant === false ) bits.push("takes part again");
+      if ( "orders" in set ) bits.push(set.orders ? `has its orders: ${MOVES[set.orders.move]?.label ?? set.orders.move}` : "carries out its orders");
+      if ( "owners" in set ) bits.push(set.owners?.length ? `is run by ${set.owners.map(an).join(", ")}` : "is run by the Storyteller");
+      if ( "leader" in set ) bits.push(set.leader ? `is led by ${an(set.leader)}` : "has no leader");
+      return `${fn(c.faction)} ${bits.join(", ") || "changes"}`;
+    }
     case "goal": return `${fn(c.faction)} takes up a goal: ${MOVES[c.goal?.move]?.label ?? c.goal?.move}${c.goal?.target ? ` against ${fn(c.goal.target)}` : ""}`;
     case "breach": return `A rumour starts at ${pn(c.place)}: ${c.event}`;
     case "breach-sev": return `A rumour ${c.delta < 0 ? "quietens" : "grows"} (${c.delta > 0 ? "+" : ""}${c.delta})`;
