@@ -31,7 +31,8 @@ export async function loadGoods() {
   if ( GOODS ) return;
   try {
     const g = await import("../../wodx-library/data/goods.mjs");
-    GOODS = new Map((g.GOODS ?? []).map(x => [x.name.toLowerCase(), x]));
+    GOODS = new Map();
+    for ( const x of g.GOODS ?? [] ) for ( const n of [x.was, x.former, x.name] ) if ( n ) GOODS.set(n.toLowerCase(), x);
     GOODS_ERAS = g.ERAS ?? null;
   } catch (e) { GOODS = new Map(); }
 }

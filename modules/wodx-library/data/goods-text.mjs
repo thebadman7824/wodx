@@ -822,6 +822,1140 @@ a personal assistant pin that still talks | A small pin that answers questions, 
 @1900 a newspaper | A folded newspaper with photographs and advertisements.
 @1500 a small mirror | A small hand mirror of glass.
 @1800 a leather purse | A small leather purse with a clasp.
+a yule wreath | A ring of evergreen boughs and berries hung for midwinter.
+a pair of pom poms | Two bunches of coloured strips waved by cheerleaders.
+a tic-tac-toe set | A board of nine squares and pieces for noughts and crosses.
+a compact checkerboard | A small folding board for draughts.
+a checkers set | A board and pieces for draughts.
+a tangram set | Seven flat pieces cut from a square, laid out to make shapes.
+a star checkers set | A star-shaped board with holes and marbles.
+a mancala set | A board with two rows of pits and a handful of seeds or stones.
+a rummy-o set | Numbered tiles for a rummy game.
+a reversi set | A board and two-coloured discs.
+a compact checkers set | A small travelling set of draughts.
+a senet set | A board of thirty squares for the ancient Egyptian game of passing.
+a mahjong set | A box of engraved tiles for a game of matching sets, played by four.
+a backgammon set | A folding board with pieces and dice.
+a latrunculi set | A grid board and pieces for the Roman game of soldiers.
+a go set | A grid board and black and white stones.
+a shogi set | A board and wedge-shaped pieces for Japanese chess.
+a hnefatafl set | A board and pieces for the Norse game of the king's escape.
+an alquerque set | A board of lines and points for an old Moorish game.
+a dominoes set | A box of dotted tiles.
+a jackstraws set | A bundle of thin sticks dropped in a heap and picked out one by one.
+a ludo set | A board and coloured pieces for a race game.
+a cigar punch | A small tool that punches a hole in the end of a cigar.
+a ruler | A straight strip of wood or metal marked in measurements.
+an eraser | A small block of rubber for rubbing out pencil marks.
+a pencil sharpener | A small blade in a case that sharpens pencils.
+a doormat | A rough mat for wiping feet at the door.
+a sketch | A quick drawing on paper.
+a stone sculpture | A figure carved in stone.
+a clay sculpture | A figure modelled in clay.
+a bottle of ethanol | Pure grain alcohol, for fuel, cleaning or worse.
+a bottle of denatured alcohol | Alcohol made undrinkable with poisons, sold for burning.
+a bottle of methanol | Wood alcohol, a clear and poisonous fuel.
+a can of diesel | Diesel oil for engines.
+a can of aviation fuel | High-grade fuel for aircraft engines.
+a can of biodiesel | Diesel made from plant oil.
+a can of gasoline | Petrol for engines.
+a can of napalm | Gasoline thickened into a sticky jelly that burns fiercely.
+a tank of propane | Propane gas for stoves and heaters.
+a tank of biogas | Gas made from rotting waste.
+a bottle of turpentine | A strong-smelling spirit from pine resin, used to thin paint.
+a bottle of camphine | A lamp fuel of turpentine and alcohol that burns bright and explodes easily.
+a flyer | A printed sheet handed out to advertise something.
+a newspaper page | A single page torn from a newspaper.
+a hoof pick | A small hooked tool for clearing stones and muck from a horse's hoof.
+a horseshoe puller | Long pincers for drawing an old shoe off a hoof.
+a nail puller | A bar with a claw for pulling nails.
+a hoof tester | Large pincers that squeeze a hoof to find where it hurts.
+a pair of nippers | Sharp pincers for trimming a hoof or cutting nails.
+a rasp | A coarse file for smoothing wood or a horse's hoof.
+a pritchel | A pointed iron punch a farrier uses to open nail holes in a hot shoe.
+a pair of clinchers | Pincers that bend over the ends of horseshoe nails.
+anesthetic | A drug that puts a patient to sleep for surgery.
+a bag of sulfur | Yellow powdered brimstone.
+a crystal of borax | A white crystal of borax, used in soldering and cleaning.
+a bag of ash flux | Ash used to help metal flow and join.
+a bag of gravel | Small stones.
+limestone | Pale, soft stone, burned to make lime.
+a bag of soil | Earth.
+an onyx | A banded black and white stone.
+a bottle of bleach | A strong liquid that whitens and kills germs.
+a tank of liquid ammonia | Ammonia kept liquid under pressure, with a choking smell.
+a bottle of ammonia solution | Ammonia in water, for cleaning.
+a bag of zinc oxide | White powder used in paint and ointment.
+a bottle of acetone | A clear solvent that strips paint and glue.
+a bottle of liquid hydrogen peroxide | Strong peroxide that bleaches and burns.
+a bag of ammonium nitrate pellets | White pellets of fertiliser that can be made into explosive.
+a bottle of formaldehyde | A sharp-smelling liquid for preserving dead flesh.
+a bag of black gunpowder | Black powder of saltpetre, charcoal and sulfur.
+a bag of hickory nuts | Small, hard-shelled nuts with a sweet kernel that takes patience and a stone to get at.
+a bag of pecans | Smooth brown nuts with a rich, buttery kernel that cracks out in two halves.
+a bag of pistachios | Pale nuts in split shells, the kernels faintly green.
+a bag of almonds | Flat, pointed nuts in a brown skin, sweet and dry.
+a bag of peanuts | Peanuts still in their papery, waisted shells.
+a bag of hazelnuts | Round brown nuts with a pale scar where they left the husk.
+a bag of chestnuts | Glossy brown nuts, good roasted in the embers or ground into flour.
+a bag of walnuts | Wrinkled kernels in hard, ridged shells.
+a bag of butternuts | Long, sticky-husked nuts with an oily kernel, close kin to the walnut.
+a bag of butternut husks | The husks of butternuts, boiled to make a brown dye.
+a box of soap flakes | Flakes of soap for washing clothes.
+a bag of wood ashes | Ash from a wood fire, used for lye and soap.
+a jar of cremated ashes | The grey ashes of the dead.
+a bottle of dimethyl sulfoxide | A solvent that soaks through skin, and smells of garlic once it does.
+a bottle of phenol | A burning, sweet-smelling chemical used as a disinfectant.
+a bottle of benzene | A clear, sweet-smelling solvent.
+a bottle of toluene | A clear solvent with a sharp smell.
+a bottle of glycerol | A thick, sweet, clear syrup.
+a bag of agar flakes | Flakes of dried seaweed jelly, for setting foods and growing germs.
+a bag of rosin | Lumps of hardened pine resin.
+a tank of acetylene | Acetylene gas for welding and lamps.
+a bottle of latex | Milky sap of the rubber tree.
+rocuronium | A drug that stops the muscles working, used in surgery.
+a bottle of acetic anhydride | A sharp, choking chemical that reacts with water.
+a bag of pine resin | Sticky resin from pine trees.
+a bottle of silicone caulk | A tube of rubbery sealant.
+a bottle of weak glue | A pot of thin glue for paper.
+a bottle of strong glue | A pot of strong glue.
+a plush toy | A soft stuffed toy.
+a shark plushie | A soft stuffed shark.
+a figurine | A small figure of a person or animal.
+a yoyo | A spool on a string that climbs back up to the hand.
+a fidget spinner | A small toy that spins on a bearing between the fingers.
+an arm splint | A stiff frame for holding a broken arm still.
+a tourniquet | A band tightened around a limb to stop bleeding.
+a blindfold | A strip of cloth tied over the eyes.
+a leg splint | A stiff frame for holding a broken leg still.
+a fitness band | A wristband that counts steps and heartbeats.
+a fedora | A soft felt hat with a creased crown and a wide brim.
+a pair of binoculars | A pair of joined telescopes for seeing far off with both eyes.
+a pair of night-vision goggles | Goggles that make the dark look like a green dusk.
+a pair of infrared goggles | Goggles that show warm bodies glowing in the dark.
+a hairpin | A thin pin for holding up hair.
+a fancy hairpin | A decorated pin for holding up hair.
+a towel | A towel.
+a straw fedora | A light fedora woven of straw, for summer.
+a turtleneck | A close-fitting knitted top with a high, folded collar.
+a whistle | A small whistle with a shrill note.
+a pair of shooter's earmuffs | Padded cups on a headband that dull the bang of gunfire.
+a stethoscope | A doctor's tube for listening to the heart and lungs.
+a riot helmet | A hard helmet with a clear visor, made for police holding a line.
+a military flight helmet | A hard helmet with a visor and fittings for a radio and oxygen mask.
+a bag of seaweed | Dark, salty fronds of dried seaweed that soften in water.
+a scythe blade | The long curved blade of a scythe, without its handle.
+a tree spile | A small spout pushed into a tree to draw its sap.
+a drum skin | A stretched hide for the head of a drum.
+a lawnmower | A machine with turning blades for cutting grass.
+a water heater | A tank that heats water for a house.
+a dishwasher | A machine that washes dishes.
+a pair of tinted glass lenses | Two lenses of coloured glass.
+a fishbowl | A round glass bowl for keeping fish.
+a clockwork movement | The gears and springs from inside a clock.
+a pine bough | A green branch of pine.
+a pinecone | A woody pinecone.
+a sunflower | A heavy flower head packed with striped seeds.
+a bag of chamomile flowers | Small dried flowers with a yellow eye and an apple smell, steeped to calm the stomach.
+a lotus flower | A broad pink water flower on a long stem. The seeds and root are eaten where it grows.
+an adobe brick | A brick of sun-dried mud and straw.
+a sassafras root | A fragrant root, brewed as a tea or a root beer.
+a malachite | A green stone with swirling bands.
+a cannabis plant | A growing cannabis plant.
+a clay flower pot | A clay pot for growing plants.
+a plastic flower pot | A plastic pot for growing plants.
+a fire brick | A brick that stands great heat, for lining kilns and forges.
+a plastic die | A small plastic cube with spots on each face.
+a salt lick | A block of salt for cattle to lick.
+a military parachute | A large silk or nylon parachute with its harness.
+a wooden pallet | A low frame of planks for stacking goods.
+a training dummy | A padded figure for practising blows.
+a cash register | A machine with a drawer for money that adds up sales.
+a wooden crate | A sturdy wooden crate.
+a collapsible drum | A drum that folds flat when empty.
+a paper sack | A paper bag.
+a steel drum | A large steel drum.
+a heavy plastic sack | A strong plastic sack.
+a canvas sack | A canvas sack.
+a bucket | A metal bucket.
+a large plastic bucket | A large plastic bucket.
+a wooden bucket | A wooden bucket with iron hoops.
+a half gallon carton | A waxed paper carton.
+an egg carton | A carton that holds a dozen eggs.
+a thermos | A flask that keeps drinks hot or cold.
+a clay hydria | A Greek water jar with three handles.
+a clay pot | A clay pot.
+a test tube | A small glass tube for chemistry.
+a beaker | A glass jar with a spout, for chemistry.
+a graduated cylinder | A tall glass tube marked for measuring liquids.
+a petri dish | A shallow glass dish with a lid, for growing germs.
+an aluminum keg | An aluminum keg for beer.
+a steel keg | A steel keg for beer.
+a plastic tub | A plastic tub with a lid.
+a balloon | A rubber balloon.
+a large propane tank | A big tank for propane gas.
+a bottle gourd | A long, pale green gourd. Young, it is cooked like squash; old and dried, it becomes a flask.
+a lunchbox | A tin box for carrying a meal.
+a pillbox | A small box for pills.
+a wire spool | A spool for winding wire.
+a plate of eggplant parmigiana | Slices of fried eggplant baked in layers with tomato and cheese.
+a corn cob | A raw ear of corn, the kernels still on the cob.
+a bag of corn kernels | Loose dried kernels of corn, for grinding, soaking or planting.
+a bag of popcorn | Popped corn, light and dry, lightly salted.
+a bag of buttered popcorn | Popped corn slick with melted butter and salt.
+a bag of threshed wheat | Wheat beaten from the straw, with chaff still among the grain.
+a bag of wheat | Clean grains of wheat, ready for the mill.
+a bag of winter wheat | Hard grains of wheat sown in autumn and cut in summer.
+a bag of buckwheat | Small three-sided seeds, cooked as a porridge or ground for flat cakes.
+an omelet | Beaten eggs cooked flat in a pan and folded.
+a vegetable omelet | Folded eggs with chopped vegetables cooked inside.
+a supreme omelet | A thick omelet stuffed with meat, cheese, onion and peppers.
+a bottle of riesling | A dry, fragrant white wine from the Rhine.
+a bottle of chardonnay | A full white wine from Burgundy.
+a bottle of pinot noir | A light red wine from Burgundy.
+a bottle of marsala | A sweet fortified wine from Sicily.
+a bottle of vermouth | A wine flavoured with herbs and wormwood.
+a bottle of tequila | A strong spirit distilled from agave.
+a bottle of triple sec | An orange-flavoured liqueur.
+a bottle of sake | Japanese rice wine.
+a bottle of nigori sake | Cloudy, unfiltered rice wine.
+a glass of irish coffee | Hot coffee with whiskey and cream.
+a glass of karsk | Norwegian coffee strengthened with moonshine.
+a glass of vodka and orange | Vodka mixed with orange juice.
+a bottle of grog | Rum watered down with lemon, a sailor's ration.
+a glass of gin and tonic | Gin with tonic water and lime.
+a glass of piña colada | Rum blended with coconut and pineapple.
+a glass of tequila sunrise | Tequila and orange juice with red syrup sinking through it.
+a bottle of moonshine | Raw, clear spirit from an illegal still.
+a bottle of european pilsner | A pale, crisp lager in the Bohemian style.
+a bottle of stout | A dark, heavy beer.
+a bottle of imperial stout | A very strong, black stout first brewed for export to Russia.
+a bottle of sherry | A fortified wine from Spain.
+a glass of kalimotxo | Red wine mixed with cola.
+a glass of bee's knees | Gin with honey and lemon.
+a glass of whiskey sour | Whiskey with lemon and sugar.
+a glass of spiked eggnog | Eggnog with rum or brandy in it.
+a glass of martini | Gin and vermouth.
+a bottle of hard seltzer | Sparkling water with alcohol and a little fruit flavour.
+fried liver | Slices of liver fried in fat, dark and rich.
+a humble pie | A pie of offal, the parts of a deer left to the servants once the lord's household has eaten.
+a bowl of stewed tripe | Strips of stomach stewed soft with onions.
+a plate of deep-fried tripe | Pieces of tripe in batter, fried crisp.
+a jar of leverpostej | A soft, spreadable liver paste, baked and pressed into the jar.
+grilled sweetbread | Pale glands of a calf or lamb, grilled until browned.
+töttchen | A thick stew of veal offal in a sour sauce, from Westphalia.
+a milkshake | Milk whipped with ice cream into a thick, cold drink.
+a fast food milkshake | A paper cup of thick, sweet shake from a drive-in counter.
+a chocolate milkshake | A thick, cold shake of milk, ice cream and chocolate.
+a snow cone | Shaved ice in a paper cone, soaked in bright syrup.
+a jar of ice cream | Frozen sweetened cream that melts fast once out of the cold.
+frozen custard | Rich frozen custard, thicker and yellower than ice cream.
+a jar of frozen yogurt | Tart frozen yogurt, softer than ice cream.
+sorbet | A frozen ice of fruit juice and sugar, with no cream in it.
+gelato | Dense Italian ice cream, smooth and strongly flavoured.
+a pair of frog legs | The meaty hind legs of a large frog, skinned.
+a fish fillet | A boneless side of fish.
+a can of fish | A tin of cooked fish packed in oil.
+a can of lobster | A tin of cooked lobster meat.
+a plate of shucked oysters | Oysters opened and loosed from the shell, eaten raw or cooked.
+roasted bone marrow | Split bones roasted until the marrow inside is soft enough to scoop out.
+meat jerky | Strips of lean meat dried hard and salted, chewy and long-keeping.
+roast fowl | A roasted bird, chicken, goose or duck, brown and crisp-skinned.
+chicken jerky | Strips of chicken dried and salted until hard.
+a jar of tomato sauce | A thick red sauce of cooked tomatoes.
+a jar of mayonnaise | A thick pale sauce of egg yolk and oil.
+a jar of ketchup | A sweet, vinegary sauce of tomatoes.
+a jar of barbecue sauce | A dark, sweet and smoky sauce for basting meat.
+a jar of vinegar | Sour soured wine or cider, for pickling and seasoning.
+a jar of molasses | Black, sticky syrup left over from refining sugar.
+a jar of horseradish | Grated horseradish root in vinegar, sharp enough to make the eyes water.
+a jar of salca | A Turkish paste of red peppers or tomatoes, dried in the sun.
+a jar of pekmez | A thick syrup of boiled-down grape juice from Anatolia.
+hickory nut ambrosia | A sweet dish of hickory nut meats folded with fruit and cream.
+a jar of nut butter | Nuts ground into a thick, oily paste.
+a jar of peanut butter spread | Smooth, sweetened peanut butter.
+a jar of royal jelly | A milky, sour paste taken from a beehive, said to make the queen bee.
+a honeydew melon | A large pale melon with smooth skin and sweet green flesh.
+a bag of yeast | Dried yeast for raising bread or starting beer.
+a bag of koji | Rice grown through with a white mould, used to make soy sauce, miso and sake.
+a napkin | A square of cloth or paper for wiping hands and mouth.
+tofu | A pale block of pressed bean curd.
+a bag of raw soybeans | Hard, round dried soybeans.
+raw edamame | Green soybeans still in their fuzzy pods.
+a bowl of blood rice pudding | Rice cooked in blood and fat, set firm and sliced.
+a bag of dry dog food | Hard brown pellets made for dogs.
+a can of wet cat food | A tin of soft meat scraps in jelly, made for cats.
+a bag of dry cat food | Small, hard pellets made for cats.
+nectar | Thick, sweet fruit juice with the pulp left in.
+an earthworm | A pink, wriggling earthworm. Food for fish, birds, or the truly desperate.
+a bag of dried earthworms | Earthworms dried brittle, for bait or for eating.
+a snail | A garden snail in its shell. It wants a few days' purging before cooking.
+a bowl of gravy | Thick sauce made from meat drippings and flour.
+a cattail stalk | The tender inner stalk of a cattail from the marsh edge, eaten raw or cooked.
+a cattail rhizome | The starchy root of a cattail, pounded for flour or roasted.
+roasted garlic | Whole heads of garlic roasted until soft and sweet.
+a plate of boiled dandelion greens | Bitter dandelion leaves boiled soft.
+a plate of fried dandelions | Dandelion flowers dipped in batter and fried.
+a plate of boiled burdock greens | Burdock leaves boiled to take out the bitterness.
+a plate of fried burdocks | Slices of burdock root fried crisp.
+a plate of fried bamboo shoots | Young bamboo shoots sliced and fried.
+a jar of vegetable aspic | Cooked vegetables set in a clear, savoury jelly.
+a corn on the cob | An ear of corn boiled or roasted whole.
+a bowl of hominy | Corn kernels soaked in lye until they swell, then boiled soft.
+a bag of cornmeal | Ground dried corn, yellow and gritty.
+a bowl of succotash | A stew of corn and beans.
+a plate of tofu stirfry | Tofu and vegetables fried quickly in a hot pan.
+a lotus root | A long, pale root that shows a ring of holes when sliced.
+a cooking banana | A large, starchy green banana, cooked rather than eaten raw.
+a carrot | An orange root, sweet and crunchy.
+glazed carrot | Carrots cooked in butter and sugar until they shine.
+a plate of vegetable pie | A slice of pie filled with vegetables in gravy.
+a vegetable samosa | A fried triangle of pastry around spiced potato and peas.
+a vegetable pizza | A flat bread baked with tomato, cheese and vegetables.
+a jar of pesto | A green paste of basil, garlic, cheese, nuts and oil.
+a can of vegetables | A tin of cooked mixed vegetables.
+a plate of spaghetti al pesto | Spaghetti tossed in green basil pesto.
+dehydrated vegetable | Vegetables dried to brittle chips, light to carry. They soften in water.
+a garlic clove | One clove of garlic in its papery skin.
+a bowl of vegetable salad | Raw greens and vegetables, cut and dressed.
+a dahlia root | The swollen root of a dahlia, eaten in Mexico before the flower was grown for show.
+a roasted salsify | A long, thin root roasted until tender.
+an onigiri | A ball of rice pressed around a filling and wrapped in seaweed.
+a vegetable hosomaki | A thin roll of rice and vegetables wrapped in seaweed and sliced.
+a bowl of sauerkraut | Shredded cabbage soured in brine.
+a bag of fiddleheads | The curled young tops of ferns, picked in spring.
+a plate of sauteed fiddleheads | Fern tops fried in butter.
+jerusalem artichoke | Knobbly roots of a sunflower, sweet and crisp.
+a jar of salsa | A sauce of chopped tomato, onion and chili.
+a plate of melitzanosalata | A Greek dip of roasted eggplant, garlic and oil.
+a bag of kombu | Thick sheets of dried kelp for making broth.
+a toaster pastry | A flat, frosted pastry with a sweet filling, made to be warmed in a toaster.
+a jar of buttercream icing | Sweet whipped butter and sugar for frosting cakes.
+a bag of pretzels | Hard, salted knots of baked dough.
+a chocolate-covered pretzel | A salted pretzel dipped in chocolate.
+a bag of marshmallows | Soft, spongy white sweets.
+a plate of s'mores | Toasted marshmallow and chocolate pressed between crackers.
+a jar of peanut butter candy | Sweets made of peanut butter and sugar.
+a bag of chocolate candy | Small chocolates in bright wrappers.
+a bag of chewy candy | Soft, chewy sweets in fruit flavours.
+a bag of gummy candy | Soft gelatin sweets shaped like animals.
+a bag of licorice | Black, chewy sticks of licorice.
+a candy bracelet | A string of hard sugar beads worn on the wrist and eaten one by one.
+a bag of graham cracker chunks | Broken pieces of sweet wholemeal crackers.
+a cookie | A round, sweet baked biscuit.
+a plate of fries | Strips of potato fried crisp and salted.
+a plate of poutine | Fries smothered in gravy and cheese curds.
+a peppermint patty | A disc of mint cream coated in chocolate.
+a bag of necco wafers | A roll of chalky, pastel sugar wafers.
+a caramel | A soft, chewy sweet of cooked sugar and butter.
+a plate of cheese nachos | Tortilla chips covered in melted cheese.
+a plate of meat nachos | Tortilla chips with melted cheese and spiced meat.
+a plate of deep-fried chicken | Pieces of chicken in batter, deep-fried.
+a plate of buffalo wings | Chicken wings fried and tossed in hot sauce.
+a chocolate pancake | A pancake with chocolate in the batter.
+a chocolate waffle | A crisp chocolate waffle with a grid pattern.
+a jar of cheese spread | Soft processed cheese for spreading.
+a plate of cheese fries | Fries covered in melted cheese.
+a hot dog | A sausage in a long bun.
+a bag of candy-coated peanuts | Peanuts in a hard, coloured sugar shell.
+a fruit filled gelatin dessert | A wobbling, brightly coloured jelly with pieces of fruit set inside.
+a plate of pasta carbonara | Pasta with egg, cheese, cured pork and black pepper.
+a plate of amatriciana pasta | Pasta in a sauce of tomato, cured pork cheek and cheese.
+a crepe | A thin pancake folded around a filling.
+a jar of marshmallow fluff | A sticky, sweet white spread.
+a cup of dandelion tea | Tea made from dandelion roots or leaves.
+a pumpkin muffin | A small, spiced cake of pumpkin.
+baklava | Layers of thin pastry with chopped nuts, soaked in honey syrup.
+a religieuse au chocolat | Two choux buns stacked and filled with chocolate cream, iced like a nun's habit.
+a jar of hot sauce | A fiery red sauce of chili peppers and vinegar.
+a jar of buffalo sauce | A buttery, vinegary hot sauce for chicken wings.
+a bag of spicebush berries | Small red berries with a peppery, allspice taste.
+a bag of dry spicebush berries | Dried spicebush berries, ground as a pepper.
+a bag of italian seasoning | A mix of dried oregano, basil, thyme and rosemary.
+a bag of sprinkles | Tiny coloured sugar strands for decorating cakes.
+a jar of soy sauce | A dark, salty sauce made from fermented soybeans.
+a bag of thyme | Dried thyme leaves, small and fragrant.
+a bag of bee balm | Dried leaves of bee balm, a minty herb brewed as a tea.
+wild garlic | Broad leaves from the woodland floor that smell strongly of garlic.
+broccoli | Green heads of broccoli on thick stalks.
+celery | Pale green ribbed stalks, crisp and watery.
+a salad cucumber | A long, smooth green cucumber for eating raw.
+a gherkin cucumber | A small, bumpy cucumber for pickling.
+a salsify root | A long, thin root with a mild taste, sometimes called oyster plant.
+a chicory root | A thick, bitter root. Roasted and ground, it stands in for coffee.
+a bag of hop flowers | Papery green cones of the hop plant, for bittering beer.
+a horseradish root | A thick, pale root with a fierce bite when grated.
+a pumpkin | A large, round orange squash.
+a plate of horseradish greens | Young horseradish leaves, sharp and peppery.
+a bag of dandelion leaves | Young dandelion leaves, bitter and green.
+a burdock root | A long, brown root, crisp when young.
+rhubarb | Red, sour stalks, cooked with plenty of sugar. The leaves are poison.
+a sugar beet | A pale, heavy root grown to be boiled down for sugar.
+zucchini | Green summer squash.
+a plate of japanese knotweed stems | Sour young stems of knotweed, cooked like rhubarb.
+an eggplant | A glossy purple fruit cooked as a vegetable.
+a bag of sea lettuce | Thin, bright green seaweed, eaten raw or dried.
+a bag of sugar kelp | Long, ruffled brown seaweed with a faintly sweet taste.
+a bag of bladderwrack | Brown seaweed with air bladders along the fronds.
+a raw artichoke | The scaled green bud of an artichoke, eaten leaf by leaf once cooked.
+a plate of raw asparagus | Green asparagus spears.
+a brussels sprout | A small green bud like a tiny cabbage.
+cauliflower | A white head of cauliflower in green leaves.
+kale | Curly, dark green leaves of kale.
+a bag of corn flakes | Crisp flakes of toasted corn, eaten with milk.
+a donut hole | A small, round ball of fried dough rolled in sugar.
+a flatbread | A thin, unleavened bread baked on a hot stone or griddle.
+a frybread | A round of dough fried puffy and golden.
+buttered toast | Toasted bread spread with butter.
+jam toast | Toasted bread spread with jam.
+peanut butter toast | Toasted bread spread with peanut butter.
+a toad in a hole | Sausages baked in a batter pudding.
+a cornbread | A crumbly yellow bread of cornmeal.
+a johnnycake | A flat cornmeal cake fried on a griddle.
+a corn tortilla | A thin, flat round of cornmeal bread.
+a flour tortilla | A soft, thin round of wheat bread.
+a hallula | A flat, round Chilean bread.
+a crabapple | A small, hard, sour wild apple.
+a banana | A curved yellow fruit, soft and sweet inside the peel.
+a mayapple | The small yellow fruit of a woodland plant. The fruit is eaten ripe; the rest of the plant is poison.
+a bag of wintergreen berries | Bright red berries that taste of mint.
+a guava | A round fruit with green skin and pink, seedy flesh.
+a lulo | A small orange fruit from the Andes, sour and juicy, with green flesh.
+a grapefruit | A large, sour-sweet citrus fruit.
+a coconut | A hard, hairy nut full of white meat and sweet water.
+a peach | A soft, fuzzy fruit with a stone inside.
+a watermelon | A large green melon with red, watery flesh and black seeds.
+a cantaloupe melon | A melon with a netted rind and orange flesh.
+a mango | A sweet tropical fruit with orange flesh around a flat stone.
+a pomegranate | A leathery red fruit packed with juicy seeds.
+a papaya | A long tropical fruit with orange flesh and black seeds.
+a kiwi | A small, brown, fuzzy fruit with bright green flesh.
+a bottle of prescription stimulants | Pills that keep a tired person awake and alert.
+an epinephrine autoinjector | A pen that pushes a dose of adrenaline into the thigh.
+a bottle of antibiotics | Pills that fight infection.
+a bottle of deworming pills | Pills that kill worms in the gut.
+a bottle of ibuprofen | Pills for pain and swelling.
+a bottle of naproxen | Pills for pain and swelling.
+a bottle of acetaminophen | Pills for pain and fever.
+a bottle of metoprolol | Pills that slow and steady the heart.
+a bottle of hydrogen peroxide | A clear liquid for cleaning wounds.
+a bottle of codeine | Pills of a mild opiate for pain and coughs.
+a pair of contact lenses | Thin lenses worn on the eyes to correct sight.
+a bottle of antiseptic | A liquid that kills germs in wounds.
+a bottle of prescription sedatives | Pills that calm the nerves and bring sleep.
+a vial of cannabis distillate | A thick, amber oil of cannabis.
+a bottle of steroid eyedrops | Drops that calm swollen, sore eyes.
+a flu shot | A dose of vaccine against influenza.
+methamphetamine | Crystals of a strong, harsh stimulant.
+a bottle of oxycodone | Pills of a strong opiate painkiller.
+antivenom | A serum against snakebite.
+a bottle of antidepressants | Pills that lift a low mood over weeks.
+a bottle of saline solution | Salt water for cleaning wounds and eyes.
+a bottle of antipsychotics | Pills that quiet voices and visions.
+a bottle of tramadol | Pills of a strong painkiller.
+a bottle of multivitamins | Pills of vitamins and minerals.
+a bottle of gummy vitamins | Chewable vitamins shaped like sweets.
+a bottle of fast-acting sedatives | Pills that bring sleep quickly.
+a tube of cocaine cream | A cream that numbs the skin, made with cocaine.
+a bottle of sunscreen | A lotion that guards the skin against sunburn.
+buttermilk | The sour milk left after churning butter.
+a jar of yogurt | Thick, sour milk set with a culture.
+a jar of ghee | Butter cooked clear, golden and long-keeping.
+a bowl of pudding | A soft, sweet milk pudding.
+a jar of cottage cheese with fruit | Soft curds of cheese mixed with fruit.
+a quesadilla | A tortilla folded around melted cheese and toasted.
+a jar of whipped cream | Cream beaten stiff and sweetened.
+a jar of heavy cream | Thick cream skimmed from the top of the milk.
+tiramisù | Layers of coffee-soaked sponge and soft sweet cheese, dusted with cocoa.
+a jar of mascarpone | A soft, rich Italian cream cheese.
+pecorino | A hard, salty cheese of sheep's milk.
+a can of fruit | A tin of fruit in sweet syrup.
+a jar of fruit jam | Fruit boiled with sugar into a thick, sweet spread.
+a bowl of hardtack pudding | Hard ship's biscuit soaked, boiled and sweetened into a pudding.
+brandied fruit | Fruit kept in brandy and sugar.
+a bowl of stewed elderberries | Dark elderberries cooked soft with sugar.
+a can of black beans in sauce | A tin of black beans in a thick sauce.
+a bowl of chocolate pudding | A soft, sweet chocolate pudding.
+a jar of mushroom ketchup | A dark, salty sauce of mushrooms and spices.
+a plate of meat confit | Meat slow-cooked and kept in its own fat.
+a blutwurst | A dark sausage of blood, fat and grain.
+a bratwurst | A pale pork sausage for grilling.
+bacon | Strips of salted, smoked pork belly.
+a plate of cracklins | Pieces of pork skin fried until they puff and crackle.
+a plate of glazed tenderloins | Slices of tender pork in a sweet glaze.
+a lobster platter | A whole lobster cooked and served on a platter.
+a plate of currywurst | A sliced sausage with curry-spiced ketchup.
+a jar of aspic | Meat set in a clear, savoury jelly.
+batter fried fish | Pieces of fish in batter, fried golden.
+a plate of stuffed clams | Clams baked in the shell with breadcrumbs and herbs.
+bologna | A large, smooth sausage sliced for sandwiches.
+a plate of lutefisk | Dried cod soaked in lye until it turns soft and jelly-like.
+a bowl of sausage gravy | Thick white gravy with crumbled sausage.
+a plate of ravioli | Small pasta parcels stuffed with meat or cheese.
+a bowl of chili con carne | A spicy stew of meat, beans and chili.
+a can of tuna fish | A tin of cooked tuna.
+a can of salmon | A tin of cooked salmon.
+a plate of fried chicken | Pieces of chicken fried in a crisp coating.
+a can of clams | A tin of cooked clams in their juice.
+a plate of meat pie | A slice of pie filled with meat and gravy.
+a plate of meat pizza | A slice of flat bread baked with tomato, cheese and meat.
+a plate of supreme pizza | A slice of pizza heaped with meats and vegetables.
+a plate of spaghetti bolognese | Spaghetti in a sauce of meat and tomato.
+a plate of lasagne | Layers of pasta, meat sauce and cheese, baked.
+a cheeseburger | A beef patty with melted cheese in a bun.
+a plate of sloppy joe | Loose minced meat in a sweet tomato sauce, spooned onto a bun.
+a taco | A folded tortilla filled with meat and toppings.
+an indian taco | Frybread heaped with beans, meat and toppings.
+a plate of haggis | A sheep's stomach stuffed with offal, oats and suet, boiled.
+a fish makizushi | A roll of rice and fish wrapped in seaweed and sliced.
+a meat temaki | A cone of seaweed filled with rice and meat.
+sashimi | Thin slices of raw fish.
+a plate of pelmeni | Small dumplings filled with minced meat.
+a meatball | A ball of minced meat, browned.
+a bowl of valencian paella | Rice cooked with saffron, rabbit, chicken and beans in a wide pan.
+a plate of escargot | Snails cooked in garlic butter.
+a plate of kiymali pide | A boat-shaped Turkish flatbread baked with spiced minced meat.
+a lahmacun | A thin, round flatbread baked with spiced minced meat.
+a plate of iskender kebab | Slices of roast meat on bread with tomato sauce, butter and yogurt.
+a plate of manti | Small dumplings of meat served with yogurt and spiced butter.
+a plate of sarma | Cabbage or vine leaves rolled around rice and meat.
+a plate of buttermilk fried chicken | Chicken soaked in buttermilk, then fried crisp.
+a plate of tandoori chicken | Chicken marinated in yogurt and spices, roasted in a clay oven.
+a plate of chicken parmesan | Breaded chicken baked with tomato sauce and cheese.
+a plate of dolmas | Vine leaves stuffed with rice and herbs.
+a bundle of hop rhizomes | Roots of the hop plant for planting.
+a potato section | A piece of seed potato with an eye.
+a bundle of rhubarb stems | Rhubarb crowns for planting.
+a packet of mushroom spores | Spores for growing mushrooms.
+a packet of morel mushroom spores | Spores for growing morels.
+a seed garlic | A head of garlic kept for planting.
+a packet of seed popcorn | Kernels of popping corn kept for planting.
+a cup of black coffee | Coffee with no milk.
+a cup of coffee substitute | A brew of roasted grain or roots drunk when coffee is short.
+a cup of chicory brew | Coffee made from roasted chicory root.
+a bottle of cranberry juice | Sour red cranberry juice.
+a glass of eggnog | A sweet drink of milk, eggs and nutmeg.
+a bottle of horchata | A sweet milky drink of rice or tiger nuts.
+a bottle of fruit juice | Pressed fruit juice.
+a bottle of pineapple juice | Sweet pineapple juice.
+a bottle of kompot | A drink of fruit boiled in water and sugar.
+a bottle of orangeade | A sweet orange drink.
+a bottle of grapeade | A sweet grape drink.
+a bottle of orange juice | Squeezed orange juice.
+a bottle of spezi | Cola mixed with orange soda.
+a cup of sweetened coffee | Coffee with sugar.
+a bottle of tomato juice | Thick tomato juice.
+a bottle of ayran | A salty drink of yogurt and water.
+a bottle of kvass | A sour, faintly alcoholic drink brewed from black bread.
+a packet of dried spaghetti | Long, thin sticks of dried pasta.
+a packet of lasagne sheets | Flat sheets of dried pasta.
+a packet of macaroni | Short, curved tubes of dried pasta.
+a bag of flour | Ground wheat flour.
+a bag of bread flour | Strong wheat flour, good for raising bread.
+a bag of oatmeal | Rolled or ground oats for porridge.
+a bowl of grits | Coarse ground corn boiled into a porridge.
+a bowl of cheese grits | Corn porridge with cheese stirred in.
+a pancake | A flat, round cake of batter fried in a pan.
+a fruit pancake | A pancake with fruit in the batter.
+a plate of blodplättar | Small Swedish pancakes made with blood.
+french toast | Bread dipped in egg and milk, then fried.
+a waffle | A crisp cake of batter with a grid pattern.
+a fruit waffle | A waffle topped with fruit.
+a plate of fruit pie | A slice of pie filled with fruit.
+a plate of cheese pizza | A slice of flat bread baked with tomato and cheese.
+a bag of granola | Toasted oats, nuts and dried fruit.
+a plate of maple pie | A slice of pie filled with sweet maple syrup custard.
+a plate of cloutie dumplings | A rich, spiced fruit pudding boiled in a cloth.
+a brioche | A soft, rich bread made with butter and eggs.
+a brownie | A dense square of chocolate cake.
+a bowl of vegetable broth | A thin, clear soup of boiled vegetables.
+a bowl of meat broth | A thin, clear soup of boiled meat.
+a bowl of bone broth | A rich broth of bones simmered for hours.
+a bowl of vegetable soup | A thick soup of vegetables.
+a bowl of three sisters stew | A stew of corn, beans and squash.
+a bowl of meat soup | A thick soup of meat and vegetables.
+a bowl of fish soup | A soup of fish and vegetables.
+a bowl of curry | A spiced stew in a thick sauce.
+a bowl of chicken noodle soup | Chicken broth with noodles and vegetables.
+a bowl of mushroom soup | A creamy soup of mushrooms.
+a bowl of blood soup | A dark soup thickened with blood.
+a bowl of tomato soup | A smooth red soup of tomatoes.
+a plate of chicken and dumplings | Chicken stewed with soft dumplings.
+a bowl of cullen skink | A thick Scottish soup of smoked fish, potatoes and onions.
+a bowl of lobster stew | A rich stew of lobster in milk and butter.
+a plate of coq au vin | Chicken stewed in red wine with mushrooms and onions.
+a pillowcase | A cloth cover for a pillow.
+a hammock | A bed of cloth hung between two posts.
+a net hammock | A hammock of knotted cord.
+a quilt | A padded, stitched bedcover.
+a patchwork quilt | A quilt sewn from many scraps of cloth.
+a coffee mug | A heavy mug for coffee.
+a plastic tumbler | A plastic cup.
+a plastic tupperware | A plastic box with a tight lid for food.
+a plastic straw | A plastic drinking straw.
+a corkscrew | A spiral of steel for drawing corks.
+a vegetable peeler | A small blade for peeling vegetables.
+a spork | A spoon with fork tines on the end.
+a pair of chopsticks | Two thin sticks for eating.
+a potato masher | A tool for mashing potatoes.
+a garlic press | A press for crushing garlic.
+a spatula | A flat tool for turning food in a pan.
+a copper pot | A copper cooking pot.
+a casserole pot | A heavy pot with a lid for slow cooking.
+a stock pot | A large, deep pot for soup.
+a canning pot | A large pot for boiling jars to seal them.
+a clay canning pot | A large clay pot for preserving food.
+a coffee pot | A pot for brewing coffee.
+a mesh colander | A mesh bowl for draining food.
+a splatter guard | A mesh lid that stops fat spitting from a pan.
+a cheese grater | A grater for cheese.
+a cast-iron dutch oven | A heavy iron pot with a lid, for baking and stewing.
+a clay pot oven | A clay oven for baking.
+an aluminum pot | A light aluminum pot.
+a pyrometer | A gauge for measuring the heat of a furnace.
+a pair of headphones | Headphones for listening to music.
+a plectrum | A small flat pick for plucking strings.
+an envelope | A paper envelope for a letter.
+a clothes hanger | A shaped wire or wooden hanger for clothes.
+a short cordage piece | A short length of cord.
+a long cordage piece | A long length of cord.
+a short vine | A short length of tough vine.
+a long vine | A long length of tough vine, good as rope.
+a rubber band | A loop of rubber.
+a soap dish | A dish for a bar of soap.
+a tampon | A plug of cotton for monthly bleeding.
+a hairbrush | A brush for hair.
+a hair curler | A roller for curling hair.
+a spool of dental floss | Thin thread for cleaning between teeth.
+a toilet plunger | A rubber cup on a stick for clearing a blocked drain.
+a professional plunger | A heavy plunger for stubborn drains.
+a toilet brush | A brush for cleaning a toilet.
+a bath toy | A small rubber toy that floats.
+a set of dentures | A set of false teeth.
+a swimming kickboard | A foam board held in front for practising kicks.
+a badminton shuttlecock | A cork cone with feathers, hit over a net.
+a golf tee | A small peg that holds a golf ball.
+a football | A leather ball for football.
+a basketball | A large rubber ball for basketball.
+a volleyball | A light ball for volleyball.
+a beach volleyball | A soft ball for playing on sand.
+a hockey puck | A hard rubber disc for ice hockey.
+a mannequin | A life-sized figure for showing clothes.
+a fire piston | A tube and piston that light tinder when the piston is slammed down.
+a matchbook | A folded card of paper matches.
+a matchbox | A box of matches.
+an ember carrier | A clay or metal pot for carrying live coals.
+a dog whistle | A whistle too high for people to hear, used to call dogs.
+a set of horse tack | A saddle, bridle and the rest of the gear for riding a horse.
+a pet carrier | A box with a door for carrying a small animal.
+a wooden pet carrier | A wooden box for carrying a small animal.
+a glass terrarium | A glass box for keeping plants or small animals.
+a wooden dog whistle | A wooden whistle for calling dogs.
+a stapler | A tool that fastens papers with wire staples.
+a hole puncher | A tool that punches holes in paper.
+a pair of office scissors | Plain scissors for paper.
+a pencil | A wooden pencil.
+a leather journal | A notebook bound in leather.
+a cellphone | A small mobile telephone.
+a pair of electronic handcuffs | Handcuffs that lock and open by remote signal.
+a portable hard drive | A small box that stores computer files.
+a handheld game system | A small machine for playing video games in the hand.
+a vibrator | A small electric toy for private pleasure.
+a wheelchair | A chair on wheels for someone who cannot walk.
+an inflatable boat | A rubber boat that is blown up with air.
+a skateboard | A board on four wheels for riding.
+bubble wrap | Plastic sheet full of air bubbles, for wrapping fragile things.
+a land mine | A buried bomb that goes off when stepped on.
+a large fire extinguisher | A heavy red cylinder that sprays foam or powder on a fire.
+a pike pole | A long pole with a hook and spike, used by firefighters to pull down burning walls.
+an aluminum tent pole | A light metal pole for pitching a tent.
+a bathroom scale | A scale for weighing a person.
+a scrub brush | A stiff brush for scrubbing.
+a dish towel | A cloth for drying dishes.
+an electric hair trimmer | An electric clipper for cutting hair.
+a collapsible mop | A mop with a handle that folds.
+a razor blade | A thin blade for shaving.
+a sponge | A sponge for washing.
+a stone chopper | A heavy stone with one edge knocked sharp.
+a pair of carding paddles | Two paddles set with fine wire teeth, for combing wool before spinning.
+a paint chipper | A scraper for taking off old paint.
+a clamp | A screw clamp for holding work together while glue sets.
+a distaff and spindle | A stick that holds loose fibre and a weighted spindle that twists it into thread.
+an electric jackhammer | An electric hammer drill for breaking up concrete.
+a hacksaw | A fine-toothed saw in a frame, for cutting metal.
+a pair of tin snips | Heavy shears for cutting sheet metal.
+a bronze nail puller | A bronze bar with a claw for pulling nails.
+a jackhammer | A heavy air-driven hammer for breaking up roads.
+an electric kiln | An electric oven for firing pottery.
+a bronze fileset | A set of bronze files for shaping metal and wood.
+a metal fileset | A set of steel files.
+a paint brush | A brush for painting.
+a pin reamer | A tapered tool for cleaning and widening holes.
+a pair of pliers | Pliers for gripping and bending.
+a pair of tongue-and-groove pliers | Pliers with an adjustable jaw, for gripping pipes.
+a pair of locking pliers | Pliers that lock tight onto what they grip.
+a screwdriver | A screwdriver.
+a screwdriver set | A set of screwdrivers in different sizes.
+a socket screwdriver set | A handle with a set of sockets for driving bolts.
+a toolbox | A metal box of hand tools.
+a workshop toolbox | A large chest of tools for a workshop.
+an arc welder | A machine that welds metal with an electric arc.
+a block and tackle | A set of pulleys and rope for lifting heavy loads.
+a wooden block and tackle | Pulleys of wood and rope for lifting heavy loads.
+a fanning mill | A wooden machine with a crank-driven fan that blows chaff from grain.
+a bench vise | A heavy vise bolted to a workbench.
+a nail header | An iron plate with holes, used by a smith to form the heads of nails.
+a bronze nail header | A bronze plate for forming the heads of nails.
+a rotary tool | A small, fast spinning tool for grinding and cutting.
+a lockpick | A thin bent wire for opening locks without a key.
+an anvil | A heavy iron block on which a smith hammers metal.
+a bronze anvil | A heavy bronze block for hammering metal.
+a charcoal forge | A forge fired with charcoal and blown by bellows.
+a portable charcoal kiln | A small kiln for burning wood into charcoal.
+a crucible | A heat-proof pot for melting metal.
+a clay crucible | A clay pot for melting metal.
+a hot chisel | A smith's chisel for cutting hot iron.
+a sheet of sandpaper | Paper coated with grit for smoothing wood.
+a sandcasting mold | A frame packed with sand into which molten metal is poured.
+a long sandcasting mold | A long frame of sand for casting bars and blades.
+a gas forge | A forge heated by gas.
+a bone sewing awl | A pointed bone tool for punching holes in leather.
+a steel sewing awl | A steel point for punching holes in leather.
+a pair of knitting needles | Two long needles for knitting.
+a frame loom | A wooden frame for weaving cloth.
+a bone needle | A sewing needle carved from bone.
+a curved needle | A curved needle for stitching leather or wounds.
+a wooden needle | A sewing needle of wood.
+a tanning frame | A wooden frame for stretching a hide while it is scraped and tanned.
+a tailoring pattern set | Paper patterns for cutting out clothes.
+a can of butane | A small can of butane gas for refilling lighters and torches.
+a clay urn | A tall clay jar with a lid.
+a crystal urn | A tall cut-glass jar with a lid.
+an entrenching tool | A short folding spade carried by soldiers.
+an etched human skull | A human skull carved all over with signs.
+a rollmat | A foam mat rolled up for sleeping on the ground.
+a grappling hook | A hook with three or four prongs on a rope, for climbing or catching hold.
+a pair of leather bellows | Bellows of leather and wood for blowing up a fire.
+a large space heater | A big electric heater for warming a room.
+a filter straw | A tube with a filter inside, for drinking safely from streams.
+a permanent marker | A felt pen with ink that will not wash off.
+a porcelain urn | A tall porcelain jar with a lid.
+a wooden stepladder | A folding ladder of wood.
+a tear gas sprayer | A can that sprays tear gas.
+a telescoping umbrella | A small umbrella that folds into a short tube.
+a travel toilet | A small portable toilet.
+an umbrella | An umbrella.
+an aluminum stepladder | A light folding metal ladder.
+a riding crop | A short whip for riding.
+a sex toy | A toy for private pleasure.
+a pair of leather cuffs | Wide bands of leather buckled around the wrists.
+a ball gag | A rubber ball on a strap, fitted into the mouth.
+a tape measure | A long rolled tape marked with measurements.
+a hand press | A small press worked by hand.
+an arbor press | A small press with a lever, for pressing parts together.
+a bone punch | A pointed bone tool for punching holes.
+a nail punch | A short steel rod for driving nails below the surface.
+a glowstick | A plastic tube that glows when bent.
+a reading light | A small lamp for reading.
+a luthier toolset | Tools for making and repairing stringed instruments.
+a stone adze | A stone blade set crosswise on a handle, for shaping wood.
+a barometer | A gauge that shows air pressure, used to forecast weather.
+a chemistry set | A box of glassware and chemicals for experiments.
+a basic chemistry set | A small box of simple glassware and chemicals.
+a plastic gasket set | A set of plastic seals for pipes and fittings.
+a butane tank | A tank of butane gas.
+a hydrogen tank | A steel tank of hydrogen gas.
+a pressurized tank | A strong steel tank for gas under pressure.
+a hygrometer | A gauge that shows how damp the air is.
+a nitrogen tank | A steel tank of nitrogen gas.
+an oxygen tank | A steel tank of oxygen.
+a small weight scale | A small scale for weighing things.
+a voltmeter | A meter that measures electric voltage.
+a glass prism | A three-sided glass block that splits light into colours.
+a small glass tube | A thin glass tube.
+a dissecting microscope | A low-powered microscope for looking at small specimens.
+a burette | A long glass tube with a tap, for measuring out liquid drop by drop.
+a fractional distillation apparatus | A tall glass column for separating liquids by their boiling points.
+a centrifuge | A machine that spins samples fast to separate them.
+a test tube rack | A rack for holding test tubes.
+a glass thermometer | A glass tube of mercury or spirit that measures heat.
+a microscope slide | A thin glass plate for holding specimens under a microscope.
+an alcohol wipe | A small pad soaked in alcohol, for cleaning skin.
+a roll of medical gauze | A roll of loose woven cotton for dressing wounds.
+a scalpel | A small, very sharp surgical knife.
+a thermometer | A glass thermometer for taking a temperature.
+a pair of medical scissors | Scissors with a blunt tip, for cutting dressings.
+a dental tool set | Picks, mirrors and pliers for working on teeth.
+a bronze hoe | A bronze blade on a handle for weeding.
+a wooden shovel | A shovel of wood.
+a metal rake | A rake with steel teeth.
+a plastic rake | A light plastic rake for leaves.
+a shovel | A steel shovel.
+a snow shovel | A wide shovel for clearing snow.
+a plastic snow shovel | A wide plastic shovel for clearing snow.
+a bill pole | A long pole with a hooked blade, for cutting branches.
+a bronze bill pole | A long pole with a hooked bronze blade.
+a hedge trimmer | A powered cutter for trimming hedges.
+a diving cylinder | A tank of compressed air for breathing underwater.
+a screw press | A press worked by turning a large screw, for pressing grapes, oil or paper.
+a can sealer | A machine that seals the lids onto tins.
+a charcoal smoker | A box that smokes meat and fish over smouldering charcoal.
+a coffeemaker | An electric machine for brewing coffee.
+a food dehydrator | A machine that dries food.
+a hexamine stove | A small folding stove that burns fuel tablets.
+a hotplate | An electric cooking ring.
+an induction hotplate | An electric plate that heats the pan itself.
+a manual oil press | A press for squeezing oil out of seeds and nuts.
+a pasta extruder | A press that pushes dough through shaped holes to make pasta.
+a stone quern | Two round stones for grinding grain by hand.
+a wicker sieve | A sieve of woven wicker.
+a sieve | A mesh for sifting flour or straining.
+a vacuum sealer | A machine that sucks the air out of bags and seals them.
+a honing rod | A steel rod for keeping a knife's edge straight.
+a handheld knife sharpener | A small tool for sharpening knives.
+a brazier | An iron basket for burning coal or charcoal.
+a hobo stove | A stove made from a tin can.
+a portable stove | A small stove for camping.
+a cot | A light folding bed.
+a metal butchering rack | A metal frame for hanging carcasses while they are cut up.
+a metal smoking rack | A metal rack for smoking meat.
+a leather tarp | A sheet of leather for shelter or covering goods.
+a butter churn | A wooden churn for making butter.
+a stick of dynamite | A stick of explosive wrapped in paper.
+a firecracker | A small paper tube of powder that bangs.
+a flashbang | A grenade that blinds and deafens.
+a molotov cocktail | A bottle of fuel with a burning rag.
+a pipebomb | A pipe filled with explosive.
+a banjo | A stringed instrument with a round, drum-like body.
+a clarinet | A black wooden woodwind instrument with a single reed.
+a kantele | A Finnish stringed instrument plucked on the lap.
+a ukulele | A small four-stringed guitar.
+a violin | A small, bowed stringed instrument.
+a gilded fiddle | A fiddle covered in gold leaf.
+a krar | A five- or six-stringed lyre from Ethiopia.
+a set of bagpipes | A bag with drones and a chanter, blown to make a loud, droning tune.
+a tuba | A large, deep brass instrument.
+a saxophone | A brass instrument played with a reed.
+a fishing hook | A single barbed hook for fishing.
+a fishing rod | A rod with line and hook.
+a pro fishing rod | A fine fishing rod with a good reel.
+a two-piece fishing rod | A fishing rod that comes apart in two for carrying.
+a telescoping fishing rod | A fishing rod that slides together into a short tube.
+a plastic hand fishing reel | A plastic spool of fishing line held in the hand.
+a wooden hand fishing reel | A wooden spool of fishing line held in the hand.
+copper tubing | A length of copper pipe.
+bismuth | A heavy, brittle metal that forms rainbow-coloured crystals.
+platinum | A heavy, silvery metal worth more than gold.
+zinc | A grey metal used to coat iron against rust.
+a hinge | A metal hinge for a door or lid.
+a copper rod | A rod of copper.
+an aluminum sheet | A thin sheet of aluminum.
+aluminum bar stock | Bars of aluminum for machining.
+steel bar stock | Bars of steel for machining.
+iron bar stock | Bars of iron for forging.
+aluminum flat bar stock | Flat bars of aluminum.
+steel flat bar stock | Flat bars of steel.
+a structural steel section | A heavy steel beam.
+a wool staple | A lock of raw wool, ready for carding.
+a tanned pelt | A tanned animal skin with the fur left on.
+a fuse | A cord that burns slowly to set off an explosive.
+a sharp rock | A rock with a sharp edge.
+a cannonball | A round iron shot for a cannon.
+a bag of potassium alum | White crystals used in dyeing and tanning.
+a bag of calcium chloride | White salt that pulls water from the air.
+a bottle of mercury | Quicksilver, a heavy liquid metal.
+a jar of mercury fulminate | A grey powder that explodes at a knock, used in percussion caps.
+a jar of sodium | A soft metal kept under oil. It bursts into flame in water.
+a jar of potassium | A soft metal kept under oil. It burns violet in water.
+a bag of lead azide | A white powder that explodes at a touch, used in detonators.
+a box of hair dye | A box of hair dye.
+a long pole | A long wooden pole.
+a spear shaft | A straight wooden shaft for a spear.
+tonewood | Seasoned wood chosen for making instruments.
+a heavy wooden beam | A thick wooden beam.
+a wooden post | A wooden post.
+a short wooden post | A short wooden post.
+a long wooden post | A long wooden post.
+a wooden panel | A flat panel of wood.
+a large wooden sheet | A large board of wood.
+a plastic sheet | A sheet of plastic.
+a human skull | A human skull.
+a bear skull | The skull of a bear.
+a cow skull | The skull of a cow.
+a horse skull | The skull of a horse.
+a deer skull | The skull of a deer.
+a moose skull | The skull of a moose.
+a steel buckle | A buckle of steel.
+a steel snap fastener | A small press-stud of steel.
+a bone fossil | A bone turned to stone.
+a pair of cord sandals | Sandals with soles and straps of plaited cord.
+a pair of toecaps | Steel caps worn over the toes of shoes.
+a pair of cleats | Sports shoes with studs on the soles for grip on grass.
+a pair of wooden clogs | Shoes carved from a single block of wood.
+a pair of flip-flops | Thin rubber sandals held on by a strap between the toes.
+a pair of foot rags | Strips of cloth wound around the feet in place of socks.
+a pair of fur foot wraps | Pieces of fur bound around the feet for warmth.
+a pair of geta | Japanese wooden sandals raised on two blocks.
+a pair of heels | Shoes with tall, narrow heels.
+a pair of leather sandals | Open shoes of leather straps on a leather sole.
+a pair of moccasins | Soft shoes of one piece of leather, stitched over the top.
+a pair of rollerblades | Boots with a single line of wheels for skating.
+a pair of rollerskates | Boots with four wheels set in pairs for skating.
+a pair of slippers | Soft shoes for wearing indoors.
+a pair of straw sandals | Sandals woven from straw.
+a pair of flame-resistant socks | Thick socks made of cloth that will not catch fire.
+a pair of socks | Knitted socks.
+a pair of ankle socks | Short socks that stop at the ankle.
+a pair of stockings | Long, fine stockings that reach above the knee.
+a pair of tabi | Japanese socks with the big toe split from the others.
+a pair of gi tabi | Thick cotton tabi worn with martial arts dress.
+a pair of espadrilles | Canvas shoes with soles of plaited rope.
+a pair of jika-tabi | Japanese work boots with a split toe and a rubber sole.
+a headscarf | A square of cloth tied over the hair.
+a keffiyeh | A checked cotton headcloth from Arabia, worn against sun and sand.
+a knit scarf | A long knitted scarf.
+a fur scarf | A scarf of fur worn around the neck.
+a wimple | A cloth worn around the head and neck, framing the face.
+a tallit gadol | A large Jewish prayer shawl with knotted fringes at the corners.
+a pair of arm warmers | Knitted sleeves without a garment, pulled on over the arms.
+a belly band | A band of cloth worn around the belly.
+a belly wrap | A long strip of cloth wound around the waist for warmth or support.
+a pair of boxer briefs | Close-fitting underpants with short legs.
+a pair of boxer shorts | Loose cotton underpants.
+a pair of boy shorts | Short, close-fitting underpants cut like small shorts.
+a pair of briefs | Close-fitting underpants.
+a camisole | A light, sleeveless undergarment with thin straps.
+a chestwrap | A strip of cloth wound tightly around the chest.
+a garter belt | A belt worn at the waist with straps that hold up stockings.
+a pair of leg warmers | Knitted tubes worn over the lower legs.
+a pair of leggings | Close-fitting stretch trousers.
+a long underwear bottom | Close-fitting knitted underwear that covers the legs to the ankle.
+a pair of panties | Light underpants.
+a sports bra | A firm, close-fitting bra made for exercise.
+a pair of tights | Thin, close-fitting stretch legwear covering the feet.
+a pair of compression shorts | Tight stretch shorts worn for sport.
+an undershirt | A plain cotton shirt worn under another.
+a pair of bikini bottoms | The lower half of a two-piece swimsuit.
+a swimsuit | A one-piece swimming costume.
+a racing swimsuit | A tight swimming costume cut for speed.
+a pair of swim briefs | Small, tight swimming trunks.
+a pair of diving socks | Thin neoprene socks for diving.
+a pair of swim fins | Long rubber flippers worn on the feet for swimming.
+a wetsuit | A close-fitting suit of neoprene that keeps a swimmer warm in cold water.
+a wetsuit hood | A neoprene hood that goes with a wetsuit.
+a pair of wetsuit pants | Neoprene trousers for cold water.
+a pair of swim goggles | Small goggles that keep water out of the eyes.
+a pair of diving gloves | Neoprene gloves for cold water.
+a beekeeping hood | A hat with a veil of fine mesh that keeps bees off the face.
+a rain hood | A waterproof hood.
+a flame-resistant hood | A hood of cloth that will not catch fire, worn by firefighters.
+a ninja hood | A black cloth hood that leaves only the eyes showing.
+a high-volume rucksack | A very large backpack.
+a bindle | A bundle tied in a cloth on the end of a stick.
+a daypack | A small backpack.
+a military rucksack | A large army backpack.
+a travelpack | A backpack made for long journeys.
+a bookstrap | A strap for carrying books.
+a military seabag | A long canvas bag carried by sailors and soldiers.
+a firefighter belt | A wide belt with rings for a firefighter's tools.
+a black belt | A black cloth belt that marks a high grade in a martial art.
+a leather belt | A belt of leather with a buckle.
+a police duty belt | A belt that holds a police officer's gear.
+a broad belt | A wide belt of leather.
+a tool belt | A belt with pockets for tools.
+a pair of suspenders | Straps over the shoulders that hold up trousers.
+an antarvasa | The inner robe of a Buddhist monk, wrapped around the waist.
+a pair of basketball shorts | Long, loose shorts made for basketball.
+a pair of breeches | Trousers that end just below the knee.
+a cheerleader skirt | A short pleated skirt in team colours.
+a pair of fishing waders | Waterproof trousers joined to boots, worn standing in rivers.
+a pair of short shorts | Very short shorts.
+a kilt | A knee-length skirt of pleated tartan wool.
+a utility kilt | A kilt of heavy cotton with pockets, made for work.
+a loincloth | A strip of cloth worn around the hips.
+a pair of pants | Plain trousers.
+a pair of army pants | Sturdy trousers in military colours.
+a pair of cargo pants | Loose trousers with large pockets on the thighs.
+a pair of checkered pants | Trousers in a checked pattern.
+a pair of ninja trousers | Loose black trousers tied at the ankle.
+a pair of ski pants | Padded, waterproof trousers for skiing.
+a pair of police breeches | Riding breeches cut for mounted police.
+a pair of shorts | Short trousers that end above the knee.
+a pair of cargo shorts | Shorts with large pockets on the sides.
+a jean skirt | A skirt made of denim.
+a skirt | A plain skirt.
+a long skirt | A skirt that reaches the ankles.
+a grass skirt | A skirt of dried grass strands.
+a pair of striped pants | Trousers with stripes running down the legs.
+a pair of work pants | Heavy trousers made for labour.
+a pair of army winter pants | Padded military trousers for cold weather.
+a zubon | Japanese trousers.
+a pair of hiking pants | Light, tough trousers for walking.
+a pair of tactical pants | Trousers with many pockets, made for police and soldiers.
+a pair of gaiters | Coverings of cloth or leather worn over the ankle and lower leg.
+a clown wig | A wig of bright, frizzy hair.
+a clown nose | A round red nose worn for laughs.
+a golden crown | A crown of gold.
+a protective mouthpiece | A rubber guard worn over the teeth in sport.
+a skinny tie | A narrow necktie.
+a bow tie | A tie knotted in the shape of a bow.
+a clip-on tie | A necktie that clips onto the collar instead of being tied.
+a necktie | A long strip of cloth tied at the collar.
+a wedding veil | A long, fine veil worn by a bride.
+a tarpaulin | A large waterproof sheet.
+a head bandana | A bandana tied over the head.
+a beret | A round, flat cap of soft wool.
+a chaplet | A wreath or band worn on the head.
+an eboshi | A tall black court hat of old Japan.
+a toque | A brimless knitted cap.
+a noise-cancelling headset | A headset that blocks out outside noise.
+a sombrero | A hat with a very wide brim and a tall crown.
+a kippah | A small round cap worn by Jewish men.
+a turban | A long cloth wound around the head.
+a hijab | A scarf that covers the hair and neck.
+a niqab | A veil that covers the face, leaving the eyes showing.
+a long apron | A long apron that covers the front from chest to shins.
+a short apron | A short apron tied at the waist.
+a cotton apron | A plain cotton apron.
+a plastic apron | A wipe-clean apron of plastic.
+a blazer | A tailored jacket, often in a club or school colour.
+a cheerleader dress | A short dress in team colours.
+a long dress | A dress that reaches the ankles.
+a short dress | A dress that ends above the knee.
+a wedding dress | A long dress worn by a bride.
+an evening gown | A long, formal dress for evening.
+a hoodie | A soft, warm top with a hood.
+a cropped hoodie | A short hoodie that ends above the waist.
+a sports jersey | A team's shirt with a number on the back.
+a leotard | A close-fitting one-piece garment for dancing or gymnastics.
+a mummy dress | A costume dress wrapped in strips like a mummy.
+a ninja dress | A black costume dress styled after a ninja.
+a sundress | A light, loose summer dress.
+a sweater | A warm knitted top.
+a tallit katan | A small fringed garment worn under the clothes by observant Jews.
+an uttarasanga | The upper robe of a Buddhist monk.
+a cheongsam | A close-fitting dress with a high collar and side slits.
+a garter sheath | A small knife sheath strapped to the thigh.
+an ankle sheath | A small knife sheath strapped to the ankle.
+a birchbark ankle sheath | An ankle sheath of birch bark.
+a sheath | A sheath for a knife or sword.
+a birchbark sheath | A sheath of birch bark.
+a spear strap | A strap for carrying a spear on the back.
+a pair of beekeeping gloves | Long leather gloves that keep bees from stinging.
+a pair of boxing gloves | Padded gloves for boxing.
+a pair of fire gauntlets | Heavy gloves that protect the hands from fire.
+a pair of fingerless wool gloves | Wool gloves with the fingertips left bare.
+a pair of fur gloves | Gloves of fur.
+a pair of glove liners | Thin gloves worn inside other gloves.
+a pair of medical gloves | Thin rubber gloves worn by doctors and nurses.
+a pair of black gloves | Plain black gloves.
+a pair of rubber gloves | Thick rubber gloves for washing and cleaning.
+a pair of tactical gloves | Tough gloves with padded knuckles.
+a pair of winter gloves | Warm, padded gloves.
+a pair of work gloves | Heavy gloves for labour.
+a pair of hand wraps | Strips of cloth wound around the hands for boxing.
+a pair of extra long white gloves | White evening gloves that reach above the elbow.
+a pair of mittens | Gloves with one part for all four fingers.
+a pair of flame-resistant gloves | Gloves of cloth that will not catch fire.
+a pair of army winter gloves | Padded military gloves for cold weather.
+a pair of white gloves | Plain white gloves.
+a pair of skeleton gloves | Black gloves printed with the bones of the hand.
+a pair of golfing gloves | Thin leather gloves for gripping a golf club.
+a cassock | A long, close-fitting robe worn by clergy.
+a duster | A long, loose coat for riding, made to keep off dust.
+a hakama | Wide, pleated Japanese trousers.
+a bathrobe | A loose towelling robe.
+a combat blouse | A military field jacket.
+a windbreaker | A light jacket that keeps out the wind.
+a judo gi | A heavy cotton jacket and trousers for judo.
+a karate gi | A light cotton jacket and trousers for karate.
+a kariginu | A loose hunting robe of old Japanese court dress.
+a kasaya | The robe of a Buddhist monk.
+a keikogi | A Japanese training uniform for martial arts.
+a kimono | A long Japanese robe with wide sleeves, tied with a sash.
+a yukata | A light cotton kimono for summer.
+a haori | A short Japanese coat worn over a kimono.
+a kittel | A white linen robe worn by Jewish men on holy days, and in which they are buried.
+a peacoat | A short, heavy wool coat with two rows of buttons, first worn by sailors.
+a robe | A long, loose robe.
+a ghost's robe | A white costume robe for playing a ghost.
+a grim reaper's robe | A hooded black costume robe.
+a wizard robe | A costume robe covered in stars and moons.
+a samghati | The outer robe of a Buddhist monk.
+a trenchcoat | A long, belted coat with a deep collar.
+a thawb | An ankle-length robe with long sleeves, worn by men in Arabia.
+a tuxedo | A black evening suit with silk lapels.
+a steampunk trenchcoat | A long coat decorated with brass gears and buckles.
+a plague robe | A long waxed robe worn by plague doctors.
+an abaya | A long, loose black robe worn over other clothes.
+a pride flag | A rainbow flag.
+a national flag | A country's flag.
+a state flag | The flag of a state or province.
+a heraldic cape | A cape showing a coat of arms.
+a wool poncho | A wool blanket with a hole in the middle for the head.
+a rain poncho | A waterproof poncho.
+a military poncho | A sturdy army poncho that doubles as a shelter.
+a military poncho liner | A quilted blanket that fits inside an army poncho.
+a straw cape | A cape of woven straw that sheds the rain.
+a lycra bodysuit | A close-fitting stretch suit that covers the whole body.
+a pair of denim overalls | Denim trousers with a bib and shoulder straps.
+a jumpsuit | A one-piece suit of shirt and trousers.
+a skeleton jumpsuit | A costume jumpsuit printed with bones.
+a mummy jumpsuit | A costume jumpsuit wrapped in strips like a mummy.
+a pair of work coveralls | One-piece overalls worn over clothes for dirty work.
+a fursuit | A full costume of a furry animal.
+a devil onesie | A one-piece costume with horns and a tail.
+a ski bib | Padded ski trousers with a bib and straps.
+a western gun belt | A leather gun belt with a holster and loops for cartridges.
+a balaclava | A knitted hood that covers the head and neck, leaving the face or eyes open.
+a bandana | A square of patterned cloth.
+a face veil | A veil that hangs over the face.
+a rifle bandolier | A belt of loops for rifle cartridges, worn over the shoulder.
+a leather eyepatch | A leather patch over one eye.
+a pair of eyeglasses | Glasses that correct poor sight.
+a monocle | A single lens worn in one eye.
+a pair of glass goggles | Goggles with glass lenses.
+a pair of ski goggles | Tinted goggles worn against snow glare.
+a pair of welding goggles | Goggles with very dark lenses for welding.
+a pair of snow goggles | Goggles with narrow slits that cut the glare from snow.
+a pair of chemical goggles | Sealed goggles that keep splashes out of the eyes.
+a beaded bracelet | A bracelet of beads.
+a pair of beaded earrings | Earrings of beads.
+a friendship bracelet | A woven bracelet of coloured thread.
+a cowrie bracelet | A bracelet of cowrie shells.
+a barrette | A clip for holding hair.
+a gold bracelet | A bracelet of gold.
+a pair of gold earrings | Earrings of gold.
+a gold hairpin | A hairpin of gold.
+a gold locket | A small gold case on a chain, for a picture or a lock of hair.
+a pair of cufflinks | Two fasteners for shirt cuffs.
+a gold tooth cap | A gold cap fitted over a tooth.
+a tie clip | A clip that holds a tie to the shirt.
+a small relic | A small relic.
+a holy symbol | A holy symbol.
+a carved holy symbol | A holy symbol carved by hand.
+a deputy badge | A tin star of a deputy.
+a detective badge | A detective's badge.
+a marshal badge | A marshal's badge.
+a doctor badge | A doctor's badge.
+a pair of fuzzy cat ears | A headband with furry cat ears.
+a pair of leather cat ears | A headband with leather cat ears.
+a gold anklet | A chain of gold worn on the ankle.
+a bat charm anklet | An anklet with a small bat charm.
+a flower charm anklet | An anklet with a small flower charm.
+a woven anklet | An anklet of woven thread.
+a gold lip ring stud | A gold stud worn through the lip.
+a silver lip ring stud | A silver stud worn through the lip.
+a gold nose ring stud | A gold stud worn through the nose.
+a silver nose ring stud | A silver stud worn through the nose.
+an angel halo | A gold ring on a wire headband.
+a pair of angel wings | Costume wings of white feathers.
+a pair of cuffs | A pair of metal arm cuffs.
+a pair of black bunny ears | A headband with black rabbit ears.
+an ammo satchel | A bag for carrying ammunition.
+a chest rig | A harness of pouches worn on the chest.
+a birchbark quiver | A quiver of birch bark.
+a simple cloth quiver | A cloth quiver for arrows.
 `;
 
 /**

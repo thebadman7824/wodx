@@ -245,6 +245,18 @@ Ben approved every entry below, which had been waiting for review, at 04:03 UTC 
 | 2026-11-10 | Audit, weak refs: the Encyclopaedia claim about copies of Das Buch vom Grabkrieg (bh-grabkrieg) cites Beckett pdf 12-14, but the book is named on pdf 5 and 19. | Left as it is; the right page needs a look in the PDF. | Change the ref in beckett.json once checked. |
 | 2026-11-10 | Release stamp: where to show the build the server runs, and to whom? | A line in the Settings sidebar, for the GM only, plus a console line and a warning at start when packages come from different commits. | Edit onRenderSettings and announce in wodx-chronicle/scripts/release.mjs. |
 
+## Approved by Ben, 11 November 2026 (New Items Desk)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-11 | Add the 1,136 items on the New Items Desk to the goods? | Yes, all approved by Ben. 1,134 added (two were already goods), each with an original description; "Chinese checkers" renamed "a star checkers set" (B906). | Delete the rows after "ADDED FROM THE NEW ITEMS DESK" in goods.mjs and their lines in goods-text.mjs. |
+
+## Approved by Ben, 11 November 2026, 20:38 UTC (goods without containers)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-11 | Should goods name their container ("a bottle of claret")? | No: the name is the thing ("claret"), found in its container, shown as "claret (in a bottle)" in a container's list (B905). Ben asked for it and approved switching the 797 goods too. | Empty CONTAINER_WORDS in modules/wodx-library/data/goods.mjs. |
+
 ## Approved by Ben, 11 November 2026, 20:30 UTC (dealing with NPCs)
 
 Ben approved every recommendation for dealing with NPCs from the Actions menu: the social rolls, attitude, lifting and planting, and trade.

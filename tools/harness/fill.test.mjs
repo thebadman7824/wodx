@@ -149,7 +149,7 @@ test("goods: every good carries its backend tags", () => {
     assert.ok(G.GOODS.some(g => g.kind === k), `${k}: no goods`);
   }
   for ( const k of Object.keys(G.KINDS) ) assert.ok(G.KIND_BEHAVIOUR[k], `${k}: no behaviour`);
-  for ( const n of [...Object.keys(G.BEHAVIOUR_OVERRIDES), ...Object.keys(G.USES_OVERRIDES)] ) assert.ok(G.GOODS.some(g => g.name === n), `override for unknown good ${n}`);
+  for ( const n of [...Object.keys(G.BEHAVIOUR_OVERRIDES), ...Object.keys(G.USES_OVERRIDES)] ) assert.ok(G.GOODS.some(g => (g.former ?? g.name) === n), `override for unknown good ${n}`);
   for ( const c of Object.values(G.GEAR_CATEGORIES) ) assert.ok(G.BEHAVIOURS[c.use] && c.uses.length, c.label);
 });
 
@@ -188,14 +188,36 @@ test("goods are single things that stack, never piles", async () => {
     if ( g.stack ) assert.ok(g.stack.min >= 1 && g.stack.max >= g.stack.min, g.name);
     if ( g.stack?.max > 1 ) assert.ok(g.stack.plural, g.name);
   }
-  for ( const [name] of Object.entries(G.STACK_SIZES) ) assert.ok(G.GOODS.some(g => g.name === name), `stack size for missing ${name}`);
+  for ( const [name] of Object.entries(G.STACK_SIZES) ) assert.ok(G.GOODS.some(g => g.name === name || g.former === name), `stack size for missing ${name}`);
   const coin = G.GOODS.find(g => g.name === "a bronze coin");
   assert.equal(coin.stacks, true);
   assert.deepEqual(coin.stack, {plural: "bronze coins", min: 2, max: 12});
-  assert.equal(G.GOODS.find(g => g.name === "a sack of grain").stack.plural, "sacks of grain");
+  const grain = G.GOODS.find(g => g.name === "grain");
+  assert.equal(grain.container, "a sack");
+  assert.equal(grain.former, "a sack of grain");
+  assert.equal(grain.id, "a-sack-of-grain", "the id stays the same, so old marks and items still match");
+  assert.equal(G.stackLine(grain, 1), "grain (in a sack)");
+  assert.equal(G.stackLine(grain, 3), "grain (in 3 sacks)");
+  assert.equal(F.goodsLine(grain, () => 0.999), `grain (in ${grain.stack.max} sacks)`);
+  assert.deepEqual(G.readLine("grain (in 3 sacks)"), {name: "grain", count: 3});
   assert.equal(G.stackLine(coin, 7), "7 bronze coins");
   assert.equal(G.stackLine(coin, 1), "a bronze coin");
   assert.equal(F.goodsLine(coin, () => 0), "2 bronze coins");
   assert.equal(F.goodsLine(coin, () => 0.999), "12 bronze coins");
   assert.equal(F.goodsLine({name: "a storm lantern", stack: null}, () => 0.5), "a storm lantern");
 });
+
+test("goods name the thing, not its container (Ben, 2026-11-11)", () => {
+  const re = new RegExp(`^an? (${G.CONTAINER_WORDS.join("|")}) of `);
+  for ( const g of G.GOODS ) {
+    if ( !G.CONTAINER_KEEP.has(g.name) ) assert.ok(!re.test(g.name), `${g.name} still names its container`);
+    if ( g.container ) assert.ok(g.former && g.former.endsWith(` of ${g.name}`), g.name);
+  }
+  const names = G.GOODS.map(g => g.name);
+  assert.equal(new Set(names).size, names.length, "no two goods share a name after the split");
+  assert.equal(G.GOODS.find(g => g.name === "a can of pepper spray")?.container, null);
+  const claret = G.GOODS.find(g => g.name === "claret");
+  assert.equal(claret.container, "a bottle");
+  assert.equal(claret.tags.container, "a bottle");
+});
+
