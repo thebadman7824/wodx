@@ -26,6 +26,7 @@ import * as AU from "./auto.js";
 import * as CD from "./conductor.js";
 import * as CR from "./conductor-rules.js";
 import * as ST from "./start.js";
+import * as AM from "./ambush-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -615,13 +616,46 @@ export async function attack({ attacker: a, target: t, weaponId, noAim = false }
     if (!r || r.id !== "attack") return null;
     const fd = r.data;
     const w = fd.weapon === "auto" ? { id: "auto" } : weapons.find(x => x.id === fd.weapon);
-    try { const res = await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); openFight(attackerTok, targetTok); return res; }
+    try {
+        if (!(await ambushFirst({ attacker, attackerTok, target, targetTok, fd }))) { openFight(attackerTok, targetTok); return null; }
+        const res = await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); openFight(attackerTok, targetTok); return res;
+    }
     catch (e) { console.error(e); ui.notifications.error(`WoDX Combat: ${e.message}`); return null; }
 }
 
 /* ------------------------------------------------------------------ */
 /*  Attack resolution                                                  */
 /* ------------------------------------------------------------------ */
+
+/**
+ * 3.11.0 (B836): an attacker lying in wait (sneaking, Obfuscated or hidden) who strikes someone not already fighting
+ * rolls the ambush first (ambush-rules.js). A win takes away the defence (and adds the extra successes in V20); a tie
+ * strikes first with a defence; a loss means no blow, and the fight starts on initiative. Returns false when the
+ * attack does not go ahead.
+ */
+async function ambushFirst({ attacker, attackerTok, target, targetTok, fd }) {
+    if (!attacker || !target || !attackerTok || !targetTok) return true;
+    const aDoc = attackerTok.document ?? attackerTok, tDoc = targetTok.document ?? targetTok;
+    const fighting = d => (game.combats?.contents ?? []).some(c => c.started && c.combatants.some(x => x.tokenId === d.id));
+    const st = attacker.statuses ?? new Set();
+    const s = { hidden: !!aDoc.hidden, sneaking: st.has?.("wodx-sneaking") || !!aDoc.flags?.["wodx-npc"]?.sneaking, obfuscated: st.has?.("wodx-obfuscated"),
+        attackerFighting: fighting(aDoc), targetFighting: fighting(tDoc) };
+    if (!AM.isAmbush(s)) return true;
+    const book = darkAgesNow() ? "v20da" : "v20";
+    const ar = await rollPool(attr(attacker, "dexterity") + ability(attacker, "stealth"), AM.DIFFICULTY);
+    const tr = await rollPool(attr(target, "perception") + ability(target, "alertness"), AM.DIFFICULTY);
+    const out = AM.ambushOutcome(ar.botch ? 0 : ar.successes, tr.botch ? 0 : tr.successes, book);
+    if (!out.defend) fd.defense = "none";
+    if (out.bonusDice) fd.extraDice = (Number(fd.extraDice) || 0) + out.bonusDice;
+    const content = `<div class="vtc-card"><h3>Ambush: ${esc(aDoc.name)} on ${esc(tDoc.name)}</h3>
+      <div>Dexterity + Stealth: <b>${ar.successes}</b>${diceHtml(ar.faces, ar.difficulty)}</div>
+      <div>Perception + Alertness: <b>${tr.successes}</b>${diceHtml(tr.faces, tr.difficulty)}</div>
+      <div class="vtc-note">${esc(out.why.charAt(0).toUpperCase() + out.why.slice(1))}.</div></div>`;
+    const md = { speaker: ChatMessage.getSpeaker({ actor: attacker }), content, rolls: [ar.roll, tr.roll].filter(Boolean), flags: { [MOD]: { ambush: { result: out.result, book } } } };
+    if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL;
+    await ChatMessage.create(md);
+    return out.attack;
+}
 
 /** An attack made outside a fight starts one (3.9.0); never in the way of the attack itself. */
 function openFight(attackerTok, targetTok) {
@@ -1346,7 +1380,7 @@ Hooks.once("init", () => {
     ST.registerStartSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.10.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.11.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1690,7 +1724,10 @@ export async function quickAttack({ attacker: a = null, target: t = null } = {})
             extraDice: cm.attackerDice, extraDiff: cm.attackerDiff, extraDmg: 0, defense: "auto", defIndex: "auto", defDice: 0,
             defDiff: L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0, defCel: discipline(target, "Celerity") > 0,
             celDice: setting("celerityDice"), fortBlood: "auto", soakBonus: 0, atkKind: "auto", profile: "auto" };
-        try { results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: { id: "auto" }, fd })); openFight(attackerTok, targetTok); }
+        try {
+            if (await ambushFirst({ attacker, attackerTok, target, targetTok, fd })) results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: { id: "auto" }, fd }));
+            openFight(attackerTok, targetTok);
+        }
         catch (e) { console.error(e); ui.notifications.error(`WoDX Combat: ${attacker.name}: ${e.message}`); }
     }
     return results;

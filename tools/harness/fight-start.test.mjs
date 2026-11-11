@@ -92,7 +92,7 @@ test("the starter is wired in: attacks, settings, API, socket, and the NPC trigg
   assert.match(main, /fight: ST\.fightApi/);
   const st = readFileSync(new URL("../../modules/wodx-combat/scripts/start.js", import.meta.url), "utf8");
   assert.match(st, /fightApi = \{ start, afterAttack, accept, undo, rules: S \}/, "a card can be accepted or taken back through the api");
-  assert.equal((main.match(/openFight\(attackerTok, targetTok\);/g) ?? []).length, 2);
+  assert.equal((main.match(/openFight\(attackerTok, targetTok\);/g) ?? []).length, 3, "both attacks, and the ambush that is spotted");
   assert.match(main, /p\?\.action !== "startFight"/, "the damage socket ignores fight requests");
   const rt = readFileSync(new URL("../../modules/wodx-npc/scripts/routines.mjs", import.meta.url), "utf8");
   assert.match(rt, /Hooks\.on\("updateToken", onTokenMoved\)/);
