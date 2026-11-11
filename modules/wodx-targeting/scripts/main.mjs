@@ -1,5 +1,5 @@
 /**
- * WoDX Targeting 0.1.0: picks a likely target for a power or an attack.
+ * WoDX Targeting (the version is in module.json): picks a likely target for a power or an attack.
  *
  * When an action window opens and the user has not targeted anyone by hand, WoDX reads the power's tag (an intent
  * and a range band, data/tags.json) and ranks the tokens on the scene (target-rules.mjs):
