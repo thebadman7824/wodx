@@ -1,5 +1,5 @@
 import {MODULE_ID, fetchJSON, isActiveGM, rule, setting, setSetting, log, esc} from "./util.mjs";
-import {mergeProfiles, resolveEra, LINES} from "./era-resolve.mjs";
+import {mergeProfiles, resolveEra, interludeSpans, LINES} from "./era-resolve.mjs";
 import {getEngine, describeTime} from "./calendar.mjs";
 import {writeChronicleRules} from "./journals.mjs";
 import * as approvals from "./approvals.mjs";
@@ -99,7 +99,11 @@ export async function refreshRulesJournal() {
   if ( !isActiveGM() ) return;
   const a = activeEra();
   const now = describeTime(game.time.worldTime, setting("latitude"));
-  await writeChronicleRules({...a, dateLabel: `${now.dateLabel}, ${now.timeLabel}`});
+  let gaps = [];
+  try {
+    gaps = interludeSpans(state.profiles, {region: setting("region"), rules: {timeOfJudgment: rule("timeOfJudgment"), futureBranch: rule("futureBranch")}});
+  } catch (e) { gaps = []; }
+  await writeChronicleRules({...a, gaps, dateLabel: `${now.dateLabel}, ${now.timeLabel}`});
 }
 
 /** Called on every client when the activeEra setting changes. */

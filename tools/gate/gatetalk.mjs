@@ -14,7 +14,8 @@
  *   8. the window opens for a targeted NPC and a topic button answers in it; with nobody targeted it opens for the nearest
  *   9. Undo on the Storyteller's card takes back what was taught
  *  10. stock talk: a stranger with no sheet greets and answers work; passes on a rumour it heard; off means silence
- *  11. every other WoDX module still answers
+ *  11. more stock talk (0.14.0): a child's voice, a remembered visit, Goodbye, trade lines for Actions, a cry of alarm
+ *  12. every other WoDX module still answers
  * Result: Data/wodx-gate/gatetalk-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -164,6 +165,30 @@ export async function run() {
         && (!st || (/ferry runs at midnight/.test(r?.said ?? "") && heard.includes(rum.id))) && off.ok && !off.said,
         {greet: m.menu.greet, work: w.said, rumour: r?.said, heard: heard.length, off: off.said});
     });
+    await step("more stock talk: a voice, remembering, goodbye, trade lines and a cry", async () => {
+      const L = talk().lines;
+      const [kid] = await Actor.create([{name: "WoDX gate: Talk child", type: "Mortal", flags: {[MOD]: {behavior: {voice: "child"}}}}]);
+      actors.push(kid);
+      await scene.createEmbeddedDocuments("Token", [{name: "child", actorId: kid.id, x: G * 7, y: G * 5}]);
+      const kTok = scene.tokens.find(t => t.actorId === kid.id);
+      const kreq = {sceneId: scene.id, npcTokenId: kTok.id, meTokenId: meTok.id};
+      const stockBefore = game.settings.get(MOD, "stockTalk");
+      await game.settings.set(MOD, "stockTalk", true);
+      const kidLines = Object.values(L.VOICES.child.greet).flat();
+      const first = await talk().serve("menu", kreq, asUser);
+      const second = await talk().serve("menu", kreq, asUser);
+      const bye = await talk().serve("bye", kreq, asUser);
+      const trade = talk().stock("trade:open", {npc: kTok, pc: meTok});
+      const cry = await talk().bark(kTok, "cry:alarm", {force: true});
+      await game.settings.set(MOD, "stockTalk", stockBefore);
+      const soon = Object.values(L.REMEMBER.soon).flat();
+      const bye1 = Object.values(L.FAREWELL).flatMap(e => Object.values(e).flat());
+      ok("more stock talk: a voice, remembering, goodbye, trade lines and a cry", first.ok && kidLines.some(l => first.menu.greet.startsWith(l))
+        && soon.some(l => second.menu.greet.startsWith(l)) && bye.ok && bye1.includes(bye.said)
+        && Object.values(L.TRADE.open).flat().includes(trade) && Object.values(L.CRY_ALARM).flat().includes(cry)
+        && typeof game.actors.get(kid.id).flags?.[MOD]?.talked?.[actors[1].id] === "number",
+        {first: first.menu?.greet, second: second.menu?.greet, bye: bye.said, trade, cry});
+    });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-otherworlds", "wodx-storyteller"];
       const off = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
@@ -175,7 +200,7 @@ export async function run() {
       await game.settings.set(MOD, "sharedTalk", sharedBefore);
       if ( back && back.id !== scene?.id ) await back.view();
       if ( scene ) await scene.delete();
-      const msgs = game.messages.contents.filter(m => m.timestamp >= t0 && (m.flags?.[MOD]?.talk || m.flags?.[MOD]?.talkAsk || /WoDX gate: Talk/.test(m.content ?? "")));
+      const msgs = game.messages.contents.filter(m => m.timestamp >= t0 && (m.flags?.[MOD]?.talk || m.flags?.[MOD]?.talkAsk || m.flags?.[MOD]?.bark || /WoDX gate: Talk/.test(m.content ?? "")));
       if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));
       for ( const j of game.journal.filter(j => j.id === journal?.id || actors.some(a => j.flags?.["wodx-storyteller"]?.codex === a.id)) ) await j.delete();
       for ( const x of actors ) await game.actors.get(x.id)?.delete();

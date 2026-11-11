@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.15.0: the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
+ * WoDX Storyteller (the version is in module.json): the open world, the ledger, starting a chronicle on the world template (setup.mjs), and the
  * night's draw and the story aids (night.mjs).
  *
  * Players roam the world on their own, between sessions or side by side within one: they travel from place to place

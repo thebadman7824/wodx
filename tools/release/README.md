@@ -19,3 +19,11 @@ A copy made another way (copying from a clone, as the PC deploy scripts do) show
 Without `--commit` it uses the commit checked out in the repo and refuses when the working tree has changes.
 
 To read the stamp from a console: `await game.wodx.chronicle.release.check({force: true})`.
+
+## Bundling
+
+For a release copy (the folder that goes to the live server), `node tools/release/bundle.mjs <Data folder or deploy folder>` bundles and minifies each `wodx-` module's code into `scripts/main.bundle.js` (plus chunk files for code reached only through `import()`), and points that copy's `module.json` at it. In the repo nothing changes. Players' browsers then load 14 script files instead of about 250, and about a third less code. Install esbuild first with `cd tools/harness && npm install`.
+
+A file one package imports from another (for example `wodx-chronicle/scripts/calendar.mjs`) stays out of every bundle and is loaded from its own path, so the browser still holds one copy of it. Source files stay in the copy, so gates that import a single file still work.
+
+`--check` reports sizes and writes nothing. To undo, put each `module.json` back from the repo, or deploy the folder again. Bundle after `stamp.mjs`, since both rewrite files in the copy.

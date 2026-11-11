@@ -61,7 +61,7 @@ Other ways would be to run the future after a quiet Time of Judgment (Gehenna's 
 
 **D. After 2025.** Either end the era at 2030 and leave the rest to the Storyteller, or write five to ten house-rule events (mortal reaction, sect collapse into coteries, the corps' hunters) clearly marked as house rules. Recommended: end the era at 2030 for now and keep the open years as an interlude.
 
-**E. Europe in 2020.** A short house-rule note for Germany and the Rhineland, built on the article's one line about the Ventrue and cyberware, so Rothenstein has a future setting.
+**E. Europe in 2020.** A short house-rule note for Central Europe and Moravia, built on the article's one line about the Ventrue and cyberware, so Rothenstein has a future setting.
 
 ## Not used
 

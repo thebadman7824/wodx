@@ -25,6 +25,9 @@ import * as effects from "./effects.mjs";
 import * as church from "./church.mjs";
 import * as release from "./release.mjs";
 import * as when from "./when.mjs";
+import * as referee from "./referee.mjs";
+import * as refereeRules from "./referee-rules.mjs";
+import * as traits from "./traits.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -72,6 +75,7 @@ Hooks.once("init", () => {
   // Languages in chat
   languages.registerLanguageSettings();
   languages.registerLanguageHooks();
+  traits.registerTraitHooks();
   // Knowledge-gated handouts: @Know[Latin]{...} in journals
   know.registerKnow();
 
@@ -107,6 +111,7 @@ Hooks.once("init", () => {
     editable: [],
     onDown: () => { ClockApp.open(); return true; }
   });
+  referee.registerRefereeKey();
 
   log(`Chronicle initialised; world time 0 is 1 January ${EPOCH_YEAR}`);
 });
@@ -152,10 +157,13 @@ Hooks.once("ready", async () => {
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
     release: {check: release.check, current: release.current},
     when: {check: when.check, run: when.run, context: when.contextFor, checker: when.checker, parse: when.rules.parseWhen, parseThen: when.rules.parseThen, help: when.rules.helpText, rules: when.rules},
+    referee: {open: opts => referee.RefereeApp.open(opts), ask: referee.ask, roll: referee.rollFor, sheetOf: referee.sheetOf,
+      cases: refereeRules.CASES, profileOf: refereeRules.profileOf, rules: refereeRules},
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, rules: church.rules},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
     tours: {start: tours.startTour},
+    traits: traits.traitsApi,
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
@@ -172,6 +180,8 @@ Hooks.once("ready", async () => {
   }
   // Other WoDX modules wait for this: Foundry does not wait for an async ready hook to finish
   Hooks.callAll("wodxChronicleReady", api);
+  // The crossover referee sits in the Storyteller's hand when WoDX Storyteller is on
+  if ( game.user.isGM ) referee.addToHand();
 
   // Which WoDX build this server runs (GM only, so players' machines skip the extra reads)
   if ( game.user.isGM ) release.announce().catch(err => console.error("WoDX | Release stamp could not be read", err));

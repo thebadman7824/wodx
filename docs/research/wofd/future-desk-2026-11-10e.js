@@ -70,7 +70,7 @@ fall:"By 2098 the dead and the living talk every night, and the Labyrinth below 
 fall:"By 2098 the dead in the Net outnumber the living users, and the Void has a door that opens on every screen.",refs:"Original. Rules Desk g03, g14."},
 {line:"Wraith",id:"wr3",title:"The glass Tempest",pitch:"The 1997 Maelstrom never ended under the glassed lands. It grows slowly, year by year, and the Shadowlands shrink before it.",beats:[
 ["2029","Storms of the dead roll out of the Mideast glass into Europe's Shadowlands."],
-["2044","The Dark Kingdom of Iron's heirs fortify the Shadowlands of the Rhineland and Rothenstein."],
+["2044","The Dark Kingdom of Iron's heirs fortify the Shadowlands of Moravia and Rothenstein."],
 ["2066","Whole Necropoli are swallowed. Ghosts flee into the living world, possessing bodies to escape."],
 ["2090","The storm reaches every continent. Oblivion is on the move."]],
 fall:"By 2098 the Shadowlands are an island in a storm, and every wraith knows the next Maelstrom will be the last.",refs:"Original. The 1997 Maelstrom of the branch canon (Conflict Desk join). Ends of Empire for later retelling."},
@@ -103,7 +103,7 @@ fall:"By 2098 the hunt is a licensed trade with unions and quotas, and the hunte
 {line:"Hunter",id:"h2",title:"Leopold's crusade",pitch:"The Society of Leopold turns the Vatican's 2025 admission into a holy war. Chromed crusaders and Zealot imbued burn the supernatural out of Europe, then look further.",beats:[
 ["2028","The Society recruits openly in every parish. Its paramilitaries carry blessed rounds and thermographic optics."],
 ["2039","Zealot imbued join the crusade. The Merciful walk out after the burning of a changeling freehold in Lyon, which turns out to have held mortal children."],
-["2058","The crusade reaches the Rhineland. Rothenstein's old families, who hid Kindred for centuries, are tried as collaborators."],
+["2058","The crusade reaches Moravia. Rothenstein's old families, who hid Kindred for centuries, are tried as collaborators."],
 ["2081","With few monsters left in Europe, the crusade's courts start calling ordinary dissenters heretics."]],
 fall:"By 2098 the crusade rules a belt of cities from Rome to Hamburg, and its own inquisitors whisper that its leaders no longer cast reflections.",refs:"Original. Builds on h2 and the Rome Elysium strike (summer 2025)."},
 {line:"Hunter",id:"h3",title:"The quiet watch",pitch:"Some hunters choose to stand between the living and the rest instead of killing. Merciful and Visionary imbued, with the Arcanum, try to make the uncovered world livable.",beats:[

@@ -22,15 +22,42 @@ def init(seed, asset_list):
     """Set the seed and read the asset list (every asset path in the packs, one a line). Returns the generator."""
     global R, ASSETS
     R = random.Random(seed)
-    ASSETS = [l.strip() for l in open(asset_list, encoding="utf-8-sig") if "/textures/" in l]
+    ASSETS = list(dict.fromkeys(l.strip() for f in str(asset_list).split(",") if f for l in open(f, encoding="utf-8-sig") if "/textures/" in l))
+    USED.clear()
     return R
 
 def asset(name, kind="objects"):
     hits = [a for a in ASSETS if a.endswith("/" + name) and f"/textures/{kind}/" in a]
+    if len(hits) > 1 and len({h.split("/")[0] for h in hits}) > 1:   # the same file in two packs: Forgotten Adventures first
+        fa = [h for h in hits if h.split("/")[0] in PACKS]
+        hits = fa[:1] if len(fa) == 1 else hits
     if len(hits) != 1: raise SystemExit(f"asset {name!r}: {len(hits)} matches")
+    USED.add(hits[0].split("/")[0])
     return "res://packs/" + hits[0]
 
+
+def pack_info(pid):
+    """(name, version, author) of a pack: Forgotten Adventures' from PACKS, the rest from the PC's pack table (the
+    newest copy where Ben has several)."""
+    if pid in PACKS: return PACKS[pid] + ("Forgotten Adventures",)
+    try:
+        rows = [l.rstrip("\n").split("\t") for l in open(PACK_TABLE, encoding="utf-8-sig")][1:]
+    except OSError: rows = []
+    def ver(v):
+        try: return tuple(int(x) for x in re.findall(r"\d+", v))
+        except ValueError: return ()
+    mine = sorted((r for r in rows if r and r[0] == pid), key=lambda r: ver(r[2] if len(r) > 2 else ""))
+    if not mine: return (pid, "1", "")
+    r = mine[-1] + ["", "", ""]
+    return (r[1], r[2] or "1", r[3])
+
+SIZES = {}                    # cells of assets whose names carry no size (eratypes.py fills it)
+USED = set()                  # pack ids the map refers to, for its asset manifest
+PACK_TABLE = "/mnt/project-files/dd-pack-ids.tsv"   # id, name, version, author, file (read off each pack on the PC)
+
 def cells_of(name):
+    if name in SIZES: return SIZES[name]
+    if name.rsplit("/", 1)[-1] in SIZES: return SIZES[name.rsplit("/", 1)[-1]]      # a name given with its folder
     m = re.search(r"_(\d+)x(\d+)(?:_\w+)?\.(?:webp|png)$", name)
     return (int(m.group(1)), int(m.group(2))) if m else (1, 1)
 
@@ -53,14 +80,14 @@ PORTALS = {"door": ("Door_Wood_Ashen_A1_1x1.webp", 1), "double": ("DoubleDoor_Wo
 LEAFLESS = {"doorway", "arch"}
 
 # What "beside:<tag>" and "hearth" look for among the items already placed in the room.
-BESIDE = {"bed": "Bed", "table": "Table", "anvil": "Anvil", "altar": "Altar", "bar": "Bar_", "desk": "Desk"}
+BESIDE = {"bed": "Bed", "table": "Table", "anvil": "Anvil", "altar": "Altar", "bar": "Bar_", "desk": "Desk", "couch": "Couch", "stove": "Stove", "counter": "Cabinet"}
 HEARTH = re.compile(r"Oven|Cooking_Pit|Brazier")
 
 # ------------------------------------------------------------------ rooms and their furnishing
 class Room:
     """A room in map cells. openings: (kind, x, y, along) in map cells; furnish: [(asset, rule, count[, scale])].
     Rules: wall[:sides], corner[:sides], end[:sides] (touches those walls, never turned; endt: always turned),
-    window, centre,
+    window, centre, at:x:y[:1] (that spot, from the room's corner, turned if :1; left empty if it will not fit),
     hearth (by an oven, cooking pit or brazier), beside:<tag> (see BESIDE)."""
     def __init__(self, name, x, y, w, h, floor, openings, furnish=()):
         self.name, self.x, self.y, self.w, self.h, self.floor = name, x, y, w, h, floor
@@ -97,10 +124,11 @@ class Room:
                     rx0, ry0 = max(x0 - .5, x), max(y0 - .5, y); rx1, ry1 = min(x1 + .5, x + w), min(y1 + .5, y + h)
                     if rx1 > rx0 and ry1 > ry0: self.blocked.append((rx0, ry0, rx1 - rx0, ry1 - ry0, "walkway"))
 
-    def fits(self, r):
+    def fits(self, r, open_floor=True):
         x, y, w, h = r
         if x < self.ix - 1e-6 or y < self.iy - 1e-6 or x + w > self.ix + self.iw + 1e-6 or y + h > self.iy + self.ih + 1e-6: return False
-        for bx, by, bw, bh, *_ in self.blocked + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]:
+        blocked = self.blocked if open_floor else [b for b in self.blocked if b[4] == "door clear zone"]   # fixed spots keep only the doorways clear
+        for bx, by, bw, bh, *_ in blocked + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]:
             if x < bx + bw - 1e-6 and bx < x + w - 1e-6 and y < by + bh - 1e-6 and by < y + h - 1e-6: return False
         return True
 
@@ -148,7 +176,7 @@ class Room:
         if kind == "window" and self.windows:
             s += 8 * (walls >= 1) - min(math.hypot(cx - wx, cy - wy) for wx, wy, _ in self.windows)
         if kind in ("hearth", "beside"):
-            ref = [i for i in self.items if (HEARTH.search(i["asset"]) if kind == "hearth" else BESIDE[arg] in i["asset"])]
+            ref = [i for i in self.items if (HEARTH.search(i["asset"]) if kind == "hearth" else BESIDE[arg].lower() in i["asset"].lower())]
             if ref:
                 d = min(rdist(cx, cy, i["x"], i["y"], i["w"], i["h"]) for i in ref)
                 s += 10 - 4 * d + 2 * (walls >= 1)
@@ -169,6 +197,19 @@ class Room:
         for entry in self.furnish_list:
             name, rule, count = entry[:3]; sc = entry[3] if len(entry) > 3 else 1.0
             fw, fh = (round(v * sc, 3) for v in cells_of(name))
+            if rule.startswith("at:"):                         # a fixed spot: aisles of shelves, rows of seats
+                _, ax, ay, *turn = rule.split(":")
+                rot = int(turn[0]) if turn else 0
+                for shrink in (1, .8, .65):                    # as given, else a little smaller about its middle
+                    w, h = ((fh, fw) if rot else (fw, fh))
+                    w, h = w * shrink, h * shrink
+                    x = self.x + float(ax) + (1 - shrink) * w / shrink / 2
+                    y = self.y + float(ay) + (1 - shrink) * h / shrink / 2
+                    x = min(max(x, self.ix), self.ix + self.iw - w); y = min(max(y, self.iy), self.iy + self.ih - h)
+                    if w <= self.iw and h <= self.ih and self.fits((x, y, w, h), open_floor=False):
+                        self.items.append({"asset": name, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(sc * shrink, 3)})
+                        break
+                continue                                       # a spot that will not take it is left empty
             for _ in range(count):
                 c = self.candidates(fw, fh, rule)
                 if not c: self.last_fail = name; return False
@@ -199,7 +240,7 @@ def obj(name, cx, cy, rot=0.0, scale=1.0, layer=100, shadow=True, kind="objects"
     return {"position": v2(*at(cx, cy)), "rotation": rot, "scale": v2(scale, scale), "mirror": False,
             "texture": asset(name, kind), "layer": layer, "shadow": shadow, "node_id": NID()}
 
-def wall_with_portals(points, texture, openings, loop):
+def wall_with_portals(points, texture, openings, loop, kinds=None):
     """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t."""
     nid = NID()
     pts = points + ([points[0]] if loop else [])
@@ -211,7 +252,7 @@ def wall_with_portals(points, texture, openings, loop):
             t = ((ox - ax) * (bx - ax) + (oy - ay) * (by - ay)) / (L * L)
             px_, py_ = ax + t * (bx - ax), ay + t * (by - ay)
             if 0 < t < 1 and math.hypot(px_ - ox, py_ - oy) < .01:
-                tex, width = PORTALS[kind]
+                tex, width = PORTALS[(kinds or {}).get(kind, kind)]
                 d = ((bx - ax) / L, (by - ay) / L)
                 portals.append({"position": v2(*at(ox, oy)), "rotation": math.atan2(d[1], d[0]), "scale": v2(1, 1),
                                 "direction": v2(*d), "texture": asset(tex, "portals"), "radius": CELL * width / 2,
@@ -253,7 +294,7 @@ def level(cols, rows, walls, patterns, objects, paths, terrain, splat, ambient="
             "water": {}, "materials": {}, "paths": paths, "objects": objects, "lights": []}
 
 def write_map(fname, cols, rows, seed, lvl):
-    manifest = [{"name": n, "id": i, "version": v, "author": "Forgotten Adventures"} for i, (n, v) in PACKS.items()]
+    manifest = [{"name": n, "id": i, "version": v, "author": a} for i in list(PACKS) + sorted(USED - set(PACKS)) for n, v, a in [pack_info(i)]]
     # editor state copied from a saved Dungeondraft map, so the editor finds every key it expects
     sample = json.load(open(SAMPLE))["header"]
     editor = dict(sample["editor_state"], current_level=0, camera_position=v2(P(cols / 2), P(rows / 2)), camera_zoom=1, trace_image=None)

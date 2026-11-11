@@ -13,6 +13,10 @@ list yet), so a Victorian street is drawn with medieval houses on a Victorian pl
 import json, math, os
 import geom as G
 import ddtown as T
+import buildings as B
+import eratypes as E
+import cddatypes as CD
+import firstgroup as FG
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ERAS = os.path.join(HERE, "..", "..", "modules", "wodx-chronicle", "data", "eras.json")
@@ -102,6 +106,12 @@ def clear(t, keep=("chapel",), why="cleared"):
 
 def drop(t, keys):
     if not keys: return
+    # Remembered for the Shadowlands: a building pulled down by a later age can stand there again as a relic
+    if not hasattr(t, "gone"): t.gone = []
+    for b in t.blds:
+        if b.key in keys:
+            t.gone.append({"key": b.key, "label": b.label, "type": b.type, "outline": list(b.outline),
+                           "year": getattr(t, "layer_year", t.year), "why": getattr(t, "layer_name", "")})
     t.blds = [b for b in t.blds if b.key not in keys]
     t.households = [h for h in t.households if h["building"] not in keys]
     t.gardens = [g for g in t.gardens if g.get("of") not in keys]
@@ -436,6 +446,249 @@ def layer_docklands(t):
             b.label = "Offices (old warehouse)"; b.era_area = "offices"
 
 
+# ------------------------------------------------------------------ each era's own buildings (the building-designs doc)
+# At the start of each era some of the town's houses are rebuilt in that era's types, as real towns were: plot by plot,
+# a house now and then taking in its neighbour's plot. The shares are a house rule, rough rates of renewal.
+REBUILDS = [(1450, "renaissance", .30), (1601, "age-of-reason", .30), (1837, "victorian", .25), (1919, "mid-century", .12),
+            (1990, "modern", .08), (2010, "future-darkness", .15)]
+KEEP = {"chapel", "town-hall", "tenement", "mill", "panel-block", "dept-store", "culture-house", "hypermarket", "capsule-tower", "vertical-farm", "school"}
+KEEP |= set(FG.TYPES) | set(CD.CDDA_TYPES)                  # public buildings stay up once built
+
+
+def types_for(year, upto, role):
+    """Era types of a role first built by `upto` and still being built at `year`."""
+    return [k for k, v in E.ERA_TYPES.items() if v["role"] == role and v["built"][0] <= upto and v["built"][1] >= year]
+
+
+def replace(t, olds, tk, label=None, trade=None, extra=2):
+    """Pulls down the buildings `olds` (the first is the one whose front line the new building keeps) and puts up a
+    type tk in their place, its front on the same line. Puts them back and returns None if it will not fit."""
+    b = olds[0]
+    tdef = B.TYPES[tk]
+    lw, lh = tdef["size"]
+    n = b.normal
+    F = b.world(b.lw / 2, b.lh)                               # the middle of the old front
+    cx, cy = F[0] - n[0] * lh / 2, F[1] - n[1] * lh / 2
+    th = b.theta
+    import organic as O
+    cs = O.box_corners(cx, cy, th, lw, lh)
+    gone = {o.key for o in olds}
+    keep_h = [h for h in t.households if h["building"] in gone]
+    saved = (list(t.blds), list(t.households), list(t.gardens), list(t.plots))
+    # whatever else the new footprint would stand on comes down too (a plot taken in), but never a kept building
+    for o in t.blds:
+        if o.key in gone: continue
+        if any(G.separation(cs, hb) < .3 for hb in o.hulls):
+            if o.type in KEEP or o.type in ("smithy", "bakehouse", "guardhouse") or o is getattr(t, "mill", None) or len(gone) >= len(olds) + extra: return None
+            gone.add(o.key); keep_h += [h for h in t.households if h["building"] == o.key]
+    drop(t, gone); regrid(t)
+    spot = (cx, cy, th, cs, tdef) if t.free([cs], .3, None) else None
+    nb = t.put(tk, label or tdef["label"], spot) if spot else None
+    if not nb:
+        t.blds, t.households, t.gardens, t.plots = saved
+        regrid(t)
+        return None
+    nb.built_era = tdef.get("era")
+    nb.wealth = getattr(b, "wealth", "middling")
+    for h in keep_h[:1]:                                      # the old household moves in; a block gets its flats
+        t.households.append(dict(h, id=f"{nb.key}-household", building=nb.key, label=f"{nb.label} household"))
+    for i in range(min(tdef.get("flats", 1), 60) - len(keep_h[:1])):
+        household(t, nb, trade or t.R.choice(["clerk", "shopkeeper", "teacher", "factory hand", "nurse", "driver", "pensioner"]))
+        t.households[-1]["id"] = f"{nb.key}-household-{i + 2}"
+    return nb
+
+
+def in_quarter(t, b):
+    """Houses of the Jewish quarter stand together in one street or two, as in Mikulov, Třebíč or Boskovice, off the
+    market. About half of towns have one (the royal towns expelled their Jews in 1454)."""
+    if not hasattr(t, "quarter"):
+        r = max(math.dist((t.xc, t.yc), q) for q in t.outline) if t.outline else 20
+        spots = [o.centre for o in t.blds if t.in_town(o.centre) and .45 * r < math.dist(o.centre, (t.xc, t.yc)) < .9 * r]
+        t.quarter = t.R.choice(spots) if spots and t.R.random() < .5 else None
+    return t.quarter is not None and math.dist(b.centre, t.quarter) < 12
+
+
+def rebuild(t, y0, era, share):
+    """One era's renewal of the town's houses and shops."""
+    R = t.R
+    upto = min(t.year, next((y for y, e, _ in REBUILDS if y > y0), 2099) - 1)
+    olds = [b for b in t.blds if b.type in sum((E.REPLACES[r] for r in E.REPLACES), ()) + tuple(E.ERA_TYPES)
+            and b.type not in KEEP and (t.in_town(b.centre) or era in ("mid-century", "modern", "future-darkness"))]
+    R.shuffle(olds)
+    n = 0
+    for b in olds[:int(len(olds) * share * 1.6)]:
+        if n >= len(olds) * share: break
+        if b not in t.blds: continue
+        role = next((r for r, ks in E.REPLACES.items() if b.type in ks), None) or B.TYPES[b.type].get("role", "home")
+        if role in ("block", "civic", "industry", "farm"): continue
+        cands = types_for(y0, upto, role) or types_for(y0, upto, "home")
+        if "ghetto-house" in cands and not in_quarter(t, b): cands.remove("ghetto-house")
+        if not cands: continue
+        if replace(t, [b], R.choice(cands)): n += 1
+    return n
+
+
+def place_blocks(t, tk, n, where, fallback=True):
+    """Big types: on the main streets near the market ("core"), along the roads out of town ("edge").
+    Whatever will not fit where it is meant to go is tried in the other place."""
+    made = _place_blocks(t, tk, n, where)
+    if made < n and fallback: made += _place_blocks(t, tk, n - made, "edge" if where == "core" else "core")
+    if made < n and fallback and B.TYPES[tk]["role"] in ("block", "industry", "civic"): made += estate(t, tk, n - made)
+    return made
+
+
+def estate(t, tk, n):
+    """A housing estate (sídliště): blocks set square to each other on open ground just outside the old town, with
+    lawns between them, as at Brno-Lesná or Ostrava-Poruba. Each block needs nothing but free ground."""
+    import organic as O
+    tdef = B.TYPES[tk]
+    lw, lh = tdef["size"]
+    made, step = 0, 3
+    spots = [(i, j) for j in range(4, t.rows - 4, step) for i in range(4, t.cols - 4, step) if not t.in_town((i, j))]
+    spots.sort(key=lambda q: math.dist(q, (t.xc, t.yc)))
+    th0 = t.R.choice((0.0, math.pi / 2))
+    for (cx, cy) in spots:
+        if made >= n: break
+        for th in (th0, th0 + math.pi / 2):
+            cs = O.box_corners(cx, cy, th, lw, lh)
+            if not t.free([cs], 3.0 if tdef.get("place") == "home" else 1.5, None): continue
+            nb = t.put(tk, tdef["label"], (cx, cy, th, cs, tdef))
+            if not nb: continue
+            made += 1
+            nb.built_era = tdef.get("era")
+            for i in range(min(tdef.get("flats", 1), 60)):
+                household(t, nb, t.R.choice(["clerk", "factory hand", "nurse", "driver", "teacher", "pensioner", "student"]))
+                t.households[-1]["id"] = f"{nb.key}-household-{i + 1}"
+            break
+    return made
+
+
+def clearing(t, tk, n):
+    """A big type with no open ground left for it (the hospital): houses outside the old town are pulled down for it,
+    as hospitals were built, never a kept building, a street or more than 30 houses. Returns how many went up."""
+    import organic as O
+    tdef = B.TYPES[tk]
+    lw, lh = tdef["size"]
+    made = 0
+    spots = [(i, j) for j in range(4, t.rows - 4, 4) for i in range(4, t.cols - 4, 4) if not t.in_town((i, j))]
+    spots.sort(key=lambda q: math.dist(q, (t.xc, t.yc)))
+    for (cx, cy) in spots:
+        if made >= n: break
+        for th in (0.0, math.pi / 2):
+            cs = O.box_corners(cx, cy, th, lw, lh)
+            under = [o for o in t.blds if any(G.separation(cs, hb) < 1.5 for hb in o.hulls)]
+            if not under or len(under) > 30 or any(o.type in KEEP or o is getattr(t, "mill", None) for o in under): continue
+            saved = (list(t.blds), list(t.households), list(t.gardens), list(t.plots))
+            drop(t, {o.key for o in under}); regrid(t)
+            nb = t.put(tk, tdef["label"], (cx, cy, th, cs, tdef)) if t.free([cs], 1.5, None) else None
+            if not nb:
+                t.blds, t.households, t.gardens, t.plots = saved
+                regrid(t)
+                continue
+            nb.built_era = tdef.get("era")
+            household(t, nb, "nurse")
+            made += 1
+            break
+    return made
+
+
+def _place_blocks(t, tk, n, where):
+    R = t.R
+    made = 0
+    if where == "estate": return estate(t, tk, n)
+    if where == "core":
+        cands = sorted((b for b in t.blds if b.type not in KEEP and t.in_town(b.centre)), key=lambda b: math.dist(b.centre, (t.xc, t.yc)))
+        for b in cands[:60]:
+            if made >= n: break
+            if b in t.blds and replace(t, [b], tk, extra=6): made += 1
+        return made
+    lines = list(t.road_lines) + [w["line"] for w in t.era_ways if w["kind"] in ("ring-road", "boulevard")]
+    lw, lh = B.TYPES[tk]["size"]
+    for line in lines:
+        for a, b in zip(line, line[1:]):
+            L_ = math.dist(a, b)
+            if L_ < lw + 4: continue
+            u = ((b[0] - a[0]) / L_, (b[1] - a[1]) / L_)
+            for side in (1, -1):
+                inw = (-u[1] * side, u[0] * side)
+                A = (a[0] + inw[0] * 2.2, a[1] + inw[1] * 2.2)
+                tt = 2.0
+                while tt < min(L_, 160) - lw and made < n:
+                    q = (A[0] + u[0] * tt, A[1] + u[1] * tt)
+                    if t.in_town(q) or not (4 < q[0] < t.cols - 4 and 4 < q[1] < t.rows - 4): tt += 3; continue
+                    s_ = t.try_at(tk, A, u, inw, tt, 2.0, 2.5, None)
+                    if s_ and (nb := t.put(tk, B.TYPES[tk]["label"], s_)):
+                        made += 1
+                        for i in range(min(B.TYPES[tk].get("flats", 1), 60)):
+                            household(t, nb, R.choice(["clerk", "factory hand", "nurse", "driver", "teacher", "pensioner", "student"]))
+                            t.households[-1]["id"] = f"{nb.key}-household-{i + 1}"
+                        tt += lw + 4
+                    else: tt += 3
+    return made
+
+
+SCALE = {"village": 0, "town": 1, "city": 2, "metropolis": 5}
+
+
+def older_forms(t, y0, k):
+    """The first group's older forms (firstgroup.py): each goes up once, in the first era layer after its first
+    year, and stays. A synagogue only where the town has a Jewish quarter."""
+    upto = min(t.year, next((y for y, e, _ in REBUILDS if y > y0), 2099) - 1)
+    t.older = getattr(t, "older", set())
+    for tk, per, where in FG.PLACES:
+        if tk in t.older or FG.TYPES[tk]["built"][0] > upto: continue
+        t.older.add(tk)
+        if tk == "old-synagogue" and t.blds and not in_quarter(t, t.blds[0]): continue
+        n = int(per * k) + (t.R.random() < per * k % 1)
+        if n: place_blocks(t, tk, n, where)
+
+
+def layer_era(t, y0, era, share):
+    k = SCALE[t.size]
+    rebuild(t, y0, era, share)
+    y = t.year
+    if k: older_forms(t, y0, k)
+    if era == "renaissance" and k and not any(b.type == "town-hall" for b in t.blds): place_blocks(t, "town-hall", 1, "core")
+    if era == "age-of-reason" and y >= 1700 and k: place_blocks(t, "manufactory", k, "edge")
+    if era == "victorian":
+        if y >= 1840 and k: place_blocks(t, "mill", k, "edge")
+        if y >= 1860 and k: place_blocks(t, "tenement", 2 * k, "core")
+        if y >= 1870: place_blocks(t, "school", max(1, k), "edge")
+    if era == "mid-century":
+        if y >= 1930 and k: place_blocks(t, "dept-store", max(1, k // 2), "core")
+        if y >= 1950 and k: place_blocks(t, "culture-house", 1, "edge")
+        if y >= 1958: place_blocks(t, "panel-block", 2 + 3 * k, "estate", fallback=False)
+    if era == "modern" and y >= 1995 and k: place_blocks(t, "hypermarket", max(1, k // 2), "estate", fallback=False)
+    if era in ("mid-century", "modern", "future-darkness") and y >= 1960 and k: civic_set(t, k)
+    if era == "future-darkness":
+        if y >= 2030 and k: place_blocks(t, "capsule-tower", k, "core")
+        if y >= 2035 and k: place_blocks(t, "vertical-farm", k, "edge")
+
+
+# Present-day public buildings, from the layouts adapted from Cataclysm (cddatypes.py): (kind, how many per town scale, where)
+CIVIC = [("cdda-police-station", 1, "core"), ("cdda-bank", 1, "core"), ("cdda-library", 1, "core"), ("cdda-funeral-home", 1, "edge"),
+         ("cdda-bar", 1, "core"), ("cdda-music-club", .5, "core"), ("cdda-museum", .5, "core"), ("cdda-art-gallery", .3, "core"),
+         ("cdda-warehouse", 1, "edge"), ("cdda-sewer-station", .5, "edge"), ("cdda-hospital", .5, "estate")]
+
+
+def civic_set(t, k):
+    """Puts up the town's present-day public buildings once (the first era layer from 1960 that runs), each kind in one
+    of its Cataclysm variants. Kinds the town already has are left alone. No new churches: few were built in
+    Czechoslovakia after 1948, so the church layouts are there for a Storyteller to place by hand."""
+    if getattr(t, "civic_done", False): return
+    t.civic_done = True
+    have = {b.type.rstrip("-0123456789") for b in t.blds}
+    for kind, per, where in CIVIC:
+        n = int(per * k) + (t.R.random() < per * k % 1)
+        variants = [v for v in CD.CDDA_TYPES if v == kind or (v.startswith(kind + "-") and v[len(kind) + 1:].isdigit())]
+        if not n or not variants or kind in have: continue
+        tk = t.R.choice(variants)
+        made = place_blocks(t, tk, n, where, fallback=where != "estate")
+        if made < n and where == "estate": made += clearing(t, tk, n - made)
+        if made < n and tk == "cdda-hospital": place_blocks(t, "hospital-entrance", n - made, "edge")   # the wards on their own map
+        if made < n and where != "estate" and B.TYPES[tk]["role"] in ("shop", "inn"): estate(t, tk, n - made)
+
+
 FUNCS = {"brick": layer_brick, "quays": layer_quays, "courts": layer_courts, "wall-down": layer_wall_down, "cemetery": layer_cemetery,
          "railway": layer_railway, "park": layer_park, "boulevards": layer_boulevards, "embankment": layer_embankment,
          "suburbs": layer_suburbs, "blitz": layer_blitz, "docklands": layer_docklands}
@@ -444,8 +697,11 @@ FUNCS = {"brick": layer_brick, "quays": layer_quays, "courts": layer_courts, "wa
 def grow(t, year):
     """Applies every layer up to the year, in order. Records what was done in t.layers."""
     t.year, t.era_ways, t.era_areas, t.layers = year, [], [], []
-    for y, name in LAYERS:
+    t.gone, t.civic_done, t.older = [], False, set()
+    steps = sorted([(y, 1, name) for y, name in LAYERS] + [(y, 0, (y, e, sh)) for y, e, sh in REBUILDS], key=lambda s_: (s_[0], s_[1]))
+    for y, kind, what in steps:
         if year < y: break
-        FUNCS[name](t)
-        t.layers.append(name)
+        t.layer_year, t.layer_name = y, (what if kind else f"rebuild-{what[1]}")
+        if kind: FUNCS[what](t); t.layers.append(what)
+        else: layer_era(t, *what); t.layers.append(f"rebuild-{what[1]}")
     return t

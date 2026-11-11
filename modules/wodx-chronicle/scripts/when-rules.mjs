@@ -63,6 +63,8 @@ export const TESTS = {
   faction: "faction <name>: belongs to a WoDX NPC faction", standing: "standing <faction> >= welcome: how that faction regards the character", carries: "carries silver: holds an item whose name contains this",
   knows: "knows <page>: has a codex page whose name contains this", condition: "condition <id>: has a WoDX condition",
   attitude: "attitude >= welcome: how the NPC being dealt with regards the character (WoDX NPC)",
+  merit: "merit <name>: has this merit (WoDX trait table names and aliases)", flaw: "flaw <name>: has this flaw",
+  background: "background <name> [>= 2]: has this background, or at this rating", power: "power <name>: has a power whose name contains this",
   persuaded: "persuaded [by <name>]: won a social roll against that NPC lately (also charmed, intimidated, bribed, fooled); bare: by the NPC being dealt with"
 };
 
@@ -77,8 +79,19 @@ export const OUTCOMES = {
   event: "event [label]: pass a map event on to beats and the log",
   cue: "cue <id>: play a WoDX Atmosphere cue (dawn, dusk, notice, birds, cock)",
   ledger: "ledger <oath|debt|boon|consequence>: <text>: add a Ledger entry (WoDX Storyteller)",
-  standing: "standing <faction> -1 (or +1, or to welcome): how that faction regards the character (WoDX NPC)"
+  standing: "standing <faction> -1 (or +1, or to welcome): how that faction regards the character (WoDX NPC)",
+  fight: "fight [names or household]: start a fight with the people named here, or with those near who distrust the character (WoDX Combat)"
 };
+
+/** Who a "fight" outcome brings in. arg: names or households, comma-separated (blank: anyone near at Distrusted or
+ * worse). npcs: [{id, name, household, step, yards}] the NPCs on the scene; reach in yards. Returns ids, nearest first. */
+export function fightFoes(arg, npcs = [], {reach = 30} = {}) {
+  const want = list(arg);
+  const near = (npcs ?? []).filter(n => n && (!Number.isFinite(Number(n.yards)) || Number(n.yards) <= reach));
+  const hit = want.length ? near.filter(n => want.includes(low(n.name)) || (n.household && want.includes(low(n.household))))
+    : near.filter(n => Number(n.step) <= -1);
+  return hit.sort((a, b) => (Number(a.yards) || 0) - (Number(b.yards) || 0)).map(n => n.id);
+}
 
 const OPS = {"<=": (a, b) => a <= b, ">=": (a, b) => a >= b, "<": (a, b) => a < b, ">": (a, b) => a > b, "=": (a, b) => a === b, "==": (a, b) => a === b, "!=": (a, b) => a !== b};
 const low = v => String(v ?? "").trim().toLowerCase();
@@ -135,6 +148,17 @@ export function parseTest(line, {eras = null} = {}) {
   if ( word === "named" || word === "carries" || word === "knows" ) {
     const want = low(unquote(arg));
     return want ? ok({t: word, want}) : bad(`${word} what?`);
+  }
+  if ( word === "merit" || word === "flaw" || word === "background" ) {
+    const c = /^(.+?)\s*(<=|>=|<|>|==|=|!=)\s*(\d+)$/.exec(arg);
+    const name = low(unquote(c ? c[1] : arg));
+    if ( !name ) return bad(`which ${word}?`);
+    if ( c && word !== "background" ) return bad(`a ${word} has no rating to compare; write ${word} ${c[1]}`);
+    return ok({t: "feat", kind: word, want: name, op: c?.[2] ?? null, n: c ? Number(c[3]) : null});
+  }
+  if ( word === "power" ) {
+    const want = low(unquote(arg));
+    return want ? ok({t: "power", want}) : bad("which power?");
   }
   if ( word === "faction" ) return arg ? ok({t: "faction", ids: list(arg.replace(/["']/g, ""))}) : bad("which faction?");
   if ( word === "standing" ) {
@@ -215,7 +239,7 @@ export function parseWhen(text, opts = {}) {
 /** Does one test pass? Returns true, false, or null when the context lacks what it reads (counts as a fail). */
 export function testOne(t, ctx = {}) {
   const a = ctx.actor ?? null;
-  const needActor = ["pc", "kind", "named", "carries", "knows", "faction", "standing", "field", "state", "attitude", "sway"].includes(t.t) || t.trait;
+  const needActor = ["pc", "kind", "named", "carries", "knows", "faction", "standing", "field", "state", "attitude", "sway", "feat", "power"].includes(t.t) || t.trait;
   if ( needActor && !a ) return null;
   let r;
   switch ( t.t ) {
@@ -241,6 +265,13 @@ export function testOne(t, ctx = {}) {
     case "named": r = low(a.name).includes(t.want); break;
     case "carries": r = (a.items ?? []).some(n => low(n).includes(t.want)); break;
     case "knows": r = (a.codex ?? []).some(n => low(n).includes(t.want)); break;
+    case "feat": {
+      const key = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      const hit = (a.feats ?? []).find(f => f.kind === t.kind && (key(f.name) === key(t.want) || key(f.key) === key(t.want) || (f.aliases ?? []).some(x => key(x) === key(t.want))));
+      r = !!hit && (t.op === null || OPS[t.op](Number(hit.value) || 0, t.n));
+      break;
+    }
+    case "power": r = (a.powers ?? []).some(n => low(n).includes(t.want)); break;
     case "faction": r = (a.factions ?? []).some(f => t.ids.includes(low(f))); break;
     case "standing": {
       const st = a.standing ?? {};
@@ -335,6 +366,6 @@ export function helpText() {
     `When: ${["era", "year", "before", "from", "night", "day", "hour", "moon", "feast", "fast", "season", "branch"].join(", ")}.`,
     `Who: pc, npc, kind, named, faction, standing <faction> >= welcome, ${Object.keys(FIELDS).join(", ")}.`,
     `State: ${Object.keys(TRAITS).join(", ")} with <=, >=, <, >, = or != and a number (wounds also takes bruised to incapacitated); ${Object.keys(STATES).join(", ")}; condition <id>.`,
-    "Has: carries <item>, knows <codex page>."
+    "Has: carries <item>, knows <codex page>, merit <name>, flaw <name>, background <name> >= 2, power <name>."
   ];
 }

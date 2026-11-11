@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.10.0: the topic menu. A player targets someone the Storyteller plays (or nobody, for the nearest in reach), stands close, and presses Talk
+ * WoDX NPC 0.14.0: the topic menu. A player targets someone the Storyteller plays (or nobody, for the nearest in reach), stands close, and presses Talk
  * (the token tools, or Talk in WoDX Actions). A window lists what this person can be asked; the player picks a
  * topic and the person answers with a line the Storyteller wrote (talk-rules.mjs has the format and the rules).
  *
@@ -11,9 +11,15 @@
  *
  *   flags.wodx-npc.topics   [topics]  on a player character: what they have been taught to ask about
  *   setting wodx-npc.sharedTalk {key: text}  shared sheets: household:<name>, faction:<key>, scene:<id>, everyone
+ *   flags.wodx-npc.talked   {pcId: worldTime}  on an NPC: when each character last talked to them (0.12.0)
+ *
+ * 0.14.0 adds more stock talk: what a mortal notices about the character, voices for kinds of people, small talk on
+ * feasts, fasts and weather, rumours about the character, debts in the Ledger, remembering the last visit, farewells,
+ * remarks while about a routine, cries of alarm and pain, and trade and social-roll lines for WoDX Actions (stock()).
  */
 import * as TK from "./talk-rules.mjs";
 import * as STOCK from "../data/stock-talk.mjs";
+import * as MORE from "../data/stock-talk-more.mjs";
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -33,6 +39,8 @@ export function build(ctx) {
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
     game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "When nothing you wrote fits, NPCs greet, gossip, pass on rumours they have heard and talk of news, work and the way, in words suited to the era and to how they regard the character. Your lines always come first.",
       scope: "world", config: true, type: Boolean, default: true});
+    game.settings.register(MOD, "barks", {name: "NPCs remark and cry out", hint: "With stock talk on, NPCs say a word as they go about their routine, cry out when a place is raised or when they are hurt. Speech bubbles only, or in the chat as well.",
+      scope: "world", config: true, type: String, default: "bubble", choices: {bubble: "Speech bubbles", chat: "Speech bubbles and chat", off: "Off"}});
   }
 
   /* ---------------- Who is talking to whom ---------------- */
@@ -101,8 +109,8 @@ export function build(ctx) {
   /** Era, regard and a steady seed for one NPC and one character. */
   function stockCtx(r, kind) {
     const npc = baseActor(r.npcTok), pc = baseActor(r.me);
-    let year = null, branch = "";
-    try { const c = chron()?.when?.context?.({actor: pc}); year = c?.year ?? null; branch = c?.branch ?? ""; } catch (e) { /* no calendar */ }
+    let year = null, branch = "", wc = {};
+    try { wc = chron()?.when?.context?.({actor: pc}) ?? {}; year = wc.year ?? null; branch = wc.branch ?? ""; } catch (e) { /* no calendar */ }
     let att = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.step ?? null;
     // NPC 0.12.0: the attitude track, which seeds a first meeting from the household or faction
     try { const o = game.modules.get(MOD)?.api?.attitude?.of?.(npc, pc); if ( o?.met ) att = o.step; } catch (e) { /* keep the saved step */ }
@@ -116,7 +124,51 @@ export function build(ctx) {
     const n = asked.get(key) ?? 0;
     if ( kind !== "greet" ) asked.set(key, n + 1);
     const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
-    return {era: TK.eraBand(year, branch), regard: TK.regardOf(step), step, seed: TK.hashSeed(npc?.id, pc?.id, kind, day) + n};
+    return {era: TK.eraBand(year, branch), regard: TK.regardOf(step), step, seed: TK.hashSeed(npc?.id, pc?.id, kind, day) + n, year, wc, voice: voiceOf(npc, year)};
+  }
+  /** The kind of person they speak as (the Storyteller's choice, else their factions and household), with its lines. */
+  function voiceOf(npc, year) {
+    if ( !npc ) return null;
+    let names = [];
+    try { const st = game.modules.get(MOD)?.api?.factions?.state?.(); names = (st?.factions ?? []).filter(f => (f.members ?? []).includes(npc.id) || f.leader === npc.id).map(f => f.name ?? ""); } catch (e) { names = []; }
+    const p = savedProfile(npc);
+    const k = TK.voiceFor({voice: p.voice ?? null, factions: [...factionKeysOf(npc), ...names], household: p.household ?? null, year}, MORE.VOICES);
+    return k ? {key: k, only: ["child", "beggar", "drunk"].includes(k), ...MORE.VOICES[k]} : null;
+  }
+  const storyteller = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
+  /** Does an "Only when" test hold for this actor? */
+  const holds = (actor, text) => { try { return !!chron()?.when?.check?.(text, {actor}).ok; } catch (e) { return false; } };
+  /** What comes after the greeting: one aside (what they notice, a debt, talk of the character, small talk). */
+  function asidesOf(r, c) {
+    const npc = baseActor(r.npcTok), pc = baseActor(r.me), w = TK.warmthOf(c.regard), out = {};
+    if ( holds(npc, "kind mortal") ) {
+      const seen = TK.noticeFor(t => holds(pc, t));
+      if ( seen && (seen === "wounded" || seen === "frenzy" || c.seed % 3 === 0) ) out.notice = TK.pickLine(MORE.NOTICE[seen], c.seed);
+    }
+    try {
+      const L = storyteller()?.ledger?.state?.();
+      const owe = TK.ledgerBetween(L?.entries ?? [], npc.id, pc.id);
+      if ( owe ) out.ledger = TK.pickLine(MORE.LEDGER[owe], c.seed);
+    } catch (e) { /* no Ledger */ }
+    try {
+      const about = TK.rumourAbout(storyteller()?.rumours?.heardBy?.(npc.id) ?? [], pc.name);
+      if ( about ) out.about = TK.pickLine(MORE.ABOUT_YOU[c.regard], c.seed);
+    } catch (e) { /* no rumours */ }
+    if ( c.seed % 2 === 0 && c.regard !== "hate" ) {
+      let day = null;
+      try { const atm = game.modules.get("wodx-atmosphere"); day = atm?.active ? atm.api?.weather?.now?.() : null; } catch (e) { day = null; }
+      const keys = TK.smallTalkKeys(c.wc, day?.tags ?? [], day?.jdn ? TK.monthOfJdn(day.jdn) : null);
+      out.small = TK.smallTalk(MORE.SMALL, keys, {seed: c.seed, feast: c.wc.feast ?? ""});
+    }
+    const last = npc?.flags?.[MOD]?.talked?.[pc.id];
+    const rem = last === undefined ? null : TK.rememberOf(last, game.time?.worldTime ?? 0);
+    if ( rem ) out.remember = TK.pickLine(MORE.REMEMBER[rem]?.[w], c.seed);
+    return out;
+  }
+  /** Note when this character last talked to the NPC (the world actor, so every token of them remembers). */
+  async function noteTalked(r) {
+    const npc = baseActor(r.npcTok), pc = baseActor(r.me);
+    if ( npc && pc ) await npc.update({[`flags.${MOD}.talked.${pc.id}`]: game.time?.worldTime ?? 0});
   }
   /** A rumour this NPC has heard that this character has not had from anyone yet. */
   function rumourFor(r) {
@@ -131,17 +183,26 @@ export function build(ctx) {
     const kind = TK.LOCAL[topic] ? topic : "none";
     const c = stockCtx(r, kind);
     const rum = kind === "rumours" && c.regard !== "hate" ? rumourFor(r) : null;
-    const hit = TK.stockLine(kind, {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, rumour: rum?.text ?? null});
+    const hit = TK.stockLine(kind, {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, rumour: rum?.text ?? null, voice: c.voice});
     return hit ? {kind: "stock", say: hit.say, when: "", then: TK.parseThen(""), rumourId: hit.rumour ? rum.id : null} : null;
   }
 
-  function menuOf(r, user) {
+  /** The menu. greet: false leaves the greeting out (after a question, the window keeps the first one). */
+  function menuOf(r, user, {greet: withGreet = true} = {}) {
     const chain = chainOf(r.npcTok.actor, r.scene);
     const menu = TK.menuFor(chain, knownOf(baseActor(r.me)));
+    const out = {name: displayName(r.npcTok, user), me: r.me.name, ...menu};
+    if ( !withGreet ) return out;
     const g = TK.greetFor(chain, checker(r.me.actor, r.me, r.npcTok.actor));
     let greet = g?.say ?? "";
-    if ( !greet && stockOn(r.npcTok.actor) ) { const c = stockCtx(r, "greet"); greet = TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed})?.say ?? ""; }
-    return {name: displayName(r.npcTok, user), me: r.me.name, greet, ...menu};
+    if ( stockOn(r.npcTok.actor) ) {
+      const c = stockCtx(r, "greet"), a = asidesOf(r, c);
+      const plain = greet || TK.stockLine("greet", {stock: STOCK, era: c.era, regard: c.regard, seed: c.seed, voice: c.voice})?.say || "";
+      // the Storyteller's own greeting is never replaced, only followed
+      greet = TK.composeGreet({greet: plain, remember: greet ? "" : a.remember, notice: a.notice, ledger: a.ledger, about: a.about, small: a.small});
+    }
+    out.greet = greet;
+    return out;
   }
 
   /** The line to say: the Storyteller's own (a topic line, then their "none" line), and only then stock talk. */
@@ -157,8 +218,9 @@ export function build(ctx) {
     const user = game.users.get(userId) ?? game.user;
     const r = resolve(p, user);
     if ( r.why ) return {ok: false, why: r.why};
-    const menu = menuOf(r, user);
-    if ( kind === "menu" ) return {ok: true, menu};
+    if ( kind === "bye" ) return {ok: true, ...(await farewell(r, user))};
+    const menu = menuOf(r, user, {greet: kind === "menu"});
+    if ( kind === "menu" ) { await noteTalked(r).catch(() => null); return {ok: true, menu}; }
     const topic = TK.normTopic(p.topic);
     if ( !TK.canAsk(topic, menu) ) return {ok: false, why: "They do not follow you.", menu};
     const chain = chainOf(r.npcTok.actor, r.scene), check = checker(r.me.actor, r.me, r.npcTok.actor);
@@ -168,7 +230,26 @@ export function build(ctx) {
       return {ok: true, waiting: true, menu};
     }
     const said = await deliver(r, user, topic, lineFor(r, topic, chain, check));
-    return {ok: true, ...said, menu: menuOf(r, user)};
+    return {ok: true, ...said, menu: menuOf(r, user, {greet: false})};
+  }
+
+  /** Goodbye: the Storyteller's [farewell] line if one fits, else a stock one. Whispered like any answer. */
+  async function farewell(r, user) {
+    const chain = chainOf(r.npcTok.actor, r.scene);
+    let line = TK.answerFor("farewell", chain, checker(r.me.actor, r.me, r.npcTok.actor));
+    line = line && !line.none ? line.line : null;
+    if ( !line && stockOn(r.npcTok.actor) ) {
+      const c = stockCtx(r, "farewell");
+      const say = TK.moreLine("farewell", {more: MORE, era: c.era, regard: c.regard, seed: c.seed});
+      line = say ? {kind: "stock", say, when: "", then: TK.parseThen("")} : null;
+    }
+    await noteTalked(r).catch(() => null);
+    if ( !line ) return {said: ""};
+    const name = displayName(r.npcTok, user);
+    await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, whisper: [...new Set([user.id, ...gmIds()])],
+      content: `<div class="vta-card wodx-x wnpc wnpc-talk-card"><div class="vta-body"><p class="wodx-quiet">${esc(r.me.name)} takes their leave.</p><p>${esc(line.say)}</p></div></div>`,
+      flags: {[MOD]: {talk: {actor: baseActor(r.me)?.id, taught: [], topic: "farewell", stock: line.kind === "stock", rumour: null}}}});
+    return {said: line.say};
   }
 
   /** Say a line to the asking player (or aloud), and carry out what follows it. */
@@ -232,7 +313,7 @@ export function build(ctx) {
     const line = i >= 0 ? d.lines[i] ?? null : null;
     let said = {said: "", taught: [], waiting: false, quiet: i < 0};
     if ( line ) said = await deliver(r, user, d.topic, line);
-    const reply = {type: "talk.said", userId: user.id, said: {...said, topic: d.topic, quiet: i < 0}, menu: menuOf(r, user)};
+    const reply = {type: "talk.said", userId: user.id, said: {...said, topic: d.topic, quiet: i < 0}, menu: menuOf(r, user, {greet: false})};
     if ( user.id === game.user.id ) onSaid(reply); else game.socket.emit(SOCKET, reply);
   }
 
@@ -260,7 +341,7 @@ export function build(ctx) {
   function onSaid(m) {
     if ( m.userId !== game.user.id || !win ) return;
     win.state.waiting = false;
-    if ( m.menu ) Object.assign(win.state.menu, m.menu);
+    if ( m.menu ) Object.assign(win.state.menu, m.menu, {greet: win.state.menu.greet});
     win.state.log.push({topic: m.said.topic, say: m.said.quiet ? "" : m.said.said, quiet: m.said.quiet, taught: m.said.taught ?? []});
     paint();
   }
@@ -308,7 +389,7 @@ export function build(ctx) {
     if ( !r.ok ) { win.state.waiting = false; paint(); return ui.notifications.warn(r.why); }
     if ( r.waiting ) return; // the Storyteller's card answers through onSaid
     win.state.waiting = false;
-    if ( r.menu ) win.state.menu = r.menu;
+    if ( r.menu ) Object.assign(win.state.menu, r.menu, {greet: win.state.menu.greet});
     win.state.log.push({topic: TK.normTopic(topic), say: r.said, taught: r.taught ?? []});
     paint();
   }
@@ -341,7 +422,7 @@ export function build(ctx) {
     D.wait({window: {title: `Talk: ${r.menu.name}`, resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog", "wnpc-talk-window"], position: {width: 400, height: "auto"},
       content: `<div class="wnpc-talk-wrap">${talkHtml(state)}</div>`,
       render: (ev, dlg) => { mine.dlg = dlg; const root = dlg.element?.querySelector?.(".wnpc-talk-wrap"); if ( root ) bind(root); },
-      buttons: [{action: "close", label: "Goodbye", default: true}], rejectClose: false})
+      buttons: [{action: "close", label: "Goodbye", default: true, callback: () => { request("bye", req).catch(() => null); return "close"; }}], rejectClose: false})
       .finally(() => { if ( win === mine ) win = null; });
     return r.menu;
   }
@@ -377,6 +458,79 @@ export function build(ctx) {
     return clean;
   }
 
+  /* ---------------- Remarks and cries (0.14.0) ---------------- */
+
+  const lastBark = new Map(); // actor id -> real time of their last remark
+  let recent = []; // real times of the last remarks anywhere, so a jump in time does not flood the scene
+  const barkOK = actor => setting("barks") && setting("barks") !== "off" && !!setting("stockTalk") && actor && !actor.hasPlayerOwner && !savedProfile(actor).noBarks && !savedProfile(actor).noStock;
+  function eraNow() {
+    try { const c = chron()?.when?.context?.({}) ?? {}; return TK.eraBand(c.year, c.branch ?? ""); } catch (e) { return "modern"; }
+  }
+  /**
+   * Say a line out loud over a token: a speech bubble everyone on the scene sees (and a chat line too, when the
+   * world asks for it). Only the active Storyteller's client calls this.
+   */
+  async function say(tokDoc, text, {chat = setting("barks") === "chat"} = {}) {
+    if ( !tokDoc || !text ) return false;
+    const name = tokDoc.name ?? "Someone";
+    try {
+      const B = canvas?.hud?.bubbles;
+      if ( B?.broadcast ) await B.broadcast(tokDoc, text, {pan: false});
+      else if ( tokDoc.parent?.id === canvas?.scene?.id ) await B?.say?.(tokDoc.object ?? tokDoc, text, {pan: false});
+    } catch (e) { /* not on the viewed scene */ }
+    if ( chat ) await ChatMessage.create({speaker: {alias: name, scene: tokDoc.parent?.id, token: tokDoc.id}, content: `<p>${esc(text)}</p>`, flags: {[MOD]: {bark: true}}});
+    return true;
+  }
+  /** A remark or cry from one NPC, with the throttles. kind: bark:<activity>, cry:alarm, cry:hurt. */
+  async function bark(tokDoc, kind, {force = false, gap = 90000} = {}) {
+    const actor = baseActor(tokDoc);
+    if ( !tokDoc || tokDoc.hidden || !barkOK(actor) ) return null;
+    const now = Date.now();
+    recent = recent.filter(t => now - t < 10000);
+    if ( !force && ((now - (lastBark.get(actor.id) ?? 0)) < gap || recent.length >= 2) ) return null;
+    const text = TK.moreLine(kind, {more: MORE, era: eraNow(), seed: TK.hashSeed(actor.id, kind, now)});
+    if ( !text ) return null;
+    lastBark.set(actor.id, now); recent.push(now);
+    await say(tokDoc, text);
+    return text;
+  }
+  const tokensOf = actor => (game.scenes?.contents ?? []).flatMap(sc => sc.tokens.contents.filter(t => t.actorId === actor.id && !t.hidden));
+  /** A remark as a new part of their routine begins, now and then (one time in three), on the scene being shown. */
+  function onWhere(actor, changes) {
+    const act = changes?.flags?.[MOD]?.where?.activity;
+    if ( !act || !isActiveGM() || Math.random() > 1 / 3 ) return;
+    const tok = tokensOf(actor).find(t => t.parent?.id === canvas?.scene?.id || t.parent?.active);
+    if ( tok ) bark(tok, `bark:${act}`).catch(e => console.error(`${MOD} | barks`, e));
+  }
+  /** A place is raised: one or two of the mortals there cry out. */
+  function onAlarm(a) {
+    if ( !isActiveGM() ) return;
+    const sc = game.scenes.get(a?.scene?.id ?? a?.scene);
+    const who = (sc?.tokens?.contents ?? []).filter(t => !t.hidden && barkOK(baseActor(t)) && holds(baseActor(t), "kind mortal") && baseActor(t)?.flags?.[MOD]?.where?.activity !== "sleep");
+    for ( const t of who.sort(() => Math.random() - 0.5).slice(0, 2) ) bark(t, "cry:alarm", {gap: 20000}).catch(e => console.error(`${MOD} | barks`, e));
+  }
+  /** An NPC who is hurt cries out (mortals and ghouls; the rest keep their pain to themselves). */
+  function onHurt(actor) {
+    if ( !isActiveGM() || !actor || actor.hasPlayerOwner || !(holds(actor, "kind mortal") || holds(actor, "kind ghoul")) ) return;
+    const tok = actor.isToken ? actor.token : tokensOf(actor).find(t => t.parent?.id === canvas?.scene?.id);
+    if ( tok ) bark(tok, "cry:hurt", {gap: 20000}).catch(e => console.error(`${MOD} | barks`, e));
+  }
+
+  /**
+   * A stock line for other modules (WoDX Actions trades and social rolls), coloured by how the NPC regards the
+   * character. kind: trade:open, trade:tooDear, trade:fair, trade:haggleWin, trade:haggleLose, trade:refuse,
+   * trade:noMoney, trade:fence, trade:buy, social:<persuade|intimidate|bribe|charm|deceive|seduce>:<win|lose>,
+   * farewell, cry:alarm, cry:hurt, bark:<activity>. npc and pc: tokens or actors. Returns the line or null.
+   */
+  function stock(kind, {npc = null, pc = null} = {}) {
+    const n = npc?.document ?? npc, p = pc?.document ?? pc;
+    const nTok = n?.documentName === "Token" ? n : null, pTok = p?.documentName === "Token" ? p : null;
+    const r = {npcTok: nTok ?? {actor: n, actorId: n?.id}, me: pTok ?? {actor: p, actorId: p?.id}};
+    if ( !r.npcTok.actor || savedProfile(baseActor(r.npcTok)).noStock || !setting("stockTalk") ) return null;
+    const c = r.me.actor ? stockCtx(r, kind) : {era: eraNow(), regard: "neutral", seed: TK.hashSeed(r.npcTok.actor.id, kind, Date.now())};
+    return TK.moreLine(kind, {more: MORE, era: c.era, regard: c.regard, seed: c.seed});
+  }
+
   /* ---------------- Hooks ---------------- */
 
   function hooks() {
@@ -389,6 +543,9 @@ export function build(ctx) {
         game.socket.emit(SOCKET, {type: "talk.res", reqId: m.reqId, userId: m.userId, result});
       });
     });
+    Hooks.on("updateActor", (actor, changes) => { if ( changes?.flags?.[MOD]?.where ) onWhere(actor, changes); });
+    Hooks.on("wodxPlaceAlarm", a => { try { onAlarm(a); } catch (e) { console.error(`${MOD} | barks`, e); } });
+    Hooks.on("wodxDamageApplied", actor => { try { onHurt(actor); } catch (e) { console.error(`${MOD} | barks`, e); } });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
       const html = el?.[0] ?? el;
       if ( msg.flags?.[MOD]?.talk?.stock && game.user.isGM ) {
@@ -407,5 +564,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, rules: TK};
+  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, rules: TK, lines: MORE};
 }

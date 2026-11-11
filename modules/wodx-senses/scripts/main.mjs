@@ -1,5 +1,5 @@
 /**
- * WoDX Senses 0.3.0: what a character sees, hears, smells and feels, answered in chat.
+ * WoDX Senses (the version is in module.json): what a character sees, hears, smells and feels, answered in chat.
  *
  *   Asking     /look, /listen, /smell, /touch, or /sense for all four (a word after it puts lines about that first:
  *              "/look door"). The player toolbar button "What do I notice?" opens the same choice. A plain question in

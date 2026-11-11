@@ -40,6 +40,8 @@ const f = it => it?.flags?.[MOD] ?? {};
 export const qtyOf = it => Math.max(1, Math.floor(Number(f(it).qty) || 1));
 export const isContainer = it => !!it?.system?.iscontainer;
 export const parentOf = it => f(it).in || null;
+/** The Storyteller kept this item although it is out of its time (an heirloom, a relic, a traveller's kit). */
+export const isKept = it => !!f(it).keepOutOfEra;
 /** The concealment step an item needs: its own flag, the weapon's conceal letter, small goods a jacket, else null. */
 export function needOf(it, good = null) {
   const own = concealStep(f(it).conceal ?? it?.system?.conceal);
@@ -119,7 +121,7 @@ export function eraStatus(info, era, year = 0) {
   if ( eras.includes(era) || (ERA_LIKE[era] && eras.includes(ERA_LIKE[era])) ) return "ok";
   return info.order && info.order.indexOf(era) >= 0 && info.order.indexOf(eras[0]) > info.order.indexOf(era) ? "early" : "late";
 }
-export const ERA_NOTE = {early: "Not made yet in this year", late: "No longer in use in this year"};
+export const ERA_NOTE = {early: "Not made yet in this year", late: "No longer in use in this year", kept: "Out of its time, kept by the Storyteller"};
 
 /** Value tiers (as the goods list): a working wage of the time is the measure. */
 export const TIERS = ["Trifle", "Cheap", "Modest", "Costly", "Dear", "Treasure"];
@@ -200,7 +202,8 @@ export function possessions(items, {look = () => ({}), era = null, year = 0} = {
   const ids = new Set(list.map(i => i.id));
   const row = (it, depth) => {
     const L = look(it) ?? {};
-    const st = eraStatus(L.eraInfo ?? null, era, year);
+    const st0 = eraStatus(L.eraInfo ?? null, era, year);
+    const st = st0 && st0 !== "ok" && isKept(it) ? "kept" : st0;
     const tier = tierAt(L.value, year);
     const kids = depth < 6 ? list.filter(c => parentOf(c) === it.id).sort(byName).map(c => row(c, depth + 1)) : [];
     return {
@@ -214,7 +217,7 @@ export function possessions(items, {look = () => ({}), era = null, year = 0} = {
   const top = list.filter(i => !parentOf(i) || !ids.has(parentOf(i)));
   const groups = Object.keys(GROUPS).map(g => ({id: g, label: GROUPS[g], rows: top.filter(i => groupOf(i) === g).sort(byName).map(i => row(i, 0))}))
     .filter(g => g.rows.length);
-  return {groups, count: list.length, outOfEra: list.filter(i => { const s = eraStatus(look(i)?.eraInfo ?? null, era, year); return s && s !== "ok"; }).length};
+  return {groups, count: list.length, outOfEra: list.filter(i => { const s = eraStatus(look(i)?.eraInfo ?? null, era, year); return s && s !== "ok" && !isKept(i); }).length};
 }
 const byName = (a, b) => a.name.localeCompare(b.name);
 
