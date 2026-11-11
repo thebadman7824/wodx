@@ -81,7 +81,7 @@ export function build(ctx) {
             const mods = Object.keys(M.MODIFIERS).filter(k => fd[`m-${k}`]);
             const form = EF.read(fd);
             if (form.save && form.keywords.length) await EF.saveRote(actor, EF.E.roteFrom(form.save, { keywords: form.keywords, used, plan: form.plan, ctx: form.ctx, kind: fd.kind, feat: n(fd.feat) }));
-            const kw = form.keywords.length ? EF.plan(actor, form, 0, { used, feat: n(fd.feat) }) : null;
+            const kw = form.keywords.length ? EF.plan(actor, form, 0, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: kw ? kw.need : n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (plan.quintUsed) { if (plan.quintUsed > i.quint) { notify(`${actor.name} has ${i.quint} Quintessence.`); return null; } await updateActor(actor, { "system.quintessence.temporary": i.quint - plan.quintUsed }); }
@@ -96,10 +96,10 @@ export function build(ctx) {
             let body = rollBlock(`Arete ${plan.dice}`, r, [`${label}: ${(W[fd.kind] ?? M.KINDS[fd.kind].label).toLowerCase()} (${plan.base}${plan.net ? `, ${plan.net > 0 ? "+" : ""}${plan.net}` : ""})`, ...(plan.capped ? ["modifiers capped at ±3"] : []),
                 ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : [])]);
             body += `<div class="vta-big ${d.key === "botch" ? "bad" : d.key === "success" || d.key === "extraordinary" ? "good" : ""}">${r.successes} of ${plan.need}: ${esc(d.text)}.</div>`;
-            const fx = kw && r.successes && !r.botch ? EF.plan(actor, form, r.successes, { used, feat: n(fd.feat) }) : null;
+            const fx = kw && r.successes && !r.botch ? EF.plan(actor, form, r.successes, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             if (fx?.got?.ok) body += fx.html;
             else if ((d.key === "success" || d.key === "extraordinary" || d.key === "partial") && r.successes) {
-                body += fd.dmg ? `<div class="vta-res">Damage: ${M.damage(r.successes, { forces: used.some(x => x.sphere === "forces") })} levels (${M.damageType({ spheres: used.map(x => x.sphere) })}, unless charged with Prime or Pattern-breaking); the Effect is instant.</div>`
+                body += fd.dmg ? `<div class="vta-res">Damage: ${EF.E.eraRules(sg.age.key).levels(r.successes, { forces: used.some(x => x.sphere === "forces") })} levels (${M.damageType({ spheres: used.map(x => x.sphere) })}, unless charged with Prime or Pattern-breaking); the Effect is instant.</div>`
                     : `<div class="vta-res">Duration: ${M.duration(r.successes)}.</div>`;
             }
             if (px) body += `<div class="vta-note">+${px} ${sg.age.key === "crusade" ? "Scourge" : "Paradox"} (${after.paradox})${after.quintLost ? `; it cancels ${after.quintLost} Quintessence on the wheel` : ""}.${after.paradox > 5 ? " Past five: the Storyteller may roll a backlash." : ""}${M.overload(after.paradox) ? " Twenty or more: an intense Quiet, a crack in reality, or worse." : ""}</div>`;

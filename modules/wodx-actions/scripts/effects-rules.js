@@ -150,6 +150,18 @@ const clampDiff = d => Math.max(2, Math.min(9, d));
  * What one keyword does. got: from spend(). ctx: {spheres: [names used], primeCharged, fire, aggravated, slow, dark}.
  * Returns {key, label, kind, ...}: kind is damage | heal | timed | light | quint | condition | note.
  */
+/**
+ * The era's magic charts: how successes turn into damage, healing and Quintessence, and the countermagick difficulty.
+ * The Ascension uses Mage 20th (p. 504's 2/6/8/10 chart; Forces adds a success). The Sorcerers Crusade reads
+ * Revised-style charts: up to 2 levels a success, Forces adds a level (Mage Revised p. 209).
+ */
+export const ERA_RULES = {
+  ascension: {label: "Mage 20th", levels: (s, {forces = false} = {}) => M.damage(s, {forces}), counterDiff: 7, ref: "Mage 20th pp. 502-504"},
+  crusade: {label: "Sorcerers Crusade", levels: (s, {forces = false} = {}) => Math.min(20, 2 * Math.max(0, n(s)) + (forces && n(s) > 0 ? 1 : 0)),
+    counterDiff: 7, ref: "Mage Revised p. 209"}
+};
+export const eraRules = age => ERA_RULES[age] ?? ERA_RULES.ascension;
+
 export function outcome(key, got, ctx = {}) {
   const K = KEYWORDS[key];
   if ( !K || !got?.ok ) return null;
@@ -162,16 +174,16 @@ export function outcome(key, got, ctx = {}) {
   switch ( key ) {
     case "harm": {
       const type = M.damageType({spheres, primeCharged: !!ctx.primeCharged, fire: !!ctx.fire});
-      const levels = M.damage(str, {forces: spheres.includes("forces")});
+      const levels = eraRules(ctx.age).levels(str, {forces: spheres.includes("forces")});
       return {...base, kind: "damage", levels, type: type === "none" ? "lethal" : type, soak: !spheres.every(s => s === "mind"),
         text: `${levels} ${type} level${levels === 1 ? "" : "s"}`};
     }
     case "mend": {
-      const levels = M.damage(str);
+      const levels = eraRules(ctx.age).levels(str);
       return {...base, kind: "heal", levels, aggravated: !!ctx.aggravated, text: `${levels} health level${levels === 1 ? "" : "s"} healed${ctx.aggravated ? ", aggravated at a Quintessence point each" : ""}`};
     }
     case "charge": {
-      const points = M.damage(str);
+      const points = eraRules(ctx.age).levels(str);
       return {...base, kind: "quint", points: ctx.drain ? -points : points, text: `${points} Quintessence ${ctx.drain ? "drawn out" : "given"}`};
     }
     case "ward":
