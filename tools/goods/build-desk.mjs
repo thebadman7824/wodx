@@ -12,7 +12,7 @@ const out = {
   kinds: G.KINDS, eras: G.ERAS.map(id => ({id, name: eraName[id], years: G.ERA_YEARS[id]})),
   values: G.VALUES, sources: G.SOURCES, behaviours: G.BEHAVIOURS, conceal: G.CONCEAL,
   items: G.GOODS.map((g, i) => ({id: g.id, order: i, name: g.name, kind: g.kind, years: `${yr(g.from)} to ${yr(g.to)}`,
-    eras: g.eras, values: g.values, value: g.value, conceal: g.conceal, use: g.use, stacks: g.stacks, uses: g.uses,
+    eras: g.eras, values: g.values, value: g.value, conceal: g.conceal, use: g.use, stacks: g.stacks, stack: g.stack, uses: g.uses,
     source: g.source}))
 };
 writeFileSync(process.argv[2] ?? "items-desk.json", JSON.stringify(out));

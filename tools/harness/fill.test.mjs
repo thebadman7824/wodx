@@ -174,9 +174,28 @@ test("goods: values change over the centuries, and behaviour comes from the cate
   assert.deepEqual([bible.values.renaissance, bible.values.victorian, bible.values.modern], [4, 2, 1]);
   assert.equal(G.valueAt(bible, 1700), 2);
   assert.ok(bible.uses.includes("pray with") && bible.uses.includes("read"));
-  assert.equal(G.GOODS.find(g => g.name === "tallow candles").stacks, true);
+  assert.equal(G.GOODS.find(g => g.name === "a tallow candle").stacks, true);
   assert.equal(G.GOODS.find(g => g.name === "a storm lantern").use, "lit");
   assert.equal(G.GOODS.find(g => g.name === "an iron door key").kind, "keys");
-  assert.equal(G.GOODS.find(g => g.name === "a packet of cigarettes").kind, "drugs");
+  assert.equal(G.GOODS.find(g => g.name === "a cigarette").kind, "drugs");
   assert.equal(G.KINDS.coin, "Currency");
+});
+
+test("goods are single things that stack, never piles", async () => {
+  const pile = /^(a few|a handful|some|several|a pile|a heap|a stack of|a purse of|a bag of (mixed )?coins)\b/i;
+  for ( const g of G.GOODS ) {
+    assert.ok(!pile.test(g.name), `${g.name} is a pile`);
+    if ( g.stack ) assert.ok(g.stack.min >= 1 && g.stack.max >= g.stack.min, g.name);
+    if ( g.stack?.max > 1 ) assert.ok(g.stack.plural, g.name);
+  }
+  for ( const [name] of Object.entries(G.STACK_SIZES) ) assert.ok(G.GOODS.some(g => g.name === name), `stack size for missing ${name}`);
+  const coin = G.GOODS.find(g => g.name === "a bronze coin");
+  assert.equal(coin.stacks, true);
+  assert.deepEqual(coin.stack, {plural: "bronze coins", min: 2, max: 12});
+  assert.equal(G.GOODS.find(g => g.name === "a sack of grain").stack.plural, "sacks of grain");
+  assert.equal(G.stackLine(coin, 7), "7 bronze coins");
+  assert.equal(G.stackLine(coin, 1), "a bronze coin");
+  assert.equal(F.goodsLine(coin, () => 0), "2 bronze coins");
+  assert.equal(F.goodsLine(coin, () => 0.999), "12 bronze coins");
+  assert.equal(F.goodsLine({name: "a storm lantern", stack: null}, () => 0.5), "a storm lantern");
 });

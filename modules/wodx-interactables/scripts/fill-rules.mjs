@@ -115,6 +115,16 @@ export function goodsCandidates(goods, weights, {era = null, place = "home", con
   return out;
 }
 
+/**
+ * A good is one thing that stacks (a coin, a candle), never a pile: draw how many from its usual stack size and
+ * write "7 bronze coins", or the name alone for one.
+ */
+export function goodsLine(g, rng = Math.random) {
+  const lo = Math.max(1, g?.stack?.min ?? 1), hi = Math.max(lo, g?.stack?.max ?? 1);
+  const n = lo + Math.floor(rng() * (hi - lo + 1));
+  return n > 1 && g.stack?.plural ? `${n} ${g.stack.plural}` : g.name;
+}
+
 /** What the fill can draw: Gear by era, everyday goods, or both in one draw. */
 export const WHAT = {both: {label: "Gear and everyday goods"}, goods: {label: "Everyday goods only"}, gear: {label: "Gear by era only"}};
 
@@ -128,7 +138,7 @@ export function drawMixed({items = [], goods = [], weights = null, what = "both"
     ...(what === "gear" ? [] : goodsCandidates(goods, weights, {era, place, container}))
   ];
   return pick(pool, howMany(count), rng).map(p => p.cat === "goods"
-    ? {name: p.item.name, line: p.item.name, goods: true}
+    ? {name: p.item.name, line: goodsLine(p.item, rng), goods: true}
     : {name: p.item.name, line: p.item.uuid ?? p.item.name, goods: false});
 }
 
