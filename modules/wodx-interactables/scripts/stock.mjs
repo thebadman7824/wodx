@@ -18,8 +18,11 @@ export async function drawStock(tile, {now = game.time.worldTime} = {}) {
   const W = chron()?.when;
   const passes = when => (W?.check ? W.check(when, {scene: tile.parent}).ok : false);
   const fresh = R.rollStock(lines, {passes});
+  // 0.23.2: another module (WoDX Storyteller's markets) may thin or fill the draw in place, by the market's supply
+  Hooks.callAll("wodxStockFilter", tile, fresh);
   const items = R.restockLines(f.items, f.stockDrawn ?? [], fresh);
   await tile.update({[`flags.${MOD}.items`]: items.join("\n"), [`flags.${MOD}.stockDrawn`]: fresh, [`flags.${MOD}.stockedAt`]: now});
+  Hooks.callAll("wodxStockDrawn", tile, fresh);
   if ( problems.length ) console.warn(`${MOD} | stock list on ${tile.parent?.name}: ${problems.join(" ")}`);
   return items;
 }

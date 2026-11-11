@@ -23,6 +23,7 @@ import * as Letters from "./letters.mjs";
 import * as Up from "./upkeep.mjs";
 import * as UpRules from "./upkeep-rules.mjs";
 import * as Money from "./money.mjs";
+import * as Markets from "./markets.mjs";
 import * as Tasks from "./tasks.mjs";
 import * as TaskRules from "./tasks-rules.mjs";
 import * as Havens from "./havens.mjs";
@@ -63,6 +64,7 @@ Hooks.once("init", () => {
   Up.registerUpkeepHooks();
   Money.registerMoneySettings();
   Money.registerMoneyHooks();
+  Markets.registerMarketSettings();
   Tasks.registerTaskSettings();
   Tasks.registerTaskHooks();
   Body.registerBodyHooks();
@@ -91,6 +93,7 @@ Hooks.once("ready", () => {
   C.onChange(() => A.TrackerClass().refresh());
   game.socket.on(C.SOCKET, onSocket);
   C.primeQueue();
+  Markets.setupMarkets().catch(e => console.error("WoDX | markets", e));
   const api = {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
@@ -112,7 +115,8 @@ Hooks.once("ready", () => {
       grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules,
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
-        cashIn: Money.cashIn, payDay: Money.payDay, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())}},
+        cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
+      markets: Markets.api()},
     hardship: {open: Hard.hardshipDialog, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},

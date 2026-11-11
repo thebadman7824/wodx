@@ -11,6 +11,7 @@
  *   the coin of the day, and whose way of living drops within the month. Runs on the active Storyteller's client.
  */
 import * as R from "./money-rules.mjs";
+import * as MK from "./market-rules.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -211,33 +212,54 @@ export async function undoLast(a) {
 }
 
 let goodsCache = null;
-async function goodsList() {
+/** Load the goods list once (WoDX Library); later calls are instant, so stock draws can price lines at once. */
+export async function goodsList() {
   if ( goodsCache ) return goodsCache;
   try { goodsCache = (await import("../../wodx-library/data/goods.mjs")).GOODS ?? []; } catch (e) { goodsCache = []; }
   return goodsCache;
 }
+export const goodsLoaded = () => goodsCache ?? [];
 
-/** A good by name, or by "7 bronze coins" (a count and its plural). Returns {good, count}. */
-export async function findGood(name) {
-  const s = String(name ?? "").trim();
+/** A good by name, "7 bronze coins" (a count and its plural) or "bronze coins (7)" (a stock line). Sync once loaded. */
+export function findGoodSync(name) {
+  const list = goodsLoaded();
+  let s = String(name ?? "").trim();
+  const st = /^(.*?)\s*\((\d+)\)\s*$/.exec(s);
+  let count = 1;
+  if ( st ) { s = st[1].trim(); count = Number(st[2]); }
   const m = /^(\d+)\s+(.+)$/.exec(s);
-  const list = await goodsList();
-  if ( m ) { const g = list.find(x => x.stack?.plural === m[2] || x.name === m[2]); if ( g ) return {good: g, count: Number(m[1])}; }
-  const g = list.find(x => x.name === s);
-  return g ? {good: g, count: 1} : null;
+  if ( m ) { const g = list.find(x => x.stack?.plural === m[2] || x.name === m[2]); if ( g ) return {good: g, count: Number(m[1]) * count}; }
+  const g = list.find(x => x.name === s || x.stack?.plural === s || x.name.replace(/^(a|an|some) /, "") === s);
+  return g ? {good: g, count} : null;
+}
+export async function findGood(name) { await goodsList(); return findGoodSync(name); }
+
+const marketState = () => { try { return game.settings.get(MOD, "markets") ?? MK.blankState(); } catch (e) { return MK.blankState(); } };
+/** The market a price is asked in: given, a trader's shop tile, or the scene in view. */
+export function marketFor({market = null, tile = null, scene = null} = {}) {
+  const st = marketState();
+  if ( market ) return typeof market === "string" ? MK.marketById(st, market) : market;
+  if ( tile ) { const m = MK.marketOfTile(st, typeof tile === "string" ? tile : tile.uuid); if ( m ) return m; }
+  const sid = scene?.id ?? scene ?? globalThis.canvas?.scene?.id ?? null;
+  return sid ? MK.marketOfScene(st, sid) : null;
 }
 
-/** The price of a good now, here, in the smallest unit (and as words). good: a goods entry or its name. */
-export async function priceNow(good, {place = {}, count = 1} = {}) {
-  const hit = typeof good === "string" ? await findGood(good) : {good, count: 1};
+/** The price of a good now, here, in the smallest unit (sync once goods are loaded). */
+export function priceSync(good, {place = {}, count = 1, market = null, tile = null, scene = null} = {}) {
+  const hit = typeof good === "string" ? findGoodSync(good) : {good, count: 1};
   if ( !hit?.good ) return null;
   const e = eraId(), g = hit.good;
   const tier = g.values?.[e] ?? g.value ?? 0;
-  const n = Math.max(1, Math.round(num(count) || hit.count || 1));
-  const each = R.priceOf({...g, value: tier}, yearNow(), region(), {place});
+  const n = Math.max(1, Math.round(num(count) > 1 ? num(count) : (hit.count || 1)));
+  const mk = marketFor({market, tile, scene});
+  const idx = mk ? MK.indexOf(mk, g.kind) : 1;
+  const each = Math.max(1, Math.round(R.priceOf({...g, value: tier}, yearNow(), region(), {place}) * idx));
   const m = moneyNow();
-  return {each, total: each * n, count: n, text: R.formatMoney(each * n, m), sell: R.sellPrice(each * n), fence: R.sellPrice(each * n, {fence: true}), money: m.id};
+  return {each, total: each * n, count: n, index: idx, market: mk?.id ?? null, text: R.formatMoney(each * n, m), sell: R.sellPrice(each * n), fence: R.sellPrice(each * n, {fence: true}), money: m.id};
 }
+
+/** The price of a good now, here (loads the goods list first). good: a goods entry or its name. */
+export async function priceNow(good, opts = {}) { await goodsList(); return priceSync(good, opts); }
 
 /** Count coins found in play into the purse: an item named like "7 silver pennies" becomes carried money. */
 export async function cashIn(a, item) {
