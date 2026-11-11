@@ -191,6 +191,14 @@ export async function run() {
       ok("19 map, night, Ledger and prompts", hit.includes("cant-cross-running-water") && pulls.includes("hunted") && led.includes(`trait-${k.id}-dark-secret`) && pr.includes("flashbacks")
         && (!IA || typeof IA.labelsOnPath === "function") && (!ST || typeof ST.ledger?.syncTraits === "function"), {hit, pulls, led, pr});
     });
+
+    await step("20 backgrounds made real", async () => {
+      const k = await mk("Trait World", "Vampire", [feat("Retainers", "background", 2), feat("Mentor", "background", 3), feat("Resources", "background", 2)]);
+      const plan = T().worldPlan(k);
+      const by = key => plan.find(p => p.key === key);
+      ok("20 backgrounds made real", by("retainers")?.count === 2 && by("retainers")?.kind === "ghoul" && by("mentor")?.count === 1 && !by("resources") && typeof T().makeReal === "function",
+        {plan: plan.map(p => `${p.key}:${p.count ?? p.size}:${p.kind ?? "place"}`)});
+    });
   } catch (e) {
     R.errors.push(e.message);
   } finally {

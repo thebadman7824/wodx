@@ -1562,3 +1562,7 @@ Ben asked for a bug check of everything done so far. The harness passed 1,286 of
 - Actions: feeding prompt.
 - docs/HOOKS.md: wodxSocial and wodxFightStarted now heard. Tests: trait-moments.test.mjs (6). Gate: gatetraits step 19.
 
+
+## 2026-11-11: trait effects, step 8 (Chronicle 0.23.0, B888)
+- data BG_WORLD; trait-rules worldPlan, describe names it for backgrounds. New scripts/bg-world.mjs (madeOf, plan, makeReal: People through WoDX Creation, attitude through WoDX NPC, regions owned through WoDX Storyteller). Trait effects window: Make them real button.
+- Tests: trait-world.test.mjs (4). Gate: gatetraits step 20.

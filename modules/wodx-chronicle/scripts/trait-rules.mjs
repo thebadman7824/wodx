@@ -10,9 +10,9 @@
  * kind that cannot hold it is matched but marked wrongKind: it does nothing until fixed. Mixed kinds count as both
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
-import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS} from "../data/trait-effects.mjs";
+import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD} from "../data/trait-effects.mjs";
 
-export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS};
+export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD};
 
 /** A name with case, accents, quotes, spaces and punctuation taken out: "Can’t Cross Running Water" -> "cantcrossrunningwater". */
 export const normName = s => String(s ?? "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
@@ -273,6 +273,28 @@ export function promptsOn(view, on, idx = index()) {
     .map(m => ({key: m.key, name: m.entry.name, text: `${PROMPTS[m.key].text} (${m.entry.book} p. ${m.entry.page})`}));
 }
 
+/* ---- Step 8 (Chronicle 0.23.0): backgrounds as things in the world ---- */
+
+/**
+ * What a character's backgrounds call for in the world: [{id, key, name, rating, people|place, count, role, to, kind,
+ * word, have, more}]. made: {itemId: [ids already made]}, so a background that grew asks only for the new ones.
+ */
+export function worldPlan(view, made = {}, idx = index()) {
+  const out = [];
+  for ( const m of traitsOf(view, idx).matched ) {
+    const W = BG_WORLD[m.key];
+    if ( !W || m.kind !== "background" ) continue;
+    const rating = Math.max(0, Math.round(Number(m.value) || 0));
+    if ( !rating ) continue;
+    const have = (made[m.id] ?? []).length;
+    if ( W.place ) { out.push({id: m.id, key: m.key, name: m.entry.name, rating, place: true, word: W.word, have, more: have ? 0 : 1, size: 2 + 2 * rating}); continue; }
+    const count = W.count ?? Math.min(W.max ?? 5, rating);
+    const kind = W.sameKind ? (view.kind || "mortal") : (W.ghoulFor?.includes(view.kind) ? "ghoul" : "mortal");
+    out.push({id: m.id, key: m.key, name: m.entry.name, rating, people: true, count, role: W.role, to: W.to, kind, have, more: Math.max(0, count - have)});
+  }
+  return out;
+}
+
 /** Book names with no entry, for the coverage test: names = [{name, kind, book}]. Only books in BOOKS_DONE count. */
 export function missing(names = [], idx = index()) {
   return names.filter(n => BOOKS_DONE.includes(n.book) && !matchFeature({name: n.name, kind: n.kind}, idx));
@@ -296,7 +318,11 @@ export function problems(merits = MERITS_FLAWS, backgrounds = BACKGROUNDS) {
 /** One line for a matched trait, for the Trait effects window. */
 export function describe(m) {
   const e = m.entry;
-  if ( e.kind === "background" ) return `Background: ${e.hook}`;
+  if ( e.kind === "background" ) {
+    const W = BG_WORLD[e.key];
+    const world = W ? (W.place ? "; Make them real puts it on the map as a region the character owns" : `; Make them real makes ${W.count ? "one NPC" : "an NPC a dot"} (${W.role}) who starts out ${W.to >= 3 ? "devoted" : W.to === 2 ? "warm" : "friendly"}`) : "";
+    return `Background: ${BACKGROUND_HOOKS_TEXT[e.hook] ?? e.hook}${world}`;
+  }
   const pats = (e.patterns ?? []).map(p => PATTERNS[p]).filter(Boolean).join(", ");
   // every way WoDX carries the trait out: roll effects, senses, signs, first meetings, the Actions windows
   const k = e.key;

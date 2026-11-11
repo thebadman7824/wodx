@@ -84,5 +84,5 @@ test("the modules carry it out: Interactables holds the move, Storyteller draws 
   const tr = src("modules/wodx-chronicle/scripts/traits.mjs");
   assert.match(tr, /Hooks\.on\("wodxSocial"/);
   assert.match(tr, /Hooks\.on\("wodxFightStarted"/);
-  assert.equal(JSON.parse(src("modules/wodx-chronicle/module.json")).version, "0.22.0");
+  assert.match(JSON.parse(src("modules/wodx-chronicle/module.json")).version, /^0\.(2[2-9]|[3-9]\d)\./);
 });
