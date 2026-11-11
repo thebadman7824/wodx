@@ -275,3 +275,15 @@ export function itemOfRote(rote) {
   for ( const k of SPHERE_KEYS ) system[k] = n(rote.spheres?.[k]);
   return {name: rote.name, type: "Rote", system, flags: {"wodx-actions": {rote}}};
 }
+
+/**
+ * Countermagick on a card (Mage 20th p. 545): each success cancels one of the caster's. Reflected, any beyond the
+ * caster's turn the Effect back on its caster with that many successes. Returns {left, reflected}.
+ */
+export function countered(successes, counter, mode = "self") {
+  const s = Math.max(0, n(successes)), c = Math.max(0, n(counter));
+  return {left: Math.max(0, s - c), reflected: mode === "reflect" ? Math.max(0, c - s) : 0};
+}
+
+/** Is a target a mage who could counter (Arete 1 or more)? data: the actor's system data. */
+export const canCounter = system => n(system?.advantages?.arete?.permanent) > 0;

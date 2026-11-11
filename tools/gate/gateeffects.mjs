@@ -1,5 +1,5 @@
 /**
- * Mage effect keywords gate (WoDX Actions 3.24.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Mage effect keywords gate (WoDX Actions 3.25.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateeffects.mjs?${Date.now()}`)).run()
  * Makes a caster and a target actor, applies keyword results straight through the apply step, undoes them,
  * posts one keyword card for the Storyteller's client to apply, then deletes what it made.
@@ -13,6 +13,7 @@
  *   8. Move puts a token where asked, and Undo puts it back (needs a scene; a token is made and deleted)
  *   9. an area works on a token inside it once, on one standing outside only when it walks in, and Undo removes it
  *  10. a rote is saved as a Rote item on the caster, replaced by name, and forgotten
+ *  12. a held card waits; countermagick cuts its successes, then a reflected counter turns it on the caster
  *  11. a Rote item opens the WoDX Cast window filled in (a Mage 20th era), or is left to the system's dialog (Dark Ages)
  * Result: Data/wodx-gate/gateeffects-result.json.
  */
@@ -43,7 +44,7 @@ export async function run() {
 
     await step("1 api, setting, on here", async () => {
       const mode = game.settings.get(MOD, "effectsApply");
-      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.24.0", {mode});
+      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.25.0", {mode});
     });
 
     await step("2 Harm and Undo", async () => {
@@ -170,6 +171,22 @@ export async function run() {
       for ( const app of foundry.applications.instances?.values?.() ?? [] ) if ( app.element?.textContent?.includes?.("Cast an Effect") ) await app.close?.();
       win?.closest?.("dialog")?.close?.();
       ok("11 a Rote item opens the Cast window", dark ? took === false : (took === true && ticked), {dark, took, ticked, before: before.size});
+    });
+    await step("12 countermagick on a card", async () => {
+      const recipe = {successes: 4, form: {keywords: ["charge"], plan: {targets: 0, duration: 0, area: false}, ctx: {}}, used: [{sphere: "prime", level: 3}], witnessed: false, feat: 0, targets: [target.uuid], actor: caster.uuid};
+      const q0 = Number(target.system?.quintessence?.temporary) || 0;
+      const m = await ChatMessage.create({content: "<div class='vta-res wodx-effects'><ul><li>WoDX gate countered card</li></ul></div>", whisper: [game.user.id],
+        flags: {[MOD]: {kind: "effects", caster: caster.name, recipe, hold: true, items: [item("charge", E.spend(4, 2, {}))]}}});
+      msgs.push(m);
+      await new Promise(r => setTimeout(r, 500));
+      const waited = !m.flags?.[MOD]?.done;
+      const a = await fx().applyCounter(m, 2, {mode: "dispel", by: "WoDX gate"});
+      const cut = a?.left === 2 && !!m.flags?.[MOD]?.done && m.flags[MOD].items.length === 1;
+      const b = await fx().applyCounter(m, 5, {mode: "reflect", by: "WoDX gate"});
+      const back = b?.left === 0 && b?.reflected === 3 && (m.flags?.[MOD]?.items ?? []).some(i => /reflected/.test(i.name));
+      await fx().undo(m.flags?.[MOD]?.undo ?? []);
+      await target.update({"system.quintessence.temporary": q0});
+      ok("12 countermagick on a card", waited && cut && back, {waited, a, b});
     });
     if ( toks.length ) await scene.deleteEmbeddedDocuments("Token", toks.map(t => t.id)).catch(() => {});
   } catch (e) { R.errors.push(e.message); }

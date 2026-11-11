@@ -1374,3 +1374,8 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - effects-rules.js: roteOfItem, itemOfRote. effects.js: rotesOf reads Rote items, saveRote makes or updates one, forgetRote, fill, takesRote. m20.js: cast(actor, {rote}) fills the window; castRote for the system. main.js: api m20CastRote.
 - Fork: the Rote branch in action-helpers.js asks game.wodxActions.m20CastRote first. Sheets: a cast button on each rote in the Rotes list (Mage 20th sheet).
 - Tests: effects.test.mjs (10). Gate gateeffects.mjs 11 steps.
+
+## 2026-11-11: Countermagick on keyword cards (Actions 3.25.0)
+- Item 5 of "Magic that applies itself". B766.
+- effects-rules.js: countered, canCounter. effects.js: the card's recipe and hold, applyCounter (undo, cut, work out again, reflect), the Countermagick and Apply now buttons, the list redrawn from the flags. m20.js: counter(actor, {card}) posts a counter result the active Storyteller applies to the card.
+- Tests: effects.test.mjs (11). Gate gateeffects.mjs 12 steps.
