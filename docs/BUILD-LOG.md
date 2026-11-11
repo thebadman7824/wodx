@@ -1409,3 +1409,5 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - Otherworlds 0.9.1: the module.json reason says Chronicle must be installed even when off.
 - Not changed here: the Moravian coins wait on PR 506 (goods and money), which holds them.
 
+## 2026-11-11: fuller furniture for the later eras (B659)
+Ben saw the plans page (https://claude.ai/artifact/MK8nkv4MRBxncvF6A2QoKo) and asked for the bare later-era rooms to be furnished. 31 more Tyger and Mog pieces were measured on the PC and added: whole kitchens and living rooms for the Baťa house, functionalist villa, panel-block flats and entrepreneur's house; shop aisles, freezers and checkouts for the department store, supermarket and petrol station; rows of seats in the house of culture; capsules with desks, sinks and lockers; growing rows in the vertical farm. A new furniture rule, at:x:y, puts a piece on a fixed spot so aisles and seat rows come out in lines; a spot that will not take it stays empty.

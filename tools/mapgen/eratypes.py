@@ -63,6 +63,52 @@ C.SIZES.update({name: (max(.25, round(w / PX * 4) / 4), max(.25, round(h / PX * 
     "sink 1.png": (120, 93),
     "small terminal.png": (64, 41),
     "table circular with chairs.png": (994, 1000),
+    "BedTwin02.png": (192, 336),
+    "BedQueen01.png": (288, 368),
+    "Chair02.png": (160, 160),
+    "ChairA01.png": (98, 104),
+    "Couch02.png": (384, 160),
+    "TableEndA01.png": (114, 114),
+    "DeskS01.png": (268, 140),
+    "Hutch01.png": (268, 89),
+    "TableCoffeeB01.png": (216, 114),
+    "KitchenSinkDouble.png": (143, 96),
+    "ApplianceMicrowave.png": (111, 96),
+    "ApplianceStoveGas.png": (160, 128),
+    "Cabinet05.png": (256, 256),
+    "Cabinet15.png": (768, 256),
+    "CabinetCorner01.png": (256, 256),
+    "BathShower.png": (176, 176),
+    "BathSink02.png": (96, 80),
+    "BathToilet2.png": (96, 144),
+    "Urinal01.png": (95, 67),
+    "ApplianceDrier.png": (127, 150),
+    "ShoppingCart01.png": (224, 128),
+    "StoreRefrigerator02.png": (267, 152),
+    "StoreDisplay01.png": (268, 153),
+    "StoreDisplay02.png": (267, 153),
+    "StoreFreezer01.png": (268, 165),
+    "StoreMagazine01.png": (268, 95),
+    "StoreLotto01.png": (108, 81),
+    "Register02.png": (64, 64),
+    "CardReader01.png": (48, 64),
+    "ElevatorShaft01.png": (608, 608),
+    "PillarT02.png": (64, 64),
+    "Mog Seating/chair.png": (154, 129),
+    "Mog Seating/bench.png": (63, 468),
+    "Mog Seating/Colorable/Chair 2.png": (140, 96),
+    "Mog Misc/Colorable/table.png": (246, 491),
+    "Mog Misc/Colorable/sink2.png": (127, 70),
+    "Mog Misc/Colorable/Bed hammock.png": (135, 514),
+    "Mog Storage/Colorable/locker red.png": (256, 90),
+    "Mog Storage/Colorable/Pallette.png": (326, 326),
+    "Mog Storage/Container locked above.png": (139, 70),
+    "Mog Storage/sleep chamber closed.png": (256, 483),
+    "Mog Consoles/Colorable/console small.png": (128, 128),
+    "Mog Consoles/Colorable/wide console.png": (768, 256),
+    "Mog Consoles/Colorable/twin monitor.png": (390, 238),
+    "Mog Consoles/holotable active.png": (1024, 1024),
+    "Mog Misc/Colorable/Extinguisher.png": (43, 31),
 }.items()})
 C.PORTALS.update({"m-door": ("TDoorKnob36.png", 1), "m-double": ("TDoorGPushPullDouble01.png", 2), "m-window": ("TWindowWide01.png", 2),
                   "s-door": ("Blast door small Closed.png", 1), "s-window": ("dome window.png", 1)})
@@ -344,6 +390,107 @@ ERA_TYPES = {
                     "Packing hall": [(SF["crate"], "wall", 4), (SF["console"], "corner", 1)], "Water plant": [(SF["console"], "wall:E", 1), (SF["crate"], "corner", 1)]},
     },
 }
+# ---------------------------------------------------------------- fuller furnishing for the later eras
+# Real-size furniture is small beside a room (a double bed is 1 x 1.25 squares), so the later types get full sets:
+# whole kitchens and living rooms, and shops and halls laid out in rows on fixed spots ("at:" rules).
+M.update(queen="BedQueen01.png", twin2="BedTwin02.png", chair2="Chair02.png", armchair="ChairA01.png", couch2="Couch02.png",
+         endtable="TableEndA01.png", smalldesk="DeskS01.png", hutch="Hutch01.png", coffee2="TableCoffeeB01.png",
+         sink2="KitchenSinkDouble.png", micro="ApplianceMicrowave.png", gas="ApplianceStoveGas.png", cab="Cabinet05.png",
+         counter="Cabinet15.png", cabcorner="CabinetCorner01.png", shower="BathShower.png", basin2="BathSink02.png",
+         wc2="BathToilet2.png", urinal="Urinal01.png", drier="ApplianceDrier.png", cart="ShoppingCart01.png",
+         chiller2="StoreRefrigerator02.png", display="StoreDisplay01.png", display2="StoreDisplay02.png",
+         freezer="StoreFreezer01.png", mags="StoreMagazine01.png", lotto="StoreLotto01.png", till2="Register02.png")
+SF.update(chair="Mog Seating/chair.png", bench="Mog Seating/bench.png", chair2="Mog Seating/Colorable/Chair 2.png",
+          table2="Mog Misc/Colorable/table.png", sink2="Mog Misc/Colorable/sink2.png", hammock="Mog Misc/Colorable/Bed hammock.png",
+          locker="Mog Storage/Colorable/locker red.png", pallet="Mog Storage/Colorable/Pallette.png", box="Mog Storage/Container locked above.png",
+          pod="Mog Storage/sleep chamber closed.png", csmall="Mog Consoles/Colorable/console small.png",
+          cwide="Mog Consoles/Colorable/wide console.png", twinmon="Mog Consoles/Colorable/twin monitor.png")
+
+
+def row(asset, x0, x1, y, step, turn=0, gaps=(), sc=1.0):
+    """Fixed spots along a line (room cells from the room's corner): a shop aisle, a row of seats or of pots.
+    gaps: (from, to) stretches left open for a cross aisle."""
+    out, x = [], x0
+    while x <= x1 + 1e-6:
+        if not any(a <= x <= b for a, b in gaps):
+            out.append((asset, f"at:{x:.2f}:{y:.2f}" + (":1" if turn else ""), 1, sc))
+        x += step
+    return out
+
+
+def rows(asset, x0, x1, ys, step, **kw):
+    return [e for y in ys for e in row(asset, x0, x1, y, step, **kw)]
+
+
+LIVING = lambda side: [(M["couch2"], f"wall:{side}", 1), (M["coffee2"], "beside:couch", 1), (M["armchair"], "beside:couch", 2),
+                       (M["hutch"], "wall", 1), (M["endtable"], "beside:couch", 1)]
+KITCHEN = [(M["gas"], "wall:N", 1), (M["sink2"], "beside:stove", 1), (M["fridge"], "beside:stove", 1), (M["cab"], "wall", 1)]
+FULLER = {
+    "bata-house": {
+        "Living room": [(M["stove"], "corner:E", 1), (M["sink2"], "beside:stove", 1), (M["table"], "window", 1), (M["chair2"], "beside:table", 2),
+                        (M["couch"], "wall:W", 1), (M["hutch"], "wall", 1), (M["armchair"], "beside:couch", 1)],
+        "Neighbours' living room": [(M["stove"], "corner:W", 1), (M["sink2"], "beside:stove", 1), (M["table"], "window", 1), (M["chair2"], "beside:table", 2),
+                                    (M["couch"], "wall:E", 1), (M["hutch"], "wall", 1), (M["armchair"], "beside:couch", 1)]},
+    "func-villa": {
+        "Living space": [(M["couch2"], "wall:W", 2), (M["coffee2"], "beside:couch", 1), (M["armchair"], "beside:couch", 3), (M["endtable"], "beside:couch", 2),
+                         (M["table"], "window", 2), (M["chair2"], "beside:table", 6), (M["desk"], "corner:E", 1), (M["chair2"], "beside:desk", 1),
+                         (M["hutch"], "wall", 2), (M["tv"], "wall", 1)],
+        "Kitchen": KITCHEN + [(M["counter"], "wall", 1), (M["micro"], "wall", 1), (M["table"], "wall", 1), (M["chair2"], "beside:table", 2)],
+        "Entrance": [(M["hutch"], "wall", 1), (M["armchair"], "wall", 2), (M["endtable"], "wall", 1)]},
+    "dept-store": {
+        "Sales floor": rows(M["display"], 1.2, 12.6, (1.3, 3.1), 1.05, gaps=((6.2, 7.4),)) + rows(M["display2"], 1.2, 12.6, (4.9,), 1.05, gaps=((2.8, 4.9), (8.9, 10.9)))
+                       + [(M["chiller2"], "wall:W", 2), (M["counter"], "wall:E", 1), (M["till2"], "beside:counter", 1), (M["mags"], "wall", 1)],
+        "Stair and lifts": [(M["stair"], "corner:W", 1), ("ElevatorShaft01.png", "corner:E", 1)],
+        "Stock room": [(B.CRATE, "wall", 6), (M["counter"], "wall:N", 1), (M["shelf"], "wall", 4, 2)]},
+    "panel-block": {
+        "Flat": [(M["queen"], "corner:W", 1), (M["hutch"], "wall", 1)] + KITCHEN + [(M["table"], "window", 1), (M["chair2"], "beside:table", 3),
+                 (M["couch2"], "wall", 1), (M["coffee2"], "beside:couch", 1), (M["tv"], "wall", 1), (M["washer"], "corner", 1)],
+        "Stair core": [(M["stair"], "wall", 1), ("Mog Misc/Colorable/Extinguisher.png", "wall", 1)],
+        "Second flat": [(M["twin2"], "wall:E", 1), (M["hutch"], "wall", 1), (M["gas"], "wall:N", 1), (M["sink2"], "beside:stove", 1), (M["fridge"], "beside:stove", 1),
+                        (M["table"], "window", 1), (M["chair2"], "beside:table", 2), (M["couch"], "wall", 1)],
+        "Third flat": [(M["twin2"], "wall:W", 1), (M["hutch"], "wall", 1), (M["gas"], "wall:N", 1), (M["sink2"], "beside:stove", 1), (M["fridge"], "beside:stove", 1),
+                       (M["table"], "window", 1), (M["chair2"], "beside:table", 2), (M["couch"], "wall", 1)],
+        "Second stair core": [(M["stair"], "wall", 1), ("Mog Misc/Colorable/Extinguisher.png", "wall", 1)],
+        "Fourth flat": [(M["queen"], "corner:E", 1), (M["hutch"], "wall", 1)] + KITCHEN + [(M["table"], "window", 1), (M["chair2"], "beside:table", 3),
+                        (M["couch2"], "wall", 1), (M["coffee2"], "beside:couch", 1), (M["tv"], "wall", 1), (M["washer"], "corner", 1)]},
+    "culture-house": {
+        "Hall": [(M["counter"], "wall:N", 3)] + rows(M["chair2"], 1.5, 16.0, (3.6, 4.6, 5.6, 6.6, 7.6), .85, gaps=((8.0, 9.6),)),
+        "Foyer": [(M["counter"], "wall:W", 1), (M["couch"], "wall", 2), (M["coffee2"], "beside:couch", 1), (M["armchair"], "beside:couch", 2), (M["hutch"], "wall", 1)],
+        "Club room": [(M["table"], "wall", 2), (M["chair2"], "beside:table", 6), (M["tv"], "wall:E", 1), (M["couch2"], "wall", 1), (M["counter"], "wall", 1)]},
+    "hypermarket": {
+        "Sales floor": rows(M["display"], 1.3, 20.2, (1.6, 3.2), 1.05, gaps=((6.6, 8.0), (13.6, 15.0))) + rows(M["display2"], 1.3, 20.2, (4.8,), 1.05, gaps=((6.6, 8.0), (13.6, 15.0)))
+                       + [(M["freezer"], "wall:N", 6), (M["chiller2"], "wall:W", 3), (M["chiller2"], "wall:E", 3)]
+                       + row(M["counter"], 2.0, 18.0, 6.9, 4.0, gaps=((4.5, 8.5), (14.5, 17.5))) + [(M["cart"], "wall:S", 4), (M["mags"], "wall", 1), (M["lotto"], "wall", 1)],
+        "Store and loading bay": [(SF["pallet"], "wall", 5), (B.CRATE, "wall", 6), (M["counter"], "wall:N", 1)],
+        "Staff room": [(M["table"], "wall", 1), (M["chair2"], "beside:table", 3), (M["fridge"], "corner", 1), (M["micro"], "wall", 1), (M["sink2"], "wall", 1), (M["hutch"], "wall", 1)]},
+    "petrol-station": {
+        "Shop": row(M["display"], 1.2, 4.4, 1.2, 1.05) + [(M["freezer"], "wall:N", 2), (M["counter"], "wall:E", 1), (M["till2"], "beside:counter", 1),
+                 (M["mags"], "wall:W", 1), (M["lotto"], "wall", 1)],
+        "Back office": [(M["smalldesk"], "wall", 1), (M["chair2"], "beside:desk", 1), (M["cab"], "wall", 1), (M["wc2"], "corner", 1), (M["basin2"], "wall", 1)]},
+    "suburban-house": {
+        "Living room": LIVING("W") + [(M["tv"], "wall:E", 1), (M["couch"], "wall", 1)],
+        "Kitchen": KITCHEN + [(M["micro"], "wall", 1), (M["table"], "wall:S", 1), (M["chair2"], "beside:table", 3)],
+        "Garage": [(M["washer"], "wall", 1), (M["drier"], "wall", 1), (B.CRATE, "wall", 1, .7)]},
+    "printed-house": {
+        "Living room": [(SF["table2"], "wall", 1), (SF["chair"], "beside:table", 3), (SF["galley"], "wall:E", 1), (SF["bench"], "wall", 1), (SF["twinmon"], "wall", 1),
+                        (SF["locker"], "wall", 1)],
+        "Bedroom": [(SF["bigbed"], "corner:W", 1), (SF["locker"], "wall", 1), (SF["box"], "wall", 1)],
+        "Wet room": [(SF["wc"], "corner:E", 1), (SF["shower"], "corner:W", 1), (SF["sink2"], "wall", 1)]},
+    "capsule-tower": {
+        "Core": [(SF["csmall"], "corner", 1), (SF["locker"], "wall", 1)], "Lobby": [(SF["chair2"], "wall", 2), (SF["csmall"], "wall", 1)],
+        "Plant room": [(SF["crate"], "wall:N", 1), (SF["locker"], "wall", 2), (SF["box"], "wall", 2), ("Mog Misc/Colorable/Extinguisher.png", "wall", 1)],
+        **{name: [(SF["bed"], f"wall:{side}", 1), (SF["monitor"], "corner", 1), (SF["chair2"], "wall", 1), (SF["sink2"], "wall", 1), (SF["box"], "wall", 1)]
+           + ([(SF["wc"], "corner", 1)] if i % 2 else [])
+           for i, (name, side) in enumerate((("Capsule", "W"), ("Capsule two", "E"), ("Capsule three", "W"), ("Capsule four", "E"), ("Capsule five", "W"), ("Capsule six", "E")))}},
+    "vertical-farm": {
+        "Growing floor": rows("Plant_Pot_Clay_Brown_A_1x1.webp", 1.2, 12.4, (1.4, 2.4, 4.2, 5.2, 7.0), .9, gaps=((6.2, 7.6),), sc=.8),
+        "Packing hall": [(SF["pallet"], "wall", 2), (SF["crate"], "wall", 2), (SF["box"], "wall", 3), (SF["csmall"], "corner", 1), (SF["table2"], "wall", 1)],
+        "Water plant": [(SF["cwide"], "wall:E", 1, .6), (SF["locker"], "wall", 1), (SF["csmall"], "corner", 1)]},
+}
+for _k, _f in FULLER.items():
+    assert set(_f) == {r[0] for r in ERA_TYPES[_k]["rooms"]}, (_k, set(_f) ^ {r[0] for r in ERA_TYPES[_k]["rooms"]})
+    ERA_TYPES[_k]["furnish"] = _f
+
 ERA_STARTS = [("renaissance", 1450), ("age-of-reason", 1601), ("victorian", 1837), ("great-war", 1914), ("mid-century", 1919),
               ("modern", 1990), ("time-of-judgment", 2004), ("future-darkness", 2010), ("time-of-future-judgement", 2099)]
 for k, v in ERA_TYPES.items():

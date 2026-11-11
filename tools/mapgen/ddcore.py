@@ -57,6 +57,7 @@ PACK_TABLE = "/mnt/project-files/dd-pack-ids.tsv"   # id, name, version, author,
 
 def cells_of(name):
     if name in SIZES: return SIZES[name]
+    if name.rsplit("/", 1)[-1] in SIZES: return SIZES[name.rsplit("/", 1)[-1]]      # a name given with its folder
     m = re.search(r"_(\d+)x(\d+)(?:_\w+)?\.(?:webp|png)$", name)
     return (int(m.group(1)), int(m.group(2))) if m else (1, 1)
 
@@ -79,14 +80,14 @@ PORTALS = {"door": ("Door_Wood_Ashen_A1_1x1.webp", 1), "double": ("DoubleDoor_Wo
 LEAFLESS = {"doorway", "arch"}
 
 # What "beside:<tag>" and "hearth" look for among the items already placed in the room.
-BESIDE = {"bed": "Bed", "table": "Table", "anvil": "Anvil", "altar": "Altar", "bar": "Bar_", "desk": "Desk", "couch": "Couch", "stove": "Stove"}
+BESIDE = {"bed": "Bed", "table": "Table", "anvil": "Anvil", "altar": "Altar", "bar": "Bar_", "desk": "Desk", "couch": "Couch", "stove": "Stove", "counter": "Cabinet"}
 HEARTH = re.compile(r"Oven|Cooking_Pit|Brazier")
 
 # ------------------------------------------------------------------ rooms and their furnishing
 class Room:
     """A room in map cells. openings: (kind, x, y, along) in map cells; furnish: [(asset, rule, count[, scale])].
     Rules: wall[:sides], corner[:sides], end[:sides] (touches those walls, never turned; endt: always turned),
-    window, centre,
+    window, centre, at:x:y[:1] (that spot, from the room's corner, turned if :1; left empty if it will not fit),
     hearth (by an oven, cooking pit or brazier), beside:<tag> (see BESIDE)."""
     def __init__(self, name, x, y, w, h, floor, openings, furnish=()):
         self.name, self.x, self.y, self.w, self.h, self.floor = name, x, y, w, h, floor
@@ -123,10 +124,11 @@ class Room:
                     rx0, ry0 = max(x0 - .5, x), max(y0 - .5, y); rx1, ry1 = min(x1 + .5, x + w), min(y1 + .5, y + h)
                     if rx1 > rx0 and ry1 > ry0: self.blocked.append((rx0, ry0, rx1 - rx0, ry1 - ry0, "walkway"))
 
-    def fits(self, r):
+    def fits(self, r, open_floor=True):
         x, y, w, h = r
         if x < self.ix - 1e-6 or y < self.iy - 1e-6 or x + w > self.ix + self.iw + 1e-6 or y + h > self.iy + self.ih + 1e-6: return False
-        for bx, by, bw, bh, *_ in self.blocked + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]:
+        blocked = self.blocked if open_floor else [b for b in self.blocked if b[4] != "open floor"]
+        for bx, by, bw, bh, *_ in blocked + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]:
             if x < bx + bw - 1e-6 and bx < x + w - 1e-6 and y < by + bh - 1e-6 and by < y + h - 1e-6: return False
         return True
 
@@ -174,7 +176,7 @@ class Room:
         if kind == "window" and self.windows:
             s += 8 * (walls >= 1) - min(math.hypot(cx - wx, cy - wy) for wx, wy, _ in self.windows)
         if kind in ("hearth", "beside"):
-            ref = [i for i in self.items if (HEARTH.search(i["asset"]) if kind == "hearth" else BESIDE[arg] in i["asset"])]
+            ref = [i for i in self.items if (HEARTH.search(i["asset"]) if kind == "hearth" else BESIDE[arg].lower() in i["asset"].lower())]
             if ref:
                 d = min(rdist(cx, cy, i["x"], i["y"], i["w"], i["h"]) for i in ref)
                 s += 10 - 4 * d + 2 * (walls >= 1)
@@ -195,6 +197,14 @@ class Room:
         for entry in self.furnish_list:
             name, rule, count = entry[:3]; sc = entry[3] if len(entry) > 3 else 1.0
             fw, fh = (round(v * sc, 3) for v in cells_of(name))
+            if rule.startswith("at:"):                         # a fixed spot: aisles of shelves, rows of seats
+                _, ax, ay, *turn = rule.split(":")
+                rot = int(turn[0]) if turn else 0
+                w, h = (fh, fw) if rot else (fw, fh)
+                r = (self.x + float(ax), self.y + float(ay), w, h)
+                if self.fits(r, open_floor=False):
+                    self.items.append({"asset": name, "x": r[0], "y": r[1], "w": w, "h": h, "rot": rot, "scale": sc})
+                continue                                       # a spot that will not take it is left empty
             for _ in range(count):
                 c = self.candidates(fw, fh, rule)
                 if not c: self.last_fail = name; return False
