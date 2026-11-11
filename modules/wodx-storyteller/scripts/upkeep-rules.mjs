@@ -153,7 +153,7 @@ export function daysWords(days) {
 /* ---------------- Hunting grounds and heat ---------------- */
 
 /** Heat on a place, house rule: each hunt there adds 1, a botch or a feeding seen adds 2, it cools 1 a week. */
-export const HEAT = {hunt: 1, botch: 2, seen: 2, coolDays: 7, max: 10};
+export const HEAT = {hunt: 1, botch: 2, seen: 2, body: 2, coolDays: 7, max: 10}; // body: a body found (0.25.0, B844)
 
 export const HEAT_BANDS = [
   {min: 7, name: "Hunted", diff: 2, note: "The authorities of the era are looking for whoever does this. A response is ready for the approval queue."},

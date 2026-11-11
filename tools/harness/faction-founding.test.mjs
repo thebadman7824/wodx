@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 import {readFileSync} from "node:fs";
 
-// WoDX NPC 0.16.0: founding, splitting, ending and absorbing factions; player-run factions; years and eras.
+// WoDX NPC 0.17.0: founding, splitting, ending and absorbing factions; player-run factions; years and eras.
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
 

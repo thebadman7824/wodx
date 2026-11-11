@@ -26,7 +26,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.16.0";
+const VERSION = "0.17.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -665,7 +665,7 @@ routines.hooks();
 /* Phase 7d: factions and domains, on top of 7c's places */
 const factions = buildFactions({MOD, esc, gmIds, isActiveGM, chron, routines});
 factions.hooks();
-/* 0.16.0: founding factions in play, and factions the players run */
+/* 0.17.0: founding factions in play, and factions the players run */
 const founding = buildFounding({MOD, esc, gmIds, isActiveGM}, factions);
 factions.setFounding(founding);
 founding.hooks();

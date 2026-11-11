@@ -1,9 +1,9 @@
 /**
- * WoDX NPC 0.16.0 gate (founding factions in play), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * WoDX NPC 0.17.0 gate (founding factions in play), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatefounding.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes one actor (a founder with Resources 3 and Contacts 2) and deletes it, and
  * puts back the factions record, the faction settings, the approval queue and its chat cards.
- *   1. WoDX NPC 0.16.0 or later: founding API, settings, the players' Factions button
+ *   1. WoDX NPC 0.17.0 or later: founding API, settings, the players' Factions button
  *   2. the Storyteller's founding reads the founder's dots from the sheet and caps each pledge there
  *   3. a player's request (sent as the socket message would be) waits in the queue; approving it adds the faction
  *   4. a player-run faction on orders waits at a turn; given orders, it rolls them and spends them
@@ -59,7 +59,7 @@ export async function run() {
     await step("1. modules", async () => {
       const v = game.modules.get(MOD).version;
       const tools = {}; Hooks.callAll("getSceneControlButtons", {tokens: {tools}});
-      ok("1. WoDX NPC 0.16.0+, founding API, settings, the Factions button for everyone", newer(v, "0.16.0") && typeof FO()?.foundDialog === "function" && typeof FO()?.openPlayer === "function"
+      ok("1. WoDX NPC 0.17.0+, founding API, settings, the Factions button for everyone", newer(v, "0.17.0") && typeof FO()?.foundDialog === "function" && typeof FO()?.openPlayer === "function"
         && game.settings.settings.has(`${MOD}.factionSplits`) && game.settings.settings.has(`${MOD}.playerFactions`) && tools.wodxFactions?.visible === true, {v});
     });
 

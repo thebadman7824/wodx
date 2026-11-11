@@ -51,7 +51,7 @@ export const SPHERES = {
     underworld: "Underworld", university: "University"}
 };
 /**
- * NPC 0.16.0: the spheres by period, so a faction's sway follows the age from 1197 to the Future Darkness. The keys
+ * NPC 0.17.0: the spheres by period, so a faction's sway follows the age from 1197 to the Future Darkness. The keys
  * carry over where a power lasts (the Church is "church" in every age), so dots held in one age keep their meaning in
  * the next. The periods and the sphere names between the Dark Ages and the modern list are a house rule (B830).
  */
@@ -143,7 +143,7 @@ export function normFaction(f = {}) {
     goals: (f.goals ?? []).filter(g => MOVES[g?.move]).map(g => ({move: g.move, sphere: g.sphere || null, target: g.target || null, place: g.place || null, note: String(g.note ?? "").slice(0, 200)})),
     assets: {herd: dot(a.herd), resources: dot(a.resources), status: dot(a.status), retainers: dot(a.retainers), contacts: dot(a.contacts), domain, security, influence},
     standing, people: normPeople(f.people), guard: Number(f.guard) || 0, notes: String(f.notes ?? "").slice(0, 2000),
-    // NPC 0.16.0: who runs it, when it began and ended, and what it came from
+    // NPC 0.17.0: who runs it, when it began and ended, and what it came from
     owners: uniq(f.owners), run: f.run === "orders" ? "orders" : "auto", orders: normOrders(f.orders),
     founded: yearOrNull(f.founded), ended: yearOrNull(f.ended), dormantBy: ["year", "event", "ended"].includes(f.dormantBy) ? f.dormantBy : null,
     risesOn: f.risesOn ? String(f.risesOn).slice(0, 60) : null, endsOn: f.endsOn ? String(f.endsOn).slice(0, 60) : null,
@@ -190,6 +190,32 @@ export function peopleStandingOf(state, actorId) {
   }
   return out;
 }
+/**
+ * NPC 0.16.0, standing that spills over (house rule, B841): when a faction's regard for a character moves, the
+ * factions bound to it hear of it. A faction that holds this one as a close friend (standing +2 or more) moves the
+ * same way by one step; one that holds it as an enemy (standing -2 or less) moves the other way by one step. Factions
+ * at +1, 0 or -1 toward it don't care. Dormant factions and the faction itself are left out. Returns changes
+ * [{op: "people", faction, actor, delta, why}] for the approval queue; empty when nothing would move.
+ */
+export const SPILL_AT = 2;
+export function spillFrom(state, factionId, actorId, delta) {
+  const d = Math.sign(Number(delta) || 0);
+  if ( !d || !actorId ) return [];
+  const src = (state?.factions ?? []).find(f => f.id === factionId);
+  if ( !src ) return [];
+  const out = [];
+  for ( const o of state.factions ) {
+    if ( o.id === src.id || o.dormant ) continue;
+    const s = standingOf(o, src.id);
+    const step = s >= SPILL_AT ? d : s <= -SPILL_AT ? -d : 0;
+    if ( !step ) continue;
+    const was = o.people?.[actorId] ?? 0, to = Math.max(STANDING.min, Math.min(STANDING.max, was + step));
+    if ( to === was ) continue;
+    out.push({op: "people", faction: o.id, actor: actorId, delta: step, why: s >= SPILL_AT ? "friend" : "enemy"});
+  }
+  return out;
+}
+
 /** Find a faction by id, key or name (whole name first, then a part of it). */
 export function findFaction(state, ref) {
   const r = String(ref ?? "").trim().toLowerCase();
@@ -505,6 +531,16 @@ export function applyChanges(state, changes, {ids = () => Math.random().toString
         inverse.unshift({op: "standing", faction: f.id, other: c.other, delta: was - to}); applied.push(c);
         break;
       }
+      case "people": {
+        // NPC 0.16.0: how a faction regards one character, -3 to +3
+        const f = fac(c.faction); if ( !f || !c.actor ) break;
+        f.people = {...(f.people ?? {})};
+        const was = f.people[c.actor] ?? 0, to = Math.max(STANDING.min, Math.min(STANDING.max, was + (Number(c.delta) || 0)));
+        if ( to === was ) break;
+        if ( to ) f.people[c.actor] = to; else delete f.people[c.actor];
+        inverse.unshift({op: "people", faction: f.id, actor: c.actor, delta: was - to}); applied.push(c);
+        break;
+      }
       case "guard": {
         const f = fac(c.faction); if ( !f ) break;
         inverse.unshift({op: "guard", faction: f.id, until: f.guard}); f.guard = c.until; applied.push(c);
@@ -643,7 +679,7 @@ export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], p
   for ( const f0 of order ) {
     const f = work.factions.find(x => x.id === f0.id);
     const rand = streamFor(`${seedKey}:${f.id}`);
-    // NPC 0.16.0: a faction its players run on orders waits for them; their orders are spent on the turn (B835)
+    // NPC 0.17.0: a faction its players run on orders waits for them; their orders are spent on the turn (B835)
     let choice;
     if ( f.owners.length && f.run === "orders" ) {
       if ( !f.orders ) { const q = quiet(f, "wait", `${f.name} waits for its players' orders.`); q.size = "small"; results.push(q); continue; }
@@ -790,7 +826,7 @@ export function untendedLoss(f, decades) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Founding, splitting, ending and absorbing (NPC 0.16.0)             */
+/*  Founding, splitting, ending and absorbing (NPC 0.17.0)             */
 /* ------------------------------------------------------------------ */
 
 /** The Backgrounds a founder can pledge to a new faction (Domain security starts at 0). */

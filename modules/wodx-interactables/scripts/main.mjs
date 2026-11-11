@@ -61,7 +61,7 @@ import * as Stock from "./stock.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.23.0";
+const VERSION = "0.24.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -597,7 +597,10 @@ export async function applyAsk(msg) {
     heldEvents.set(doc.id, []);
     // Examining a clue: what the character learns goes to that player and the Storyteller only
     let whisper = null;
-    if ( (op.id === "examine" || op.id === "look") && o.clue ) whisper = await clueReport(o, out, author, actor);
+    if ( (op.id === "examine" || op.id === "look") && o.clue ) {
+      whisper = await clueReport(o, out, author, actor);
+      await clueCodex(o, doc, out, actor).catch(e => console.error(`${MOD} | clue codex`, e));
+    }
     if ( o.watch ) {
       const w = await watchReport(o, doc, out, op, author, actor, tokDoc);
       if ( w.whisper ) whisper = w.whisper;
@@ -862,6 +865,18 @@ export async function springOn(tokDoc, actor, o) {
   }
   if ( out.caught ) lines.push(`${actor.name} is held until breaking free (Strength, difficulty 7) or someone cuts the snare.`);
   return {...out, lines, damageMsg, reflex};
+}
+/** 0.24.0: the first look that reaches the clue's mark puts its journal page in the character's codex (WoDX Storyteller). */
+async function clueCodex(o, doc, out, actor) {
+  if ( !game.user.isGM || !actor ) return false;
+  const best = Math.max(0, out.examine ?? 0, Number(o.seen?.[actor.id]) || 0);
+  if ( !R.codexDue(o, actor.id, best) ) return false;
+  const st = game.modules.get("wodx-storyteller");
+  const page = await fromUuid(o.codexPage).catch(() => null);
+  if ( !st?.active || !st.api?.codex?.reveal || !page ) return false;
+  await st.api.codex.reveal(page, [actor]);
+  await doc.update({[`flags.${MOD}.codexed`]: {...(o.codexed ?? {}), [actor.id]: true}});
+  return true;
 }
 /** Whisper what a character learns from a clue: the texts its successes reach (all it has learned so far). */
 async function clueReport(o, out, author, actor) {
@@ -1440,6 +1455,8 @@ export function tileConfigHtml(doc) {
     ${field("With 1 success", `<textarea name="${p}.text1" rows="2">${esc(c.text1)}</textarea>`)}
     ${field("With 2 successes", `<textarea name="${p}.text2" rows="2">${esc(c.text2)}</textarea>`)}
     ${field("With 3 or more", `<textarea name="${p}.text3" rows="2">${esc(c.text3)}</textarea>`, "Leave the last three empty and looking at it needs no roll.")}
+    ${field("Codex page", `<input type="text" name="${p}.codexPage" value="${esc(c.codexPage)}" placeholder="Drop or paste a journal page's UUID">`, "The first time a character's look reaches the successes below, a copy of this page goes into their codex (WoDX Storyteller). Once a character.")}
+    ${field("Successes for the page", `<input type="number" name="${p}.codexAt" value="${c.codexAt}" min="0" max="3">`, "0: any look.")}
     <h4 class="wix-sub">Light source</h4>
     <p class="hint">A torch, candles, a lantern, a lamp or a light switch that characters can light and put out. It works the scene's own lights: the ones named here, or else every light on the tile or within a square of it.</p>
     ${field("Light source", `<input type="checkbox" name="${p}.light"${l.light ? " checked" : ""}>`, "A container, trap or clue on the same tile wins.")}

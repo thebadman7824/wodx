@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.16.0: founding factions in play, and factions the players run.
+ * WoDX NPC 0.17.0: founding factions in play, and factions the players run.
  *
  *   Founding   The Storyteller founds a faction from its founders' own Backgrounds (each pledges up to the dots they
  *              hold; the faction holds the sum, to 5). A player may ask to found one from their own characters; the
