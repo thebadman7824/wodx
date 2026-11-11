@@ -18,10 +18,12 @@ test("years pick their era", () => {
   assert.deepEqual(at(1346), ["dark-ages", false]);
   assert.deepEqual(at(1347), ["long-night", false]);
   assert.deepEqual(at(1486), ["renaissance", false]);
-  assert.deepEqual(at(1700), ["renaissance", true]);
+  assert.deepEqual(at(1700), ["age-of-reason", false]);
+  assert.deepEqual(at(1836), ["age-of-reason", false]);
   assert.deepEqual(at(1870), ["victorian", false]);
   assert.deepEqual(at(1916), ["great-war", false]);
-  assert.deepEqual(at(1950), ["great-war", true]);
+  assert.deepEqual(at(1950), ["mid-century", false]);
+  assert.deepEqual(at(1910), ["victorian", true]);
   assert.deepEqual(at(1999), ["modern", false]);
   assert.deepEqual(at(2004), ["modern", true]);
   assert.deepEqual(at(2020), ["modern", true]);

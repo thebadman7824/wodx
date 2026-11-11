@@ -57,10 +57,11 @@ import {setupCarry} from "./carry.mjs";
 import {setupAdopt} from "./adopt.mjs";
 import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
+import * as Stock from "./stock.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.20.0";
+const VERSION = "0.23.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -87,6 +88,10 @@ function registerSettings() {
   game.settings.register(MOD, "reach", {
     name: "Reach, in grid squares", hint: "How far from the edge of a token a door or window can be used.",
     scope: "world", config: true, type: Number, default: 1, range: {min: 0.5, max: 3, step: 0.5}
+  });
+  game.settings.register(MOD, "makePlain", {
+    name: "Hand over things with no item behind them", hint: "Taking from a container: a line that is only a name (everyday goods, a stock list's own words) becomes a simple item of that name. Off: those lines are left for the Storyteller to describe.",
+    scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "advanceClock", {
     name: "Long attempts move the clock", hint: "Outside combat, picking a lock for ten minutes moves the Chronicle clock on ten minutes.",
@@ -245,6 +250,8 @@ export function characterFor(actor, center, doc) {
     potence: powerDots(actor, "potence"), abilities, meta,
     side: center && Array.isArray(doc?.c) ? R.sideOf(doc.c, center) : null,
     hasKey: !!key && (actor?.items ?? []).some(i => String(i.name ?? "").toLowerCase().includes(key)),
+    // 0.23.0: "Opens for": a WoDX Chronicle "Only when" list; whoever fits it can lock and unlock it without a key
+    opensFor: !!String(o.opensFor ?? "").trim() && !!chron()?.when?.check?.(o.opensFor, {actor})?.ok,
     hasTools: (actor?.items ?? []).some(i => TOOLS.test(i.name ?? "")),
     powers: [...new Set((actor?.items ?? []).filter(i => i.type === "Power" && POWERS.test(i.name ?? "")).map(i => i.name.trim()))].slice(0, 6),
     woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty),
@@ -465,14 +472,21 @@ const listWords = a => (a.length <= 1 ? a.join("") : `${a.slice(0, -1).join(", "
 /** Hand a container's items to a character: copies of each item named (a UUID, or a world item's name). */
 async function giveItems(actor, refs) {
   const data = [], names = [], missing = [];
-  for ( const ref of refs ) {
+  for ( const line of refs ) {
+    // 0.23.0: "silver pennies (7)" from a stock list: the item, with the count kept in its name until sheets count things
+    const cm = /^(.+?)\s+\((\d+)\)$/.exec(String(line));
+    const ref = cm ? cm[1] : line, count = cm ? Number(cm[2]) : 1;
     let it = null;
     try { it = /^(Compendium|Item|Actor|Scene)\./.test(ref) ? await fromUuid(ref) : game.items?.getName?.(ref) ?? null; } catch (e) { it = null; }
-    if ( !it || it.documentName && it.documentName !== "Item" ) { missing.push(ref); continue; }
-    const o = typeof it.toObject === "function" ? it.toObject() : foundry.utils.deepClone(it);
+    if ( it && it.documentName && it.documentName !== "Item" ) { missing.push(line); continue; }
+    // A plain name with no item behind it (everyday goods, a stock list's own words): a simple item of that name
+    const isUuid = /^(Compendium|Item|Actor|Scene)\./.test(ref);
+    if ( !it && (isUuid || !setting("makePlain")) ) { missing.push(line); continue; }
+    const o = it ? (typeof it.toObject === "function" ? it.toObject() : foundry.utils.deepClone(it)) : {name: ref, type: "Item"};
     delete o._id;
-    o.flags = {...(o.flags ?? {}), [MOD]: {...(o.flags?.[MOD] ?? {}), from: ref}};
-    data.push(o); names.push(it.name);
+    if ( count > 1 ) o.name = `${o.name} (${count})`;
+    o.flags = {...(o.flags ?? {}), [MOD]: {...(o.flags?.[MOD] ?? {}), from: line, ...(it ? {} : {plain: true})}};
+    data.push(o); names.push(o.name);
   }
   const made = data.length ? await actor.createEmbeddedDocuments("Item", data) : [];
   return {ids: (made ?? []).map(d => d.id), names, missing};
@@ -1351,6 +1365,7 @@ export function configHtml(doc) {
     ${field("Lock", `<select name="${p}.lock" data-fixed>${opt({"": "By the door's state (locked: a good lock)", ...R.LOCKS}, f.lock)}</select>`)}
     ${field("Keypad or alarm", `<select name="${p}.electronic" data-fixed>${opt(R.ELECTRONIC, f.electronic)}</select>`, "Only in the modern eras.")}
     ${field("Key", `<input type="text" name="${p}.keyName" value="${esc(f.keyName)}" placeholder="Name of the key item">`, "A character carrying an item with this name can lock and unlock it.")}
+    ${field("Opens for", `<input type="text" name="${p}.opensFor" value="${esc(doc?.flags?.[MOD]?.opensFor ?? "")}" placeholder="clan Tremere; before 1493">`, "WoDX Chronicle tests, separated by ;. Whoever fits them can lock and unlock it without a key: a ward that knows its own, a door that opens only by night.")}
     ${field("Bar", `<select name="${p}.barSide" data-fixed>${opt(sides, f.barSide)}</select> <label class="checkbox"><input type="checkbox" name="${p}.barred"${f.barred ? " checked" : ""}> Barred now</label>`)}
     ${field("Secret door found", `<input type="checkbox" name="${p}.found"${f.found ? " checked" : ""}>`, "For a secret door: once found, players see it in their Interact list.")}
     ${field("Stuck", `<input type="checkbox" name="${p}.stuck"${f.stuck ? " checked" : ""}>`, "Painted shut or swollen: Strength to open.")}
@@ -1367,10 +1382,6 @@ function onRenderWallConfig(app, html) {
   wrap.innerHTML = configHtml(doc);
   const footer = form.querySelector("footer, .form-footer, .sheet-footer");
   if ( footer ) footer.before(wrap.firstElementChild); else form.appendChild(wrap.firstElementChild);
-  form.querySelector("[data-wix-fill]")?.addEventListener("click", ev => {
-    ev.preventDefault();
-    Fill.fillDialog(app.document ?? app.object, form.querySelector(`[name="flags.${MOD}.items"]`)).catch(e => console.error(`${MOD} |`, e));
-  });
   app.setPosition?.({height: "auto"});
 }
 /** The WoDX part of a tile's config window: a container. */
@@ -1403,9 +1414,12 @@ export function tileConfigHtml(doc) {
     ${field("State", `<select name="${p}.ds" data-fixed>${opt({closed: "Closed", locked: "Locked", open: "Open"}, st)}</select>`)}
     ${field("Keypad or alarm", `<select name="${p}.electronic" data-fixed>${opt(R.ELECTRONIC, f.electronic)}</select>`, "Only in the modern eras.")}
     ${field("Key", `<input type="text" name="${p}.keyName" value="${esc(f.keyName)}" placeholder="Name of the key item">`)}
+    ${field("Opens for", `<input type="text" name="${p}.opensFor" value="${esc(f.opensFor)}" placeholder="faction court; night">`, "WoDX Chronicle tests, separated by ;. Whoever fits them can lock and unlock it without a key.")}
     ${field("Inside", `<textarea name="${p}.items" rows="4" placeholder="One item a line: its UUID, or its name in the Items directory">${esc(f.items)}</textarea>`, "Taking them gives the character a copy of each. Leave it empty and say what is inside yourself.")}
     ${field("Usual contents", `<select name="${p}.fillPlace" data-fixed><option value="">As where it sits</option>${opt(FillRules.PLACES, doc?.flags?.[MOD]?.fillPlace)}</select>`, "The place Fill by place and era starts from. Blank: the place tag of the region or scene it sits in, else a home.")}
     ${field("", `<button type="button" data-wix-fill>Fill by place and era…</button>`, "Draws from Gear by era for the chronicle's era, for you to check before anything goes in.")}
+    ${field("Stock list", `<textarea name="${p}.stock" rows="3" placeholder="always: a tallow candle&#10;1 in 3: a ritual book&#10;50%: 3-12 silver pennies&#10;when year >= 1890: 1 in 2: a box of matches">${esc(f.stock)}</textarea>`, "Your own table: a chance (always, 1 in N, or a percentage), a colon, a count or range if more than one, then the item. A line can start with when and WoDX Chronicle tests.")}
+    ${field("Draw the stock", `<select name="${p}.restock" data-fixed>${opt(R.RESTOCK, f.restock)}</select> <button type="button" data-wix-stock>Draw now</button><input type="hidden" name="${p}.stockDrawn" value="">`, "A shop's shelf or a herb patch: on the clock, what the last draw left is taken away and the list is drawn again. Draw now puts a draw in Inside for you to check before you save.")}
     <h4 class="wix-sub">Trap</h4>
     <p class="hint">A snare, pit, tripwire or spring blade. Hide the tile: it goes off when a character walks over it, and players see it once a search finds it.</p>
     ${field("Trap", `<input type="checkbox" name="${p}.trap"${t.trap ? " checked" : ""}>`, "A tile is a container or a trap; a container wins if both are ticked.")}
@@ -1499,6 +1513,22 @@ function onRenderTileConfig(app, html) {
   wrap.innerHTML = tileConfigHtml(app.document ?? app.object);
   const footer = form.querySelector("footer, .form-footer, .sheet-footer");
   if ( footer ) footer.before(wrap.firstElementChild); else form.appendChild(wrap.firstElementChild);
+  // 0.23.0: the Fill button is wired here, in the tile's window where it sits (it was looked for in the wall's)
+  form.querySelector("[data-wix-fill]")?.addEventListener("click", ev => {
+    ev.preventDefault();
+    Fill.fillDialog(app.document ?? app.object, form.querySelector(`[name="flags.${MOD}.items"]`)).catch(e => console.error(`${MOD} |`, e));
+  });
+  form.querySelector("[data-wix-stock]")?.addEventListener("click", ev => {
+    ev.preventDefault();
+    const field = form.querySelector(`[name="flags.${MOD}.stock"]`), inside = form.querySelector(`[name="flags.${MOD}.items"]`);
+    const {lines, problems} = R.parseStock(field?.value ?? "");
+    if ( problems.length ) ui.notifications.warn(problems.join(" "));
+    const W = chron()?.when;
+    const fresh = R.rollStock(lines, {passes: when => (W?.check ? W.check(when, {scene: (app.document ?? app.object)?.parent}).ok : false)});
+    if ( inside ) inside.value = R.restockLines(inside.value, (app.document ?? app.object)?.flags?.[MOD]?.stockDrawn ?? [], fresh).join("\n");
+    const drawn = form.querySelector(`[name="flags.${MOD}.stockDrawn"]`);
+    if ( drawn ) drawn.value = JSON.stringify(fresh);
+  });
   app.setPosition?.({height: "auto"});
 }
 function onPreUpdateTile(doc, changes) {
@@ -1506,6 +1536,10 @@ function onPreUpdateTile(doc, changes) {
   if ( !f || typeof f !== "object" ) return;
   for ( const k of ["material", "lock", "keyName", "fillPlace"] ) if ( f[k] === "" ) f[k] = null;
   if ( "items" in f ) f.items = R.parseItems(f.items).join("\n");
+  if ( "stockDrawn" in f && typeof f.stockDrawn === "string" ) {
+    if ( !f.stockDrawn ) delete f.stockDrawn;
+    else { try { f.stockDrawn = JSON.parse(f.stockDrawn); f.stockedAt = game.time.worldTime; } catch (e) { delete f.stockDrawn; } }
+  }
   if ( "sacredItems" in f ) f.sacredItems = R.parseItems(f.sacredItems).join("\n");
   // A lock set on a closed container locks it
   if ( f.lock && !f.ds && !doc.flags?.[MOD]?.ds ) f.ds = "locked";
@@ -1582,6 +1616,8 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();
   game.modules.get(MOD).api.adopt = setupAdopt();
+  Stock.setupStock();
+  game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

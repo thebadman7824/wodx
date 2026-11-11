@@ -10,6 +10,17 @@
    "modern"
   ],
   "summary": "Word that Baba Yaga had woken and ruled Russia from behind a veil.",
+  "date": {
+   "from": 1990,
+   "label": "1990",
+   "refs": [
+    {
+     "book": "cb",
+     "page": 33,
+     "pdf": 26
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Contact with the lands of the Iron Hag broke off, few who entered returned, and the Valkyries were the exception.",
@@ -50,6 +61,18 @@
    "great-war"
   ],
   "summary": "The struggle that gave Lodin control of Chicago.",
+  "date": {
+   "from": 1908,
+   "to": 1913,
+   "label": "1908 to 1913",
+   "refs": [
+    {
+     "book": "encv",
+     "page": 47,
+     "pdf": 48
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 1908 Lodin warned the city's oldest Kindred that anarch actions threatened the Masquerade, and the elders allowed Lodin to end the conflict by any means.",

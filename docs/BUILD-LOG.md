@@ -1236,3 +1236,54 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - tools/goods/build-desk.mjs writes the review desk's item file. Desk: https://claude.ai/artifact/RFDVx5w2jCtbK1ASY8WeLP.
 - Tests: three new in fill.test.mjs (tags on every good, era years match Chronicle and every era from 1197 has every kind, a value can change over time). Harness 1019 pass.
 - 2026-11-11 (B594-B596): sub-categories dropped; 31 top-level categories (ten adapted from Cataclysm DDA), 799 goods. Each good carries behaviour, stacks, uses, sheet type and V20 concealment step (P/J/T/N) in tags. Gear category spelled Armor. Items back on the desk for Ben's marks.
+
+## 2026-11-10: burgage plots (map tools)
+- Ben approved every recommendation in the Claude Doc "Town planning lessons for the map generator"; this is the first. Houses on a frontage now get a plot: a strip of land in the house's own frame, as wide as its share of the frontage, running back to the ward's plot depth or until it meets another plot, a building or a way. Behind the house is a yard, then a garden or croft to the back fence. Fences run along the sides and back, open to the street. B582.
+- A frontage that would stand back to back with one already built in the same block, closer than 16 squares (20 to 24 in villages, outside the gates and in rich wards), is left as yards. Slum and craftsmen wards still build on alleys and back to back, packing their yards into courts. Towns come out a little less dense (Rotheim city seed 9: 161 households, was 186).
+- Each plot is a sidecar region "Yard of the <building>" (place home, private, owner the building). Plots are checked against every way like buildings.
+- Samples schondorf and linberg redrawn.
+
+## 2026-11-10: rivers, bridges, mills and washing places (map tools)
+- Second of the approved planning recommendations. An organic village, town or city may have a river (villages 50%, towns 60%, cities 75%; ddtown.py --river yes/no/random). It winds gently across the whole map and passes to one side of the market, 2.6 to 4.6 squares wide by size. It is not tied to the patches: buildings, wings, plots and gardens keep off it like a way (check_ways covers it), and each street or road that crosses it gets a plank bridge with railings. B583.
+- A watermill (a workshop whose household is the miller's) stands on the frontage nearest the water; a washing place (trough, bucket, barrel) sits on the town's bank upstream of the middle of town, leaving downstream for the dirty trades. The river is drawn with Forgotten Adventures' River_Bank_Blue path.
+- Sidecar regions: river-N (the river, place other), bridge-N (place street), washing-place (place other). Samples schondorf and linberg redrawn. Test: a town on a river has its river, bridges, washing place and miller; --river no has none.
+
+## 2026-11-10: dirty trades, wealth, landmarks, suburbs and fire (map tools)
+- Recommendations 3 to 7 of the approved planning doc. The river now takes the course (of ten tried) that runs along the fewest ways, so streets do not run into the water.
+- Dirty trades: about 30% of workshops become tanners, dyers, butchers, fullers and chandlers, placed by a score that favours downstream on the river, against or outside the wall, and far from the market; the rest take clean trades. B584.
+- Wealth: each house is rich, middling or poor by distance from the market, its ward and nearness to the dirty trades. Rich houses have stone and timber walls and boarded floors, middling timber and plaster, poor plain timber. Each household in the sidecar carries wealth (Adopt does not read it yet). B585.
+- Landmarks: public wells by the busier junctions away from the market, set back off the ways (towns 2, cities 6), a market cross a few squares from the market well, and a tower each side of every gate. B586.
+- Suburbs: gate wards outside the walls are now likely (85%), with inns and an almshouse (its keeper and almsmen) as well as cottages, smiths and workshops. B587.
+- Fire history: villages 20%, towns 40%, cities 60% have had a great fire in one block. One burned-out plot is left with charred timbers (sidecar region burned-N) and the block's houses were rebuilt in stone. B588.
+- Samples schondorf and linberg redrawn.
+
+
+## 2026-11-10: dates for Encyclopaedia events (Library 0.5.4)
+- Entries may carry `date` {from, to, label, approx, refs}: years with BCE negative, the date as the book writes it, and its page. The format check tests it; the journal shows it under When; the journal flags carry year and yearTo.
+- Ben asked for dates on every event, from the OCR'd books where they give one. 206 entries checked (195 events and 11 lore entries that tell of a war, battle, fall or treaty); the text of each cited page and the pages either side was searched for dates on the PC. 84 now carry a date. The rest have none on or near their pages, or their books are novels with no text on the PC (B593).
+- The table of dates and the script that writes them: tools/encyclopedia/event-dates.py.
+## 2026-11-10: river stairs and water gates (map tools)
+- Ben's report: the river lay over the end of one path, and the wall had no opening for the water. B589.
+- The river course now also counts dead ends in the water and gates by the water against it. Ways that still reach the water stop on the bank with stone river stairs (region landing-N). Alleys are not cut toward the river. check_ways() stops the generator if a way runs into the river.
+- Water gates: the wall is cut where the river passes, an iron grate spans the stream, and a tower stands on each bank (region water-gate-N). No wall tower stands in the water.
+- Plan view draws the river as wide as the Dungeondraft map does. Fixed a duplicate road-trigger id when one road leaves by the same side twice.
+- Sample linberg redrawn.
+## 2026-11-10: lighter sheet saves and redraws (fork 7.3.2-wodx.7, WoDX Sheets 0.6.2)
+- From the character sheet review (https://claude.ai/artifact/9HMVrBciCtp9WQCAZiDSrW), steps 1 and 2.
+- After-save recompute: only the client that made the change runs it, and it writes the changed values only (module/scripts/wodx-save.js, `systemChanges`). The item-change recompute does the same. B600.
+- Mortal and PC sheets no longer print the whole actor to the console on every redraw.
+- All 12 line sheet templates wrap the Core tab in `{{#unless wodxCore}}`; WoDX Sheets sets `wodxCore` when it draws the book's sheet. B601.
+- Harness: sheet-speed.test.mjs. Gate: tools/gate/gatesheetspeed.mjs (redraw times, saves per change, totals follow, Core tab with and without a WoDX sheet).
+
+## 2026-11-10: the RPG Builder ideas (Chronicle 0.14.0, NPC 0.9.0, Interactables 0.23.0, Atmosphere 0.11.0, Storyteller 0.20.0)
+- From the RPG Builder review (https://claude.ai/artifact/MvqiV7QLsQP3KJcd6uukXz), every idea, approved by Ben 2026-11-10 23:18Z.
+- WoDX Chronicle: scripts/when-rules.mjs (the language, pure) and scripts/when.mjs (the world and character read into a context; outcomes; the Storyteller's checker). API: game.wodx.chronicle.when.check / run / context / checker. B620, B621.
+- WoDX NPC: Trigger regions have "Only when" and "Then also" (B622); behaviour window has Phases (npc-rules parsePhases, phaseNow, withPhase; B623).
+- Same PR, the rest of the review's ideas: NPC households, talk sheets and faction standing toward characters (B624, B630, B632); Interactables 0.23.0 stock lists, restocking, "Opens for", plain names handed over, the Fill button wired in the tile window (it was looked for in the wall window) (B625-B627); Atmosphere 0.11.0 Mood regions (B628); Storyteller 0.20.0 Ledger objectives and recipes for long tasks (B629, B631).
+- Harness: when.test.mjs, rpgb-batch.test.mjs; interactables.test.mjs now expects a plain name to be handed over. 1055 of 1055 pass. Gate: tools/gate/gatewhen.mjs (9 steps).
+## 2026-11-10: part lines that miss the market and houses; era layers (map tools)
+- Part lines are planned before any building goes down, along streets and round the market, which now stays whole on one map. A house a line passes over is drawn whole on its own part only, and the plan shows the line stepping round it. B650.
+- Era layers: ddtown.py --year grows the medieval town through every later age up to that year (eras.py). Railway (track path), station with a stone platform, quays and embankments in stone, ring road on the old wall line, courts, cemetery, park, boulevards, suburbs, bomb sites or car parks, offices in old warehouses. Sidecar era from Chronicle's eras.json; new regions tagged with an area kind. B651.
+- New test: a town grown to 1950 has a railway, station, ring road, quay and suburb, era mid-century; the medieval town has none.
+- Known gaps: every building is still a medieval type (no later building packs), and towns lose houses to the new ways rather than growing denser.
+- Sample linberg redrawn.

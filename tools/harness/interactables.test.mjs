@@ -739,11 +739,12 @@ test("runtime: a chest is picked, opened and emptied; the items go to the charac
     const before = pc.items.length;
     const take = await api.attempt(tokPc, "chest1", "take");
     const d = take.flags[MOD].done;
-    assert.equal(d.given.length, 2);
-    assert.equal(pc.items.length, before + 2);
+    // 0.23.0: a name with no item behind it is handed over as a simple item of that name
+    assert.equal(d.given.length, 3);
+    assert.equal(pc.items.length, before + 3);
     assert.ok(pc.items.some(i => i.name === "Silver dagger" && i.flags[MOD].from === "Item.dagger" && !i._id));
-    assert.ok(d.lines.some(l => /Silver dagger and Ledger of debts/.test(l)));
-    assert.ok(d.lines.some(l => /A thing nobody made/.test(l)));
+    assert.ok(d.lines.some(l => /Silver dagger, Ledger of debts and A thing nobody made/.test(l)));
+    assert.ok(pc.items.some(i => i.name === "A thing nobody made" && i.flags[MOD].plain === true));
     assert.equal(chest.document.flags[MOD].taken, true);
     me = gm;
     await api.undoCard(take);

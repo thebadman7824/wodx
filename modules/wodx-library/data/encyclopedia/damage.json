@@ -795,6 +795,17 @@
    "dark-ages"
   ],
   "summary": "A Hermetic chantry destroyed in 1210.",
+  "date": {
+   "from": 1210,
+   "label": "winter 1210",
+   "refs": [
+    {
+     "book": "damage",
+     "page": 60,
+     "pdf": 61
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Hermetic sanctum at Mistridge fell in 1210, brought down by mortals led by a group calling itself the Craftmasons.",
@@ -902,6 +913,17 @@
    "dark-ages"
   ],
   "summary": "An early joint act of the Houses.",
+  "date": {
+   "from": 876,
+   "label": "876",
+   "refs": [
+    {
+     "book": "damage",
+     "page": 58,
+     "pdf": 59
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 876 several Houses joined to destroy a mighty necromancer's lair in Turkey and took the stronghold for themselves.",

@@ -22,9 +22,10 @@ import * as OR from "./opening-rules.mjs";
 import {reckon} from "../../wodx-chronicle/scripts/reckoning-rules.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as Mood from "./mood.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.10.0";
+const VERSION = "0.11.0";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -1117,6 +1118,8 @@ export const AtmosphereApp = {
 /* ------------------------------------------------------------------ */
 
 Hooks.once("init", () => {
+  // 0.11.0: the Mood region type is registered in every world, so a region that has one always loads
+  try { Mood.registerMood({playMood, playCue, getMood: () => setting("mood")}); } catch (e) { console.error(`${MOD} | mood regions`, e); }
   if ( !game.world?.flags?.wodx ) return;
   active = true;
   registerSettings();

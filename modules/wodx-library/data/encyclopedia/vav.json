@@ -10,6 +10,18 @@
    "victorian"
   ],
   "summary": "The Kindred era from 1880 to 1897.",
+  "date": {
+   "from": 1880,
+   "to": 1897,
+   "label": "1880 to 1897",
+   "refs": [
+    {
+     "book": "vav",
+     "page": 16,
+     "pdf": 16
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Victoria has ruled the Empire's living subjects since 1837, so few alive remember any other reign.",
@@ -73,6 +85,17 @@
    "victorian"
   ],
   "summary": "How vampires spread through the secret societies.",
+  "date": {
+   "from": 1880,
+   "label": "from 1880",
+   "refs": [
+    {
+     "book": "vav",
+     "page": 16,
+     "pdf": 16
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Mortals start the Golden Dawn in 1880, but Kindred soon infest it and use it to draw living initiates.",
@@ -163,6 +186,17 @@
    "victorian"
   ],
   "summary": "The count who breaks the line between East and West.",
+  "date": {
+   "from": 1897,
+   "label": "1897",
+   "refs": [
+    {
+     "book": "vav",
+     "page": 16,
+     "pdf": 16
+    }
+   ]
+  },
   "claims": [
    {
     "text": "In 1897 Vlad Dracula arrives in London and whispers a story to an Irish author that strains the Masquerade to its limits.",

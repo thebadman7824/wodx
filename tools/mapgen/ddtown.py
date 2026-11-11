@@ -575,6 +575,8 @@ def main():
     ap.add_argument("--assets", default="/mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt")
     ap.add_argument("--layout", choices=("organic", "grid"), default="organic", help="organic: winding streets, wards and walls (organic.py); grid: straight streets")
     ap.add_argument("--walls", choices=("random", "yes", "no"), default="random", help="organic layout only: a curtain wall round the town")
+    ap.add_argument("--river", choices=("random", "yes", "no"), default="random", help="organic layout only: a river across the map")
+    ap.add_argument("--year", type=int, help="organic layout only: grow the medieval town through every later age up to this year (eras.py)")
     ap.add_argument("--day", action="store_true")
     ap.add_argument("--out", default=".")
     a = ap.parse_args()
@@ -582,7 +584,7 @@ def main():
     C.init(a.seed, a.assets)
     if a.layout == "organic":
         import organic
-        t = organic.OrganicTown(a.seed, a.size, a.name, not a.day, {"random": None, "yes": True, "no": False}[a.walls]).make()
+        t = organic.OrganicTown(a.seed, a.size, a.name, not a.day, {"random": None, "yes": True, "no": False}[a.walls], {"random": None, "yes": True, "no": False}[a.river], a.year, a.part).make()
     else:
         t = Town(a.seed, a.size, a.name, not a.day).make()
     base = slug(t.name)

@@ -42,6 +42,7 @@
 
 				<!-- Core Normal -->
 				<div class="tab core sheet-inner-area" data-group="primary" data-tab="core">
+					{{#unless wodxCore}}{{!-- WoDX fork: WoDX Sheets draws its own Core tab here --}}
 
 					<i class="macroBtn pointer createicon fa-solid fa-square-plus item-create" title="{{localize "wod.labels.add.item"}}" aria-hidden="true" data-itemtype="All" data-origin="core"></i>
 					
@@ -84,6 +85,7 @@
 							</div>
 						</div>						
 					</div>
+					{{/unless}}
 				</div>
 
 				<!-- Death Tab -->
@@ -140,11 +142,13 @@
 
 				<!-- Core Normal -->
 				<div class="tab core sheet-inner-area" data-group="primary" data-tab="core">
+					{{#unless wodxCore}}{{!-- WoDX fork: WoDX Sheets draws its own Core tab here --}}
 
 					<i class="macroBtn pointer createicon fa-solid fa-square-plus item-create" title="{{localize "wod.labels.add.item"}}" aria-hidden="true" data-itemtype="All" data-origin="power"></i>
 					
 					{{> "systems/worldofdarkness/templates/actor/parts/wraith/shadow.html"}}
 					
+					{{/unless}}
 				</div>
 
 				<!-- Settings Tab -->

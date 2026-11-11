@@ -54,6 +54,17 @@
    "modern"
   ],
   "summary": "A disaster that set the city's supernatural factions against one another.",
+  "date": {
+   "from": 1985,
+   "label": "19 September 1985",
+   "refs": [
+    {
+     "book": "m2cf",
+     "page": 21,
+     "pdf": 22
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The quake of 19 September 1985 damaged over 4,000 buildings and killed more than 9,000 people.",

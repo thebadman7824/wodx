@@ -10,6 +10,18 @@
    "future-darkness"
   ],
   "summary": "Why the Masquerade collapses in the 2020s.",
+  "date": {
+   "from": 2024,
+   "to": 2025,
+   "label": "2024 or 2025 at the latest",
+   "refs": [
+    {
+     "book": "wofd",
+     "page": 3,
+     "pdf": 3
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Cyber-senses defeat the old disguises: the Masquerade cannot fake scent, and even Kindred of very high Humanity rarely fool Image Enhancement, Thermographics or Sound Editing.",

@@ -560,6 +560,8 @@ export function build(ctx) {
           <td><input type="text" name="g${k}.note" value="${esc(g.note ?? "")}"></td></tr>`).join("")}</tbody></table></fieldset>
       ${others.length ? `<fieldset><legend>Standing with the others (−3 to +3)</legend>${others.length > 5 ? searchBox(".wnpc-standing", "Search factions…", "Search factions") : ""}<div class="wnpc-standing wnpc-list">
         ${others.map(o => `<label class="wnpc-check" data-search-item data-search-text="${esc(o.name)}">${esc(o.name)} <select name="st.${o.id}" data-fixed>${[-3, -2, -1, 0, 1, 2, 3].map(v => `<option value="${v}"${v === F.standingOf(f, o.id) ? " selected" : ""}>${v > 0 ? "+" : ""}${v}</option>`).join("")}</select></label>`).join("")}</div></fieldset>` : ""}
+      ${pcs.length ? `<fieldset><legend>How it regards the players' characters (−3 Hunted to +3 Honoured)</legend><div class="wnpc-people wnpc-list">
+        ${pcs.map(a => `<label class="wnpc-check" data-search-item data-search-text="${esc(a.name)}">${esc(a.name)} <select name="ps.${a.id}" data-fixed>${[-3, -2, -1, 0, 1, 2, 3].map(v => `<option value="${v}"${v === (f.people?.[a.id] ?? 0) ? " selected" : ""}>${v > 0 ? "+" : ""}${v} ${esc(F.peopleWord(v))}</option>`).join("")}</select></label>`).join("")}</div></fieldset>` : ""}
       <fieldset><legend>Members</legend>${searchBox(".wnpc-members", "Search people…", "Search members")}<div class="wnpc-members wnpc-list">
         ${[...npcs, ...pcs].map(a => `<label class="wnpc-check" data-search-item data-search-text="${esc(a.name)}"><input type="checkbox" name="m.${a.id}" ${f.members.includes(a.id) ? "checked" : ""}> ${esc(a.name)}${a.hasPlayerOwner ? " (player)" : ""}</label>`).join("")}</div></fieldset>
       <fieldset><legend>Places held (its domain)</legend>${searchBox(".wnpc-held", "Search places…", "Search places")}<div class="wnpc-held wnpc-list">
@@ -572,7 +574,8 @@ export function build(ctx) {
     const next = {id: f.id, name: String(data.name || f.name).trim(), kind: data.kind, ruler: !!data.ruler, secret: !!data.secret, dormant: !!data.dormant, leader: data.leader || null,
       members: Object.keys(data).filter(k => k.startsWith("m.") && data[k]).map(k => k.slice(2)),
       places: Object.keys(data).filter(k => k.startsWith("p.") && data[k]).map(k => k.slice(2)),
-      assets: {influence: {}}, standing: {}, goals: [], guard: f.guard, notes: data.notes ?? ""};
+      assets: {influence: {}}, standing: {}, people: {...(f.people ?? {})}, goals: [], guard: f.guard, notes: data.notes ?? ""};
+    for ( const a of pcs ) { const v = num(data[`ps.${a.id}`]); if ( v ) next.people[a.id] = v; else delete next.people[a.id]; }
     for ( const k of ["herd", "resources", "status", "retainers", "contacts", "domain", "security"] ) next.assets[k] = num(data[`a.${k}`]);
     for ( const k of Object.keys(era.spheres) ) if ( num(data[`i.${k}`]) ) next.assets.influence[k] = num(data[`i.${k}`]);
     for ( const [k, v] of Object.entries(f.assets.influence) ) if ( !(k in era.spheres) ) next.assets.influence[k] = v; // another era's spheres are kept
@@ -792,7 +795,21 @@ export function build(ctx) {
     });
   }
 
-  return {onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
+  /** NPC 0.9.0: move how a faction regards a character, by a step or to a step. Returns the new step, or null. */
+  async function adjustPeople(ref, actorId, {delta = 0, to = null} = {}) {
+    if ( !game.user.isGM || !actorId ) return null;
+    return mutate(st => {
+      const f = F.findFaction(st, ref);
+      if ( !f ) return {result: null};
+      const was = f.people?.[actorId] ?? 0;
+      const n = Math.max(F.STANDING.min, Math.min(F.STANDING.max, to !== null ? Number(to) : was + Number(delta || 0)));
+      f.people = {...(f.people ?? {})};
+      if ( n ) f.people[actorId] = n; else delete f.people[actorId];
+      return {state: st, result: n};
+    });
+  }
+  const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
+  return {adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
     setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => FactionsAppClass().open(), rules: F, ROTHENSTEIN};
 }

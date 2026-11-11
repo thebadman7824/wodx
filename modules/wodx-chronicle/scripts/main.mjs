@@ -24,6 +24,7 @@ import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
 import * as church from "./church.mjs";
 import * as release from "./release.mjs";
+import * as when from "./when.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -150,6 +151,7 @@ Hooks.once("ready", async () => {
     theme,
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
     release: {check: release.check, current: release.current},
+    when: {check: when.check, run: when.run, context: when.contextFor, checker: when.checker, parse: when.rules.parseWhen, parseThen: when.rules.parseThen, help: when.rules.helpText, rules: when.rules},
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, rules: church.rules},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,

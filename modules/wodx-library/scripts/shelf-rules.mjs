@@ -20,8 +20,8 @@ export const SHELF_ORDER = ["vampire", "werewolf", "wraith", "rules", "encyclope
 export const LINE_LABELS = {all: "Every line", vampire: "Vampire", ghoul: "Ghoul", werewolf: "Werewolf", wraith: "Wraith", mage: "Mage", changeling: "Changeling",
   hunter: "Hunter", mummy: "Mummy", demon: "Demon", mortal: "Mortal"};
 
-const DA = ["dark-ages", "long-night", "renaissance"];
-export const ALL_ERAS = ["dark-ages", "long-night", "renaissance", "victorian", "wild-west", "great-war", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement", "classical", "living-gods"];
+const DA = ["dark-ages", "long-night", "renaissance", "age-of-reason"];
+export const ALL_ERAS = ["dark-ages", "long-night", "renaissance", "age-of-reason", "victorian", "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement", "classical", "living-gods"];
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const title = s => String(s ?? "").replace(/[-_]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
@@ -145,15 +145,17 @@ export function buildShelves(src = {}) {
 /** Does an entry fit a line and an era? "all" on either side matches anything. */
 /**
  * An era whose shelf also shows another's entries: 2099 is Future Darkness's last year, the Long Night keeps the Dark
- * Ages books, and the Time of Judgment is the modern setting's last years (house rule, see PENDING-REVIEW).
+ * Ages books, the Time of Judgment is the modern setting's last years, and the two bridge eras show the era before
+ * (Mid-century the modern entries too, for the history that leads there). House rule, see PENDING-REVIEW.
  */
-export const SHELF_LIKE = {"time-of-future-judgement": "future-darkness", "long-night": "dark-ages", "time-of-judgment": "modern"};
+export const SHELF_LIKE = {"time-of-future-judgement": ["future-darkness"], "long-night": ["dark-ages"], "time-of-judgment": ["modern"],
+  "age-of-reason": ["renaissance"], "mid-century": ["great-war", "modern"]};
 
 export function fits(flags, {line = "all", era = null} = {}) {
   const f = flags ?? {};
   const lineOk = line === "all" || (f.lines ?? []).includes("all") || (f.lines ?? []).includes(line);
-  const like = SHELF_LIKE[era] ?? era;
-  const eraOk = !era || (f.eras ?? []).includes(era) || (f.eras ?? []).includes(like);
+  const eras = f.eras ?? [];
+  const eraOk = !era || eras.includes(era) || (SHELF_LIKE[era] ?? []).some(e => eras.includes(e));
   return lineOk && eraOk;
 }
 

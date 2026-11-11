@@ -107,7 +107,7 @@ body.wodx-look[data-wodx-kit="long-night"] {
   --wx-vignette: radial-gradient(ellipse at center, transparent 45%, rgba(40, 20, 5, 0.28) 100%);
 }
 /* Sorcerers Crusade (and the ancient eras): old-style roman type, engraved borders */
-body.wodx-look:is([data-wodx-kit="renaissance"], [data-wodx-kit="classical"], [data-wodx-kit="living-gods"]) {
+body.wodx-look:is([data-wodx-kit="renaissance"], [data-wodx-kit="age-of-reason"], [data-wodx-kit="classical"], [data-wodx-kit="living-gods"]) {
   --wx-paper: #f0e8d5;
   --wx-paper-2: rgba(40, 60, 90, 0.06);
   --wx-bar: #e3d7bb;
@@ -230,6 +230,36 @@ body.wodx-look[data-wodx-kit="great-war"] {
   --wx-head-tt: uppercase;
   --wx-head-ls: 0.06em;
   --wx-body-size: 0.95em;
+}
+/* Mid-century: typewriter on cream carbon paper, no stencil */
+body.wodx-look[data-wodx-kit="mid-century"] {
+  --wx-paper: #e6dfca;
+  --wx-paper-2: rgba(40, 50, 70, 0.07);
+  --wx-bar: #2f3a4a;
+  --wx-bar-ink: #f2eee2;
+  --wx-bar-mix: 30%;
+  --wx-ink: #1e2128;
+  --wx-quiet: #4a5060;
+  --wx-rule: #6f7686;
+  --wx-field: rgba(252, 250, 242, 0.7);
+  --wx-btn: rgba(252, 250, 242, 0.55);
+  --wx-kit-accent: #a0281c;
+  --wx-on-accent: #f8f3e6;
+  --wx-good: #2d5e22;
+  --wx-bad: #9b1c10;
+  --wx-focus: #1d4f9a;
+  --wx-texture: var(--wx-grain-fibre);
+  --wx-frame: inset 0 0 0 1px var(--wx-rule);
+  --wx-radius: 2px;
+  --wx-orn: "◆";
+  --wx-f-title: "WX Typewriter", "WX Courier", monospace;
+  --wx-f-head: "WX Typewriter", "WX Courier", monospace;
+  --wx-f-body: "WX Baskerville", Georgia, serif;
+  --wx-f-ui: "WX Typewriter", "WX Courier", monospace;
+  --wx-f-mono: "WX Courier", monospace;
+  --wx-title-size: 1.15em;
+  --wx-head-ls: 0.03em;
+  --wx-body-size: 0.93em;
 }
 /* Modern and the Time of Judgment: typewriter and grunge, gothic-punk, neon on black */
 body.wodx-look:is([data-wodx-kit="modern"], [data-wodx-kit="time-of-judgment"]) {

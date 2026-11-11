@@ -235,6 +235,7 @@ export class LedgerApp extends ApplicationV2 {
     const names = [...(game.actors ?? [])].map(a => `<option value="${esc(a.name)}"></option>`).join("");
     const row = e => `<div class="wodx-ledger-row" data-search-item data-search-text="${esc(`${e.kind} ${e.from.name} ${e.to.name} ${e.what} ${e.status}`)}">
       <div><strong>${esc(L.KINDS[e.kind].split(" (")[0])}${e.size ? ` (${esc(L.BOONS[e.size])})` : ""}</strong>: ${esc(e.from.name || "someone")}${e.to.name ? ` to ${esc(e.to.name)}` : ""}. ${esc(e.what)}</div>
+      ${e.steps?.length ? `<ul class="wodx-ledger-steps">${e.steps.map(x => `<li>${x.done ? "&#10003;" : "&#9675;"} ${esc(x.text)}${x.done && x.by ? ` <span class="wodx-quiet">(${esc(x.by)})</span>` : ""}</li>`).join("")}</ul>` : ""}
       <div class="wodx-quiet">Made ${esc(dateOf(e.made))}${e.due !== null ? `, due ${esc(dateOf(e.due))}` : ""}. ${esc(L.STATUS[e.status])}.${e.history.length ? ` ${esc(e.history.at(-1).what)}` : ""}</div>
       ${e.status === "open" ? `<div class="wodx-buttons"><button type="button" data-action="status" data-id="${esc(e.id)}" data-status="kept">Kept or paid</button><button type="button" data-action="status" data-id="${esc(e.id)}" data-status="broken">Broken</button><button type="button" data-action="status" data-id="${esc(e.id)}" data-status="void">Cancel</button></div>` : ""}</div>`;
     const open = s.entries.filter(e => e.status === "open").sort((a, b) => (a.due ?? Infinity) - (b.due ?? Infinity));
@@ -252,6 +253,7 @@ export class LedgerApp extends ApplicationV2 {
         <div class="form-group"><label>Who owes or swore</label><input type="text" name="from" list="wodx-ledger-names" placeholder="A character's name"></div>
         <div class="form-group"><label>To whom</label><input type="text" name="to" list="wodx-ledger-names" placeholder="Optional"></div>
         <div class="form-group"><label>What</label><input type="text" name="what" placeholder="What was promised, owed or will happen"></div>
+        <div class="form-group"><label>Steps (an objective)</label><textarea name="steps" rows="3" placeholder="reach the cellar stairs&#10;open the reliquary&#10;found the trapdoor"></textarea></div>
         <div class="form-group"><label>Due (year, month, day)</label><div class="form-fields">
           <input type="number" name="year" placeholder="${today.year}" step="1" aria-label="Year"><input type="number" name="month" min="1" max="12" placeholder="month" aria-label="Month"><input type="number" name="day" min="1" max="31" placeholder="day" aria-label="Day"></div></div>
         <datalist id="wodx-ledger-names">${names}</datalist>
@@ -273,9 +275,34 @@ export class LedgerApp extends ApplicationV2 {
       try { due = getEngine().dateToTime({year: Number(f.year.value), month: Number(f.month.value) || 1, day: Number(f.day.value) || 1, hour: 21, minute: 0}); }
       catch { return ui.notifications.warn("That date never happened here: it was skipped at the calendar reform."); }
     }
-    await saveEntry({kind: f.kind.value, size: f.size.value, from: actor(f.from.value), to: f.to.value.trim() ? actor(f.to.value) : null, what: f.what.value, due});
+    await saveEntry({kind: f.kind.value, size: f.size.value, from: actor(f.from.value), to: f.to.value.trim() ? actor(f.to.value) : null, what: f.what.value, due,
+      steps: f.kind.value === "objective" ? String(f.steps?.value ?? "") : []});
     if ( due !== null && due <= now() ) await checkDue();
   }
   static async #onStatus(event, target) { await setStatus(target.dataset.id, target.dataset.status); }
   static async #onVeil(event, target) { await moveVeil(Number(target.dataset.delta), "By hand"); }
+}
+
+/** Storyteller 0.20.0: a map event ticks the steps of open objectives, with a quiet note to the Storyteller. */
+export async function onMapEventObjectives(ev) {
+  if ( !isActiveGM() || skipping() || !ev || ev.undone ) return [];
+  const st = ledger();
+  if ( !st.entries.some(e => e.kind === "objective" && e.status === "open") ) return [];
+  const notes = [];
+  await mutate(s => {
+    for ( let i = 0; i < s.entries.length; i++ ) {
+      const r = L.tickObjective(s.entries[i], ev);
+      if ( !r.ticked.length ) continue;
+      r.entry.history = [...(r.entry.history ?? []), {at: now(), what: `${r.finished ? "Done" : "Step done"}: ${r.ticked.join("; ")}.`}].slice(-20);
+      s.entries[i] = r.entry;
+      notes.push({e: r.entry, ticked: r.ticked, finished: r.finished});
+    }
+    return notes.length ? {value: s} : null;
+  });
+  for ( const n of notes ) {
+    const left = n.e.steps.filter(x => !x.done).length;
+    await log({kind: "ledger", attention: n.finished ? "Objective done" : null, name: ev.whoName ?? "",
+      text: `${n.e.what}: ${n.ticked.join("; ")}${n.finished ? ". Every step is done." : `. ${left} step${left === 1 ? "" : "s"} left.`}`});
+  }
+  return notes;
 }

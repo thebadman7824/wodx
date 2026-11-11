@@ -3,6 +3,7 @@ import CombatHelper from "../../scripts/combat-helpers.js";
 import CreateHelper from "../../scripts/create-helpers.js";
 import Functions from "../../functions.js";
 import PCActorAPI from "../api-handler.js";
+import { systemChanges } from "../../scripts/wodx-save.js";
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -810,6 +811,9 @@ export class WoDActor extends Actor {
     async _onUpdate(updateData, options, user) {
         super._onUpdate(updateData, options, user);
 
+        // WoDX fork: only the client that made the change recomputes, so two owners never both write the actor back
+        if (user !== game.user.id) return;
+
         if (this.type !== "PC" && this.type !== "Group") {
             let actor;
 
@@ -919,7 +923,9 @@ export class WoDActor extends Actor {
                 updateData.system.movement = await CombatHelper.CalculateMovement(updateData);
 
                 updateData.system.settings.isupdated = true;
-                await actor.update(updateData);
+                // WoDX fork: write back only what the recompute changed, not the whole actor
+                const changes = systemChanges(actor.toObject().system, updateData.system);
+                if (Object.keys(changes).length) await actor.update(changes);
             }
             catch (err) {
                 ui.notifications.error(`Cannot update Actor ${actor?.name}. Please check console for details.`);
@@ -939,6 +945,7 @@ export class WoDActor extends Actor {
 
         if (this.type === "PC" || this.type === "Group") return;
         if (this.permission < 3) return;
+        if (userId !== game.user.id) return; // WoDX fork: only the client that changed the items recomputes
         if (collection !== "items" || !documents?.length) return;
 
         (async () => {
@@ -946,7 +953,8 @@ export class WoDActor extends Actor {
                 let actorData = foundry.utils.duplicate(this);
                 actorData = await calculateTotals(actorData);
                 actorData.system.settings.isupdated = true;
-                await this.update(actorData);
+                const changes = systemChanges(this.toObject().system, actorData.system); // WoDX fork: changed values only
+                if (Object.keys(changes).length) await this.update(changes);
             } catch (err) {
                 ui.notifications.error(`Cannot update Actor ${this?.name} after item change. Please check console for details.`);
                 console.error(err);

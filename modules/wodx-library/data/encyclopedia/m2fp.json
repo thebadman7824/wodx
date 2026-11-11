@@ -66,6 +66,18 @@
    "modern"
   ],
   "summary": "Key dates from Mistridge to the founding quests.",
+  "date": {
+   "from": 1210,
+   "to": 1457,
+   "label": "1210 to 1457",
+   "refs": [
+    {
+     "book": "m2fp",
+     "page": 12,
+     "pdf": 8
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Craftmasons destroyed Mistridge in the winter of 1210, and the Convention of the White Tower met on 25 March 1325; the Ascension War is dated from 1330.",

@@ -153,6 +153,17 @@
    "modern"
   ],
   "summary": "The Camarilla campaign that broke the Sabbat's hold on New York.",
+  "date": {
+   "from": 1999,
+   "label": "1999",
+   "refs": [
+    {
+     "book": "nybn",
+     "page": 30,
+     "pdf": 31
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Jan Pieterzoon ran the front line: arranging with the Giovanni to slip Kindred into the city, timing the strike so attackers inside and outside New York hit together, and brokering a Setite deal to sell Sabbat buyers blood said to be a Methuselah's.",

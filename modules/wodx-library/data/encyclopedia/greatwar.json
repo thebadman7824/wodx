@@ -10,6 +10,18 @@
    "great-war"
   ],
   "summary": "The dead from November 1918 to the eve of the 1929 crash.",
+  "date": {
+   "from": 1918,
+   "to": 1929,
+   "label": "11 November 1918 to 1929",
+   "refs": [
+    {
+     "book": "greatwar",
+     "page": 15,
+     "pdf": 15
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The setting covers the years from Armistice Day, 11 November 1918, up to the night before the stock market crash of 1929.",
@@ -73,6 +85,17 @@
    "great-war"
   ],
   "summary": "The psychic storm born of the Somme.",
+  "date": {
+   "from": 1916,
+   "label": "from 1916 (the Somme)",
+   "refs": [
+    {
+     "book": "greatwar",
+     "page": 16,
+     "pdf": 16
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The carnage of the Somme spawned the Fourth Great Maelstrom, which still rages.",

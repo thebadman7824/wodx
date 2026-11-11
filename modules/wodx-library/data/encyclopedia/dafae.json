@@ -128,6 +128,18 @@
    "dark-ages"
   ],
   "summary": "The hundred-year peace between the Four Courts.",
+  "date": {
+   "from": 1130,
+   "to": 1230,
+   "label": "AD 1130 to 1230",
+   "refs": [
+    {
+     "book": "dafae",
+     "page": 19,
+     "pdf": 20
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Oath-Truce is a pact among the Four Courts to halt hostilities for a hundred years.",
@@ -530,6 +542,19 @@
    "dark-ages"
   ],
   "summary": "The long war among the Four Courts.",
+  "date": {
+   "from": 300,
+   "to": 399,
+   "label": "ended in the 300s AD",
+   "approx": true,
+   "refs": [
+    {
+     "book": "dafae",
+     "page": 24,
+     "pdf": 25
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Courts fought for many years, ending at the dreadful Battle of Stone, fought in the 300s AD.",
@@ -582,6 +607,19 @@
    "dark-ages"
   ],
   "summary": "A battle fought without firstborn.",
+  "date": {
+   "from": 1,
+   "to": 100,
+   "label": "1st century AD",
+   "approx": true,
+   "refs": [
+    {
+     "book": "dafae",
+     "page": 47,
+     "pdf": 48
+    }
+   ]
+  },
   "claims": [
    {
     "text": "It was fought on a field near the Crystal Fortress, where neither side was strong enough to wrest the fortress away from Winter.",
@@ -622,6 +660,19 @@
    "dark-ages"
   ],
   "summary": "The battle all four Courts lost.",
+  "date": {
+   "from": 300,
+   "to": 399,
+   "label": "4th century AD",
+   "approx": true,
+   "refs": [
+    {
+     "book": "dafae",
+     "page": 24,
+     "pdf": 25
+    }
+   ]
+  },
   "claims": [
    {
     "text": "It followed the Battle of Ice by some 300 years, around the time Constantine I turned Christian.",

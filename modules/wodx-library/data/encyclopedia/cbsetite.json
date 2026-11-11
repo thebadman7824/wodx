@@ -10,6 +10,19 @@
    "ancient"
   ],
   "summary": "The clan's own chronicle of its rise and fall along the Nile.",
+  "date": {
+   "from": -1799,
+   "to": -1600,
+   "label": "18th century BC, then 200 years of Hyksos rule",
+   "approx": true,
+   "refs": [
+    {
+     "book": "cbsetite",
+     "page": 15,
+     "pdf": 16
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Setite chronicles from the Old Kingdom are always said to be kept at some other temple. The clan claims the civil wars that ended the Old Kingdom, when Setites are said to have ruled openly as nomarchs.",

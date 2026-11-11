@@ -61,6 +61,17 @@
    "modern"
   ],
   "summary": "The Shadow's century of peace with the gweilo, and its end.",
+  "date": {
+   "from": 1997,
+   "label": "ended 1997",
+   "refs": [
+    {
+     "book": "dbbf",
+     "page": 33,
+     "pdf": 42
+    }
+   ]
+  },
   "claims": [
    {
     "text": "For a century the Bone Flowers handled the Western factions of shen in Hong Kong, and dealings with the Kin-jin grew almost easy.",

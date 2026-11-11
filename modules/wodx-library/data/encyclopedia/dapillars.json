@@ -247,6 +247,17 @@
    "dark-ages"
   ],
   "summary": "A warning that haunts Italian princes.",
+  "date": {
+   "from": 1194,
+   "label": "1194",
+   "refs": [
+    {
+     "book": "dapillars",
+     "page": 136,
+     "pdf": 137
+    }
+   ]
+  },
   "claims": [
    {
     "text": "Until 1194 the Brujah Marco held Orvieto as prince, and heretics thrived in the town with Marco’s blessing.",

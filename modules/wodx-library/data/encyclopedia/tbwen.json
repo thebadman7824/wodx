@@ -103,6 +103,17 @@
    "victorian"
   ],
   "summary": "The great rite of 1889 as the Wendigo tell it.",
+  "date": {
+   "from": 1889,
+   "label": "1889",
+   "refs": [
+    {
+     "book": "tbwen",
+     "page": 27,
+     "pdf": 28
+    }
+   ]
+  },
   "claims": [
    {
     "text": "The Storm Eater, a blend of Weaver and Wyrm, was destroyed in 1889 by a rite the Pure Ones and Wyrmcomers found together; the Wendigo say its exact form is now lost.",
