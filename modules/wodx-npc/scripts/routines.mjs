@@ -1270,47 +1270,66 @@ export function build(ctx) {
   const lastLook = new Map();
   const moveWait = new Map();
 
-  /** One NPC and one character: does the NPC want a fight, and does it see them? Starts it when both. */
+  /**
+   * Where a token stands once its move is done: the document's place, not the token on screen, which is still
+   * walking there while the move animates (0.15.1: the check ran mid-walk and saw the character still far off).
+   */
+  const restCentre = t => {
+    const d = t.document, g = canvas.grid?.size ?? canvas.dimensions?.size ?? 100;
+    return {x: d.x + (Number(d.width) || 1) * g / 2, y: d.y + (Number(d.height) || 1) * g / 2};
+  };
+  const restYards = (a, b) => {
+    try { return canvas.grid.measurePath([restCentre(a), restCentre(b)]).distance / (1 / (C()?.auto?.toYards?.(1, canvas.scene?.grid?.units ?? "ft") ?? 1 / 3)); }
+    catch (e) { return null; }
+  };
+
+  /** One NPC and one character: does the NPC want a fight, and does it see them? Starts it when both. Returns
+   * the starter's answer, or {skip: why} (kept for the gate and for a Storyteller asking why nothing happened). */
   async function lookForFoe(nTok, pTok, {range, alarm, book}) {
+    if ( !nTok?.actor || !pTok?.actor ) return {skip: "no token"};
     const att = attitudeApi()?.of?.(nTok.actor, pTok.actor);
     const want = FR.wantsFight(profileFor(nTok.actor), att?.step ?? 0, {alarm});
-    if ( !want ) return null;
-    if ( inRunningFight(nTok.document) && inRunningFight(pTok.document) ) return null;
-    const yards = ctx.yardsBetween(nTok, pTok);
-    const inSight = (yards === null || yards <= range) && !sightBlocked(nTok.center, pTok.center);
-    if ( !inSight ) return null;
+    if ( !want ) return {skip: `does not want a fight (attitude ${att?.step ?? "unknown"}, aggression ${profileFor(nTok.actor).aggression})`};
+    if ( inRunningFight(nTok.document) && inRunningFight(pTok.document) ) return {skip: "already fighting"};
+    const yards = restYards(nTok, pTok);
+    if ( yards !== null && yards > range ) return {skip: `out of range (${Math.round(yards)} of ${range} yards)`};
+    if ( sightBlocked(restCentre(nTok), restCentre(pTok)) ) return {skip: "out of sight"};
     const k = `${nTok.id}:${pTok.id}`, now = Date.now();
     const quiet = !sneaking(pTok.document) && !ctx.hiddenByObfuscate(pTok);
-    if ( !quiet && lastLook.get(k) > now - FR.NOTICE_EVERY * 1000 ) return null;
+    if ( !quiet && lastLook.get(k) > now - FR.NOTICE_EVERY * 1000 ) return {skip: "looked a moment ago"};
     lastLook.set(k, now);
     const base = a => a?.isToken ? (a.baseActor ?? game.actors.get(a.id)) : a;
     const wa = base(nTok.actor), act = whereOf(wa)?.activity, intruder = pTok.actor;
     const ob = ctx.hiddenByObfuscate(pTok) ? Math.max(1, disc(intruder, "obfuscate")) : 0;
     const res = R.notice({perception: at(nTok.actor, "perception"), alertness: ab(nTok.actor, "alertness"), awareness: ab(nTok.actor, "awareness"),
-      auspex: disc(nTok.actor, "auspex") || (profileFor(nTok.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight},
+      auspex: disc(nTok.actor, "auspex") || (profileFor(nTok.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight: true},
       {dexterity: at(intruder, "dexterity"), stealth: ab(intruder, "stealth"), manipulation: at(intruder, "manipulation"), subterfuge: ab(intruder, "subterfuge"), sneaking: sneaking(pTok.document), obfuscate: ob},
       {book, diff: AR.NOTICE_DIFF[alarm] ?? 6});
-    if ( !res.noticed ) return null;
+    if ( !res.noticed ) return {skip: `does not notice (${res.why})`};
     return C()?.fight?.start?.({scene: canvas.scene, tokens: [nTok.document, pTok.document], source: want.source,
       why: `${nTok.name} ${want.why}, and sees ${pTok.name} (${res.why})`});
   }
 
   /** Active Storyteller: a token moved on the scene being viewed. Hostile NPCs who see a character start a fight. */
-  async function watchFoes(doc) {
-    if ( !isActiveGM() || skipping() || fightMode() === "off" || doc.parent?.id !== canvas.scene?.id ) return;
+  async function watchFoes(docLike) {
+    const doc = docLike?.document ?? docLike;
+    if ( !isActiveGM() || skipping() || fightMode() === "off" || doc?.parent?.id !== canvas.scene?.id ) return [{skip: "not checked here"}];
     const moved = canvas.tokens.get(doc.id);
-    if ( !moved?.actor ) return;
+    if ( !moved?.actor ) return [{skip: "no token"}];
     const scene = canvas.scene;
-    await loadCalendar();
-    const d = describer()(game.time.worldTime);
+    let d = {};
+    try { await loadCalendar(); d = describer()(game.time.worldTime) ?? {}; } catch (e) { d = {}; }
     const yardsSet = (() => { try { return game.settings.get("wodx-combat", "fightSightYards"); } catch (e) { return 30; } })();
     const range = FR.sightRange(yardsSet, !!d.isNight), alarm = alertLevel(scene), book = bookNow();
     const others = canvas.tokens.placeables.filter(t => t.actor && t.id !== moved.id).map(t => ({id: t.id, pc: !!t.actor.hasPlayerOwner, down: !!downState(t.actor), hidden: !!t.document.hidden}));
-    if ( downState(moved.actor) ) return;
+    if ( downState(moved.actor) ) return [{skip: "down"}];
+    const out = [];
     for ( const p of FR.pairsFor({id: moved.id, pc: !!moved.actor.hasPlayerOwner}, others) ) {
       const r = await lookForFoe(canvas.tokens.get(p.npc), canvas.tokens.get(p.pc), {range, alarm, book});
+      out.push({...p, range, ...(r?.skip ? {skip: r.skip} : {done: r?.done ?? null})});
       if ( r?.done === "started" || r?.done === "joined" || r?.done === "suggested" ) break;
     }
+    return out;
   }
   /** A token's move ends after its animation: wait a moment, once per token. */
   function onTokenMoved(doc, changes) {

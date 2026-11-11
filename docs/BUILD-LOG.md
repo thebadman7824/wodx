@@ -1462,3 +1462,6 @@ Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 
 - Still open: Kindred of the East (unreadable scan), 85 Demon Lore powers whose names the scan cut short.
 - book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
 - Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
+
+## 2026-11-11: fight on sight reads where tokens stand (NPC 0.15.1)
+gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight check ran 0.9 s after a move and read the token as drawn, still walking from 38 yards off, so the guard was out of range. It now reads the document's resting place for range and walls, and watchFoes returns why each pair was skipped (the gate records it). Ambush book check (PC): V20 printed p. 274 (pdf 282), Dexterity + Stealth against Perception + Alertness, a win gives one free attack with the extra successes as dice, a tie lets the ambusher go first but the target may defend, anyone already fighting cannot be ambushed; V20 Dark Ages printed p. 345, the same roll, a win gives one free action the target cannot oppose, no margin bonus. Not built yet.

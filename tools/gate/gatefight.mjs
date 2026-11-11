@@ -67,7 +67,11 @@ export async function run() {
       await pc.update({x: G * 6, y: G * 5});
       await until(() => cards(t0).length, 6000);
       card = cards(t0)[0] ?? null;
+      // No card: ask the watcher why, so the result says which check stopped it
+      const why = card ? null : await game.modules.get("wodx-npc").api.routines.watchFoes?.(pc);
+      if ( why && !card ) card = cards(t0)[0] ?? null;
       const f = card?.getFlag("wodx-combat", "fightStart");
+      if ( why ) R.notes.push({sightCheck: why, pcAt: [pc.x, pc.y], npcAt: [npc.x, npc.y]});
       ok("suggest on sight", !!card && f?.source === "sight" && f.tokens.includes(npc.id) && f.tokens.includes(pc.id) && !fightsHere().some(c => c.started),
         {source: f?.source, why: f?.why});
     });
@@ -79,6 +83,7 @@ export async function run() {
       ok("start the fight", !!c && c.combatants.some(x => x.tokenId === npc.id) && c.combatants.some(x => x.tokenId === pc.id), {button: !!el});
     });
     await step("undo", async () => {
+      if ( !fightsHere().some(c => c.started) ) return ok("undo", false, {note: "no fight to take back"});
       await until(() => document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-undo`), 3000);
       document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-undo`)?.click();
       await until(() => !fightsHere().length, 5000);
