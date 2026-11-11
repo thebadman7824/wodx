@@ -1,5 +1,6 @@
 import {MODULE_ID, esc} from "./util.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
+import * as BW from "./bg-world.mjs";
 import {searchBox} from "./search.mjs";
 import * as T from "./trait-rules.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
@@ -60,6 +61,8 @@ export async function open(actorOrId) {
   if ( !a || !(game.user.isGM || a.isOwner) ) return null;
   const gm = game.user.isGM;
   const v = view(a), t = T.traitsOf(v);
+  // Step 8: backgrounds the world does not hold yet (Allies with no sheets, a Domain with no region)
+  const todo = gm ? BW.plan(a, v).filter(x => x.more > 0) : [];
   const opts = (kind, sel) => [`<option value="">Match by name</option>`, `<option value="none"${sel === "none" ? " selected" : ""}>No effect (a home-made trait)</option>`,
     ...ENTRIES().filter(e => e.kind === kind).sort((x, y) => x.name.localeCompare(y.name))
       .map(e => `<option value="${esc(e.key)}"${sel === e.key ? " selected" : ""}>${esc(e.name)}</option>`)].join("");
@@ -82,8 +85,13 @@ export async function open(actorOrId) {
   return foundry.applications.api.DialogV2.wait({rejectClose: false, render: wire, position: {width: 600}, window: {title: `Trait effects: ${a.name}`}, classes: ["wodx-dialog", "wct-traits"],
     content: `<p>Merits, flaws and backgrounds on ${esc(a.name)} (${esc(v.kind)}), and what WoDX does with each. ${t.unmatched.filter(u => !u.skipped).length} with no effect yet.</p>
       ${v.features.length > 5 ? searchBox("ul.wct-traits-list", "Search traits…", "Search traits") : ""}<div class="wst-scroll"><ul class="wct-traits-list">${rows || "<li>No merits, flaws or backgrounds on this sheet.</li>"}</ul></div>`,
-    buttons: [{action: "close", label: "Close", default: true}]});
+    buttons: [...(todo.length ? [{action: "real", label: `Make them real (${todo.map(x => x.name).join(", ")})`, callback: () => BW.makeReal(a, v)}] : []),
+      {action: "close", label: "Close", default: true}]});
 }
+
+/* ---- Step 8 (Chronicle 0.23.0): backgrounds as things in the world ---- */
+export const worldPlan = actor => BW.plan(actor, view(actor));
+export const makeReal = actor => BW.makeReal(actor, view(actor));
 
 /* ---- Step 7 (Chronicle 0.22.0) ---- */
 
@@ -146,4 +154,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, senses, shows, attitudeSeed, triggers, pulls, ledgerFor, prompt, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {view, of, has, effects, senses, shows, attitudeSeed, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};

@@ -416,3 +416,29 @@ export const PROMPTS = {
   "cursed": {on: ["night"], text: "the curse may show itself tonight"},
   "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
 };
+
+/**
+ * Step 8 (Chronicle 0.23.0): backgrounds made into things in the world. People backgrounds become NPC sheets tied to the
+ * character (one a dot up to max, house rule; count fixes the number), each starting at an attitude step toward the
+ * character (NPC attitude, -3 Hunted to +3 Honoured). ghoulFor: holders of these kinds get ghouls (a Kindred's
+ * retainers). sameKind: the NPC is the holder's own kind (a mentor). Place backgrounds become a region on the scene the
+ * character is on, owned by the character in WoDX Storyteller, its size growing with the dots.
+ */
+export const BG_WORLD = {
+  "allies": {people: true, max: 5, role: "Ally", to: 2},
+  "contacts": {people: true, max: 5, role: "Contact", to: 1},
+  "retainers": {people: true, max: 5, role: "Retainer", to: 3, ghoulFor: ["kindred"]},
+  "mentor": {people: true, count: 1, role: "Mentor", to: 2, sameKind: true},
+  "followers": {people: true, max: 5, role: "Follower", to: 2},
+  "cult": {people: true, max: 5, role: "Cultist", to: 2},
+  "kinfolk": {people: true, max: 5, role: "Kinfolk", to: 1},
+  "pacts": {people: true, max: 5, role: "Thrall", to: 1},
+  "retinue": {people: true, max: 5, role: "Retinue", to: 2},
+  "domain": {place: true, word: "domain"},
+  "haunt": {place: true, word: "haunt"},
+  "holdings": {place: true, word: "holdings"},
+  "node": {place: true, word: "node"},
+  "sanctum": {place: true, word: "sanctum"},
+  "chantry": {place: true, word: "chantry"},
+  "tomb": {place: true, word: "tomb"}
+};
