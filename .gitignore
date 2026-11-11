@@ -5,3 +5,6 @@
 **/node_modules/
 tools/harness/package-lock.json
 __pycache__/
+
+# A symlinked node_modules is not matched by the folder pattern above
+**/node_modules
