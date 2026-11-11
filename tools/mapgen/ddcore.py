@@ -304,7 +304,7 @@ def write_map(fname, cols, rows, seed, lvl):
                       "asset_manifest": manifest, "editor_state": editor},
            "world": {"format": 2, "width": cols, "height": rows, "next_node_id": format(NID.n + 1, "x"),
                      "msi": {"offset_map_size": 512, "max_offset_distance": .2, "cell_size": 64, "seed": format(seed, "08x")},
-                     "grid": {"color": "7f000000"}, "embedded": [], "levels": {"0": lvl}}}
+                     "grid": {"color": "7f000000"}, "embedded": {}, "levels": {"0": lvl}}}
     json.dump(doc, open(fname, "w"), indent="\t")
 
 def splat_byte(wgt):
