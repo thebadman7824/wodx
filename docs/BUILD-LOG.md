@@ -1595,3 +1595,6 @@ Ben asked for a bug check of everything done so far. The harness passed 1,286 of
 
 ## 2026-11-11: fuller rooms on generated maps
 Ben found the burgher palace too bare. ddcore.dress() now dresses every furnished room after its furniture: pieces along the walls and in the corners (about one per 4 squares, by what the room is for), a rug under the open middle of living rooms, studies and bedrooms, small things on every table and desk, a lit sconce on a wall and a chandelier in big rooms, plants and a bench in courts. Each lamp is also a Dungeondraft light, written as Dungeondraft writes one. Dressing has its own random generator and stays out of room.items, so the furniture, the WoDX files and the town samples do not change. Building maps re-emitted (burgher palace ground 32 to 78 objects, 8 lights).
+
+## 2026-11-11: which way things face
+Ben saw chairs facing random ways and the hearth facing its wall. ddcore.orient() turns every piece after dressing. Seats face their nearest table, or else the middle of the room, in quarter turns. Pieces against a wall (beds, ovens, shelves, cupboards, mirrors) put their backs to it, keeping their footprint. Ovens, whose picture is half their 2 by 2 square deep, are moved flush to their wall. Only the pictures move: the WoDX files mark the same spots, and town features keep their footprint turn.
