@@ -93,3 +93,80 @@ export function addSway(list, sway, now) {
     const live = (Array.isArray(list) ? list : []).filter(x => x && Number(x.until) >= now && !(x.kind === sway.kind && x.npc === sway.npc));
     return [...live, { kind: sway.kind, npc: sway.npc, npcName: sway.npcName ?? "", at: now, until: now + SWAY_SECONDS }].slice(-SWAY_LIMIT);
 }
+
+/* ------------------------------------------------------------------ */
+/*  Lift and plant (3.21.0)                                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Picking a pocket, or slipping something into one. Neither V20 nor V20 Dark Ages writes a system: Larceny lists
+ * pickpocketing as a specialty (V20 p. 105) and Legerdemain covers it in the Dark Ages (V20 Dark Ages p. 165, with
+ * Dexterity + Legerdemain at 8 for a key off a guard's belt, p. 328). House rules: the hand is Dexterity + Larceny
+ * (Legerdemain, else Subterfuge) at 6, and the mark notices only by beating it with Perception + Alertness, as with
+ * sneaking. Only what fits a pocket or a jacket (concealment P or J) can be lifted from the person.
+ */
+export const LIFT = {
+    lift: { key: "lift", label: "Lift something", icon: "fa-hand-holding", preset: "liftNpc",
+        note: "Take something small off them unseen. They notice only by beating your successes with Perception + Alertness.", ref: "V20 p. 105, V20 Dark Ages pp. 165, 328, house rule",
+        moves: { noticed: -2, botch: -2 } },
+    plant: { key: "plant", label: "Plant something", icon: "fa-hand-holding-heart", preset: "liftNpc",
+        note: "Slip something small into their pocket or bag unseen. They notice only by beating your successes.", ref: "house rule",
+        moves: { noticed: -1, botch: -1 } }
+};
+export const LIFT_PRESET = {
+    liftNpc: { label: "Pick a pocket (Dex + Larceny vs Per + Alertness)", attr: "dexterity", ability: "larceny", diff: 6, mode: "resisted",
+        alts: [["dexterity", "larceny"], ["dexterity", "legerdemain"], ["dexterity", "subterfuge"]], opp: { attr: "perception", ability: "alertness", diff: 6, needMore: true },
+        note: "House rule: no book writes a pickpocketing system; the mark notices only by beating the thief's successes." }
+};
+Object.assign(PRESETS, LIFT_PRESET);
+
+const STEP = { P: 0, J: 1, T: 2, C: 2, N: 3 };
+/** An item's concealment step: WoDX Sheets' flag, the weapon's letter, else a guess by type (null: unknown). */
+export function concealOf(item) {
+    const v = item?.flags?.["wodx-sheets"]?.conceal ?? item?.system?.conceal;
+    const k = String(v ?? "").trim().toUpperCase().charAt(0);
+    if (k in STEP) return STEP[k];
+    if (item?.flags?.["wodx-sheets"]?.coin) return STEP.P;
+    return null;
+}
+/** What can be taken from someone's person: pocket or jacket sized, not a container, not armour. Unknown sizes count when the type is small. */
+export function liftable(items = []) {
+    return (items ?? []).filter(it => {
+        if (!it || it.system?.iscontainer || it.type === "Armor") return false;
+        const s = concealOf(it);
+        if (s !== null) return s <= STEP.J;
+        return !["Melee Weapon", "Ranged Weapon", "Feature", "Power", "Trait"].includes(it.type) && /item|gear|equipment|treasure|loot|misc/i.test(String(it.type ?? "item"));
+    });
+}
+
+/**
+ * The outcome of a lift or a plant. me, them: {successes, botch}. Returns {done, noticed, net}: done, the hand worked;
+ * noticed, the mark saw it (a botch is always seen; a fumble the mark misses is neither).
+ */
+export function liftOutcome(me, them) {
+    if (me.botch) return { done: false, noticed: true, net: 0 };
+    const a = me.successes || 0, b = them.botch ? 0 : (them.successes || 0);
+    if (b > a) return { done: false, noticed: true, net: a - b };
+    return { done: a > 0, noticed: false, net: a - b };
+}
+/** With two or more net successes the thief picks; with one, the hand closes on whatever comes first (rand in [0, 1)). */
+export function liftPick(items, net, chosenId, rand = 0) {
+    if (!items?.length) return null;
+    if (net >= 2 && chosenId) return items.find(i => i.id === chosenId) ?? items[0];
+    return items[Math.min(items.length - 1, Math.floor(rand * items.length))];
+}
+/** Coins off the purse: 1 net success a tenth of what they carry, 2 a quarter, 3 or more half (house rule). */
+export function coinShare(carried, net) {
+    const c = Math.max(0, Math.floor(Number(carried) || 0));
+    if (net <= 0 || !c) return 0;
+    return Math.max(1, Math.floor(c * (net >= 3 ? 0.5 : net === 2 ? 0.25 : 0.1)));
+}
+/** Where people keep what is worth stealing, by year (for the card): a belt purse to a cred chip. */
+export function pocketsIn(year) {
+    const y = Number(year);
+    if (!Number.isFinite(y)) return "their purse and pockets";
+    if (y < 1600) return "the purse on their belt";
+    if (y < 1900) return "their coat pockets";
+    if (y < 2020) return "their pockets, wallet or phone";
+    return "their pockets, cred chip or phone";
+}

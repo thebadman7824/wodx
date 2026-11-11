@@ -530,7 +530,7 @@ const PRESETS = {
     seduction: { label: "Seduction → use the Seduction action", redirect: "seduction" }
 };
 
-Object.assign(PRESETS, PM.EXTRA_PRESETS, CK.asPresets(), SOR.PRESETS);
+Object.assign(PRESETS, PM.EXTRA_PRESETS, CK.asPresets(), SOR.PRESETS, SOR.LIFT_PRESET);
 
 /** The pool a list of [attribute, ability] pairs gives this character (common checks and preset alternatives). */
 function pickPool(actor, pools) {
@@ -1799,7 +1799,7 @@ async function diablerieStep(actor, victim, html = "", msg = null) {
 /*  Seduction (p. 339)                                                 */
 /* ================================================================== */
 
-export async function seduction({ actor: a, target: t, onDone = null } = {}) {
+export async function seduction({ actor: a, target: t, onDone = null, shift = 0 } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const target = targetActor(t);
@@ -1822,9 +1822,9 @@ export async function seduction({ actor: a, target: t, onDone = null } = {}) {
         const rolls = [];
         for (const [name, at, ab, diff, fail, botch] of steps) {
             const dice = Math.max(0, attr(actor, at) + (findAbility(actor, ab)?.value ?? 0) + carry + wpen);
-            const r = await rollPool(dice, R.clampDifficulty(diff + aura));
+            const r = await rollPool(dice, R.clampDifficulty(diff + aura + (Number(shift) || 0)));
             rolls.push(r.roll);
-            html += rollBlock(`${name}: ${cap(at)} + ${cap(ab)}`, r, [`difficulty ${diff}${aura ? ` ${aura > 0 ? "+" : ""}${aura} aura` : ""}`, carry ? `+${carry} carried` : ""].filter(Boolean));
+            html += rollBlock(`${name}: ${cap(at)} + ${cap(ab)}`, r, [`difficulty ${diff}${aura ? ` ${aura > 0 ? "+" : ""}${aura} aura` : ""}${shift ? ` ${shift > 0 ? "+" : ""}${shift} how they regard ${actor.name}` : ""}`, carry ? `+${carry} carried` : ""].filter(Boolean));
             if (!r.successes) {
                 html += `<div class="vta-big bad">${r.botch ? botch : fail}</div>`;
                 const m = await post(actor, `${actor.name}: seduction`, html, rolls);
@@ -1889,7 +1889,7 @@ let SOE = null;
 /** "With this person" (3.20.0): dealing with one NPC face to face. */
 function sox() {
     return SOE ??= SOD.build({ R, PRESETS, pickPool, readPool, woundPenalty, setting, road, rollPool, rollBlock, post, opponentPool, esc, dialog, opts,
-        willpower, spendWillpower, seduction, menu, resolveActor });
+        willpower, spendWillpower, seduction, menu, resolveActor, feed, kindOf: a => P.detectProfile(a) });
 }
 
 let CXE = null;
@@ -2187,9 +2187,9 @@ async function createMacros() {
     }
 }
 
-const API = { menu, action, quickCheck, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
+const API = { menu, action, quickCheck, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.20.0",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.21.0",
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2293,6 +2293,8 @@ Hooks.once("ready", async () => {
         MIG.offerMigration().catch(e => console.error("WoDX |", e));
         // The inner voice's proposals (6d): approved in the queue, answered from a card
         (L.chronicle()?.registerApprovalHandler ?? game.modules.get("wodx-chronicle")?.api?.registerApprovalHandler)?.("wodx-voice", { label: "Inner voice", approve: entry => vx().onApproved(entry) });
+        // Lifted and planted items, and being caught at it (3.21.0)
+        try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
     };
     if (L.chronicle()) withChronicle(); else Hooks.once("wodxChronicleReady", withChronicle);
     Hooks.on("wodxEndScene", () => {
