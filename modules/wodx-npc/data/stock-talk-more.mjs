@@ -31,7 +31,7 @@ export const CRY_ALARM = {
   future: ["\"Trigger the alarm! Lock it down!\"", "\"Ping security, all channels!\"", "\"Intruder! Intruder!\"", "\"Somebody flag it, now!\"", "\"Seal the doors!\""]
 };
 /** Cries when hurt (any era). */
-/** NPC 0.16.0: what a rival says when it squares up but holds back, by era. */
+/** NPC 0.17.0: what a rival says when it squares up but holds back, by era. */
 export const CRY_THREAT = {
   medieval: ["\"Not here. Not tonight.\"", "\"Another step and you will regret it.\"", "\"I know what you are.\"", "\"Go back the way you came.\""],
   earlymodern: ["\"Keep your distance, if you value your neck.\"", "\"I know your kind.\"", "\"This is not your street.\"", "\"Another time, then.\""],

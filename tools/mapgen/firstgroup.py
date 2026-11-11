@@ -190,7 +190,16 @@ TYPES = {
         [((8, 0), (8, 9)), ((8, 6), (12, 6))],
         {"Reading room": [(B.TABLE, "centre", 2), (CHAIR, "beside:table", 4), (BOOKCASE, "wall", 3)], "Stacks": [(BOOKCASE, "wall", 4)],
          "Librarian's office": [(B.TABLE, "wall", 1, .9), (CHAIR, "beside:table", 1)]}),
+    # ---------------------------------------------------------------- stand-ins on the town map for buildings on maps of their own
+    "hospital-entrance": T("Hospital entrance", "the entrance block of a hospital whose wards stand on their own map (ddsite.py --kind building --type cdda-hospital)",
+        (1960, 2098), (14, 7), "Tyger_wall.png", "workplace", "office",
+        [("Entrance hall", 0, 2, 9, 5, "terrazzo"), ("Porter's lodge", 9, 2, 5, 5, "lino"), ("Corridor to the wards", 0, 0, 14, 2, "lino")],
+        [("double", 4.5, 7, "h"), ("window", 1.5, 7, "h"), ("window", 11.5, 7, "h"), ("door", 9, 4.5, "v"), ("double", 4.5, 2, "h"), ("double", 7, 0, "h")],
+        [((0, 2), (14, 2)), ((9, 2), (9, 7))],
+        {"Entrance hall": [(B.BENCH, "wall", 3), (CHAIR, "corner", 2)], "Porter's lodge": [(B.TABLE, "wall", 1), (CHAIR, "beside:table", 1)],
+         "Corridor to the wards": []}),
 }
+TYPES["hospital-entrance"].update(portals=E.MODERN, site={"kind": "building", "type": "cdda-hospital"})
 
 for k, v in TYPES.items():
     v["era"] = "dark-ages" if v["built"][0] < 1450 else max((e for e, y in E.ERA_STARTS if y <= v["built"][0]), key=lambda e: dict(E.ERA_STARTS)[e])

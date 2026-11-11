@@ -1454,9 +1454,18 @@ Ben asked whether combat could begin by itself when conditions are met. Combat 3
 - Rituals saved by name in the world setting stRituals; api.effects.storyteller, rituals, saveRitual, forgetRitual, stItems.
 
 
+## 2026-11-11: failed layouts, the hospital, cellars and upper floors (B669)
+Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 26 in all), with the converter now reading nested rooms, palettes beside their maps and turned tiles. Towns that cannot fit the hospital clear houses for it, or put up a hospital entrance whose region names its own map. ddsite.py gains --kind building (any type on its own grounds) and --kind floors (every level of a building as its own map, stair in one spot, index file). A harness test furnishes every level of every building type and checks the stair lines up.
 ## 2026-11-11: keywords for the modern lines' powers (WoDX Actions 3.32.0, B783)
 - power-keywords-lines.js: 837 powers across V20, W20, C20, Hunter, Demon, Mummy and Orpheus name their effect keywords.
 - keywordsOf takes a name or slug for these sets; new api.effects.powersWith and lineSets. Test added in effects.test.mjs.
 - Still open: Kindred of the East (unreadable scan), 85 Demon Lore powers whose names the scan cut short.
 - book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
 - Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
+
+## 2026-11-11: fight on sight reads where tokens stand (NPC 0.15.1)
+gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight check ran 0.9 s after a move and read the token as drawn, still walking from 38 yards off, so the guard was out of range. It now reads the document's resting place for range and walls, and watchFoes returns why each pair was skipped (the gate records it). Ambush book check (PC): V20 printed p. 274 (pdf 282), Dexterity + Stealth against Perception + Alertness, a win gives one free attack with the extra successes as dice, a tie lets the ambusher go first but the target may defend, anyone already fighting cannot be ambushed; V20 Dark Ages printed p. 345, the same roll, a win gives one free action the target cannot oppose, no margin bonus. Not built yet.
+## 2026-11-11: Games by Hyper ideas (Storyteller 0.25.0, NPC 0.16.0, Interactables 0.24.0)
+- Reviewed the Games by Hyper template docs for ideas. Two of the six picks were already built (Atmosphere's weather by season and era; place alarms carried by era), so those became a link (hardship follows the sky, B840) and nothing.
+- Standing that spills over (B841), calls to passers-by (B842), a clue's first look fills the codex (B843), bodies left behind (B844). All house rules, all off by default.
+- Harness: passing-world.test.mjs.

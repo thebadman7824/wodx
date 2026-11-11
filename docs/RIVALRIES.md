@@ -1,6 +1,6 @@
 # Rivalries
 
-The dated rivalries WoDX NPC 0.16.0 reads (modules/wodx-npc/scripts/rivalry-rules.mjs, decisions B820 to B825). Steps run from -1 (Tense) to -3 (Hunts), A toward B and B toward A. V20 of each line first, then Revised or 2nd edition; nothing from 5th edition. Every step and year is a house reading until the book check below fills in the page (pdf or printed). "history" rows follow real events in the Czech lands.
+The dated rivalries WoDX NPC 0.17.0 reads (modules/wodx-npc/scripts/rivalry-rules.mjs, decisions B820 to B825). Steps run from -1 (Tense) to -3 (Hunts), A toward B and B toward A. V20 of each line first, then Revised or 2nd edition; nothing from 5th edition. Every step and year is a house reading until the book check below fills in the page (pdf or printed). "history" rows follow real events in the Czech lands.
 
 | Id | A | B | Years | A to B | B to A | Why | Book to check | Page |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |

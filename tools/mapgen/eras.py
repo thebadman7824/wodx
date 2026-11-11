@@ -563,6 +563,35 @@ def estate(t, tk, n):
     return made
 
 
+def clearing(t, tk, n):
+    """A big type with no open ground left for it (the hospital): houses outside the old town are pulled down for it,
+    as hospitals were built, never a kept building, a street or more than 30 houses. Returns how many went up."""
+    import organic as O
+    tdef = B.TYPES[tk]
+    lw, lh = tdef["size"]
+    made = 0
+    spots = [(i, j) for j in range(4, t.rows - 4, 4) for i in range(4, t.cols - 4, 4) if not t.in_town((i, j))]
+    spots.sort(key=lambda q: math.dist(q, (t.xc, t.yc)))
+    for (cx, cy) in spots:
+        if made >= n: break
+        for th in (0.0, math.pi / 2):
+            cs = O.box_corners(cx, cy, th, lw, lh)
+            under = [o for o in t.blds if any(G.separation(cs, hb) < 1.5 for hb in o.hulls)]
+            if not under or len(under) > 30 or any(o.type in KEEP or o is getattr(t, "mill", None) for o in under): continue
+            saved = (list(t.blds), list(t.households), list(t.gardens), list(t.plots))
+            drop(t, {o.key for o in under}); regrid(t)
+            nb = t.put(tk, tdef["label"], (cx, cy, th, cs, tdef)) if t.free([cs], 1.5, None) else None
+            if not nb:
+                t.blds, t.households, t.gardens, t.plots = saved
+                regrid(t)
+                continue
+            nb.built_era = tdef.get("era")
+            household(t, nb, "nurse")
+            made += 1
+            break
+    return made
+
+
 def _place_blocks(t, tk, n, where):
     R = t.R
     made = 0
@@ -655,6 +684,8 @@ def civic_set(t, k):
         if not n or not variants or kind in have: continue
         tk = t.R.choice(variants)
         made = place_blocks(t, tk, n, where, fallback=where != "estate")
+        if made < n and where == "estate": made += clearing(t, tk, n - made)
+        if made < n and tk == "cdda-hospital": place_blocks(t, "hospital-entrance", n - made, "edge")   # the wards on their own map
         if made < n and where != "estate" and B.TYPES[tk]["role"] in ("shop", "inn"): estate(t, tk, n - made)
 
 

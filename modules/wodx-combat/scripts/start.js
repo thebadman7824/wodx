@@ -204,4 +204,4 @@ export function installStarter() {
     });
 }
 
-export const fightApi = { start, afterAttack, rules: S };
+export const fightApi = { start, afterAttack, accept, undo, rules: S };

@@ -50,6 +50,8 @@ NAMES = [("altar", "Sanctuary"), ("slab", "Mortuary"), ("coffin", "Coffin room")
          ("couch", "Lounge"), ("locker", "Locker room"), ("shelf", "Library"), ("table", "Dining room"), ("crate", "Store")]
 
 # ------------------------------------------------------------------ reading CDDA
+NESTED = {}   # nested chunk id -> its mapgen object (rooms set into a bigger map, as in the motel)
+
 def load(src):
     pal, gens = {}, collections.defaultdict(list)
     for f in glob.glob(os.path.join(src, "data/json/mapgen_palettes/**/*.json"), recursive=True):
@@ -59,6 +61,8 @@ def load(src):
         try: data = json.load(open(f, encoding="utf-8"))
         except ValueError: continue
         for e in data if isinstance(data, list) else []:
+            if e.get("type") == "palette": pal.setdefault(e["id"], e)          # some palettes live beside their maps
+            if e.get("type") == "mapgen" and e.get("nested_mapgen_id") and "object" in e: NESTED.setdefault(e["nested_mapgen_id"], e["object"])
             if e.get("type") != "mapgen" or e.get("method", "json") != "json" or "object" not in e: continue
             om = e.get("om_terrain")
             if isinstance(om, str): gens[om].append(e)
@@ -116,20 +120,41 @@ def tile(e, pal):
             k = kind_of(ter.get(ch)) if ch in ter else (fill if ch != " " else "outside")   # a mark with no terrain stands on the fill
             grid[y][x] = k
             furn[y][x] = FURN.get(fur.get(ch) or "")
+    nest = {}
+    for pid in o.get("palettes", []):                       # chunks set on a mark ("nested"), palettes' first
+        if isinstance(pid, str) and pid in pal: nest.update(pal[pid].get("nested") or {})
+    nest.update(o.get("nested") or {})
+    marks = [dict(v, x=x, y=y) for y, r in enumerate(rows) for x, c in enumerate(r) if c in nest for v in (nest[c],)]
+    for pn in (o.get("place_nested") or []) + marks:                # chunks set into the map: the likeliest one, at its first spot
+        ch_ = pn.get("chunks") or []
+        if not ch_ or pn.get("neighbors") or pn.get("joins"): continue
+        best = max(ch_, key=lambda c: c[1] if isinstance(c, list) else 1)
+        n = NESTED.get(best[0] if isinstance(best, list) else best)
+        if not n or not n.get("rows"): continue
+        nt, nf, _ = palette(n, pal)
+        ox, oy = (v[0] if isinstance(v, list) else v for v in (pn.get("x", 0), pn.get("y", 0)))
+        for y, r in enumerate(n["rows"]):
+            for x, c in enumerate(r):
+                X, Y = ox + x, oy + y
+                if c == " " or not (0 <= X < W and 0 <= Y < H): continue
+                if c in nt: grid[Y][X] = kind_of(nt[c])
+                if c in nf: furn[Y][X] = FURN.get(nf[c])
     return grid, furn
 
 def settle(grid):
-    """Squares of unknown ground are floor when walls close them in, else outside."""
+    """Squares of unknown ground are floor when walls close them in, else outside; so is floor open to the map edge
+    (a concrete yard, a car park, a patio)."""
     H, W = len(grid), len(grid[0])
     out, st = set(), [(x, y) for x in range(W) for y in (0, H - 1)] + [(x, y) for y in range(H) for x in (0, W - 1)]
     while st:
         x, y = st.pop()
-        if (x, y) in out or not (0 <= x < W and 0 <= y < H) or grid[y][x] not in ("unknown", "outside", "street"): continue
+        if (x, y) in out or not (0 <= x < W and 0 <= y < H) or grid[y][x] not in ("unknown", "outside", "street", "floor"): continue
         out.add((x, y)); st += [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
     for y in range(H):
         for x in range(W):
             if grid[y][x] == "unknown": grid[y][x] = "outside" if (x, y) in out else "floor"
             elif grid[y][x] == "outside" and (x, y) not in out: grid[y][x] = "floor"
+            elif grid[y][x] == "floor" and (x, y) in out: grid[y][x] = "outside"     # a yard, car park or patio open to the edge
     return grid
 
 def stitch(tiles):
@@ -353,16 +378,29 @@ WANT = {   # name -> (label, model, CDDA tiles in rows)
     "warehouse": ("Warehouse", "a town warehouse", [["warehouse"]]),
     "empty-warehouse": ("Empty warehouse", "a disused warehouse", [["abandonedwarehouse"]]),
     "empty-warehouse-2": ("Empty warehouse", "a disused warehouse", [["abandonedwarehouse_1"]]),
-    "lock-ups": ("Lock-ups", "rows of storage units", [["small_storage_units"]]),
     "music-club": ("Music club", "a music venue and nightclub", [["music_venue"]]),
     "music-club-2": ("Music club", "a music venue and nightclub", [["music_venue_1"]]),
     "motel": ("Motel", "a roadside motel", [["motel_entrance", "motel_1"]]),
     "hospital": ("Hospital", "a town hospital with its wards, theatre and blood store",
                  [["hospital_1", "hospital_2", "hospital_3"], ["hospital_4", "hospital_5", "hospital_6"], ["hospital_7", "hospital_8", "hospital_9"]]),
-    "mansion": ("Mansion", "a great house", [["mansion_c1", "mansion_t1", "mansion_c2"], ["mansion_e1", "mansion_+1", "mansion_e2"]]),
+    "mansion": ("Mansion", "a great house", [["mansion_c5_north", "mansion_e2_north", "mansion_c3_east"], ["mansion_t2_east", "mansion_+2_north", "mansion_t6_west"],
+                                             ["mansion_c4_west", "mansion_t7_north", "mansion_c1_south"]]),
     "cathedral": ("Cathedral", "a cathedral", [["cathedral_1_NW", "cathedral_1_NE"], ["cathedral_1_SW", "cathedral_1_SE"]]),
     "sewer-station": ("Sewer pumping station", "a sewer sub-station", [["sewer_sub_station"]]),
 }
+
+FACINGS = {"north": 0, "east": 1, "south": 2, "west": 3}
+
+def facing(om):
+    """A tile named with the way it faces in a special (mansion_c5_east) as its id and quarter turns clockwise."""
+    base, _, f = om.rpartition("_")
+    return (base, FACINGS[f]) if f in FACINGS and base else (om, 0)
+
+def turned(t, q):
+    if t is None: return None
+    g, f = t
+    for _ in range(q): g, f = rotate(g), rotate(f)
+    return g, f
 
 def main():
     src = sys.argv[1]
@@ -371,15 +409,16 @@ def main():
     out, report = {}, []
     for key in want:
         label, model, layout = WANT[key]
-        missing = [om for row in layout for om in row if om not in gens]
+        layout = [[facing(om) for om in row] for row in layout]   # (id, quarter turns) for tiles named with a facing
+        missing = [om for row in layout for om, _ in row if om not in gens]
         if missing: report.append(f"{key}: not found {missing}"); continue
-        first = gens[layout[0][0]][0]
+        first = gens[layout[0][0][0]][0]
         if "part" in first:                                   # the whole drawing at once
             tiles = [[tile(first, pal)]]
         else:
-            tiles = [[tile(gens[om][0], pal) for om in row] for row in layout]
+            tiles = [[turned(tile(gens[om][0], pal), q) for om, q in row] for row in layout]
         if any(t is None for row in tiles for t in row): report.append(f"{key}: a tile has no rows"); continue
-        t, why = convert(*stitch(tiles), label, model, ", ".join(om for row in layout for om in row))
+        t, why = convert(*stitch(tiles), label, model, ", ".join(om for row in layout for om, _ in row))
         if t: out[f"cdda-{key}"] = t; report.append(f"{key}: ok {t['size']}, {len(t['rooms'])} rooms, {sum(len(v) for v in t['furnish'].values())} pieces")
         else: report.append(f"{key}: {why}")
     doc = {"credit": "Adapted from Cataclysm: Dark Days Ahead (https://github.com/CleverRaven/Cataclysm-DDA), CC BY-SA 3.0. "

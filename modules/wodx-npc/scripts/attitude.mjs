@@ -23,7 +23,7 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null}) {
     try { standing = factions?.peopleOf?.(charId) ?? {}; } catch (e) { standing = {}; }
     const seed = AT.seedFrom({household: savedProfile(npc)?.household ?? "", factions: factionNamesOf(npc)}, standing);
     if ( seed.from || !rivalry ) return seed;
-    // NPC 0.16.0 (B823): nothing from household or faction; a rival side the NPC recognises sets the first meeting
+    // NPC 0.17.0 (B823): nothing from household or faction; a rival side the NPC recognises sets the first meeting
     try {
       const ch = game.actors.get(charId);
       const r = ch ? rivalry.seedFor(npc, ch) : null;
