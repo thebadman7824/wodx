@@ -421,6 +421,9 @@ Some kept things have uses (a book is read or written in). Rather than splitting
 ## B596. Concealment steps replace the small flag (2026-11-11)
 From the RPG Builder review: every good has V20's concealment step from the weapons chart, P pocket, J jacket, T trench coat, N cannot hide. good.conceal and tags.conceal; good.small stays for Fill by place and era and is true for P and J. Steps were proposed per good and go to Ben on the Item Review Desk with the items.
 
+## B597. One good per thing, never a pile (2026-11-11)
+Ben: no piles such as "a few bronze coins"; make one item that stacks. Goods named as a pile or a group became one thing (a bronze coin, a tallow candle, a cartridge, an apple), 110 in all; two that repeated another good were folded into it (a purse of silver pennies into a silver penny, a few gold florins into a gold florin of Florence). STACK_SIZES gives each one's plural and the stack a find usually holds (bronze coins 2 to 12, cartridges 3 to 30). A good sold by its measure (a sack of grain, a bottle of gin) stays as it is and stacks one to three. Where one unit is worth less than the pile was, the value tier came down. Fill by place and era draws a count and writes "7 bronze coins" (Interactables 0.23.1). good.stack = {plural, min, max} and tags.stack.
+
 ## B582. Burgage plots (2026-11-10)
 Houses get long plots behind them, by ward: slum 4 to 7 squares deep, market, administration and gate 10 to 14, craftsmen 10 to 16, merchant 12 to 18, patriciate and outside the gates 14 to 20, villages 16 to 24 (a house rule). Chapels, guardhouses and barns get none. Two frontages are not built back to back closer than 16 squares (villages 24) except in slum and craftsmen wards, which keep their courts.
 

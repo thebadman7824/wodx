@@ -1236,6 +1236,7 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - tools/goods/build-desk.mjs writes the review desk's item file. Desk: https://claude.ai/artifact/RFDVx5w2jCtbK1ASY8WeLP.
 - Tests: three new in fill.test.mjs (tags on every good, era years match Chronicle and every era from 1197 has every kind, a value can change over time). Harness 1019 pass.
 - 2026-11-11 (B594-B596): sub-categories dropped; 31 top-level categories (ten adapted from Cataclysm DDA), 799 goods. Each good carries behaviour, stacks, uses, sheet type and V20 concealment step (P/J/T/N) in tags. Gear category spelled Armor. Items back on the desk for Ben's marks.
+- 2026-11-11 (B597): no piles. 110 goods became one thing that stacks, with a usual stack size (STACK_SIZES); Fill writes "7 bronze coins" (Interactables 0.23.1). 797 goods.
 
 ## 2026-11-10: burgage plots (map tools)
 - Ben approved every recommendation in the Claude Doc "Town planning lessons for the map generator"; this is the first. Houses on a frontage now get a plot: a strip of land in the house's own frame, as wide as its share of the frontage, running back to the ward's plot depth or until it meets another plot, a building or a way. Behind the house is a yard, then a garden or croft to the back fence. Fences run along the sides and back, open to the street. B582.
