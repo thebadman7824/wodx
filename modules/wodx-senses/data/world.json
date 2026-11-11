@@ -1330,6 +1330,34 @@
      "n": 1
     }
    ]
+  },
+  "restless": {
+   "sense": "sound",
+   "dead": [
+    {
+     "t": "A voice no one else hears murmurs {{dir}}.",
+     "n": 0
+    },
+    {
+     "t": "The dead are close: {{count}} of them, {{dir}}.",
+     "n": 1
+    }
+   ],
+   "place": [
+    {
+     "t": "The dead linger in this place; the air is full of their whispering.",
+     "n": 1
+    }
+   ]
+  },
+  "deathsight": {
+   "sense": "sight",
+   "hurt": [
+    {
+     "t": "Decay clings to {{count}} here, {{dir}}, like grey ash on the skin.",
+     "n": 0
+    }
+   ]
   }
  }
 }

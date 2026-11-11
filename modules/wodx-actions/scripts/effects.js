@@ -334,7 +334,7 @@ export async function applyItem(item, casterName = "the caster") {
       const tok = tokenOf(d);
       const tokenWas = tok ? {uuid: tok.uuid, elevation: tok.elevation, sight: foundry.utils.deepClone(tok.sight ?? {})} : null;
       const effect = await T.applyTimed(a, {name: o.name ?? o.label, description: `${o.text} (cast by ${casterName})`, duration: o.timed, condition: o.condition,
-        changes, key: `wodx-effect-${o.key}`, source: o.source ?? "Mage 20th pp. 502-504"});
+        changes, key: `wodx-effect-${o.key}`, source: o.source ?? "Mage 20th pp. 502-504", data: o.difficulty ? {difficulty: o.difficulty} : null});
       if ( tok && o.feet ) await tok.update({elevation: n(tok.elevation) + o.feet});
       if ( tok && o.vision ) await tok.update({"sight.visionMode": "darkvision", "sight.range": Math.max(n(tok.sight?.range), 30)});
       return {uuid: a.uuid, effect: effect?.uuid ?? null, token: tok && (o.feet || o.vision) ? tokenWas : null};

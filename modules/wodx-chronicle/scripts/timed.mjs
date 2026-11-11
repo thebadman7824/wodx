@@ -37,7 +37,7 @@ export async function applyTimed(actor, o) {
   if ( !actor?.createEmbeddedDocuments ) throw new Error("No actor to apply the effect to");
   const d = o.duration ?? {kind: "scene"};
   const now = game.time.worldTime;
-  const timed = {kind: d.kind, source: o.source ?? "", revert: o.revert ?? null, key: o.key ?? null, applied: now};
+  const timed = {kind: d.kind, source: o.source ?? "", revert: o.revert ?? null, key: o.key ?? null, data: o.data ?? null, applied: now};
   const duration = {};
   if ( d.kind === "rounds" ) {
     const combat = game.combat ?? null;
