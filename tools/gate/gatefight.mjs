@@ -76,16 +76,19 @@ export async function run() {
         {source: f?.source, why: f?.why});
     });
     await step("start the fight", async () => {
+      // The chat log may draw the card late, or not at all when hidden: wait for the button, else accept through the api
+      await until(() => document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-go`), 3000);
       const el = document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-go`);
-      if ( el ) el.click();
+      if ( el ) el.click(); else if ( card ) await api().accept(card);
       await until(() => fightsHere().some(c => c.started), 6000);
       const c = fightsHere().find(x => x.started);
-      ok("start the fight", !!c && c.combatants.some(x => x.tokenId === npc.id) && c.combatants.some(x => x.tokenId === pc.id), {button: !!el});
+      ok("start the fight", !!c && c.combatants.some(x => x.tokenId === npc.id) && c.combatants.some(x => x.tokenId === pc.id), {button: !!el, byApi: !el});
     });
     await step("undo", async () => {
       if ( !fightsHere().some(c => c.started) ) return ok("undo", false, {note: "no fight to take back"});
       await until(() => document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-undo`), 3000);
-      document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-undo`)?.click();
+      const el = document.querySelector(`[data-message-id="${card?.id}"] button.vtc-fight-undo`);
+      if ( el ) el.click(); else if ( card ) await api().undo(game.messages.get(card.id));
       await until(() => !fightsHere().length, 5000);
       ok("undo", !fightsHere().length);
     });
