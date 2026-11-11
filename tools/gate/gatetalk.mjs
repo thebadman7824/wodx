@@ -55,7 +55,7 @@ export async function run() {
     actors = await Actor.create([{name: "WoDX gate: Talk NPC", type: "Mortal", flags: {[MOD]: {behavior: {talk: SHEET}}}},
       {name: "WoDX gate: Talk PC", type: "Mortal", ownership: own}]);
     journal = await JournalEntry.create({name: "WoDX gate: Talk page", pages: [{name: "WoDX gate: Talk page", type: "text", text: {content: "<p>A gate page.</p>"}}]});
-    await scene.createEmbeddedDocuments("Token", [{name: "npc", actorId: actors[0].id, x: G * 5, y: G * 5}, {name: "pc", actorId: actors[1].id, x: G * 6, y: G * 5}]);
+    await scene.createEmbeddedDocuments("Token", [{name: "npc", actorId: actors[0].id, x: G * 5, y: G * 5}, {name: "pc", actorId: actors[1].id, actorLink: true, x: G * 6, y: G * 5}]);
     npcTok = scene.tokens.find(t => t.actorId === actors[0].id); meTok = scene.tokens.find(t => t.actorId === actors[1].id);
     await until(() => npcTok.object && meTok.object);
     const pc = () => game.actors.get(actors[1].id);
@@ -79,7 +79,7 @@ export async function run() {
       const r = await talk().serve("ask", req({topic: "the mill"}), asUser);
       const msg = game.messages.contents.filter(m => m.flags?.[MOD]?.talk && m.timestamp >= t0).at(-1);
       ok("an offered topic teaches", r.ok && /flour/.test(r.said) && r.taught?.join() === "the night porter" && (pc().flags?.[MOD]?.topics ?? []).includes("the night porter")
-        && r.menu.ask.includes("the night porter") && (msg?.whisper?.length ?? 0) > 0, {r, whisper: msg?.whisper});
+        && r.menu.ask.includes("the night porter") && (msg?.whisper?.length ?? 0) > 0, {r, whisper: msg?.whisper, topics: pc().flags?.[MOD]?.topics, tokenTopics: meTok.actor?.flags?.[MOD]?.topics});
     });
     await step("a taught topic gives a codex page", async () => {
       const r = await talk().serve("ask", req({topic: "The Night Porter"}), asUser);
@@ -97,10 +97,12 @@ export async function run() {
     });
     await step("too far away", async () => {
       await meTok.update({x: G * 15, y: G * 12});
+      const moved = await until(() => meTok.x === G * 15 && meTok.y === G * 12);
+      const at = [meTok.x, meTok.y];
       const r = await talk().serve("menu", req(), asUser);
       await meTok.update({x: G * 6, y: G * 5});
-      await until(() => meTok.x === G * 6);
-      ok("too far away", !r.ok && /closer/i.test(r.why ?? ""), {why: r.why});
+      await until(() => meTok.x === G * 6 && meTok.y === G * 5);
+      ok("too far away", !r.ok && /closer/i.test(r.why ?? ""), {why: r.why, ok: r.ok, moved, at, reach: game.settings.get(MOD, "talkReach")});
     });
     await step("the window", async () => {
       canvas.tokens.releaseAll();

@@ -34,6 +34,8 @@ export function build(ctx) {
 
   /* ---------------- Who is talking to whom ---------------- */
 
+  /** The world actor behind a token: taught topics and the codex belong to the character, not one unlinked token. */
+  const baseActor = tok => (tok?.actorId ? game.actors.get(tok.actorId) : null) ?? tok?.actor ?? null;
   const owns = (user, actor) => !!actor && (user.isGM || actor.testUserPermission?.(user, "OWNER"));
   /** The asking character's token on this scene: one the user controls, else their character's. */
   function speakerToken(user = game.user, scene = canvas?.scene) {
@@ -90,7 +92,7 @@ export function build(ctx) {
 
   function menuOf(r, user) {
     const chain = chainOf(r.npcTok.actor, r.scene);
-    const menu = TK.menuFor(chain, knownOf(r.me.actor));
+    const menu = TK.menuFor(chain, knownOf(baseActor(r.me)));
     const g = TK.greetFor(chain, checker(r.me.actor, r.me));
     return {name: displayName(r.npcTok, user), me: r.me.name, greet: g?.say ?? "", ...menu};
   }
@@ -116,7 +118,7 @@ export function build(ctx) {
 
   /** Say a line to the asking player (or aloud), and carry out what follows it. */
   async function deliver(r, user, topic, line) {
-    const actor = r.me.actor;
+    const actor = baseActor(r.me);
     const say = line?.say ?? "";
     const before = actor.flags?.[MOD]?.topics ?? [];
     const taught = (line?.then?.teach ?? []).filter(t => !TK.knowsTopic(t, {learned: before}));
