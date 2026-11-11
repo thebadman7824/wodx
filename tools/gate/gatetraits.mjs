@@ -19,6 +19,7 @@
  *  14. WoDX Senses reads the senses: Bad Sight +2 on sight, Acute Sense (Smell) -2 on smell, Deaf takes hearing, Medium opens the restless dead
  *  16. a Discipline's keywords reach the effects card (Actions 3.33.0): the setting is there, and a sensing power plans a Sense on the user
  *  17. a first meeting: the Kindred's Eerie Presence chills a mortal NPC one step, not a Kindred one; WoDX NPC's seed takes it
+ *  18. Lucky counts three rerolls a story on the actor; Efficient Digestion, Thin Blood and Deep Sleeper read from the sheet
  *  15. signs others sense: the Kindred gives off Eerie Presence and Cast No Reflection, the mortal nothing; a Veil keeps its difficulty for Senses
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
@@ -168,6 +169,14 @@ export async function run() {
       const AT = game.modules.get("wodx-npc")?.api?.attitude;
       const seed = AT ? AT.seedFor(human, vamp.id) : null;
       ok("17 first meeting", onMortal.delta === -1 && onKindred.delta === 0 && (!AT || seed.step === -1), {onMortal, onKindred, seed});
+    });
+
+    await step("18 pools and Lucky", async () => {
+      const k = await mk("Trait Lucky", "Vampire", [feat("Lucky", "merit", 3), feat("Efficient Digestion", "merit", 3), feat("Thin Blood", "flaw", 4), feat("Deep Sleeper", "flaw", 1)]);
+      const before = TH.luckyLeft(k);
+      const used = await TH.useLucky(k);
+      ok("18 pools and Lucky", before === 3 && used?.left === 2 && TH.luckyLeft(k) === 2 && TH.digestionBonus(k, 4, 10) === 2 && TH.bloodCostMult(k) === 2 && TH.sleepMods(k).diff === 2,
+        {before, used, digest: TH.digestionBonus(k, 4, 10), mult: TH.bloodCostMult(k)});
     });
   } catch (e) {
     R.errors.push(e.message);

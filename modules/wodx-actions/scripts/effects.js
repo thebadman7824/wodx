@@ -432,7 +432,7 @@ async function applyCore(item, casterName = "the caster") {
 /* ------------------------------------------------------------------ */
 
 /**
- * 3.34.1: put a token straight on a spot. In Foundry 14 a plain x/y update is a move that stops at walls, so a Move
+ * 3.35.1: put a token straight on a spot. In Foundry 14 a plain x/y update is a move that stops at walls, so a Move
  * through a wall (or its Undo) came up short; a "displace" move ignores walls. The plain update stays as a fallback.
  */
 async function jump(tok, pos) {
