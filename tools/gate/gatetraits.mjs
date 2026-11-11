@@ -17,6 +17,7 @@
  *  12. the Trait effects window opens and closes
  *  13. every other WoDX module still answers
  *  14. WoDX Senses reads the senses: Bad Sight +2 on sight, Acute Sense (Smell) -2 on smell, Deaf takes hearing, Medium opens the restless dead
+ *  16. a Discipline's keywords reach the effects card (Actions 3.33.0): the setting is there, and a sensing power plans a Sense on the user
  *  15. signs others sense: the Kindred gives off Eerie Presence and Cast No Reflection, the mortal nothing; a Veil keeps its difficulty for Senses
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
@@ -152,6 +153,13 @@ export async function run() {
       const kept = eff?.flags?.["wodx-chronicle"]?.timed?.data?.difficulty;
       await eff?.delete();
       ok("15 signs and Veil", JSON.stringify(v) === JSON.stringify(["cast-no-reflection", "eerie-presence"]) && h.length === 0 && kept === 8, {v, h: h.map(x => x.key), kept});
+    });
+
+    await step("16 power keywords", async () => {
+      const FX = game.modules.get("wodx-actions").api.effects;
+      const set = game.settings.get("wodx-actions", "powerEffects");
+      const plan = FX.powerPlan(vamp, {set: "disc", id: "abombwe-predators-communion", name: "Predator's Communion", successes: 2});
+      ok("16 power keywords", set === true && typeof FX.powerPlan === "function" && (plan.items.length > 0 || !FX.isOn()), {items: plan.items.map(i => `${i.key}:${i.route}`), on: FX.isOn()});
     });
   } catch (e) {
     R.errors.push(e.message);

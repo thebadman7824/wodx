@@ -8,6 +8,7 @@
 import * as E from "./effects-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
+import * as PW from "./power-effects.js";
 import { ask } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual } from "./book-rituals.js";
 export { E };
@@ -233,6 +234,21 @@ export function pathPlan(actor, power, successes) {
 export function numinaPlan(actor, key, level, successes, def) {
   return planOf(actor, PE.numinaOutcomes(key, level, successes, def), successes);
 }
+
+/**
+ * Any other power with keywords (a Discipline, a Gift): its keywords on the effects card (Traits With Teeth step 4).
+ * set and id name the power in power-keywords.js; line is the line list to try by name. Off when the world setting is off.
+ */
+export function powerPlan(actor, {set, id, name, line = null, successes, source = ""} = {}) {
+  if ( !isOn() || !powerEffectsOn() ) return {items: [], html: "", skipped: []};
+  const kw = PW.powerKeywords(set, id, name, line);
+  const t = targetsOf(actor);
+  const {results, skipped} = PW.powerOutcomes(kw, successes, {label: name, source, hasTarget: !t.self && t.docs.length > 0});
+  const plan = planOf(actor, results, successes);
+  if ( skipped.length ) plan.html += `<p class="wodx-quiet">Needs a target: ${esc(skipped.join(", "))}.</p>`;
+  return {...plan, skipped};
+}
+export const powerEffectsOn = () => { try { return game.settings.get(MOD, "powerEffects") !== false; } catch (e) { return true; } };
 
 /** Results in the [{key, who, ask?, st?, out}] shape, spread over the caster's targets: {items, html}. */
 export function planOf(actor, results, successes) {
