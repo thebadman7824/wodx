@@ -48,13 +48,14 @@ export async function writeArt(model) {
 }
 
 /**
- * Draw a realm: a new scene with its map, walls and regions. opts: {realm, seed, year, size, name}.
+ * Draw a realm: a new scene with its map, walls and regions. opts: {realm, seed, year, size, name, keys}. keys: extra map keywords on top of the realm's own ("forest:2, ruins").
  * Returns the scene.
  */
-export async function drawRealm({realm = "tempest", seed = null, year: y = null, size = "medium", name = ""} = {}) {
+export async function drawRealm({realm = "tempest", seed = null, year: y = null, size = "medium", name = "", keys = ""} = {}) {
   if ( !game.user.isGM ) throw new Error("Only the Storyteller draws realm maps.");
   const s = Number.isFinite(Number(seed)) && seed !== null && seed !== "" ? Math.trunc(Number(seed)) : Math.floor(Math.random() * 1e6);
-  const model = RM.generate({realm, seed: s, year: y ?? year(), size, future: future()});
+  const extra = RM.parseKeys(keys).map(k => k.n > 1 ? `${k.key}:${k.n}` : k.key);
+  const model = RM.generate({realm, seed: s, year: y ?? year(), size, future: future(), keys: extra});
   const src = await writeArt(model);
   const {walls, regions} = RM.sceneParts(model, GRID);
   const folder = game.folders.find(f => f.type === "Scene" && f.name === FOLDER) ?? await Folder.create({name: FOLDER, type: "Scene", color: "#2a3340"});
@@ -63,7 +64,7 @@ export async function drawRealm({realm = "tempest", seed = null, year: y = null,
     width: model.cols * GRID, height: model.rows * GRID, padding: 0, backgroundColor: model.palette.void, grid: {size: GRID},
     background: {src}, environment: {darknessLevel: 0.55, globalLight: {enabled: true, darkness: {max: 1}}},
     flags: {[MODULE_ID]: {realm: realm, note: RM.realmNote(model),
-      realmMap: {version: model.version, realm, seed: model.seed, year: model.year, size, shape: model.shape, world: model.world}}}
+      realmMap: {version: model.version, realm, seed: model.seed, year: model.year, size, shape: model.shape, world: model.world, keys: extra}}}
   });
   await setArt(scene, src);
   if ( walls.length ) await scene.createEmbeddedDocuments("Wall", walls);
@@ -76,7 +77,7 @@ export async function redrawRealm(scene, {seed = null, year: y = null} = {}) {
   const f = scene?.flags?.[MODULE_ID]?.realmMap;
   if ( !f ) throw new Error("That scene is not a drawn realm.");
   const s = seed ?? Math.floor(Math.random() * 1e6);
-  const model = RM.generate({realm: f.realm, seed: s, year: y ?? f.year, size: f.size, future: future()});
+  const model = RM.generate({realm: f.realm, seed: s, year: y ?? f.year, size: f.size, future: future(), keys: f.keys ?? []});
   const src = await writeArt(model);
   const {walls, regions} = RM.sceneParts(model, GRID);
   const oldWalls = scene.walls.filter(w => w.flags?.[MODULE_ID]?.realmWall).map(w => w.id);
@@ -95,7 +96,7 @@ export async function redrawRealm(scene, {seed = null, year: y = null} = {}) {
 /** The model a drawn realm scene was made from, made again from its flags. */
 export function modelOf(scene) {
   const f = scene?.flags?.[MODULE_ID]?.realmMap;
-  return f ? RM.generate({realm: f.realm, seed: f.seed, year: f.year, size: f.size, future: future()}) : null;
+  return f ? RM.generate({realm: f.realm, seed: f.seed, year: f.year, size: f.size, future: future(), keys: f.keys ?? []}) : null;
 }
 
 /** Where tokens arrive on a realm scene, in pixels: the arrival cells, or the scene's middle. */
@@ -198,19 +199,21 @@ export async function realmMapsDialog() {
       <div class="form-group"><label>Size</label><select name="size" data-fixed><option value="small">Small (30 by 22)</option><option value="medium" selected>Medium (40 by 30)</option><option value="large">Large (56 by 40)</option></select></div>
       <div class="form-group"><label>Seed</label><input type="number" name="seed" placeholder="Leave empty for a new map"></div>
       <div class="form-group"><label>Year</label><input type="number" name="year" value="${year()}"></div>
+      <div class="form-group"><label>Extra keywords</label><input type="text" name="keys" maxlength="200" placeholder="Added to the realm's own, as forest:2, ruins" list="wodx-realm-keys"><datalist id="wodx-realm-keys">${Object.entries(RM.KEYWORDS).map(([k, v]) => `<option value="${k}">${v.label}: ${v.about}</option>`).join("")}</datalist></div>
+      <p class="wodx-quiet">Keywords: ${Object.keys(RM.KEYWORDS).join(", ")}. Add :2 or :3 for more. The realm's own: shown on the scene's note.</p>
       <div class="form-group"><label>Name</label><input type="text" name="name" maxlength="120" placeholder="As the realm is called"></div>
       <h3>Send or bring back (${sel} token${sel === 1 ? "" : "s"} selected)</h3>
       <div class="form-group"><label>Into</label>${searchBox("select[name=scene]", "Find a drawn realm…", "Search drawn realms")}<select name="scene">${sceneOpts || `<option value="">No realm drawn yet</option>`}</select></div>
       <div class="form-group"><label>Go there too</label><input type="checkbox" name="follow"></div>`,
     buttons: [
-      {action: "draw", label: "Draw the realm", default: true, callback: (e, b) => ({do: "draw", ...Object.fromEntries(["realm", "size", "seed", "year", "name"].map(k => [k, b.form.elements[k].value]))})},
+      {action: "draw", label: "Draw the realm", default: true, callback: (e, b) => ({do: "draw", ...Object.fromEntries(["realm", "size", "seed", "year", "name", "keys"].map(k => [k, b.form.elements[k].value]))})},
       {action: "send", label: "Send the selected tokens", callback: (e, b) => ({do: "send", scene: b.form.elements.scene.value, follow: b.form.elements.follow.checked})},
       {action: "back", label: "Bring them back", callback: (e, b) => ({do: "back", follow: b.form.elements.follow.checked})},
       {action: "close", label: "Close"}]});
   if ( !pick || pick === "close" ) return null;
   try {
     if ( pick.do === "draw" ) {
-      const s = await drawRealm({realm: pick.realm, size: pick.size, seed: pick.seed === "" ? null : pick.seed, year: pick.year === "" ? null : Number(pick.year), name: pick.name});
+      const s = await drawRealm({realm: pick.realm, size: pick.size, seed: pick.seed === "" ? null : pick.seed, year: pick.year === "" ? null : Number(pick.year), name: pick.name, keys: pick.keys});
       ui.notifications.info(`${s.name} is drawn, in ${FOLDER}.`);
       return s;
     }
