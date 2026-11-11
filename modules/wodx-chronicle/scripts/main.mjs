@@ -27,6 +27,7 @@ import * as release from "./release.mjs";
 import * as when from "./when.mjs";
 import * as referee from "./referee.mjs";
 import * as refereeRules from "./referee-rules.mjs";
+import * as traits from "./traits.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -74,6 +75,7 @@ Hooks.once("init", () => {
   // Languages in chat
   languages.registerLanguageSettings();
   languages.registerLanguageHooks();
+  traits.registerTraitHooks();
   // Knowledge-gated handouts: @Know[Latin]{...} in journals
   know.registerKnow();
 
@@ -161,6 +163,7 @@ Hooks.once("ready", async () => {
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
     tours: {start: tours.startTour},
+    traits: traits.traitsApi,
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,

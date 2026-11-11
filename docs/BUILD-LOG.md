@@ -1411,3 +1411,19 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 
 ## 2026-11-11: fuller furniture for the later eras (B659)
 Ben saw the plans page (https://claude.ai/artifact/MK8nkv4MRBxncvF6A2QoKo) and asked for the bare later-era rooms to be furnished. 31 more Tyger and Mog pieces were measured on the PC and added: whole kitchens and living rooms for the Baťa house, functionalist villa, panel-block flats and entrepreneur's house; shop aisles, freezers and checkouts for the department store, supermarket and petrol station; rows of seats in the house of culture; capsules with desks, sinks and lockers; growing rows in the vertical farm. A new furniture rule, at:x:y, puts a piece on a fixed spot so aisles and seat rows come out in lines; a spot that will not take it stays empty.
+
+
+## 2026-11-11: trait effect table, step 1 (Chronicle 0.18.0, B800-B803)
+Ben approved Traits With Teeth (https://claude.ai/artifact/4QwnLur2u6kmHPQSMjTgn4) as recommended; this is its step 1.
+- data/trait-effects.mjs: PATTERNS (P1-P20), BACKGROUND_HOOKS, MERITS_FLAWS (162 V20 entries: cost, printed and pdf page, patterns, holders, against, aliases, effects for step 2), BACKGROUNDS (71 from fourteen books with pages), BOOKS_DONE.
+- scripts/trait-rules.mjs: normName, featureKind, kindsOf/kindFits (mixed kinds), buildIndex, matchFeature (item flag wodx-chronicle.trait overrides; "none" leaves alone), traitsOf (wrongKind with a reason), has, effectsFor (channel, tags, the other side's kind), missing, problems, describe.
+- scripts/traits.mjs: view(actor) for players and NPCs alike, the "Trait effects" window on the actor sheet header (Storyteller sets the match), api.traits {view, of, has, effects, open, whenFeats, kindOf, table, rules}.
+- "Only when": merit, flaw, background [>= n], power (when-rules.mjs; when.mjs reads feats and powers).
+- Book checks: /mnt/project-files/trait-book-checks.md; draft patterns for the other books: /mnt/project-files/notes/trait-effects-draft.md.
+- Tests: trait-effects.test.mjs (10).
+
+## 2026-11-11: trait effects, step 2 (Actions 3.29.0, B804-B806)
+- wodx-actions/scripts/trait-hooks.js: traitMods, resistMods, powerTags, tagsFor, the world setting "Merits and flaws on rolls", TICKS and ticksHtml.
+- rules.js actionPool takes traitDice, traitDiff, traitParts. main.js: actions, quick checks and the frenzy check (beastRoll) read the traits. social.js: speaker's traits, the NPC's resist-social traits, first meeting from WoDX NPC. kindred.js: target's resisting traits on Discipline rolls.
+- Chronicle trait-rules.mjs: effectsFor reads nameTags, againstKinds and the moon; sumEffects; rollTags. 37 V20 entries carry effects. Fixed: nameTags read the item name before its bracket was stripped, so "Acute Sense (Hearing)" now works.
+- Tests: trait-effects.test.mjs (17).
