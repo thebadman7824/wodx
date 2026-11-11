@@ -245,16 +245,25 @@ export async function run() {
       const routes = items.map(i => i.route).join(",");
       const recs = [];
       for ( const it of items.filter(i => i.route === "auto") ) recs.push(await fx().apply(it, "the Storyteller"));
-      const given = target.items.some(i => i.name === gift.name);
+      // Make gives the item to the token's own actor: an unlinked token's synthetic actor, not the base actor
+      const holder = tok?.actor ?? target;
+      const given = holder.items.some(i => i.name === gift.name);
       const warded = recs.some(r => r?.effect && fromUuidSync(r.effect));
       const sc = canvas?.scene;
       const sum = items.find(i => i.out.kind === "summon");
       const placed = sc && sum ? await fx().apply({...sum, at: {x: 300, y: 300}}, "the Storyteller") : null;
       const made = placed?.made?.length ?? 0;
       await fx().undo([...recs, placed].filter(Boolean));
-      const clean = !target.items.some(i => i.name === gift.name) && !(placed?.made ?? []).some(u => fromUuidSync(u));
+      const clean = !holder.items.some(i => i.name === gift.name) && !(placed?.made ?? []).some(u => fromUuidSync(u));
       await gift.delete();
       ok("16 the Storyteller's effect: Ward, Make and Summon with Undo", given && warded && (!sc || made === 2) && clean && routes === "auto,auto,pick", {given, warded, made, clean, routes});
+    });
+    await step("17 the books' rituals and the modern lines' labels", async () => {
+      const haven = fx().bookRitual?.("v20", 3);
+      const counted = Object.values(fx().bookRituals ?? {}).reduce((a, b) => a + b.list.length, 0);
+      const items = haven ? fx().stItems({...haven, plan: {targets: 0, duration: 0, area: false}, actor: "", item: "", count: 1}, [(target.getActiveTokens?.()?.[0]?.document) ?? target]) : [];
+      const label = fx().keywordsOf?.("w20", "Rattler's Bite")?.keywords?.[0] === "harm" && (fx().lineSets?.() ?? []).length === 7;
+      ok("17 the books' rituals and the modern lines' labels", haven?.keywords?.includes("ward") && counted >= 300 && items.length === 1 && label, {haven: haven?.name, counted, items: items.length, label});
     });
     if ( toks.length ) await scene.deleteEmbeddedDocuments("Token", toks.map(t => t.id)).catch(() => {});
   } catch (e) { R.errors.push(e.message); }
