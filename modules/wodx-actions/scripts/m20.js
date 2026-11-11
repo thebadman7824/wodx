@@ -133,7 +133,7 @@ export function build(ctx) {
         // Answering a WoDX keyword card: the successes come off that card (3.25.0)
         const card = o.card ? game.messages?.get(o.card) : null;
         const i = info(actor);
-        const content = `<form><div class="form-group"><label>How</label><select name="mode" data-fixed><option value="self">Against an Effect aimed at this mage (Arete at 7)</option><option value="dispel">For another: dispel it (8; Prime 1 and a Quintessence)</option><option value="reflect">For another: reflect it (9; Prime 1 and a Quintessence)</option>
+        const content = `<form><div class="form-group"><label>How</label><select name="mode" data-fixed><option value="self">Against an Effect aimed at this mage (Arete at 7)</option><option value="dispel">For another: dispel it (8; Prime 1 and a Quintessence)</option>${EF.E.eraRules(age().key).reflect ? `<option value="reflect">For another: reflect it (9; Prime 1 and a Quintessence)</option>` : ""}
             <option value="mind">Resist Mind magick (Willpower at 6)</option><option value="quiet">Dispel a Quiet delusion (a Willpower point; Willpower at 7)</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="share" checked/> Knows at least one of the attacking Spheres</label></div></form>`;
         return dialog(`Countermagick: ${actor.name}`, content, "Roll", async fd => {

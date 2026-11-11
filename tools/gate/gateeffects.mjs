@@ -1,5 +1,5 @@
 /**
- * Mage effect keywords gate (WoDX Actions 3.26.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Mage effect keywords gate (WoDX Actions 3.28.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateeffects.mjs?${Date.now()}`)).run()
  * Makes a caster and a target actor, applies keyword results straight through the apply step, undoes them,
  * posts one keyword card for the Storyteller's client to apply, then deletes what it made.
@@ -45,7 +45,7 @@ export async function run() {
 
     await step("1 api, setting, on here", async () => {
       const mode = game.settings.get(MOD, "effectsApply");
-      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.26.0", {mode});
+      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === game.modules.get(MOD).version, {mode});
     });
 
     await step("2 Harm and Undo", async () => {

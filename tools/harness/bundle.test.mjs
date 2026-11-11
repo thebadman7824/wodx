@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {test} from "node:test";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
-import {cpSync, mkdtempSync, readFileSync, readdirSync, rmSync} from "node:fs";
+import {cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {execFileSync} from "node:child_process";
 
@@ -15,6 +15,7 @@ test("release bundle: every module bundles, links and keeps cross-package files 
     const mods = readdirSync(join(root, "modules")).filter(m => m.startsWith("wodx-"));
     for ( const m of mods ) cpSync(join(root, "modules", m), join(tmp, "modules", m), {recursive: true});
     cpSync(join(root, "system", "worldofdarkness"), join(tmp, "systems", "worldofdarkness"), {recursive: true});
+    writeFileSync(join(tmp, "systems", "README.txt"), "a loose file, as in a Foundry Data folder");
     const out = execFileSync(process.execPath, [join(root, "tools/release/bundle.mjs"), tmp], {encoding: "utf8"});
     assert.match(out, /Kept out of bundles/);
     for ( const m of mods ) {

@@ -152,13 +152,18 @@ const clampDiff = d => Math.max(2, Math.min(9, d));
  */
 /**
  * The era's magic charts: how successes turn into damage, healing and Quintessence, and the countermagick difficulty.
- * The Ascension uses Mage 20th (p. 504's 2/6/8/10 chart; Forces adds a success). The Sorcerers Crusade reads
- * Revised-style charts: up to 2 levels a success, Forces adds a level (Mage Revised p. 209).
+ * The Ascension uses Mage 20th (p. 504's 2/6/8/10 chart; Forces adds a success). The Sorcerers Crusade multiplies the
+ * successes by its Damage and Duration chart (pr 230 and 240): x1 for one, x2 for two to four, x3 for five; Forces adds
+ * a success and Mind takes one away (pr 230). The x3 for six and more is a house reading: that chart cell is unreadable.
  */
+export const CRUSADE_MULT = [0, 1, 2, 2, 2, 3];
+export function crusadeLevels(successes, {forces = false, mind = false} = {}) {
+  const s = Math.max(0, n(successes) + (forces ? 1 : 0) - (mind ? 1 : 0));
+  return Math.min(20, s * (CRUSADE_MULT[s] ?? 3));
+}
 export const ERA_RULES = {
-  ascension: {label: "Mage 20th", levels: (s, {forces = false} = {}) => M.damage(s, {forces}), counterDiff: 7, ref: "Mage 20th pp. 502-504"},
-  crusade: {label: "Sorcerers Crusade", levels: (s, {forces = false} = {}) => Math.min(20, 2 * Math.max(0, n(s)) + (forces && n(s) > 0 ? 1 : 0)),
-    counterDiff: 7, ref: "Mage Revised p. 209"}
+  ascension: {label: "Mage 20th", levels: (s, {forces = false} = {}) => M.damage(s, {forces}), counterDiff: 7, reflect: true, ref: "Mage 20th pp. 502-504"},
+  crusade: {label: "Sorcerers Crusade", levels: crusadeLevels, counterDiff: 7, reflect: false, ref: "Sorcerers Crusade pr 230-231, 240"}
 };
 export const eraRules = age => ERA_RULES[age] ?? ERA_RULES.ascension;
 
@@ -174,7 +179,7 @@ export function outcome(key, got, ctx = {}) {
   switch ( key ) {
     case "harm": {
       const type = M.damageType({spheres, primeCharged: !!ctx.primeCharged, fire: !!ctx.fire});
-      const levels = eraRules(ctx.age).levels(str, {forces: spheres.includes("forces")});
+      const levels = eraRules(ctx.age).levels(str, {forces: spheres.includes("forces"), mind: spheres.includes("mind")});
       return {...base, kind: "damage", levels, type: type === "none" ? "lethal" : type, soak: !spheres.every(s => s === "mind"),
         text: `${levels} ${type} level${levels === 1 ? "" : "s"}`};
     }
