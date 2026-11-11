@@ -39,3 +39,10 @@ export function powerOutcomes(kw, successes, {label = "", source = "", hasTarget
   }
   return { results, skipped };
 }
+
+/** How a keyword result moves an NPC's regard for the caster: Sway +1 (Awe has its own rule), Fear's Afraid -1. */
+export function moodDelta(key, out = {}) {
+  if ( key === "sway" && !out.awe ) return 1;
+  if ( key === "fear" && out.name === "Afraid" ) return -1;
+  return 0;
+}

@@ -13,7 +13,7 @@
  *   7. every other WoDX module still answers
  *   8. a lift with a big pool takes the NPC's pocket-sized ring unseen (Actions 3.21.0); the sack of grain is never offered
  *   9. deleting on an unlinked token (diagnostic)
- *  10. buying a good from the NPC and selling it back moves the item and the money both ways (Actions 3.34.0)
+ *  10. buying a good from the NPC and selling it back moves the item and the money both ways (Actions 3.35.0)
  * Result: Data/wodx-gate/gatesocial-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));

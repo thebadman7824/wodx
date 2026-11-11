@@ -1,7 +1,7 @@
 import * as TR from "./trade-rules.js";
 
 /**
- * WoDX Actions 3.34.0: trade with one NPC from "With this person". Buy from them, sell to them, or barter one thing
+ * WoDX Actions 3.35.0: trade with one NPC from "With this person". Buy from them, sell to them, or barter one thing
  * for another, at WoDX Storyteller's prices (era goods and the local market). A trader's shop is the container their
  * market lists for them; anyone else trades from what they carry. The NPC's purse is the till. A haggle roll
  * (Manipulation + Finance, Commerce in the Dark Ages) moves the price. Players' trades wait in the approval queue;

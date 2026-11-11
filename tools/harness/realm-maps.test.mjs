@@ -265,7 +265,7 @@ test("map keywords: written as a list, with weight 1 to 3; unknown words are dro
 
 test("map keywords: each one leaves its mark on the map, the same kind of mark in every realm", () => {
   const cellOnly = new Set(["chasm", "gardens"]);
-  for ( const key of Object.keys(RM.KEYWORDS) ) for ( const realm of ["pangaea", "stygia", "tempest"] ) {
+  for ( const key of Object.keys(RM.KEYWORDS) ) for ( const realm of ["pangaea", "stygia", "enoch"] ) {
     const plain = RM.generate({realm, seed: 11, year: 1600}), with2 = RM.generate({realm, seed: 11, year: 1600, keys: [`${key}:2`]});
     assert.ok(with2.keys.includes(`${key}:2`) || with2.keys.includes(`${key}:3`), `${key} in ${realm}: listed`);
     const mine = with2.decor.filter(d => d.key === key);
@@ -297,12 +297,28 @@ test("map keywords: some change the layout itself (island form, caverns, a squar
   const st = RM.generate({realm: "stygia", seed: 5, year: 1600});
   assert.ok(st.cells.filter(r => r[cx + 5] === RM.T.path).length < street, "Stygia keeps its web");
   // Caverns: no three-wide grid maze, so walkable cells meet in open runs
-  const lab = RM.generate({realm: "labyrinth", seed: 5, year: 1600}), at = RM.generate({realm: "atrocity", seed: 5, year: 1600});
+  const rl = seed => { const {stream} = {stream: null}; let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; };
+  const lab = {...RM.LAYOUT.caverns(rl(5), 40, 30, {}, {}), rows: 30, cols: 40}, at = {...RM.LAYOUT.maze(rl(5), 40, 30, {}, {}), rows: 30, cols: 40};
+  lab.cells = lab.m; at.cells = at.m;
   // A cut maze keeps a pillar of rock at every third cell; grown caverns do not
   const pillarsOpen = m => { let n = 0; for ( let y = 3; y < m.rows - 1; y += 3 ) for ( let x = 3; x < m.cols - 1; x += 3 ) if ( RM.walkable(m.cells[y][x]) ) n++; return n; };
-  assert.ok(pillarsOpen(lab) > pillarsOpen(at) + 10, `the Labyrinth's caverns are grown, not cut (${pillarsOpen(lab)} to ${pillarsOpen(at)})`);
+  assert.ok(pillarsOpen(lab) > pillarsOpen(at) + 10, `grown caverns, not a cut maze (${pillarsOpen(lab)} to ${pillarsOpen(at)})`);
   // Island forms: square terraces for a Horizon Realm differ from the plain round islands
   const hz = RM.generate({realm: "horizon-realm", seed: 5, year: 1600}), hz0 = RM.generate({realm: "horizon-realm", seed: 5, year: 1600, keys: []});
   assert.ok(hz.keys.includes("gardens") && hz0.keys.includes("gardens"));
   assert.ok(RM.svg(hz, {cell: 10}).includes("<g "), "the marks are drawn");
+});
+
+test("0.12.0: every realm has a layout of its own, drawn from what the realm is", () => {
+  const seen = new Map();
+  for ( const id of RM.REALM_ORDER ) {
+    const R = RM.REALMS[id], k = R.layout ?? R.shape;
+    assert.ok(!seen.has(k), `${id} shares its layout with ${seen.get(k)}`);
+    seen.set(k, id);
+  }
+  // Each layout's own places: the landmarks it puts by name stand where it put them, on ground the arrival can reach
+  for ( const id of RM.REALM_ORDER ) for ( const seed of [1, 2, 3] ) {
+    const m = RM.generate({realm: id, seed, year: 1700}), seen2 = RM.reach(m.cells, m.regions.find(r => r.kind === "arrival").at);
+    for ( const r of m.regions.filter(r => r.kind !== "hazard") ) assert.ok(seen2.has(`${r.at.x},${r.at.y}`), `${id} ${seed}: ${r.label} can be reached`);
+  }
 });

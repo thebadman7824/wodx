@@ -33,6 +33,13 @@ export function seedFrom(npc = {}, standing = {}) {
   return {step: 0, from: ""};
 }
 
+/** A seed moved by the character's traits: {step, from}, from naming the traits when nothing else set it. */
+export function withTraits(seed = {step: 0, from: ""}, {delta = 0, names = []} = {}) {
+  const step = clampStep((Number(seed.step) || 0) + (Number(delta) || 0));
+  const said = names.length ? `the look of them (${names.join(", ")})` : "";
+  return {step, from: seed.from ? (said ? `${seed.from}, and ${said}` : seed.from) : said};
+}
+
 /** The saved entry for a character, or null when they have not met. */
 export function entryFor(attitude = {}, charId) {
   const e = attitude?.[charId];

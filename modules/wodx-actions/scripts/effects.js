@@ -320,6 +320,32 @@ const tokenOf = d => (d?.documentName === "Token" ? d : actorOf(d)?.getActiveTok
 
 /** Apply one item. Returns an undo record, or {note} when nothing could change. */
 export async function applyItem(item, casterName = "the caster") {
+  const rec = await applyCore(item, casterName);
+  // Traits With Teeth step 5: Sway and Fear move an NPC's regard for the caster (WoDX NPC), undone with the rest
+  try {
+    const mood = await moodAfter(item, casterName);
+    if ( mood && rec && typeof rec === "object" ) rec.attitude = mood;
+  } catch (e) { console.warn("WoDX | effect attitude", e); }
+  return rec;
+}
+
+/** Sway (not Awe) on an NPC: one step warmer toward the caster; Fear (Afraid): one step colder. Returns the undo record. */
+async function moodAfter(item, casterName) {
+  const o = item?.out ?? {};
+  const delta = PW.moodDelta(item?.key, o);
+  if ( !delta || !game.user.isGM ) return null;
+  const AT = game.modules.get("wodx-npc")?.active ? game.modules.get("wodx-npc").api?.attitude : null;
+  const npc = actorOf(docOf(item.target));
+  if ( !AT || !npc || npc.hasPlayerOwner ) return null;
+  const caster = ((item.casterUuid ?? item.caster) ? actorOf(docOf(item.casterUuid ?? item.caster)) : null) ?? game.actors.getName?.(casterName) ?? null;
+  if ( !caster || caster.id === npc.id ) return null;
+  const before = AT.of(npc, caster)?.step ?? 0;
+  const met = !!AT.of(npc, caster)?.met;
+  await AT.apply(npc, caster, {delta, why: `${o.label ?? "A power"} (${casterName})`});
+  return {npc: npc.id, char: caster.id, before, met};
+}
+
+async function applyCore(item, casterName = "the caster") {
   const d = docOf(item.target), a = actorOf(d), o = item.out;
   if ( !a && o?.kind !== "summon" ) return {note: `${item.name}: not found`};
   const C = combat(), T = chron();
@@ -504,6 +530,10 @@ export async function undo(records = []) {
       if ( Number.isFinite(r.quint) && a ) await a.update({"system.quintessence.temporary": r.quint});
       if ( r.pool?.path && a ) await a.update({[r.pool.path]: n(r.pool.value)});
       for ( const u of r.made ?? [] ) await fromUuidSync(u)?.delete?.();
+      if ( r.attitude ) {
+        const AT = game.modules.get("wodx-npc")?.api?.attitude, npc = game.actors.get(r.attitude.npc), ch = game.actors.get(r.attitude.char);
+        if ( AT && npc && ch ) await (r.attitude.met ? AT.apply(npc, ch, {to: r.attitude.before, why: "Undone"}) : AT.forget(npc, ch));
+      }
       if ( r.effect ) await fromUuidSync(r.effect)?.delete?.();
       if ( r.token ) {
         const tok = fromUuidSync(r.token.uuid);
