@@ -561,7 +561,7 @@ export async function action({ actor: a, preset = "" } = {}) {
     if (!actor) return;
     const target = targetActor();
     const rd = road(actor);
-    const day = !!flag(actor, "daytime");
+    const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
     const presetOpts = Object.entries(PRESETS).map(([k, p]) => [k, p.label]);
     const content = `<form>
       <div class="form-group"><label>Dramatic system</label>${searchBox("select[name=preset]", "Search dramatic systems…", "Search dramatic systems")}<select name="preset">${opts(presetOpts, preset)}</select></div>
@@ -586,7 +586,7 @@ export async function action({ actor: a, preset = "" } = {}) {
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       <div class="form-group"><label><input type="checkbox" name="ignoreWounds"/> Spend Willpower to ignore wound penalties (${woundPenalty(actor)})</label></div>
-      ${TH.ticksHtml(actor, esc)}
+      ${TH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
       <div class="form-group"><label><input type="checkbox" name="aura"/> Apply Road aura (${rd.name} ${rd.value}: ${R.auraModifier(rd.value) >= 0 ? "+" : ""}${R.auraModifier(rd.value)})</label></div>
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label><input type="checkbox" name="auto"/> Take an automatic success if pool ≥ difficulty</label></div>
@@ -659,7 +659,7 @@ export async function quickCheck({ actor: a, check = "notice" } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const target = targetActor();
-    const day = !!flag(actor, "daytime");
+    const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
     const first = CK.byKey(check) ?? CK.CHECKS[0];
     const groups = CK.GROUPS.map(([g, label]) => `<optgroup label="${esc(label)}">${opts(CK.CHECKS.filter(c => c.group === g).map(c => [c.key, c.label]), first.key)}</optgroup>`).join("");
     const content = `<form>
@@ -670,7 +670,7 @@ export async function quickCheck({ actor: a, check = "notice" } = {}) {
       <div class="form-group"><label>Bonus dice / extra difficulty</label><input type="number" name="bonus" value="0" style="width:4em"/> <input type="number" name="extraDiff" value="0" style="width:4em"/></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
-      ${TH.ticksHtml(actor, esc)}
+      ${TH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
       <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
       <p class="vta-note">For a roll against someone, an extended roll or teamwork, use Any roll. Wound penalties apply.</p>
@@ -697,7 +697,7 @@ export async function quickCheck({ actor: a, check = "notice" } = {}) {
             preset: `check-${c.key}`, attr: pick.attr, ability: pick.abilityId, diff: num(fd.diff) || c.diff, mode: "simple",
             bonus: num(fd.bonus), extraDiff: num(fd.extraDiff), multi: 0, retries: 0, specialty: !!fd.specialty, wp: !!fd.wp,
             ignoreWounds: false, aura: false, daytime: !!fd.daytime, auto: false, desc: fd.desc || c.label.split(" (")[0],
-            ...Object.fromEntries(Object.entries(fd).filter(([k]) => k.startsWith("tag-")))
+            ...Object.fromEntries(Object.entries(fd).filter(([k]) => k.startsWith("tag-") || k === "lucky"))
         });
     }, { render, width: 460 });
 }
@@ -771,9 +771,19 @@ async function resolveAction(actor, target, fd) {
     if (fd.auto && built.autoSuccessAllowed && fd.mode === "simple") {
         return post(actor, title, `<div class="vta-sec"><b>${label}</b> (${built.dice} dice vs ${built.difficulty}): automatic success (V20 Dark Ages p. 323).</div>${preset.note ? `<div class="vta-note">${preset.note}</div>` : ""}`);
     }
-    const r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
+    let r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
     const rolls = [...helperRolls, r.roll];
-    let body = helperHtml + rollBlock(label || "Pool", r, built.parts.concat(fd.specialty ? ["specialty"] : [], fd.wp ? ["Willpower"] : []), fd.specialty);
+    let body = "";
+    // Lucky (V20 p. 493 printed): a failed roll, botches too, is rolled again, three times a story
+    if (fd.lucky && (r.botch || !r.successes) && fd.mode !== "extended") {
+        const lk = await TH.useLucky(actor);
+        if (lk) {
+            body += rollBlock(`${label || "Pool"} (first roll)`, r, [], fd.specialty) + `<div class="vta-note">Lucky: rolled again (${lk.left} left this story).</div>`;
+            r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
+            rolls.push(r.roll);
+        }
+    }
+    body = helperHtml + body + rollBlock(label || "Pool", r, built.parts.concat(fd.specialty ? ["specialty"] : [], fd.wp ? ["Willpower"] : []), fd.specialty);
 
     // Resisted
     if (fd.mode === "resisted") {
@@ -1176,7 +1186,10 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     const turns = Math.ceil(drunk / 3);
     html += `<div class="vta-sec"><b>Drinks ${drunk} blood point${drunk === 1 ? "" : "s"}</b> (${turns} turn${turns === 1 ? "" : "s"} at up to 3 per turn)${minutes >= 10 ? `; cold blood, worth ${effective}` : ""}.</div>`;
     if (vessel.pool < 1) html += `<div class="vta-note">A ${vessel.label.toLowerCase()} holds only ${vessel.pool} blood point.</div>`;
-    const gain = vessel.pool < 1 ? 0 : effective;
+    // Efficient Digestion (V20 p. 480 printed): one more point for every two drunk
+    const digest = vessel.pool < 1 ? 0 : TH.digestionBonus(actor, drunk, room - effective);
+    if (digest) html += `<div class="vta-note">Efficient Digestion: ${digest} more blood point${digest === 1 ? "" : "s"}.</div>`;
+    const gain = vessel.pool < 1 ? 0 : effective + digest;
     if (gain) {
         const ch = await changeBlood(actor, gain);
         html += `<div class="vta-res good">Blood pool ${ch.before} → ${ch.after}</div>`;
@@ -1185,6 +1198,8 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         const pen = taint === "drunk" ? R.drinkPenalty(drinks) : 0;
         html += `<div class="vta-note"><b>${esc(R.VESSEL_STATES[taint].label)}.</b> ${esc(R.VESSEL_STATES[taint].note)}${taint === "drunk" ? ` Now: −${pen} di${pen === 1 ? "e" : "ce"}.` : ""}</div>`;
     }
+    const prey = drunk > 0 ? TH.preyNote(actor) : "";
+    if (prey) html += `<div class="vta-warn">${esc(prey)}</div>`;
     const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
     const high = faeVessel && isVampire(actor) ? R.faeBloodHigh(drunk) : null;
     if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;
@@ -1263,7 +1278,9 @@ async function resolveSpend(actor, fd) {
     const q = { strength: Math.max(0, fd.qStr), dexterity: Math.max(0, fd.qDex), stamina: Math.max(0, fd.qSta) };
     const qTotal = q.strength + q.dexterity + q.stamina;
     const imitate = fd.imitate ? R.imitateLifeCost(rd.value) : 0;
-    const total = lethal + bashing + agg * 5 + qTotal + imitate + Math.max(0, fd.disc) + Math.max(0, fd.give);
+    // Thin Blood (V20 p. 483 printed): every cost doubled; blood given away is not a cost
+    const mult = TH.bloodCostMult(actor);
+    const total = (lethal + bashing + agg * 5 + qTotal + imitate + Math.max(0, fd.disc)) * mult + Math.max(0, fd.give);
     if (total > b.value) { ui.notifications.warn(`${actor.name} has only ${b.value} blood (needs ${total}).`); return null; }
     if (!total) return null;
 
@@ -1338,6 +1355,7 @@ async function resolveSpend(actor, fd) {
             if (!isVampire(t)) html += `<div class="vta-note">A mortal who drinks Cainite blood becomes a ghoul (V20 Dark Ages p. 399).</div>`;
         } else html += `<div class="vta-sec"><b>Gives</b> ${fd.give} blood (no target selected).</div>`;
     }
+    if (mult > 1) { const given = Math.max(0, fd.give); spent = (spent - given) * mult + given; html += `<div class="vta-note">Thin Blood: every cost doubled.</div>`; }
     const ch = await changeBlood(actor, -spent);
     html += `<div class="vta-big">Blood ${ch.before} → ${ch.after}</div>`;
     if (spent > b.perTurn) html += `<div class="vta-note">More than ${b.perTurn} blood per turn: this takes ${Math.ceil(spent / b.perTurn)} turns.</div>`;
@@ -1472,14 +1490,15 @@ export async function daytime({ actor: a } = {}) {
             if (!n.successes) return post(actor, `${actor.name} sleeps on`, html + `<div class="vta-big">The disturbance goes unnoticed.</div>`, rolls);
         }
         if (fd.wp && !(await spendWillpower(actor, 1))) fd.wp = false;
-        const r = await rollPool(rd.value, 8, { willpower: fd.wp });
-        rolls.push(r.roll);
-        html += rollBlock(rd.name, r);
-        const res = R.awakeningResult(r);
+        // Deep Sleeper (V20 p. 485 printed): waking is 2 harder; Light Sleeper wakes at once
+        const sm = TH.sleepMods(actor);
+        const r = sm.light ? null : await rollPool(rd.value, Math.min(10, 8 + sm.diff), { willpower: fd.wp });
+        if (r) { rolls.push(r.roll); html += rollBlock(rd.name, r, sm.diff ? ["Deep Sleeper +2 diff"] : []); }
+        const res = r ? R.awakeningResult(r) : { awake: true, turns: Infinity, text: "Light Sleeper: wide awake at once, and the Road does not cap the dice today." };
         html += `<div class="vta-big ${res.awake ? "good" : "bad"}">${res.text}</div>`;
         if (res.awake) {
-            html += `<div class="vta-note">While active by day, no dice pool may exceed the Road rating (${rd.value}). Enabled on the Action dialog.</div>`;
-            await setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns });
+            if (!sm.light) html += `<div class="vta-note">While active by day, no dice pool may exceed the Road rating (${rd.value}). Enabled on the Action dialog.</div>`;
+            await setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns, ...(sm.light ? { uncapped: true } : {}) });
         }
         return post(actor, `${actor.name} stirs by day`, html, rolls);
     });
@@ -2208,7 +2227,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.35.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.36.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

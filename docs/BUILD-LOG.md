@@ -1543,6 +1543,14 @@ Ben approved all 291 timeline cards and asked for a deconfliction. docs/research
 - Actions: effects.js applyItem wraps applyCore and records an attitude change for Sway and Fear (power-effects.js moodDelta); undo puts it back.
 - Tests: trait-attitude.test.mjs (4). Gate: gatetraits step 17.
 
-## 2026-11-11: Dealing with NPCs, part C: trade (Actions 3.35.0)
+## 2026-11-11: trait effects, step 6 (Actions 3.35.0, Chronicle 0.21.0, B886)
+- trait-hooks.js: holds, luckyLeft, useLucky, luckyHtml, digestionBonus, bloodCostMult, sleepMods, preyNote.
+- main.js: Lucky in resolveAction (action and quick check), feedResolve (Efficient Digestion, Prey Exclusion), resolveSpend (Thin Blood), daytime (Deep and Light Sleeper; the daytime flag's uncapped).
+- Chronicle: HANDLED; describe lists every way a trait is carried out.
+- Tests: trait-pools.test.mjs (4). Gate: gatetraits step 18.
+## 2026-11-11: bug check of the finished work
+Ben asked for a bug check of everything done so far. The harness passed 1,286 of 1,286 on main d8933e8. Two gate faults traced to one cause: Foundry 14 can hand back a batch of new actors out of order, so gatefight sometimes set the guard's attitude on the wrong actor (the "attitude 0 on a cold start" fault), and gaterivals sometimes gave the wolf's kind to the leech (the "fails after gateeffects" fault). Nine gates now match new actors to their data by name (createActors), gateoworld does the same for its two scenes, and gateeffects finds its Move token by name. The play code never makes actors in a batch like that, so Live is not affected. One real bug found on the way: a Mage Move and its Undo used a plain x/y update, which Foundry 14 stops at walls. Actions 3.35.1 jumps the token with a "displace" move and keeps the plain update as a fallback. New harness checks cover both.
+
+## 2026-11-11: Dealing with NPCs, part C: trade (Actions 3.36.0)
 
 "With this person" gains Trade once WoDX Storyteller's money is on (B895-B897). Buy, sell or barter with the NPC at the prices the era goods list and the local market give; a trader sells from the shop container their market lists, anyone else from what they carry, and the NPC's purse is the till. A haggle roll (Manipulation + Finance, Commerce in the Dark Ages, difficulty 6) moves the price a tenth per success, up to three tenths. Hostile NPCs refuse; distrusted ones deal a tenth worse. Lifted things carry a stolen mark and fetch the fence's price. Social and trade cards now add a stock line from WoDX NPC, coloured by attitude. New trade-rules.js and trade.js; harness trade.test.mjs; gatesocial step 10 buys a good and sells it back.

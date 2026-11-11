@@ -41,7 +41,7 @@ export const ACTS = [
 export const actByKey = key => ACTS.find(a => a.key === key) ?? null;
 
 /** The presets this file adds to main.js's dramatic systems. */
-/** Which of WoDX NPC's stock social lines fits each act (3.35.0): social:<kind>:<win|lose>. */
+/** Which of WoDX NPC's stock social lines fits each act (3.36.0): social:<kind>:<win|lose>. */
 export const STOCK_KIND = { persuade: "persuade", fasttalk: "deceive", con: "deceive", intimidate: "intimidate", threaten: "intimidate", question: "persuade", bribe: "bribe", charm: "charm" };
 
 export const PRESETS = {

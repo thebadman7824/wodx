@@ -335,7 +335,7 @@ export function build(ctx) {
         return { ...res, item: item?.name ?? null, coins, moved };
     }
 
-    /* ---------------- Trade (3.35.0) ---------------- */
+    /* ---------------- Trade (3.36.0) ---------------- */
     let TRE = null;
     const tradeX = () => TRE ??= TRD.build({ R, PRESETS, pickPool, readPool, woundPenalty, setting, rollPool, rollBlock, post, esc, dialog, opts, willpower, spendWillpower,
         attitudeOf, nameFor, npcApi, gmIds, proposeOrApply, moveItem });

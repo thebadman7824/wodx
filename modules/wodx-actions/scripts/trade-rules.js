@@ -1,5 +1,5 @@
 /**
- * WoDX Actions 3.35.0: trade with one NPC, the rules part (no Foundry). Buy, sell and barter at the prices WoDX
+ * WoDX Actions 3.36.0: trade with one NPC, the rules part (no Foundry). Buy, sell and barter at the prices WoDX
  * Storyteller's money gives (era goods, the local market's index), with a haggle roll. House rules, noted in
  * PENDING-REVIEW: V20 has no haggling system. The roll follows V20 Dark Ages' Commerce example (Manipulation +
  * Commerce, difficulty 6, pdf p. 327); in later eras Finance stands in for Commerce.
