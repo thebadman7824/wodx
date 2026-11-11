@@ -106,7 +106,7 @@ export function build(ctx) {
             if (fortune) body += fortune.html;
             if (r.botch && sg.age.key !== "crusade") body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;
-            const fxData = fx?.got?.ok && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st") } : null;
+            const fxData = fx?.got?.ok && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st"), recipe: fx.recipe, hold: fx.hold } : null;
             return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean), fxData?.items.length ? fxData : undefined);
         }, { width: 560, render: root => { EF.wire(root, i.spheres, EF.rotesOf(actor)); if (preset) EF.fill(root, preset); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
     }
@@ -129,7 +129,9 @@ export function build(ctx) {
             return post(actor, `${actor.name}: Paradox backlash`, body, [r.roll].filter(Boolean));
         });
     }
-    async function counter(actor) {
+    async function counter(actor, o = {}) {
+        // Answering a WoDX keyword card: the successes come off that card (3.25.0)
+        const card = o.card ? game.messages?.get(o.card) : null;
         const i = info(actor);
         const content = `<form><div class="form-group"><label>How</label><select name="mode" data-fixed><option value="self">Against an Effect aimed at this mage (Arete at 7)</option><option value="dispel">For another: dispel it (8; Prime 1 and a Quintessence)</option><option value="reflect">For another: reflect it (9; Prime 1 and a Quintessence)</option>
             <option value="mind">Resist Mind magick (Willpower at 6)</option><option value="quiet">Dispel a Quiet delusion (a Willpower point; Willpower at 7)</option></select></div>
@@ -149,7 +151,8 @@ export function build(ctx) {
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (plan.quint) await updateActor(actor, { "system.quintessence.temporary": i.quint - 1 });
             const r = await rollPool(plan.dice, plan.difficulty);
-            return post(actor, `${actor.name}: countermagick`, rollBlock(`Arete ${plan.dice}`, r) + `<div class="vta-res">${r.successes} of the caster's successes cancelled${fd.mode === "reflect" ? "; any beyond theirs strike the caster" : ""}. A full action.</div><div class="wodx-quiet">${REF} p. 545</div>`, [r.roll].filter(Boolean));
+            return post(actor, `${actor.name}: countermagick`, rollBlock(`Arete ${plan.dice}`, r) + `<div class="vta-res">${r.successes} of the caster's successes cancelled${fd.mode === "reflect" ? "; any beyond theirs strike the caster" : ""}. A full action.${card ? " The casting's card is worked out again." : ""}</div><div class="wodx-quiet">${REF} p. 545</div>`, [r.roll].filter(Boolean),
+                card ? { kind: "counter", card: card.id, successes: r.successes, mode: fd.mode, by: actor.name } : undefined);
         });
     }
     /** The Fortune Dice (Sorcerers Crusade pdf p. 249): a 1 is a Bane, a 10 a Boon; either spends the whole Scourge Pool. */

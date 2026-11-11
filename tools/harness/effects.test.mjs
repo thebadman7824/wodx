@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.24.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.25.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -147,4 +147,17 @@ test("3.24.0: the system's Rote items open the WoDX Cast window, and saved rotes
   assert.match(m20, /EF\.fill\(root, preset\)/); assert.match(m20, /function castRote/);
   assert.match(src("modules/wodx-sheets/templates/block.hbs"), /wodx-cast-rote/);
   assert.match(src("modules/wodx-sheets/scripts/main.mjs"), /\.wodx-cast-rote\[data-itemid\]/);
+});
+
+test("3.25.0: countermagick takes successes off the card; reflected, the rest lands on the caster", () => {
+  assert.deepEqual(E.countered(4, 1), {left: 3, reflected: 0});
+  assert.deepEqual(E.countered(2, 5), {left: 0, reflected: 0});
+  assert.deepEqual(E.countered(2, 5, "reflect"), {left: 0, reflected: 3});
+  assert.deepEqual(E.countered(5, 2, "reflect"), {left: 3, reflected: 0});
+  assert.equal(E.canCounter({advantages: {arete: {permanent: 2}}}), true);
+  assert.equal(E.canCounter({}), false);
+  const fx = src("modules/wodx-actions/scripts/effects.js");
+  assert.match(fx, /data\.hold \|\| !isActiveGM\(\)/); assert.match(fx, /kind === "counter"/); assert.match(fx, /export async function applyCounter/);
+  const m20 = src("modules/wodx-actions/scripts/m20.js");
+  assert.match(m20, /kind: "counter", card: card\.id/); assert.match(m20, /recipe: fx\.recipe, hold: fx\.hold/);
 });

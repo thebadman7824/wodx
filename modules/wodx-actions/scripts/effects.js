@@ -139,8 +139,12 @@ export function read(fd) {
 }
 
 /** The targets: the user's targets, else the caster's own token (or the actor). */
-export function targetsOf(actor) {
+export function targetsOf(actor, uuids = null) {
   const own = actor?.getActiveTokens?.()?.[0]?.document ?? null;
+  if ( Array.isArray(uuids) ) {
+    const docs = uuids.map(docOf).filter(Boolean);
+    return docs.length ? {self: false, docs} : {self: true, docs: [own ?? actor]};
+  }
   const list = [...(game.user.targets ?? [])].map(t => t.document).filter(t => t && t.actorId !== actor?.id);
   return list.length ? {self: false, docs: list} : {self: true, docs: [own ?? actor]};
 }
@@ -148,8 +152,8 @@ export function targetsOf(actor) {
 /**
  * Turn a roll into the card's items. Returns {items, html, base, need}. items: [{key, out, target, name, route}].
  */
-export function plan(actor, form, successes, {used = [], witnessed = false, feat = 0} = {}) {
-  const t = targetsOf(actor);
+export function plan(actor, form, successes, {used = [], witnessed = false, feat = 0, targets = null} = {}) {
+  const t = targetsOf(actor, targets);
   const base = E.needFor(form.keywords, {self: t.self, feat});
   const got = E.spend(successes, base, form.plan);
   const spheres = used.map(x => x.sphere);
@@ -178,7 +182,47 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
   const html = !got.ok ? "" : `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
     `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(i.out.text)}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul>
     ${got.dropped.length ? `<div class="vta-note">Too few successes for ${esc(got.dropped.join(" and "))}.</div>` : ""}</div>`;
-  return {items, html, base, need: E.needFor(form.keywords, {self: t.self, feat, plan: form.plan}), got};
+  // What a countermagick roll needs to work the card out again (3.25.0)
+  const recipe = {successes, form, used, witnessed, feat, targets: t.self ? null : t.docs.map(d => d?.uuid).filter(Boolean), actor: actor?.uuid ?? null};
+  // A target who is a mage may counter first: the card waits for countermagick or the Storyteller's Apply now
+  const hold = isOn() && !t.self && t.docs.some(d => E.canCounter((d?.actor ?? d)?.system));
+  return {items, html, base, need: E.needFor(form.keywords, {self: t.self, feat, plan: form.plan}), got, recipe, hold};
+}
+
+/** The card's list, written from its flags (so countermagick can change it). */
+function listHtml(data) {
+  const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply",
+    pick: "goes where the Storyteller clicks", area: "waits for the Storyteller to place it"};
+  const items = data.items ?? [];
+  return `<ul>${items.map(i => `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(i.out.text)}. <span class="wodx-quiet">It ${word[i.route] ?? "waits"}.</span></li>`).join("") || "<li>Nothing: the Effect fails.</li>"}</ul>`;
+}
+
+/**
+ * Countermagick against a card, on the active Storyteller's client: take back what applied, cut the caster's
+ * successes, and work the card out again; reflected successes turn the Effect on its caster.
+ */
+export async function applyCounter(msg, counter, {mode = "self", by = ""} = {}) {
+  const data = msg?.flags?.[MOD];
+  if ( data?.kind !== "effects" || !data.recipe || !isActiveGM() ) return null;
+  if ( data.done && data.undo?.length && !data.undone ) await undo(data.undo);
+  const caster = docOf(data.recipe.actor);
+  const prev = n(data.countered?.total);
+  const total = prev + n(counter);
+  const {left, reflected} = E.countered(data.recipe.successes, total, mode);
+  const opts = {used: data.recipe.used ?? [], witnessed: data.recipe.witnessed, feat: data.recipe.feat};
+  let items = [];
+  const now = plan(caster, data.recipe.form, left, {...opts, targets: data.recipe.targets ?? []});
+  if ( now.got.ok ) items = now.items;
+  let back = null;
+  if ( reflected ) {
+    const own = caster?.getActiveTokens?.()?.[0]?.document ?? null;
+    const r = plan(caster, data.recipe.form, reflected, {...opts, targets: own ? [own.uuid] : [caster?.uuid]});
+    if ( r.got.ok ) { back = r.items.map(i => ({...i, name: `${i.name} (reflected)`})); items = [...items, ...back]; }
+  }
+  await msg.update({[`flags.${MOD}.items`]: items, [`flags.${MOD}.done`]: false, [`flags.${MOD}.undo`]: [], [`flags.${MOD}.undone`]: false,
+    [`flags.${MOD}.placed`]: [], [`flags.${MOD}.hold`]: false, [`flags.${MOD}.countered`]: {total, mode, by, left, reflected}});
+  await onCard(msg);
+  return {left, reflected, items: items.length};
 }
 
 /* ------------------------------------------------------------------ */
@@ -364,7 +408,12 @@ export async function undo(records = []) {
 /** The active Storyteller applies a new card's automatic items and sends the queued ones on. */
 async function onCard(msg) {
   const data = msg.flags?.[MOD];
-  if ( data?.kind !== "effects" || data.done || !isActiveGM() ) return;
+  if ( data?.kind === "counter" && data.card && isActiveGM() ) {
+    const card = game.messages?.get(data.card);
+    if ( card ) await applyCounter(card, data.successes, {mode: data.mode, by: data.by});
+    return;
+  }
+  if ( data?.kind !== "effects" || data.done || data.hold || !isActiveGM() ) return;
   const records = [], notes = [];
   for ( const item of data.items ?? [] ) {
     if ( item.route === "auto" ) {
@@ -434,9 +483,34 @@ export function setup() {
   Hooks.on("wodxEndScene", () => { expireAreas({sceneEnd: true}).catch(e => console.error("WoDX | effect areas", e)); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {
     const data = msg.flags?.[MOD];
-    if ( data?.kind !== "effects" || !game.user.isGM || !el?.querySelector ) return;
+    if ( data?.kind !== "effects" || !el?.querySelector ) return;
     const box = el.querySelector(".wodx-effects");
     if ( !box ) return;
+    if ( data.countered ) {
+      const ul = box.querySelector("ul");
+      if ( ul ) ul.outerHTML = listHtml(data);
+      box.insertAdjacentHTML("beforeend", `<div class="vta-note">Countermagick${data.countered.by ? ` by ${esc(data.countered.by)}` : ""}: ${n(data.countered.total)} success${n(data.countered.total) === 1 ? "" : "es"} cancelled, ${n(data.countered.left)} left${data.countered.reflected ? `; ${n(data.countered.reflected)} turned back on the caster` : ""}.</div>`);
+    }
+    // Countermagick: anyone with a mage of their own may answer the card while it waits (or after, for the Storyteller)
+    if ( !data.undone && (data.hold || game.user.isGM) && data.recipe ) {
+      box.insertAdjacentHTML("beforeend", `<button type="button" class="wodx-effects-counter"><i class="fa-solid fa-shield-halved"></i> Countermagick</button>`);
+      box.querySelector(".wodx-effects-counter").addEventListener("click", ev => {
+        ev.preventDefault();
+        const who = canvas?.tokens?.controlled?.[0]?.actor ?? game.user.character ?? null;
+        if ( !who ) return ui.notifications?.warn?.("Select the countering mage's token first.");
+        game.wodxActions?.m20Counter?.({actor: who, card: msg.id});
+      });
+    }
+    if ( !game.user.isGM ) return;
+    if ( data.hold ) {
+      box.insertAdjacentHTML("beforeend", `<div class="vta-note">A target is a mage and may counter first.</div><button type="button" class="wodx-effects-release"><i class="fa-solid fa-play"></i> Apply now</button>`);
+      box.querySelector(".wodx-effects-release").addEventListener("click", async ev => {
+        ev.currentTarget.disabled = true;
+        await msg.update({[`flags.${MOD}.hold`]: false});
+        await onCard(game.messages.get(msg.id) ?? msg);
+      });
+      return;
+    }
     if ( data.notes?.length ) box.insertAdjacentHTML("beforeend", `<div class="vta-note">${data.notes.map(esc).join("; ")}.</div>`);
     if ( !data.undone ) {
       (data.items ?? []).forEach((item, i) => {
