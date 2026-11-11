@@ -204,6 +204,25 @@ export async function run() {
       await fx().undo([...recs, wr].filter(Boolean));
       ok("13 a Dark Ages rote", hurt && timed && st && sum(dmg(caster)) === sum(before), {hurt, timed, st, routes: harm?.items?.map(i => i.route)});
     });
+    await step("14 path magic and Numina", async () => {
+      const api = game.modules.get(MOD).api;
+      const disc = api.disciplines?.() ?? (await fetch(`/modules/${MOD}/data/disciplines-daw.json`).then(r => r.json()));
+      const pw = id => (disc.powers ?? disc).find(p => p.id === id);
+      const before = dmg(caster);
+      const dust = api.effects.pathPlan(caster, pw("necromancy-the-graves-decay-dust-to-dust"), 2);
+      const recs = [];
+      for ( const it of dust?.items ?? [] ) if ( it.route === "auto" ) recs.push(await fx().apply(it, caster.name));
+      const hurt = sum(dmg(caster)) > sum(before) || recs.some(r => r?.health);
+      const ward = api.effects.pathPlan(caster, pw("necromancy-the-path-of-the-corpse-in-the-monster-algor-mortis"), 1);
+      const wr = ward.items[0]?.route === "auto" ? await fx().apply(ward.items[0], caster.name) : null;
+      const timed = !!(wr?.effect && fromUuidSync(wr.effect));
+      const st = api.effects.pathPlan(caster, pw("thaumaturgy-potestas-elementorum-summon-elemental"), 3).items.every(i => i.route === "st");
+      const H = api.hunterRules ?? (await import(`/modules/${MOD}/scripts/hunter-rules.js?${Date.now()}`));
+      const fire = api.effects.numinaPlan(caster, "pyrokinesis", 3, 2, H.NUMINA.pyrokinesis);
+      const asks = fire.items.every(i => i.route === "queue" && i.out.levels === 2);
+      await fx().undo([...recs, wr].filter(Boolean));
+      ok("14 path magic and Numina", hurt && timed && st && asks && sum(dmg(caster)) === sum(before), {hurt, timed, st, asks, routes: dust?.items?.map(i => i.route)});
+    });
     if ( toks.length ) await scene.deleteEmbeddedDocuments("Token", toks.map(t => t.id)).catch(() => {});
   } catch (e) { R.errors.push(e.message); }
   finally {

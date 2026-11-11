@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.26.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.27.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -194,4 +194,40 @@ test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it 
   assert.deepEqual([D.targetCount("self", 3, 2), D.targetCount("one", 3, 2), D.targetCount("each", 3, 5), D.targetCount("each", 3, 2), D.targetCount("all", 1, 4)], [0, 1, 3, 2, 4]);
   const da = src("modules/wodx-actions/scripts/mage-da.js");
   assert.match(da, /EF\.daPlan\(actor, rote, out\.successes\)/); assert.match(da, /kind: "effects", caster: actor\.name, items: fxItems/);
+});
+
+test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
+  const PE = await import(join(root, "modules/wodx-actions/scripts/path-effects.js"));
+  const disc = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/disciplines-daw.json"), "utf8")).powers;
+  const paths = disc.filter(p => PE.isPath(p.d));
+  assert.equal(paths.length, 70);
+  for ( const id of Object.keys(PE.PATH_EFFECTS) ) assert.ok(paths.some(p => p.id === id), `no path power ${id}`);
+  for ( const p of paths ) {
+    const o = PE.pathOutcomes(p, 2);
+    assert.ok(o.length >= 1, p.id);
+    for ( const x of o ) assert.match(x.out.source, /V20 Dark Ages p\. \d+/);
+  }
+  assert.deepEqual(PE.pathOutcomes(paths[0], 0), []);
+  assert.equal(PE.isPath("Quietus"), false);
+  const H = await import(join(root, "modules/wodx-actions/scripts/hunter-rules.js"));
+  for ( const k of Object.keys(PE.NUMINA_EFFECTS) ) { const [key, l] = k.split(":"); assert.ok(H.NUMINA[key] && +l >= 1 && +l <= 5, k); }
+  const fire = PE.numinaOutcomes("pyrokinesis", 4, 3, H.NUMINA.pyrokinesis);
+  assert.deepEqual(fire.map(o => [o.out.levels, o.out.type, o.ask]), [[2, "aggravated", true]]);
+  const heal = PE.numinaOutcomes("healing", 5, 3, H.NUMINA.healing)[0].out;
+  assert.deepEqual([heal.kind, heal.levels, heal.aggravated], ["heal", 3, true]);
+  assert.deepEqual(PE.numinaOutcomes("telekinesis", 2, 4, H.NUMINA.telekinesis).map(o => [o.out.levels, o.out.type, o.ask]), [[2, "bashing", true]]);
+  assert.deepEqual(PE.numinaOutcomes("healing", 4, 3, H.NUMINA.healing)[0].out.levels, 3);
+  assert.equal(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses)[0].st, true);
+  assert.equal(Object.keys(PE.PATH_EFFECTS).length, 70);
+  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 38);
+  const by = id => paths.find(p => p.id.endsWith(id));
+  assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3)[0].st, true);
+  assert.deepEqual(PE.pathOutcomes(by("dust-to-dust"), 3).map(o => [o.out.levels, o.out.type, o.out.soak]), [[3, "aggravated", false]]);
+  assert.deepEqual(PE.pathOutcomes(by("ashen-ladys-embrace"), 4).map(o => [o.out.levels, o.ask]), [[2, true]]);
+  assert.deepEqual(PE.pathOutcomes(by("benedictio-mortem"), 3)[0].out.timed, {kind: "rounds", rounds: 3});
+  assert.equal(PE.pathOutcomes(by("pontos-euxeinos"), 2)[0].out.kind, "heal");
+  const kx = src("modules/wodx-actions/scripts/kindred.js"), hx = src("modules/wodx-actions/scripts/hunter.js");
+  assert.match(kx, /EF\.pathPlan\(actor, p, successes\)/); assert.match(kx, /!PE\.PATH_EFFECTS\[p\.id\]/);
+  assert.match(hx, /EF\.numinaPlan\(actor, /);
+  assert.match(src("modules/wodx-actions/scripts/effects.js"), /source: o\.source \?\? /);
 });

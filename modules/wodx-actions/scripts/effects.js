@@ -7,6 +7,7 @@
  */
 import * as E from "./effects-rules.js";
 import * as DAE from "./mage-da-effects.js";
+import * as PE from "./path-effects.js";
 export { E };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -195,7 +196,21 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
  * any keyword result. Returns {items, html}.
  */
 export function daPlan(actor, rote, successes) {
-  const results = DAE.daOutcomes(rote, successes);
+  return planOf(actor, DAE.daOutcomes(rote, successes), successes);
+}
+
+/** A Thaumaturgy, Necromancy or Koldunic path power on the effects card (Dark Ages Disciplines). */
+export function pathPlan(actor, power, successes) {
+  return planOf(actor, PE.pathOutcomes(power, successes), successes);
+}
+
+/** A Numen at a level on the effects card (The Hunters Hunted II). */
+export function numinaPlan(actor, key, level, successes, def) {
+  return planOf(actor, PE.numinaOutcomes(key, level, successes, def), successes);
+}
+
+/** Results in the [{key, who, ask?, st?, out}] shape, spread over the caster's targets: {items, html}. */
+export function planOf(actor, results, successes) {
   if ( !results.length ) return {items: [], html: ""};
   const t = targetsOf(actor);
   const own = actor?.getActiveTokens?.()?.[0]?.document ?? actor;
@@ -294,7 +309,7 @@ export async function applyItem(item, casterName = "the caster") {
       const tok = tokenOf(d);
       const tokenWas = tok ? {uuid: tok.uuid, elevation: tok.elevation, sight: foundry.utils.deepClone(tok.sight ?? {})} : null;
       const effect = await T.applyTimed(a, {name: o.name ?? o.label, description: `${o.text} (cast by ${casterName})`, duration: o.timed, condition: o.condition,
-        changes, key: `wodx-effect-${o.key}`, source: "Mage 20th pp. 502-504"});
+        changes, key: `wodx-effect-${o.key}`, source: o.source ?? "Mage 20th pp. 502-504"});
       if ( tok && o.feet ) await tok.update({elevation: n(tok.elevation) + o.feet});
       if ( tok && o.vision ) await tok.update({"sight.visionMode": "darkvision", "sight.range": Math.max(n(tok.sight?.range), 30)});
       return {uuid: a.uuid, effect: effect?.uuid ?? null, token: tok && (o.feet || o.vision) ? tokenWas : null};
