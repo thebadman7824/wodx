@@ -36,13 +36,13 @@ const INQUISITION = "inquisit|society of leopold|leopold";
 export const RIVALRIES = [
   // Kindred among themselves
   {id: "tremere-tzimisce", a: "clan:tremere", b: "clan:tzimisce", from: null, to: 1492, ab: -3, ba: -3,
-    note: "The war over the Carpathians and Bohemia: the Tremere took their first strongholds from Tzimisce land", book: "V20 Dark Ages"},
+    note: "The war over the Carpathians and Bohemia: the Tremere took their first strongholds from Tzimisce land", book: "VtDA20 pdf 413-414"},
   {id: "tremere-tzimisce-sects", a: "clan:tremere", b: "clan:tzimisce", from: 1493, to: null, ab: -2, ba: -2,
-    note: "The old war goes on inside the war of the sects", book: "V20"},
+    note: "The old war goes on inside the war of the sects", book: "V20 pdf 142, 145, 404"},
   {id: "tremere-salubri", a: "clan:tremere", b: "clan:salubri", from: null, to: null, ab: -3, ba: -3,
-    note: "The Tremere hunt Saulot's line since their founder took Saulot's blood", book: "V20; V20 Dark Ages"},
+    note: "The Tremere hunt Saulot's line since their founder took Saulot's blood", book: "VtDA20 pdf 41, 101-103; V20 pdf 416, 446"},
   {id: "tremere-assamite", a: "clan:tremere", b: "clan:assamite|banu haqim", from: 1493, to: null, ab: -2, ba: -2,
-    note: "The blood curse the Tremere laid on the Assamites at the Convention of Thorns", book: "V20"},
+    note: "The blood curse the Tremere laid on the Assamites at the Convention of Thorns", book: "V20 pdf 324, 436, 441"},
   {id: "tremere-hermes", a: "clan:tremere", b: "hermes|hermetic", from: null, to: null, ab: -2, ba: -3,
     note: "The Order of Hermes never forgave the house that stole immortality from vampires", book: "V20 Dark Ages; M20"},
   {id: "tzimisce-ventrue", a: "clan:tzimisce", b: "clan:ventrue", from: null, to: 1492, ab: -1, ba: -1,
@@ -52,9 +52,9 @@ export const RIVALRIES = [
   {id: "anarch-revolt", a: "sect:anarch", b: "sect:camarilla|prince|elder", from: 1394, to: 1492, ab: -2, ba: -2,
     note: "The Anarch Revolt against the elders", book: "V20"},
   {id: "anarch-camarilla", a: "sect:anarch", b: "sect:camarilla", from: 1493, to: null, ab: -1, ba: -1,
-    note: "Rebels kept on sufferance after the Convention of Thorns", book: "V20"},
+    note: "Rebels kept on sufferance after the Convention of Thorns", book: "Anarchs pdf 14-15"},
   {id: "sabbat-camarilla", a: "sect:sabbat", b: "sect:camarilla", from: 1493, to: null, ab: -2, ba: -2,
-    note: "The war of the sects", book: "V20"},
+    note: "The war of the sects", book: "Anarchs pdf 14-15, 133; V20 pdf 46"},
   {id: "sabbat-anarch", a: "sect:sabbat", b: "sect:anarch", from: 1493, to: null, ab: -1, ba: -1,
     note: "Those who walked away from the Sword of Caine", book: "V20"},
   {id: "baali", a: "clan:baali|infernal", b: "line:kindred", bNot: "clan:baali|infernal", from: null, to: null, ab: -2, ba: -3,
@@ -67,9 +67,7 @@ export const RIVALRIES = [
     note: "The Kin-jin and the Cathayans", book: "Kindred of the East"},
   // Garou and the Changing Breeds
   {id: "garou-kindred", a: "line:lupine", b: "line:kindred", from: null, to: null, ab: -2, ba: -2,
-    note: "Leeches: the Garou count the walking dead as the Wyrm's own", book: "W20; V20"},
-  {id: "shadowlord-tzimisce", a: "tribe:shadow lord", b: "clan:tzimisce", from: null, to: 1492, ab: -3, ba: -3,
-    note: "The war in the Carpathian forests", book: "Werewolf: The Dark Ages; V20 Dark Ages"},
+    note: "Leeches: the Garou count the walking dead as the Wyrm's own", book: "W20 pdf 73, 195, 456-457"},
   {id: "garou-spiral", a: "tribe:black spiral", b: "line:lupine", bNot: "tribe:black spiral", from: null, to: null, ab: -3, ba: -3,
     note: "The fallen tribe", book: "W20"},
   {id: "garou-fomor", a: "fomor|wyrm", b: "line:lupine", bNot: "tribe:black spiral", from: null, to: null, ab: -3, ba: -3,
@@ -89,12 +87,10 @@ export const RIVALRIES = [
   {id: "garou-reason", a: "line:lupine", b: REASON, from: 1325, to: null, ab: -1, ba: -1,
     note: "Servants of the Weaver who drain the caerns", book: "W20; M20"},
   // Mages
-  {id: "hermes-daedalean", a: TRADITIONS, b: REASON, from: null, to: 1324, ab: -1, ba: -1,
-    note: "The craftsmen's guilds and the old orders begin to quarrel", book: "Mage: The Dark Ages"},
-  {id: "traditions-reason", a: TRADITIONS, b: REASON, from: 1325, to: 1449, ab: -1, ba: -1,
-    note: "The Order of Reason is founded and grows", book: "M20; Sorcerers Crusade"},
-  {id: "ascension-war", a: TRADITIONS, b: REASON, from: 1450, to: 1999, ab: -2, ba: -2,
-    note: "The Ascension War", book: "M20; Sorcerers Crusade"},
+  {id: "hermes-daedalean", a: TRADITIONS, b: REASON, from: null, to: 1209, ab: -1, ba: -1,
+    note: "The craftsmen's guilds and the old orders begin to quarrel", book: "Sorcerers Crusade pdf 70"},
+  {id: "ascension-war", a: TRADITIONS, b: REASON, from: 1210, to: 1999, ab: -2, ba: -2,
+    note: "The Ascension War, from the fall of Mistridge in 1210; the Order of Reason takes its name in 1325", book: "Sorcerers Crusade pdf 63-72; M20 pdf 23"},
   {id: "after-the-storm", a: TRADITIONS, b: REASON, from: 2000, to: null, ab: -1, ba: -1,
     note: "After the Avatar Storm the war goes quieter", book: "M20"},
   {id: "marauder", a: "marauder", b: "line:mage", bNot: "marauder", from: null, to: null, ab: -2, ba: -2,
@@ -111,7 +107,7 @@ export const RIVALRIES = [
   {id: "shadow-court", a: "shadow court", b: "court:seelie", from: null, to: null, ab: -2, ba: -2,
     note: "The Shadow Court works against the Seelie", book: "C20"},
   {id: "accordance-war", a: "kith:sidhe", b: "line:fae", bNot: "kith:sidhe", from: 1969, to: 1972, ab: -2, ba: -2,
-    note: "The Accordance War after the sidhe came back", book: "C20"},
+    note: "The Accordance War after the sidhe came back", book: "C20 pdf 29, 38-39, 51"},
   {id: "fomorian", a: "fomorian|thallain", b: "line:fae", bNot: "fomorian|thallain", from: null, to: null, ab: -3, ba: -3,
     note: "The Fomorians and their kin", book: "C20"},
   {id: "fae-kindred", a: "line:fae", b: "line:kindred", from: null, to: null, ab: -1, ba: -1,
@@ -367,8 +363,13 @@ export function enemiesBySide(map, x, y) {
 /*  Senses, the Storyteller's own rows                                 */
 /* ------------------------------------------------------------------ */
 
-/** Rolled senses (house rules): a Garou's nose for a Leech, a mage's feel for another of the Awakened. */
-export const SENSE_ROLLS = {scent: {attr: "perception", ability: "primal-urge", diff: 7}, awareness: {attr: "perception", ability: "awareness", diff: 8}};
+/**
+ * Rolled senses. A vampire does not pass for human to a werewolf's nose (W20 pdf 456-457); the roll for it is a house
+ * rule. Sense Wyrm is Perception + Occult (W20 pdf 158; difficulty 6 a house reading). A mage's feel for another of the
+ * Awakened is a house rule.
+ */
+export const SENSE_ROLLS = {scent: {attr: "perception", ability: "primal-urge", diff: 7}, "sense wyrm": {attr: "perception", ability: "occult", diff: 6},
+  awareness: {attr: "perception", ability: "awareness", diff: 8}};
 
 /**
  * The senses a watcher has. who: {kind (the combat profile), auspex (dots), senseWyrm (has the Gift), imbued (a creed)}.
@@ -377,7 +378,7 @@ export const SENSE_ROLLS = {scent: {attr: "perception", ability: "primal-urge", 
 export function sensesOf(who = {}) {
   const auto = [], roll = [];
   if ( Number(who.auspex) >= 2 ) auto.push("auspex");
-  if ( who.kind === "lupine" ) { roll.push("scent"); if ( who.senseWyrm ) auto.push("sense wyrm"); }
+  if ( who.kind === "lupine" ) { roll.push("scent"); if ( who.senseWyrm ) roll.push("sense wyrm"); }
   if ( who.kind === "fae" ) auto.push("kenning");
   if ( who.kind === "hunter" && who.imbued ) auto.push("second sight");
   if ( who.kind === "mage" ) roll.push("awareness");

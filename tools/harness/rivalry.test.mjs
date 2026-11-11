@@ -25,7 +25,7 @@ test("every rivalry row is whole: an id, two sides, steps from -3 to 0, years in
     assert.ok(r.note && r.book, r.id);
     assert.doesNotMatch(r.note, /—/, r.id);
   }
-  assert.ok(RV.RIVALRIES.length >= 60);
+  assert.ok(RV.RIVALRIES.length >= 55);
 });
 
 test("every line has a rivalry in force in every era, 1197 to the Future Darkness", () => {
@@ -141,7 +141,7 @@ test("the Storyteller's own rows, and rows switched off", () => {
 test("senses by line: Aura Perception at Auspex 2, a Garou's nose and Sense Wyrm, Kenning, Second Sight", () => {
   assert.deepEqual(RV.sensesOf({kind: "kindred", auspex: 1}), {auto: [], roll: []});
   assert.deepEqual(RV.sensesOf({kind: "kindred", auspex: 2}).auto, ["auspex"]);
-  assert.deepEqual(RV.sensesOf({kind: "lupine", senseWyrm: true}), {auto: ["sense wyrm"], roll: ["scent"]});
+  assert.deepEqual(RV.sensesOf({kind: "lupine", senseWyrm: true}), {auto: [], roll: ["scent", "sense wyrm"]});
   assert.deepEqual(RV.sensesOf({kind: "fae"}).auto, ["kenning"]);
   assert.deepEqual(RV.sensesOf({kind: "hunter", imbued: true}).auto, ["second sight"]);
   assert.deepEqual(RV.sensesOf({kind: "hunter"}).auto, []);
