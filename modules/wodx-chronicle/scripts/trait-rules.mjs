@@ -10,9 +10,9 @@
  * kind that cannot hold it is matched but marked wrongKind: it does nothing until fixed. Mixed kinds count as both
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
-import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS} from "../data/trait-effects.mjs";
+import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE} from "../data/trait-effects.mjs";
 
-export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS};
+export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE};
 
 /** A name with case, accents, quotes, spaces and punctuation taken out: "Can’t Cross Running Water" -> "cantcrossrunningwater". */
 export const normName = s => String(s ?? "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
@@ -196,6 +196,23 @@ export function showsOf(view, idx = index()) {
     out.push({key: m.key, name: m.entry.name, lines, glows: !!S.glows, strong: !!S.strong, indoor: !!S.indoor});
   }
   return out;
+}
+
+/**
+ * How a character's traits move an NPC's first regard (P7): {delta, names}. npcKind: the NPC's kind (an effect with
+ * againstKinds needs it). The sum is held to two steps either way, so traits never make a first meeting hunted on sight.
+ */
+export function attitudeSeed(view, npcKind = null, idx = index()) {
+  let delta = 0;
+  const names = [];
+  for ( const m of traitsOf(view, idx).matched ) {
+    const A = ATTITUDE[m.key];
+    if ( !A || m.wrongKind ) continue;
+    if ( A.againstKinds?.length && !(npcKind && kindFits(A.againstKinds, npcKind)) ) continue;
+    delta += A.delta;
+    names.push(m.entry.name);
+  }
+  return {delta: Math.max(-2, Math.min(2, delta)), names};
 }
 
 /** Book names with no entry, for the coverage test: names = [{name, kind, book}]. Only books in BOOKS_DONE count. */

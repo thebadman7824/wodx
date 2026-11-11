@@ -18,6 +18,7 @@
  *  13. every other WoDX module still answers
  *  14. WoDX Senses reads the senses: Bad Sight +2 on sight, Acute Sense (Smell) -2 on smell, Deaf takes hearing, Medium opens the restless dead
  *  16. a Discipline's keywords reach the effects card (Actions 3.33.0): the setting is there, and a sensing power plans a Sense on the user
+ *  17. a first meeting: the Kindred's Eerie Presence chills a mortal NPC one step, not a Kindred one; WoDX NPC's seed takes it
  *  15. signs others sense: the Kindred gives off Eerie Presence and Cast No Reflection, the mortal nothing; a Veil keeps its difficulty for Senses
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
@@ -160,6 +161,13 @@ export async function run() {
       const set = game.settings.get("wodx-actions", "powerEffects");
       const plan = FX.powerPlan(vamp, {set: "disc", id: "abombwe-predators-communion", name: "Predator's Communion", successes: 2});
       ok("16 power keywords", set === true && typeof FX.powerPlan === "function" && (plan.items.length > 0 || !FX.isOn()), {items: plan.items.map(i => `${i.key}:${i.route}`), on: FX.isOn()});
+    });
+
+    await step("17 first meeting", async () => {
+      const onMortal = T().attitudeSeed(vamp, human), onKindred = T().attitudeSeed(vamp, mage);
+      const AT = game.modules.get("wodx-npc")?.api?.attitude;
+      const seed = AT ? AT.seedFor(human, vamp.id) : null;
+      ok("17 first meeting", onMortal.delta === -1 && onKindred.delta === 0 && (!AT || seed.step === -1), {onMortal, onKindred, seed});
     });
   } catch (e) {
     R.errors.push(e.message);
