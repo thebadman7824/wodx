@@ -18,6 +18,7 @@ import * as G from "./mage-da-grimoire.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -175,6 +176,7 @@ export function build(ctx) {
             if (bonus) successes = Math.max(0, r.raw + bonus - ones) + (wp ? 1 : 0);
             const out = M.castOutcome({ raw: r.raw, ones, successes }, { extra: plan.extra, quintessenceSpent: qSpend, sanctum });
             const parts = [...plan.notes, ...(fd.belief ? ["belief cancels a 1"] : []), ...(fd.foreign ? ["another fellowship's magic: foci required"] : []), ...(wp ? ["Willpower"] : []), ...(qSpend ? [`${qSpend} Quintessence spent`] : []), ...(specUsed ? [`10s re-rolled: +${bonus} success${bonus === 1 ? "" : "es"}`] : [])];
+            let fx = null;
             let body = rollBlock(`${esc(i.F.foundation)} ${i.foundation} + ${esc(rote ? rote.name : "the Pillar")}`, r, parts);
             const hurried = !!fd.hurried && !(i.fellowship === "oldfaith" && i.foundation >= 5);
             await save(actor, { lastCast: game.time.worldTime, fadeCarry: { twilight: 0, brandings: 0 }, lastFade: game.time.worldTime });
@@ -184,6 +186,8 @@ export function build(ctx) {
                   <div class="vta-res">Lasts up to ${esc(rc.duration)}; reaches ${esc(rc.distance)}; ${esc(rc.note)}.${hurried && !(i.fellowship === "oldfaith" && i.foundation >= 4) ? " Hurried: it takes effect next turn (unless instant)." : ""}</div>
                   ${rote ? `<div class="vta-note">${esc(rote.name)}: ${esc(rote.system)}</div>` : ""}
                   <div class="wodx-quiet">${REF} pp. 98–105${rote ? `, ${rotePage(rote)}` : ""}</div>`;
+                // What the rote does on the table (3.26.0)
+                if (rote) { fx = EF.daPlan(actor, rote, out.successes); body += fx.html; }
                 await setFlag(actor, "daTries", { key: sceneKey(), failures: here.failures, botches: here.botches });
             } else if (out.result === "failure") {
                 body += `<div class="vta-big">No effect. Trying the same spell again this scene is +1 difficulty per failure.</div><div class="wodx-quiet">${REF} p. 100</div>`;
@@ -195,7 +199,9 @@ export function build(ctx) {
                   <div class="wodx-quiet">${REF} pp. 136–140</div>`;
                 await setFlag(actor, "daTries", { key: sceneKey(), failures: here.failures, botches: here.botches + 1 });
             }
-            const msg = await post(actor, `${actor.name} casts${rote ? `: ${rote.name}` : ""}`, body, [r.roll, ...extraRolls].filter(Boolean));
+            const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
+            const msg = await post(actor, `${actor.name} casts${rote ? `: ${rote.name}` : ""}`, body, [r.roll, ...extraRolls].filter(Boolean),
+                fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
             if (out.result === "backlash" && msg) await msg.setFlag(MOD, "daBacklash", { actor: actor.uuid, ones: out.ones, highest: plan.highest, pillarsUsed: plan.pillarsUsed, cancelled: 0, done: null });
             return msg;
         }, { width: 520, render: root => aim(root, { actor, cast: { intent: "e" } }) });
