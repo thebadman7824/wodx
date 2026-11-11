@@ -170,3 +170,9 @@ test("Actions wires the trait effects into actions, social rolls, frenzy and pow
   assert.match(s, /resist-social/);
   assert.match(k, /TH\.resistMods\(/);
 });
+
+test("the Actions api version matches module.json", async () => {
+  const {readFileSync} = await import("node:fs");
+  const v = JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version;
+  assert.match(readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8"), new RegExp(`profiles: P, version: "${v.replace(/\./g, "\\.")}"`));
+});

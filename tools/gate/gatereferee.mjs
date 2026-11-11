@@ -37,7 +37,9 @@ export async function run() {
       {name: "WoDX gate: Referee elder", type: "Vampire", system: {generation: 8}, flags: flag("kindred")},
       {name: "WoDX gate: Referee Garou", type: "Werewolf", flags: flag("lupine")},
       {name: "WoDX gate: Referee faithful", type: "Mortal", flags: {...flag("mortal"), "wodx-actions": {trueFaith: 3}}}]);
-    const [young, elder, garou, faithful] = actors;
+    // Actor.create does not keep the array's order: find each by name
+    const by = n => actors.find(a => a.name === `WoDX gate: Referee ${n}`);
+    const [young, elder, garou, faithful] = ["young", "elder", "Garou", "faithful"].map(by);
 
     await step("api, key and hand", async () => {
       const key = game.keybindings.actions.get("wodx-chronicle.referee");
