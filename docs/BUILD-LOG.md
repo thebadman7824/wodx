@@ -1533,3 +1533,9 @@ Ben asked for one-click mapmaking with our Dungeondraft assets and chose a Dunge
 
 ## 2026-11-11: The approved era timelines agree with each other
 Ben approved all 291 timeline cards and asked for a deconfliction. docs/research/era-timelines/deconflict.py reads every card beside the others on the same subject and the dated tables in Chronicle, Otherworlds and NPC, and writes timeline-approved-2026-11-11.json (289 cards: 5 edited, 2 dropped). Encyclopaedia: the Fragile Path entry loses its 1330 start for the Ascension War, the Lupine War entry gets a WoDX note on Lodin, the Anacreon revolts date is reworded (Library 0.7.2). Rivalries: Anarch Revolt 1381-1492, Accordance War 1969-1973 (NPC 0.18.2). Report DECONFLICT-2026-11-11.md; decision B861.
+
+## 2026-11-11: trait effects, step 5 (Chronicle 0.20.0, NPC 0.19.0, Actions 3.34.0, B884-B885)
+- Chronicle: ATTITUDE in data/trait-effects.mjs; trait-rules.mjs attitudeSeed; api.traits.attitudeSeed(character, npc).
+- NPC: attitude.mjs seedFor moves the seed by the traits (attitude-rules.mjs withTraits); main.mjs state.self.afraid and a flee option.
+- Actions: effects.js applyItem wraps applyCore and records an attitude change for Sway and Fear (power-effects.js moodDelta); undo puts it back.
+- Tests: trait-attitude.test.mjs (4). Gate: gatetraits step 17.

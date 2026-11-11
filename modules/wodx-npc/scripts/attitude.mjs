@@ -19,6 +19,16 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null}) {
     } catch (e) { return []; }
   }
   function seedFor(npc, charId) {
+    const seed = baseSeed(npc, charId);
+    // Chronicle 0.20.0 (Traits With Teeth step 5): the character's merits and flaws move the first look (Friendly Face, Monstrous)
+    try {
+      const ch = game.actors.get(charId);
+      const t = ch ? chron()?.traits?.attitudeSeed?.(ch, npc) : null;
+      if ( t?.delta ) return AT.withTraits(seed, t);
+    } catch (e) { /* no traits */ }
+    return seed;
+  }
+  function baseSeed(npc, charId) {
     let standing = {};
     try { standing = factions?.peopleOf?.(charId) ?? {}; } catch (e) { standing = {}; }
     const seed = AT.seedFrom({household: savedProfile(npc)?.household ?? "", factions: factionNamesOf(npc)}, standing);
