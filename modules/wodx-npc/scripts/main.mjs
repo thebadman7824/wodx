@@ -16,6 +16,7 @@ import * as NR from "./npc-rules.mjs";
 import * as RR from "./routine-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
+import {build as buildFounding} from "./founding.mjs";
 import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
@@ -25,7 +26,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.15.0";
+const VERSION = "0.16.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -664,6 +665,10 @@ routines.hooks();
 /* Phase 7d: factions and domains, on top of 7c's places */
 const factions = buildFactions({MOD, esc, gmIds, isActiveGM, chron, routines});
 factions.hooks();
+/* 0.16.0: founding factions in play, and factions the players run */
+const founding = buildFounding({MOD, esc, gmIds, isActiveGM}, factions);
+factions.setFounding(founding);
+founding.hooks();
 /* 0.8.0: followers who take orders */
 const orders = buildOrders({MOD, esc, gmIds, isActiveGM, chron, routines, cellOf, cellsAt, besideFor});
 orders.hooks();
@@ -685,7 +690,7 @@ Hooks.once("init", () => {
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
-    factions, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
+    factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude};
   game.modules.get(MOD).api = api;
 });
@@ -778,8 +783,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
-  tokens.tools.wodxFactions = {name: "wodxFactions", title: "WoDX factions (faction turns, hunting grounds, rumours)", icon: "fa-solid fa-chess-rook", order: 112,
-    button: true, visible: game.user.isGM, onChange: () => factions.openFactions()};
+  tokens.tools.wodxFactions = {name: "wodxFactions", title: game.user.isGM ? "WoDX factions (faction turns, hunting grounds, rumours)" : "Your factions (found one, or give orders to one you run)", icon: "fa-solid fa-chess-rook", order: 112,
+    button: true, visible: true, onChange: () => factions.openFactions()};
 });
 Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !game.user.isGM ) return;

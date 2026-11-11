@@ -1462,3 +1462,10 @@ Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 
 - Still open: Kindred of the East (unreadable scan), 85 Demon Lore powers whose names the scan cut short.
 - book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
 - Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
+
+## WoDX NPC 0.16.0: founding factions in play (2026-11-11)
+- Found from its members (Storyteller, Factions window) and Found a faction (players, the Factions button on the token tools): dots pooled from the founders' own Backgrounds (B831). Players' requests go to the approval queue.
+- Player-run factions: owners, and orders for each turn from the players (B835).
+- Splits of strained factions at a turn (B833); End and Fold into another (B832); founding and ending years, rising or ending with a dated event, and new powers offered by six events (B834).
+- Spheres and kinds of faction by age, 1197 to the Future Darkness (B830).
+- New harness test faction-founding.test.mjs.
