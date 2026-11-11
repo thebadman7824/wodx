@@ -67,8 +67,11 @@ export async function run() {
       await S().remains.tick();
       await until(() => body.flags?.[ST]?.remains?.shown);
       const st = S().remains.stage(body);
-      ok("3 bodies age", st && st.id !== "fresh" && body.flags[ST].remains.shown === st.id && (st.tint ? body.texture.tint?.css === st.tint || String(body.texture.tint) === st.tint : true),
-        {stage: st?.id, tint: String(body.texture.tint)});
+      // Foundry eases a token's tint to its new colour over about a second, so the shown tint lags the saved one
+      const want = st?.tint ?? "#ffffff", css = () => body.texture.tint?.css ?? String(body.texture.tint);
+      await until(() => css() === want, 4000);
+      ok("3 bodies age", st && st.id !== "fresh" && body.flags[ST].remains.shown === st.id && String(body._source.texture?.tint) === want && css() === want,
+        {stage: st?.id, saved: String(body._source.texture?.tint), shown: css()});
     });
     await step("4 a body found", async () => {
       await game.settings.set(ST, "heat", false);
