@@ -13,8 +13,8 @@ const T = await imp("modules/wodx-library/data/goods-text.mjs");
 const X = await imp("modules/wodx-library/scripts/examine-rules.mjs");
 
 test("examine: every good has a description, and no description names a good that is not there", () => {
-  const names = new Set(G.GOODS.map(g => g.name));
-  for ( const g of G.GOODS ) assert.ok(T.describe(g.name), `${g.name} has no description`);
+  const names = new Set(G.GOODS.map(g => g.former ?? g.name));
+  for ( const g of G.GOODS ) assert.ok(T.describe(g.former ?? g.name), `${g.name} has no description`);
   for ( const n of Object.keys(T.DESC) ) assert.ok(names.has(n), `description for unknown good: ${n}`);
   for ( const [n, forms] of Object.entries(T.DESC) ) for ( const f of forms ) {
     assert.doesNotMatch(f.text, /—|–/, `${n}: no dashes`);
@@ -62,6 +62,9 @@ test("examine: the Storyteller's own lines and a good found by any of its names"
   assert.equal(X.goodOf("7 bronze coins", G.GOODS)?.name, "a bronze coin");
   assert.equal(X.goodOf("A Bronze Coin", G.GOODS)?.name, "a bronze coin");
   assert.equal(X.goodOf("a sword of legend", G.GOODS), null);
+  assert.equal(X.goodOf("claret (in a bottle)", G.GOODS)?.name, "claret");
+  assert.equal(X.goodOf("claret (in 3 bottles)", G.GOODS)?.name, "claret");
+  assert.equal(X.goodOf("a bottle of claret", G.GOODS)?.name, "claret", "an item made before the rename still finds its good");
   const facts = X.factsOf(G.GOODS.find(g => g.name === "a bronze coin"), {kinds: G.KINDS, values: G.VALUES, conceal: G.CONCEAL});
   assert.deepEqual(facts.map(f => f[0]), ["Kind", "Used to", "Hides in", "Worth", "Stacks"]);
 });
@@ -78,7 +81,7 @@ test("examine: names and descriptions say plainly what a thing is; origin and hi
   const plainWords = /\b(Chinese|Muslim|Byzantine|Florence|Venetian|Spanish|Swiss|Confederate|Thor's|unicorn|forged|stolen|loaded)\b/i;
   for ( const g of G.GOODS ) assert.doesNotMatch(g.name, plainWords, `name: ${g.name}`);
   for ( const [n, forms] of Object.entries(T.DESC) ) for ( const f of forms ) assert.doesNotMatch(f.text, /\b(Chinese|Muslim|Byzantine|Florence|Venice|Spanish|Swiss|Confederate|laced with)\b/, `description: ${n}`);
-  const names = new Set(G.GOODS.map(g => g.name));
+  const names = new Set(G.GOODS.map(g => g.former ?? g.name));
   for ( const n of Object.keys(T.DETAILS) ) assert.ok(names.has(n), `detail for unknown good: ${n}`);
   const dinar = G.GOODS.find(g => g.name === "a gold dinar");
   assert.equal(dinar.id, "a-gold-dinar-from-a-muslim-mint", "a renamed good keeps its id");

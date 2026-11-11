@@ -31,8 +31,13 @@ function onPreCreateItem(item, data) {
   const good = X.goodOf(data?.name ?? item.name, G.GOODS);
   if ( !good ) return;
   const patch = {[`flags.${MOD}.good`]: good.id};
+  // "claret (in a bottle)" from a container's list becomes the item "claret", kept in its bottle.
+  if ( good.container && /\(in (an?|\d+) [^)]+\)\s*$/.test(String(data?.name ?? item.name)) ) {
+    patch.name = good.name;
+    patch[`flags.${MOD}.container`] = good.container;
+  }
   const has = String(data?.system?.description ?? item.system?.description ?? "").trim();
-  const text = T.describe(good.name, yearNow());
+  const text = T.describe(good.former ?? good.name, yearNow());
   if ( !has && text ) patch["system.description"] = `<p>${esc(text)}</p>`;
   item.updateSource(patch);
 }
@@ -80,7 +85,7 @@ export async function examine(item) {
   if ( !item ) return;
   await load();
   const good = goodOfItem(item);
-  const desc = String(item.system?.description ?? "").trim() || (good ? `<p>${esc(T.describe(good.name, yearNow()))}</p>` : "<p>Nothing more is known about it.</p>");
+  const desc = String(item.system?.description ?? "").trim() || (good ? `<p>${esc(T.describe(good.former ?? good.name, yearNow()))}</p>` : "<p>Nothing more is known about it.</p>");
   const rows = (await facts(item, good)).map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join("");
   const who = looker(item);
   const f = flagOf(item);
@@ -104,7 +109,7 @@ export async function lookCloser(item, actor = looker(item)) {
   const roll = await new Roll(`${p.pool}d10`).evaluate();
   const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
   const {successes, botch} = X.countSuccesses(faces, p.difficulty);
-  const found = X.findings(good.kind, successes, flagOf(item), ownerOf(item), T.detailsOf(good.name));
+  const found = X.findings(good.kind, successes, flagOf(item), ownerOf(item), T.detailsOf(good.former ?? good.name));
   const dice = faces.map(v => `<span class="vta-die ${v === 1 ? "one" : v >= p.difficulty ? "hit" : "miss"}">${v}</span>`).join("");
   const body = botch ? "<p>A botch. The Storyteller may tell something misleading.</p>"
     : found.length ? `<p class="wodx-quiet">What the look shows. The Storyteller fills in the details.</p><ul>${found.map(l => `<li>${esc(l.text)}</li>`).join("")}</ul>` : "<p>Nothing more than meets the eye.</p>";

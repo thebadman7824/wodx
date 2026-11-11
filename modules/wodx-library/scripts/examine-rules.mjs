@@ -162,9 +162,9 @@ export const joinLines = (lines = []) => lines.map(l => `${l.need}: ${l.text}`).
 /** The good a name refers to: "a bronze coin (7)" or "7 bronze coins" or "a bronze coin". */
 export function goodOf(name, goods = []) {
   const s = String(name ?? "").trim();
-  const bare = s.replace(/\s*\(\d+\)\s*$/, "");
+  const bare = s.replace(/\s*\(\d+\)\s*$/, "").replace(/\s*\(in (an?|\d+) [^)]+\)\s*$/, "");
   const lc = bare.toLowerCase();
-  const byName = goods.find(g => g.name.toLowerCase() === lc || (g.was && g.was.toLowerCase() === lc));
+  const byName = goods.find(g => g.name.toLowerCase() === lc || (g.was && g.was.toLowerCase() === lc) || (g.former && g.former.toLowerCase() === lc));
   if ( byName ) return byName;
   const m = /^(\d+)\s+(.+)$/.exec(bare);
   if ( m ) return goods.find(g => g.stack?.plural && g.stack.plural.toLowerCase() === m[2].toLowerCase()) ?? null;

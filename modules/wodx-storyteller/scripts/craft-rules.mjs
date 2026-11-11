@@ -20,7 +20,7 @@ export const CRAFTS = {
   kitchen: {label: "Smithing", shop: W(["forge", -10000]), materials: ["a bar of iron"]},
   house: {label: "Carpentry", shop: W(["bench", -10000]), materials: ["a seasoned timber plank"]},
   cloth: {label: "Tailoring and leatherwork", shop: W(["bench", -10000]), materials: []},
-  hygiene: {label: "Soap and salve making", shop: W(["still", -10000]), materials: ["a pot of lye", "a lump of beeswax"]},
+  hygiene: {label: "Soap and salve making", shop: W(["still", -10000]), materials: ["lye", "a lump of beeswax"]},
   tools: {label: "Smithing", shop: W(["forge", -10000], ["machine", 1800]), materials: ["a bar of iron", "a seasoned timber plank"]},
   light: {label: "Candle and lamp making", shop: W(["bench", -10000], ["machine", 1880]), materials: ["a lump of beeswax"]},
   fuel: {label: "Charcoal burning", shop: W(["", -10000]), materials: []},

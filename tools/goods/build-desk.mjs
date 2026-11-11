@@ -23,7 +23,7 @@ const out = {
   values: G.VALUES, sources: G.SOURCES, closer: Object.fromEntries(Object.keys(G.KINDS).map(k => [k, {abilities: X.ABILITIES[k], lines: X.LINES[k]}])), behaviours: G.BEHAVIOURS, conceal: G.CONCEAL,
   items: G.GOODS.map((g, i) => ({id: g.id, order: i, name: g.name, kind: g.kind, years: `${yr(g.from)} to ${yr(g.to)}`,
     eras: g.eras, values: g.values, value: g.value, conceal: g.conceal, use: g.use, stacks: g.stacks, stack: g.stack, uses: g.uses,
-    source: g.source, prices: priceText(g), details: T.detailsOf(g.name), was: g.was, desc: (T.DESC[g.name] ?? []).map(f => ({from: Number.isFinite(f.from) ? f.from : null, text: f.text}))}))
+    source: g.source, prices: priceText(g), details: T.detailsOf(g.former ?? g.name), was: g.was ?? g.former, container: g.container, desc: (T.DESC[g.former ?? g.name] ?? []).map(f => ({from: Number.isFinite(f.from) ? f.from : null, text: f.text}))}))
 };
 writeFileSync(process.argv[2] ?? "items-desk.json", JSON.stringify(out));
 console.log(out.items.length, "items");

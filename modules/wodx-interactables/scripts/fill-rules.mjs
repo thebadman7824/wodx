@@ -122,8 +122,14 @@ export function goodsCandidates(goods, weights, {era = null, place = "home", con
 export function goodsLine(g, rng = Math.random) {
   const lo = Math.max(1, g?.stack?.min ?? 1), hi = Math.max(lo, g?.stack?.max ?? 1);
   const n = lo + Math.floor(rng() * (hi - lo + 1));
+  if ( g?.container ) {
+    const unit = g.container.replace(/^an? /, "");
+    return n > 1 ? `${g.name} (in ${n} ${unitPlural(unit)})` : `${g.name} (in ${g.container})`;
+  }
   return n > 1 && g.stack?.plural ? `${n} ${g.stack.plural}` : g.name;
 }
+const UNIT_PLURALS = {box: "boxes", pouch: "pouches", glass: "glasses", "paper bag": "paper bags", "six-pack": "six-packs"};
+const unitPlural = u => UNIT_PLURALS[u] ?? (/(s|x|ch|sh)$/.test(u) ? u + "es" : u + "s");
 
 /** What the fill can draw: Gear by era, everyday goods, or both in one draw. */
 export const WHAT = {both: {label: "Gear and everyday goods"}, goods: {label: "Everyday goods only"}, gear: {label: "Gear by era only"}};

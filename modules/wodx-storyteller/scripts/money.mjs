@@ -231,9 +231,11 @@ export function findGoodSync(name) {
   const st = /^(.*?)\s*\((\d+)\)\s*$/.exec(s);
   let count = 1;
   if ( st ) { s = st[1].trim(); count = Number(st[2]); }
+  const held = /^(.+?)\s*\(in (an?|\d+) [^)]+\)$/.exec(s);
+  if ( held ) { s = held[1].trim(); if ( /^\d+$/.test(held[2]) ) count *= Number(held[2]); }
   const m = /^(\d+)\s+(.+)$/.exec(s);
   if ( m ) { const g = list.find(x => x.stack?.plural === m[2] || x.name === m[2]); if ( g ) return {good: g, count: Number(m[1]) * count}; }
-  const g = list.find(x => x.name === s || x.was === s || x.stack?.plural === s || x.name.replace(/^(a|an|some) /, "") === s);
+  const g = list.find(x => x.name === s || x.was === s || x.former === s || x.stack?.plural === s || x.name.replace(/^(a|an|some) /, "") === s);
   return g ? {good: g, count} : null;
 }
 export async function findGood(name) { await goodsList(); return findGoodSync(name); }
