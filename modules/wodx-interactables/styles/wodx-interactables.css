@@ -24,3 +24,8 @@
 .wix-dialog .wix-search { margin: 0.2em 0 0.5em; padding-bottom: 0.3em; border-bottom: 1px solid var(--wx-rule, #8886); }
 .tile-config .wix-config .wix-sub { margin: 0.6em 0 0.2em; border: 0; font-size: 1em; }
 .tile-config .wix-config textarea[name$="text0"], .tile-config .wix-config textarea[name$="text1"], .tile-config .wix-config textarea[name$="text2"], .tile-config .wix-config textarea[name$="text3"] { min-height: 3em; }
+.wix-dialog .wix-chase-list { list-style: none; margin: 0 0 0.5em; padding: 0; max-height: 30vh; overflow-y: auto; }
+.wix-dialog table.wix-chase { width: 100%; border-collapse: collapse; margin: 0.4em 0; }
+.wix-dialog table.wix-chase td { padding: 0.2em 0.3em; vertical-align: middle; }
+.wix-dialog table.wix-chase select { max-width: 12em; }
+.wix-dialog .window-content, .wix-dialog .dialog-content { overflow-y: auto; }

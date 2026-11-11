@@ -336,6 +336,14 @@ The toolbar's **Property and building** button (players see it too) lists what c
 - **Put up a building.** Pick a kind of building the year allows, the builder and the workers. Each stage is paid for as it starts; the work waits when the money runs out. When it is done the place appears on the scene as a tagged Region, and as its own map when the building kit has one. You can start a build for an NPC faction; factions with Resources 3 or more also propose builds through the approval queue.
 - **Workshops.** A working place that supplies a goods category keeps its market from running short of it.
 
+## Chases
+
+Open the Storyteller's hand and pick A chase. Choose the quarry, tick the pursuers (selected tokens are ticked for you), pick the ground and give the lead in yards, or leave it empty to measure from the nearest pursuer. A token at the reins of a mount or vehicle tile starts on it.
+
+Each turn, set the ground the chase has reached, each racer's way (only what exists in the chronicle's year is offered) and who goes flat out, then Roll the turn. Everyone rolls: Dexterity + Athletics on foot, Dexterity + Ride mounted, Dexterity + Drive in a motor vehicle, Stamina + Athletics at the oars. The quarry's head start counts as successes, and the faster side gains up to three free successes a turn. A pursuer whose total passes the quarry's catches up; a lead of 10 and the quarry is away. With a lead of 3 and cover about, tick the box to let the quarry try to break sight with Stealth.
+
+The players see who is gaining in words. Your copy, whispered, has the dice and totals, Undo this turn, a button for crash or fall damage, and Start a fight once someone is caught. End the chase from the window at any time.
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.
