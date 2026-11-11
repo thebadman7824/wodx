@@ -87,7 +87,10 @@ test("use: wired into the Library, the Possessions row, carried light and the co
   assert.equal(JSON.parse(src("modules/wodx-library/module.json")).socket, true);
   assert.match(src("modules/wodx-sheets/scripts/extras-html.mjs"), /data-act="use"/);
   assert.match(src("modules/wodx-sheets/scripts/extras.mjs"), /case "use":/);
-  assert.match(src("modules/wodx-interactables/scripts/main.mjs"), /rules: R, carry,/);
+  assert.match(src("modules/wodx-interactables/scripts/main.mjs"), /api\.carry = setupCarry\(\)/);
+  assert.match(src("modules/wodx-library/scripts/use.mjs"), /typeof c === "function" \? c : c\?\.carry/);
+  const iv = JSON.parse(src("modules/wodx-interactables/module.json")).version;
+  assert.match(src("modules/wodx-interactables/scripts/main.mjs"), new RegExp(`const VERSION = "${iv.replace(/\./g, "\\.")}"`));
   assert.equal(U.ABILITIES.play.preset, "performance");
   assert.match(src("modules/wodx-actions/scripts/main.js"), /extraDiff: preDiff = 0/);
 });

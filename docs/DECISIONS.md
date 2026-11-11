@@ -955,7 +955,7 @@ Reverse: set every cell in EFFECTS to {does: "storyteller"}.
 
 ## B918. First aid with supplies, carried light from owned lights, a Perform check (2026-11-11)
 
-Treat with supplies opens the First aid common check one easier (house rule); bandages, dressings and salves are spent, instruments and kits are kept. Light it starts the token's carried light of that kind (candle, torch, lantern, electric), and lamp oil or a battery refills it (Interactables api.carry, 0.26.2). Instruments open Any roll on the Performance dramatic system (Charisma + Performance, difficulty 7). Common checks take a preset difficulty change, bonus and description (Actions 3.39.0).
+Treat with supplies opens the First aid common check one easier (house rule); bandages, dressings and salves are spent, instruments and kits are kept. Light it starts the token's carried light of that kind (candle, torch, lantern, electric), and lamp oil or a battery refills it (Interactables api.carry from setupCarry, read as a function or its carry member; Library 0.9.1, Interactables 0.26.3). Instruments open Any roll on the Performance dramatic system (Charisma + Performance, difficulty 7). Common checks take a preset difficulty change, bonus and description (Actions 3.39.0).
 
 Reverse: remove the treat, light and system cases from use.mjs.
 
