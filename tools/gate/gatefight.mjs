@@ -14,7 +14,8 @@
  *   8. a door or region outcome "fight" asks for one
  *   9. a frenzy outside a fight asks for one
  *  10. Off: nothing
- *  11. every other WoDX module still answers
+ *  11. an attack from hiding rolls the ambush first (Combat 3.11.0)
+ *  12. every other WoDX module still answers
  * Result: Data/wodx-gate/gatefight-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -135,6 +136,17 @@ export async function run() {
       await game.settings.set("wodx-combat", "fightStart", "off");
       const r = await api().start({scene, tokens: [npc, pc], source: "hand", byHand: true});
       ok("off does nothing", r.done === "off" && !fightsHere().length);
+    });
+    await step("ambush from hiding", async () => {
+      await clearFights();
+      await pc.update({hidden: true});
+      const t0 = Date.now();
+      await game.wodxCombat.quickAttack({attacker: pc.object, target: npc.object});
+      await until(() => game.messages.contents.some(m => m.timestamp >= t0 && m.getFlag("wodx-combat", "ambush")), 4000);
+      const m = game.messages.contents.find(x => x.timestamp >= t0 && x.getFlag("wodx-combat", "ambush"));
+      ok("ambush from hiding", !!m, {result: m?.getFlag("wodx-combat", "ambush")?.result, book: m?.getFlag("wodx-combat", "ambush")?.book});
+      await pc.update({hidden: false});
+      await actors[0].update({"system.health.damage": {bashing: 0, lethal: 0, aggravated: 0}});
     });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-otherworlds", "wodx-storyteller"];

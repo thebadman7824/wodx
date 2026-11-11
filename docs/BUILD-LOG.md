@@ -1475,3 +1475,6 @@ gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight 
 - Splits of strained factions at a turn (B833); End and Fold into another (B832); founding and ending years, rising or ending with a dated event, and new powers offered by six events (B834).
 - Spheres and kinds of faction by age, 1197 to the Future Darkness (B830).
 - New harness test faction-founding.test.mjs.
+
+## 2026-11-11: the ambush (B836)
+Ben asked for the ambush rule, then a Live release. Combat 3.11.0: ambush-rules.js; the attack dialog and the quick attack roll the ambush first when the attacker is sneaking, Obfuscated or hidden and neither side is fighting (V20 p. 274; V20 Dark Ages p. 345 before 1450). Harness ambush.test.mjs (4). gatefight step 12.

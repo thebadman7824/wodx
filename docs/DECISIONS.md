@@ -778,3 +778,7 @@ A faction may name player characters as its owners. On "Its players give the ord
 
 ## B860. Hardship weather thresholds follow M20 (2026-11-11)
 The book check found that M20 p. 435 (pdf p. 436) names what is truly dangerous: below freezing, above about 120°F (49°C), ice storms and hurricane winds. Milder weather gets narration and penalties only. B840's thresholds now follow it: below freezing or 49°C is harsh (a roll an hour); -10°C, or below freezing with a gale, heavy snow or sleet, or 52°C is severe; -20°C, or -10°C with a gale or heavy snow, or 55°C is deadly. A gale or heavy rain above freezing, and heat under 49°C, no longer harm. How often the harm comes is still the Storyteller's call (house rule). A found body's card now names the book roll for examining it, Intelligence + Medicine (HH2 p. 94, pdf p. 95).
+
+## B836. The ambush (2026-11-11)
+WoDX Combat 3.11.0. An attacker who is sneaking, Obfuscated or hidden by the Storyteller, striking someone not already in a fight, first rolls Dexterity + Stealth against the target's Perception + Alertness, both at 6. V20 (printed p. 274, pdf 282): more successes give a free attack with no defence and the extra successes as dice; a tie strikes first with a defence; fewer means no blow, and the fight starts on initiative. Before 1450, V20 Dark Ages (printed p. 345): a win is a free action the target cannot oppose, with no extra dice; the book names no tie, so a tie works as in V20 (house rule). An attack in plain sight is not an ambush.
+
