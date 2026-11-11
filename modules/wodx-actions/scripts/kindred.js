@@ -20,6 +20,8 @@ import * as GX from "./garou.js";
 import * as G from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as EF from "./effects.js";
+import * as PE from "./path-effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -187,7 +189,10 @@ export function build(ctx) {
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(VtDA20 p. ${p.p ?? "?"})</span></div>`;
-            const dur = successes > 0 ? K.discDuration(p.t, successes) : null;
+            // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
+            let fx = null;
+            if (PE.isPath(p.d) && successes > 0 && p.r && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
+            const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
                 await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `VtDA20 p. ${p.p}`, key: `disc-${p.id}` });
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(K.DURATION_TEXT[p.t] ?? "")}).</div>`;
@@ -197,7 +202,8 @@ export function build(ctx) {
                 const marked = await setWitnessState(tgt, "forgot", actor.name);
                 if (marked) body += `<div class="vta-note">Masquerade: ${esc(tgt.name)} marked as made to forget (${marked} record${marked === 1 ? "" : "s"}).</div>`;
             }
-            return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls);
+            const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
+            return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
     }

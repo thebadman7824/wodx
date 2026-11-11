@@ -14,12 +14,14 @@ import * as M from "./mage-da-rules.js";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
-const H = (kw, per, type, o = {}) => ({kw, kind: "harm", per, type, soak: o.soak !== false, who: o.who ?? "one", also: o.also ?? null, ask: !!o.ask});
-const T = (kw, name, lasts, who = "one", o = {}) => ({kw, kind: "timed", name, lasts, who, ...o});
-const C = (kw, condition, name, lasts, who = "one") => ({kw, kind: "condition", condition, name, lasts, who});
-const N = (kw = "sense") => ({kw, kind: "note", who: "self"});
-const S = (kw = "free") => ({kw, kind: "st", who: "self"});
-const MV = () => ({kw: "move", kind: "move", who: "self"});
+export const H = (kw, per, type, o = {}) => ({kw, kind: "harm", per, type, soak: o.soak !== false, who: o.who ?? "one", also: o.also ?? null, ask: !!o.ask, fixed: !!o.fixed});
+export const T = (kw, name, lasts, who = "one", o = {}) => ({kw, kind: "timed", name, lasts, who, ...o});
+export const C = (kw, condition, name, lasts, who = "one") => ({kw, kind: "condition", condition, name, lasts, who});
+export const N = (kw = "sense") => ({kw, kind: "note", who: "self"});
+export const S = (kw = "free") => ({kw, kind: "st", who: "self"});
+export const MV = () => ({kw: "move", kind: "move", who: "self"});
+/** Healing: levels per success (lethal then bashing, or aggravated only). */
+export const HL = (per, o = {}) => ({kw: "mend", kind: "heal", per, aggravated: !!o.aggravated, who: o.who ?? "one", ask: !!o.ask});
 
 /** By rote id. */
 export const DA_EFFECTS = {
@@ -92,15 +94,18 @@ export function lastsFor(lasts, successes) {
  * Returns [{key, who, out}] (an empty list when the rote has no entry or the spell failed).
  */
 export function daOutcomes(rote, successes) {
-  const spec = DA_EFFECTS[rote?.id];
+  return outcomesOf(DA_EFFECTS[rote?.id], {key: DA_EFFECTS[rote?.id]?.kw, label: rote?.name}, successes, String(rote?.system ?? ""));
+}
+
+/** One spec (from the helpers above) worked out with its successes: [{key, who, ask?, st?, out}]. */
+export function outcomesOf(spec, base, successes, text = "") {
   const s = n(successes);
   if ( !spec || s < 1 ) return [];
-  const base = {key: spec.kw, label: rote.name};
-  const text = String(rote.system ?? "");
   switch ( spec.kind ) {
     case "harm": {
-      const list = [{key: spec.kw, who: spec.who, ask: !!spec.ask, out: {...base, kind: "damage", levels: spec.per * s, type: spec.type, soak: spec.soak,
-        text: `${spec.per * s} ${spec.type} level${spec.per * s === 1 ? "" : "s"}${spec.soak ? ", soaked as usual" : ", not soaked"}`}}];
+      const lv = spec.fixed ? spec.per : spec.per * s;
+      const list = [{key: spec.kw, who: spec.who, ask: !!spec.ask, out: {...base, kind: "damage", levels: lv, type: spec.type, soak: spec.soak,
+        text: `${lv} ${spec.type} level${lv === 1 ? "" : "s"}${spec.soak ? ", soaked as usual" : ", not soaked"}`}}];
       if ( spec.also ) list.push({key: spec.kw, who: spec.who, ask: !!spec.ask, out: {...base, kind: "damage", levels: spec.also.per * s, type: spec.also.type, soak: spec.soak,
         text: `and ${spec.also.per * s} ${spec.also.type}`}});
       return list;
@@ -114,6 +119,11 @@ export function daOutcomes(rote, successes) {
       const d = lastsFor(spec.lasts, s);
       return [{key: spec.kw, who: spec.who, out: {...base, kind: "condition", condition: spec.condition, name: spec.name, timed: d.timed, duration: d.label,
         text: `${spec.name}, for ${d.label}: ${text}`}}];
+    }
+    case "heal": {
+      const lv = spec.per * s;
+      return [{key: spec.kw, who: spec.who, ask: !!spec.ask, out: {...base, kind: "heal", levels: lv, aggravated: spec.aggravated,
+        text: `heals ${lv} ${spec.aggravated ? "aggravated" : "lethal or bashing"} level${lv === 1 ? "" : "s"}`}}];
     }
     case "move":
       return [{key: "move", who: "self", out: {...base, kind: "move", text: `${s} jump${s === 1 ? "" : "s"}: ${text}`}}];
