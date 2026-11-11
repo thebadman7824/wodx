@@ -23,7 +23,7 @@ export async function run() {
   R.actors = { wodx: wodx?.name, plain: plain?.name ?? null };
 
   await step("the fork and WoDX Sheets versions", async () => {
-    ok("the fork and WoDX Sheets versions", game.system.version === "7.3.2-wodx.7" && game.modules.get("wodx-sheets")?.version === "0.6.2",
+    ok("the fork and WoDX Sheets versions", game.system.version === "7.3.2-wodx.7" && !foundry.utils.isNewerVersion("0.6.2", game.modules.get("wodx-sheets")?.version ?? "0"),
       { system: game.system.version, sheets: game.modules.get("wodx-sheets")?.version });
   });
 

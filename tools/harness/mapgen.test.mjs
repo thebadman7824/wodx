@@ -148,6 +148,24 @@ test("mapgen: a town on a river has its banks clear, bridges, water gates, a mil
   assert.ok(!JSON.parse(readFileSync(join(d2, "haselberg.wodx.json"), "utf8")).regions.some(r => r.id.startsWith("river")));
 });
 
+test("mapgen: a town grown to a later year has that era's layers and era id", {skip}, () => {
+  const dir = mkdtempSync(join(tmpdir(), "wodx-y-"));
+  const out = run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--walls", "yes", "--river", "yes", "--year", "1950", "--assets", ASSETS, "--out", dir], dir);
+  assert.match(out, /Railway station/);
+  const s = JSON.parse(readFileSync(join(dir, "haselberg.wodx.json"), "utf8"));
+  assert.deepEqual(A.parseSidecar(s).errors, []);
+  assert.equal(s.era, "mid-century");
+  const areas = new Set(s.regions.map(r => r.area).filter(Boolean));
+  for ( const a of ["railway", "station", "ring-road", "quay", "suburb"] ) assert.ok(areas.has(a), `no ${a}`);
+  assert.ok(!s.regions.some(r => r.id.startsWith("water-gate-")), "the wall came down, so no water gate");
+  // the medieval town keeps its own era and none of the later layers
+  const d2 = mkdtempSync(join(tmpdir(), "wodx-y-"));
+  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--walls", "yes", "--river", "yes", "--assets", ASSETS, "--out", d2], d2);
+  const m = JSON.parse(readFileSync(join(d2, "haselberg.wodx.json"), "utf8"));
+  assert.equal(m.era, "dark-ages");
+  assert.ok(!m.regions.some(r => r.area));
+});
+
 test("mapgen: an organic town splits into parts that fit together, and its sample matches", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-op-"));
   const out = run([join(gen, "ddtown.py"), "--size", "town", "--seed", "3", "--assets", ASSETS, "--out", dir], dir);

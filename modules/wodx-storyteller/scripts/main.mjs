@@ -147,6 +147,8 @@ Hooks.on("updateWorldTime", () => { if ( active && !skipping() ) { safe(C.onCloc
 Hooks.on("wodxSkipEnd", () => { if ( active ) safe(C.onClock()); });
 Hooks.on("wodxEndScene", () => { if ( active ) safe(C.release()); });
 Hooks.on("wodxMapEvent", ev => { if ( active ) safe(C.onMapEvent(ev)); });
+// 0.20.0: open objectives in the Ledger tick their steps from map events
+Hooks.on("wodxMapEvent", ev => { if ( active ) safe(Led.onMapEventObjectives(ev)); });
 Hooks.on("wodxBreach", p => {
   if ( !active ) return;
   const by = p?.by?.uuid ? fromUuidSyncSafe(p.by.uuid) : null;

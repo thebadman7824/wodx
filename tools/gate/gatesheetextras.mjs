@@ -37,12 +37,15 @@ export async function run() {
     });
 
     await step("containers: things nest, a too-big thing is refused, a stack counts", async () => {
-      [purse, coins, sword, watch] = await a.createEmbeddedDocuments("Item", [
+      await a.createEmbeddedDocuments("Item", [
         { name: "Gate purse", type: "Item", system: { iscontainer: true }, flags: { [MOD]: { gate: "sheetextras", holds: "P" } } },
         { name: "Gate coins", type: "Item", flags: { [MOD]: { gate: "sheetextras", qty: 12, conceal: "P", coin: { denom: "Pfennig" } } } },
         { name: "Gate sword", type: "Melee Weapon", system: { conceal: "N" }, flags: TAG },
         { name: "a pocket watch on a chain", type: "Item", flags: TAG }
       ]);
+      // Foundry need not hand them back in order: find each by name
+      const by = n => a.items.find(i => i.name === n && i.flags?.[MOD]?.gate === "sheetextras");
+      [purse, coins, sword, watch] = ["Gate purse", "Gate coins", "Gate sword", "a pocket watch on a chain"].map(by);
       await coins.update({ [`flags.${MOD}.in`]: purse.id });
       await sleep(600); await open();
       const row = el.querySelector(`[data-in='${purse.id}'] [data-wodx-item='${coins.id}']`);

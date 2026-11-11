@@ -1272,3 +1272,15 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Ben asked for all nine suggested sheet features. On every WoDX sheet: in-play strip; Possessions tab (containers, stacks with split and merge, concealment sizes, out-of-era flags, value for the time, money by era, search and filter, give, leave on the map); Ties tab (domitor and ghouls filled in from the lineage); Storyteller's notes in a Storyteller-only journal; search on long power lists; History window with Undo; Print. B602-B606.
 - Pure parts in extras-rules.mjs and extras-html.mjs; harness sheet-extras.test.mjs. Full suite 1042 pass.
 - Sample shown to Ben before any testbed deploy: https://claude.ai/artifact/UcwShGByyLddqUGKWYRD9d
+## 2026-11-10: the RPG Builder ideas (Chronicle 0.14.0, NPC 0.9.0, Interactables 0.23.0, Atmosphere 0.11.0, Storyteller 0.20.0)
+- From the RPG Builder review (https://claude.ai/artifact/MvqiV7QLsQP3KJcd6uukXz), every idea, approved by Ben 2026-11-10 23:18Z.
+- WoDX Chronicle: scripts/when-rules.mjs (the language, pure) and scripts/when.mjs (the world and character read into a context; outcomes; the Storyteller's checker). API: game.wodx.chronicle.when.check / run / context / checker. B620, B621.
+- WoDX NPC: Trigger regions have "Only when" and "Then also" (B622); behaviour window has Phases (npc-rules parsePhases, phaseNow, withPhase; B623).
+- Same PR, the rest of the review's ideas: NPC households, talk sheets and faction standing toward characters (B624, B630, B632); Interactables 0.23.0 stock lists, restocking, "Opens for", plain names handed over, the Fill button wired in the tile window (it was looked for in the wall window) (B625-B627); Atmosphere 0.11.0 Mood regions (B628); Storyteller 0.20.0 Ledger objectives and recipes for long tasks (B629, B631).
+- Harness: when.test.mjs, rpgb-batch.test.mjs; interactables.test.mjs now expects a plain name to be handed over. 1055 of 1055 pass. Gate: tools/gate/gatewhen.mjs (9 steps).
+## 2026-11-10: part lines that miss the market and houses; era layers (map tools)
+- Part lines are planned before any building goes down, along streets and round the market, which now stays whole on one map. A house a line passes over is drawn whole on its own part only, and the plan shows the line stepping round it. B650.
+- Era layers: ddtown.py --year grows the medieval town through every later age up to that year (eras.py). Railway (track path), station with a stone platform, quays and embankments in stone, ring road on the old wall line, courts, cemetery, park, boulevards, suburbs, bomb sites or car parks, offices in old warehouses. Sidecar era from Chronicle's eras.json; new regions tagged with an area kind. B651.
+- New test: a town grown to 1950 has a railway, station, ring road, quay and suburb, era mid-century; the medieval town has none.
+- Known gaps: every building is still a medieval type (no later building packs), and towns lose houses to the new ways rather than growing denser.
+- Sample linberg redrawn.

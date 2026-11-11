@@ -165,3 +165,23 @@ export function triggerEvent({does = "note", label = "", scene = null, place = n
     before: null, x: Number.isFinite(Number(x)) ? Math.round(Number(x)) : null, y: Number.isFinite(Number(y)) ? Math.round(Number(y)) : null,
     owner: null, placeKind: null, heard: [], supernatural: false, message: null, undone: false};
 }
+
+/* ------------------------------------------------------------------ */
+/*  Households that answer together (NPC 0.9.0)                        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A household is a name the Storyteller gives NPCs who stand by each other: a family on a farm, a coterie, a pack, a
+ * chantry's apprentices, a guild workshop, a gang. When one is hurt, the others within call come. The call is a
+ * voice: it reaches as far as the setting says (40 yards by default, a house figure) in any era; further than that,
+ * an Alert zone carries the alarm by the era's own means.
+ */
+export const normHousehold = v => String(v ?? "").trim().toLowerCase().slice(0, 60);
+
+/** Who answers. victim: {id, household}; others: [{id, name, household, yards, pc, down, inFight}]. */
+export function kinToAnswer(victim = {}, others = [], {reach = 40} = {}) {
+  const h = normHousehold(victim.household);
+  if ( !h ) return [];
+  return (others ?? []).filter(t => t && t.id !== victim.id && !t.pc && !t.down && !t.inFight && normHousehold(t.household) === h
+    && Number.isFinite(Number(t.yards)) && Number(t.yards) <= reach).sort((a, b) => a.yards - b.yards);
+}

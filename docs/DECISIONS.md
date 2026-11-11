@@ -447,3 +447,45 @@ They live in one journal entry only the Storyteller owns, a page per character, 
 
 ## B606. Sheet history is kept in memory (2026-11-10)
 The History window lists this session's edits on that computer only, so recording costs no saves. A reload clears it.
+## B620. One language for "Only when" (2026-11-10)
+From the RPG Builder review (https://claude.ai/artifact/MvqiV7QLsQP3KJcd6uukXz), approved by Ben 2026-11-10. Any map piece that asks who, when and in what state uses the same short tests, held in WoDX Chronicle (when-rules.mjs): one test a line or separated by ";", every line must pass, "not" turns a line round, "any of:" or "2 of:" opens a group. The tests cover every era: era, year, before and from, hour, night, moon, church feast, fast and season, the Future Darkness branch. Who: player or not, kind (WoDX Combat's kinds, with the books' names accepted), clan, tribe, Tradition and the other sheet fields, faction, name. State: pools and ratings with a comparison, wounds by health level name, frenzy, Rötschreck, Obfuscate, any WoDX condition. Has: an item, a codex page. A list with a mistake never passes, so a typo cannot open a door.
+
+## B621. "Then" outcomes go through the module that owns them (2026-11-10)
+A "Then" list can tell the Storyteller, whisper the Storyteller's own words to the character's players, raise the alarm (WoDX NPC), pass a map event on, play an Atmosphere cue, or add a Ledger entry. Each runs only on the Storyteller's client, and one whose module is off is skipped with a note to the Storyteller. No outcome writes NPC dialogue (standing rule 11).
+
+## B622. WoDX: Trigger regions take the lists first (2026-11-10)
+Trigger regions get "Only when" and "Then also" boxes. A region whose list does not fit stays quiet and is not marked as set off. The Region config shows one-line boxes, so ";" separates lines there. Doors, clues and traps (WoDX Interactables) follow in a later step.
+
+## B623. NPC phases (2026-11-10)
+In the NPC behaviour window, each phase is a line: a name, a colon, an "Only when" list about the NPC itself, "=>", then changes (template, the temperament numbers, fleeAt, tactics, fears). The first phase that fits is in force each turn, and the plan card names it. The thresholds are the Storyteller's; the books set none for this, so nothing is filled in by default.
+
+## B624. Households answer together (2026-11-10)
+An NPC's behaviour window takes a household name. When one of a household is hurt, the others on the scene within call (setting, 40 yards by default, a house figure) and not already fighting are named on a card to the Storyteller, who can bring them into the fight with one button. The call is a voice in every era; past it, Alert zones carry the alarm by the era's own means (B-series alarm carriers).
+
+## B625. Stock lists and restocking (2026-11-10)
+A container can hold the Storyteller's own stock list: "always:", "1 in N:" or a percentage, an optional count or range, then the item; a line can start with "when" and WoDX Chronicle tests, so matches turn up only from 1890. Set to draw every dawn, week, month or season, the clock takes away what the last draw left and draws again; the Storyteller's own lines in Inside stay. A count shows in the item's name, as "silver pennies (7)", until the sheets count things.
+
+## B626. Plain names are handed over (2026-11-10)
+Taking from a container, a line that is only a name (everyday goods from Fill, a stock list's own words) becomes a simple item of that name on the character, instead of "Not found". A world setting turns it off. A UUID that does not resolve is still reported.
+
+## B627. "Opens for" (2026-11-10)
+Doors and containers take an "Opens for" list of WoDX Chronicle tests. Whoever fits it can lock and unlock without a key: a chantry door for its own clan, a gate that opens only by night.
+
+## B628. Mood regions (2026-11-10)
+WoDX Atmosphere adds the WoDX: Mood region: the era kit's music for a mood while a player's character is inside, a cue on the way in, and the Storyteller's own line whispered to that character's players; an "Only when" list can limit it. The music goes back when the last of them leaves.
+
+## B629. Ledger objectives (2026-11-10)
+A new Ledger kind, Objective, takes steps one a line: "reach" a Trigger region, a state word ("open the reliquary", "found the trapdoor"), or "any". Map events tick them, the log notes each, and the entry is marked kept when every step is done. A due date is the date it fails by. No Experience is awarded (Ben dropped automatic XP on 2026-11-08).
+
+## B630. Faction standing toward characters (2026-11-10)
+Each faction keeps how it regards each player's character, -3 Hunted to +3 Honoured, set in the Factions window or by a "standing" outcome, and read by a "standing" test. The Status Background stays as each line's book defines it; this track is a house rule.
+
+## B631. Recipes for long tasks (2026-11-10)
+A long task can say what the character must carry, where it is done (a forge or a scriptorium in any era; a printing press from about 1450, a laboratory from 1660, a machine shop from 1800, a darkroom from 1839, an electronics bench from 1920, a computer from 1975, a fabricator from 2010, a gene lab from 2030: history, not the books), and what it makes. A roll that cannot be made pauses the task with the reason; finished, the thing made goes to the character, and Undo takes it back. The dice, difficulty and goal stay the Storyteller's, as V20 p. 251 leaves them.
+
+## B632. Talk sheets (2026-11-10)
+An NPC's behaviour window holds the Storyteller's own talk sheet: lines of what they will say or do, each with an optional "Only when" list about the character they talk to. A HUD button shows the lines that fit the targeted character. WoDX writes none of it (standing rule 11).
+## B650. Part lines planned before the town is built (2026-11-10)
+Ben, 2026-11-10: a town split into part maps must not cut off distinct areas (the market had its tip cut off and houses were split between parts). Now the part lines are chosen first, from the street plan: a line pays most for crossing the market (400), then a park, cemetery or bomb site, a bridge, a well or the cross, and for each stretch of building land it runs through, so lines follow streets and open ground. The cheapest set over the whole side is found exactly, each part 24 to --part squares wide. A house a line still passes over belongs whole to the part its middle is in: that part's map reaches past the line to hold it, and the neighbouring map leaves it out. The plan view draws each part line stepping round such houses. (Forbidding houses on the lines was tried and lost a fifth of the houses.)
+## B651. Era layers (2026-11-10)
+Ben approved the town planning doc's era layers. ddtown.py --year Y (organic layout) builds the medieval town, then applies each later age up to Y, with dates from London's history (a house rule): 1667 brick rebuilding, 1690 quays and warehouses, 1780 cottages in back plots (courts), 1800 wall pulled down for a ring road, 1832 cemetery, 1838 railway and station (houses pulled down in its way), 1840 public park, 1853 boulevards (cities), 1865 embankment (cities), 1920 suburbs on the farms by the roads out, 1940 bomb sites (car parks from 1960), 1975 warehouses to offices. The stocks go from 1837 and the washing place from 1900. The sidecar era is the Chronicle era for the year (the Wild West left to American maps; a gap year takes the era before it). New regions carry an "area" kind from the area catalogue in eras.py. Buildings stay medieval types until later building packs exist.
