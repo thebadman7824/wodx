@@ -272,7 +272,9 @@ game.world.id = worldId;
     ["With this person", () => game.wodxActions.withPerson({actor, token: {actor: target, document: {name: target.name, actor: target}}})],
     ["Persuade someone", () => game.wodxActions.social(actor, {actor: target, document: {name: target.name, actor: target}}, "persuade")],
     ["Bribe someone", () => game.wodxActions.social(actor, {actor: target, document: {name: target.name, actor: target}}, "bribe")],
-    ["Lift something", () => game.wodxActions.lift(actor, {actor: target, document: {name: target.name, actor: target}}, "lift")]];
+    ["Lift something", () => game.wodxActions.lift(actor, {actor: target, document: {name: target.name, actor: target}}, "lift")],
+    // 3.31.0: the Storyteller's effect and saved rituals (token tools, Storyteller only)
+    ["Apply an effect or ritual", async () => { const gm = game.user.isGM; game.user.isGM = true; try { return await game.wodxActions.effects.storyteller(); } finally { game.user.isGM = gm; } }]];
   // 3.2.0: a Cainite with many Disciplines and a path; the Road, downtime, healing, prestation and Masquerade dialogs
   for ( const [d, v] of [["Dominate", 5], ["Auspex", 5], ["Obfuscate", 5], ["Presence", 5], ["Animalism", 5], ["Celerity", 3], ["Fortitude", 3], ["Potence", 2], ["Path of Bone", 5], ["Potestas Vitae", 3]] )
     actor.items.set(`d${d}`, {id: `d${d}`, name: d, type: "Power", system: {type: d.startsWith("Path") || d.startsWith("Potestas") ? "wod.types.disciplinepath" : "wod.types.discipline", value: v}, getFlag: () => undefined});

@@ -9,6 +9,7 @@ import * as E from "./effects-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import { ask } from "./profiles.js";
+import { BOOK_RITUALS, bookRitual } from "./book-rituals.js";
 export { E };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -667,6 +668,8 @@ function stContent(rituals, picks) {
   const opts = (list, none) => `<option value="">${none}</option>${list.map(x => `<option value="${esc(x.uuid)}">${esc(x.name)}</option>`).join("")}`;
   return `<form class="wodx-st-effect"><p class="hint">Applies on the targeted tokens (or the selected ones), with no roll. For a ritual or rite the players made up, or a power with no list yet. Everything it changes can be undone from its card.</p>
     ${rituals.length ? `<div class="form-group"><label>A saved ritual</label>${rituals.length > 5 ? searchBox("select[name=st-ritual]", "Search rituals…", "Search rituals") : ""}<select name="st-ritual"><option value="">(none)</option>${rituals.map((r, i) => `<option value="${i}">${esc(r.name)}</option>`).join("")}</select></div>` : ""}
+    <div class="form-group"><label>From the books</label>${searchBox("select[name=st-book]", "Search book rituals…", "Search book rituals")}<select name="st-book"><option value="">(none)</option>${Object.entries(BOOK_RITUALS).map(([set, b]) =>
+      `<optgroup label="${esc(b.book)}">${b.list.map((r, i) => `<option value="${set}:${i}">${esc(r.n)} (${esc(r.g)}${/^\d/.test(r.lvl) ? ` ${esc(r.lvl)}` : ""})</option>`).join("")}</optgroup>`).join("")}</select></div>
     <fieldset class="wodx-keywords"><legend>What it does (keywords)</legend><div class="wodx-kw-list" data-fixed>${Object.entries(E.KEYWORDS).map(([k, K]) =>
       `<label class="wodx-kw" title="${esc(K.does)}"><input type="checkbox" name="kw-${k}"/> ${esc(K.label)}</label>`).join("")}</div></fieldset>
     <div class="form-group"><label>Strength (as successes, 1 to ${E.ST_STRENGTH_MAX})</label><input type="number" name="st-strength" min="1" max="${E.ST_STRENGTH_MAX}" value="3"/></div>
@@ -722,7 +725,10 @@ export async function storytellerEffect() {
   const picks = {actors: byName(game.actors), items: byName(game.items)};
   const r = await ask({title: "Apply an effect or ritual", content: stContent(rituals, picks), width: 560,
     buttons: [{id: "ok", label: "Apply", icon: "fa-solid fa-wand-sparkles", default: true}, {id: "no", label: "Cancel", icon: "fa-solid fa-xmark"}],
-    onRender: root => root?.querySelector?.('[name="st-ritual"]')?.addEventListener("change", ev => { const x = rituals[n(ev.currentTarget.value)]; if ( ev.currentTarget.value !== "" && x ) stFill(root, x); })});
+    onRender: root => {
+      root?.querySelector?.('[name="st-ritual"]')?.addEventListener("change", ev => { const x = rituals[n(ev.currentTarget.value)]; if ( ev.currentTarget.value !== "" && x ) stFill(root, x); });
+      root?.querySelector?.('[name="st-book"]')?.addEventListener("change", ev => { const [set, i] = String(ev.currentTarget.value).split(":"); const x = bookRitual(set, n(i)); if ( x ) stFill(root, x); });
+    }});
   if ( !r || r.id !== "ok" ) return null;
   const fd = r.data, base = read(fd);
   if ( !base.keywords.length ) return ui.notifications?.warn?.("Tick at least one keyword.");
@@ -735,7 +741,8 @@ export async function storytellerEffect() {
   const name = String(fd["st-save"] ?? "").trim();
   if ( name ) await saveRitual(E.ritualFrom(name, {...form, ctx: {...form.ctx, ...(form.actor ? {summonActor: form.actor} : {}), ...(form.item ? {makeItem: form.item} : {})}, area: form.plan.area, note: fd["st-note"], takes: fd["st-takes"]}));
   const items = stItems(form, docs);
-  const title = name || (fd["st-ritual"] !== "" && rituals[n(fd["st-ritual"])]?.name) || "The Storyteller's effect";
+  const fromBook = fd["st-book"] ? bookRitual(...String(fd["st-book"]).split(":").map((v, k) => (k ? n(v) : v))) : null;
+  const title = name || (fd["st-ritual"] !== "" && rituals[n(fd["st-ritual"])]?.name) || fromBook?.name || "The Storyteller's effect";
   const extra = [fd["st-takes"] ? `Takes ${esc(fd["st-takes"])}.` : "", fd["st-note"] ? esc(fd["st-note"]) : ""].filter(Boolean).join(" ");
   const word = {auto: "applies", pick: "goes where the Storyteller clicks", area: "waits for the Storyteller to place it"};
   const content = `<div class="wodx-card"><h3>${esc(title)}</h3>${extra ? `<p>${extra}</p>` : ""}<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>

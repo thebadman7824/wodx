@@ -11,6 +11,7 @@
  */
 import { PATH_EFFECTS } from "./path-effects.js";
 import { KEYWORDS } from "./effects-rules.js";
+import { LINE_KEYWORDS } from "./power-keywords-lines.js";
 
 export const POWER_KEYWORDS = {
   disc: {
@@ -261,9 +262,15 @@ export const POWER_KEYWORDS = {
 
 /**
  * The keywords of one power: {keywords, passive} or null when the power is not listed. set: disc | gift | wraith |
- * greatwar. A Dark Ages path power not listed here reads its keyword from PATH_EFFECTS.
+ * greatwar, or one of the line sets in power-keywords-lines.js (v20, w20, c20, htr, dtf, mummy, orpheus), where id may
+ * be the power's name. A Dark Ages path power not listed here reads its keyword from PATH_EFFECTS.
  */
 export function keywordsOf(set, id) {
+  const line = LINE_KEYWORDS[set];
+  if ( line ) {
+    const l = line[id] ?? line[slugOf(id)];
+    return l ? {keywords: l.k.filter(k => KEYWORDS[k]), passive: l.p === 1, name: l.n} : null;
+  }
   const e = POWER_KEYWORDS[set]?.[id];
   if ( e ) return {keywords: e[0].filter(k => KEYWORDS[k]), passive: e[1] === 1};
   if ( set === "disc" && PATH_EFFECTS[id] ) return {keywords: [PATH_EFFECTS[id].kw].filter(k => KEYWORDS[k]), passive: false};
@@ -274,5 +281,15 @@ export function keywordsOf(set, id) {
 export function keywordCounts() {
   const out = {};
   for ( const set of Object.values(POWER_KEYWORDS) ) for ( const [ks] of Object.values(set) ) for ( const k of ks ) out[k] = (out[k] ?? 0) + 1;
+  for ( const set of Object.values(LINE_KEYWORDS) ) for ( const {k: ks} of Object.values(set) ) for ( const k of ks ) out[k] = (out[k] ?? 0) + 1;
   return out;
+}
+
+/** A power name as a line-set key: "Rattler's Bite" -> "rattlers-bite". */
+export const slugOf = (name = "") => String(name).toLowerCase().replace(/'/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/** The powers of one line set that use a keyword, as names (for the Storyteller guide). */
+export { LINE_KEYWORDS };
+export function powersWith(set, key) {
+  return Object.values(LINE_KEYWORDS[set] ?? {}).filter(e => e.k.includes(key)).map(e => e.n);
 }

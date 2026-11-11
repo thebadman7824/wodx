@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.31.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.32.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -353,4 +353,48 @@ test("Actions 3.31.0: the Storyteller's effect and saved rituals", () => {
   assert.match(fx, /if \( !a && o\?\.kind !== "summon" \)/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /storyteller: EFX\.storytellerEffect/);
+});
+
+test("Actions 3.32.0: keywords for the lines with no power data yet", async () => {
+  const PK = await import("../../modules/wodx-actions/scripts/power-keywords.js");
+  const { KEYWORDS } = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+  const sets = ["v20", "w20", "c20", "htr", "dtf", "mummy", "orpheus"];
+  for ( const s of sets ) {
+    const list = Object.entries(PK.LINE_KEYWORDS[s]);
+    assert.ok(list.length >= 10, `${s} has powers`);
+    for ( const [id, e] of list ) {
+      if ( s !== "htr" ) assert.equal(id, PK.slugOf(e.n), `${s} ${id} is the slug of its name`); // Edges keep their Virtue in the id
+      assert.ok(e.k.length && e.k.every(k => KEYWORDS[k]), `${s} ${id} uses known keywords`);
+    }
+  }
+  assert.deepEqual(PK.keywordsOf("w20", "Rattler's Bite").keywords, ["harm"]);
+  assert.deepEqual(PK.keywordsOf("v20", "summon-soul").keywords, ["summon"]);
+  assert.equal(PK.keywordsOf("v20", "Heightened Senses").passive, true);
+  assert.equal(PK.keywordsOf("htr", "innocence-hide").name, "Hide (Innocence)");
+  assert.equal(PK.keywordsOf("mummy", "Nobody"), null);
+  assert.ok(PK.powersWith("dtf", "possess").includes("Possess Animals"));
+  assert.ok(PK.keywordCounts().summon > 40);
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /version: "3\.32\.0"/);
+});
+
+test("Actions 3.32.0: the books' rituals and rites fill the Storyteller's window", async () => {
+  const BR = await import("../../modules/wodx-actions/scripts/book-rituals.js");
+  const { KEYWORDS } = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+  const c = BR.bookRitualCounts();
+  assert.deepEqual(Object.keys(c), ["v20", "v20da", "w20", "daw", "mummy"]);
+  assert.ok(Object.values(c).reduce((a, b) => a + b, 0) >= 300);
+  for ( const [set, b] of Object.entries(BR.BOOK_RITUALS) ) b.list.forEach((r, i) => {
+    assert.ok(r.n && r.page && r.k.length && r.k.every(k => KEYWORDS[k]), `${set} ${i} ${r.n}`);
+    const x = BR.bookRitual(set, i);
+    assert.ok(x && x.name && x.keywords.length && x.note.length <= 300 && x.takes.length <= 60, `${set} ${i} fills in`);
+    assert.doesNotMatch(r.does, /\b(he|she|his|her|him)\b/i);
+  });
+  const haven = BR.bookRitual("v20", 3);
+  assert.equal(haven.name, "Defense of the Sacred Haven");
+  assert.ok(haven.area && haven.keywords.includes("ward") && /V20 p\. 230/.test(haven.note));
+  assert.equal(BR.bookRitual("w20", 4).strength, 4);
+  assert.equal(BR.bookRitual("nope", 0), null);
+  const fx = src("modules/wodx-actions/scripts/effects.js");
+  assert.match(fx, /name="st-book"/);
+  assert.match(fx, /bookRitual\(set, n\(i\)\)/);
 });

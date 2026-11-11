@@ -1450,3 +1450,10 @@ Ben found the realms too alike and asked for map keywords. Otherworlds 0.11.0: 2
 - Summon places tokens of a chosen actor where the Storyteller clicks; Make gives a chosen item; Undo deletes both.
 - Rituals saved by name in the world setting stRituals; api.effects.storyteller, rituals, saveRitual, forgetRitual, stItems.
 
+
+## 2026-11-11: keywords for the modern lines' powers (WoDX Actions 3.32.0, B783)
+- power-keywords-lines.js: 837 powers across V20, W20, C20, Hunter, Demon, Mummy and Orpheus name their effect keywords.
+- keywordsOf takes a name or slug for these sets; new api.effects.powersWith and lineSets. Test added in effects.test.mjs.
+- Still open: Kindred of the East (unreadable scan), 85 Demon Lore powers whose names the scan cut short.
+- book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
+- Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
