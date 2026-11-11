@@ -24,6 +24,7 @@ function rowHtml(r, editable) {
       ${r.isContainer ? "" : `<a class="wodx-act" data-act="qty-minus" title="One fewer"><i class="fa-solid fa-minus"></i></a><a class="wodx-act" data-act="qty-plus" title="One more"><i class="fa-solid fa-plus"></i></a>`}
       ${r.qty > 1 ? `<a class="wodx-act" data-act="split" title="Split the stack"><i class="fa-solid fa-scissors"></i></a>` : ""}
       ${r.depth ? `<a class="wodx-act" data-act="take-out" title="Take it out"><i class="fa-solid fa-arrow-up-from-bracket"></i></a>` : ""}
+      ${r.usable ? `<a class="wodx-act" data-act="use" title="Use it"><i class="fa-solid fa-hand-sparkles"></i></a>` : ""}
       <a class="wodx-act" data-act="give" title="Give to someone"><i class="fa-solid fa-hand-holding"></i></a>
       <a class="wodx-act" data-act="leave" title="Leave it here, on the map"><i class="fa-solid fa-location-dot"></i></a>
       <a class="wodx-act" data-act="container" title="${r.isContainer ? "Container settings" : "Make it a container"}"><i class="fa-solid fa-box-open"></i></a>

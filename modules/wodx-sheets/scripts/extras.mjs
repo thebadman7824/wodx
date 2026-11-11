@@ -26,7 +26,7 @@ const place = () => { try { return game.settings.get(MOD, "coinPlace") || "germa
 /*  Gear and goods lookups (WoDX Library's lists, when on disk)    */
 /* -------------------------------------------------------------- */
 
-let GOODS = null, GOODS_ERAS = null;
+let GOODS = null, GOODS_ERAS = null, USES = null;
 export async function loadGoods() {
   if ( GOODS ) return;
   try {
@@ -34,6 +34,7 @@ export async function loadGoods() {
     GOODS = new Map();
     for ( const x of g.GOODS ?? [] ) for ( const n of [x.was, x.former, x.name] ) if ( n ) GOODS.set(n.toLowerCase(), x);
     GOODS_ERAS = g.ERAS ?? null;
+    try { USES = (await import("../../wodx-library/scripts/use-rules.mjs")).abilitiesOf; } catch (e) { USES = null; }
   } catch (e) { GOODS = new Map(); }
 }
 /** What the lists say of an item: its eras (or years), its goods entry and its value. */
@@ -43,7 +44,8 @@ export function look(item) {
   const firstYear = own.firstYear ?? lib.firstYear ?? good?.firstYear, lastYear = own.lastYear ?? lib.lastYear ?? good?.lastYear;
   const eras = own.eras ?? lib.eras ?? good?.tags?.era ?? good?.eras ?? null;
   const eraInfo = eras || Number.isFinite(firstYear) || Number.isFinite(lastYear) ? { eras: eras ?? [], firstYear, lastYear, order: GOODS_ERAS } : null;
-  return { eraInfo, good, value: own.value ?? good?.tags?.value ?? null };
+  const usable = !!((good && USES?.(good)?.length) || lib.pages?.length);
+  return { eraInfo, good, value: own.value ?? good?.tags?.value ?? null, usable };
 }
 
 /* -------------------------------------------------------------- */
@@ -311,6 +313,7 @@ export function listen(sheet, root) {
       case "qty-plus": return it.update({ [`flags.${MOD}.qty`]: XR.qtyOf(it) + 1 });
       case "qty-minus": return XR.qtyOf(it) > 1 ? it.update({ [`flags.${MOD}.qty`]: XR.qtyOf(it) - 1 }) : null;
       case "take-out": return it.update({ [`flags.${MOD}.in`]: null });
+      case "use": return game.modules.get("wodx-library")?.api?.use?.open?.(it, actor);
       case "edit": return it.sheet.render(true);
       case "delete": return deleteWithContents(actor, it);
       case "split": return split(actor, it);
