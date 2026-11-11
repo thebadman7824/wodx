@@ -1356,3 +1356,9 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - modules/wodx-sheets/scripts/anachronism-rules.mjs (pure): jumped, newlyOut (only what the jump changed, kept items left out), isOn (automatic is off in the Live world).
 - anachronism.mjs (Foundry): the check on updateWorldTime and wodxSkipEnd (active Storyteller, after the skip), the whispered card with Keep buttons, world settings "Anachronism check" and the stored year, api.anachronism (check, scan, report, keep). extras-rules.mjs: isKept; a kept item shows "Out of its time, kept by the Storyteller" and is not counted in the warning.
 - Tests: tools/harness/anachronism.test.mjs (6). Gate: tools/gate/gateanachronism.mjs (6 steps).
+
+## 2026-11-11: Mage effect keywords (Actions 3.22.0)
+- Items 2 and 3 of "Magic that applies itself". B763.
+- modules/wodx-actions/scripts/effects-rules.js (pure): KEYWORDS (19), spheresFor, needFor, spend, durationFor, outcome, route, leanOf, wardStands.
+- effects.js (Foundry): the keyword fieldset in the Mage 20th Cast window (ticking a keyword raises the Sphere choices), the card's "What it does" list, the active Storyteller's client applying automatic items on createChatMessage (Combat soak and damage, healing, Quintessence, Chronicle timed effects and conditions, token light, elevation and vision), one Undo button from snapshots, queued items sent to the approval queue (type wodx-actions.effect). World setting "Magic that applies itself".
+- Tests: tools/harness/effects.test.mjs (8). Gate: tools/gate/gateeffects.mjs.

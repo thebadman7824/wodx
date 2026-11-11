@@ -54,6 +54,7 @@ import * as UR from "./mummy-rules.js";
 import * as OXD from "./orpheus.js";
 import * as ORR from "./orpheus-rules.js";
 import * as ZXD from "./m20.js";
+import * as EFX from "./effects.js";
 import * as ZR from "./m20-rules.js";
 import * as CNR from "./consensus-rules.js";
 import * as CK from "./checks-rules.js";
@@ -2189,7 +2190,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.21.3",
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.22.0", effects: { isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan },
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
@@ -2270,6 +2271,7 @@ Hooks.once("init", () => {
     // Never run beside the module this one replaces: both would answer every button
     if (L.oldActive("vtda20-actions")) { OFF = true; return; }
     registerSettings();
+    EFX.setup();
     SX.registerBehavior();
     MIG.registerSettings();
     P.register();
@@ -2293,6 +2295,8 @@ Hooks.once("ready", async () => {
         MIG.offerMigration().catch(e => console.error("WoDX |", e));
         // The inner voice's proposals (6d): approved in the queue, answered from a card
         (L.chronicle()?.registerApprovalHandler ?? game.modules.get("wodx-chronicle")?.api?.registerApprovalHandler)?.("wodx-voice", { label: "Inner voice", approve: entry => vx().onApproved(entry) });
+        // Mage keyword results that wait for a yes (3.22.0)
+        EFX.registerHandler(L.chronicle() ?? game.modules.get("wodx-chronicle")?.api);
         // Lifted and planted items, and being caught at it (3.21.0)
         try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
     };
