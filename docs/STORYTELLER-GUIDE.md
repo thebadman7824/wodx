@@ -1,12 +1,12 @@
 # WoDX: the Storyteller's guide
 
-How the current build works from the Storyteller's chair, and how to keep a session moving. It describes the build in the "What Sleeps Beneath Rothenstein Live Version" world (system 7.3.2-wodx.3; Actions 3.11.2, Chronicle 0.4.2, Combat 3.7.4, Creation 0.6.1, NPC 0.3.0, Otherworlds 0.2.0, Sheets 0.5.0).
+How the build works from the Storyteller's chair, and how to keep a session moving. This guide was written for the "What Sleeps Beneath Rothenstein Live Version" world as it stood on system 7.3.2-wodx.3 (Actions 3.11.2, Chronicle 0.4.2, Combat 3.7.4, Creation 0.6.1, NPC 0.3.0, Otherworlds 0.2.0, Sheets 0.5.0). Since 11 November 2026 Live runs build ab958f2: system 7.3.2-wodx.7, and the server carries fourteen WoDX modules (Actions 3.21.3, Atmosphere 0.11.0, Chronicle 0.16.0, Combat 3.8.7, Creation 0.10.1, Interactables 0.23.0, Library 0.5.4, NPC 0.14.0, Otherworlds 0.9.0, Paperdoll 0.6.4, Senses 0.5.1, Sheets 0.7.0, Storyteller 0.22.0, Targeting 0.1.1). What each later version adds is in the running Storyteller's guide (https://claude.ai/artifact/UbJuJuWv4HHaB6i9VcP6QT) and in docs/MODULES.md; the sections below still hold for what they describe.
 
 ## Quick start: tonight's session
 
 **Before the players arrive**
 
-1. Open the world as the Gamemaster. All seven WoDX modules should be on. vtda20-actions and vtda20-combat must be off in this world, or WoDX Actions and WoDX Combat switch themselves off and say so.
+1. Open the world as the Gamemaster. Every WoDX module this world uses should be on (the Settings sidebar names the build). vtda20-actions and vtda20-combat must be off in this world, or WoDX Actions and WoDX Combat switch themselves off and say so.
 2. Open the **Chronicle Clock** (moon button in the token controls). Check the date, the hour and the era. If the era is wrong, fix the date with **Set date**, or lock the era.
 3. Open the **Approval queue** (inbox button). Clear anything left from testing, so tonight's proposals are easy to spot.
 4. Decide how much the game should do on its own. Each of these is a world setting (Game Settings, Configure Settings):

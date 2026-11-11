@@ -10,9 +10,11 @@ export const isNpcType = type => /^wodx-npc[.:-]/.test(String(type ?? ""));
 
 /**
  * Where a new proposal goes. auto: {type: true} standing rules; cap: NPC proposals allowed this session (0: no cap);
- * used: NPC proposals already queued this session. Returns "auto", "hold" or "queue".
+ * used: NPC proposals already queued this session; lightTouch: the house rule Light-touch mode is on, so everything but a
+ * player's own request is held back quietly until the Storyteller puts it in the queue. Returns "auto", "hold" or "queue".
  */
-export function routeProposal(type, {auto = {}, cap = 0, used = 0} = {}) {
+export function routeProposal(type, {auto = {}, cap = 0, used = 0, lightTouch = false} = {}) {
+  if ( lightTouch && !NEVER_AUTO.includes(type) ) return "hold";
   if ( auto?.[type] === true && !NEVER_AUTO.includes(type) ) return "auto";
   const c = Math.max(0, Math.trunc(Number(cap) || 0));
   if ( c && isNpcType(type) && Number(used) >= c ) return "hold";

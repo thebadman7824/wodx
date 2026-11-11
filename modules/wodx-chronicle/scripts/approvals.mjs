@@ -1,4 +1,4 @@
-import {esc, emit, isActiveGM, setting, setSetting} from "./util.mjs";
+import {esc, emit, isActiveGM, rule, setting, setSetting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
 import * as QR from "./approvals-rules.mjs";
 
@@ -62,6 +62,7 @@ export const npcCount = () => npcUsed;
 export function resetSession() { npcUsed = 0; }
 const autoRules = () => { try { return setting("autoApprove") ?? {}; } catch (e) { return {}; } };
 const npcCap = () => { try { return Number(setting("npcCap")) || 0; } catch (e) { return 0; } };
+const lightTouch = () => { try { return !!rule("lightTouch"); } catch (e) { return false; } };
 
 /** Active GM: add a proposal to the queue, approve it under a standing rule, or hold it back past the NPC cap. */
 export async function addToQueue(entry) {
@@ -69,7 +70,7 @@ export async function addToQueue(entry) {
   const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
   q.held ??= [];
   if ( entry.key && (q.pending.some(p => p.key === entry.key) || q.held.some(p => p.key === entry.key)) ) return;
-  const route = QR.routeProposal(entry.type, {auto: autoRules(), cap: npcCap(), used: npcUsed});
+  const route = QR.routeProposal(entry.type, {auto: autoRules(), cap: npcCap(), used: npcUsed, lightTouch: lightTouch()});
   if ( route === "hold" ) {
     q.held.push(entry);
     await setSetting("approvals", q);
@@ -212,7 +213,8 @@ export class ApprovalsApp extends ApplicationV2 {
         <button type="button" data-action="rejectTicked"><i class="fa-solid fa-xmark"></i> Reject the ticked</button>
         <button type="button" data-action="tickAll">Tick all or none</button></div>
         <p class="wodx-quiet">Untick the ones to leave for later.</p>` : "";
-    const heldNote = kept ? `<p class="wodx-held">${kept} NPC proposal${kept === 1 ? " is" : "s are"} held back: past this session's cap of ${cap}. <button type="button" data-action="release">Put them in the queue</button></p>` : "";
+    const why = lightTouch() ? "Light-touch mode is on" : `past this session's cap of ${cap} NPC proposals`;
+    const heldNote = kept ? `<p class="wodx-held">${kept} proposal${kept === 1 ? " is" : "s are"} held back: ${why}. <button type="button" data-action="release">Put them in the queue</button></p>` : "";
     const ts = types().filter(t => !QR.NEVER_AUTO.includes(t.type));
     const rules = ts.map(t => `<li><label><input type="checkbox" class="wodx-auto" data-type="${esc(t.type)}"${auto[t.type] ? " checked" : ""}> ${esc(t.label)}</label></li>`).join("");
     const standing = `<section class="wodx-standing"><h3>Approve on its own${Object.keys(auto).length ? ` (${Object.keys(auto).length})` : ""}</h3>

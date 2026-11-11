@@ -650,3 +650,10 @@ In the Sorcerers Crusade age (1450 to 1699), keyword cards and the plain "succes
 
 ## B780. Lazy-loading each line's code is set aside (2026-11-11)
 WoDX Actions keeps loading all its line code at start. Loading rare lines on first use would save about 15% of the start-up script (some 50 ms on a slow computer), but it would turn over a hundred synchronous calls in main.js, and parts of the public api, into waits. The release bundler already gives the larger gain: 14 script loads instead of about 250, and a third less code. Logged for Ben to reverse.
+
+## B790. Light-touch mode holds proposals instead of dropping only the era check (2026-11-11)
+Light-touch mode said it turned off every WoDX proposal, but only the era check read it. Now the approval queue itself reads it: while it is on, every proposal except a player's own request is held back without a notice, the same way proposals past the NPC cap are held, and the Storyteller puts them in the queue from the approvals window when ready. A kind set to approve on its own is held too, so nothing changes the world quietly on a light night. The era check still skips itself. Whispered NPC plans in combat are cards, not proposals, and still follow the NPC's own mode.
+
+## B791. The years between eras are named in the Chronicle Rules journal (2026-11-11)
+Years no era book covers keep the last era's rules (1902 to 1913 keep Victorian; on the Future branch 2004 to 2009 keep Modern). The Era and calendar page now lists each such span and the era it keeps, worked out from the loaded profiles, the region and the branch rules.
+

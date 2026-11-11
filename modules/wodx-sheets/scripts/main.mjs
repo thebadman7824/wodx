@@ -1,5 +1,5 @@
 /**
- * WoDX Sheets 0.4 — character sheets that follow the era and each line's book (B74).
+ * WoDX Sheets (the version is in module.json): character sheets that follow the era and each line's book (B74).
  *
  * Each WoDX sheet extends the World of Darkness system's own sheet for its actor type and keeps every tab the system
  * draws; only the Core tab (and, for the fae, the Dreaming tab) is replaced by the book's sheet, laid out from the
