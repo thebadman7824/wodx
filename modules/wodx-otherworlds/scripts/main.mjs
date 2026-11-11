@@ -13,6 +13,8 @@ import * as drift from "./drift.mjs";
 import * as driftRules from "./drift-rules.mjs";
 import * as waysRules from "./ways-rules.mjs";
 import * as realmsRules from "./realms-rules.mjs";
+import * as realmMaps from "./realm-maps.mjs";
+import * as realmMapsRules from "./realm-maps-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
 let active = false;
@@ -54,7 +56,9 @@ Hooks.once("ready", () => {
       dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,
       netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
     drift: {of: drift.driftOf, step: drift.stepDrift, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
-    ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules}
+    ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
+    realmMaps: {draw: realmMaps.drawRealm, redraw: realmMaps.redrawRealm, send: realmMaps.sendToRealm, bringBack: realmMaps.bringBack,
+      dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {otherworlds: api});
@@ -126,6 +130,10 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxWays = {
     name: "wodxWays", title: "Ways and realms: trods, Moon Paths, airts, Anchorheads, Byways and realm scenes (Storyteller)", icon: "fa-solid fa-route", order: 132,
     button: true, visible: game.user.isGM, onChange: () => ways.waysDialog()
+  };
+  tokens.tools.wodxRealmMaps = {
+    name: "wodxRealmMaps", title: "Realm maps: draw a realm past the near worlds, send the selected tokens there, bring them back (Storyteller)", icon: "fa-solid fa-map", order: 133,
+    button: true, visible: game.user.isGM, onChange: () => realmMaps.realmMapsDialog()
   };
   tokens.tools.wodxOtherRolls = {
     name: "wodxOtherRolls", title: "Otherworld rolls: the Avatar Storm, the Opened Bridge, Wayfare, the Maelstrom, the Net", icon: "fa-solid fa-meteor", order: 131,
