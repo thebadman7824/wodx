@@ -132,6 +132,7 @@ async function writePurse(a, next, note) {
   if ( !a?.update ) return null;
   const old = rawPurse(a), m = moneyNow();
   const entry = {at: now(), carried: next.carried - old.carried, bank: next.bank - old.bank, debt: next.debt - old.debt, note: String(note ?? "").slice(0, 120)};
+  if ( next.paidMonth !== undefined && next.paidMonth !== old.paidMonth ) entry.prevPaid = old.paidMonth;
   const log = [...old.log, entry].slice(-30);
   const purse = {money: m.id, year: yearNow(), carried: Math.max(0, Math.round(next.carried)), bank: Math.max(0, Math.round(next.bank)),
     debt: Math.max(0, Math.round(next.debt)), paidMonth: next.paidMonth ?? old.paidMonth, log};
@@ -204,6 +205,7 @@ export async function undoLast(a) {
   const p = rawPurse(a), e = p.log[p.log.length - 1];
   if ( !e ) return false;
   const purse = {...p, carried: p.carried - num(e.carried), bank: p.bank - num(e.bank), debt: p.debt - num(e.debt), log: p.log.slice(0, -1)};
+  if ( "prevPaid" in e ) purse.paidMonth = e.prevPaid;
   await a.update({[`flags.${MOD}.money.purse`]: {...purse, money: p.money, year: p.year}});
   return true;
 }
