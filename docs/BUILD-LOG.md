@@ -1235,3 +1235,4 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Fill by place and era (Interactables) needs no change: it reads name, kind, eras and small as before; place weights cover the seven new kinds.
 - tools/goods/build-desk.mjs writes the review desk's item file. Desk: https://claude.ai/artifact/RFDVx5w2jCtbK1ASY8WeLP.
 - Tests: three new in fill.test.mjs (tags on every good, era years match Chronicle and every era from 1197 has every kind, a value can change over time). Harness 1019 pass.
+- 2026-11-11 (B594-B596): sub-categories dropped; 31 top-level categories (ten adapted from Cataclysm DDA), 799 goods. Each good carries behaviour, stacks, uses, sheet type and V20 concealment step (P/J/T/N) in tags. Gear category spelled Armor. Items back on the desk for Ben's marks.

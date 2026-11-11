@@ -126,55 +126,57 @@ test("goods: names are plain text, gender-neutral, with no long dashes", () => {
   }
 });
 
-/* Era item lists: every good is tagged with category, era and value, and the tags agree with the books' eras */
-test("goods: every good carries category, era and value tags", () => {
+/* Era item lists: every good is tagged with category, era, value, behaviour, uses and concealment */
+test("goods: every good carries its backend tags", () => {
   const ids = new Set();
   for ( const g of G.GOODS ) {
-    assert.ok(G.SUBS[g.sub], `${g.name}: sub ${g.sub}`);
-    assert.equal(g.tags.category, `${g.kind}/${g.sub}`, g.name);
+    assert.ok(G.KINDS[g.kind], `${g.name}: category ${g.kind}`);
+    assert.equal(g.tags.category, g.kind, g.name);
     assert.ok(g.tags.era.length, `${g.name}: no era tag`);
     assert.ok(g.from <= g.to && g.to <= 2099, `${g.name}: years ${g.from}-${g.to}`);
     for ( const e of g.eras ) assert.ok(Number.isInteger(g.values[e]) && g.values[e] >= 0 && g.values[e] <= 5, `${g.name}: value in ${e}`);
     assert.ok(G.VALUES[g.value], `${g.name}: value ${g.value}`);
     assert.ok(G.SOURCES[g.source], `${g.name}: source ${g.source}`);
+    assert.ok(G.CONCEAL[g.conceal], `${g.name}: conceal ${g.conceal}`);
+    assert.equal(g.small, g.conceal === "P" || g.conceal === "J", g.name);
+    assert.ok(G.BEHAVIOURS[g.use] && typeof g.stacks === "boolean", `${g.name}: behaviour`);
+    assert.ok(g.uses.length && g.tags.uses === g.uses, `${g.name}: uses`);
     assert.ok(!ids.has(g.id), `${g.id}: twice`);
     ids.add(g.id);
   }
-  for ( const [k, [kind, , v, s]] of Object.entries(G.SUBS) ) {
-    assert.ok(G.KINDS[kind], `${k}: kind ${kind}`);
-    assert.ok(G.VALUES[v] && G.SOURCES[s], k);
-    assert.ok(G.GOODS.some(g => g.sub === k), `${k}: no goods`);
+  for ( const [k, [use, stacks, sheet, uses]] of Object.entries(G.KIND_BEHAVIOUR) ) {
+    assert.ok(G.KINDS[k] && G.BEHAVIOURS[use] && typeof stacks === "boolean" && sheet && uses.length, k);
+    assert.ok(G.GOODS.some(g => g.kind === k), `${k}: no goods`);
   }
+  for ( const k of Object.keys(G.KINDS) ) assert.ok(G.KIND_BEHAVIOUR[k], `${k}: no behaviour`);
+  for ( const n of [...Object.keys(G.BEHAVIOUR_OVERRIDES), ...Object.keys(G.USES_OVERRIDES)] ) assert.ok(G.GOODS.some(g => g.name === n), `override for unknown good ${n}`);
+  for ( const c of Object.values(G.GEAR_CATEGORIES) ) assert.ok(G.BEHAVIOURS[c.use] && c.uses.length, c.label);
 });
 
-test("goods: era years match Chronicle, and every era from 1197 on has every kind of good", () => {
+test("goods: era years match Chronicle, and every era from 1197 on has every category", () => {
   for ( const p of JSON.parse(src("modules/wodx-chronicle/data/eras.json")).profiles ) {
     if ( p.start == null ) continue;
     assert.deepEqual(G.ERA_YEARS[p.id], [p.start, p.end], p.id);
   }
+  const since = {power: 1837};
   for ( const e of G.ERAS.filter(e => G.ERA_YEARS[e][0] >= 1197) )
-    for ( const k of Object.keys(G.KINDS) ) assert.ok(G.GOODS.some(g => g.kind === k && g.eras.includes(e)), `${e} has no ${k}`);
+    for ( const k of Object.keys(G.KINDS) ) {
+      if ( since[k] && G.ERA_YEARS[e][1] < since[k] ) continue;
+      assert.ok(G.GOODS.some(g => g.kind === k && g.eras.includes(e)), `${e} has no ${k}`);
+    }
 });
 
-test("goods: a value can change over the centuries", () => {
+test("goods: values change over the centuries, and behaviour comes from the category unless a good differs", () => {
   const nutmeg = G.GOODS.find(g => g.name === "a whole nutmeg");
   assert.equal(nutmeg.values["dark-ages"], 3);
   assert.equal(nutmeg.values["victorian"], 0);
   const bible = G.GOODS.find(g => g.name === "a family Bible with names inside the cover");
   assert.deepEqual([bible.values.renaissance, bible.values.victorian, bible.values.modern], [4, 2, 1]);
   assert.equal(G.valueAt(bible, 1700), 2);
-});
-
-test("goods: every sub-category and good has a behaviour and a stacks flag", () => {
-  for ( const s of Object.keys(G.SUBS) ) {
-    const b = G.SUB_BEHAVIOUR[s];
-    assert.ok(b && G.BEHAVIOURS[b[0]] && typeof b[1] === "boolean", `${s}: behaviour`);
-  }
-  for ( const n of Object.keys(G.BEHAVIOUR_OVERRIDES) ) assert.ok(G.GOODS.some(g => g.name === n), `override for unknown good ${n}`);
-  for ( const g of G.GOODS ) {
-    assert.ok(G.BEHAVIOURS[g.use] && typeof g.stacks === "boolean", g.name);
-    assert.equal(g.tags.use, g.use, g.name);
-  }
+  assert.ok(bible.uses.includes("pray with") && bible.uses.includes("read"));
   assert.equal(G.GOODS.find(g => g.name === "tallow candles").stacks, true);
-  assert.equal(G.GOODS.find(g => g.name === "a storm lantern").stacks, false);
+  assert.equal(G.GOODS.find(g => g.name === "a storm lantern").use, "lit");
+  assert.equal(G.GOODS.find(g => g.name === "an iron door key").kind, "keys");
+  assert.equal(G.GOODS.find(g => g.name === "a packet of cigarettes").kind, "drugs");
+  assert.equal(G.KINDS.coin, "Currency");
 });
