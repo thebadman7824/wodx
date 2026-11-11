@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Markets, the living economy's first build (Storyteller 0.23.0, B599) */
+/* Markets, the living economy's first build (Storyteller 0.24.0, B599) */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");

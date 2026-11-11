@@ -34,6 +34,7 @@ import * as Hard from "./hardship.mjs";
 import * as HardRules from "./hardship-rules.mjs";
 import * as MoneyRules from "./money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
+import * as Road from "./road-rules.mjs";
 import * as Prelude from "./prelude.mjs";
 import * as Dash from "./dashboard.mjs";
 import * as PreludeRules from "./prelude-rules.mjs";
@@ -98,6 +99,7 @@ Hooks.once("ready", () => {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
     travel: C.travel, planTrip: C.planTrip, travelPlaces: C.travelPlaces, setTravel: C.setTravel, solo: C.solo,
+    tripContext: C.tripContext, tripWords: C.tripWords, roads: Road,
     log: C.log, entries: C.entries, personalTime: C.personalTime, setPersonal: C.setPersonal, advancePersonal: C.advancePersonal,
     beats: C.beats, saveBeat: C.saveBeat, deleteBeat: C.deleteBeat, checkBeats: C.checkBeats,
     endSession: C.endSession, report: C.report, reportDialog: A.reportDialog, summaryDialog: A.summaryDialog,
@@ -107,7 +109,7 @@ Hooks.once("ready", () => {
     night: {draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
-    rumours: {open: () => Rumours.RumoursApp.open(), list: Rumours.rumours, start: Rumours.startRumour, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
+    rumours: {open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
     letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},

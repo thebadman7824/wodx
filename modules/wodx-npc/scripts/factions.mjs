@@ -18,6 +18,7 @@
  * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
  */
 import * as F from "./faction-rules.mjs";
+import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const TYPE = "wodx-npc.faction";
@@ -69,6 +70,7 @@ export function build(ctx) {
   /*  The world as the rules see it                                      */
   /* ------------------------------------------------------------------ */
 
+  const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
   function eraInfo() {
     let morality = "roads", year = 1197, name = "Dark Ages";
     try {
@@ -348,7 +350,7 @@ export function build(ctx) {
           else { await proposeChanges(`A rumour fades: ${b.event}`, "A week with nothing new to feed it.", ch, {key: `breach:${b.id}`, kind: "breach"}); break; }
           continue;
         }
-        const step = F.spreadDay(s, b, placeList(), streamFor(`breach:${b.id}:${Math.floor(t)}`), {now: t});
+        const step = F.spreadDay(s, b, placeList(), streamFor(`breach:${b.id}:${Math.floor(t)}`), {now: t, perDay: Media.breachReach(b.severity, eraInfo().year, {future: futureOn()})});
         const small = step.changes.filter(c => c.op !== "stage");
         const n = names(s);
         if ( m === "auto" ) { const r = await applyNow(small); undo = [...r.inverse, ...undo]; const w = small.map(c => F.describeChange(c, n)).filter(x => x !== "The rumour lingers"); if ( w.length ) lines.push(`${b.event}: ${w.join("; ")}.`); }

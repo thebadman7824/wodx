@@ -112,9 +112,10 @@ export function build(ctx) {
   }
   const placeName = (places, id) => places.find(p => p.id === id)?.name ?? (id ? "a place no longer tagged" : "somewhere off the map");
 
+  const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
   const routineOf = actor => flag(actor, "routine") ?? null;
   const whereOf = actor => flag(actor, "where") ?? null;
-  const blocksFor = actor => R.blocksOf(routineOf(actor), profileFor(actor).template);
+  const blocksFor = actor => R.blocksOf(routineOf(actor), profileFor(actor).template, yearNow());
   const allActors = () => game.actors?.contents ?? [...(game.actors?.values?.() ?? [])];
   const routineNpcs = () => allActors().filter(a => !a.hasPlayerOwner && routineOf(a)?.on);
   const domitorOf = actor => { const id = actor.flags?.["wodx-creation"]?.lineage?.domitor?.id; return id ? game.actors.get(id) : null; };
@@ -737,7 +738,6 @@ export function build(ctx) {
     }
     return {alert: a, carry};
   }
-  const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
   const tripMinutes = sc => {
     const own = Number(sc?.flags?.["wodx-storyteller"]?.travel?.minutes);
     if ( own > 0 ) return own;
@@ -1190,7 +1190,10 @@ export function build(ctx) {
     if ( !actor || !game.user.isGM ) return null;
     const r = routineOf(actor) ?? {}, tpl = profileFor(actor).template, places = listPlaces().sort((a, b) => a.name.localeCompare(b.name));
     const preset = r.preset ?? R.DEFAULT_PRESET[tpl] ?? "recluse";
-    const blocks = R.blocksOf({...r, preset}, tpl);
+    const year = yearNow(), age = r.age ?? "";
+    const blocks = R.blocksOf({...r, preset}, tpl, year);
+    const shown = R.presetsFor(year);
+    if ( !shown[preset] && R.PRESETS[preset] ) shown[preset] = R.PRESETS[preset];
     const roleOpts = Object.fromEntries(Object.entries(R.ROLES).map(([k, v]) => [k, `${v.label} (role)`]));
     const placeOpts = Object.fromEntries(places.map(p => [p.id, p.name]));
     const pick = v => opt({"": "Not set", ...roleOpts, ...placeOpts}, v);
@@ -1206,8 +1209,9 @@ export function build(ctx) {
     const content = `<div class="wnpc-routine-form">
       <div class="wodx-field"><label><input type="checkbox" name="on" ${r.on ? "checked" : ""}> Keeps a routine</label></div>
       <div class="wodx-field"><label>Routines and reactions</label><select name="mode" data-fixed>${opt({"": `As the scene or world says (${NR.MODES[modeOf(actor)].split(" (")[0]})`, ...NR.MODES}, r.mode ?? "")}</select></div>
-      <div class="wodx-field"><label>Ready routine</label><select name="preset" data-fixed>${opt(Object.fromEntries(Object.entries(R.PRESETS).map(([k, v]) => [k, v.label])), preset)}</select></div>
-      <p class="wodx-quiet">Change the ready routine and save to load its hours; edit the hours below to make them this NPC's own. The first row that fits the time wins. An empty place drops a row.</p>
+      <div class="wodx-field"><label>Ready routine</label><select name="preset" data-fixed>${opt(Object.fromEntries(Object.entries(shown).map(([k, v]) => [k, v.label])), preset)}</select></div>
+      <div class="wodx-field"><label>Hours of the age</label><select name="age" data-fixed>${opt({"": `Follow the year (now ${R.AGES[R.ageOf(year)].label})`, ...Object.fromEntries(Object.entries(R.AGES).map(([k, v]) => [k, v.label]))}, age)}</select></div>
+      <p class="wodx-quiet">A ready routine changes its hours with the age (the factory day, the short Saturday, late bars) unless you fix an age here, or type hours of its own. Change the ready routine or the age and save to load its hours; edit the hours below to make them this NPC's own. The first row that fits the time wins. An empty place drops a row.</p>
       ${searchBox("select.wnpc-place-pick", "Search places…", "Search places")}
       <fieldset><legend>Their places</legend>${roles}</fieldset>
       ${searchBox("table.wnpc-blocks", "Search the hours…", "Search the hours")}
@@ -1220,10 +1224,10 @@ export function build(ctx) {
       rejectClose: false
     });
     if ( !data || data === "cancel" ) return null;
-    const out = {on: !!data.on, mode: data.mode || null, preset: data.preset || preset, roles: {}, blocks: null};
+    const out = {on: !!data.on, mode: data.mode || null, preset: data.preset || preset, age: R.AGES[data.age] ? data.age : null, roles: {}, blocks: null};
     for ( const k of Object.keys(R.ROLES) ) if ( data[`role-${k}`] ) out.roles[k] = data[`role-${k}`];
     if ( out.roles.domitor ) delete out.roles.domitor;
-    if ( !data.reset && out.preset === preset ) {
+    if ( !data.reset && out.preset === preset && (out.age ?? "") === age ) {
       const typed = [];
       for ( let k = 0; data[`b${k}.place`] !== undefined; k++ ) {
         if ( !data[`b${k}.place`] ) continue;
@@ -1233,7 +1237,7 @@ export function build(ctx) {
       }
       const bad = R.checkBlocks(typed);
       if ( bad.length ) { ui.notifications.error(`The routine was not saved. ${bad.slice(0, 3).join("; ")}.`); return null; }
-      const same = JSON.stringify(typed.map(norm)) === JSON.stringify((R.PRESETS[preset]?.blocks ?? []).map(norm));
+      const same = JSON.stringify(typed.map(norm)) === JSON.stringify(R.presetBlocks(preset, out.age || R.ageOf(year)).map(norm));
       out.blocks = same ? null : typed;
     }
     await actor.update({[`flags.${MOD}.routine`]: out});

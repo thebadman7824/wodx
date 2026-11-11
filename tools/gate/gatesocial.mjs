@@ -11,6 +11,7 @@
  *   5. an open threat wins: "intimidated", and the attitude drops a step
  *   6. the window opens for the targeted NPC
  *   7. every other WoDX module still answers
+ *   8. a lift with a big pool takes the NPC's pocket-sized ring unseen (Actions 3.21.0); the sack of grain is never offered
  * Result: Data/wodx-gate/gatesocial-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -93,6 +94,14 @@ export async function run() {
     await step("7 other modules", async () => {
       const off = game.modules.filter(m => m.id.startsWith("wodx-") && m.active && !m.api && !["wodx-library"].includes(m.id)).map(m => m.id);
       ok("7 other modules", !!game.wodxCombat && !!game.modules.get("wodx-chronicle")?.api && off.length === 0, {off});
+    });
+    await step("8 lift", async () => {
+      await npc().createEmbeddedDocuments("Item", [{name: "WoDX gate ring", type: "Item", flags: {"wodx-sheets": {conceal: "P"}}}, {name: "WoDX gate sack", type: "Item", flags: {"wodx-sheets": {conceal: "N"}}}]);
+      const ring = npc().items.find(i => i.name === "WoDX gate ring");
+      const res = await A().lift(pc(), npcTok.object, "lift", {...fd, want: ring.id});
+      await sleep(300);
+      const got = pc().items.some(i => i.name === "WoDX gate ring"), left = npc().items.some(i => i.name === "WoDX gate ring"), sack = npc().items.some(i => i.name === "WoDX gate sack");
+      ok("8 lift", res?.done && !res.noticed && got && !left && sack, {res, got, left, sack});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

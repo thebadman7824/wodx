@@ -1,4 +1,5 @@
 import * as RR from "./rumour-rules.mjs";
+import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, mutate} from "./core.mjs";
 import {nightNow} from "./night.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -17,7 +18,13 @@ export function registerRumourSettings() {
   game.settings.register(MOD, "rumours", {scope: "world", config: false, type: Array, default: [], onChange: () => RumoursApp.refresh()});
   game.settings.register(MOD, "rumourNetwork", {name: "Rumours spread between people", hint: "A rumour from the night's draw, once approved, or one you start by hand, passes between your characters each night along factions and shared scenes.",
     scope: "world", config: true, type: Boolean, default: true});
+  game.settings.register(MOD, "rumourGarble", {name: "Rumours change in the telling", hint: "Each time someone passes a rumour on, it may twist a little. The rumour mill counts the twists for you to play; the words stay yours.",
+    scope: "world", config: true, type: Boolean, default: false});
 }
+const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };
+const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
+/** How the year carries word, for the window. */
+export const mediaNow = () => Media.mediaFor(yearNow(), {future: futureOn()});
 export const rumours = () => RR.normRumours(setting("rumours"));
 
 /** Who talks to whom now: each faction's members, and the characters with tokens on each scene (not players'). */
@@ -30,7 +37,7 @@ export function contacts() {
 const rand = key => chron()?.gen?.random?.(key) ?? Math.random;
 
 /** Start a rumour. tellers: actor ids who know it first; none given, one is picked (the scene in view first). */
-export async function startRumour({text, tellers = []} = {}) {
+export async function startRumour({text, tellers = [], big = false} = {}) {
   if ( !game.user.isGM || !String(text ?? "").trim() ) return null;
   const id = foundry.utils.randomID();
   let first = (tellers ?? []).filter(Boolean);
@@ -40,7 +47,7 @@ export async function startRumour({text, tellers = []} = {}) {
     if ( t ) first = [t];
   }
   const at = await nightNow();
-  const r = RR.normRumour({id, text, started: game.time?.worldTime ?? 0, night: at.jdn, knownBy: first, log: [{night: at.jdn, heard: first.length, label: at.label}]});
+  const r = RR.normRumour({id, text, started: game.time?.worldTime ?? 0, night: at.jdn, knownBy: first, big: !!big, log: [{night: at.jdn, heard: first.length, label: at.label}]});
   await mutate("rumours", cur => ({value: [...RR.normRumours(cur), r]}));
   return r;
 }
@@ -54,13 +61,14 @@ export function tick({force = false, once = null} = {}) {
     const at = await nightNow();
     const net = contacts();
     const moved = [];
+    const year = yearNow(), future = futureOn(), twist = setting("rumourGarble") ? Media.TWIST_CHANCE : 0;
     await mutate("rumours", cur => {
       const list = RR.normRumours(cur).map(r => {
         if ( once && r.id !== once ) return r;
         const nights = once ? [(r.night ?? at.jdn) + 1] : RR.nightsDue(r, at.jdn);
         let x = r;
         for ( const n of nights ) {
-          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`));
+          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`), {heat: Media.rumourHeat(year, {big: r.big, future}), twist});
           x = {...rumour, night: once ? r.night : n, log: [...rumour.log, ...(heard.length ? [{night: n, heard: heard.length, label: once ? "by hand" : ""}] : [])].slice(-40)};
           if ( heard.length ) moved.push(r.id);
         }
@@ -109,17 +117,18 @@ export class RumoursApp extends ApplicationV2 {
       const names = r.knownBy.map(name);
       return `<div class="wstory-rumour" data-search-item data-search-text="${esc(`${r.text} ${names.join(" ")}`)}">
         <div><strong>${esc(r.text)}</strong></div>
-        <div class="wodx-quiet">${r.ended ? "Ended." : RR.live(r) ? "Spreading." : "Gone quiet: nobody new has heard it for a while."} Known to ${r.knownBy.length}${names.length ? `: ${esc(names.slice(0, 12).join(", "))}${names.length > 12 ? ` and ${names.length - 12} more` : ""}` : ""}.</div>
+        <div class="wodx-quiet">${r.ended ? "Ended." : RR.live(r) ? "Spreading." : "Gone quiet: nobody new has heard it for a while."} ${r.big ? "Big news. " : ""}${r.twists ? `Changed in the telling ${r.twists === 1 ? "once" : `${r.twists} times`}. ` : ""}Known to ${r.knownBy.length}${names.length ? `: ${esc(names.slice(0, 12).join(", "))}${names.length > 12 ? ` and ${names.length - 12} more` : ""}` : ""}.</div>
         <div class="wodx-buttons">${RR.live(r) ? `<button type="button" data-action="spread" data-id="${esc(r.id)}">Spread a night now</button><button type="button" data-action="end" data-id="${esc(r.id)}">End it</button>` : ""}<button type="button" data-action="remove" data-id="${esc(r.id)}">Remove</button></div></div>`;
     };
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
     div.innerHTML = `
-      <p class="wodx-quiet">A rumour passes each night from those who know it to the people they talk to: their faction, and anyone with a token on the same scene. ${linked} of your characters talk to someone now.${setting("rumourNetwork") === false ? " Spreading on its own is off in Configure Settings." : ""} The night's draw starts one when you approve it.</p>
+      <p class="wodx-quiet">A rumour passes each night from those who know it to the people they talk to: their faction, and anyone with a token on the same scene. ${linked} of your characters talk to someone now.${setting("rumourNetwork") === false ? " Spreading on its own is off in Configure Settings." : ""} The night's draw starts one when you approve it. Word travels now by ${esc(mediaNow().label.toLowerCase())}: each who knows tells ${mediaNow().heat} a night${mediaNow().flood ? ", and big news reaches everyone they can in one night" : mediaNow().bigHeat ? `, ${mediaNow().bigHeat} for big news` : ""}.</p>
       <section><h3>Start a rumour</h3><form class="wstory-rumour-new">
         <div class="form-group stacked"><label>What is said</label><input type="text" name="text" maxlength="1000" placeholder="They say the miller's wife walks at night"></div>
         ${people.length > 8 ? searchBox("select[name=teller]", "Search people…", "Search people") : ""}
         <div class="form-group"><label>Who starts it</label><select name="teller"${people.length > 8 ? "" : " data-fixed"}><option value="">Someone in the scene in view</option>${people.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join("")}</select></div>
+        <div class="form-group"><label><input type="checkbox" name="big"> Big news (the print shop, the papers, the wireless or the Net would carry it)</label></div>
         <div class="wodx-buttons"><button type="button" data-action="start"><i class="fa-solid fa-comment-dots"></i> Start it</button></div></form></section>
       <section><h3>Rumours (${list.length})</h3>${searchBox(".wstory-rumours", "Search rumours or people…", "Search rumours or who knows them")}
         <div class="wstory-rumours">${list.map(row).join("") || "<p class=\"wodx-quiet\">None yet.</p>"}</div></section>`;
@@ -130,7 +139,7 @@ export class RumoursApp extends ApplicationV2 {
   static async #onStart(event, target) {
     const f = target.closest("form").elements;
     if ( !f.text.value.trim() ) return ui.notifications.warn("Say what the rumour is first.");
-    const r = await startRumour({text: f.text.value, tellers: f.teller.value ? [f.teller.value] : []});
+    const r = await startRumour({text: f.text.value, tellers: f.teller.value ? [f.teller.value] : [], big: !!f.big?.checked});
     if ( r && !r.knownBy.length ) ui.notifications.warn("Nobody was found to start it: name who starts it, or view a scene with people on it.");
   }
   static async #onSpread(event, target) { await tick({force: true, once: target.dataset.id}); }
