@@ -208,3 +208,21 @@ test("mapgen: castle, mine and arcology deck sites come out whole, and their sid
 test("mapgen: a metropolis is organic only", {skip}, () => {
   assert.throws(() => run([join(gen, "ddtown.py"), "--layout", "grid", "--size", "metropolis", "--assets", ASSETS], mkdtempSync(join(tmpdir(), "wodx-m-"))), /organic layout/);
 });
+
+test("mapgen: a river bends like a real one: bends about 11 widths apart, never touching itself", {skip}, () => {
+  const code = `
+import math, random, sys
+sys.path.insert(0, ${JSON.stringify(gen)})
+from organic import meander
+for seed in range(12):
+    R = random.Random(seed); B = 6.0
+    pts, ox = meander(R, R.uniform(0, math.pi), 400, B, 1.6)
+    L = sum(math.dist(a, b) for a, b in zip(pts, pts[1:])); K = L / math.dist(pts[0], pts[-1])
+    assert 1.15 < K < 2.6, (seed, K)
+    gap = int(4 * B / 2)
+    for i in range(len(pts)):
+        for j in range(i + gap, len(pts)):
+            assert math.dist(pts[i], pts[j]) >= 2 * B - 1e-6, (seed, i, j)
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8"}), /ok/);
+});
