@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.32.2");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.33.1");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -374,7 +374,7 @@ test("Actions 3.32.0: keywords for the lines with no power data yet", async () =
   assert.equal(PK.keywordsOf("mummy", "Nobody"), null);
   assert.ok(PK.powersWith("dtf", "possess").includes("Possess Animals"));
   assert.ok(PK.keywordCounts().summon > 40);
-  assert.match(src("modules/wodx-actions/scripts/main.js"), /version: "3\.32\.2"/);
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /version: "3\.33\.1"/);
 });
 
 test("Actions 3.32.0: the books' rituals and rites fill the Storyteller's window", async () => {
@@ -399,7 +399,7 @@ test("Actions 3.32.0: the books' rituals and rites fill the Storyteller's window
   assert.match(fx, /bookRitual\(set, n\(i\)\)/);
 });
 
-test("Move and its Undo jump with a displace move, so walls do not stop them (3.32.2)", async () => {
+test("Move and its Undo jump with a displace move, so walls do not stop them (3.33.1)", async () => {
   const {readFile} = await import("node:fs/promises");
   const src = await readFile(new URL("../../modules/wodx-actions/scripts/effects.js", import.meta.url), "utf8");
   assert.match(src, /async function jump\(tok, pos\)[\s\S]*?action: "displace"/);

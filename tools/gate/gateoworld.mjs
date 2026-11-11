@@ -49,7 +49,7 @@ export async function run() {
 
     await step("versions and api", async () => {
       const v = id => game.modules.get(id)?.version;
-      ok("versions and api", !foundry.utils.isNewerVersion("0.22.0", v("wodx-storyteller")) && v("wodx-npc") === "0.13.0" && v("wodx-chronicle") === "0.16.0"
+      ok("versions and api", !foundry.utils.isNewerVersion("0.22.0", v("wodx-storyteller")) && !foundry.utils.isNewerVersion("0.13.0", v("wodx-npc")) && !foundry.utils.isNewerVersion("0.16.0", v("wodx-chronicle"))
         && typeof st().tripContext === "function" && !!st().roads?.MODES && typeof st().rumours?.media === "function",
         {st: v("wodx-storyteller"), npc: v("wodx-npc"), chron: v("wodx-chronicle")});
     });
