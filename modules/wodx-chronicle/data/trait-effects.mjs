@@ -329,3 +329,13 @@ export const ATTITUDE = {
   "lord-of-the-flies": {delta: -1, againstKinds: ["mortal"]},
   "cold-breeze": {delta: -1, againstKinds: ["mortal"]}
 };
+
+/** Step 6 (Chronicle 0.21.0): traits WoDX Actions carries out in its own windows, for the Trait effects window. */
+export const HANDLED = {
+  "lucky": "a failed roll is rolled again, three times a story (the action window)",
+  "efficient-digestion": "one more blood point for every two drunk (feeding)",
+  "thin-blood": "every blood cost doubled (Spend Blood)",
+  "deep-sleeper": "+2 difficulty to wake by day",
+  "light-sleeper": "wakes at once by day, with no Road cap on the dice",
+  "prey-exclusion": "a reminder on every feeding card"
+};

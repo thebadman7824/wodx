@@ -10,9 +10,9 @@
  * kind that cannot hold it is matched but marked wrongKind: it does nothing until fixed. Mixed kinds count as both
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
-import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE} from "../data/trait-effects.mjs";
+import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED} from "../data/trait-effects.mjs";
 
-export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE};
+export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED};
 
 /** A name with case, accents, quotes, spaces and punctuation taken out: "Can’t Cross Running Water" -> "cantcrossrunningwater". */
 export const normName = s => String(s ?? "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
@@ -240,6 +240,13 @@ export function describe(m) {
   const e = m.entry;
   if ( e.kind === "background" ) return `Background: ${e.hook}`;
   const pats = (e.patterns ?? []).map(p => PATTERNS[p]).filter(Boolean).join(", ");
-  const live = (e.effects ?? []).length ? (e.effects.map(x => x.note).filter(Boolean).join("; ") || "in effect") : "no automatic effect yet";
+  // every way WoDX carries the trait out: roll effects, senses, signs, first meetings, the Actions windows
+  const k = e.key;
+  const ways = [...(e.effects ?? []).map(x => x.note).filter(Boolean),
+    ...(SENSE_LOSS[k] ? [`no ${SENSE_LOSS[k]} in WoDX Senses`] : []), ...(SENSE_CHANNELS[k] ? ["a channel of its own in WoDX Senses"] : []),
+    ...(SHOWS[k] ? ["others nearby can sense it (WoDX Senses)"] : []),
+    ...(ATTITUDE[k] ? [`a first meeting with an NPC ${ATTITUDE[k].delta > 0 ? "warmer" : "colder"}${ATTITUDE[k].againstKinds ? ` (${ATTITUDE[k].againstKinds.join(", ")} only)` : ""}`] : []),
+    ...(HANDLED[k] ? [HANDLED[k]] : [])];
+  const live = ways.length ? ways.join("; ") : "no automatic effect yet";
   return `${pats}. ${live}. ${e.book} p. ${e.page}`;
 }

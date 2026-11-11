@@ -1542,3 +1542,9 @@ Ben approved all 291 timeline cards and asked for a deconfliction. docs/research
 - NPC: attitude.mjs seedFor moves the seed by the traits (attitude-rules.mjs withTraits); main.mjs state.self.afraid and a flee option.
 - Actions: effects.js applyItem wraps applyCore and records an attitude change for Sway and Fear (power-effects.js moodDelta); undo puts it back.
 - Tests: trait-attitude.test.mjs (4). Gate: gatetraits step 17.
+
+## 2026-11-11: trait effects, step 6 (Actions 3.35.0, Chronicle 0.21.0, B886)
+- trait-hooks.js: holds, luckyLeft, useLucky, luckyHtml, digestionBonus, bloodCostMult, sleepMods, preyNote.
+- main.js: Lucky in resolveAction (action and quick check), feedResolve (Efficient Digestion, Prey Exclusion), resolveSpend (Thin Blood), daytime (Deep and Light Sleeper; the daytime flag's uncapped).
+- Chronicle: HANDLED; describe lists every way a trait is carried out.
+- Tests: trait-pools.test.mjs (4). Gate: gatetraits step 18.
