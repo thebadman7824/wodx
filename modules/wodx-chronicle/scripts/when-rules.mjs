@@ -79,8 +79,19 @@ export const OUTCOMES = {
   event: "event [label]: pass a map event on to beats and the log",
   cue: "cue <id>: play a WoDX Atmosphere cue (dawn, dusk, notice, birds, cock)",
   ledger: "ledger <oath|debt|boon|consequence>: <text>: add a Ledger entry (WoDX Storyteller)",
-  standing: "standing <faction> -1 (or +1, or to welcome): how that faction regards the character (WoDX NPC)"
+  standing: "standing <faction> -1 (or +1, or to welcome): how that faction regards the character (WoDX NPC)",
+  fight: "fight [names or household]: start a fight with the people named here, or with those near who distrust the character (WoDX Combat)"
 };
+
+/** Who a "fight" outcome brings in. arg: names or households, comma-separated (blank: anyone near at Distrusted or
+ * worse). npcs: [{id, name, household, step, yards}] the NPCs on the scene; reach in yards. Returns ids, nearest first. */
+export function fightFoes(arg, npcs = [], {reach = 30} = {}) {
+  const want = list(arg);
+  const near = (npcs ?? []).filter(n => n && (!Number.isFinite(Number(n.yards)) || Number(n.yards) <= reach));
+  const hit = want.length ? near.filter(n => want.includes(low(n.name)) || (n.household && want.includes(low(n.household))))
+    : near.filter(n => Number(n.step) <= -1);
+  return hit.sort((a, b) => (Number(a.yards) || 0) - (Number(b.yards) || 0)).map(n => n.id);
+}
 
 const OPS = {"<=": (a, b) => a <= b, ">=": (a, b) => a >= b, "<": (a, b) => a < b, ">": (a, b) => a > b, "=": (a, b) => a === b, "==": (a, b) => a === b, "!=": (a, b) => a !== b};
 const low = v => String(v ?? "").trim().toLowerCase();

@@ -697,3 +697,15 @@ A Discipline roll against a target adds the target's resisting traits to the dif
 
 ## B806. Tick boxes for facts a roll cannot see (2026-11-11)
 Some traits depend on things no roll records: the sense used, speaking aloud, a first meeting, a risky deed, balance, an unplanned act. The action and quick check windows show a tick box for each such fact, but only when the character holds a trait that names it. A social roll ticks "first meeting" by itself when WoDX NPC says the two have not met.
+
+## B807. One starter for every fight that begins by itself (2026-11-11)
+WoDX Combat 3.9.0 holds a single fight starter (start.js, start-rules.js) that every trigger calls: it joins a fight already running on the scene, else uses an encounter set up but not started, else makes one, adds the people named and their household within call, and starts it. World setting "Start fights by themselves": Off, Suggest (default, a card with Start the fight) or Auto (at once, with Undo). Light-touch mode holds Auto at Suggest; the Storyteller's own Accept starts it at once unless the setting is Off. The same people for the same reason stay quiet for a minute. The books leave the start of a fight to the Storyteller (VtDA20 pdf p. 344), so this is a house rule.
+
+## B808. Who starts a fight on sight (2026-11-11)
+An NPC with Aggression of a half or more starts a fight when it sees a character it regards as Hostile or Hunted, within "A hostile NPC sees this far" (30 yards by day, a third at night), with walls and closed doors blocking the view. Guards (the guard template, or a guard tactic) at a place on alarm do the same for anyone at Unknown or worse. Sneaking and Obfuscate use the Reaction region's noticing roll (V20 Dark Ages pp. 169, 195), at most once every 30 seconds for the same pair. Bystanders never start one.
+
+## B809. Turning hostile, frenzy and an attack outside a fight (2026-11-11)
+An NPC whose attitude falls past Hostile while the character is in sight and in range starts a fight. A character who enters frenzy outside a fight starts one with the nearest living person within 20 yards. An attack made outside a fight starts one with attacker and target; the attack already rolled stands as the opening blow of the ambush. What surprise gives beyond that blow (V20 p. 274, Dexterity + Stealth against Perception + Alertness) waits for a book check.
+
+## B810. A "fight" outcome for doors, regions and dated events (2026-11-11)
+WoDX Chronicle 0.18.1 adds `fight [names or households]` to the Then outcomes. Blank, it brings in the NPCs within range who regard the character at Distrusted or worse; with names, the NPCs by name or household. A Reaction region's Fight now goes through the starter too, and in Auto it is carried out without waiting when fights start by themselves.

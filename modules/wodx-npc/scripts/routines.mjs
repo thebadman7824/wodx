@@ -22,6 +22,7 @@
 import * as R from "./routine-rules.mjs";
 import * as NR from "./npc-rules.mjs";
 import * as AR from "./alert-rules.mjs";
+import * as FR from "./fight-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
@@ -689,7 +690,7 @@ export function build(ctx) {
     if ( mode === "off" ) return null;
     const data = {watcher: wTok.document.uuid, intruder, region, scene: scene.uuid, options, head, why, lines, mode, trigger, ...(event ? {event} : {})};
     if ( mode === "auto" ) {
-      const pick = R.autoReaction(options);
+      const pick = R.autoReaction(options, {fightOk: fightAuto()});
       if ( pick.act ) {
         const k = options.indexOf(pick.act);
         const r = await doReaction(data, k);
@@ -1035,6 +1036,14 @@ export function build(ctx) {
       }
       case "fight": {
         if ( !i ) return {text: "The intruder is gone.", snap};
+        // Combat 3.9.0: the shared fight starter sets it up and starts it (with the household within call)
+        const starter = C()?.fight?.start;
+        if ( starter ) {
+          const res = await starter({scene: canvas.scene, tokens: [w.document, i.document], source: "region", why: `${w.name} fights ${i.name}`, byHand: true});
+          if ( res?.created ) snap.combat = res.combat;
+          if ( res?.done === "off" ) return {text: `${w.name} would fight ${i.name}, but fights are set to start by hand: start it from the combat tracker.`, snap};
+          return {text: `${w.name} fights ${i.name}: the fight begins.`, snap};
+        }
         const combat = await Combat.create({scene: canvas.scene.id, active: true});
         await combat.createEmbeddedDocuments("Combatant", [w, i].map(t2 => ({tokenId: t2.id, sceneId: canvas.scene.id, actorId: t2.actor?.id})));
         snap.combat = combat.id;
@@ -1250,8 +1259,85 @@ export function build(ctx) {
   /*  Hooks                                                              */
   /* ------------------------------------------------------------------ */
 
+  /* ------------------------------------------------------------------ */
+  /*  Fights that start by themselves (0.15.0, B808, B809)               */
+  /* ------------------------------------------------------------------ */
+
+  const fightMode = () => { try { return game.settings.get("wodx-combat", "fightStart"); } catch (e) { return "off"; } };
+  const fightAuto = () => fightMode() === "auto" && !chron()?.rule?.("lightTouch");
+  const attitudeApi = () => game.modules.get(MOD)?.api?.attitude ?? null;
+  const inRunningFight = d => (game.combats?.contents ?? []).some(c => c.started && c.combatants.some(x => x.tokenId === d.id));
+  const lastLook = new Map();
+  const moveWait = new Map();
+
+  /** One NPC and one character: does the NPC want a fight, and does it see them? Starts it when both. */
+  async function lookForFoe(nTok, pTok, {range, alarm, book}) {
+    const att = attitudeApi()?.of?.(nTok.actor, pTok.actor);
+    const want = FR.wantsFight(profileFor(nTok.actor), att?.step ?? 0, {alarm});
+    if ( !want ) return null;
+    if ( inRunningFight(nTok.document) && inRunningFight(pTok.document) ) return null;
+    const yards = ctx.yardsBetween(nTok, pTok);
+    const inSight = (yards === null || yards <= range) && !sightBlocked(nTok.center, pTok.center);
+    if ( !inSight ) return null;
+    const k = `${nTok.id}:${pTok.id}`, now = Date.now();
+    const quiet = !sneaking(pTok.document) && !ctx.hiddenByObfuscate(pTok);
+    if ( !quiet && lastLook.get(k) > now - FR.NOTICE_EVERY * 1000 ) return null;
+    lastLook.set(k, now);
+    const base = a => a?.isToken ? (a.baseActor ?? game.actors.get(a.id)) : a;
+    const wa = base(nTok.actor), act = whereOf(wa)?.activity, intruder = pTok.actor;
+    const ob = ctx.hiddenByObfuscate(pTok) ? Math.max(1, disc(intruder, "obfuscate")) : 0;
+    const res = R.notice({perception: at(nTok.actor, "perception"), alertness: ab(nTok.actor, "alertness"), awareness: ab(nTok.actor, "awareness"),
+      auspex: disc(nTok.actor, "auspex") || (profileFor(nTok.actor).template === "beast" ? 1 : 0), awake: act !== "sleep" || !routineOf(wa)?.on, inSight},
+      {dexterity: at(intruder, "dexterity"), stealth: ab(intruder, "stealth"), manipulation: at(intruder, "manipulation"), subterfuge: ab(intruder, "subterfuge"), sneaking: sneaking(pTok.document), obfuscate: ob},
+      {book, diff: AR.NOTICE_DIFF[alarm] ?? 6});
+    if ( !res.noticed ) return null;
+    return C()?.fight?.start?.({scene: canvas.scene, tokens: [nTok.document, pTok.document], source: want.source,
+      why: `${nTok.name} ${want.why}, and sees ${pTok.name} (${res.why})`});
+  }
+
+  /** Active Storyteller: a token moved on the scene being viewed. Hostile NPCs who see a character start a fight. */
+  async function watchFoes(doc) {
+    if ( !isActiveGM() || skipping() || fightMode() === "off" || doc.parent?.id !== canvas.scene?.id ) return;
+    const moved = canvas.tokens.get(doc.id);
+    if ( !moved?.actor ) return;
+    const scene = canvas.scene;
+    await loadCalendar();
+    const d = describer()(game.time.worldTime);
+    const yardsSet = (() => { try { return game.settings.get("wodx-combat", "fightSightYards"); } catch (e) { return 30; } })();
+    const range = FR.sightRange(yardsSet, !!d.isNight), alarm = alertLevel(scene), book = bookNow();
+    const others = canvas.tokens.placeables.filter(t => t.actor && t.id !== moved.id).map(t => ({id: t.id, pc: !!t.actor.hasPlayerOwner, down: !!downState(t.actor), hidden: !!t.document.hidden}));
+    if ( downState(moved.actor) ) return;
+    for ( const p of FR.pairsFor({id: moved.id, pc: !!moved.actor.hasPlayerOwner}, others) ) {
+      const r = await lookForFoe(canvas.tokens.get(p.npc), canvas.tokens.get(p.pc), {range, alarm, book});
+      if ( r?.done === "started" || r?.done === "joined" || r?.done === "suggested" ) break;
+    }
+  }
+  /** A token's move ends after its animation: wait a moment, once per token. */
+  function onTokenMoved(doc, changes) {
+    if ( !isActiveGM() || !("x" in (changes ?? {}) || "y" in (changes ?? {})) ) return;
+    clearTimeout(moveWait.get(doc.id));
+    moveWait.set(doc.id, setTimeout(() => { moveWait.delete(doc.id); track(watchFoes(doc)).catch(e => console.error(`${MOD} | fight on sight`, e)); }, 900));
+  }
+  /** An NPC's attitude fell to Hostile while the character is in sight: a fight (a bystander only flees or calls). */
+  async function onAttitude({npc, character, entry} = {}) {
+    if ( !isActiveGM() || fightMode() === "off" || !npc || !character || !entry ) return null;
+    const log = entry.log ?? [], last = log.at(-1);
+    const before = last ? Number(last.step) - Number(last.delta || 0) : 0;
+    if ( !FR.turnedHostile(before, entry.step) ) return null;
+    const nTok = canvas.tokens?.placeables?.find(t => t.actor && !t.actor.hasPlayerOwner && (t.actor.id === npc.id || t.document.actorId === npc.id));
+    const pTok = canvas.tokens?.placeables?.find(t => t.actor && (t.actor.id === character.id || t.document.actorId === character.id));
+    if ( !nTok || !pTok || !(Number(profileFor(nTok.actor).aggression) >= FR.TIMID_BELOW) ) return null;
+    const yardsSet = (() => { try { return game.settings.get("wodx-combat", "fightSightYards"); } catch (e) { return 30; } })();
+    const yards = ctx.yardsBetween(nTok, pTok);
+    if ( yards !== null && yards > yardsSet ) return null;
+    if ( sightBlocked(nTok.center, pTok.center) ) return null;
+    return C()?.fight?.start?.({scene: canvas.scene, tokens: [nTok.document, pTok.document], source: "attitude", why: `${nTok.name} turns hostile toward ${pTok.name}${last?.why ? ` (${last.why})` : ""}`});
+  }
+
   function hooks() {
     Hooks.on("updateWorldTime", onWorldTime);
+    Hooks.on("updateToken", onTokenMoved);
+    Hooks.on("wodxAttitude", e => { track(onAttitude(e)).catch(err => console.error(`${MOD} | fight on attitude`, err)); });
     Hooks.on("wodxMapEvent", ev => { track(onMapEvent(ev)).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() && setting("routineMode") !== "off" ) track(tick("skip")).catch(e => console.error(`${MOD} |`, e)); if ( isActiveGM() ) track(checkAlerts()).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("canvasReady", () => {
@@ -1287,6 +1373,6 @@ export function build(ctx) {
   }
 
   return {onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, routineNpcs, describer, loadCalendar,
-    applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
+    watchFoes, onAttitude, applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow};
 }

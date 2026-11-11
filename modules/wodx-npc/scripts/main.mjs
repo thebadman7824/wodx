@@ -1,7 +1,7 @@
 /**
  * WoDX NPC (the version is in module.json): NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
- * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0).
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -25,7 +25,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.14.0";
+const VERSION = "0.15.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -686,7 +686,7 @@ Hooks.once("init", () => {
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, talk, openTalk: talk.openTalk, attitude};
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -703,6 +703,21 @@ Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); } // else on wodxChronicleReady
   ensureStyles();
 });
+/**
+ * NPC 0.15.0: the rest of an NPC's household within call on the scene being viewed (token ids, nearest first), for
+ * WoDX Combat's fight starter. None for a character with a player, or an NPC with no household.
+ */
+function kinNear(docLike) {
+  const doc = docLike?.document ?? docLike;
+  const tok = doc?.id ? canvas.tokens?.get(doc.id) : null;
+  if ( !tok?.actor || tok.actor.hasPlayerOwner || doc.parent?.id !== canvas.scene?.id ) return [];
+  const household = savedProfile(tok.actor).household;
+  if ( !household ) return [];
+  const others = canvas.tokens.placeables.filter(t => t.actor && t.id !== tok.id).map(t => ({id: t.id, name: t.name, household: savedProfile(t.actor).household,
+    yards: yardsBetween(tok, t), pc: !!t.actor.hasPlayerOwner, down: wounds(t.actor) >= 7, inFight: false}));
+  return AR.kinToAnswer({id: tok.id, household}, others, {reach: Number(setting("householdReach")) || 40}).map(k => k.id);
+}
+
 /** NPC 0.9.0: one of a household is hurt; the others within call come. A card asks the Storyteller to bring them in. */
 async function householdAnswers(actor, info = {}) {
   const tot = d => (typeof d === "number" ? d : num(d?.bashing) + num(d?.lethal) + num(d?.aggravated));
