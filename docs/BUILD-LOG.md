@@ -1283,6 +1283,7 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Era layers: ddtown.py --year grows the medieval town through every later age up to that year (eras.py). Railway (track path), station with a stone platform, quays and embankments in stone, ring road on the old wall line, courts, cemetery, park, boulevards, suburbs, bomb sites or car parks, offices in old warehouses. Sidecar era from Chronicle's eras.json; new regions tagged with an area kind. B651.
 - Site maps: ddsite.py makes a castle (curtain wall, towers, gatehouse, moat, keep, hall and bailey buildings), a drift mine (pithead yard, adit, railed haulage gallery, working faces, sump, shaft) or an arcology deck (atrium and lift core, corridors, housing, hydroponics, commons and services quarters, maglev). Samples in /mnt/project-files/maps/site-samples/. B652.
 - Even map parts: part lines are equal cuts no wider than --part, no building stands on one, and a refill pass by the lines takes back some houses (about 15% fewer in all). Linberg sample regenerated. B653.
+- Metropolis size: ddtown.py --size metropolis, 60 districts, organic layout only. B654.
 - New test: a town grown to 1950 has a railway, station, ring road, quay and suburb, era mid-century; the medieval town has none.
 - Known gaps: every building is still a medieval type (no later building packs), and towns lose houses to the new ways rather than growing denser.
 - Sample linberg redrawn.

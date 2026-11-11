@@ -31,6 +31,7 @@ ORGANIC = {
     "village": {"n": 5, "walls": 0, "scale": 1.6, "margin": 12, "label": "village", "stalls": 1, "river": .5, "rhalf": 1.3},
     "town": {"n": 10, "walls": .6, "scale": 1.6, "margin": 10, "label": "small town", "stalls": 5, "river": .6, "rhalf": 1.8},
     "city": {"n": 18, "walls": 1, "scale": 1.6, "margin": 10, "label": "city", "stalls": 9, "river": .75, "rhalf": 2.3},
+    "metropolis": {"n": 60, "walls": 1, "scale": 1.6, "margin": 10, "label": "metropolis", "stalls": 18, "river": .85, "rhalf": 2.8},
 }
 STEP = math.radians(15)
 HALF = {"main": 1.3, "street": .85, "road": 1.1, "alley": .6}            # half widths of the ways, in squares
@@ -70,7 +71,8 @@ BACK_TO_BACK = {"village": 24, "gate-out": 22, "patriciate": 20}   # the least d
 TERRACED = {"merchant": 1, "market": 1, "administration": .8, "gate": .6, "craftsmen": .6, "slum": .5}   # chance a frontage is a row
 CAPS = {"village": {"smithy": 1, "bakehouse": 1, "tavern": 1, "guardhouse": 0, "storehouse": 1},
         "town": {"smithy": 2, "bakehouse": 2, "tavern": 2, "guardhouse": 2, "storehouse": 3},
-        "city": {"smithy": 4, "bakehouse": 5, "tavern": 4, "guardhouse": 5, "storehouse": 7}}
+        "city": {"smithy": 4, "bakehouse": 5, "tavern": 4, "guardhouse": 5, "storehouse": 7},
+        "metropolis": {"smithy": 12, "bakehouse": 15, "tavern": 12, "guardhouse": 14, "storehouse": 20}}
 LABELS = {"cottage": "Cottage", "byre-house": "Farmhouse", "smithy": "Smithy", "bakehouse": "Bakehouse", "tavern": "Alehouse",
           "storehouse": "Storehouse", "guardhouse": "Guardhouse", "barn": "Barn", "chapel": "Chapel"}
 
@@ -487,7 +489,7 @@ class OrganicTown(T.Town):
                 if spot:
                     lab = self.label_for(tk)
                     if ward == "gate-out" and tk == "tavern": lab = "Inn"
-                    if ward == "gate-out" and tk == "cottage" and self.count.get("hospital", 0) < {"village": 0, "town": 1, "city": 2}[self.size]:
+                    if ward == "gate-out" and tk == "cottage" and self.count.get("hospital", 0) < {"village": 0, "town": 1, "city": 2, "metropolis": 5}[self.size]:
                         lab = "Almshouse"; self.count["hospital"] = self.count.get("hospital", 0) + 1
                     b = self.put(tk, lab, spot)
                     if not b: continue
@@ -621,12 +623,17 @@ class OrganicTown(T.Town):
         s = self.best_spot("cottage", sorted(near, key=lambda x: math.dist(x[0]["mid"], chapel.centre))[:4], None)
         if s:
             pr = self.put("cottage", "Priest's house", s, {"priest": True})
+        if self.size == "metropolis":   # a parish church in every other church ward (a house rule; smaller places keep one)
+            for p, blk, kinds in blocks.values():
+                if p["ward"] != "church" or G.inside(chapel.centre, p["poly"]): continue
+                s = self.best_spot("chapel", [(e, blk, p["ward"]) for e in self.edges_of(blk, kinds)], None)
+                if s: self.put("chapel", "Parish church", s)
         if self.river_line: self.put_mill(blocks)
         self.count["tavern"] = 1
         # fire history: now and then a great fire took one block; it was rebuilt in stone, all but one plot left in ash
         self.fire_p, self.filled = None, []
         hot = [p for p, blk, kinds in blocks.values() if p["ward"] in ("craftsmen", "merchant", "market", "slum", "village")]
-        if hot and R.random() < {"village": .2, "town": .4, "city": .6}[self.size]: self.fire_p = R.choice(hot)
+        if hot and R.random() < {"village": .2, "town": .4, "city": .6, "metropolis": .7}[self.size]: self.fire_p = R.choice(hot)
         order = ["gate", "merchant", "market", "administration", "church", "military", "patriciate", "craftsmen", "village", "slum", "gate-out"]
         for ward in order:
             for p, blk, kinds in blocks.values():
@@ -858,7 +865,7 @@ class OrganicTown(T.Town):
     def node_wells(self):
         """A public well by the busier junctions away from the market, one to each quarter of the town, set back off
         the ways so they stay clear; each is a landmark and a meeting place."""
-        want = {"village": 0, "town": 2, "city": 6}[self.size]
+        want = {"village": 0, "town": 2, "city": 6, "metropolis": 16}[self.size]
         if not want: return []
         deg = {}
         for a, b, h, k in self.segs:

@@ -204,3 +204,7 @@ test("mapgen: castle, mine and arcology deck sites come out whole, and their sid
     if ( kind === "arcology" ) { assert.equal(sc.era, "future-darkness"); for ( const a of ["park", "corridor", "transit"] ) assert.ok(sc.regions.some(r => r.area === a), a); }
   }
 });
+
+test("mapgen: a metropolis is organic only", {skip}, () => {
+  assert.throws(() => run([join(gen, "ddtown.py"), "--layout", "grid", "--size", "metropolis", "--assets", ASSETS], mkdtempSync(join(tmpdir(), "wodx-m-"))), /organic layout/);
+});
