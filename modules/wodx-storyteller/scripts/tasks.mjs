@@ -9,6 +9,7 @@
 import * as R from "./tasks-rules.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as Own from "./owners.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -46,7 +47,9 @@ export function poolFor(a, task) {
   const t = R.normTask(task);
   const at = a?.system?.attributes?.[t.attr];
   const ab = t.ability ? a?.system?.abilities?.[t.ability] : null;
-  return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice);
+  // 0.25.0: a faction's building rolls its Resources + Retainers; workers add a die each
+  if ( t.faction ) return Math.max(1, Own.factionPool(t.faction) + t.workers + t.dice);
+  return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice + t.workers);
 }
 
 const canEdit = a => !!a && (game.user.isGM || a.isOwner);
@@ -89,7 +92,9 @@ export async function tick({force = false} = {}) {
     for ( const a of game.actors ) {
       const raw = rawTasks(a);
       if ( !Object.keys(raw).length ) continue;
-      const before = {}, after = {}, lines = [];
+      const before = {}, after = {}, lines = [], built = [];
+      const pursePrev = a.flags?.[MOD]?.money?.purse ? foundry.utils.deepClone(a.flags[MOD].money.purse) : null;
+      let paidAny = false;
       for ( const task of tasksOf(a) ) {
         let due = Math.min(R.MAX_ROLLS, R.dueRolls(task, t0));
         if ( !due ) continue;
@@ -101,30 +106,49 @@ export async function tick({force = false} = {}) {
           lines.push({id: task.id, name: task.name, status: "paused", rolled: 0, sum: 0, botches: 0, total: task.total, goal: task.goal, dice: 0, diff: task.diff, more: 0, waits: rc.why});
           continue;
         }
-        let t = task, sum = 0, botches = 0, rolled = 0;
+        let t = task, sum = 0, botches = 0, rolled = 0, waits = "";
+        // 0.25.0: a building's stage is paid for as it starts; without the money the work waits
+        const payNow = async () => {
+          if ( t.kind !== "build" || !t.stages.length || t.paidStage >= t.stage ) return true;
+          const p = await Own.payStage(a, t);
+          if ( !p.ok ) { waits = p.why; t = {...R.pauseTask(t), waits: p.why}; return false; }
+          if ( p.paid ) paidAny = true;
+          t = {...t, paidStage: t.stage};
+          return true;
+        };
         const dice = poolFor(a, t);
-        while ( due-- > 0 && t.status === "open" ) {
+        if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
           const r = await rollOnce(dice, t.diff, t.specialty);
           t = R.stepTask(t, r, t.next);
           rolled++; sum += r.successes; if ( r.botch ) botches++;
+          if ( !(await payNow()) ) break;
+        }
+        if ( t.status === "done" && t.kind === "build" && !t.made ) {
+          try { const made = await Own.finishBuild(a, t); built.push({task: t.id, ...made}); t = {...t, made: true, place: made.region ?? made.scene ?? ""}; }
+          catch (e) { console.error(`${MOD} | building`, e); }
         }
         if ( t.status === "done" && t.makes && !t.made ) {
           try {
             const base = game.items?.getName?.(t.makes);
             const data = base ? base.toObject() : {name: t.makes, type: "Item"};
             delete data._id;
-            data.flags = {...(data.flags ?? {}), [MOD]: {...(data.flags?.[MOD] ?? {}), madeBy: t.id}};
+            // 0.25.0: a recipe's quality and its maker as owner
+            const q = t.good ? Own.finishCraft(t) : null;
+            if ( q && q.quality !== "plain" ) data.name = `${data.name} (${q.label.toLowerCase()})`;
+            data.flags = {...(data.flags ?? {}), [MOD]: {...(data.flags?.[MOD] ?? {}), madeBy: t.id, owner: Own.recordFor(a), ...(q ? q.flags : {})}};
+            if ( q ) t = {...t, quality: q.quality};
             await a.createEmbeddedDocuments("Item", [data]);
             t = {...t, made: true};
           } catch (e) { console.error(`${MOD} | made item`, e); }
         }
         after[task.id] = t;
         const more = R.dueRolls(t, t0);
-        lines.push({id: t.id, name: t.name, status: t.status, rolled, sum, botches, total: t.total, goal: t.goal, dice, diff: t.diff, more});
+        lines.push({id: t.id, name: t.name, status: t.status, rolled, sum, botches, total: t.total, goal: t.goal, dice, diff: t.diff, more, waits,
+          stage: t.stages.length ? `${t.stages[t.stage]?.name ?? ""} (stage ${t.stage + 1} of ${t.stages.length})` : "", quality: t.quality});
       }
       if ( !lines.length ) continue;
       await a.update(Object.fromEntries(Object.entries(after).map(([id, t]) => [`flags.${MOD}.tasks.${id}`, t])));
-      await postCard(a, lines, before);
+      await postCard(a, lines, before, {built, purse: paidAny ? pursePrev : undefined});
       for ( const l of lines ) {
         if ( l.status === "done" || l.status === "ruined" ) await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name,
           attention: l.status === "ruined" ? "A long task was ruined" : null, text: `${a.name}: ${l.name} ${l.status === "done" ? "is finished" : "was ruined by a botch"}.`});
@@ -136,20 +160,21 @@ export async function tick({force = false} = {}) {
 }
 
 function lineHtml(l) {
-  if ( l.waits ) return `<li><b>${esc(l.name)}</b> waits: ${esc(l.waits)}. It is paused; resume it in Long tasks when that is put right.</li>`;
+  if ( l.waits && !l.rolled ) return `<li><b>${esc(l.name)}</b> waits: ${esc(l.waits)}. It is paused; resume it in Long tasks when that is put right.</li>`;
   const head = `<b>${esc(l.name)}</b> (${l.dice} dice, difficulty ${l.diff}): ${l.rolled} roll${l.rolled === 1 ? "" : "s"}, ${l.sum} success${l.sum === 1 ? "" : "es"}${l.botches ? `, ${l.botches} botch${l.botches === 1 ? "" : "es"}` : ""}.`;
-  const tail = l.status === "done" ? " <b>Finished.</b>" : l.status === "ruined" ? " <b>A botch ruined the work.</b>"
-    : ` Now ${l.total} of ${l.goal}.${l.botches ? " A botch lost the successes so far." : ""}${l.more ? ` ${l.more} more roll${l.more === 1 ? "" : "s"} wait for the clock.` : ""}`;
+  const tail = l.waits ? ` Now ${l.total} of ${l.goal}${l.stage ? ` on the ${esc(l.stage.toLowerCase())}` : ""}. It waits: ${esc(l.waits)}.`
+    : l.status === "done" ? ` <b>Finished${l.quality && l.quality !== "plain" ? `: ${esc(l.quality === "master" ? "a masterwork" : `${l.quality} work`)}` : ""}.</b>` : l.status === "ruined" ? " <b>A botch ruined the work.</b>"
+    : ` Now ${l.total} of ${l.goal}${l.stage ? ` on the ${esc(l.stage.toLowerCase())}` : ""}.${l.botches ? " A botch lost the successes so far." : ""}${l.more ? ` ${l.more} more roll${l.more === 1 ? "" : "s"} wait for the clock.` : ""}`;
   return `<li>${head}${tail}</li>`;
 }
 
-async function postCard(a, lines, before) {
+async function postCard(a, lines, before, {built = [], purse} = {}) {
   const done = lines.some(l => l.status === "done" || l.status === "ruined");
   await ChatMessage.create({content: `<div class="wodx-card wst-tasks"><h3>${esc(a.name)}: long tasks</h3><ul data-fixed>${lines.map(lineHtml).join("")}</ul>
     <p class="wodx-quiet">An extended action: successes add up roll by roll; a botch loses them, and ruins delicate work (V20 p. 252, V20 Dark Ages p. 324).</p>
     <button type="button" data-action="wst-task-undo">Undo</button></div>`,
     whisper: [...new Set([...gmIds(), ...ownerIds(a)])], speaker: {alias: done ? "A long task ends" : "Long tasks"},
-    flags: {[MOD]: {tasks: {actor: a.id, before}}}});
+    flags: {[MOD]: {tasks: {actor: a.id, before, built, ...(purse !== undefined ? {purse} : {})}}}});
 }
 
 export async function undoTick(message) {
@@ -161,6 +186,9 @@ export async function undoTick(message) {
   // 0.20.0: what a finished recipe made goes again
   const made = [...(a.items ?? [])].filter(i => i.flags?.[MOD]?.madeBy && f.before[i.flags[MOD].madeBy] && !f.before[i.flags[MOD].madeBy].made).map(i => i.id);
   if ( made.length ) await a.deleteEmbeddedDocuments("Item", made);
+  // 0.25.0: a building's place goes again, and what its stages cost comes back
+  if ( f.built?.length ) for ( const b of f.built ) await Own.unbuild(b);
+  if ( f.purse !== undefined && f.purse !== null ) await a.update({[`flags.${MOD}.money.purse`]: f.purse});
   await message.update({[`flags.${MOD}.tasks.undone`]: true, content: message.content.replace(/<button type="button" data-action="wst-task-undo">Undo<\/button>/, "<p><i>Undone.</i></p>")});
 }
 

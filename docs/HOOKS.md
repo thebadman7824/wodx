@@ -17,6 +17,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |
+| wodxItemsTaken | interactables | storyteller (marks things taken from someone else's container as stolen) |
 | wodxMapEvent | chronicle, interactables, npc | npc, otherworlds, storyteller |
 | wodxNpcTurnDone | combat, npc | combat |
 | wodxPlaceAlarm | npc | npc (remarks and cries) |
@@ -24,6 +25,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxSensesGather | senses | senses |
 | wodxShroudCrossing | otherworlds | storyteller |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
+| wodxStockFilter | interactables | storyteller (a market thins or fills a trader's stock draw by its supply) |
 | wodxXCard | chronicle | actions |
 
 ## Extension points (sent, nobody listens yet)
@@ -39,5 +41,6 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
+| wodxStockDrawn | interactables | a container's stock list was drawn afresh |
 | wodxSocial | actions | a social act on one NPC and its outcome |
 | wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |

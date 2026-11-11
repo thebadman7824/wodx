@@ -1477,3 +1477,14 @@ Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 
 - Still open: Kindred of the East (unreadable scan), 85 Demon Lore powers whose names the scan cut short.
 - book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
 - Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
+
+## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.25.0, Interactables 0.23.3, B840-B846)
+
+Ben approved the ownership proposal (all five parts). Built on the markets branch, since it needs the goods list and the purse.
+- owner-rules.mjs: owner records, stolen marks, name matching for older place tags, Moravian holding forms by year, the right to trade.
+- craft-rules.mjs: a recipe for any good in the year, materials, quality. build-rules.mjs: 41 kinds of building, methods and stages, worth, upkeep, income, kit keys.
+- owners.mjs: theft marks from wodxItemsTaken, holdings and pay day, Make something, Put up a building, finished buildings as Regions (and kit scenes), workshops feeding markets, faction builds through the approval queue. Toolbar button "Property and building"; api.owners.
+- tasks: a build task's stages and stage costs (Undo puts the purse and the place back); a recipe's quality on the item.
+- Interactables: sends wodxItemsTaken after a take; the Interact window marks what is yours or someone's.
+- Tests: ownership.test.mjs (rules, every era), ownership-foundry.test.mjs (the Foundry side on stand-ins).
+- Still to do: the building kit maps (a PC job: one map per kit key, exported from Dungeondraft and imported as scenes flagged wodx-storyteller.kit).

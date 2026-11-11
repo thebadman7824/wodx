@@ -357,11 +357,13 @@ export async function openInteract(tok = pickToken(), {onlyWall = null} = {}) {
   const rows = list.map(({doc, o}) => {
     const ch = characterFor(tok.actor, tok.center, doc);
     const ops = R.optionsFor(o, ch);
+    let mine = "";
+    try { mine = game.modules.get("wodx-storyteller")?.api?.owners?.whose?.(doc, tok.actor) ?? ""; } catch (e) { mine = ""; }
     const bar = o.barred && o.barSide && Array.isArray(doc.c) ? ` (barred on the ${R.sideLabel(doc.c, o.barSide)} side)` : "";
     const opsHtml = ops.map(op => `<li class="wix-op${op.disabled ? " disabled" : ""}">`
       + (op.disabled ? `<b>${esc(op.label)}</b>` : `<button type="button" data-wall="${doc.id}" data-op="${op.id}">${esc(op.label)}</button>`)
       + `<div class="wodx-quiet">${esc(optionSummary(op))}</div></li>`).join("");
-    return `<li data-search-text="${esc(R.nameOf(o, ch))}"><h4>${esc(R.nameOf(o, ch))}${esc(bar)}</h4><ul class="wix-ops" data-fixed>${opsHtml || `<li class="wodx-quiet">Nothing to do here.</li>`}</ul></li>`;
+    return `<li data-search-text="${esc(R.nameOf(o, ch))}"><h4>${esc(R.nameOf(o, ch))}${esc(bar)}${mine ? ` <small class="wodx-quiet">(${esc(mine)})</small>` : ""}</h4><ul class="wix-ops" data-fixed>${opsHtml || `<li class="wodx-quiet">Nothing to do here.</li>`}</ul></li>`;
   }).join("");
   const search = onlyWall ? null : R.searchOption(characterFor(tok.actor, tok.center, null));
   const searchHtml = search ? `<div class="wix-search wix-op"><button type="button" data-wall="${SEARCH}" data-op="search">${esc(search.label)}</button><div class="wodx-quiet">${esc(optionSummary(search))}</div></div>` : "";
@@ -572,6 +574,8 @@ export async function applyAsk(msg) {
       given = got.ids;
       lines.push(got.names.length ? `${actor.name} takes ${listWords(got.names)}.` : "There is nothing there that WoDX could hand over: the Storyteller says what was inside.");
       if ( got.missing.length ) lines.push(`Not found, so not handed over: ${got.missing.join(", ")}.`);
+      // 0.23.3: WoDX Storyteller marks what was taken as stolen when the container is someone else's
+      if ( given.length ) Hooks.callAll("wodxItemsTaken", {actor, items: given, doc, scene: doc.parent});
     }
     // Hiding: into the place and out of sight; coming out; searching the place
     let revealed = [];

@@ -41,6 +41,10 @@ import * as PreludeRules from "./prelude-rules.mjs";
 import * as Hand from "./hand.mjs";
 import * as Between from "./between.mjs";
 import * as Teleport from "./teleport.mjs";
+import * as Own from "./owners.mjs";
+import * as OwnRules from "./owner-rules.mjs";
+import * as CraftRules from "./craft-rules.mjs";
+import * as BuildRules from "./build-rules.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -80,13 +84,14 @@ Hooks.once("init", () => {
   Between.registerBetweenTools();
   Teleport.registerTeleportKeys();
   Teleport.registerTeleportHooks();
+  Own.registerOwnerHooks();
   game.keybindings?.register?.(C.MOD, "downtime", {name: "Downtime request", editable: [], onDown: () => { Between.downtimeDialog(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "dashboard", {name: "The Storyteller's dashboard", editable: [], onDown: () => { Dash.DashboardApp.open(); return true; }, restricted: true});
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -132,6 +137,10 @@ Hooks.once("ready", () => {
       extras: Between.makeExtras, extrasDialog: Between.extrasDialog, hooks: Between.hooksFor, hooksDialog: Between.hooksDialog, willpowerForNature: Between.willpowerForNature,
       absent: Between.absentMap, setAbsent: Between.setAbsent, absentDialog: Between.absentDialog, recapDraft: Between.recapDraft, postRecap: Between.postRecap, recapDialog: Between.recapDialog,
       downtime: Between.requestDowntime, downtimeDialog: Between.downtimeDialog},
+    owners: {open: Own.propertyDialog, of: Own.ownerOf, at: Own.ownerRecordAt, set: Own.setOwner, whose: Own.whose, handOver: Own.handOver, stolen: Own.stolenGoods,
+      holdings: Own.holdings, holdingsOf: Own.holdingsOf, saveHolding: Own.saveHolding, editHolding: Own.editHolding, payHoldings: Own.payHoldings,
+      craft: Own.craftDialog, startCraft: Own.startCraft, makeable: Own.makeable, build: Own.buildDialog, startBuild: Own.startBuild,
+      workshops: Own.workshopsMonth, factionBuilds: Own.factionBuildsMonth, rules: {owner: OwnRules, craft: CraftRules, build: BuildRules}},
     teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
     draw: Night.drawChooser, nightRules: Night.N
   };
@@ -198,6 +207,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => Letters.openLetters()};
   tokens.tools.wodxTasks = {name: "wodxTasks", title: "Long tasks (work that takes days or weeks: making things, research, training)", icon: "fa-solid fa-hourglass-half", order: 109,
     button: true, visible: true, onChange: () => Tasks.tasksDialog()};
+  tokens.tools.wodxProperty = {name: "wodxProperty", title: "Property and building (what you own, making things, putting up a building)", icon: "fa-solid fa-house-flag", order: 126,
+    button: true, visible: true, onChange: () => Own.propertyDialog()};
   tokens.tools.wodxTracker = {name: "wodxTracker", title: "The Storyteller's tracker (every character, convening, beats)", icon: "fa-solid fa-binoculars", order: 113,
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
