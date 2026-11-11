@@ -1274,3 +1274,9 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - WoDX NPC: Trigger regions have "Only when" and "Then also" (B622); behaviour window has Phases (npc-rules parsePhases, phaseNow, withPhase; B623).
 - Same PR, the rest of the review's ideas: NPC households, talk sheets and faction standing toward characters (B624, B630, B632); Interactables 0.23.0 stock lists, restocking, "Opens for", plain names handed over, the Fill button wired in the tile window (it was looked for in the wall window) (B625-B627); Atmosphere 0.11.0 Mood regions (B628); Storyteller 0.20.0 Ledger objectives and recipes for long tasks (B629, B631).
 - Harness: when.test.mjs, rpgb-batch.test.mjs; interactables.test.mjs now expects a plain name to be handed over. 1055 of 1055 pass. Gate: tools/gate/gatewhen.mjs (9 steps).
+## 2026-11-10: part lines that miss the market and houses; era layers (map tools)
+- Part lines are planned before any building goes down, along streets and round the market, which now stays whole on one map. A house a line passes over is drawn whole on its own part only, and the plan shows the line stepping round it. B650.
+- Era layers: ddtown.py --year grows the medieval town through every later age up to that year (eras.py). Railway (track path), station with a stone platform, quays and embankments in stone, ring road on the old wall line, courts, cemetery, park, boulevards, suburbs, bomb sites or car parks, offices in old warehouses. Sidecar era from Chronicle's eras.json; new regions tagged with an area kind. B651.
+- New test: a town grown to 1950 has a railway, station, ring road, quay and suburb, era mid-century; the medieval town has none.
+- Known gaps: every building is still a medieval type (no later building packs), and towns lose houses to the new ways rather than growing denser.
+- Sample linberg redrawn.
