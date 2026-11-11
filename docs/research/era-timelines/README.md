@@ -9,4 +9,6 @@ Rebuild from the repo root:
 
 then join head.html, `const ERAS=` + desk-data.json, and tail.html into the page.
 
+Ben approved all cards (2026-11-11). Deconfliction: `python3 docs/research/era-timelines/deconflict.py` applies the rulings and writes timeline-approved-2026-11-11.json, the timeline later stages build on; report DECONFLICT-2026-11-11.md (B861).
+
 Next stages (Ben, 2026-11-10): house-only events for each era on a second desk, then house-only Encyclopaedia entries. The Future Darkness branch's timeline (docs/research/wofd) is already approved.

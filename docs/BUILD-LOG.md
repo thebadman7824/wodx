@@ -1524,3 +1524,6 @@ Ben asked for one-click mapmaking with our Dungeondraft assets and chose a Dunge
 - Senses: traitsOf reads traitSenses; powersFor returns traitMods and cannot; difficulty adds signed trait steps and returns lost for Blind or Deaf; gatherSources adds each visible token's signs and the veiled source; channels restless and deathsight (data/world.json).
 - Actions: effects.js passes a Veil's difficulty to the timed effect.
 - Tests: trait-senses.test.mjs (5). Gate: gatetraits steps 14 and 15.
+
+## 2026-11-11: The approved era timelines agree with each other
+Ben approved all 291 timeline cards and asked for a deconfliction. docs/research/era-timelines/deconflict.py reads every card beside the others on the same subject and the dated tables in Chronicle, Otherworlds and NPC, and writes timeline-approved-2026-11-11.json (289 cards: 5 edited, 2 dropped). Encyclopaedia: the Fragile Path entry loses its 1330 start for the Ascension War, the Lupine War entry gets a WoDX note on Lodin, the Anacreon revolts date is reworded (Library 0.7.2). Rivalries: Anarch Revolt 1381-1492, Accordance War 1969-1973 (NPC 0.18.2). Report DECONFLICT-2026-11-11.md; decision B861.
