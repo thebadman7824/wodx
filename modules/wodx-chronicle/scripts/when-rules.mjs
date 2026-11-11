@@ -1,5 +1,5 @@
 /**
- * WoDX Chronicle 0.14.0: "Only when" and "Then" lists. Pure rules, no Foundry calls, so the harness can test them.
+ * WoDX Chronicle 0.14.0: "Only when" and "Then" lists (0.15.0: attitude and persuaded tests). Pure rules, no Foundry calls, so the harness can test them.
  *
  * One small language for every map piece that has to ask who, when and in what state: a trigger region, a door, a
  * clue, a trap, a dated event. The Storyteller writes one test per line; every line must pass. A line that starts
@@ -61,8 +61,13 @@ export const TESTS = {
   branch: "branch <id>: the Future Darkness branch in force",
   pc: "pc: a player's character", npc: "npc: anyone else", kind: `kind kindred, lupine: ${KINDS.join(", ")}`, named: "named Anna: the character's name contains this",
   faction: "faction <name>: belongs to a WoDX NPC faction", standing: "standing <faction> >= welcome: how that faction regards the character", carries: "carries silver: holds an item whose name contains this",
-  knows: "knows <page>: has a codex page whose name contains this", condition: "condition <id>: has a WoDX condition"
+  knows: "knows <page>: has a codex page whose name contains this", condition: "condition <id>: has a WoDX condition",
+  attitude: "attitude >= welcome: how the NPC being dealt with regards the character (WoDX NPC)",
+  persuaded: "persuaded [by <name>]: won a social roll against that NPC lately (also charmed, intimidated, bribed, fooled); bare: by the NPC being dealt with"
 };
+
+/** What a won social roll leaves on the character for a while (WoDX Actions' "With this person"). */
+export const SWAYS = ["persuaded", "charmed", "intimidated", "bribed", "fooled"];
 
 /** A "Then" outcome. */
 export const OUTCOMES = {
@@ -140,6 +145,18 @@ export function parseTest(line, {eras = null} = {}) {
     return ok({t: "standing", faction: low(unquote(c[1])), op: c[2], n});
   }
   if ( word === "condition" ) return arg ? ok({t: "state", id: low(arg)}) : bad("which condition?");
+  if ( word === "attitude" ) {
+    const c = /^(<=|>=|<|>|==|=|!=)\s*(\S+)$/.exec(arg);
+    if ( !c ) return bad("write attitude >= welcome (hunted, hostile, distrusted, unknown, tolerated, welcome, honoured, or -3 to 3)");
+    const n = STANDING_WORDS[low(c[2])] ?? Number(c[2]);
+    if ( !Number.isFinite(n) ) return bad(`${c[2]} is not a step`);
+    return ok({t: "attitude", op: c[1], n});
+  }
+  if ( SWAYS.includes(word) ) {
+    const by = /^by\s+(.+)$/i.exec(arg);
+    if ( arg && !by ) return bad(`write ${word}, or ${word} by <name>`);
+    return ok({t: "sway", kind: word, by: by ? low(unquote(by[1])) : ""});
+  }
   const fieldKey = word in FIELD_ALIAS ? FIELD_ALIAS[word] : word;
   if ( fieldKey && FIELDS[fieldKey] ) {
     const ids = list(arg.replace(/["']/g, ""));
@@ -198,7 +215,7 @@ export function parseWhen(text, opts = {}) {
 /** Does one test pass? Returns true, false, or null when the context lacks what it reads (counts as a fail). */
 export function testOne(t, ctx = {}) {
   const a = ctx.actor ?? null;
-  const needActor = ["pc", "kind", "named", "carries", "knows", "faction", "standing", "field", "state"].includes(t.t) || t.trait;
+  const needActor = ["pc", "kind", "named", "carries", "knows", "faction", "standing", "field", "state", "attitude", "sway"].includes(t.t) || t.trait;
   if ( needActor && !a ) return null;
   let r;
   switch ( t.t ) {
@@ -234,6 +251,21 @@ export function testOne(t, ctx = {}) {
     }
     case "field": { const v = low(a.fields?.[t.key]); r = !!v && t.ids.some(i => v === i || v.includes(i)); break; }
     case "state": r = (a.conditions ?? []).map(low).includes(t.id); break;
+    case "attitude": {
+      const v = ctx.npc?.attitude;
+      if ( v === undefined || v === null || !Number.isFinite(Number(v)) ) return null;
+      r = OPS[t.op](Number(v), t.n); break;
+    }
+    case "sway": {
+      const now = Number.isFinite(ctx.time) ? ctx.time : null;
+      const live = (a.sways ?? []).filter(x => x && low(x.kind) === t.kind && (now === null || !Number.isFinite(Number(x.until)) || Number(x.until) >= now));
+      if ( t.by ) r = live.some(x => low(x.npc) === t.by || low(x.npcName).includes(t.by));
+      else {
+        if ( !ctx.npc?.id ) return null;
+        r = live.some(x => x.npc === ctx.npc.id);
+      }
+      break;
+    }
     default: return null;
   }
   return t.neg ? !r : r;

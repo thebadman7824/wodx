@@ -129,5 +129,22 @@ test("the Foundry side: answers decided on the Storyteller's client, the toolbar
   assert.match(m, /tokens\.tools\.wodxTalk = /);
   assert.match(m, /talkAsk: data\.talkAsk \? true : null/);
   assert.match(m, /openTalk: talk\.openTalk/);
-  assert.equal(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.10.0");
+  assert.equal(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.11.0");
+});
+
+/* NPC 0.11.0 + Chronicle 0.15.0: talk lines that test the NPC's attitude and a won social roll */
+test("talk lines can test the NPC's attitude and a persuasion by that NPC", () => {
+  const sheet = `[the toll] attitude >= welcome => Waves the cart through.
+[the toll] persuaded => Agrees to look the other way, once.
+[the toll] Wants the full toll.`;
+  const chain = TK.chainFor({own: sheet, household: null, factions: [], sceneId: null}, {});
+  const base = {time: 1000, actor: {pc: true, name: "Anna", sways: []}};
+  const say = ctx => TK.answerFor("the toll", chain, check(ctx))?.line?.say;
+  assert.equal(say({...base, npc: {id: "n1", name: "Toll keeper", attitude: 0}}), "Wants the full toll.");
+  assert.equal(say({...base, npc: {id: "n1", name: "Toll keeper", attitude: 2}}), "Waves the cart through.");
+  const swayed = {...base, actor: {...base.actor, sways: [{kind: "persuaded", npc: "n1", npcName: "Toll keeper", until: 4600}]}};
+  assert.equal(say({...swayed, npc: {id: "n1", name: "Toll keeper", attitude: 0}}), "Agrees to look the other way, once.");
+  // Someone else's persuasion, or an old one, does not count
+  assert.equal(say({...swayed, npc: {id: "n2", name: "Guard", attitude: 0}}), "Wants the full toll.");
+  assert.equal(say({...swayed, time: 9000, npc: {id: "n1", name: "Toll keeper", attitude: 0}}), "Wants the full toll.");
 });

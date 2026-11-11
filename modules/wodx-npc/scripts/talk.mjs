@@ -71,7 +71,8 @@ export function build(ctx) {
     const codex = game.journal?.find(j => j.flags?.["wodx-storyteller"]?.codex === actor.id);
     return {learned: actor.flags?.[MOD]?.topics ?? [], codex: codex ? [...codex.pages].map(p => p.name) : []};
   }
-  const checker = (actor, token) => { const W = chron()?.when; return W?.check ? when => W.check(when, {actor, token}).ok : null; };
+  // The NPC goes with the check, so a line can test the NPC's attitude and "persuaded" means by this NPC (0.11.0)
+  const checker = (actor, token, npc = null) => { const W = chron()?.when; return W?.check ? when => W.check(when, {actor, token, npc}).ok : null; };
   function displayName(npcTok, user) {
     const mine = game.actors.filter(a => a.hasPlayerOwner && a.testUserPermission?.(user, "OWNER")).map(a => a.id);
     return F.nameFor({name: npcTok.name, flags: npcTok.actor?.flags?.[MOD] ?? {}, mine, gm: user.isGM, on: !!setting("faces"), playerOwned: false});
@@ -93,7 +94,7 @@ export function build(ctx) {
   function menuOf(r, user) {
     const chain = chainOf(r.npcTok.actor, r.scene);
     const menu = TK.menuFor(chain, knownOf(baseActor(r.me)));
-    const g = TK.greetFor(chain, checker(r.me.actor, r.me));
+    const g = TK.greetFor(chain, checker(r.me.actor, r.me, r.npcTok.actor));
     return {name: displayName(r.npcTok, user), me: r.me.name, greet: g?.say ?? "", ...menu};
   }
 
@@ -107,7 +108,7 @@ export function build(ctx) {
     if ( kind === "menu" ) return {ok: true, menu};
     const topic = TK.normTopic(p.topic);
     if ( !TK.canAsk(topic, menu) ) return {ok: false, why: "They do not follow you.", menu};
-    const chain = chainOf(r.npcTok.actor, r.scene), check = checker(r.me.actor, r.me);
+    const chain = chainOf(r.npcTok.actor, r.scene), check = checker(r.me.actor, r.me, r.npcTok.actor);
     if ( savedProfile(r.npcTok.actor).talkAsk && !user.isGM ) {
       await askFirstCard(r, user, topic, TK.answersFor(topic, chain, check), TK.answerFor(topic, chain, check));
       return {ok: true, waiting: true, menu};

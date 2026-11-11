@@ -507,3 +507,18 @@ Ben chose even parts over the stepped part lines of B650. A town split into part
 ## B654. Metropolis size (2026-11-11)
 Ben asked for a metropolis size. ddtown.py --size metropolis (organic layout only) lays out 60 districts from a longer ward list (more markets, churches, administration and parks), with three times a city's caps on smithies, bakehouses, taverns, guardhouses and stores, more market stalls, a wider river, and the era layers scaled up. It is always walled, and every church ward past the first gets a parish church. Expect about 560 squares across, some 1,400 households after even parts, about 80 part maps of 64 squares, and four to five minutes to make. There is no sample in the repo or a harness run of it, because of its size; the harness checks only that the grid layout refuses it.
 
+
+## B670. NPC attitude toward each character (2026-11-11)
+Ben asked for an attitude track per NPC, in addition to faction standing (03:05Z). Each NPC regards each character on the standing steps (Hunted to Honoured). The first meeting takes the character's standing with the NPC's household (a faction of that name or key), else the first faction the NPC belongs to, else Unknown. After that it moves only on how the characters treat that NPC. Stored on the NPC's world actor, flags["wodx-npc"].attitude {character id: {step, log}}; changes from players go through the approval queue as wodx-npc.attitude. WoDX NPC 0.11.0, attitude-rules.mjs and attitude.mjs.
+
+## B671. "With this person" (2026-11-11)
+WoDX Actions 3.20.0 puts "With this person" third in every line's Act group. It deals with the targeted NPC, or the nearest in talking reach: Talk (the topic window), Persuade, Fast-talk, Deceive, Intimidate quietly, Threaten openly, Question them, Bribe, Charm or seduce (the Seduction action) and Use a power (the line's menu with the NPC targeted). The pools are V20's social systems (pp. 265-266; V20 Dark Ages pp. 338-339 agree); the first pool the sheet has dots in is rolled, so later-era Abilities stand in where they fit. Book notes: docs/research/social-book-checks.md.
+
+## B672. The NPC's resisting roll is the Storyteller's (2026-11-11)
+Ben's choice (03:06Z). The player's card shows the player's dice and what happened; the NPC's roll, the attitude and its move go to the Storyteller as a blind whisper.
+
+## B673. Attitude and social rolls (2026-11-11)
+House rules, in PENDING-REVIEW: attitude moves the difficulty by one a step past Unknown, at most two (intimidation ignores it); each act's outcome may move the attitude (social-rules.js ACTS[].moves); Persuade sets V20's sample pool against Willpower; Bribe is Manipulation + Streetwise (or Finance, Commerce, Hearth Wisdom) against Willpower with 0 to 3 dice for the offer.
+
+## B674. Sway notes and the new "Only when" tests (2026-11-11)
+A won roll leaves a note on the character for an hour of game time: flags["wodx-actions"].sways [{kind, npc, npcName, at, until}], kinds persuaded, charmed, intimidated, bribed, fooled. WoDX Chronicle 0.15.0 adds "attitude >= welcome" and "persuaded [by <name>]" (and the other kinds); a bare test means the NPC being dealt with, which WoDX NPC's talk window now passes with every check. Agreed with the topic-menu thread.
