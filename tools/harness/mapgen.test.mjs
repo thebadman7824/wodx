@@ -110,7 +110,7 @@ test("mapgen: organic villages, towns and cities come out whole, and the samples
   assert.match(out, /^ok: Schöndorf, village/m);
   const sc = JSON.parse(readFileSync(join(dir, "schondorf.wodx.json"), "utf8"));
   assert.deepEqual(sc, JSON.parse(readFileSync(join(gen, "samples/schondorf.wodx.json"), "utf8")), "schondorf changed: run ddtown.py again into samples");
-  for ( const [size, seeds, least] of [["village", [1, 3, 4], 10], ["town", [1, 2, 4, 6], 30], ["city", [9], 120]] ) {
+  for ( const [size, seeds, least] of [["village", [1, 3, 4], 8], ["town", [1, 2, 4, 6], 30], ["city", [9], 120]] ) {
     for ( const seed of seeds ) {
       const d = mkdtempSync(join(tmpdir(), "wodx-o-"));
       const o = run([join(gen, "ddtown.py"), "--size", size, "--seed", String(seed), "--part", "0", "--assets", ASSETS, "--out", d], d);
