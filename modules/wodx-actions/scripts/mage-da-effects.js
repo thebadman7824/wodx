@@ -39,7 +39,7 @@ export const DA_EFFECTS = {
   dwarfhoard: N(), unsleeping: S(), emptyroads: S("sway"),
   // Ahl-i-Batin (Grimoire)
   "g-dhikr": N(), "g-closetdance": MV(), "g-tearsallah": H("harm", 1, "lethal", {also: {per: 1, type: "bashing"}}),
-  "g-summoning": S(), "g-binding": S(), "g-commanding": S(),
+  "g-summoning": S("summon"), "g-binding": S("bind"), "g-commanding": S(),
   // Messianic Voices (Grimoire)
   "g-comeforsouls": T("fear", "Terror of the Souls", {turns: 20}, "each"), "g-plowshares": S("sway"), "g-revokeadam": T("sway", "Speech taken", "reach"),
   "g-72names": S(),
@@ -47,15 +47,15 @@ export const DA_EFFECTS = {
   "g-glamour": T("ward", "Bewitching Glamour", "night", "self"), "g-bitterfruit": S("harm"), "g-circe": S("shape"), "g-dowsing": N(),
   "g-slumber": S(), "g-eyehunter": T("sight", "Eye of the Hunter", "reach", "self"), "g-faeriegate": S("sideways"), "g-giantsdance": S(),
   "g-healsight-s": N(), "g-healsight-w": N(), "g-hollowhill": S(), "g-magicmirror": N(), "g-merlinsride": S("move"), "g-bounty": S(),
-  "g-oracularhead": S(), "g-stormbrew": S(), "g-straysod": T("fortune", "Led astray", "reach", "each"), "g-witchwind": S(),
+  "g-oracularhead": S("know"), "g-stormbrew": S("weather"), "g-straysod": T("fortune", "Led astray", "reach", "each"), "g-witchwind": S("weather"),
   "g-withering": T("harm", "Withering Curse", {days: 1}, "one"), "g-flyingoint": S(), "g-fourthieves": S(), "g-lovephilter": S("sway"),
   // Spirit-Talkers (Grimoire)
-  "g-animalspeech": N(), "g-animalorders": S(), "g-banishwar": S("sway"), "g-bindspirit": S(), "g-curseshift": S(), "g-deadwords": N(),
-  "g-denycharm": T("ward", "Deny the Charm of Death", "reach", "self"), "g-exorcism-w": S(), "g-exorcism-c": S(), "g-horsebringer": S(),
+  "g-animalspeech": N(), "g-animalorders": S(), "g-banishwar": S("sway"), "g-bindspirit": S("bind"), "g-curseshift": S(), "g-deadwords": N(),
+  "g-denycharm": T("ward", "Deny the Charm of Death", "reach", "self"), "g-exorcism-w": S("banish"), "g-exorcism-c": S("banish"), "g-horsebringer": S(),
   "g-ironglare": T("ward", "Iron Glare", "scene", "self"), "g-summons": S("sway"), "g-lordsbane": T("fortune", "Lords' Bane", "scene"),
   "g-otherskin": T("shape", "Otherskin", "night", "self"), "g-antics": T("hasten", "Sacred Antics", {turns: 2}, "self"),
   "g-selfpossess": T("ward", "Self Possession", "scene", "self"), "g-shelterwinds": T("ward", "Sheltering Winds", "scene", "self"),
-  "g-slipshadow": S(), "g-slowdream": T("hasten", "Slow Dream", "scene", "each", {slow: true}), "g-spiritarmy": S(),
+  "g-slipshadow": S(), "g-slowdream": T("hasten", "Slow Dream", "scene", "each", {slow: true}), "g-spiritarmy": S("summon"),
   "g-guidedarrow": T("fortune", "Spirit-Guided Arrow", "scene", "self"), "g-welcomewaters": S(), "g-dreamblade2": T("ward", "Dreamblade", "scene", "self"),
   "g-willowbody": T("shape", "Willow Body", {turns: 1}, "self"),
   // Valdaermen (Grimoire)
@@ -63,7 +63,7 @@ export const DA_EFFECTS = {
   "g-berserk": T("hasten", "Berserkgangr", {turns: 1}, "one"), "g-gungnir": T("ward", "Borrowing Gungnir", "scene", "self"), "g-bridgewill": S("move"),
   "g-cunningsight": N(), "g-firekiller": S("light"), "g-findinghere": N(), "g-tracking": N(), "g-frostbite": S("harm"), "g-fylgja": S(),
   "g-lovemagic": S("sway"), "g-mimir": N(), "g-hlidskialf": N(), "g-scornpole": T("fortune", "Scorn Pole", {days: 1}, "one", {curse: true}),
-  "g-skald": S(), "g-skogarmathur": T("sway", "Outlawed", {weeks: 1}, "one"), "g-snowglide": S("move"), "g-summonpack": S(), "g-switch": S(),
+  "g-skald": S(), "g-skogarmathur": T("sway", "Outlawed", {weeks: 1}, "one"), "g-snowglide": S("move"), "g-summonpack": S("summon"), "g-switch": S(),
   "g-wavecalmer": S()
 };
 

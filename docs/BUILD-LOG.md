@@ -1409,3 +1409,9 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - Otherworlds 0.9.1: the module.json reason says Chronicle must be installed even when off.
 - Not changed here: the Moravian coins wait on PR 506 (goods and money), which holds them.
 
+## 2026-11-11: one effect keyword roster (WoDX Actions 3.29.0, B781)
+- Ben approved the keyword coverage review. effects-rules.js KEYWORDS: 34 keywords (15 new), POOLS, BOOSTS, KINDS, resistOf, passive.
+- Widened Harm, Charge or Drain, Mend, Ward, Fear, Sway; the Cast window gains the matching options and choice lists; Undo restores a pool.
+- Ten Dark Ages rotes and six path powers carry their keyword (still the Storyteller's call).
+- Page check queued: /mnt/project-files/jobs/keyword-roster-book-check-2026-11-11.md (122 Dark Ages powers, then eight lines' power lists).
+
