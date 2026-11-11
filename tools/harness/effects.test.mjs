@@ -86,7 +86,7 @@ test("every keyword has a label, a Sphere floor, a feat and a plain description"
     assert.ok(K.label && K.does && K.opts.length && K.feat >= 1, k);
     assert.ok(["auto", "queue", "st"].includes(K.tier), k);
   }
-  assert.equal(Object.keys(E.KEYWORDS).length, 19);
+  assert.equal(Object.keys(E.KEYWORDS).length, 34);
 });
 
 test("the Mage 20th cast uses the keywords and posts a card the Storyteller's client applies", () => {
@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.29.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.30.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -246,4 +246,84 @@ test("Actions 3.28.0: the Sorcerers Crusade's magic charts", () => {
   const m = src("modules/wodx-actions/scripts/m20.js");
   assert.equal((m.match(/age: sg\.age\.key \}/g) ?? []).length, 2);
   assert.match(m, /eraRules\(age\(\)\.key\)\.reflect/);
+});
+
+test("Actions 3.30.0: the shared keyword roster for every line's powers", async () => {
+  const DA = await import(join(root, "modules/wodx-actions/scripts/mage-da-effects.js"));
+  for ( const k of ["know", "speak", "boost", "summon", "make", "work", "illusion", "possess", "bind", "banish", "manifest", "imbue", "place", "weather", "time"] )
+    assert.ok(E.KEYWORDS[k], k);
+  const got = {ok: true, strength: 3, duration: 0, targets: 0};
+  // Boost or Sap
+  const b = E.outcome("boost", got, {boost: "social"});
+  assert.equal(b.dice, 3); assert.equal(b.on, "social"); assert.equal(b.kind, "timed");
+  assert.equal(E.outcome("boost", {...got, strength: 9}, {sap: true}).dice, -5);
+  // Pools: Charge or Drain and Mend
+  const d = E.outcome("charge", got, {pool: "blood", drain: true});
+  assert.equal(d.kind, "pool"); assert.equal(d.pool, "blood"); assert.ok(d.points < 0);
+  assert.equal(E.outcome("charge", got, {}).kind, "quint");
+  assert.equal(E.outcome("charge", got, {pool: "quintessence"}).kind, "quint");
+  assert.equal(E.outcome("mend", got, {pool: "willpower"}).kind, "pool");
+  assert.equal(E.outcome("mend", got, {}).kind, "heal");
+  assert.equal(E.poolOf("nope"), E.POOLS.quintessence);
+  // Harm: kind and lasting
+  const h = E.outcome("harm", got, {spheres: ["life"], damageKind: "silver", lasting: true});
+  assert.equal(h.of, "silver"); assert.equal(h.lasting, 3); assert.match(h.text, /each turn/);
+  assert.equal(E.outcome("harm", got, {spheres: ["forces"], fire: true}).of, "fire");
+  // Ward against a kind, reflect
+  const w = E.outcome("ward", got, {against: "sunlight", reflect: true});
+  assert.equal(w.against, "sunlight"); assert.ok(w.reflect);
+  // Fear: calm and frenzy; Sway: awe applies on NPCs, not on player characters
+  assert.equal(E.outcome("fear", got, {calm: true}).name, "Calmed");
+  assert.equal(E.outcome("fear", got, {frenzy: true}).name, "Roused");
+  const awe = E.outcome("sway", got, {awe: true});
+  assert.ok(awe.awe);
+  assert.equal(E.route("sway", {count: 1}, awe), "auto");
+  assert.equal(E.route("sway", {count: 1, playerCharacter: true}, awe), "st");
+  assert.equal(E.route("sway", {count: 1}, E.outcome("sway", got, {})), "queue");
+  // Tiers of the new keywords
+  assert.equal(E.route("possess", {count: 1}), "queue");
+  assert.equal(E.route("bind", {count: 1, playerCharacter: true}), "st");
+  assert.equal(E.route("time", {self: true}), "st");
+  assert.equal(E.route("boost", {self: true}), "auto");
+  // Resisted by: the roster's house rule, a power's own entry wins
+  assert.deepEqual(E.resistOf("sway"), {pool: "willpower", diff: 6, text: "resisted by Willpower at 6"});
+  assert.equal(E.resistOf("harm"), null);
+  assert.equal(E.resistOf("sway", {resist: null}), null);
+  assert.equal(E.resistOf("harm", {resist: {pool: "stamina", diff: 8}}).diff, 8);
+  // Always-on powers
+  const p = E.passive("boost", 2);
+  assert.ok(p.passive); assert.equal(p.dice, 2); assert.equal(p.timed.kind, "passive");
+  assert.equal(E.passive("harm", 2), null); assert.equal(E.passive("ward", 0), null);
+  // Rotes keep the choice lists
+  const r = E.roteFrom("Blood tap", {keywords: ["charge"], ctx: {pool: "blood", drain: true, fire: false}});
+  assert.deepEqual(r.ctx, {pool: "blood", drain: true});
+  // The Cast window carries the new options and Undo restores a pool
+  const fx = src("modules/wodx-actions/scripts/effects.js");
+  for ( const f of ["kw-pool", "kw-boost", "kw-of", "kw-awe", "kw-lasting", "kw-reflect", "kw-calm", "kw-frenzy", "kw-sap", "kw-derange"] ) assert.match(fx, new RegExp(`name="${f}"`), f);
+  assert.match(fx, /case "pool":/); assert.match(fx, /r\.pool\?\.path/); assert.match(fx, /E\.resistOf\(key\)/);
+  // Dark Ages entries that now carry a keyword
+  assert.equal(DA.DA_EFFECTS["g-exorcism-w"].kw, "banish"); assert.equal(DA.DA_EFFECTS["g-summoning"].kw, "summon");
+});
+
+test("Actions 3.30.0: every listed power reads the shared roster", async () => {
+  const P = await import(join(root, "modules/wodx-actions/scripts/power-keywords.js"));
+  const data = f => JSON.parse(src(`modules/wodx-actions/data/${f}`));
+  const sets = {disc: data("disciplines-daw.json").powers, gift: data("gifts-daw.json").gifts,
+    wraith: data("arcanoi-w20.json").arts, greatwar: data("arcanoi-gw.json").arts};
+  for ( const [set, list] of Object.entries(sets) ) {
+    for ( const p of list ) {
+      const got = P.keywordsOf(set, p.id);
+      assert.ok(got && got.keywords.length, `${set} ${p.id} has a keyword`);
+    }
+    for ( const id of Object.keys(P.POWER_KEYWORDS[set]) ) assert.ok(list.some(p => p.id === id), `${set} ${id} is a real power`);
+    for ( const [ks] of Object.values(P.POWER_KEYWORDS[set]) ) for ( const k of ks ) assert.ok(E.KEYWORDS[k], `${set} keyword ${k}`);
+  }
+  // Every keyword on the roster is used by some power, and few fall back to the Storyteller's Free Effect
+  const c = P.keywordCounts();
+  for ( const k of Object.keys(E.KEYWORDS) ) assert.ok(c[k] > 0, `${k} is used`);
+  assert.ok(c.free < 10);
+  // Path powers read PATH_EFFECTS; always-on powers are marked
+  assert.equal(P.keywordsOf("disc", "necromancy-the-graves-decay-rigor-mortis").keywords[0], "hold");
+  assert.ok(P.keywordsOf("disc", sets.disc.find(p => p.d === "Potence").id).passive);
+  assert.equal(P.keywordsOf("disc", "nope"), null);
 });

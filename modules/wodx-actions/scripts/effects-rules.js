@@ -48,25 +48,68 @@ export const KEYWORDS = {
   charge:  {label: "Charge or Drain", opts: [{prime: 3}], feat: 2, strength: true, tier: "auto", lean: "coincidental",
     does: "Quintessence moved into or out of a Pattern by the p. 504 chart."},
   veil:    {label: "Veil", opts: [{mind: 1}, {forces: 3}], feat: 2, strength: true, tier: "auto", lean: "coincidental", timed: true, mind: true,
+    resist: {pool: "perception", diff: 6},
     does: "Unnoticed (Mind) or unseen (Forces): noticing the target is at difficulty 6 + strength, 9 at most (house rule)."},
   sight:   {label: "Night Sight", opts: [{forces: 1}, {life: 2}], feat: 1, strength: false, tier: "auto", lean: "coincidental", timed: true,
     does: "The token sees in the dark for as long as the successes last."},
   rise:    {label: "Rise", opts: [{forces: 2, self: true}, {forces: 3}], feat: 2, strength: true, tier: "auto", lean: "vulgar", timed: true,
     does: "The token rises 5 feet for each success of strength (house rule)."},
   trip:    {label: "Disarm or Trip", opts: [{forces: 2}, {matter: 2}], feat: 2, strength: true, tier: "auto", lean: "coincidental",
+    resist: {pool: "dexterity", diff: 6},
     does: "The target is knocked down; resisting is Dexterity + Athletics at 6 + strength, 9 at most (house rule)."},
   hold:    {label: "Hold", opts: [{forces: 2}, {matter: 2}, {life: 3}, {mind: 3}], feat: 3, strength: true, tier: "auto", lean: "vulgar", timed: true,
+    resist: {pool: "strength", diff: 6},
     does: "Held: breaking free is Strength at 6 + strength, 9 at most (house rule)."},
   fear:    {label: "Fear", opts: [{mind: 2}], feat: 2, strength: true, tier: "queue", lean: "coincidental", timed: true, mind: true,
+    resist: {pool: "willpower", diff: 6},
     does: "Afraid: the target keeps away from the caster or flees, as an NPC behaviour."},
   sway:    {label: "Sway", opts: [{mind: 2}], feat: 2, strength: true, tier: "queue", lean: "coincidental", mind: true,
+    resist: {pool: "willpower", diff: 6},
     does: "An impulse or a mood planted; control of the mind needs Mind 4 and is an impressive feat (p. 502). The Storyteller plays it out."},
   shape:   {label: "Shape", opts: [{life: 3}, {matter: 2}], feat: 4, strength: true, tier: "queue", lean: "vulgar",
     does: "A change of form, for the Storyteller to approve and describe."},
-  sideways:{label: "Step Sideways", opts: [{spirit: 3}], feat: 2, strength: false, tier: "queue", lean: "vulgar",
-    does: "A crossing into the Umbra through WoDX Otherworlds, against the scene's Gauntlet."},
+  sideways:{label: "Step Sideways or Cross", opts: [{spirit: 3}], feat: 2, strength: false, tier: "queue", lean: "vulgar",
+    does: "A crossing through WoDX Otherworlds: into the Umbra against the Gauntlet, or across the Shroud, into the Dreaming or a dream."},
+  // 3.30.0: the shared roster for every line's powers (B781). The Sphere options let a Mage cast them too; they are
+  // house readings of the Sphere lists (M20 pp. 513-523) until the page check, logged in PENDING-REVIEW.
+  know:    {label: "Know", opts: [{mind: 1}, {time: 2}, {correspondence: 2}, {entropy: 1}], feat: 1, strength: false, tier: "auto", lean: "coincidental", mind: true,
+    resist: {pool: "willpower", diff: 6},
+    does: "Answers one question: a thought, an aura, an object's past, a lie told. The Storyteller gives the answer."},
+  speak:   {label: "Speak", opts: [{mind: 1}, {spirit: 2}, {life: 2}], feat: 1, strength: false, tier: "auto", lean: "coincidental", timed: true,
+    does: "Talk with animals, spirits, ghosts, the dead or machines for as long as the successes last."},
+  boost:   {label: "Boost or Sap", opts: [{life: 3}, {mind: 3}], feat: 3, strength: true, tier: "auto", lean: "coincidental", ally: true, timed: true,
+    resist: {pool: "stamina", diff: 6},
+    does: "A die for each success of strength, 5 at most, added to (or taken from) one kind of roll: Physical, Social, Mental, soak or Initiative (house rule)."},
+  summon:  {label: "Summon", opts: [{spirit: 3}, {life: 3}, {correspondence: 3}], feat: 3, strength: true, tier: "queue", lean: "vulgar",
+    does: "Calls a creature, spirit or ghost; more successes bring more or stronger. The Storyteller places and plays them."},
+  make:    {label: "Make", opts: [{matter: 2, prime: 2}, {forces: 2, prime: 2}, {life: 2, prime: 2}], feat: 3, strength: true, tier: "queue", lean: "vulgar",
+    does: "Creates an object, a weapon, food or a chimera; it goes to the target's inventory once the Storyteller approves."},
+  work:    {label: "Work or Break", opts: [{forces: 2}, {matter: 2}, {entropy: 2}], feat: 2, strength: true, tier: "auto", lean: "coincidental",
+    does: "Works a door, lock or mechanism from afar, throws a thing by will, or breaks, rots or ages an object (WoDX Interactables)."},
+  illusion:{label: "Illusion", opts: [{forces: 2}, {mind: 2}], feat: 2, strength: true, tier: "auto", lean: "coincidental", timed: true, mind: true,
+    resist: {pool: "perception", diff: 6},
+    does: "Shows something that is not there: a sight, a sound, a figure. Seeing through it is Perception + Awareness at 6 + strength, 9 at most (house rule)."},
+  possess: {label: "Possess", opts: [{mind: 5}, {spirit: 4}], feat: 5, strength: true, tier: "queue", lean: "vulgar", mind: true, timed: true,
+    resist: {pool: "willpower", diff: 7},
+    does: "Takes over a body or an object: the possessor plays the target while their own body lies empty."},
+  bind:    {label: "Bind", opts: [{mind: 4}, {life: 3, mind: 2}], feat: 4, strength: true, tier: "queue", lean: "coincidental", mind: true, timed: true,
+    resist: {pool: "willpower", diff: 7},
+    does: "A lasting change of mind or loyalty: a memory taken or rewritten, a derangement, conditioning, a bond, an oath. Written on the sheet with what ends it."},
+  banish:  {label: "Banish or Bar", opts: [{spirit: 2}, {prime: 2}, {entropy: 3}], feat: 2, strength: true, tier: "queue", lean: "vulgar",
+    resist: {pool: "willpower", diff: 6},
+    does: "Ends another power, drives a being out or away, or keeps one kind of being out of a place."},
+  manifest:{label: "Manifest", opts: [{spirit: 3}, {entropy: 4}], feat: 3, strength: true, tier: "queue", lean: "vulgar", timed: true,
+    does: "A being in another realm shows itself or acts on this side without crossing: seen, heard, or solid enough to touch."},
+  imbue:   {label: "Imbue", opts: [{prime: 3}, {spirit: 3}, {prime: 2, matter: 2}], feat: 4, strength: true, tier: "queue", lean: "vulgar",
+    does: "Puts a lasting power into a thing or a person: a fetish, a talisman, a reliquary, a charm."},
+  place:   {label: "Place", opts: [{spirit: 4}, {prime: 4}, {entropy: 4}], feat: 4, strength: true, tier: "queue", lean: "vulgar",
+    does: "Changes a place: its Gauntlet, its Shroud, a caern, node, haunt or freehold, a consecrated ground, a ley line."},
+  weather: {label: "Weather", opts: [{forces: 3}], feat: 4, strength: true, tier: "queue", lean: "vulgar", timed: true,
+    does: "Changes the scene's weather: wind, rain, fog, snow, storm, calm (WoDX Senses weather)."},
+  time:    {label: "Time", opts: [{time: 2}], feat: 3, strength: true, tier: "st", lean: "vulgar",
+    does: "Sees the past or the future, or works on time beyond Hasten or Slow. The Storyteller says what happens."},
   free:    {label: "Free Effect", opts: [{any: 1}], feat: 1, strength: true, tier: "st", lean: "coincidental",
-    does: "Anything else: the roll and its costs are tracked, the Storyteller says what happens."}
+    does: "Anything else (the Story keyword): the roll and its costs are tracked, the Storyteller says what happens."}
 };
 
 /** The Sphere levels a set of keywords needs: for each keyword the first option the caster can work, merged by highest. */
@@ -148,7 +191,8 @@ const clampDiff = d => Math.max(2, Math.min(9, d));
 
 /**
  * What one keyword does. got: from spend(). ctx: {spheres: [names used], primeCharged, fire, aggravated, slow, dark}.
- * Returns {key, label, kind, ...}: kind is damage | heal | timed | light | quint | condition | note.
+ * Returns {key, label, kind, ...}: kind is damage | heal | timed | light | quint | pool | condition | note | move.
+ * 3.30.0 ctx adds: pool (a POOLS key), damageKind, lasting, against, reflect, calm, frenzy, awe, boost, sap, derangement.
  */
 /**
  * The era's magic charts: how successes turn into damage, healing and Quintessence, and the countermagick difficulty.
@@ -167,6 +211,54 @@ export const ERA_RULES = {
 };
 export const eraRules = age => ERA_RULES[age] ?? ERA_RULES.ascension;
 
+/**
+ * The pools a Charge or Drain (or a Mend of a pool) can move, by line (3.30.0). path: the temporary value; cap: the
+ * permanent rating it cannot pass (none for Quintessence, which the Avatar caps elsewhere).
+ */
+export const POOLS = {
+  quintessence: {label: "Quintessence", path: "system.quintessence.temporary"},
+  blood:     {label: "blood", path: "system.advantages.bloodpool.temporary"},
+  willpower: {label: "Willpower", path: "system.advantages.willpower.temporary", cap: "system.advantages.willpower.permanent"},
+  gnosis:    {label: "Gnosis", path: "system.advantages.gnosis.temporary", cap: "system.advantages.gnosis.permanent"},
+  rage:      {label: "Rage", path: "system.advantages.rage.temporary", cap: "system.advantages.rage.permanent"},
+  glamour:   {label: "Glamour", path: "system.advantages.glamour.temporary", cap: "system.advantages.glamour.permanent"},
+  pathos:    {label: "Pathos", path: "system.advantages.pathos.temporary"},
+  faith:     {label: "Faith", path: "system.advantages.faith.temporary", cap: "system.advantages.faith.permanent"},
+  sekhem:    {label: "Sekhem", path: "system.advantages.sekhem.temporary", cap: "system.advantages.sekhem.permanent"},
+  yinchi:    {label: "Yin Chi", path: "system.advantages.yinchi.temporary"},
+  yangchi:   {label: "Yang Chi", path: "system.advantages.yangchi.temporary"},
+  conviction:{label: "Conviction", path: "system.advantages.conviction.temporary", cap: "system.advantages.conviction.permanent"}
+};
+export const poolOf = k => POOLS[k] ?? POOLS.quintessence;
+
+/** The kinds of roll a Boost or Sap works on (house rule, B781). */
+export const BOOSTS = {physical: "Physical rolls", social: "Social rolls", mental: "Mental rolls", soak: "soak", initiative: "Initiative"};
+
+/** The kinds of damage Harm can carry and a Ward can stand against (3.30.0). */
+export const KINDS = ["any", "fire", "sunlight", "silver", "faith", "spirits", "mind"];
+
+/**
+ * What resists a keyword: {pool, diff, text}, or null. power: a power's own entry from a book check, which wins
+ * ({resist: {pool, diff}} or {resist: null} for none). The difficulties on the roster are house rules (B781).
+ */
+export function resistOf(key, power = null) {
+  const r = power && "resist" in power ? power.resist : KEYWORDS[key]?.resist;
+  if ( !r ) return null;
+  const pool = String(r.pool ?? "willpower"), diff = clampDiff(n(r.diff) || 6);
+  return {pool, diff, text: `resisted by ${pool[0].toUpperCase()}${pool.slice(1)} at ${diff}`};
+}
+
+/**
+ * An always-on power (3.30.0): no Cast window and no roll; its rating stands in for strength and it lasts as long as
+ * the power does. Returns the outcome with passive: true and no end, or null for a keyword that cannot be passive.
+ */
+export const PASSIVE_KEYS = ["boost", "ward", "sense", "sight", "hasten", "veil"];
+export function passive(key, rating, ctx = {}) {
+  if ( !PASSIVE_KEYS.includes(key) || n(rating) <= 0 ) return null;
+  const out = outcome(key, {ok: true, strength: n(rating), duration: 0, targets: 0}, ctx);
+  return out ? {...out, passive: true, duration: "while the power lasts", timed: {kind: "passive"}, text: `${out.text.replace(/ (for|within) .*$/, "")}, always on`} : null;
+}
+
 export function outcome(key, got, ctx = {}) {
   const K = KEYWORDS[key];
   if ( !K || !got?.ok ) return null;
@@ -180,19 +272,29 @@ export function outcome(key, got, ctx = {}) {
     case "harm": {
       const type = M.damageType({spheres, primeCharged: !!ctx.primeCharged, fire: !!ctx.fire});
       const levels = eraRules(ctx.age).levels(str, {forces: spheres.includes("forces"), mind: spheres.includes("mind")});
-      return {...base, kind: "damage", levels, type: type === "none" ? "lethal" : type, soak: !spheres.every(s => s === "mind"),
-        text: `${levels} ${type} level${levels === 1 ? "" : "s"}`};
+      const of = KINDS.includes(ctx.damageKind) && ctx.damageKind !== "any" ? ctx.damageKind : (ctx.fire ? "fire" : null);
+      const turns = ctx.lasting ? Math.max(2, Math.min(10, str)) : 0;
+      return {...base, kind: "damage", levels, type: type === "none" ? "lethal" : type, soak: !spheres.every(s => s === "mind"), of, lasting: turns,
+        text: `${levels} ${type} level${levels === 1 ? "" : "s"}${of ? ` (${of})` : ""}${turns ? `, then one more each turn for ${turns - 1} turn${turns === 2 ? "" : "s"} unless stopped` : ""}`};
     }
     case "mend": {
+      if ( ctx.pool && POOLS[ctx.pool] ) {
+        const points = eraRules(ctx.age).levels(str);
+        return {...base, kind: "pool", pool: ctx.pool, points, text: `${points} ${POOLS[ctx.pool].label} restored`};
+      }
+      if ( ctx.derangement ) return {...base, kind: "note", text: "one derangement, Paradox flaw or Banality scar eased; the Storyteller strikes it"};
       const levels = eraRules(ctx.age).levels(str);
       return {...base, kind: "heal", levels, aggravated: !!ctx.aggravated, text: `${levels} health level${levels === 1 ? "" : "s"} healed${ctx.aggravated ? ", aggravated at a Quintessence point each" : ""}`};
     }
     case "charge": {
       const points = eraRules(ctx.age).levels(str);
+      if ( ctx.pool && ctx.pool !== "quintessence" && POOLS[ctx.pool] )
+        return {...base, kind: "pool", pool: ctx.pool, points: ctx.drain ? -points : points, text: `${points} ${POOLS[ctx.pool].label} ${ctx.drain ? "drawn out" : "given"}`};
       return {...base, kind: "quint", points: ctx.drain ? -points : points, text: `${points} Quintessence ${ctx.drain ? "drawn out" : "given"}`};
     }
     case "ward":
-      return {...base, kind: "timed", name: "Warded", dice: str, text: `${str} armour dice for ${dur.label}`};
+      return {...base, kind: "timed", name: "Warded", dice: str, against: KINDS.includes(ctx.against) && ctx.against !== "any" ? ctx.against : null, reflect: !!ctx.reflect,
+        text: `${str} armour dice${KINDS.includes(ctx.against) && ctx.against !== "any" ? ` against ${ctx.against}` : ""}${ctx.reflect ? ", turning blows back on their source" : ""} for ${dur.label}`};
     case "fortune": {
       const shift = Math.min(3, str);
       return {...base, kind: "timed", name: ctx.curse ? "Cursed" : "Blessed", shift: ctx.curse ? shift : -shift,
@@ -216,11 +318,34 @@ export function outcome(key, got, ctx = {}) {
     case "hold":
       return {...base, kind: "condition", condition: "held", difficulty: clampDiff(6 + str), text: `held for ${dur.label}; Strength at ${clampDiff(6 + str)} breaks free`};
     case "fear":
+      if ( ctx.calm ) return {...base, kind: "timed", name: "Calmed", difficulty: clampDiff(6 + str), text: `the Beast or Rage calmed for ${dur.label}; frenzy rolls at +${Math.min(3, str)} difficulty`};
+      if ( ctx.frenzy ) return {...base, kind: "timed", name: "Roused", difficulty: clampDiff(6 + str), text: `a frenzy roll at ${clampDiff(6 + str)} now (Self-Control or Instinct, or Rage), roused for ${dur.label}`};
       return {...base, kind: "timed", name: "Afraid", text: `afraid of the caster for ${dur.label}`};
     case "sense":
       return {...base, kind: "note", text: `the caster senses it for ${dur.label}`};
     case "move":
       return {...base, kind: "move", text: "moves to where the caster means to go, in this scene"};
+    case "sway":
+      if ( ctx.awe ) return {...base, kind: "timed", name: "In awe", awe: true, difficulty: clampDiff(6 + str),
+        text: `in awe for ${dur.label}: acting against the caster needs Courage (or Willpower) at ${clampDiff(6 + str)}`};
+      return {...base, kind: "note", text: `${K.does} (strength ${str}, ${dur.label})`};
+    case "boost": {
+      const dice = Math.min(5, str), on = BOOSTS[ctx.boost] ? ctx.boost : "physical";
+      return {...base, kind: "timed", name: ctx.sap ? "Sapped" : "Boosted", dice: ctx.sap ? -dice : dice, on,
+        text: `${ctx.sap ? "-" : "+"}${dice} ${dice === 1 ? "die" : "dice"} to ${BOOSTS[on]} for ${dur.label}`};
+    }
+    case "illusion":
+      return {...base, kind: "timed", name: "Illusion", difficulty: clampDiff(6 + str), text: `an illusion for ${dur.label}; Perception + Awareness at ${clampDiff(6 + str)} sees through it`};
+    case "speak":
+      return {...base, kind: "timed", name: "Speaks with", text: `can talk with animals, spirits, ghosts or machines for ${dur.label}`};
+    case "know":
+      return {...base, kind: "note", text: "the Storyteller answers one question"};
+    case "possess":
+      return {...base, kind: "timed", name: "Possessed", text: `possessed for ${dur.label}; the possessor plays this body and their own lies empty`};
+    case "bind":
+      return {...base, kind: "timed", name: "Bound", text: `bound (a memory, a derangement, a bond or an oath) for ${dur.label}; the Storyteller writes it on the sheet`};
+    case "manifest":
+      return {...base, kind: "timed", name: "Manifest", text: `seen and able to touch on this side for ${dur.label}`};
     default:
       return {...base, kind: "note", text: `${K.does} (strength ${str}, ${dur.label})`};
   }
@@ -237,6 +362,7 @@ export function route(key, t = {}, out = null) {
   if ( !K ) return "st";
   if ( K.tier === "st" || n(t.need) >= 10 || (out && out.timed === null) ) return "st";
   if ( K.mind && t.playerCharacter && !t.self ) return "st";
+  if ( out?.awe && !t.playerCharacter && !t.witnessed && n(t.count) <= 3 ) return "auto"; // Awe is a plain condition on NPCs (3.30.0)
   if ( K.tier === "queue" ) return "queue";
   if ( n(t.count) > 3 || t.witnessed ) return "queue";
   if ( K.mind && !t.self ) return "queue";
@@ -259,7 +385,7 @@ export function roteFrom(name, {keywords = [], used = [], plan = {}, ctx = {}, k
   if ( !nm ) return null;
   return {name: nm, keywords: keywords.filter(k => KEYWORDS[k]), spheres: Object.fromEntries(used.filter(u => n(u.level) > 0).map(u => [u.sphere, n(u.level)])),
     plan: {targets: Math.max(0, n(plan.targets)), duration: Math.max(0, n(plan.duration)), area: !!plan.area},
-    ctx: Object.fromEntries(Object.entries(ctx).filter(([, v]) => v === true)), kind: String(kind), feat: Math.max(0, n(feat))};
+    ctx: Object.fromEntries(Object.entries(ctx).filter(([, v]) => v === true || (typeof v === "string" && v && v.length <= 20))), kind: String(kind), feat: Math.max(0, n(feat))};
 }
 
 /** Keep a rote: one per name (a new one with the same name replaces it), the list sorted by name, at most ROTES_MAX. */

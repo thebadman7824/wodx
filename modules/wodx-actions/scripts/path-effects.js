@@ -22,11 +22,11 @@ export const PATH_EFFECTS = {
   [`${K}black-sea-kraina-pontos-euxeinos`]: HL(1, {who: "self"}), [`${K}black-sea-kraina-minions-of-deep-marmora`]: S(),
   [`${K}black-sea-kraina-pontos-axeinos`]: S(),
   // Path of Bone (pp. 279-280)
-  [`${NE}path-of-bone-seal-of-abamixtra`]: S(), [`${NE}path-of-bone-awaken-the-homuncular-servant`]: S(), [`${NE}path-of-bone-shambling-hordes`]: S(),
-  [`${NE}path-of-bone-baleful-exorcism`]: S("sway"), [`${NE}path-of-bone-daemonic-possession`]: S(),
+  [`${NE}path-of-bone-seal-of-abamixtra`]: S(), [`${NE}path-of-bone-awaken-the-homuncular-servant`]: S("summon"), [`${NE}path-of-bone-shambling-hordes`]: S("summon"),
+  [`${NE}path-of-bone-baleful-exorcism`]: S("sway"), [`${NE}path-of-bone-daemonic-possession`]: S("possess"),
   // Path of the Cenotaph (pp. 280-281)
   [`${NE}path-of-the-cenotaph-a-touch-of-death`]: N(), [`${NE}path-of-the-cenotaph-reveal-the-catene`]: N(),
-  [`${NE}path-of-the-cenotaph-tread-upon-the-grave`]: N(), [`${NE}path-of-the-cenotaph-death-knell`]: N(), [`${NE}path-of-the-cenotaph-ephemeral-binding`]: S(),
+  [`${NE}path-of-the-cenotaph-tread-upon-the-grave`]: N(), [`${NE}path-of-the-cenotaph-death-knell`]: N(), [`${NE}path-of-the-cenotaph-ephemeral-binding`]: S("bind"),
   // Path of the Corpse in the Monster (p. 282)
   [`${NE}path-of-the-corpse-in-the-monster-mortuus-in-vultus`]: T("shape", "Mortuus in Vultus", "scene", "self"),
   [`${NE}path-of-the-corpse-in-the-monster-algor-mortis`]: T("ward", "Algor Mortis", "scene", "self"),
@@ -43,7 +43,7 @@ export const PATH_EFFECTS = {
   [`${NE}path-of-haunting-spectral-menacing`]: S(),
   // Path of the Sepulchre (pp. 287-288)
   [`${NE}path-of-the-sepulchre-peering-across-the-shroud`]: T("sight", "Peering Across the Shroud", "scene", "self"),
-  [`${NE}path-of-the-sepulchre-summon-soul`]: S(), [`${NE}path-of-the-sepulchre-compel-soul`]: S("sway"), [`${NE}path-of-the-sepulchre-haunting`]: S(),
+  [`${NE}path-of-the-sepulchre-summon-soul`]: S("summon"), [`${NE}path-of-the-sepulchre-compel-soul`]: S("sway"), [`${NE}path-of-the-sepulchre-haunting`]: S(),
   [`${NE}path-of-the-sepulchre-torment`]: H("harm", 1, "lethal"),
   // Path of Ash (p. 289)
   [`${NE}path-of-ash-shroudsight`]: T("sight", "Shroudsight", "scene", "self"),
@@ -61,7 +61,7 @@ export const PATH_EFFECTS = {
   // Thaumaturgy (pp. 299-302)
   [`${TH}elementorum-strength-of-the-earth`]: T("shape", "Strength of the Earth", {turns: 1}, "self"), [`${TH}elementorum-wooden-tongues`]: N(),
   [`${TH}elementorum-animate-the-unmoving`]: S(), [`${TH}elementorum-elemental-form`]: T("shape", "Elemental Form", "night", "self"),
-  [`${TH}elementorum-summon-elemental`]: S(),
+  [`${TH}elementorum-summon-elemental`]: S("summon"),
   [`${TH}exsecrabilis-stigma`]: T("fortune", "Stigma", {seconds: 86400}, "one"), [`${TH}exsecrabilis-malady`]: S("harm"),
   [`${TH}exsecrabilis-scapegoat`]: T("sway", "Scapegoat", {days: 1}, "one"), [`${TH}exsecrabilis-corrupt-body`]: S("shape"),
   [`${TH}exsecrabilis-acedia`]: S("fortune"),
