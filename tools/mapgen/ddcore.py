@@ -127,7 +127,7 @@ class Room:
     def fits(self, r, open_floor=True):
         x, y, w, h = r
         if x < self.ix - 1e-6 or y < self.iy - 1e-6 or x + w > self.ix + self.iw + 1e-6 or y + h > self.iy + self.ih + 1e-6: return False
-        blocked = self.blocked if open_floor else [b for b in self.blocked if b[4] != "open floor"]
+        blocked = self.blocked if open_floor else [b for b in self.blocked if b[4] == "door clear zone"]   # fixed spots keep only the doorways clear
         for bx, by, bw, bh, *_ in blocked + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]:
             if x < bx + bw - 1e-6 and bx < x + w - 1e-6 and y < by + bh - 1e-6 and by < y + h - 1e-6: return False
         return True
@@ -200,10 +200,15 @@ class Room:
             if rule.startswith("at:"):                         # a fixed spot: aisles of shelves, rows of seats
                 _, ax, ay, *turn = rule.split(":")
                 rot = int(turn[0]) if turn else 0
-                w, h = (fh, fw) if rot else (fw, fh)
-                r = (self.x + float(ax), self.y + float(ay), w, h)
-                if self.fits(r, open_floor=False):
-                    self.items.append({"asset": name, "x": r[0], "y": r[1], "w": w, "h": h, "rot": rot, "scale": sc})
+                for shrink in (1, .8, .65):                    # as given, else a little smaller about its middle
+                    w, h = ((fh, fw) if rot else (fw, fh))
+                    w, h = w * shrink, h * shrink
+                    x = self.x + float(ax) + (1 - shrink) * w / shrink / 2
+                    y = self.y + float(ay) + (1 - shrink) * h / shrink / 2
+                    x = min(max(x, self.ix), self.ix + self.iw - w); y = min(max(y, self.iy), self.iy + self.ih - h)
+                    if w <= self.iw and h <= self.ih and self.fits((x, y, w, h), open_floor=False):
+                        self.items.append({"asset": name, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(sc * shrink, 3)})
+                        break
                 continue                                       # a spot that will not take it is left empty
             for _ in range(count):
                 c = self.candidates(fw, fh, rule)
