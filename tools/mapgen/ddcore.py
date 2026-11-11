@@ -24,6 +24,7 @@ def init(seed, asset_list):
     R = random.Random(seed)
     ASSETS = list(dict.fromkeys(l.strip() for f in str(asset_list).split(",") if f for l in open(f, encoding="utf-8-sig") if "/textures/" in l))
     USED.clear()
+    LIGHTS.clear()
     return R
 
 def asset(name, kind="objects"):
@@ -53,6 +54,7 @@ def pack_info(pid):
 
 SIZES = {}                    # cells of assets whose names carry no size (eratypes.py fills it)
 USED = set()                  # pack ids the map refers to, for its asset manifest
+LIGHTS = []                   # Dungeondraft lights made with the dressing since the last level(); level() takes them
 PACK_TABLE = "/mnt/project-files/dd-pack-ids.tsv"   # id, name, version, author, file (read off each pack on the PC)
 
 def cells_of(name):
@@ -187,10 +189,12 @@ class Room:
 
     def furnish(self, tries=80):
         """Greedy placement by rule; if an item cannot be placed, start the room again with more shuffle.
-        Only when every try fails does the script stop."""
+        Only when every try fails does the script stop. Then the room is dressed (see dress())."""
         for t in range(tries):
             self.items, self.noise = [], .1 + t * .08
-            if self.try_furnish(): return
+            if self.try_furnish():
+                dress(self)
+                return
         raise SystemExit(f"cannot furnish {self.name}: {self.last_fail} has no room after {tries} tries")
 
     def try_furnish(self):
@@ -217,6 +221,148 @@ class Room:
                 self.items.append({"asset": name, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": sc})
         return True
 
+# ------------------------------------------------------------------ dressing: what makes a room look lived in
+# After the furniture a room's type asks for, each room gets a rug, things on its tables, pieces along its walls and
+# lights, by what the room is for. Best effort: a piece with no room is left out. Dressing has its own random
+# generator (from the room's name and place), so it never moves the furniture or the WoDX file, and it is kept apart
+# (room.dressing, room.lights) from room.items, which the WoDX file reads.
+OUTDOOR = ("Yard", "Court", "Garden", "Open to", "Arcade", "Gateway", "Porch", "Loading", "Pen", "Paddock", "Lot", "Field")
+STORE = ("Store", "Cellar", "Barn", "Byre", "Stable", "Granary", "Loft", "Shed", "Vault", "Warehouse", "Larder", "Pantry",
+         "Crypt", "Morgue", "Coop", "Garage", "Workshop", "Smithy", "Forge", "Mill", "Press", "Bay", "Lock-up")
+KITCHEN = ("Kitchen", "Bakehouse", "Bakery", "Brewhouse", "Scullery", "Cook")
+STUDY = ("Study", "Office", "Counting", "Library", "Clerk", "Chancery", "Archive", "School", "Scriptorium", "Desk")
+SLEEP = ("Bed", "Chamber", "Guest", "Dormitory", "Ward", "Cell", "Sleeping", "Solar")
+FA_RUGS = [f"Rug_Rectangle_{c}{n}_Colorable_3x2.webp" for c in "CDEFGH" for n in range(1, 7)] + ["Rug_Rectangle_A_Colorable_3x2.webp"]
+FA_FURS = [f"Rug_Fur_A_0{n}_2x2.webp" for n in range(1, 7)]
+FA_DRESS = {
+    "table": ["Candle_Colorable_A_1x1.png", "Bottle_Glass_A_Colorable_1x1.png", "Book_A_Colorable_1x1.png", "Candelabra_Metal_Grey_Colorable_A_1x1.png"],
+    "kitchen": ["Bread_Loaf_A_1x1.webp", "Cheese_Wheel_A1_1x1.webp", "Bottle_Glass_A_Colorable_1x1.png", "Basket_Lid_Wood_Ashen_A_1x1.webp"],
+    "study": ["Paper_White_Sheet_A_1x1.webp", "Quill_A_Black_1x1.webp", "Book_B_Colorable_1x1.png", "Candle_Colorable_A_1x1.png"],
+    "wall": ["Bookshelf_Wood_Ashen_A_2x1.webp", "Cupboard_Wood_Ashen_A_2x1.webp", "Bench_Wood_Ashen_A1_2x1.webp", "Mirror_Wood_Ashen_B_2x1.webp"],
+    "wall_study": ["Bookshelf_Wood_Ashen_A_2x1.webp", "Bookshelf_Wood_Ashen_B_2x1.webp", "Desk_Rectangle_Wood_Ashen_A1_2x1.webp"],
+    "wall_sleep": ["Cupboard_Wood_Ashen_B_2x1.webp", "Mirror_Wood_Ashen_A_1x1.webp", "Armchair_Wood_Ashen_Fabric_Colorable_A_1x1.png"],
+    "wall_store": ["Box_Crate_Wood_Ashen_A1_1x1.webp", "Barrel_Wood_Ashen_A_1x1.webp", "Sack_Brown_E_Grains_1x1.webp", "Basket_Lid_Wood_Ashen_A_1x1.webp"],
+    "corner": ["Plant_Pot_Clay_Brown_A_1x1.webp", "Armchair_Wood_Ashen_Fabric_Colorable_B_1x1.png", "Basket_Lid_Wood_Ashen_A_1x1.webp"],
+    "sconce": "Sconce_Red_A_Lit_1x1.webp", "chandelier": "Chandelier_Wood_Ashen_A_Lit_2x2.webp",
+}
+MOD_DRESS = {
+    "table": ["MugFull.png", "SFPlate.png"], "kitchen": ["MugFull.png", "SFPlate.png"], "study": ["MugFull.png"],
+    "wall": ["Couch01.png", "Hutch01.png", "TableEndA01.png"], "wall_study": ["DeskS01.png", "Hutch01.png"],
+    "wall_sleep": ["TableEndB01.png", "Hutch01.png"], "wall_store": ["Box_Crate_Wood_Ashen_A1_1x1.webp"],
+    "corner": ["Plant_Pot_Clay_Brown_A_1x1.webp", "TableEndC01.png"], "centre": ["TableCoffeeA01.png"],
+}
+TABLES = re.compile(r"Table|Desk|Counter|Bench_|Workbench", re.I)
+
+def have(name): return any(a.endswith("/" + name) for a in ASSETS)
+
+def kind_of(room):
+    n = room.name
+    has = lambda words: any(re.search(rf"\b{re.escape(w)}", n) for w in words)
+    if has(OUTDOOR): return "outdoor"
+    if has(KITCHEN): return "kitchen"
+    if has(STORE): return "store"
+    if has(STUDY): return "study"
+    if has(SLEEP) and not re.search(r"\bCellar", n): return "sleep"
+    return "living"
+
+def dress(room):
+    global R
+    room.dressing, room.lights = [], []
+    kind = kind_of(room)
+    if room.iw < 1.5 or room.ih < 1.5: return
+    keep, R = R, random.Random(f"{room.name}|{room.x:.2f}|{room.y:.2f}")
+    if kind == "outdoor":                                   # a court or yard: plants in its corners, a bench on a wall
+        try:
+            if re.search(r"\b(Court|Garden)", room.name):
+                n0 = len(room.items)
+                for a, rule in (("Potted_Plant_C_2x2.webp", "corner"), ("Potted_Plant_D_2x2.webp", "corner"), ("Bench_Wood_Ashen_A1_2x1.webp", "wall")):
+                    if not have(a): continue
+                    fw, fh = cells_of(a)
+                    c = room.candidates(fw * .7, fh * .7, rule) if a.startswith("Potted") else room.candidates(fw, fh, rule)
+                    if c:
+                        _, x, y, w, h, rot = c[0]
+                        room.items.append({"asset": a, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": .7 if a.startswith("Potted") else 1.0})
+                room.dressing += [dict(i, layer=100) for i in room.items[n0:]]
+                del room.items[n0:]
+        finally:
+            R = keep
+        return
+    modern = any(re.fullmatch(r"[A-Za-z]+\d+\.png", i["asset"]) for i in room.items)
+    D = MOD_DRESS if modern else FA_DRESS
+    n0 = len(room.items)
+    area = room.iw * room.ih
+    try:
+        # pieces along the walls and in the corners, one for every 4 squares or so
+        wall = D.get({"study": "wall_study", "sleep": "wall_sleep", "store": "wall_store"}.get(kind, "wall"), [])
+        for k in range(min(10, int(area // 4))):
+            choice = [a for a in (wall if k % 3 or kind == "store" else D.get("corner", [])) if have(a)]
+            if not choice: continue
+            a = R.choice(choice)
+            fw, fh = cells_of(a)
+            c = room.candidates(fw, fh, "corner" if k % 3 == 0 else "wall")
+            if c:
+                _, x, y, w, h, rot = c[0]
+                room.items.append({"asset": a, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": 1.0})
+        if modern and kind == "living" and area >= 12:
+            for a in (x for x in D.get("centre", []) if have(x)):
+                fw, fh = cells_of(a); c = room.candidates(fw, fh, "corner")
+                if c:
+                    _, x, y, w, h, rot = c[0]
+                    room.items.append({"asset": a, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": 1.0})
+        placed = room.items[n0:]
+        del room.items[n0:]
+        for it in placed: room.dressing.append(dict(it, layer=100))
+        # a rug under the middle of the room (the open floor), below the furniture
+        if kind in ("living", "study", "sleep") and room.iw >= 2.4 and room.ih >= 2.4:
+            rugs = [r for r in (FA_FURS if kind == "sleep" and area < 16 else FA_RUGS) if have(r)]
+            if rugs:
+                a = R.choice(rugs); fw, fh = cells_of(a)
+                long_w = room.iw >= room.ih
+                rw, rh = (fw, fh) if long_w or fw == fh else (fh, fw)
+                sc = min((room.iw - 1.2) / rw, (room.ih - 1.2) / rh, 1.8)
+                if sc >= .6:
+                    w, h = rw * sc, rh * sc
+                    room.dressing.append({"asset": a, "x": room.ix + (room.iw - w) / 2, "y": room.iy + (room.ih - h) / 2,
+                                          "w": w, "h": h, "rot": 0 if (long_w or fw == fh) else 1, "scale": round(sc, 3), "layer": 50})
+        # things on each table or desk
+        pool = [a for a in D.get(kind if kind in ("kitchen", "study") else "table", []) if have(a)]
+        for t in [i for i in room.items + room.dressing if TABLES.search(i["asset"])]:
+            if not pool: break
+            for k in range(min(3, max(1, int(t["w"] * t["h"])))):
+                a = R.choice(pool)
+                room.dressing.append({"asset": a, "x": t["x"] + R.uniform(.1, max(.1, t["w"] - .5)), "y": t["y"] + R.uniform(.1, max(.1, t["h"] - .5)),
+                                      "w": .4, "h": .4, "rot": 0, "scale": .45, "layer": 150, "spin": R.uniform(0, 6.28)})
+        # light: a lit sconce on a wall in every room, a chandelier in a big one; the spots also become Dungeondraft lights
+        if not modern and kind != "store":
+            if area >= 30 and have(D["chandelier"]):
+                cx, cy = room.ix + room.iw / 2, room.iy + room.ih / 2
+                room.dressing.append({"asset": D["chandelier"], "x": cx - 1, "y": cy - 1, "w": 2, "h": 2, "rot": 0, "scale": 1.0, "layer": 400})
+                room.lights.append((cx, cy, 7))
+            if have(D["sconce"]):
+                side = R.choice("NSEW")
+                cx = room.ix + room.iw / 2 if side in "NS" else (room.ix + .25 if side == "W" else room.ix + room.iw - .25)
+                cy = room.iy + room.ih / 2 if side in "EW" else (room.iy + .25 if side == "N" else room.iy + room.ih - .25)
+                room.dressing.append({"asset": D["sconce"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0, "scale": .6, "layer": 400})
+                room.lights.append((cx, cy, 4))
+        elif kind != "store" or area >= 9:
+            room.lights.append((room.ix + room.iw / 2, room.iy + room.ih / 2, 5))
+    finally:
+        R = keep
+
+def dressing_objects(room, under):
+    """Dungeondraft objects for a room's dressing. under=True: the rugs, to write before the furniture on the same
+    layer (Dungeondraft draws later objects on top); under=False: pieces, then clutter (layer 300) and lamps (400)."""
+    out = []
+    for it in sorted(getattr(room, "dressing", []), key=lambda i: i.get("layer", 100)):
+        lay = it.get("layer", 100)
+        if (lay < 100) != under: continue
+        rot = it.get("spin", math.pi / 2 if it["rot"] else 0.0)
+        out.append(obj(it["asset"], it["x"] + it["w"] / 2, it["y"] + it["h"] / 2, rot, it["scale"],
+                       {50: 100, 150: 300}.get(lay, lay), shadow=lay >= 100 and lay < 400))
+    if not under:
+        for x, y, rng in getattr(room, "lights", []): light(x, y, rng)
+    return out
+
 # ------------------------------------------------------------------ Dungeondraft writer
 class Ids:
     def __init__(self): self.n = 0x10
@@ -239,6 +385,12 @@ def set_origin(x=0, y=0):
 def obj(name, cx, cy, rot=0.0, scale=1.0, layer=100, shadow=True, kind="objects"):
     return {"position": v2(*at(cx, cy)), "rotation": rot, "scale": v2(scale, scale), "mirror": False,
             "texture": asset(name, kind), "layer": layer, "shadow": shadow, "node_id": NID()}
+
+def light(cx, cy, rng, colour="ffeccd8b", intensity=.7):
+    """A Dungeondraft light (as Dungeondraft writes one): range in squares, colour alpha first. It waits in LIGHTS
+    for the next level()."""
+    LIGHTS.append({"position": v2(*at(cx, cy)), "range": rng, "intensity": intensity, "color": colour,
+                   "texture": "res://textures/lights/fragments.png", "shadows": True, "node_id": NID()})
 
 def wall_with_portals(points, texture, openings, loop, kinds=None):
     """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t."""
@@ -281,6 +433,7 @@ def level(cols, rows, walls, patterns, objects, paths, terrain, splat, ambient="
     """terrain: the four terrain texture names, in splat order."""
     n = cols * rows
     cl = cave_len(cols, rows)
+    lights = list(LIGHTS); LIGHTS.clear()
     return {"label": "Ground", "environment": {"baked_lighting": True, "ambient_light": ambient},
             "layers": {"-400": "Below Ground", "-100": "Below Water", "100": "User Layer 1", "200": "User Layer 2",
                        "300": "User Layer 3", "400": "User Layer 4", "700": "Above Walls"},
@@ -291,7 +444,7 @@ def level(cols, rows, walls, patterns, objects, paths, terrain, splat, ambient="
                      "entrance_bitmap": pool([0] * cl, "PoolByteArray")},
             "terrain": {"enabled": True, **{f"texture_{i + 1}": asset(t, "terrain") for i, t in enumerate(terrain)},
                         "splat": pool(splat, "PoolByteArray")},
-            "water": {}, "materials": {}, "paths": paths, "objects": objects, "lights": []}
+            "water": {}, "materials": {}, "paths": paths, "objects": objects, "lights": lights}
 
 def write_map(fname, cols, rows, seed, lvl):
     manifest = [{"name": n, "id": i, "version": v, "author": a} for i in list(PACKS) + sorted(USED - set(PACKS)) for n, v, a in [pack_info(i)]]

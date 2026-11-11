@@ -418,9 +418,11 @@ class Town:
             for r in b.rooms:
                 if B.FLOORS.get(r.floor):
                     patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.FLOORS[r.floor]))
+                objects.extend(C.dressing_objects(r, True))
                 for it in r.items:
                     rot = 0.0 if not it["rot"] else math.pi / 2
                     objects.append(obj(it["asset"], it["x"] + it["w"] / 2, it["y"] + it["h"] / 2, rot, it["scale"], 100))
+                objects.extend(C.dressing_objects(r, False))
         for g in self.gardens:
             x, y, w, h = g["rect"]
             if not inside(x + w / 2, y + h / 2, win, 2): continue
