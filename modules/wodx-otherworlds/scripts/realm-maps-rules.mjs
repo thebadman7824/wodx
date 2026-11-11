@@ -42,7 +42,7 @@ const P = (ground, path, solid, water, hazard, growth, glow, voidC, ink = "#e8e2
 export const REALMS = {
   // ---------------------------------------------------------------- Werewolf: the Umbral Realms of the Near Umbra
   aetherial: {label: "The Aetherial Realm", line: "werewolf", world: "umbra", shape: "islands", palette: P("#28304a", "#c9d4ff", "#141a30", "#0a0e1c", "#7a5a9a", "#3c4a78", "#e8eeff", "#05070f"),
-    landmarks: ["Phoebe's light", "a star spirit's perch", "the Wyrm Reaches' edge", "an observatory of the Stargazers"], hazards: ["Wyrm Reaches rot", "a falling star"],
+    landmarks: ["Phoebe's light", "a star spirit's perch", "the Wyrm Reaches' edge", "an observatory of the Stargazers"], hazards: ["Wyrm Reaches rot", "a falling star"], map: {reaches: "Wyrm Reaches rot", sky: "moon", on: "A Moon Bridge to Malfeas, sold by Banes in the Wyrm Reaches"},
     ways: ["A Moon Path or Moon Bridge upward", "Gifts and rites that reach the sky (Storyteller's call)"], refs: ["Rage Across the Heavens pdf 25 / p. 24", "Book of the Wyrm (W20) pdf 23 / p. 22"],
     eras: [{note: "Phoebe fills half the sky; the Wyrm Reaches lie above Malfeas."}]},
   "arcadia-gateway": {label: "Arcadia Gateway", line: "werewolf", world: "umbra", shape: "wilds", palette: P("#1f3324", "#e6d9a0", "#0f1c12", "#203a50", "#6a3a6a", "#2f5a3a", "#ffe9b0", "#050a07"),
@@ -50,13 +50,15 @@ export const REALMS = {
     ways: ["A Moon Path from a Glen", "A trod, for changelings"], refs: ["Umbra: The Velvet Shadow pdf 50 / p. 49"],
     eras: [{to: 1348, note: "Fae still walk here openly.", mods: {dense: 1}}, {to: 1968, note: "Since the Shattering the fae who lived here are gone; the palaces stand empty (house rule).", mods: {ruin: 0.3}}, {note: "Some fae have come back since 1969 (house rule)."}]},
   atrocity: {label: "The Atrocity Realm", line: "werewolf", world: "umbra", shape: "maze", palette: P("#2a1a1a", "#7a5a50", "#120a0a", "#2a1010", "#a02a20", "#3a2420", "#ff6040", "#050202"),
-    landmarks: ["the gibbet trees", "a replayed massacre", "a prison yard", "the gate to the Hellbringer's domain"], hazards: ["a replayed horror", "a Bane drawn by cruelty"],
+    landmarks: ["the gibbet trees", "a replayed massacre", "a prison yard"], hazards: ["a replayed horror", "a Bane drawn by cruelty"], map: {on: "The gateway among the gibbet trees, into the Hellbringer's domain"},
     ways: ["Following signs of cruelty from the Penumbra"], refs: ["Umbra: The Velvet Shadow pdf 53 / p. 52", "Book of the Wyrm (W20) pdf 23 / p. 22"],
     eras: [{to: 1500, note: "The horrors replayed are those of the age so far: sieges, crusades, burnings (house rule)."}, {to: 1914, note: "The replays now hold the Thirty Years War, the slave ships and the colonies' massacres (house rule).", mods: {dense: 1}}, {to: 2025, note: "The twentieth century's camps and wars fill new wings (house rule).", mods: {dense: 2}}, {note: "In the World of Future Darkness the realm keeps growing with every corporate war (house rule).", mods: {dense: 2, blight: 0.2}}]},
   battleground: {label: "The Battleground", line: "werewolf", world: "umbra", shape: "trenches", palette: P("#3a3428", "#b0a080", "#1a1812", "#2a3038", "#8a3020", "#4a4430", "#ffd080", "#080806"),
-    landmarks: ["the Signpost", "an abandoned camp", "a war spirit's banner", "the far hill"], hazards: ["a battle in full cry", "a crater field"],
+    landmarks: ["an abandoned camp", "a war spirit's banner", "the far hill"], hazards: ["a battle in full cry", "a crater field"], map: {back: "The Signpost's first path", on: "The Signpost's second path"},
     ways: ["Following signs of war and bloodshed from the Penumbra"], refs: ["Umbra: The Velvet Shadow pdf 56 / p. 55", "Umbra: The Velvet Shadow pdf 40 / p. 39"],
-    eras: [{to: 1500, note: "The wars fought here are with swords, bows and siege engines; the Signpost is wooden (house rule)."}, {to: 1913, note: "Pike, musket and cannon; the Signpost is a milestone (house rule)."}, {to: 2025, note: "Trenches, wire and armour; the Signpost is a road sign (house rule).", mods: {dense: 1}}, {note: "Drones and powered armour; the Signpost is a touch screen (house rule).", mods: {dense: 2}}]},
+    eras: [{to: 1500, note: "The wars fought here are with swords, bows and siege engines, round palisaded camps; the Signpost is wooden (house rule).", mods: {works: "camps", craters: 0}, hazards: ["a battle in full cry", "a charge of knights"]},
+      {to: 1913, note: "Pike, musket and cannon, with earthwork redoubts; the Signpost is a milestone (house rule).", mods: {works: "redoubts", craters: 3}, hazards: ["a battle in full cry", "a cannonade"]},
+      {to: 2025, note: "Trenches, wire and armour; the Signpost is a road sign (house rule).", mods: {dense: 1, craters: 8}}, {note: "Drones and powered armour; the Signpost is a touch screen (house rule).", mods: {dense: 2, craters: 10}}]},
   cyberrealm: {label: "The CyberRealm", line: "werewolf", world: "umbra", shape: "city", palette: P("#1a2430", "#6ad0ff", "#0e141c", "#0a1a24", "#40ffa0", "#203040", "#a0f0ff", "#030508"),
     landmarks: ["a tower of glass", "a Pattern Spider nest", "the road to the Scar", "a Glass Walker refuge"], hazards: ["Pattern Spiders", "a Net-spider's web"],
     ways: ["Following webs of the Weaver from a city's Penumbra"], refs: ["Umbra: The Velvet Shadow pdf 59 / p. 58", "Book of the Weaver pdf 33 / p. 32"],
@@ -66,7 +68,7 @@ export const REALMS = {
     ways: ["Only through dreams; the old Spirit Gates are lost"], refs: ["Umbra: The Velvet Shadow pdf 43 / p. 42"],
     eras: [{note: "Built from shared dreams, so its islands look like the dreams of the age."}]},
   erebus: {label: "Erebus", line: "werewolf", world: "umbra", shape: "maze", palette: P("#2a1e18", "#d8d8e8", "#140c08", "#c8c8e0", "#ff7030", "#3a2a20", "#f0f0ff", "#060302"),
-    landmarks: ["a river of molten silver", "the Crucible", "a chamber of atonement"], hazards: ["molten silver", "a purifying fire"],
+    landmarks: ["the Crucible", "a chamber of atonement", "the silver ford"], hazards: ["molten silver", "a purifying fire"], map: {river: {hazard: "molten silver"}},
     ways: ["Drawn there by guilt nothing else can clear"], refs: ["Umbra: The Velvet Shadow pdf 62 / p. 61"],
     eras: [{note: "Gaia's wrath and the Garou Nation's purgatory, in every age."}]},
   flux: {label: "The Flux Realm", line: "werewolf", world: "umbra", shape: "islands", palette: P("#302a20", "#ffb060", "#181410", "#203040", "#c040c0", "#3a4a2a", "#ffe0a0", "#0a0806"),
@@ -78,7 +80,8 @@ export const REALMS = {
     ways: ["A Moon Path, or a tale told at a moot (Storyteller's call)"], refs: ["Umbra: The Velvet Shadow pdf 68 / p. 67"],
     eras: [{to: 1500, note: "Bright with tales of the Impergium's end and the old wars (house rule)."}, {to: 1950, note: "The tales darken as the Garou lose ground (house rule).", mods: {blight: 0.1}}, {to: 2025, note: "With the Apocalypse near, Wyrm victories let a shard of Malfeas leak through.", mods: {blight: 0.25}}, {note: "In the World of Future Darkness the realm is half dark (house rule).", mods: {blight: 0.4}}]},
   malfeas: {label: "Malfeas", line: "werewolf", world: "umbra", shape: "spiral", palette: P("#2a2018", "#a08040", "#140c06", "#3a3010", "#80ff20", "#3a2a10", "#c0ff40", "#040200"),
-    landmarks: ["the Black Spiral's pit", "a Maeljin's court", "the Last Junction's far station", "Ananasa's opal"], hazards: ["acid fog", "Banes in thousands"],
+    landmarks: ["the castle over the Black Spiral's pit", "a Maeljin's court", "the black train's far station", "Ananasa's opal"], hazards: ["acid fog", "Banes in thousands"],
+    map: {centre: "the castle over the Black Spiral's pit", rail: "the black train's far station", on: "A Hellhole up to the Penumbra"},
     ways: ["The black train from the Scar", "The caverns at the Abyss's edge", "A Moon Bridge sold by Banes in the Wyrm Reaches"], refs: ["Book of the Wyrm (W20) pdf 23 / p. 22", "Book of the Wyrm (W20) pdf 15 / p. 14"],
     eras: [{to: 1800, note: "Pits, fumes and the Maeljin's courts (house rule)."}, {note: "Factories and pipelines join the pits as industry grows (house rule).", mods: {dense: 1}}]},
   pangaea: {label: "Pangaea", line: "werewolf", world: "umbra", shape: "wilds", palette: P("#24341c", "#d8c890", "#121a0e", "#1a3a48", "#8a4020", "#2e5a22", "#f0ffb0", "#060a04"),
@@ -86,7 +89,7 @@ export const REALMS = {
     ways: ["A Moon Bridge (dangerous)", "A powerful Glen that opens straight onto it"], refs: ["Umbra: The Velvet Shadow pdf 71 / p. 70", "Umbra: The Velvet Shadow pdf 73 / p. 72"],
     eras: [{note: "The primordial world, the same in every age."}]},
   scar: {label: "The Scar", line: "werewolf", world: "umbra", shape: "city", palette: P("#2a2622", "#a09080", "#14120e", "#2a2418", "#c06020", "#302a20", "#ffb060", "#060504"),
-    landmarks: ["the Last Junction", "a slag mountain", "a sweatshop of spirits", "the road from the CyberRealm"], hazards: ["smog", "the black train's guards"],
+    landmarks: ["the Last Junction", "a slag mountain", "a sweatshop of spirits"], hazards: ["smog", "the black train's guards"], map: {centre: "a slag mountain", rail: "the Last Junction", back: "The road from the CyberRealm"},
     ways: ["Routes from the CyberRealm", "Following industrial ruin from the Penumbra"], refs: ["Book of the Wyrm (W20) pdf 23 / p. 22", "Umbra: The Velvet Shadow pdf 59 / p. 58"],
     eras: [{to: 1750, note: "A few smoking forges and mine heads (house rule).", mods: {small: 1}}, {to: 2025, note: "Rust, smog and the Last Junction."}, {note: "In the World of Future Darkness it reaches the horizon (house rule).", mods: {dense: 2}}]},
   "summer-country": {label: "Summer Country", line: "werewolf", world: "umbra", shape: "wilds", palette: P("#2a3a1c", "#f0e0a0", "#16200e", "#2a4a40", "#9a5020", "#3a7a2a", "#ffffb0", "#080c04"),
@@ -94,17 +97,17 @@ export const REALMS = {
     ways: ["No path reaches it: it takes rare strength of being, respect for all things and love of one's enemy"], refs: ["Umbra: The Velvet Shadow pdf 77 / p. 76"],
     eras: [{note: "Life arises unbidden here in every age."}]},
   wolfhome: {label: "Wolfhome", line: "werewolf", world: "umbra", shape: "wilds", palette: P("#28301e", "#d0c0a0", "#141810", "#203848", "#6a4030", "#34502a", "#f0e8c0", "#060804"),
-    landmarks: ["the Town", "a farm", "a hidden laboratory", "the Countryside's wood"], hazards: ["a Fera hunted near the Town"],
+    landmarks: ["the Town", "a farm", "a hidden laboratory", "the Countryside's wood"], hazards: ["a Fera hunted near the Town"], map: {town: "the Town"},
     ways: ["Sent there for neglecting duty or the beast within, or by elders or spirits; the way starts from a forest or park in the Penumbra"], refs: ["Umbra: The Velvet Shadow pdf 80 / p. 79", "Umbra: The Velvet Shadow pdf 40 / p. 39"],
     eras: [{to: 1800, note: "Mostly countryside, with a market town (house rule)."}, {to: 2025, note: "A blend of rustic countryside and generic suburbia.", mods: {dense: 1}}, {note: "Suburbs and laboratories spread (house rule).", mods: {dense: 2, web: 0.2}}]},
   "umbral-abyss": {label: "The Abyss (Umbral)", line: "werewolf", world: "umbra", shape: "islands", palette: P("#1a1a1e", "#808090", "#0a0a0e", "#000000", "#5a2a6a", "#202028", "#b0b0d0", "#000000"),
-    landmarks: ["a ledge over nothing", "Black Spiral runes", "a lost human's camp"], hazards: ["the fall", "a spirit forced to Slumber"],
+    landmarks: ["a ledge over nothing", "a lost human's camp", "a spirit's last perch"], hazards: ["the fall", "a spirit forced to Slumber"], map: {on: "The caverns of Black Spiral runes, whose path leads to a pit under a castle of Malfeas"},
     ways: ["Lost or thrown there; few go on purpose"], refs: ["Umbra: The Velvet Shadow pdf 47 / p. 46", "Book of the Wyrm (W20) pdf 23 / p. 22"],
     eras: [{note: "Spirits here must take bodies and can be hurt as flesh is."}]},
 
   // ---------------------------------------------------------------- Mage: past the Membrane and the Horizon
   "horizon-realm": {label: "A Horizon Realm", line: "mage", world: "deep", shape: "islands", palette: P("#24283a", "#e0d0a0", "#121420", "#1a2440", "#7a4a90", "#344060", "#fff0c0", "#04050c"),
-    landmarks: ["the Chantry house", "a library tower", "the portal", "a garden of the Spheres"], hazards: ["a ward against spirits"],
+    landmarks: ["the Chantry house", "a library tower", "a garden of the Spheres"], hazards: ["a ward against spirits"], map: {compound: "the Chantry house", arrival: "The portal"},
     ways: ["A portal from a Node or Chantry", "Spirit 4 or more (book check queued)"], refs: ["Horizon: Stronghold of Hope pdf 55 / p. 54"],
     eras: [{to: 1998, note: "Open to mages who know the portal."}, {to: 2025, note: "Since the Avatar Storm, every crossing of Earth's Gauntlet tears at a mage.", mods: {ruin: 0.2}}, {note: "In the World of Future Darkness few Horizon Realms still answer (house rule).", mods: {ruin: 0.4}}]},
   "shade-realm": {label: "A Shade Realm", line: "mage", world: "deep", shape: "islands", palette: P("#2a2430", "#d8b0e0", "#141018", "#201830", "#a04060", "#3a3048", "#ffd0f0", "#06040a"),
@@ -112,7 +115,7 @@ export const REALMS = {
     ways: ["Spirit magic past the Horizon"], refs: ["Beyond the Barriers: The Book of Worlds pdf 21 / p. 20", "The Infinite Tapestry pdf 118 / p. 117"],
     eras: [{to: 1998, note: "Each Shard's shadow on the Horizon, the way on to the Shard."}, {note: "Since the Storm the portals on to the Shards are treacherous.", mods: {ruin: 0.2}}]},
   "shard-realm": {label: "A Shard Realm", line: "mage", world: "deep", shape: "wilds", palette: P("#302418", "#ffd080", "#181008", "#1a2a40", "#ff6020", "#4a3a20", "#ffffa0", "#080400"),
-    landmarks: ["the Sphere's heart", "a ruined Chantry", "a wrecked Umbral ship", "a glassy scar"], hazards: ["raw magic of the ruling Sphere"],
+    landmarks: ["the Sphere's heart", "a Chantry behind black walls", "a wrecked Umbral ship", "a glassy scar"], hazards: ["raw magic of the ruling Sphere"], map: {compound: "a Chantry behind black walls"},
     ways: ["Spirit 5 to cross the First Horizon (The Infinite Tapestry pdf 110 / p. 109)"], refs: ["The Infinite Tapestry pdf 118 / p. 117", "Tradition Book: Order of Hermes (Revised) pdf 35 / p. 33"],
     eras: [{to: 1998, note: "A body of the solar system, ruled by one Sphere."}, {note: "Since the Storm the way in is treacherous; Doissetep lies in ruins in the Realm of Forces.", mods: {ruin: 0.3}}]},
   "paradox-realm": {label: "A Paradox Realm", line: "mage", world: "deep", shape: "maze", palette: P("#2a2a2a", "#ffffff", "#101010", "#202030", "#ff40ff", "#3a3a3a", "#ffffff", "#000000"),
@@ -134,28 +137,29 @@ export const REALMS = {
 
   // ---------------------------------------------------------------- Wraith: the Dark Umbra past the Shadowlands
   tempest: {label: "The Tempest", line: "wraith", world: "underworld", shape: "islands", palette: P("#1a2228", "#a0b0b8", "#0c1014", "#0a1418", "#5a80a0", "#24303a", "#d0e8ff", "#040608"),
-    landmarks: ["a Byway's marker", "the River of Death", "a Ferryman's reed boat", "a relic wreck"], hazards: ["the Maelstrom", "a Nihil"],
+    landmarks: ["a Byway's marker", "the River of Death", "a Ferryman's reed boat", "a relic wreck", "a Renegade cove"], hazards: ["the Maelstrom", "a Nihil"], map: {sea: true, islands: 8, back: "The Byway from the Anchorhead", on: "A Byway on"},
     ways: ["An Anchorhead, then a Byway", "Argos (Wraith 20th)"], refs: ["The Sea of Shadows pdf 20 / p. 19", "The Sea of Shadows pdf 21 / p. 20", "The Sea of Shadows pdf 28 / p. 27"],
     eras: [{note: "The storm-ocean between the realms of the dead; ways only where everyone agrees on them."}]},
   stygia: {label: "Stygia", line: "wraith", world: "underworld", shape: "city", palette: P("#1e1e24", "#b0a890", "#0e0e12", "#0c1018", "#8a2a2a", "#2a2a30", "#e0d8b0", "#040406"),
-    landmarks: ["the Onyx Tower", "Nhudri's forges", "the harbour of the Sea of Shadows", "a Legion's citadel"], hazards: ["a thrall gang", "the forges' hunger"],
+    landmarks: ["the Onyx Tower", "Nhudri's forges", "a Legion's citadel", "the Senate"], hazards: ["a thrall gang", "the forges' hunger"], map: {walled: true, centre: "the Onyx Tower", arrival: "The harbour on the Sea of Shadows"},
     ways: ["A Byway across the Tempest", "The Midnight Express"], refs: ["Handbook for the Recently Deceased pdf 15 / p. 14", "Wraith 20th pdf 95 / p. 30", "Wraith 20th pdf 86 / p. 93", "Wraith 20th pdf 105 / p. 112"],
     eras: [{to: 1944, note: "Charon's Stygia, walled against Maelstroms on its islands.", mods: {dense: 1}}, {to: 1998, note: "The Deathlords rule since Charon vanished fighting Gorool in the Fifth Great Maelstrom of 1945.", mods: {dense: 1}}, {to: 2025, note: "Broken by the Sixth Great Maelstrom: whole quarters lie flooded (house rule: Wraith 20th is set before it).", mods: {ruin: 0.35}}, {note: "In the World of Future Darkness Stygia survives, broken in places.", mods: {ruin: 0.2}}]},
   labyrinth: {label: "The Labyrinth", line: "wraith", world: "underworld", shape: "maze", palette: P("#16121a", "#706878", "#08060a", "#0a0610", "#8020a0", "#201a24", "#c080ff", "#000000"),
-    landmarks: ["a Zone", "Industrion's waste shaft", "a Spectre hive", "the way down to the Void"], hazards: ["Spectres", "a Nihil's pull"],
+    landmarks: ["a Zone, untouched by time", "Industrion's waste shaft", "a Spectre hive"], hazards: ["Spectres", "a Nihil's pull"], map: {debris: {at: "Industrion's waste shaft", label: "broken machinery and plasm pipes"}, on: "The way down to the Void"},
     ways: ["A Nihil from the Tempest", "Enoch's lower gate"], refs: ["Book of Oblivion pdf 70 / p. 69", "Doomslayers: Into the Labyrinth pdf 140 / p. 139"],
     eras: [{note: "Oblivion's maze, worse in the years of a Great Maelstrom."}]},
   "far-shores": {label: "The Far Shores", line: "wraith", world: "underworld", shape: "islands", palette: P("#243026", "#e0d8b0", "#121812", "#1a2a36", "#6a3a3a", "#345a3a", "#fff0c0", "#060806"),
-    landmarks: ["an island paradise", "an island Hell", "a would-be god's throne", "the landing"], hazards: ["a paradise that will not let go", "the empire's patrols"],
+    landmarks: ["an island paradise", "an island Hell", "a would-be god's throne", "the landing"], hazards: ["a paradise that will not let go", "the empire's patrols"], map: {sea: true, islands: 11},
     ways: ["A long voyage across the Tempest from Stygia; the empire forbids it"], refs: ["Wraith 20th pdf 84 / p. 91", "Wraith 20th pdf 87 / p. 94"],
     eras: [{to: 1998, note: "An endless archipelago, rumoured to hold paradise or Hell, some islands ruled by would-be gods."}, {note: "After the Sixth Great Maelstrom many islands lie wrecked (house rule: Wraith 20th gives no fate).", mods: {ruin: 0.4}}]},
   "dark-kingdom": {label: "Another Dark Kingdom", line: "wraith", world: "underworld", shape: "city", palette: P("#24201a", "#d0b080", "#120e0a", "#101a20", "#8a4020", "#30281e", "#ffe0a0", "#060504"),
-    landmarks: ["the throne of the Kingdom", "a market of the dead", "the shore to the storm"], hazards: ["a foreign wraith's suspicion"],
+    landmarks: ["the throne of the Kingdom", "a market of the dead", "a Necropolis gate"], hazards: ["a foreign wraith's suspicion"], map: {walled: true, centre: "the throne of the Kingdom", arrival: "The landing from the storm"},
     ways: ["A long voyage across the Tempest", "The Midnight Express to an outpost"], refs: ["Handbook for the Recently Deceased pdf 15 / p. 14", "Wraith: The Great War pdf 16 / p. 16"],
     eras: [{note: "Each Dark Kingdom keeps its own island in the storm: Jade, Ivory, Obsidian and others."}]},
   enoch: {label: "Enoch", line: "vampire", world: "underworld", shape: "city", palette: P("#1a1618", "#a09080", "#0a0808", "#0c0a10", "#a02020", "#241e20", "#e0c0a0", "#020102"),
-    landmarks: ["the five spires", "the bronze gate", "the re-made First City", "the way to the Labyrinth"], hazards: ["enslaved ghost stars", "no fire allowed"],
-    ways: ["The Tal'Mahe'Ra's own routes"], refs: ["The Black Hand: A Guide to the Tal'Mahe'Ra pdf 121 / p. 120", "Dirty Secrets of the Black Hand pdf 92 / p. 93"],
+    landmarks: ["the first spire", "the second spire", "the third spire", "the fourth spire", "the fifth spire", "the bronze gate", "the re-made First City", "the Aralu tombs"], hazards: ["enslaved ghost stars", "no fire allowed"],
+    map: {centre: "the re-made First City", arc: ["the first spire", "the second spire", "the third spire", "the fourth spire", "the fifth spire"], on: "The gate straight down to the Labyrinth"},
+    ways: ["The Tal'Mahe'Ra's own routes"], refs: ["The Black Hand: A Guide to the Tal'Mahe'Ra pdf 121 / p. 120", "Dirty Secrets of the Black Hand pdf 92 / p. 93", "Sins of the Blood pdf 181 / p. 180"],
     eras: [{note: "In the Tempest, opening straight onto the Labyrinth."}]},
 
   // ---------------------------------------------------------------- Changeling: past the Near Dreaming
@@ -170,19 +174,19 @@ export const REALMS = {
 
   // ---------------------------------------------------------------- Kuei-jin, Mummy, Demon
   yomi: {label: "Yomi, the Thousand Hells", line: "kuei-jin", world: "underworld", shape: "spiral", palette: P("#2a1818", "#d0a070", "#140808", "#200a0a", "#ff3010", "#301a14", "#ffb080", "#060202"),
-    landmarks: ["a Yama King's court", "a hell of the wicked", "the gate the Second Breath returns by"], hazards: ["a demon of the court", "endless punishment"],
-    ways: ["Every Kuei-jin passed through it before the Second Breath", "A Yomi gate"], refs: ["The Thousand Hells pdf 7 / p. 9"],
-    eras: [{note: "The Yama Kings wait here in every age."}]},
+    landmarks: ["Ti Yu, the Earth Prison", "a Yama King's court", "a hell of the wicked", "the gate the Second Breath returns by"], hazards: ["a demon of the court", "endless punishment"], map: {heart: true, centre: "Ti Yu, the Earth Prison", compound: "Ti Yu, the Earth Prison"},
+    ways: ["Every Kuei-jin passed through it before the Second Breath", "A Yomi gate"], refs: ["The Thousand Hells pdf 7 / p. 9", "Dark Kingdom of Jade pdf 90 / p. 89"],
+    eras: [{note: "The hells ring Ti Yu, the Earth Prison, a walled city with broad streets and a Hall of Justice; the Yama Kings wait here in every age."}]},
   "yellow-springs": {label: "The Yellow Springs", line: "kuei-jin", world: "underworld", shape: "city", palette: P("#2a2418", "#e0c060", "#14100a", "#1a1a10", "#a04020", "#302a18", "#fff0a0", "#060502"),
-    landmarks: ["the Jade Emperor's court", "a magistrate's hall", "a Chinatown trading hall", "the Kowloon station's twin"], hazards: ["loss of face", "a Castigator's notice"],
-    ways: ["Death in the Middle Kingdom", "A long, dangerous voyage through the Tempest", "The Midnight Express to Hong Kong"], refs: ["Wraith 20th pdf 498 / p. 433", "Wraith: The Great War pdf 16 / p. 16", "World of Darkness: Hong Kong pdf 33 / p. 31"],
+    landmarks: ["the Jade Emperor's court", "a magistrate's hall", "a Chinatown trading hall", "the Kowloon station's twin"], map: {centre: "the Jade Emperor's court", on: "The Imperial Highway to the Jade Palace"}, hazards: ["loss of face", "a Castigator's notice"],
+    ways: ["Death in the Middle Kingdom", "A long, dangerous voyage through the Tempest", "The Midnight Express to Hong Kong"], refs: ["Wraith 20th pdf 498 / p. 433", "Wraith: The Great War pdf 16 / p. 16", "World of Darkness: Hong Kong pdf 33 / p. 31", "Dark Kingdom of Jade pdf 45 / p. 44"],
     eras: [{note: "China's Deadlands under the Emperor Yu Huang: stable, crowded and rich, trading with Stygia through the Chinatowns of many Necropoli."}]},
   duat: {label: "Duat", line: "mummy", world: "underworld", shape: "wilds", palette: P("#2a2418", "#e0c890", "#16120a", "#14283a", "#8a3020", "#3a3420", "#fff0b0", "#060402"),
-    landmarks: ["Amenti's hidden fortress", "the hall of judgement", "the river of the dead"], hazards: ["the Devourer's servants"],
+    landmarks: ["Amenti's hidden fortress", "the hall of judgement", "a ferry over the river of the dead"], hazards: ["the Devourer's servants"], map: {river: {}, compound: "Amenti's hidden fortress"},
     ways: ["A mummy's death: the soul goes there between lives"], refs: ["Mummy (Second Edition) pdf 14 / p. 13", "Mummy (Second Edition) pdf 109 / p. 108"],
     eras: [{note: "The Egyptian Underworld, home of the Restless Dead."}]},
   "demon-abyss": {label: "The Abyss (the Pit)", line: "demon", world: "abyss", shape: "spiral", palette: P("#1c1414", "#c09070", "#0c0606", "#0a0404", "#ff4020", "#241818", "#ffc0a0", "#020000"),
-    landmarks: ["a broken gate", "a House's chained elders", "the Creator's wall"], hazards: ["the prison's pull"],
+    landmarks: ["a broken gate", "a House's chained elders", "the Creator's wall"], hazards: ["the prison's pull"], map: {centre: "a House's chained elders"},
     ways: ["Only by being sent back"], refs: ["Demon: The Fallen pdf 14 / p. 13", "Demon: The Fallen pdf 99 / p. 98"],
     eras: [{to: 1998, note: "Sealed: its gates hold (house rule for the date).", mods: {closed: 1}}, {note: "Its gates are broken and the fallen walk free."}]}
 };
@@ -206,7 +210,7 @@ export function realmEra(id, year, {future = false} = {}) {
     if ( g ) { notes.push(`${g[2]} Great Maelstrom rages this year: more hazards.`); mods.storm = 1; }
   }
   if ( future && y >= 2090 && ["umbra", "dreaming"].includes(R.world) ) { mods.frost = Math.max(mods.frost ?? 0, 0.6); notes.push("The Endless Winter has frozen this part of the Otherworld (house rule)."); }
-  return {year: y, notes, mods, closed: !!mods.closed};
+  return {year: y, notes, mods, closed: !!mods.closed, hazards: span.hazards ?? R.hazards ?? []};
 }
 
 /* ------------------------------------------------------------------ helpers */
@@ -285,9 +289,74 @@ function blot(m, rand, from, to, share, size = 2) {
   }
 }
 
+/** More sites where a layout made too few: walkable cells as far as can be from the ones there (seeded). */
+function addSites(m, sites, need, rand) {
+  const cols = m[0].length, rows = m.length, cand = [];
+  for ( let y = 2; y < rows - 2; y++ ) for ( let x = 2; x < cols - 2; x++ ) if ( walkable(m[y][x]) ) cand.push({x, y});
+  for ( const c of shuffled(rand, cand) ) c.r = rand();
+  while ( sites.length < need && cand.length ) {
+    let best = null, bd = -1;
+    for ( const c of cand ) {
+      const d = Math.min(...sites.map(s => Math.abs(s.x - c.x) + Math.abs(s.y - c.y))) + c.r;
+      if ( d > bd ) { bd = d; best = c; }
+    }
+    sites.push({x: best.x, y: best.y});
+    cand.splice(cand.indexOf(best), 1);
+  }
+  while ( sites.length < need ) sites.push({...sites[sites.length - 1]});
+}
+
+/** A river across the map from west to east, wandering with the noise, two cells wide. */
+function river(m, rand) {
+  const cols = m[0].length, rows = m.length, n = noise(rand, cols, rows, 9);
+  let y = between(rand, Math.floor(rows * 0.3), Math.floor(rows * 0.7));
+  const cells = [];
+  for ( let x = 0; x < cols; x++ ) {
+    y += n(x, y) > 0.62 ? 1 : n(x, y) < 0.38 ? -1 : 0;
+    y = Math.max(3, Math.min(rows - 4, y));
+    for ( const yy of [y, y + 1] ) { m[yy][x] = T.water; cells.push({x, y: yy}); }
+  }
+  return cells;
+}
+
+/** A walled compound round a site: a ring of wall w across with one gate, the inside cleared. */
+function compound(m, s, w = 7, gateSide = "s") {
+  const h = Math.floor(w / 2);
+  for ( let dy = -h; dy <= h; dy++ ) for ( let dx = -h; dx <= h; dx++ ) {
+    const X = s.x + dx, Y = s.y + dy;
+    if ( !inB(m, X, Y) ) continue;
+    const edge = Math.abs(dx) === h || Math.abs(dy) === h;
+    const gate = (gateSide === "s" && dy === h && dx === 0) || (gateSide === "n" && dy === -h && dx === 0);
+    m[Y][X] = edge && !gate ? T.solid : (dx === 0 && dy >= 0 ? T.path : T.ground);
+  }
+  // The way out of the gate
+  const gy = s.y + (gateSide === "s" ? h + 1 : -h - 1);
+  if ( inB(m, s.x, gy) && !walkable(m[gy][s.x]) ) m[gy][s.x] = T.path;
+}
+
+/** Little blocks of building round a site, with lanes between: a town in the wilds. */
+function hamlet(m, s, r = 5) {
+  for ( let dy = -r; dy <= r; dy++ ) for ( let dx = -r; dx <= r; dx++ ) {
+    const X = s.x + dx, Y = s.y + dy;
+    if ( !inB(m, X, Y) || Math.hypot(dx, dy) > r + 0.3 ) continue;
+    const lane = ((dx + 30) % 3 === 0) || ((dy + 30) % 3 === 0);
+    m[Y][X] = lane ? T.path : T.solid;
+  }
+  m[s.y][s.x] = T.path;
+}
+
+/** A straight line of track from a site to the nearest edge of the map: the black train's line. */
+function rail(m, s) {
+  const cols = m[0].length, rows = m.length;
+  const d = [[0, -1], [-1, 0], [1, 0], [0, 1]][[s.y, s.x, cols - 1 - s.x, rows - 1 - s.y].indexOf(Math.min(s.y, s.x, cols - 1 - s.x, rows - 1 - s.y))];
+  let x = s.x, y = s.y;
+  while ( inB(m, x + d[0], y + d[1]) ) { x += d[0]; y += d[1]; m[y][x] = T.path; }
+  return {x, y};
+}
+
 /* ------------------------------------------------------------------ the seven layouts. Each returns {m, sites}. */
 const LAYOUT = {
-  wilds(rand, cols, rows, mods) {
+  wilds(rand, cols, rows, mods, spec = {}) {
     const h = noise(rand, cols, rows, 7), g = noise(rand, cols, rows, 4);
     const m = grid(cols, rows, T.ground);
     for ( let y = 0; y < rows; y++ ) for ( let x = 0; x < cols; x++ ) {
@@ -298,7 +367,7 @@ const LAYOUT = {
     const sites = spread(rand, cols, rows, 5 + (mods.dense ?? 0));
     return {m, sites, roads: "path"};
   },
-  maze(rand, cols, rows, mods) {
+  maze(rand, cols, rows, mods, spec = {}) {
     const m = grid(cols, rows, T.solid);
     const cw = Math.floor((cols - 1) / 3), ch = Math.floor((rows - 1) / 3);
     const seen = grid(cw, ch, false);
@@ -330,10 +399,10 @@ const LAYOUT = {
     }
     return {m, sites};
   },
-  city(rand, cols, rows, mods) {
+  city(rand, cols, rows, mods, spec = {}) {
     const m = grid(cols, rows, T.solid);
     const cx = Math.floor(cols / 2), cy = Math.floor(rows / 2);
-    const maxR = Math.min(cx, cy) - 1;
+    const maxR = Math.min(cx, cy) - (spec.walled ? 3 : 1); // a walled city leaves room for its wall and the sea
     const rings = Math.max(2, Math.floor(maxR / 4) + (mods.dense ?? 0) - (mods.small ? 1 : 0));
     const spokes = 6 + 2 * (mods.dense ?? 0);
     const rr = Array.from({length: rings}, (_, i) => Math.round(2 + (maxR - 2) * (i + 1) / rings));
@@ -346,18 +415,35 @@ const LAYOUT = {
       else if ( rand() < 0.08 ) m[y][x] = T.ground;
     }
     const sites = [{x: cx, y: cy}];
+    if ( spec.walled ) {
+      // A wall round the city against the Maelstroms, the sea beyond, and one harbour gate where travellers land
+      const wr = maxR + 1;
+      for ( let y = 0; y < rows; y++ ) for ( let x = 0; x < cols; x++ ) {
+        const d = Math.hypot(x - cx, y - cy);
+        if ( Math.abs(d - wr) < 0.6 ) m[y][x] = T.solid;
+        else if ( d > wr + 0.6 ) m[y][x] = T.water;
+      }
+      // The harbour: a gate through the wall and a quay just inside it, the sea at its foot
+      const hy = Math.round(cy + wr);
+      for ( let y = cy; y <= hy; y++ ) m[y][cx] = T.path;
+      if ( inB(m, cx, hy + 1) ) m[hy + 1][cx] = T.shallow;
+      sites.unshift({x: cx, y: hy}); // the arrival
+    }
     for ( let i = 0; i < 3 + (mods.dense ?? 0); i++ ) {
       const a = rand() * Math.PI * 2, r = rr[between(rand, 0, rr.length - 1)];
       sites.push({x: Math.round(cx + Math.cos(a) * r), y: Math.round(cy + Math.sin(a) * r)});
     }
-    return {m, sites, roads: "path"};
+    return {m, sites, roads: "path", heart: spec.walled ? 1 : 0};
   },
-  islands(rand, cols, rows, mods) {
-    const m = grid(cols, rows, T.void);
+  islands(rand, cols, rows, mods, spec = {}) {
+    // In the Underworld the islands stand in the Tempest's storm sea; elsewhere in the void
+    const m = grid(cols, rows, spec.sea ? T.water : T.void);
     const n = noise(rand, cols, rows, 3);
-    const sites = spread(rand, cols, rows, 5 + (mods.dense ?? 0), 4);
+    const count = (spec.islands ?? 5) + (mods.dense ?? 0);
+    const sites = spread(rand, cols, rows, count, 4);
+    const rmax = count > 7 ? 4 : 5;
     for ( const s of sites ) {
-      const r = between(rand, 3, 5);
+      const r = between(rand, 3, rmax);
       for ( let y = s.y - r - 1; y <= s.y + r + 1; y++ ) for ( let x = s.x - r - 1; x <= s.x + r + 1; x++ ) {
         if ( !inB(m, x, y) ) continue;
         const d = Math.hypot(x - s.x, y - s.y) / r;
@@ -366,27 +452,54 @@ const LAYOUT = {
     }
     return {m, sites, roads: "bridge"};
   },
-  trenches(rand, cols, rows, mods) {
+  trenches(rand, cols, rows, mods, spec = {}) {
     const m = grid(cols, rows, T.ground);
-    const lines = 3 + (mods.dense ?? 0);
-    for ( let i = 0; i < lines; i++ ) {
-      const x0 = Math.round((i + 1) * cols / (lines + 1));
-      let x = x0;
-      for ( let y = 1; y < rows - 1; y++ ) {
-        if ( rand() < 0.3 ) x += rand() < 0.5 ? -1 : 1;
-        x = Math.max(2, Math.min(cols - 3, x));
-        if ( y % 7 !== 3 ) m[y][x] = T.solid; // the parapet, with gaps every few cells
-        m[y][x + 1] = T.path;
+    // The field's works follow the age of war: palisaded camps (before 1500), earthwork redoubts (to 1913),
+    // continuous trench lines (from 1914). Without an era's works the lines are the trenches.
+    const works = mods.works ?? "trenches";
+    if ( works === "trenches" ) {
+      const lines = 3 + (mods.dense ?? 0);
+      for ( let i = 0; i < lines; i++ ) {
+        let x = Math.round((i + 1) * cols / (lines + 1));
+        for ( let y = 1; y < rows - 1; y++ ) {
+          if ( rand() < 0.3 ) x += rand() < 0.5 ? -1 : 1;
+          x = Math.max(4, Math.min(cols - 4, x));
+          if ( y % 7 !== 3 ) m[y][x] = T.solid; // the parapet, with gaps every few cells
+          m[y][x + 1] = T.path;
+        }
+      }
+    } else {
+      // Camps (a square of palisade) or redoubts (a short bank with a ditch behind), scattered over the field
+      const n = works === "camps" ? 4 : 6;
+      for ( const c of spread(rand, cols, rows, n, 5) ) {
+        if ( c.x < 6 ) continue;
+        if ( works === "camps" ) compound(m, c, 5, rand() < 0.5 ? "n" : "s");
+        else for ( let dy = -2; dy <= 2; dy++ ) { if ( inB(m, c.x, c.y + dy) ) m[c.y + dy][c.x] = T.solid; if ( inB(m, c.x + 1, c.y + dy) ) m[c.y + dy][c.x + 1] = T.path; }
       }
     }
-    for ( let i = 0; i < 6 + 2 * (mods.dense ?? 0); i++ ) {
+    const craters = mods.craters ?? 6;
+    for ( let i = 0; i < craters + 2 * (mods.dense ?? 0); i++ ) {
       const x = between(rand, 2, cols - 3), y = between(rand, 2, rows - 3), r = between(rand, 1, 2);
       for ( let dy = -r; dy <= r; dy++ ) for ( let dx = -r; dx <= r; dx++ ) if ( inB(m, x + dx, y + dy) && m[y + dy][x + dx] === T.ground && Math.hypot(dx, dy) <= r ) m[y + dy][x + dx] = T.hazard;
     }
-    const sites = [{x: 1, y: Math.floor(rows / 2)}, {x: cols - 3, y: 3}, {x: cols - 3, y: rows - 4}, {x: Math.floor(cols / 2), y: Math.floor(rows / 2)}];
+    // Every visit starts at the Signpost, which points down two paths into the realm (Umbra: The Velvet Shadow pdf 56 / p. 55)
+    const post = {x: 2, y: Math.floor(rows / 2)}, a = {x: cols - 4, y: 3}, b = {x: cols - 4, y: rows - 4};
+    for ( const end of [a, b] ) {
+      let x = post.x, y = post.y;
+      x++; m[y][x] = T.path;
+      while ( x !== end.x || y !== end.y ) {
+        // The two paths part at once: one up, one down, then on across the field
+        if ( Math.abs(y - post.y) < 3 && y !== end.y ) y += Math.sign(end.y - y); else if ( y !== end.y && (x === end.x || rand() < 0.45) ) y += Math.sign(end.y - y); else x += Math.sign(end.x - x);
+        if ( m[y][x] !== T.path ) m[y][x] = T.path;
+      }
+    }
+    // Around the Signpost only the two paths lead on: rough ground bars the rest
+    for ( let dy = -4; dy <= 4; dy++ ) for ( let dx = -2; dx <= 4; dx++ ) { const X = post.x + dx, Y = post.y + dy; if ( inB(m, X, Y) && m[Y][X] !== T.path ) m[Y][X] = T.solid; }
+    m[post.y][post.x] = T.path;
+    const sites = [post, a, b, {x: Math.floor(cols / 2), y: Math.floor(rows / 2)}];
     return {m, sites, roads: "path"};
   },
-  grid(rand, cols, rows, mods) {
+  grid(rand, cols, rows, mods, spec = {}) {
     const m = grid(cols, rows, T.void);
     const step = mods.small ? 8 : 6;
     const sites = [];
@@ -399,11 +512,19 @@ const LAYOUT = {
     if ( sites.length < 2 ) {
       for ( const p of [{x: 4, y: 4}, {x: cols - 6, y: rows - 6}] ) { for ( let dy = -1; dy <= 1; dy++ ) for ( let dx = -1; dx <= 1; dx++ ) m[p.y + dy][p.x + dx] = T.ground; sites.push(p); }
     }
+    // Every sector joined to its neighbours by a straight line of light (the data highways)
+    const at = new Map(sites.filter(q => q.w).map(q => [`${q.x0},${q.y0}`, q]));
+    for ( const q of at.values() ) for ( const [ox, oy] of [[step, 0], [0, step]] ) {
+      const n = at.get(`${q.x0 + ox},${q.y0 + oy}`);
+      if ( !n ) continue;
+      if ( ox ) { const y = Math.min(q.y, n.y); for ( let x = q.x; x <= n.x; x++ ) if ( m[y][x] === T.void ) m[y][x] = T.path; }
+      else { const x = Math.min(q.x, n.x); for ( let y = q.y; y <= n.y; y++ ) if ( m[y][x] === T.void ) m[y][x] = T.path; }
+    }
     // Restricted sectors: walled hazard boxes
     for ( const s of sites.slice(1) ) if ( rand() < 0.25 && s.w ) for ( let dy = 0; dy < s.h; dy++ ) for ( let dx = 0; dx < s.w; dx++ ) m[s.y0 + dy][s.x0 + dx] = T.hazard;
     return {m, sites, roads: "line"};
   },
-  spiral(rand, cols, rows, mods) {
+  spiral(rand, cols, rows, mods, spec = {}) {
     const m = grid(cols, rows, T.ground);
     const cx = Math.floor(cols / 2), cy = Math.floor(rows / 2), maxR = Math.min(cx, cy) - 1;
     const rings = Math.max(3, Math.floor(maxR / 3));
@@ -411,7 +532,7 @@ const LAYOUT = {
     for ( let y = 0; y < rows; y++ ) for ( let x = 0; x < cols; x++ ) {
       const d = Math.hypot(x - cx, y - cy);
       if ( d > maxR + 0.5 ) { m[y][x] = T.solid; continue; }
-      if ( d < 2 ) { m[y][x] = T.hazard; continue; }
+      if ( d < 2 ) { m[y][x] = spec.heart ? T.ground : T.hazard; continue; }
       const a = (Math.atan2(y - cy, x - cx) + Math.PI) / (2 * Math.PI);
       for ( let i = 0; i < rings; i++ ) {
         const r = 2.5 + (maxR - 2.5) * (i + 1) / rings;
@@ -426,13 +547,13 @@ const LAYOUT = {
       const a = rand() * Math.PI * 2, r = 3.5 + rand() * (maxR - 4);
       sites.push({x: Math.round(cx + Math.cos(a) * r), y: Math.round(cy + Math.sin(a) * r)});
     }
-    sites.push({x: cx, y: cy - 2}); // the pit's lip, last: the deepest place
-    return {m, sites};
+    sites.push({x: cx, y: cy - (spec.heart ? 0 : 2)}); // the pit's lip (or the heart's city), last: the deepest place
+    return {m, sites, heart: sites.length - 1};
   }
 };
 
 /** Make sure every site sits on walkable ground and joins the start, carving the way where it must. */
-function join(m, sites, rand, roads) {
+function join(m, sites, rand, roads, only = false) {
   const kind = T.path;
   for ( const s of sites ) if ( !walkable(m[s.y][s.x]) ) m[s.y][s.x] = T.ground;
   // A road along a minimum tree of the sites (nearest joined first), then any site still cut off is carved to
@@ -444,7 +565,7 @@ function join(m, sites, rand, roads) {
       const d = Math.abs(r.x - j.x) + Math.abs(r.y - j.y);
       if ( !best || d < best.d ) best = {r, j, d};
     }
-    if ( roads ) carve(m, best.j, best.r, kind, rand, 1, roads === "path" ? new Set([T.water]) : null);
+    if ( roads && !(only && reach(m, best.j).has(`${best.r.x},${best.r.y}`)) ) carve(m, best.j, best.r, kind, rand, 1, roads === "path" ? new Set([T.water]) : null);
     joined.push(best.r);
     rest.splice(rest.indexOf(best.r), 1);
   }
@@ -452,7 +573,7 @@ function join(m, sites, rand, roads) {
     const seen = reach(m, sites[0]);
     const cut = sites.filter(s => !seen.has(`${s.x},${s.y}`));
     if ( !cut.length ) break;
-    for ( const s of cut ) carve(m, sites[0], s, T.path, rand, 1);
+    for ( const s of cut ) carve(m, only ? sites[1] ?? sites[0] : sites[0], s, T.path, rand, 1);
   }
 }
 
@@ -500,31 +621,97 @@ export function generate({realm = "tempest", seed = 1197, year = 1999, size = "m
   const era = realmEra(realm, year, {future});
   const {cols, rows} = SIZES[size] ?? SIZES.medium;
   const rand = stream(seed, `realm:${realm}:${era.year}:${size}`);
-  const mods = era.mods;
-  const {m, sites, roads} = LAYOUT[R.shape](rand, cols, rows, mods);
+  const mods = era.mods, spec = R.map ?? {};
+  const lay = LAYOUT[R.shape](rand, cols, rows, mods, spec);
+  const {m, roads} = lay;
+  let sites = lay.sites.map(p => ({x: p.x, y: p.y}));
+  // Every named landmark gets a place: the arrival, the way back, the landmarks, a way on
+  const marks = R.landmarks ?? [];
+  const need = 3 + marks.length;
+  addSites(m, sites, need, rand);
+  sites = sites.slice(0, Math.max(need, lay.heart !== undefined ? lay.heart + 1 : 0));
+  const heart = lay.heart;
+  const order = sites.map((_, i) => i).filter(i => i !== 0 && i !== heart);
+  const role = new Map([[0, {kind: "arrival"}]]);
+  role.set(order[0], {kind: "back"});
+  role.set(order[order.length - 1], {kind: "on"});
+  const left = [...marks];
+  if ( heart !== undefined && heart !== 0 ) {
+    const c = spec.centre && left.includes(spec.centre) ? spec.centre : left[0];
+    role.set(heart, {kind: "landmark", label: c});
+    left.splice(left.indexOf(c), 1);
+  }
+  for ( const i of order.slice(1, -1) ) if ( left.length ) role.set(i, {kind: "landmark", label: left.shift()});
+  const placed = [...role.entries()].filter(([i]) => sites[i]).sort((a, b) => a[0] - b[0]);
+  const siteOf = label => { const e = placed.find(([, r]) => r.label === label); return e ? sites[e[0]] : null; };
+  // A row of landmarks in an arc (Enoch's five spires, curved like a hand)
+  if ( spec.arc ) {
+    const cx = Math.floor(cols / 2), cy = Math.floor(rows / 2), r = Math.min(cx, cy) * 0.55;
+    spec.arc.forEach((label, k) => {
+      const s = siteOf(label); if ( !s ) return;
+      const a = Math.PI * (1.15 + 0.7 * k / Math.max(1, spec.arc.length - 1));
+      s.x = Math.round(cx + Math.cos(a) * r); s.y = Math.round(cy + Math.sin(a) * r);
+      if ( inB(m, s.x, s.y - 1) ) m[s.y - 1][s.x] = T.solid; // the spire itself
+    });
+  }
   // Era changes: ruin floods or breaks, blight rots, frost freezes water to ground, the storm adds hazards
   if ( mods.ruin ) blot(m, rand, [T.solid], R.world === "underworld" ? T.shallow : T.hazard, mods.ruin * 0.25, 1);
   if ( mods.blight ) blot(m, rand, [T.ground, T.growth], T.hazard, mods.blight * 0.2, 1);
   if ( mods.web ) blot(m, rand, [T.ground, T.growth], T.shallow, mods.web * 0.15, 1);
   if ( mods.frost ) for ( const row of m ) for ( let x = 0; x < row.length; x++ ) if ( row[x] === T.water && rand() < mods.frost ) row[x] = T.shallow; else if ( row[x] === T.growth && rand() < mods.frost ) row[x] = T.ground;
   if ( mods.storm ) blot(m, rand, [T.ground], T.hazard, 0.04, 1);
-  join(m, sites, rand, roads);
-  // Sites: the first is where travellers arrive; one or two ways out; the rest take the realm's landmarks
+  // What the realm's own descriptions call for
+  const fixedHz = [];
+  if ( spec.river ) {
+    const cells = river(m, rand);
+    if ( spec.river.hazard ) fixedHz.push({label: spec.river.hazard, cells});
+  }
+  if ( spec.reaches ) {
+    // A decayed band along the top of the map (the Wyrm Reaches over the Aetherial Realm)
+    const band = [];
+    for ( let y = 0; y < Math.floor(rows * 0.22); y++ ) for ( let x = 0; x < cols; x++ ) if ( walkable(m[y][x]) && m[y][x] !== T.path && rand() < 0.35 ) { m[y][x] = T.hazard; band.push({x, y}); }
+    fixedHz.push({label: spec.reaches, cells: band});
+  }
+  for ( const label of [spec.compound ?? []].flat() ) { const s = siteOf(label); if ( s ) compound(m, s, 7, s.y > rows / 2 ? "n" : "s"); }
+  if ( spec.town ) { const s = siteOf(spec.town); if ( s ) hamlet(m, s, 4); }
+  if ( spec.debris ) {
+    const s = siteOf(spec.debris.at), cells = [];
+    if ( s ) for ( let dy = -4; dy <= 4; dy++ ) for ( let dx = -4; dx <= 4; dx++ ) {
+      const X = s.x + dx, Y = s.y + dy, d = Math.abs(dx) + Math.abs(dy);
+      if ( d >= 2 && inB(m, X, Y) && walkable(m[Y][X]) && rand() < 0.4 ) { m[Y][X] = T.hazard; cells.push({x: X, y: Y}); }
+    }
+    fixedHz.push({label: spec.debris.label, cells});
+  }
+  const named = placed.map(([i]) => sites[i]);
+  join(m, named, rand, roads, R.shape === "trenches");
+  if ( spec.rail ) { const s = siteOf(spec.rail); if ( s ) rail(m, s); }
+  for ( const s of named ) if ( !walkable(m[s.y][s.x]) ) m[s.y][s.x] = T.path;
+  // The regions
   const regions = [];
   const clampRect = (s, w = 2, h = 2) => [Math.max(0, Math.min(cols - w, s.x - Math.floor(w / 2))), Math.max(0, Math.min(rows - h, s.y - Math.floor(h / 2))), w, h];
-  regions.push({id: "arrival", kind: "arrival", label: R.shape === "trenches" ? "The Signpost" : "Arrival", rect: clampRect(sites[0]), at: {x: sites[0].x, y: sites[0].y}, note: "Travellers sent here arrive in this square."});
-  const marks = shuffled(rand, R.landmarks ?? []);
-  const named = sites.slice(0, 7);
-  named.slice(1).forEach((s, i) => {
-    if ( i === 0 || (i === named.length - 2 && named.length > 4) ) regions.push({id: `exit-${i}`, kind: "exit", label: i === 0 ? "The way back" : "A way on", rect: clampRect(s), note: i === 0 ? "Leads back the way the travellers came." : "Leads on to another realm (link it in Ways and realms)."});
-    else regions.push({id: `landmark-${i}`, kind: "landmark", label: marks[(i - 1) % Math.max(1, marks.length)] ?? "A landmark", rect: clampRect(s, 3, 3), note: ""});
-  });
-  // Hazards: on hazard cells, a region on each of a few of them
-  const hz = [], near = reach(m, sites[0]);
-  m.forEach((row, y) => row.forEach((t, x) => { if ( t === T.hazard && near.has(`${x},${y}`) ) hz.push({x, y}); }));
-  shuffled(rand, hz).slice(0, Math.min(4, hz.length)).forEach((c, i) => regions.push({id: `hazard-${i}`, kind: "hazard", label: pick(rand, R.hazards ?? ["Danger"]) ?? "Danger", rect: clampRect(c, 2, 2), note: ""}));
+  for ( const [i, r] of placed ) {
+    const s = sites[i];
+    if ( r.kind === "arrival" ) regions.push({id: "arrival", kind: "arrival", label: spec.arrival ?? (R.shape === "trenches" ? "The Signpost" : "Arrival"), rect: clampRect(s), at: {x: s.x, y: s.y}, note: "Travellers sent here arrive in this square."});
+    else if ( r.kind === "back" ) regions.push({id: "exit-back", kind: "exit", label: spec.back ?? "The way back", rect: clampRect(s), at: {x: s.x, y: s.y}, note: "Leads back the way the travellers came."});
+    else if ( r.kind === "on" ) regions.push({id: "exit-on", kind: "exit", label: spec.on ?? "A way on", rect: clampRect(s), at: {x: s.x, y: s.y}, note: "Leads on to another realm (link it in Ways and realms)."});
+    else regions.push({id: `landmark-${regions.filter(x => x.kind === "landmark").length}`, kind: "landmark", label: r.label ?? "A landmark", rect: clampRect(s, 3, 3), at: {x: s.x, y: s.y}, note: ""});
+  }
+  // Hazards: each of the realm's dangers once, apart from each other and from the named places
+  const near = reach(m, named[0]);
+  const used = [];
+  const far = (c, d) => named.every(s => Math.abs(s.x - c.x) + Math.abs(s.y - c.y) >= 3) && used.every(u => Math.abs(u.x - c.x) + Math.abs(u.y - c.y) >= d);
+  const addHz = (label, c) => { used.push(c); regions.push({id: `hazard-${used.length - 1}`, kind: "hazard", label, rect: clampRect(c, 2, 2), note: ""}); };
+  for ( const f of fixedHz ) { const c = shuffled(rand, f.cells).find(c => far(c, 4)) ?? f.cells[0]; if ( c ) addHz(f.label, c); }
+  const hzCells = [];
+  m.forEach((row, y) => row.forEach((t, x) => { if ( t === T.hazard && near.has(`${x},${y}`) ) hzCells.push({x, y}); }));
+  const pool = shuffled(rand, hzCells), ground = shuffled(rand, [...near].map(k => { const [x, y] = k.split(",").map(Number); return {x, y}; }).filter(c => m[c.y][c.x] === T.ground));
+  for ( const label of era.hazards.filter(h => !fixedHz.some(f => f.label === h)) ) {
+    let c = pool.find(c => far(c, 5)) ?? pool.find(c => far(c, 3));
+    if ( !c ) { c = ground.find(c => far(c, 5)) ?? ground.find(c => far(c, 2)); if ( c ) for ( const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1]] ) if ( inB(m, c.x + dx, c.y + dy) && m[c.y + dy][c.x + dx] === T.ground ) m[c.y + dy][c.x + dx] = T.hazard; }
+    if ( c ) addHz(label, c);
+  }
   return {version: VERSION, realm, label: R.label, line: R.line, world: R.world, shape: R.shape, seed, year: era.year, size, cols, rows,
-    cells: m, walls: wallsOf(m), regions, notes: era.notes, closed: era.closed, palette: R.palette, ways: R.ways ?? [], refs: R.refs ?? []};
+    cells: m, walls: wallsOf(m), regions, notes: era.notes, closed: era.closed, palette: R.palette, ways: R.ways ?? [], refs: R.refs ?? [], sky: spec.sky ?? null};
 }
 
 /* ------------------------------------------------------------------ drawing */
@@ -549,6 +736,8 @@ export function svg(model, {cell = 50, labels = false} = {}) {
     `<defs><radialGradient id="glow"><stop offset="0" stop-color="${C.glow}" stop-opacity="0.55"/><stop offset="1" stop-color="${C.glow}" stop-opacity="0"/></radialGradient>`,
     `<radialGradient id="dim" cx="0.5" cy="0.5" r="0.75"><stop offset="0.55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.6"/></radialGradient></defs>`,
     `<rect width="${W}" height="${H}" fill="${C.void}"/>`];
+  // Phoebe fills half the Aetherial sky (Rage Across the Heavens pdf 25 / p. 24)
+  if ( model.sky === "moon" ) out.push(`<radialGradient id="moon" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#f4f6ff" stop-opacity="0.5"/><stop offset="0.7" stop-color="#c9d4ff" stop-opacity="0.22"/><stop offset="1" stop-color="#c9d4ff" stop-opacity="0"/></radialGradient>`);
   // Runs of one kind along each row
   const by = {};
   for ( let y = 0; y < rows; y++ ) {
@@ -577,6 +766,7 @@ export function svg(model, {cell = 50, labels = false} = {}) {
   const line = k => model.walls.filter(w => w.kind === k).map(w => `M${w.c[0] * cell} ${w.c[1] * cell}L${w.c[2] * cell} ${w.c[3] * cell}`).join("");
   out.push(`<path d="${line("edge")}" stroke="${C.glow}" stroke-opacity="0.45" stroke-width="${(cell * 0.08).toFixed(1)}" fill="none"/>`);
   out.push(`<path d="${line("solid")}" stroke="${C.ink}" stroke-opacity="0.22" stroke-width="${(cell * 0.06).toFixed(1)}" fill="none"/>`);
+  if ( model.sky === "moon" ) out.push(`<circle cx="${W * 0.72}" cy="${H * 0.62}" r="${Math.max(W, H) * 0.55}" fill="url(#moon)"/>`);
   // A glow on each landmark and on the arrival
   for ( const r of model.regions.filter(r => r.kind !== "hazard") ) {
     const [x, y, w, h] = r.rect;
@@ -585,7 +775,8 @@ export function svg(model, {cell = 50, labels = false} = {}) {
   out.push(`<rect width="${W}" height="${H}" fill="url(#dim)"/>`);
   if ( labels ) for ( const r of model.regions ) {
     const [x, y, w] = r.rect;
-    out.push(`<text x="${(x + w / 2) * cell}" y="${(y - 0.3) * cell}" fill="${C.ink}" font-family="EB Garamond, Georgia, serif" font-size="${cell * 0.6}" text-anchor="middle">${esc(r.label)}</text>`);
+    const tx = Math.max(cell * 4, Math.min(W - cell * 4, (x + w / 2) * cell)), ty = r.kind === "hazard" ? (y + r.rect[3] + 0.9) * cell : Math.max(cell, (y - 0.3) * cell);
+    out.push(`<text x="${tx}" y="${ty}" fill="${C.ink}" font-family="EB Garamond, Georgia, serif" font-size="${cell * 0.6}" text-anchor="middle">${esc(r.label)}</text>`);
   }
   out.push("</svg>");
   return out.join("");

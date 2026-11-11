@@ -74,8 +74,16 @@ export function reflect(sidecar, layer = "penumbra", {year = null, future = fals
     if ( p.wealth === "poor" ) add("faint", r, 0.5);
     if ( r.place?.private && p.wealth !== "rich" ) add("faint", r, 0.25);
   }
-  for ( const g of sc.umbral?.gone ?? [] ) {
-    if ( Number(g.year) > y ) continue;
+  // Where one spot lost several buildings over the ages, only the most recent one stands again as a relic
+  const gone = (sc.umbral?.gone ?? []).filter(g => Number(g.year) <= y).sort((a, b) => Number(b.year) - Number(a.year));
+  const overlap = (a, b) => {
+    const [ax, ay, aw, ah] = a.rect ?? [0, 0, 0, 0], [bx, by, bw, bh] = b.rect ?? [0, 0, 0, 0];
+    const ix = Math.max(0, Math.min(ax + aw, bx + bw) - Math.max(ax, bx)), iy = Math.max(0, Math.min(ay + ah, by + bh) - Math.max(ay, by));
+    return ix * iy > 0.3 * Math.min(aw * ah, bw * bh);
+  };
+  const kept = [];
+  for ( const g of gone ) if ( !kept.some(k => overlap(k, g)) ) kept.push(g);
+  for ( const g of kept ) {
     // A house rebuilt in a later style is a faint relic under the new one (drawn, no region); a building cleared away is a strong one.
     if ( String(g.why ?? "").startsWith("rebuild-") ) add("relic", g, 0.35, `Relic: the older ${String(g.label).toLowerCase()}`, `Rebuilt in ${g.year}; the older house still stands for the dead.`);
     else add("relic", g, 0.8, `Relic: ${g.label}`, `Pulled down in ${g.year}${g.why ? ` (${String(g.why).replace(/-/g, " ")})` : ""}; still standing for the dead.`);
