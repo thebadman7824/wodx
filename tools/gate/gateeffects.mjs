@@ -1,5 +1,5 @@
 /**
- * Mage effect keywords gate (WoDX Actions 3.22.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Mage effect keywords gate (WoDX Actions 3.23.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateeffects.mjs?${Date.now()}`)).run()
  * Makes a caster and a target actor, applies keyword results straight through the apply step, undoes them,
  * posts one keyword card for the Storyteller's client to apply, then deletes what it made.
@@ -10,6 +10,9 @@
  *   5. a keyword card is applied once by the active Storyteller, marked done, with an Undo record
  *   6. a queued item goes to the approval queue under its own type
  *   7. every other WoDX module still answers
+ *   8. Move puts a token where asked, and Undo puts it back (needs a scene; a token is made and deleted)
+ *   9. an area works on a token inside it once, on one standing outside only when it walks in, and Undo removes it
+ *  10. a rote is saved on the caster, replaced by name, and forgotten
  * Result: Data/wodx-gate/gateeffects-result.json.
  */
 async function save(R, name) {
@@ -38,7 +41,7 @@ export async function run() {
 
     await step("1 api, setting, on here", async () => {
       const mode = game.settings.get(MOD, "effectsApply");
-      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.22.0", {mode});
+      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.23.0", {mode});
     });
 
     await step("2 Harm and Undo", async () => {
@@ -100,6 +103,56 @@ export async function run() {
       const missing = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
       ok("7 other modules answer", !missing.length, {missing});
     });
+
+    const scene = canvas?.scene;
+    let toks = [];
+    await step("8 Move and Undo", async () => {
+      if ( !scene ) return ok("8 Move and Undo", false, {error: "no scene is viewed"});
+      const g = scene.grid?.size ?? 100, d = scene.dimensions ?? {};
+      const x0 = (d.sceneX ?? 0) + g * 2, y0 = (d.sceneY ?? 0) + g * 2;
+      toks = await scene.createEmbeddedDocuments("Token", [
+        {name: "WoDX gate: keyword token in", actorId: target.id, x: x0, y: y0, actorLink: false, hidden: true},
+        {name: "WoDX gate: keyword token out", actorId: target.id, x: x0 + g * 8, y: y0, actorLink: false, hidden: true}]);
+      const t = toks[0];
+      const out = E.outcome("move", E.spend(2, 2, {}));
+      const rec = await fx().apply({key: "move", out, target: t.uuid, name: t.name, route: "pick", at: {x: x0 + g * 3.5, y: y0 + g * 0.5}}, caster.name);
+      const moved = t.x === x0 + g * 3;
+      await fx().undo([rec]);
+      ok("8 Move and Undo", moved && t.x === x0 && t.y === y0, {x: t.x, y: t.y});
+    });
+
+    await step("9 an area on entry", async () => {
+      if ( !scene || toks.length < 2 ) return ok("9 an area on entry", false, {error: "no tokens"});
+      const g = scene.grid?.size ?? 100;
+      const [tin, tout] = toks;
+      const a0 = (tin.actor?.system?.quintessence?.temporary ?? 0);
+      const out = E.outcome("charge", {...E.spend(4, 2, {area: true}), area: true});
+      out.area = E.AREA.feet;
+      const centre = {x: tin.x + g / 2, y: tin.y + g / 2};
+      const rec = await fx().placeArea({key: "charge", out, target: null, name: "an area", route: "area"}, centre, {caster: caster.name, scene});
+      const region = fromUuidSync(rec.region);
+      const area = () => region?.flags?.["wodx-actions"]?.effectArea ?? {};
+      const firstIn = area().applied?.includes(tin.id) && !area().applied?.includes(tout.id);
+      await tout.update({x: tin.x, y: tin.y}, {animate: false, teleport: true});
+      for ( let i = 0; i < 20 && !area().applied?.includes(tout.id); i++ ) await new Promise(r => setTimeout(r, 150));
+      const walkedIn = area().applied?.includes(tout.id);
+      await tout.update({x: tin.x + g * 8}, {animate: false, teleport: true});
+      await tout.update({x: tin.x}, {animate: false, teleport: true});
+      await new Promise(r => setTimeout(r, 400));
+      const once = area().applied.filter(id => id === tout.id).length === 1;
+      await fx().undo([rec]);
+      ok("9 an area on entry", firstIn && walkedIn && once && !fromUuidSync(rec.region) && (tin.actor?.system?.quintessence?.temporary ?? 0) === a0, {firstIn, walkedIn, once});
+    });
+
+    await step("10 rotes", async () => {
+      const R0 = fx().rules;
+      await fx().saveRote(caster, R0.roteFrom("WoDX gate bolt", {keywords: ["harm"], used: [{sphere: "forces", level: 3}], kind: "vulgar", feat: 3}));
+      await fx().saveRote(caster, R0.roteFrom("wodx gate bolt", {keywords: ["harm", "light"], used: [{sphere: "forces", level: 3}], kind: "vulgar", feat: 3}));
+      const one = fx().rotes(caster);
+      await fx().forgetRote(caster, "WoDX GATE BOLT");
+      ok("10 rotes", one.length === 1 && one[0].keywords.length === 2 && fx().rotes(caster).length === 0, {names: one.map(r => r.name)});
+    });
+    if ( toks.length ) await scene.deleteEmbeddedDocuments("Token", toks.map(t => t.id)).catch(() => {});
   } catch (e) { R.errors.push(e.message); }
   finally {
     for ( const m of msgs ) await m.delete().catch(() => {});

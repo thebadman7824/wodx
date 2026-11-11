@@ -1,11 +1,13 @@
 /**
- * WoDX Actions 3.22.0: magic that applies itself, in Foundry. The Mage 20th Cast window gets effect keywords and a
+ * WoDX Actions 3.22.0 and 3.23.0: magic that applies itself, in Foundry. The Mage 20th Cast window gets effect keywords and a
  * spend plan; after the roll the card says what each keyword does to each target, and the active Storyteller's
  * client applies what may apply on its own (health, Quintessence, timed effects, light, height, conditions), with
  * one Undo button. What needs a yes goes to the approval queue; what is the Storyteller's call is listed for them.
  * World setting "Magic that applies itself": Automatic (on, except in the Live world), On, Off. Rules: effects-rules.js.
  */
 import * as E from "./effects-rules.js";
+export { E };
+import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-actions";
 const TYPE = "wodx-actions.effect";
@@ -27,17 +29,35 @@ export function isOn() {
 /*  The Cast window                                                    */
 /* ------------------------------------------------------------------ */
 
-/** The keyword part of the Cast window. known: the caster's Spheres. */
-export function fieldset(known = {}) {
+/** The caster's saved rotes. */
+export const rotesOf = actor => (Array.isArray(actor?.flags?.[MOD]?.rotes) ? actor.flags[MOD].rotes : []);
+
+/** Save a rote on the caster. */
+export async function saveRote(actor, rote) {
+  if ( !actor || !rote ) return null;
+  await actor.update({[`flags.${MOD}.rotes`]: E.keepRote(rotesOf(actor), rote)});
+  return rote;
+}
+
+/** Forget a rote by name. */
+export async function forgetRote(actor, name) {
+  const key = String(name ?? "").toLowerCase();
+  await actor?.update?.({[`flags.${MOD}.rotes`]: rotesOf(actor).filter(r => r.name.toLowerCase() !== key)});
+}
+
+/** The keyword part of the Cast window. known: the caster's Spheres; rotes: the caster's saved rotes. */
+export function fieldset(known = {}, rotes = []) {
   const box = ([k, K]) => {
     const can = E.spheresFor([k], known).missing.length === 0;
     return `<label class="wodx-kw${can ? "" : " wodx-kw-off"}" title="${esc(K.does)}"><input type="checkbox" name="kw-${k}"${can ? "" : " disabled"}/> ${esc(K.label)}</label>`;
   };
-  return `<fieldset class="wodx-keywords"><legend>What the Effect does (keywords)</legend>
+  const roteRow = rotes.length ? `<div class="form-group"><label>A saved rote</label>${rotes.length > 5 ? searchBox("select[name=kw-rote]", "Search rotes…", "Search rotes") : ""}<select name="kw-rote"><option value="">(none)</option>${rotes.map((r, i) => `<option value="${i}">${esc(r.name)}</option>`).join("")}</select></div>` : "";
+  return `<fieldset class="wodx-keywords"><legend>What the Effect does (keywords)</legend>${roteRow}
     <div class="wodx-kw-list" data-fixed>${Object.entries(E.KEYWORDS).map(box).join("")}</div>
     <p class="hint">Each keyword fills in the Spheres it needs. Each one past the first needs one more success (house rule); an Effect on someone else needs at least two (Mage 20th p. 502).</p>
     <div class="form-group"><label>Extra targets</label><input type="number" name="kw-targets" min="0" max="10" value="0"/></div>
     <div class="form-group"><label>Duration steps (a turn, a scene, a day, a story, six months)</label><input type="number" name="kw-duration" min="0" max="4" value="0"/></div>
+    <div class="form-group"><label><input type="checkbox" name="kw-area"/> An area, ${E.AREA.feet} feet around a spot (+${E.AREA.cost} successes; works on whoever enters)</label></div>
     <div class="form-group"><label>Options</label><div class="form-fields wodx-kw-opts" data-fixed>
       <label><input type="checkbox" name="kw-fire"/> Fire or lightning</label>
       <label><input type="checkbox" name="kw-prime"/> Charged with Prime 2 and a Quintessence</label>
@@ -45,11 +65,14 @@ export function fieldset(known = {}) {
       <label><input type="checkbox" name="kw-slow"/> Slow, not hasten</label>
       <label><input type="checkbox" name="kw-dark"/> Darkness, not light</label>
       <label><input type="checkbox" name="kw-drain"/> Drain, not charge</label>
-      <label><input type="checkbox" name="kw-agg"/> Mend aggravated wounds</label></div></div></fieldset>`;
+      <label><input type="checkbox" name="kw-agg"/> Mend aggravated wounds</label></div></div>
+    <div class="form-group"><label>Save as a rote named</label><input type="text" name="kw-save" maxlength="60" placeholder="Leave empty to not save"/></div></fieldset>`;
 }
 
-/** Ticking a keyword raises the Sphere choices to what it needs. */
-export function wire(root, known = {}) {
+const CTX_BOXES = {fire: "kw-fire", primeCharged: "kw-prime", curse: "kw-curse", slow: "kw-slow", dark: "kw-dark", drain: "kw-drain", aggravated: "kw-agg"};
+
+/** Ticking a keyword raises the Sphere choices to what it needs; picking a rote fills the window in. */
+export function wire(root, known = {}, rotes = []) {
   const sync = () => {
     const ks = Object.keys(E.KEYWORDS).filter(k => root.querySelector(`[name="kw-${k}"]`)?.checked);
     const self = !game.user.targets?.size;
@@ -65,13 +88,24 @@ export function wire(root, known = {}) {
   };
   root.querySelector('[name="kind"]')?.addEventListener("change", e => { e.currentTarget.dataset.wodxTouched = "1"; });
   for ( const k of Object.keys(E.KEYWORDS) ) root.querySelector(`[name="kw-${k}"]`)?.addEventListener("change", sync);
+  root.querySelector('[name="kw-rote"]')?.addEventListener("change", ev => {
+    const r = rotes[n(ev.currentTarget.value)];
+    if ( ev.currentTarget.value === "" || !r ) return;
+    const set = (name, v) => { const el = root.querySelector(`[name="${name}"]`); if ( !el ) return; if ( el.type === "checkbox" ) el.checked = !!v; else el.value = String(v); };
+    for ( const k of Object.keys(E.KEYWORDS) ) set(`kw-${k}`, r.keywords.includes(k));
+    for ( const el of root.querySelectorAll('select[name^="s-"]') ) el.value = String(r.spheres?.[el.name.slice(2)] ?? 0);
+    set("kw-targets", r.plan?.targets ?? 0); set("kw-duration", r.plan?.duration ?? 0); set("kw-area", r.plan?.area);
+    for ( const [k, name] of Object.entries(CTX_BOXES) ) set(name, r.ctx?.[k]);
+    if ( r.kind ) set("kind", r.kind);
+    if ( r.feat ) set("feat", r.feat);
+  });
 }
 
 /** What the form asks for. */
 export function read(fd) {
   const keywords = Object.keys(E.KEYWORDS).filter(k => fd[`kw-${k}`]);
-  return {keywords, plan: {targets: n(fd["kw-targets"]), duration: n(fd["kw-duration"])},
-    ctx: {fire: !!fd["kw-fire"], primeCharged: !!fd["kw-prime"], curse: !!fd["kw-curse"], slow: !!fd["kw-slow"], dark: !!fd["kw-dark"], drain: !!fd["kw-drain"], aggravated: !!fd["kw-agg"]}};
+  return {keywords, plan: {targets: n(fd["kw-targets"]), duration: n(fd["kw-duration"]), area: !!fd["kw-area"]},
+    ctx: Object.fromEntries(Object.entries(CTX_BOXES).map(([k, name]) => [k, !!fd[name]])), save: String(fd["kw-save"] ?? "").trim()};
 }
 
 /** The targets: the user's targets, else the caster's own token (or the actor). */
@@ -91,21 +125,30 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
   const spheres = used.map(x => x.sphere);
   const items = [];
   const docs = t.docs.slice(0, 1 + got.targets);
+  const caster = actor?.getActiveTokens?.()?.[0]?.document ?? null;
   for ( const key of form.keywords ) {
     const out = E.outcome(key, got, {...form.ctx, spheres});
     if ( !out ) continue;
+    if ( out.area ) {
+      // One circle on the scene: the Storyteller places it, and it works on whoever enters
+      const route = isOn() ? E.route(key, {self: false, count: 1, witnessed, need: base}, out) : "off";
+      items.push({key, out, target: null, name: "an area", caster: caster?.uuid ?? null, route: route === "st" || route === "off" ? route : "area"});
+      continue;
+    }
     for ( const d of docs ) {
       const a = d?.actor ?? d;
       const pc = !!a?.hasPlayerOwner;
       const route = isOn() ? E.route(key, {self: t.self, playerCharacter: pc, count: docs.length, witnessed, need: base}, out) : "off";
-      items.push({key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route});
+      // A move waits for the Storyteller's click on the map
+      items.push({key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route: route === "auto" && out.kind === "move" ? "pick" : route});
     }
   }
-  const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply"};
+  const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply",
+    pick: "goes where the Storyteller clicks", area: "waits for the Storyteller to place it"};
   const html = !got.ok ? "" : `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
     `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(i.out.text)}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul>
     ${got.dropped.length ? `<div class="vta-note">Too few successes for ${esc(got.dropped.join(" and "))}.</div>` : ""}</div>`;
-  return {items, html, base, need: base + n(form.plan.targets) + n(form.plan.duration), got};
+  return {items, html, base, need: E.needFor(form.keywords, {self: t.self, feat, plan: form.plan}), got};
 }
 
 /* ------------------------------------------------------------------ */
@@ -160,9 +203,106 @@ export async function applyItem(item, casterName = "the caster") {
       await tok.update(o.dark ? {"light.negative": true, "light.dim": 20, "light.bright": 10} : {"light.negative": false, "light.dim": 30, "light.bright": 15, "light.color": "#ffd9a0"});
       return {token: {uuid: tok.uuid, light: was}};
     }
+    case "move": {
+      const tok = tokenOf(d);
+      if ( !tok || !item.at ) return {note: `${item.name}: no token or no spot to move to`};
+      const was = {uuid: tok.uuid, x: tok.x, y: tok.y};
+      const size = tok.parent?.grid?.size ?? 100;
+      const pos = {x: Math.round(item.at.x - (n(tok.width) || 1) * size / 2), y: Math.round(item.at.y - (n(tok.height) || 1) * size / 2)};
+      await tok.update(pos, {animate: false, teleport: true});
+      return {token: was};
+    }
     default:
       return {note: `${o.label}: ${o.text}`};
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Areas: a circle on the scene that works on whoever enters          */
+/* ------------------------------------------------------------------ */
+
+const HOSTILE = ["harm", "hold", "fear", "trip"];
+const centerOf = tok => {
+  const size = tok?.parent?.grid?.size ?? 100;
+  return {x: n(tok?.x) + (Number(tok?.width) || 1) * size / 2, y: n(tok?.y) + (Number(tok?.height) || 1) * size / 2};
+};
+const areaOf = r => r?.flags?.[MOD]?.effectArea ?? null;
+
+/** When an area ends, in world seconds (null: at the end of the scene). */
+function untilOf(timed) {
+  if ( !timed ) return null;
+  if ( timed.kind === "time" ) return (game.time?.worldTime ?? 0) + n(timed.seconds);
+  if ( timed.kind === "rounds" ) return (game.time?.worldTime ?? 0) + 6 * Math.max(1, n(timed.rounds));
+  return null;
+}
+
+/** Does the area touch this token? Not the caster, for an area meant to hurt or bind. */
+function touches(area, tok) {
+  if ( !tok || area.applied?.includes(tok.id) ) return false;
+  if ( HOSTILE.includes(area.item?.key) || (area.item?.key === "fortune" && area.item?.out?.name === "Cursed") ) {
+    if ( area.casterToken && tok.uuid === area.casterToken ) return false;
+  }
+  return E.inArea(centerOf(tok), area);
+}
+
+/** Work an area on one token: what may apply applies, the rest is queued or whispered. Returns an undo record or null. */
+async function areaOn(region, tok) {
+  const area = areaOf(region);
+  if ( !area ) return null;
+  const a = tok.actor;
+  const route = E.route(area.item.key, {self: false, playerCharacter: !!a?.hasPlayerOwner, count: 1, need: 0}, area.item.out);
+  const item = {...area.item, target: tok.uuid, name: tok.name, route};
+  let rec = null;
+  if ( route === "auto" ) {
+    rec = await applyItem(item, area.caster);
+    if ( rec?.note ) rec = null;
+  } else if ( route === "queue" ) {
+    await chron()?.propose?.({type: TYPE, title: `${area.caster}: ${item.out.label} (area) on ${tok.name}`, detail: item.out.text, data: {item, caster: area.caster}});
+  } else {
+    await ChatMessage.create({content: `<p><b>${esc(item.out.label)}</b> (area) reaches ${esc(tok.name)}: ${esc(item.out.text)}.</p>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: area.caster}});
+  }
+  await region.update({[`flags.${MOD}.effectArea.applied`]: [...(area.applied ?? []), tok.id], [`flags.${MOD}.effectArea.undo`]: rec ? [...(area.undo ?? []), rec] : (area.undo ?? [])});
+  return rec;
+}
+
+/** Place an area on the scene at a spot, and work it on whoever stands in it already. */
+export async function placeArea(item, at, {caster = "the caster", scene = canvas?.scene} = {}) {
+  if ( !scene || !at ) return null;
+  const radius = E.areaRadius({size: scene.grid?.size, distance: scene.grid?.distance});
+  const color = HOSTILE.includes(item.key) ? "#9b3b3b" : "#5a7fb0";
+  const [region] = await scene.createEmbeddedDocuments("Region", [{name: `${item.out.label} (${caster})`, color,
+    shapes: [{type: "ellipse", x: Math.round(at.x), y: Math.round(at.y), radiusX: radius, radiusY: radius, rotation: 0, hole: false}],
+    flags: {[MOD]: {effectArea: {x: Math.round(at.x), y: Math.round(at.y), radius, item, caster, casterToken: item.caster ?? null,
+      until: untilOf(item.out.timed), scene: item.out.timed?.kind === "scene" || !item.out.timed, applied: [], undo: []}}}}]);
+  for ( const tok of scene.tokens ) {
+    const area = areaOf(region);
+    if ( touches(area, tok) ) await areaOn(region, tok);
+  }
+  return {region: region.uuid};
+}
+
+/** A token moved: any area it now stands in works on it, once. */
+async function onMove(tok, change) {
+  if ( !isActiveGM() || !("x" in change || "y" in change) ) return;
+  for ( const region of tok.parent?.regions ?? [] ) {
+    const area = areaOf(region);
+    if ( area && touches(area, tok) ) await areaOn(region, tok);
+  }
+}
+
+/** Areas end with their duration, or at the end of the scene. What they did stays (timed effects run out on their own). */
+export async function expireAreas({sceneEnd = false} = {}) {
+  if ( !isActiveGM() ) return 0;
+  const now = game.time?.worldTime ?? 0;
+  let gone = 0;
+  for ( const scene of game.scenes ?? [] ) {
+    const ids = (scene.regions ?? []).filter(r => {
+      const a = areaOf(r);
+      return a && ((a.scene && sceneEnd) || (Number.isFinite(a.until) && a.until !== null && now >= a.until));
+    }).map(r => r.id);
+    if ( ids.length ) { await scene.deleteEmbeddedDocuments("Region", ids); gone += ids.length; }
+  }
+  return gone;
 }
 
 /** Take back what a card applied. */
@@ -170,6 +310,11 @@ export async function undo(records = []) {
   const C = combat();
   for ( const r of [...records].reverse() ) {
     try {
+      if ( r.region ) {
+        const region = fromUuidSync(r.region);
+        if ( region ) { await undo(areaOf(region)?.undo ?? []); await region.delete(); }
+        continue;
+      }
       const a = r.uuid ? fromUuidSync(r.uuid) : null;
       if ( r.health && a && C?.setDamage ) await C.setDamage(a, r.health);
       if ( Number.isFinite(r.quint) && a ) await a.update({"system.quintessence.temporary": r.quint});
@@ -177,10 +322,10 @@ export async function undo(records = []) {
       if ( r.token ) {
         const tok = fromUuidSync(r.token.uuid);
         const back = {};
-        if ( "elevation" in r.token ) back.elevation = r.token.elevation;
+        for ( const k of ["elevation", "x", "y"] ) if ( k in r.token ) back[k] = r.token[k];
         if ( r.token.sight ) back.sight = r.token.sight;
         if ( r.token.light ) back.light = r.token.light;
-        if ( tok ) await tok.update(back);
+        if ( tok ) await tok.update(back, {animate: false, teleport: true});
       }
     } catch (e) { console.warn("WoDX | effect undo", e); }
   }
@@ -202,18 +347,78 @@ async function onCard(msg) {
   await msg.update({[`flags.${MOD}.done`]: true, [`flags.${MOD}.undo`]: records, [`flags.${MOD}.notes`]: notes});
 }
 
+/* The Storyteller's next click on the map, in scene pixels (null when cancelled). */
+const board = () => canvas?.app?.view ?? canvas?.app?.canvas ?? document.getElementById("board");
+export function pickPoint(prompt = "Click the map. Right click or Escape cancels.") {
+  return new Promise(resolve => {
+    const el = board();
+    if ( !el ) return resolve(null);
+    const was = el.style.cursor;
+    const end = p => {
+      window.removeEventListener("pointerdown", down, true); window.removeEventListener("keydown", key, true); window.removeEventListener("contextmenu", menu, true);
+      el.style.cursor = was; resolve(p);
+    };
+    const toScene = ev => {
+      try {
+        if ( typeof canvas.canvasCoordinatesFromClient === "function" ) return canvas.canvasCoordinatesFromClient({x: ev.clientX, y: ev.clientY});
+        const r = el.getBoundingClientRect();
+        return canvas.stage.worldTransform.applyInverse({x: ev.clientX - r.left, y: ev.clientY - r.top});
+      } catch (e) { return canvas?.mousePosition ?? null; }
+    };
+    const down = ev => {
+      if ( ev.target !== el ) return;
+      ev.stopPropagation(); ev.preventDefault();
+      if ( ev.button === 2 ) return end(null);
+      if ( ev.button === 0 ) { const p = toScene(ev); end(p ? {x: p.x, y: p.y} : null); }
+    };
+    const key = ev => { if ( ev.key === "Escape" ) end(null); };
+    const menu = ev => { if ( ev.target === el ) { ev.preventDefault(); ev.stopPropagation(); } };
+    window.addEventListener("pointerdown", down, true); window.addEventListener("keydown", key, true); window.addEventListener("contextmenu", menu, true);
+    el.style.cursor = "crosshair";
+    ui.notifications?.info?.(prompt);
+  });
+}
+
+/** A card's move or area item, on the Storyteller's click. */
+export async function placeItem(msg, index, at = undefined) {
+  const data = msg.flags?.[MOD];
+  const item = data?.items?.[index];
+  if ( !item || (data.placed ?? []).includes(index) ) return null;
+  const spot = at ?? await pickPoint(item.route === "area" ? `Click where the ${item.out.label} area goes.` : `Click where ${item.name} goes.`);
+  if ( !spot ) return null;
+  const rec = item.route === "area" ? await placeArea(item, spot, {caster: data.caster}) : await applyItem({...item, at: spot}, data.caster);
+  const good = rec && !rec.note;
+  await msg.update({[`flags.${MOD}.placed`]: [...(data.placed ?? []), index], [`flags.${MOD}.undo`]: good ? [...(data.undo ?? []), rec] : (data.undo ?? []),
+    [`flags.${MOD}.undone`]: false, ...(rec?.note ? {[`flags.${MOD}.notes`]: [...(data.notes ?? []), rec.note]} : {})});
+  return rec;
+}
+
 export function setup() {
   game.settings.register(MOD, "effectsApply", {
-    name: "Magic that applies itself", hint: "Mage 20th castings with effect keywords change health, Quintessence, timed effects, light and height on their own, with Undo; the rest goes to the approval queue. Automatic: on, except in the Live world.",
+    name: "Magic that applies itself", hint: "Mage 20th castings with effect keywords change health, Quintessence, timed effects, light, height and place on their own, with Undo; areas work on whoever enters; the rest goes to the approval queue. Automatic: on, except in the Live world.",
     scope: "world", config: true, type: String, default: "auto", choices: {auto: "Automatic", on: "On", off: "Off"}
   });
   Hooks.on("createChatMessage", msg => { onCard(msg).catch(e => console.error("WoDX | effects", e)); });
+  Hooks.on("updateToken", (tok, change) => { onMove(tok, change).catch(e => console.error("WoDX | effect areas", e)); });
+  Hooks.on("updateWorldTime", () => { expireAreas().catch(e => console.error("WoDX | effect areas", e)); });
+  Hooks.on("wodxEndScene", () => { expireAreas({sceneEnd: true}).catch(e => console.error("WoDX | effect areas", e)); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {
     const data = msg.flags?.[MOD];
     if ( data?.kind !== "effects" || !game.user.isGM || !el?.querySelector ) return;
     const box = el.querySelector(".wodx-effects");
     if ( !box ) return;
     if ( data.notes?.length ) box.insertAdjacentHTML("beforeend", `<div class="vta-note">${data.notes.map(esc).join("; ")}.</div>`);
+    if ( !data.undone ) {
+      (data.items ?? []).forEach((item, i) => {
+        if ( !["pick", "area"].includes(item.route) || (data.placed ?? []).includes(i) ) return;
+        const label = item.route === "area" ? `Place the ${item.out.label} area` : `Move ${item.name}`;
+        box.insertAdjacentHTML("beforeend", `<button type="button" class="wodx-effects-place" data-i="${i}"><i class="fa-solid fa-crosshairs"></i> ${esc(label)}</button>`);
+      });
+      box.querySelectorAll(".wodx-effects-place").forEach(b => b.addEventListener("click", async ev => {
+        ev.currentTarget.disabled = true;
+        await placeItem(msg, n(ev.currentTarget.dataset.i));
+      }));
+    }
     if ( !data.undo?.length || data.undone ) return;
     box.insertAdjacentHTML("beforeend", `<button type="button" class="wodx-effects-undo"><i class="fa-solid fa-rotate-left"></i> Undo what applied</button>`);
     box.querySelector(".wodx-effects-undo").addEventListener("click", async ev => {

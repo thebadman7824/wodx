@@ -1,5 +1,5 @@
 /**
- * WoDX Actions 3.22.0: magic that applies itself, the pure rules. Effect keywords turn a Mage 20th casting's successes
+ * WoDX Actions 3.22.0 and 3.23.0: magic that applies itself, the pure rules. Effect keywords turn a Mage 20th casting's successes
  * into changes on the table. No Foundry here: the harness tests it. The Foundry side is effects.js.
  *
  *   KEYWORDS        each keyword's lowest Spheres (M20 pp. 513-523), its feat size (p. 502), what its successes buy,
@@ -13,6 +13,8 @@
  *                   light, height, a condition
  *   route           auto (applies with Undo), queue (the approval queue) or st (the Storyteller's call)
  *   durationFor     the p. 504 ladder as a WoDX Chronicle timed-effect duration
+ *   AREA, inArea    an area Effect (3.23.0): a circle on the scene that works on whoever enters it, for its duration
+ *   roteFrom, keepRote  saved keyword sets, a caster's own rotes (3.23.0)
  *
  * Mechanics from Mage: The Ascension 20th Anniversary Edition, in WoDX's words, with printed pages. House rules are
  * marked and logged in DECISIONS (B763).
@@ -41,8 +43,8 @@ export const KEYWORDS = {
     does: "An extra action for every two successes of strength, or a lost action each turn when slowed (p. 523)."},
   light:   {label: "Light or Dark", opts: [{forces: 2}], feat: 1, strength: false, tier: "auto", lean: "coincidental",
     does: "Light or darkness on the caster's token; spare successes go to how long it lasts."},
-  move:    {label: "Move", opts: [{correspondence: 3}], feat: 2, strength: false, tier: "queue", lean: "vulgar",
-    does: "A step through space: the Storyteller moves the token where the caster means to go."},
+  move:    {label: "Move", opts: [{correspondence: 3}], feat: 2, strength: false, tier: "auto", lean: "vulgar",
+    does: "A step through space inside this scene: the Storyteller clicks where the caster means to go. Another scene is the Storyteller's call."},
   charge:  {label: "Charge or Drain", opts: [{prime: 3}], feat: 2, strength: true, tier: "auto", lean: "coincidental",
     does: "Quintessence moved into or out of a Pattern by the p. 504 chart."},
   veil:    {label: "Veil", opts: [{mind: 1}, {forces: 3}], feat: 2, strength: true, tier: "auto", lean: "coincidental", timed: true, mind: true,
@@ -94,8 +96,20 @@ export function needFor(keywords = [], {self = true, plan = {}, feat = 0} = {}) 
   if ( !ks.length ) return 0;
   let base = Math.max(n(feat), ...ks.map(k => KEYWORDS[k].feat));
   if ( !self ) base = Math.max(2, base);
-  return base + (ks.length - 1) + Math.max(0, n(plan.targets)) + Math.max(0, n(plan.duration));
+  return base + (ks.length - 1) + (plan.area && ks.some(k => AREA.keys.includes(k)) ? AREA.cost : 0) + Math.max(0, n(plan.targets)) + Math.max(0, n(plan.duration));
 }
+
+/**
+ * An area Effect (house rule: Mage 20th has no area chart, book check of 9 November 2026): two more successes make a
+ * circle with a 15-foot radius on the scene, that works on each token as it enters, once, for the Effect's duration.
+ */
+export const AREA = {cost: 2, feet: 15, keys: ["harm", "ward", "fortune", "veil", "hold", "fear", "trip"]};
+
+/** Is a point inside an area? area: {x, y, radius} in scene pixels. */
+export const inArea = (p, a) => !!p && !!a && Math.hypot(n(p.x) - n(a.x), n(p.y) - n(a.y)) <= n(a.radius);
+
+/** The radius of an area in scene pixels: feet over the grid's distance per square. */
+export const areaRadius = ({size = 100, distance = 5} = {}) => Math.round(AREA.feet / (n(distance) || 5) * (n(size) || 100));
 
 /**
  * Spend the successes rolled (dividing successes, p. 504). base: the successes needed before extras.
@@ -105,15 +119,17 @@ export function needFor(keywords = [], {self = true, plan = {}, feat = 0} = {}) 
  */
 export function spend(successes, base, plan = {}) {
   const s = n(successes), b = Math.max(1, n(base));
-  if ( s < b ) return {ok: false, targets: 0, duration: 0, strength: 0, dropped: ["the Effect"]};
+  if ( s < b ) return {ok: false, area: false, targets: 0, duration: 0, strength: 0, dropped: ["the Effect"]};
   let left = s - b;
   const dropped = [];
+  const area = !!plan.area && left >= AREA.cost;
+  if ( area ) left -= AREA.cost; else if ( plan.area ) dropped.push("the area");
   const targets = Math.min(left, Math.max(0, n(plan.targets))); left -= targets;
   if ( targets < n(plan.targets) ) dropped.push(`${n(plan.targets) - targets} extra target${n(plan.targets) - targets === 1 ? "" : "s"}`);
   const duration = Math.min(left, Math.max(0, n(plan.duration))); left -= duration;
   if ( duration < n(plan.duration) ) dropped.push(`${n(plan.duration) - duration} duration step${n(plan.duration) - duration === 1 ? "" : "s"}`);
   // Strength reads the chart from the base successes plus what is left over
-  return {ok: true, targets, duration, strength: b + left, dropped};
+  return {ok: true, area, targets, duration, strength: b + left, dropped};
 }
 
 /** The p. 504 duration ladder as a Chronicle timed-effect duration. step 1 is a turn, 2 a scene, 3 a day, 4 a story, 5 six months. */
@@ -141,7 +157,7 @@ export function outcome(key, got, ctx = {}) {
   // No strength: every success past the first goes to how long it lasts
   const step = K.strength ? 1 + n(got.duration) : Math.min(6, str + n(got.duration));
   const dur = durationFor(step);
-  const base = {key, label: K.label, duration: dur.label, timed: dur.timed};
+  const base = {key, label: K.label, duration: dur.label, timed: dur.timed, ...(got.area && AREA.keys.includes(key) ? {area: AREA.feet} : {})};
   const spheres = ctx.spheres ?? [];
   switch ( key ) {
     case "harm": {
@@ -186,6 +202,8 @@ export function outcome(key, got, ctx = {}) {
       return {...base, kind: "timed", name: "Afraid", text: `afraid of the caster for ${dur.label}`};
     case "sense":
       return {...base, kind: "note", text: `the caster senses it for ${dur.label}`};
+    case "move":
+      return {...base, kind: "move", text: "moves to where the caster means to go, in this scene"};
     default:
       return {...base, kind: "note", text: `${K.does} (strength ${str}, ${dur.label})`};
   }
@@ -214,3 +232,23 @@ export const leanOf = (keywords = []) => (keywords.some(k => KEYWORDS[k]?.lean =
 
 /** Of two Wards of the same kind the stronger counts (house rule): returns the dice that stand. */
 export const wardStands = (old, fresh) => Math.max(n(old), n(fresh));
+
+/* Saved rotes (3.23.0): a caster keeps keyword sets with their Spheres and plan, by name. */
+export const ROTES_MAX = 40;
+
+/** A rote from the Cast window's choices. */
+export function roteFrom(name, {keywords = [], used = [], plan = {}, ctx = {}, kind = "coincidental", feat = 0} = {}) {
+  const nm = String(name ?? "").trim().slice(0, 60);
+  if ( !nm ) return null;
+  return {name: nm, keywords: keywords.filter(k => KEYWORDS[k]), spheres: Object.fromEntries(used.filter(u => n(u.level) > 0).map(u => [u.sphere, n(u.level)])),
+    plan: {targets: Math.max(0, n(plan.targets)), duration: Math.max(0, n(plan.duration)), area: !!plan.area},
+    ctx: Object.fromEntries(Object.entries(ctx).filter(([, v]) => v === true)), kind: String(kind), feat: Math.max(0, n(feat))};
+}
+
+/** Keep a rote: one per name (a new one with the same name replaces it), the list sorted by name, at most ROTES_MAX. */
+export function keepRote(list = [], rote) {
+  if ( !rote ) return list;
+  const key = rote.name.toLowerCase();
+  const out = [...list.filter(r => String(r?.name ?? "").toLowerCase() !== key), rote].sort((a, b) => a.name.localeCompare(b.name));
+  return out.slice(0, ROTES_MAX);
+}

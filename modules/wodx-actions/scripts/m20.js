@@ -65,7 +65,7 @@ export function build(ctx) {
           <div class="form-group"><label>The Effect is</label><select name="kind" data-fixed>${Object.entries(M.KINDS).map(([k, x]) => `<option value="${k}"${k === sg.kind ? " selected" : ""}>${esc(W[k] ?? x.label)} (highest + ${x.add})</option>`).join("")}</select></div>
           <div class="form-group"><label>The caster's style</label><input type="text" name="style" value="${esc(i.f.style ?? "")}" placeholder="Hermetic, Christian miracles, witchcraft, Taoist"/></div>
           <p class="hint">${esc(sg.age.label)}${sg.why ? `: ${esc(sg.why)}` : "."}${sg.age.key === "dark" ? " A Dark Ages mage uses the Dark Ages cast." : ""} (${esc(sg.age.ref)})</p>
-          ${EF.fieldset(i.spheres)}
+          ${EF.fieldset(i.spheres, EF.rotesOf(actor))}
           <div class="form-group"><label>The feat</label><select name="feat" data-fixed>${M.FEATS.map(f => `<option value="${f.need}">${esc(f.label)}: ${f.need}</option>`).join("")}</select></div>
           <div class="form-group"><label>More successes declared (targets, damage, duration)</label><input type="number" name="extra" min="0" max="20" value="0"/></div>
           <fieldset><legend>Modifiers (net ±3)</legend>${Object.entries(M.MODIFIERS).map(([k, m]) => `<div class="form-group"><label><input type="checkbox" name="m-${k}"/> ${esc(m.label)} (${m.mod > 0 ? "+" : ""}${m.mod})</label></div>`).join("")}
@@ -77,6 +77,7 @@ export function build(ctx) {
             const used = M.SPHERES.map(k => ({ sphere: k, level: n(fd[`s-${k}`]) })).filter(x => x.level);
             const mods = Object.keys(M.MODIFIERS).filter(k => fd[`m-${k}`]);
             const form = EF.read(fd);
+            if (form.save && form.keywords.length) await EF.saveRote(actor, EF.E.roteFrom(form.save, { keywords: form.keywords, used, plan: form.plan, ctx: form.ctx, kind: fd.kind, feat: n(fd.feat) }));
             const kw = form.keywords.length ? EF.plan(actor, form, 0, { used, feat: n(fd.feat) }) : null;
             const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: kw ? kw.need : n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
@@ -104,7 +105,7 @@ export function build(ctx) {
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;
             const fxData = fx?.got?.ok && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st") } : null;
             return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean), fxData?.items.length ? fxData : undefined);
-        }, { width: 560, render: root => { EF.wire(root, i.spheres); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
+        }, { width: 560, render: root => { EF.wire(root, i.spheres, EF.rotesOf(actor)); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
     }
 
     async function backlashRoll(actor) {
