@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Ownership, holdings, recipes, buildings and workshops (Storyteller 0.25.0, B840-B846) */
+/* Ownership, holdings, recipes, buildings and workshops (Storyteller 0.25.0, B850-B856) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));

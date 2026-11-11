@@ -8,7 +8,7 @@
  *   since: the year it came to the owner. stolen: the thing is away from its owner without leave; takenBy: who took it.
  *
  * Owning is bookkeeping only. A building or a hoard never adds Background dots by itself: Domain, Holdings, Chantry,
- * Sanctum, Haunt or Resources rise by a story award or by experience, as the Storyteller rules (house rule, B840).
+ * Sanctum, Haunt or Resources rise by a story award or by experience, as the Storyteller rules (house rule, B850).
  */
 
 const str = (v, n = 120) => String(v ?? "").trim().slice(0, n);
@@ -92,7 +92,7 @@ export function fromPlaceTag(place, candidates = []) {
 
 /**
  * kinds: the place kinds (WoDX NPC's place tags) a form suits; [] suits any. The years are history, not the books
- * (house figures, B841). The note is what the window says about it.
+ * (house figures, B851). The note is what the window says about it.
  */
 export const TENURES = {
   fief: {label: "A fief held of a lord", from: 1197, to: 1848, kinds: ["castle", "home", "wilds", "workplace", "market"],

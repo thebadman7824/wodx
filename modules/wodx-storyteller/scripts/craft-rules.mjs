@@ -4,7 +4,7 @@
  * A recipe is worked out from a good (WoDX Library's goods by era): its category says the craft, the workshop and
  * the materials; its value tier in the year says how long the work takes. The work is a long task (an extended
  * action, V20 pp. 251-252; V20 Dark Ages p. 324) on Dexterity + Crafts, the Storyteller's to change. What the books
- * leave open (goals, intervals, materials, quality) is house rule (B842).
+ * leave open (goals, intervals, materials, quality) is house rule (B852).
  *
  * The year decides what can be made: nothing before the good is known; after it has gone out of use, only hand
  * crafts can still make it ("the old way", one more difficulty). Extra successes past the goal make it better.

@@ -1478,7 +1478,7 @@ Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 
 - book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
 - Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
 
-## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.25.0, Interactables 0.23.3, B840-B846)
+## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.25.0, Interactables 0.23.3, B850-B856)
 
 Ben approved the ownership proposal (all five parts). Built on the markets branch, since it needs the goods list and the purse.
 - owner-rules.mjs: owner records, stolen marks, name matching for older place tags, Moravian holding forms by year, the right to trade.

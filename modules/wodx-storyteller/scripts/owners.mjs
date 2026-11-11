@@ -10,7 +10,7 @@
  *
  * Taking things from someone's container marks them stolen from that owner (Interactables calls wodxItemsTaken on
  * the Storyteller's client). A holding's upkeep and income are paid on the month's pay day with the allowance.
- * Owning never adds Background dots: the Storyteller awards them or the player buys them (B840).
+ * Owning never adds Background dots: the Storyteller awards them or the player buys them (B850).
  */
 import * as O from "./owner-rules.mjs";
 import * as CR from "./craft-rules.mjs";
@@ -316,7 +316,7 @@ export async function unbuild(made = {}) {
 
 /**
  * Once a month: a market whose working places supply a category does not run short of it. One working place lifts
- * a short or empty supply to normal; three or more make it plenty (house rule, B845). A private workshop run by a
+ * a short or empty supply to normal; three or more make it plenty (house rule, B855). A private workshop run by a
  * person is closed while private trade is forbidden (1948-1989); one held by a faction (the state) still works.
  */
 export async function workshopsMonth() {
@@ -362,7 +362,7 @@ async function undoWorkshops(message) {
 
 /**
  * Once a month: a faction with Resources 3 or more and nothing being built may propose putting something up
- * (1 in 6 a month, house rule, B846). It goes to the approval queue; approved, the build starts on its leader.
+ * (1 in 6 a month, house rule, B856). It goes to the approval queue; approved, the build starts on its leader.
  */
 export async function factionBuildsMonth(rng = Math.random) {
   const fa = npcFactions();

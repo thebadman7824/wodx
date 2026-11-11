@@ -3,7 +3,7 @@
  *
  * A building is a long task in stages (groundwork, walls, roof, fitting out), each an extended action of its own
  * (V20 pp. 251-252; V20 Dark Ages p. 324) on Dexterity + Crafts. Hired hands, retainers and allied NPCs each add a
- * die (house rule, B843). Each stage is paid for when it starts, from the builder's purse; with too little money the
+ * die (house rule, B853). Each stage is paid for when it starts, from the builder's purse; with too little money the
  * work waits. When the last stage is done the place exists: a Region on the scene tagged with its kind and owner,
  * and the matching map from the building kit when the kit has one.
  *
