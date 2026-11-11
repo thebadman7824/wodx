@@ -215,6 +215,12 @@ export async function run() {
       const OW = game.modules.get("wodx-otherworlds")?.api, AW = game.modules.get("wodx-atmosphere")?.api?.weather;
       ok("22 queued keywords", kinds.join(",") === "timed,cross,summon,give,weather" && (!OW || typeof OW.sendAcross === "function") && (!AW || typeof AW.set === "function"), {kinds});
     });
+
+    await step("23 other lines in the table", async () => {
+      const merits = T().table.merits;
+      const w20 = merits.filter(e => e.book === "W20").length, m20 = merits.filter(e => e.book === "M20 Book of Secrets").length;
+      ok("23 other lines in the table", merits.length >= 450 && w20 > 50 && m20 > 50 && T().rules.problems().length === 0, {total: merits.length, w20, m20});
+    });
   } catch (e) {
     R.errors.push(e.message);
   } finally {
