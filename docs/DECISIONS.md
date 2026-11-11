@@ -663,3 +663,23 @@ Light-touch mode said it turned off every WoDX proposal, but only the era check 
 ## B791. The years between eras are named in the Chronicle Rules journal (2026-11-11)
 Years no era book covers keep the last era's rules (1902 to 1913 keep Victorian; on the Future branch 2004 to 2009 keep Modern). The Era and calendar page now lists each such span and the era it keeps, worked out from the loaded profiles, the region and the branch rules.
 
+## B800. One trait effect table for every merit, flaw and background (2026-11-11)
+Ben approved the Traits With Teeth design (https://claude.ai/artifact/4QwnLur2u6kmHPQSMjTgn4) as recommended, at priority 2 beside Interactables. WoDX Chronicle 0.18.0 holds the table (data/trait-effects.mjs): all 162 V20 merits and flaws with cost, printed and pdf page, one or more of twenty patterns, the kinds that can hold each one and the kinds it works on; and the 71 backgrounds found across fourteen books, each with the kind of hook it gets. Names come from the PC book checks of 2026-11-11; no book text is copied. Other books' merits and flaws join in step 11 (BOOKS_DONE).
+
+## B801. Traits are matched by name, and a flag on the item overrides it (2026-11-11)
+The system keeps merits, flaws and backgrounds as hand-typed Feature items. WoDX matches each by name or alias, without case, quotes or spaces. The Storyteller can set the match by hand in the new "Trait effects" window on the actor sheet header (item flag wodx-chronicle.trait = {key}), or mark a home-made trait "No effect". Unmatched traits are listed there as "no effect yet".
+
+## B802. Both sides' kinds count, for players and NPCs alike (2026-11-11)
+Ben, 2026-11-11 11:54Z: the checks must take the supernatural kinds of player characters and NPCs into account. Each entry names holders and against. A trait on a kind that cannot hold it (Cast No Reflection on a mortal) is matched but does nothing, with the reason shown. A ghoul, revenant, Kinfolk, hunter, sorcerer or kinain also counts as a mortal. NPC actors are read exactly as player characters are.
+
+## B803. "Only when" tests for traits (2026-11-11)
+Chronicle's "Only when" lists take four new tests: merit <name>, flaw <name>, background <name> [>= 2] and power <name>. A trait that does nothing for its kind does not pass the test.
+
+## B804. Merits and flaws change rolls on their own (2026-11-11)
+Step 2 of Traits With Teeth. WoDX Actions 3.29.0 reads the trait table through Chronicle's api.traits on every action, quick check, social roll and frenzy check. Each roll gets tags from its Attribute, Ability, quick check and social act (rollTags in trait-rules.mjs); an effect whose tags match adds dice or difficulty, and the card names each trait that did ("Natural Leader +2"). Effects that need the other side's kind (Eerie Presence, the Masquerade flaws) count only when the target's kind is known. Lunacy reads the moon from WoDX Atmosphere. The world setting "Merits and flaws on rolls" turns it all off.
+
+## B805. Iron Will and Magic Resistance make powers on the holder harder (2026-11-11)
+A Discipline roll against a target adds the target's resisting traits to the difficulty (at most 10): Dominate and Dementation count as mind powers; Thaumaturgy, Koldunic sorcery, Necromancy, Obtenebration of the Abyss, paths and rituals as magic. NPCs and player characters are read the same way. Iron Will gives +3 against mind powers and Thaumaturgy (V20 core p. 485 printed, pdf 493); Magic Resistance gives +2 against magic (p. 493 printed, pdf 501), so Thaumaturgy on a target with both is +5. The Willpower spend against level 6 and 7 powers stays the Storyteller's call.
+
+## B806. Tick boxes for facts a roll cannot see (2026-11-11)
+Some traits depend on things no roll records: the sense used, speaking aloud, a first meeting, a risky deed, balance, an unplanned act. The action and quick check windows show a tick box for each such fact, but only when the character holds a trait that names it. A social roll ticks "first meeting" by itself when WoDX NPC says the two have not met.

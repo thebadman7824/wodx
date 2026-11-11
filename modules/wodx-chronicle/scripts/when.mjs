@@ -4,6 +4,7 @@ import * as eras from "./eras.mjs";
 import * as church from "./church.mjs";
 import * as conditions from "./conditions.mjs";
 import * as W from "./when-rules.mjs";
+import {whenFeats} from "./traits.mjs";
 
 /**
  * WoDX Chronicle 0.14.0: "Only when" and "Then" lists on the Foundry side. when-rules.mjs holds the language; this
@@ -76,6 +77,7 @@ export function actorContext(actor) {
     items: [...(actor.items ?? [])].map(i => i.name),
     codex: codex ? [...(codex.pages ?? [])].map(p => p.name) : [],
     conditions: [...conds],
+    ...(() => { try { return whenFeats(actor); } catch (e) { return {feats: [], powers: []}; } })(),
     traits: {
       blood: num(adv.bloodpool?.temporary), willpower: num(adv.willpower?.temporary), rage: num(adv.rage?.temporary), gnosis: num(adv.gnosis?.temporary),
       glamour: num(adv.glamour?.temporary), banality: num(adv.banality?.temporary), quintessence: num(s.quintessence?.temporary ?? adv.quintessence?.temporary),

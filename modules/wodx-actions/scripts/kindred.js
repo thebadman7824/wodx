@@ -22,6 +22,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as PE from "./path-effects.js";
+import * as TH from "./trait-hooks.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -182,10 +183,13 @@ export function build(ctx) {
             let successes = 1;
             if (p.r && !p.passive) {
                 const pool = poolOf(actor, p.r, fd.attr);
-                const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), fd.diff, { specialty: fd.specialty });
+                // The target's Iron Will or Magic Resistance makes a mind power or magic harder (V20 pp. 485, 493)
+                const target = [...(game.user.targets ?? [])][0]?.actor ?? null;
+                const rm = target && target !== actor ? TH.resistMods(target, TH.powerTags(p.d), actor) : { diff: 0, parts: [] };
+                const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff), { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
-                body += rollBlock(pool.label, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : [], fd.specialty);
+                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(VtDA20 p. ${p.p ?? "?"})</span></div>`;
