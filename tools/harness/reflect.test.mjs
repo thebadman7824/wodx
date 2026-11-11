@@ -43,7 +43,11 @@ test("the Penumbra: churches loom, a later town is webbed, dirty trades sour, wa
 test("the Shadowlands: what was pulled down stands again, but only once it is gone", () => {
   const relics = y => RF.reflect(grown, "shadowlands", {year: y}).filter(x => x.kind === "relic" && x.id.startsWith("relic:gone-"));
   const all = relics(1960);
-  assert.equal(all.length, grown.umbral.gone.length);
+  assert.ok(all.length > 0 && all.length < grown.umbral.gone.length, "one relic a spot, the most recent");
+  for ( const a of all ) for ( const b of all ) if ( a !== b ) {
+    const ix = Math.max(0, Math.min(a.rect[0] + a.rect[2], b.rect[0] + b.rect[2]) - Math.max(a.rect[0], b.rect[0])), iy = Math.max(0, Math.min(a.rect[1] + a.rect[3], b.rect[1] + b.rect[3]) - Math.max(a.rect[1], b.rect[1]));
+    assert.ok(ix * iy <= 0.3 * Math.min(a.rect[2] * a.rect[3], b.rect[2] * b.rect[3]) + 1e-9, `${a.id} and ${b.id} stack`);
+  }
   for ( const r of all ) assert.match(r.note, /(Pulled down|Rebuilt) in \d{4}/);
   assert.ok(all.some(r => /Pulled down/.test(r.note)) && all.some(r => /Rebuilt/.test(r.note)), "both kinds of relic");
   assert.ok(RF.regionsFor(all).length < all.length, "rebuilt houses are drawn but get no region");
