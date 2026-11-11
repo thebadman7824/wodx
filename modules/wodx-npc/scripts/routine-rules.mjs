@@ -195,6 +195,63 @@ Object.assign(PRESETS, {
     B(22, 6, "work", "work", {days: monFri, label: "The night shift"}), B(7, 15, "home", "sleep"), B(0, 24, "home", "rest")]}
 });
 
+/**
+ * NPC 0.18.0 (B825): the rival kinds' hours, and more people of the town. WoDX readings, house rules. Hours that
+ * change with the age have an `ages` entry; the rest keep their first hours in every age.
+ */
+const night = {when: "night"}, day = {when: "day"};
+Object.assign(PRESETS, {
+  "sabbat-pack": {label: "Sabbat pack, runs at night", from: 1493, blocks: [
+    B(0, 24, "haven", "sleep", day), B(19, 21, "haven", "pray", {...night, days: [6], label: "Ritae with the pack"}),
+    B(21, 3, "street", "hunt", {...night, label: "Running with the pack"}), B(0, 24, "haven", "rest", night)],
+  ages: {modern: [B(0, 24, "haven", "sleep", day), B(20, 22, "haven", "pray", {...night, days: [6], label: "Ritae with the pack"}),
+    B(22, 4, "street", "hunt", {...night, label: "A war party in the streets"}), B(0, 24, "haven", "rest", night)]}},
+  sheriff: {label: "Sheriff or enforcer, keeps the domain", blocks: [
+    B(0, 24, "haven", "sleep", day), B(20, 24, "street", "patrol", {...night, label: "Rounds of the domain"}),
+    B(0, 2, "court", "work", {...night, label: "Reports to the prince"}), B(2, 4, "street", "hunt", night), B(0, 24, "haven", "rest", night)]},
+  tremere: {label: "Tremere, works in the chantry", blocks: [
+    B(0, 24, "haven", "sleep", day), B(19, 3, "work", "work", {...night, label: "Study in the chantry"}),
+    B(3, 5, "street", "hunt", night), B(0, 24, "haven", "rest", night)]},
+  mage: {label: "Mage, sanctum and study", blocks: [
+    B(8, 12, "home", "work", {label: "Study in the sanctum"}), B(14, 18, "work", "work", {days: weekdays, feast: "not", label: "A living in the town"}),
+    B(21, 1, "home", "work", {days: [2, 5], label: "Workings by night"}), B(1, 8, "home", "sleep"), B(0, 24, "home", "rest")]},
+  technocrat: {label: "Order of Reason, later the Technocracy", from: 1325, blocks: [
+    B(6, 18, "work", "work", {days: weekdays, feast: "not", label: "The workshop and the guild"}), B(19, 21, "tavern", "drink", {days: [4]}),
+    B(21, 6, "home", "sleep"), B(0, 24, "home", "rest")],
+  ages: {c20: [B(8, 17, "work", "work", {days: monFri, label: "The office"}), B(22, 2, "street", "patrol", {days: [1, 3], label: "A night sweep"}),
+    B(23, 7, "home", "sleep"), B(0, 24, "home", "rest")],
+    modern: [B(9, 18, "work", "work", {days: monFri, label: "The office"}), B(22, 3, "street", "patrol", {days: [1, 3], label: "A night sweep"}),
+      B(23, 7, "home", "sleep"), B(0, 24, "home", "rest")]}},
+  changeling: {label: "Changeling, two lives", blocks: [
+    B(8, 16, "work", "work", {days: weekdays, feast: "not", label: "A mortal living"}),
+    B(20, 2, "tavern", "drink", {days: [4, 5], label: "At the freehold, or a revel"}), B(22, 7, "home", "sleep"), B(0, 24, "home", "rest")]},
+  wraith: {label: "Wraith, stays by a fetter", blocks: [
+    B(22, 4, "street", "wander", {...night, label: "Walks the old ways"}), B(0, 24, "home", "rest", {label: "By a fetter"})]},
+  inquisitor: {label: "Inquisitor, questions by day and hunts by night", from: 1231, blocks: [
+    B(6, 9, "church", "pray", {label: "Mass and the offices"}), B(9, 17, "street", "errand", {days: weekdays, label: "Questions in the town"}),
+    B(21, 3, "street", "hunt", night), B(3, 6, "home", "sleep"), B(17, 21, "church", "pray"), B(0, 24, "home", "rest")],
+  ages: {c20: [B(9, 17, "work", "work", {days: monFri, label: "The Society's work"}), B(21, 2, "street", "hunt", night), B(2, 8, "home", "sleep"), B(0, 24, "home", "rest")]}},
+  soldier: {label: "Soldier or man-at-arms", blocks: [
+    B(6, 12, "post", "patrol", {label: "Drill and the watch"}), B(12, 18, "post", "patrol", {days: weekdays}),
+    B(18, 22, "tavern", "drink", {days: [4, 5]}), B(22, 6, "home", "sleep", {label: "In barracks"}), B(0, 24, "home", "rest", {label: "In barracks"})]},
+  beggar: {label: "Beggar", blocks: [
+    B(7, 12, "church", "work", {label: "Begging on the church steps"}), B(12, 18, "market", "work", {label: "Begging in the market"}),
+    B(18, 21, "tavern", "wander", {label: "Scraps at the inn door"}), B(21, 7, "street", "sleep", {label: "Sleeps rough"}), B(0, 24, "street", "rest")]},
+  noble: {label: "Noble, holds court", blocks: [
+    B(8, 10, "church", "pray", {days: [6], label: "Mass"}), B(10, 14, "court", "work", {label: "Holds court"}),
+    B(14, 18, "wilds", "wander", {days: [2, 4], label: "The hunt"}), B(18, 22, "court", "rest", {label: "Feasting"}),
+    B(22, 8, "home", "sleep"), B(0, 24, "home", "rest")],
+  ages: {c20: [B(9, 17, "work", "work", {days: monFri, label: "Estates and business"}), B(19, 23, "tavern", "drink", {days: [4]}),
+    B(23, 8, "home", "sleep"), B(0, 24, "home", "rest")]}},
+  monk: {label: "Monk or nun (the cloister's hours)", blocks: [
+    B(2, 3, "church", "pray", {label: "Matins and Lauds"}), B(6, 7, "church", "pray", {label: "Prime"}),
+    B(7, 12, "work", "work", {label: "Labour in the cloister"}), B(12, 13, "church", "pray", {label: "Sext"}),
+    B(13, 17, "work", "work", {label: "Study and copying"}), B(17, 18, "church", "pray", {label: "Vespers"}),
+    B(19, 20, "church", "pray", {label: "Compline"}), B(20, 2, "home", "sleep"), B(3, 6, "home", "sleep"), B(0, 24, "home", "rest")]}
+});
+Object.assign(DEFAULT_PRESET, {sabbat: "sabbat-pack", sheriff: "sheriff", mage: "mage", technocrat: "technocrat", changeling: "changeling",
+  inquisitor: "inquisitor", soldier: "soldier", ghost: "wraith"});
+
 /* ------------------------------------------------------------------ */
 /*  Which block is current                                             */
 /* ------------------------------------------------------------------ */

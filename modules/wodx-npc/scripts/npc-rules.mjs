@@ -28,17 +28,50 @@ export const TEMPLATES = {
   ghost: {label: "Ghost", line: "wraith", aggression: 0.6, caution: 1, cunning: 1.3, loyalty: 0.5, cowardice: 0.4, berserk: 0, power: 1.6,
     fleeAt: 5, frenzyProne: false, fears: [], tactics: ["power"]},
   beast: {label: "Beast or creature", line: "beast", aggression: 1.2, caution: 0.6, cunning: 0.2, loyalty: 0.3, cowardice: 0.6, berserk: 0.4, power: 0,
-    fleeAt: 4, frenzyProne: false, fears: ["fire"], tactics: ["melee"]}
+    fleeAt: 4, frenzyProne: false, fears: ["fire"], tactics: ["melee"]},
+  // NPC 0.18.0 (B824): the rival kinds' own temperaments. WoDX readings of each line's usual conduct, house rules.
+  sabbat: {label: "Sabbat pack Cainite", line: "kindred", aggression: 1.5, caution: 0.4, cunning: 0.7, loyalty: 1.3, cowardice: 0.2, berserk: 1.1, power: 1,
+    fleeAt: 5, frenzyProne: true, fears: ["fire", "sunlight", "faith"], tactics: ["melee", "power", "pack"]},
+  sheriff: {label: "Sheriff or enforcer", line: "kindred", aggression: 1.1, caution: 0.9, cunning: 1, loyalty: 1.4, cowardice: 0.2, berserk: 0.5, power: 1.2,
+    fleeAt: 5, frenzyProne: true, fears: ["fire", "sunlight", "faith"], tactics: ["melee", "power", "call", "guard", "alive"]},
+  mage: {label: "Mage", line: "mage", aggression: 0.6, caution: 1.3, cunning: 1.4, loyalty: 0.6, cowardice: 0.5, berserk: 0, power: 2,
+    fleeAt: 4, frenzyProne: false, fears: [], tactics: ["power", "ranged", "call", "masquerade"]},
+  technocrat: {label: "Technocrat", line: "mage", aggression: 0.9, caution: 1, cunning: 1.2, loyalty: 1.2, cowardice: 0.4, berserk: 0, power: 1,
+    fleeAt: 4, frenzyProne: false, fears: [], tactics: ["ranged", "call", "pack", "masquerade"]},
+  changeling: {label: "Changeling", line: "fae", aggression: 0.7, caution: 1, cunning: 1.2, loyalty: 0.8, cowardice: 0.6, berserk: 0.2, power: 1.2,
+    fleeAt: 4, frenzyProne: false, fears: ["iron"], tactics: ["power", "flee", "masquerade"]},
+  spectre: {label: "Spectre", line: "spirit", aggression: 1.6, caution: 0.3, cunning: 1, loyalty: 0.4, cowardice: 0.1, berserk: 1, power: 1.6,
+    fleeAt: 6, frenzyProne: false, fears: [], tactics: ["power"]},
+  fomor: {label: "Fomor", line: "mortal", aggression: 1.5, caution: 0.5, cunning: 0.5, loyalty: 1, cowardice: 0.3, berserk: 0.8, power: 1,
+    fleeAt: 5, frenzyProne: false, fears: [], tactics: ["melee", "power"]},
+  inquisitor: {label: "Inquisitor", line: "hunter", aggression: 1, caution: 1, cunning: 1, loyalty: 1.5, cowardice: 0.2, berserk: 0, power: 1,
+    fleeAt: 4, frenzyProne: false, fears: [], tactics: ["melee", "supernatural", "call", "alive"]},
+  soldier: {label: "Soldier or man-at-arms", line: "mortal", aggression: 1, caution: 0.8, cunning: 0.6, loyalty: 1.4, cowardice: 0.5, berserk: 0, power: 0,
+    fleeAt: 4, frenzyProne: false, fears: ["supernatural"], tactics: ["melee", "ranged", "pack", "ground"]},
+  mob: {label: "Mob", line: "mortal", aggression: 1.2, caution: 0.3, cunning: 0.1, loyalty: 0.6, cowardice: 1.2, berserk: 0.3, power: 0,
+    fleeAt: 2, frenzyProne: false, fears: ["supernatural", "fire"], tactics: ["melee", "pack"]}
+};
+
+/** Tactics a profile can list, and what each does (shown in the behaviour window). */
+export const TACTICS = {
+  melee: "Fights hand to hand", ranged: "Shoots", power: "Uses its powers", willpower: "Spends Willpower", call: "Calls for help",
+  guard: "Guards its master", flee: "Runs", supernatural: "Goes for the monster first",
+  pack: "Goes for the foe an ally has already hurt", ground: "Fights harder on its own ground",
+  masquerade: "Hides its nature before mortal eyes", alive: "Takes them alive", parley: "Speaks a challenge before a fight"
 };
 
 /** The template a line's NPC starts from. info: {kind, generation, melee, ranged}. */
-export function templateFor({kind, generation = 13, melee = 0, ranged = 0}) {
+export function templateFor({kind, generation = 13, melee = 0, ranged = 0, sides = []}) {
+  const has = re => (sides ?? []).some(x => re.test(String(x)));
+  if ( has(/fomor/) ) return "fomor";
   switch ( kind ) {
-    case "kindred": return generation && generation <= 8 ? "elder" : "neonate";
+    case "kindred": return has(/^sect:.*sabbat/) ? "sabbat" : generation && generation <= 8 ? "elder" : "neonate";
+    case "mage": return has(/technocra|order of reason|daedalean|iteration x|progenitor|syndicate|void engineer|new world order/) ? "technocrat" : "mage";
+    case "fae": return "changeling";
     case "ghoul": return "ghoul";
     case "lupine": return "garou";
-    case "hunter": return "hunter";
-    case "spirit": return "spirit";
+    case "hunter": return has(/inquisit|leopold/) ? "inquisitor" : "hunter";
+    case "spirit": return has(/spectre/) ? "spectre" : "spirit";
     case "wraith": return "ghost";
     case "beast": return "beast";
     case "mortal": return Math.max(melee, ranged) >= 2 ? "guard" : "civilian";
@@ -75,6 +108,9 @@ export function scoreOptions(profile, state) {
   // Fear of the supernatural needs it to show: a Kindred who passes for human frightens no one until it does
   const anyFear = enemies.some(e => fearHere(e).length) || ((p.fears ?? []).includes("supernatural") && enemies.some(e => e.obvious));
   const outnumbered = enemies.length > allies.length + 1;
+  const tac = t => (p.tactics ?? []).includes(t);
+  // The Masquerade (or the Veil, or the Consensus): mortals watching and a foe who passes for human
+  const hiding = tac("masquerade") && Number(state.witnesses ?? 0) > 0 && !enemies.some(e => e.obvious);
 
   // The Delirium, or a bystander facing violence, overrides the rest (WoDX reading of the line rules)
   if ( s.delirious ) out.push({action: "flee", score: 20, why: "The Delirium: the sight of a Crinos sends a mortal running"});
@@ -90,6 +126,9 @@ export function scoreOptions(profile, state) {
     const ally = allies.find(a => !a.isDomitor && (a.attackerIds ?? []).includes(e.id));
     if ( ally ) { sc += 0.8 * p.loyalty; r.push(`they attacked ${ally.name}`); }
     if ( (p.tactics ?? []).includes("supernatural") && e.supernatural ) { sc += 2; r.push("a hunter goes for the monster first"); }
+    if ( tac("pack") && e.hurtByAllies ) { sc += 1.5 * (0.5 + p.loyalty / 2); r.push("the pack goes for the one already bleeding"); }
+    if ( tac("ground") && s.onGround ) { sc += 1; r.push("on its own ground"); }
+    if ( tac("alive") && (e.supernatural || e.wounds >= 4) ) { sc += e.wounds >= 4 ? 1 : 0.3; r.push("aims to take them alive (stake, bind or seize)"); }
     const f = fearHere(e);
     if ( f.length ) { sc -= 4 * (1 + p.caution / 2); r.push(`afraid of their ${f.join(" and ")}`); }
     if ( !e.reach && !state.canRanged ) { sc -= 0.8; r.push("must close in first"); }
@@ -100,7 +139,9 @@ export function scoreOptions(profile, state) {
   {
     let sc = p.cowardice;
     const r = [];
-    if ( s.wounds >= p.fleeAt ) { sc += 6 + (s.wounds - p.fleeAt); r.push(`wounded past what this NPC will bear (${s.wounds} ≥ ${p.fleeAt})`); }
+    const bear = p.fleeAt + (tac("ground") && s.onGround ? 1 : 0);
+    if ( s.wounds >= bear ) { sc += 6 + (s.wounds - bear); r.push(`wounded past what this NPC will bear (${s.wounds} ≥ ${bear})`); }
+    if ( hiding ) { sc += 2; r.push(`${state.witnesses} mortal witness${state.witnesses === 1 ? "" : "es"}: better to slip away`); }
     if ( outnumbered ) { sc += 1.5 * (p.caution); r.push("outnumbered"); }
     if ( anyFear ) { sc += 2 + 1.5 * p.caution; r.push("faces what it fears"); }
     if ( (p.fears ?? []).includes("violence") && enemies.length ) { sc += 3; r.push("not a fighter"); }
@@ -137,7 +178,8 @@ export function scoreOptions(profile, state) {
 
   // A power (Discipline, Gift, Arcanos, Numen, Edge): the Storyteller picks which
   if ( s.hasPowers && p.power > 0 && enemies.length ) {
-    out.push({action: "power", score: 1.5 * p.power + (p.cunning > 1 ? 0.5 : 0), why: "this NPC fights with its powers"});
+    out.push({action: "power", score: 1.5 * p.power + (p.cunning > 1 ? 0.5 : 0) - (hiding ? 3 : 0),
+      why: hiding ? "this NPC fights with its powers, though mortals are watching" : "this NPC fights with its powers"});
   }
 
   // Call for help
