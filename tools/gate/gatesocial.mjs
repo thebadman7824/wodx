@@ -99,10 +99,30 @@ export async function run() {
       // The NPC token is unlinked: the lift takes from that token's own actor, not the world actor
       await npcTok.actor.createEmbeddedDocuments("Item", [{name: "WoDX gate ring", type: "Item", flags: {"wodx-sheets": {conceal: "P"}}}, {name: "WoDX gate sack", type: "Item", flags: {"wodx-sheets": {conceal: "N"}}}]);
       const ring = npcTok.actor.items.find(i => i.name === "WoDX gate ring");
-      const res = await A().lift(pc(), npcTok.object, "lift", {...fd, want: ring.id});
+      const warns = [], w0 = console.warn, e0 = console.error;
+      console.warn = (...a) => { warns.push(a.map(String).join(" ")); w0(...a); };
+      console.error = (...a) => { warns.push(a.map(String).join(" ")); e0(...a); };
+      let res;
+      try { res = await A().lift(pc(), npcTok.object, "lift", {...fd, want: ring.id}); } finally { console.warn = w0; console.error = e0; }
+      R.notes.push({liftWarns: warns.slice(0, 10)});
       await sleep(300);
       const got = pc().items.some(i => i.name === "WoDX gate ring"), left = npcTok.actor.items.some(i => i.name === "WoDX gate ring"), sack = npcTok.actor.items.some(i => i.name === "WoDX gate sack");
-      ok("8 lift", res?.done && !res.noticed && got && !left && sack, {res, got, left, sack});
+      ok("8 lift", res?.done && !res.noticed && got && !left && sack, {res, got, left, sack, isToken: npcTok.actor?.isToken, ringId: ring?.id, ringParent: ring?.parent?.uuid, items: npcTok.actor.items.map(i => i.name)});
+    });
+    await step("9 delete on an unlinked token (diagnostic)", async () => {
+      const ta = npcTok.actor;
+      const [m1] = await ta.createEmbeddedDocuments("Item", [{name: "WoDX gate diag 1", type: "Item"}]);
+      const via = fromUuidSync(npcTok.uuid)?.actor;
+      const same = via === ta;
+      let e1 = null; try { await via.deleteEmbeddedDocuments("Item", [m1.id]); } catch (e) { e1 = e.message; }
+      const gone1 = !npcTok.actor.items.get(m1.id);
+      const [m2] = await npcTok.actor.createEmbeddedDocuments("Item", [{name: "WoDX gate diag 2", type: "Item"}]);
+      let e2 = null; try { await npcTok.actor.items.get(m2.id).delete(); } catch (e) { e2 = e.message; }
+      const gone2 = !npcTok.actor.items.get(m2.id);
+      const ringNow = npcTok.actor.items.find(i => i.name === "WoDX gate ring");
+      let e3 = null; if ( ringNow ) { try { await ringNow.delete(); } catch (e) { e3 = e.message; } }
+      const gone3 = !npcTok.actor.items.some(i => i.name === "WoDX gate ring");
+      ok("9 delete on an unlinked token (diagnostic)", gone1 && gone2, {same, viaUuid: via?.uuid, e1, gone1, e2, gone2, ringFlags: ringNow?.flags, e3, gone3, delta: Object.keys(npcTok.delta?.toObject?.()?.items ?? {}).length});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

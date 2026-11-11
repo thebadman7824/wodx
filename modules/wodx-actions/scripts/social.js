@@ -181,8 +181,10 @@ export function build(ctx) {
     const qtyOf = it => Math.max(1, Math.floor(Number(it?.flags?.["wodx-sheets"]?.qty) || 1));
 
     /** Move one of an item (or the whole of a single one) from one actor to another. Storyteller's client. */
+    let lastMove = null;
     async function moveItem(from, to, itemId, qty = 1) {
         const it = from?.items?.get(itemId);
+        lastMove = { from: from?.uuid ?? null, to: to?.uuid ?? null, item: itemId, found: !!it };
         if (!it || !to) return null;
         const have = qtyOf(it), n = Math.max(1, Math.min(have, Math.floor(Number(qty) || 1)));
         const data = it.toObject();
@@ -190,15 +192,26 @@ export function build(ctx) {
         foundry.utils.setProperty(data, "flags.wodx-sheets.qty", n);
         if (data.flags?.["wodx-sheets"]?.in) delete data.flags["wodx-sheets"].in;
         const [made] = await to.createEmbeddedDocuments("Item", [data]);
-        if (n >= have) await it.delete(); else await it.update({ "flags.wodx-sheets.qty": have - n });
+        lastMove = { from: from.uuid, to: to.uuid, item: it.id, have, n, made: made?.uuid ?? null };
+        if (n >= have) {
+            const gone = await from.deleteEmbeddedDocuments("Item", [it.id]);
+            lastMove.deleted = (gone ?? []).map(g => g?.uuid ?? g?.id ?? String(g));
+            lastMove.after = !!from.items.get(it.id);
+            if (lastMove.after) console.warn("WoDX Actions | lift: the item is still on", from.uuid);
+        } else await from.updateEmbeddedDocuments("Item", [{ _id: it.id, "flags.wodx-sheets.qty": have - n }]);
         return made ?? null;
     }
     /** Carry out a lift or plant: the item and any coins. data: {from, to, item, qty, coins}. */
     async function applyLift(d) {
-        // Uuids, so an unlinked token's own actor (its own pockets) is the one that changes
-        const get = id => { if (!id) return null; try { const a = fromUuidSync(id); if (a instanceof Actor) return a; } catch (e) { /* an id */ } return game.actors.get(id) ?? null; };
-        const from = get(d.from), to = get(d.to);
-        if (!from || !to) return null;
+        // A token's uuid gives that token's own actor (an unlinked token's own pockets); else a world actor by uuid or id
+        const get = (id, tok) => {
+            if (tok) { try { const t = fromUuidSync(tok); if (t?.actor) return t.actor; } catch (e) { /* gone */ } }
+            if (!id) return null;
+            try { const a = fromUuidSync(id); if (a instanceof Actor) return a; } catch (e) { /* an id */ }
+            return game.actors.get(id) ?? null;
+        };
+        const from = get(d.from, d.fromToken), to = get(d.to, d.toToken);
+        if (!from || !to) { lastMove = { unresolved: true, d }; return null; }
         const made = d.item ? await moveItem(from, to, d.item, d.qty) : null;
         if (d.coins && money()?.transfer) { try { await money().transfer(from, to, d.coins, { note: "lifted" }); } catch (e) { console.warn("WoDX Actions | coins", e); } }
         return made;
@@ -289,7 +302,9 @@ export function build(ctx) {
                 + `${rollBlock(`${esc(name)} (${esc(op.label)})`, them)}<p>${esc(res.noticed ? "Noticed." : res.done ? `Not noticed: ${got || "nothing"} ${key === "lift" ? "taken" : "planted"}.` : "Nothing happened.")}</p>`
                 + `${!game.user.isGM && (got || res.noticed) ? `<p class="vta-note">The change waits in the approval queue.</p>` : ""}</div></div>`
         });
-        const data = { from: key === "lift" ? npc.uuid : actor.uuid, to: key === "lift" ? actor.uuid : npc.uuid, item: item?.id ?? null, qty: 1, coins };
+        const npcTokUuid = npc.isToken ? (npcTok.document?.uuid ?? npc.token?.uuid ?? null) : null;
+        const data = { from: key === "lift" ? npc.uuid : actor.uuid, to: key === "lift" ? actor.uuid : npc.uuid,
+            fromToken: key === "lift" ? npcTokUuid : null, toToken: key === "lift" ? null : npcTokUuid, item: item?.id ?? null, qty: 1, coins };
         if (item || coins) await proposeOrApply("wodx-actions.lift", `${actor.name} ${key === "lift" ? "lifts" : "plants"} ${got} ${key === "lift" ? "from" : "on"} ${npc.name}`, data, applyLift);
         if (res.noticed) {
             await proposeOrApply("wodx-actions.caught", `${npc.name} caught ${actor.name} ${key === "lift" ? "stealing" : "planting something"}`, { npc: npc.id, char: actor.id, scene: npcTok.document?.parent?.id ?? canvas.scene?.id, what: key }, applyCaught);
@@ -297,7 +312,10 @@ export function build(ctx) {
             await npcApi()?.attitude?.propose?.(npc, actor, { delta: move, why: `${actor.name}: caught at ${key === "lift" ? "lifting" : "planting"}` });
         }
         Hooks.callAll("wodxSocial", { actor, npc, act: key, result: res.noticed ? "noticed" : res.done ? "win" : "lose", item: item?.name ?? null, coins });
-        return { ...res, item: item?.name ?? null, coins };
+        // For gates and the console: where the move went, and whether the NPC token still has the item
+        const moved = lastMove ? { ...lastMove, tokenStill: item && key === "lift" ? !!npcTok.actor?.items?.get(item.id) : null, data } : null;
+        lastMove = null;
+        return { ...res, item: item?.name ?? null, coins, moved };
     }
 
     return { withPerson, social, lift, applyLift, applyCaught, registerHandlers, findNpc, rules: SR };
