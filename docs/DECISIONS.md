@@ -544,3 +544,41 @@ WoDX Actions 3.21.0 adds Lift something and Plant something to "With this person
 
 ## B676. Charm or seduce with this person (2026-11-11)
 "With this person" runs V20's three-stage Seduction (p. 266) with the NPC's attitude shifting each stage's difficulty. A won seduction leaves a "charmed" note and raises the attitude a step; a botch lowers it. For Kindred, a won seduction offers to feed at once, as the Siren hunts (V20 pp. 259-260); feeding opens the usual window, so Masquerade, Humanity and the vessel's blood work as before.
+
+
+## B700. Travel by distance and the year's ways (2026-11-11)
+Ben approved the open world study (all recommendations). A travel place may carry a distance in km and a kind of road (track, country road, main road, motorway, town streets, railway line, water). The trip's time comes from the fastest way the year allows on that road, or the way the player picks: on foot, on horseback, by cart or coach (to 1945), by boat, by tram or bus (from 1869), by train (from 1839, on a railway line), by car (from 1900), and transit pods on the Future Darkness branch (from 2040). A motorway counts as a main road before 1971 and a railway line before 1839. Hand-typed minutes on a route or place still win, so places set up before keep their times. House figures; the books give no travel speeds. Code: Storyteller road-rules.mjs, world-rules.mjs tripPlan.
+
+## B701. The weather and the dark slow the road (2026-11-11)
+WoDX Atmosphere's weather for the night slows a trip by distance: mud on unpaved roads in rain, snow lying, deep snow, thick fog for riders and drivers, a gale for walkers and boats. Country roads count as paved from 1950, main roads from 1750, town streets from 1800. Before 1900 the open road is unlit at night, and walkers, riders and carts go at two thirds of their speed (town streets before 1800: four fifths). The factor is capped at 2.5. House figures.
+
+## B702. Encounter odds by road and the dark (2026-11-11)
+The encounter chance an hour is scaled by the road: a track 1.5 times, a country road and town streets as set, a main road three quarters, a boat three quarters, a motorway and a railway a quarter. An unlit road at night adds a quarter. Faster ways have fewer hours on the road, so fewer checks.
+
+## B703. The player picks how to travel (2026-11-11)
+Out on your own has a How list with the ways open in the year; the default is the fastest way open. A way the road cannot take (a train with no line) goes by the fastest way open instead. Whether the character owns a horse or a car is the Storyteller's call; the log says how they went.
+
+## B704. Routines follow the age (2026-11-11)
+Ready routines change with the age of the year: medieval (to 1499, the hours first written), early modern (1500 to 1799), industrial (1800 to 1913), twentieth century (1914 to 1979) and modern (1980 on). An age with no hours of its own for a routine uses the nearest earlier one. The Future Darkness keeps the modern hours. A routine with hours of its own never changes. Code: NPC routine-rules.mjs AGES, presetBlocks.
+
+## B705. The hours of each age (2026-11-11)
+House readings for the Czech lands: shops by the town clock after 1500; the twelve-hour workshop and factory day in the nineteenth century; the eight-hour day and the short Saturday from 1918; the five-day week, late bars and fewer at Mass after 1980; the secular priest's day (no Matins at night) from 1800; Cainites hunting the gaslit streets, then clubs. Ghouls, elders, Garou and recluses keep their hours in every age.
+
+## B706. Ready routines for later ages (2026-11-11)
+New ready routines: student (from 1348), factory hand (from 1800), police patrol (from 1850), clerk or office worker (from 1850), night-shift worker (from 1900). The routine window lists a ready routine only from its year, and has Hours of the age to fix one age.
+
+## B707. Word travels at the speed of the age (2026-11-11)
+One table in WoDX Chronicle (media-rules.mjs) sets how fast word travels, used by the rumour mill and by Masquerade breaches: word of mouth, then printed sheets (1490), the newspapers (1848), the wireless (1923), television (1953), the internet (1995) and the Net on the Future Darkness branch (2026). Each knower tells 2 a night by word of mouth and in the age of print, 3 from the papers, 4 from television, 6 with the internet, 8 on the Net. House figures.
+
+## B708. Big news floods (2026-11-11)
+A rumour can be marked big news. In the age of print each knower tells 4 a night; from the papers on, big news reaches everyone it can in one night. A breach reaches its severity times the age's reach of new places a day (1, 2, 3, 4, 5), and from 1848 a breach of severity 2 or more reaches every place in a day. Rising to the Prince and the hunters still waits on the queue as before. In the Dark Ages nothing changes.
+
+## B709. Rumours change in the telling (2026-11-11)
+A world setting, off by default: each telling has a 15 percent chance to twist the tale. The rumour mill counts the twists for the Storyteller to play; WoDX never rewrites the words.
+
+## B710. Townsfolk are not all the same age (2026-11-11)
+Item 4 of the open world study. Pass the Years (WoDX Creation) already ages every character and offers death by age and an heir; a character with no birth year is taken as 20 when the skip starts, so a long skip took a whole town in the same year. NPCs who keep a WoDX NPC routine or belong to a household, with no birth year, are now taken as 20 to 49, seeded by the actor, so deaths spread over the decades. Player characters and other NPCs keep 20. Code: Creation time.mjs assumedAgeOf, data/time.mjs MORTAL.townSpread.
+
+## B711. The town stays staffed (2026-11-11)
+When Pass the Years proposes a certain death (100 years or more) for townsfolk, "An heir inherits" starts ticked. The heir's sheet is copied from the dead one, so it keeps the routine, the household, the places and the talk sheet; the Storyteller can untick it. Deaths themselves still wait for the Storyteller's tick in Pass the Years, never automatic.
+

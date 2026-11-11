@@ -90,11 +90,110 @@ export const PRESETS = {
 /** The routine each 7b template starts from. Spirits, ghosts and beasts have none: they keep no hours a town would know. */
 export const DEFAULT_PRESET = {guard: "night-watch", civilian: "labourer", ghoul: "ghoul", neonate: "neonate", elder: "elder", garou: "garou", hunter: "hunter"};
 
-export const blocksOf = (routine, template) => {
+export const blocksOf = (routine, template, year = null) => {
   if ( Array.isArray(routine?.blocks) && routine.blocks.length ) return routine.blocks;
-  const p = PRESETS[routine?.preset] ?? PRESETS[DEFAULT_PRESET[template]];
-  return p?.blocks ?? [];
+  const key = PRESETS[routine?.preset] ? routine.preset : DEFAULT_PRESET[template];
+  return presetBlocks(key, routine?.age || ageOf(year));
 };
+
+/* ------------------------------------------------------------------ */
+/*  Routines by era (NPC 0.13.0, B704 to B706)                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The ages a ready routine can change with. A routine follows the year unless the Storyteller fixes its age
+ * (routine.age). House readings of how working days changed in the Czech lands: the clock and the town ordinance
+ * after 1500; the factory's twelve-hour day in the nineteenth century; the eight-hour day from 1918 and the short
+ * Saturday; the five-day week, late bars and fewer at Mass after 1980. The Future Darkness keeps the modern hours.
+ */
+export const AGES = {
+  medieval: {label: "Medieval (to 1499)", from: -9999},
+  early: {label: "Early modern (1500 to 1799)", from: 1500},
+  industrial: {label: "Industrial (1800 to 1913)", from: 1800},
+  c20: {label: "Twentieth century (1914 to 1979)", from: 1914},
+  modern: {label: "Modern (1980 on)", from: 1980}
+};
+const AGE_ORDER = Object.keys(AGES);
+/** The age of a year; no year known keeps the medieval hours the presets were first written for. */
+export function ageOf(year) {
+  const y = Number(year);
+  if ( !Number.isFinite(y) || !y ) return "medieval";
+  let out = "medieval";
+  for ( const k of AGE_ORDER ) if ( y >= AGES[k].from ) out = k;
+  return out;
+}
+/** A preset's hours in an age: that age's version, else the nearest earlier one, else its first hours. */
+export function presetBlocks(key, age = "medieval") {
+  const p = PRESETS[key];
+  if ( !p ) return [];
+  const i = Math.max(0, AGE_ORDER.indexOf(AGES[age] ? age : "medieval"));
+  for ( let k = i; k >= 0; k-- ) if ( p.ages?.[AGE_ORDER[k]] ) return p.ages[AGE_ORDER[k]];
+  return p.blocks ?? [];
+}
+/** Ready routines that belong to the year (those with a `from` year after it are left out of the picker). */
+export const presetsFor = year => Object.fromEntries(Object.entries(PRESETS).filter(([, p]) => !p.from || !Number(year) || Number(year) >= p.from));
+
+const monFri = [0, 1, 2, 3, 4];
+/** Later ages of the first presets. Medieval hours stay as they were written above. */
+const LATER = {
+  "night-watch": {
+    c20: [B(22, 6, "street", "patrol", {label: "The night shift on the streets"}), B(6, 14, "home", "sleep"), B(0, 24, "home", "rest")]},
+  "day-watch": {
+    c20: [B(6, 14, "post", "patrol", {label: "The early shift"}), B(18, 22, "tavern", "drink", {days: [4, 5]}), B(23, 6, "home", "sleep"), B(0, 24, "home", "rest")]},
+  merchant: {
+    early: [B(8, 10, "church", "pray", {days: [6], label: "Mass"}), B(8, 10, "church", "pray", {feast: "only", label: "Mass"}),
+      B(7, 18, "work", "work", {days: weekdays, feast: "not", label: "Trading by the town clock"}), B(18, 21, "tavern", "drink", {days: [4, 5]}),
+      B(22, 6, "home", "sleep"), B(0, 24, "home", "rest")],
+    industrial: [B(9, 10, "church", "pray", {days: [6], label: "Mass"}), B(7, 19, "work", "work", {days: weekdays, feast: "not", label: "Shop hours"}),
+      B(19, 22, "tavern", "drink", {days: [4, 5], label: "The coffee house or the inn"}), B(22, 6, "home", "sleep"), B(0, 24, "home", "rest")],
+    c20: [B(9, 10, "church", "pray", {days: [6], label: "Sunday Mass"}), B(8, 18, "work", "work", {days: monFri, label: "Shop hours"}),
+      B(8, 12, "work", "work", {days: [5], label: "Saturday morning"}), B(19, 22, "tavern", "drink", {days: [4]}), B(23, 7, "home", "sleep"), B(0, 24, "home", "rest")],
+    modern: [B(9, 19, "work", "work", {days: monFri, label: "Shop hours"}), B(9, 13, "work", "work", {days: [5], label: "Saturday morning"}),
+      B(20, 23, "tavern", "drink", {days: [4]}), B(23, 7, "home", "sleep"), B(0, 24, "home", "rest")]},
+  labourer: {
+    industrial: [B(7, 9, "church", "pray", {days: [6], label: "Mass"}), B(6, 18, "work", "work", {days: weekdays, feast: "not", label: "The workshop's twelve hours"}),
+      B(19, 22, "tavern", "drink", {days: [5]}), B(21, 5, "home", "sleep"), B(0, 24, "home", "rest")],
+    c20: [B(8, 9, "church", "pray", {days: [6], label: "Sunday Mass"}), B(6, 14, "work", "work", {days: monFri, label: "The eight-hour day"}),
+      B(6, 12, "work", "work", {days: [5], label: "Saturday morning"}), B(18, 21, "tavern", "drink", {days: [4, 5]}), B(22, 5, "home", "sleep"), B(0, 24, "home", "rest")],
+    modern: [B(7, 16, "work", "work", {days: monFri}), B(18, 22, "tavern", "drink", {days: [4]}), B(23, 6, "home", "sleep"), B(0, 24, "home", "rest")]},
+  priest: {
+    industrial: [B(7, 12, "church", "pray", {days: [6], label: "Sunday Masses"}), B(7, 12, "church", "pray", {feast: "only", label: "Feast-day Masses"}),
+      B(7, 8, "church", "pray", {label: "Morning Mass"}), B(8, 12, "street", "errand", {label: "Parish rounds"}), B(12, 18, "home", "work", {label: "Parish work"}),
+      B(18, 19, "church", "pray", {label: "Evening prayer"}), B(22, 6, "home", "sleep"), B(0, 24, "home", "rest")]},
+  innkeeper: {
+    industrial: [B(9, 10, "church", "pray", {days: [6], label: "Mass"}), B(10, 24, "tavern", "work"), B(0, 9, "home", "sleep"), B(0, 24, "home", "rest")],
+    c20: [B(10, 23, "tavern", "work"), B(0, 9, "home", "sleep"), B(0, 24, "home", "rest")],
+    modern: [B(11, 1, "tavern", "work", {label: "Open till late"}), B(1, 10, "home", "sleep"), B(0, 24, "home", "rest")]},
+  neonate: {
+    industrial: [B(0, 24, "haven", "sleep", {when: "day"}), B(21, 3, "street", "hunt", {when: "night", label: "Hunting the gaslit streets"}), B(0, 24, "haven", "rest", {when: "night"})],
+    modern: [B(0, 24, "haven", "sleep", {when: "day"}), B(22, 4, "street", "hunt", {when: "night", label: "Clubs and late streets"}), B(0, 24, "haven", "rest", {when: "night"})]},
+  hunter: {
+    c20: [B(21, 3, "street", "hunt", {when: "night"}), B(8, 16, "work", "work", {days: monFri}), B(3, 7, "home", "sleep"), B(0, 24, "home", "rest")],
+    modern: [B(21, 3, "street", "hunt", {when: "night"}), B(9, 17, "work", "work", {days: monFri}), B(3, 8, "home", "sleep"), B(0, 24, "home", "rest")]}
+};
+for ( const [k, ages] of Object.entries(LATER) ) if ( PRESETS[k] ) PRESETS[k].ages = {...ages};
+
+/** Ready routines that begin in later ages. from: the first year the picker offers them. */
+Object.assign(PRESETS, {
+  student: {label: "Student", from: 1348, blocks: [
+    B(7, 9, "church", "pray", {days: [6], label: "Mass"}), B(6, 11, "work", "work", {days: weekdays, feast: "not", label: "Lectures"}),
+    B(13, 17, "work", "work", {days: weekdays, feast: "not", label: "Disputations and study"}), B(19, 22, "tavern", "drink", {days: [3, 4, 5]}),
+    B(22, 5, "home", "sleep"), B(0, 24, "home", "rest")],
+  ages: {modern: [B(9, 16, "work", "work", {days: monFri, label: "Lectures"}), B(20, 2, "tavern", "drink", {days: [3, 4, 5]}),
+    B(2, 9, "home", "sleep"), B(23, 8, "home", "sleep"), B(0, 24, "home", "rest")]}},
+  factory: {label: "Factory hand", from: 1800, blocks: LATER.labourer.industrial.map(b => (b.activity === "work" ? {...b, label: "The mill's twelve hours"} : b)),
+    ages: {c20: LATER.labourer.c20, modern: [B(6, 14, "work", "work", {days: monFri, label: "The morning shift"}), B(18, 22, "tavern", "drink", {days: [4]}),
+      B(22, 5, "home", "sleep"), B(0, 24, "home", "rest")]}},
+  police: {label: "Police patrol", from: 1850, blocks: [
+    B(18, 2, "street", "patrol", {label: "The evening beat"}), B(2, 4, "post", "patrol", {label: "At the station"}), B(4, 12, "home", "sleep"), B(0, 24, "home", "rest")]},
+  clerk: {label: "Clerk or office worker", from: 1850, blocks: [
+    B(9, 10, "church", "pray", {days: [6], label: "Mass"}), B(8, 18, "work", "work", {days: weekdays, feast: "not", label: "Office hours"}),
+    B(19, 22, "tavern", "drink", {days: [4], label: "The coffee house"}), B(22, 7, "home", "sleep"), B(0, 24, "home", "rest")],
+  ages: {c20: [B(8, 17, "work", "work", {days: monFri}), B(8, 12, "work", "work", {days: [5]}), B(19, 22, "tavern", "drink", {days: [4]}), B(23, 7, "home", "sleep"), B(0, 24, "home", "rest")],
+    modern: [B(9, 17, "work", "work", {days: monFri}), B(19, 22, "tavern", "drink", {days: [4]}), B(23, 7, "home", "sleep"), B(0, 24, "home", "rest")]}},
+  "night-shift": {label: "Night-shift worker", from: 1900, blocks: [
+    B(22, 6, "work", "work", {days: monFri, label: "The night shift"}), B(7, 15, "home", "sleep"), B(0, 24, "home", "rest")]}
+});
 
 /* ------------------------------------------------------------------ */
 /*  Which block is current                                             */

@@ -2,7 +2,7 @@
   "id": "wodx-npc",
   "title": "WoDX NPC",
   "description": "World of Darkness Expanded: NPC profiles, combat tactics, routines and reactions. On an NPC's turn WoDX weighs what it could do from its temperament, fears and the fight, then suggests a plan to the Storyteller or (in Auto) moves and attacks with an undo card. NPCs with a routine keep hour-by-hour places on the Chronicle clock, and WoDX: Reaction regions let watchers notice and react. NPCs who hear a player at work on the map (WoDX Interactables) react through the same card, and a place put on alarm stays so for an hour and wary until dusk, lighting its WoDX: Alert zones. Factions take a turn each week of world time, hunting grounds follow Herd and Domain, and a Masquerade breach spreads as a rumour, every result through the approval queue. WoDX: Trigger regions pass on what happens when someone walks in, and an Alert zone can carry the alarm to other places by bell, telephone, radio or runner. Private use only; not for distribution or sale. Followers take orders: a player tells an NPC that serves their character to follow, wait, guard, keep watch or go to someone; a hard order waits for the Storyteller. Players talk to NPCs from a topic menu: they target someone close by, press Talk and pick a topic, and the NPC answers with a line the Storyteller wrote on a talk sheet, or with stock talk suited to the era and to how they regard the character: greetings, gossip, rumours from the rumour network, news, work and the way.",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "authors": [
     {
       "name": "WoDX Project (private)"
