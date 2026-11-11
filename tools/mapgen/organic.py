@@ -31,6 +31,7 @@ ORGANIC = {
     "village": {"n": 5, "walls": 0, "scale": 1.6, "margin": 12, "label": "village", "stalls": 1, "river": .5, "rhalf": 1.3},
     "town": {"n": 10, "walls": .6, "scale": 1.6, "margin": 10, "label": "small town", "stalls": 5, "river": .6, "rhalf": 1.8},
     "city": {"n": 18, "walls": 1, "scale": 1.6, "margin": 10, "label": "city", "stalls": 9, "river": .75, "rhalf": 2.3},
+    "metropolis": {"n": 60, "walls": 1, "scale": 1.6, "margin": 10, "label": "metropolis", "stalls": 18, "river": .85, "rhalf": 2.8},
 }
 STEP = math.radians(15)
 HALF = {"main": 1.3, "street": .85, "road": 1.1, "alley": .6}            # half widths of the ways, in squares
@@ -70,7 +71,8 @@ BACK_TO_BACK = {"village": 24, "gate-out": 22, "patriciate": 20}   # the least d
 TERRACED = {"merchant": 1, "market": 1, "administration": .8, "gate": .6, "craftsmen": .6, "slum": .5}   # chance a frontage is a row
 CAPS = {"village": {"smithy": 1, "bakehouse": 1, "tavern": 1, "guardhouse": 0, "storehouse": 1},
         "town": {"smithy": 2, "bakehouse": 2, "tavern": 2, "guardhouse": 2, "storehouse": 3},
-        "city": {"smithy": 4, "bakehouse": 5, "tavern": 4, "guardhouse": 5, "storehouse": 7}}
+        "city": {"smithy": 4, "bakehouse": 5, "tavern": 4, "guardhouse": 5, "storehouse": 7},
+        "metropolis": {"smithy": 12, "bakehouse": 15, "tavern": 12, "guardhouse": 14, "storehouse": 20}}
 LABELS = {"cottage": "Cottage", "byre-house": "Farmhouse", "smithy": "Smithy", "bakehouse": "Bakehouse", "tavern": "Alehouse",
           "storehouse": "Storehouse", "guardhouse": "Guardhouse", "barn": "Barn", "chapel": "Chapel"}
 
@@ -79,6 +81,12 @@ def snap(a): return round(a / STEP) * STEP
 def box_corners(cx, cy, th, w, h):
     c, s = math.cos(th), math.sin(th)
     return [(cx + dx * c - dy * s, cy + dx * s + dy * c) for dx, dy in ((-w / 2, -h / 2), (w / 2, -h / 2), (w / 2, h / 2), (-w / 2, h / 2))]
+
+def even_cuts(length, part):
+    """Equal parts along one side, as few as keep each within part squares."""
+    if not part or length <= part: return [0, length]
+    n = math.ceil(length / part)
+    return [round(k * length / n) for k in range(n + 1)]
 
 def seg_cross(a, b, p, q):
     """Where two segments cross, or None."""
@@ -106,7 +114,20 @@ class OrganicTown(T.Town):
         y0, y1 = min(p[1] for p in inner_pts), max(p[1] for p in inner_pts)
         m = cfg["margin"]
         self.cols, self.rows = math.ceil((x1 - x0) * s + 2 * m), math.ceil((y1 - y0) * s + 2 * m)
-        to = lambda p: (round((p[0] - x0) * s + m, 4), round((p[1] - y0) * s + m, 4))
+        mx = my = m
+        if part:                                              # even parts: shift the town so no line crosses the market
+            mk = [((lay.pt(v)[0] - x0) * s, (lay.pt(v)[1] - y0) * s) for v in lay.plaza["v"]]
+            def shift(size, lo, hi):
+                n0 = math.ceil(size / part)
+                for d in sorted(range(0, part), key=lambda d: (math.ceil((size + d) / part) > n0, d)):   # no extra part if it can be helped
+                    L_ = size + d
+                    cs = even_cuts(L_, part)
+                    if not any(lo + m + d - 2 < c < hi + m + d + 2 for c in cs[1:-1]): return d
+                return 0
+            dx = shift(self.cols, min(q[0] for q in mk), max(q[0] for q in mk))
+            dy = shift(self.rows, min(q[1] for q in mk), max(q[1] for q in mk))
+            self.cols, self.rows, mx, my = self.cols + dx, self.rows + dy, m + dx, m + dy
+        to = lambda p: (round((p[0] - x0) * s + mx, 4), round((p[1] - y0) * s + my, 4))
         self.P = {v: to(xy) for v, xy in lay.V.items()}
         self.patches = lay.patches
         for p in self.patches: p["poly"] = [self.P[v] for v in p["v"]]
@@ -367,6 +388,8 @@ class OrganicTown(T.Town):
         pts = [q for poly in polys for q in poly]
         x, y, w, h = G.bbox(pts)
         if x < 1.5 or y < 1.5 or x + w > self.cols - 1.5 or y + h > self.rows - 1.5: return False
+        if self.on_cut(x, y, w, h, .2): return False
+        if getattr(self, "mind_plots", False) and any(G.separation(poly, q["poly"]) < .1 for poly in polys for q in self.plots if overlaps(q["rect"], (x, y, w, h), .2)): return False
         if blk is not None and not all(G.inside(q, blk) for q in pts): return False
         for _, b in self.bgrid.near((x, y, w, h), gap + .5):
             if any(G.separation(poly, hb) < gap for poly in polys for hb in b.hulls): return False
@@ -377,6 +400,10 @@ class OrganicTown(T.Town):
         if any(G.separation(poly, self.market_poly) < .3 for poly in polys): return False
         if any(G.separation(poly, q) < .3 for poly in polys for q in self.burned): return False
         return True
+
+    def on_cut(self, x, y, w, h, pad=0):
+        """True when a box would lie across a line between two part maps."""
+        return any(x - pad < c < x + w + pad for c in self.cut_xs[1:-1]) or any(y - pad < c < y + h + pad for c in self.cut_ys[1:-1])
 
     def off_ways(self, polys, box, clear):
         """True when no street, road or alley band comes within clear of any piece (whole sides, not just corners:
@@ -410,6 +437,7 @@ class OrganicTown(T.Town):
         n = self.count.get(type_key, 0) + 1
         try: b = B.Angled(f"{type_key}-{n}", type_key, cx, cy, th, label, extra, tdef).furnish()
         except SystemExit: return None                     # a variant whose rooms will not furnish: try another
+        if self.on_cut(*b.rect): return None
         self.count[type_key] = n
         self.blds.append(b)
         self.bgrid.add(b.rect, b)
@@ -461,7 +489,7 @@ class OrganicTown(T.Town):
                 if spot:
                     lab = self.label_for(tk)
                     if ward == "gate-out" and tk == "tavern": lab = "Inn"
-                    if ward == "gate-out" and tk == "cottage" and self.count.get("hospital", 0) < {"village": 0, "town": 1, "city": 2}[self.size]:
+                    if ward == "gate-out" and tk == "cottage" and self.count.get("hospital", 0) < {"village": 0, "town": 1, "city": 2, "metropolis": 5}[self.size]:
                         lab = "Almshouse"; self.count["hospital"] = self.count.get("hospital", 0) + 1
                     b = self.put(tk, lab, spot)
                     if not b: continue
@@ -595,12 +623,17 @@ class OrganicTown(T.Town):
         s = self.best_spot("cottage", sorted(near, key=lambda x: math.dist(x[0]["mid"], chapel.centre))[:4], None)
         if s:
             pr = self.put("cottage", "Priest's house", s, {"priest": True})
+        if self.size == "metropolis":   # a parish church in every other church ward (a house rule; smaller places keep one)
+            for p, blk, kinds in blocks.values():
+                if p["ward"] != "church" or G.inside(chapel.centre, p["poly"]): continue
+                s = self.best_spot("chapel", [(e, blk, p["ward"]) for e in self.edges_of(blk, kinds)], None)
+                if s: self.put("chapel", "Parish church", s)
         if self.river_line: self.put_mill(blocks)
         self.count["tavern"] = 1
         # fire history: now and then a great fire took one block; it was rebuilt in stone, all but one plot left in ash
-        self.fire_p = None
+        self.fire_p, self.filled = None, []
         hot = [p for p, blk, kinds in blocks.values() if p["ward"] in ("craftsmen", "merchant", "market", "slum", "village")]
-        if hot and R.random() < {"village": .2, "town": .4, "city": .6}[self.size]: self.fire_p = R.choice(hot)
+        if hot and R.random() < {"village": .2, "town": .4, "city": .6, "metropolis": .7}[self.size]: self.fire_p = R.choice(hot)
         order = ["gate", "merchant", "market", "administration", "church", "military", "patriciate", "craftsmen", "village", "slum", "gate-out"]
         for ward in order:
             for p, blk, kinds in blocks.values():
@@ -626,6 +659,12 @@ class OrganicTown(T.Town):
                                                   (e["mid"][0] - f["mid"][0]) * f["in"][0] + (e["mid"][1] - f["mid"][1]) * f["in"][1] < BACK_TO_BACK.get(ward, 16)
                                                   for f in done): continue
                     self.fill_edge(e, ward, blk); done.append(e)
+                    self.filled.append((e, ward, blk))
+        if self.cut_xs[1:-1] or self.cut_ys[1:-1]:           # a second pass along the frontages a part line crossed,
+            for e, ward, blk in self.filled:                  # so the houses slide up to the line on both sides
+                a, b = e["A"], (e["A"][0] + e["u"][0] * e["len"], e["A"][1] + e["u"][1] * e["len"])
+                bx = (min(a[0], b[0]) - 8, min(a[1], b[1]) - 8, abs(b[0] - a[0]) + 16, abs(b[1] - a[1]) + 16)
+                if self.on_cut(*bx): self.fill_edge(e, ward, blk)
         for p, blk, kinds in blocks.values():                 # farms: a farmhouse and a barn by the road
             if p["ward"] != "farm": continue
             for e in self.edges_of(blk, kinds, ("road",)):
@@ -826,7 +865,7 @@ class OrganicTown(T.Town):
     def node_wells(self):
         """A public well by the busier junctions away from the market, one to each quarter of the town, set back off
         the ways so they stay clear; each is a landmark and a meeting place."""
-        want = {"village": 0, "town": 2, "city": 6}[self.size]
+        want = {"village": 0, "town": 2, "city": 6, "metropolis": 16}[self.size]
         if not want: return []
         deg = {}
         for a, b, h, k in self.segs:
@@ -1006,6 +1045,7 @@ class OrganicTown(T.Town):
         if not part or length <= part: return [0, length]
         planned = self.cut_xs if across == "x" else self.cut_ys
         if planned and part == self.part: return planned
+        if part == self.part: return even_cuts(length, part)          # even parts (B652)
         ax = 0 if across == "x" else 1
         span = lambda poly: (min(q[ax] for q in poly), max(q[ax] for q in poly))
         things = [(span(hb), 8) for b in self.blds for hb in b.hulls]
@@ -1342,8 +1382,8 @@ class OrganicTown(T.Town):
     def make(self):
         self.mill = None
         if self.part:                                         # the part lines first, down streets and round the market
-            self.cut_xs = self.cuts(self.cols, self.part, "x")
-            self.cut_ys = self.cuts(self.rows, self.part, "y")
+            self.cut_xs = even_cuts(self.cols, self.part)
+            self.cut_ys = even_cuts(self.rows, self.part)
         self.lay_out()
         if self.year:
             import eras
