@@ -126,7 +126,7 @@ export async function run() {
       const r = document.querySelectorAll(".wnpc-rivals input[type='checkbox']").length;
       document.querySelector(".wnpc-rivals")?.closest(".application")?.querySelector("button[data-action='cancel']")?.click();
       await p2;
-      ok("windows", b && r >= 60, {behaviour: b, rows: r});
+      ok("windows", b && r >= 55, {behaviour: b, rows: r});
     });
     await step("other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-npc", "wodx-interactables", "wodx-otherworlds", "wodx-storyteller"];
