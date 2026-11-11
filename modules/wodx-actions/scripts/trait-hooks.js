@@ -98,3 +98,56 @@ export function ticksHtml(actor, esc = s => s) {
     return `<fieldset class="vta-ticks"><legend>Merits and flaws: does this roll…</legend>${list.map(t =>
         `<label><input type="checkbox" name="tag-${t.key}"/> ${esc(t.label)}</label>`).join(" ")}</fieldset>`;
 }
+
+/* Traits With Teeth step 6 (Actions 3.35.0): sleep, feeding, pools and banked rerolls (V20 core pp. 480-494 printed) */
+
+/** Does the actor hold a working trait (by table key)? */
+export function holds(actor, key) {
+    const T = traits();
+    if (!T || !actor) return false;
+    try { return T.has(actor, key) > 0; } catch (e) { return false; }
+}
+
+/** Lucky: three rerolls of a failed roll in a story. The count is kept on the actor against the story's id. */
+export const LUCKY_PER_STORY = 3;
+const storyNow = () => { try { return game.settings.get("wodx-actions", "storyId") || "first"; } catch (e) { return "first"; } };
+export function luckyLeft(actor) {
+    if (!holds(actor, "lucky")) return 0;
+    const f = actor.flags?.["wodx-actions"]?.lucky ?? {};
+    return Math.max(0, LUCKY_PER_STORY - (f.story === storyNow() ? Number(f.used) || 0 : 0));
+}
+export async function useLucky(actor) {
+    const left = luckyLeft(actor);
+    if (!left) return null;
+    const f = actor.flags?.["wodx-actions"]?.lucky ?? {};
+    const used = (f.story === storyNow() ? Number(f.used) || 0 : 0) + 1;
+    await actor.setFlag("wodx-actions", "lucky", { story: storyNow(), used });
+    return { left: left - 1 };
+}
+export function luckyHtml(actor, esc = s => s) {
+    const left = luckyLeft(actor);
+    if (!left) return "";
+    return `<div class="form-group"><label><input type="checkbox" name="lucky" checked/> ${esc(`Lucky: roll again if it fails (${left} left this story)`)}</label></div>`;
+}
+
+/** Feeding: Efficient Digestion gives one more point for every two drunk (never past the pool's room). */
+export function digestionBonus(actor, drunk, room) {
+    if (!holds(actor, "efficient-digestion")) return 0;
+    return Math.max(0, Math.min(Math.floor((Number(drunk) || 0) / 2), Number(room) || 0));
+}
+
+/** Blood spent: Thin Blood doubles every cost (rising at dusk still costs one). */
+export const bloodCostMult = actor => (holds(actor, "thin-blood") ? 2 : 1);
+
+/** Waking by day: Deep Sleeper +2 difficulty; Light Sleeper wakes at once and acts without the Road cap. */
+export function sleepMods(actor) {
+    return { diff: holds(actor, "deep-sleeper") ? 2 : 0, light: holds(actor, "light-sleeper") };
+}
+
+/** Prey Exclusion: a reminder on every feeding card (the excluded group is the player's own choice, written on the item). */
+export function preyNote(actor) {
+    if (!holds(actor, "prey-exclusion")) return "";
+    const it = (actor.items ?? []).find(i => /prey exclusion/i.test(i.name ?? ""));
+    const who = it?.name?.match(/\((.+)\)/)?.[1];
+    return `Prey Exclusion${who ? ` (${who})` : ""}: feeding on that group means frenzy at once and a roll of the Road or Humanity at difficulty 7.`;
+}
