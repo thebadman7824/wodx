@@ -56,7 +56,10 @@ export function build(ctx) {
         return { paradox: p, quintLost: i.quint - w.quintessence };
     }
 
-    async function cast(actor) {
+    async function cast(actor, o = {}) {
+        // A Rote item (the system's or WoDX's own) fills the window in
+        const roteItem = typeof o.rote === "string" ? actor.items?.get(o.rote) : o.rote;
+        const preset = roteItem ? EF.E.roteOfItem(roteItem) : null;
         const i = info(actor);
         const sg = suggest(actor), W = C.WORDS[sg.age.key];
         const row = k => `<div class="form-group"><label>${cap(k)} <small>${i.spheres[k]}</small></label><select name="s-${k}" data-fixed><option value="0">—</option>${[1, 2, 3, 4, 5].filter(l => l <= i.spheres[k]).map(l => `<option value="${l}">${l}</option>`).join("")}</select></div>`;
@@ -105,7 +108,7 @@ export function build(ctx) {
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;
             const fxData = fx?.got?.ok && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st") } : null;
             return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean), fxData?.items.length ? fxData : undefined);
-        }, { width: 560, render: root => { EF.wire(root, i.spheres, EF.rotesOf(actor)); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
+        }, { width: 560, render: root => { EF.wire(root, i.spheres, EF.rotesOf(actor)); if (preset) EF.fill(root, preset); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
     }
 
     async function backlashRoll(actor) {
@@ -195,5 +198,12 @@ export function build(ctx) {
         }
     }
 
-    return { info, cast, backlash: backlashRoll, counter, shedAll, purify, placeDialog, age, suggest, rules: M };
+    /** The system's Rote button: true when WoDX's Cast window takes it (opened here), false to leave it to the system. */
+    function castRote(actor, item) {
+        if (!EF.takesRote(actor, age().key)) return false;
+        cast(actor, { rote: item }).catch(e => console.error("WoDX | rote", e));
+        return true;
+    }
+
+    return { info, cast, castRote, backlash: backlashRoll, counter, shedAll, purify, placeDialog, age, suggest, rules: M };
 }

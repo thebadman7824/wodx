@@ -1,5 +1,5 @@
 /**
- * Mage effect keywords gate (WoDX Actions 3.23.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Mage effect keywords gate (WoDX Actions 3.24.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateeffects.mjs?${Date.now()}`)).run()
  * Makes a caster and a target actor, applies keyword results straight through the apply step, undoes them,
  * posts one keyword card for the Storyteller's client to apply, then deletes what it made.
@@ -12,7 +12,8 @@
  *   7. every other WoDX module still answers
  *   8. Move puts a token where asked, and Undo puts it back (needs a scene; a token is made and deleted)
  *   9. an area works on a token inside it once, on one standing outside only when it walks in, and Undo removes it
- *  10. a rote is saved on the caster, replaced by name, and forgotten
+ *  10. a rote is saved as a Rote item on the caster, replaced by name, and forgotten
+ *  11. a Rote item opens the WoDX Cast window filled in (a Mage 20th era), or is left to the system's dialog (Dark Ages)
  * Result: Data/wodx-gate/gateeffects-result.json.
  */
 async function save(R, name) {
@@ -37,11 +38,12 @@ export async function run() {
   const item = (key, got, ctx = {}, route = "auto") => ({key, out: E.outcome(key, got, ctx), target: target.uuid, name: target.name, route});
   try {
     caster = await Actor.create({name: "WoDX gate: Keyword caster", type: "Mage"});
+    await caster.update({"system.spheres.forces.value": 3, "system.spheres.life.value": 3, "system.spheres.prime.value": 3, "system.advantages.arete.permanent": 3});
     target = await Actor.create({name: "WoDX gate: Keyword target", type: "Mortal"});
 
     await step("1 api, setting, on here", async () => {
       const mode = game.settings.get(MOD, "effectsApply");
-      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.23.0", {mode});
+      ok("1 api, setting, on here", !!fx() && ["auto", "on", "off"].includes(mode) && fx().isOn() && game.modules.get(MOD).api.version === "3.24.0", {mode});
     });
 
     await step("2 Harm and Undo", async () => {
@@ -149,8 +151,25 @@ export async function run() {
       await fx().saveRote(caster, R0.roteFrom("WoDX gate bolt", {keywords: ["harm"], used: [{sphere: "forces", level: 3}], kind: "vulgar", feat: 3}));
       await fx().saveRote(caster, R0.roteFrom("wodx gate bolt", {keywords: ["harm", "light"], used: [{sphere: "forces", level: 3}], kind: "vulgar", feat: 3}));
       const one = fx().rotes(caster);
+      const items = caster.items.filter(i => i.type === "Rote").length;
       await fx().forgetRote(caster, "WoDX GATE BOLT");
-      ok("10 rotes", one.length === 1 && one[0].keywords.length === 2 && fx().rotes(caster).length === 0, {names: one.map(r => r.name)});
+      ok("10 rotes", one.length === 1 && items === 1 && one[0].keywords.length === 2 && fx().rotes(caster).length === 0 && !caster.items.some(i => i.type === "Rote"), {names: one.map(r => r.name), items});
+    });
+
+    await step("11 a Rote item opens the Cast window", async () => {
+      const A = game.modules.get(MOD).api;
+      const R0 = fx().rules;
+      await fx().saveRote(caster, R0.roteFrom("WoDX gate ward", {keywords: ["ward"], used: [{sphere: "forces", level: 2}], plan: {duration: 1}, kind: "coincidental", feat: 1}));
+      const item = caster.items.find(i => i.type === "Rote");
+      const dark = A.consensus?.age?.()?.key === "dark";
+      const before = new Set(Object.keys(ui.windows ?? {}));
+      const took = game.wodxActions.m20CastRote(caster, item);
+      await new Promise(r => setTimeout(r, 800));
+      const win = [...document.querySelectorAll(".application, .window-app, dialog")].find(el => /Cast an Effect/.test(el.textContent ?? "") && el.querySelector('[name="kw-ward"]'));
+      const ticked = !!win?.querySelector('[name="kw-ward"]')?.checked && win?.querySelector('[name="kw-duration"]')?.value === "1";
+      for ( const app of foundry.applications.instances?.values?.() ?? [] ) if ( app.element?.textContent?.includes?.("Cast an Effect") ) await app.close?.();
+      win?.closest?.("dialog")?.close?.();
+      ok("11 a Rote item opens the Cast window", dark ? took === false : (took === true && ticked), {dark, took, ticked, before: before.size});
     });
     if ( toks.length ) await scene.deleteEmbeddedDocuments("Token", toks.map(t => t.id)).catch(() => {});
   } catch (e) { R.errors.push(e.message); }

@@ -29,20 +29,35 @@ export function isOn() {
 /*  The Cast window                                                    */
 /* ------------------------------------------------------------------ */
 
-/** The caster's saved rotes. */
-export const rotesOf = actor => (Array.isArray(actor?.flags?.[MOD]?.rotes) ? actor.flags[MOD].rotes : []);
+const flagRotes = actor => (Array.isArray(actor?.flags?.[MOD]?.rotes) ? actor.flags[MOD].rotes : []);
+const roteItems = actor => [...(actor?.items ?? [])].filter(i => i.type === "Rote");
+const same = (a, b) => String(a ?? "").toLowerCase() === String(b ?? "").toLowerCase();
 
-/** Save a rote on the caster. */
+/** The caster's rotes: the Rote items on the sheet (3.24.0), and any kept on the actor by 3.23.0. Sorted by name. */
+export function rotesOf(actor) {
+  const items = roteItems(actor).map(i => ({...E.roteOfItem(i), itemId: i.id}));
+  const old = flagRotes(actor).filter(r => !items.some(i => same(i.name, r.name)));
+  return [...items, ...old].sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Save a rote as a Rote item on the sheet: one per name, a new one replaces what the old item held. */
 export async function saveRote(actor, rote) {
   if ( !actor || !rote ) return null;
-  await actor.update({[`flags.${MOD}.rotes`]: E.keepRote(rotesOf(actor), rote)});
+  const data = E.itemOfRote(rote);
+  const old = roteItems(actor).find(i => same(i.name, rote.name));
+  if ( old ) await old.update({system: data.system, [`flags.${MOD}.rote`]: rote});
+  else if ( roteItems(actor).length < E.ROTES_MAX ) await actor.createEmbeddedDocuments("Item", [data]);
+  else { ui.notifications?.warn?.(`${actor.name} already has ${E.ROTES_MAX} rotes.`); return null; }
+  if ( flagRotes(actor).some(r => same(r.name, rote.name)) ) await actor.update({[`flags.${MOD}.rotes`]: flagRotes(actor).filter(r => !same(r.name, rote.name))});
   return rote;
 }
 
-/** Forget a rote by name. */
+/** Forget a rote by name: one kept on the actor, or a Rote item that WoDX made. Rote items made by hand stay. */
 export async function forgetRote(actor, name) {
-  const key = String(name ?? "").toLowerCase();
-  await actor?.update?.({[`flags.${MOD}.rotes`]: rotesOf(actor).filter(r => r.name.toLowerCase() !== key)});
+  if ( !actor ) return;
+  if ( flagRotes(actor).some(r => same(r.name, name)) ) await actor.update({[`flags.${MOD}.rotes`]: flagRotes(actor).filter(r => !same(r.name, name))});
+  const ids = roteItems(actor).filter(i => same(i.name, name) && i.flags?.[MOD]?.rote).map(i => i.id);
+  if ( ids.length ) await actor.deleteEmbeddedDocuments("Item", ids);
 }
 
 /** The keyword part of the Cast window. known: the caster's Spheres; rotes: the caster's saved rotes. */
@@ -91,14 +106,29 @@ export function wire(root, known = {}, rotes = []) {
   root.querySelector('[name="kw-rote"]')?.addEventListener("change", ev => {
     const r = rotes[n(ev.currentTarget.value)];
     if ( ev.currentTarget.value === "" || !r ) return;
-    const set = (name, v) => { const el = root.querySelector(`[name="${name}"]`); if ( !el ) return; if ( el.type === "checkbox" ) el.checked = !!v; else el.value = String(v); };
-    for ( const k of Object.keys(E.KEYWORDS) ) set(`kw-${k}`, r.keywords.includes(k));
-    for ( const el of root.querySelectorAll('select[name^="s-"]') ) el.value = String(r.spheres?.[el.name.slice(2)] ?? 0);
-    set("kw-targets", r.plan?.targets ?? 0); set("kw-duration", r.plan?.duration ?? 0); set("kw-area", r.plan?.area);
-    for ( const [k, name] of Object.entries(CTX_BOXES) ) set(name, r.ctx?.[k]);
-    if ( r.kind ) set("kind", r.kind);
-    if ( r.feat ) set("feat", r.feat);
+    fill(root, r);
   });
+}
+
+/** Fill the Cast window in from a rote. A Sphere the caster lacks stays at what the sheet allows. */
+export function fill(root, r) {
+  if ( !root || !r ) return;
+  const set = (name, v) => { const el = root.querySelector(`[name="${name}"]`); if ( !el ) return; if ( el.type === "checkbox" ) el.checked = !!v && !el.disabled; else el.value = String(v); };
+  for ( const k of Object.keys(E.KEYWORDS) ) set(`kw-${k}`, (r.keywords ?? []).includes(k));
+  for ( const el of root.querySelectorAll('select[name^="s-"]') ) {
+    const want = n(r.spheres?.[el.name.slice(2)]);
+    const best = Math.max(0, ...[...el.options].map(o => n(o.value)).filter(v => v <= want));
+    el.value = String(best);
+  }
+  set("kw-targets", r.plan?.targets ?? 0); set("kw-duration", r.plan?.duration ?? 0); set("kw-area", r.plan?.area);
+  for ( const [k, name] of Object.entries(CTX_BOXES) ) set(name, r.ctx?.[k]);
+  if ( r.kind ) set("kind", r.kind);
+  if ( r.feat ) set("feat", r.feat);
+}
+
+/** Does WoDX's Cast window take this Rote item? Only for a Mage 20th caster (a Dark Ages mage keeps the system dialog). */
+export function takesRote(actor, ageKey) {
+  return !!actor && ageKey !== "dark" && game.modules.get(MOD)?.active === true;
 }
 
 /** What the form asks for. */

@@ -1368,3 +1368,9 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - effects-rules.js: Move outcome and route, AREA, inArea, areaRadius, area in needFor and spend, roteFrom, keepRote.
 - effects.js: Move and Place the area buttons on the card for the Storyteller (pickPoint: the next click on the map), placeArea makes a Region flagged with the effect, the active Storyteller works it on whoever enters (updateToken), areas end with their duration (updateWorldTime) or at the end of the scene (wodxEndScene), Undo removes the Region and what it did. Saved rotes in the Cast window (a list with a search box past five, Save as a rote named).
 - Tests: effects.test.mjs (9). Gate gateeffects.mjs now 10 steps.
+
+## 2026-11-11: Rote items open the WoDX Cast window (Actions 3.24.0, Sheets 0.8.1, fork 7.3.2-wodx.8)
+- Item 4 of "Magic that applies itself" and the rest of item 3 (rotes on the sheet). B765.
+- effects-rules.js: roteOfItem, itemOfRote. effects.js: rotesOf reads Rote items, saveRote makes or updates one, forgetRote, fill, takesRote. m20.js: cast(actor, {rote}) fills the window; castRote for the system. main.js: api m20CastRote.
+- Fork: the Rote branch in action-helpers.js asks game.wodxActions.m20CastRote first. Sheets: a cast button on each rote in the Rotes list (Mage 20th sheet).
+- Tests: effects.test.mjs (10). Gate gateeffects.mjs 11 steps.
