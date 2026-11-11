@@ -245,6 +245,25 @@ Ben approved every entry below, which had been waiting for review, at 04:03 UTC 
 | 2026-11-10 | Audit, weak refs: the Encyclopaedia claim about copies of Das Buch vom Grabkrieg (bh-grabkrieg) cites Beckett pdf 12-14, but the book is named on pdf 5 and 19. | Left as it is; the right page needs a look in the PDF. | Change the ref in beckett.json once checked. |
 | 2026-11-10 | Release stamp: where to show the build the server runs, and to whom? | A line in the Settings sidebar, for the GM only, plus a console line and a warning at start when packages come from different commits. | Edit onRenderSettings and announce in wodx-chronicle/scripts/release.mjs. |
 
+## Approved by Ben, 11 November 2026, 20:30 UTC (dealing with NPCs)
+
+Ben approved every recommendation for dealing with NPCs from the Actions menu: the social rolls, attitude, lifting and planting, and trade.
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-11 | How much an NPC's attitude changes a social roll. | One difficulty a step past Unknown, at most two either way; intimidation ignores it (B673). | difficultyShift in modules/wodx-npc/scripts/attitude-rules.mjs. |
+| 2026-11-11 | How each social act moves the NPC's attitude. | Persuade and Question: only a botch (-1). Fast-talk and Deceive: seen through -1, botch -2. Intimidate: -1 whatever happens (threaten botch -2). Bribe taken +1, botch -1. Charm won +1, botch -1 (B673). | ACTS[].moves in modules/wodx-actions/scripts/social-rules.js. |
+| 2026-11-11 | Persuasion has no V20 system. | V20's sample pool (Manipulation + Expression, p. 255) against the NPC's Willpower, both at 6, as Fast-Talk (B673). | PRESETS.persuadeNpc in social-rules.js. |
+| 2026-11-11 | Bribery has no rule in V20 or V20 Dark Ages. | Manipulation + Streetwise (Finance, Commerce or Hearth Wisdom where those are the character's) against Willpower at 6; the offer adds 0 to 3 dice. No money moves yet: pay by hand until Trade is built (B673). | PRESETS.bribeNpc and OFFERS in social-rules.js. |
+| 2026-11-11 | How long a won social roll counts for talk lines and "Only when" lists. | One hour of game time (B674). | SWAY_SECONDS in social-rules.js. |
+| 2026-11-11 | Which group seeds an NPC's attitude at the first meeting. | The faction named like the NPC's household, else the first faction the NPC belongs to, else Unknown (B670). | seedFrom in attitude-rules.mjs. |
+| 2026-11-11 | Pickpocketing has no V20 system. | Dexterity + Larceny (Legerdemain, else Subterfuge) at 6 against the mark's Perception + Alertness, who must beat the thief's successes to notice (B675). | LIFT_PRESET in modules/wodx-actions/scripts/social-rules.js. |
+| 2026-11-11 | How much a lift takes. | Pocket or jacket sized only; two net successes take what was gone for, one the first thing found; coins a tenth, a quarter or half of the purse by net successes (B675). | liftable, liftPick, coinShare in social-rules.js. |
+| 2026-11-11 | What being caught costs. | The alarm on the scene, one step of standing with the NPC's faction, two steps of the NPC's attitude (one for a plant) (B675). | applyCaught in social.js and LIFT[].moves in social-rules.js. |
+| 2026-11-11 | Haggling with NPCs (B896). | Manipulation + Finance (Commerce in the Dark Ages) at difficulty 6; a tenth off per success, three tenths at most, a botch costs a tenth; attitude shifts the difficulty; hostile NPCs will not trade, distrusted ones charge a tenth more. House rule: V20 has no haggling system. |
+| 2026-11-11 | Stolen goods and barter (B895, B897). | A trader gives the fence's share for anything lifted; barter gives no change; a trader whose purse is short cannot buy. |
+| 2026-11-11 | Cheap goods sold to a trader (B898). | Anything with a price fetches at least the smallest coin, since half the price of cheap goods rounds down to nothing (340 of 797 goods). |
+
 ## Approved by Ben, 10 November 2026, 18:18 UTC
 
 Ben approved every entry that was waiting for review at 18:18 UTC on 10 November 2026 (17 rows). Each still lists how to reverse it.
@@ -339,17 +358,8 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | River water in the Dungeondraft map. | Still a fixed-width river path; the varying width, bars and floodplain show only on the plan. Tributaries, marsh and fishponds not built (B656). | banks() in land.py; Dungeondraft water layer for a polygon. |
 | 2026-11-11 | Landform odds and relief. | Plain 30, hills 35, upland 15, foothills 10, karst 5, mountain 5; relief 5 to 48 m on a 300 to 850 m map (B657). | KINDS and PICK in land.py. |
 | 2026-11-11 | How far apart bridges stand. | Lesser streets: 40, 60, 90, 120 squares by size; roads: half that (B658). | gap in limit_bridges() in organic.py. |
-| 2026-11-11 | How much an NPC's attitude changes a social roll. | One difficulty a step past Unknown, at most two either way; intimidation ignores it (B673). | difficultyShift in modules/wodx-npc/scripts/attitude-rules.mjs. |
-| 2026-11-11 | How each social act moves the NPC's attitude. | Persuade and Question: only a botch (-1). Fast-talk and Deceive: seen through -1, botch -2. Intimidate: -1 whatever happens (threaten botch -2). Bribe taken +1, botch -1. Charm won +1, botch -1 (B673). | ACTS[].moves in modules/wodx-actions/scripts/social-rules.js. |
-| 2026-11-11 | Persuasion has no V20 system. | V20's sample pool (Manipulation + Expression, p. 255) against the NPC's Willpower, both at 6, as Fast-Talk (B673). | PRESETS.persuadeNpc in social-rules.js. |
-| 2026-11-11 | Bribery has no rule in V20 or V20 Dark Ages. | Manipulation + Streetwise (Finance, Commerce or Hearth Wisdom where those are the character's) against Willpower at 6; the offer adds 0 to 3 dice. No money moves yet: pay by hand until Trade is built (B673). | PRESETS.bribeNpc and OFFERS in social-rules.js. |
-| 2026-11-11 | How long a won social roll counts for talk lines and "Only when" lists. | One hour of game time (B674). | SWAY_SECONDS in social-rules.js. |
-| 2026-11-11 | Which group seeds an NPC's attitude at the first meeting. | The faction named like the NPC's household, else the first faction the NPC belongs to, else Unknown (B670). | seedFrom in attitude-rules.mjs. |
 | 2026-11-11 | Market price index range and supply levels. | Index 0.5 to 3; Short keeps half the lines at half count, Plenty adds half again (B599). | Change INDEX and SUPPLY in modules/wodx-storyteller/scripts/market-rules.mjs. |
 | 2026-11-11 | What a trader pays to restock. | Half the market price, from the NPC's purse; a thin till buys a thin restock (B599). | Change RESTOCK_SHARE in market-rules.mjs. |
-| 2026-11-11 | Pickpocketing has no V20 system. | Dexterity + Larceny (Legerdemain, else Subterfuge) at 6 against the mark's Perception + Alertness, who must beat the thief's successes to notice (B675). | LIFT_PRESET in modules/wodx-actions/scripts/social-rules.js. |
-| 2026-11-11 | How much a lift takes. | Pocket or jacket sized only; two net successes take what was gone for, one the first thing found; coins a tenth, a quarter or half of the purse by net successes (B675). | liftable, liftPick, coinShare in social-rules.js. |
-| 2026-11-11 | What being caught costs. | The alarm on the scene, one step of standing with the NPC's faction, two steps of the NPC's attitude (one for a plant) (B675). | applyCaught in social.js and LIFT[].moves in social-rules.js. |
 | 2026-11-11 | Travel speeds by way and age. | Foot 3 to 5 km/h, horse 5 to 9, cart and coach 3 to 9 (to 1945), boat 5 to 20, tram 8 to 16 (1869), train 30 to 110 (1839), car 12 to 100 (1900), transit pods on the branch (2040) (B700). | MODES in modules/wodx-storyteller/scripts/road-rules.mjs. |
 | 2026-11-11 | How weather and the dark slow a trip. | Mud 1.15 or 1.3, snow 1.2 to 2, fog 1.2, gale 1.15 or 1.5, cap 2.5; unlit before 1900 at night 1.5 (streets before 1800: 1.25) (B701). | weatherFactor, nightFactor, ROADS_LIT in road-rules.mjs. |
 | 2026-11-11 | Encounter odds by road. | Track 1.5, road and streets 1, main road and boat 0.75, motorway and rail 0.25; dark plus a quarter (B702). | ROADS enc in road-rules.mjs. |
@@ -453,9 +463,6 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | How much do looks and manner move an NPC's first regard? | One step for each trait (Monstrous two), two steps at most in all, and the Masquerade flaws only with mortal NPCs (B884). | ATTITUDE in wodx-chronicle/data/trait-effects.mjs. |
 | 2026-11-11 | What do Sway and Fear do to an NPC's attitude? | Sway one step warmer toward the caster, Fear one step colder and the NPC flees in a fight while Afraid; Undo puts it back (B885). | moodDelta in wodx-actions/scripts/power-effects.js; afraid in wodx-npc main.mjs. |
 | 2026-11-11 | When does Lucky's count start again? | At End of story (the story id it renews); Lucky is offered on the action and quick check windows only, ticked by default (B886). | luckyLeft and useLucky in wodx-actions/scripts/trait-hooks.js. |
-| 2026-11-11 | Haggling with NPCs (B896). | Manipulation + Finance (Commerce in the Dark Ages) at difficulty 6; a tenth off per success, three tenths at most, a botch costs a tenth; attitude shifts the difficulty; hostile NPCs will not trade, distrusted ones charge a tenth more. House rule: V20 has no haggling system. |
-| 2026-11-11 | Stolen goods and barter (B895, B897). | A trader gives the fence's share for anything lifted; barter gives no change; a trader whose purse is short cannot buy. |
-| 2026-11-11 | Cheap goods sold to a trader (B898). | Anything with a price fetches at least the smallest coin, since half the price of cheap goods rounds down to nothing (340 of 797 goods). |
 | 2026-11-11 | Should a flaw like Can't Cross Running Water stop a player's token, and how is a river known? | Yes: the move is held where it began when it crosses a tile title or region name with the flaw's words (river, stream, garlic, cross and so on); the Storyteller's own moves go through. A world setting turns it off (B887). | traitTriggers and labelsOnPath in Interactables main.mjs; TRIGGERS in Chronicle data/trait-effects.mjs |
 | 2026-11-11 | How often do Hunted, Haunted and the like turn up in the night's draw? | A fifth to a third of nights each, house rule; Oracular Ability draws an augury instead (B887). | PULLS in Chronicle data/trait-effects.mjs; pullsFor in Storyteller night.mjs |
 | 2026-11-11 | Do Boon, Dark Secret and the like open Ledger entries by themselves? | Yes, once each, with a reveal date 90 to 180 nights out for secrets (house rule); an entry the Storyteller deletes stays deleted (B887). | LEDGER in Chronicle data/trait-effects.mjs; syncTraits in Storyteller ledger.mjs |
