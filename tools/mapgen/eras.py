@@ -15,6 +15,7 @@ import geom as G
 import ddtown as T
 import buildings as B
 import eratypes as E
+import cddatypes as CD
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ERAS = os.path.join(HERE, "..", "..", "modules", "wodx-chronicle", "data", "eras.json")
@@ -613,9 +614,32 @@ def layer_era(t, y0, era, share):
         if y >= 1950 and k: place_blocks(t, "culture-house", 1, "edge")
         if y >= 1958: place_blocks(t, "panel-block", 2 + 3 * k, "estate", fallback=False)
     if era == "modern" and y >= 1995 and k: place_blocks(t, "hypermarket", max(1, k // 2), "estate", fallback=False)
+    if era in ("mid-century", "modern", "future-darkness") and y >= 1960 and k: civic_set(t, k)
     if era == "future-darkness":
         if y >= 2030 and k: place_blocks(t, "capsule-tower", k, "core")
         if y >= 2035 and k: place_blocks(t, "vertical-farm", k, "edge")
+
+
+# Present-day public buildings, from the layouts adapted from Cataclysm (cddatypes.py): (kind, how many per town scale, where)
+CIVIC = [("cdda-police-station", 1, "core"), ("cdda-bank", 1, "core"), ("cdda-library", 1, "core"), ("cdda-funeral-home", 1, "edge"),
+         ("cdda-bar", 1, "core"), ("cdda-music-club", .5, "core"), ("cdda-museum", .5, "core"), ("cdda-art-gallery", .3, "core"),
+         ("cdda-warehouse", 1, "edge"), ("cdda-sewer-station", .5, "edge"), ("cdda-hospital", .5, "estate")]
+
+
+def civic_set(t, k):
+    """Puts up the town's present-day public buildings once (the first era layer from 1960 that runs), each kind in one
+    of its Cataclysm variants. Kinds the town already has are left alone. No new churches: few were built in
+    Czechoslovakia after 1948, so the church layouts are there for a Storyteller to place by hand."""
+    if getattr(t, "civic_done", False): return
+    t.civic_done = True
+    have = {b.type.rstrip("-0123456789") for b in t.blds}
+    for kind, per, where in CIVIC:
+        n = int(per * k + .5) or (1 if t.R.random() < per * k else 0)
+        variants = [v for v in CD.CDDA_TYPES if v == kind or (v.startswith(kind + "-") and v[len(kind) + 1:].isdigit())]
+        if not n or not variants or kind in have: continue
+        tk = t.R.choice(variants)
+        made = place_blocks(t, tk, n, where, fallback=where != "estate")
+        if made < n and where != "estate" and B.TYPES[tk]["role"] in ("shop", "inn"): estate(t, tk, n - made)
 
 
 FUNCS = {"brick": layer_brick, "quays": layer_quays, "courts": layer_courts, "wall-down": layer_wall_down, "cemetery": layer_cemetery,
@@ -626,7 +650,7 @@ FUNCS = {"brick": layer_brick, "quays": layer_quays, "courts": layer_courts, "wa
 def grow(t, year):
     """Applies every layer up to the year, in order. Records what was done in t.layers."""
     t.year, t.era_ways, t.era_areas, t.layers = year, [], [], []
-    t.gone = []
+    t.gone, t.civic_done = [], False
     steps = sorted([(y, 1, name) for y, name in LAYERS] + [(y, 0, (y, e, sh)) for y, e, sh in REBUILDS], key=lambda s_: (s_[0], s_[1]))
     for y, kind, what in steps:
         if year < y: break

@@ -273,3 +273,29 @@ assert sum(n[k] for k in n if k == "ghetto-house") == 0 or t.quarter, n
 print("ok")`;
   assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 300000}), /ok/);
 });
+
+test("mapgen: the layouts adapted from Cataclysm keep their credit, furnish, have doors on walls, and stand in a 2005 town", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const code = `
+import sys, json, collections
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, cddatypes as CD, organic as O
+C.init(1, ${JSON.stringify(ASSETS + "," + NEW_ASSETS)})
+doc = json.load(open(${JSON.stringify(gen + "/cdda_types.json")}))
+assert "Cataclysm" in doc["credit"] and "CC BY-SA 3.0" in doc["credit"]
+assert len(CD.CDDA_TYPES) >= 20, len(CD.CDDA_TYPES)
+def on(o, a, b):
+    if o[3] == "h": return abs(a[1] - b[1]) < .01 and abs(o[2] - a[1]) < .05 and min(a[0], b[0]) - .05 <= o[1] <= max(a[0], b[0]) + .05
+    return abs(a[0] - b[0]) < .01 and abs(o[1] - a[0]) < .05 and min(a[1], b[1]) - .05 <= o[2] <= max(a[1], b[1]) + .05
+for k, v in CD.CDDA_TYPES.items():
+    assert v["credit"] == doc["credit"] and "Cataclysm" in v["model"], k
+    ol = v["outline"]; segs = list(zip(ol, ol[1:] + ol[:1])) + list(v["partitions"])
+    assert all(any(on(o, a, b) for a, b in segs) for o in v["openings"]), k
+    for s in range(3):
+        C.R.seed(s); B.Angled("x", k, 80, 80, 0).furnish()
+C.R.seed(7)
+t = O.OrganicTown(7, "town", year=2005).make()
+n = collections.Counter(b.type for b in t.blds)
+assert sum(n[k] for k in n if k.startswith("cdda-")) >= 6, n
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
+});
