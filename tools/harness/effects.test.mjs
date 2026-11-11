@@ -5,98 +5,97 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 import {readFileSync} from "node:fs";
 
-/* Scene video effects (WoDX Chronicle 0.5.4): each player can hide looping video tiles on a slow computer */
-
+/* WoDX Actions 3.22.0: Mage effect keywords, the spend plan, routes, and the apply step with Undo */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const settings = new Map();
-const registered = {};
-const hooks = {};
-globalThis.game = {settings: {
-  register: (m, k, cfg) => { registered[`${m}.${k}`] = cfg; settings.set(`${m}.${k}`, cfg.default); },
-  get: (m, k) => { if ( !settings.has(`${m}.${k}`) ) throw new Error("not registered"); return settings.get(`${m}.${k}`); }
-}};
-globalThis.Hooks = {on: (h, fn) => { (hooks[h] ??= []).push(fn); }};
-const FX = await import(join(root, "modules/wodx-chronicle/scripts/effects.mjs"));
+const E = await import(join(root, "modules/wodx-actions/scripts/effects-rules.js"));
+const src = p => readFileSync(join(root, p), "utf8");
 
-function video() { return {paused: false, plays: 0, pause() { this.paused = true; }, play() { this.paused = false; this.plays++; return Promise.resolve(); }}; }
-function tile(src, {autoplay = true, shape = "pixi7"} = {}) {
-  const v = video();
-  const texture = shape === "pixi7" ? {baseTexture: {resource: {source: v}}} : {source: {resource: v}};
-  return {v, document: {texture: {src}, video: {autoplay}}, mesh: {renderable: true}, texture};
-}
-
-test("video paths are told from images", () => {
-  for ( const s of ["fx/fog-loop.webm", "a/B.MP4", "x.m4v?v=2", "y.ogv#t=1", " fx/embers-loop.webm "] ) assert.ok(FX.isVideoSrc(s), s);
-  for ( const s of ["maps/a.webp", "a.png", "webm.png", "", null, undefined, 3] ) assert.ok(!FX.isVideoSrc(s), String(s));
+test("keywords bring the lowest Sphere the caster can work, merged by highest", () => {
+  const {used, missing} = E.spheresFor(["harm", "ward"], {forces: 3, life: 1});
+  assert.deepEqual(used, [{sphere: "forces", level: 3}]);
+  assert.deepEqual(missing, []);
+  assert.deepEqual(E.spheresFor(["harm"], {life: 3}).used, [{sphere: "life", level: 3}]);
+  assert.deepEqual(E.spheresFor(["hasten"], {forces: 5}).missing, ["hasten"]);
+  // Mend on oneself is Life 2; on someone else Life 3
+  assert.deepEqual(E.spheresFor(["mend"], {life: 2}).used, [{sphere: "life", level: 2}]);
+  assert.deepEqual(E.spheresFor(["mend"], {life: 2}, {self: false}).missing, ["mend"]);
+  // Sense takes the caster's best Sphere
+  assert.deepEqual(E.spheresFor(["sense"], {mind: 1, prime: 2}).used, [{sphere: "prime", level: 1}]);
 });
 
-test("before the setting exists nothing is hidden", () => {
-  assert.equal(FX.hiding(), false);
+test("the need: largest feat, one more per extra keyword, two on someone else, plus the plan", () => {
+  assert.equal(E.needFor([]), 0);
+  assert.equal(E.needFor(["sense"]), 1);
+  assert.equal(E.needFor(["sense"], {self: false}), 2);
+  assert.equal(E.needFor(["harm", "charge"], {self: false}), 4);
+  assert.equal(E.needFor(["ward"], {feat: 3, plan: {targets: 2, duration: 1}}), 6);
 });
 
-test("the setting is a client choice, shown, defaulting to show, with hooks on draw, refresh and scene load", () => {
-  FX.registerEffectSettings();
-  const cfg = registered["wodx-chronicle.sceneVideo"];
-  assert.equal(cfg.scope, "client");
-  assert.equal(cfg.config, true);
-  assert.equal(cfg.default, "show");
-  assert.deepEqual(Object.keys(cfg.choices), ["show", "hide"]);
-  for ( const h of ["refreshTile", "drawTile", "canvasReady"] ) assert.equal(hooks[h]?.length, 1, h);
+test("the spend: extra targets, then duration, the rest to strength; short rolls drop from the end", () => {
+  assert.deepEqual(E.spend(1, 2, {}), {ok: false, targets: 0, duration: 0, strength: 0, dropped: ["the Effect"]});
+  assert.deepEqual(E.spend(6, 2, {targets: 1, duration: 1}), {ok: true, targets: 1, duration: 1, strength: 4, dropped: []});
+  const short = E.spend(3, 2, {targets: 1, duration: 2});
+  assert.equal(short.targets, 1); assert.equal(short.duration, 0);
+  assert.deepEqual(short.dropped, ["2 duration steps"]);
 });
 
-test("hiding pauses the video and stops drawing it; showing brings it back", () => {
-  for ( const shape of ["pixi7", "pixi8"] ) {
-    const t = tile("rothenstein-landing/fx/fog-loop.webm", {shape});
-    assert.equal(FX.applyTile(t, true), true);
-    assert.equal(t.mesh.renderable, false);
-    assert.equal(t.v.paused, true);
-    FX.applyTile(t, false);
-    assert.equal(t.mesh.renderable, true);
-    assert.equal(t.v.paused, false);
-    assert.equal(t.v.plays, 1);
+test("durations follow the p. 504 ladder as Chronicle timed durations", () => {
+  assert.deepEqual(E.durationFor(1).timed, {kind: "rounds", rounds: 1});
+  assert.deepEqual(E.durationFor(2).timed, {kind: "scene"});
+  assert.equal(E.durationFor(3).timed.seconds, 86400);
+  assert.equal(E.durationFor(4).timed.seconds, 30 * 86400);
+  assert.equal(E.durationFor(5).timed.seconds, 182 * 86400);
+  assert.equal(E.durationFor(9).timed, null);
+});
+
+test("outcomes: damage by the chart and type, healing, Quintessence, timed effects, conditions", () => {
+  const got = E.spend(3, 3, {});
+  const h = E.outcome("harm", got, {spheres: ["forces"]});
+  assert.equal(h.kind, "damage"); assert.equal(h.levels, 8); assert.equal(h.type, "lethal"); assert.equal(h.soak, true);
+  assert.equal(E.outcome("harm", got, {spheres: ["forces"], fire: true}).type, "aggravated");
+  assert.equal(E.outcome("harm", got, {spheres: ["mind"]}).type, "bashing");
+  assert.equal(E.outcome("harm", got, {spheres: ["mind"]}).soak, false);
+  assert.equal(E.outcome("mend", got).kind, "heal");
+  assert.equal(E.outcome("charge", got, {drain: true}).points < 0, true);
+  const w = E.outcome("ward", E.spend(3, 1, {duration: 1}));
+  assert.equal(w.kind, "timed"); assert.equal(w.dice, 2); assert.deepEqual(w.timed, {kind: "scene"});
+  assert.equal(E.outcome("hold", got).condition, "held");
+  assert.equal(E.outcome("trip", got).condition, "knockdown");
+  // no strength: spare successes go to how long it lasts
+  assert.deepEqual(E.outcome("sight", E.spend(2, 1, {})).timed, {kind: "scene"});
+  assert.equal(E.outcome("harm", E.spend(0, 3, {})), null);
+});
+
+test("routes: auto with Undo, the queue, or the Storyteller", () => {
+  assert.equal(E.route("harm", {self: false, count: 1, need: 3}), "auto");
+  assert.equal(E.route("harm", {self: false, count: 1, need: 3, witnessed: true}), "queue");
+  assert.equal(E.route("harm", {self: false, count: 4, need: 3}), "queue");
+  assert.equal(E.route("harm", {self: false, playerCharacter: true, count: 1, need: 3}), "queue");
+  assert.equal(E.route("mend", {self: false, playerCharacter: true, count: 1, need: 3}), "auto");
+  assert.equal(E.route("fear", {self: false, count: 1, need: 2}), "queue");
+  assert.equal(E.route("sway", {self: false, playerCharacter: true, count: 1, need: 2}), "st");
+  assert.equal(E.route("free", {self: true}), "st");
+  assert.equal(E.route("harm", {self: false, need: 10}), "st");
+  assert.equal(E.route("ward", {self: true, need: 1}, {timed: null}), "st");
+  assert.equal(E.leanOf(["sense", "harm"]), "vulgar"); assert.equal(E.leanOf(["ward"]), "coincidental");
+  assert.equal(E.wardStands(3, 2), 3);
+});
+
+test("every keyword has a label, a Sphere floor, a feat and a plain description", () => {
+  for ( const [k, K] of Object.entries(E.KEYWORDS) ) {
+    assert.ok(K.label && K.does && K.opts.length && K.feat >= 1, k);
+    assert.ok(["auto", "queue", "st"].includes(K.tier), k);
   }
+  assert.equal(Object.keys(E.KEYWORDS).length, 19);
 });
 
-test("a video set not to autoplay stays paused when shown again", () => {
-  const t = tile("fx/snow-loop.webm", {autoplay: false});
-  FX.applyTile(t, true);
-  FX.applyTile(t, false);
-  assert.equal(t.v.paused, true);
-  assert.equal(t.mesh.renderable, true);
-});
-
-test("image tiles and broken tiles are left alone", () => {
-  const t = tile("maps/roofs/lt-church--00.webp");
-  assert.equal(FX.applyTile(t, true), false);
-  assert.equal(t.mesh.renderable, true);
-  assert.equal(t.v.paused, false);
-  assert.equal(FX.applyTile(null, true), false);
-  assert.equal(FX.applyTile({document: {texture: {src: "a.webm"}}}, true), true, "no mesh, no video: no error");
-});
-
-test("the hooks act only when this player hides effects", () => {
-  globalThis.canvas = {tiles: {placeables: [tile("a.webm"), tile("b.webp"), tile("c.mp4")]}};
-  hooks.canvasReady[0]();
-  assert.ok(canvas.tiles.placeables.every(t => t.mesh.renderable), "show: untouched");
-  settings.set("wodx-chronicle.sceneVideo", "hide");
-  hooks.canvasReady[0]();
-  assert.deepEqual(canvas.tiles.placeables.map(t => t.mesh.renderable), [false, true, false]);
-  const later = tile("d.webm");
-  hooks.refreshTile[0](later);
-  assert.equal(later.mesh.renderable, false);
-  settings.set("wodx-chronicle.sceneVideo", "show");
-  assert.equal(registered["wodx-chronicle.sceneVideo"].onChange(), 2, "two video tiles on the scene");
-  assert.ok(canvas.tiles.placeables.every(t => t.mesh.renderable), "show again: all drawn");
-  delete globalThis.canvas;
-});
-
-test("the module loads the setting at init", () => {
-  const main = readFileSync(join(root, "modules/wodx-chronicle/scripts/main.mjs"), "utf8");
-  assert.match(main, /effects\.registerEffectSettings\(\)/);
-});
-
-test("the Garou test pack is no longer loaded for every player", () => {
-  const main = readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8");
-  assert.doesNotMatch(main, /^import .*garou-testpack/m);
-  assert.match(main, /import\("\.\/garou-testpack\.js"\)/);
+test("the Mage 20th cast uses the keywords and posts a card the Storyteller's client applies", () => {
+  const m20 = src("modules/wodx-actions/scripts/m20.js");
+  assert.match(m20, /EF\.fieldset\(i\.spheres\)/); assert.match(m20, /EF\.wire\(root/); assert.match(m20, /kind: "effects"/);
+  const fx = src("modules/wodx-actions/scripts/effects.js");
+  assert.match(fx, /createChatMessage/); assert.match(fx, /isActiveGM\(\)/); assert.match(fx, /setDamage/);
+  assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
+  const main = src("modules/wodx-actions/scripts/main.js");
+  assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.22.0");
 });
