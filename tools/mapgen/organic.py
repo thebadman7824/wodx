@@ -77,6 +77,9 @@ CAPS = {"village": {"smithy": 1, "bakehouse": 1, "tavern": 1, "guardhouse": 0, "
 LABELS = {"cottage": "Cottage", "byre-house": "Farmhouse", "smithy": "Smithy", "bakehouse": "Bakehouse", "tavern": "Alehouse",
           "storehouse": "Storehouse", "guardhouse": "Guardhouse", "barn": "Barn", "chapel": "Chapel"}
 
+SLOPE_MAX = .3                                             # rise over run a house can be terraced into (a little more in town)
+
+
 def snap(a): return round(a / STEP) * STEP
 
 def box_corners(cx, cy, th, w, h):
@@ -133,7 +136,7 @@ def meander(R, th, length, B, K):
     return pts, oxbows
 
 class OrganicTown(T.Town):
-    def __init__(self, seed, size, name=None, night=True, walls=None, river=None, year=None, part=None):
+    def __init__(self, seed, size, name=None, night=True, walls=None, river=None, year=None, part=None, land=None):
         self.R = R = C.R
         cfg = dict(ORGANIC[size])
         self.size, self.cfg, self.seed, self.night = size, cfg, seed, night
@@ -175,8 +178,11 @@ class OrganicTown(T.Town):
         self.outline = [self.P[v] for v in lay.border]
         self.arteries = [[self.P[v] for v in a] for a in lay.arteries]
         self.river_e, self.river_v = set(), []
+        self.land_kind = land or LAND.pick_kind(R)            # the landform the town stands in (the landform study)
+        self.land, self.streams, self.sinks = None, [], []
         if (R.random() < cfg["river"]) if river is None else river: self.pick_river()
         self.ways()
+        self.settle_land()
         self.roads = []                                       # the grid generator's road rects: none here
         self.blds, self.gardens, self.households, self.notes = [], [], [], []
         self.plots, self.frontages, self.burned = [], {}, []
@@ -228,6 +234,22 @@ class OrganicTown(T.Town):
 
     def in_town(self, p): return G.inside(p, self.outline)
 
+    def settle_land(self):
+        """The ground worn down by water once the river is laid: side valleys, brooks running to the river, karst
+        sinkholes. Houses keep off the brooks, the sinkholes and slopes too steep to build on."""
+        if not self.land:                                     # no river: the same landform, with no main valley
+            town_r = max(math.dist((self.xc, self.yc), q) for q in self.outline) if self.outline else 30
+            self.land = LAND.Land(self.R, self.cols, self.rows, self.R.uniform(0, 2 * math.pi), (self.xc, self.yc, max(town_r, 20)), None, 40, self.land_kind)
+        self.land.erode(self.river_line or None, getattr(self, "river_half", 0), self.in_town)
+        self.streams, self.sinks = self.land.streams, self.land.sinks
+        self.wet_grid = T.Grid(8)                             # brooks and sinkholes, padded by what a house keeps off
+        for st in self.streams:
+            r = st["half"] + 1.5
+            for a, b in zip(st["line"], st["line"][1:]):
+                self.wet_grid.add((min(a[0], b[0]) - r, min(a[1], b[1]) - r, abs(b[0] - a[0]) + 2 * r, abs(b[1] - a[1]) + 2 * r), (a, b, r))
+        for x, y, rad in self.sinks:
+            self.wet_grid.add((x - rad - 2, y - rad - 2, 2 * rad + 4, 2 * rad + 4), ((x, y), (x, y), rad + 2))
+
     # ------------------------------------------------------------ the river
     def pick_river(self):
         """A river across the whole map, winding gently, passing to one side of the market (towns grow beside their
@@ -251,10 +273,12 @@ class OrganicTown(T.Town):
             off = R.choice((-1, 1)) * R.uniform(mr + h + 6, max(mr + h + 7, town_r * .55))
             for _ in range(6):
                 vp = (cx + n[0] * off, cy + n[1] * off)
-                ground = LAND.Land(R, self.cols, self.rows, th, (cx, cy, max(town_r, 20)), vp, max(18, 4 * B))
+                ground = LAND.Land(R, self.cols, self.rows, th, (cx, cy, max(town_r, 20)), vp, max(18, 4 * B), self.land_kind)
                 course = ground.course(avoid)
                 if len(course) < 3: off *= 1.2; continue
                 pts, oxbows = LAND.shape(R, ground, course, B, K, meander)
+                inside = sum(math.dist(a_, b_) for a_, b_ in zip(pts, pts[1:]) if 0 < a_[0] < self.cols and 0 < a_[1] < self.rows)
+                if inside < .7 * min(self.cols, self.rows): off *= 1.2; continue   # a river across the map, not past a corner
                 if min(G.seg_dist(q, a_, b_) for q in self.market_poly for a_, b_ in zip(pts, pts[1:])) > h + 3: break
                 off *= 1.2
             else: continue
@@ -320,28 +344,38 @@ class OrganicTown(T.Town):
             self.bridges.append({"at": x, "dir": (d[0] / L_, d[1] / L_), "len": 2 * h / max(sin, .5) + 2.4, "w": 2.8 if k in ("main", "road") else 2.0})
 
     def limit_bridges(self):
-        """Few bridges, as in a real town: every main street and road keeps its crossing, and a lesser street gets one
-        only where no bridge stands within a good walk. Any other street that met the river is cut at the crossing;
-        trim_to_banks() then ends both halves on the banks with stairs down to the water."""
+        """Bridges only where they are needed, as in a real town, where a bridge was a costly work kept up by tolls:
+        the roads through the town (its arteries) keep their crossings unless another road's bridge is close by,
+        and a lesser street gets one only where no bridge stands within a long walk. Any other way that met the
+        river is cut at the crossing; trim_to_banks() then ends both halves on the banks with stairs down to the
+        water."""
         pts = self.river_line
-        gap = {"village": 18, "town": 24, "city": 30, "metropolis": 34}.get(self.size, 24)
+        gap = {"village": 40, "town": 60, "city": 90, "metropolis": 120}.get(self.size, 60)
+        art = {frozenset((a, b)) for line in self.arteries for a, b in zip(line, line[1:])}
         cross = []
         for sg in self.segs:
             a, b, hh, k = sg
-            for p_, q_ in zip(pts, pts[1:]):
+            rank = 0 if (k == "road" or frozenset((a, b)) in art) else 1
+            for p_, q_ in zip(pts, pts[1:]):                  # every crossing: a bend may cross one way twice
                 x = seg_cross(a, b, p_, q_)
-                if x: cross.append((0 if k in ("main", "road") else 1, sg, x)); break
+                if x: cross.append((rank, math.dist(x, (self.xc, self.yc)), sg, x))
         kept, cut = [], {}
-        for rank, sg, x in sorted(cross, key=lambda c: c[0]):
-            if rank == 0 or all(math.dist(x, y) > gap for y in kept): kept.append(x)
-            else: cut[id(sg)] = x
+        for rank, _, sg, x in sorted(cross, key=lambda c: (c[0], c[1])):   # the crossings nearest the market first
+            if all(math.dist(x, y) > (gap * .5 if rank == 0 else gap) for y in kept): kept.append(x)
+            else: cut.setdefault(id(sg), []).append(x)
         if not cut: return
         segs = []
         for sg in self.segs:
-            x = cut.get(id(sg))
-            if x is None: segs.append(sg); continue
+            xs = cut.get(id(sg))
+            if not xs: segs.append(sg); continue
             a, b, hh, k = sg
-            segs += [(a, x, hh, k), (x, b, hh, k)]
+            L_ = math.dist(a, b) or 1
+            u = ((b[0] - a[0]) / L_, (b[1] - a[1]) / L_)
+            ps = [a]
+            for x in sorted(xs, key=lambda q: math.dist(a, q)):   # a hair short of the crossing on each side
+                ps += [(x[0] - u[0] * .3, x[1] - u[1] * .3), (x[0] + u[0] * .3, x[1] + u[1] * .3)]
+            ps.append(b)
+            segs += [(ps[i], ps[i + 1], hh, k) for i in range(0, len(ps) - 1, 2)]
         self.segs = segs
         self.seg_grid = T.Grid(6)
         for sg in self.segs:
@@ -481,6 +515,10 @@ class OrganicTown(T.Town):
         if getattr(self, "fp_half", 0):                       # no house out on the floodplain, outside the town
             c = (x + w / 2, y + h / 2)
             if not self.in_town(c) and any(G.seg_dist(c, a, b) < self.fp_half for _, (a, b) in self.fp_grid.near((x, y, w, h), 1)): return False
+        if self.land and self.land.z:                         # not on a brook, in a sinkhole or up a steep slope
+            c = (x + w / 2, y + h / 2)
+            if any(G.seg_poly_dist(a, b, poly) < r for poly in polys for _, (a, b, r) in self.wet_grid.near((x, y, w, h), 1)): return False
+            if max(self.land.slope(*q) for q in (c, (x, y), (x + w, y + h))) > (SLOPE_MAX + .08 if self.in_town(c) else SLOPE_MAX): return False
         if getattr(self, "mind_plots", False) and any(G.separation(poly, q["poly"]) < .1 for poly in polys for q in self.plots if overlaps(q["rect"], (x, y, w, h), .2)): return False
         if blk is not None and not all(G.inside(q, blk) for q in pts): return False
         for _, b in self.bgrid.near((x, y, w, h), gap + .5):
@@ -1210,6 +1248,9 @@ class OrganicTown(T.Town):
         for ox in getattr(self, "oxbows", []):
             for piece in G.clip_line(ox, bw):
                 if len(piece) > 1: paths.append(path(piece, "River_Bank_Blue.webp", int(2 * self.river_half * C.CELL * 1.25), layer=50))
+        for st in self.streams:                               # brooks: a narrow run of the same water
+            for piece in G.clip_line(st["line"], bw):
+                if len(piece) > 1: paths.append(path(piece, "River_Bank_Blue.webp", max(48, int(2 * st["half"] * C.CELL * 1.25)), layer=50))
         for br in self.bridges:
             bp = self.bridge_poly(br)
             if not overlaps(G.bbox(bp), win, 1): continue
@@ -1333,13 +1374,25 @@ class OrganicTown(T.Town):
                 rs = region_shape(G.buffer_line(piece, self.river_half))
                 if rs: regions.append({"id": f"river-{j + 1}", "label": "The river", "rect": rs[0], "points": rs[1], "place": {"kind": "other"}})
             for kind, label, lines in (("oxbow", "Oxbow lake", getattr(self, "oxbows", [])), ("old-loop", "Old river bed (wet meadow)", getattr(self, "old_loops", []))):
-                for k, ox in enumerate(lines):
-                    for j2, piece in enumerate(G.clip_line(ox, win)):
+                for k, loop in enumerate(lines):              # (not ox: that is the window's corner)
+                    for j2, piece in enumerate(G.clip_line(loop, win)):
                         if len(piece) < 2: continue
                         step = max(1, math.ceil(len(piece) / 60))
                         piece = piece[::step] + ([piece[-1]] if (len(piece) - 1) % step else [])
                         rs = region_shape(G.buffer_line(piece, self.river_half))
                         if rs: regions.append({"id": f"{kind}-{k + 1}-{j2 + 1}", "label": label, "rect": rs[0], "points": rs[1], "place": {"kind": "other"}, "area": kind})
+        for k, st in enumerate(self.streams):
+            for j2, piece in enumerate(G.clip_line(st["line"], win)):
+                if len(piece) < 2: continue
+                step = max(1, math.ceil(len(piece) / 60))
+                piece = piece[::step] + ([piece[-1]] if (len(piece) - 1) % step else [])
+                rs = region_shape(G.buffer_line(piece, st["half"] + .5))
+                if rs: regions.append({"id": f"brook-{k + 1}-{j2 + 1}", "label": "Brook" + (" (sinks into the ground)" if st["into"] == "sink" else ""), "rect": rs[0], "points": rs[1], "place": {"kind": "other"}, "area": "brook"})
+        for k, (x, y, rad) in enumerate(self.sinks):
+            ring = [(x + rad * math.cos(t * math.pi / 8), y + rad * math.sin(t * math.pi / 8)) for t in range(16)]
+            if overlaps(G.bbox(ring), win, 0):
+                rs = region_shape(ring)
+                if rs: regions.append({"id": f"sinkhole-{k + 1}", "label": "Sinkhole", "rect": rs[0], "points": rs[1], "place": {"kind": "other"}, "area": "sinkhole"})
         for k, q in enumerate(self.burned):
             rs = region_shape(q)
             if rs: regions.append({"id": f"burned-{k + 1}", "label": "A burned-out plot", "rect": rs[0], "points": rs[1], "place": {"kind": "other"}})
@@ -1431,14 +1484,21 @@ class OrganicTown(T.Town):
         f = lambda p: f"{p[0] * s:.1f},{p[1] * s:.1f}"
         o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.cols * s}" height="{self.rows * s}" font-family="DejaVu Sans" font-size="6">',
              '<rect width="100%" height="100%" fill="#e9efe0"/>']
-        if getattr(self, "land", None):                       # the lie of the land: darker is lower
-            st = 2 if self.cols <= 200 else 3
-            for j in range(0, self.rows, st):
-                for i in range(0, self.cols, st):
-                    op = max(0, min(.3, (.8 - self.land.at(i + st / 2, j + st / 2)) * .3))
-                    if op > .02: o.append(f'<rect x="{i * s}" y="{j * s}" width="{st * s + .5}" height="{st * s + .5}" fill="#6d8560" opacity="{op:.2f}"/>')
+        if getattr(self, "land", None) and self.land.z:      # the lie of the land: hill shading and contour lines
+            px = 1 if self.cols <= 260 else 2
+            url, w_, h_ = self.land.picture(px)
+            o.append(f'<image href="{url}" x="0" y="0" width="{w_ * s}" height="{h_ * s}" preserveAspectRatio="none"/>')
+            for n, (lv, segs) in enumerate(self.land.contours(2 if self.cols <= 260 else 3)):
+                if not segs: continue
+                major = round(lv / self.land.k["contour"]) % 5 == 0
+                d = "".join(f"M{a_[0] * s:.0f} {a_[1] * s:.0f}L{b_[0] * s:.0f} {b_[1] * s:.0f}" for a_, b_ in segs)
+                o.append(f'<path d="{d}" fill="none" stroke="#8a7650" stroke-opacity="{.65 if major else .4}" stroke-width="{1.5 if major else .8}"/>')
+            for x, y, rad in self.sinks:
+                o.append(f'<circle cx="{x * s:.0f}" cy="{y * s:.0f}" r="{rad * s:.0f}" fill="#b9c79b" fill-opacity=".5" stroke="#6b5a3a" stroke-dasharray="4 3"/>')
         if getattr(self, "fp_half", 0):
-            o.append(f'<polyline points="{" ".join(map(f, self.river_line))}" fill="none" stroke="#dce6bf" stroke-opacity=".8" stroke-width="{2 * self.fp_half * s:.1f}" stroke-linejoin="round" stroke-linecap="round"/>')
+            o.append(f'<polyline points="{" ".join(map(f, self.river_line))}" fill="none" stroke="#dce6bf" stroke-opacity=".45" stroke-width="{2 * self.fp_half * s:.1f}" stroke-linejoin="round" stroke-linecap="round"/>')
+        for st in self.streams:
+            o.append(f'<polyline points="{" ".join(map(f, st["line"]))}" fill="none" stroke="#7fa7c9" stroke-width="{2 * st["half"] * s:.1f}" stroke-linejoin="round" stroke-linecap="round"/>')
         for p in self.patches:
             if p["inner"]: o.append(f'<polygon points="{" ".join(map(f, p["poly"]))}" fill="#f1efe4" stroke="#cfc6ae"/>')
         for a, b, h, k in self.segs:
@@ -1495,7 +1555,8 @@ class OrganicTown(T.Town):
             c = pt["cell"]
             o.append(f'<text x="{c[0] * s + 6}" y="{c[1] * s + 22}" font-size="20" font-weight="bold" fill="#7a1fa2">{pt["id"]}</text>')
         o.append(f'<text x="6" y="{self.rows * s - 8}" font-size="12" font-weight="bold">{self.name}{f" in {self.year}" if self.year else ""}, a {"walled " if self.wall else ""}{self.cfg["label"]} of {self.population()} people in {len(self.households)} households'
-                 + (f', in {len(parts)} parts' if len(parts) > 1 else "") + '</text>')
+                 + (f', in {len(parts)} parts' if len(parts) > 1 else "")
+                 + (f'; {self.land.k["label"]}, {self.land.zmax:.0f} m of rise, contours every {self.land.k["contour"]} m' if self.land and self.land.z else "") + '</text>')
         o.append("</svg>")
         open(path_out, "w").write("\n".join(o))
 

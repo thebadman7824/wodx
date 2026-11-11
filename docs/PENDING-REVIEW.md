@@ -327,3 +327,5 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-11 | Talking distance and who hears. | Within 2 squares and in sight; whispered to the asking player and the Storyteller unless the line says aloud (B663). | "Talking distance" in WoDX NPC's settings; write aloud after the line. |
 | 2026-11-11 | Even parts let ways, the river, the wall and open ground (the market) cross a part line; only buildings are kept off. | Keeping everything off left too little town (B653). | Add more kinds to on_cut() in organic.py. |
 | 2026-11-11 | River water in the Dungeondraft map. | Still a fixed-width river path; the varying width, bars and floodplain show only on the plan. Tributaries, marsh and fishponds not built (B656). | banks() in land.py; Dungeondraft water layer for a polygon. |
+| 2026-11-11 | Landform odds and relief. | Plain 30, hills 35, upland 15, foothills 10, karst 5, mountain 5; relief 5 to 48 m on a 300 to 850 m map (B657). | KINDS and PICK in land.py. |
+| 2026-11-11 | How far apart bridges stand. | Lesser streets: 40, 60, 90, 120 squares by size; roads: half that (B658). | gap in limit_bridges() in organic.py. |

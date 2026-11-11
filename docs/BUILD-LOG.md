@@ -1286,6 +1286,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Metropolis size: ddtown.py --size metropolis, 60 districts, organic layout only. B654.
 - Rivers: meandering middle line from the sine-generated curve, bends sized from the water's width, cut-offs leave oxbow lakes or old river beds. Schöndorf and Linberg samples regenerated. B655.
 - Rivers from the land: land.py height map (valley, town rise, noise); river is the least-cost course down the valley, bends only on flat ground, width varies with bars on tight bends, floodplain keeps houses off outside the town, lesser streets end at landings unless a bridge is far. Samples regenerated. B656.
+- Landforms: land.py picks plain, hills, upland, foothills, karst or mountain (--land), raises and then erodes the ground, draws brooks and karst sinkholes, terraces the town; houses keep off brooks, sinkholes and steep slopes; plan has hill shading and contours. B657.
+- Bridges only where needed: road bridges spaced, lesser streets bridged only far from any bridge; fixed cut streets keeping their bridge and the oxbow sidecar window bug. New test: towns stand in real landforms. B658.
 - New test: a town grown to 1950 has a railway, station, ring road, quay and suburb, era mid-century; the medieval town has none.
 - Known gaps: every building is still a medieval type (no later building packs), and towns lose houses to the new ways rather than growing denser.
 - Sample linberg redrawn.
