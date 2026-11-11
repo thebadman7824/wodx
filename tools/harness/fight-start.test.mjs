@@ -96,6 +96,9 @@ test("the starter is wired in: attacks, settings, API, socket, and the NPC trigg
   assert.match(rt, /Hooks\.on\("updateToken", onTokenMoved\)/);
   assert.match(rt, /Hooks\.on\("wodxAttitude"/);
   assert.match(rt, /source: "region"/);
+  // 0.15.1: the sight check reads where the tokens stand, not where the moving token is drawn mid-walk
+  assert.match(rt, /const yards = restYards\(nTok, pTok\)/);
+  assert.match(rt, /sightBlocked\(restCentre\(nTok\), restCentre\(pTok\)\)/);
   const npc = readFileSync(new URL("../../modules/wodx-npc/scripts/main.mjs", import.meta.url), "utf8");
   assert.match(npc, /householdAnswers, kinNear, talk/);
 });
