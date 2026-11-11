@@ -1478,3 +1478,6 @@ gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight 
 
 ## 2026-11-11: the ambush (B836)
 Ben asked for the ambush rule, then a Live release. Combat 3.11.0: ambush-rules.js; the attack dialog and the quick attack roll the ambush first when the attacker is sneaking, Obfuscated or hidden and neither side is fighting (V20 p. 274; V20 Dark Ages p. 345 before 1450). Harness ambush.test.mjs (4). gatefight step 12.
+
+## 2026-11-11: Dungeondraft to Foundry in one click
+Ben asked for one-click mapmaking with our Dungeondraft assets and chose a Dungeondraft mod plus a PC watcher. tools/ddmod/: the WoDX Export mod (export this map, or every map in its folder, as Universal VTT at 100 px a square), wodx-watch.ps1 (stages each new export under Data\wodx-maps and runs the import), and tools/gate/mapimport.mjs (scene, walls, doors, lights, then Adopt, rothenstein-wodx only). Universal VTT, not PNG, because the WoDX file holds openings but not plain walls. New harness test mapimport.test.mjs. The mod is untried in Dungeondraft yet.

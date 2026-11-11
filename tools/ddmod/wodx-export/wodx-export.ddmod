@@ -1,0 +1,8 @@
+{
+    "name": "WoDX Export",
+    "unique_id": "WoDX.Export",
+    "version": "1.0.0",
+    "author": "WoDX",
+    "description": "One click to export this map, or every map in its folder, as Universal VTT files for the WoDX map watcher (100 px a square, grid and lighting off).",
+    "dd_version": "1.1.0.0"
+}
