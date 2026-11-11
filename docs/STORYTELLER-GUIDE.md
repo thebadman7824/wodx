@@ -326,6 +326,16 @@ These three run on your machine only, when the clock moves. Each has a world set
 - **Money.** The books give no sums for Resources, only the way each rating lives. The Upkeep button's Money window lists each player character's Resources and how they live now. Tick Away when a character leaves home: 2 dots last six months on what they carry, 3 dots live plainly anywhere. Tick Neglected when a fortune of 4 or 5 dots goes untended: it keeps comfort for a year, then less. Once a month of game time a card tells you the coin of the day (German lands by default; England and France in the settings) and whose living drops soon. To raise money fast, call for Wits + Finance, a roll a night, difficulty 7.
 - **Consensus by era.** A Mage 20th caster's Cast window follows the chronicle's year. Before 1450 there is no coincidental or vulgar split, and Dark Ages mages use their own Cast. From 1450 to 1699 magick is casual or vain: name the caster's style, and the window suggests casual when it fits what people believe in that place and vain when it is a stranger's magick. Each cast rolls a Fortune Die: a 1 is a Bane, a 10 a Boon, and either spends the whole Scourge. In that age the Scourge does not fade by the week; use Purify the Scourge, a day alone in meditation for each point. From 1700 Mage 20th applies. Use Consensus here (Storyteller) in the mage's menu to set the styles a place accepts. Reality Zones are off unless you set them to "the place decides".
 
+## Property, making things and building
+
+The toolbar's **Property and building** button (players see it too) lists what characters own, how each place is held in the chronicle's year, and what it is worth, costs and brings in each month. Upkeep and income are paid on the month's pay day with the allowance. Owning a place never adds Background dots; award them or let the player buy them.
+
+- **Tag a holding.** "Tag a place on this scene" picks the whole scene or one of its Regions, then sets the owner (a character, an NPC or a faction), how it is held, since when, the kind of building and what it supplies the market with.
+- **Stolen goods.** Taking from someone else's chest or shelf marks the things stolen. The window lists them; mark one Fenced or Theirs now. A thing back on its owner's sheet is theirs again by itself.
+- **Make something.** Pick a good known in the year; WoDX sets up a long task (Dexterity + Crafts) with the workshop and materials it needs, and takes or buys the materials. Extra successes make better work.
+- **Put up a building.** Pick a kind of building the year allows, the builder and the workers. Each stage is paid for as it starts; the work waits when the money runs out. When it is done the place appears on the scene as a tagged Region, and as its own map when the building kit has one. You can start a build for an NPC faction; factions with Resources 3 or more also propose builds through the approval queue.
+- **Workshops.** A working place that supplies a goods category keeps its market from running short of it.
+
 ## Approvals and Undo: the two safety nets
 
 WoDX has two ways of asking before it acts.

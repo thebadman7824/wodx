@@ -71,6 +71,10 @@
 .wodx-sheet .wodx-poss-tools .wodx-act:hover { opacity: 1; }
 .wodx-sheet .wodx-fold, .wodx-sheet .wodx-fold-pad { width: 12px; flex: 0 0 12px; cursor: pointer; }
 .wodx-sheet .wodx-poss-contents.wodx-folded { display: none; }
+.wodx-sheet .wodx-desc-fold { opacity: 0.6; font-size: 0.85em; }
+.wodx-sheet .wodx-desc-fold[aria-expanded="true"] { opacity: 1; }
+.wodx-sheet .wodx-poss-desc { padding: 2px 8px 6px 32px; font-size: 0.9em; line-height: 1.35; opacity: 0.9; }
+.wodx-sheet .wodx-poss-desc[hidden] { display: none; }
 .wodx-sheet .wodx-money { display: flex; flex-direction: column; gap: 4px; margin: 4px 0 8px; }
 .wodx-sheet .wodx-money-coins { display: flex; flex-wrap: wrap; gap: 4px 12px; }
 .wodx-sheet .wodx-money-sums { display: flex; gap: 14px; }

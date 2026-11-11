@@ -23,6 +23,7 @@ import * as Letters from "./letters.mjs";
 import * as Up from "./upkeep.mjs";
 import * as UpRules from "./upkeep-rules.mjs";
 import * as Money from "./money.mjs";
+import * as Markets from "./markets.mjs";
 import * as Tasks from "./tasks.mjs";
 import * as TaskRules from "./tasks-rules.mjs";
 import * as Havens from "./havens.mjs";
@@ -42,6 +43,10 @@ import * as PreludeRules from "./prelude-rules.mjs";
 import * as Hand from "./hand.mjs";
 import * as Between from "./between.mjs";
 import * as Teleport from "./teleport.mjs";
+import * as Own from "./owners.mjs";
+import * as OwnRules from "./owner-rules.mjs";
+import * as CraftRules from "./craft-rules.mjs";
+import * as BuildRules from "./build-rules.mjs";
 
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
 let active = false;
@@ -66,6 +71,7 @@ Hooks.once("init", () => {
   Up.registerUpkeepHooks();
   Money.registerMoneySettings();
   Money.registerMoneyHooks();
+  Markets.registerMarketSettings();
   Tasks.registerTaskSettings();
   Tasks.registerTaskHooks();
   Body.registerBodyHooks();
@@ -82,13 +88,14 @@ Hooks.once("init", () => {
   Between.registerBetweenTools();
   Teleport.registerTeleportKeys();
   Teleport.registerTeleportHooks();
+  Own.registerOwnerHooks();
   game.keybindings?.register?.(C.MOD, "downtime", {name: "Downtime request", editable: [], onDown: () => { Between.downtimeDialog(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "onYourOwn", {name: "Out on your own", editable: [], onDown: () => { A.openOnYourOwn(); return true; }, restricted: false});
   game.keybindings?.register?.(C.MOD, "dashboard", {name: "The Storyteller's dashboard", editable: [], onDown: () => { Dash.DashboardApp.open(); return true; }, restricted: true});
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -96,6 +103,7 @@ Hooks.once("ready", () => {
   C.onChange(() => A.TrackerClass().refresh());
   game.socket.on(C.SOCKET, onSocket);
   C.primeQueue();
+  Markets.setupMarkets().catch(e => console.error("WoDX | markets", e));
   const api = {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
@@ -116,7 +124,10 @@ Hooks.once("ready", () => {
     letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
       grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules,
-      money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules}},
+      money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
+        purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
+        cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
+      markets: Markets.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
@@ -131,6 +142,10 @@ Hooks.once("ready", () => {
       extras: Between.makeExtras, extrasDialog: Between.extrasDialog, hooks: Between.hooksFor, hooksDialog: Between.hooksDialog, willpowerForNature: Between.willpowerForNature,
       absent: Between.absentMap, setAbsent: Between.setAbsent, absentDialog: Between.absentDialog, recapDraft: Between.recapDraft, postRecap: Between.postRecap, recapDialog: Between.recapDialog,
       downtime: Between.requestDowntime, downtimeDialog: Between.downtimeDialog},
+    owners: {open: Own.propertyDialog, of: Own.ownerOf, at: Own.ownerRecordAt, set: Own.setOwner, whose: Own.whose, handOver: Own.handOver, stolen: Own.stolenGoods,
+      holdings: Own.holdings, holdingsOf: Own.holdingsOf, saveHolding: Own.saveHolding, editHolding: Own.editHolding, payHoldings: Own.payHoldings,
+      craft: Own.craftDialog, startCraft: Own.startCraft, makeable: Own.makeable, build: Own.buildDialog, startBuild: Own.startBuild,
+      workshops: Own.workshopsMonth, factionBuilds: Own.factionBuildsMonth, rules: {owner: OwnRules, craft: CraftRules, build: BuildRules}},
     teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
     draw: Night.drawChooser, nightRules: Night.N
   };
@@ -197,6 +212,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => Letters.openLetters()};
   tokens.tools.wodxTasks = {name: "wodxTasks", title: "Long tasks (work that takes days or weeks: making things, research, training)", icon: "fa-solid fa-hourglass-half", order: 109,
     button: true, visible: true, onChange: () => Tasks.tasksDialog()};
+  tokens.tools.wodxProperty = {name: "wodxProperty", title: "Property and building (what you own, making things, putting up a building)", icon: "fa-solid fa-house-flag", order: 126,
+    button: true, visible: true, onChange: () => Own.propertyDialog()};
   tokens.tools.wodxTracker = {name: "wodxTracker", title: "The Storyteller's tracker (every character, convening, beats)", icon: "fa-solid fa-binoculars", order: 113,
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,

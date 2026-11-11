@@ -17,11 +17,13 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxFormChanged | actions | actions |
 | wodxHunted | actions | storyteller |
 | wodxInteractablesNoise | interactables | senses |
+| wodxItemsTaken | interactables | storyteller (marks things taken from someone else's container as stolen) |
 | wodxMapEvent | chronicle, interactables, npc | npc, otherworlds, storyteller |
 | wodxNpcTurnDone | combat, npc | combat |
 | wodxPlaceAlarm | npc | npc (remarks and cries) |
 | wodxRegisterMigrations | chronicle | chronicle |
 | wodxSensesGather | senses | senses |
+| wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxShroudCrossing | otherworlds | storyteller |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxXCard | chronicle | actions |
@@ -33,6 +35,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | Hook | Sent by | Carries |
 |---|---|---|
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
+| wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
 | wodxDreamingGate | otherworlds | a crossing through a Dreaming gateway |
 | wodxEventUndone | chronicle | a dated event taken back |
 | wodxFightStarted | combat | a fight the starter set up: {combat, source, tokens, created} |

@@ -1,6 +1,7 @@
 import * as G from "./gear-rules.mjs";
 import * as Sh from "./shelves.mjs";
 import * as SR from "./shelf-rules.mjs";
+import {setupExamine, examineApi} from "./examine.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**
@@ -146,6 +147,7 @@ Hooks.once("ready", async () => {
   game.modules.get(MOD).api = {version: VERSION, rules: G, gear, installPack, give, open: era => GearApp.open(era),
     library: {open: () => Sh.LibraryApp.open(), install: Sh.installShelves, catalogue: Sh.catalogue, rules: SR},
     manual: {open: Sh.openManual, ensure: Sh.ensureManual}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
+  try { await setupExamine(); game.modules.get(MOD).api.examine = examineApi(); } catch (err) { console.warn("WoDX Library | Examine could not start", err); }
   if ( game.user.isGM && game.users.activeGM?.isSelf ) {
     const data = await gear();
     const have = game.packs.get(`world.${PACK_NAME}`) ?? game.packs.find(p => p.metadata?.name === PACK_NAME && p.metadata?.packageType === "world");

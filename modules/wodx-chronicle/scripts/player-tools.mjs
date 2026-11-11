@@ -22,7 +22,8 @@ export const PLAYER_TOOLS = [
   {name: "wodxOnYourOwn", label: "Out on your own", module: "WoDX Storyteller"},
   {name: "wodxLetters", label: "Send a letter", module: "WoDX Storyteller"},
   {name: "wodxDowntime", label: "Downtime request", module: "WoDX Storyteller"},
-  {name: "wodxTasks", label: "Long tasks", module: "WoDX Storyteller"}
+  {name: "wodxTasks", label: "Long tasks", module: "WoDX Storyteller"},
+  {name: "wodxProperty", label: "Property and building", module: "WoDX Storyteller"}
 ];
 
 /** Does this player see this button? Pure. map: the playerTools setting. */

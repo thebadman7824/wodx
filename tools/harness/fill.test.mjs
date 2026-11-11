@@ -125,3 +125,77 @@ test("goods: names are plain text, gender-neutral, with no long dashes", () => {
     assert.ok(!/[<>]/.test(g.name), g.name);
   }
 });
+
+/* Era item lists: every good is tagged with category, era, value, behaviour, uses and concealment */
+test("goods: every good carries its backend tags", () => {
+  const ids = new Set();
+  for ( const g of G.GOODS ) {
+    assert.ok(G.KINDS[g.kind], `${g.name}: category ${g.kind}`);
+    assert.equal(g.tags.category, g.kind, g.name);
+    assert.ok(g.tags.era.length, `${g.name}: no era tag`);
+    assert.ok(g.from <= g.to && g.to <= 2099, `${g.name}: years ${g.from}-${g.to}`);
+    for ( const e of g.eras ) assert.ok(Number.isInteger(g.values[e]) && g.values[e] >= 0 && g.values[e] <= 5, `${g.name}: value in ${e}`);
+    assert.ok(G.VALUES[g.value], `${g.name}: value ${g.value}`);
+    assert.ok(G.SOURCES[g.source], `${g.name}: source ${g.source}`);
+    assert.ok(G.CONCEAL[g.conceal], `${g.name}: conceal ${g.conceal}`);
+    assert.equal(g.small, g.conceal === "P" || g.conceal === "J", g.name);
+    assert.ok(G.BEHAVIOURS[g.use] && typeof g.stacks === "boolean", `${g.name}: behaviour`);
+    assert.ok(g.uses.length && g.tags.uses === g.uses, `${g.name}: uses`);
+    assert.ok(!ids.has(g.id), `${g.id}: twice`);
+    ids.add(g.id);
+  }
+  for ( const [k, [use, stacks, sheet, uses]] of Object.entries(G.KIND_BEHAVIOUR) ) {
+    assert.ok(G.KINDS[k] && G.BEHAVIOURS[use] && typeof stacks === "boolean" && sheet && uses.length, k);
+    assert.ok(G.GOODS.some(g => g.kind === k), `${k}: no goods`);
+  }
+  for ( const k of Object.keys(G.KINDS) ) assert.ok(G.KIND_BEHAVIOUR[k], `${k}: no behaviour`);
+  for ( const n of [...Object.keys(G.BEHAVIOUR_OVERRIDES), ...Object.keys(G.USES_OVERRIDES)] ) assert.ok(G.GOODS.some(g => g.name === n), `override for unknown good ${n}`);
+  for ( const c of Object.values(G.GEAR_CATEGORIES) ) assert.ok(G.BEHAVIOURS[c.use] && c.uses.length, c.label);
+});
+
+test("goods: era years match Chronicle, and every era from 1197 on has every category", () => {
+  for ( const p of JSON.parse(src("modules/wodx-chronicle/data/eras.json")).profiles ) {
+    if ( p.start == null ) continue;
+    assert.deepEqual(G.ERA_YEARS[p.id], [p.start, p.end], p.id);
+  }
+  const since = {power: 1837};
+  for ( const e of G.ERAS.filter(e => G.ERA_YEARS[e][0] >= 1197) )
+    for ( const k of Object.keys(G.KINDS) ) {
+      if ( since[k] && G.ERA_YEARS[e][1] < since[k] ) continue;
+      assert.ok(G.GOODS.some(g => g.kind === k && g.eras.includes(e)), `${e} has no ${k}`);
+    }
+});
+
+test("goods: values change over the centuries, and behaviour comes from the category unless a good differs", () => {
+  const nutmeg = G.GOODS.find(g => g.name === "a whole nutmeg");
+  assert.equal(nutmeg.values["dark-ages"], 3);
+  assert.equal(nutmeg.values["victorian"], 0);
+  const bible = G.GOODS.find(g => g.name === "a family Bible with names inside the cover");
+  assert.deepEqual([bible.values.renaissance, bible.values.victorian, bible.values.modern], [4, 2, 1]);
+  assert.equal(G.valueAt(bible, 1700), 2);
+  assert.ok(bible.uses.includes("pray with") && bible.uses.includes("read"));
+  assert.equal(G.GOODS.find(g => g.name === "a tallow candle").stacks, true);
+  assert.equal(G.GOODS.find(g => g.name === "a storm lantern").use, "lit");
+  assert.equal(G.GOODS.find(g => g.name === "an iron door key").kind, "keys");
+  assert.equal(G.GOODS.find(g => g.name === "a cigarette").kind, "drugs");
+  assert.equal(G.KINDS.coin, "Currency");
+});
+
+test("goods are single things that stack, never piles", async () => {
+  const pile = /^(a few|a handful|some|several|a pile|a heap|a stack of|a purse of|a bag of (mixed )?coins)\b/i;
+  for ( const g of G.GOODS ) {
+    assert.ok(!pile.test(g.name), `${g.name} is a pile`);
+    if ( g.stack ) assert.ok(g.stack.min >= 1 && g.stack.max >= g.stack.min, g.name);
+    if ( g.stack?.max > 1 ) assert.ok(g.stack.plural, g.name);
+  }
+  for ( const [name] of Object.entries(G.STACK_SIZES) ) assert.ok(G.GOODS.some(g => g.name === name), `stack size for missing ${name}`);
+  const coin = G.GOODS.find(g => g.name === "a bronze coin");
+  assert.equal(coin.stacks, true);
+  assert.deepEqual(coin.stack, {plural: "bronze coins", min: 2, max: 12});
+  assert.equal(G.GOODS.find(g => g.name === "a sack of grain").stack.plural, "sacks of grain");
+  assert.equal(G.stackLine(coin, 7), "7 bronze coins");
+  assert.equal(G.stackLine(coin, 1), "a bronze coin");
+  assert.equal(F.goodsLine(coin, () => 0), "2 bronze coins");
+  assert.equal(F.goodsLine(coin, () => 0.999), "12 bronze coins");
+  assert.equal(F.goodsLine({name: "a storm lantern", stack: null}, () => 0.5), "a storm lantern");
+});

@@ -37,13 +37,15 @@ test("money: a neglected fortune keeps comfort for a year, then less", () => {
 });
 
 test("money: coins of the day follow history", () => {
-  assert.match(R.coinsFor(1197).coin, /pfennig/);
-  assert.match(R.coinsFor(1600).coin, /thaler/);
-  assert.match(R.coinsFor(1900).coin, /gold mark/);
-  assert.match(R.coinsFor(1999).coin, /Deutsche Mark/);
+  assert.match(R.coinsFor(1197, "german").coin, /pfennig/);
+  assert.match(R.coinsFor(1600, "german").coin, /thaler/);
+  assert.match(R.coinsFor(1900, "german").coin, /gold mark/);
+  assert.match(R.coinsFor(1999, "german").coin, /Deutsche Mark/);
   assert.match(R.coinsFor(1700, "english").coin, /guinea/);
-  assert.equal(R.coinsFor(1700, "nowhere").region, "german");
+  assert.equal(R.coinsFor(1700, "nowhere").region, "moravian");
   assert.equal(R.monthsBetween(0, 61 * R.DAY), 2);
+  assert.match(R.coinsFor(1400).coin, /Prague groschen/);
+  assert.match(R.coinsFor(1925).coin, /Czechoslovak koruna/);
 });
 
 test("consensus: the age by year, M20 with no year", () => {
@@ -90,4 +92,70 @@ test("wiring: settings, api, menus, the monthly card", () => {
   assert.match(z, /fortuneRoll/);
   assert.match(src("modules/wodx-actions/scripts/profile-menus.js"), /api:m20Purify/);
   assert.match(src("modules/wodx-storyteller/scripts/money.mjs"), /searchBox\("table\.wst-money-t"/);
+});
+
+/* Real money (Storyteller 0.26.0, B598) */
+const G = await imp("modules/wodx-library/data/goods.mjs");
+
+test("money: Moravia's money follows history, other lands have their own", () => {
+  assert.equal(R.moneyFor(1197).id, "denar");
+  assert.equal(R.moneyFor(1400).id, "grosch");
+  assert.equal(R.moneyFor(1700).id, "zlaty-cm");
+  assert.equal(R.moneyFor(1880).id, "zlaty-oe");
+  assert.equal(R.moneyFor(1913).id, "krone");
+  assert.equal(R.moneyFor(1930).id, "kc-1");
+  assert.equal(R.moneyFor(1995).id, "czk");
+  assert.equal(R.moneyFor(2050).id, "eb");
+  assert.equal(R.moneyFor(1995, "german").id, "dm");
+  assert.equal(R.moneyFor(1700, "american").id, "lsd");
+  assert.equal(R.moneyFor(1880, "american").id, "usd");
+  assert.equal(R.moneyFor(1300, "french").id, "pfennig");
+  assert.equal(R.moneyFor(1197).banks, false);
+  assert.equal(R.moneyFor(1700, "english").banks, true);
+  // Every money covers its years without gaps, from the prologue to the far future
+  for ( const [k, r] of Object.entries(R.MONIES) ) for ( let y = -3000; y <= 2200; y += 7 ) assert.ok(R.moneyFor(y, k).wage.length, `${k} ${y}`);
+});
+
+test("money: the allowance is the Wild West's pay by dot, raised by half", () => {
+  // 1880s United States: a one-dot wage of $45 a month (V20 The Wild West pdf 86)
+  assert.equal(R.wageAt(1880, "american"), 4500);
+  assert.deepEqual([0, 1, 2, 3, 4, 5].map(d => R.allowance(d, 1880, "american") / 100), [27, 67.5, 168.75, 472.5, 1350, 3375]);
+  // World of Future Darkness: a tenth of the article's starting cash, raised by half
+  assert.deepEqual([0, 1, 2, 3, 4, 5].map(d => R.allowance(d, 2050)), [120, 300, 750, 1500, 3000, 7500]);
+  assert.ok(R.allowance(3, 1197) > R.allowance(1, 1197));
+});
+
+test("money: prices come from the value tiers, with a spread, sale and haggling", () => {
+  // Sorcerers Crusade Companion pdf 36: an inn meal at 5-6 pence in 1630, a horse at 30 shillings
+  const meal = R.priceOf({name: "an inn meal", value: 1}, 1630, "english");
+  assert.ok(meal >= 3 * 4 && meal <= 8 * 4, `meal ${meal}`);
+  const wage = R.wageAt(1630, "english");
+  assert.ok(30 * 48 > wage && 30 * 48 < wage * 6, "a horse sits between Costly and Dear");
+  for ( const n of ["a", "bb", "a bronze coin", "a sack of grain"] ) { const s = R.spread(n); assert.ok(s >= 0.7 && s <= 1.4); }
+  assert.equal(R.spread("x"), R.spread("x"));
+  const cig = G.GOODS.find(g => g.name === "a cigarette");
+  const each = R.priceOf({...cig, value: 0}, 1995), pack = R.priceOf({...cig, value: 0}, 1995, "moravian", {perUnit: false});
+  assert.ok(each * 10 < pack, "one cigarette costs a share of the usual stack");
+  assert.equal(R.priceOf({name: "x", value: 2}, 1995, "moravian", {book: 777}), 777);
+  assert.equal(R.sellPrice(100), 50);
+  assert.equal(R.sellPrice(100, {fence: true}), 25);
+  assert.equal(R.haggled(100, 2), 80);
+  assert.equal(R.haggled(100, 9), 70);
+  assert.equal(R.haggled(100, 0, {botch: true}), 110);
+  assert.equal(R.creditLimit(2, 1197), 0);
+  assert.equal(R.creditLimit(2, 1995), 2 * R.allowance(2, 1995));
+});
+
+test("money: amounts read as coins, savings keep their worth, missed months are paid", () => {
+  assert.equal(R.formatMoney(90, "zlaty-cm"), "1 gulden 30 kreuzer");
+  assert.equal(R.formatMoney(1, "denar"), "1 half-denar");
+  assert.equal(R.formatMoney(0, "czk"), "0 haléřů");
+  assert.equal(R.formatMoney(2 * 960 + 3 * 48 + 2 * 4 + 1, "lsd"), "2 pounds 3 shillings 2 pence 1 farthing");
+  assert.equal(R.mainUnits(12345, R.moneyFor(1995)), 123.45);
+  const saved = R.convertSavings(R.wageAt(1500), 1500, 1700);
+  assert.equal(saved, R.wageAt(1700));
+  assert.equal(R.monthsToPay(null, 40), 1);
+  assert.equal(R.monthsToPay(38, 40), 2);
+  assert.equal(R.monthsToPay(0, 400), 12);
+  assert.equal(R.monthsToPay(40, 40), 0);
 });

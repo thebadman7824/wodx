@@ -1229,6 +1229,14 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Ben: buildings must never stand on a path or road, since NPCs with daily rounds will walk them. A check over 15 towns found 218 overlaps, almost all with alleys: the old test measured only a building's corners against each way, so an alley could cross a long wall between them. One market tavern also moved when its variant would not furnish.
 - organic.py now measures whole walls against every way band (geom.seg_poly_dist), checks gardens too, re-finds a spot for a plain tavern or chapel, and stops with an error if any building or garden is on a way (check_ways), as the farmstead generator does. After the fix: 0 overlaps over the same 15 towns. B581.
 - Samples schondorf and linberg redrawn.
+## 2026-11-10: Era item lists (Library 0.6.0, B590-B592)
+- data/goods.mjs grows from 160 goods to 681, in 21 kinds and 80 sub-categories, covering the prologue ages, 1197 and every era to the Time of Future Judgement. Rows give years in use; eras are derived from Chronicle's era years.
+- Every good carries tags.category, tags.era and tags.value (tier per era, 0 Trifle to 5 Treasure, set against Resources). VALUES, SOURCES, SUBS, ERA_YEARS, valueAt() exported.
+- Fill by place and era (Interactables) needs no change: it reads name, kind, eras and small as before; place weights cover the seven new kinds.
+- tools/goods/build-desk.mjs writes the review desk's item file. Desk: https://claude.ai/artifact/RFDVx5w2jCtbK1ASY8WeLP.
+- Tests: three new in fill.test.mjs (tags on every good, era years match Chronicle and every era from 1197 has every kind, a value can change over time). Harness 1019 pass.
+- 2026-11-11 (B594-B596): sub-categories dropped; 31 top-level categories (ten adapted from Cataclysm DDA), 799 goods. Each good carries behaviour, stacks, uses, sheet type and V20 concealment step (P/J/T/N) in tags. Gear category spelled Armor. Items back on the desk for Ben's marks.
+- 2026-11-11 (B597): no piles. 110 goods became one thing that stacks, with a usual stack size (STACK_SIZES); Fill writes "7 bronze coins" (Interactables 0.23.1). 797 goods.
 
 ## 2026-11-10: burgage plots (map tools)
 - Ben approved every recommendation in the Claude Doc "Town planning lessons for the map generator"; this is the first. Houses on a frontage now get a plot: a strip of land in the house's own frame, as wide as its share of the frontage, running back to the ward's plot depth or until it meets another plot, a building or a way. Behind the house is a yard, then a garden or croft to the back fence. Fences run along the sides and back, open to the street. B582.
@@ -1297,6 +1305,10 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Jumps use a displacement move (no walls, no path, no animation), snapped to the grid unless gridless, kept inside the scene. A group keeps its shape around the point. Elevation and level unchanged.
 - teleport-rules.mjs (where each token lands) with teleport.test.mjs; api game.wodx.storyteller.teleport.
 
+## 2026-11-11: Real money by era (Storyteller 0.26.0, B598)
+- money-rules.mjs: monies by region and year (Moravia default; German, English, American, French), monthly wages, allowance ladder x1.5, prices from goods value tiers, selling, fencing, credit, haggling, savings carried across a change of money.
+- money.mjs: a purse per actor (carried, bank, debt, log, undo), pay day each month on the Storyteller's monthly card, pay/receive/transfer/price/cashIn in the Storyteller API (api.money), carried and bank editable in the Money by era window.
+- Item Review Desk shows each good's price in Moravia by era.
 ## 2026-11-11: the NPC topic menu (NPC 0.10.0)
 Players talk to NPCs from a topic menu, in the manner of Daggerfall and Morrowind (B661 to B663). The Talk button in the token tools (and, once built, Talk in WoDX Actions) opens a window for the targeted person (with nobody targeted, the nearest one in reach): their greeting, Ask about (what this person can be asked that the character knows or is offered), Local talk (news, rumours, work, directions), and the answers so far. The line comes from the NPC's talk sheet, then their household, faction, scene and everyone sheets (NPC panel, Shared talk), picked on the Storyteller's client by "Only when" tests, so a 1197 and a 2097 answer can sit side by side. A line can teach a topic, give a codex page, be said aloud, or run any Chronicle outcome; the Storyteller's copy has Undo for what was taught. "Ask me first" on an NPC sends the Storyteller a card instead. talk-rules.mjs, talk.mjs; tests talk-menu.test.mjs; gate tools/gate/gatetalk.mjs; UI fit adds the Talk and Shared talk windows.
 
@@ -1306,6 +1318,9 @@ NPCs now have things to say before the Storyteller writes a line (B664, B665). A
 
 Ben asked how the Actions menu could drive dealing with NPCs (design: https://claude.ai/artifact/Ted6jfh7nS7smhvqJsBvsf), then to build it as recommended. Part A: "With this person" in every line's Act group opens a window on the targeted NPC (or the nearest in talking reach): Talk opens WoDX NPC's topic window, and Persuade, Fast-talk, Deceive, Intimidate quietly, Threaten openly, Question them and Bribe are resisted rolls from V20's social systems (pp. 265-266). Charm or seduce runs the three-stage Seduction; Use a power opens the line's menu with the NPC targeted. The NPC's roll is a blind whisper to the Storyteller (B672). Each NPC now has its own attitude toward each character (B670), seeded from household or faction standing at the first meeting and moved by how the characters treat that NPC; it shifts social difficulties and goes through the approval queue when a player's roll moves it. A won roll leaves a sway note for an hour, and Chronicle's "Only when" lists gain "attitude >= welcome" and "persuaded [by <name>]" (B674). Book notes: docs/research/social-book-checks.md. Tests: social.test.mjs, talk-menu.test.mjs. Parts B (lift and plant), C (trade on the Storyteller's money) and D (seduction feeding) follow.
 
+## 2026-11-11: Markets, the living economy's first build (Storyteller 0.26.0, Interactables 0.24.1, B599)
+
+Ben approved the living economy study's recommendations. Built steps 1 and 2: markets per settlement with a price index and supply per goods category, set by hand in a Markets window (Upkeep, Storyteller only); all prices read the index. Traders link an NPC and a stock container to a market; a stock draw is thinned or filled by supply and paid from the NPC's purse at half price. Interactables fires wodxStockFilter and wodxStockDrawn around a stock draw. New rules file market-rules.mjs, window markets.mjs, tests markets.test.mjs. The weekly market turn is not built yet.
 ## 2026-11-11: Dealing with NPCs, parts B and D: lift and plant, seduction and feeding (Actions 3.21.0)
 
 "With this person" gains Lift something and Plant something (B675): Dexterity + Larceny (Legerdemain in the Dark Ages) against the mark's Perception + Alertness, who notices only by beating the thief. Only pocket or jacket sized things come off the person; coins come off the Storyteller module's purse when it is there. The card says where people keep things in that year, from a belt purse in 1197 to a cred chip after 2020. The take and being caught go through the approval queue; caught raises the scene's alarm and costs standing and attitude. Also fixed from the first testbed run of gatesocial: the window's content was a form inside the dialog's form, which browsers drop, so the window showed no buttons; and "persuaded by <name>" now matches the NPC's actor name as well as the token's. Part D (B676): Charm or seduce takes the NPC's attitude into each stage, and a Kindred whose seduction wins is offered the feeding window at once, as the Siren hunts.
@@ -1476,6 +1491,28 @@ gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight 
 - Spheres and kinds of faction by age, 1197 to the Future Darkness (B830).
 - New harness test faction-founding.test.mjs.
 
+## 2026-11-11: Item descriptions and Examine (Library 0.7.0, B607-B608)
+
+Ben asked for examination and descriptions on items, as in Cataclysm DDA. All 797 goods have descriptions (data/goods-text.mjs, 21 with a later wording), filled into an item's description as it is made. Item sheets get Examine (description and facts) and Look closer (Perception + the category's Ability, difficulty 6; findings by successes, false, stolen, worn and uncanny from the Storyteller's Examine notes). The Item Review Desk shows each description and what a closer look finds. Tests examine.test.mjs.
+
+## 2026-11-11: Plain item names, details on a closer look (Library 0.7.1, B609)
+
+Ben asked that names and descriptions say only what a thing is. 67 goods renamed with their ids kept; origins and hidden features moved into per-good details opened by Look closer. The desk shows each good's details and its old name.
+## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.27.0, Interactables 0.24.2, B850-B856)
+
+Ben approved the ownership proposal (all five parts). Numbered 0.27.0 because main took 0.25.0 (hardship weather, bodies) and the markets branch 0.26.0. Built on the markets branch, since it needs the goods list and the purse.
+- owner-rules.mjs: owner records, stolen marks, name matching for older place tags, Moravian holding forms by year, the right to trade.
+- craft-rules.mjs: a recipe for any good in the year, materials, quality. build-rules.mjs: 41 kinds of building, methods and stages, worth, upkeep, income, kit keys.
+- owners.mjs: theft marks from wodxItemsTaken, holdings and pay day, Make something, Put up a building, finished buildings as Regions (and kit scenes), workshops feeding markets, faction builds through the approval queue. Toolbar button "Property and building"; api.owners.
+- tasks: a build task's stages and stage costs (Undo puts the purse and the place back); a recipe's quality on the item.
+- Chronicle 0.18.2: Property and building is in the list of player buttons the Storyteller can hide.
+- Interactables: sends wodxItemsTaken after a take; the Interact window marks what is yours or someone's.
+- Tests: ownership.test.mjs (rules, every era), ownership-foundry.test.mjs (the Foundry side on stand-ins).
+- Still to do: the building kit maps (a PC job: one map per kit key, exported from Dungeondraft and imported as scenes flagged wodx-storyteller.kit).
+
+## 2026-11-11: Description folds in Possessions (Sheets 0.8.2, B610)
+
+The Possessions tab shows each item's description in a fold under its row, closed by default, opened with an info button by the name.
 ## 2026-11-11: the ambush (B836)
 Ben asked for the ambush rule, then a Live release. Combat 3.11.0: ambush-rules.js; the attack dialog and the quick attack roll the ambush first when the attacker is sneaking, Obfuscated or hidden and neither side is fighting (V20 p. 274; V20 Dark Ages p. 345 before 1450). Harness ambush.test.mjs (4). gatefight step 12.
 
