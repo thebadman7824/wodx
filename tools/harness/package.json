@@ -1,1 +1,1 @@
-{"name":"wodx-harness","private":true,"type":"module","dependencies":{"jsdom":"24.1.3","@resvg/resvg-js":"2.6.2"}}
+{"name":"wodx-harness","private":true,"type":"module","dependencies":{"@resvg/resvg-js":"2.6.2","esbuild":"0.24.2","jsdom":"24.1.3"}}

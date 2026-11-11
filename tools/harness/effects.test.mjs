@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.26.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.27.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -215,7 +215,17 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   assert.deepEqual(fire.map(o => [o.out.levels, o.out.type, o.ask]), [[2, "aggravated", true]]);
   const heal = PE.numinaOutcomes("healing", 5, 3, H.NUMINA.healing)[0].out;
   assert.deepEqual([heal.kind, heal.levels, heal.aggravated], ["heal", 3, true]);
-  assert.equal(PE.numinaOutcomes("telekinesis", 2, 2, H.NUMINA.telekinesis)[0].st, true);
+  assert.deepEqual(PE.numinaOutcomes("telekinesis", 2, 4, H.NUMINA.telekinesis).map(o => [o.out.levels, o.out.type, o.ask]), [[2, "bashing", true]]);
+  assert.deepEqual(PE.numinaOutcomes("healing", 4, 3, H.NUMINA.healing)[0].out.levels, 3);
+  assert.equal(PE.numinaOutcomes("curses", 2, 2, H.NUMINA.curses)[0].st, true);
+  assert.equal(Object.keys(PE.PATH_EFFECTS).length, 70);
+  assert.equal(Object.values(PE.PATH_EFFECTS).filter(x => x.kind === "st").length, 38);
+  const by = id => paths.find(p => p.id.endsWith(id));
+  assert.deepEqual(PE.pathOutcomes(by("theft-of-vitae"), 3)[0].st, true);
+  assert.deepEqual(PE.pathOutcomes(by("dust-to-dust"), 3).map(o => [o.out.levels, o.out.type, o.out.soak]), [[3, "aggravated", false]]);
+  assert.deepEqual(PE.pathOutcomes(by("ashen-ladys-embrace"), 4).map(o => [o.out.levels, o.ask]), [[2, true]]);
+  assert.deepEqual(PE.pathOutcomes(by("benedictio-mortem"), 3)[0].out.timed, {kind: "rounds", rounds: 3});
+  assert.equal(PE.pathOutcomes(by("pontos-euxeinos"), 2)[0].out.kind, "heal");
   const kx = src("modules/wodx-actions/scripts/kindred.js"), hx = src("modules/wodx-actions/scripts/hunter.js");
   assert.match(kx, /EF\.pathPlan\(actor, p, successes\)/); assert.match(kx, /!PE\.PATH_EFFECTS\[p\.id\]/);
   assert.match(hx, /EF\.numinaPlan\(actor, /);

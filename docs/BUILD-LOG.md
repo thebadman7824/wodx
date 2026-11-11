@@ -1385,3 +1385,10 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - modules/wodx-actions/scripts/mage-da-effects.js (pure): DA_EFFECTS for all 97 rotes, daDuration (p. 103 ladder), lastsFor, daOutcomes, targetCount.
 - effects.js daPlan; mage-da.js posts a successful rote's card with the same items, so the active Storyteller applies them with Undo, queues the rest and lists the Storyteller's calls.
 - Tests: effects.test.mjs (12). Gate gateeffects.mjs 13 steps.
+
+## 2026-11-11: Path magic and Numina on the table (Actions 3.27.0)
+- Item 7 of "Magic that applies itself" (Numina part included). B768.
+- modules/wodx-actions/scripts/path-effects.js (pure): PATH_EFFECTS for all 70 path powers, NUMINA_EFFECTS by numen and level, pathOutcomes, numinaOutcomes. mage-da-effects.js gains outcomesOf, fixed damage and a heal result.
+- effects.js planOf, pathPlan, numinaPlan; kindred.js (Use a Discipline) and hunter.js (Numina) post the card. Timed effects name their book page.
+- Page check: /mnt/project-files/path-powers-book-check-20261111T103729-2a82.md (printed pages).
+- Tests: effects.test.mjs (13). Gate gateeffects.mjs 14 steps.
