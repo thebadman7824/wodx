@@ -293,12 +293,13 @@ export async function groundsDialog() {
 export async function upkeepChooser() {
   if ( !game.user.isGM ) return;
   const pick = await foundry.applications.api.DialogV2.wait({rejectClose: false, window: {title: "Upkeep"}, classes: ["wodx-dialog"],
-    content: "<p>Ties a character has to keep up, the hunting grounds and how hot each one is, how each character lives on their Resources, the long tasks under way, the havens and who knows where they are, or hardship on the road.</p>",
+    content: "<p>Ties a character has to keep up, the hunting grounds and how hot each one is, how each character lives on their Resources, the long tasks under way, the havens and who knows where they are, hardship on the road, or the bodies left behind.</p>",
     buttons: [{action: "ties", label: "Ties that need tending"}, {action: "grounds", label: "Hunting grounds"},
       ...(game.modules.get("wodx-otherworlds")?.api?.drift ? [{action: "drift", label: "The Gauntlet over time"}] : []),
-      {action: "money", label: "Money"}, {action: "tasks", label: "Long tasks"}, {action: "havens", label: "Havens"}, {action: "hardship", label: "Hardship on the road"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
+      {action: "money", label: "Money"}, {action: "tasks", label: "Long tasks"}, {action: "havens", label: "Havens"}, {action: "hardship", label: "Hardship on the road"}, {action: "remains", label: "Bodies left behind"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
   if ( pick === "drift" ) return game.modules.get("wodx-otherworlds")?.api?.drift?.dialog?.();
   if ( pick === "hardship" ) return game.modules.get(MOD)?.api?.hardship?.open?.();
+  if ( pick === "remains" ) return game.modules.get(MOD)?.api?.remains?.open?.();
   if ( pick === "havens" ) return game.modules.get(MOD)?.api?.havens?.open?.();
   if ( pick === "tasks" ) return game.modules.get(MOD)?.api?.tasks?.open?.();
   if ( pick === "money" ) return game.modules.get(MOD)?.api?.upkeep?.money?.dialog?.();

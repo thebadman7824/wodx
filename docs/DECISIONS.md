@@ -724,3 +724,19 @@ The page check of 2026-11-11 listed the powers of seven lines this module holds 
 
 ## B784. The books' rituals and rites in the Storyteller's effect window (2026-11-11)
 The page check of 2026-11-11 listed 314 documented rituals and rites: V20 Thaumaturgy and Necromancy (62), V20 Dark Ages Thaumaturgy, Necromancy and Abyss rituals (66), W20 rites (53), Dark Ages: Werewolf rites (38) and Mummy: The Resurrection Hekau rituals (95). book-rituals.js holds each with its level, casting time, who it works on, what it does in our own words, what resists it, the page and its keywords. Picking one in the Storyteller's window fills in the keywords, strength (the ritual's level, read as successes), the casting time, an area when it works on a place, and a note with what it does and the page. The roll to cast stays the book's (Intelligence + Occult, and so on); long rites over several days use the Storyteller's long tasks. Mage 20th has no named rituals in the core book, so none are listed.
+
+
+## B840. Hardship weather from the sky (2026-11-11)
+A scene's hardship weather now defaults to "From the sky": WoDX Atmosphere's weather for the day, on an outdoor scene, sets how harsh it is. Bitter cold (-10°C or below) in a gale or heavy snow, or 40°C, is deadly; freezing (-2°C) with snow, sleet or a gale, deep snow, -15°C, or 35°C is severe; a freezing night, a gale, heavy cold rain or 31°C is harsh. A level the Storyteller picks for the scene still wins. The books leave the harshness to the Storyteller (M20 p. 435), so these thresholds are a house rule. hardship-rules.mjs severityFromDay.
+
+## B841. Standing that spills over (2026-11-11)
+When a faction's regard for a character moves (Hunted to Honoured), each faction holding it at +2 or more moves the same way by a step and each holding it at -2 or less moves the other way by a step, through the approval queue (it touches a player's character, so it always waits). One step only: a spill does not spill again. Setting "Standing spills over", off by default. faction-rules.mjs spillFrom, op "people" in applyChanges.
+
+## B842. NPCs who call out to passers-by (2026-11-11)
+With the setting on (off by default), a player's character who walks within talking distance of an NPC may be greeted out loud, in a speech bubble, at the chance set (default one in two), once a character a day of game time, and not in a fight or while the NPC sleeps. Only a talk-sheet greet line marked aloud is used, since sheet lines are otherwise whispered; else a stock greeting. One NPC speaks a step. talk-rules.mjs mayCallOut, passingLine.
+
+## B843. A clue's first look fills the codex (2026-11-11)
+A clue tile can name a journal page and a number of successes (0 to 3, 0 for any look). The first look or examination by a character that reaches it puts a copy of the page in that character's codex through WoDX Storyteller, once a character (flag codexed). interact-rules.mjs codexDue.
+
+## B844. Bodies left behind (2026-11-11)
+With the setting on (off by default), an NPC token marked dead becomes a body (token flag wodx-storyteller.remains) that goes fresh, bloated (2 warm days), rotting (6), decayed (20) and bones (60). A warm day is a day at about 15°C; each day counts (mean + 5) / 20, from 0.1 to 2, using WoDX Atmosphere's mean temperature when it is on. Indoors counts 0.8, in water 0.5, buried 0.25. The token takes a tint for its stage. A player's character who first comes within talking distance finds it: the Storyteller gets the stage and what the era's authorities could learn (the priest and neighbours before 1500, a physician to 1840, police surgeons and inquests to 1901, fingerprints and examiners to 1986, DNA laboratories, then scanners from 2023), with a note on what a drained body is taken for. The first finding of a body that still shows how it died adds 2 heat to the hunting ground. Rough figures for play; the books have no rules for corpses. remains-rules.mjs.

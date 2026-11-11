@@ -151,6 +151,32 @@ export function peopleStandingOf(state, actorId) {
   }
   return out;
 }
+/**
+ * NPC 0.16.0, standing that spills over (house rule, B841): when a faction's regard for a character moves, the
+ * factions bound to it hear of it. A faction that holds this one as a close friend (standing +2 or more) moves the
+ * same way by one step; one that holds it as an enemy (standing -2 or less) moves the other way by one step. Factions
+ * at +1, 0 or -1 toward it don't care. Dormant factions and the faction itself are left out. Returns changes
+ * [{op: "people", faction, actor, delta, why}] for the approval queue; empty when nothing would move.
+ */
+export const SPILL_AT = 2;
+export function spillFrom(state, factionId, actorId, delta) {
+  const d = Math.sign(Number(delta) || 0);
+  if ( !d || !actorId ) return [];
+  const src = (state?.factions ?? []).find(f => f.id === factionId);
+  if ( !src ) return [];
+  const out = [];
+  for ( const o of state.factions ) {
+    if ( o.id === src.id || o.dormant ) continue;
+    const s = standingOf(o, src.id);
+    const step = s >= SPILL_AT ? d : s <= -SPILL_AT ? -d : 0;
+    if ( !step ) continue;
+    const was = o.people?.[actorId] ?? 0, to = Math.max(STANDING.min, Math.min(STANDING.max, was + step));
+    if ( to === was ) continue;
+    out.push({op: "people", faction: o.id, actor: actorId, delta: step, why: s >= SPILL_AT ? "friend" : "enemy"});
+  }
+  return out;
+}
+
 /** Find a faction by id, key or name (whole name first, then a part of it). */
 export function findFaction(state, ref) {
   const r = String(ref ?? "").trim().toLowerCase();
@@ -464,6 +490,16 @@ export function applyChanges(state, changes, {ids = () => Math.random().toString
         if ( to === was ) break;
         if ( to ) f.standing[c.other] = to; else delete f.standing[c.other];
         inverse.unshift({op: "standing", faction: f.id, other: c.other, delta: was - to}); applied.push(c);
+        break;
+      }
+      case "people": {
+        // NPC 0.16.0: how a faction regards one character, -3 to +3
+        const f = fac(c.faction); if ( !f || !c.actor ) break;
+        f.people = {...(f.people ?? {})};
+        const was = f.people[c.actor] ?? 0, to = Math.max(STANDING.min, Math.min(STANDING.max, was + (Number(c.delta) || 0)));
+        if ( to === was ) break;
+        if ( to ) f.people[c.actor] = to; else delete f.people[c.actor];
+        inverse.unshift({op: "people", faction: f.id, actor: c.actor, delta: was - to}); applied.push(c);
         break;
       }
       case "guard": {

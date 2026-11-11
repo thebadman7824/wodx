@@ -1462,3 +1462,8 @@ Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 
 - Still open: Kindred of the East (unreadable scan), 85 Demon Lore powers whose names the scan cut short.
 - book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
 - Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
+
+## 2026-11-11: Games by Hyper ideas (Storyteller 0.25.0, NPC 0.16.0, Interactables 0.24.0)
+- Reviewed the Games by Hyper template docs for ideas. Two of the six picks were already built (Atmosphere's weather by season and era; place alarms carried by era), so those became a link (hardship follows the sky, B840) and nothing.
+- Standing that spills over (B841), calls to passers-by (B842), a clue's first look fills the codex (B843), bodies left behind (B844). All house rules, all off by default.
+- Harness: passing-world.test.mjs.
