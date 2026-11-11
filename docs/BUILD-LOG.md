@@ -1484,3 +1484,9 @@ gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight 
 - Reviewed the Games by Hyper template docs for ideas. Two of the six picks were already built (Atmosphere's weather by season and era; place alarms carried by era), so those became a link (hardship follows the sky, B840) and nothing.
 - Standing that spills over (B841), calls to passers-by (B842), a clue's first look fills the codex (B843), bodies left behind (B844). All house rules, all off by default.
 - Harness: passing-world.test.mjs.
+## WoDX NPC 0.17.0: founding factions in play (2026-11-11)
+- Found from its members (Storyteller, Factions window) and Found a faction (players, the Factions button on the token tools): dots pooled from the founders' own Backgrounds (B831). Players' requests go to the approval queue.
+- Player-run factions: owners, and orders for each turn from the players (B835).
+- Splits of strained factions at a turn (B833); End and Fold into another (B832); founding and ending years, rising or ending with a dated event, and new powers offered by six events (B834).
+- Spheres and kinds of faction by age, 1197 to the Future Darkness (B830).
+- New harness test faction-founding.test.mjs.
