@@ -136,3 +136,23 @@ test("every power has at least one line that uses it, and every line can use som
   for ( const p of Object.keys(R.POWERS) ) assert.ok(R.CASES.some(c => c.power === p), p);
   for ( const l of Object.keys(R.LINES) ) assert.ok(R.powersFor(l).length, l);
 });
+
+test("the book checks: changelings, wraiths, ghouls, the imbued (0.17.1)", async () => {
+  const H = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/hunter-rules.js")).href);
+  for ( const e of ERAS.profiles ) for ( const y of [null, 1200, 1700, 1998, 1999, 2010, 2030] ) for ( const fb of [false, true] )
+    assert.equal(R.isReckoning(e.id, y, {futureBranch: fb}), H.hunterLine(e.id, y, {futureBranch: fb}) === "reckoning", `${e.id} ${y} ${fb}`);
+  assert.equal(R.casesFor({power: "mind", from: "kindred", to: "fae", book: "late"})[0].status, "settled");
+  assert.equal(R.casesFor({power: "ghoul", from: "kindred", to: "lupine"})[0].id, "ghoul-lupine");
+  assert.equal(R.casesFor({power: "ghoul", from: "kindred", to: "wraith"})[0].id, "ghoul-ghost");
+  assert.equal(R.casesFor({power: "ghoul", from: "kindred", to: "mage"})[0].id, "ghoul-mage");
+  const imb = R.casesFor({power: "mind", from: "kindred", to: "hunter", reckoning: true});
+  assert.equal(imb[0].id, "mind-imbued");
+  assert.equal(R.testFor(imb[0], {}).verdict, "fails");
+  assert.ok(!R.casesFor({power: "mind", from: "kindred", to: "hunter", reckoning: false}).some(c => c.id === "mind-imbued"));
+  assert.ok(!R.casesFor({power: "mind", from: "kindred", to: "mortal", reckoning: true}).some(c => c.id === "mind-imbued"));
+  assert.equal(R.casesFor({power: "sight", from: "hunter", to: "kindred", reckoning: true})[0].id, "sight-imbued");
+  const ghost = R.casesFor({power: "sight", from: "kindred", to: "wraith"});
+  assert.deepEqual(ghost.map(c => c.id), ["sight-unseen"]);
+  assert.equal(R.testFor(ghost[0], {actor: {auspex: 1, perception: 3, awareness: 1}, target: {manipulation: 2, subterfuge: 2}}).rolls[0].difficulty, 7);
+  assert.equal(R.testFor(ghost[0], {actor: {}, target: {}}).verdict, "note");
+});

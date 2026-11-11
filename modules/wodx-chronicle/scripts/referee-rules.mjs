@@ -41,17 +41,32 @@ export function profileOf(actor) {
 export const DA_ERAS = ["classical", "living-gods", "dark-ages", "long-night"];
 export const bookOf = era => (DA_ERAS.includes(String(era ?? "").toLowerCase()) ? "da" : "late");
 
+/**
+ * Hunter: The Reckoning's years: from 1999, or from 2023 on the Future Darkness branch; the Time of Judgment and
+ * the future eras always. The same reading as WoDX Actions' hunterLine() (B42).
+ */
+export function isReckoning(era, year = null, {futureBranch = false} = {}) {
+  const e = String(era ?? "").toLowerCase();
+  const y = year === null || year === undefined || year === "" ? null : Number(year);
+  if ( [...DA_ERAS, "renaissance", "age-of-reason", "victorian", "wild-west", "great-war", "mid-century"].includes(e) ) return false;
+  if ( futureBranch && Number.isFinite(y) && y >= 1500 && y < 2023 && ["modern", "future-darkness", ""].includes(e) ) return false;
+  if ( ["time-of-judgment", "future-darkness", "time-of-future-judgement"].includes(e) ) return true;
+  if ( Number.isFinite(y) ) return y >= 1999;
+  return !/dark|medieval/.test(e);
+}
+
 const fits = (list, key) => !list?.length || list.includes("any") || list.includes(key);
-const needOk = (need, faith) => !need || (need === "faith" && faith > 0) || (need === "faith3" && faith >= 3) || (need === "faith4" && faith >= 4);
+const needOk = (need, faith, reckoning) => !need || (need === "faith" && faith > 0) || (need === "faith3" && faith >= 3) || (need === "faith4" && faith >= 4)
+  || (need === "imbued" && !!reckoning);
 
 /**
- * The cases for one meeting. q: {power, from, to, book, actorFaith, targetFaith}.
+ * The cases for one meeting. q: {power, from, to, book, actorFaith, targetFaith, reckoning}.
  * A case with `needs` sits first (True Faith comes before anything else), then cases for the target's own line,
  * then cases open to any line. A fallback case shows only when nothing more particular fits.
  */
-export function casesFor({power, from = "mortal", to = "mortal", book = "late", actorFaith = 0, targetFaith = 0} = {}, cases = CASES) {
+export function casesFor({power, from = "mortal", to = "mortal", book = "late", actorFaith = 0, targetFaith = 0, reckoning = false} = {}, cases = CASES) {
   const hits = cases.filter(c => c.power === power && fits(c.from, from) && fits(c.to, to) && (!c.book || c.book === book)
-    && needOk(c.needs, c.watcherFaith ? n(actorFaith) : n(targetFaith)));
+    && needOk(c.needs, c.watcherFaith ? n(actorFaith) : n(targetFaith), reckoning && (c.watcherFaith ? from : to) === "hunter"));
   const particular = hits.filter(c => !c.fallback);
   const list = particular.length ? particular : hits;
   const rank = c => (c.needs ? 0 : c.to.includes(to) ? 1 : 2);
@@ -132,6 +147,15 @@ export function testFor(c, {actor = {}, target = {}, book = "late", rating = 0} 
         roll("actor", "Perception + Awareness", dice, 7, "Needs more successes than the hider."),
         roll("target", "Manipulation + Subterfuge", n(target.manipulation) + n(target.subterfuge), 7, "The hider stays unseen on a tie or more.")]};
       return {verdict: "roll", text: `${p.why}: Perception + Awareness at ${p.diff}.`, roll: roll("actor", "Perception + Awareness", dice, p.diff, "One success sees through it.")};
+    }
+    case "imbued":
+      return {verdict: "fails", text: `${T} is imbued: second sight shields them from it.`};
+    case "unseen": {
+      const a = n(actor.auspex);
+      if ( !a ) return {verdict: "note", text: `${A} needs Auspex, or a sense power of their own line, to look for it.`};
+      return {verdict: "roll", text: "A resisted roll at 7: the one looking needs more successes.", rolls: [
+        roll("actor", "Perception + Awareness", n(actor.perception) + n(actor.awareness), 7, "Needs more successes than the one hidden."),
+        roll("target", "Manipulation + Subterfuge", n(target.manipulation) + n(target.subterfuge), 7, "Stays unseen on a tie or more.")]};
     }
     case "witness": {
       const sleeper = target.profile === "mortal" && !n(target.faith);
