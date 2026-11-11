@@ -94,7 +94,7 @@ test("wiring: settings, api, menus, the monthly card", () => {
   assert.match(src("modules/wodx-storyteller/scripts/money.mjs"), /searchBox\("table\.wst-money-t"/);
 });
 
-/* Real money (Storyteller 0.23.0, B598) */
+/* Real money (Storyteller 0.26.0, B598) */
 const G = await imp("modules/wodx-library/data/goods.mjs");
 
 test("money: Moravia's money follows history, other lands have their own", () => {

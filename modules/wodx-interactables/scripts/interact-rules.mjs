@@ -406,8 +406,18 @@ export function describeClue(f = {}) {
     clue: true, trap: false, container: false, door: false, secret: false, ds: "closed", kind, texts,
     title: String(f.title ?? "").trim().slice(0, 80), need: Math.max(1, Math.min(5, Math.round(Number(f.need) || 1))),
     found: !!f.found, seen: f.seen && typeof f.seen === "object" ? f.seen : {},
+    codexPage: String(f.codexPage ?? "").trim().slice(0, 200), codexAt: Math.max(0, Math.min(CLUE_TIERS, Math.round(Number(f.codexAt) || 0))),
+    codexed: f.codexed && typeof f.codexed === "object" ? f.codexed : {},
     electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
+}
+/**
+ * Interactables 0.24.0, a first look that teaches (B843): does this look or examination put the clue's journal page
+ * in the character's codex? Once a character, when the clue names a page and the successes reach codexAt (0: any look).
+ */
+export function codexDue(o, actorId, successes = 0) {
+  if ( !o?.clue || !o.codexPage || !actorId || o.codexed?.[actorId] ) return false;
+  return Math.max(0, Number(successes) || 0) >= (Number(o.codexAt) || 0);
 }
 /**
  * A light source on a tile. f: the tile's flags.wodx-interactables, with light: true. on: whether its lights are lit now
@@ -1452,7 +1462,8 @@ export function cleanTrap(s = {}) {
 export function cleanClue(s = {}) {
   const t = k => String(s[k] ?? "").slice(0, 4000);
   return {clue: !!s.clue, clueKind: CLUES[s.clueKind] ? s.clueKind : "document", title: String(s.title ?? "").slice(0, 80).trim(),
-    need: Math.max(1, Math.min(5, Math.round(Number(s.need) || 1))), found: !!s.found, text0: t("text0"), text1: t("text1"), text2: t("text2"), text3: t("text3")};
+    need: Math.max(1, Math.min(5, Math.round(Number(s.need) || 1))), found: !!s.found, text0: t("text0"), text1: t("text1"), text2: t("text2"), text3: t("text3"),
+    codexPage: String(s.codexPage ?? "").trim().slice(0, 200), codexAt: Math.max(0, Math.min(CLUE_TIERS, Math.round(Number(s.codexAt) || 0)))};
 }
 
 /** Clean a tile's light settings from the config form. lightIds: the ids of the scene lights it works, comma separated. */

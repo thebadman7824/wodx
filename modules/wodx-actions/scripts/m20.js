@@ -13,6 +13,7 @@
 import * as M from "./m20-rules.js";
 import { aim, castIntent } from "./aim.js";
 import * as C from "./consensus-rules.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -55,7 +56,10 @@ export function build(ctx) {
         return { paradox: p, quintLost: i.quint - w.quintessence };
     }
 
-    async function cast(actor) {
+    async function cast(actor, o = {}) {
+        // A Rote item (the system's or WoDX's own) fills the window in
+        const roteItem = typeof o.rote === "string" ? actor.items?.get(o.rote) : o.rote;
+        const preset = roteItem ? EF.E.roteOfItem(roteItem) : null;
         const i = info(actor);
         const sg = suggest(actor), W = C.WORDS[sg.age.key];
         const row = k => `<div class="form-group"><label>${cap(k)} <small>${i.spheres[k]}</small></label><select name="s-${k}" data-fixed><option value="0">—</option>${[1, 2, 3, 4, 5].filter(l => l <= i.spheres[k]).map(l => `<option value="${l}">${l}</option>`).join("")}</select></div>`;
@@ -64,6 +68,7 @@ export function build(ctx) {
           <div class="form-group"><label>The Effect is</label><select name="kind" data-fixed>${Object.entries(M.KINDS).map(([k, x]) => `<option value="${k}"${k === sg.kind ? " selected" : ""}>${esc(W[k] ?? x.label)} (highest + ${x.add})</option>`).join("")}</select></div>
           <div class="form-group"><label>The caster's style</label><input type="text" name="style" value="${esc(i.f.style ?? "")}" placeholder="Hermetic, Christian miracles, witchcraft, Taoist"/></div>
           <p class="hint">${esc(sg.age.label)}${sg.why ? `: ${esc(sg.why)}` : "."}${sg.age.key === "dark" ? " A Dark Ages mage uses the Dark Ages cast." : ""} (${esc(sg.age.ref)})</p>
+          ${EF.fieldset(i.spheres, EF.rotesOf(actor))}
           <div class="form-group"><label>The feat</label><select name="feat" data-fixed>${M.FEATS.map(f => `<option value="${f.need}">${esc(f.label)}: ${f.need}</option>`).join("")}</select></div>
           <div class="form-group"><label>More successes declared (targets, damage, duration)</label><input type="number" name="extra" min="0" max="20" value="0"/></div>
           <fieldset><legend>Modifiers (net ±3)</legend>${Object.entries(M.MODIFIERS).map(([k, m]) => `<div class="form-group"><label><input type="checkbox" name="m-${k}"/> ${esc(m.label)} (${m.mod > 0 ? "+" : ""}${m.mod})</label></div>`).join("")}
@@ -74,7 +79,10 @@ export function build(ctx) {
         return dialog(`Cast an Effect: ${actor.name}`, content, "Cast", async fd => {
             const used = M.SPHERES.map(k => ({ sphere: k, level: n(fd[`s-${k}`]) })).filter(x => x.level);
             const mods = Object.keys(M.MODIFIERS).filter(k => fd[`m-${k}`]);
-            const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
+            const form = EF.read(fd);
+            if (form.save && form.keywords.length) await EF.saveRote(actor, EF.E.roteFrom(form.save, { keywords: form.keywords, used, plan: form.plan, ctx: form.ctx, kind: fd.kind, feat: n(fd.feat) }));
+            const kw = form.keywords.length ? EF.plan(actor, form, 0, { used, feat: n(fd.feat), age: sg.age.key }) : null;
+            const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: kw ? kw.need : n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (plan.quintUsed) { if (plan.quintUsed > i.quint) { notify(`${actor.name} has ${i.quint} Quintessence.`); return null; } await updateActor(actor, { "system.quintessence.temporary": i.quint - plan.quintUsed }); }
             const wp = !!fd.wp && await spendWillpower(actor, 1);
@@ -88,16 +96,19 @@ export function build(ctx) {
             let body = rollBlock(`Arete ${plan.dice}`, r, [`${label}: ${(W[fd.kind] ?? M.KINDS[fd.kind].label).toLowerCase()} (${plan.base}${plan.net ? `, ${plan.net > 0 ? "+" : ""}${plan.net}` : ""})`, ...(plan.capped ? ["modifiers capped at ±3"] : []),
                 ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : [])]);
             body += `<div class="vta-big ${d.key === "botch" ? "bad" : d.key === "success" || d.key === "extraordinary" ? "good" : ""}">${r.successes} of ${plan.need}: ${esc(d.text)}.</div>`;
-            if ((d.key === "success" || d.key === "extraordinary" || d.key === "partial") && r.successes) {
-                body += fd.dmg ? `<div class="vta-res">Damage: ${M.damage(r.successes, { forces: used.some(x => x.sphere === "forces") })} levels (${M.damageType({ spheres: used.map(x => x.sphere) })}, unless charged with Prime or Pattern-breaking); the Effect is instant.</div>`
+            const fx = kw && r.successes && !r.botch ? EF.plan(actor, form, r.successes, { used, feat: n(fd.feat), age: sg.age.key }) : null;
+            if (fx?.got?.ok) body += fx.html;
+            else if ((d.key === "success" || d.key === "extraordinary" || d.key === "partial") && r.successes) {
+                body += fd.dmg ? `<div class="vta-res">Damage: ${EF.E.eraRules(sg.age.key).levels(r.successes, { forces: used.some(x => x.sphere === "forces") })} levels (${M.damageType({ spheres: used.map(x => x.sphere) })}, unless charged with Prime or Pattern-breaking); the Effect is instant.</div>`
                     : `<div class="vta-res">Duration: ${M.duration(r.successes)}.</div>`;
             }
             if (px) body += `<div class="vta-note">+${px} ${sg.age.key === "crusade" ? "Scourge" : "Paradox"} (${after.paradox})${after.quintLost ? `; it cancels ${after.quintLost} Quintessence on the wheel` : ""}.${after.paradox > 5 ? " Past five: the Storyteller may roll a backlash." : ""}${M.overload(after.paradox) ? " Twenty or more: an intense Quiet, a crack in reality, or worse." : ""}</div>`;
             if (fortune) body += fortune.html;
             if (r.botch && sg.age.key !== "crusade") body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;
-            return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean));
-        }, { width: 560, render: root => aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }) });
+            const fxData = fx?.got?.ok && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st"), recipe: fx.recipe, hold: fx.hold } : null;
+            return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean), fxData?.items.length ? fxData : undefined);
+        }, { width: 560, render: root => { EF.wire(root, i.spheres, EF.rotesOf(actor)); if (preset) EF.fill(root, preset); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
     }
 
     async function backlashRoll(actor) {
@@ -118,9 +129,11 @@ export function build(ctx) {
             return post(actor, `${actor.name}: Paradox backlash`, body, [r.roll].filter(Boolean));
         });
     }
-    async function counter(actor) {
+    async function counter(actor, o = {}) {
+        // Answering a WoDX keyword card: the successes come off that card (3.25.0)
+        const card = o.card ? game.messages?.get(o.card) : null;
         const i = info(actor);
-        const content = `<form><div class="form-group"><label>How</label><select name="mode" data-fixed><option value="self">Against an Effect aimed at this mage (Arete at 7)</option><option value="dispel">For another: dispel it (8; Prime 1 and a Quintessence)</option><option value="reflect">For another: reflect it (9; Prime 1 and a Quintessence)</option>
+        const content = `<form><div class="form-group"><label>How</label><select name="mode" data-fixed><option value="self">Against an Effect aimed at this mage (Arete at 7)</option><option value="dispel">For another: dispel it (8; Prime 1 and a Quintessence)</option>${EF.E.eraRules(age().key).reflect ? `<option value="reflect">For another: reflect it (9; Prime 1 and a Quintessence)</option>` : ""}
             <option value="mind">Resist Mind magick (Willpower at 6)</option><option value="quiet">Dispel a Quiet delusion (a Willpower point; Willpower at 7)</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="share" checked/> Knows at least one of the attacking Spheres</label></div></form>`;
         return dialog(`Countermagick: ${actor.name}`, content, "Roll", async fd => {
@@ -138,7 +151,8 @@ export function build(ctx) {
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (plan.quint) await updateActor(actor, { "system.quintessence.temporary": i.quint - 1 });
             const r = await rollPool(plan.dice, plan.difficulty);
-            return post(actor, `${actor.name}: countermagick`, rollBlock(`Arete ${plan.dice}`, r) + `<div class="vta-res">${r.successes} of the caster's successes cancelled${fd.mode === "reflect" ? "; any beyond theirs strike the caster" : ""}. A full action.</div><div class="wodx-quiet">${REF} p. 545</div>`, [r.roll].filter(Boolean));
+            return post(actor, `${actor.name}: countermagick`, rollBlock(`Arete ${plan.dice}`, r) + `<div class="vta-res">${r.successes} of the caster's successes cancelled${fd.mode === "reflect" ? "; any beyond theirs strike the caster" : ""}. A full action.${card ? " The casting's card is worked out again." : ""}</div><div class="wodx-quiet">${REF} p. 545</div>`, [r.roll].filter(Boolean),
+                card ? { kind: "counter", card: card.id, successes: r.successes, mode: fd.mode, by: actor.name } : undefined);
         });
     }
     /** The Fortune Dice (Sorcerers Crusade pdf p. 249): a 1 is a Bane, a 10 a Boon; either spends the whole Scourge Pool. */
@@ -187,5 +201,12 @@ export function build(ctx) {
         }
     }
 
-    return { info, cast, backlash: backlashRoll, counter, shedAll, purify, placeDialog, age, suggest, rules: M };
+    /** The system's Rote button: true when WoDX's Cast window takes it (opened here), false to leave it to the system. */
+    function castRote(actor, item) {
+        if (!EF.takesRote(actor, age().key)) return false;
+        cast(actor, { rote: item }).catch(e => console.error("WoDX | rote", e));
+        return true;
+    }
+
+    return { info, cast, castRote, backlash: backlashRoll, counter, shedAll, purify, placeDialog, age, suggest, rules: M };
 }

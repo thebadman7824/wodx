@@ -4,6 +4,7 @@ import * as eras from "./eras.mjs";
 import * as church from "./church.mjs";
 import * as conditions from "./conditions.mjs";
 import * as W from "./when-rules.mjs";
+import {whenFeats} from "./traits.mjs";
 
 /**
  * WoDX Chronicle 0.14.0: "Only when" and "Then" lists on the Foundry side. when-rules.mjs holds the language; this
@@ -76,6 +77,7 @@ export function actorContext(actor) {
     items: [...(actor.items ?? [])].map(i => i.name),
     codex: codex ? [...(codex.pages ?? [])].map(p => p.name) : [],
     conditions: [...conds],
+    ...(() => { try { return whenFeats(actor); } catch (e) { return {feats: [], powers: []}; } })(),
     traits: {
       blood: num(adv.bloodpool?.temporary), willpower: num(adv.willpower?.temporary), rage: num(adv.rage?.temporary), gnosis: num(adv.gnosis?.temporary),
       glamour: num(adv.glamour?.temporary), banality: num(adv.banality?.temporary), quintessence: num(s.quintessence?.temporary ?? adv.quintessence?.temporary),
@@ -148,6 +150,23 @@ export async function run(text, opts = {}) {
         if ( !actor ) { skipped.push("standing: no character"); continue; }
         const n = await fx.adjustPeople(a.faction, actor.id, {delta: a.delta, to: a.to});
         if ( n === null || n === undefined ) { skipped.push(`standing: no faction called ${a.faction}`); continue; }
+      }
+      else if ( a.does === "fight" ) {
+        const fight = game.wodxCombat?.fight;
+        if ( !fight?.start ) { skipped.push("fight: WoDX Combat is off"); continue; }
+        const tok = opts.token?.document ?? opts.token ?? null;
+        if ( !tok || tok.parent?.id !== canvas?.scene?.id ) { skipped.push("fight: no character on the scene in view"); continue; }
+        const me = canvas.tokens.get(tok.id), npcApi = api("wodx-npc");
+        const per = ["ft", "feet", "foot", "'"].includes(String(canvas.scene.grid?.units ?? "").toLowerCase()) ? 3 : 1;
+        const npcs = canvas.tokens.placeables.filter(t => t.actor && t.id !== tok.id && !t.actor.hasPlayerOwner && !t.document.hidden).map(t => {
+          let yards = null; try { yards = canvas.grid.measurePath([me.center, t.center]).distance / per; } catch (e) { /* none */ }
+          return {id: t.id, name: t.name, household: t.actor.getFlag?.("wodx-npc", "behavior")?.household ?? "", step: npcApi?.attitude?.of?.(t.actor, actor)?.step ?? 0, yards};
+        });
+        let reach = 30; try { reach = Number(game.settings.get("wodx-combat", "fightSightYards")) || 30; } catch (e) { /* default */ }
+        const foes = W.fightFoes(a.text, npcs, {reach});
+        if ( !foes.length ) { skipped.push(`fight: no one here to fight${a.text ? ` (${a.text})` : ""}`); continue; }
+        const r = await fight.start({scene: canvas.scene, tokens: [tok.id, ...foes], source: "outcome", why: `${vars.name} at ${vars.place}`});
+        if ( r?.done === "off" ) { skipped.push("fight: fights are set to start by hand"); continue; }
       }
       else if ( a.does === "ledger" ) {
         const st = api("wodx-storyteller");

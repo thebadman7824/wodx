@@ -80,3 +80,11 @@
 /* Queue relief: the kinds approved on their own, in a box of their own */
 .wodx-approvals .wodx-standing h3 { margin: 0.6em 0 0.2em; font-size: 1em; }
 .wodx-approvals .wodx-autolist { max-height: 11em; overflow-y: auto; }
+
+/* The crossover referee (0.17.0) */
+.wodx-referee .wodx-referee-case { border-left: 3px solid var(--wodx-line); padding-left: 0.5rem; }
+.wodx-referee .wodx-verdict-fails { border-left-color: var(--wodx-alert); }
+.wodx-referee .wodx-verdict-works { border-left-color: #7fb77e; }
+.wodx-referee .wodx-verdict-roll, .wodx-referee .wodx-verdict-resisted { border-left-color: var(--wodx-accent); }
+.wodx-referee .wodx-referee-all { margin-top: 0.75rem; }
+.wodx-referee .wodx-referee-list > li { padding: 0.35rem 0; }

@@ -202,6 +202,8 @@ export default class ActionHelper {
 			
 			// used a Rote
 			if (dataset.object == "wod.types.rote") {
+				// WoDX: the WoDX Cast window takes a Mage 20th caster's Rote (keywords, Paradox, what it does on the table)
+				if (game.wodxActions?.m20CastRote?.(actor, item) === true) return;
 				const rote = new Rote(item);
 				let areteCasting = new DialogAreteCasting(actor, rote);
 				areteCasting.render(true);

@@ -4,7 +4,7 @@ const L={vg:'Vampire',wa:'Werewolf',ma:'Mage',wj:'Wraith',cj:'Changeling',dj:'De
 const TOTAL={vg:4,wa:4,ma:5,wj:2,cj:5,dj:3,hj:3,kj:3,mj:4,oj:2};
 const C=[
 {id:'k1',title:'The Seventh Storm',pitch:'The dead go first. The Tempest that began under the glass in 1997 breaks loose, and every ending after it rides the storm out of the Underworld.',end:'The darkest Cascade. The world that survives is one where life and death are no longer separate, and most of the old powers are gone.',steps:[
-['wj1','The Seventh Maelstrom takes the Rhineland, the Hierarchy\'s last fortress, and throws thousands of the dead into the Skinlands.'],
+['wj1','The Seventh Maelstrom takes Moravia, the Hierarchy\'s last fortress, and throws thousands of the dead into the Skinlands.'],
 ['oj1','To keep rebel Malfeans off her greatest anchor in the storm, Grandmother turns a Spectre hive inside out under Night City. The Maelstrom floods up through the projection parlours.'],
 ['mj4','Eurydice uses the breach to finish what seventy years of projection began and tears the Shroud down.'],
 ['mj1','With the Shroud gone, the Serpent\'s power fills Eurydice, and Apophis rises against the Duat.'],
@@ -51,7 +51,7 @@ const C=[
 ['mj3','The Empress\'s rise opens the way for Yomi. The Wu T\'ian make their last stand in Hong Kong.'],
 ['mj1','Eurydice, swollen with the Net\'s dead, carries the Serpent\'s power into the Duat, and Apophis rises.'],
 ['ma1','The Tenth Sphere\'s judgement falls on a world where few still believe in wonder.'],
-['wj1','The Serpent wakes the Tempest. The Seventh Maelstrom takes the Rhineland.'],
+['wj1','The Serpent wakes the Tempest. The Seventh Maelstrom takes Moravia.'],
 ['oj1','Grandmother breaches the Stormwall under Night City to protect her anchor from the storm.'],
 ['oj2','The banned projectors and the legal ghosts go into the Labyrinth together for the relic that can end it.'],
 ['wj2','The dead in the Net\'s Necropoli outlast the Shadowlands and start again.']]},
@@ -77,7 +77,7 @@ const C=[
 ['mj1','The Serpent\'s power fills Eurydice and Apophis rises.'],
 ['ma4','After the judgement, magick ebbs out of the world, and Enlightened Science with it.'],
 ['dj1','The Earthbound, starved of faith in a world that saw heaven move, unite against the Fallen.'],
-['wj1','The Earthbound war wakes the Tempest. The Seventh Maelstrom takes the Rhineland.'],
+['wj1','The Earthbound war wakes the Tempest. The Seventh Maelstrom takes Moravia.'],
 ['oj1','Grandmother breaches the Stormwall under Night City.'],
 ['oj2','Projectors raid her Memory Tower for God\'s Arrow before she grows too strong.'],
 ['wj2','The flood of new dead finds homes in the Necropoli of the Net and the cities.']]},
@@ -103,7 +103,7 @@ const C=[
 ['ma5','The Nephandi, who held Lilith\'s oldest paper, call it in. The Descent begins.'],
 ['mj1','The Serpent\'s power fills Eurydice and Apophis rises.'],
 ['mj4','Eurydice tears down the Shroud.'],
-['wj1','The Seventh Maelstrom takes the Rhineland.'],
+['wj1','The Seventh Maelstrom takes Moravia.'],
 ['oj1','Grandmother breaches the Stormwall under Night City to protect her anchor from the war above.'],
 ['oj2','The projectors go into the Labyrinth for the relic that can end it.'],
 ['wj2','The dead watch the living trade the world away, and start again.']]},
@@ -129,7 +129,7 @@ const C=[
 ['dj2','The Morningstar returns to a world that has seen everything else, and the Fallen must choose.'],
 ['vg3','The surviving Ancients gather at the basalt throne. Saulot\'s atonement brings the sun.'],
 ['ma2','The Union sells the survivors a future, and in the ruins they buy it.'],
-['wj1','The war in the Labyrinth wakes the Tempest. The Seventh Maelstrom takes the Rhineland.'],
+['wj1','The war in the Labyrinth wakes the Tempest. The Seventh Maelstrom takes Moravia.'],
 ['oj1','Grandmother breaches the Stormwall under Night City.'],
 ['oj2','Projectors go into the Labyrinth for the relic that can end the Spectre war.'],
 ['wj2','The dead rebuild in the Necropoli of the Net and the cities.']]}

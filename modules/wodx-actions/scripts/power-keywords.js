@@ -1,0 +1,295 @@
+/**
+ * WoDX Actions 3.30.0: which effect keywords each power uses (B781), so every line's powers read one roster
+ * (effects-rules.js KEYWORDS). Keys are the power ids in this module's data files:
+ *   disc      data/disciplines-daw.json (V20 Dark Ages Disciplines; path powers read PATH_EFFECTS in path-effects.js)
+ *   gift      data/gifts-daw.json (Dark Ages: Werewolf Gifts)
+ *   wraith    data/arcanoi-w20.json (Wraith 20th Arcanoi)
+ *   greatwar  data/arcanoi-gw.json (Wraith: The Great War Arcanoi)
+ * Each entry is [keywords] or [keywords, 1] for an always-on power (passive). The first keyword is the main one.
+ * Labels only: what a power does on the table still comes from its own roll card. Worked out from each power's
+ * summary and, for the elder powers, the page check of 11 November 2026 (keyword-roster-book-check-A).
+ */
+import { PATH_EFFECTS } from "./path-effects.js";
+import { KEYWORDS } from "./effects-rules.js";
+import { LINE_KEYWORDS } from "./power-keywords-lines.js";
+
+export const POWER_KEYWORDS = {
+  disc: {
+    "abombwe-predators-communion": [["sense"]], "abombwe-invoking-the-predator": [["boost","harm"]], "abombwe-unseen-hibernation": [["veil"]],
+    "abombwe-power-from-darkness": [["boost"]], "abombwe-predators-transformation": [["shape"]], "animalism-whispers-to-the-wild": [["speak"]],
+    "animalism-call-the-wild": [["summon"]], "animalism-song-of-serenity": [["fear"]], "animalism-subsume-the-spirit": [["possess"]],
+    "animalism-unleash-the-beast": [["fear"]], "auspex-heightened-senses": [["sense"],1], "auspex-read-the-soul": [["know"]],
+    "auspex-the-spirits-touch": [["know"]], "auspex-invade-the-mind": [["know","speak"]], "auspex-souls-flight": [["sense","veil"]],
+    "bardo-restore-humanitas": [["mend"]], "bardo-banishing-sign-of-thoth": [["banish"]], "bardo-gift-of-apis": [["charge"]],
+    "bardo-pillar-of-osiris": [["place"]], "bardo-revelation": [["fear"]], "chimerstry-ignis-fatuus": [["illusion"]],
+    "chimerstry-chimaera": [["illusion"]], "chimerstry-phantasm": [["illusion"]], "chimerstry-permanency": [["illusion"]],
+    "chimerstry-horrid-reality": [["illusion","harm"]], "daimoinon-sense-the-sin": [["know"]], "daimoinon-fear-of-the-void": [["fear"]],
+    "daimoinon-tormented-essence": [["harm"]], "daimoinon-psychomachia": [["bind"]], "daimoinon-condemnation": [["fortune"]],
+    "dementation-incubus-humor": [["sway"]], "dementation-soul-haunting": [["bind"]], "dementation-eyes-of-chaos": [["know"]],
+    "dementation-fire-voice": [["bind"]], "dementation-shedding-the-mask": [["bind"]], "dominate-command": [["sway"]],
+    "dominate-mesmerize": [["sway"]], "dominate-the-forgetful-mind": [["bind"]], "dominate-conditioning": [["bind"]],
+    "dominate-possession": [["possess"]], "mytherceria-folderol": [["know"],1], "mytherceria-fae-sight": [["sense"],1],
+    "mytherceria-aura-absorption": [["know"]], "mytherceria-changeling-ward": [["banish"]], "mytherceria-the-riddle-phantastique": [["hold"]],
+    "obfuscate-the-silence-of-death": [["veil"]], "obfuscate-unseen-presence": [["veil"]], "obfuscate-mask-of-a-thousand-faces": [["illusion"]],
+    "obfuscate-vanish-from-the-minds-eye": [["veil"]], "obfuscate-cloak-the-gathering": [["veil"]], "obtenebration-shadow-play": [["boost","light"]],
+    "obtenebration-nocturne": [["light"]], "obtenebration-arms-of-ahriman": [["hold","harm"]], "obtenebration-nightshades": [["illusion","light"]],
+    "obtenebration-tenebrous-avatar": [["shape","ward"]], "ogham-consecration-of-esus": [["place"]], "ogham-woad-of-teutates": [["ward","boost"]],
+    "ogham-mhallacht-of-the-cyoeraeth": [["fortune"]], "ogham-woad-of-taranis": [["fortune"]], "ogham-thirst-of-donn": [["charge"]],
+    "presence-awe": [["sway"]], "presence-dread-gaze": [["fear"]], "presence-entrancement": [["bind"]],
+    "presence-summon": [["summon"]], "presence-majesty": [["sway"],1], "protean-eyes-of-the-beast": [["sight"]],
+    "protean-feral-weapons": [["harm"]], "protean-earth-meld": [["veil","ward"]], "protean-shape-of-the-beast": [["shape"]],
+    "protean-lurking-mists": [["shape","ward"]], "quietus-cruscitus-blood-essence": [["know","charge"]], "quietus-cruscitus-scorpions-touch": [["harm","boost"]],
+    "quietus-cruscitus-dagons-call": [["harm"]], "quietus-cruscitus-baals-caress": [["harm"]], "quietus-cruscitus-quicken-the-mortals-blood": [["charge"]],
+    "quietus-hematus-blood-tempering": [["imbue"]], "quietus-hematus-truth-of-blood": [["know"]], "quietus-hematus-cleansed-in-blood": [["banish"]],
+    "quietus-hematus-ripples-of-the-heart": [["sway"]], "quietus-hematus-blood-sweat": [["charge"]], "serpentis-enchanting-gaze": [["boost","hold"]],
+    "serpentis-typhonic-maw": [["harm"]], "serpentis-serpents-flesh": [["ward"]], "serpentis-typhonic-avatar": [["shape"]],
+    "serpentis-mother-of-monsters": [["summon"]], "spiritus-aid-from-spirits": [["boost"]], "spiritus-summon-spirit-beast": [["summon"]],
+    "spiritus-aspect-of-the-beast": [["shape","boost"]], "spiritus-beastly-hunger": [["charge"]], "spiritus-the-wild-beast": [["shape","boost"]],
+    "temporis-hourglass-of-the-mind": [["know"],1], "temporis-locked-contemplation": [["hasten"]], "temporis-leaden-movement": [["hasten"]],
+    "temporis-patience-of-the-norns": [["hasten"]], "temporis-clothos-gift": [["hasten"]], "valeren-healer-sense-vitality": [["know"]],
+    "valeren-healer-gift-of-sleep": [["boost","hold"]], "valeren-healer-healers-touch": [["mend"]], "valeren-healer-shepherds-watch": [["ward"]],
+    "valeren-healer-unburden-the-bestial-soul": [["mend"]], "valeren-warrior-sense-death": [["sense"]], "valeren-warrior-morphean-blow": [["boost","hold"]],
+    "valeren-warrior-burning-touch": [["harm"]], "valeren-warrior-armor-of-caines-fury": [["ward","light"]], "valeren-warrior-ending-the-watch": [["harm"]],
+    "valeren-watcher-sense-cycle": [["know"]], "valeren-watcher-peaceful-touch": [["fortune"]], "valeren-watcher-pariahs-caress": [["sway"]],
+    "valeren-watcher-peacemaker": [["place","fear"]], "valeren-watcher-souls-breath": [["free"]], "vicissitude-malleable-visage": [["shape"]],
+    "vicissitude-transmogrify-the-mortal-clay": [["shape"]], "vicissitude-rend-the-osseous-frame": [["harm","shape"]], "vicissitude-awaken-the-zulo-shape": [["shape","boost"]],
+    "vicissitude-the-body-impolitic": [["summon"]], "abyss-mysticism-pierce-the-veil": [["know"]], "abyss-mysticism-eyes-of-the-abyss": [["sight"]],
+    "abyss-mysticism-subsume-the-darkness": [["shape","ward"]], "abyss-mysticism-calling-the-hungry-shade": [["summon"]], "abyss-mysticism-the-third-eye-of-abyssal-sight": [["sight","sense"]],
+    "abyss-mysticism-reflections-of-hollow-revelation": [["know"]], "abyss-mysticism-whispers-in-the-dark": [["speak"]], "celerity-1": [["hasten","boost"],1],
+    "celerity-2": [["hasten","boost"],1], "celerity-3": [["hasten","boost"],1], "celerity-4": [["hasten","boost"],1],
+    "celerity-5": [["hasten","boost"],1], "fortitude-1": [["ward","boost"],1], "fortitude-2": [["ward","boost"],1],
+    "fortitude-3": [["ward","boost"],1], "fortitude-4": [["ward","boost"],1], "fortitude-5": [["ward","boost"],1],
+    "potence-1": [["boost"],1], "potence-2": [["boost"],1], "potence-3": [["boost"],1],
+    "potence-4": [["boost"],1], "potence-5": [["boost"],1], "abombwe-incarnate-darkness": [["shape","rise"]],
+    "animalism-animal-succulence": [["charge"],1], "animalism-the-twin-souls": [["know","bind"]], "animalism-the-tongue-of-beasts": [["speak"],1],
+    "animalism-beast-shard": [["fear"]], "animalism-the-devils-claws": [["fear"]], "animalism-the-beasts-quills": [["ward"]],
+    "animalism-plague-of-beasts": [["summon","sway"]], "auspex-far-sense": [["sense"]], "auspex-the-hearts-desire": [["know","boost"]],
+    "auspex-soul-bond": [["bind"]], "auspex-anticipate-victory": [["boost"]], "auspex-brutal-ecstasy": [["boost"],1],
+    "auspex-a-gathering-of-souls": [["sideways"]], "auspex-omniscience": [["sense","know"]], "auspex-souls-sword": [["harm"]],
+    "auspex-false-slumber": [["sense"],1], "bardo-boon-of-anubis": [["ward"]], "celerity-momentum": [["boost","trip"]],
+    "celerity-precision": [["boost"]], "celerity-projectile": [["boost","harm"]], "celerity-flower-of-death": [["boost"]],
+    "celerity-quickness": [["hasten"]], "celerity-physical-defiance": [["move"]], "celerity-time-out-of-time": [["hasten"]],
+    "chimerstry-fatuus-mastery": [["illusion"],1], "chimerstry-shared-nightmare": [["illusion","fear"]], "chimerstry-blade-of-the-demons": [["illusion","harm"]],
+    "chimerstry-far-fatuus": [["illusion"]], "chimerstry-interrupt-reality": [["illusion","banish"]], "chimerstry-visions-from-the-asura": [["illusion","bind"]],
+    "chimerstry-synesthesia": [["illusion","boost"]], "chimerstry-fabrication": [["illusion","make"]], "daimoinon-hell-born-investiture": [["ward"]],
+    "daimoinon-lure-diabolik": [["sway"]], "daimoinon-bring-the-plague": [["harm","mend"]], "daimoinon-demonic-servitor": [["summon"]],
+    "daimoinon-call-forth-the-herald-of-hell": [["summon"]], "daimoinon-adramelechs-wrath": [["sway","fear"]], "daimoinon-spew-wide-the-pit": [["free"]],
+    "dementation-the-call": [["speak"]], "dementation-stain-the-soul": [["bind"]], "dementation-cobble-the-road": [["bind"]],
+    "dementation-the-sword-of-malkav": [["bind"]], "dementation-prison-of-the-mind": [["hold","bind"]], "dementation-brothers-gift": [["mend","banish"]],
+    "dominate-chain-the-psyche": [["hold"]], "dominate-obedience": [["sway"],1], "dominate-loyalty": [["ward"],1],
+    "dominate-mass-manipulation": [["sway"]], "dominate-still-the-mortal-flesh": [["hold"]], "dominate-far-mastery": [["sway"]],
+    "dominate-speak-through-the-blood": [["sway"]], "fortitude-the-knights-bane": [["ward","work"]], "fortitude-the-blessing-of-vitality": [["boost"]],
+    "fortitude-armored-flesh": [["ward"]], "mytherceria-steal-the-mind": [["know"]], "obfuscate-mask-the-devil": [["veil"],1],
+    "obfuscate-fortress-of-silence": [["veil"]], "obfuscate-reaper-of-the-heart": [["illusion"]], "obfuscate-obscure-gods-creation": [["bind","veil"]],
+    "obtenebration-the-darkness-within": [["fear"]], "obtenebration-walk-the-abyss": [["move"]], "obtenebration-shadow-twin": [["summon"]],
+    "obtenebration-oubliette": [["hold"]], "obtenebration-ahrimans-demesne": [["harm","place"]], "potence-crush": [["work","harm"]],
+    "potence-brutality": [["harm"],1], "potence-aftershock": [["harm"]], "presence-kingmaker": [["boost"]],
+    "presence-love": [["bind"]], "presence-paralyzing-glance": [["hold","fear"]], "presence-spark-of-rage": [["fear"]],
+    "presence-cooperation": [["sway"]], "presence-ironclad-command": [["sway"],1], "presence-pulse-of-the-people": [["sway"]],
+    "protean-adaptation": [["ward"]], "protean-earth-control": [["move","sense"]], "protean-ephemeral-slumber": [["ward"]],
+    "protean-flesh-of-marble": [["ward"]], "protean-lokis-gift": [["shape"]], "protean-reversion-to-the-true-form": [["shape"]],
+    "protean-deaths-hidden-crawl": [["move"],1], "protean-shape-of-the-beasts-wrath": [["shape","boost"]], "protean-spectral-body": [["shape","ward"]],
+    "protean-purify-the-impaled-breast": [["mend"]], "protean-draught-of-phoenix-blood": [["mend"],1], "quietus-cruscitus-taste-of-death": [["harm"]],
+    "quietus-cruscitus-rapturous-touch": [["charge"],1], "quietus-cruscitus-blood-of-destruction": [["harm"]], "quietus-cruscitus-weaken-the-blood": [["boost"]],
+    "quietus-hematus-blood-awakening": [["know"]], "quietus-hematus-dam-the-hearts-river": [["charge"]], "quietus-hematus-songs-of-distant-vitae": [["possess"]],
+    "quietus-hematus-condemn-the-sins": [["harm"]], "serpentis-cerberuss-fury": [["hasten","shape"]], "serpentis-godhead": [["boost"]],
+    "serpentis-echidnas-venom": [["harm","hold"]], "serpentis-form-of-the-storm": [["shape","weather"]], "spiritus-the-spirit-beast": [["shape","ward"]],
+    "temporis-kiss-of-lachesis": [["time","harm"]], "temporis-cheat-the-fates": [["fortune"]], "temporis-clios-kiss": [["time"]],
+    "valeren-healer-fathers-judgment": [["bind"]], "valeren-healer-blissful-gaze": [["mend"]], "valeren-healer-rayzeels-song": [["fear"]],
+    "valeren-healer-heavens-gate": [["mend"]], "valeren-warrior-samiels-vengeance": [["boost","harm"]], "valeren-warrior-dream-combat": [["sideways","harm"]],
+    "valeren-warrior-fiery-agony": [["harm"]], "valeren-warrior-song-of-the-blooded": [["free"]], "valeren-watcher-safe-passage": [["ward","fortune"],1],
+    "valeren-watcher-aversion": [["sway","fortune"]], "valeren-watcher-purification": [["banish"]], "valeren-watcher-soul-exchange": [["possess"]],
+    "vicissitude-chiropteran-marauder": [["shape","rise"]], "vicissitude-blood-of-the-earth": [["ward"],1], "vicissitude-sublimation-of": [["harm"]],
+    "vicissitude-the-last-dracul": [["shape","boost"]], "abyss-mysticism-into-the-chasm": [["sideways","summon"]], "abyss-mysticism-evocation-of-the-oubliette": [["harm"]],
+    "abyss-mysticism-cry-that-slays-the-light": [["free"]]
+  },
+  gift: {
+    "artisans-command": [["work"]], "aura-of-confidence": [["veil"]], "beast-speech": [["speak"]],
+    "blur-of-the-milky-eye": [["veil"]], "breath-of-the-wyld": [["boost"]], "call-of-the-wyld": [["sway"]],
+    "cookery": [["make"]], "create-element": [["make"]], "distract-the-fool": [["sway"]],
+    "eves-blessing": [["ward","mend"]], "eye-of-the-falcon": [["boost"],1], "faerie-light": [["light"]],
+    "falling-touch": [["trip"]], "fatal-flaw": [["know","boost"]], "gift-of-salt": [["imbue"]],
+    "hares-leap": [["rise"]], "heavens-guidance": [["sense"]], "heightened-senses": [["sense"],1],
+    "hunters-harmony": [["speak"]], "inspiration": [["boost"]], "lambent-flame": [["light","fortune"]],
+    "ley-lines": [["sense"]], "mans-skin": [["shape","illusion"]], "master-of-fire": [["ward"]],
+    "mothers-touch": [["mend"]], "persuasion": [["boost"]], "preys-cry": [["illusion"]],
+    "razor-claws": [["harm","boost"]], "resist-pain": [["boost"]], "resist-toxin": [["ward"]],
+    "scent-of-running-water": [["veil"],1], "scent-of-the-honeycomb": [["sense"]], "scent-of-the-true-form": [["sense"]],
+    "seizing-the-edge": [["fortune"]], "sense-wyrm": [["sense"]], "shed": [["boost"]],
+    "smell-of-man": [["sway"]], "snow-running": [["move","veil"]], "speed-of-thought": [["hasten"]],
+    "spirit-speech": [["speak"]], "truth-of-gaia": [["know"]], "visage-of-fenris": [["boost","fortune"]],
+    "waking-dream": [["sideways"]], "wolf-at-the-door": [["fear"]], "beastmind": [["bind"]],
+    "blissful-ignorance": [["veil"]], "call-of-the-wyrm": [["summon"]], "call-to-duty": [["summon"]],
+    "clap-of-thunder": [["hold"]], "command-spirit": [["sway"]], "cornered-rat": [["boost","fear"]],
+    "curse-of-aeolus": [["weather"]], "curse-of-hatred": [["charge"]], "distractions": [["boost"]],
+    "empathy": [["know"]], "grandmothers-touch": [["mend"]], "halt-the-cowards-flight": [["hasten"]],
+    "howl-of-the-banshee": [["fear"]], "lunas-armor": [["ward"]], "mask-the-predator": [["veil"]],
+    "messengers-fortitude": [["hasten"]], "plague-visage": [["illusion"]], "scent-of-sight": [["sense"]],
+    "sense-guilt": [["know"]], "sense-silver": [["sense"]], "sense-of-the-prey": [["sense"],1],
+    "sense-the-unnatural": [["sense"]], "sight-from-beyond": [["know"]], "speech-of-the-world": [["speak"]],
+    "spirit-of-the-fray": [["hasten"],1], "staredown": [["fear"]], "strength-of-purpose": [["mend"]],
+    "summon-talisman": [["summon"]], "true-fear": [["fear"]], "warriors-draught": [["boost","fear"]],
+    "call-the-rust": [["work"]], "calm-the-savage-beast": [["fear"]], "coup-de-grace": [["harm","boost"]],
+    "dazzle": [["sway"]], "devils-child": [["fear"]], "exceptional-swordplay": [["boost"]],
+    "expel-spirit": [["banish"]], "eye-of-the-asp": [["sway"]], "eyes-of-the-cat": [["sight"]],
+    "faerie-aid": [["summon"]], "flames-of-hestia": [["mend","work"]], "fleet-footed": [["ward"]],
+    "friend-in-need": [["charge"]], "great-leap": [["rise"]], "heart-of-fury": [["boost"]],
+    "mental-speech": [["speak"]], "might-of-thor": [["boost"]], "name-the-spirit": [["know"]],
+    "open-moon-bridge": [["place","move"]], "pulse-of-the-invisible": [["sense"]], "ravens-curse": [["fortune"]],
+    "redirect-pain": [["boost"]], "reshape-object": [["make"]], "reynards-lie": [["sway"]],
+    "shadow-cutting": [["harm"]], "silver-claws": [["harm"]], "snap-mans-chains": [["sway"]],
+    "song-of-rage": [["fear"]], "spirit-friend": [["boost"]], "spirit-witness": [["know"]],
+    "tongues": [["speak"]], "trackless-waste": [["place"]], "warriors-eye": [["boost"]],
+    "woadling": [["summon"]], "wrath-of-gaia": [["fear"]], "angels-semblance": [["sway"]],
+    "attunement": [["know"]], "balors-gaze": [["hold"]], "beast-life": [["speak","summon"]],
+    "berserkers-song": [["fear"]], "blink": [["move"]], "body-wrack": [["hold","boost"]],
+    "bow-of-pegasus": [["boost"]], "bury-the-wolf": [["veil"]], "claws-of-the-glassblower": [["harm"]],
+    "dam-the-heartflood": [["banish"]], "dolorous-stroke": [["harm"]], "doppelganger": [["illusion","shape"]],
+    "full-moons-light": [["light","sense"]], "gift-of-the-porcupine": [["ward","harm"]], "gnaw": [["work","harm"]],
+    "gorge": [["charge"]], "grasp-the-beyond": [["sideways"]], "iron-cannot-pierce": [["ward"]],
+    "lepers-curse": [["harm"]], "lordly-will": [["ward"]], "lunas-blessing": [["ward"]],
+    "quicksand": [["hold","place"]], "roll-over": [["sway"]], "scent-of-beyond": [["sense"]],
+    "semblance": [["illusion"]], "shadows-by-the-firelight": [["sway"]], "sidestep-death": [["ward"]],
+    "song-of-mockery": [["know"]], "speed-beyond-thought": [["move"]], "spirit-ward": [["ward","boost"]],
+    "spirit-wassail": [["charge"]], "stoking-furys-furnace": [["charge"],1], "strength-of-the-dominator": [["charge"]],
+    "wither-limb": [["harm","boost"]], "assimilation": [["veil"]], "blaze-of-glory": [["harm"]],
+    "call-for-vengeance": [["charge"]], "chimerical-form": [["shape"]], "command-the-blaze": [["work"]],
+    "dream-golem": [["make"]], "earthfriends-pact": [["trip"]], "elemental-gift": [["weather","work"]],
+    "false-comfort": [["ward"]], "fog-on-the-moor": [["shape","ward"]], "gaias-vengeance": [["free"]],
+    "gate-of-the-moon": [["move"]], "gaze-of-the-gorgon": [["hold"]], "geas": [["bind"]],
+    "gift-of-the-spriggan": [["shape","boost"]], "halo-of-the-sun": [["harm"]], "horde-of-valhalla": [["summon"]],
+    "kiss-of-helios": [["ward"]], "lunas-avenger": [["ward","harm"]], "madness": [["bind"]],
+    "malleable-spirit": [["shape"]], "maw-of-the-whale": [["hold"]], "nightmare-possession": [["harm"]],
+    "obedience": [["sway"]], "paws-of-the-newborn-cub": [["banish"]], "reach-the-umbra": [["sideways"],1],
+    "shadow-pack": [["summon"]], "share-the-wolfs-skin": [["shape"]], "song-of-the-great-beast": [["summon"]],
+    "strength-of-will": [["charge"]], "the-living-wood": [["summon","work"]], "thieving-talons-of-the-magpie": [["banish"]],
+    "totem-gift": [["free"]], "wyld-warp": [["summon"]]
+  },
+  wraith: {
+    "argos-weather-eye": [["sense"],1], "argos-enshroud": [["veil","boost"]], "argos-phantom-wings": [["rise"]],
+    "argos-wayfarers-resolve": [["ward"],1], "argos-flicker": [["move"]], "argos-turn-the-anemois-wrath": [["ward"]],
+    "argos-stormreader": [["move","sense"]], "argos-tempest-riders-canceleer": [["shape"]], "argos-oubliette": [["sideways","hold"]],
+    "argos-ma-tre-apr-s-dieu": [["work"]], "castigate-soulsight": [["know"]], "castigate-playing-with-fire": [["boost"]],
+    "castigate-bulwark": [["ward"]], "castigate-catechize": [["know"]], "castigate-purify": [["harm","banish"]],
+    "castigate-trimming-the-black-rose": [["banish"]], "castigate-get-thee-hence": [["banish","ward"]], "castigate-cooling-the-blood": [["bind"]],
+    "castigate-purge": [["banish"]], "castigate-defiance": [["ward"]], "embody-whispers": [["speak","manifest"]],
+    "embody-maintain-the-material-form": [["manifest"]], "embody-phantom": [["manifest"]], "embody-cache": [["manifest"]],
+    "embody-statue": [["manifest"]], "embody-skingrasp": [["manifest","work"]], "embody-life-in-death": [["manifest"]],
+    "embody-harrow-the-mortal-flesh": [["harm"]], "embody-shroudguide": [["manifest"]], "embody-materialize": [["manifest"]],
+    "fatalism-kismet": [["know"]], "fatalism-friendly-card": [["fortune"]], "fatalism-foreshadow": [["sense"]],
+    "fatalism-retrace": [["know"]], "fatalism-reading-the-bones": [["know"]], "fatalism-malocchio": [["fortune"]],
+    "fatalism-sidestep": [["ward"]], "fatalism-entangle": [["bind"]], "fatalism-breathing-the-mists": [["know"]],
+    "fatalism-ensnare": [["fortune"]], "flux-rot": [["work"]], "flux-sense-fluxion": [["sense"]],
+    "flux-reinforce": [["imbue","work"]], "flux-relic-dowsing": [["sense"]], "flux-non-euclidean-mechanics": [["make"]],
+    "flux-render-relic": [["charge","work"]], "flux-decay": [["work"]], "flux-sculpt-matters-memory": [["make"]],
+    "flux-a-memory-of-fire": [["know"]], "flux-reintegrate-relic": [["make"]], "inhabit-assume-the-shell": [["possess","veil"]],
+    "inhabit-reveal-rider": [["sense"]], "inhabit-misfire": [["work"]], "inhabit-forge-affinity": [["make"]],
+    "inhabit-claim-the-shell": [["possess"]], "inhabit-smiths-tenacity": [["ward"]], "inhabit-wire-rider": [["move","possess"]],
+    "inhabit-the-tool-knows-its-master": [["work"]], "inhabit-empower": [["imbue"]], "inhabit-compel-the-soulsteel": [["sway"]],
+    "intimation-impulse": [["know"]], "intimation-know-thyself": [["ward","sense"]], "intimation-excise": [["bind"]],
+    "intimation-launch-a-thousand-ships": [["sway"]], "intimation-unfold-the-animal-heart": [["know"]], "intimation-ignite": [["bind"]],
+    "intimation-apple-of-discord": [["sway"]], "intimation-two-fires": [["bind"]], "intimation-adrestias-communion": [["bind"]],
+    "intimation-a-single-thread": [["bind"]], "keening-hearing-voices": [["speak","illusion"]], "keening-sotto-voce": [["veil"]],
+    "keening-mood-music": [["sway"]], "keening-cacophony": [["hold","boost"]], "keening-siren-song": [["sway","hold"]],
+    "keening-crescendo": [["boost"]], "keening-satire": [["harm"]], "keening-banshee": [["fear"]],
+    "keening-requiem": [["hold"]], "keening-out-of-tune": [["banish"]], "lifeweb-sense-strands": [["sense"],1],
+    "lifeweb-vibrations-in-the-web": [["sense"]], "lifeweb-strand-channel": [["speak"]], "lifeweb-movement-in-the-web": [["sense"]],
+    "lifeweb-splice-strand": [["bind"]], "lifeweb-sever-strand": [["harm"]], "lifeweb-walk-the-web": [["move"]],
+    "lifeweb-web-parasite": [["charge"]], "lifeweb-souls-interwoven": [["bind"]], "lifeweb-master-in-the-web": [["sense"]],
+    "mnemosynis-keys-to-the-memory-palace": [["know"]], "mnemosynis-memory-vault": [["bind"]], "mnemosynis-washed-in-the-lethe": [["veil"]],
+    "mnemosynis-further-reflection": [["know"]], "mnemosynis-open-book": [["know"]], "mnemosynis-tabula-rasa": [["bind"]],
+    "mnemosynis-phantom-pain": [["harm"]], "mnemosynis-soulkeeper": [["know","charge"]], "mnemosynis-gray-man": [["veil"]],
+    "mnemosynis-muse-of-lies": [["bind"]], "moliate-imitate": [["shape","illusion"]], "moliate-shapesense": [["sense"]],
+    "moliate-sculpt": [["shape"]], "moliate-panoply-of-eyes": [["sense","shape"]], "moliate-unmarked": [["shape"]],
+    "moliate-armory": [["shape","ward"]], "moliate-rend": [["harm"]], "moliate-girding": [["ward","harm"]],
+    "moliate-bodyshape": [["shape"]], "moliate-savage": [["harm","shape"]], "outrage-taptap": [["manifest","work"]],
+    "outrage-stonehand-punch": [["harm"]], "outrage-wraithgrasp": [["work"]], "outrage-stonehand-parry": [["ward"]],
+    "outrage-wings-of-rage": [["hasten","rise"]], "outrage-tantrum": [["work","harm"]], "outrage-deaths-touch": [["harm"]],
+    "outrage-wyldfire": [["harm"]], "outrage-obliviate": [["harm"]], "outrage-anger-enough-for-two-worlds": [["place"]],
+    "pandemonium-weirdness": [["fortune"]], "pandemonium-postmortemscript": [["speak","manifest"]], "pandemonium-strange-ether": [["weather"]],
+    "pandemonium-taste-chaos": [["sense"]], "pandemonium-befuddlement": [["boost"]], "pandemonium-eschers-stair": [["move","place"]],
+    "pandemonium-foul-humor": [["make","fear"]], "pandemonium-grotesque-apparition": [["illusion","fear"]], "pandemonium-tesseract-bomb": [["place","harm"]],
+    "pandemonium-tempus-fugit": [["hasten"]], "phantasm-sleepsense": [["know"]], "phantasm-dreamreading": [["know"]],
+    "phantasm-dreamweaver": [["sway"]], "phantasm-morphean-embrace": [["speak","sideways"]], "phantasm-dream-sequence": [["veil"]],
+    "phantasm-deep-slumber": [["mend"]], "phantasm-phantasmagoria": [["illusion"]], "phantasm-oneirataxia": [["illusion","fear"]],
+    "phantasm-tableau-of-terror": [["hold"]], "phantasm-agon": [["harm"]], "puppetry-skinride": [["possess"]],
+    "puppetry-menagerie-mask": [["possess"]], "puppetry-masters-voice": [["speak","possess"]], "puppetry-twitch": [["possess"]],
+    "puppetry-admix-humors": [["possess"]], "puppetry-shared-blood-shared-breath": [["harm","mend"]], "puppetry-rein-in-the-mind": [["possess"]],
+    "puppetry-revivify": [["possess","summon"]], "puppetry-legion": [["possess"]], "puppetry-obliterate-the-soul": [["possess"]],
+    "usury-pathos-conduit": [["charge"]], "usury-appraisal": [["know"]], "usury-plasm-exchange": [["charge"]],
+    "usury-gray-ledger": [["know"]], "usury-corpus-conduit": [["charge"]], "usury-suspend": [["bind"]],
+    "usury-facilitate": [["charge"]], "usury-oblivions-seal": [["bind"]], "usury-invest": [["imbue"]],
+    "usury-arcanos-conduit": [["charge"]]
+  },
+  greatwar: {
+    "gw-argos-maelstrom-navigation": [["move","sense"]], "gw-argos-tempest-glimpse": [["sense"]], "gw-argos-enshroud": [["veil"]],
+    "gw-argos-storm-robes": [["ward"]], "gw-argos-flicker": [["move"]], "gw-argos-travel": [["move"]],
+    "gw-argos-maelstrom-bridge": [["place","weather"]], "gw-castigate-bulwark": [["ward"]], "gw-castigate-soulsight": [["know"]],
+    "gw-castigate-wrestle-the-devil": [["banish"]], "gw-castigate-faustian-rapport": [["boost"]], "gw-castigate-purify": [["banish"]],
+    "gw-castigate-purity-bulwark": [["place"]], "gw-castigate-defiance": [["banish"]], "gw-embody-ghostly-touch": [["manifest","work"]],
+    "gw-embody-maintain-the-material-form": [["manifest"]], "gw-embody-sense-embodiment": [["sense"]], "gw-embody-whispers": [["speak","manifest"]],
+    "gw-embody-phantom": [["manifest"]], "gw-embody-shadow-presence": [["manifest"]], "gw-embody-corpse": [["manifest","sideways"]],
+    "gw-embody-slip-the-lethan-bonds": [["sideways"]], "gw-fatalism-augur": [["know"]], "gw-fatalism-sensing-the-strands": [["know"]],
+    "gw-fatalism-foreshadow": [["sense"]], "gw-fatalism-interpretation": [["know"]], "gw-fatalism-presage": [["boost"]],
+    "gw-fatalism-luck": [["fortune"]], "gw-keening-perfect-pitch": [["sense"]], "gw-keening-sotto-voce": [["veil"]],
+    "gw-keening-dirge": [["sway"]], "gw-keening-ballad": [["sway"]], "gw-keening-muse": [["sway"]],
+    "gw-keening-brendan-s-lay": [["ward","move"]], "gw-keening-songs-of-the-living": [["harm"]], "gw-kinesis-sense-kinesis": [["sense"]],
+    "gw-kinesis-straddle": [["veil"]], "gw-kinesis-bind": [["work"]], "gw-kinesis-reliquary": [["imbue","ward"]],
+    "gw-kinesis-haywire": [["work"]], "gw-kinesis-claim": [["possess"]], "gw-kinesis-ludd-s-grip": [["work"]],
+    "gw-lifeweb-locate-fetter": [["sense"]], "gw-lifeweb-lifeline": [["bind","ward"]], "gw-lifeweb-fetter-sentry": [["ward"]],
+    "gw-lifeweb-splice-strand": [["bind"]], "gw-lifeweb-sever-strand": [["harm"]], "gw-lifeweb-torsion": [["hold"]],
+    "gw-lifeweb-haunt-a-vessel-war-art": [["imbue"]], "gw-lifeweb-bind-a-ship-s-crossing-war-art": [["sideways"]], "gw-argos-safe-passage-war-art": [["sideways"]],
+    "gw-moliate-glow": [["light"]], "gw-moliate-deathmasque": [["shape"]], "gw-moliate-the-shaper-s-eye": [["sense"]],
+    "gw-moliate-imitate": [["shape","illusion"]], "gw-moliate-sculpt": [["shape"]], "gw-moliate-martialry": [["shape","ward"]],
+    "gw-moliate-rend": [["harm"]], "gw-moliate-maelstrom-visage": [["ward"]], "gw-outrage-leap-of-rage": [["rise"]],
+    "gw-outrage-breath-of-the-grave": [["manifest","weather"]], "gw-outrage-rap": [["manifest"]], "gw-outrage-adamant-strike": [["harm"]],
+    "gw-outrage-death-s-touch": [["manifest","work"]], "gw-outrage-furious-spiral": [["work","harm"]], "gw-pandemonium-sense-chaos": [["sense"]],
+    "gw-pandemonium-bewilderment": [["boost"]], "gw-pandemonium-haunting": [["illusion","fear"]], "gw-pandemonium-wyldfire": [["harm"]],
+    "gw-pandemonium-foul-humor": [["make"]], "gw-pandemonium-tempus-fugit": [["hasten"]], "gw-phantasm-sift": [["sense"]],
+    "gw-phantasm-elysia": [["sideways"]], "gw-phantasm-lucidity": [["sway"]], "gw-phantasm-dreams-of-sleep": [["hold"]],
+    "gw-phantasm-dream-canvas": [["sway"]], "gw-phantasm-dream-cloak": [["ward"]], "gw-puppetry-detect-possession": [["sense"]],
+    "gw-puppetry-skinride": [["possess"]], "gw-puppetry-spasm": [["possess"]], "gw-puppetry-ventriloquy": [["speak","possess"]],
+    "gw-puppetry-anesthesia": [["possess"]], "gw-puppetry-obliterate-the-soul": [["possess"]], "gw-usury-assessment": [["know"]],
+    "gw-usury-transfer": [["charge"]], "gw-usury-charity": [["mend"]], "gw-usury-withdrawal": [["charge","harm"]],
+    "gw-usury-danegeld": [["ward"]], "gw-usury-lien": [["bind"]], "gw-flux-grave-mold": [["work"]],
+    "gw-flux-sense-fluxion": [["know"]], "gw-flux-rot": [["work"]], "gw-flux-white-stone": [["imbue"]],
+    "gw-flux-black-stone": [["work"]], "gw-flux-racing-corruption": [["work"]], "gw-flux-automaton": [["make","boost"]],
+    "gw-intimation-twinge": [["know"]], "gw-intimation-self-intimation": [["ward"]], "gw-intimation-the-gleaming": [["sway"]],
+    "gw-intimation-quash": [["bind"]], "gw-intimation-deepest-desires": [["know"]], "gw-intimation-cravings": [["bind"]],
+    "gw-intimation-cupitatis": [["bind"]]
+  }
+};
+
+/**
+ * The keywords of one power: {keywords, passive} or null when the power is not listed. set: disc | gift | wraith |
+ * greatwar, or one of the line sets in power-keywords-lines.js (v20, w20, c20, htr, dtf, mummy, orpheus), where id may
+ * be the power's name. A Dark Ages path power not listed here reads its keyword from PATH_EFFECTS.
+ */
+export function keywordsOf(set, id) {
+  const line = LINE_KEYWORDS[set];
+  if ( line ) {
+    const l = line[id] ?? line[slugOf(id)];
+    return l ? {keywords: l.k.filter(k => KEYWORDS[k]), passive: l.p === 1, name: l.n} : null;
+  }
+  const e = POWER_KEYWORDS[set]?.[id];
+  if ( e ) return {keywords: e[0].filter(k => KEYWORDS[k]), passive: e[1] === 1};
+  if ( set === "disc" && PATH_EFFECTS[id] ) return {keywords: [PATH_EFFECTS[id].kw].filter(k => KEYWORDS[k]), passive: false};
+  return null;
+}
+
+/** How many powers use each keyword (for the coverage test and the Storyteller guide). */
+export function keywordCounts() {
+  const out = {};
+  for ( const set of Object.values(POWER_KEYWORDS) ) for ( const [ks] of Object.values(set) ) for ( const k of ks ) out[k] = (out[k] ?? 0) + 1;
+  for ( const set of Object.values(LINE_KEYWORDS) ) for ( const {k: ks} of Object.values(set) ) for ( const k of ks ) out[k] = (out[k] ?? 0) + 1;
+  return out;
+}
+
+/** A power name as a line-set key: "Rattler's Bite" -> "rattlers-bite". */
+export const slugOf = (name = "") => String(name).toLowerCase().replace(/'/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/** The powers of one line set that use a keyword, as names (for the Storyteller guide). */
+export { LINE_KEYWORDS };
+export function powersWith(set, key) {
+  return Object.values(LINE_KEYWORDS[set] ?? {}).filter(e => e.k.includes(key)).map(e => e.n);
+}

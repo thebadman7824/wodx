@@ -1,5 +1,7 @@
 /**
- * WoDX shared actor profiles (identical copy ships in WoDX Combat and WoDX Actions). Ported from vtda20 2.2.1.
+ * WoDX shared actor profiles (a copy ships in WoDX Combat and in WoDX Actions). Ported from vtda20 2.2.1.
+ * The two copies hold the same profiles, resources and shared functions; a harness test keeps them equal. The
+ * Actions copy alone adds the line look to its dialogs (setLine, currentLine), which only Actions calls.
  *
  * A "profile" decides which combat menu, soak model and action menu an actor gets.
  * Detection order:

@@ -135,6 +135,13 @@ def meander(R, th, length, B, K):
         i += 1
     return pts, oxbows
 
+def grown_margin(year):
+    """Room round the old town for what later eras build outside it: mills and schools on the roads out,
+    then estates of panel blocks. None (no era given) keeps the medieval map."""
+    if not year: return 0
+    return 0 if year < 1840 else 6 if year < 1900 else 12 if year < 1950 else 18
+
+
 class OrganicTown(T.Town):
     def __init__(self, seed, size, name=None, night=True, walls=None, river=None, year=None, part=None, land=None):
         self.R = R = C.R
@@ -150,7 +157,7 @@ class OrganicTown(T.Town):
         inner_pts = [lay.pt(v) for p in lay.inner for v in p["v"]]
         x0, x1 = min(p[0] for p in inner_pts), max(p[0] for p in inner_pts)
         y0, y1 = min(p[1] for p in inner_pts), max(p[1] for p in inner_pts)
-        m = cfg["margin"]
+        m = cfg["margin"] + grown_margin(year)
         self.cols, self.rows = math.ceil((x1 - x0) * s + 2 * m), math.ceil((y1 - y0) * s + 2 * m)
         mx = my = m
         if part:                                              # even parts: shift the town so no line crosses the market
@@ -1233,8 +1240,9 @@ class OrganicTown(T.Town):
             if not overlaps(b.rect, win) or not (self.mine(b, pt) or T.inside(b.rect[0], b.rect[1], win, .01) and T.inside(b.rect[0] + b.rect[2], b.rect[1] + b.rect[3], win, .01)): continue
             ops = [(k, x, y, None) for k, x, y, _ in b.openings_world()]
             wt = getattr(b, "wall_tex", None) or b.t["wall"]
-            walls.append(wall_with_portals(b.outline, wt, ops, True))
-            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False))
+            pk = b.t.get("portals")                            # a later era's doors and windows
+            walls.append(wall_with_portals(b.outline, wt, ops, True, pk))
+            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk))
             for r in b.rooms:
                 if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
                 for it, cx, cy, rot in b.items_world(r):
@@ -1365,7 +1373,7 @@ class OrganicTown(T.Town):
                     features.append(f)
             if b.t["place"]:
                 rs = region_shape(b.outline)
-                regions.append({"id": b.key, "label": b.label, "rect": rs[0], "points": rs[1], "place": {"kind": b.t["place"]}})
+                regions.append({"id": b.key, "label": b.label, "rect": rs[0], "points": rs[1], "place": {"kind": b.t["place"]}, **({"site": b.t["site"]} if b.t.get("site") else {})})
                 if getattr(b, "era_area", None): regions[-1]["area"] = b.era_area
         if self.river_line:
             for j, piece in enumerate(G.clip_line(self.river_line, win)):
@@ -1467,9 +1475,17 @@ class OrganicTown(T.Town):
             rect = {"north": [0, 0, w, 1], "south": [0, h - 1, w, 1], "west": [0, 0, 1, h], "east": [w - 1, 0, 1, h]}[side]
             regions.append({"id": f"edge-{side}", "label": f"To {self.name} {other}", "rect": rect,
                             "behaviors": [{"type": "trigger", "system": {"label": f"the way into {self.name} {other} ({side})", "does": "note", "who": "pcs"}}]})
+        # For the Umbral twins (Otherworlds' reflection): what each building means, and what later ages pulled down
+        places = {b.key: {"type": b.type, "wealth": getattr(b, "wealth", None), "dirty": bool(getattr(b, "dirty", False)),
+                          "rebuilt": bool(getattr(b, "rebuilt", False))} for b in self.blds if b.key in keys}
+        gone = []
+        for g in getattr(self, "gone", []):
+            rs = region_shape(g["outline"])
+            if rs: gone.append({"id": f"gone-{g['key']}", "label": g["label"], "type": g["type"], "year": g["year"], "why": g["why"], "rect": rs[0], "points": rs[1]})
         out = {"format": "wodx-map", "version": 1, "name": f"{self.name} {pt['id']}".strip(), "map": map_name, "cells": [int(win[2]), int(win[3])], "seed": self.seed,
                "kind": self.size, "layout": "organic", "walled": bool(self.wall), "era": self.era_id(), "population": self.population(keys),
-               "openings": openings, "features": features, "regions": regions, "households": [h for h in self.households if h["building"] in keys]}
+               "openings": openings, "features": features, "regions": regions, "households": [h for h in self.households if h["building"] in keys],
+               "umbral": {"year": self.year, "places": places, "gone": gone}}
         if pt["id"]:
             out["part"] = {"of": self.name, "id": pt["id"], "origin": [win[0], win[1]], "whole": [self.cols, self.rows], "neighbours": nb, "index": f"{base}-parts.json"}
         return out

@@ -1305,7 +1305,7 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Jumps use a displacement move (no walls, no path, no animation), snapped to the grid unless gridless, kept inside the scene. A group keeps its shape around the point. Elevation and level unchanged.
 - teleport-rules.mjs (where each token lands) with teleport.test.mjs; api game.wodx.storyteller.teleport.
 
-## 2026-11-11: Real money by era (Storyteller 0.23.0, B598)
+## 2026-11-11: Real money by era (Storyteller 0.26.0, B598)
 - money-rules.mjs: monies by region and year (Moravia default; German, English, American, French), monthly wages, allowance ladder x1.5, prices from goods value tiers, selling, fencing, credit, haggling, savings carried across a change of money.
 - money.mjs: a purse per actor (carried, bank, debt, log, undo), pay day each month on the Storyteller's monthly card, pay/receive/transfer/price/cashIn in the Storyteller API (api.money), carried and bank editable in the Money by era window.
 - Item Review Desk shows each good's price in Moravia by era.
@@ -1318,7 +1318,7 @@ NPCs now have things to say before the Storyteller writes a line (B664, B665). A
 
 Ben asked how the Actions menu could drive dealing with NPCs (design: https://claude.ai/artifact/Ted6jfh7nS7smhvqJsBvsf), then to build it as recommended. Part A: "With this person" in every line's Act group opens a window on the targeted NPC (or the nearest in talking reach): Talk opens WoDX NPC's topic window, and Persuade, Fast-talk, Deceive, Intimidate quietly, Threaten openly, Question them and Bribe are resisted rolls from V20's social systems (pp. 265-266). Charm or seduce runs the three-stage Seduction; Use a power opens the line's menu with the NPC targeted. The NPC's roll is a blind whisper to the Storyteller (B672). Each NPC now has its own attitude toward each character (B670), seeded from household or faction standing at the first meeting and moved by how the characters treat that NPC; it shifts social difficulties and goes through the approval queue when a player's roll moves it. A won roll leaves a sway note for an hour, and Chronicle's "Only when" lists gain "attitude >= welcome" and "persuaded [by <name>]" (B674). Book notes: docs/research/social-book-checks.md. Tests: social.test.mjs, talk-menu.test.mjs. Parts B (lift and plant), C (trade on the Storyteller's money) and D (seduction feeding) follow.
 
-## 2026-11-11: Markets, the living economy's first build (Storyteller 0.24.0, Interactables 0.23.2, B599)
+## 2026-11-11: Markets, the living economy's first build (Storyteller 0.26.0, Interactables 0.24.1, B599)
 
 Ben approved the living economy study's recommendations. Built steps 1 and 2: markets per settlement with a price index and supply per goods category, set by hand in a Markets window (Upkeep, Storyteller only); all prices read the index. Traders link an NPC and a stock container to a market; a stock draw is thinned or filled by supply and paid from the NPC's purse at half price. Interactables fires wodxStockFilter and wodxStockDrawn around a stock draw. New rules file market-rules.mjs, window markets.mjs, tests markets.test.mjs. The weekly market turn is not built yet.
 ## 2026-11-11: Dealing with NPCs, parts B and D: lift and plant, seduction and feeding (Actions 3.21.0)
@@ -1332,3 +1332,155 @@ Ben approved every recommendation of the open world study (B700 to B709). Travel
 - Chronicle: media-rules.mjs.
 - Tests: open-world-era.test.mjs.- Creation 0.10.1: townsfolk with no birth year are spread over thirty years of age in Pass the Years, and their heirs start ticked when they die of age (B710, B711). The study had said mortals never age; Pass the Years already ages everyone, so this is the part that was missing.
 
+## 2026-11-11: Dealing with NPCs, testbed fixes (Actions 3.21.1)
+
+The second testbed run of gatesocial found two faults and UI fit one. Lift and plant moved items on the world actor while the window listed the token's own pockets, so on an unlinked NPC token the thief got a copy and the NPC kept the original; the move now goes by actor uuid, so the token that was robbed is the one that loses the item. A won social roll stored the token's name as the NPC's name (an unlinked token's actor carries the token's name), so "persuaded by <NPC name>" failed; the note now holds the world actor's name and the token's. The With this person window refused a call of the form {actor, token} unless the actor was a real Actor, so UI fit never saw it; it now takes any options object with a token. gatesocial step 8 now reads the token's own actor.
+
+## 2026-11-11: realm maps (Otherworlds 0.8.0)
+Ben asked how maps in Umbral realms are formed, then for a study of the Umbra's reflection, the Deep Umbra and the Underworld, and map logic for every realm outside the Near Umbra (B730-B733). Study doc: https://claude.ai/artifact/WrAho8YW73inRyAjAVo8Vz. Built: realm-maps-rules.mjs, a catalogue of 34 realms (Werewolf's Umbral Realms, Mage's Horizon, Shade, Shard and Paradox Realms, the Deep Umbra, the Digital Web and Autochthonia, Wraith's Tempest, Stygia, Labyrinth, Far Shores and Dark Kingdoms, Enoch, Yomi, the Yellow Springs, Duat, the Abyss of the Fallen, the Far and Deep Dreaming) in seven layouts, each with landmarks, hazards, ways in, sources and era spans from 1197 to the World of Future Darkness. A seeded generator makes the cells, walls and regions (arrival, ways out, landmarks, hazards) and an SVG drawn at night. realm-maps.mjs draws a realm as a scene in WoDX realms (art in Data/wodx-assets/realms), redraws it, sends the selected tokens there and brings them back. Storyteller toolbar button "Realm maps". Tests: realm-maps.test.mjs (every realm in 11 years, both branches, two sizes: everything joins up).
+## 2026-11-11: building designs by era (B659)
+Ben asked for building designs for each era, informed by real or speculative models, then approved them. The map generator now has 23 era building types from the Renaissance to the World of Future Darkness, each named after its Moravian or speculative model (Telč arcades to Nakagin capsules), with rooms and furniture from Forgotten Adventures, Tyger's modern packs and Mog's sci-fi pack. A town given --year is rebuilt era by era: houses and shops are replaced in each era's style, and town halls, manufactories, mills, tenements, schools, department stores, houses of culture, panel estates, supermarkets, capsule towers and vertical farms go up when their time comes. Maps after 1840 grow room outside the walls. Samples of one town, Linberg, in 1500, 1750, 1900, 1970 and 2050: /mnt/project-files/maps/era-buildings/. Test: "every era building type furnishes, and a 1950 town is rebuilt with era types".
+## 2026-11-11: More stock talk (NPC 0.14.0)
+
+Ben asked for every kind of NPC line suggested after the stock talk library (B740-B742). About 500 new lines in data/stock-talk-more.mjs, wired in: greetings now carry one aside (a wound, a debt, what the character is, a rumour about them, small talk on the feast, fast, weather or season), a remembered visit replaces a stock hello, and Goodbye says a farewell. Voices for thirteen kinds of people come from the behaviour window or from faction and household names. NPCs remark as their routine changes and cry out on alarms and when hurt, as speech bubbles by default. api.talk.stock(kind, {npc, pc}) gives WoDX Actions trade and social-roll lines. Harness 1125 pass (stock-talk-more.test.mjs, 6 tests).
+
+## 2026-11-11: Umbral twins from the town generator (Otherworlds 0.9.0)
+- tools/mapgen: eras.py records each building a later age pulls down (t.gone, with year and why); organic.py writes an "umbral" block into the sidecar (year, places by type, wealth, dirty trade, rebuilt, and the gone list). Sample reflecttown.wodx.json (grown to 1960) added; schondorf.wodx.json regenerated with only the new block.
+- modules/wodx-otherworlds/scripts/reflect-rules.mjs (pure): marks for each layer, the webbing by age, an overlay SVG, region shapes, a short summary.
+- reflect.mjs (Foundry): reflectScene, undoReflection, reflectDialog; plain twin levels when none exist; toolbar button "Reflect a generated town map" (Storyteller); api.reflect.
+- realm-maps-rules.mjs: page refs from the PC lookups (B737).
+- Tests: tools/harness/reflect.test.mjs (7). Gate: tools/gate/gatereflect.mjs (8 steps).
+
+## 2026-11-11: Future Darkness events moved to Moravia (Chronicle 0.16.1)
+- Eight World of Future Darkness events put Rothenstein in the Rhineland or centred the Rhineland (2044, 2058, 2081, the 2099 Seventh Maelstrom and four cascade beats). The sources in docs/research/wofd now name Moravia, and data/future-events.mjs was rebuilt with tools/wofd/build-future-events.mjs.
+- The source also takes the spelling pass's "favours", so the rebuild changes nothing else.
+
+## 2026-11-11: The crossover referee (Chronicle 0.17.0)
+- Item 1 of "Lines and eras that meet" (approved 2026-11-10). B760.
+- modules/wodx-chronicle/data/crossover.mjs: 34 cases over 14 kinds of meeting, each on a rules-clash row, with pages; three drafts carry their page question.
+- scripts/referee-rules.mjs (pure): profileOf (the shared Combat profile flag first), bookOf (Dark Ages books up to the Long Night), casesFor (True Faith first, fallbacks only when nothing particular fits), testFor (Generation, Faith, Day or Night, Willpower, countermagick, Wits + Occult, Auspex against Obfuscate as WoDX NPC reads it, witnesses, possession), successes.
+- scripts/referee.mjs (Foundry): the referee window (selected token and first target fill it in; every case listed with a search box), rolls whispered to the Storyteller, a tool in the Storyteller's hand, key binding "The crossover referee", api.referee (open, ask, roll, sheetOf, cases).
+- Tests: tools/harness/referee.test.mjs (11). UI fit: the referee window added. Gate: tools/gate/gatereferee.mjs.
+
+## 2026-11-11: The referee's book checks (Chronicle 0.17.1)
+- B761. From the PC lookups: changeling and wraith Dominate settled as house rules; Auspex against hiding that is not a Discipline (V20 p. 142) for wraiths, mages, fae and the rest; ghouling Garou, ghosts and mages (Ghouls: Fatal Addiction p. 23); imbued second sight (Hunter Players Guide p. 58), drafts until the HtR core is read.
+- isReckoning() in referee-rules.mjs mirrors WoDX Actions' hunterLine(); the harness checks the two agree for every era. referee.test.mjs now 12 tests.
+
+## 2026-11-11: The anachronism check (Sheets 0.8.0)
+- Item 2 of "Lines and eras that meet". B762.
+- modules/wodx-sheets/scripts/anachronism-rules.mjs (pure): jumped, newlyOut (only what the jump changed, kept items left out), isOn (automatic is off in the Live world).
+- anachronism.mjs (Foundry): the check on updateWorldTime and wodxSkipEnd (active Storyteller, after the skip), the whispered card with Keep buttons, world settings "Anachronism check" and the stored year, api.anachronism (check, scan, report, keep). extras-rules.mjs: isKept; a kept item shows "Out of its time, kept by the Storyteller" and is not counted in the warning.
+- Tests: tools/harness/anachronism.test.mjs (6). Gate: tools/gate/gateanachronism.mjs (6 steps).
+
+## 2026-11-11: Mage effect keywords (Actions 3.22.0)
+- Items 2 and 3 of "Magic that applies itself". B763.
+- modules/wodx-actions/scripts/effects-rules.js (pure): KEYWORDS (19), spheresFor, needFor, spend, durationFor, outcome, route, leanOf, wardStands.
+- effects.js (Foundry): the keyword fieldset in the Mage 20th Cast window (ticking a keyword raises the Sphere choices), the card's "What it does" list, the active Storyteller's client applying automatic items on createChatMessage (Combat soak and damage, healing, Quintessence, Chronicle timed effects and conditions, token light, elevation and vision), one Undo button from snapshots, queued items sent to the approval queue (type wodx-actions.effect). World setting "Magic that applies itself".
+- Tests: tools/harness/effects.test.mjs (8). Gate: tools/gate/gateeffects.mjs.
+
+## 2026-11-11: Mage keywords, moves, areas and saved rotes (Actions 3.23.0)
+- The rest of item 2 and item 3 of "Magic that applies itself" (B764).
+- effects-rules.js: Move outcome and route, AREA, inArea, areaRadius, area in needFor and spend, roteFrom, keepRote.
+- effects.js: Move and Place the area buttons on the card for the Storyteller (pickPoint: the next click on the map), placeArea makes a Region flagged with the effect, the active Storyteller works it on whoever enters (updateToken), areas end with their duration (updateWorldTime) or at the end of the scene (wodxEndScene), Undo removes the Region and what it did. Saved rotes in the Cast window (a list with a search box past five, Save as a rote named).
+- Tests: effects.test.mjs (9). Gate gateeffects.mjs now 10 steps.
+
+## 2026-11-11: Rote items open the WoDX Cast window (Actions 3.24.0, Sheets 0.8.1, fork 7.3.2-wodx.8)
+- Item 4 of "Magic that applies itself" and the rest of item 3 (rotes on the sheet). B765.
+- effects-rules.js: roteOfItem, itemOfRote. effects.js: rotesOf reads Rote items, saveRote makes or updates one, forgetRote, fill, takesRote. m20.js: cast(actor, {rote}) fills the window; castRote for the system. main.js: api m20CastRote.
+- Fork: the Rote branch in action-helpers.js asks game.wodxActions.m20CastRote first. Sheets: a cast button on each rote in the Rotes list (Mage 20th sheet).
+- Tests: effects.test.mjs (10). Gate gateeffects.mjs 11 steps.
+
+## 2026-11-11: Countermagick on keyword cards (Actions 3.25.0)
+- Item 5 of "Magic that applies itself". B766.
+- effects-rules.js: countered, canCounter. effects.js: the card's recipe and hold, applyCounter (undo, cut, work out again, reflect), the Countermagick and Apply now buttons, the list redrawn from the flags. m20.js: counter(actor, {card}) posts a counter result the active Storyteller applies to the card.
+- Tests: effects.test.mjs (11). Gate gateeffects.mjs 12 steps.
+
+## 2026-11-11: The Dark Ages rotes on the table (Actions 3.26.0)
+- Item 6 of "Magic that applies itself". B767.
+- modules/wodx-actions/scripts/mage-da-effects.js (pure): DA_EFFECTS for all 97 rotes, daDuration (p. 103 ladder), lastsFor, daOutcomes, targetCount.
+- effects.js daPlan; mage-da.js posts a successful rote's card with the same items, so the active Storyteller applies them with Undo, queues the rest and lists the Storyteller's calls.
+- Tests: effects.test.mjs (12). Gate gateeffects.mjs 13 steps.
+
+## 2026-11-11: Path magic and Numina on the table (Actions 3.27.0)
+- Item 7 of "Magic that applies itself" (Numina part included). B768.
+- modules/wodx-actions/scripts/path-effects.js (pure): PATH_EFFECTS for all 70 path powers, NUMINA_EFFECTS by numen and level, pathOutcomes, numinaOutcomes. mage-da-effects.js gains outcomesOf, fixed damage and a heal result.
+- effects.js planOf, pathPlan, numinaPlan; kindred.js (Use a Discipline) and hunter.js (Numina) post the card. Timed effects name their book page.
+- Page check: /mnt/project-files/path-powers-book-check-20261111T103729-2a82.md (printed pages).
+- Tests: effects.test.mjs (13). Gate gateeffects.mjs 14 steps.
+
+## 2026-11-11: The Sorcerers Crusade's magic charts (Actions 3.28.0)
+- Item 8 of "Magic that applies itself". B769.
+- effects-rules.js ERA_RULES, eraRules, crusadeLevels, CRUSADE_MULT; outcome reads ctx.age for damage, healing and Quintessence. effects.js plan takes {age}; m20.js passes the chronicle's age, uses it for the plain damage line, and hides reflect in the Crusade.
+- Page check: /mnt/project-files/crusade-effects-book-check.md (printed and pdf pages).
+- Tests: effects.test.mjs (14).
+
+## 2026-11-11: fixes from the design document review
+- Light-touch mode holds every proposal (Chronicle 0.17.2, B790): approvals-rules.mjs routeProposal takes lightTouch; approvals.mjs reads the house rule; the held note names why; the hint and the clock notice say what happens.
+- Years between eras on the Chronicle Rules journal (B791): era-resolve.mjs interludeSpans; eras.mjs passes the spans to journals.mjs.
+- The two shared profiles.js copies: headers say what differs (the Actions copy's line look); a harness test keeps everything game.wodx.profiles offers the same in both.
+- docs/HOOKS.md lists every hook, who sends and who hears it, with the nine unheard ones as extension points; hooks.test.mjs fails when a new hook is sent and not listed. Atmosphere's header no longer says Senses hears wodxWeather.
+- Version numbers dropped from the main file headers of Atmosphere, Interactables, NPC, Senses, Sheets, Storyteller and Targeting (module.json holds the version).
+- MODULES.md: Senses 0.5.1, the broken Chronicle fragment, the title date. STORYTELLER-GUIDE.md: names the build Live runs now and points to the running guide; step 1 no longer says seven modules.
+- Otherworlds 0.9.1: the module.json reason says Chronicle must be installed even when off.
+- Not changed here: the Moravian coins wait on PR 506 (goods and money), which holds them.
+
+## 2026-11-11: fuller furniture for the later eras (B659)
+Ben saw the plans page (https://claude.ai/artifact/MK8nkv4MRBxncvF6A2QoKo) and asked for the bare later-era rooms to be furnished. 31 more Tyger and Mog pieces were measured on the PC and added: whole kitchens and living rooms for the Baťa house, functionalist villa, panel-block flats and entrepreneur's house; shop aisles, freezers and checkouts for the department store, supermarket and petrol station; rows of seats in the house of culture; capsules with desks, sinks and lockers; growing rows in the vertical farm. A new furniture rule, at:x:y, puts a piece on a fixed spot so aisles and seat rows come out in lines; a spot that will not take it stays empty.
+
+
+## 2026-11-11: trait effect table, step 1 (Chronicle 0.18.0, B800-B803)
+Ben approved Traits With Teeth (https://claude.ai/artifact/4QwnLur2u6kmHPQSMjTgn4) as recommended; this is its step 1.
+- data/trait-effects.mjs: PATTERNS (P1-P20), BACKGROUND_HOOKS, MERITS_FLAWS (162 V20 entries: cost, printed and pdf page, patterns, holders, against, aliases, effects for step 2), BACKGROUNDS (71 from fourteen books with pages), BOOKS_DONE.
+- scripts/trait-rules.mjs: normName, featureKind, kindsOf/kindFits (mixed kinds), buildIndex, matchFeature (item flag wodx-chronicle.trait overrides; "none" leaves alone), traitsOf (wrongKind with a reason), has, effectsFor (channel, tags, the other side's kind), missing, problems, describe.
+- scripts/traits.mjs: view(actor) for players and NPCs alike, the "Trait effects" window on the actor sheet header (Storyteller sets the match), api.traits {view, of, has, effects, open, whenFeats, kindOf, table, rules}.
+- "Only when": merit, flaw, background [>= n], power (when-rules.mjs; when.mjs reads feats and powers).
+- Book checks: /mnt/project-files/trait-book-checks.md; draft patterns for the other books: /mnt/project-files/notes/trait-effects-draft.md.
+- Tests: trait-effects.test.mjs (10).
+
+## 2026-11-11: trait effects, step 2 (Actions 3.29.0, B804-B806)
+- wodx-actions/scripts/trait-hooks.js: traitMods, resistMods, powerTags, tagsFor, the world setting "Merits and flaws on rolls", TICKS and ticksHtml.
+- rules.js actionPool takes traitDice, traitDiff, traitParts. main.js: actions, quick checks and the frenzy check (beastRoll) read the traits. social.js: speaker's traits, the NPC's resist-social traits, first meeting from WoDX NPC. kindred.js: target's resisting traits on Discipline rolls.
+- Chronicle trait-rules.mjs: effectsFor reads nameTags, againstKinds and the moon; sumEffects; rollTags. 37 V20 entries carry effects. Fixed: nameTags read the item name before its bracket was stripped, so "Acute Sense (Hearing)" now works.
+- Tests: trait-effects.test.mjs (17).
+
+## 2026-11-11: realm maps checked against their descriptions (B738, B739)
+Ben asked for each otherworld map to be checked against how the books describe the realm, rebuilt where it fell short, and a new set of samples. Otherworlds 0.10.0: every landmark placed once, named arrival and ways out, era hazards spread out once each; Stygia and the Dark Kingdoms walled island cities with a harbour arrival; the Tempest and the Far Shores on a storm sea; the Battleground's Signpost with two paths and works by year; rivers in Erebus and Duat; the black train from Malfeas and the Scar; Enoch's five spires and Labyrinth gate; Ti Yu at Yomi's heart; Phoebe and the Wyrm Reaches in the Aetherial Realm; Wolfhome's Town; walled Chantries and Amenti; Labyrinth debris; every Digital Web and Autochthonia sector joined; labels kept inside the map. The Shadowlands reflection keeps only the newest pulled-down house on each spot (178 relics to 66 in the 1960 sample). A new harness test checks each realm against its description.
+
+## 2026-11-11: present-day buildings from Cataclysm's layouts (B666, B667)
+Ben approved the first group of building types from the Cataclysm: Dark Days Ahead review (https://claude.ai/artifact/QQjdofxZQKFhsBW8TEWtvL) and asked for its building code to be used where it helps. tools/mapgen/cdda.py reads Cataclysm's map data (one character a metre, 24 to a tile, with palettes) and turns a layout into a WoDX building type: rooms cut into rectangles, inner walls, doors and windows, a traced outline for buildings that are not boxes, and the squares each piece of furniture stands on. 21 layouts convert: two banks, a bar, two libraries, a funeral home, a museum, an art gallery, three police stations, two churches, a country church, a synagogue, a cathedral, a warehouse, two music clubs, a hospital and a sewer pumping station. tools/mapgen/cddatypes.py loads them (cdda_types.json) and furnishes them with Tyger's modern pieces. Towns grown to 1960 or later get a police station, bank, library, bar, funeral home, warehouse and pumping station, and some get a music club, museum, gallery or hospital. The layouts keep Cataclysm's CC BY-SA 3.0 licence; the credit is in each type and in tools/mapgen/CDDA-CREDIT.md. A new harness test checks the credit, that every door and window is on a wall, that each type furnishes, and that a 2005 town has them.
+
+## 2026-11-11: older forms of hospitals, gaols, banks and the rest (B668)
+19 older forms of the first group's kinds, drawn from Moravian models (tools/mapgen/firstgroup.py), from the lazar house and charnel house of the Dark Ages to the grand hotel and dance hall of the 1870s and 1880s. Towns grown through the eras put each up once and keep it; a 1900 small town now has its gaol, lazar house, general hospital, cemetery chapel, savings bank, gendarmerie, coffeehouse and the like. The plans page shows them with their era. A new harness test checks they furnish and that a 1900 town has them.
+## 2026-11-11: one effect keyword roster (WoDX Actions 3.30.0, B781)
+- Ben approved the keyword coverage review. effects-rules.js KEYWORDS: 34 keywords (15 new), POOLS, BOOSTS, KINDS, resistOf, passive.
+- Widened Harm, Charge or Drain, Mend, Ward, Fear, Sway; the Cast window gains the matching options and choice lists; Undo restores a pool.
+- Ten Dark Ages rotes and six path powers carry their keyword (still the Storyteller's call).
+- Page check queued: /mnt/project-files/jobs/keyword-roster-book-check-2026-11-11.md (122 Dark Ages powers, then eight lines' power lists).
+
+
+## 2026-11-11: map keywords for realm maps (B745)
+Ben found the realms too alike and asked for map keywords. Otherworlds 0.11.0: 22 keywords (forest, marsh, peaks, caves, sea, ash, ice, chasm, stars, ruins, towers, machines, web, tombs, gardens, fire, rot, storm, shifting, nihil, bones, crystal), each a cell step and a drawn mark; every realm has two to four; island form, caverns and a square city follow from the keywords; the age and some eras add keywords; an Extra keywords field in the Realm maps window, kept on the scene for redraws; the scene note lists them. Five new harness tests (realms sharing keywords share marks, unrelated ones share none, other seeds differ).
+
+## 2026-11-11: fights that start by themselves (B807-B810)
+Ben asked whether combat could begin by itself when conditions are met. Combat 3.9.0: one fight starter (start.js, start-rules.js), world settings "Start fights by themselves" (Off, Suggest by default, Auto with Undo; Light touch holds it at Suggest) and "A hostile NPC sees this far" (30 yards, a third at night); it joins a running fight or starts one, with the NPC's household within call; frenzy outside a fight and attacks outside a fight call it. NPC 0.15.0: fight-rules.mjs; Hostile or Hunted NPCs on sight and guards on alarm (same noticing roll as Reaction regions), an attitude that falls to Hostile, a Reaction region's Fight (carried out in Auto when fights start by themselves); api kinNear. Chronicle 0.18.1: the "fight" outcome for doors, regions and dated events. Harness fight-start.test.mjs (9). Gate tools/gate/gatefight.mjs (11 steps) queued for the PC. Off on Live until Ben says. The V20 p. 274 ambush rule waits for a book check.
+## 2026-11-11: the Storyteller's effect and saved rituals (WoDX Actions 3.31.0, B782)
+- Token tools button "Apply an effect or ritual" (Storyteller only): any keyword, strength, length, area, options, casting time, note; card applies with Undo.
+- Summon places tokens of a chosen actor where the Storyteller clicks; Make gives a chosen item; Undo deletes both.
+- Rituals saved by name in the world setting stRituals; api.effects.storyteller, rituals, saveRitual, forgetRitual, stItems.
+
+
+## 2026-11-11: failed layouts, the hospital, cellars and upper floors (B669)
+Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 26 in all), with the converter now reading nested rooms, palettes beside their maps and turned tiles. Towns that cannot fit the hospital clear houses for it, or put up a hospital entrance whose region names its own map. ddsite.py gains --kind building (any type on its own grounds) and --kind floors (every level of a building as its own map, stair in one spot, index file). A harness test furnishes every level of every building type and checks the stair lines up.
+## 2026-11-11: keywords for the modern lines' powers (WoDX Actions 3.32.0, B783)
+- power-keywords-lines.js: 837 powers across V20, W20, C20, Hunter, Demon, Mummy and Orpheus name their effect keywords.
+- keywordsOf takes a name or slug for these sets; new api.effects.powersWith and lineSets. Test added in effects.test.mjs.
+- Still open: Kindred of the East (unreadable scan), 85 Demon Lore powers whose names the scan cut short.
+- book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
+- Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
+
+## 2026-11-11: fight on sight reads where tokens stand (NPC 0.15.1)
+gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight check ran 0.9 s after a move and read the token as drawn, still walking from 38 yards off, so the guard was out of range. It now reads the document's resting place for range and walls, and watchFoes returns why each pair was skipped (the gate records it). Ambush book check (PC): V20 printed p. 274 (pdf 282), Dexterity + Stealth against Perception + Alertness, a win gives one free attack with the extra successes as dice, a tie lets the ambusher go first but the target may defend, anyone already fighting cannot be ambushed; V20 Dark Ages printed p. 345, the same roll, a win gives one free action the target cannot oppose, no margin bonus. Not built yet.
+## 2026-11-11: Games by Hyper ideas (Storyteller 0.25.0, NPC 0.16.0, Interactables 0.24.0)
+- Reviewed the Games by Hyper template docs for ideas. Two of the six picks were already built (Atmosphere's weather by season and era; place alarms carried by era), so those became a link (hardship follows the sky, B840) and nothing.
+- Standing that spills over (B841), calls to passers-by (B842), a clue's first look fills the codex (B843), bodies left behind (B844). All house rules, all off by default.
+- Harness: passing-world.test.mjs.

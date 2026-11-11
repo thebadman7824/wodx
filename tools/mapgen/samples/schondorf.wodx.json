@@ -6457,5 +6457,149 @@
    ],
    "wealth": "middling"
   }
- ]
+ ],
+ "umbral": {
+  "year": null,
+  "places": {
+   "tavern-1": {
+    "type": "tavern",
+    "wealth": "rich",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "chapel-1": {
+    "type": "chapel",
+    "wealth": null,
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-1": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "workshop-1": {
+    "type": "workshop",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "smithy-1": {
+    "type": "smithy",
+    "wealth": null,
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-2": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-3": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "storehouse-1": {
+    "type": "storehouse",
+    "wealth": null,
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-4": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-5": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-6": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-7": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-8": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-9": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-10": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "cottage-11": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "workshop-2": {
+    "type": "workshop",
+    "wealth": "middling",
+    "dirty": true,
+    "rebuilt": false
+   },
+   "workshop-3": {
+    "type": "workshop",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "byre-house-1": {
+    "type": "byre-house",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": true
+   },
+   "cottage-12": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": true
+   },
+   "cottage-13": {
+    "type": "cottage",
+    "wealth": "poor",
+    "dirty": false,
+    "rebuilt": true
+   },
+   "bakehouse-1": {
+    "type": "bakehouse",
+    "wealth": "poor",
+    "dirty": false,
+    "rebuilt": true
+   },
+   "cottage-14": {
+    "type": "cottage",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": true
+   }
+  },
+  "gone": []
+ }
 }

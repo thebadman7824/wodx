@@ -214,6 +214,9 @@ test("queue relief: the rules route a proposal and pick a bulk decision's entrie
   assert.equal(QR.routeProposal("wodx-npc.faction", {cap: 2, used: 1}), "queue");
   assert.equal(QR.routeProposal("wodx-npc.faction", {cap: 2, used: 2}), "hold");
   assert.equal(QR.routeProposal("wodx-npc.faction", {cap: 0, used: 99}), "queue", "0 is no cap");
+  assert.equal(QR.routeProposal("era-change", {lightTouch: true}), "hold", "light-touch holds a proposal back");
+  assert.equal(QR.routeProposal("wodx-npc.faction", {lightTouch: true, auto: {"wodx-npc.faction": true}}), "hold", "even one approved on its own");
+  assert.equal(QR.routeProposal("request", {lightTouch: true}), "queue", "a player's request still comes through");
   assert.equal(QR.routeProposal("wodx-npc.faction", {auto: {"wodx-npc.faction": true}, cap: 1, used: 5}), "auto");
   assert.equal(QR.routeProposal("wodx-npcish", {cap: 1, used: 5}), "queue");
   assert.deepEqual(QR.bulkIds([{id: "a"}, {id: "b"}, {id: "c"}], ["b"]), ["a", "c"]);
@@ -294,4 +297,17 @@ test("module stays idle in a world without the WoDX flag", async () => {
 test("no errors were raised as notifications", () => {
   const errors = mock.log.notifications.filter(([level]) => level === "error");
   assert.deepEqual(errors, []);
+});
+
+test("the years no era book covers are listed as spans, with the era each keeps", async () => {
+  const R = await import(join(root, "modules/wodx-chronicle/scripts/era-resolve.mjs"));
+  const ps = [
+    {id: "a", name: "Early", start: 1000, end: 1100},
+    {id: "b", name: "Late", start: 1120, end: 1200}
+  ];
+  assert.deepEqual(R.interludeSpans(ps, {from: 1000, to: 1210}), [
+    {from: 1101, to: 1119, keeps: "Early"},
+    {from: 1201, to: 1210, keeps: "Late"}
+  ]);
+  assert.deepEqual(R.interludeSpans(ps, {from: 1000, to: 1100}), [], "no gap, no span");
 });

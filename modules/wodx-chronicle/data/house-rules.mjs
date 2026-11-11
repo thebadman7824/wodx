@@ -28,7 +28,7 @@ export default {
       "id": "lightTouch",
       "group": "automation",
       "name": "Light-touch mode",
-      "hint": "Turns off every WoDX proposal and prompt for tonight's session. The clock still runs.",
+      "hint": "Holds back every WoDX proposal for tonight's session, quietly, and skips the era check. Players' own requests still come through. The held ones wait in the approvals window until you put them in the queue. The clock still runs.",
       "default": false,
       "source": "WoDX plan: Light-touch mode"
     },

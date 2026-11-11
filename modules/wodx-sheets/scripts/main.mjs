@@ -1,5 +1,5 @@
 /**
- * WoDX Sheets 0.4 — character sheets that follow the era and each line's book (B74).
+ * WoDX Sheets (the version is in module.json): character sheets that follow the era and each line's book (B74).
  *
  * Each WoDX sheet extends the World of Darkness system's own sheet for its actor type and keeps every tab the system
  * draws; only the Core tab (and, for the fae, the Dreaming tab) is replaced by the book's sheet, laid out from the
@@ -29,6 +29,7 @@ import * as UR from "../../wodx-actions/scripts/mummy-rules.js";
 import * as CR from "../../wodx-actions/scripts/c20-rules.js";
 import * as SR from "./sheet-rules.mjs";
 import * as X from "./extras.mjs";
+import * as AN from "./anachronism.mjs";
 
 const MOD = "wodx-sheets", ACT = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -168,7 +169,7 @@ function block(key, a) {
       return { kind: "items", title: "Possessions", rows: itemRows(itemsOf(a, i => i.type === "Item"), false), empty: g ? "" : "Nothing carried.", note: [g, n(m.carried) || n(m.bank) ? `Money: ${n(m.carried)} carried, ${n(m.bank)} put by` : ""].filter(Boolean).join(" · ") };
     }
     case "fetishes": return { kind: "items", title: "Fetishes and Talens", rows: itemsOf(a, i => i.type === "Fetish").map(i => ({ id: i.id, name: n(i.system?.gnosis) ? `${i.name} (Gnosis ${n(i.system.gnosis)})` : i.name, dots: SR.dots(i.system?.level ?? i.system?.value) })), empty: "None." };
-    case "rotes": return { kind: "items", title: "Rotes", roll: sheetFor(a) === "m20" ? "m20Cast" : "daMage", rows: itemRows(itemsOf(a, i => i.type === "Rote"), false), empty: "None yet." };
+    case "rotes": return { kind: "items", title: "Rotes", roll: sheetFor(a) === "m20" ? "m20Cast" : "daMage", rows: itemRows(itemsOf(a, i => i.type === "Rote"), false).map(r => ({ ...r, cast: sheetFor(a) === "m20" })), empty: "None yet." };
     case "description": { const cut = t => t.length > 240 ? `${t.slice(0, 237)}...` : t;
       return { kind: "list", title: "History and Description", lines: [["Appearance:", strip(a.system.appearance)], ["History:", strip(a.system.background)]].filter(([, t]) => t).map(([bold, t]) => ({ bold, text: cut(t) })), empty: "Written on the Bio tab." };
     }
@@ -375,6 +376,7 @@ function listeners(sheet, root) {
     const fn = game.wodxActions?.[el.dataset.roll];
     if (fn) fn({ actor });
   }));
+  root.querySelectorAll(".wodx-cast-rote[data-itemid]").forEach(el => el.addEventListener("click", ev => { ev.preventDefault(); game.wodxActions?.m20Cast?.({ actor, rote: el.dataset.itemid }); }));
   root.querySelectorAll(".wodx-open[data-itemid]").forEach(el => el.addEventListener("click", ev => { ev.preventDefault(); actor.items.get(el.dataset.itemid)?.sheet?.render(true); }));
   if (!sheet.options.editable) return;
   // As on the system's sheets: a locked sheet keeps its permanent traits; only points (boxes) still change
@@ -438,6 +440,7 @@ const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
 
 Hooks.once("init", async () => {
   X.setup();
+  AN.setup();
   game.settings.register(MOD, "sheetLook", {
     name: "Sheet look",
     hint: "WoDX gives each line's sheets their own fonts, paper and section rules, in light and dark mode. The system's look brings back the fonts and banners that come with the World of Darkness system.",
@@ -455,5 +458,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.7.0", extras: X, rules: SR, sheetFor, viewFor };
+  game.modules.get(MOD).api = { version: "0.8.1", extras: X, rules: SR, sheetFor, viewFor,
+    anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep } };
 });

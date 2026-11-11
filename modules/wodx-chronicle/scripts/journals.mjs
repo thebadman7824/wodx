@@ -54,14 +54,14 @@ const RULES_PAGES = ["Era and calendar", "House rules", "Conditions", "Dated eve
 
 /**
  * Rewrite the Chronicle Rules journal from the current settings. GM only.
- * @param {object} info  {profile, interlude, locked, dateLabel}
+ * @param {object} info  {profile, interlude, locked, dateLabel, gaps}
  */
 export function writeChronicleRules(info) {
   if ( !game.user.isGM ) return Promise.resolve();
   return serial(() => _writeChronicleRules(info));
 }
 
-async function _writeChronicleRules({profile, interlude, locked, dateLabel}) {
+async function _writeChronicleRules({profile, interlude, locked, dateLabel, gaps = []}) {
   const journal = await ensureJournal("chronicle-rules", "Chronicle Rules", RULES_PAGES);
   const stamp = esc(dateLabel);
 
@@ -74,6 +74,7 @@ async function _writeChronicleRules({profile, interlude, locked, dateLabel}) {
     <p><strong>What this era changes:</strong> ${esc(profile.switches)}</p>
     ${interlude ? "<p>No era book covers this year, so the last era's rules stay in force until the Storyteller locks another.</p>" : ""}
     ${ourCall ? `<p><strong>House rules (not from a book):</strong></p><ul>${ourCall}</ul>` : ""}
+    ${gaps.length ? `<h2>Years between eras</h2><p>No era book covers these years. Each keeps the rules of the era before it until the Storyteller locks another.</p><ul>${gaps.map(g => `<li>${g.from === g.to ? g.from : `${g.from} to ${g.to}`}: ${esc(g.keeps || "no era")}</li>`).join("")}</ul>` : ""}
     <h2>Calendar</h2>
     <p>Julian calendar until the reform, Gregorian after it. Reform: ${esc(reform)}.</p>
     <p>Sunrise and sunset are given in local solar time for latitude ${esc(game.settings.get(MODULE_ID, "latitude"))}° N.</p>`
