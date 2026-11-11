@@ -1450,3 +1450,6 @@ Ben found the realms too alike and asked for map keywords. Otherworlds 0.11.0: 2
 - Summon places tokens of a chosen actor where the Storyteller clicks; Make gives a chosen item; Undo deletes both.
 - Rituals saved by name in the world setting stRituals; api.effects.storyteller, rituals, saveRitual, forgetRitual, stItems.
 
+
+## 2026-11-11: failed layouts, the hospital, cellars and upper floors (B669)
+Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 26 in all), with the converter now reading nested rooms, palettes beside their maps and turned tiles. Towns that cannot fit the hospital clear houses for it, or put up a hospital entrance whose region names its own map. ddsite.py gains --kind building (any type on its own grounds) and --kind floors (every level of a building as its own map, stair in one spot, index file). A harness test furnishes every level of every building type and checks the stair lines up.

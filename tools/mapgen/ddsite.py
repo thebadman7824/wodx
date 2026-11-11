@@ -9,12 +9,17 @@ the script stops on any overlap.
             a moat, and in the bailey a keep, great hall, chapel, kitchen, smithy, stables, barracks, store and well.
   mine      a drift mine: the pithead yard at the surface, an adit into the hill, a main haulage gallery with rails,
             cross-cuts to the working faces, a shaft, a sump, a miners' rest and a tool store.
+  building  one big building on its own grounds (--type, any building type: the hospital, the mansion, the cathedral),
+            for a type too big for the town map or wanted at full size: a lawn and trees round it, a path from the
+            front door to the road along the bottom edge, and a car park beside it from 1950 on.
+  floors    every level of one building (--type) as its own map: the ground floor on its grounds, the upper floors
+            and the cellar (floors.py), the stair in the same spot on each, and an index <name>-levels.json.
   arcology  one deck of an arcology: a square hull round a planted atrium with the lift core, a ring corridor, four
             axial corridors and a perimeter corridor; the four quarters hold housing pods, hydroponics, a market
             commons and the services (clinic, security, engineering). The asset packs are medieval, so the
             furniture stands in for later kit until later packs are added.
 
-Run: python3 ddsite.py --kind castle|mine|arcology [--seed N] [--name NAME] [--assets LIST] [--out DIR] [--day]
+Run: python3 ddsite.py --kind castle|mine|arcology|building [--type KEY] [--seed N] [--name NAME] [--assets LIST] [--out DIR] [--day]
 """
 import argparse, json, math, re
 
@@ -460,6 +465,96 @@ def arcology(seed, name):
     return st, ["Gravel_Light_A.webp", "Dirt_A_01.webp", "Grass_A_03.webp", "Space_01.webp"], weights, "future-darkness"
 
 
+class Placed(B.Building):
+    """A building type set down facing south whose outer wall follows the type's outline (Cataclysm's layouts are
+    not all boxes)."""
+    @property
+    def outline(self):
+        return [(self.x + p[0], self.y + p[1]) for p in self.t.get("outline") or [(0, 0), (self.w, 0), (self.w, self.h), (0, self.h)]]
+
+
+def building_site(seed, name, tk):
+    import cddatypes, firstgroup, eratypes          # noqa: F401  (they add their types to buildings.TYPES)
+    if tk not in B.TYPES: raise SystemExit(f"no building type {tk!r}")
+    R = C.R
+    tdef = B.TYPES[tk]
+    w, h = tdef["size"]
+    m = 8
+    st = Site(name or tdef["label"], int(w + 2 * m + .99), int(h + 2 * m + 4.99), seed)
+    x0, y0 = (st.cols - w) / 2, m
+    b = Placed(tk, tk, x0, y0, "S", tdef["label"], None, tdef)
+    furnish_safely(b)
+    st.building(b, tdef.get("place"), ("staff",) if tdef.get("place") != "home" else ("owner", "household"))
+    # the way in: from the front door (the street-side door nearest the middle) to the road along the bottom
+    fronts = [o for o in b.openings if o[0] in ("door", "double") and abs(o[2] - (y0 + h)) < .05] or [("door", x0 + w / 2, y0 + h, "h")]
+    fx = min(fronts, key=lambda o: abs(o[1] - (x0 + w / 2)))[1]
+    road_y = st.rows - 2.5
+    walk = [(fx - 1, y0 + h), (fx + 1, y0 + h), (fx + 1, road_y), (fx - 1, road_y)]
+    st.patterns.append(pattern(walk, STONE)); st.take(walk)
+    st.svg.append(f'<polygon points="{pl(walk)}" fill="#c9c2b4"/>')
+    road = [(0, road_y), (st.cols, road_y), (st.cols, st.rows), (0, st.rows)]
+    st.region("road", "Road", road, "street", area="street")
+    st.svg.append(f'<polygon points="{pl(road)}" fill="#b3aa98"/>')
+    era = tdef.get("era") or "dark-ages"
+    if tdef["built"][1] >= 1950 and tdef["built"][0] >= 1900:      # a car park beside the way in
+        px = fx + 3 if fx < st.cols / 2 else fx - 3 - 12
+        lot = [(px, y0 + h + 2), (px + 12, y0 + h + 2), (px + 12, road_y), (px, road_y)]
+        if all(0 <= q[0] <= st.cols for q in lot) and st.clear_of(lot, .5):
+            st.take(lot); st.region("car-park", "Car park", lot, "street", area="parking")
+            st.svg.append(f'<polygon points="{pl(lot)}" fill="#a9a9a9"/>')
+    for _ in range(40):                                        # trees on the lawn, clear of everything
+        x, y = R.uniform(2, st.cols - 2), R.uniform(2, road_y - 2)
+        ring = [(x - 2, y - 2), (x + 2, y - 2), (x + 2, y + 2), (x - 2, y + 2)]
+        if not st.clear_of(ring, .5): continue
+        st.take(ring)
+        st.objects.append(obj(R.choice(TREES), x, y, R.uniform(0, 6.3), .45, 200))
+        st.svg.append(f'<circle cx="{x * S}" cy="{y * S}" r="{1.3 * S}" fill="#6f9e5a" stroke="#3d6b2d"/>')
+    grounds = [(0, 0), (st.cols, 0), (st.cols, road_y), (0, road_y)]
+    st.region("grounds", f"{tdef['label']} grounds", grounds, "other", area="grounds")
+    BG["building"], LABEL["building"] = "#dfe8d2", tdef["label"].lower()
+    def weights(x, y): return [0, 0, 1, 0] if y < road_y else [1, 0, 0, 0]
+    return st, ["Gravel_Light_A.webp", "Dirt_A_01.webp", "Grass_A_03.webp", "Grass_A_03.webp"], weights, era
+
+
+def floors_site(seed, name, tk, out, assets_day):
+    """Every level of one building as its own map: the ground floor on its grounds, each upper floor and the cellar
+    on a bare map of the same size, the stair in the same spot on each, plus an index (<name>-levels.json)."""
+    import cddatypes, firstgroup, eratypes          # noqa: F401
+    import floors as FL
+    if tk not in B.TYPES: raise SystemExit(f"no building type {tk!r}")
+    lv, spot = FL.levels(tk)
+    base_name = name or B.TYPES[tk]["label"]
+    index = {"format": "wodx-levels", "version": 1, "name": base_name, "type": tk, "levels": []}
+    for i, (lname, tdef) in enumerate(lv):
+        C.R.seed(seed + i)
+        B.TYPES[f"{tk}--{lname}"] = tdef
+        if lname == "ground":
+            st, terrain, weights, era = building_site(seed, f"{base_name}", f"{tk}--{lname}")
+        else:
+            w, h = tdef["size"]
+            st = Site(f"{base_name}, {tdef['label'].split(', ')[-1]}", int(w + 4.99), int(h + 4.99), seed + i)
+            b = Placed(f"{tk}--{lname}", f"{tk}--{lname}", 2, 2, "S", tdef["label"], None, tdef)
+            furnish_safely(b)
+            st.building(b, tdef.get("place"))
+            BG["building"], LABEL["building"] = ("#4a4640" if lname == "cellar" else "#e8e4dc"), tdef["label"].lower()
+            era = tdef.get("era") or "dark-ages"
+            terrain = ["Gravel_Light_A.webp", "Dirt_A_01.webp", "Grass_A_03.webp", "Grass_A_03.webp"]
+            weights = (lambda x, y: [0, 1, 0, 0]) if lname == "cellar" else (lambda x, y: [1, 0, 0, 0])
+        ox, oy = (st.cols - tdef["size"][0]) / 2 if lname == "ground" else 2, 8 if lname == "ground" else 2
+        if spot:
+            r = [r_ for r_ in tdef["rooms"]][[n_ for n_, *_ in B.TYPES[tk]["rooms"]].index(spot[0])]
+            sx, sy = ox + r[1] + spot[1], oy + r[2] + spot[2]
+            ups = i < len(lv) - 1 and lv[i + 1][0] != "cellar"
+            st.features.append({"id": "stair", "label": "Stairs", "rect": [round(sx, 2), round(sy, 2), 1, 2],
+                                "flags": {"climb": True, "climbKind": "ladder", "height": 10,
+                                          "title": "Stairs " + ("up and down" if ups and lname != "cellar" else "up" if lname == "cellar" else "down")}})
+        base = st.write(out, "building", era, terrain, weights, assets_day)
+        index["levels"].append({"level": lname, "map": f"{base}.dungeondraft_map", "sidecar": f"{base}.wodx.json"})
+    slug = re.sub(r"[^a-z0-9]+", "-", base_name.lower()).strip("-")
+    json.dump(index, open(f"{out}/{slug}-levels.json", "w"), indent=1)
+    print(f"  levels: {', '.join(l['level'] for l in index['levels'])} ({slug}-levels.json)")
+
+
 SECTOR = {
     "housing": ("Housing pod", 4, 4, "home", [(BED, "wall", 1), (CHEST, "corner", 1), (CHAIR, "corner", 1, .8)], ("resident", "partner")),
     "hydroponics": ("Hydroponics bay", 8, 5, "workplace", [(BIGPLANT, "wall", 4), (PLANT, "wall", 2)], ("grower",)),
@@ -501,7 +596,8 @@ def sector(st, kind, q, x0, y0, x1, y1, cut, R):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--kind", choices=("castle", "mine", "arcology"), required=True)
+    ap.add_argument("--kind", choices=("castle", "mine", "arcology", "building", "floors"), required=True)
+    ap.add_argument("--type", help="--kind building: the building type, e.g. cdda-hospital, cdda-mansion, cdda-cathedral, general-hospital")
     ap.add_argument("--seed", type=int, default=1197)
     ap.add_argument("--name")
     ap.add_argument("--assets", default="/mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt")
@@ -509,8 +605,11 @@ def main():
     ap.add_argument("--day", action="store_true")
     a = ap.parse_args()
     C.init(a.seed, a.assets)
-    st, terrain, weights, era = {"castle": castle, "mine": mine, "arcology": arcology}[a.kind](a.seed, a.name)
-    amb = "ffffffff" if a.day else {"castle": "ff6a7aa8", "mine": "ff3a3a48", "arcology": "ffc8d0e0"}[a.kind]
+    if a.kind == "floors":
+        return floors_site(a.seed, a.name, a.type or "burgher-palace", a.out, "ffffffff" if a.day else "ff6a7aa8")
+    if a.kind == "building": st, terrain, weights, era = building_site(a.seed, a.name, a.type or "cdda-hospital")
+    else: st, terrain, weights, era = {"castle": castle, "mine": mine, "arcology": arcology}[a.kind](a.seed, a.name)
+    amb = "ffffffff" if a.day else {"castle": "ff6a7aa8", "mine": "ff3a3a48", "arcology": "ffc8d0e0"}.get(a.kind, "ff6a7aa8")
     st.write(a.out, a.kind, era, terrain, weights, amb)
 
 
