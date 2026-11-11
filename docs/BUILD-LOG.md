@@ -1524,3 +1524,9 @@ Ben asked for one-click mapmaking with our Dungeondraft assets and chose a Dunge
 - Senses: traitsOf reads traitSenses; powersFor returns traitMods and cannot; difficulty adds signed trait steps and returns lost for Blind or Deaf; gatherSources adds each visible token's signs and the veiled source; channels restless and deathsight (data/world.json).
 - Actions: effects.js passes a Veil's difficulty to the timed effect.
 - Tests: trait-senses.test.mjs (5). Gate: gatetraits steps 14 and 15.
+
+## 2026-11-11: trait effects, step 4 (Actions 3.33.0, B883)
+- power-effects.js: powerKeywords (data set, then line list by name), powerOutcomes (successes as strength, NEEDS_TARGET dropped with no target, ON_SELF on the user).
+- effects.js powerPlan (through planOf and the card's routing); setting powerEffects; api.effects.powerPlan.
+- kindred.js: Discipline rolls without a path spec; garou.js: Gift rolls (DA:W library, else W20 by name).
+- Tests: power-effects.test.mjs (5). Gate: gatetraits step 16.

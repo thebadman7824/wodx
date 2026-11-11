@@ -855,3 +855,6 @@ A token whose actor holds Smell of the Grave, Cold Breeze, Glowing Eyes, Eerie P
 
 ## B882. The Veil keyword hides a token from WoDX Senses (2026-11-11)
 A Veil cast through WoDX Actions keeps its difficulty on the timed effect (Chronicle timed effects take a data field). WoDX Senses leaves a veiled token out of the plain look; on a closer look, Perception + Awareness at the Veil's difficulty finds them.
+
+## B883. A Discipline or Gift roll puts the power's keywords on the effects card (2026-11-11)
+Step 4 of Traits With Teeth. The keyword labels from B781 and B783 now act: a Discipline roll (the Dark Ages data, else the V20 list by name) or a Gift roll (the Dark Ages: Werewolf library, else the W20 list by name) with successes puts the power's keywords on the effects card, worked out as the Storyteller's effect window does. The successes are the strength (house rule) and the card's own routing decides the rest: plain keywords on an NPC apply with Undo, mind keywords and anything aimed at a player character wait in the approval queue, the Storyteller's keywords stay the Storyteller's call. A hostile keyword with no target is dropped and named on the card, never turned on the user. Passive powers and powers with their own effects spec (path magic, Numina) are left out. The world setting "Powers on the effects card" turns it off.
