@@ -170,7 +170,7 @@ def layer_quays(t):
     clear(t)
     if not run: return
     side = town_side(t)
-    n, want = 0, {"town": 3, "city": 6}[t.size]
+    n, want = 0, {"town": 3, "city": 6, "metropolis": 14}[t.size]
     for i in range(0, len(run) - 3, 2):
         a, b = run[i], run[i + 3]
         L_ = math.dist(a, b) or 1
@@ -264,7 +264,7 @@ def open_box(t, w, h, taken=()):
 
 
 def layer_cemetery(t):
-    box = open_box(t, {"village": 10, "town": 14, "city": 18}[t.size], {"village": 8, "town": 10, "city": 14}[t.size])
+    box = open_box(t, {"village": 10, "town": 14, "city": 18, "metropolis": 26}[t.size], {"village": 8, "town": 10, "city": 14, "metropolis": 20}[t.size])
     if box: t.era_areas.append({"kind": "cemetery", "label": "Cemetery", "poly": box})
 
 
@@ -347,12 +347,12 @@ def layer_park(t):
         if p["ward"] == "park":
             poly = G.inset(p["poly"], [2.3] * len(p["poly"]))
             if poly: t.era_areas.append({"kind": "park", "label": "Public park", "poly": poly}); return
-    box = open_box(t, {"town": 16, "city": 24}[t.size], {"town": 12, "city": 18}[t.size], [a["poly"] for a in t.era_areas])
+    box = open_box(t, {"town": 16, "city": 24, "metropolis": 30}[t.size], {"town": 12, "city": 18, "metropolis": 22}[t.size], [a["poly"] for a in t.era_areas])
     if box: t.era_areas.append({"kind": "park", "label": "Public park", "poly": box})
 
 
 def layer_boulevards(t):
-    if t.size != "city": return
+    if t.size not in ("city", "metropolis"): return
     out = []
     for sg in t.segs:
         a, b, h, k = sg
@@ -379,7 +379,7 @@ def layer_boulevards(t):
 
 
 def layer_embankment(t):
-    if not t.river_line or t.size != "city": return
+    if not t.river_line or t.size not in ("city", "metropolis"): return
     bank_way(t, -town_side(t), "quay", "Embankment")
     clear(t)
 
@@ -387,7 +387,7 @@ def layer_embankment(t):
 def layer_suburbs(t):
     R = t.R
     n = 0
-    want = {"village": 6, "town": 14, "city": 24}[t.size]
+    want = {"village": 6, "town": 14, "city": 24, "metropolis": 60}[t.size]
     drop(t, {b.key for b in t.blds if b.type in ("byre-house", "barn") and not t.in_town(b.centre)})   # the farms near town are sold for building
     regrid(t)
     lines = list(t.road_lines) + [w["line"] for w in t.era_ways if w["kind"] == "ring-road"]
@@ -416,7 +416,7 @@ def layer_suburbs(t):
 def layer_blitz(t):
     R = t.R
     if t.size == "village" or (t.size == "town" and R.random() < .5): return
-    hits = {"town": 1, "city": 3}[t.size]
+    hits = {"town": 1, "city": 3, "metropolis": 8}[t.size]
     cand = [b for b in t.blds if b.type not in ("chapel",) and b.label not in ("Tavern", "Railway station")]
     for _ in range(hits):
         if not cand: break

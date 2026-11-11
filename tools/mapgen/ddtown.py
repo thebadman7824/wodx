@@ -29,7 +29,7 @@ How it decides where things go
 
 Night: the map's ambient light is a night blue (Rothenstein's maps are drawn as night). --day keeps daylight.
 
-Run: python3 ddtown.py [--seed N] [--size village|town|city] [--name NAME] [--part SQUARES] [--assets LIST] [--day]
+Run: python3 ddtown.py [--seed N] [--size village|town|city|metropolis] [--name NAME] [--part SQUARES] [--assets LIST] [--day]
 The asset list is every asset path in the Forgotten Adventures packs, one a line (the farmstead's copy:
 /mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt).
 """
@@ -43,6 +43,7 @@ SIZES = {
     "village": {"cols": 64, "rows": 48, "pop": (70, 120), "grid": 0, "market": (13, 8), "label": "village", "trades": 1, "stalls": 1},
     "town": {"cols": 96, "rows": 72, "pop": (190, 260), "grid": 1, "market": (17, 11), "label": "small town", "trades": 2.5, "stalls": 5},
     "city": {"cols": 168, "rows": 124, "pop": (500, 700), "grid": 3, "market": (21, 13), "label": "city", "trades": 2.5, "stalls": 9},
+    "metropolis": {"cols": 560, "rows": 560, "pop": (5000, 7000), "grid": 0, "market": (30, 20), "label": "metropolis", "trades": 2.5, "stalls": 18},   # organic only
 }
 ROAD_HALF = 1.2
 NIGHT, DAY = "ff6a7aa8", "ffffffff"
@@ -569,7 +570,7 @@ def clip_whole(r, whole):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=1197)
-    ap.add_argument("--size", choices=sorted(SIZES), default="village")
+    ap.add_argument("--size", choices=sorted(SIZES), default="village", help="metropolis: organic layout only, about 560 squares across and 1,400 households, in some 80 part maps")
     ap.add_argument("--name")
     ap.add_argument("--part", type=int, default=PART, help="the largest side of one map, in squares; 0 keeps one map")
     ap.add_argument("--assets", default="/mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt")
@@ -581,6 +582,7 @@ def main():
     ap.add_argument("--out", default=".")
     a = ap.parse_args()
     if a.part and a.part < 24: raise SystemExit("--part must be 24 squares or more (or 0 for one map)")
+    if a.size == "metropolis" and a.layout != "organic": raise SystemExit("a metropolis needs the organic layout")
     C.init(a.seed, a.assets)
     if a.layout == "organic":
         import organic
