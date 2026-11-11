@@ -1494,3 +1494,7 @@ gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight 
 ## 2026-11-11: Item descriptions and Examine (Library 0.7.0, B607-B608)
 
 Ben asked for examination and descriptions on items, as in Cataclysm DDA. All 797 goods have descriptions (data/goods-text.mjs, 21 with a later wording), filled into an item's description as it is made. Item sheets get Examine (description and facts) and Look closer (Perception + the category's Ability, difficulty 6; findings by successes, false, stolen, worn and uncanny from the Storyteller's Examine notes). The Item Review Desk shows each description and what a closer look finds. Tests examine.test.mjs.
+
+## 2026-11-11: Plain item names, details on a closer look (Library 0.7.1, B609)
+
+Ben asked that names and descriptions say only what a thing is. 67 goods renamed with their ids kept; origins and hidden features moved into per-good details opened by Look closer. The desk shows each good's details and its old name.

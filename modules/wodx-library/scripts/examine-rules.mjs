@@ -7,6 +7,7 @@
  *   more: one, how it was made; two, where and roughly when; three, whether it is false, stolen or worn out;
  *   four, anything uncanny about it. The Storyteller's own lines on an item open at the successes they set.
  *
+ * A good's own details (data/goods-text.mjs DETAIL_RAW: origin, special features, what is hidden) open at their successes.
  * Item flag wodx-library.examine = {origin, quality, forged, forgedTell, stolen, worn, uncanny, uncannyNeed, lines:
  * [{need, text}], note}. Nothing here is needed: an item with no flag is examined from its goods entry alone.
  */
@@ -124,24 +125,26 @@ export function factsOf(good, {kinds = {}, values = {}, conceal = {}, uses = nul
 }
 
 /** What a closer look finds. Returns [{need, text, secret}] for every line the successes open, in order. */
-export function findings(kind, successes = 0, flag = {}, owner = null) {
+export function findings(kind, successes = 0, flag = {}, owner = null, details = []) {
   const s = num(successes), f = flag ?? {};
+  const own = (Array.isArray(details) ? details : []).filter(d => d?.text);
+  const opened = need => own.filter(d => num(d.need) === need).map(d => ({need, secret: need >= NEEDS.truth, text: d.text}));
   const base = LINES[kind] ?? ["How it was made.", "Where it comes from.", "Whether it is what it seems."];
   const out = [];
   if ( s >= NEEDS.made ) {
-    out.push({need: 1, text: base[0]});
+    out.push({need: 1, text: base[0]}, ...opened(1));
     if ( f.quality && QUALITY[f.quality] ) out.push({need: 1, text: `The work is ${QUALITY[f.quality].toLowerCase()}.`});
   }
   if ( s >= NEEDS.origin ) {
-    out.push({need: 2, text: base[1]});
+    out.push({need: 2, text: base[1]}, ...opened(2));
     if ( f.origin ) out.push({need: 2, text: String(f.origin)});
   }
   if ( s >= NEEDS.truth ) {
-    out.push({need: 3, text: base[2]});
+    out.push({need: 3, text: base[2]}, ...opened(3));
     if ( f.forged ) out.push({need: 3, secret: true, text: f.forgedTell ? `It is not genuine: ${f.forgedTell}` : "It is not genuine. Someone made it to pass as something it is not."});
     if ( f.stolen || owner?.stolen ) out.push({need: 3, secret: true, text: "There are signs it was stolen: a mark scratched off, a name cut away, or a fit made for someone else."});
     if ( f.worn ) out.push({need: 3, text: "It is worn and will not last much longer."});
-    if ( !f.forged && !f.stolen && !owner?.stolen && !f.worn ) out.push({need: 3, text: "Nothing about it is false."});
+    if ( !f.forged && !f.stolen && !owner?.stolen && !f.worn && !opened(3).length ) out.push({need: 3, text: "Nothing about it is false."});
   }
   const un = Math.max(NEEDS.uncanny, num(f.uncannyNeed) || NEEDS.uncanny);
   if ( f.uncanny && s >= un ) out.push({need: un, secret: true, text: String(f.uncanny)});
@@ -160,7 +163,8 @@ export const joinLines = (lines = []) => lines.map(l => `${l.need}: ${l.text}`).
 export function goodOf(name, goods = []) {
   const s = String(name ?? "").trim();
   const bare = s.replace(/\s*\(\d+\)\s*$/, "");
-  const byName = goods.find(g => g.name === bare || g.name.toLowerCase() === bare.toLowerCase());
+  const lc = bare.toLowerCase();
+  const byName = goods.find(g => g.name.toLowerCase() === lc || (g.was && g.was.toLowerCase() === lc));
   if ( byName ) return byName;
   const m = /^(\d+)\s+(.+)$/.exec(bare);
   if ( m ) return goods.find(g => g.stack?.plural && g.stack.plural.toLowerCase() === m[2].toLowerCase()) ?? null;

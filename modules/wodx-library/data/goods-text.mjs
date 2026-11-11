@@ -6,39 +6,39 @@
 export const DESC_RAW = `
 a bronze coin | A small, worn disc of bronze. The stamped head is rubbed almost smooth by hands and purses.
 a cowrie shell | A glossy, humped seashell with a toothed slit underneath. Far from the sea it passes as small money, strung by the dozen.
-a Chinese cash coin | A round copper coin with a square hole in the middle, made to be strung on a cord in hundreds. Four characters ring the hole.
-a gold dinar from a Muslim mint | A thin gold coin covered on both faces in lines of Arabic script, with no picture at all. It is heavy for its size and rings true.
+a square-holed copper coin | A round copper coin with a square hole in the middle and four characters around the hole.
+a gold dinar | A thin gold coin covered on both faces in lines of script, with no picture at all. It is heavy for its size and rings true.
 a silver penny | A thin silver coin with a cross on one face and a ruler's crude head on the other. Most everyday dealing is done in these.
 a clipped half-penny | Half of a silver penny, cut along the cross, with its edge trimmed by someone who kept the shavings.
 a thin bracteate pfennig | A silver coin so thin that it was struck on one side only, so the picture shows through backwards on the other. It bends between two fingers.
-a Byzantine gold hyperpyron | A cup-shaped gold coin from Constantinople showing Christ on one face and the emperor on the other. Its gold is not as pure as it once was.
+a gold hyperpyron | A small cup-shaped gold coin with a robed figure on each face.
 a silver groat | A broad silver coin worth several pennies, with a crowned head and a cross on the back.
-a gold florin of Florence | A small gold coin stamped with a lily on one face and Saint John the Baptist on the other. Bankers across Christendom trust it.
-a Venetian gold ducat | A gold coin showing the doge kneeling before Saint Mark. It is the trader's coin from Venice to the Levant.
-a stamped silver bar of one mark weight | A small ingot of silver weighing one mark, struck with the stamp of the town that assayed it. It is too much money to spend at market.
+a gold florin | A small gold coin stamped with a lily on one face and a saint on the other.
+a gold ducat | A gold coin showing a figure kneeling before a saint.
+a stamped silver bar | A small ingot of silver struck with a stamp. It is too much money to spend at market.
 a brass counting jeton | A brass token made for reckoning sums on a counting board. It is not money, though it is sometimes passed off as money in the dark.
 a copper coin | A heavy copper coin, brown and greasy from handling, worth little alone.
 a foreign coin | A coin from somewhere else, its legend in a strange script or tongue. A money-changer could say what it is worth.
-a Spanish silver piece of eight | A big silver coin from the Spanish mints of the New World, often cut into eight bits for change. It is good almost everywhere ships go.
-a silver thaler | A large, heavy silver coin with a ruler's portrait and coat of arms. It is the standard coin of the German lands and beyond.
+a silver piece of eight | A big silver coin, often cut into eight bits for change.
+a silver thaler | A large, heavy silver coin with a ruler's portrait and coat of arms.
 a goldsmith's note promising payment | A handwritten note from a goldsmith, promising to pay the bearer a stated sum in coin on demand. It is only as good as the goldsmith.
 a copper farthing | A small copper coin worth a quarter of a penny. It buys a crust or a match.
 a gold sovereign | A small, bright gold coin with the monarch's head and Saint George slaying the dragon. Its weight is exact.
-a US silver dollar | A big silver dollar with Liberty on its face and an eagle on the back.
+a silver dollar | A big silver dollar with Liberty on its face and an eagle on the back.
 a twenty-dollar gold piece | A heavy gold coin with an eagle on the back, worth a month's wages for a working person.
-a US dollar bill | A green paper note with a president's portrait, folded soft from many wallets.
-a worthless Confederate banknote | A paper note of the defeated Confederate States, now good only as a curiosity or to start a fire.
+a dollar bill | A green paper note with a portrait, folded soft from many wallets.
+an old banknote | A printed paper banknote, brittle and yellowed.
 a company-store scrip token | A stamped brass token issued by a mining or lumber company. Only the company store will take it.
 a banknote | A printed paper note of a national bank, with a watermark that shows against the light.
-an emergency town banknote | A paper note printed by a town council when coin ran out. It is cheap to make and quick to lose its value.
-a Deutsche Mark note | A West German banknote, trusted across Europe for its steady worth.
+a town banknote | A cheaply printed paper note with a town's name and arms.
+a Deutsche Mark note | A Deutsche Mark banknote, crisp and finely printed.
 a small coin | A small coin of base metal, worth very little.
 a euro note | A European banknote with arches and bridges that stand for no real place, and a hologram strip.
 a bank card | A plastic card with a magnetic stripe and the holder's name embossed on the front.
-a credit card in someone else's name | A credit card showing another person's name and signature. It works until the theft is reported.
-a hardware crypto wallet with a forgotten balance | A small device like a USB stick that holds the keys to a cryptocurrency balance. Nobody remembers the PIN.
-a credchip with a little money on it | A thumb-sized chip holding a small sum of electronic money. It can be passed hand to hand with no name attached.
-a corporate scrip chit, good only in company towns | A plastic chit worth credit at one corporation's stores and housing. Outside the company's towns it is worthless.
+a credit card | A plastic credit card with a name and a signature strip.
+a hardware crypto wallet | A small device like a USB stick that holds the keys to a cryptocurrency balance.
+a credchip | A thumb-sized chip of electronic money that can be passed hand to hand.
+a scrip chit | A plastic chit printed with a company's logo and a value.
 a loaf of dark bread | A heavy round loaf of rye or mixed grain, dense and sour. It keeps for days.
 a sack of grain | A sack of threshed grain, ready for the mill or the pot.
 a bag of barley | A cloth bag of hulled barley, for soup, porridge or brewing.
@@ -63,14 +63,14 @@ an apple | A single apple, small and a little wrinkled from the store-loft.
 a turnip | A single turnip, a winter food for the poor.
 a dried fig | A soft dried fig, sweet and seedy.
 a jar of olives | A clay jar of green or black olives in brine, sealed with a wooden plug.
-an orange | A single orange, a luxury brought from the south.
-a pineapple for a rich host's table | A whole pineapple, grown in a hothouse or shipped at great cost. It is put on the table to be admired more often than eaten.
+an orange | A single orange.
+a pineapple | A whole pineapple with its crown of leaves.
 a pot of honey | A small pot of honey sealed with wax.
 a twist of salt | A twist of paper or cloth holding a little salt.
 a pouch of pepper | A small pouch of black peppercorns, worth more than its weight in many things.
 a whole nutmeg | A single nutmeg, brown and wrinkled. It is grated onto food and drink.
 a paper of saffron threads | A folded paper holding red saffron threads, the costliest spice by weight.
-a stick of cinnamon | A rolled quill of cinnamon bark from the far east, sweet and woody when snapped.
+a stick of cinnamon | A rolled quill of cinnamon bark, sweet and woody when snapped.
 a pot of mustard | A small pot of ground mustard mixed with vinegar.
 a sugarloaf in blue paper | A hard cone of white sugar wrapped in blue paper. Pieces are cut from it with sugar nips.
 a marzipan figure | A small figure moulded from almond paste and sugar, painted for a feast day.
@@ -94,12 +94,12 @@ a pizza box with two cold slices | A greasy cardboard pizza box holding two cold
 a packet of instant noodles | A brick of dried noodles with a sachet of flavour powder.
 a field ration pack | A sealed plastic pouch holding a soldier's meal, with a heater and a plastic spoon.
 a ration bar in foil | A dense bar of compressed food in foil, made for emergencies.
-a vat-grown protein block | A pale block of protein grown in a tank, with no flavour of its own.
-a tube of flavoured algae paste | A squeeze tube of green paste made from algae and flavoured to taste of something else.
-a packet of insect-flour crackers | A packet of crisp crackers baked from cricket flour, cheap protein for crowded cities.
-a printed snack bar shaped like a star | A snack bar laid down by a food printer in a neat star shape.
-a hydroponic tomato in a plastic dome | A perfect red tomato grown without soil, sold under a clear plastic dome.
-a slice of real farmed beef, a status meal | A slice of beef from a real animal, sealed in a branded tray. Eating it says something about who can afford to.
+a protein block | A pale block of protein with no flavour of its own.
+a tube of flavoured paste | A squeeze tube of green paste with a picture of a better meal on the label.
+a packet of crackers | A packet of crisp brown crackers.
+a star-shaped snack bar | A snack bar in a neat star shape, in clear wrap.
+a tomato in a plastic dome | A perfect red tomato sold under a clear plastic dome.
+a slice of beef in a branded tray | A slice of red beef sealed in a branded tray.
 a jug of ale | A jug of brown ale, thick and cloudy, brewed without hops.
 a cask of small beer | A small cask of weak beer, safer to drink than the water.
 a jug of cider | A jug of cloudy apple cider, sharp and a little fizzy.
@@ -107,20 +107,20 @@ a bottle of beer | A glass bottle of beer with a stopper or cap.
 a six-pack of beer cans | Six cans of cheap beer held together by plastic rings.
 a skin of wine | A leather skin of wine, sour and strong.
 a jug of mead | A jug of golden mead brewed from honey and water, sweet and strong.
-a bottle of claret | A bottle of light red wine from Bordeaux, the gentleman's table wine.
-a bottle of port | A bottle of strong sweet wine from Portugal.
+a bottle of claret | A bottle of light red wine, the gentleman's table wine.
+a bottle of port | A bottle of strong sweet wine.
 a bottle of champagne | A heavy bottle of sparkling wine with its cork wired down.
 a flask of rice wine | A ceramic flask of clear rice wine, served warm or cold.
 a flask of brandy | A flask of brandy distilled from wine, warming and strong. Physicians prescribe it as often as innkeepers sell it.
 a bottle of vodka | A bottle of clear grain spirit with almost no smell, bought to get drunk on.
 a bottle of gin | A bottle of gin. Its smell of juniper carries.
-a bottle of rum | A bottle of dark rum from the sugar islands.
+a bottle of rum | A bottle of dark rum.
 a bottle of whiskey | A bottle of amber whiskey that smells of smoke and malt.
 a jar of corn liquor | A mason jar of raw white corn liquor from an illegal still.
 a bottle of absinthe | A bottle of green absinthe, bitter with wormwood.
 a bottle of synthetic vodka | A bottle of vodka made in a lab. It tastes of nothing and burns all the same.
 a bag of coffee beans | A cloth bag of roasted coffee beans with a dark, oily smell.
-a packet of tea | A packet of dried black or green tea leaves, once worth more than its weight in silver.
+a packet of tea | A packet of dried black or green tea leaves.
 a bottle of mineral water | A stoneware or glass bottle of water from a spa spring, sold for health.
 a bottle of lemonade | A stoppered bottle of sweet, fizzy lemonade.
 a bottle of cola | A curved glass bottle of dark, sweet cola with a crimped metal cap.
@@ -130,12 +130,12 @@ a pouch of electrolyte drink | A foil pouch of salted drink for heat and hard wo
 a lump of opium | A sticky dark lump of opium wrapped in leaf or paper. It smells bitter and earthy.
 a twist of dried poppy heads | A twist of dried poppy seed heads, for a sleeping draught.
 a bottle of laudanum | A small brown bottle of opium dissolved in alcohol, sold for pain, coughs and sleeplessness.
-a bottle of soothing syrup for babies | A bottle of syrup for teething children. The label does not say that it is laced with morphine.
+a bottle of soothing syrup | A bottle of syrup for teething children.
 a vial of morphine | A small glass vial of morphine solution for injection. It kills pain and makes the user drowsy.
 a paper wrap of heroin | A folded paper wrap of brown or off-white powder, cut with something to stretch it.
 a fentanyl patch | A medical skin patch of a very strong opioid. It is dangerous in the wrong hands.
 a pouch of coca leaves | A pouch of dried coca leaves to be chewed with lime against hunger and cold.
-a bottle of coca tonic wine | A bottle of wine laced with coca, sold as a tonic for the nerves.
+a bottle of coca tonic wine | A bottle of tonic wine sold for the nerves, with a bright label.
 a vial of cocaine | A small glass vial of white powder that numbs the gums.
 a rock of crack cocaine | A small off-white rock wrapped in cling film, smoked for a short, hard high.
 an amphetamine tablet | A small white tablet that keeps the taker awake and sharp, then crashes them.
@@ -149,7 +149,7 @@ a dried mushroom | A shrivelled dried mushroom. Some kinds bring visions.
 a pouch of henbane seeds | A pouch of henbane seeds, burned or brewed by those who want visions or to poison someone.
 a peyote button | A dried, bitter button of the peyote cactus.
 a tab of LSD blotter paper | A small square of printed blotting paper soaked in LSD.
-a joint dusted with PCP | A hand-rolled joint with a harsh chemical smell. Its smoker may become violent.
+a hand-rolled joint | A hand-rolled joint with a harsh chemical smell.
 a baggie of ecstasy pills | A small bag of pressed pills, each stamped with a little logo.
 a bottle of belladonna drops | A small bottle of nightshade drops, used to widen the pupils for beauty. Too much kills.
 a bottle of chloral hydrate | A bottle of sleeping drug, the knockout drops of a bar.
@@ -159,7 +159,7 @@ a vial of ketamine | A small vial of ketamine, an animal anaesthetic.
 a glass syringe and a bent spoon | A glass syringe and a spoon blackened underneath from cooking drugs.
 a long opium pipe | A long pipe with a small bowl, made for smoking opium lying down.
 a hookah | A tall water pipe with a hose for smoking tobacco.
-a dermal patch of street stims | A skin patch of stimulants cooked in someone's kitchen. Its dose is a guess.
+a dermal patch | A skin patch of stimulants in a plain wrapper.
 a vial of designer neurostim | A vial of a designer drug made to sharpen the mind for a few hours.
 an inhaler of synthetic dream gas | An inhaler of a gas that brings vivid waking dreams.
 a pouch of pipe tobacco | A leather or oilskin pouch of shredded pipe tobacco.
@@ -169,8 +169,8 @@ a cigar | A single hand-rolled cigar of dark leaf, with a paper band.
 a plug of chewing tobacco | A dark, sticky plug of pressed tobacco for chewing.
 a cigarette | A single cigarette, a little bent from the packet.
 an electronic cigarette | A small battery vaporiser with a flavoured liquid cartridge.
-a pair of loaded dice | A pair of dice weighted to favour certain numbers.
-a deck of marked cards | A deck of playing cards with marks on the backs that only someone who knows them can read.
+a pair of gaming dice | A pair of bone dice with worn pips.
+a worn deck of cards | A worn deck of playing cards, soft at the corners.
 a lottery ticket | A printed lottery ticket with a row of numbers. The draw has not happened yet, or the result has not been checked.
 a betting slip from a bookmaker | A bookmaker's slip recording a bet on a race or a match, with the odds written in.
 a racing form with horses circled | A racing paper with horses circled in pencil and some crossed out.
@@ -199,7 +199,7 @@ a woollen blanket | A heavy blanket of coarse wool, warm even when it is damp.
 a feather pillow | A linen pillow stuffed with goose or hen feathers. Quills poke through now and then.
 a three-legged stool | A three-legged stool that stands steady on an uneven floor.
 a rolled tapestry | A rolled woven wall hanging with a scene of hunting or of saints.
-a Venetian glass mirror | A mirror of Venetian glass in a carved frame, clearer than any polished metal.
+a glass mirror in a carved frame | A clear glass mirror in a carved wooden frame.
 a mantel clock | A clock in a wooden or marble case, wound with a key each week. It chimes the hours.
 a baby's cradle | A wooden cradle on curved rockers, made to be rocked with a foot while the hands work.
 a Christmas ornament | A small glass ornament for a Christmas tree.
@@ -258,13 +258,13 @@ a trench coat | A belted, waterproof coat with epaulettes, first worn by officer
 a hard hat | A hard plastic or fibreglass helmet worn on building sites.
 a high-visibility vest | A bright yellow or orange vest with reflective strips.
 a bolt of undyed wool | A bolt of plain undyed woollen cloth, enough for several garments.
-a bolt of dyed silk | A bolt of shining dyed silk from the east, worth a small fortune.
+a bolt of dyed silk | A bolt of shining dyed silk.
 a needle case and thread | A small case holding needles and a hank of thread.
 a paper of pins | A folded paper holding rows of brass pins.
-a smart-fabric jacket that changes colour | A jacket woven with fibres that change colour and pattern on command.
-a filter mask for bad air days | A face mask with filter cartridges against smog, smoke and dust.
-a cooling vest for heat waves | A vest with pockets of coolant gel for heat waves.
-a coat with stab-proof lining sold as fashion | A fashionable coat with a hidden lining of woven fibre that stops a knife.
+a smart-fabric jacket | A light jacket of a smooth, faintly shimmering fabric.
+a filter mask | A face mask with two filter cartridges.
+a cooling vest | A padded vest with pockets of gel.
+a fashionable long coat | A fashionable long coat, cut close and a little heavy.
 a cake of lye soap | A coarse brown cake of soap made from lye and fat.
 a bar of scented soap | A bar of scented soap in a paper wrapper.
 a chewing stick for the teeth | A twig with a frayed end for cleaning the teeth.
@@ -286,9 +286,9 @@ a hair dryer | An electric hair dryer that blows hot air and smells faintly of d
 nail clippers | A small pair of nail clippers.
 a set of false teeth | A set of false teeth in a pink or ivory plate, sometimes made from the teeth of the dead.
 a bottle of rosewater | A small bottle of rosewater for scent and cooking.
-a pot of lead-white face paint | A pot of white face paint made from lead. It eats the skin it beautifies.
+a pot of white face paint | A pot of white face paint for a pale, fashionable face.
 a pot of rouge | A small pot of red rouge for the cheeks and lips.
-a bottle of eau de Cologne | A bottle of light citrus scent from Cologne.
+a bottle of eau de Cologne | A bottle of light citrus scent.
 a tube of lipstick | A small metal tube of red lipstick.
 a cut-glass perfume bottle | A cut-glass perfume bottle with a bulb sprayer.
 a compact of face powder | A small mirrored compact of face powder with a puff.
@@ -420,7 +420,7 @@ a ration book with coupons | A ration book with coupons for food and clothing.
 a driving licence | A driving licence with the holder's name, address and photograph.
 identity papers | A set of official identity papers.
 a passport | A passport with a photograph, a stamped visa or two, and the holder's name and nationality.
-a forged passport | A passport that looks right at a glance.
+a passport in a plastic sleeve | A passport in a plastic sleeve, with a photograph and a few stamped visas.
 a floppy disk | A square plastic floppy disk with a hand-written label.
 a spindle of blank CDs | A plastic spindle of blank recordable CDs.
 a USB stick on a lanyard | A small memory stick on a lanyard.
@@ -428,7 +428,7 @@ a data chip with no label | A small data chip with no label. Only reading it wil
 a Latin grammar | A Latin grammar, the first book of every schoolchild and cleric.
 a herbal with drawings | A book of plants and their uses, with drawings of each.
 a treatise on falconry | A treatise on training, keeping and flying hawks, for the nobility.
-a guild's book of trade secrets | A guild's handwritten book of methods, recipes and secrets of the trade.
+a guild's handwritten book | A guild's handwritten book, bound in leather and kept under lock.
 a fencing manual | A fencing manual with drawings of guards and cuts.
 a cookery book | A cookery book of recipes and household advice.
 a printed military drill book | A printed drill book of marching and weapons handling.
@@ -455,7 +455,7 @@ a subway map | A subway map with lines in different colours.
 a trench map | A military trench map with lines in red and blue.
 a holo-map chip | A chip that projects a moving map in the air.
 a small carved household idol | A small household god carved in wood or stone, worn smooth by offerings.
-a Thor's hammer amulet | A small amulet shaped like Thor's hammer, worn on a cord.
+a small hammer amulet | A small amulet shaped like a hammer, worn on a cord.
 a corn dolly from the last sheaf | A figure woven from the last sheaf of the harvest, kept through winter for luck.
 a sprig of mistletoe tied with red wool | A sprig of mistletoe tied with red wool, hung for luck and protection.
 a wooden cross on a cord | A small wooden cross on a leather cord, worn under the shirt.
@@ -465,7 +465,7 @@ a pilgrim's badge of lead | A small lead badge from a shrine, pinned to a hat to
 a vial of holy water | A small glass vial of water blessed by a priest, stoppered with wax.
 a scapular | Two small squares of cloth joined by strings, worn over the shoulders for devotion.
 a saint's medal | A small stamped medal of a saint on a cord, worn for protection on a journey or in a trade.
-a reliquary holding a saint's bone | A small case of gilt and crystal holding a fragment of bone said to be a saint's.
+a reliquary holding a bone | A small case of gilt and crystal holding a fragment of bone.
 a painted icon on wood | A painted holy image on a wooden panel, darkened by candle smoke.
 a pyx of consecrated hosts | A small round box holding consecrated hosts for the sick.
 a brass censer | A brass censer on chains for burning incense.
@@ -477,7 +477,7 @@ a hymnal | A book of hymns with words and tunes for the congregation.
 a pocket New Testament | A small pocket New Testament, the kind given to soldiers.
 a holy picture printed on card | A small printed card of a saint, with a prayer on the back.
 a tract pressed into someone's hand | A short cheap tract warning of judgement and hell, pressed into a passer-by's hand.
-a prayer cloth sent by a television preacher | A small cloth mailed by a television preacher, to be laid on the sick, with a request for donations.
+a small prayer cloth | A small square of cloth with a printed prayer.
 a mezuzah case | A small case for a scroll of scripture, fixed to a doorpost.
 a set of tefillin | Two small leather boxes holding scripture, with straps for the arm and head.
 a prayer shawl | A fringed prayer shawl with blue or black stripes.
@@ -491,45 +491,45 @@ a Buddhist mala of wooden beads | A string of a hundred and eight wooden beads f
 an incense stick | A thin stick of incense that burns for half an hour.
 a small brass Buddha | A small seated Buddha of brass, its hands in the gesture of meditation.
 a brass image of Ganesha | A small brass image of the elephant-headed god, remover of obstacles.
-a sheet of paper money to burn for the dead | A sheet of fake money printed to be burned as an offering to the dead.
+a sheet of printed paper money | A sheet of paper money printed in gold and red, too gaudy to spend.
 a holo-icon that weeps light | A holographic icon of a saint whose eyes shed tears of light on a loop.
 a rosary with a counting chip in the cross | A rosary with a chip in the cross that counts decades and reminds its owner to pray.
 a hag stone on a string | A stone with a natural hole through it, hung on a string. Folk say it shows the true face of the Fair Folk.
 a bundle of rowan twigs tied with red thread | A bundle of rowan twigs tied with red thread, against witches and the Fair Folk.
-a fever charm written small and folded | A tiny folded paper of words against fever, to be worn or swallowed.
+a tiny folded paper charm | A tiny paper folded many times, with words written very small inside.
 an iron horseshoe for over the door | An iron horseshoe to nail over a door, points up so the luck does not run out.
-a blue glass eye bead against the evil eye | A blue glass bead painted with an eye, to turn away the evil eye.
+a blue glass eye bead | A blue glass bead painted with an eye.
 a cloth poppet stuck with pins | A crude cloth doll stuck with pins, sometimes with a scrap of hair or cloth sewn in.
-a mandrake root wrapped in silk | A forked root shaped like a little person, wrapped in silk. It is sold dear as a charm.
-a stoneware witch bottle full of pins | A stoneware jug filled with bent pins, hair and urine, buried to turn back a witch's curse.
+a forked root wrapped in silk | A forked root wrapped in silk.
+a stoneware bottle full of pins | A small stoneware jug that rattles, stoppered and full of bent pins.
 a vial of graveyard dirt | A small vial of dirt dug from a grave, used in charms and curses.
 a gris-gris bag | A small cloth bag of herbs, roots and charms, worn for protection or luck.
 a lucky rabbit's foot | A rabbit's foot on a little chain, carried for luck.
-a dried hand sold as a hand of glory | A dried, blackened hand sold as a hand of glory, which is meant to freeze sleepers in place.
-a dream catcher from a gift shop | A dream catcher of hoop and web with beads and feathers, from a gift shop.
-a crystal sold as a healing stone | A quartz crystal sold with a card that lists the ailments it is said to cure.
+a dried hand | A dried, blackened human hand.
+a dream catcher | A hoop and woven web with beads and feathers.
+a quartz crystal | A clear quartz crystal the size of a thumb.
 a handwritten grimoire | A handwritten book of spells, sigils and invocations, in a crabbed hand.
 a printed grimoire chapbook | A cheap printed grimoire of spells and charms.
 a set of alchemist's glassware | A set of retorts, flasks and alembics for distilling.
-a bezoar stone in a gold cage | A smooth stone from the gut of an animal, set in a gold cage. It is said to draw out poison.
-a sliver of unicorn horn | A sliver of white spiral horn said to come from a unicorn. Most are narwhal tusk.
-a polished obsidian scrying mirror | A disc of polished black obsidian for seeing visions.
-a brass astrolabe engraved with sigils | A brass astrolabe for reading the stars, with sigils engraved among its marks.
-a chalk-drawn summoning diagram on oilcloth | A roll of oilcloth with a summoning circle drawn in chalk.
+a smooth stone in a gold cage | A smooth, waxy stone set in a little gold cage.
+a sliver of white spiral horn | A sliver of white horn with a spiral groove.
+a polished obsidian mirror | A disc of polished black obsidian.
+a brass astrolabe | A brass astrolabe for reading the stars, with plates that turn.
+a roll of chalk-marked oilcloth | A roll of oilcloth with circles and signs drawn in chalk.
 a tarot deck | A deck of seventy-eight tarot cards for games or fortune-telling.
 a crystal ball on a stand | A clear glass ball on a carved stand, gazed into by fortune-tellers.
 a planchette | A small heart-shaped board on castors with a pencil, for spirit writing.
 a talking board | A board printed with letters, numbers and YES and NO, with a pointer.
 a seance trumpet | A tin cone that spirits are said to speak through at a seance.
-a spirit photograph | A photograph with a pale figure behind the sitter.
-a phone app that claims to find ghosts | An app that blinks and buzzes and claims to find ghosts.
+a photograph with a pale figure | A photograph of a sitter with a pale figure standing behind.
+a phone with a ghost-finding app | A phone whose screen shows a blinking app with a dial and a pulsing light.
 a pouch of dried herbs | A pouch of dried herbs for teas, poultices and cooking.
 a roll of clean linen bandage | A roll of clean linen bandage, boiled and dried in the sun.
 a jar of goose-grease salve | A jar of salve of goose grease and herbs.
 a pot of theriac | A pot of theriac, a costly cure-all paste of dozens of ingredients.
 a live leech | A live leech in a jar of water.
 a glass cupping cup | A small glass cup for drawing blood to the skin.
-a pot of mercury ointment for the pox | A pot of mercury ointment for the French pox. It makes the teeth loose.
+a pot of grey ointment | A pot of heavy grey ointment.
 a bottle of patent medicine | A bottle of patent medicine that promises to cure everything.
 a bottle of smelling salts | A small bottle of ammonia salts to bring someone round from a faint.
 a paper of quinine powder | A folded paper of bitter quinine powder against fever and the ague.
@@ -544,7 +544,7 @@ a field dressing | A sealed field dressing of gauze and bandage.
 a bottle of aspirin | A bottle of aspirin tablets for pain and fever.
 a morphine syrette | A small tube of morphine with a needle.
 a vial of penicillin | A glass vial of penicillin. It cures infections that would otherwise kill.
-a bag of donated blood taken from a hospital | A plastic bag of donated blood with a hospital label and a blood group.
+a bag of blood | A plastic bag of blood.
 a first aid kit | A metal or plastic first aid kit with bandages, plasters and antiseptic.
 a prescription pill | A single prescription pill with a number stamped on it. A pharmacist could name it.
 an asthma inhaler | An asthma inhaler. Its owner may need it urgently.
@@ -573,11 +573,11 @@ an instant photo | An instant photo with a white border.
 a concert ticket stub | The torn stub of a concert ticket with the date and the band.
 a school yearbook | A school yearbook full of signatures and jokes.
 a mixtape with a handwritten label | A cassette with a handwritten label and a list of songs.
-a cracked tablet full of old photos | A tablet with a cracked screen, still holding years of someone's photos.
-a memory crystal of someone's last week | A crystal holding a recording of a week of someone's life as they lived it.
+a cracked tablet | A tablet computer with a cracked screen. It still turns on.
+a memory crystal | A small crystal with a faint light deep inside.
 a small mirror | A small hand mirror of polished metal.
 a seashell | A seashell, carried a long way from the sea.
-a key to a door long gone | An old iron key to a door that no longer stands.
+an old iron key | An old iron key, heavy and rusted at the bow.
 a snow globe | A glass globe of water and white flakes around a little scene.
 a button tin | A tin of odd buttons saved over years.
 a set of knucklebones | A set of sheep's knucklebones for a game of tossing and catching.
@@ -614,7 +614,7 @@ a portable cassette player | A portable cassette player with foam headphones and
 a music CD | A music CD in a plastic case.
 an MP3 player | A small MP3 player with white earphones.
 a pair of wireless earbuds | A pair of wireless earbuds in a charging case.
-a bill of exchange drawn on an Italian bank | A bill ordering an Italian bank to pay a sum to the bearer in another city. It carries money across Christendom without coin.
+a bill of exchange | A written order for a bank to pay a sum to the bearer. It carries money across Christendom without coin.
 a silver ring | A plain silver ring, a little tarnished.
 a gold signet ring | A gold ring with a seal cut into its face, for stamping wax.
 an amber necklace | A necklace of polished amber beads, some with tiny insects caught inside.
@@ -625,7 +625,7 @@ a loose gem | A cut gemstone, out of its setting.
 a pocket watch on a chain | A pocket watch on a chain, wound each day with a key or crown.
 a wristwatch | A wristwatch on a leather strap.
 a diamond engagement ring | A gold ring set with a single diamond.
-a luxury Swiss watch | A luxury Swiss watch, heavy and precise. It is worth as much as a car.
+a luxury watch | A heavy, precise luxury watch. It is worth as much as a car.
 a silver cup | A silver drinking cup, often a gift for a christening or a wedding.
 a silver spoon | A silver spoon, often engraved with initials.
 a silver salt cellar | A small silver dish for salt, set at the head of the table.
@@ -634,8 +634,8 @@ an enamelled snuffbox | A small enamelled box for snuff, painted with a scene.
 a gilded chalice | A silver chalice gilded inside and out, for the wine of the Mass.
 a small oil painting in a gilt frame | A small oil painting of a landscape or a portrait in a gilt frame.
 a fur stole | A fur stole worn over the shoulders.
-a stolen designer handbag | A designer handbag with its owner's things still inside.
-a rare comic sealed in a plastic case | A rare comic sealed in a graded plastic case, worth far more than its cover price.
+a designer handbag | A designer handbag with a gold clasp.
+a comic sealed in a plastic case | A comic sealed in a graded plastic case.
 a bearer bond | A printed bond payable to whoever holds it, with coupons to clip for interest.
 a gold bullion coin | A gold bullion coin of exactly one ounce, worth its weight in gold.
 a corporate share token | A token holding a small number of shares in a corporation.
@@ -724,19 +724,19 @@ a duffel bag | A canvas duffel bag with a shoulder strap.
 a hard-shell case with foam inserts | A hard plastic case with foam cut-outs for delicate equipment.
 a self-sealing smart case | A case that seals itself and opens only for its owner.
 a padlock and key | An iron padlock and its key.
-a key to an unknown door | A key with no tag, to a door no one has found.
+a key on a string | A key on a loop of string with no tag.
 a set of car keys | A set of car keys on a ring with a fob.
 a fob for a self-driving car | A plastic fob that unlocks and summons a self-driving car.
 an iron door key | A long iron door key with a simple ward.
-a great key to a town gate | A great iron key to a town gate, as long as a forearm.
-a jailer's ring of keys | A heavy iron ring of keys to cells and doors.
+a great iron key | A great iron key as long as a forearm.
+a heavy ring of keys | A heavy iron ring of keys.
 a small brass casket key | A small brass key for a casket or jewellery box.
 a skeleton key | A skeleton key filed to open many simple locks.
 a pin-tumbler key on a ring | A small brass pin-tumbler key on a ring.
 a safe-deposit box key | A safe-deposit box key with a number stamped on it.
 a hotel key card | A plastic hotel key card with the hotel's logo.
 a security pass on a lanyard | A plastic security pass with a photo and a chip, on a lanyard.
-a guild's seal matrix | The brass or bronze seal of a guild, for stamping its documents.
+a brass seal matrix | A brass or bronze seal for stamping wax, with a handle.
 a biometric passkey ring | A ring that opens locks keyed to its wearer's pulse.
 a tanned hide | A tanned cowhide, stiff and brown, ready to be cut and sewn.
 a seasoned timber plank | A plank of oak or pine, dried for a year.
@@ -763,7 +763,7 @@ a sack of seed potatoes | A sack of seed potatoes, sprouting pale shoots.
 a tulip bulb | A tulip bulb. In the 1630s a rare one sold for the price of a house.
 a packet of flower seeds | A printed packet of flower seeds with a picture of the bloom.
 a hydroponic seed pod | A seed pod for a hydroponic garden, ready to drop in water.
-a vial of gene-edited seed | A vial of gene-edited seed, patented and licensed. Growing it without a licence is a crime.
+a vial of seed | A sealed vial of seed with a printed licence number.
 an hourglass | An hourglass in a wooden frame that runs for an hour.
 a pocket sundial | A folding pocket sundial with a small compass.
 a magnetic compass | A magnetic compass in a brass case.
@@ -823,6 +823,107 @@ a personal assistant pin that still talks | A small pin that answers questions, 
 @1500 a small mirror | A small hand mirror of glass.
 @1800 a leather purse | A small leather purse with a clasp.
 `;
+
+/**
+ * What a closer look adds for a single good: "name | successes | text". Where it comes from (2), its special features
+ * (1) and what is hidden or false about it (3). Kept out of the description, which says only what the thing plainly is.
+ */
+export const DETAIL_RAW = `
+a square-holed copper coin | 2 | Chinese cash, made to be strung in hundreds. The four characters name the reign it was struck under.
+a gold dinar | 2 | Struck at a Muslim mint. The script gives verses of the Quran, the mint's name and the year of the Hijra.
+a gold hyperpyron | 2 | Byzantine, struck in Constantinople, with Christ on one face and the emperor on the other.
+a gold hyperpyron | 3 | Its gold is not as pure as the old coins of the empire were.
+a gold florin | 2 | Struck in Florence: the lily is the city's, the saint is John the Baptist. Bankers across Christendom trust it.
+a gold ducat | 2 | Struck in Venice: the kneeling figure is the doge before Saint Mark. It is the traders' coin from Venice to the Levant.
+a silver piece of eight | 2 | From the Spanish mints of the New World. It is good almost everywhere ships go.
+a stamped silver bar | 1 | It weighs exactly one mark of silver.
+a stamped silver bar | 2 | The stamp is the assay mark of the town that tested it.
+a silver dollar | 2 | A United States silver dollar.
+a dollar bill | 2 | A United States note.
+an old banknote | 2 | A note of the Confederate States of America.
+an old banknote | 3 | It has been worthless since the Confederacy fell in 1865. It is good only as a curiosity.
+a town banknote | 2 | Printed by a town council when coin ran out. Its value falls week by week.
+a credit card | 3 | It is in someone else's name, with someone else's signature on the back. It works until the theft is reported.
+a hardware crypto wallet | 3 | It still holds a balance, if anyone can remember the PIN.
+a credchip | 1 | It holds a little money and carries no name.
+a scrip chit | 2 | Corporate scrip, good only at one company's stores and housing. Outside its towns it is worthless.
+a pineapple | 2 | Grown in a hothouse or shipped at great cost, it is set on a rich host's table to be admired more often than eaten.
+a protein block | 2 | Grown in a vat, not taken from any animal.
+a tube of flavoured paste | 2 | It is made from algae, flavoured to taste of something else.
+a packet of crackers | 2 | The flour is ground crickets: cheap protein for crowded cities.
+a star-shaped snack bar | 2 | It was laid down by a food printer.
+a tomato in a plastic dome | 2 | Grown without soil in a hydroponic farm.
+a slice of beef in a branded tray | 2 | From a real farmed animal. Eating it says something about who can afford to.
+a bottle of soothing syrup | 3 | The label does not say that it is laced with morphine.
+a hand-rolled joint | 3 | It is dusted with PCP. Its smoker may turn violent.
+a dermal patch | 2 | Street-cooked stimulants. Its dose is a guess.
+a pair of gaming dice | 3 | They are loaded to favour certain numbers.
+a worn deck of cards | 3 | The backs are marked so that someone who knows the marks can read each card.
+a glass mirror in a carved frame | 2 | Venetian glass, clearer than any polished metal.
+a fashionable long coat | 3 | A hidden lining of woven fibre stops a knife.
+a smart-fabric jacket | 1 | Its fibres change colour and pattern on command.
+a filter mask | 1 | Its cartridges are made against smog, smoke and bad air days.
+a cooling vest | 1 | Pockets of coolant gel keep its wearer cool through a heat wave.
+a pot of white face paint | 2 | It is made from lead and eats the skin it beautifies.
+a passport in a plastic sleeve | 3 | It is a forgery: the laminate lifts at one corner and the photograph was set in later.
+a small hammer amulet | 2 | Thor's hammer, worn by those who keep the old Norse gods.
+a reliquary holding a bone | 2 | The label names a saint and the shrine it came from.
+a reliquary holding a bone | 3 | Whether the bone is truly the saint's is another matter.
+a small prayer cloth | 2 | Mailed out by a television preacher, to be laid on the sick, with a request for donations.
+a sheet of printed paper money | 2 | Joss money, printed to be burned as an offering to the dead.
+a tiny folded paper charm | 2 | Words against fever, to be worn or swallowed.
+a blue glass eye bead | 2 | It is worn to turn away the evil eye.
+a forked root wrapped in silk | 2 | A mandrake root, its fork shaped like a little person. It is sold dear as a charm.
+a stoneware bottle full of pins | 2 | A witch bottle: bent pins, hair and urine, buried to turn back a witch's curse.
+a dried hand | 2 | It is sold as a hand of glory, which is meant to freeze sleepers in place.
+a dream catcher | 2 | It came from a gift shop.
+a quartz crystal | 2 | It is sold as a healing stone, with a card listing the ailments it is said to cure.
+a sliver of white spiral horn | 2 | It is sold as unicorn horn.
+a sliver of white spiral horn | 3 | It is narwhal tusk, as most of them are.
+a polished obsidian mirror | 2 | It is made for scrying, seeing visions in its black face.
+a brass astrolabe | 1 | Sigils are engraved among the marks of its plates.
+a roll of chalk-marked oilcloth | 1 | The marks are a summoning circle.
+a photograph with a pale figure | 2 | A spirit photograph from a medium's studio.
+a photograph with a pale figure | 3 | The figure is a double exposure.
+a phone with a ghost-finding app | 3 | The app blinks and buzzes at random.
+a smooth stone in a gold cage | 2 | A bezoar from the gut of an animal, said to draw out poison.
+a bag of blood | 2 | It carries a hospital label and a blood group. It was donated.
+a pot of grey ointment | 2 | Mercury ointment for the French pox. It makes the teeth loose.
+a memory crystal | 3 | It holds a recording of a week of someone's life, as they lived it.
+an old iron key | 3 | The door it opened no longer stands.
+a cracked tablet | 1 | It still holds years of someone's photos.
+a bill of exchange | 2 | It is drawn on an Italian bank, payable in another city.
+a luxury watch | 2 | Swiss made.
+a designer handbag | 3 | It was stolen: its owner's things are still inside.
+a comic sealed in a plastic case | 2 | It is rare and graded, worth far more than its cover price.
+a key on a string | 3 | No one knows which door it opens.
+a great iron key | 2 | It is the key to a town gate.
+a heavy ring of keys | 2 | A jailer's keys, to cells and doors.
+a brass seal matrix | 2 | The seal of a guild, for stamping its documents.
+a guild's handwritten book | 1 | It holds the guild's methods, recipes and secrets of the trade.
+a vial of seed | 2 | Gene-edited, patented and licensed. Growing it without a licence is a crime.
+an orange | 2 | Brought from the south at some cost.
+a stick of cinnamon | 2 | From the far east, by many hands.
+a bolt of dyed silk | 2 | From the east, worth a small fortune.
+a bottle of claret | 2 | From Bordeaux.
+a bottle of port | 2 | From Portugal.
+a bottle of rum | 2 | From the sugar islands.
+a packet of tea | 2 | Shipped from China or India.
+a bottle of coca tonic wine | 3 | The wine is laced with coca.
+a silver thaler | 2 | Struck in one of the German lands. It is the standard coin of the Empire and beyond.
+a Deutsche Mark note | 2 | West German, trusted across Europe for its steady worth.
+`;
+
+/** {name: [{need, text}]} */
+export const DETAILS = (() => {
+  const out = {};
+  for ( const line of DETAIL_RAW.split("\n") ) {
+    const m = /^(.+?) \| (\d+) \| (.+)$/.exec(line.trim());
+    if ( m ) (out[m[1]] ??= []).push({need: Number(m[2]), text: m[3]});
+  }
+  return out;
+})();
+export const detailsOf = name => DETAILS[name] ?? [];
 
 /** {name: [{from, text}]} sorted by year. */
 export const DESC = (() => {

@@ -73,3 +73,19 @@ test("examine: Library fills descriptions as goods become items and puts Examine
   assert.match(src, /getItemSheetHeaderButtons/);
   assert.match(readFileSync(join(root, "modules/wodx-library/scripts/main.mjs"), "utf8"), /api\.examine = examineApi\(\)/);
 });
+
+test("examine: names and descriptions say plainly what a thing is; origin and hidden features wait for a closer look", () => {
+  const plainWords = /\b(Chinese|Muslim|Byzantine|Florence|Venetian|Spanish|Swiss|Confederate|Thor's|unicorn|forged|stolen|loaded)\b/i;
+  for ( const g of G.GOODS ) assert.doesNotMatch(g.name, plainWords, `name: ${g.name}`);
+  for ( const [n, forms] of Object.entries(T.DESC) ) for ( const f of forms ) assert.doesNotMatch(f.text, /\b(Chinese|Muslim|Byzantine|Florence|Venice|Spanish|Swiss|Confederate|laced with)\b/, `description: ${n}`);
+  const names = new Set(G.GOODS.map(g => g.name));
+  for ( const n of Object.keys(T.DETAILS) ) assert.ok(names.has(n), `detail for unknown good: ${n}`);
+  const dinar = G.GOODS.find(g => g.name === "a gold dinar");
+  assert.equal(dinar.id, "a-gold-dinar-from-a-muslim-mint", "a renamed good keeps its id");
+  assert.equal(X.goodOf("a gold dinar from a Muslim mint", G.GOODS)?.name, "a gold dinar", "the old name still finds it");
+  assert.ok(!X.findings("coin", 1, {}, null, T.detailsOf("a gold dinar")).some(l => /Muslim/.test(l.text)));
+  assert.ok(X.findings("coin", 2, {}, null, T.detailsOf("a gold dinar")).some(l => /Muslim mint/.test(l.text)));
+  const pass = X.findings("papers", 3, {}, null, T.detailsOf("a passport in a plastic sleeve"));
+  assert.ok(pass.some(l => /forgery/.test(l.text) && l.secret));
+  assert.ok(!pass.some(l => l.text === "Nothing about it is false."));
+});

@@ -104,7 +104,7 @@ export async function lookCloser(item, actor = looker(item)) {
   const roll = await new Roll(`${p.pool}d10`).evaluate();
   const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
   const {successes, botch} = X.countSuccesses(faces, p.difficulty);
-  const found = X.findings(good.kind, successes, flagOf(item), ownerOf(item));
+  const found = X.findings(good.kind, successes, flagOf(item), ownerOf(item), T.detailsOf(good.name));
   const dice = faces.map(v => `<span class="vta-die ${v === 1 ? "one" : v >= p.difficulty ? "hit" : "miss"}">${v}</span>`).join("");
   const body = botch ? "<p>A botch. The Storyteller may tell something misleading.</p>"
     : found.length ? `<p class="wodx-quiet">What the look shows. The Storyteller fills in the details.</p><ul>${found.map(l => `<li>${esc(l.text)}</li>`).join("")}</ul>` : "<p>Nothing more than meets the eye.</p>";
