@@ -231,11 +231,14 @@ export const pickLine = (list, seed = 0) => ((list ?? []).length ? list[seed % l
  * A stock line. kind: greet, none, rumours, news, work, directions. stock: the data (data/stock-talk.mjs).
  * rumour: the text of a rumour the NPC has heard (for rumours). Returns {say, rumour} or null.
  */
-export function stockLine(kind, {stock, era = "modern", regard = "neutral", seed = 0, rumour = null} = {}) {
+export function stockLine(kind, {stock, era = "modern", regard = "neutral", seed = 0, rumour = null, voice = null} = {}) {
   if ( !stock ) return null;
   const say = text => (text ? {say: text, rumour: null} : null);
-  if ( kind === "greet" ) return say(pickLine(stock.GREET?.[era]?.[regard], seed));
-  if ( kind === "none" ) return say(pickLine(stock.NONE?.[regard], seed));
+  // voice (0.12.0): {greet, none, gossip} lines of the kind of person they are, mixed with the era's own
+  // voice.only: children, beggars and drunks keep to their own lines
+  const mix = (v, list) => (voice?.only && (v ?? []).length ? v : [...(v ?? []), ...(list ?? [])]);
+  if ( kind === "greet" ) return say(pickLine(mix(voice?.greet?.[warmthOf(regard)], stock.GREET?.[era]?.[regard]), seed));
+  if ( kind === "none" ) return say(pickLine(mix(voice?.none, stock.NONE?.[regard]), seed));
   if ( kind === "work" ) return regard === "hate" ? say(pickLine(stock.NONE?.hate, seed)) : say(pickLine(stock.WORK?.[era], seed));
   if ( kind === "directions" ) return say(pickLine(stock.DIRECTIONS?.[regard], seed));
   if ( kind === "news" ) return regard === "hate" ? say(pickLine(stock.NONE?.hate, seed)) : say(pickLine(stock.NEWS?.[era], seed));
@@ -246,7 +249,134 @@ export function stockLine(kind, {stock, era = "modern", regard = "neutral", seed
       const words = String(rumour).trim().replace(/^"|"$/g, "");
       return {say: lead.replace("{rumour}", words), rumour};
     }
-    return say(pickLine(stock.GOSSIP?.[era], seed));
+    return say(pickLine(mix(voice?.gossip, stock.GOSSIP?.[era]), seed));
   }
   return null;
+}
+
+/* ------------------------------------------------------------------ */
+/*  More stock talk (NPC 0.12.0): what a person notices, voices, small talk, memory, farewells, barks            */
+/* ------------------------------------------------------------------ */
+
+/** Hate and dislike are cold; like and love are warm. */
+export const warmthOf = regard => (regard === "hate" || regard === "dislike" ? "cold" : regard === "like" || regard === "love" ? "warm" : "neutral");
+
+/** Words in a faction's key or a household's name that give a voice when the Storyteller has not chosen one. */
+export const VOICE_WORDS = {
+  clergy: ["church", "abbey", "priest", "monastery", "convent", "parish", "clergy", "chapter", "friars", "nuns", "monks", "temple", "cathedral", "bishop"],
+  noble: ["noble", "court", "baron", "count", "duke", "lord", "lady", "margrave", "castle"],
+  merchant: ["guild", "merchant", "trade", "market", "shop", "traders", "bank"],
+  soldier: ["watch", "guard", "army", "garrison", "police", "militia", "soldier", "knights", "regiment", "security"],
+  criminal: ["thieves", "gang", "mob", "smuggler", "smugglers", "crime", "cartel", "brigands", "bandits", "fences"],
+  scholar: ["university", "college", "library", "academy", "scholars", "school", "institute"],
+  servant: ["servants", "staff", "kitchen", "stable"],
+  peasant: ["farm", "farmers", "village", "villagers", "peasants", "mill", "steading"],
+  corporate: ["corp", "corporation", "company", "inc", "ltd", "holdings", "pentex", "industries"],
+  street: ["street", "crew", "block", "corner"],
+  beggar: ["beggars", "poor", "almshouse"]
+};
+/**
+ * The voice an NPC speaks in: the one the Storyteller chose, else the first fitting word in their factions or
+ * household. A voice with a "from" year only speaks from that year. Returns a key of voices, or null.
+ */
+export function voiceFor({voice = null, factions = [], household = null, year = null} = {}, voices = {}) {
+  const fits = k => k && voices[k] && !(voices[k].from && Number.isFinite(Number(year)) && Number(year) < voices[k].from);
+  if ( voice ) return fits(voice) ? voice : null;
+  const words = [...(factions ?? []), household ?? ""].join(" ").toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  for ( const [k, list] of Object.entries(VOICE_WORDS) ) if ( list.some(w => words.includes(w)) && fits(k) ) return k;
+  return null;
+}
+
+/** What a mortal notices first about a character, from "Only when" tests (check(text) -> true or false). */
+export const NOTICE_ORDER = ["frenzy", "wounded", "kindred", "ghoul", "lupine", "mage", "fae", "wraith", "hunter", "demon", "mummy"];
+export function noticeFor(check) {
+  if ( typeof check !== "function" ) return null;
+  for ( const k of NOTICE_ORDER ) { try { if ( check(k === "frenzy" || k === "wounded" ? k : `kind ${k}`) ) return k; } catch (e) { /* a test it cannot read */ } }
+  return null;
+}
+
+/** The month (1 to 12) of a Julian day number, in the Gregorian reckoning the weather uses. */
+export function monthOfJdn(jdn) {
+  const a = Math.floor(Number(jdn)) + 32044, b = Math.floor((4 * a + 3) / 146097), c = a - Math.floor(146097 * b / 4);
+  const d = Math.floor((4 * c + 3) / 1461), e = c - Math.floor(1461 * d / 4), m = Math.floor((5 * e + 2) / 153);
+  return m + 3 - 12 * Math.floor(m / 10);
+}
+export const seasonOfMonth = m => (m === 12 || m <= 2 ? "winter" : m <= 5 ? "spring" : m <= 8 ? "summer" : "autumn");
+
+/** What small talk could be about today, most pressing first: {feast, fast, night}, weather tags, the month. */
+export function smallTalkKeys({feast = "", fast = "", night = false} = {}, tags = [], month = null) {
+  const t = new Set(tags ?? []), out = [];
+  if ( feast ) out.push("feast");
+  if ( fast ) out.push("fast");
+  for ( const k of ["thunder", "snow", "rain", "fog", "wind", "cold", "hot"] ) if ( t.has(k) || (k === "fog" && t.has("mist")) || (k === "wind" && t.has("gale")) ) out.push(k);
+  if ( night ) out.push("night");
+  if ( Number(month) >= 1 ) out.push(seasonOfMonth(Number(month)));
+  return out;
+}
+/** A small-talk line for today, or null. feast: its name for {feast}. */
+export function smallTalk(small, keys = [], {seed = 0, feast = ""} = {}) {
+  for ( const k of keys ) { const l = pickLine(small?.[k], seed); if ( l ) return l.replaceAll("{feast}", feast || "feast day"); }
+  return null;
+}
+
+/** soon: within 30 days of the last talk; long: more than a year; else null. Times in seconds. */
+export function rememberOf(last, now) {
+  const l = Number(last), n = Number(now);
+  if ( !Number.isFinite(l) || !Number.isFinite(n) || n < l ) return null;
+  const days = (n - l) / 86400;
+  return days <= 30 ? "soon" : days > 365 ? "long" : null;
+}
+
+/** A rumour whose text names the character (their whole name or a word of it of 3 letters or more). */
+export function rumourAbout(rumours = [], name = "") {
+  const words = String(name ?? "").toLowerCase().split(/[^\p{L}\p{N}']+/u).filter(w => w.length >= 3);
+  if ( !words.length ) return null;
+  const has = text => { const t = ` ${String(text ?? "").toLowerCase().replace(/[^\p{L}\p{N}']+/gu, " ")} `; return words.some(w => t.includes(` ${w} `)); };
+  return [...(rumours ?? [])].reverse().find(r => r && !r.ended && has(r.text)) ?? null;
+}
+
+/** Open Ledger entries between two people ("from" owes or swore to "to"): youOwe (the character owes the NPC), iOwe, else null. */
+export function ledgerBetween(entries = [], npcId, pcId) {
+  const open = (entries ?? []).filter(e => e && (e.status ?? "open") === "open" && (e.kind === "debt" || e.kind === "boon" || e.kind === "oath"));
+  const id = x => (typeof x === "object" ? x?.id : x) ?? null;
+  if ( open.some(e => id(e.from) === pcId && id(e.to) === npcId) ) return "youOwe";
+  if ( open.some(e => id(e.from) === npcId && id(e.to) === pcId) ) return "iOwe";
+  return null;
+}
+
+/**
+ * The greeting with what comes after it: the opening (a remembered visit replaces a plain hello), then at most one
+ * aside, most pressing first: what they notice about the character, a debt, a rumour about the character, small talk.
+ */
+export function composeGreet({greet = "", remember = "", notice = "", ledger = "", about = "", small = ""} = {}) {
+  const open = remember || greet;
+  const aside = notice || ledger || about || small;
+  return [open, aside].filter(Boolean).join(" ");
+}
+
+/**
+ * The rest of the stock kinds. kind: farewell, cry:alarm, cry:hurt, bark:<activity>, trade:<part>, social:<act>:<win|lose>.
+ * more: data/stock-talk-more.mjs. Returns a line or null.
+ */
+export function moreLine(kind, {more, era = "modern", regard = "neutral", seed = 0} = {}) {
+  if ( !more ) return null;
+  const w = warmthOf(regard), [k, a, b] = String(kind).split(":");
+  if ( k === "farewell" ) return pickLine(more.FAREWELL?.[era]?.[w], seed);
+  if ( k === "cry" ) return a === "hurt" ? pickLine(more.CRY_HURT, seed) : pickLine(more.CRY_ALARM?.[era], seed);
+  if ( k === "bark" ) return pickLine([...(more.BARK_ERA?.[era]?.[a] ?? []), ...(more.BARK?.[a] ?? [])], seed);
+  if ( k === "trade" ) {
+    if ( a === "open" ) return pickLine(more.TRADE?.open?.[w], seed);
+    if ( a === "refuse" && regard !== "hate" && regard !== "dislike" ) return pickLine(more.TRADE?.haggleLose, seed);
+    return pickLine(more.TRADE?.[a], seed);
+  }
+  if ( k === "social" ) return pickLine(more.SOCIAL?.[a]?.[b === "win" ? "win" : "lose"], seed);
+  return null;
+}
+
+/** A voice's greeting, brush-off or gossip. part: greet, none, gossip. */
+export function voiceLine(voices, voice, part, {regard = "neutral", seed = 0} = {}) {
+  const v = voices?.[voice];
+  if ( !v ) return null;
+  if ( part === "greet" ) return pickLine(v.greet?.[warmthOf(regard)], seed);
+  return pickLine(v[part], seed);
 }

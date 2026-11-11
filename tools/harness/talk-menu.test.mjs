@@ -129,5 +129,5 @@ test("the Foundry side: answers decided on the Storyteller's client, the toolbar
   assert.match(m, /tokens\.tools\.wodxTalk = /);
   assert.match(m, /talkAsk: data\.talkAsk \? true : null/);
   assert.match(m, /openTalk: talk\.openTalk/);
-  assert.equal(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.11.0");
+  assert.equal(JSON.parse(src("modules/wodx-npc/module.json")).version, "0.12.0");
 });
