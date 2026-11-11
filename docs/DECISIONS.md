@@ -846,3 +846,12 @@ WoDX Combat 3.11.0. An attacker who is sneaking, Obfuscated or hidden by the Sto
 
 ## B826. The rivalry rows after the book check (2026-11-11)
 The PC book check (gates/gaterivals-result-2026-11-11-38424b7.md) found no war between the Shadow Lords and the Tzimisce (Werewolf: The Dark Ages only rumours Shadow Lords dealing with Leeches), so that row is gone and the general Garou against Kindred row applies. Sorcerers Crusade puts the official start of the Ascension War at the fall of Mistridge in 1210, so the war row now runs 1210 to 1999 and the quarrel before it to 1209. Sense Wyrm is a Perception + Occult roll (W20 p. 156), not automatic. The years 1394 (Anarch Revolt), 1231 (Inquisition), 1885 (Arcanum) and 1444 (Giovanni) were not found in the books on the PC and stay house readings, marked so in docs/RIVALRIES.md.
+
+## B880. Merits and flaws on the senses (2026-11-11)
+Step 3 of Traits With Teeth. WoDX Senses 0.6.0 reads Chronicle's trait table for the one sensing: Acute Sense lowers the difficulty of the sense named on the item, Bad Sight, One Eye and Hard of Hearing raise it, and Blind and Deaf take that sense away (no roll, one line saying so). Medium and Deathsight open two new Senses channels, the restless dead (heard) and decay on the hurt (seen). Both are house readings of V20 core pp. 493-494 printed.
+
+## B881. Signs others can sense (2026-11-11)
+A token whose actor holds Smell of the Grave, Cold Breeze, Glowing Eyes, Eerie Presence, Lord of the Flies, Permanent Fangs, Cast No Reflection (indoors only) or Touch of Frost gives off a line in WoDX Senses for whoever looks, listens, smells or feels the air nearby. The lines are in WoDX's own words and never name the character. A kind that cannot hold the flaw gives nothing off.
+
+## B882. The Veil keyword hides a token from WoDX Senses (2026-11-11)
+A Veil cast through WoDX Actions keeps its difficulty on the timed effect (Chronicle timed effects take a data field). WoDX Senses leaves a veiled token out of the plain look; on a closer look, Perception + Awareness at the Veil's difficulty finds them.

@@ -35,6 +35,9 @@ export function view(actor) {
 export const of = actor => T.traitsOf(view(actor));
 export const has = (actor, keyOrName) => T.has(view(actor), keyOrName);
 export const effects = (actor, ctx = {}) => T.effectsFor(view(actor), ctx);
+/** For WoDX Senses: what the character's traits do to their own senses, and what others sense about them. */
+export const senses = actor => T.senseEffects(view(actor));
+export const shows = actor => T.showsOf(view(actor));
 
 /** For "Only when": the working traits as {name, key, kind, value, aliases}, and the power names. */
 export function whenFeats(actor) {
@@ -94,4 +97,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {view, of, has, effects, senses, shows, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};

@@ -105,6 +105,10 @@ export function difficulty(sense, ctx = {}, powers = {}) {
     if ( ctx.masked ) add("A stronger smell", STEPS.masked);
   }
   for ( const m of powers.mods ?? [] ) if ( !m.senses || m.senses.includes(sense) ) add(m.label, -Math.abs(m.n));
+  // merits and flaws keep their own sign: Acute Sense -2, Bad Sight +2
+  for ( const m of powers.traitMods ?? [] ) if ( !m.senses || m.senses.includes(sense) ) add(m.label, Number(m.n) || 0);
+  const lost = (powers.cannot ?? []).find(c => c.sense === sense);
+  if ( lost ) return {diff: BASE_DIFFICULTY, parts: [], blind: true, lost: lost.label};
   const floored = Math.max(FLOOR, Math.min(10, diff));
   if ( floored !== diff ) parts.push(`no lower than ${FLOOR}`);
   return {diff: floored, parts, blind};
@@ -133,8 +137,16 @@ export function powersFor(t = {}) {
   for ( const k of ["life", "spirit", "entropy", "prime"] ) if ( (Number(sp[k]) || 0) >= 1 ) channels.push(`sphere-${k}`);
   if ( t.fae ) channels.push("chimerical");
   if ( t.kind === "wraith" && t.layer === "shadowlands" ) channels.push("lifesight");
-  return {mods, darkSight, channels: [...new Set(channels)], smellFirst, reach};
+  // merits and flaws (WoDX Chronicle's trait table): signed difficulty changes, senses lost, channels opened
+  const ts = t.traitSenses ?? {};
+  const traitMods = (ts.mods ?? []).map(m => ({label: m.label, n: Number(m.n) || 0, senses: m.senses}));
+  const cannot = (ts.cannot ?? []).map(sense => ({sense, label: sense === "sight" ? "Blind" : sense === "sound" ? "Deaf" : "Lost"}));
+  for ( const c of ts.channels ?? [] ) channels.push(c);
+  return {mods, traitMods, cannot, darkSight, channels: [...new Set(channels)], smellFirst, reach};
 }
+
+/** The line for a sense a character does not have. */
+export const lostLine = sense => sense === "sight" ? "Blind: nothing can be seen." : sense === "sound" ? "Deaf: nothing can be heard." : "Nothing comes through this sense.";
 
 /** Does a line fit the moment? ctx: {era, part, sky, indoor, moon, wx (the weather's tags, when WoDX Atmosphere is on)} */
 export function fits(line, ctx = {}) {
