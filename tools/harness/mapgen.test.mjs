@@ -30,6 +30,9 @@ test("mapgen: the farmstead still comes out the same from its seed", {skip}, () 
   const dir = mkdtempSync(join(tmpdir(), "wodx-f-"));
   run([join(gen, "ddfarm.py"), "1197", ASSETS], dir);
   assert.deepEqual(JSON.parse(readFileSync(join(dir, "kessler-steading.wodx.json"), "utf8")), JSON.parse(readFileSync(join(gen, "samples/kessler-steading.wodx.json"), "utf8")));
+  // Dungeondraft crashes on load (World.LoadEmbedded) unless "embedded" is an object
+  const map = JSON.parse(readFileSync(join(dir, readdirSync(dir).find(f => f.endsWith(".dungeondraft_map"))), "utf8"));
+  assert.ok(map.world.embedded && typeof map.world.embedded === "object" && !Array.isArray(map.world.embedded), "world.embedded must be {}");
 });
 
 const slug = s => s.toLowerCase().replace(/ü/g, "u").replace(/ö/g, "o").replace(/ä/g, "a").replace(/[^a-z0-9]+/g, "-");
