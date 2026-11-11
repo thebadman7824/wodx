@@ -1577,3 +1577,7 @@ Ben asked for a bug check of everything done so far. The harness passed 1,286 of
 - effects.js: applyCore cases cross and weather, Summon and Make ask the Storyteller when the card did not say, a queued Move asks for its spot; choose and askText dialogs; undo for crossings and weather; the approval handler posts a card with Undo.
 - Otherworlds crossing.mjs: sendAcross, on the API.
 - Tests: queue-keywords.test.mjs (2). Gate: gatetraits step 22.
+
+## 2026-11-11: trait effects, step 11 (Chronicle 0.24.0, B891)
+- New data/trait-lines.mjs: LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS (335 rows), made from trait-book-checks.md and notes/trait-effects-draft.md. trait-effects.mjs joins them and widens shared V20 entries; BOOKS_DONE lists the books.
+- Tests: trait-lines.test.mjs (2). Gate: gatetraits step 23.
