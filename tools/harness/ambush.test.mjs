@@ -37,3 +37,11 @@ test("wired into both attacks, before the roll", () => {
   assert.equal((main.match(/await ambushFirst\(\{ attacker, attackerTok, target, targetTok, fd \}\)/g) ?? []).length, 2);
   assert.match(main, /if \(!out\.defend\) fd\.defense = "none"/);
 });
+
+test("3.11.1: the ambush pools add ability dots, not the ability record", () => {
+  const src = readFileSync(new URL("../../modules/wodx-combat/scripts/main.js", import.meta.url), "utf8");
+  const body = src.slice(src.indexOf("async function ambushFirst"), src.indexOf("export async function quickAttack"));
+  assert.match(body, /ability\(attacker, "stealth"\)\.value/);
+  assert.match(body, /ability\(target, "alertness"\)\.value/);
+  assert.doesNotMatch(body, /ability\([^)]*\)\s*,\s*AM\.DIFFICULTY/, "every ability in a pool is read by .value");
+});
