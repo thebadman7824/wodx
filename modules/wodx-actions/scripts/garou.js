@@ -9,6 +9,7 @@ import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -454,7 +455,14 @@ export function build(ctx) {
                     source: g ? `DA:W p. ${g.p}` : "", key: `gift-${it.id}` });
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(dur.kind === "rounds" ? `${dur.rounds} turn${dur.rounds === 1 ? "" : "s"}` : dur.kind === "scene" ? "the scene" : "its time")}).</div>`;
             }
-            return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean));
+            // The Gift's keywords on the effects card (Traits With Teeth step 4): the Dark Ages library, else the W20 list by name
+            let fxItems = [];
+            if (code && successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: "gift", id: g?.id ?? "", name: it.name, line: "w20", successes, source: g ? `DA:W p. ${g.p}` : "W20" });
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            }
+            return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { render: root => { describe(root); root.querySelector("[name=gift]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "gift", power: r => { const it = actor.items.get(r.querySelector("[name=gift]")?.value); return it ? (giftData(it) ?? { id: it.id, n: it.name }) : null; }, onPick: a => { tgt = a; describe(root); } }); } });
     }

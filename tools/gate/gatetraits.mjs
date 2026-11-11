@@ -16,6 +16,9 @@
  *  11. the tick boxes show only for a character with a trait that needs one
  *  12. the Trait effects window opens and closes
  *  13. every other WoDX module still answers
+ *  14. WoDX Senses reads the senses: Bad Sight +2 on sight, Acute Sense (Smell) -2 on smell, Deaf takes hearing, Medium opens the restless dead
+ *  16. a Discipline's keywords reach the effects card (Actions 3.33.0): the setting is there, and a sensing power plans a Sense on the user
+ *  15. signs others sense: the Kindred gives off Eerie Presence and Cast No Reflection, the mortal nothing; a Veil keeps its difficulty for Senses
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
 async function save(R, name) {
@@ -132,6 +135,31 @@ export async function run() {
       const ids = ["wodx-chronicle", "wodx-actions", "wodx-combat", "wodx-sheets", "wodx-storyteller", "wodx-npc"];
       const off = ids.filter(id => game.modules.get(id)?.active && !game.modules.get(id)?.api);
       ok("13 other modules", !off.length, {off});
+    });
+
+    await step("14 senses", async () => {
+      const SN = game.modules.get("wodx-senses")?.api;
+      if ( !SN ) return ok("14 senses", false, {error: "WoDX Senses is off"});
+      const odd = await mk("Trait senses", "Mortal", [feat("Bad Sight", "flaw", 2), feat("Acute Sense (Smell)", "merit", 1), feat("Deaf", "flaw", 4), feat("Medium", "merit", 2)]);
+      const pw = SN.rules.powersFor(SN.traitsOf(odd));
+      const sight = SN.rules.difficulty("sight", {light: "bright"}, pw), smell = SN.rules.difficulty("smell", {}, pw), sound = SN.rules.difficulty("sound", {}, pw);
+      ok("14 senses", sight.diff === 8 && smell.diff === 4 && sound.lost === "Deaf" && pw.channels.includes("restless"), {sight, smell, sound, channels: pw.channels});
+    });
+
+    await step("15 signs and Veil", async () => {
+      const v = T().shows(vamp).map(x => x.key).sort(), h = T().shows(human);
+      const C = game.modules.get("wodx-chronicle").api;
+      const eff = await C.applyTimed(human, {name: "Veiled", description: "gate", duration: {kind: "scene"}, key: "wodx-effect-veil", data: {difficulty: 8}});
+      const kept = eff?.flags?.["wodx-chronicle"]?.timed?.data?.difficulty;
+      await eff?.delete();
+      ok("15 signs and Veil", JSON.stringify(v) === JSON.stringify(["cast-no-reflection", "eerie-presence"]) && h.length === 0 && kept === 8, {v, h: h.map(x => x.key), kept});
+    });
+
+    await step("16 power keywords", async () => {
+      const FX = game.modules.get("wodx-actions").api.effects;
+      const set = game.settings.get("wodx-actions", "powerEffects");
+      const plan = FX.powerPlan(vamp, {set: "disc", id: "abombwe-predators-communion", name: "Predator's Communion", successes: 2});
+      ok("16 power keywords", set === true && typeof FX.powerPlan === "function" && (plan.items.length > 0 || !FX.isOn()), {items: plan.items.map(i => `${i.key}:${i.route}`), on: FX.isOn()});
     });
   } catch (e) {
     R.errors.push(e.message);

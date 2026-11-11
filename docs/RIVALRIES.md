@@ -11,7 +11,7 @@ The dated rivalries WoDX NPC reads (modules/wodx-npc/scripts/rivalry-rules.mjs, 
 | tremere-hermes | clan:tremere | hermes or hermetic | 1197 to the Future Darkness | Hostile (-2) | Hunts (-3) | The Order of Hermes never forgave the house that stole immortality from vampires | V20 Dark Ages; M20 | to check |
 | tzimisce-ventrue | clan:tzimisce | clan:ventrue | 1197 to 1492 | Tense (-1) | Tense (-1) | Eastern domains disputed with the Ventrue of the Empire | V20 Dark Ages | to check |
 | giovanni-cappadocian | clan:giovanni | cappadocian or lamia or harbinger | 1444 to the Future Darkness | Hunts (-3) | Hunts (-3) | The Giovanni destroyed their own clan's founder and hunt what remains of the line | V20 Dark Ages; V20 | not found: no 1444 in V20 (house reading, approved by Ben 2026-11-11) |
-| anarch-revolt | sect:anarch | sect:camarilla or prince or elder | 1394 to 1492 | Hostile (-2) | Hostile (-2) | The Anarch Revolt against the elders | V20 | not found: 1394 not in V20, VtDA20 or Anarchs (house reading, approved by Ben 2026-11-11) |
+| anarch-revolt | sect:anarch | sect:camarilla or prince or elder | 1381 to 1492 | Hostile (-2) | Hostile (-2) | The Anarch Revolt against the elders | Guide to the Anarchs p. 19 (pdf 20) | checked: the revolt began in 1381 (found 2026-11-11 by the timeline deconfliction) |
 | anarch-camarilla | sect:anarch | sect:camarilla | 1493 to the Future Darkness | Tense (-1) | Tense (-1) | Rebels kept on sufferance after the Convention of Thorns | Anarchs pdf 14-15 | checked |
 | sabbat-camarilla | sect:sabbat | sect:camarilla | 1493 to the Future Darkness | Hostile (-2) | Hostile (-2) | The war of the sects | Anarchs pdf 14-15, 133; V20 pdf 46 | checked |
 | sabbat-anarch | sect:sabbat | sect:anarch | 1493 to the Future Darkness | Tense (-1) | Tense (-1) | Those who walked away from the Sword of Caine | V20 | to check |
@@ -38,7 +38,7 @@ The dated rivalries WoDX NPC reads (modules/wodx-npc/scripts/rivalry-rules.mjs, 
 | dauntain | dauntain | line:fae (not dauntain) | 1197 to the Future Darkness | Hunts (-3) | Hunts (-3) | Changelings who turned on the Dreaming | C20 | to check |
 | seelie-unseelie | court:seelie | court:unseelie | 1197 to the Future Darkness | Tense (-1) | Tense (-1) | The two courts | C20 | to check |
 | shadow-court | shadow court | court:seelie | 1197 to the Future Darkness | Hostile (-2) | Hostile (-2) | The Shadow Court works against the Seelie | C20 | to check |
-| accordance-war | kith:sidhe | line:fae (not kith:sidhe) | 1969 to 1972 | Hostile (-2) | Hostile (-2) | The Accordance War after the sidhe came back | C20 pdf 29, 38-39, 51 | checked |
+| accordance-war | kith:sidhe | line:fae (not kith:sidhe) | 1969 to 1973 | Hostile (-2) | Hostile (-2) | The Accordance War after the sidhe came back | C20 pdf 29, 38-39, 51; Battle of Manhattan December 1973, pdf 39 | checked |
 | fomorian | fomorian or thallain | line:fae (not fomorian or thallain) | 1197 to the Future Darkness | Hunts (-3) | Hunts (-3) | The Fomorians and their kin | C20 | to check |
 | fae-kindred | line:fae | line:kindred | 1197 to the Future Darkness | Tense (-1) | Tense (-1) | Kindred prize fae blood as a drug | C20; V20 | to check |
 | spectres | spectre | line:wraith (not spectre) | 1197 to the Future Darkness | Hunts (-3) | Hunts (-3) | The servants of Oblivion | Wraith 20th | to check |

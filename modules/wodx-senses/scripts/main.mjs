@@ -27,7 +27,7 @@ import {registerSight, setupSight, cycleSight} from "./sight.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.5.0";
+const VERSION = "0.6.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -224,7 +224,9 @@ export function traitsOf(actor, {scene = null, layer = "physical", useAuspex = t
     senseUnnatural: hasPower(actor, /^sense the unnatural$/i), trueForm: hasPower(actor, /^scent of the true form$/i),
     form: formOf(actor), kind: kindOf(actor), layer, fae: kindOf(actor) === "fae", secondSight: secondSightOn(actor, scene),
     spheres: {life: num(sp.life?.value), spirit: num(sp.spirit?.value), entropy: num(sp.entropy?.value), prime: num(sp.prime?.value)},
-    woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty)
+    woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty),
+    // merits and flaws from WoDX Chronicle's trait table: Acute Sense, Bad Sight, Blind, Deaf, Medium, Deathsight
+    traitSenses: (() => { try { return chron()?.traits?.senses?.(actor) ?? null; } catch (e) { return null; } })()
   };
 }
 
@@ -290,11 +292,20 @@ export function gatherSources(scene, td, actor) {
   for ( const t of scene?.tokens ?? [] ) {
     if ( t.id === td.id || !t.actor ) continue;
     const at = centerOf(t, scene);
-    if ( t.hidden || obfuscated(t) || invisible(t) ) {
+    const veil = veiledBy(t);
+    if ( t.hidden || obfuscated(t) || invisible(t) || veil ) {
+      if ( veil && !t.hidden && !obfuscated(t) ) out.push({id: `veil.${t.id}`, key: "veiled", at, secret: true, name: t.name, diff: veil});
       if ( obfuscated(t) ) out.push({id: `obf.${t.id}`, key: "obfuscated", at, secret: true, name: t.name, obf: powerDots(t.actor, /^obfuscate$/i) || 1, kind: kindOf(t.actor)});
       continue;
     }
     seen.push({t, at});
+    // what others can sense about this one: Smell of the Grave, Glowing Eyes, Cold Breeze and the like (WoDX Chronicle)
+    try {
+      for ( const sh of chron()?.traits?.shows?.(t.actor) ?? [] ) {
+        if ( sh.indoor && !R.isIndoor(placeAt(scene, at) ?? {}) ) continue;
+        out.push({id: `shows.${t.id}.${sh.key}`, key: `shows.${sh.key}`, lines: sh.lines, at, glows: sh.glows, strong: sh.strong, loud: "quiet", name: `${t.name}: ${sh.name}`, person: true});
+      }
+    } catch (e) { console.warn(`${MOD} | trait signs`, e); }
     const act = t.actor.flags?.["wodx-npc"]?.where?.activity;
     if ( act && TABLES.sources?.[`activity.${act}`] ) out.push({id: `act.${t.id}:${act}`, key: `activity.${act}`, at, loud: act === "sleep" || act === "hunt" || act === "hide" ? "quiet" : "normal", name: t.name, person: true});
   }
@@ -316,6 +327,11 @@ export function gatherSources(scene, td, actor) {
   return {sources: out, presences, me};
 }
 const invisible = t => !!t.actor?.statuses?.has?.("invisible");
+/** A Veil keyword on the token's actor (WoDX Actions): the difficulty to notice them, or 0. */
+const veiledBy = t => {
+  const e = (t.actor?.effects ?? []).find?.(x => !x.disabled && x.flags?.["wodx-chronicle"]?.timed?.key === "wodx-effect-veil");
+  return e ? (num(e.flags["wodx-chronicle"].timed.data?.difficulty) || 7) : 0;
+};
 const obfuscated = t => !!t.actor?.statuses?.has?.("wodx-obfuscated") || !!chron()?.conditions?.hasCondition?.(t.actor, "obfuscated");
 let IR = null;
 /** The scene's own lights a light tile works: the ones it names, else those on or next to it (as Interactables reads them). */
@@ -356,6 +372,11 @@ function sourceLines(sense, src, ctx, pw, gathered) {
       if ( sense !== "sight" || !chk.canTry ) { out.push({t: "", n: 99, id: s.id, name: s.name, why: "hidden by Obfuscate", held: true}); continue; }
       out.push({t: chk.auto ? "Someone stands {{dir}} that the others can't see, and it is not human." : "Someone is here, hidden from ordinary eyes, {{dir}}.",
         n: chk.auto ? 0 : 1, id: s.id, name: s.name, vars: {dir: R.directionWord(gathered.me, s.at)}, obfDiff: chk.diff, auto: chk.auto});
+      continue;
+    }
+    if ( s.key === "veiled" ) {
+      if ( sense !== "sight" ) continue;
+      out.push({t: "Someone stands {{dir}} that the eye keeps sliding past.", n: 1, id: s.id, name: s.name, vars: {dir: R.directionWord(gathered.me, s.at)}, obfDiff: s.diff, failWhy: "veiled (the roll failed)"});
       continue;
     }
     const base = s.lines?.[sense] ?? linesFor(s.key, sense);
@@ -401,6 +422,8 @@ function channelLines(sense, pw, ctx, gathered) {
     if ( ch === "sphere-entropy" ) { add("any", []); const k = near.filter(p => p.kind === "kindred"); if ( k.length ) add("kindred", k); continue; }
     if ( ch === "sphere-prime" ) { const m = near.filter(p => p.kind === "mage"); if ( m.length ) add("mage", m); if ( ctx.place.kind === "caern" ) add("place", []); continue; }
     if ( ch === "chimerical" ) { const f = near.filter(p => p.kind === "fae"); if ( f.length ) add("fae", f); if ( ctx.place.chimerical ) add("place", []); continue; }
+    if ( ch === "restless" ) { const g = near.filter(p => ["wraith", "spirit"].includes(p.kind)); if ( g.length ) add("dead", g); if ( ["graveyard", "church"].includes(ctx.place.kind) ) add("place", []); continue; }
+    if ( ch === "deathsight" ) { const h = near.filter(p => p.hurt && !["wraith", "spirit"].includes(p.kind)); if ( h.length ) add("hurt", h); continue; }
     if ( ch === "lifesight" ) { if ( living.length ) add("living", living); if ( living.some(p => p.hurt) ) add("hurt", living.filter(p => p.hurt)); continue; }
   }
   return out;
@@ -444,6 +467,7 @@ export async function answer(req) {
     const crowd = gathered.sources.some(s => s.key === "activity.drink") || ["tavern", "market"].includes(ctx.place.kind) && ctx.part !== "night";
     const masked = gathered.sources.some(s => (s.key === "fire" || s.key === "brazier") && yardsBetween(me, s.at, scene) <= 10);
     const D = R.difficulty(sense, {light: ctx.light, crowd, sky: ctx.sky, indoor: ctx.indoor, masked, wx: ctx.wx, heavy: ctx.heavy}, pw);
+    if ( D.lost ) { live.length = 0; heldOut.length = 0; }
     // what is there and how hard each is to catch: a new wall or light changes the answer
     const fp = R.fingerprint([...live.map(l => `${l.id}:${l.n}`), ...(sense === "sight" ? [`light:${ctx.light}`] : [])]);
     const key = R.memoryKey({scene: scene.id, place: ctx.place.id, hour: `${ctx.t?.year ?? 0}-${ctx.t?.month ?? 0}-${ctx.t?.day ?? 0}-${ctx.hour}`, sense});
@@ -461,7 +485,7 @@ export async function answer(req) {
       for ( const l of live.filter(x => x.obfDiff) ) {
         const r = await rollPool(ctx.traits.perception + ctx.traits.awareness + ctx.traits.woundPenalty, l.obfDiff);
         rolls.push(r.roll);
-        if ( r.successes > 0 ) l.n = 0; else { l.held = true; l.why = "hidden by Obfuscate (the roll failed)"; }
+        if ( r.successes > 0 ) l.n = 0; else { l.held = true; l.why = l.failWhy ?? "hidden by Obfuscate (the roll failed)"; }
       }
     }
     const usable = live.filter(l => !l.held && !(l.obfDiff && !req.closer && !(sameAsBefore && memo.obfSeen?.includes(l.id))));
@@ -469,12 +493,13 @@ export async function answer(req) {
     if ( ctx.layer !== "physical" ) { placeL = R.layerLines(TABLES, ctx.layer, ctx.place, sense, ctxL); condL = []; }
     else { placeL = R.placeLines(TABLES, ctx.place, sense, ctxL); condL = R.conditionLines(TABLES, sense, ctxL, {feast: ctx.feast, curfew: ctx.curfew}); }
     if ( sense === "sight" && D.blind ) { placeL = placeL.filter(l => l.own && /dark/i.test(l.t)); condL = []; }
+    if ( D.lost ) { placeL = []; condL = []; }
     const chanL = channelLines(sense, pw, ctx, gathered);
     const rand = R.seedFor(seed, {scene: scene.id, place: ctx.place.id, hour: `${ctx.t?.day ?? 0}-${ctx.hour}`, sense, actor: actor.id});
     const ordered = c => R.byFocus(c, req.focus);
     const res = R.compose({place: ordered(placeL), cond: condL, sources: ordered(usable.filter(l => l.t)), channel: chanL, successes, botch, rand});
     const lines = R.render(res.lines, rand, {place: ctx.place.name});
-    if ( D.blind ) lines.unshift("It is pitch dark. Nothing can be seen.");
+    if ( D.blind ) lines.unshift(D.lost ? R.lostLine(sense) : "It is pitch dark. Nothing can be seen.");
     const held = [...heldOut, ...res.held.filter(l => l.secret || l.channel), ...live.filter(l => l.held)];
     memory[key] = {fp, best: Math.max(successes, sameAsBefore ? num(memo.best) : 0), botch: rolled ? botch : !!memo?.botch, closer: !!(req.closer || (sameAsBefore && memo.closer)), at: Date.now(),
       obfSeen: usable.filter(l => l.obfDiff && l.n === 0).map(l => l.id)};
@@ -505,7 +530,7 @@ function stBody(res) {
   const head = `<p class="wodx-quiet">${esc(cap(ctx.place.kind))}${ctx.place.name ? ` (${esc(ctx.place.name)})` : ""}, ${esc(ctx.part)}, ${esc(ctx.light)} light, sky ${esc(ctx.sky)}${ctx.wx?.length ? ` (${esc(ctx.wx.join(", "))})` : ""}, ${esc(ctx.era)}${ctx.layer !== "physical" ? `, in the ${esc(cap(ctx.layer))}` : ""}${ctx.viewing ? "" : ". View the scene for walls and light to count"}.</p>`;
   return head + res.sections.map(s => {
     const roll = s.rolled ? `Perception + Alertness at ${s.diff.diff}${s.diff.parts.length ? ` (${esc(s.diff.parts.join(", "))})` : ""}: ${s.botch ? "a botch" : `${s.successes} success${s.successes === 1 ? "" : "es"}`}`
-      : s.repeat ? `The same answer as before (${s.successes} success${s.successes === 1 ? "" : "es"})` : s.diff.blind ? "Too dark to see" : "A plain look, no roll";
+      : s.repeat ? `The same answer as before (${s.successes} success${s.successes === 1 ? "" : "es"})` : s.diff.lost ? `No roll: ${s.diff.lost}` : s.diff.blind ? "Too dark to see" : "A plain look, no roll";
     const lines = s.chosen.map((l, i) => `<li>${esc(s.lines[i + (s.diff.blind ? 1 : 0)] ?? l.t)} <span class="wodx-quiet">(need ${num(l.n)}${l.own ? ", your line" : ""}${l.channel ? `, ${esc(l.channel)}` : ""})</span></li>`).join("");
     const held = s.held.length ? `<p class="wodx-quiet">Held back: ${s.held.map(h => esc(`${h.name || h.channel || h.id}${h.why ? `: ${h.why}` : ` (needs ${num(h.n)})`}`)).join("; ")}.</p>` : "";
     return `<h4>${esc(R.SENSES[s.sense].label)}</h4><p class="wodx-quiet">${roll}.</p><ul>${lines}</ul>${held}${s.botch ? `<p class="wodx-quiet">A botch: the player got only what anyone would notice. Add a wrong detail if you want one.</p>` : ""}`;

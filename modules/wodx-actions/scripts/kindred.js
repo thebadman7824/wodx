@@ -206,6 +206,11 @@ export function build(ctx) {
                 const marked = await setWitnessState(tgt, "forgot", actor.name);
                 if (marked) body += `<div class="vta-note">Masquerade: ${esc(tgt.name)} marked as made to forget (${marked} record${marked === 1 ? "" : "s"}).</div>`;
             }
+            // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
+            if (!fx && p.r && !p.passive && successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: "disc", id: p.id, name: p.n, line: "v20", successes, source: `VtDA20 p. ${p.p ?? "?"}` });
+                if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
+            }
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));

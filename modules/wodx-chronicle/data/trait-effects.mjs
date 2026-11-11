@@ -288,3 +288,25 @@ export const BACKGROUNDS = [
 
 /** Books whose merits and flaws are in MERITS_FLAWS. The rest come with their own rows later (the design's step 11). */
 export const BOOKS_DONE = ["V20"];
+
+/**
+ * Step 3 (Chronicle 0.19.0): what others can sense about a character (pattern P15), for WoDX Senses. Lines are WoDX's own
+ * words; {{dir}} is where the character stands from the one sensing. need: successes needed (0 shows to a plain look).
+ * indoor: only indoors (a mirror or a window pane to show in). Senses: sight, sound, smell, touch.
+ */
+export const SHOWS = {
+  "smell-of-the-grave": {smell: [{t: "A smell of wet earth and old graves hangs about someone {{dir}}.", n: 0}], strong: true},
+  "cold-breeze": {touch: [{t: "The air turns cold and still near someone {{dir}}.", n: 0}]},
+  "glowing-eyes": {sight: [{t: "Eyes {{dir}} catch the light and shine like an animal's.", n: 0}], glows: true},
+  "eerie-presence": {touch: [{t: "Something about the one {{dir}} sets the teeth on edge.", n: 1}]},
+  "lord-of-the-flies": {sound: [{t: "Flies drone around someone {{dir}}.", n: 0}], sight: [{t: "Flies circle someone {{dir}} and will not leave.", n: 1}]},
+  "permanent-fangs": {sight: [{t: "The one {{dir}} has long, sharp eyeteeth.", n: 2}]},
+  "cast-no-reflection": {sight: [{t: "The one {{dir}} throws no reflection in the glass.", n: 2}], indoor: true},
+  "touch-of-frost": {sight: [{t: "Flowers and leaves close to someone {{dir}} have gone black, as if frost had bitten them.", n: 2}]}
+};
+
+/** Senses a trait takes away (V20 Blind and Deaf), by WoDX Senses' sense names. */
+export const SENSE_LOSS = {blind: "sight", deaf: "sound"};
+
+/** Senses channels a trait opens (house reading of V20 Medium and Deathsight; channel lines are in WoDX Senses). */
+export const SENSE_CHANNELS = {medium: "restless", deathsight: "deathsight"};

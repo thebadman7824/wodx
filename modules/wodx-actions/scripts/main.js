@@ -76,6 +76,11 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 /* ================================================================== */
 
 function registerSettings() {
+    game.settings.register(MOD, "powerEffects", {
+        name: "Powers on the effects card",
+        hint: "A Discipline or Gift roll with successes puts the power's effect keywords on the effects card, which applies the plain ones with Undo and queues the rest. Needs the effect keywords to be on.",
+        scope: "world", config: true, type: Boolean, default: true
+    });
     TH.registerTraitSetting();
     // A new setting starts from the choice made in vtda20-actions, if there was one (nothing is written)
     const s = (key, name, hint, type, def) =>
@@ -2202,7 +2207,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.32.0", effects: { keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.33.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     migrate: o => MIG.migrate(o), planMigration: () => MIG.planMigration(),
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },

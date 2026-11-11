@@ -115,6 +115,7 @@ export async function run() {
     await step("attack outside a fight", async () => {
       const t0 = Date.now();
       const r = await api().afterAttack(pc, npc);
+      await until(() => cards(t0).length, 3000);
       ok("attack outside a fight", r?.done === "suggested" && cards(t0)[0]?.getFlag("wodx-combat", "fightStart")?.source === "attack", {done: r?.done});
     });
     await step("outcome fight", async () => {
