@@ -25,7 +25,7 @@ export async function run() {
   const tagged = act => act.items.filter(i => i.flags?.[MOD]?.gate === "sheetextras");
 
   try {
-    await step("version and api", async () => ok("version and api", game.modules.get(MOD)?.version === "0.7.0" && !!X?.decorate && !!a && !!b, { v: game.modules.get(MOD)?.version, a: a?.name, b: b?.name }));
+    await step("version and api", async () => ok("version and api", !foundry.utils.isNewerVersion("0.7.0", game.modules.get(MOD)?.version ?? "0") && !!X?.decorate && !!a && !!b, { v: game.modules.get(MOD)?.version, a: a?.name, b: b?.name }));
 
     await step("the sheet shows the strip, Possessions, Ties, the Storyteller's notes and the header buttons", async () => {
       await open();
