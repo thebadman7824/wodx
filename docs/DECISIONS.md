@@ -882,3 +882,6 @@ House rule: no V20 haggling system. The roll follows V20 Dark Ages' Commerce exa
 
 ## B897. Stolen goods sell at the fence's price; stock lines on social and trade cards (2026-11-11)
 Anything lifted is marked stolen, and a trader gives the fence's share for it (Storyteller money rules). Buying or selling it through a trade clears the mark. Social and trade cards add one of WoDX NPC's stock lines, coloured by attitude, when stock talk is on for that NPC (rule 11 lifted by Ben 2026-11-11); the Storyteller's own talk lines still come first in the topic menu.
+
+## B898. Cheap goods fetch at least the smallest coin (2026-11-11)
+Storyteller's sell price is half the price rounded down, so 340 of the 797 goods sell for nothing. When a character sells or barters a good that has a price, the trader gives at least the smallest coin of the money in use. House rule, in PENDING-REVIEW. Coins themselves are money and are counted into the purse, not sold.

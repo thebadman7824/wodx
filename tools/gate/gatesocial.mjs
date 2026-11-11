@@ -134,7 +134,7 @@ export async function run() {
       if ( !M?.priceSync || !A().trade ) { ok("10 trade", false, {why: "WoDX Storyteller money or Actions trade missing"}); return; }
       await M.findGood("");
       const G = (await import("/modules/wodx-library/data/goods.mjs")).GOODS ?? [];
-      const g = G.find(x => M.priceSync(x.name)?.each > 0);
+      const g = G.find(x => x.kind !== "coin" && M.priceSync(x.name)?.sell > 0) ?? G.find(x => x.kind !== "coin" && M.priceSync(x.name)?.each > 0);
       await M.receive(pc(), 1000000, {note: "gate"}); await M.receive(npcTok.actor, 1000000, {note: "gate"});
       const [it] = await npcTok.actor.createEmbeddedDocuments("Item", [{name: g.name, type: "Item"}]);
       const cash = a => { const p = M.purse(a); return (p.carried ?? 0) + (p.bank ?? 0); };
