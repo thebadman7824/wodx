@@ -1,6 +1,6 @@
 /**
  * WoDX Storyteller 0.14.0: money by era. The rules are in money-rules.mjs.
- * 0.21.0: a real purse. flags.wodx-storyteller.money.purse = {money, year, carried, bank, debt, paidMonth, log}:
+ * 0.22.0: a real purse. flags.wodx-storyteller.money.purse = {money, year, carried, bank, debt, paidMonth, log}:
  *   amounts in the smallest unit of the money id (pfennig, kreuzer, haléř). system.money.carried / bank (the
  *   sheet's own numbers) get the same amounts in the main unit. Each month of game time Resources pays its
  *   allowance into the bank (before banks: the strongbox at home), first paying off any debt.
@@ -108,7 +108,7 @@ export async function moneyDialog() {
   }
 }
 
-/* ---------------------------------------------------------------- the purse (0.21.0) */
+/* ---------------------------------------------------------------- the purse (0.22.0) */
 
 const region = () => { try { return setting("moneyRegion") || "moravian"; } catch (e) { return "moravian"; } };
 const eraId = () => { try { return chron()?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } };

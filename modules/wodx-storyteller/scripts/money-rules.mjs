@@ -113,7 +113,7 @@ export const monthsBetween = (from, to) => Math.max(0, Math.floor(((Number(to) |
 
 /* ------------------------------------------------------------------------------------------------------------ */
 /*
- * Storyteller 0.21.0: real money (Ben, 2026-11-11). Resources pays a monthly allowance in the money of the place
+ * Storyteller 0.22.0: real money (Ben, 2026-11-11). Resources pays a monthly allowance in the money of the place
  * and year, and goods have prices worked out from their value tiers.
  *
  * Books (pdf pages): V20 Dark Ages pdf 182 makes Resources a monthly allowance; V20 The Wild West pdf 86 gives

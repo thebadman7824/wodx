@@ -327,3 +327,5 @@ Ben approved every entry that was waiting for review at 18:18 UTC on 10 November
 | 2026-11-10 | What money the World of Future Darkness uses. | Eurodollars from 2050, borrowed from Cyberpunk 2020 (B604). | Edit the 2050 spans in CURRENCIES, extras-rules.mjs. |
 | 2026-11-10 | Should the sheet's change history survive a reload? | No, it is kept in memory so it costs no saves (B606). | Store pushEntry's list in a flag in installHistory, extras.mjs. |
 | 2026-11-11 | Arcology decks use medieval furniture (beds, chests, potted plants) as stand-ins for later kit, and the deck layout is one fixed pattern (atrium, ring, four axial corridors, four quarters). | No later-era asset packs yet (B652). | Add later packs, or more deck patterns in ddsite.py. |
+| 2026-11-11 | Wages and money of each era where no book gives them. | History, approximate, per region in MONIES (B598). | Change the wage points in modules/wodx-storyteller/scripts/money-rules.mjs. |
+| 2026-11-11 | Default money region. | Moravia, Rothenstein's land (B598). | Change the world setting Coins of the day. |

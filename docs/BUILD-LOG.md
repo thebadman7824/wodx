@@ -1298,3 +1298,8 @@ From the Cataclysm study Ben approved (all eight fits; the poor fits are never t
 - Storyteller-only token toolbar button: press it, then click the map, and the selected tokens jump there (right click or Escape cancels). Key Alt+Shift+P sends them to the cursor at once.
 - Jumps use a displacement move (no walls, no path, no animation), snapped to the grid unless gridless, kept inside the scene. A group keeps its shape around the point. Elevation and level unchanged.
 - teleport-rules.mjs (where each token lands) with teleport.test.mjs; api game.wodx.storyteller.teleport.
+
+## 2026-11-11: Real money by era (Storyteller 0.22.0, B598)
+- money-rules.mjs: monies by region and year (Moravia default; German, English, American, French), monthly wages, allowance ladder x1.5, prices from goods value tiers, selling, fencing, credit, haggling, savings carried across a change of money.
+- money.mjs: a purse per actor (carried, bank, debt, log, undo), pay day each month on the Storyteller's monthly card, pay/receive/transfer/price/cashIn in the Storyteller API (api.money), carried and bank editable in the Money by era window.
+- Item Review Desk shows each good's price in Moravia by era.

@@ -2,6 +2,14 @@
 // Usage: node tools/goods/build-desk.mjs <out.json>
 import {writeFileSync} from "node:fs";
 const G = await import(new URL("../../modules/wodx-library/data/goods.mjs", import.meta.url));
+const M = await import(new URL("../../modules/wodx-storyteller/scripts/money-rules.mjs", import.meta.url));
+// Prices in Moravia (Rothenstein's land), at the start of each era the good is in use (or its first year)
+const priceText = g => Object.fromEntries(g.eras.map(e => {
+  const y = Math.max(G.ERA_YEARS[e][0], g.from);
+  const each = M.priceOf({...g, value: g.values[e]}, y, "moravian");
+  const n = g.stack?.max > 1 ? `each; ${g.stack.max} for ${M.formatMoney(each * g.stack.max, M.moneyFor(y))}` : "";
+  return [e, `${M.formatMoney(each, M.moneyFor(y))}${n ? ` ${n}` : ""} (${y < 0 ? -y + " BC" : y})`];
+}));
 const eraName = {"living-gods": "Living Gods", "classical": "Classical", "dark-ages": "Dark Ages", "long-night": "Long Night",
   "renaissance": "Renaissance", "age-of-reason": "Age of Reason", "victorian": "Victorian", "wild-west": "Wild West",
   "great-war": "Great War", "mid-century": "Mid-Century", "modern": "Modern", "time-of-judgment": "Time of Judgment",
@@ -13,7 +21,7 @@ const out = {
   values: G.VALUES, sources: G.SOURCES, behaviours: G.BEHAVIOURS, conceal: G.CONCEAL,
   items: G.GOODS.map((g, i) => ({id: g.id, order: i, name: g.name, kind: g.kind, years: `${yr(g.from)} to ${yr(g.to)}`,
     eras: g.eras, values: g.values, value: g.value, conceal: g.conceal, use: g.use, stacks: g.stacks, stack: g.stack, uses: g.uses,
-    source: g.source}))
+    source: g.source, prices: priceText(g)}))
 };
 writeFileSync(process.argv[2] ?? "items-desk.json", JSON.stringify(out));
 console.log(out.items.length, "items");
