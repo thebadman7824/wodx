@@ -210,7 +210,7 @@ export function possessions(items, {look = () => ({}), era = null, year = 0} = {
       id: it.id, name: it.name, qty: qtyOf(it), kind: groupOf(it), depth, isContainer: isContainer(it),
       holds: isContainer(it) ? CONCEAL[holdsOf(it)].label : "", era: st, eraNote: st && st !== "ok" ? ERA_NOTE[st] : "",
       value: tier === null ? "" : TIERS[Math.max(0, Math.min(5, tier))], equipped: !!(it.system?.isequipped || it.system?.isactive),
-      desc: plainDesc(it.system?.description), contents: kids, count: kids.reduce((n, k) => n + 1 + k.count, 0)
+      desc: plainDesc(it.system?.description), usable: !!L.usable, contents: kids, count: kids.reduce((n, k) => n + 1 + k.count, 0)
     };
   };
   // Anything whose container is gone is loose again

@@ -940,3 +940,22 @@ Reverse: sightDiff in chase-rules.mjs, and the Call for sight box in the Chase w
 A catch, or the last pursuer losing the quarry, ends it. A catch puts Start a fight on the Storyteller's card, which hands the quarry and whoever caught up to WoDX Combat's fight start. The book has no fixed lead that ends a chase; as a fallback when nobody calls for sight, WoDX lets the quarry get away with a lead of 10 successes over every pursuer (house rule). The Storyteller can end a chase at any time. Players' cards say who is gaining in words; the dice and totals of every racer are on the Storyteller's copy, with an Undo for the last turn, so a Storyteller character's rolls stay hidden.
 
 Reverse: AWAY_LEAD in chase-rules.mjs (a large number turns it off).
+
+## B916. Things can be used: abilities on every good (2026-11-11)
+
+Ben asked for items with real uses. modules/wodx-library/scripts/use-rules.mjs gives each good its abilities from its category and its name (abilitiesOf): a journal can be written and drawn in, a fiddle played, a candle lit, a bedroll slept in, a fountain pen writes a letter, a map can be marked. About 1,580 of 1,931 goods have one; coins, arms, keys, containers and materials already work through money, combat, Interactables and crafting. Use opens from a hand button on the Possessions row and a Use button on the item sheet (Library 0.9.0, Sheets 0.9.0). Pages written, drawn, marked, recorded or photographed are kept on the item (flags.wodx-library.pages) and shown by Read. Ben reviews the list on the Item Uses Desk.
+
+Reverse: drop the Use button from extras-html.mjs and the setupUse call from Library main.mjs.
+
+## B917. Eating, drinking and drugs touch each line its own way (2026-11-11)
+
+What a substance does is a table of substance by line (EFFECTS). Food and drink feed and water the living through Storyteller hardship (M20 pp. 435-436). A vampire cannot keep food or drink down without the Eat Food merit, and drugs and drink reach the Kindred only through a vessel's blood (V20 printed pp. 301-302). A wraith has no body to take anything. Changelings are drunk or high like anyone (Ben, 2026-11-11). A drink or drug on a living character also sets the vessel state a feeding vampire meets (wodx-actions vesselState). The intoxication effects on the living (drunk, wired, dulled, drowsy, seeing things, mellow) are house rules after V20's drugged-blood notes; nothing applies them to dice by itself, the card says what to apply. Werewolves, mummies and demons, hallucinogens on changelings, holy water on vampires and first aid on the dead are left to Ben on the desk; until then the Storyteller decides each time. Bagged blood: a pint is one blood point (house rule, as a body of ten pints holds ten points).
+
+Reverse: set every cell in EFFECTS to {does: "storyteller"}.
+
+## B918. First aid with supplies, carried light from owned lights, a Perform check (2026-11-11)
+
+Treat with supplies opens the First aid common check one easier (house rule); bandages, dressings and salves are spent, instruments and kits are kept. Light it starts the token's carried light of that kind (candle, torch, lantern, electric), and lamp oil or a battery refills it (Interactables api.carry, 0.26.2). Instruments open Any roll on the Performance dramatic system (Charisma + Performance, difficulty 7). Common checks take a preset difficulty change, bonus and description (Actions 3.39.0).
+
+Reverse: remove the treat, light and system cases from use.mjs.
+
