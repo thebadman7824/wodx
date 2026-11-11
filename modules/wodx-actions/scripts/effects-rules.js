@@ -252,3 +252,26 @@ export function keepRote(list = [], rote) {
   const out = [...list.filter(r => String(r?.name ?? "").toLowerCase() !== key), rote].sort((a, b) => a.name.localeCompare(b.name));
   return out.slice(0, ROTES_MAX);
 }
+
+const SPHERE_KEYS = ["correspondence", "entropy", "forces", "life", "matter", "mind", "prime", "spirit", "time"];
+
+/**
+ * A rote from one of the system's Rote items: WoDX's own keyword set when the item carries one (flags), else the
+ * item's Spheres and kind. data: {name, system, flags}.
+ */
+export function roteOfItem(data) {
+  if ( !data ) return null;
+  const kept = data.flags?.["wodx-actions"]?.rote;
+  const spheres = Object.fromEntries(SPHERE_KEYS.filter(k => n(data.system?.[k]) > 0).map(k => [k, n(data.system[k])]));
+  const kind = data.system?.spelltype === "vulgar" ? "vulgar" : "coincidental";
+  const base = {name: String(data.name ?? "").slice(0, 60), keywords: [], spheres, plan: {targets: 0, duration: 0, area: false}, ctx: {}, kind, feat: 0};
+  if ( !kept ) return base;
+  return {...base, ...kept, name: base.name, spheres: Object.keys(spheres).length ? spheres : (kept.spheres ?? {}), keywords: (kept.keywords ?? []).filter(k => KEYWORDS[k])};
+}
+
+/** The system Rote item that holds a rote: its Spheres, its kind, and the whole keyword set on its flags. */
+export function itemOfRote(rote) {
+  const system = {spelltype: rote.kind === "coincidental" ? "coincidental" : "vulgar"};
+  for ( const k of SPHERE_KEYS ) system[k] = n(rote.spheres?.[k]);
+  return {name: rote.name, type: "Rote", system, flags: {"wodx-actions": {rote}}};
+}

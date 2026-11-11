@@ -10,7 +10,7 @@
 {{else if (eq kind "items")}}
 	<div class="headlineGroup splatFont centerText {{#if roll}}wodx-roll{{/if}}" {{#if roll}}data-roll="{{roll}}"{{/if}}>{{title}}</div>
 	{{#each rows}}
-	<div class="clearareaBox wodx-row"><label class="pullLeft ability-headlineWidth headlineNormal wodx-open" data-itemid="{{this.id}}" title="{{this.hint}}">{{this.name}}</label>{{#if this.dots}}<div class="pullLeft wodx-dots ro">{{#each this.dots}}<span class="wodx-dot {{#if this.on}}on{{/if}}"></span>{{/each}}</div>{{/if}}</div>
+	<div class="clearareaBox wodx-row"><label class="pullLeft ability-headlineWidth headlineNormal wodx-open" data-itemid="{{this.id}}" title="{{this.hint}}">{{this.name}}</label>{{#if this.cast}}<a class="pullLeft wodx-cast-rote" data-itemid="{{this.id}}" title="Cast this rote" aria-label="Cast {{this.name}}"><i class="fas fa-magic"></i></a>{{/if}}{{#if this.dots}}<div class="pullLeft wodx-dots ro">{{#each this.dots}}<span class="wodx-dot {{#if this.on}}on{{/if}}"></span>{{/each}}</div>{{/if}}</div>
 	{{else}}{{#if empty}}<div class="wodx-quiet">{{empty}}</div>{{/if}}{{/each}}
 	{{#if note}}<div class="wodx-quiet">{{note}}</div>{{/if}}
 {{else if (eq kind "list")}}

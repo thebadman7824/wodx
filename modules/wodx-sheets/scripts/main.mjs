@@ -169,7 +169,7 @@ function block(key, a) {
       return { kind: "items", title: "Possessions", rows: itemRows(itemsOf(a, i => i.type === "Item"), false), empty: g ? "" : "Nothing carried.", note: [g, n(m.carried) || n(m.bank) ? `Money: ${n(m.carried)} carried, ${n(m.bank)} put by` : ""].filter(Boolean).join(" · ") };
     }
     case "fetishes": return { kind: "items", title: "Fetishes and Talens", rows: itemsOf(a, i => i.type === "Fetish").map(i => ({ id: i.id, name: n(i.system?.gnosis) ? `${i.name} (Gnosis ${n(i.system.gnosis)})` : i.name, dots: SR.dots(i.system?.level ?? i.system?.value) })), empty: "None." };
-    case "rotes": return { kind: "items", title: "Rotes", roll: sheetFor(a) === "m20" ? "m20Cast" : "daMage", rows: itemRows(itemsOf(a, i => i.type === "Rote"), false), empty: "None yet." };
+    case "rotes": return { kind: "items", title: "Rotes", roll: sheetFor(a) === "m20" ? "m20Cast" : "daMage", rows: itemRows(itemsOf(a, i => i.type === "Rote"), false).map(r => ({ ...r, cast: sheetFor(a) === "m20" })), empty: "None yet." };
     case "description": { const cut = t => t.length > 240 ? `${t.slice(0, 237)}...` : t;
       return { kind: "list", title: "History and Description", lines: [["Appearance:", strip(a.system.appearance)], ["History:", strip(a.system.background)]].filter(([, t]) => t).map(([bold, t]) => ({ bold, text: cut(t) })), empty: "Written on the Bio tab." };
     }
@@ -376,6 +376,7 @@ function listeners(sheet, root) {
     const fn = game.wodxActions?.[el.dataset.roll];
     if (fn) fn({ actor });
   }));
+  root.querySelectorAll(".wodx-cast-rote[data-itemid]").forEach(el => el.addEventListener("click", ev => { ev.preventDefault(); game.wodxActions?.m20Cast?.({ actor, rote: el.dataset.itemid }); }));
   root.querySelectorAll(".wodx-open[data-itemid]").forEach(el => el.addEventListener("click", ev => { ev.preventDefault(); actor.items.get(el.dataset.itemid)?.sheet?.render(true); }));
   if (!sheet.options.editable) return;
   // As on the system's sheets: a locked sheet keeps its permanent traits; only points (boxes) still change
@@ -457,6 +458,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.8.0", extras: X, rules: SR, sheetFor, viewFor,
+  game.modules.get(MOD).api = { version: "0.8.1", extras: X, rules: SR, sheetFor, viewFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep } };
 });

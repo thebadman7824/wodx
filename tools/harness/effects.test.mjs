@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.23.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.24.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -130,4 +130,21 @@ test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
   const fx = src("modules/wodx-actions/scripts/effects.js");
   assert.match(fx, /updateToken/); assert.match(fx, /wodxEndScene/); assert.match(fx, /createEmbeddedDocuments\("Region"/);
   assert.match(src("modules/wodx-actions/scripts/m20.js"), /EF\.saveRote/);
+});
+
+test("3.24.0: the system's Rote items open the WoDX Cast window, and saved rotes are Rote items", () => {
+  const item = {name: "Ball of Abysmal Flame", system: {forces: 3, prime: 2, life: 0, spelltype: "vulgar"}, flags: {}};
+  assert.deepEqual(E.roteOfItem(item), {name: "Ball of Abysmal Flame", keywords: [], spheres: {forces: 3, prime: 2}, plan: {targets: 0, duration: 0, area: false}, ctx: {}, kind: "vulgar", feat: 0});
+  const rote = E.roteFrom("Bolt", {keywords: ["harm"], used: [{sphere: "forces", level: 3}], plan: {targets: 1}, ctx: {fire: true}, kind: "witnessed", feat: 3});
+  const data = E.itemOfRote(rote);
+  assert.equal(data.type, "Rote"); assert.equal(data.system.forces, 3); assert.equal(data.system.mind, 0); assert.equal(data.system.spelltype, "vulgar");
+  // round trip: the item gives the rote back, keywords and all
+  assert.deepEqual(E.roteOfItem(data), rote);
+  assert.equal(E.roteOfItem(null), null);
+  const sys = src("system/worldofdarkness/module/scripts/action-helpers.js");
+  assert.match(sys, /game\.wodxActions\?\.m20CastRote\?\.\(actor, item\) === true/);
+  const m20 = src("modules/wodx-actions/scripts/m20.js");
+  assert.match(m20, /EF\.fill\(root, preset\)/); assert.match(m20, /function castRote/);
+  assert.match(src("modules/wodx-sheets/templates/block.hbs"), /wodx-cast-rote/);
+  assert.match(src("modules/wodx-sheets/scripts/main.mjs"), /\.wodx-cast-rote\[data-itemid\]/);
 });
