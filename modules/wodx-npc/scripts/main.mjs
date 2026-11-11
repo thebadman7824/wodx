@@ -1,7 +1,7 @@
 /**
  * WoDX NPC 0.8.0: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
- * the topic menu players talk to NPCs through (0.10.0, talk.mjs).
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -23,7 +23,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.10.0";
+const VERSION = "0.11.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -573,7 +573,8 @@ export async function editBehavior(actor) {
     <fieldset><legend>Talk sheet (only you see it)</legend>
     <textarea name="talk" rows="4" style="width:100%" placeholder="[the abbot] carries bishop's seal => Opens the archive and names the night porter. | teach the night porter">${esc(saved.talk ?? "")}</textarea>
     <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
-    <label class="wnpc-check"><input type="checkbox" name="talkAsk"${saved.talkAsk ? " checked" : ""}/> Ask me first: when a player asks them something, you pick the answer</label></fieldset>
+    <label class="wnpc-check"><input type="checkbox" name="talkAsk"${saved.talkAsk ? " checked" : ""}/> Ask me first: when a player asks them something, you pick the answer</label>
+    <label class="wnpc-check"><input type="checkbox" name="noStock"${saved.noStock ? " checked" : ""}/> No stock talk: only the lines you write</label></fieldset>
     <fieldset><legend>Phases (first that fits is used)</legend>
     <textarea name="phases" rows="3" style="width:100%" placeholder="Cornered: wounds >= mauled => aggression 2, caution 0, fleeAt 8">${esc(saved.phases ?? "")}</textarea>
     <p class="wodx-quiet">One a line: a name, a colon, WoDX Chronicle tests (; between them), =&gt;, then changes: template, ${Object.keys(TRAITS).join(", ")}, fleeAt, tactics, fears.</p></fieldset>
@@ -588,7 +589,7 @@ export async function editBehavior(actor) {
   if ( data === "routine" ) return routines.editRoutine(actor);
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
-    household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null};
+    household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null, noStock: data.noStock ? true : null};
   const ph = NR.parsePhases(out.phases);
   if ( ph.problems.length ) ui.notifications.warn(`Phases: ${ph.problems.join(" ")}`);
   for ( const k of [...Object.keys(TRAITS), "fleeAt"] ) out[k] = data[k] === "" || data[k] === null || data[k] === undefined ? null : Number(data[k]);
