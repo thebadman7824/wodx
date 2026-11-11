@@ -102,11 +102,7 @@ export async function run() {
       const res = await A().lift(pc(), npcTok.object, "lift", {...fd, want: ring.id});
       await sleep(300);
       const got = pc().items.some(i => i.name === "WoDX gate ring"), left = npcTok.actor.items.some(i => i.name === "WoDX gate ring"), sack = npcTok.actor.items.some(i => i.name === "WoDX gate sack");
-<<<<<<< HEAD
       ok("8 lift", res?.done && !res.noticed && got && !left && sack, {res, got, left, sack, isToken: npcTok.actor?.isToken, ringId: ring?.id, ringParent: ring?.parent?.uuid, items: npcTok.actor.items.map(i => i.name)});
-=======
-      ok("8 lift", res?.done && !res.noticed && got && !left && sack, {res, got, left, sack});
->>>>>>> origin/main
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

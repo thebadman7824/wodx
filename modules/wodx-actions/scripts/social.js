@@ -198,8 +198,6 @@ export function build(ctx) {
     }
     /** Carry out a lift or plant: the item and any coins. data: {from, to, item, qty, coins}. */
     async function applyLift(d) {
-        // Uuids, so an unlinked token's own actor (its own pockets) is the one that changes
-<<<<<<< HEAD
         // A token's uuid gives that token's own actor (an unlinked token's own pockets); else a world actor by uuid or id
         const get = (id, tok) => {
             if (tok) { try { const t = fromUuidSync(tok); if (t?.actor) return t.actor; } catch (e) { /* gone */ } }
@@ -208,10 +206,6 @@ export function build(ctx) {
             return game.actors.get(id) ?? null;
         };
         const from = get(d.from, d.fromToken), to = get(d.to, d.toToken);
-=======
-        const get = id => { if (!id) return null; try { const a = fromUuidSync(id); if (a instanceof Actor) return a; } catch (e) { /* an id */ } return game.actors.get(id) ?? null; };
-        const from = get(d.from), to = get(d.to);
->>>>>>> origin/main
         if (!from || !to) return null;
         const made = d.item ? await moveItem(from, to, d.item, d.qty) : null;
         if (d.coins && money()?.transfer) { try { await money().transfer(from, to, d.coins, { note: "lifted" }); } catch (e) { console.warn("WoDX Actions | coins", e); } }
@@ -303,13 +297,9 @@ export function build(ctx) {
                 + `${rollBlock(`${esc(name)} (${esc(op.label)})`, them)}<p>${esc(res.noticed ? "Noticed." : res.done ? `Not noticed: ${got || "nothing"} ${key === "lift" ? "taken" : "planted"}.` : "Nothing happened.")}</p>`
                 + `${!game.user.isGM && (got || res.noticed) ? `<p class="vta-note">The change waits in the approval queue.</p>` : ""}</div></div>`
         });
-<<<<<<< HEAD
         const npcTokUuid = npc.isToken ? (npcTok.document?.uuid ?? npc.token?.uuid ?? null) : null;
         const data = { from: key === "lift" ? npc.uuid : actor.uuid, to: key === "lift" ? actor.uuid : npc.uuid,
             fromToken: key === "lift" ? npcTokUuid : null, toToken: key === "lift" ? null : npcTokUuid, item: item?.id ?? null, qty: 1, coins };
-=======
-        const data = { from: key === "lift" ? npc.uuid : actor.uuid, to: key === "lift" ? actor.uuid : npc.uuid, item: item?.id ?? null, qty: 1, coins };
->>>>>>> origin/main
         if (item || coins) await proposeOrApply("wodx-actions.lift", `${actor.name} ${key === "lift" ? "lifts" : "plants"} ${got} ${key === "lift" ? "from" : "on"} ${npc.name}`, data, applyLift);
         if (res.noticed) {
             await proposeOrApply("wodx-actions.caught", `${npc.name} caught ${actor.name} ${key === "lift" ? "stealing" : "planting something"}`, { npc: npc.id, char: actor.id, scene: npcTok.document?.parent?.id ?? canvas.scene?.id, what: key }, applyCaught);
