@@ -1,5 +1,5 @@
 /**
- * Mage effect keywords gate (WoDX Actions 3.28.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Mage effect keywords gate (WoDX Actions 3.30.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateeffects.mjs?${Date.now()}`)).run()
  * Makes a caster and a target actor, applies keyword results straight through the apply step, undoes them,
  * posts one keyword card for the Storyteller's client to apply, then deletes what it made.
@@ -15,6 +15,7 @@
  *  10. a rote is saved as a Rote item on the caster, replaced by name, and forgotten
  *  12. a held card waits; countermagick cuts its successes, then a reflected counter turns it on the caster
  *  13. a Dark Ages rote's card: Verdant Slumber hurts, Self Possession is a timed effect, a summoning stays the Storyteller's
+ *  15. the shared roster (3.30.0): Drain on a Willpower pool, Boost as a timed effect, both undone; power labels
  *  11. a Rote item opens the WoDX Cast window filled in (a Mage 20th era), or is left to the system's dialog (Dark Ages)
  * Result: Data/wodx-gate/gateeffects-result.json.
  */
@@ -222,6 +223,17 @@ export async function run() {
       const asks = fire.items.every(i => i.route === "queue" && i.out.levels === 2);
       await fx().undo([...recs, wr].filter(Boolean));
       ok("14 path magic and Numina", hurt && timed && st && asks && sum(dmg(caster)) === sum(before), {hurt, timed, st, asks, routes: dust?.items?.map(i => i.route)});
+    });
+    await step("15 the shared roster: a pool, Boost and the power labels", async () => {
+      await target.update({"system.advantages.willpower.temporary": 5, "system.advantages.willpower.permanent": 5});
+      const r1 = await fx().apply(item("charge", E.spend(2, 2, {}), {pool: "willpower", drain: true}), caster.name);
+      const drained = Number(target.system?.advantages?.willpower?.temporary);
+      const r2 = await fx().apply(item("boost", E.spend(3, 3, {}), {boost: "physical"}), caster.name);
+      const boosted = !!(r2?.effect && fromUuidSync(r2.effect));
+      await fx().undo([r1, r2]);
+      const back = Number(target.system?.advantages?.willpower?.temporary) === 5 && !(r2?.effect && fromUuidSync(r2.effect));
+      const label = fx().keywordsOf?.("gift", "beast-speech")?.keywords?.[0] === "speak" && fx().keywordCounts?.().free < 10;
+      ok("15 the shared roster: a pool, Boost and the power labels", drained < 5 && boosted && back && label && Object.keys(E.KEYWORDS).length === 34, {drained, boosted, back, label});
     });
     if ( toks.length ) await scene.deleteEmbeddedDocuments("Token", toks.map(t => t.id)).catch(() => {});
   } catch (e) { R.errors.push(e.message); }
