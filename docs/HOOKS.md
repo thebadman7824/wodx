@@ -43,4 +43,5 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
 | wodxSocial | actions | a social act on one NPC and its outcome |
+| wodxTrade | actions | a trade with one NPC: mode, what changed hands, and the money |
 | wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |

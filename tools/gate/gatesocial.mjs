@@ -12,6 +12,8 @@
  *   6. the window opens for the targeted NPC
  *   7. every other WoDX module still answers
  *   8. a lift with a big pool takes the NPC's pocket-sized ring unseen (Actions 3.21.0); the sack of grain is never offered
+ *   9. deleting on an unlinked token (diagnostic)
+ *  10. buying a good from the NPC and selling it back moves the item and the money both ways (Actions 3.33.0)
  * Result: Data/wodx-gate/gatesocial-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -123,6 +125,26 @@ export async function run() {
       let e3 = null; if ( ringNow ) { try { await ringNow.delete(); } catch (e) { e3 = e.message; } }
       const gone3 = !npcTok.actor.items.some(i => i.name === "WoDX gate ring");
       ok("9 delete on an unlinked token (diagnostic)", gone1 && gone2, {same, viaUuid: via?.uuid, e1, gone1, e2, gone2, ringFlags: ringNow?.flags, e3, gone3, delta: Object.keys(npcTok.delta?.toObject?.()?.items ?? {}).length});
+    });
+    await step("10 trade", async () => {
+      const M = game.modules.get("wodx-storyteller")?.api?.upkeep?.money;
+      if ( !M?.priceSync || !A().trade ) { ok("10 trade", false, {why: "WoDX Storyteller money or Actions trade missing"}); return; }
+      await M.findGood("");
+      const G = (await import("/modules/wodx-library/data/goods.mjs")).GOODS ?? [];
+      const g = G.find(x => M.priceSync(x.name)?.each > 0);
+      await M.receive(pc(), 1000000, {note: "gate"}); await M.receive(npcTok.actor, 1000000, {note: "gate"});
+      const [it] = await npcTok.actor.createEmbeddedDocuments("Item", [{name: g.name, type: "Item"}]);
+      const cash = a => { const p = M.purse(a); return (p.carried ?? 0) + (p.bank ?? 0); };
+      const pc0 = cash(pc()), npc0 = cash(npcTok.actor);
+      const tf = {bonus: 0, extraDiff: 0, specialty: false, wp: false, haggle: false, count: 1};
+      const buy = await A().trade(pc(), npcTok.object, "buy", {...tf, mode: "buy", want: `i${it.id}`, give: ""});
+      await sleep(300);
+      const mine = pc().items.find(i => i.name === g.name);
+      const bought = buy?.done && !!mine && !npcTok.actor.items.get(it.id) && cash(pc()) === pc0 - buy.owe && cash(npcTok.actor) === npc0 + buy.owe;
+      const sell = mine ? await A().trade(pc(), npcTok.object, "sell", {...tf, mode: "sell", want: "", give: mine.id}) : null;
+      await sleep(300);
+      const sold = sell?.done && !pc().items.some(i => i.name === g.name) && npcTok.actor.items.some(i => i.name === g.name) && sell.owe < 0;
+      ok("10 trade", bought && sold, {good: g?.name, buy, sell, bought, sold, pc: cash(pc()) - pc0, npc: cash(npcTok.actor) - npc0});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

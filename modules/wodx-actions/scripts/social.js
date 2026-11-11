@@ -1,5 +1,6 @@
 import * as SR from "./social-rules.js";
 import * as TH from "./trait-hooks.js";
+import * as TRD from "./trade.js";
 
 /**
  * WoDX Actions 3.20.0: "With this person". A player picks one NPC (the target, the token given, or the nearest in
@@ -39,6 +40,7 @@ export function build(ctx) {
     }
     const nameFor = tok => tok?.document?.name ?? tok?.name ?? "They";
     const attitudeOf = (npc, me) => { try { return npcApi()?.attitude?.of?.(npc, me) ?? null; } catch (e) { return null; } };
+    const stockLine = (kind, npcTok, actor) => { try { return npcApi()?.talk?.stock?.(kind, { npc: npcTok, pc: actor }) ?? null; } catch (e) { return null; } };
 
     /** The window: who it is, and what the character can do. */
     async function withPerson(arg = {}) {
@@ -64,6 +66,7 @@ export function build(ctx) {
             ${npcApi()?.openTalk ? btn("talk", "fa-comment", "Talk", "Ask about the topics they will talk about") : ""}
             ${SR.ACTS.map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
             ${Object.values(SR.LIFT).map(a => btn(a.key, a.icon, a.label, `${a.note} (${a.ref})`)).join("")}
+            ${money()?.priceSync ? btn("trade", "fa-scale-balanced", "Trade", "Buy, sell or barter, at this era's and this market's prices, with a haggle roll (house rule)") : ""}
             ${btn("charm", "fa-heart", "Charm or seduce", "The three-stage Seduction (V20 p. 266)")}
             ${btn("power", "fa-hand-sparkles", "Use a power on them", "Opens your menu with them still targeted")}
           </div>
@@ -95,6 +98,7 @@ export function build(ctx) {
             }
             if (act === "power") { npcTok.setTarget?.(true, { releaseOthers: true }); return menu({ actor }); }
             if (act === "lift" || act === "plant") return lift(actor, npcTok, act);
+            if (act === "trade") return tradeX().trade(actor, npcTok, "buy");
             return social(actor, npcTok, act);
         }, { render, width: 520 });
     }
@@ -150,6 +154,10 @@ export function build(ctx) {
         let body = rollBlock(label, me, built.parts.concat(fd.specialty ? ["specialty"] : [], fd.wp ? ["Willpower"] : []), !!fd.specialty);
         if (act.offer && fd.offerText) body += `<div class="vta-note">Offered: ${esc(fd.offerText)}</div>`;
         body += `<div class="vta-big">${esc(SR.outcomeText(act, res, name))}</div>`;
+        // A stock line from WoDX NPC (when stock talk is on for them): the Storyteller's own lines come first in talk
+        const sayKind = SR.STOCK_KIND[act.key];
+        const say = sayKind && res.result !== "tie" ? stockLine(`social:${sayKind}:${res.result === "win" ? "win" : "lose"}`, npcTok, actor) : null;
+        if (say) body += `<div class="vta-note">${esc(name)}: ${esc(say)}</div>`;
         if (key === "question" && res.result === "win" && res.margin > willpower(npc).perm) body += `<div class="vta-note">${esc(name)} tells everything.</div>`;
         await post(actor, `${actor.name}: ${act.label.toLowerCase()}`, body, [me.roll]);
         // The NPC's side, for the Storyteller only
@@ -188,7 +196,7 @@ export function build(ctx) {
 
     /** Move one of an item (or the whole of a single one) from one actor to another. Storyteller's client. */
     let lastMove = null;
-    async function moveItem(from, to, itemId, qty = 1) {
+    async function moveItem(from, to, itemId, qty = 1, mark = {}) {
         const it = from?.items?.get(itemId);
         lastMove = { from: from?.uuid ?? null, to: to?.uuid ?? null, item: itemId, found: !!it };
         if (!it || !to) return null;
@@ -197,6 +205,8 @@ export function build(ctx) {
         delete data._id;
         foundry.utils.setProperty(data, "flags.wodx-sheets.qty", n);
         if (data.flags?.["wodx-sheets"]?.in) delete data.flags["wodx-sheets"].in;
+        // A stolen thing stays stolen (traders give a fence's price for it); a bought or sold one is clean again
+        foundry.utils.setProperty(data, "flags.wodx-actions.lifted", !!mark.lifted);
         const [made] = await to.createEmbeddedDocuments("Item", [data]);
         lastMove = { from: from.uuid, to: to.uuid, item: it.id, have, n, made: made?.uuid ?? null };
         if (n >= have) {
@@ -218,7 +228,7 @@ export function build(ctx) {
         };
         const from = get(d.from, d.fromToken), to = get(d.to, d.toToken);
         if (!from || !to) { lastMove = { unresolved: true, d }; return null; }
-        const made = d.item ? await moveItem(from, to, d.item, d.qty) : null;
+        const made = d.item ? await moveItem(from, to, d.item, d.qty, d.lifted ? { lifted: true } : {}) : null;
         if (d.coins && money()?.transfer) { try { await money().transfer(from, to, d.coins, { note: "lifted" }); } catch (e) { console.warn("WoDX Actions | coins", e); } }
         return made;
     }
@@ -238,6 +248,7 @@ export function build(ctx) {
         if (!reg) return;
         reg("wodx-actions.lift", { label: "Lifted or planted items", approve: e => applyLift(e.data ?? {}) });
         reg("wodx-actions.caught", { label: "Caught stealing", approve: e => applyCaught(e.data ?? {}) });
+        reg("wodx-actions.trade", { label: "Trades with NPCs", approve: e => tradeX().applyTrade(e.data ?? {}) });
     }
     async function proposeOrApply(type, title, data, fn) {
         if (isActiveGM()) return fn(data);
@@ -310,7 +321,7 @@ export function build(ctx) {
         });
         const npcTokUuid = npc.isToken ? (npcTok.document?.uuid ?? npc.token?.uuid ?? null) : null;
         const data = { from: key === "lift" ? npc.uuid : actor.uuid, to: key === "lift" ? actor.uuid : npc.uuid,
-            fromToken: key === "lift" ? npcTokUuid : null, toToken: key === "lift" ? null : npcTokUuid, item: item?.id ?? null, qty: 1, coins };
+            fromToken: key === "lift" ? npcTokUuid : null, toToken: key === "lift" ? null : npcTokUuid, item: item?.id ?? null, qty: 1, coins, lifted: key === "lift" };
         if (item || coins) await proposeOrApply("wodx-actions.lift", `${actor.name} ${key === "lift" ? "lifts" : "plants"} ${got} ${key === "lift" ? "from" : "on"} ${npc.name}`, data, applyLift);
         if (res.noticed) {
             await proposeOrApply("wodx-actions.caught", `${npc.name} caught ${actor.name} ${key === "lift" ? "stealing" : "planting something"}`, { npc: npc.id, char: actor.id, scene: npcTok.document?.parent?.id ?? canvas.scene?.id, what: key }, applyCaught);
@@ -324,5 +335,11 @@ export function build(ctx) {
         return { ...res, item: item?.name ?? null, coins, moved };
     }
 
-    return { withPerson, social, lift, applyLift, applyCaught, registerHandlers, findNpc, rules: SR };
+    /* ---------------- Trade (3.33.0) ---------------- */
+    let TRE = null;
+    const tradeX = () => TRE ??= TRD.build({ R, PRESETS, pickPool, readPool, woundPenalty, setting, rollPool, rollBlock, post, esc, dialog, opts, willpower, spendWillpower,
+        attitudeOf, nameFor, npcApi, gmIds, proposeOrApply, moveItem });
+    const trade = (actor, npcTok, key, given) => tradeX().trade(actor, npcTok, key, given);
+
+    return { withPerson, social, lift, trade, applyLift, applyCaught, registerHandlers, findNpc, rules: SR, tradeX };
 }

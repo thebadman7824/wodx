@@ -858,3 +858,12 @@ A token whose actor holds Smell of the Grave, Cold Breeze, Glowing Eyes, Eerie P
 
 ## B882. The Veil keyword hides a token from WoDX Senses (2026-11-11)
 A Veil cast through WoDX Actions keeps its difficulty on the timed effect (Chronicle timed effects take a data field). WoDX Senses leaves a veiled token out of the plain look; on a closer look, Perception + Awareness at the Veil's difficulty finds them.
+
+## B895. Trade with one NPC from "With this person" (2026-11-11)
+Ben asked for bartering through the Actions menu. "With this person" gains Trade when WoDX Storyteller's money is on: buy from the NPC, sell to them, or barter one thing for another. Prices are WoDX Storyteller's (the era goods list times the local market's index); a trader's shop is the container their market lists for them, and anyone else trades from what they carry. The NPC's purse is the till, so a trader short of money cannot buy. Restocking at half price stays with the markets (Storyteller 0.24.1 onward). Players' trades wait in the approval queue as wodx-actions.trade; the Storyteller's apply at once.
+
+## B896. Haggling (2026-11-11)
+House rule: no V20 haggling system. The roll follows V20 Dark Ages' Commerce example (Manipulation + Commerce, difficulty 6, pdf p. 327), with Finance in the later eras and Streetwise as a fallback. Each success takes a tenth off a purchase or adds a tenth to a sale, up to three tenths, never past what the good sells for new; a botch costs a tenth. The NPC's attitude shifts the difficulty as for the social rolls. Hostile or hunted NPCs refuse to trade; distrusted ones charge a tenth more and pay a tenth less. Barter gives no change.
+
+## B897. Stolen goods sell at the fence's price; stock lines on social and trade cards (2026-11-11)
+Anything lifted is marked stolen, and a trader gives the fence's share for it (Storyteller money rules). Buying or selling it through a trade clears the mark. Social and trade cards add one of WoDX NPC's stock lines, coloured by attitude, when stock talk is on for that NPC (rule 11 lifted by Ben 2026-11-11); the Storyteller's own talk lines still come first in the topic menu.

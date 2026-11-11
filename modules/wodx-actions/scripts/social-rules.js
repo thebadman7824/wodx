@@ -41,6 +41,9 @@ export const ACTS = [
 export const actByKey = key => ACTS.find(a => a.key === key) ?? null;
 
 /** The presets this file adds to main.js's dramatic systems. */
+/** Which of WoDX NPC's stock social lines fits each act (3.33.0): social:<kind>:<win|lose>. */
+export const STOCK_KIND = { persuade: "persuade", fasttalk: "deceive", con: "deceive", intimidate: "intimidate", threaten: "intimidate", question: "persuade", bribe: "bribe", charm: "charm" };
+
 export const PRESETS = {
     persuadeNpc: { label: "Persuade someone (Man + Expression vs Willpower)", attr: "manipulation", ability: "expression", diff: 6, mode: "resisted",
         alts: [["manipulation", "expression"], ["manipulation", "persuasion"], ["charisma", "expression"]], opp: { pool: "willpower", diff: 6 }, aura: true,
