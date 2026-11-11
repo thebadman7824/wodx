@@ -76,7 +76,9 @@ export function reflect(sidecar, layer = "penumbra", {year = null, future = fals
   }
   for ( const g of sc.umbral?.gone ?? [] ) {
     if ( Number(g.year) > y ) continue;
-    add("relic", g, 0.8, `Relic: ${g.label}`, `Pulled down in ${g.year}${g.why ? ` (${String(g.why).replace(/-/g, " ")})` : ""}; still standing for the dead.`);
+    // A house rebuilt in a later style is a faint relic under the new one (drawn, no region); a building cleared away is a strong one.
+    if ( String(g.why ?? "").startsWith("rebuild-") ) add("relic", g, 0.35, `Relic: the older ${String(g.label).toLowerCase()}`, `Rebuilt in ${g.year}; the older house still stands for the dead.`);
+    else add("relic", g, 0.8, `Relic: ${g.label}`, `Pulled down in ${g.year}${g.why ? ` (${String(g.why).replace(/-/g, " ")})` : ""}; still standing for the dead.`);
   }
   const order = Object.keys(MARKS);
   return out.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind) || b.strength - a.strength);

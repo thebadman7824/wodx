@@ -61,7 +61,7 @@ export async function run() {
     await step("relics on the Shadowlands", async () => {
       const sha = twinLevel("shadowlands");
       const rel = scene.regions.filter(r => r.flags?.[M]?.reflection === "relic");
-      ok("relics on the Shadowlands", rel.length >= side.umbral.gone.length && rel.every(r => [...r.levels][0] === sha.id), {relics: rel.length, gone: side.umbral.gone.length});
+      ok("relics on the Shadowlands", rel.length >= side.umbral.gone.filter(g => !String(g.why).startsWith("rebuild-")).length && rel.every(r => [...r.levels][0] === sha.id), {relics: rel.length, gone: side.umbral.gone.length});
     });
     await step("second run replaces", async () => {
       const n = [scene.tiles.size, scene.regions.size, scene.levels.size];

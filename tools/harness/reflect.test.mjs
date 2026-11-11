@@ -19,7 +19,7 @@ test("the generator writes what each place means, and what later ages pulled dow
   for ( const g of grown.umbral.gone ) {
     assert.match(g.id, /^gone-/); assert.equal(g.rect.length, 4);
     assert.ok(g.year > 1197 && g.year <= 1960, `${g.id} ${g.year}`);
-    assert.ok(!grown.regions.some(r => `gone-${r.id}` === g.id), `${g.id} is still on the living map`);
+    assert.ok(typeof g.why === "string" && g.why.length, `${g.id} has no reason`);
   }
 });
 
@@ -44,7 +44,9 @@ test("the Shadowlands: what was pulled down stands again, but only once it is go
   const relics = y => RF.reflect(grown, "shadowlands", {year: y}).filter(x => x.kind === "relic" && x.id.startsWith("relic:gone-"));
   const all = relics(1960);
   assert.equal(all.length, grown.umbral.gone.length);
-  for ( const r of all ) assert.match(r.note, /Pulled down in \d{4}/);
+  for ( const r of all ) assert.match(r.note, /(Pulled down|Rebuilt) in \d{4}/);
+  assert.ok(all.some(r => /Pulled down/.test(r.note)) && all.some(r => /Rebuilt/.test(r.note)), "both kinds of relic");
+  assert.ok(RF.regionsFor(all).length < all.length, "rebuilt houses are drawn but get no region");
   const sl = RF.reflect(grown, "shadowlands");
   assert.ok(sl.some(x => x.kind === "thin"), "the church and cemetery thin the Shroud");
   assert.ok(sl.every(x => RF.MARKS[x.kind].layer === "shadowlands"));
