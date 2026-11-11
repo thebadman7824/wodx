@@ -51,12 +51,12 @@ export function look(item) {
 
 const NOTES_NAME = "WoDX: Storyteller's notes on characters";
 function notesEntry() { return game.journal?.find(j => j.getFlag?.(MOD, "stNotes")) ?? null; }
-function stNotesOf(actor) {
+export function stNotesOf(actor) {
   const j = notesEntry(); if ( !j ) return "";
   const p = j.pages.find(pg => pg.getFlag?.(MOD, "actor") === actor.id);
   return p ? String(p.text?.content ?? "").replace(/<\/?p>/g, "").replace(/<br\s*\/?>/g, "\n") : "";
 }
-async function saveStNotes(actor, text) {
+export async function saveStNotes(actor, text) {
   if ( !game.user.isGM ) return;
   let j = notesEntry();
   if ( !j ) j = await JournalEntry.create({ name: NOTES_NAME, ownership: { default: 0 }, flags: { [MOD]: { stNotes: true } } });
@@ -95,7 +95,7 @@ function installHistory() {
     remember(a.id, { at: Date.now(), user: game.user.name, kind: "created", label: `Added ${item.name}`, id: item.id });
   });
 }
-async function undo(actor, i) {
+export async function undo(actor, i) {
   const list = historyOf(actor.id), e = list[i];
   if ( !e ) return;
   const opt = { wodxUndo: true };
@@ -170,7 +170,7 @@ async function makeOn(target, data, parentId = null, seed = new Map()) {
   return target.items.get(map.get(top));
 }
 
-async function doGive({ from, item, to }) {
+export async function doGive({ from, item, to }) {
   const a = game.actors.get(from), b = await fromUuid(to);
   const target = b?.actor ?? b;
   if ( !a || !target || target.documentName !== "Actor" ) return;
@@ -182,7 +182,7 @@ async function doGive({ from, item, to }) {
 }
 
 const LEFT_FOLDER = "WoDX: things left on maps";
-async function doLeave({ from, item, scene, x, y }) {
+export async function doLeave({ from, item, scene, x, y }) {
   const a = game.actors.get(from), sc = game.scenes.get(scene);
   if ( !a || !sc ) return;
   const data = bundle(a, item);
