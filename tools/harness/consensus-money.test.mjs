@@ -37,13 +37,15 @@ test("money: a neglected fortune keeps comfort for a year, then less", () => {
 });
 
 test("money: coins of the day follow history", () => {
-  assert.match(R.coinsFor(1197).coin, /pfennig/);
-  assert.match(R.coinsFor(1600).coin, /thaler/);
-  assert.match(R.coinsFor(1900).coin, /gold mark/);
-  assert.match(R.coinsFor(1999).coin, /Deutsche Mark/);
+  assert.match(R.coinsFor(1197, "german").coin, /pfennig/);
+  assert.match(R.coinsFor(1600, "german").coin, /thaler/);
+  assert.match(R.coinsFor(1900, "german").coin, /gold mark/);
+  assert.match(R.coinsFor(1999, "german").coin, /Deutsche Mark/);
   assert.match(R.coinsFor(1700, "english").coin, /guinea/);
-  assert.equal(R.coinsFor(1700, "nowhere").region, "german");
+  assert.equal(R.coinsFor(1700, "nowhere").region, "moravian");
   assert.equal(R.monthsBetween(0, 61 * R.DAY), 2);
+  assert.match(R.coinsFor(1400).coin, /Prague groschen/);
+  assert.match(R.coinsFor(1925).coin, /Czechoslovak koruna/);
 });
 
 test("consensus: the age by year, M20 with no year", () => {
