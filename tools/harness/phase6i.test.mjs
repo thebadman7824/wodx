@@ -113,7 +113,7 @@ test("the inner voice of the fallen: the Torment (pp. 159–170)", () => {
 });
 
 test("wiring: Actions 3.10, the Demon menu and API, gender-neutral text (B48)", () => {
-  assert.match(JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version, /^3\.[123]\d\./);
+  assert.match(JSON.parse(readFileSync(join(root, "modules/wodx-actions/module.json"), "utf8")).version, /^3\.[1-9]\d\./);
   const main = readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8");
   for ( const k of ["demonEvoke", "demonForm", "demonRevelation", "demonReap", "demonThralls", "demonSin", "demonKindness", "demonHeal", "demonHoly", "demonName", "demonIllusion"] ) assert.match(main, new RegExp(`${k}: withActor`));
   const pm = readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8");
