@@ -27,12 +27,43 @@ SF = dict(bed="Bed single.png", bigbed="Bed double.png", table="table circular w
           wc="Mog Misc/Colorable/Toilet.png", shower="Mog Misc/Colorable/Shower.png", sink="sink 1.png", console="small terminal.png", medbay="medbay.png",
           crate="Closed compartment.png", monitor="monitor.png")
 # sizes in squares of the assets whose names carry none (checked on the PC: pc-job-dd-asset-sizes)
-C.SIZES.update({M["bed"]: (2, 2), M["twin"]: (1, 2), M["bunk"]: (1, 2), M["couch"]: (2, 1), M["coffee"]: (1, 1), M["table"]: (2, 1),
-                M["chair"]: (1, 1), M["fridge"]: (1, 1), M["stove"]: (1, 1), M["sink"]: (1, 1), M["wc"]: (1, 1), M["basin"]: (1, 1),
-                M["bath"]: (1, 2), M["desk"]: (2, 2), M["till"]: (1, 1), M["shelf"]: (2, 1), M["chiller"]: (2, 1), M["cabinet"]: (1, 1),
-                M["tv"]: (2, 1), M["stair"]: (2, 3), M["washer"]: (1, 1),
-                SF["bed"]: (1, 2), SF["bigbed"]: (2, 2), SF["table"]: (2, 2), SF["galley"]: (2, 1), SF["wc"]: (1, 1), SF["shower"]: (1, 1),
-                SF["sink"]: (1, 1), SF["console"]: (1, 1), SF["medbay"]: (2, 1), SF["crate"]: (1, 1), SF["monitor"]: (1, 1)})
+# Cells from each image's own size at 256 px a cell (measured on the PC, 2026-11-11), so the furniture's
+# footprint matches what Dungeondraft draws.
+PX = 256
+C.SIZES.update({name: (max(.25, round(w / PX * 4) / 4), max(.25, round(h / PX * 4) / 4)) for name, (w, h) in {
+    "ApplianceRefrigerator01.png": (160, 143),
+    "ApplianceStove.png": (160, 128),
+    "ApplianceWasher.png": (129, 150),
+    "BathSink.png": (80, 80),
+    "BathToilet1.png": (96, 144),
+    "Bathtub.png": (288, 144),
+    "Bed double.png": (354, 163),
+    "Bed single.png": (351, 152),
+    "BedBunk01.png": (160, 352),
+    "BedDouble01.png": (256, 334),
+    "BedTwin01.png": (192, 336),
+    "Cabinet10.png": (512, 256),
+    "Chair01.png": (192, 160),
+    "Closed compartment.png": (552, 149),
+    "Couch01.png": (416, 160),
+    "DeskL01.png": (267, 267),
+    "EntertainmentSystem01.png": (422, 93),
+    "Galley.png": (554, 151),
+    "Register01.png": (96, 64),
+    "Shower.png": (264, 164),
+    "StairUp01.png": (288, 544),
+    "StoreRefrigerator01.png": (268, 153),
+    "StoreShelf100.png": (140, 95),
+    "Table01.png": (177, 195),
+    "TableCoffeeA01.png": (216, 114),
+    "Toilet.png": (79, 116),
+    "kitchenSinkSingle.png": (96, 96),
+    "medbay.png": (776, 1024),
+    "monitor.png": (335, 132),
+    "sink 1.png": (120, 93),
+    "small terminal.png": (64, 41),
+    "table circular with chairs.png": (994, 1000),
+}.items()})
 C.PORTALS.update({"m-door": ("TDoorKnob36.png", 1), "m-double": ("TDoorGPushPullDouble01.png", 2), "m-window": ("TWindowWide01.png", 2),
                   "s-door": ("Blast door small Closed.png", 1), "s-window": ("dome window.png", 1)})
 MODERN = {"door": "m-door", "double": "m-double", "window": "m-window"}
@@ -284,7 +315,7 @@ ERA_TYPES = {
         "rooms": [("Living room", 0, 3, 8, 5, "terrazzo"), ("Bedroom", 0, 0, 4, 3, "terrazzo"), ("Wet room", 4, 0, 4, 3, "deck")],
         "openings": [("door", 4, 8, "h"), ("window", 1.5, 8, "h"), ("window", 6.5, 8, "h"), ("door", 3.3, 3, "h"), ("door", 6, 3, "h"), ("window", 2, 0, "h")],
         "partitions": [((0, 3), (8, 3)), ((4, 0), (4, 3))],
-        "furnish": {"Living room": [(SF["table"], "wall", 1), (SF["galley"], "wall:E", 1)], "Bedroom": [(SF["bigbed"], "corner:W", 1)],
+        "furnish": {"Living room": [(SF["table"], "wall", 1, .5), (SF["galley"], "wall:E", 1)], "Bedroom": [(SF["bigbed"], "corner:W", 1)],
                     "Wet room": [(SF["wc"], "corner:E", 1), (SF["shower"], "corner:W", 1)]},
     },
     "capsule-tower": {
@@ -298,7 +329,7 @@ ERA_TYPES = {
                      ("door", 4, 2, "v"), ("door", 8, 2, "v"), ("door", 4, 10, "v"), ("door", 8, 10, "v"),
                      ("window", 0, 2, "v"), ("window", 12, 2, "v"), ("window", 0, 10, "v"), ("window", 12, 10, "v"), ("window", 0, 6, "v"), ("window", 12, 6, "v")],
         "partitions": [((4, 0), (4, 12)), ((8, 0), (8, 12)), ((0, 4), (12, 4)), ((0, 8), (12, 8))],
-        "furnish": {"Core": [(SF["console"], "corner", 1)], "Lobby": [], "Plant room": [(SF["crate"], "wall", 2)],
+        "furnish": {"Core": [(SF["console"], "corner", 1)], "Lobby": [], "Plant room": [(SF["crate"], "wall:N", 1)],
                     "Capsule": [(SF["bed"], "wall:W", 1), (SF["monitor"], "corner", 1)], "Capsule two": [(SF["bed"], "wall:E", 1), (SF["monitor"], "corner", 1)],
                     "Capsule three": [(SF["bed"], "wall:W", 1), (SF["wc"], "corner", 1)], "Capsule four": [(SF["bed"], "wall:E", 1), (SF["wc"], "corner", 1)],
                     "Capsule five": [(SF["bed"], "wall:W", 1)], "Capsule six": [(SF["bed"], "wall:E", 1)]},
