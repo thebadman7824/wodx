@@ -1566,3 +1566,8 @@ Ben asked for a bug check of everything done so far. The harness passed 1,286 of
 ## 2026-11-11: trait effects, step 8 (Chronicle 0.23.0, B888)
 - data BG_WORLD; trait-rules worldPlan, describe names it for backgrounds. New scripts/bg-world.mjs (madeOf, plan, makeReal: People through WoDX Creation, attitude through WoDX NPC, regions owned through WoDX Storyteller). Trait effects window: Make them real button.
 - Tests: trait-world.test.mjs (4). Gate: gatetraits step 20.
+
+## 2026-11-11: trait effects, step 9 (Storyteller 0.30.0, B889)
+- codex-rules: needsOf, knowsEnough, bareName; codex.mjs: dotsOf, the Reveal dialog ticks those who know enough.
+- hardship-rules: weatherDice; hardship.mjs rolls Stamina + Survival against the weather.
+- Tests: passive-hooks.test.mjs (2). Gate: gatetraits step 21.

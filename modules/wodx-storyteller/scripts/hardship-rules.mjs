@@ -91,3 +91,9 @@ export function weatherRolls(exposedAt, now, severity) {
 
 /** The penalty in dice for being tired. */
 export const tiredPenalty = tired => -Math.max(0, Math.min(MAX_TIRED, Math.round(n(tired))));
+
+/**
+ * Storyteller 0.30.0 (Traits With Teeth step 9): the weather roll is Stamina + Survival (house reading of M20 p. 435:
+ * knowing how to shelter and dress for it counts), so a hunter or a Gangrel of the wilds weathers more than a clerk.
+ */
+export const weatherDice = (stamina, survival = 0) => Math.max(1, Math.round(n(stamina)) + Math.max(0, Math.round(n(survival))));

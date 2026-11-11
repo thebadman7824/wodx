@@ -199,6 +199,14 @@ export async function run() {
       ok("20 backgrounds made real", by("retainers")?.count === 2 && by("retainers")?.kind === "ghoul" && by("mentor")?.count === 1 && !by("resources") && typeof T().makeReal === "function",
         {plan: plan.map(p => `${p.key}:${p.count ?? p.size}:${p.kind ?? "place"}`)});
     });
+
+    await step("21 codex thresholds and weather", async () => {
+      const X = await import("/modules/wodx-storyteller/scripts/codex-rules.mjs");
+      const H = await import("/modules/wodx-storyteller/scripts/hardship-rules.mjs");
+      const needs = X.needsOf("Gate page [Occult 5]");
+      ok("21 codex thresholds and weather", X.knowsEnough(needs, {intelligence: 3, abilities: {occult: 2}}) && !X.knowsEnough(needs, {intelligence: 2, abilities: {occult: 1}}) && H.weatherDice(2, 3) === 5,
+        {needs});
+    });
   } catch (e) {
     R.errors.push(e.message);
   } finally {
