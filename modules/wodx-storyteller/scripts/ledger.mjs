@@ -1,5 +1,5 @@
 import * as L from "./ledger-rules.mjs";
-import {MOD, esc, chron, npc, isActiveGM, setting, mutate as mutateSetting, log} from "./core.mjs";
+import {MOD, esc, chron, npc, isActiveGM, setting, mutate as mutateSetting, log, isPC, pcs} from "./core.mjs";
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -27,6 +27,38 @@ export function registerLedgerSettings() {
   game.settings.register(MOD, "ledger", {scope: "world", config: false, type: Object, default: L.blankLedger(), onChange: () => LedgerApp.refresh()});
   game.settings.register(MOD, "veilOn", {name: "Veil track", hint: "Breaches lower the chronicle's Veil track; quiet months mend it.",
     scope: "world", config: true, type: Boolean, default: true});
+  game.settings.register(MOD, "ledgerTraits", {scope: "world", config: false, type: Array, default: []});
+}
+
+/* ---- Merits and flaws that open entries (WoDX Chronicle 0.22.0, pattern P10) ---- */
+
+/**
+ * Active GM: open a Ledger entry for each Boon, Dark Secret, Old Flame and the like on a player character, once. The
+ * ids opened are remembered, so an entry the Storyteller deletes stays deleted. Returns the entries opened.
+ */
+let syncing = Promise.resolve([]);
+export function syncTraits(actors = null) {
+  syncing = syncing.then(() => _syncTraits(actors)).catch(e => { console.error(`${MOD} |`, e); return []; });
+  return syncing;
+}
+async function _syncTraits(actors) {
+  const T = chron()?.traits;
+  if ( !isActiveGM() || !T?.ledgerFor ) return [];
+  const seen = new Set(setting("ledgerTraits") ?? []);
+  const have = new Set(ledger().entries.map(e => e.id));
+  const made = [];
+  for ( const a of (actors ?? pcs()).filter(isPC) ) {
+    for ( const e of T.ledgerFor(a, now()) ) {
+      if ( seen.has(e.id) || have.has(e.id) ) continue;
+      made.push(await saveEntry(e));
+      seen.add(e.id);
+    }
+  }
+  if ( made.length ) {
+    await game.settings.set(MOD, "ledgerTraits", [...seen].slice(-500));
+    await log({kind: "ledger", text: `The Ledger opened ${made.length} entr${made.length === 1 ? "y" : "ies"} from merits and flaws: ${made.map(e => e.what.split(":")[0]).join(", ")}.`});
+  }
+  return made;
 }
 
 export const ledger = () => L.normLedger(setting("ledger"));
@@ -210,6 +242,11 @@ export function registerLedgerHooks() {
     if ( !archived && (diedOf(actor) === undefined || diedOf(actor) === null) ) onDeath(actor).catch(e => console.error(`${MOD} |`, e));
   });
   Hooks.on("renderChatMessageHTML", (msg, el) => bindVeilUndo(msg, el?.[0] ?? el));
+  // A merit or flaw added to a player character, or matched in the Trait effects window
+  const onItem = item => { if ( item?.type === "Feature" && isPC(item.parent) ) syncTraits([item.parent]); };
+  Hooks.on("createItem", onItem);
+  Hooks.on("updateItem", (item, change) => { if ( change?.flags?.["wodx-chronicle"] || change?.name ) onItem(item); });
+  Hooks.once("ready", () => { setTimeout(() => syncTraits(), 2000); });
 }
 
 /* ---- The window ---- */

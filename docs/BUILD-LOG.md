@@ -1548,3 +1548,11 @@ Ben approved all 291 timeline cards and asked for a deconfliction. docs/research
 - main.js: Lucky in resolveAction (action and quick check), feedResolve (Efficient Digestion, Prey Exclusion), resolveSpend (Thin Blood), daytime (Deep and Light Sleeper; the daytime flag's uncapped).
 - Chronicle: HANDLED; describe lists every way a trait is carried out.
 - Tests: trait-pools.test.mjs (4). Gate: gatetraits step 18.
+
+## 2026-11-11: trait effects, step 7 (Chronicle 0.22.0, Actions 3.36.0, Storyteller 0.29.0, Interactables 0.25.0, B887)
+- Chronicle data: TRIGGERS, PULLS, LEDGER, PROMPTS. trait-rules: bracketWords, triggersOf, triggered, pullsOf, ledgerOf, promptsOn; describe names them. traits.mjs: triggers, pulls, ledgerFor, prompt (queue type wodx-chronicle.traitPrompt), listens to wodxSocial and wodxFightStarted.
+- Interactables: labelsOnPath (tile titles, region names), traitTriggers in onTokenMoved (holds a player's move; option wodxHeld), setting traitTriggers.
+- Storyteller: night pulls (seeded per character), the aid for Oracular Ability, night prompts on approval; Ledger syncTraits (setting ledgerTraits remembers ids).
+- Actions: feeding prompt.
+- docs/HOOKS.md: wodxSocial and wodxFightStarted now heard. Tests: trait-moments.test.mjs (6). Gate: gatetraits step 19.
+

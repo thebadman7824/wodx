@@ -178,6 +178,19 @@ export async function run() {
       ok("18 pools and Lucky", before === 3 && used?.left === 2 && TH.luckyLeft(k) === 2 && TH.digestionBonus(k, 4, 10) === 2 && TH.bloodCostMult(k) === 2 && TH.sleepMods(k).diff === 2,
         {before, used, digest: TH.digestionBonus(k, 4, 10), mult: TH.bloodCostMult(k)});
     });
+
+    await step("19 map, night, Ledger and prompts", async () => {
+      const k = await mk("Trait Moments", "Vampire", [feat("Can't Cross Running Water", "flaw", 3), feat("Hunted", "flaw", 4), feat("Dark Secret", "flaw", 1), feat("Flashbacks", "flaw", 6)]);
+      const tr = T().triggers(k);
+      const hit = T().rules.triggered(tr, ["The mill stream"]).map(t => t.key);
+      const pulls = T().pulls(k, () => 0).map(p => p.key);
+      const led = T().ledgerFor(k, 0).map(e => e.id);
+      const pr = T().rules.promptsOn(T().view(k), "fight").map(p => p.key);
+      const IA = game.modules.get("wodx-interactables")?.api;
+      const ST = game.modules.get("wodx-storyteller")?.api;
+      ok("19 map, night, Ledger and prompts", hit.includes("cant-cross-running-water") && pulls.includes("hunted") && led.includes(`trait-${k.id}-dark-secret`) && pr.includes("flashbacks")
+        && (!IA || typeof IA.labelsOnPath === "function") && (!ST || typeof ST.ledger?.syncTraits === "function"), {hit, pulls, led, pr});
+    });
   } catch (e) {
     R.errors.push(e.message);
   } finally {

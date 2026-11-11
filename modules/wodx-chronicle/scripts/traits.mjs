@@ -1,4 +1,5 @@
 import {MODULE_ID, esc} from "./util.mjs";
+import {propose, registerHandler} from "./approvals.mjs";
 import {searchBox} from "./search.mjs";
 import * as T from "./trait-rules.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
@@ -84,7 +85,53 @@ export async function open(actorOrId) {
     buttons: [{action: "close", label: "Close", default: true}]});
 }
 
+/* ---- Step 7 (Chronicle 0.22.0) ---- */
+
+/** For WoDX Interactables: the map triggers a character carries (P4). */
+export const triggers = actor => T.triggersOf(view(actor));
+/** For WoDX Storyteller: what a character's traits put in the night's draw (P8). rand: () => 0..1. */
+export const pulls = (actor, rand) => T.pullsOf(view(actor), rand, actor?.name ?? "");
+/** For WoDX Storyteller: the Ledger entries a character's traits call for (P10). */
+export const ledgerFor = (actor, now = game.time?.worldTime ?? 0) => T.ledgerOf(view(actor), {id: actor?.id ?? "", name: actor?.name ?? "", now});
+
+export const PROMPT_TYPE = `${MODULE_ID}.traitPrompt`;
+const MOMENTS = {feed: "feeding", social: "a social act", fight: "a fight", night: "tonight"};
+/**
+ * A moment where traits should bite (P11): one queue card a character, keyed so the same moment is not asked twice.
+ * on: feed, social, fight or night. at: what makes the moment its own (a night's date, a fight id). Returns how many.
+ */
+export async function prompt(actors, on, {at = "", where = ""} = {}) {
+  if ( !MOMENTS[on] ) return 0;
+  let n = 0;
+  for ( const a of [actors].flat().filter(Boolean) ) {
+    const list = T.promptsOn(view(a), on);
+    if ( !list.length ) continue;
+    n++;
+    await propose({type: PROMPT_TYPE, key: `trait:${on}:${a.id}:${at || Math.floor(game.time?.worldTime ?? 0)}`,
+      title: `${a.name}: ${list.map(x => x.name).join(", ")} (${MOMENTS[on]})`,
+      detail: list.map(x => `${x.name}: ${x.text}.`).join(" "), data: {actor: a.id, on, where, list}});
+  }
+  return n;
+}
+function registerPromptHandler() {
+  registerHandler(PROMPT_TYPE, {label: "A merit or flaw comes into play", approve: async entry => {
+    const d = entry.data ?? {}, a = game.actors.get(d.actor);
+    const items = (d.list ?? []).map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.text)}.</li>`).join("");
+    await ChatMessage.create({content: `<div class="wodx-card"><h3>${esc(a?.name ?? "A character")}: ${esc(MOMENTS[d.on] ?? "now")}</h3><ul>${items}</ul></div>`,
+      speaker: {alias: "Chronicle"}, whisper: game.users.filter(u => u.isGM).map(u => u.id)});
+  }});
+}
+
 export function registerTraitHooks() {
+  registerPromptHandler();
+  // WoDX Actions' social acts and WoDX Combat's fights call for the moment's prompts. The hooks are heard only on the
+  // client that sent them; prompt() goes to the Storyteller's queue from any client, and the key stops repeats.
+  const actorOf = x => (x?.documentName === "Actor" ? x : x?.actor ?? (typeof x === "string" ? game.actors.get(x) : null));
+  Hooks.on("wodxSocial", p => { const a = actorOf(p?.actor); if ( a ) prompt(a, "social", {at: `${actorOf(p?.npc)?.id ?? ""}:${Math.floor(game.time.worldTime)}`}); });
+  Hooks.on("wodxFightStarted", p => {
+    const pcs = [...(p?.combat?.combatants ?? [])].map(c => c.actor).filter(a => a?.hasPlayerOwner);
+    if ( pcs.length ) prompt(pcs, "fight", {at: p?.combat?.id ?? ""});
+  });
   const can = a => !!a && (game.user.isGM || a.isOwner);
   Hooks.on("getHeaderControlsActorSheetV2", (app, controls) => {
     const a = app.document;
@@ -99,4 +146,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, senses, shows, attitudeSeed, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {view, of, has, effects, senses, shows, attitudeSeed, triggers, pulls, ledgerFor, prompt, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
