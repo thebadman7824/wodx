@@ -166,10 +166,12 @@ def build():
         for r in b.rooms:
             if B.FLOORS.get(r.floor):
                 patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.FLOORS[r.floor]))
+            objects.extend(C.dressing_objects(r, True))
             for it in r.items:
                 # a turned item: the asset's own size turned a quarter
                 rot = 0.0 if not it["rot"] else math.pi / 2
                 objects.append(obj(it["asset"], it["x"] + it["w"] / 2, it["y"] + it["h"] / 2, rot, it["scale"], 100))
+            objects.extend(C.dressing_objects(r, False))
     # yard: fences, well, woodpile, block, haystack, sty, garden crops
     def fence_box(x, y, w, h, gap_side, g0, g1):
         sides = {"N": [(x, y), (x + w, y)], "E": [(x + w, y), (x + w, y + h)], "S": [(x + w, y + h), (x, y + h)], "W": [(x, y + h), (x, y)]}

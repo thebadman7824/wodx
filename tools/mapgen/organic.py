@@ -1245,8 +1245,10 @@ class OrganicTown(T.Town):
             for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk))
             for r in b.rooms:
                 if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
+                objects.extend(b.dressing_world(r, True))
                 for it, cx, cy, rot in b.items_world(r):
                     objects.append(obj(it["asset"], cx, cy, rot, it["scale"], 100))
+                objects.extend(b.dressing_world(r, False))
         for pl in self.plots:                                  # plot fences: the sides and back, open to the street
             if not overlaps(pl["rect"], win, 2): continue
             for a, c in self.plot_fences(pl): paths.append(path([a, c], "Fence-Wood-Ashen-A.png", 64))

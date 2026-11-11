@@ -10,6 +10,7 @@ type here uses the Forgotten Adventures packs, which are medieval, so all of the
 Renaissance. Later eras need other packs.
 """
 from ddcore import Room
+import ddcore as C
 
 MEDIEVAL = ["dark-ages", "long-night", "renaissance"]
 FLOORS = {"planks": "Wooden_Flooring_H_Ashen.webp", "stone": "Stone_Tiles_A_03.webp", "earth": None}
@@ -320,6 +321,19 @@ class Angled:
         for it in r.items:
             cx, cy = self.world(it["x"] + it["w"] / 2, it["y"] + it["h"] / 2)
             yield it, cx, cy, self.theta + (_m.pi / 2 if it["rot"] else 0.0)
+
+    def dressing_world(self, r, under):
+        """Dungeondraft objects for a room's dressing (see ddcore.dress), on the map."""
+        out = []
+        for it in sorted(getattr(r, "dressing", []), key=lambda i: i.get("layer", 100)):
+            lay = it.get("layer", 100)
+            if (lay < 100) != under: continue
+            cx, cy = self.world(it["x"] + it["w"] / 2, it["y"] + it["h"] / 2)
+            rot = it.get("spin", self.theta + (_m.pi / 2 if it["rot"] else 0.0))
+            out.append(C.obj(it["asset"], cx, cy, rot, it["scale"], {50: 100, 150: 300}.get(lay, lay), shadow=100 <= lay < 400))
+        if not under:
+            for x, y, rng in getattr(r, "lights", []): C.light(*self.world(x, y), rng)
+        return out
 
     def furnish(self):
         self.local.furnish()
