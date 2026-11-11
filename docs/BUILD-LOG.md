@@ -1339,3 +1339,10 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 ## 2026-11-11: Future Darkness events moved to Moravia (Chronicle 0.16.1)
 - Eight World of Future Darkness events put Rothenstein in the Rhineland or centred the Rhineland (2044, 2058, 2081, the 2099 Seventh Maelstrom and four cascade beats). The sources in docs/research/wofd now name Moravia, and data/future-events.mjs was rebuilt with tools/wofd/build-future-events.mjs.
 - The source also takes the spelling pass's "favours", so the rebuild changes nothing else.
+
+## 2026-11-11: The crossover referee (Chronicle 0.17.0)
+- Item 1 of "Lines and eras that meet" (approved 2026-11-10). B760.
+- modules/wodx-chronicle/data/crossover.mjs: 34 cases over 14 kinds of meeting, each on a rules-clash row, with pages; three drafts carry their page question.
+- scripts/referee-rules.mjs (pure): profileOf (the shared Combat profile flag first), bookOf (Dark Ages books up to the Long Night), casesFor (True Faith first, fallbacks only when nothing particular fits), testFor (Generation, Faith, Day or Night, Willpower, countermagick, Wits + Occult, Auspex against Obfuscate as WoDX NPC reads it, witnesses, possession), successes.
+- scripts/referee.mjs (Foundry): the referee window (selected token and first target fill it in; every case listed with a search box), rolls whispered to the Storyteller, a tool in the Storyteller's hand, key binding "The crossover referee", api.referee (open, ask, roll, sheetOf, cases).
+- Tests: tools/harness/referee.test.mjs (11). UI fit: the referee window added. Gate: tools/gate/gatereferee.mjs.

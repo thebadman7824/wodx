@@ -350,6 +350,8 @@ A good habit for a first live session: leave everything on Suggest, and switch o
 
 **Teleporting a token.** Select one or more tokens (characters or NPCs), press **Teleport** on the token toolbar, then click the map where they should go. Right click or Escape cancels. Alt+Shift+P does the same at once, sending the selected tokens to wherever the cursor is (change the key in Configure Controls). The tokens jump through walls, snap to the grid, keep their places around one another, and never land outside the scene. Only the Storyteller has the button and the key.
 
+**When lines meet.** Open **The crossover referee** from the Storyteller's hand (or give it a key in Configure Controls). Select the token that acts and target the one it acts on, pick what is used (Dominate, Auspex against Obfuscate, countermagick, drinking blood, the Delirium and the rest) and press **Ask the referee**. It shows the ruling with its pages, works out what the two sheets allow (Generation, True Faith, Day or Night, Arete and Mind), and offers the books' rolls; they go to you alone. A case marked draft still waits for its page to be read. With no tokens, pick the two lines by hand.
+
 **Light touch.** If the table wants fewer interruptions, set NPCs in combat, routines and factions to Off for the night, and set Dawn and dusk to Off or "New Night automatically".
 
 ## Known quirks

@@ -110,6 +110,7 @@ const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/
 const {EventsApp} = await import(join(root, "modules/wodx-chronicle/scripts/events.mjs"));
 const {ArchiveApp} = await import(join(root, "modules/wodx-creation/scripts/archive.mjs"));
 const {LanguagesApp} = await import(join(root, "modules/wodx-chronicle/scripts/languages.mjs"));
+const {RefereeApp} = await import(join(root, "modules/wodx-chronicle/scripts/referee.mjs"));
 const {GearApp, setGear} = await import(join(root, "modules/wodx-library/scripts/main.mjs"));
 setGear(JSON.parse((await import("node:fs")).readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8")));
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
@@ -134,7 +135,7 @@ class PlannedPassYears extends PassYearsApp {
 
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
-  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["Gear by era", GearApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
+  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["The crossover referee", RefereeApp, {}], ["Gear by era", GearApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
   ["Creation and experience", CreationApp, {}], ["Creation check", CreationCheckApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
   ["Pass the years", PlannedPassYears, {}], ["People", RolledPeople, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);
