@@ -5,6 +5,8 @@
  * kind check. Patterns P1-P20 are listed in PATTERNS. `holders`: the kinds that can have it ("any" for all);
  * `against`: the kinds it works on or reacts to.
  */
+import {LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS} from "./trait-lines.mjs";
+
 export const PATTERNS = {
  "P1": "Roll modifier",
  "P2": "Sense change",
@@ -287,7 +289,11 @@ export const BACKGROUNDS = [
 ];
 
 /** Books whose merits and flaws are in MERITS_FLAWS. The rest come with their own rows later (the design's step 11). */
-export const BOOKS_DONE = ["V20"];
+export const BOOKS_DONE = ["V20", ...LINE_BOOKS];
+
+// Step 11 (Chronicle 0.24.0): the other lines' rows join the table, and V20 entries they share take their holders
+for ( const e of MERITS_FLAWS ) if ( WIDEN[e.key] && !e.holders.includes("any") ) e.holders = [...new Set([...e.holders, ...WIDEN[e.key]])];
+MERITS_FLAWS.push(...LINE_MERITS_FLAWS);
 
 /**
  * Step 3 (Chronicle 0.19.0): what others can sense about a character (pattern P15), for WoDX Senses. Lines are WoDX's own

@@ -346,10 +346,36 @@ export function outcome(key, got, ctx = {}) {
       return {...base, kind: "timed", name: "Bound", text: `bound (a memory, a derangement, a bond or an oath) for ${dur.label}; the Storyteller writes it on the sheet`};
     case "manifest":
       return {...base, kind: "timed", name: "Manifest", text: `seen and able to touch on this side for ${dur.label}`};
+    /* Traits With Teeth step 10 (Actions 3.38.0): queued keywords that change the world once the Storyteller approves */
+    case "shape":
+      return {...base, kind: "timed", name: "Shaped", form: String(ctx.form ?? "").slice(0, 60),
+        text: `${ctx.form ? `takes the shape of ${String(ctx.form).slice(0, 60)}` : "takes a new shape"} for ${dur.label}`};
+    case "sideways":
+      return {...base, kind: "cross", to: ctx.shroud ? "shadowlands" : null, text: ctx.shroud ? "crosses the Shroud, or back" : "crosses the Gauntlet, or back"};
+    case "summon":
+      return {...base, kind: "summon", count: Math.max(1, Math.min(5, Math.ceil(str / 2))), actor: ctx.actor ?? null,
+        text: `${Math.max(1, Math.min(5, Math.ceil(str / 2)))} called to the caster; the Storyteller picks who and where`};
+    case "make":
+      return {...base, kind: "give", item: ctx.item ?? null, thing: String(ctx.thing ?? "").slice(0, 80),
+        text: `${ctx.thing ? String(ctx.thing).slice(0, 80) : "a thing"} made, into the target's things`};
+    case "weather": {
+      const w = WEATHER_SET[ctx.weather] ? ctx.weather : null;
+      return {...base, kind: "weather", weather: w, text: `${w ? WEATHER_SET[w].label.toLowerCase() : "the weather changed"} tonight`};
+    }
     default:
       return {...base, kind: "note", text: `${K.does} (strength ${str}, ${dur.label})`};
   }
 }
+
+/** The weathers a Weather keyword can call (Atmosphere's hand-set day fields), step 10. */
+export const WEATHER_SET = {
+  calm: {label: "Calm and clear", day: {sky: "clear", precip: "none", fog: "none", wind: "calm"}},
+  wind: {label: "A gale", day: {wind: "gale"}},
+  rain: {label: "Heavy rain", day: {sky: "overcast", precip: "rain", intensity: "heavy"}},
+  fog: {label: "Thick fog", day: {fog: "thick", wind: "calm"}},
+  snow: {label: "Snow", day: {sky: "overcast", precip: "snow", intensity: "moderate"}},
+  storm: {label: "A storm", day: {sky: "storm", precip: "rain", wind: "gale", intensity: "heavy"}}
+};
 
 /**
  * Where a keyword's result goes. t: {self, playerCharacter, count, witnessed, need}.

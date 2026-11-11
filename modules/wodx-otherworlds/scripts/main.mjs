@@ -1,5 +1,5 @@
 import {MODULE_ID, behaviorType, makeRatingsBehavior, placeOf} from "./ratings.mjs";
-import {registerStatuses, stepSideways, clearCrossing, onApplyChangeGM, STATUS, crossShroud, checkYearAndDay, registerYearHandler, disconnectionOf, worldOf} from "./crossing.mjs";
+import {registerStatuses, stepSideways, clearCrossing, onApplyChangeGM, STATUS, crossShroud, checkYearAndDay, registerYearHandler, disconnectionOf, worldOf, sendAcross} from "./crossing.mjs";
 import * as twins from "./twins.mjs";
 import {TwinsApp} from "./twins-app.mjs";
 import * as senses from "./senses.mjs";
@@ -50,7 +50,7 @@ Hooks.once("ready", () => {
     peek: () => stepSideways({mode: "peek"}),
     clearCrossing, openRatings: () => TaggingApp.open(), writeReport, writeChartsPage,
     buildPenumbraPrototype, placeOf, rules, STATUS,
-    crossShroud, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
+    crossShroud, sendAcross, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
     readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses,
     journey: {draw: journey.drawJourney, propose: journey.proposeJourney, approve: journey.approveJourney, rules: journey.J},
     journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, lookCss: journey.lookCss, applyDecay: journey.applyDecay, swaying: journey.swaying,
