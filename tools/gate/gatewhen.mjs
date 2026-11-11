@@ -110,7 +110,7 @@ export async function run() {
     await W.run("standing gate's own faction to welcome", {actor});
     const s1 = W.check("standing gate's own faction >= welcome", {actor}).ok;
     await W.run("standing gate's own faction -3", {actor});
-    const s2 = W.check("standing gate's own faction <= hostile", {actor}).ok;
+    const s2 = W.check("standing gate's own faction <= distrusted", {actor}).ok;
     ok("8. faction standing", s1 && s2, {s1, s2, now: FX.peopleOf(actor.id)});
   } catch (err) {
     R.errors.push(`${err.message} | ${String(err.stack).split("\n").slice(0, 3).join(" | ")}`);
