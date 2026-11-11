@@ -24,19 +24,21 @@ export const AUTO = "auto";
 export const AUTO_LABEL = "From the sky (WoDX Atmosphere's weather)";
 
 /**
- * How harsh a day of WoDX Atmosphere weather is for someone out in it (house rule, B840): the books leave the
- * harshness to the Storyteller (M20 p. 435). d: Atmosphere's day {tempDay, tempNight, precip, intensity, wind,
- * deepSnow}. Bitter cold in a gale or a blizzard, or heat of 40°C, is deadly; freezing with snow, sleet or a gale, or
- * deep snow, or heat of 35°C, is severe; freezing nights, a gale, heavy cold rain or heat of 31°C is harsh.
+ * How harsh a day of WoDX Atmosphere weather is for someone out in it (B840, thresholds per M20 p. 435 in 0.25.1,
+ * B860). M20 names the dangers: below freezing, above about 120°F (49°C), ice storms and hurricane winds; milder
+ * weather is narration and penalties only, with no harm. How often the harm comes is the Storyteller's call (house
+ * rule): below freezing or 49°C is harsh; -10°C, or below freezing with a gale, heavy snow or sleet (an ice storm), or
+ * 52°C is severe; -20°C, or -10°C with a gale or heavy snow, or 55°C is deadly. d: Atmosphere's day {tempDay,
+ * tempNight, precip, intensity, wind}.
  */
+export const FREEZING = 0, SCORCHING = 49;
 export function severityFromDay(d) {
   if ( !d || typeof d !== "object" ) return "none";
   const cold = Math.min(Number(d.tempNight ?? 10), Number(d.tempDay ?? 10)), hot = Number(d.tempDay ?? 10);
-  const snow = d.precip === "snow", sleet = d.precip === "sleet", gale = d.wind === "gale", heavy = d.intensity === "heavy";
-  const wet = ["rain", "sleet", "snow", "hail"].includes(d.precip);
-  if ( (cold <= -10 && (gale || (snow && heavy))) || hot >= 40 ) return "deadly";
-  if ( (cold <= -2 && (snow || sleet || gale)) || d.deepSnow || cold <= -15 || hot >= 35 ) return "severe";
-  if ( cold <= -2 || gale || (heavy && wet && cold <= 5) || hot >= 31 ) return "harsh";
+  const gale = d.wind === "gale", heavySnow = d.precip === "snow" && d.intensity === "heavy", sleet = d.precip === "sleet";
+  if ( cold <= -20 || (cold <= -10 && (gale || heavySnow)) || hot >= 55 ) return "deadly";
+  if ( cold <= -10 || (cold < FREEZING && (gale || heavySnow || sleet)) || hot >= 52 ) return "severe";
+  if ( cold < FREEZING || hot >= SCORCHING ) return "harsh";
   return "none";
 }
 export const MAX_TIRED = 3;

@@ -74,6 +74,9 @@ export function normRemains(r = {}, now = 0) {
 }
 
 /** Who looks into a death found, by the year, and what they can do. Bands end before the next one's year. */
+/** The book roll for examining a body: HH2 p. 94 (pdf p. 95) gives an autopsy as Intelligence + Medicine. */
+export const EXAMINE = "Whoever examines the body rolls Intelligence + Medicine (HH2 p. 94); more successes, more of the above.";
+
 export const INQUESTS = [
   {from: 0, who: "the parish priest and the neighbours", id: "face", when: "days", poison: false, drained: "taken for a wasting sickness, a curse or a wolf"},
   {from: 1500, who: "a physician called by the town council", id: "face", when: "days", poison: false, drained: "taken for a sickness or witchcraft, and talked of"},

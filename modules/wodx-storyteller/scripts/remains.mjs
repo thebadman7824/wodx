@@ -116,7 +116,7 @@ export async function found(body, pc) {
     content: `<div class="wodx-card wst-remains"><h3>${esc(pc.name)} comes upon ${esc(body.name)}</h3>
       <p><strong>${esc(st.label)}.</strong> ${esc(st.note)} ${esc(R.PLACES[r.place].label)}.</p>
       ${first ? `<p>If it is reported, ${esc(f.who)} look into it. ${esc(f.identity)} ${esc(f.cause)} ${esc(f.when)}</p>` : `<p>Others have found it already.</p>`}
-      ${f.drained && first ? `<p>${esc(f.drained)}</p>` : ""}${heat ? `<p class="wodx-quiet">The hunting ground here grows hotter.</p>` : ""}${r.note ? `<p class="wodx-quiet">${esc(r.note)}</p>` : ""}</div>`});
+      ${f.drained && first ? `<p>${esc(f.drained)}</p>` : ""}<p class="wodx-quiet">${esc(R.EXAMINE)}</p>${heat ? `<p class="wodx-quiet">The hunting ground here grows hotter.</p>` : ""}${r.note ? `<p class="wodx-quiet">${esc(r.note)}</p>` : ""}</div>`});
 }
 
 /** An NPC token marked dead becomes a body (when the setting is on). */
