@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* More stock talk (NPC 0.13.0): notices, voices, small talk, memory, debts, farewells, barks, cries, trade, social rolls */
+/* More stock talk (NPC 0.14.0): notices, voices, small talk, memory, debts, farewells, barks, cries, trade, social rolls */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");

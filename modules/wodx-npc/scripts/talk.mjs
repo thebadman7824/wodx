@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.13.0: the topic menu. A player targets someone the Storyteller plays (or nobody, for the nearest in reach), stands close, and presses Talk
+ * WoDX NPC 0.14.0: the topic menu. A player targets someone the Storyteller plays (or nobody, for the nearest in reach), stands close, and presses Talk
  * (the token tools, or Talk in WoDX Actions). A window lists what this person can be asked; the player picks a
  * topic and the person answers with a line the Storyteller wrote (talk-rules.mjs has the format and the rules).
  *
@@ -13,7 +13,7 @@
  *   setting wodx-npc.sharedTalk {key: text}  shared sheets: household:<name>, faction:<key>, scene:<id>, everyone
  *   flags.wodx-npc.talked   {pcId: worldTime}  on an NPC: when each character last talked to them (0.12.0)
  *
- * 0.13.0 adds more stock talk: what a mortal notices about the character, voices for kinds of people, small talk on
+ * 0.14.0 adds more stock talk: what a mortal notices about the character, voices for kinds of people, small talk on
  * feasts, fasts and weather, rumours about the character, debts in the Ledger, remembering the last visit, farewells,
  * remarks while about a routine, cries of alarm and pain, and trade and social-roll lines for WoDX Actions (stock()).
  */
@@ -458,7 +458,7 @@ export function build(ctx) {
     return clean;
   }
 
-  /* ---------------- Remarks and cries (0.13.0) ---------------- */
+  /* ---------------- Remarks and cries (0.14.0) ---------------- */
 
   const lastBark = new Map(); // actor id -> real time of their last remark
   let recent = []; // real times of the last remarks anywhere, so a jump in time does not flood the scene

@@ -67,5 +67,5 @@ test("the four wizards are wired into the Creation window and the api", () => {
     const name = sel.match(/name="([^"]+)"/)[1];
     assert.ok(/data-fixed/.test(sel) || dlg.includes(`select[name=${name}]`), `select ${name} needs a search box or data-fixed`);
   }
-  assert.equal(JSON.parse(readFileSync(new URL("../../modules/wodx-creation/module.json", import.meta.url), "utf8")).version, "0.10.0");
+  assert.equal(JSON.parse(readFileSync(new URL("../../modules/wodx-creation/module.json", import.meta.url), "utf8")).version, "0.10.1");
 });

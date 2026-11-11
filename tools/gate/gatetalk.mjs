@@ -14,7 +14,7 @@
  *   8. the window opens for a targeted NPC and a topic button answers in it; with nobody targeted it opens for the nearest
  *   9. Undo on the Storyteller's card takes back what was taught
  *  10. stock talk: a stranger with no sheet greets and answers work; passes on a rumour it heard; off means silence
- *  11. more stock talk (0.13.0): a child's voice, a remembered visit, Goodbye, trade lines for Actions, a cry of alarm
+ *  11. more stock talk (0.14.0): a child's voice, a remembered visit, Goodbye, trade lines for Actions, a cry of alarm
  *  12. every other WoDX module still answers
  * Result: Data/wodx-gate/gatetalk-result.json.
  */

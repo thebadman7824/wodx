@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.13.0: more stock talk. Reactions to what a character is, cries of alarm and pain, barks while at work,
+ * WoDX NPC 0.14.0: more stock talk. Reactions to what a character is, cries of alarm and pain, barks while at work,
  * trade and social-roll answers, the voices of kinds of people, small talk on feasts, weather and the season, talk
  * of the characters' own deeds, farewells, and remembering a past visit. House writing, not from any book. The
  * Storyteller's own lines always come first, and every part can be switched off.

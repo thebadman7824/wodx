@@ -13,7 +13,10 @@ export const MORTAL = {
   // At this age the death is proposed ticked
   diesAt: 100,
   // With no birth year on the sheet, a character is taken to be an adult of this age when the skip starts
-  assumedAge: 20
+  assumedAge: 20,
+  // Townsfolk (NPCs who keep a WoDX NPC routine or household) with no birth year are spread over this many years
+  // from assumedAge, seeded by the actor, so a long skip does not take the whole town in one year (B710)
+  townSpread: 30
 };
 
 /** A ghoul who goes without vitae reverts to their real age; one far past a lifespan turns to dust (V20DA p. 399). */

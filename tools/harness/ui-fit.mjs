@@ -263,7 +263,12 @@ game.world.id = worldId;
     ["Frenzy", () => game.wodxActions.frenzy({actor})], ["Rötschreck", () => game.wodxActions.rotschreck({actor})],
     ["Blood Oath", () => game.wodxActions.bloodOath({actor})], ["Torpor", () => game.wodxActions.torpor({actor})], ["Hazard", () => game.wodxActions.hazard({actor})],
     ["Sin", () => game.wodxActions.sin({actor})], ["Willpower uses", () => game.wodxActions.uses({actor, resource: "willpower"})],
-    ["Migration", () => game.wodxActions.migrate()]];
+    ["Migration", () => game.wodxActions.migrate()],
+    // 3.20.0 and 3.21.0: dealing with one NPC
+    ["With this person", () => game.wodxActions.withPerson({actor, token: {actor: target, document: {name: target.name, actor: target}}})],
+    ["Persuade someone", () => game.wodxActions.social(actor, {actor: target, document: {name: target.name, actor: target}}, "persuade")],
+    ["Bribe someone", () => game.wodxActions.social(actor, {actor: target, document: {name: target.name, actor: target}}, "bribe")],
+    ["Lift something", () => game.wodxActions.lift(actor, {actor: target, document: {name: target.name, actor: target}}, "lift")]];
   // 3.2.0: a Cainite with many Disciplines and a path; the Road, downtime, healing, prestation and Masquerade dialogs
   for ( const [d, v] of [["Dominate", 5], ["Auspex", 5], ["Obfuscate", 5], ["Presence", 5], ["Animalism", 5], ["Celerity", 3], ["Fortitude", 3], ["Potence", 2], ["Path of Bone", 5], ["Potestas Vitae", 3]] )
     actor.items.set(`d${d}`, {id: `d${d}`, name: d, type: "Power", system: {type: d.startsWith("Path") || d.startsWith("Potestas") ? "wod.types.disciplinepath" : "wod.types.discipline", value: v}, getFlag: () => undefined});
