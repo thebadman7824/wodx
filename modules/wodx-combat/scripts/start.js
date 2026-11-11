@@ -50,13 +50,13 @@ const fightsOn = scene => (game.combats?.contents ?? []).filter(c => c.scene?.id
     .map(c => ({ id: c.id, started: !!c.started, tokenIds: c.combatants.map(x => x.tokenId) }));
 
 /** The households within call of each NPC named, from WoDX NPC (none when it is off). */
-function withKin(scene, docs) {
+function withKin(scene, docs, kinOf = {}) {
     const out = [...docs];
     const kin = npc()?.kinNear;
     if (typeof kin !== "function") return out;
     for (const d of docs) {
         if (d.actor?.hasPlayerOwner) continue;
-        for (const id of kin(d) ?? []) { const k = scene.tokens.get(id); if (k && !out.some(o => o.id === k.id)) out.push(k); }
+        for (const id of kin(d) ?? []) { const k = scene.tokens.get(id); if (k && !out.some(o => o.id === k.id)) { out.push(k); (kinOf[d.id] ??= []).push(k.id); } }
     }
     return out;
 }
@@ -64,19 +64,20 @@ function withKin(scene, docs) {
 /**
  * Ask for a fight. Returns {done: "started"|"joined"|"suggested"|"off"|"quiet"|"nothing"|"sent", combat?, message?}.
  */
-export async function start({ scene = null, tokens = [], source = "hand", why = "", byHand = false } = {}) {
+export async function start({ scene = null, tokens = [], source = "hand", why = "", byHand = false, sides = null } = {}) {
     const sc = sceneOf(scene);
     if (!sc) return { done: "nothing" };
     const docs = tokens.map(t => docOf(t, sc)).filter(d => d && d.parent?.id === sc.id);
     if (!game.user.isGM) {
         if (!game.users.activeGM) return { done: "nothing" };
-        game.socket.emit(SOCKET, { action: "startFight", scene: sc.id, tokens: docs.map(d => d.id), source, why });
+        game.socket.emit(SOCKET, { action: "startFight", scene: sc.id, tokens: docs.map(d => d.id), source, why, sides });
         return { done: "sent" };
     }
     if (!isActiveGM()) return { done: "nothing" };
     const mode = S.modeFor({ mode: setting("fightStart") ?? "suggest", lightTouch: !!chron()?.rule?.("lightTouch"), byHand });
     if (mode === "off") return { done: "off" };
-    const all = withKin(sc, docs);
+    const kinOf = {};
+    const all = withKin(sc, docs, kinOf);
     const ids = all.map(d => d.id);
     const plan = S.planStart(fightsOn(sc), ids);
     if (S.nothingToDo(plan, ids)) return { done: "nothing" };
@@ -84,6 +85,8 @@ export async function start({ scene = null, tokens = [], source = "hand", why = 
     if (!byHand && S.askedRecently(recent, key)) return { done: "quiet" };
     recent.set(key, Date.now());
     const data = { scene: sc.id, tokens: ids, source, why: S.reasonLine(source, why), named: docs.map(d => d.id) };
+    const sideMap = S.sidesWithKin(sides, kinOf);
+    if (sideMap) data.sides = sideMap;
     if (mode === "suggest") {
         const message = await ChatMessage.create({ speaker: { alias: "WoDX Combat" }, whisper: gmIds(), content: cardHtml(data, sc), flags: { [MOD]: { fightStart: data } } });
         return { done: "suggested", message };
@@ -103,6 +106,7 @@ async function begin(data) {
     let combat = plan.use ? game.combats.get(plan.use) : null, created = false;
     if (!combat) { combat = await Combat.create({ scene: sc.id, active: true }); created = true; }
     const made = plan.add.length ? await combat.createEmbeddedDocuments("Combatant", plan.add.map(tokenId => ({ tokenId, sceneId: sc.id, actorId: sc.tokens.get(tokenId)?.actorId }))) : [];
+    if (data.sides) await combat.setFlag(MOD, "sides", { ...(combat.getFlag(MOD, "sides") ?? {}), ...data.sides });
     let startedNow = false;
     if (!combat.started) { if (!combat.active) await combat.activate?.(); await combat.startCombat(); startedNow = true; }
     Hooks.callAll("wodxFightStarted", { combat, source: data.source, tokens: ids, created });
@@ -186,7 +190,7 @@ export function installStarter() {
     Hooks.on("updateActor", (actor, changes) => { onUpdateActor(actor, changes).catch(e => console.error(`${MOD} | fight start`, e)); });
     game.socket.on(SOCKET, p => {
         if (p?.action !== "startFight" || !isActiveGM()) return;
-        start({ scene: p.scene, tokens: p.tokens ?? [], source: p.source ?? "attack", why: p.why ?? "" }).catch(e => console.error(`${MOD} | fight start`, e));
+        start({ scene: p.scene, tokens: p.tokens ?? [], source: p.source ?? "attack", why: p.why ?? "", sides: p.sides ?? null }).catch(e => console.error(`${MOD} | fight start`, e));
     });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
         if (!msg.getFlag(MOD, "fightStart")) return;

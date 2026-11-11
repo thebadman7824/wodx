@@ -1,7 +1,7 @@
 /**
  * WoDX NPC (the version is in module.json): NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
- * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs).
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs); natural rivalries between kinds of NPC by line and era (0.18.0, rivalry.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -22,11 +22,13 @@ import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
 import {VOICES} from "../data/stock-talk-more.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
+import {build as buildRivalry} from "./rivalry.mjs";
+import * as RV from "./rivalry-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.17.0";
+const VERSION = "0.18.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -63,8 +65,10 @@ function registerSettings() {
 function infoOf(actor) {
   const s = actor.system ?? {};
   const ab = k => num(s.abilities?.[k]?.value);
+  let sides = [];
+  try { sides = rivalry?.sidesOf?.(actor)?.own ?? []; } catch (e) { sides = []; }
   return {kind: C()?.getKind?.(actor) ?? "mortal", generation: num(s.generation) || 13,
-    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery"))};
+    melee: Math.max(ab("brawl"), ab("melee")), ranged: Math.max(ab("firearms"), ab("archery")), sides};
 }
 export function savedProfile(actor) { return actor?.getFlag(MOD, "behavior") ?? {}; }
 export function profileFor(actor, {phases = true} = {}) {
@@ -118,18 +122,37 @@ function sides(tok, combat, harm) {
   const fighters = combat?.combatants?.size
     ? combat.combatants.contents.filter(c => c.token?.object && c.tokenId !== tok.id && !c.isDefeated).map(c => c.token.object)
     : canvas.tokens.placeables.filter(t => t.id !== tok.id && t.actor);
+  const sideMap = combat?.getFlag?.("wodx-combat", "sides") ?? null;
   const enemy = t => {
+    const bySide = RV.enemiesBySide(sideMap, tok.id, t.id);
+    if ( bySide !== null ) return bySide;
     const d = t.document.disposition;
     if ( me === D.NEUTRAL || me === D.SECRET ) return myHarm.has(t.actor?.uuid);
     if ( d === D.NEUTRAL || d === D.SECRET ) return myHarm.has(t.actor?.uuid);
     return d !== me;
   };
-  return {enemies: fighters.filter(enemy), allies: fighters.filter(t => !enemy(t) && t.document.disposition === me)};
+  const ally = t => (RV.enemiesBySide(sideMap, tok.id, t.id) === false) || (RV.enemiesBySide(sideMap, tok.id, t.id) === null && t.document.disposition === me);
+  return {enemies: fighters.filter(enemy), allies: fighters.filter(t => !enemy(t) && ally(t))};
 }
 const unitsPerYard = () => 1 / (C()?.auto?.toYards?.(1, canvas.scene?.grid?.units ?? "ft") ?? 1 / 3);
 const yardsBetween = (a, b) => {
   try { return canvas.grid.measurePath([a.center, b.center]).distance / unitsPerYard(); } catch (e) { return null; }
 };
+
+/** NPC 0.18.0: mortals near the fight who are not in it, for the masquerade tactic. */
+function witnessesOf(tok, combat) {
+  const inFight = new Set((combat?.combatants?.contents ?? []).map(c => c.tokenId));
+  return canvas.tokens.placeables.filter(t => t.actor && t.id !== tok.id && !inFight.has(t.id) && !t.document.hidden
+    && (C()?.getKind?.(t.actor) ?? "mortal") === "mortal" && (yardsBetween(tok, t) ?? 99) <= 30).length;
+}
+/** NPC 0.18.0: is the NPC on a place its faction holds (the scene, as WoDX NPC factions hold places)? */
+function onOwnGround(actor) {
+  try {
+    const st = factions?.state?.(), holder = st && canvas?.scene ? st.factions.find(f => (f.places ?? []).includes(canvas.scene.uuid)) : null;
+    const id = actor?.isToken ? (actor.baseActor?.id ?? actor.id) : actor?.id;
+    return !!holder && ((holder.members ?? []).includes(id) || holder.leader === id);
+  } catch (e) { return false; }
+}
 
 /** state for NR.scoreOptions, and the tokens behind the ids. */
 export function readFight(tok, combat = game.combat) {
@@ -148,7 +171,8 @@ export function readFight(tok, combat = game.combat) {
     return {id: t.id, name: t.name, visible: !hidden(t), distance: yardsBetween(tok, t),
       reach: !!best && !plan.ignoredDistance && !best.w?.ranged, ranged: !!best?.w?.ranged && !plan.ignoredDistance,
       hurtMe: myHarm.get(t.actor?.uuid) ?? 0, wounds: wounds(t.actor), supernatural: supernatural(t.actor), obvious: obvious(t.actor),
-      fearSources: fearSources(t.actor), attackDice: best?.atkDice ?? 0};
+      fearSources: fearSources(t.actor), attackDice: best?.atkDice ?? 0,
+      hurtByAllies: [...(harm.get(t.actor?.uuid)?.keys?.() ?? [])].some(u => allies.some(a => a.actor?.uuid === u))};
   });
   const AL = allies.map(t => {
     const hurt = harm.get(t.actor?.uuid) ?? new Map();
@@ -165,8 +189,8 @@ export function readFight(tok, combat = game.combat) {
       selfcontrol: num(adv.virtues?.selfcontrol?.permanent) || 3, rage: num(adv.rage?.temporary), rageMax: num(adv.rage?.permanent),
       hasPowers: actor.items.some(i => i.type === "Power"), inFrenzy: !!s.conditions?.isfrenzy || !!chron()?.conditions?.hasCondition?.(actor, "frenzy"),
       rotschreck: !!chron()?.conditions?.hasCondition?.(actor, "rotschreck"),
-      delirious: kind === "mortal" && E.some(e => e.visible && e.fearSources.includes("crinos"))},
-    enemies: E, allies: AL, offstageAllies: offstage.length,
+      delirious: kind === "mortal" && E.some(e => e.visible && e.fearSources.includes("crinos")), onGround: onOwnGround(actor)},
+    enemies: E, allies: AL, offstageAllies: offstage.length, witnesses: witnessesOf(tok, combat),
     bestAttackDice: Math.max(0, ...visiblePlans.map(p => p.atkDice ?? 0)),
     canRanged: visiblePlans.some(p => p.w?.ranged)
   };
@@ -572,6 +596,13 @@ export async function editBehavior(actor) {
     ${Object.entries(TRAITS).map(([k, l]) => `<div class="wodx-field"><label>${l}</label><input type="number" name="${k}" min="0" max="2" step="0.1" value="${saved[k] ?? ""}" placeholder="${p[k]}"/></div>`).join("")}
     <div class="wodx-field"><label>Flees at wound level</label><input type="number" name="fleeAt" min="1" max="7" step="1" value="${saved.fleeAt ?? ""}" placeholder="${p.fleeAt}"/></div>
     </fieldset>
+    <fieldset><legend>Tactics and rivals</legend>
+    <div class="wodx-field"><label>Tactics</label><input type="text" name="tactics" value="${esc((saved.tactics ?? []).join(", "))}" placeholder="${esc(p.tactics.join(", "))}"/></div>
+    <p class="wodx-quiet">Blank keeps the template's. Any of: ${Object.keys(NR.TACTICS).join(", ")}.</p>
+    <div class="wodx-field"><label>Sides</label><input type="text" name="sides" value="${esc(saved.sides ?? "")}" placeholder="sect:sabbat, inquisition"/></div>
+    <div class="wodx-field"><label>Worn openly</label><input type="text" name="openSides" value="${esc(saved.openSides ?? "")}" placeholder="kind:church"/></div>
+    <textarea name="rivals" rows="2" style="width:100%" placeholder="clan:tremere -3">${esc(saved.rivals ?? "")}</textarea>
+    <p class="wodx-quiet">Sides add to what the sheet and factions say (clan, sect, tribe, creed and the rest). Worn openly: sides anyone can see (a habit, a uniform, a livery). Rivals, one a line: a side and a step from -3 to 3; it wins over the rivalry table and faction standing (0 for none). ${esc(actor.name)}'s sides now: ${esc((rivalry.sidesOf(actor).own ?? []).join(", ") || "none")}.</p></fieldset>
     <fieldset><legend>Fears</legend>${Object.entries(FEARS).map(([k, l]) => `<label class="wnpc-check"><input type="checkbox" name="fear-${k}"${p.fears.includes(k) ? " checked" : ""}/> ${l}</label>`).join("")}</fieldset>
     <fieldset><legend>Talk sheet (only you see it)</legend>
     <textarea name="talk" rows="4" style="width:100%" placeholder="[the abbot] carries bishop's seal => Opens the archive and names the night porter. | teach the night porter">${esc(saved.talk ?? "")}</textarea>
@@ -595,7 +626,15 @@ export async function editBehavior(actor) {
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
     household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null, noStock: data.noStock ? true : null,
-    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null};
+    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null,
+    sides: String(data.sides ?? "").trim().toLowerCase().slice(0, 300) || null, openSides: String(data.openSides ?? "").trim().toLowerCase().slice(0, 200) || null,
+    rivals: String(data.rivals ?? "").trim().slice(0, 2000) || null};
+  const tacs = String(data.tactics ?? "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
+  const badTac = tacs.filter(t => !NR.TACTICS[t]);
+  if ( badTac.length ) ui.notifications.warn(`Tactics: no tactic called ${badTac.join(", ")}.`);
+  out.tactics = tacs.filter(t => NR.TACTICS[t]).length ? tacs.filter(t => NR.TACTICS[t]) : null;
+  const rv = RV.parseRivals(out.rivals);
+  if ( rv.problems.length ) ui.notifications.warn(`Rivals: ${rv.problems.join(" ")}`);
   const ph = NR.parsePhases(out.phases);
   if ( ph.problems.length ) ui.notifications.warn(`Phases: ${ph.problems.join(" ")}`);
   for ( const k of [...Object.keys(TRAITS), "fleeAt"] ) out[k] = data[k] === "" || data[k] === null || data[k] === undefined ? null : Number(data[k]);
@@ -633,6 +672,7 @@ export async function openNpcPanel() {
     <input type="search" class="wodx-search wnpc-search" data-search=".wnpc-list table" placeholder="Find an NPC…" aria-label="Find an NPC" autocomplete="off" spellcheck="false">
     <div class="wnpc-list"><table><thead><tr><th>NPC</th><th>Template</th><th>In combat</th><th>Routine now</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="5">No NPCs on this scene.</td></tr>`}</tbody></table></div>
     <div class="wodx-field"><label>Routines on this scene</label><select name="routineScene" data-fixed>${opt({"": "As the world says", ...NR.MODES}, canvas.scene?.getFlag(MOD, "routineMode") ?? "")}</select></div>
+    <label class="wnpc-check"><input type="checkbox" name="truce"${canvas.scene?.getFlag(MOD, "truce") ? " checked" : ""}/> Truce ground: rivals here do not come to blows (an Elysium, a moot, a church on a feast day)</label>
     <p class="wodx-quiet">NPCs with a player owner are never moved by WoDX.</p></div>`;
   const data = await foundry.applications.api.DialogV2.wait({
     window: {title: "WoDX NPCs", resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 520, height: "auto"}, content,
@@ -642,15 +682,18 @@ export async function openNpcPanel() {
       dlg.element.querySelectorAll("[data-routine]").forEach(b => b.addEventListener("click", () => routines.editRoutine(canvas.tokens.get(b.dataset.routine)?.actor)));
     },
     buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object},
-      {action: "places", label: "Places…", callback: () => "places"}, {action: "talk", label: "Shared talk…", callback: () => "talk"}, {action: "cancel", label: "Close"}],
+      {action: "places", label: "Places…", callback: () => "places"}, {action: "talk", label: "Shared talk…", callback: () => "talk"},
+      {action: "rivals", label: "Rivalries…", callback: () => "rivals"}, {action: "cancel", label: "Close"}],
     rejectClose: false
   });
   if ( !data || data === "cancel" ) return null;
   if ( data === "places" ) return routines.openPlaces();
   if ( data === "talk" ) return talk.editShared();
+  if ( data === "rivals" ) return rivalry.editRows();
   await game.settings.set(MOD, "mode", data.world);
   if ( data.scene ) await canvas.scene.setFlag(MOD, "mode", data.scene); else await canvas.scene.unsetFlag(MOD, "mode");
   if ( data.routineScene ) await canvas.scene.setFlag(MOD, "routineMode", data.routineScene); else await canvas.scene.unsetFlag(MOD, "routineMode");
+  if ( data.truce ) await canvas.scene.setFlag(MOD, "truce", true); else await canvas.scene.unsetFlag(MOD, "truce");
   return data;
 }
 
@@ -677,7 +720,10 @@ Faces.registerFaceHooks();
 const talk = buildTalk({MOD, esc, isActiveGM, chron, savedProfile});
 talk.hooks();
 /* 0.12.0: each NPC's attitude toward each character */
-const attitude = buildAttitude({MOD, chron, savedProfile, factions});
+/* 0.18.0: natural rivalries between kinds of NPC */
+const rivalry = buildRivalry({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile, factions, routines, yardsBetween, obvious, hiddenByObfuscate});
+rivalry.hooks();
+const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry});
 Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
 
 Hooks.once("init", () => {
@@ -687,11 +733,12 @@ Hooks.once("init", () => {
   orders.registerSettings();
   Faces.registerFaceSettings();
   talk.registerSettings();
+  rivalry.registerSettings();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude};
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */

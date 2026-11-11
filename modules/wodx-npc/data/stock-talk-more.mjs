@@ -31,6 +31,16 @@ export const CRY_ALARM = {
   future: ["\"Trigger the alarm! Lock it down!\"", "\"Ping security, all channels!\"", "\"Intruder! Intruder!\"", "\"Somebody flag it, now!\"", "\"Seal the doors!\""]
 };
 /** Cries when hurt (any era). */
+/** NPC 0.18.0: what a rival says when it squares up but holds back, by era. */
+export const CRY_THREAT = {
+  medieval: ["\"Not here. Not tonight.\"", "\"Another step and you will regret it.\"", "\"I know what you are.\"", "\"Go back the way you came.\""],
+  earlymodern: ["\"Keep your distance, if you value your neck.\"", "\"I know your kind.\"", "\"This is not your street.\"", "\"Another time, then.\""],
+  nineteenth: ["\"You are a long way from home.\"", "\"I know what you are.\"", "\"Walk on. While you can.\"", "\"Not here. Too many eyes.\""],
+  twentieth: ["\"Wrong part of town.\"", "\"I know what you are.\"", "\"Keep walking.\"", "\"Not here. Not now.\""],
+  modern: ["\"Wrong neighbourhood.\"", "\"I know what you are.\"", "\"Keep walking. Seriously.\"", "\"Not here. Too many people.\""],
+  future: ["\"You're off your grid.\"", "\"I've got your number.\"", "\"Walk. Now.\"", "\"Not here. Too many cameras.\""]
+};
+
 export const CRY_HURT = ["\"Help! Help me!\"", "\"Mercy! Have mercy!\"", "\"You've killed me!\"", "\"No, please! Stop!\"", "\"Ah! My arm!\"", "\"Someone, anyone!\"", "\"Mother of God!\"", "\"I'm bleeding! I'm bleeding!\""];
 
 /** Barks while at their routine. */
