@@ -491,38 +491,89 @@ export const REALM_LAYOUTS = {
     return {m, sites: [{x: isles[0].x, y: Math.min(rows - 2, isles[0].y + 3)}, ...isles.slice(4)], roads: "bridge", named};
   },
 
-  // The Isle of Sorrows (Wraith 20th; the Sea of Shadows pdf 20 / p. 19): the island in the storm sea, walled against the
-  // Maelstroms, cut by inner walls into the quarters of the Hierarchy, the Onyx Tower rising alone at the centre with a
-  // street round it, Nhudri's forges burning by the shore, the harbour gate where the ferries come in.
+  // The CyberRealm (Umbra: The Velvet Shadow pdf 59 / p. 58; Book of the Weaver pdf 33 / p. 32): the Weaver's city laid
+  // out on a perfect lattice. Avenues and cross streets at fixed intervals, every block filled by a tall tower, a few
+  // blocks left open as plazas, skybridges of web strung between towers, and the Technocracy's ordered core at the hub.
+  // Before the machine age the lattice is only a small walled town at the centre (house rule).
+  "neon-grid"(rand, cols, rows, mods = {}) {
+    const m = grid(cols, rows, T.void), c = centreOf(cols, rows);
+    const small = (mods.small ?? 0) > 0, step = (mods.dense ?? 0) > 0 ? 4 : 5;
+    const hw = small ? Math.floor(cols * 0.28) : Math.floor(cols / 2) - 1, hh = small ? Math.floor(rows * 0.3) : Math.floor(rows / 2) - 1;
+    const x0 = c.x - hw, x1 = c.x + hw, y0 = c.y - hh, y1 = c.y + hh;
+    rect(m, x0, y0, x1 - x0 + 1, y1 - y0 + 1, T.solid);
+    // The lattice: every step-th row and column is a street, every second one a wide avenue
+    const xs = [], ys = [];
+    for ( let x = x0 + 1; x < x1; x += step ) xs.push(x);
+    for ( let y = y0 + 1; y < y1; y += step ) ys.push(y);
+    xs.forEach((x, i) => { for ( let y = y0 + 1; y < y1; y++ ) { m[y][x] = T.path; if ( i % 2 === 0 && inB(m, x + 1, y) && x + 1 < x1 ) m[y][x + 1] = T.path; } });
+    ys.forEach((y, i) => { for ( let x = x0 + 1; x < x1; x++ ) { m[y][x] = T.path; if ( i % 2 === 0 && y + 1 < y1 ) m[y + 1][x] = T.path; } });
+    // Blocks: each a tower (solid) with a lit lobby cell on the street; some left open as plazas
+    const blocks = [];
+    for ( let j = 0; j < ys.length; j++ ) for ( let i = 0; i < xs.length; i++ ) {
+      const bx = xs[i] + (i % 2 === 0 ? 2 : 1), by = ys[j] + (j % 2 === 0 ? 2 : 1), bw = (xs[i + 1] ?? x1) - bx, bh = (ys[j + 1] ?? y1) - by;
+      if ( bw < 1 || bh < 1 ) continue;
+      blocks.push({x: bx, y: by, w: bw, h: bh});
+      if ( rand() < 0.14 ) rect(m, bx, by, bw, bh, T.ground);
+    }
+    // The core: the central blocks merged into one ordered compound
+    const core = {x: c.x, y: c.y};
+    rect(m, c.x - 3, c.y - 3, 7, 7, T.path); frame(m, c.x - 2, c.y - 2, 5, 5, T.solid); rect(m, c.x - 1, c.y - 1, 3, 3, T.ground); m[c.y + 2][c.x] = T.ground;
+    // Skybridges: web strung across a block between two towers (shallow, walkable)
+    for ( const bl of shuffled(rand, blocks).slice(0, Math.max(3, Math.floor(blocks.length / 6))) ) {
+      if ( bl.w >= 3 && bl.h >= 2 ) { const yy = bl.y + Math.floor(bl.h / 2); for ( let x = bl.x - 1; x <= bl.x + bl.w; x++ ) if ( inB(m, x, yy) ) m[yy][x] = T.shallow; }
+    }
+    if ( small ) { frame(m, x0 - 1, y0 - 1, x1 - x0 + 3, y1 - y0 + 3, T.solid); rect(m, x0 - 1, c.y, 1, 1, T.path); for ( let x = 1; x < x0 - 1; x++ ) m[c.y][x] = T.path; }
+    // A glass tower: the tallest block, and a Pattern Spider nest in a dark plaza at a far corner
+    const tall = blocks.reduce((a, b) => (b.w * b.h > a.w * a.h ? b : a), blocks[0]);
+    const nest = blocks[blocks.length - 1], refuge = blocks.find(b => b !== tall && b !== nest && Math.abs(b.x - tall.x) + Math.abs(b.y - tall.y) > 6) ?? blocks[1];
+    rect(m, nest.x, nest.y, nest.w, nest.h, T.hazard);
+    rect(m, refuge.x, refuge.y, refuge.w, refuge.h, T.ground);
+    const arrive = small ? {x: 1, y: c.y} : {x: xs[0], y: y1 - 1};
+    const scar = {x: xs[xs.length - 1], y: y0 + 1};
+    return {m, sites: [arrive, core, ...blocks.filter(b => m[b.y][b.x] === T.ground).slice(0, 3).map(b => ({x: b.x, y: b.y}))], roads: "line",
+      named: {"a tower of glass": {x: tall.x + Math.floor(tall.w / 2), y: tall.y + tall.h}, "a Pattern Spider nest": {x: nest.x, y: nest.y}, "the road to the Scar": scar, "a Glass Walker refuge": {x: refuge.x, y: refuge.y}}};
+  },
+
+  // The Isle of Sorrows (Wraith 20th; the Sea of Shadows pdf 20 / p. 19): an island packed with city to its shores in the
+  // storm sea. A great wall rings the coast against the Maelstroms, quays and piers jut into the sea all round, houses
+  // crowd every quarter with lanes between, avenues run from the Onyx Tower at the centre out to the harbour gates,
+  // Nhudri's forges burn by the eastern shore, and small walled islets stand offshore.
   "sorrow-isle"(rand, cols, rows) {
-    const m = grid(cols, rows, T.water), c = centreOf(cols, rows), R = Math.min(c.x, c.y) - 1.5, f = noise(rand, cols, rows, 4);
+    const m = grid(cols, rows, T.water), c = centreOf(cols, rows), f = noise(rand, cols, rows, 5), g = noise(rand, cols, rows, 2);
+    const RX = c.x - 5, RY = c.y - 4, er = (x, y) => Math.hypot((x - c.x) / RX, (y - c.y) / RY) - (f(x, y) - 0.5) * 0.12;
+    // The island and its wall: everything inside the wall is city
     for ( let y = 0; y < rows; y++ ) for ( let x = 0; x < cols; x++ ) {
-      const d = Math.hypot(x - c.x, y - c.y);
-      if ( d < R + (f(x, y) - 0.5) * 2 ) m[y][x] = T.ground; else if ( d < R + 1.2 ) m[y][x] = T.shallow;
+      const d = er(x, y);
+      if ( d < 0.9 ) m[y][x] = g(x, y) > 0.35 && (x % 3) && (y % 2) ? T.solid : T.ground; // houses packed close, lanes where they gap
+      else if ( d < 0.98 ) m[y][x] = T.solid; // the great wall
+      else if ( d < 1.06 ) m[y][x] = T.shallow; // the strand below it
     }
-    const W = R - 2, n = 7, off = rand() * Math.PI * 2;
+    // Avenues from the Tower out to the gates, and two ring streets
+    const gates = [];
+    for ( let k = 0; k < 6; k++ ) {
+      const a = k / 6 * Math.PI * 2 + Math.PI / 2;
+      let p = {x: c.x, y: c.y};
+      for ( let t = 0; t < 60; t++ ) { const q = {x: Math.round(c.x + Math.cos(a) * RX * t / 40), y: Math.round(c.y + Math.sin(a) * RY * t / 40)}; if ( !inB(m, q.x, q.y) || m[q.y][q.x] === T.water ) break; if ( m[q.y][q.x] !== T.shallow ) m[q.y][q.x] = T.path; p = q; }
+      gates.push(p);
+      // A pier out into the sea from each gate
+      for ( let t = 1; t <= 3; t++ ) { const x = Math.round(p.x + Math.cos(a) * t), y = Math.round(p.y + Math.sin(a) * t); if ( inB(m, x, y) && m[y][x] === T.water ) m[y][x] = T.shallow; }
+    }
     for ( let y = 0; y < rows; y++ ) for ( let x = 0; x < cols; x++ ) {
-      const d = Math.hypot(x - c.x, y - c.y), a = Math.atan2(y - c.y, x - c.x);
-      if ( Math.abs(d - W) < 0.6 ) m[y][x] = T.solid; // the great wall
-      else if ( d < W && d > 4 ) {
-        if ( Math.abs(d - 4.6) < 0.6 || Math.abs(d - W * 0.6) < 0.6 ) m[y][x] = T.path; // the street round the Tower, the middle ring
-        for ( let k = 0; k < n; k++ ) { const g = off + k / n * Math.PI * 2, da = Math.atan2(Math.sin(a - g), Math.cos(a - g)); if ( Math.abs(da) * d < 0.6 && Math.abs(d - W * 0.6) > 0.8 ) m[y][x] = T.solid; } // the quarters' walls
-      }
+      const d = er(x, y);
+      if ( (Math.abs(d - 0.32) < 0.035 || Math.abs(d - 0.62) < 0.035) ) m[y][x] = T.path;
     }
-    disc(m, c.x, c.y, 3, T.solid); // the Onyx Tower
-    // The harbour gate on the south side, and a quay running down to the sea
-    const hy = Math.round(c.y + W);
-    for ( let y = c.y + 4; y <= Math.min(rows - 2, hy + 1); y++ ) m[y][c.x] = T.path;
-    if ( inB(m, c.x, hy + 2) ) m[hy + 2][c.x] = T.shallow;
-    // Nhudri's forges: furnaces by the shore in the east quarter
-    const fg = {x: Math.round(c.x + W * 0.78), y: c.y};
-    for ( let i = 0; i < 6; i++ ) { const x = fg.x + between(rand, -2, 1), y = fg.y + between(rand, -2, 2); if ( inB(m, x, y) && m[y][x] === T.ground ) m[y][x] = T.hazard; }
-    const cit = {x: Math.round(c.x - W * 0.45), y: Math.round(c.y - W * 0.45)};
-    compound(m, cit, 5, "s");
-    const senate = {x: Math.round(c.x - W * 0.55), y: Math.round(c.y + W * 0.35)};
-    rect(m, senate.x - 2, senate.y - 1, 5, 3, T.ground);
-    return {m, sites: [{x: c.x, y: hy + 1}, {x: Math.round(c.x + W * 0.4), y: Math.round(c.y - W * 0.6)}, {x: Math.round(c.x + W * 0.3), y: Math.round(c.y + W * 0.5)}], roads: "path",
-      named: {"the Onyx Tower": c, "Nhudri's forges": fg, "a Legion's citadel": cit, "the Senate": senate}};
+    // The Onyx Tower alone in its square
+    disc(m, c.x, c.y, 3.4, T.path); disc(m, c.x, c.y, 2.2, T.solid);
+    // Nhudri's forges by the eastern shore, a Legion's citadel in the north-west, the Senate's open hall in the south-west
+    const fg = {x: Math.round(c.x + RX * 0.7), y: c.y + 1};
+    rect(m, fg.x - 2, fg.y - 2, 4, 4, T.ground); for ( let i = 0; i < 6; i++ ) { const x = fg.x + between(rand, -2, 1), y = fg.y + between(rand, -2, 1); m[y][x] = T.hazard; }
+    const cit = {x: Math.round(c.x - RX * 0.5), y: Math.round(c.y - RY * 0.5)}; compound(m, cit, 5, "s");
+    const senate = {x: Math.round(c.x - RX * 0.5), y: Math.round(c.y + RY * 0.45)}; rect(m, senate.x - 2, senate.y - 1, 5, 3, T.ground);
+    // Walled islets offshore in the corners
+    for ( const q of [{x: 3, y: 3}, {x: cols - 4, y: rows - 4}, {x: cols - 4, y: 3}] ) if ( m[q.y][q.x] === T.water ) { disc(m, q.x, q.y, 1.6, T.ground); m[q.y][q.x] = T.solid; }
+    const harbour = gates[0]; // the south gate
+    const sites = [{x: harbour.x, y: Math.min(rows - 2, harbour.y + 1)}, ...gates.slice(1, 4)];
+    return {m, sites, roads: "path", named: {"the Onyx Tower": c, "Nhudri's forges": fg, "a Legion's citadel": cit, "the Senate": senate}};
   },
 
   // Another Dark Kingdom (Wraith 20th; the Sea of Shadows): a sprawling necropolis along a coast, alleys growing as they
