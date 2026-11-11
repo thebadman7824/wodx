@@ -56,10 +56,10 @@ function Stage($vtt) {
 
 # The runner joins whichever world is running, so ask Foundry first and go on only for the testbed
 function TestbedUp {
+  # Windows PowerShell 5 cannot finish the TLS handshake with Foundry's own certificate; curl.exe (in Windows) can
   try {
-    [Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $s = Invoke-RestMethod -Uri "$Foundry/api/status" -TimeoutSec 10
+    $s = (& curl.exe -sk --max-time 10 "$Foundry/api/status") | ConvertFrom-Json
+    if (-not $s) { throw "no answer" }
   } catch { Log "Foundry is not answering at $Foundry; trying again later"; return $false }
   if ($s.world -ne "rothenstein-wodx") { Log "Foundry is running '$($s.world)', not rothenstein-wodx; waiting"; return $false }
   return $true
