@@ -8,7 +8,7 @@
   120,
   133
  ],
- "population": 120,
+ "population": 133,
  "parts": [
   {
    "id": "A1",
@@ -32,8 +32,8 @@
     "south": "B1",
     "east": "A2"
    },
-   "households": 6,
-   "population": 19
+   "households": 7,
+   "population": 26
   },
   {
    "id": "A2",
@@ -57,8 +57,8 @@
     "south": "B2",
     "west": "A1"
    },
-   "households": 4,
-   "population": 16
+   "households": 5,
+   "population": 23
   },
   {
    "id": "B1",
@@ -70,7 +70,7 @@
    ],
    "cells": [
     60,
-    46
+    45
    ],
    "cut": [
     0,
@@ -83,7 +83,7 @@
     "south": "C1",
     "east": "B2"
    },
-   "households": 4,
+   "households": 3,
    "population": 17
   },
   {
@@ -109,8 +109,8 @@
     "south": "C2",
     "west": "B1"
    },
-   "households": 10,
-   "population": 37
+   "households": 8,
+   "population": 30
   },
   {
    "id": "C1",
@@ -121,7 +121,7 @@
     89
    ],
    "cells": [
-    61,
+    60,
     44
    ],
    "cut": [
@@ -135,7 +135,7 @@
     "east": "C2"
    },
    "households": 7,
-   "population": 24
+   "population": 29
   },
   {
    "id": "C2",
@@ -160,7 +160,7 @@
     "west": "C1"
    },
    "households": 2,
-   "population": 7
+   "population": 8
   }
  ]
 }
