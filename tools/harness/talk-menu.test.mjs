@@ -103,6 +103,14 @@ test("distance: side by side is 1 square, overlap 0, big tokens measured edge to
   assert.equal(TK.squaresBetween(t(0, 0, 200, 200), t(300, 0), 100), 2);
 });
 
+test("nobody targeted: the nearest person within reach", () => {
+  const me = {x: 0, y: 0, w: 100, h: 100};
+  const o = [{id: "far", x: 900, y: 0, w: 100, h: 100}, {id: "two", x: 200, y: 0, w: 100, h: 100}, {id: "one", x: 100, y: 100, w: 100, h: 100}];
+  assert.equal(TK.nearestFor(me, o, 100, 2).id, "one");
+  assert.equal(TK.nearestFor(me, [o[0]], 100, 2), null);
+  assert.equal(TK.nearestFor(me, [], 100, 2), null);
+});
+
 test("taught topics: added once, undone exactly", () => {
   const l = TK.addLearned(["the mill"], ["The Mill", "the cloister"]);
   assert.deepEqual(l, ["the mill", "the cloister"]);

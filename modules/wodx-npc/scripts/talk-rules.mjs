@@ -165,6 +165,19 @@ export function squaresBetween(a, b, size = 100) {
   return Math.max(0, Math.round(g / s) + 1);
 }
 
+/**
+ * With nobody targeted, the person to talk to: the nearest one within reach. me: {x, y, w, h}; others:
+ * [{id, x, y, w, h}] already limited to people the Storyteller plays that the player can see. Ties go to the first.
+ */
+export function nearestFor(me, others = [], size = 100, reach = 2) {
+  let best = null, bestD = Infinity;
+  for ( const o of others ?? [] ) {
+    const d = squaresBetween(me, o, size);
+    if ( d <= reach && d < bestD ) { best = o; bestD = d; }
+  }
+  return best;
+}
+
 /** The character's taught topics after adding some (kept to 300, newest last). */
 export function addLearned(learned = [], add = []) {
   const out = [...new Set([...(learned ?? []).map(normTopic), ...(add ?? []).map(normTopic)].filter(Boolean))];

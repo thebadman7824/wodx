@@ -746,7 +746,7 @@ Hooks.on("renderChatMessageHTML", (msg, el) => {
 Hooks.on("getSceneControlButtons", controls => {
   const tokens = controls.tokens ?? controls.token;
   if ( !tokens?.tools ) return;
-  tokens.tools.wodxTalk = {name: "wodxTalk", title: "Talk to the person you target", icon: "fa-solid fa-comments", order: 108,
+  tokens.tools.wodxTalk = {name: "wodxTalk", title: "Talk to the person you target, or the nearest one in reach", icon: "fa-solid fa-comments", order: 108,
     button: true, visible: true, onChange: () => talk.openTalk()};
   tokens.tools.wodxOrders = {name: "wodxOrders", title: "Give an order (to a follower who serves your character)", icon: "fa-solid fa-bullhorn", order: 109,
     button: true, visible: true, onChange: () => orders.openOrders()};

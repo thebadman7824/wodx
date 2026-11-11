@@ -1,5 +1,5 @@
 /**
- * WoDX NPC 0.10.0: the topic menu. A player targets someone the Storyteller plays, stands close, and presses Talk
+ * WoDX NPC 0.10.0: the topic menu. A player targets someone the Storyteller plays (or nobody, for the nearest in reach), stands close, and presses Talk
  * (the token tools, or Talk in WoDX Actions). A window lists what this person can be asked; the player picks a
  * topic and the person answers with a line the Storyteller wrote (talk-rules.mjs has the format and the rules).
  *
@@ -261,10 +261,17 @@ export function build(ctx) {
   async function openTalk(target = null) {
     if ( !setting("talkMenu") ) return ui.notifications.info("Talking to NPCs is off in this world.");
     const scene = canvas?.scene;
-    const npc = (target?.document ?? target) || [...(game.user.targets ?? [])].map(t => t.document).find(d => d?.actor && !d.actor.hasPlayerOwner) || null;
-    if ( !npc?.actor ) return ui.notifications.info("Target the person you want to talk to first (hover over their token and press T).");
     const me = speakerToken(game.user, scene);
     if ( !me ) return ui.notifications.info(game.user.isGM ? "Select a player's character on this scene to talk as." : "Your character needs to be on this scene: select your token.");
+    let npc = (target?.document ?? target) || [...(game.user.targets ?? [])].map(t => t.document).find(d => d?.actor && !d.actor.hasPlayerOwner) || null;
+    if ( !npc ) {
+      // Nobody targeted: the nearest person the Storyteller plays, within reach and in sight
+      const near = (scene?.tokens?.contents ?? []).filter(t => t.id !== me.id && t.actor && !t.actor.hasPlayerOwner && !t.hidden && (t.object?.visible ?? true) && canSee(me, t));
+      const pick = TK.nearestFor(box(me, scene), near.map(t => ({id: t.id, ...box(t, scene)})), scene?.grid?.size ?? 100, Number(setting("talkReach")) || 2);
+      npc = pick ? scene.tokens.get(pick.id) : null;
+      if ( !npc ) return ui.notifications.info("No one is close enough to talk to. Step up to them, or target them (hover over their token and press T).");
+    }
+    if ( !npc?.actor ) return ui.notifications.info("Target the person you want to talk to first (hover over their token and press T).");
     if ( !reachOK(me, npc, scene) ) return ui.notifications.info(`Step closer: within ${Number(setting("talkReach")) || 2} squares.`);
     if ( !canSee(me, npc) ) return ui.notifications.info("You cannot see them from there.");
     const req = {sceneId: scene.id, npcTokenId: npc.id, meTokenId: me.id};

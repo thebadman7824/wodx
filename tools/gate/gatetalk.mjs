@@ -11,7 +11,7 @@
  *   5. the taught topic can now be asked, and its line gives a journal page to the codex
  *   6. a local topic with no line gets the none line; the shared sheet for everyone answers directions
  *   7. too far away: refused
- *   8. the window opens for a targeted NPC and a topic button answers in it
+ *   8. the window opens for a targeted NPC and a topic button answers in it; with nobody targeted it opens for the nearest
  *   9. Undo on the Storyteller's card takes back what was taught
  *  10. every other WoDX module still answers
  * Result: Data/wodx-gate/gatetalk-result.json.
@@ -117,6 +117,16 @@ export async function run() {
       el?.querySelector("button[data-action=close]")?.click();
       npcTok.object.setTarget(false);
       ok("the window", found && said && greet.startsWith("Nods"), {found, said, greet});
+    });
+    await step("nobody targeted: the nearest in reach", async () => {
+      await until(() => !document.querySelector(".wnpc-talk-window"));
+      canvas.tokens.releaseAll();
+      meTok.object.control({releaseOthers: true});
+      for ( const t of [...game.user.targets] ) t.setTarget(false, {releaseOthers: false});
+      const m = await talk().openTalk();
+      const found = await until(() => !!document.querySelector(".wnpc-talk-window .wnpc-talk-greet"));
+      document.querySelector(".wnpc-talk-window button[data-action=close]")?.click();
+      ok("nobody targeted: the nearest in reach", found && m?.greet?.startsWith("Nods"), {found, menu: m?.name});
     });
     await step("undo what was taught", async () => {
       await pc().update({[`flags.${MOD}.topics`]: []});
