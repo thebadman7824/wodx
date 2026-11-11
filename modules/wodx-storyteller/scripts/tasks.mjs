@@ -47,7 +47,7 @@ export function poolFor(a, task) {
   const t = R.normTask(task);
   const at = a?.system?.attributes?.[t.attr];
   const ab = t.ability ? a?.system?.abilities?.[t.ability] : null;
-  // 0.25.0: a faction's building rolls its Resources + Retainers; workers add a die each
+  // 0.26.0: a faction's building rolls its Resources + Retainers; workers add a die each
   if ( t.faction ) return Math.max(1, Own.factionPool(t.faction) + t.workers + t.dice);
   return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice + t.workers);
 }
@@ -107,7 +107,7 @@ export async function tick({force = false} = {}) {
           continue;
         }
         let t = task, sum = 0, botches = 0, rolled = 0, waits = "";
-        // 0.25.0: a building's stage is paid for as it starts; without the money the work waits
+        // 0.26.0: a building's stage is paid for as it starts; without the money the work waits
         const payNow = async () => {
           if ( t.kind !== "build" || !t.stages.length || t.paidStage >= t.stage ) return true;
           const p = await Own.payStage(a, t);
@@ -132,7 +132,7 @@ export async function tick({force = false} = {}) {
             const base = game.items?.getName?.(t.makes);
             const data = base ? base.toObject() : {name: t.makes, type: "Item"};
             delete data._id;
-            // 0.25.0: a recipe's quality and its maker as owner
+            // 0.26.0: a recipe's quality and its maker as owner
             const q = t.good ? Own.finishCraft(t) : null;
             if ( q && q.quality !== "plain" ) data.name = `${data.name} (${q.label.toLowerCase()})`;
             data.flags = {...(data.flags ?? {}), [MOD]: {...(data.flags?.[MOD] ?? {}), madeBy: t.id, owner: Own.recordFor(a), ...(q ? q.flags : {})}};
@@ -186,7 +186,7 @@ export async function undoTick(message) {
   // 0.20.0: what a finished recipe made goes again
   const made = [...(a.items ?? [])].filter(i => i.flags?.[MOD]?.madeBy && f.before[i.flags[MOD].madeBy] && !f.before[i.flags[MOD].madeBy].made).map(i => i.id);
   if ( made.length ) await a.deleteEmbeddedDocuments("Item", made);
-  // 0.25.0: a building's place goes again, and what its stages cost comes back
+  // 0.26.0: a building's place goes again, and what its stages cost comes back
   if ( f.built?.length ) for ( const b of f.built ) await Own.unbuild(b);
   if ( f.purse !== undefined && f.purse !== null ) await a.update({[`flags.${MOD}.money.purse`]: f.purse});
   await message.update({[`flags.${MOD}.tasks.undone`]: true, content: message.content.replace(/<button type="button" data-action="wst-task-undo">Undo<\/button>/, "<p><i>Undone.</i></p>")});

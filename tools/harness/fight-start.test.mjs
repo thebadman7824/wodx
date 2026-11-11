@@ -90,12 +90,17 @@ test("the starter is wired in: attacks, settings, API, socket, and the NPC trigg
   assert.match(main, /ST\.registerStartSettings\(\)/);
   assert.match(main, /ST\.installStarter\(\)/);
   assert.match(main, /fight: ST\.fightApi/);
+  const st = readFileSync(new URL("../../modules/wodx-combat/scripts/start.js", import.meta.url), "utf8");
+  assert.match(st, /fightApi = \{ start, afterAttack, accept, undo, rules: S \}/, "a card can be accepted or taken back through the api");
   assert.equal((main.match(/openFight\(attackerTok, targetTok\);/g) ?? []).length, 2);
   assert.match(main, /p\?\.action !== "startFight"/, "the damage socket ignores fight requests");
   const rt = readFileSync(new URL("../../modules/wodx-npc/scripts/routines.mjs", import.meta.url), "utf8");
   assert.match(rt, /Hooks\.on\("updateToken", onTokenMoved\)/);
   assert.match(rt, /Hooks\.on\("wodxAttitude"/);
   assert.match(rt, /source: "region"/);
+  // 0.15.1: the sight check reads where the tokens stand, not where the moving token is drawn mid-walk
+  assert.match(rt, /const yards = restYards\(nTok, pTok\)/);
+  assert.match(rt, /sightBlocked\(restCentre\(nTok\), restCentre\(pTok\)\)/);
   const npc = readFileSync(new URL("../../modules/wodx-npc/scripts/main.mjs", import.meta.url), "utf8");
   assert.match(npc, /householdAnswers, kinNear, talk/);
 });

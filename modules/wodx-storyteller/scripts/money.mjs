@@ -75,7 +75,7 @@ export async function monthly({force = false} = {}) {
   const rows = list.map(a => ({a, m: moneyOf(a)}));
   for ( const r of rows ) {
     try { r.paid = await payDay(r.a, month); } catch (e) { console.error(`${MOD} | pay day`, e); r.paid = null; }
-    // 0.25.0: a holding's upkeep and income come with the allowance
+    // 0.26.0: a holding's upkeep and income come with the allowance
     if ( r.paid?.months ) { try { r.held = await Own.payHoldings(r.a, r.paid.months); } catch (e) { console.error(`${MOD} | holdings`, e); } }
   }
   try { await Own.workshopsMonth(); await Own.factionBuildsMonth(); } catch (e) { console.error(`${MOD} | workshops`, e); }

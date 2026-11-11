@@ -155,6 +155,22 @@ export function greetFor(chain = [], check = null) {
 }
 
 /**
+ * NPC 0.16.0, a call as someone passes (house rule, B842): may this NPC greet this character now? last: the world
+ * time of their last call to this character (or null); now: world time; chance: 0 to 1; roll: 0 to 1. One call a
+ * character a day of game time, and only if the roll comes under the chance. Returns true or false.
+ */
+export const PASS_GAP = 86400;
+export function mayCallOut({last = null, now = 0, chance = 0.5, roll = 0} = {}) {
+  if ( last !== null && last !== undefined && Number.isFinite(Number(last)) && now - Number(last) < PASS_GAP && now >= Number(last) ) return false;
+  return Number(roll) < Math.max(0, Math.min(1, Number(chance) || 0));
+}
+/** The line for a passing call: the Storyteller's greet line only when it is marked aloud, else the stock one. */
+export function passingLine(sheetGreet, stockGreet) {
+  if ( sheetGreet?.say && sheetGreet.then?.aloud ) return sheetGreet.say;
+  return stockGreet || "";
+}
+
+/**
  * Squares between two tokens, edge to edge, counted the way a person paces it: 1 when they stand side by side,
  * 0 when they overlap. a, b: {x, y, w, h} in pixels (w, h the token's size); size: the grid's square in pixels.
  */

@@ -1478,13 +1478,21 @@ Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 
 - book-rituals.js (B784): 314 documented rituals and rites from V20, V20 Dark Ages, W20, Dark Ages: Werewolf and Mummy fill the Storyteller's effect window from a searchable list; api.effects.bookRituals and bookRitual.
 - Gate step 16 reads the unlinked token's own actor for Make; UI fit now opens the "Apply an effect or ritual" window.
 
-## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.25.0, Interactables 0.23.3, B850-B856)
+## 2026-11-11: fight on sight reads where tokens stand (NPC 0.15.1)
+gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight check ran 0.9 s after a move and read the token as drawn, still walking from 38 yards off, so the guard was out of range. It now reads the document's resting place for range and walls, and watchFoes returns why each pair was skipped (the gate records it). Ambush book check (PC): V20 printed p. 274 (pdf 282), Dexterity + Stealth against Perception + Alertness, a win gives one free attack with the extra successes as dice, a tie lets the ambusher go first but the target may defend, anyone already fighting cannot be ambushed; V20 Dark Ages printed p. 345, the same roll, a win gives one free action the target cannot oppose, no margin bonus. Not built yet.
+## 2026-11-11: Games by Hyper ideas (Storyteller 0.25.0, NPC 0.16.0, Interactables 0.24.0)
+- Reviewed the Games by Hyper template docs for ideas. Two of the six picks were already built (Atmosphere's weather by season and era; place alarms carried by era), so those became a link (hardship follows the sky, B840) and nothing.
+- Standing that spills over (B841), calls to passers-by (B842), a clue's first look fills the codex (B843), bodies left behind (B844). All house rules, all off by default.
+- Harness: passing-world.test.mjs.
 
-Ben approved the ownership proposal (all five parts). Built on the markets branch, since it needs the goods list and the purse.
+## 2026-11-11: ownership, holdings, recipes and buildings (WoDX Storyteller 0.26.0, Interactables 0.24.1, B850-B856)
+
+Ben approved the ownership proposal (all five parts). Numbered 0.26.0 because main took 0.25.0 for hardship weather and bodies. Built on the markets branch, since it needs the goods list and the purse.
 - owner-rules.mjs: owner records, stolen marks, name matching for older place tags, Moravian holding forms by year, the right to trade.
 - craft-rules.mjs: a recipe for any good in the year, materials, quality. build-rules.mjs: 41 kinds of building, methods and stages, worth, upkeep, income, kit keys.
 - owners.mjs: theft marks from wodxItemsTaken, holdings and pay day, Make something, Put up a building, finished buildings as Regions (and kit scenes), workshops feeding markets, faction builds through the approval queue. Toolbar button "Property and building"; api.owners.
 - tasks: a build task's stages and stage costs (Undo puts the purse and the place back); a recipe's quality on the item.
+- Chronicle 0.18.2: Property and building is in the list of player buttons the Storyteller can hide.
 - Interactables: sends wodxItemsTaken after a take; the Interact window marks what is yours or someone's.
 - Tests: ownership.test.mjs (rules, every era), ownership-foundry.test.mjs (the Foundry side on stand-ins).
 - Still to do: the building kit maps (a PC job: one map per kit key, exported from Dungeondraft and imported as scenes flagged wodx-storyteller.kit).

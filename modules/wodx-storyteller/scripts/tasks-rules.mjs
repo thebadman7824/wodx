@@ -62,7 +62,7 @@ export function normTask(t = {}) {
     note: String(t.note ?? ""), log: Array.isArray(t.log) ? t.log.slice(-20) : [],
     needs: String(t.needs ?? "").slice(0, 1000).trim(), workshop: WORKSHOPS[t.workshop] ? t.workshop : "", makes: String(t.makes ?? "").slice(0, 120).trim(),
     made: !!t.made, waits: String(t.waits ?? "").slice(0, 200),
-    // 0.25.0: recipes from the goods list, buildings in stages, who it is for
+    // 0.26.0: recipes from the goods list, buildings in stages, who it is for
     good: String(t.good ?? "").slice(0, 80), materials: strs(t.materials), spent: strs(t.spent), quality: String(t.quality ?? "").slice(0, 20),
     building: String(t.building ?? "").slice(0, 40), stages: stagesOf(t.stages), stage: Math.max(0, Math.round(n(t.stage))),
     paidStage: Number.isFinite(Number(t.paidStage)) ? Math.round(Number(t.paidStage)) : -1, workers: Math.max(0, Math.min(10, Math.round(n(t.workers)))),
@@ -139,7 +139,7 @@ export function stepTask(task, roll, at) {
     t.total += Math.max(0, n(roll.successes));
     t.log.push({at, s: Math.max(0, n(roll.successes))});
     if ( t.total >= t.goal ) {
-      // 0.25.0: a building moves to its next stage; only the last one finishes it
+      // 0.26.0: a building moves to its next stage; only the last one finishes it
       if ( t.stages.length && t.stage < t.stages.length - 1 ) { t.stage += 1; t.goal = t.stages[t.stage].goal; t.total = 0; }
       else t.status = "done";
     }

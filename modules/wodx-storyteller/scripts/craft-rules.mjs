@@ -1,5 +1,5 @@
 /**
- * WoDX Storyteller 0.25.0: making things from the goods list. No Foundry calls here.
+ * WoDX Storyteller 0.26.0: making things from the goods list. No Foundry calls here.
  *
  * A recipe is worked out from a good (WoDX Library's goods by era): its category says the craft, the workshop and
  * the materials; its value tier in the year says how long the work takes. The work is a long task (an extended

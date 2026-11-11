@@ -37,6 +37,8 @@ export function build(ctx) {
 
   function registerSettings() {
     game.settings.register(MOD, "factions", {scope: "world", config: false, type: Object, default: F.blankState()});
+    game.settings.register(MOD, "spillover", {name: "Standing spills over (house rule)", hint: "When a faction's regard for a character moves, its close friends move the same way a step and its enemies the other way, through the approval queue. Off: only the faction itself moves.",
+      scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "factionMode", {
       name: "Faction turns and rumours", hint: "Suggest sends every result to the approval queue. Auto applies small ones (a Background dot, a rumour moving a step) with an Undo card, and sends big ones to the queue.",
       scope: "world", config: true, type: String, default: "suggest", choices: {suggest: "Suggest (everything to the approval queue)", auto: "Auto (small changes apply, with an undo card)", off: "Off"}
@@ -798,7 +800,7 @@ export function build(ctx) {
   }
 
   /** NPC 0.9.0: move how a faction regards a character, by a step or to a step. Returns the new step, or null. */
-  async function adjustPeople(ref, actorId, {delta = 0, to = null} = {}) {
+  async function adjustPeople(ref, actorId, {delta = 0, to = null, spill = true} = {}) {
     if ( !game.user.isGM || !actorId ) return null;
     return mutate(st => {
       const f = F.findFaction(st, ref);
@@ -807,8 +809,20 @@ export function build(ctx) {
       const n = Math.max(F.STANDING.min, Math.min(F.STANDING.max, to !== null ? Number(to) : was + Number(delta || 0)));
       f.people = {...(f.people ?? {})};
       if ( n ) f.people[actorId] = n; else delete f.people[actorId];
-      return {state: st, result: n};
+      return {state: st, result: {n, faction: f.id, moved: n - was}};
+    }).then(async r => {
+      if ( !r ) return null;
+      if ( r.moved && spill && setting("spillover") ) await proposeSpill(r.faction, actorId, r.moved).catch(e => console.error(`${MOD} | spillover`, e));
+      return r.n;
     });
+  }
+  /** NPC 0.16.0: the friends and enemies of a faction hear how it now regards a character (approval queue). */
+  async function proposeSpill(factionId, actorId, moved) {
+    const s = state(), changes = F.spillFrom(s, factionId, actorId, moved);
+    if ( !changes.length ) return null;
+    const n = names(s), who = n.actor(actorId), src = n.faction(factionId);
+    const words = changes.map(c => `${n.faction(c.faction)} ${c.delta > 0 ? "warms" : "cools"} a step (${c.why === "friend" ? `a friend of ${src}` : `an enemy of ${src}`})`);
+    return proposeChanges(`Word spreads: ${src} ${moved > 0 ? "thinks better" : "thinks worse"} of ${who}`, `${words.join("; ")}.`, changes, {key: `spill:${factionId}:${actorId}:${game.time.worldTime}`, kind: "spill"});
   }
   const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
   return {adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
