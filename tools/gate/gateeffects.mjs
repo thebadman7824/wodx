@@ -119,7 +119,8 @@ export async function run() {
       toks = await scene.createEmbeddedDocuments("Token", [
         {name: "WoDX gate: keyword token in", actorId: target.id, x: x0, y: y0, actorLink: false, hidden: true},
         {name: "WoDX gate: keyword token out", actorId: target.id, x: x0 + g * 8, y: y0, actorLink: false, hidden: true}]);
-      const t = toks[0];
+      // Foundry 14 may hand back the batch out of order: find the token by name
+      const t = toks.find(x => x.name.endsWith("token in")) ?? toks[0];
       const out = E.outcome("move", E.spend(2, 2, {}));
       const rec = await fx().apply({key: "move", out, target: t.uuid, name: t.name, route: "pick", at: {x: x0 + g * 3.5, y: y0 + g * 0.5}}, caster.name);
       const moved = t.x === x0 + g * 3;

@@ -23,6 +23,9 @@ async function save(R, name) {
 }
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); } return !!fn(); }
 
+// Foundry 14 may hand back a batch of new actors out of order: match each one to its data by name
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
@@ -36,7 +39,7 @@ export async function run() {
     await scene.view();
     await until(() => canvas.ready && canvas.scene?.id === scene.id, 10000);
     await scene.createEmbeddedDocuments("Wall", [{c: [G * 5, 0, G * 5, G * 15]}]);
-    actors = await Actor.create([{name: "WoDX gate: Teleport one", type: "Mortal"}, {name: "WoDX gate: Teleport two", type: "Mortal"}]);
+    actors = await createActors([{name: "WoDX gate: Teleport one", type: "Mortal"}, {name: "WoDX gate: Teleport two", type: "Mortal"}]);
     const made = await scene.createEmbeddedDocuments("Token", [
       {name: "one", actorId: actors[0].id, x: G, y: G}, {name: "two", actorId: actors[1].id, x: G * 3, y: G}]);
     a = scene.tokens.find(t => t.actorId === actors[0].id); b = scene.tokens.find(t => t.actorId === actors[1].id);

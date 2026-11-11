@@ -22,6 +22,9 @@ async function save(R, name) {
 }
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); } return !!fn(); }
 
+// Foundry 14 may hand back a batch of new actors out of order: match each one to its data by name
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
@@ -32,7 +35,7 @@ export async function run() {
   let actors = [], scene, msgs = [];
   const flag = p => ({world: {wodx: {profile: p}}});
   try {
-    actors = await Actor.create([
+    actors = await createActors([
       {name: "WoDX gate: Referee young", type: "Vampire", system: {generation: 11}, flags: flag("kindred")},
       {name: "WoDX gate: Referee elder", type: "Vampire", system: {generation: 8}, flags: flag("kindred")},
       {name: "WoDX gate: Referee Garou", type: "Werewolf", flags: flag("lupine")},

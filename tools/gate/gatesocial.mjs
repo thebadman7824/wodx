@@ -25,6 +25,9 @@ async function save(R, name) {
 }
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); } return !!fn(); }
 
+// Foundry 14 may hand back a batch of new actors out of order: match each one to its data by name
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
@@ -39,7 +42,7 @@ export async function run() {
     scene = await Scene.create({name: "WoDX gate: Social", width: 2000, height: 1500, padding: 0, grid: {type: 1, size: G}, tokenVision: false});
     await scene.view();
     await until(() => canvas.ready && canvas.scene?.id === scene.id, 10000);
-    actors = await Actor.create([{name: "WoDX gate: Social NPC", type: "Mortal"}, {name: "WoDX gate: Social PC", type: "Mortal"}]);
+    actors = await createActors([{name: "WoDX gate: Social NPC", type: "Mortal"}, {name: "WoDX gate: Social PC", type: "Mortal"}]);
     const npcA = actors.find(a => a.name === "WoDX gate: Social NPC"), pcA = actors.find(a => a.name === "WoDX gate: Social PC");
     await scene.createEmbeddedDocuments("Token", [{name: "npc", actorId: npcA.id, x: G * 5, y: G * 5}, {name: "pc", actorId: pcA.id, actorLink: true, x: G * 6, y: G * 5}]);
     npcTok = scene.tokens.find(t => t.actorId === npcA.id); meTok = scene.tokens.find(t => t.actorId === pcA.id);
