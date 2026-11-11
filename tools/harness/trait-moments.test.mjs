@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
-/* Trait effects step 7 (Chronicle 0.22.0, Actions 3.36.0, Storyteller 0.29.0, Interactables 0.25.0): flaws set off on
+/* Trait effects step 7 (Chronicle 0.22.0, Actions 3.37.0, Storyteller 0.29.0, Interactables 0.25.0): flaws set off on
    the map, the night's draw, Ledger entries and prompts to the Storyteller */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");

@@ -29,6 +29,9 @@ async function save(R, name) {
 }
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); } return !!fn(); }
 
+// Foundry 14 may hand back a batch of new actors out of order: match each one to its data by name
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
@@ -47,7 +50,7 @@ export async function run() {
     scene = await Scene.create({name: "WoDX gate: Fight", width: 3000, height: 1500, padding: 0, grid: {type: 1, size: G, distance: 5, units: "ft"}, tokenVision: false});
     await scene.view();
     await until(() => canvas.ready && canvas.scene?.id === scene.id, 10000);
-    actors = await Actor.create([
+    actors = await createActors([
       {name: "WoDX gate: Fight guard", type: "Mortal", flags: {"wodx-npc": {behavior: {template: "guard"}}}},
       {name: "WoDX gate: Fight character", type: "Mortal", ownership: player ? {default: 0, [player.id]: 3} : {default: 0}}]);
     await game.modules.get("wodx-npc").api.attitude.apply(actors[0], actors[1], {to: -2, why: "gate"});

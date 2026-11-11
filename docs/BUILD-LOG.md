@@ -1528,7 +1528,7 @@ Ben asked for one-click mapmaking with our Dungeondraft assets and chose a Dunge
 - Actions: effects.js passes a Veil's difficulty to the timed effect.
 - Tests: trait-senses.test.mjs (5). Gate: gatetraits steps 14 and 15.
 
-## 2026-11-11: trait effects, step 4 (Actions 3.33.0, B883)
+## 2026-11-11: trait effects, step 4 (Actions 3.34.0, B883)
 - power-effects.js: powerKeywords (data set, then line list by name), powerOutcomes (successes as strength, NEEDS_TARGET dropped with no target, ON_SELF on the user).
 - effects.js powerPlan (through planOf and the card's routing); setting powerEffects; api.effects.powerPlan.
 - kindred.js: Discipline rolls without a path spec; garou.js: Gift rolls (DA:W library, else W20 by name).
@@ -1548,8 +1548,14 @@ Ben approved all 291 timeline cards and asked for a deconfliction. docs/research
 - main.js: Lucky in resolveAction (action and quick check), feedResolve (Efficient Digestion, Prey Exclusion), resolveSpend (Thin Blood), daytime (Deep and Light Sleeper; the daytime flag's uncapped).
 - Chronicle: HANDLED; describe lists every way a trait is carried out.
 - Tests: trait-pools.test.mjs (4). Gate: gatetraits step 18.
+## 2026-11-11: bug check of the finished work
+Ben asked for a bug check of everything done so far. The harness passed 1,286 of 1,286 on main d8933e8. Two gate faults traced to one cause: Foundry 14 can hand back a batch of new actors out of order, so gatefight sometimes set the guard's attitude on the wrong actor (the "attitude 0 on a cold start" fault), and gaterivals sometimes gave the wolf's kind to the leech (the "fails after gateeffects" fault). Nine gates now match new actors to their data by name (createActors), gateoworld does the same for its two scenes, and gateeffects finds its Move token by name. The play code never makes actors in a batch like that, so Live is not affected. One real bug found on the way: a Mage Move and its Undo used a plain x/y update, which Foundry 14 stops at walls. Actions 3.35.1 jumps the token with a "displace" move and keeps the plain update as a fallback. New harness checks cover both.
 
-## 2026-11-11: trait effects, step 7 (Chronicle 0.22.0, Actions 3.36.0, Storyteller 0.29.0, Interactables 0.25.0, B887)
+## 2026-11-11: Dealing with NPCs, part C: trade (Actions 3.36.0)
+
+"With this person" gains Trade once WoDX Storyteller's money is on (B895-B897). Buy, sell or barter with the NPC at the prices the era goods list and the local market give; a trader sells from the shop container their market lists, anyone else from what they carry, and the NPC's purse is the till. A haggle roll (Manipulation + Finance, Commerce in the Dark Ages, difficulty 6) moves the price a tenth per success, up to three tenths. Hostile NPCs refuse; distrusted ones deal a tenth worse. Lifted things carry a stolen mark and fetch the fence's price. Social and trade cards now add a stock line from WoDX NPC, coloured by attitude. New trade-rules.js and trade.js; harness trade.test.mjs; gatesocial step 10 buys a good and sells it back.
+
+## 2026-11-11: trait effects, step 7 (Chronicle 0.22.0, Actions 3.37.0, Storyteller 0.29.0, Interactables 0.25.0, B887)
 - Chronicle data: TRIGGERS, PULLS, LEDGER, PROMPTS. trait-rules: bracketWords, triggersOf, triggered, pullsOf, ledgerOf, promptsOn; describe names them. traits.mjs: triggers, pulls, ledgerFor, prompt (queue type wodx-chronicle.traitPrompt), listens to wodxSocial and wodxFightStarted.
 - Interactables: labelsOnPath (tile titles, region names), traitTriggers in onTokenMoved (holds a player's move; option wodxHeld), setting traitTriggers.
 - Storyteller: night pulls (seeded per character), the aid for Oracular Ability, night prompts on approval; Ledger syncTraits (setting ledgerTraits remembers ids).
