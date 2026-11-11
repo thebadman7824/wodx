@@ -319,3 +319,38 @@ assert not any(n[k] for k in FG.TYPES if FG.TYPES[k]["built"][0] > 1900), n
 print("ok")`;
   assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
 });
+
+test("mapgen: every building's cellar and upper floors furnish with the stair in one spot, and a hospital and a palace get maps of their own", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const out = mkdtempSync(join(tmpdir(), "wodx-floors-"));
+  const code = `
+import sys, json, subprocess
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, eratypes, cddatypes, firstgroup, floors as FL, ddsite as S
+C.init(1, ${JSON.stringify(ASSETS + "," + NEW_ASSETS)})
+for k in [k for k in B.TYPES if "--" not in k]:
+    lv, spot = FL.levels(k)
+    names = [n for n, _ in lv]
+    assert names[0] == "ground" and len(set(names)) == len(names), k
+    for name, t in lv:
+        assert t["size"] == B.TYPES[k]["size"] and [r[1:5] for r in t["rooms"]] == [r[1:5] for r in B.TYPES[k]["rooms"]], (k, name)
+        if name != "ground": assert not any(o[0] in ("door", "double") and FL.on_outline(t, o) for o in t["openings"]), (k, name)
+        B.TYPES["t--" + name] = t
+        b = S.furnish_safely(S.Placed("x", "t--" + name, 2, 2, "S", None, None, t))
+        if spot: assert any("Stair" in i["asset"] for r in b.rooms for i in r.items), (k, name)
+for kind, tk in (("floors", "burgher-palace"), ("building", "cdda-hospital")):
+    subprocess.run([sys.executable, ${JSON.stringify(gen + "/ddsite.py")}, "--kind", kind, "--type", tk, "--assets", ${JSON.stringify(ASSETS + "," + NEW_ASSETS)},
+                    "--out", ${JSON.stringify(out)}], check=True, capture_output=True)
+idx = json.load(open(${JSON.stringify(out)} + "/burgher-palace-levels.json"))
+assert [l["level"] for l in idx["levels"]] == ["ground", "floor-2", "floor-3", "cellar"], idx
+spots = set()
+for l in idx["levels"]:
+    sc = json.load(open(${JSON.stringify(out)} + "/" + l["sidecar"]))
+    st = [f for f in sc["features"] if f["id"] == "stair"]
+    assert st and st[0]["flags"]["climb"], l
+    spots.add(tuple(st[0]["rect"][2:]))
+assert len(spots) == 1
+h = json.load(open(${JSON.stringify(out)} + "/hospital.wodx.json"))
+assert any(r["id"] == "road" for r in h["regions"]) and any(r["id"] == "cdda-hospital" for r in h["regions"])
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
+});

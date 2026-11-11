@@ -59,6 +59,26 @@ def rename(name, label):
         if name.startswith(a): name = b + name[len(a):]
     return name
 
+# rooms Cataclysm leaves bare (its first bar is an empty hall, some motel and mansion rooms are filled at play time):
+# a kit by building, set out in a grid of fixed spots so a spot that will not take a piece is simply left empty
+BARE = {"Bar": (M["table"], M["chair2"]), "Motel": (M["twin2"], M["chair2"]), "Mansion": (M["armchair"], M["coffee2"]),
+        "Empty warehouse": (B.CRATE, B.CRATE)}
+
+def bare(label, name, rooms, pieces):
+    """Spots for a room of more than 9 cells that Cataclysm gives fewer than two pieces."""
+    r = next((r for r in rooms if r[0] == name), None)
+    if label not in BARE or not r or r[3] * r[4] <= 9 or sum(n for _, _, _, n, _ in pieces) >= 2: return []
+    main, side = BARE[label]
+    out, step = [], 3.0
+    y = 1.0
+    while y + 1 < r[4]:
+        x = 1.0
+        while x + 1 < r[3]:
+            out += [(main, f"at:{x:.2f}:{y:.2f}", 1), (side, f"at:{x + 1.2:.2f}:{y:.2f}", 1)]
+            x += step
+        y += step
+    return out
+
 def load():
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cdda_types.json")
     if not os.path.exists(path): return {}
@@ -72,7 +92,7 @@ def load():
              "wall": "Tyger_wall.png", "place": PLACE.get(role, "workplace"), "fill": "office", "portals": E.MODERN,
              "rooms": [(rename(n, t["label"]), x, y, w, h, FLOOR(n)) for n, x, y, w, h, _ in t["rooms"]],
              "openings": [tuple(o) for o in t["openings"]], "partitions": [tuple(map(tuple, p)) for p in t["partitions"]],
-             "furnish": {rename(n, t["label"]): piece_rules(p) for n, p in t["furnish"].items()}, "cdda": t["cdda"], "credit": doc["credit"],
+             "furnish": {rename(n, t["label"]): piece_rules(p) + bare(t["label"], n, t["rooms"], p) for n, p in t["furnish"].items()}, "cdda": t["cdda"], "credit": doc["credit"],
              "era": "mid-century", "eras": [e for e, y in E.ERA_STARTS if y >= 1919]}
         out[key] = v
     return out

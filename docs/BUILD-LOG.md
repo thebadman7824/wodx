@@ -1454,6 +1454,8 @@ Ben asked whether combat could begin by itself when conditions are met. Combat 3
 - Rituals saved by name in the world setting stRituals; api.effects.storyteller, rituals, saveRitual, forgetRitual, stItems.
 
 
+## 2026-11-11: failed layouts, the hospital, cellars and upper floors (B669)
+Five more Cataclysm layouts convert (bar, motel, mansion, two empty warehouses; 26 in all), with the converter now reading nested rooms, palettes beside their maps and turned tiles. Towns that cannot fit the hospital clear houses for it, or put up a hospital entrance whose region names its own map. ddsite.py gains --kind building (any type on its own grounds) and --kind floors (every level of a building as its own map, stair in one spot, index file). A harness test furnishes every level of every building type and checks the stair lines up.
 ## 2026-11-11: keywords for the modern lines' powers (WoDX Actions 3.32.0, B783)
 - power-keywords-lines.js: 837 powers across V20, W20, C20, Hunter, Demon, Mummy and Orpheus name their effect keywords.
 - keywordsOf takes a name or slug for these sets; new api.effects.powersWith and lineSets. Test added in effects.test.mjs.

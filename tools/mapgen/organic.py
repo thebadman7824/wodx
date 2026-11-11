@@ -1373,7 +1373,7 @@ class OrganicTown(T.Town):
                     features.append(f)
             if b.t["place"]:
                 rs = region_shape(b.outline)
-                regions.append({"id": b.key, "label": b.label, "rect": rs[0], "points": rs[1], "place": {"kind": b.t["place"]}})
+                regions.append({"id": b.key, "label": b.label, "rect": rs[0], "points": rs[1], "place": {"kind": b.t["place"]}, **({"site": b.t["site"]} if b.t.get("site") else {})})
                 if getattr(b, "era_area", None): regions[-1]["area"] = b.era_area
         if self.river_line:
             for j, piece in enumerate(G.clip_line(self.river_line, win)):
