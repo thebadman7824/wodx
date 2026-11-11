@@ -582,3 +582,14 @@ Item 4 of the open world study. Pass the Years (WoDX Creation) already ages ever
 ## B711. The town stays staffed (2026-11-11)
 When Pass the Years proposes a certain death (100 years or more) for townsfolk, "An heir inherits" starts ticked. The heir's sheet is copied from the dead one, so it keeps the routine, the household, the places and the talk sheet; the Storyteller can untick it. Deaths themselves still wait for the Storyteller's tick in Pass the Years, never automatic.
 
+## B730. Realm maps: every realm past the near worlds gets a stand-alone map (2026-11-11)
+Ben asked (03:33Z, 04:01Z) how Umbral maps are formed and for map logic for every realm outside the Near Umbra; some need not be layers on a physical map. WoDX Otherworlds 0.8.0 keeps the near worlds (Penumbra, Shadowlands, Near Dreaming, Net) as twin levels of the physical map, and draws every realm past them as a scene of its own from a seed and the year in force: 34 realms across eight lines (realm-maps-rules.mjs REALMS). Study: https://claude.ai/artifact/WrAho8YW73inRyAjAVo8Vz.
+
+## B731. Seven layouts for realms (2026-11-11)
+Open land, maze, web city, islands, battlefield, sectors and descending rings (SHAPES). Each realm takes the one that fits its law: realms of confinement are mazes, realms in a void or the storm are islands joined by narrow ways (their edges stop movement but not sight), realms of descent are rings down to a pit. Every landmark and way out is checked to join the arrival.
+
+## B732. Realms change by era (2026-11-11)
+Each realm lists era spans with notes and map changes (ruin, blight, Weaver web, frost, density, closed). Dates the books give are used (the Net from 1990, the Resurgence of 1969, the Avatar Storm and the Sixth Great Maelstrom of 1999, Autochthonia from 1895); the rest are house rules marked in the note. Spans past 2025 apply only on the World of Future Darkness branch; the Endless Winter freezes the Umbra and the Dreaming from 2090 there.
+
+## B733. Sending travellers into a realm (2026-11-11)
+The Storyteller sends the selected tokens into a drawn realm from the Realm maps window: each token is made again on the arrival cells and remembers where it stood (flags.wodx-otherworlds.cameFrom); its owners are pulled to the scene. "Bring them back" returns each to its old scene, spot, level and height. The power or road that carried them is the Storyteller's call; each realm lists its ways in. Inside a realm, Storyteller 0.21.0's teleport moves tokens as on any map.
