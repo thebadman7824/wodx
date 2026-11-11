@@ -6,6 +6,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 
 | Hook | Sent by | Heard by |
 |---|---|---|
+| wodxAttitude | npc | npc (a fight when an NPC turns hostile) |
 | wodxBreach | actions | npc, storyteller |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
@@ -32,9 +33,9 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | Hook | Sent by | Carries |
 |---|---|---|
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
-| wodxAttitude | npc | an NPC's attitude toward a character changed |
 | wodxDreamingGate | otherworlds | a crossing through a Dreaming gateway |
 | wodxEventUndone | chronicle | a dated event taken back |
+| wodxFightStarted | combat | a fight the starter set up: {combat, source, tokens, created} |
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxSkipStart | chronicle | a time skip begins |
