@@ -150,6 +150,23 @@ const clampDiff = d => Math.max(2, Math.min(9, d));
  * What one keyword does. got: from spend(). ctx: {spheres: [names used], primeCharged, fire, aggravated, slow, dark}.
  * Returns {key, label, kind, ...}: kind is damage | heal | timed | light | quint | condition | note.
  */
+/**
+ * The era's magic charts: how successes turn into damage, healing and Quintessence, and the countermagick difficulty.
+ * The Ascension uses Mage 20th (p. 504's 2/6/8/10 chart; Forces adds a success). The Sorcerers Crusade multiplies the
+ * successes by its Damage and Duration chart (pr 230 and 240): x1 for one, x2 for two to four, x3 for five; Forces adds
+ * a success and Mind takes one away (pr 230). The x3 for six and more is a house reading: that chart cell is unreadable.
+ */
+export const CRUSADE_MULT = [0, 1, 2, 2, 2, 3];
+export function crusadeLevels(successes, {forces = false, mind = false} = {}) {
+  const s = Math.max(0, n(successes) + (forces ? 1 : 0) - (mind ? 1 : 0));
+  return Math.min(20, s * (CRUSADE_MULT[s] ?? 3));
+}
+export const ERA_RULES = {
+  ascension: {label: "Mage 20th", levels: (s, {forces = false} = {}) => M.damage(s, {forces}), counterDiff: 7, reflect: true, ref: "Mage 20th pp. 502-504"},
+  crusade: {label: "Sorcerers Crusade", levels: crusadeLevels, counterDiff: 7, reflect: false, ref: "Sorcerers Crusade pr 230-231, 240"}
+};
+export const eraRules = age => ERA_RULES[age] ?? ERA_RULES.ascension;
+
 export function outcome(key, got, ctx = {}) {
   const K = KEYWORDS[key];
   if ( !K || !got?.ok ) return null;
@@ -162,16 +179,16 @@ export function outcome(key, got, ctx = {}) {
   switch ( key ) {
     case "harm": {
       const type = M.damageType({spheres, primeCharged: !!ctx.primeCharged, fire: !!ctx.fire});
-      const levels = M.damage(str, {forces: spheres.includes("forces")});
+      const levels = eraRules(ctx.age).levels(str, {forces: spheres.includes("forces"), mind: spheres.includes("mind")});
       return {...base, kind: "damage", levels, type: type === "none" ? "lethal" : type, soak: !spheres.every(s => s === "mind"),
         text: `${levels} ${type} level${levels === 1 ? "" : "s"}`};
     }
     case "mend": {
-      const levels = M.damage(str);
+      const levels = eraRules(ctx.age).levels(str);
       return {...base, kind: "heal", levels, aggravated: !!ctx.aggravated, text: `${levels} health level${levels === 1 ? "" : "s"} healed${ctx.aggravated ? ", aggravated at a Quintessence point each" : ""}`};
     }
     case "charge": {
-      const points = M.damage(str);
+      const points = eraRules(ctx.age).levels(str);
       return {...base, kind: "quint", points: ctx.drain ? -points : points, text: `${points} Quintessence ${ctx.drain ? "drawn out" : "given"}`};
     }
     case "ward":

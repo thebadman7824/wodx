@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.27.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.28.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -230,4 +230,20 @@ test("Actions 3.27.0: path magic and Numina on the effects card", async () => {
   assert.match(kx, /EF\.pathPlan\(actor, p, successes\)/); assert.match(kx, /!PE\.PATH_EFFECTS\[p\.id\]/);
   assert.match(hx, /EF\.numinaPlan\(actor, /);
   assert.match(src("modules/wodx-actions/scripts/effects.js"), /source: o\.source \?\? /);
+});
+
+test("Actions 3.28.0: the Sorcerers Crusade's magic charts", () => {
+  assert.deepEqual([1, 2, 3, 4, 5, 6].map(s => E.crusadeLevels(s)), [1, 4, 6, 8, 15, 18]);
+  assert.equal(E.crusadeLevels(3, {forces: true}), 8);
+  assert.equal(E.crusadeLevels(3, {mind: true}), 4);
+  assert.equal(E.eraRules("crusade").reflect, false);
+  assert.equal(E.eraRules("ascension").reflect, true);
+  assert.equal(E.eraRules("dark"), E.ERA_RULES.ascension);
+  const got = {ok: true, strength: 3, duration: 0, targets: 0};
+  assert.equal(E.outcome("harm", got, {spheres: ["forces"], age: "crusade"}).levels, 8);
+  assert.equal(E.outcome("harm", got, {spheres: ["forces"], age: "ascension"}).levels, E.outcome("harm", got, {spheres: ["forces"]}).levels);
+  assert.equal(E.outcome("mend", got, {spheres: ["life"], age: "crusade"}).levels, 6);
+  const m = src("modules/wodx-actions/scripts/m20.js");
+  assert.equal((m.match(/age: sg\.age\.key \}/g) ?? []).length, 2);
+  assert.match(m, /eraRules\(age\(\)\.key\)\.reflect/);
 });

@@ -1392,3 +1392,9 @@ Ben asked for every kind of NPC line suggested after the stock talk library (B74
 - effects.js planOf, pathPlan, numinaPlan; kindred.js (Use a Discipline) and hunter.js (Numina) post the card. Timed effects name their book page.
 - Page check: /mnt/project-files/path-powers-book-check-20261111T103729-2a82.md (printed pages).
 - Tests: effects.test.mjs (13). Gate gateeffects.mjs 14 steps.
+
+## 2026-11-11: The Sorcerers Crusade's magic charts (Actions 3.28.0)
+- Item 8 of "Magic that applies itself". B769.
+- effects-rules.js ERA_RULES, eraRules, crusadeLevels, CRUSADE_MULT; outcome reads ctx.age for damage, healing and Quintessence. effects.js plan takes {age}; m20.js passes the chronicle's age, uses it for the plain damage line, and hides reflect in the Crusade.
+- Page check: /mnt/project-files/crusade-effects-book-check.md (printed and pdf pages).
+- Tests: effects.test.mjs (14).

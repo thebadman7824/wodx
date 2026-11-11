@@ -54,7 +54,7 @@ export function sharedFiles(files) {
 }
 
 const mods = existsSync(MODS) ? readdirSync(MODS).filter(m => m.startsWith("wodx-") && existsSync(join(MODS, m, "module.json"))) : [];
-const all = [...mods.flatMap(m => walk(join(MODS, m))), ...(existsSync(SYS) ? readdirSync(SYS).flatMap(s => walk(join(SYS, s))) : [])];
+const all = [...mods.flatMap(m => walk(join(MODS, m))), ...(existsSync(SYS) ? readdirSync(SYS, {withFileTypes: true}).filter(e => e.isDirectory()).flatMap(e => walk(join(SYS, e.name))) : [])];
 const shared = sharedFiles(all);
 const report = [];
 for ( const m of mods ) {

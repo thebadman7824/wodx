@@ -154,7 +154,7 @@ export function targetsOf(actor, uuids = null) {
 /**
  * Turn a roll into the card's items. Returns {items, html, base, need}. items: [{key, out, target, name, route}].
  */
-export function plan(actor, form, successes, {used = [], witnessed = false, feat = 0, targets = null} = {}) {
+export function plan(actor, form, successes, {used = [], witnessed = false, feat = 0, targets = null, age = "ascension"} = {}) {
   const t = targetsOf(actor, targets);
   const base = E.needFor(form.keywords, {self: t.self, feat});
   const got = E.spend(successes, base, form.plan);
@@ -163,7 +163,7 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
   const docs = t.docs.slice(0, 1 + got.targets);
   const caster = actor?.getActiveTokens?.()?.[0]?.document ?? null;
   for ( const key of form.keywords ) {
-    const out = E.outcome(key, got, {...form.ctx, spheres});
+    const out = E.outcome(key, got, {...form.ctx, spheres, age});
     if ( !out ) continue;
     if ( out.area ) {
       // One circle on the scene: the Storyteller places it, and it works on whoever enters
