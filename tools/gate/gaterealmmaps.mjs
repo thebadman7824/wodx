@@ -6,7 +6,7 @@
  * Data/wodx-assets/realms and are listed in the result).
  *   1. the api and the toolbar button (Storyteller only) are there
  *   2. Stygia (seed 7, 1600) draws: a realm scene in WoDX realms, art loaded, walls and regions made
- *   3. one realm of every layout draws without an error (seven scenes)
+ *   3. every realm draws without an error (one scene each, 34 in all)
  *   4. the token goes into the Labyrinth and lands on the arrival; it remembers where it came from
  *   5. a wall of the realm stops a move across it
  *   6. bring it back: same scene, same spot
@@ -54,12 +54,12 @@ export async function run() {
       ok("Stygia draws", f.realmMap.realm === "stygia" && f.realmMap.year === 1600 && stygia.walls.size > 50 && stygia.regions.size >= 4 && !!tex
         && game.folders.get(stygia.folder?.id ?? stygia.folder)?.name === "WoDX realms", {walls: stygia.walls.size, regions: stygia.regions.size, tex: !!tex, w: tex?.width});
     });
-    await step("every layout draws", async () => {
-      const R7 = api().rules;
-      const one = Object.keys(R7.SHAPES).map(sh => R7.REALM_ORDER.find(id => R7.REALMS[id].shape === sh));
+    await step("every realm draws", async () => {
+      // Each realm has a layout of its own (Otherworlds 0.12.0), so every realm is drawn once
+      const R7 = api().rules, all = R7.REALM_ORDER;
       const out = [];
-      for ( const id of one ) { const s = await api().draw({realm: id, seed: 3, size: "small"}); made.push(s); R.art.push(api().artOf(s)); out.push([id, s.walls.size, s.regions.size]); }
-      ok("every layout draws", out.length === 7 && out.every(([, w, r]) => w > 10 && r >= 3), {out});
+      for ( const id of all ) { const s = await api().draw({realm: id, seed: 3, size: "small"}); made.push(s); R.art.push(api().artOf(s)); out.push([id, s.walls.size, s.regions.size]); }
+      ok("every realm draws", out.length === all.length && all.length >= 34 && out.every(([, w, r]) => w > 10 && r >= 3), {out});
     });
     let lab, inside;
     await step("into the Labyrinth", async () => {
