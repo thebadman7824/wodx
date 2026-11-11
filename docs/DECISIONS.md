@@ -654,6 +654,9 @@ Ben asked (12:31Z) for every realm map to be checked against how the realm is de
 ## B739. Shadowlands relics: the newest house on each spot (2026-11-11)
 Ben accepted (12:31Z) the recommendation to quiet the relics. Where pulled-down buildings overlap (by more than 30% of the smaller one), only the most recent one up to the year shown comes back. The 1960 sample town drops from 178 relics to 66.
 
+## B740. Map keywords for realm maps (2026-11-11)
+Ben said (13:04Z) the realms looked too much alike and asked for keywords tied to kinds of map logic, so realms with similar features look similar but not the same. Otherworlds 0.11.0: 22 keywords in three groups (land, built, forces), each a step on the cells plus its own marks in the art; two to four per realm from its description, weights 1 to 3, the seed sets amount and placement. Keywords that change the layout: crystal (angular islands, square city), towers and gardens (square islands; gardens also a square city), shifting (scattered islets), chasm (cracked islands), caves (rock-ringed islands; caverns grown instead of a cut maze). A Great Maelstrom adds storm, the Endless Winter ice; some eras add one (Battleground future machines, Legendary rot from 2000, Wolfhome future towers, Horizon and Shard ruins after the Avatar Storm, Scar future towers). The Storyteller can add more when drawing. Which keywords each realm gets is a house rule drawn from its encyclopedia description.
+
 ## B780. Lazy-loading each line's code is set aside (2026-11-11)
 WoDX Actions keeps loading all its line code at start. Loading rare lines on first use would save about 15% of the start-up script (some 50 ms on a slow computer), but it would turn over a hundred synchronous calls in main.js, and parts of the public api, into waits. The release bundler already gives the larger gain: 14 script loads instead of about 250, and a third less code. Logged for Ben to reverse.
 
