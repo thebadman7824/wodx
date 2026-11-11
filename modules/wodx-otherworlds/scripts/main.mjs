@@ -15,6 +15,8 @@ import * as waysRules from "./ways-rules.mjs";
 import * as realmsRules from "./realms-rules.mjs";
 import * as realmMaps from "./realm-maps.mjs";
 import * as realmMapsRules from "./realm-maps-rules.mjs";
+import * as reflect from "./reflect.mjs";
+import * as reflectRules from "./reflect-rules.mjs";
 import {installSearch} from "../../wodx-chronicle/scripts/search.mjs";
 
 let active = false;
@@ -58,7 +60,8 @@ Hooks.once("ready", () => {
     drift: {of: drift.driftOf, step: drift.stepDrift, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     realmMaps: {draw: realmMaps.drawRealm, redraw: realmMaps.redrawRealm, send: realmMaps.sendToRealm, bringBack: realmMaps.bringBack,
-      dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules}
+      dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules},
+    reflect: {scene: reflect.reflectScene, undo: reflect.undoReflection, dialog: reflect.reflectDialog, guessPath: reflect.guessPath, rules: reflectRules}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {otherworlds: api});
@@ -134,6 +137,10 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxRealmMaps = {
     name: "wodxRealmMaps", title: "Realm maps: draw a realm past the near worlds, send the selected tokens there, bring them back (Storyteller)", icon: "fa-solid fa-map", order: 133,
     button: true, visible: game.user.isGM, onChange: () => realmMaps.realmMapsDialog()
+  };
+  tokens.tools.wodxReflect = {
+    name: "wodxReflect", title: "Reflect a generated town map in the Penumbra and Shadowlands (Storyteller)", icon: "fa-solid fa-ghost", order: 115,
+    button: true, visible: game.user.isGM, onChange: () => reflect.reflectDialog()
   };
   tokens.tools.wodxOtherRolls = {
     name: "wodxOtherRolls", title: "Otherworld rolls: the Avatar Storm, the Opened Bridge, Wayfare, the Maelstrom, the Net", icon: "fa-solid fa-meteor", order: 131,

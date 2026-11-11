@@ -102,6 +102,12 @@ def clear(t, keep=("chapel",), why="cleared"):
 
 def drop(t, keys):
     if not keys: return
+    # Remembered for the Shadowlands: a building pulled down by a later age can stand there again as a relic
+    if not hasattr(t, "gone"): t.gone = []
+    for b in t.blds:
+        if b.key in keys:
+            t.gone.append({"key": b.key, "label": b.label, "type": b.type, "outline": list(b.outline),
+                           "year": getattr(t, "layer_year", t.year), "why": getattr(t, "layer_name", "")})
     t.blds = [b for b in t.blds if b.key not in keys]
     t.households = [h for h in t.households if h["building"] not in keys]
     t.gardens = [g for g in t.gardens if g.get("of") not in keys]
@@ -444,8 +450,10 @@ FUNCS = {"brick": layer_brick, "quays": layer_quays, "courts": layer_courts, "wa
 def grow(t, year):
     """Applies every layer up to the year, in order. Records what was done in t.layers."""
     t.year, t.era_ways, t.era_areas, t.layers = year, [], [], []
+    t.gone = []
     for y, name in LAYERS:
         if year < y: break
+        t.layer_year, t.layer_name = y, name
         FUNCS[name](t)
         t.layers.append(name)
     return t

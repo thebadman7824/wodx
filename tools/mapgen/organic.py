@@ -1467,9 +1467,17 @@ class OrganicTown(T.Town):
             rect = {"north": [0, 0, w, 1], "south": [0, h - 1, w, 1], "west": [0, 0, 1, h], "east": [w - 1, 0, 1, h]}[side]
             regions.append({"id": f"edge-{side}", "label": f"To {self.name} {other}", "rect": rect,
                             "behaviors": [{"type": "trigger", "system": {"label": f"the way into {self.name} {other} ({side})", "does": "note", "who": "pcs"}}]})
+        # For the Umbral twins (Otherworlds' reflection): what each building means, and what later ages pulled down
+        places = {b.key: {"type": b.type, "wealth": getattr(b, "wealth", None), "dirty": bool(getattr(b, "dirty", False)),
+                          "rebuilt": bool(getattr(b, "rebuilt", False))} for b in self.blds if b.key in keys}
+        gone = []
+        for g in getattr(self, "gone", []):
+            rs = region_shape(g["outline"])
+            if rs: gone.append({"id": f"gone-{g['key']}", "label": g["label"], "type": g["type"], "year": g["year"], "why": g["why"], "rect": rs[0], "points": rs[1]})
         out = {"format": "wodx-map", "version": 1, "name": f"{self.name} {pt['id']}".strip(), "map": map_name, "cells": [int(win[2]), int(win[3])], "seed": self.seed,
                "kind": self.size, "layout": "organic", "walled": bool(self.wall), "era": self.era_id(), "population": self.population(keys),
-               "openings": openings, "features": features, "regions": regions, "households": [h for h in self.households if h["building"] in keys]}
+               "openings": openings, "features": features, "regions": regions, "households": [h for h in self.households if h["building"] in keys],
+               "umbral": {"year": self.year, "places": places, "gone": gone}}
         if pt["id"]:
             out["part"] = {"of": self.name, "id": pt["id"], "origin": [win[0], win[1]], "whole": [self.cols, self.rows], "neighbours": nb, "index": f"{base}-parts.json"}
         return out

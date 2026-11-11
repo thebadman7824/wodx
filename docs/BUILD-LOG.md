@@ -1323,3 +1323,10 @@ The second testbed run of gatesocial found two faults and UI fit one. Lift and p
 
 ## 2026-11-11: realm maps (Otherworlds 0.8.0)
 Ben asked how maps in Umbral realms are formed, then for a study of the Umbra's reflection, the Deep Umbra and the Underworld, and map logic for every realm outside the Near Umbra (B730-B733). Study doc: https://claude.ai/artifact/WrAho8YW73inRyAjAVo8Vz. Built: realm-maps-rules.mjs, a catalogue of 34 realms (Werewolf's Umbral Realms, Mage's Horizon, Shade, Shard and Paradox Realms, the Deep Umbra, the Digital Web and Autochthonia, Wraith's Tempest, Stygia, Labyrinth, Far Shores and Dark Kingdoms, Enoch, Yomi, the Yellow Springs, Duat, the Abyss of the Fallen, the Far and Deep Dreaming) in seven layouts, each with landmarks, hazards, ways in, sources and era spans from 1197 to the World of Future Darkness. A seeded generator makes the cells, walls and regions (arrival, ways out, landmarks, hazards) and an SVG drawn at night. realm-maps.mjs draws a realm as a scene in WoDX realms (art in Data/wodx-assets/realms), redraws it, sends the selected tokens there and brings them back. Storyteller toolbar button "Realm maps". Tests: realm-maps.test.mjs (every realm in 11 years, both branches, two sizes: everything joins up).
+
+## 2026-11-11: Umbral twins from the town generator (Otherworlds 0.9.0)
+- tools/mapgen: eras.py records each building a later age pulls down (t.gone, with year and why); organic.py writes an "umbral" block into the sidecar (year, places by type, wealth, dirty trade, rebuilt, and the gone list). Sample reflecttown.wodx.json (grown to 1960) added; schondorf.wodx.json regenerated with only the new block.
+- modules/wodx-otherworlds/scripts/reflect-rules.mjs (pure): marks for each layer, the webbing by age, an overlay SVG, region shapes, a short summary.
+- reflect.mjs (Foundry): reflectScene, undoReflection, reflectDialog; plain twin levels when none exist; toolbar button "Reflect a generated town map" (Storyteller); api.reflect.
+- realm-maps-rules.mjs: page refs from the PC lookups (B737).
+- Tests: tools/harness/reflect.test.mjs (7). Gate: tools/gate/gatereflect.mjs (8 steps).
