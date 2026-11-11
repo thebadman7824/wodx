@@ -69,7 +69,7 @@ fall:"Hell on Earth. The survivors fight on in it.",refs:"Retelling of Ascension
 
 {line:"Wraith (Ends of Empire)",id:"wj1",title:"The last Maelstrom",pitch:"The glass Tempest breaks. The storm that began under the Mideast in 1997 finally reaches the heart of the Underworld, and Stygia's last order goes down with it.",beats:[
 ["The original","A blast in the Labyrinth raises the Sixth Great Maelstrom; Stygia falls, Charon returns and transcends, the Guilds come into the open, and Persephone's crossing blows thousands of wraiths into the Skinlands (Ends of Empire pp. 148-151, pdf 149-152)."],
-["2099","The storm is called the Seventh. The Rhineland, the Hierarchy's last fortress since 2081, falls with Rothenstein's Shadowlands. A crossing at the height of the storm throws thousands of the dead into the living world, onto every camera and into every linked mind."],
+["2099","The storm is called the Seventh. Moravia, the Hierarchy's last fortress since 2081, falls with Rothenstein's Shadowlands. A crossing at the height of the storm throws thousands of the dead into the living world, onto every camera and into every linked mind."],
 ["Leads from","The glass Tempest (wr3) and ghosts in the wire (wr2)."]],
 fall:"The laws of the dead lose their hold. The dead who were thrown into the Skinlands do not go back.",refs:"Retelling of Ends of Empire, Final Fates (pp. 144-151, pdf 145-152). Original material."},
 {line:"Wraith (Ends of Empire)",id:"wj2",title:"After the storm",pitch:"The rebuilding ending. The storm passes, and the dead start again from isolated Necropoli, a hundred tiny nations of ghosts in the Shadowlands and the Net.",beats:[
