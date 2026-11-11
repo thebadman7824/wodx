@@ -1490,3 +1490,7 @@ gatefight on the testbed: 9/11, the Suggest card on sight never came. The sight 
 - Splits of strained factions at a turn (B833); End and Fold into another (B832); founding and ending years, rising or ending with a dated event, and new powers offered by six events (B834).
 - Spheres and kinds of faction by age, 1197 to the Future Darkness (B830).
 - New harness test faction-founding.test.mjs.
+
+## 2026-11-11: Item descriptions and Examine (Library 0.7.0, B607-B608)
+
+Ben asked for examination and descriptions on items, as in Cataclysm DDA. All 797 goods have descriptions (data/goods-text.mjs, 21 with a later wording), filled into an item's description as it is made. Item sheets get Examine (description and facts) and Look closer (Perception + the category's Ability, difficulty 6; findings by successes, false, stolen, worn and uncanny from the Storyteller's Examine notes). The Item Review Desk shows each description and what a closer look finds. Tests examine.test.mjs.
