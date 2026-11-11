@@ -1525,9 +1525,15 @@ Ben asked for one-click mapmaking with our Dungeondraft assets and chose a Dunge
 - Actions: effects.js passes a Veil's difficulty to the timed effect.
 - Tests: trait-senses.test.mjs (5). Gate: gatetraits steps 14 and 15.
 
+## 2026-11-11: trait effects, step 4 (Actions 3.34.0, B883)
+- power-effects.js: powerKeywords (data set, then line list by name), powerOutcomes (successes as strength, NEEDS_TARGET dropped with no target, ON_SELF on the user).
+- effects.js powerPlan (through planOf and the card's routing); setting powerEffects; api.effects.powerPlan.
+- kindred.js: Discipline rolls without a path spec; garou.js: Gift rolls (DA:W library, else W20 by name).
+- Tests: power-effects.test.mjs (5). Gate: gatetraits step 16.
+
 ## 2026-11-11: The approved era timelines agree with each other
 Ben approved all 291 timeline cards and asked for a deconfliction. docs/research/era-timelines/deconflict.py reads every card beside the others on the same subject and the dated tables in Chronicle, Otherworlds and NPC, and writes timeline-approved-2026-11-11.json (289 cards: 5 edited, 2 dropped). Encyclopaedia: the Fragile Path entry loses its 1330 start for the Ascension War, the Lupine War entry gets a WoDX note on Lodin, the Anacreon revolts date is reworded (Library 0.7.2). Rivalries: Anarch Revolt 1381-1492, Accordance War 1969-1973 (NPC 0.18.2). Report DECONFLICT-2026-11-11.md; decision B861.
 
-## 2026-11-11: Dealing with NPCs, part C: trade (Actions 3.33.0)
+## 2026-11-11: Dealing with NPCs, part C: trade (Actions 3.34.0)
 
 "With this person" gains Trade once WoDX Storyteller's money is on (B895-B897). Buy, sell or barter with the NPC at the prices the era goods list and the local market give; a trader sells from the shop container their market lists, anyone else from what they carry, and the NPC's purse is the till. A haggle roll (Manipulation + Finance, Commerce in the Dark Ages, difficulty 6) moves the price a tenth per success, up to three tenths. Hostile NPCs refuse; distrusted ones deal a tenth worse. Lifted things carry a stolen mark and fetch the fence's price. Social and trade cards now add a stock line from WoDX NPC, coloured by attitude. New trade-rules.js and trade.js; harness trade.test.mjs; gatesocial step 10 buys a good and sells it back.
