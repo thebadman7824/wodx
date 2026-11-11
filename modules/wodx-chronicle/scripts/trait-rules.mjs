@@ -10,9 +10,9 @@
  * kind that cannot hold it is matched but marked wrongKind: it does nothing until fixed. Mixed kinds count as both
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
-import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE} from "../data/trait-effects.mjs";
+import {MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS} from "../data/trait-effects.mjs";
 
-export {PATTERNS, BOOKS_DONE};
+export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS};
 
 /** A name with case, accents, quotes, spaces and punctuation taken out: "Can’t Cross Running Water" -> "cantcrossrunningwater". */
 export const normName = s => String(s ?? "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
@@ -158,6 +158,44 @@ export function rollTags(...keys) {
     for ( const t of TAG_MAP[s] ?? TAG_MAP[s.toLowerCase()] ?? [] ) out.add(t);
   }
   return [...out];
+}
+
+/** WoDX Senses' sense names to the trait table's roll tags. */
+export const SENSE_TAGS = {sight: ["sight", "perception"], sound: ["hearing", "perception"], smell: ["smell", "taste", "perception"], touch: ["touch", "perception"]};
+
+/**
+ * What a character's traits do to their own senses, for WoDX Senses: {mods: [{label, n, senses}], cannot: [sense], channels: []}.
+ * n is a difficulty change (Acute Sense -2, Bad Sight +2). A perception-wide effect counts once, on every sense.
+ */
+export function senseEffects(view, idx = index()) {
+  const mods = [], cannot = [], channels = [];
+  for ( const sense of Object.keys(SENSE_TAGS) ) {
+    const own = SENSE_TAGS[sense].filter(t => t !== "perception");
+    for ( const e of effectsFor(view, {channel: "roll", tags: own}, idx) ) if ( e.diff ) mods.push({label: e.name, n: e.diff, senses: [sense]});
+  }
+  for ( const e of effectsFor(view, {channel: "roll", tags: ["perception"]}, idx) ) {
+    if ( !e.diff || mods.some(m => m.label === e.name) ) continue;
+    mods.push({label: e.name, n: e.diff, senses: Object.keys(SENSE_TAGS)});
+  }
+  for ( const m of traitsOf(view, idx).matched ) {
+    if ( m.wrongKind ) continue;
+    if ( SENSE_LOSS[m.key] ) cannot.push(SENSE_LOSS[m.key]);
+    if ( SENSE_CHANNELS[m.key] ) channels.push(SENSE_CHANNELS[m.key]);
+  }
+  return {mods, cannot: [...new Set(cannot)], channels: [...new Set(channels)]};
+}
+
+/** What others can sense about a character (P15): [{key, name, lines: {sense: [{t, n}]}, glows, strong, indoor}]. */
+export function showsOf(view, idx = index()) {
+  const out = [];
+  for ( const m of traitsOf(view, idx).matched ) {
+    const S = SHOWS[m.key];
+    if ( !S || m.wrongKind ) continue;
+    const lines = {};
+    for ( const k of ["sight", "sound", "smell", "touch"] ) if ( S[k] ) lines[k] = S[k];
+    out.push({key: m.key, name: m.entry.name, lines, glows: !!S.glows, strong: !!S.strong, indoor: !!S.indoor});
+  }
+  return out;
 }
 
 /** Book names with no entry, for the coverage test: names = [{name, kind, book}]. Only books in BOOKS_DONE count. */
