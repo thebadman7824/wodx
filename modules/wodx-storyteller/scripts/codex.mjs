@@ -12,6 +12,15 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const dateNow = () => { try { return describeTime(game.time?.worldTime ?? 0).dateLabel; } catch { return ""; } };
 const owners = actor => [...(game.users ?? [])].filter(u => !u.isGM && actor?.testUserPermission?.(u, "OWNER"));
+/** Intelligence and Abilities, for the codex thresholds (any sheet: value or total). */
+export function dotsOf(actor) {
+  const v = x => Number(x?.total ?? x?.value) || 0;
+  const abilities = {};
+  for ( const [k, a] of Object.entries(actor?.system?.abilities ?? {}) ) abilities[k.toLowerCase()] = v(a);
+  for ( const i of actor?.items ?? [] ) if ( i.type === "Trait" && /ability$/.test(i.system?.type ?? "") ) abilities[String(i.name).toLowerCase().replace(/[^a-z]/g, "")] = Number(i.system?.value) || 0;
+  return {intelligence: v(actor?.system?.attributes?.intelligence), abilities};
+}
+const needsFor = (entry, page) => X.needsOf(page?.name ?? "").length ? X.needsOf(page.name) : X.needsOf(entry?.name ?? "");
 const pcs = () => [...(game.actors ?? [])].filter(a => isPC?.(a) ?? a.hasPlayerOwner).sort((a, b) => a.name.localeCompare(b.name));
 
 async function folder() {
@@ -30,7 +39,7 @@ export async function codexOf(actor, {make = true} = {}) {
   return JournalEntry.create({name: X.codexName(actor.name), folder: f?.id ?? null, ownership, flags: {[MOD]: {codex: actor.id}}});
 }
 
-const pageData = p => ({uuid: p.uuid, name: p.name, type: p.type, text: p.text?.content ?? "", img: p.src ?? null, sort: p.sort});
+const pageData = p => ({uuid: p.uuid, name: X.bareName(p.name), type: p.type, text: p.text?.content ?? "", img: p.src ?? null, sort: p.sort});
 function toDoc(cp) {
   const d = {name: cp.name, type: cp.type, sort: cp.sort, flags: {[MOD]: {from: cp.flags.from}}};
   if ( cp.type === "image" ) Object.assign(d, {src: cp.src, image: {caption: cp.caption}});
@@ -69,10 +78,14 @@ export async function revealDialog(entry, page = null) {
   const list = pcs();
   if ( !list.length ) return ui.notifications.warn("No player characters to reveal it to.");
   const {DialogV2} = foundry.applications.api;
-  const rows = list.map(a => `<li><label><input type="checkbox" name="pc" value="${a.id}"> ${esc(a.name)}</label></li>`).join("");
+  // Step 9: a page tagged "[Occult 5]" is ticked for the characters whose Intelligence + Occult reach 5
+  const needs = needsFor(entry, page);
+  const knows = a => X.knowsEnough(needs, dotsOf(a));
+  const tag = needs.length ? needs.map(n => `Intelligence + ${n.ability[0].toUpperCase()}${n.ability.slice(1)} ${n.need}`).join(" or ") : "";
+  const rows = list.map(a => `<li><label><input type="checkbox" name="pc" value="${a.id}"${needs.length && knows(a) ? " checked" : ""}> ${esc(a.name)}${needs.length ? ` <small>(${knows(a) ? "knows enough" : "not enough"})</small>` : ""}</label></li>`).join("");
   const pageOpt = page ? `<div class="form-group"><label>What</label><select name="what" data-fixed><option value="page">This page: ${esc(page.name)}</option><option value="all">The whole journal (${entry.pages.size} pages)</option></select></div>` : "";
   const r = await DialogV2.prompt({classes: ["wodx-dialog", "wstory-dialog"], window: {title: `Reveal ${entry.name} to a codex`},
-    content: `<p class="wodx-quiet">Each chosen character's codex gets a copy, dated today in the chronicle. Their players are told.</p>${pageOpt}
+    content: `<p class="wodx-quiet">Each chosen character's codex gets a copy, dated today in the chronicle. Their players are told.</p>${tag ? `<p>Needs ${esc(tag)}: those who reach it are ticked.</p>` : ""}${pageOpt}
       ${list.length > 8 ? searchBox("ul.wstory-codex-pcs", "Search characters…", "Search characters") : ""}<ul class="wodx-list wstory-codex-pcs"${list.length > 8 ? "" : " data-fixed"}>${rows}</ul>`,
     ok: {label: "Reveal", callback: (e, b) => ({ids: [...b.form.querySelectorAll("input[name=pc]:checked")].map(i => i.value), what: b.form.elements.what?.value ?? "all"})},
     rejectClose: false});

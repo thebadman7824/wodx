@@ -40,8 +40,9 @@ function skyFor(scene) {
 export const weatherOf = scene => { const w = weatherSetOn(scene); return w === H.AUTO ? H.severityFromDay(skyFor(scene)) : w; };
 const stamina = a => { const s = a?.system?.attributes?.stamina; return Math.max(1, num(s?.total ?? s?.value) || 1); };
 
-async function rollStamina(a, diff) {
-  const r = new Roll(`${stamina(a)}d10`);
+const survival = a => { const s = a?.system?.abilities?.survival; return Math.max(0, num(s?.total ?? s?.value) || 0); };
+async function rollStamina(a, diff, dice = stamina(a)) {
+  const r = new Roll(`${dice}d10`);
   await r.evaluate();
   const faces = r.dice.flatMap(d => d.results.map(x => x.result));
   let s = 0, ones = 0;
@@ -64,9 +65,10 @@ async function checkOne(a, t) {
   const due = H.weatherRolls(x.exposed, t, sev);
   if ( due ) {
     let hurt = 0;
-    for ( let i = 0; i < due; i++ ) if ( !(await rollStamina(a, H.WEATHER_DIFF)).successes ) hurt++;
+    const dice = H.weatherDice(stamina(a), survival(a));
+    for ( let i = 0; i < due; i++ ) if ( !(await rollStamina(a, H.WEATHER_DIFF, dice)).successes ) hurt++;
     bashing += hurt;
-    lines.push(`The weather (${esc(H.WEATHER[sev].label.split(":")[0].toLowerCase())}): ${due} roll${due === 1 ? "" : "s"} of Stamina, ${hurt ? `${hurt} bashing` : "no harm"}.`);
+    lines.push(`The weather (${esc(H.WEATHER[sev].label.split(":")[0].toLowerCase())}): ${due} roll${due === 1 ? "" : "s"} of Stamina${survival(a) ? " + Survival" : ""}, ${hurt ? `${hurt} bashing` : "no harm"}.`);
   }
   x.exposed = sev === "none" ? t : x.exposed + due * (H.WEATHER[sev].every || 0);
   // Thirst and hunger
