@@ -27,7 +27,7 @@ const place = () => { try { return game.settings.get(MOD, "coinPlace") || "germa
 /* -------------------------------------------------------------- */
 
 let GOODS = null, GOODS_ERAS = null;
-async function loadGoods() {
+export async function loadGoods() {
   if ( GOODS ) return;
   try {
     const g = await import("../../wodx-library/data/goods.mjs");

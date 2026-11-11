@@ -29,6 +29,7 @@ import * as UR from "../../wodx-actions/scripts/mummy-rules.js";
 import * as CR from "../../wodx-actions/scripts/c20-rules.js";
 import * as SR from "./sheet-rules.mjs";
 import * as X from "./extras.mjs";
+import * as AN from "./anachronism.mjs";
 
 const MOD = "wodx-sheets", ACT = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -438,6 +439,7 @@ const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
 
 Hooks.once("init", async () => {
   X.setup();
+  AN.setup();
   game.settings.register(MOD, "sheetLook", {
     name: "Sheet look",
     hint: "WoDX gives each line's sheets their own fonts, paper and section rules, in light and dark mode. The system's look brings back the fonts and banners that come with the World of Darkness system.",
@@ -455,5 +457,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.7.0", extras: X, rules: SR, sheetFor, viewFor };
+  game.modules.get(MOD).api = { version: "0.8.0", extras: X, rules: SR, sheetFor, viewFor,
+    anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep } };
 });
