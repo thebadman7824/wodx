@@ -420,3 +420,26 @@ export async function crossShroud() {
   });
   Hooks.callAll("wodxShroudCrossing", {back, means, tokens, place});
 }
+
+/**
+ * Otherworlds 0.13.0 (Traits With Teeth step 10): a power that has already worked takes one token across, with no roll
+ * here: from the physical world into the Umbra (or into the Shadowlands with to "shadowlands"), and from either back.
+ * WoDX Actions calls it when the Storyteller approves a Step Sideways or Cross keyword. Returns {from, to} or null.
+ */
+export async function sendAcross(tokenDoc, {to = null} = {}) {
+  const scene = tokenDoc?.parent;
+  if ( !tokenDoc?.actor || !scene ) return null;
+  const {penumbra, physical, shadowlands} = layersOf(scene);
+  const inUmbra = tokenLayer(tokenDoc) === "penumbra" || hasStatus(tokenDoc.actor, STATUS.umbra.id);
+  const inShadow = tokenLayer(tokenDoc) === "shadowlands" || hasStatus(tokenDoc.actor, STATUS.shadowlands.id);
+  const now = game.time.worldTime;
+  const from = inUmbra ? "umbra" : inShadow ? "shadowlands" : "physical";
+  let change, side;
+  if ( inUmbra ) { change = {remove: [STATUS.umbra.id], level: physical?.id ?? null}; side = "physical"; }
+  else if ( inShadow ) { change = {remove: [STATUS.shadowlands.id], level: physical?.id ?? null}; side = "physical"; }
+  else if ( to === "shadowlands" ) { change = {add: [STATUS.shadowlands.id], level: shadowlands?.id ?? null}; side = "shadowlands"; }
+  else { change = {add: [STATUS.umbra.id], level: penumbra?.id ?? null}; side = "umbra"; }
+  await applyChange(tokenDoc, {...change, world: {in: side, since: now}});
+  Hooks.callAll("wodxCrossing", {mode: "cross", inUmbra: from !== "physical", outcome: {outcome: "success", text: "Across by a power"}, result: null, place: null, travelers: [tokenDoc]});
+  return {from, to: side};
+}

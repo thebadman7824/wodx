@@ -1571,3 +1571,9 @@ Ben asked for a bug check of everything done so far. The harness passed 1,286 of
 - codex-rules: needsOf, knowsEnough, bareName; codex.mjs: dotsOf, the Reveal dialog ticks those who know enough.
 - hardship-rules: weatherDice; hardship.mjs rolls Stamina + Survival against the weather.
 - Tests: passive-hooks.test.mjs (2). Gate: gatetraits step 21.
+
+## 2026-11-11: trait effects, step 10 (Actions 3.38.0, Otherworlds 0.13.0, B890)
+- effects-rules: outcome kinds for shape (timed), sideways (cross), summon (count from strength), make (give, a named thing), weather (WEATHER_SET).
+- effects.js: applyCore cases cross and weather, Summon and Make ask the Storyteller when the card did not say, a queued Move asks for its spot; choose and askText dialogs; undo for crossings and weather; the approval handler posts a card with Undo.
+- Otherworlds crossing.mjs: sendAcross, on the API.
+- Tests: queue-keywords.test.mjs (2). Gate: gatetraits step 22.

@@ -346,8 +346,9 @@ async function moodAfter(item, casterName) {
 }
 
 async function applyCore(item, casterName = "the caster") {
+  // item is reassigned when the Storyteller picks a spot (Summon, Move)
   const d = docOf(item.target), a = actorOf(d), o = item.out;
-  if ( !a && o?.kind !== "summon" ) return {note: `${item.name}: not found`};
+  if ( !a && !["summon", "weather"].includes(o?.kind) ) return {note: `${item.name}: not found`};
   const C = combat(), T = chron();
   const health = foundry.utils.deepClone(a?.system?.health?.damage ?? {});
   switch ( o.kind ) {
@@ -389,8 +390,10 @@ async function applyCore(item, casterName = "the caster") {
       return {uuid: a.uuid, pool: {path: P.path, value: was}};
     }
     case "summon": {
-      // The Storyteller's effect (3.31.0): tokens of a chosen actor where the Storyteller clicks
-      const src = o.actor ? fromUuidSync(o.actor) : null;
+      // The Storyteller's effect (3.31.0): tokens of a chosen actor where the Storyteller clicks. 3.38.0: a cast Summon
+      // asks the Storyteller who comes and where, when the card did not say
+      const src = (o.actor ? fromUuidSync(o.actor) : null) ?? await choose("Who answers the summons?", [...game.actors].sort((x, y) => x.name.localeCompare(y.name)).map(x => [x.uuid, x.name]), fromUuidSync);
+      if ( src && !item.at ) item = {...item, at: await pickPoint(`Click where ${src.name} appears.`)};
       const scene = canvas?.scene;
       if ( !src || !scene || !item.at ) return {note: `${o.label}: no actor or no spot to place it`};
       const size = scene.grid?.size ?? 100, count = Math.max(1, Math.min(12, n(o.count) || 1));
@@ -401,8 +404,11 @@ async function applyCore(item, casterName = "the caster") {
     }
     case "give": {
       const src = o.item ? fromUuidSync(o.item) : null;
-      if ( !src ) return {note: `${o.label}: no item chosen`};
-      const data = src.toObject(); delete data._id;
+      // 3.38.0: a cast Make with no item chosen: the Storyteller names the thing, and a plain item of that name is made
+      const named = src ? null : (o.thing || await askText(`What does ${casterName} make for ${a.name}?`));
+      if ( !src && !named ) return {note: `${o.label}: no item chosen`};
+      const data = src ? src.toObject() : {name: named, type: "Item", system: {description: `Made by ${casterName} (${o.label}).`}};
+      delete data._id;
       const [made] = await a.createEmbeddedDocuments("Item", [data]);
       return {made: made ? [made.uuid] : []};
     }
@@ -415,6 +421,8 @@ async function applyCore(item, casterName = "the caster") {
     }
     case "move": {
       const tok = tokenOf(d);
+      // 3.38.0: a Move on someone else, approved from the queue, asks for the spot then
+      if ( tok && !item.at ) item = {...item, at: await pickPoint(`Click where ${item.name} goes.`)};
       if ( !tok || !item.at ) return {note: `${item.name}: no token or no spot to move to`};
       const was = {uuid: tok.uuid, x: tok.x, y: tok.y};
       const size = tok.parent?.grid?.size ?? 100;
@@ -422,9 +430,47 @@ async function applyCore(item, casterName = "the caster") {
       await jump(tok, pos);
       return {token: was};
     }
+    case "cross": {
+      // 3.38.0 (Traits With Teeth step 10): Step Sideways or Cross, through WoDX Otherworlds with no second roll
+      const tok = tokenOf(d), OW = game.modules.get("wodx-otherworlds")?.active ? game.modules.get("wodx-otherworlds").api : null;
+      if ( !tok || !OW?.sendAcross ) return {note: `${item.name}: ${OW ? "no token on the scene" : "WoDX Otherworlds is off"}; move them across by hand`};
+      const r = await OW.sendAcross(tok, {to: o.to});
+      return r ? {across: tok.uuid, to: o.to ?? null} : {note: `${item.name}: could not cross`};
+    }
+    case "weather": {
+      // 3.38.0: Weather sets tonight's weather in WoDX Atmosphere; Undo puts back what was set before
+      const AT = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null;
+      if ( !AT?.set || !AT?.night ) return {note: "WoDX Atmosphere is off: describe the weather by hand"};
+      const w = E.WEATHER_SET[o.weather] ? o.weather : await choose(`What weather does ${casterName} call?`, Object.entries(E.WEATHER_SET).map(([k, v]) => [k, v.label]));
+      if ( !E.WEATHER_SET[w] ) return {note: `${o.label}: no weather chosen`};
+      const jdn = AT.night();
+      let prev = null;
+      try { prev = foundry.utils.deepClone(game.settings.get("wodx-atmosphere", "overrides")?.[jdn] ?? null); } catch (e) { prev = null; }
+      await AT.set(jdn, {...(prev ?? {}), ...E.WEATHER_SET[w].day});
+      return {weather: {jdn, prev}};
+    }
     default:
       return {note: `${o.label}: ${o.text}`};
   }
+}
+
+/** The Storyteller picks one of [[value, label]]. map: turns the value into what is returned. Null when cancelled. */
+async function choose(title, list, map = v => v) {
+  if ( !list.length || !game.user.isGM ) return null;
+  const DialogV2 = foundry.applications.api.DialogV2;
+  const v = await DialogV2.prompt({window: {title}, classes: ["wodx-dialog"], rejectClose: false,
+    content: `<div class="form-group"><select name="pick"${list.length > 12 ? "" : " data-fixed"}>${list.map(([k, l]) => `<option value="${esc(k)}">${esc(l)}</option>`).join("")}</select></div>`,
+    ok: {label: "Choose", callback: (ev, b) => b.form.elements.pick.value}});
+  return v ? map(v) : null;
+}
+/** The Storyteller types a short name. Null when cancelled or empty. */
+async function askText(title) {
+  if ( !game.user.isGM ) return null;
+  const DialogV2 = foundry.applications.api.DialogV2;
+  const v = await DialogV2.prompt({window: {title}, classes: ["wodx-dialog"], rejectClose: false,
+    content: `<div class="form-group"><input type="text" name="thing" maxlength="80" placeholder="a silver knife, a loaf, a lantern"></div>`,
+    ok: {label: "Make it", callback: (ev, b) => String(b.form.elements.thing.value ?? "").trim()}});
+  return v || null;
 }
 
 /* ------------------------------------------------------------------ */
@@ -546,6 +592,8 @@ export async function undo(records = []) {
         if ( AT && npc && ch ) await (r.attitude.met ? AT.apply(npc, ch, {to: r.attitude.before, why: "Undone"}) : AT.forget(npc, ch));
       }
       if ( r.effect ) await fromUuidSync(r.effect)?.delete?.();
+      if ( r.across ) { const t = fromUuidSync(r.across); if ( t ) await game.modules.get("wodx-otherworlds")?.api?.sendAcross?.(t, {to: r.to}); }
+      if ( r.weather ) await game.modules.get("wodx-atmosphere")?.api?.weather?.set?.(r.weather.jdn, r.weather.prev ?? null);
       if ( r.token ) {
         const tok = fromUuidSync(r.token.uuid);
         const back = {};
@@ -699,7 +747,15 @@ export function setup() {
 
 /** The approval queue's handler for queued keyword results (called once WoDX Chronicle is ready). */
 export function registerHandler(api) {
-  api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", approve: async entry => { await applyItem(entry.data?.item, entry.data?.caster); }});
+  api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", approve: async entry => {
+    const item = entry.data?.item, caster = entry.data?.caster ?? "the caster";
+    const rec = await applyItem(item, caster);
+    // 3.38.0: the approved result gets its own card, with Undo for what changed
+    const good = rec && !rec.note && Object.keys(rec).some(k => k !== "attitude" || rec.attitude);
+    await ChatMessage.create({speaker: {alias: caster}, whisper: game.users.filter(u => u.isGM).map(u => u.id),
+      content: `<div class="wodx-card wodx-effects"><h3>${esc(caster)}: ${esc(item?.out?.label ?? "an effect")} on ${esc(item?.name ?? "")}</h3><p>${esc(item?.out?.text ?? "")}</p></div>`,
+      flags: {[MOD]: {kind: "effects", done: true, items: [], caster, undo: good ? [rec] : [], notes: rec?.note ? [rec.note] : [], undone: false}}});
+  }});
 }
 
 
