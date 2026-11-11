@@ -1436,3 +1436,12 @@ Ben approved the first group of building types from the Cataclysm: Dark Days Ahe
 
 ## 2026-11-11: older forms of hospitals, gaols, banks and the rest (B668)
 19 older forms of the first group's kinds, drawn from Moravian models (tools/mapgen/firstgroup.py), from the lazar house and charnel house of the Dark Ages to the grand hotel and dance hall of the 1870s and 1880s. Towns grown through the eras put each up once and keep it; a 1900 small town now has its gaol, lazar house, general hospital, cemetery chapel, savings bank, gendarmerie, coffeehouse and the like. The plans page shows them with their era. A new harness test checks they furnish and that a 1900 town has them.
+## 2026-11-11: one effect keyword roster (WoDX Actions 3.30.0, B781)
+- Ben approved the keyword coverage review. effects-rules.js KEYWORDS: 34 keywords (15 new), POOLS, BOOSTS, KINDS, resistOf, passive.
+- Widened Harm, Charge or Drain, Mend, Ward, Fear, Sway; the Cast window gains the matching options and choice lists; Undo restores a pool.
+- Ten Dark Ages rotes and six path powers carry their keyword (still the Storyteller's call).
+- Page check queued: /mnt/project-files/jobs/keyword-roster-book-check-2026-11-11.md (122 Dark Ages powers, then eight lines' power lists).
+
+
+## 2026-11-11: map keywords for realm maps (B745)
+Ben found the realms too alike and asked for map keywords. Otherworlds 0.11.0: 22 keywords (forest, marsh, peaks, caves, sea, ash, ice, chasm, stars, ruins, towers, machines, web, tombs, gardens, fire, rot, storm, shifting, nihil, bones, crystal), each a cell step and a drawn mark; every realm has two to four; island form, caverns and a square city follow from the keywords; the age and some eras add keywords; an Extra keywords field in the Realm maps window, kept on the scene for redraws; the scene note lists them. Five new harness tests (realms sharing keywords share marks, unrelated ones share none, other seeds differ).

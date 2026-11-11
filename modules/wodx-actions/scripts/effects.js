@@ -82,11 +82,24 @@ export function fieldset(known = {}, rotes = []) {
       <label><input type="checkbox" name="kw-slow"/> Slow, not hasten</label>
       <label><input type="checkbox" name="kw-dark"/> Darkness, not light</label>
       <label><input type="checkbox" name="kw-drain"/> Drain, not charge</label>
-      <label><input type="checkbox" name="kw-agg"/> Mend aggravated wounds</label></div></div>
+      <label><input type="checkbox" name="kw-agg"/> Mend aggravated wounds</label>
+      <label><input type="checkbox" name="kw-lasting"/> Harm that lasts (poison, disease, decay)</label>
+      <label><input type="checkbox" name="kw-reflect"/> Ward turns blows back</label>
+      <label><input type="checkbox" name="kw-calm"/> Calm the Beast or Rage</label>
+      <label><input type="checkbox" name="kw-frenzy"/> Rouse a frenzy</label>
+      <label><input type="checkbox" name="kw-awe"/> Sway as awe</label>
+      <label><input type="checkbox" name="kw-sap"/> Sap, not boost</label>
+      <label><input type="checkbox" name="kw-derange"/> Mend a derangement or scar</label></div></div>
+    <div class="form-group"><label>Pool (Charge, Drain or Mend)</label><select name="kw-pool" data-fixed><option value="">(Quintessence, or health for Mend)</option>${Object.entries(E.POOLS).filter(([k]) => k !== "quintessence").map(([k, P]) => `<option value="${k}">${esc(P.label)}</option>`).join("")}</select></div>
+    <div class="form-group"><label>Boost or Sap works on</label><select name="kw-boost" data-fixed>${Object.entries(E.BOOSTS).map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
+    <div class="form-group"><label>Kind (Harm's damage, or what a Ward stands against)</label><select name="kw-of" data-fixed>${E.KINDS.map(k => `<option value="${k}">${k === "any" ? "(any)" : k}</option>`).join("")}</select></div>
     <div class="form-group"><label>Save as a rote named</label><input type="text" name="kw-save" maxlength="60" placeholder="Leave empty to not save"/></div></fieldset>`;
 }
 
-const CTX_BOXES = {fire: "kw-fire", primeCharged: "kw-prime", curse: "kw-curse", slow: "kw-slow", dark: "kw-dark", drain: "kw-drain", aggravated: "kw-agg"};
+const CTX_BOXES = {fire: "kw-fire", primeCharged: "kw-prime", curse: "kw-curse", slow: "kw-slow", dark: "kw-dark", drain: "kw-drain", aggravated: "kw-agg",
+  lasting: "kw-lasting", reflect: "kw-reflect", calm: "kw-calm", frenzy: "kw-frenzy", awe: "kw-awe", sap: "kw-sap", derangement: "kw-derange"};
+/** The Cast window's choice lists (3.30.0): ctx key -> field name. "of" fills both damageKind and against. */
+const CTX_SELECTS = {pool: "kw-pool", boost: "kw-boost", damageKind: "kw-of", against: "kw-of"};
 
 /** Ticking a keyword raises the Sphere choices to what it needs; picking a rote fills the window in. */
 export function wire(root, known = {}, rotes = []) {
@@ -124,6 +137,7 @@ export function fill(root, r) {
   }
   set("kw-targets", r.plan?.targets ?? 0); set("kw-duration", r.plan?.duration ?? 0); set("kw-area", r.plan?.area);
   for ( const [k, name] of Object.entries(CTX_BOXES) ) set(name, r.ctx?.[k]);
+  for ( const [k, name] of Object.entries(CTX_SELECTS) ) if ( typeof r.ctx?.[k] === "string" ) set(name, r.ctx[k]);
   if ( r.kind ) set("kind", r.kind);
   if ( r.feat ) set("feat", r.feat);
 }
@@ -137,7 +151,9 @@ export function takesRote(actor, ageKey) {
 export function read(fd) {
   const keywords = Object.keys(E.KEYWORDS).filter(k => fd[`kw-${k}`]);
   return {keywords, plan: {targets: n(fd["kw-targets"]), duration: n(fd["kw-duration"]), area: !!fd["kw-area"]},
-    ctx: Object.fromEntries(Object.entries(CTX_BOXES).map(([k, name]) => [k, !!fd[name]])), save: String(fd["kw-save"] ?? "").trim()};
+    ctx: {...Object.fromEntries(Object.entries(CTX_BOXES).map(([k, name]) => [k, !!fd[name]])),
+      ...Object.fromEntries(Object.entries(CTX_SELECTS).map(([k, name]) => [k, String(fd[name] ?? "")]).filter(([, v]) => v && v !== "any"))},
+    save: String(fd["kw-save"] ?? "").trim()};
 }
 
 /** The targets: the user's targets, else the caster's own token (or the actor). */
@@ -165,6 +181,8 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
   for ( const key of form.keywords ) {
     const out = E.outcome(key, got, {...form.ctx, spheres, age});
     if ( !out ) continue;
+    const resist = t.self ? null : E.resistOf(key);
+    if ( resist ) out.text = `${out.text}; ${resist.text}`;
     if ( out.area ) {
       // One circle on the scene: the Storyteller places it, and it works on whoever enters
       const route = isOn() ? E.route(key, {self: false, count: 1, witnessed, need: base}, out) : "off";
@@ -314,6 +332,13 @@ export async function applyItem(item, casterName = "the caster") {
       if ( tok && o.vision ) await tok.update({"sight.visionMode": "darkvision", "sight.range": Math.max(n(tok.sight?.range), 30)});
       return {uuid: a.uuid, effect: effect?.uuid ?? null, token: tok && (o.feet || o.vision) ? tokenWas : null};
     }
+    case "pool": {
+      const P = E.poolOf(o.pool);
+      const was = n(foundry.utils.getProperty(a, P.path));
+      const cap = P.cap ? n(foundry.utils.getProperty(a, P.cap)) : Infinity;
+      await a.update({[P.path]: Math.max(0, Math.min(cap || Infinity, was + n(o.points)))});
+      return {uuid: a.uuid, pool: {path: P.path, value: was}};
+    }
     case "light": {
       const tok = tokenOf(d);
       if ( !tok ) return {note: "no token on the scene for the light"};
@@ -436,6 +461,7 @@ export async function undo(records = []) {
       const a = r.uuid ? fromUuidSync(r.uuid) : null;
       if ( r.health && a && C?.setDamage ) await C.setDamage(a, r.health);
       if ( Number.isFinite(r.quint) && a ) await a.update({"system.quintessence.temporary": r.quint});
+      if ( r.pool?.path && a ) await a.update({[r.pool.path]: n(r.pool.value)});
       if ( r.effect ) await fromUuidSync(r.effect)?.delete?.();
       if ( r.token ) {
         const tok = fromUuidSync(r.token.uuid);
