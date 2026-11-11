@@ -28,6 +28,13 @@ WARDS = {
              "craftsmen", "craftsmen", "craftsmen", "craftsmen", "administration", "craftsmen", "slum", "craftsmen", "slum",
              "patriciate", "market", "slum", "craftsmen", "craftsmen", "craftsmen", "slum", "craftsmen", "craftsmen",
              "craftsmen", "military", "slum", "craftsmen", "park", "patriciate", "market", "merchant"],
+    # a metropolis: the city's list with more of everything, three cities' worth of wards (a house rule)
+    "metropolis": ["craftsmen", "merchant", "craftsmen", "church", "administration", "craftsmen", "market", "craftsmen", "slum",
+                   "patriciate", "craftsmen", "merchant", "craftsmen", "slum", "church", "craftsmen", "military", "craftsmen",
+                   "market", "craftsmen", "slum", "patriciate", "craftsmen", "merchant", "park", "craftsmen", "slum", "craftsmen",
+                   "administration", "craftsmen", "church", "slum", "craftsmen", "merchant", "craftsmen", "market", "craftsmen",
+                   "military", "slum", "patriciate", "craftsmen", "craftsmen", "park", "merchant", "slum", "craftsmen", "church",
+                   "craftsmen", "market", "craftsmen", "slum", "craftsmen", "patriciate", "craftsmen", "merchant", "park"],
 }
 
 class Layout:

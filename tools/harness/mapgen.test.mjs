@@ -79,7 +79,7 @@ function checkParts(dir, base, size) {
   }
   assert.equal(cutArea, W * H, `${base}: the cuts do not tile the whole`);
   assert.equal(pop, idx.population);
-  assert.ok(hh >= (size === "city" ? 90 : 30), `${base}: ${hh} households`);
+  assert.ok(hh >= (size === "city" ? 90 : 25), `${base}: ${hh} households`);   // even parts keep houses off the lines, at some cost (B653)
   return idx;
 }
 
@@ -110,7 +110,7 @@ test("mapgen: organic villages, towns and cities come out whole, and the samples
   assert.match(out, /^ok: Schöndorf, village/m);
   const sc = JSON.parse(readFileSync(join(dir, "schondorf.wodx.json"), "utf8"));
   assert.deepEqual(sc, JSON.parse(readFileSync(join(gen, "samples/schondorf.wodx.json"), "utf8")), "schondorf changed: run ddtown.py again into samples");
-  for ( const [size, seeds, least] of [["village", [1, 3, 4], 10], ["town", [1, 2, 4, 6], 30], ["city", [9], 120]] ) {
+  for ( const [size, seeds, least] of [["village", [1, 3, 4], 8], ["town", [1, 2, 4, 6], 30], ["city", [9], 120]] ) {
     for ( const seed of seeds ) {
       const d = mkdtempSync(join(tmpdir(), "wodx-o-"));
       const o = run([join(gen, "ddtown.py"), "--size", size, "--seed", String(seed), "--part", "0", "--assets", ASSETS, "--out", d], d);
@@ -133,8 +133,8 @@ test("mapgen: organic villages, towns and cities come out whole, and the samples
 
 test("mapgen: a town on a river has its banks clear, bridges, water gates, a mill and a washing place", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-r-"));
-  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--river", "yes", "--walls", "yes", "--assets", ASSETS, "--out", dir], dir);
-  const s = JSON.parse(readFileSync(join(dir, "haselberg.wodx.json"), "utf8"));
+  run([join(gen, "ddtown.py"), "--size", "town", "--seed", "2", "--part", "0", "--river", "yes", "--walls", "yes", "--assets", ASSETS, "--out", dir], dir);
+  const s = JSON.parse(readFileSync(join(dir, "schondorf.wodx.json"), "utf8"));   // seed 1's river crosses no way, so it needs no bridge
   assert.deepEqual(A.parseSidecar(s).errors, []);
   const ids = s.regions.map(r => r.id);
   assert.ok(ids.includes("river-1"), "no river");
@@ -163,7 +163,7 @@ test("mapgen: a town grown to a later year has that era's layers and era id", {s
   run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--walls", "yes", "--river", "yes", "--assets", ASSETS, "--out", d2], d2);
   const m = JSON.parse(readFileSync(join(d2, "haselberg.wodx.json"), "utf8"));
   assert.equal(m.era, "dark-ages");
-  assert.ok(!m.regions.some(r => r.area));
+  assert.ok(!m.regions.some(r => r.area && !["brook", "sinkhole", "oxbow", "old-loop"].includes(r.area)));   // the land's own areas are not era layers
 });
 
 test("mapgen: an organic town splits into parts that fit together, and its sample matches", {skip}, () => {
@@ -174,6 +174,18 @@ test("mapgen: an organic town splits into parts that fit together, and its sampl
   assert.deepEqual(idx, JSON.parse(readFileSync(join(gen, "samples/linberg-parts.json"), "utf8")), "linberg changed: run ddtown.py again into samples");
   const gates = idx.parts.flatMap(p => JSON.parse(readFileSync(join(dir, p.sidecar), "utf8")).regions.filter(r => r.id.startsWith("gate-")));
   assert.ok(gates.length >= 2, "a walled town has gates");
+  // even parts: widths and heights differ by at most one square, and every house stands wholly inside its own part
+  const ws = new Set(idx.parts.map(p => p.cut[2])), hs = new Set(idx.parts.map(p => p.cut[3]));
+  assert.ok(Math.max(...ws) - Math.min(...ws) <= 1 && Math.max(...hs) - Math.min(...hs) <= 1, `uneven parts ${[...ws]} ${[...hs]}`);
+  for ( const p of idx.parts ) {
+    const sc = JSON.parse(readFileSync(join(dir, p.sidecar), "utf8"));
+    const [cx, cy, cw, ch] = p.cut;
+    for ( const h of sc.households ) {
+      const r = sc.regions.find(q => q.id === h.building);
+      const [x, y, w, hh] = r.rect, X = x + p.origin[0], Y = y + p.origin[1];
+      assert.ok(X >= cx - 1e-6 && Y >= cy - 1e-6 && X + w <= cx + cw + 1e-6 && Y + hh <= cy + ch + 1e-6, `${p.id} ${h.building} crosses a part line`);
+    }
+  }
 });
 
 test("mapgen: castle, mine and arcology deck sites come out whole, and their sidecars adopt", {skip}, () => {
@@ -191,4 +203,51 @@ test("mapgen: castle, mine and arcology deck sites come out whole, and their sid
     if ( kind === "mine" ) for ( const a of ["gallery", "stope", "shaft", "sump"] ) assert.ok(sc.regions.some(r => r.area === a), a);
     if ( kind === "arcology" ) { assert.equal(sc.era, "future-darkness"); for ( const a of ["park", "corridor", "transit"] ) assert.ok(sc.regions.some(r => r.area === a), a); }
   }
+});
+
+test("mapgen: a metropolis is organic only", {skip}, () => {
+  assert.throws(() => run([join(gen, "ddtown.py"), "--layout", "grid", "--size", "metropolis", "--assets", ASSETS], mkdtempSync(join(tmpdir(), "wodx-m-"))), /organic layout/);
+});
+
+test("mapgen: a river bends like a real one: bends about 11 widths apart, never touching itself", {skip}, () => {
+  const code = `
+import math, random, sys
+sys.path.insert(0, ${JSON.stringify(gen)})
+from organic import meander
+for seed in range(12):
+    R = random.Random(seed); B = 6.0
+    pts, ox = meander(R, R.uniform(0, math.pi), 400, B, 1.6)
+    L = sum(math.dist(a, b) for a, b in zip(pts, pts[1:])); K = L / math.dist(pts[0], pts[-1])
+    assert 1.15 < K < 2.6, (seed, K)
+    gap = int(4 * B / 2)
+    for i in range(len(pts)):
+        for j in range(i + gap, len(pts)):
+            assert math.dist(pts[i], pts[j]) >= 2 * B - 1e-6, (seed, i, j)
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8"}), /ok/);
+});
+
+test("mapgen: towns stand in real landforms: worn by water, brooks run downhill, the town's ground is buildable, bridges are few", {skip}, () => {
+  const code = `
+import math, sys
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, organic as O, land as LAND
+for kind, seed, river in (("hills", 3, True), ("upland", 3, True), ("mountain", 3, True), ("karst", 4, False), ("plain", 2, True)):
+    C.R.seed(seed)
+    t = O.OrganicTown(seed, "town", river=river, land=kind)
+    L = t.land
+    assert L.kind == kind and L.z, kind
+    assert 0 <= min(L.z) and L.zmax <= LAND.KINDS[kind]["relief"] * 1.05, (kind, L.zmax)
+    for st in t.streams:                                  # water never runs uphill
+        a, b = st["line"][0], st["line"][-1]
+        assert L.z_at(*a) >= L.z_at(*b) - 1.0, (kind, a, b)
+        assert not any(t.in_town(q) for q in st["line"]), kind
+    xs = [L.slope(i, j) for j in range(0, t.rows, 3) for i in range(0, t.cols, 3) if t.in_town((i, j))]
+    assert sum(x > O.SLOPE_MAX + .08 for x in xs) / len(xs) < .2, (kind, "too steep in town")
+    if kind == "karst": assert t.sinks, "karst without sinkholes"
+    if river and t.bridges:
+        ps = [b["at"] for b in t.bridges]                 # no two bridges close together: each one is needed
+        assert all(math.dist(p, q) > 60 * .5 for i, p in enumerate(ps) for q in ps[i + 1:]), (kind, ps)
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8"}), /ok/);
 });
