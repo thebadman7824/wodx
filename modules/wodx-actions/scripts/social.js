@@ -1,4 +1,5 @@
 import * as SR from "./social-rules.js";
+import * as TH from "./trait-hooks.js";
 
 /**
  * WoDX Actions 3.20.0: "With this person". A player picks one NPC (the target, the token given, or the nearest in
@@ -128,7 +129,12 @@ export function build(ctx) {
         if (fd.wp && !(await spendWillpower(actor, 1))) return null;
         const pool = readPool(actor, pick.attr, pick.abilityId);
         const rd = road(actor);
+        // Merits and flaws on both sides: the speaker's (read against the NPC's kind), and the NPC's Weak-Willed on its resisting roll
+        const tags = [...TH.tagsFor(`social-${act.key}`, pick.attr, pool.abilityKey), ...(at && !at.met ? ["first-meeting"] : [])];
+        const tm = TH.traitMods(actor, tags, { target: npc });
+        const nm = TH.traitMods(npc, ["resist-social"], { target: actor });
         const built = R.actionPool({
+            traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
             attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
             bonusDice: (Number(fd.bonus) || 0) + (act.offer ? SR.offerDice(fd.offer) : 0), extraDiff: (Number(fd.extraDiff) || 0) + shift,
@@ -138,7 +144,7 @@ export function build(ctx) {
         if (built.blocked) { ui.notifications.warn(built.blocked); return null; }
         const me = await rollPool(built.dice, built.difficulty, { specialty: !!fd.specialty, willpower: !!fd.wp });
         const op = opponentPool(npc, preset.opp, { oppPool: "preset", diff: preset.diff ?? 6, oppDice: 3, oppDiff: 6 }, actor);
-        const them = await rollPool(op.dice, op.diff);
+        const them = await rollPool(op.dice, Math.min(10, op.diff + nm.diff));
         const res = SR.outcome(me, them, { needMore: !!preset.opp?.needMore });
         const label = [pool.attributeLabel, pool.abilityLabel || pick.abilityName].filter(Boolean).join(" + ");
         let body = rollBlock(label, me, built.parts.concat(fd.specialty ? ["specialty"] : [], fd.wp ? ["Willpower"] : []), !!fd.specialty);
@@ -152,7 +158,7 @@ export function build(ctx) {
         await ChatMessage.create({
             speaker: { alias: name }, whisper: gmIds(), blind: true, rolls: them.roll ? [them.roll] : [],
             content: `<div class="vta-card wodx-x"><div class="vta-body"><p><b>${esc(name)}</b> resists ${esc(actor.name)} (${esc(act.label.toLowerCase())}).</p>`
-                + `${rollBlock(`${esc(name)} (${esc(op.label)})`, them)}<p>${esc(res.result === "win" ? `${actor.name} wins by ${res.margin}.` : res.result === "tie" ? "A tie." : res.result === "botch" ? `${actor.name} botches.` : `${name} resists by ${res.margin}.`)}</p>`
+                + `${rollBlock(`${esc(name)} (${esc(op.label)})`, them, nm.parts)}<p>${esc(res.result === "win" ? `${actor.name} wins by ${res.margin}.` : res.result === "tie" ? "A tie." : res.result === "botch" ? `${actor.name} botches.` : `${name} resists by ${res.margin}.`)}</p>`
                 + `${at ? `<p class="vta-note">Attitude ${esc(at.word)}: difficulty ${shift > 0 ? "+" : ""}${shift}.${move ? ` It moves ${move > 0 ? "up" : "down"} ${Math.abs(move)}${game.user.isGM ? "" : " (in the approval queue)"}.` : ""}</p>` : ""}</div></div>`
         });
         await after(actor, npc, name, act, res, why);

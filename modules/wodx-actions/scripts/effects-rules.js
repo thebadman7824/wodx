@@ -70,7 +70,7 @@ export const KEYWORDS = {
     does: "A change of form, for the Storyteller to approve and describe."},
   sideways:{label: "Step Sideways or Cross", opts: [{spirit: 3}], feat: 2, strength: false, tier: "queue", lean: "vulgar",
     does: "A crossing through WoDX Otherworlds: into the Umbra against the Gauntlet, or across the Shroud, into the Dreaming or a dream."},
-  // 3.29.0: the shared roster for every line's powers (B781). The Sphere options let a Mage cast them too; they are
+  // 3.30.0: the shared roster for every line's powers (B781). The Sphere options let a Mage cast them too; they are
   // house readings of the Sphere lists (M20 pp. 513-523) until the page check, logged in PENDING-REVIEW.
   know:    {label: "Know", opts: [{mind: 1}, {time: 2}, {correspondence: 2}, {entropy: 1}], feat: 1, strength: false, tier: "auto", lean: "coincidental", mind: true,
     resist: {pool: "willpower", diff: 6},
@@ -192,7 +192,7 @@ const clampDiff = d => Math.max(2, Math.min(9, d));
 /**
  * What one keyword does. got: from spend(). ctx: {spheres: [names used], primeCharged, fire, aggravated, slow, dark}.
  * Returns {key, label, kind, ...}: kind is damage | heal | timed | light | quint | pool | condition | note | move.
- * 3.29.0 ctx adds: pool (a POOLS key), damageKind, lasting, against, reflect, calm, frenzy, awe, boost, sap, derangement.
+ * 3.30.0 ctx adds: pool (a POOLS key), damageKind, lasting, against, reflect, calm, frenzy, awe, boost, sap, derangement.
  */
 /**
  * The era's magic charts: how successes turn into damage, healing and Quintessence, and the countermagick difficulty.
@@ -212,7 +212,7 @@ export const ERA_RULES = {
 export const eraRules = age => ERA_RULES[age] ?? ERA_RULES.ascension;
 
 /**
- * The pools a Charge or Drain (or a Mend of a pool) can move, by line (3.29.0). path: the temporary value; cap: the
+ * The pools a Charge or Drain (or a Mend of a pool) can move, by line (3.30.0). path: the temporary value; cap: the
  * permanent rating it cannot pass (none for Quintessence, which the Avatar caps elsewhere).
  */
 export const POOLS = {
@@ -234,7 +234,7 @@ export const poolOf = k => POOLS[k] ?? POOLS.quintessence;
 /** The kinds of roll a Boost or Sap works on (house rule, B781). */
 export const BOOSTS = {physical: "Physical rolls", social: "Social rolls", mental: "Mental rolls", soak: "soak", initiative: "Initiative"};
 
-/** The kinds of damage Harm can carry and a Ward can stand against (3.29.0). */
+/** The kinds of damage Harm can carry and a Ward can stand against (3.30.0). */
 export const KINDS = ["any", "fire", "sunlight", "silver", "faith", "spirits", "mind"];
 
 /**
@@ -249,7 +249,7 @@ export function resistOf(key, power = null) {
 }
 
 /**
- * An always-on power (3.29.0): no Cast window and no roll; its rating stands in for strength and it lasts as long as
+ * An always-on power (3.30.0): no Cast window and no roll; its rating stands in for strength and it lasts as long as
  * the power does. Returns the outcome with passive: true and no end, or null for a keyword that cannot be passive.
  */
 export const PASSIVE_KEYS = ["boost", "ward", "sense", "sight", "hasten", "veil"];
@@ -362,7 +362,7 @@ export function route(key, t = {}, out = null) {
   if ( !K ) return "st";
   if ( K.tier === "st" || n(t.need) >= 10 || (out && out.timed === null) ) return "st";
   if ( K.mind && t.playerCharacter && !t.self ) return "st";
-  if ( out?.awe && !t.playerCharacter && !t.witnessed && n(t.count) <= 3 ) return "auto"; // Awe is a plain condition on NPCs (3.29.0)
+  if ( out?.awe && !t.playerCharacter && !t.witnessed && n(t.count) <= 3 ) return "auto"; // Awe is a plain condition on NPCs (3.30.0)
   if ( K.tier === "queue" ) return "queue";
   if ( n(t.count) > 3 || t.witnessed ) return "queue";
   if ( K.mind && !t.self ) return "queue";

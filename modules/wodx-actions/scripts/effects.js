@@ -98,7 +98,7 @@ export function fieldset(known = {}, rotes = []) {
 
 const CTX_BOXES = {fire: "kw-fire", primeCharged: "kw-prime", curse: "kw-curse", slow: "kw-slow", dark: "kw-dark", drain: "kw-drain", aggravated: "kw-agg",
   lasting: "kw-lasting", reflect: "kw-reflect", calm: "kw-calm", frenzy: "kw-frenzy", awe: "kw-awe", sap: "kw-sap", derangement: "kw-derange"};
-/** The Cast window's choice lists (3.29.0): ctx key -> field name. "of" fills both damageKind and against. */
+/** The Cast window's choice lists (3.30.0): ctx key -> field name. "of" fills both damageKind and against. */
 const CTX_SELECTS = {pool: "kw-pool", boost: "kw-boost", damageKind: "kw-of", against: "kw-of"};
 
 /** Ticking a keyword raises the Sphere choices to what it needs; picking a rote fills the window in. */

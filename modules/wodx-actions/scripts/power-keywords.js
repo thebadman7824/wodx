@@ -1,5 +1,5 @@
 /**
- * WoDX Actions 3.29.0: which effect keywords each power uses (B781), so every line's powers read one roster
+ * WoDX Actions 3.30.0: which effect keywords each power uses (B781), so every line's powers read one roster
  * (effects-rules.js KEYWORDS). Keys are the power ids in this module's data files:
  *   disc      data/disciplines-daw.json (V20 Dark Ages Disciplines; path powers read PATH_EFFECTS in path-effects.js)
  *   gift      data/gifts-daw.json (Dark Ages: Werewolf Gifts)

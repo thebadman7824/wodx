@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.29.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.30.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -248,7 +248,7 @@ test("Actions 3.28.0: the Sorcerers Crusade's magic charts", () => {
   assert.match(m, /eraRules\(age\(\)\.key\)\.reflect/);
 });
 
-test("Actions 3.29.0: the shared keyword roster for every line's powers", async () => {
+test("Actions 3.30.0: the shared keyword roster for every line's powers", async () => {
   const DA = await import(join(root, "modules/wodx-actions/scripts/mage-da-effects.js"));
   for ( const k of ["know", "speak", "boost", "summon", "make", "work", "illusion", "possess", "bind", "banish", "manifest", "imbue", "place", "weather", "time"] )
     assert.ok(E.KEYWORDS[k], k);
@@ -305,7 +305,7 @@ test("Actions 3.29.0: the shared keyword roster for every line's powers", async 
   assert.equal(DA.DA_EFFECTS["g-exorcism-w"].kw, "banish"); assert.equal(DA.DA_EFFECTS["g-summoning"].kw, "summon");
 });
 
-test("Actions 3.29.0: every listed power reads the shared roster", async () => {
+test("Actions 3.30.0: every listed power reads the shared roster", async () => {
   const P = await import(join(root, "modules/wodx-actions/scripts/power-keywords.js"));
   const data = f => JSON.parse(src(`modules/wodx-actions/data/${f}`));
   const sets = {disc: data("disciplines-daw.json").powers, gift: data("gifts-daw.json").gifts,
