@@ -299,3 +299,23 @@ assert sum(n[k] for k in n if k.startswith("cdda-")) >= 6, n
 print("ok")`;
   assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
 });
+
+test("mapgen: the older forms of hospitals, gaols, banks, libraries and the rest furnish, and a 1900 town has them", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const code = `
+import sys, collections
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, firstgroup as FG, organic as O
+C.init(1, ${JSON.stringify(ASSETS + "," + NEW_ASSETS)})
+assert len(FG.TYPES) >= 19 and {k for k, _, _ in FG.PLACES} <= set(FG.TYPES)
+for k, v in FG.TYPES.items():
+    assert v["model"] and v["built"][0] <= v["built"][1] and B.TYPES[k] is v, k
+    for s in range(6):
+        C.R.seed(s); B.Angled("x", k, 50, 50, 0).furnish()
+C.R.seed(7)
+t = O.OrganicTown(7, "town", year=1900).make()
+n = collections.Counter(b.type for b in t.blds)
+assert sum(n[k] for k in FG.TYPES) >= 8, n
+assert not any(n[k] for k in FG.TYPES if FG.TYPES[k]["built"][0] > 1900), n
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
+});
