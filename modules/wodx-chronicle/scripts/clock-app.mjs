@@ -93,7 +93,7 @@ export class ClockApp extends ApplicationV2 {
         <h3>${esc(p?.name ?? "No era")} ${a.interlude ? `<span class="wodx-tag">between eras</span>` : ""} ${lockId ? `<span class="wodx-tag">locked</span>` : ""}</h3>
         ${p ? `<p>${esc(p.switches)}</p><p class="wodx-quiet">Books: ${esc(p.basis)}</p>` : ""}
         ${gm && target.profile && p && target.profile.id !== p.id ? `<p class="wodx-notice">The date calls for ${esc(target.profile.name)}. ${waiting ? "A change is waiting in the approval queue." : ""}</p>` : ""}
-        ${rule("lightTouch") ? `<p class="wodx-notice">Light-touch mode is on: no proposals tonight.</p>` : ""}
+        ${rule("lightTouch") ? `<p class="wodx-notice">Light-touch mode is on: proposals are held back tonight.</p>` : ""}
         ${held ? `<p class="wodx-notice">The world is held: the clock moves, but nothing reacts to it.</p>` : ""}
       </section>
       ${gm ? `

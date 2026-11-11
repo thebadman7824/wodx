@@ -19,6 +19,26 @@ export const WEATHER = {
   deadly: {label: "Deadly: a roll every quarter hour", every: HOUR / 4}
 };
 export const WEATHER_DIFF = 6;
+/** Storyteller 0.25.0: a scene left on "From the sky" takes its harshness from WoDX Atmosphere's weather for the day. */
+export const AUTO = "auto";
+export const AUTO_LABEL = "From the sky (WoDX Atmosphere's weather)";
+
+/**
+ * How harsh a day of WoDX Atmosphere weather is for someone out in it (house rule, B840): the books leave the
+ * harshness to the Storyteller (M20 p. 435). d: Atmosphere's day {tempDay, tempNight, precip, intensity, wind,
+ * deepSnow}. Bitter cold in a gale or a blizzard, or heat of 40°C, is deadly; freezing with snow, sleet or a gale, or
+ * deep snow, or heat of 35°C, is severe; freezing nights, a gale, heavy cold rain or heat of 31°C is harsh.
+ */
+export function severityFromDay(d) {
+  if ( !d || typeof d !== "object" ) return "none";
+  const cold = Math.min(Number(d.tempNight ?? 10), Number(d.tempDay ?? 10)), hot = Number(d.tempDay ?? 10);
+  const snow = d.precip === "snow", sleet = d.precip === "sleet", gale = d.wind === "gale", heavy = d.intensity === "heavy";
+  const wet = ["rain", "sleet", "snow", "hail"].includes(d.precip);
+  if ( (cold <= -10 && (gale || (snow && heavy))) || hot >= 40 ) return "deadly";
+  if ( (cold <= -2 && (snow || sleet || gale)) || d.deepSnow || cold <= -15 || hot >= 35 ) return "severe";
+  if ( cold <= -2 || gale || (heavy && wet && cold <= 5) || hot >= 31 ) return "harsh";
+  return "none";
+}
 export const MAX_TIRED = 3;
 export const MAX_ROLLS = 24;
 export const REFS = {weather: "M20 p. 435; Sorcerers Crusade p. 208", thirst: "M20 pp. 435-436", hunger: "M20 pp. 435-436", sleep: "HH2 p. 90; Wraith 20th pdf p. 355"};

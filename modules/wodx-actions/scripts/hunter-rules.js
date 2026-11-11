@@ -187,7 +187,7 @@ export const NUMINA = {
     psychometry: { label: "Psychometry", kind: "psychic", pool: ["perception", "empathy"], diff: 7, wp: 1, p: "80–81",
         levels: ["The owner or main visitor", "The last 24 hours", "The whole history", "Watch the owner 10 minutes a success", "Track the owner's direction and distance"] },
     pyrokinesis: { label: "Pyrokinesis", kind: "psychic", pool: ["manipulation", "awareness"], diff: 7, wp: 1, p: "81–82",
-        levels: ["A candle flame (soak at 3, 1 aggravated a turn)", "A palm of flame (soak at 4, 1)", "A torch (soak at 5, 1)", "A bonfire (soak at 7, 2)", "An inferno (soak at 9, 3)"],
+        levels: ["A candle flame (soak at 3, 1 aggravated a turn)", "A palm of flame (soak at 4, 1)", "A campfire (soak at 5, 2)", "A bonfire (soak at 7, 2)", "An inferno (soak at 9, 3)"],
         note: "The target dodges with Dexterity + Athletics against the successes." },
     telekinesis: { label: "Telekinesis", kind: "psychic", pool: ["wits", "awareness"], diff: 7, wp: 1, p: "82–83",
         levels: ["1 lb", "20 lb", "200 lb", "500 lb", "1,000 lb"],

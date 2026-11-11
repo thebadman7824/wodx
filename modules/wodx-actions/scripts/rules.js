@@ -21,7 +21,8 @@ export const DIFFICULTIES = {
  * Build a dice pool and difficulty for an ordinary action.
  * p: { attribute, ability, abilityType ("talent"|"skill"|"knowledge"|""), abilityKey,
  *      bonusDice, extraDiff, baseDifficulty, woundPenalty, ignoreWounds,
- *      multiIndex, retries, aura, daytimeCap (Road rating or null), teamworkDice, teamworkOverflow }
+ *      multiIndex, retries, aura, daytimeCap (Road rating or null), teamworkDice, teamworkOverflow,
+ *      traitDice, traitDiff, traitParts (merits and flaws, from trait-hooks.js) }
  * Returns { dice, difficulty, parts[], blocked: string|null, autoSuccessAllowed }
  */
 export function actionPool(p) {
@@ -36,6 +37,10 @@ export function actionPool(p) {
         else if (p.abilityType === "knowledge") blocked = "An untrained Knowledge cannot be attempted: the character simply doesn't know.";
     }
     add("Bonus", p.bonusDice || 0);
+    // Merits and flaws (WoDX trait table): one part per trait, so the card says why
+    for (const t of p.traitParts || []) parts.push(t);
+    dice += p.traitDice || 0;
+    diff += p.traitDiff || 0;
     add("Teamwork", p.teamworkDice || 0);
     if (p.woundPenalty && !p.ignoreWounds) add("Wounds", p.woundPenalty);
     if (p.multiIndex > 0) { add("Multiple actions", -p.multiIndex); addD("Multiple actions", p.multiIndex); }

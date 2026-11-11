@@ -1,11 +1,11 @@
 /**
- * WoDX Atmosphere 0.2.0: the weather, lighting from the clock, and each era kit's sound, map colour and token frames.
+ * WoDX Atmosphere (the version is in module.json): the weather, lighting from the clock, and each era kit's sound, map colour and token frames.
  *
  *   Weather     each night's weather from the chronicle's seed, the climate and the date (weather-rules.mjs). At the
  *               turn of the night the Storyteller's client sets WoDX Actions' sky (which caps sunlight), puts rain,
  *               snow or fog on outdoor scenes, and whispers the Storyteller a card with what the weather does to rolls.
- *               The Storyteller can set any night by hand. The hook wodxWeather carries each new night to other modules
- *               (WoDX Senses reads api.weather.now()).
+ *               The Storyteller can set any night by hand. The hook wodxWeather announces each new night for any module
+ *               that wants it; none listens yet (WoDX Senses reads api.weather.now() instead).
  *   Light       scenes marked "follow the clock" get their darkness from the sun and moon, clouds included.
  *   Era kit     music moods as playlists (built from the kit folder, or the world's own playlists chosen per mood),
  *               ambience loops picked for the scene's kind of place and the weather, short cues at dawn and dusk and

@@ -351,7 +351,7 @@ export const TRIGGERS = {enter: "Entering", leave: "Leaving", stay: "Staying"};
 export const CONDITIONS = {night: "At night", curfew: "During the curfew", trespass: "Trespass (a private place)",
   weapon: "A weapon in hand", supernatural: "The supernatural shown openly"};
 export const RESPONSES = {challenge: "Challenge them", alarm: "Raise the alarm", send: "Send for help", flee: "Flee", fight: "Fight", ignore: "Let it pass"};
-/** Responses WoDX can carry out by itself in Auto; a fight always waits for the Storyteller. */
+/** Responses WoDX can carry out by itself in Auto; a fight waits for the Storyteller unless fights start by themselves. */
 export const SELF_RESPONSES = ["challenge", "alarm", "send", "flee", "ignore"];
 
 /** Which of a region's conditions hold. sit: {night, curfew, trespass, weapon, supernatural}. No conditions: always. */
@@ -454,8 +454,9 @@ export function pickReaction(profile, sit) {
 }
 
 /** Auto carries out the best response it can by itself; a fight stops it and waits for the Storyteller. */
-export function autoReaction(options) {
+export function autoReaction(options, {fightOk = false} = {}) {
   const top = options[0];
   if ( !top ) return {act: null};
-  return SELF_RESPONSES.includes(top.action) ? {act: top} : {act: null, needsStoryteller: top};
+  // NPC 0.15.0: a fight is carried out too when WoDX Combat starts fights by themselves (Auto)
+  return SELF_RESPONSES.includes(top.action) || (fightOk && top.action === "fight") ? {act: top} : {act: null, needsStoryteller: top};
 }

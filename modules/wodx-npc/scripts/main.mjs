@@ -1,7 +1,7 @@
 /**
- * WoDX NPC 0.8.0: NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
+ * WoDX NPC (the version is in module.json): NPC profiles and combat tactics (Phase 7b); routines, places and reactions (Phase 7c, routines.mjs);
  * factions, faction turns, hunting grounds and Masquerade rumours (Phase 7d, factions.mjs); followers who take orders (0.8.0, orders.mjs);
- * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs).
+ * the topic menu players talk to NPCs through (0.10.0, talk.mjs), with stock talk by era and regard (0.11.0); each NPC's attitude toward each character (0.12.0, attitude.mjs); more stock talk, remarks and cries (0.14.0); fights that start by themselves on sight, on alarm and when an NPC turns hostile (0.15.0, fight-rules.mjs).
  *
  * On each combat turn of an NPC with no player owner, the active Storyteller's client weighs what the NPC could do
  * (npc-rules.mjs) and, by the mode in force (the NPC's own, else the scene's, else the world's):
@@ -19,12 +19,13 @@ import {build as buildFactions} from "./factions.mjs";
 import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
+import {VOICES} from "../data/stock-talk-more.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.13.0";
+const VERSION = "0.16.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -575,7 +576,9 @@ export async function editBehavior(actor) {
     <textarea name="talk" rows="4" style="width:100%" placeholder="[the abbot] carries bishop's seal => Opens the archive and names the night porter. | teach the night porter">${esc(saved.talk ?? "")}</textarea>
     <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
     <label class="wnpc-check"><input type="checkbox" name="talkAsk"${saved.talkAsk ? " checked" : ""}/> Ask me first: when a player asks them something, you pick the answer</label>
-    <label class="wnpc-check"><input type="checkbox" name="noStock"${saved.noStock ? " checked" : ""}/> No stock talk: only the lines you write</label></fieldset>
+    <label class="wnpc-check"><input type="checkbox" name="noStock"${saved.noStock ? " checked" : ""}/> No stock talk: only the lines you write</label>
+    <label class="wnpc-check"><input type="checkbox" name="noBarks"${saved.noBarks ? " checked" : ""}/> Quiet: no cries or remarks while about their routine</label>
+    <div class="wodx-field"><label>Voice</label><select name="voice" data-fixed>${opt({"": "From their factions and household", ...Object.fromEntries(Object.entries(VOICES).map(([k, v]) => [k, v.label]))}, saved.voice ?? "")}</select></div></fieldset>
     <fieldset><legend>Phases (first that fits is used)</legend>
     <textarea name="phases" rows="3" style="width:100%" placeholder="Cornered: wounds >= mauled => aggression 2, caution 0, fleeAt 8">${esc(saved.phases ?? "")}</textarea>
     <p class="wodx-quiet">One a line: a name, a colon, WoDX Chronicle tests (; between them), =&gt;, then changes: template, ${Object.keys(TRAITS).join(", ")}, fleeAt, tactics, fears.</p></fieldset>
@@ -590,7 +593,8 @@ export async function editBehavior(actor) {
   if ( data === "routine" ) return routines.editRoutine(actor);
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
-    household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null, noStock: data.noStock ? true : null};
+    household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null, noStock: data.noStock ? true : null,
+    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null};
   const ph = NR.parsePhases(out.phases);
   if ( ph.problems.length ) ui.notifications.warn(`Phases: ${ph.problems.join(" ")}`);
   for ( const k of [...Object.keys(TRAITS), "fleeAt"] ) out[k] = data[k] === "" || data[k] === null || data[k] === undefined ? null : Number(data[k]);
@@ -682,7 +686,7 @@ Hooks.once("init", () => {
   const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, talk, openTalk: talk.openTalk, attitude};
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -699,6 +703,21 @@ Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); } // else on wodxChronicleReady
   ensureStyles();
 });
+/**
+ * NPC 0.15.0: the rest of an NPC's household within call on the scene being viewed (token ids, nearest first), for
+ * WoDX Combat's fight starter. None for a character with a player, or an NPC with no household.
+ */
+function kinNear(docLike) {
+  const doc = docLike?.document ?? docLike;
+  const tok = doc?.id ? canvas.tokens?.get(doc.id) : null;
+  if ( !tok?.actor || tok.actor.hasPlayerOwner || doc.parent?.id !== canvas.scene?.id ) return [];
+  const household = savedProfile(tok.actor).household;
+  if ( !household ) return [];
+  const others = canvas.tokens.placeables.filter(t => t.actor && t.id !== tok.id).map(t => ({id: t.id, name: t.name, household: savedProfile(t.actor).household,
+    yards: yardsBetween(tok, t), pc: !!t.actor.hasPlayerOwner, down: wounds(t.actor) >= 7, inFight: false}));
+  return AR.kinToAnswer({id: tok.id, household}, others, {reach: Number(setting("householdReach")) || 40}).map(k => k.id);
+}
+
 /** NPC 0.9.0: one of a household is hurt; the others within call come. A card asks the Storyteller to bring them in. */
 async function householdAnswers(actor, info = {}) {
   const tot = d => (typeof d === "number" ? d : num(d?.bashing) + num(d?.lethal) + num(d?.aggravated));

@@ -13,6 +13,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const gen = join(root, "tools/mapgen");
 const ASSETS = process.env.WODX_FA_ASSETS ?? "/mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt";
+const NEW_ASSETS = process.env.WODX_NEW_ASSETS ?? "/mnt/project-files/dd-assets-new-paths.txt";   // modern and sci-fi packs, for later eras
+const ERA_ASSETS = existsSync(NEW_ASSETS) ? `${ASSETS},${NEW_ASSETS}` : ASSETS;
 const SAMPLE_MAP = "/mnt/project-files/maps-ref/scripts/sample-walls-cottage inside.dungeondraft_map";
 const py = (() => { for ( const p of ["python3", "python"] ) { try { execFileSync(p, ["--version"]); return p; } catch (e) { /* next */ } } return null; })();
 const skip = !py || !existsSync(ASSETS) || !existsSync(SAMPLE_MAP) ? "needs Python 3, the asset list and the sample map" : false;
@@ -150,7 +152,7 @@ test("mapgen: a town on a river has its banks clear, bridges, water gates, a mil
 
 test("mapgen: a town grown to a later year has that era's layers and era id", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-y-"));
-  const out = run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--walls", "yes", "--river", "yes", "--year", "1950", "--assets", ASSETS, "--out", dir], dir);
+  const out = run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--walls", "yes", "--river", "yes", "--year", "1950", "--assets", ERA_ASSETS, "--out", dir], dir);
   assert.match(out, /Railway station/);
   const s = JSON.parse(readFileSync(join(dir, "haselberg.wodx.json"), "utf8"));
   assert.deepEqual(A.parseSidecar(s).errors, []);
@@ -250,4 +252,105 @@ for kind, seed, river in (("hills", 3, True), ("upland", 3, True), ("mountain", 
         assert all(math.dist(p, q) > 60 * .5 for i, p in enumerate(ps) for q in ps[i + 1:]), (kind, ps)
 print("ok")`;
   assert.match(execFileSync(py, ["-c", code], {encoding: "utf8"}), /ok/);
+});
+
+test("mapgen: every era building type furnishes, and a 1950 town is rebuilt with era types", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const code = `
+import sys, collections
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, eratypes as E, organic as O
+C.init(1, ${JSON.stringify(ASSETS + "," + NEW_ASSETS)})
+for k, v in E.ERA_TYPES.items():
+    assert v["model"] and v["built"][0] <= v["built"][1], k
+    for s in range(8):
+        C.R.seed(s); B.Angled("x", k, 50, 50, 0).furnish()
+C.R.seed(3)
+t = O.OrganicTown(3, "town", year=1950).make()
+n = collections.Counter(b.type for b in t.blds)
+era = [k for k in n if k in E.ERA_TYPES]
+assert len(era) >= 6, n
+assert sum(n[k] for k in n if k == "ghetto-house") == 0 or t.quarter, n
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 300000}), /ok/);
+});
+
+test("mapgen: the layouts adapted from Cataclysm keep their credit, furnish, have doors on walls, and stand in a 2005 town", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const code = `
+import sys, json, collections
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, cddatypes as CD, organic as O
+C.init(1, ${JSON.stringify(ASSETS + "," + NEW_ASSETS)})
+doc = json.load(open(${JSON.stringify(gen + "/cdda_types.json")}))
+assert "Cataclysm" in doc["credit"] and "CC BY-SA 3.0" in doc["credit"]
+assert len(CD.CDDA_TYPES) >= 20, len(CD.CDDA_TYPES)
+def on(o, a, b):
+    if o[3] == "h": return abs(a[1] - b[1]) < .01 and abs(o[2] - a[1]) < .05 and min(a[0], b[0]) - .05 <= o[1] <= max(a[0], b[0]) + .05
+    return abs(a[0] - b[0]) < .01 and abs(o[1] - a[0]) < .05 and min(a[1], b[1]) - .05 <= o[2] <= max(a[1], b[1]) + .05
+for k, v in CD.CDDA_TYPES.items():
+    assert v["credit"] == doc["credit"] and "Cataclysm" in v["model"], k
+    ol = v["outline"]; segs = list(zip(ol, ol[1:] + ol[:1])) + list(v["partitions"])
+    assert all(any(on(o, a, b) for a, b in segs) for o in v["openings"]), k
+    for s in range(3):
+        C.R.seed(s); B.Angled("x", k, 80, 80, 0).furnish()
+C.R.seed(7)
+t = O.OrganicTown(7, "town", year=2005).make()
+n = collections.Counter(b.type for b in t.blds)
+assert sum(n[k] for k in n if k.startswith("cdda-")) >= 6, n
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
+});
+
+test("mapgen: the older forms of hospitals, gaols, banks, libraries and the rest furnish, and a 1900 town has them", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const code = `
+import sys, collections
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, firstgroup as FG, organic as O
+C.init(1, ${JSON.stringify(ASSETS + "," + NEW_ASSETS)})
+assert len(FG.TYPES) >= 19 and {k for k, _, _ in FG.PLACES} <= set(FG.TYPES)
+for k, v in FG.TYPES.items():
+    assert v["model"] and v["built"][0] <= v["built"][1] and B.TYPES[k] is v, k
+    for s in range(6):
+        C.R.seed(s); B.Angled("x", k, 50, 50, 0).furnish()
+C.R.seed(7)
+t = O.OrganicTown(7, "town", year=1900).make()
+n = collections.Counter(b.type for b in t.blds)
+assert sum(n[k] for k in FG.TYPES) >= 8, n
+assert not any(n[k] for k in FG.TYPES if FG.TYPES[k]["built"][0] > 1900), n
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
+});
+
+test("mapgen: every building's cellar and upper floors furnish with the stair in one spot, and a hospital and a palace get maps of their own", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const out = mkdtempSync(join(tmpdir(), "wodx-floors-"));
+  const code = `
+import sys, json, subprocess
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, eratypes, cddatypes, firstgroup, floors as FL, ddsite as S
+C.init(1, ${JSON.stringify(ASSETS + "," + NEW_ASSETS)})
+for k in [k for k in B.TYPES if "--" not in k]:
+    lv, spot = FL.levels(k)
+    names = [n for n, _ in lv]
+    assert names[0] == "ground" and len(set(names)) == len(names), k
+    for name, t in lv:
+        assert t["size"] == B.TYPES[k]["size"] and [r[1:5] for r in t["rooms"]] == [r[1:5] for r in B.TYPES[k]["rooms"]], (k, name)
+        if name != "ground": assert not any(o[0] in ("door", "double") and FL.on_outline(t, o) for o in t["openings"]), (k, name)
+        B.TYPES["t--" + name] = t
+        b = S.furnish_safely(S.Placed("x", "t--" + name, 2, 2, "S", None, None, t))
+        if spot: assert any("Stair" in i["asset"] for r in b.rooms for i in r.items), (k, name)
+for kind, tk in (("floors", "burgher-palace"), ("building", "cdda-hospital")):
+    subprocess.run([sys.executable, ${JSON.stringify(gen + "/ddsite.py")}, "--kind", kind, "--type", tk, "--assets", ${JSON.stringify(ASSETS + "," + NEW_ASSETS)},
+                    "--out", ${JSON.stringify(out)}], check=True, capture_output=True)
+idx = json.load(open(${JSON.stringify(out)} + "/burgher-palace-levels.json"))
+assert [l["level"] for l in idx["levels"]] == ["ground", "floor-2", "floor-3", "cellar"], idx
+spots = set()
+for l in idx["levels"]:
+    sc = json.load(open(${JSON.stringify(out)} + "/" + l["sidecar"]))
+    st = [f for f in sc["features"] if f["id"] == "stair"]
+    assert st and st[0]["flags"]["climb"], l
+    spots.add(tuple(st[0]["rect"][2:]))
+assert len(spots) == 1
+h = json.load(open(${JSON.stringify(out)} + "/hospital.wodx.json"))
+assert any(r["id"] == "road" for r in h["regions"]) and any(r["id"] == "cdda-hospital" for r in h["regions"])
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 600000}), /ok/);
 });

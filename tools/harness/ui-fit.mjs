@@ -110,6 +110,7 @@ const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/
 const {EventsApp} = await import(join(root, "modules/wodx-chronicle/scripts/events.mjs"));
 const {ArchiveApp} = await import(join(root, "modules/wodx-creation/scripts/archive.mjs"));
 const {LanguagesApp} = await import(join(root, "modules/wodx-chronicle/scripts/languages.mjs"));
+const {RefereeApp} = await import(join(root, "modules/wodx-chronicle/scripts/referee.mjs"));
 const {GearApp, setGear} = await import(join(root, "modules/wodx-library/scripts/main.mjs"));
 setGear(JSON.parse((await import("node:fs")).readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8")));
 const {TaggingApp} = await import(join(root, "modules/wodx-otherworlds/scripts/tagging-app.mjs"));
@@ -134,7 +135,7 @@ class PlannedPassYears extends PassYearsApp {
 
 const windows = [];
 for ( const [name, App, opts] of [["Chronicle Clock", ClockApp, {}], ["Approval queue", ApprovalsApp, {}],
-  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["Gear by era", GearApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
+  ["House rules", HouseRulesApp, {}], ["Dated events", EventsApp, {}], ["Archive of the dead", ArchiveApp, {}], ["Languages", LanguagesApp, {}], ["The crossover referee", RefereeApp, {}], ["Gear by era", GearApp, {}], ["Otherworld ratings by scene", TaggingApp, {}],
   ["Creation and experience", CreationApp, {}], ["Creation check", CreationCheckApp, {}], ["Spend experience", SpendApp, {id: "wodx-spend-test", actor: spendActor}],
   ["Pass the years", PlannedPassYears, {}], ["People", RolledPeople, {}], ["Penumbra and Shadowlands levels", LoadedTwinsApp, {}]] ) {
   const app = new App(opts);
@@ -219,6 +220,9 @@ await states.secondBreathDialog();
   globalThis.canvas = {...(old ?? {}), tokens: {...(old?.tokens ?? {}), controlled: [traveller]}};
   await realms.dreamingDialog();
   await realms.rollsDialog();
+  // The Realm maps window (Otherworlds 0.11.0 adds the Extra keywords field)
+  const rmaps = await import(join(root, "modules/wodx-otherworlds/scripts/realm-maps.mjs"));
+  await rmaps.realmMapsDialog();
   globalThis.canvas = old;
   api.DialogV2.wait = wait;
 }
@@ -268,7 +272,9 @@ game.world.id = worldId;
     ["With this person", () => game.wodxActions.withPerson({actor, token: {actor: target, document: {name: target.name, actor: target}}})],
     ["Persuade someone", () => game.wodxActions.social(actor, {actor: target, document: {name: target.name, actor: target}}, "persuade")],
     ["Bribe someone", () => game.wodxActions.social(actor, {actor: target, document: {name: target.name, actor: target}}, "bribe")],
-    ["Lift something", () => game.wodxActions.lift(actor, {actor: target, document: {name: target.name, actor: target}}, "lift")]];
+    ["Lift something", () => game.wodxActions.lift(actor, {actor: target, document: {name: target.name, actor: target}}, "lift")],
+    // 3.31.0: the Storyteller's effect and saved rituals (token tools, Storyteller only)
+    ["Apply an effect or ritual", async () => { const gm = game.user.isGM; game.user.isGM = true; try { return await game.wodxActions.effects.storyteller(); } finally { game.user.isGM = gm; } }]];
   // 3.2.0: a Cainite with many Disciplines and a path; the Road, downtime, healing, prestation and Masquerade dialogs
   for ( const [d, v] of [["Dominate", 5], ["Auspex", 5], ["Obfuscate", 5], ["Presence", 5], ["Animalism", 5], ["Celerity", 3], ["Fortitude", 3], ["Potence", 2], ["Path of Bone", 5], ["Potestas Vitae", 3]] )
     actor.items.set(`d${d}`, {id: `d${d}`, name: d, type: "Power", system: {type: d.startsWith("Path") || d.startsWith("Potestas") ? "wod.types.disciplinepath" : "wod.types.discipline", value: v}, getFlag: () => undefined});

@@ -25,6 +25,7 @@ import * as L from "./legacy.js";
 import * as AU from "./auto.js";
 import * as CD from "./conductor.js";
 import * as CR from "./conductor-rules.js";
+import * as ST from "./start.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 const esc = L.esc;
 
@@ -614,13 +615,19 @@ export async function attack({ attacker: a, target: t, weaponId, noAim = false }
     if (!r || r.id !== "attack") return null;
     const fd = r.data;
     const w = fd.weapon === "auto" ? { id: "auto" } : weapons.find(x => x.id === fd.weapon);
-    try { return await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); }
+    try { const res = await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); openFight(attackerTok, targetTok); return res; }
     catch (e) { console.error(e); ui.notifications.error(`WoDX Combat: ${e.message}`); return null; }
 }
 
 /* ------------------------------------------------------------------ */
 /*  Attack resolution                                                  */
 /* ------------------------------------------------------------------ */
+
+/** An attack made outside a fight starts one (3.9.0); never in the way of the attack itself. */
+function openFight(attackerTok, targetTok) {
+    if (!attackerTok || !targetTok) return;
+    ST.afterAttack(attackerTok, targetTok).catch(e => console.error("WoDX | fight start", e));
+}
 
 async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon, fd }) {
     let w = weapon;
@@ -1336,9 +1343,10 @@ Hooks.once("init", () => {
     if (L.oldActive("vtda20-combat")) { OFF = true; return; }
     registerSettings();
     CD.registerConductorSettings();
+    ST.registerStartSettings();
     P.register();
     const api = { conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.8.7", reload, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, rules: R, version: "3.9.0", reload, fight: ST.fightApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1350,8 +1358,9 @@ Hooks.once("init", () => {
 Hooks.once("ready", async () => {
     if (OFF) return L.warnOld("WoDX Combat", "vtda20-combat");
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
-    game.socket.on(SOCKET, p => { if (!p?.conductor) onSocket(p); });
+    game.socket.on(SOCKET, p => { if (!p?.conductor && p?.action !== "startFight") onSocket(p); });
     CD.installConductor();
+    ST.installStarter();
     await createMacros();
     console.log(`${MOD} | ready`);
 });
@@ -1681,7 +1690,7 @@ export async function quickAttack({ attacker: a = null, target: t = null } = {})
             extraDice: cm.attackerDice, extraDiff: cm.attackerDiff, extraDmg: 0, defense: "auto", defIndex: "auto", defDice: 0,
             defDiff: L.chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0, defCel: discipline(target, "Celerity") > 0,
             celDice: setting("celerityDice"), fortBlood: "auto", soakBonus: 0, atkKind: "auto", profile: "auto" };
-        try { results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: { id: "auto" }, fd })); }
+        try { results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: { id: "auto" }, fd })); openFight(attackerTok, targetTok); }
         catch (e) { console.error(e); ui.notifications.error(`WoDX Combat: ${attacker.name}: ${e.message}`); }
     }
     return results;
