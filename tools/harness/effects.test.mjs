@@ -97,7 +97,7 @@ test("the Mage 20th cast uses the keywords and posts a card the Storyteller's cl
   assert.match(fx, /registerApprovalHandler/); assert.match(fx, /rothenstein-live/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /EFX\.setup\(\)/); assert.match(main, /EFX\.registerHandler/);
-  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.37.0");
+  assert.equal(JSON.parse(src("modules/wodx-actions/module.json")).version, "3.38.0");
 });
 
 test("3.23.0: Move in one scene, areas on entry, saved rotes", () => {
@@ -350,7 +350,7 @@ test("Actions 3.31.0: the Storyteller's effect and saved rituals", () => {
   assert.match(fx, /export async function storytellerEffect\(/); assert.match(fx, /tokens\.tools\.wodxStEffect/);
   assert.match(fx, /register\(MOD, "stRituals"/); assert.match(fx, /case "summon":/); assert.match(fx, /case "give":/);
   assert.match(fx, /for \( const u of r\.made \?\? \[\] \)/); assert.match(fx, /\$\{optionsHtml\(\)\}/);
-  assert.match(fx, /if \( !a && o\?\.kind !== "summon" \)/);
+  assert.match(fx, /if \( !a && !\["summon", "weather"\]\.includes\(o\?\.kind\) \)/);
   const main = src("modules/wodx-actions/scripts/main.js");
   assert.match(main, /storyteller: EFX\.storytellerEffect/);
 });
@@ -374,7 +374,7 @@ test("Actions 3.32.0: keywords for the lines with no power data yet", async () =
   assert.equal(PK.keywordsOf("mummy", "Nobody"), null);
   assert.ok(PK.powersWith("dtf", "possess").includes("Possess Animals"));
   assert.ok(PK.keywordCounts().summon > 40);
-  assert.match(src("modules/wodx-actions/scripts/main.js"), /version: "3\.37\.0"/);
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /version: "3\.38\.0"/);
 });
 
 test("Actions 3.32.0: the books' rituals and rites fill the Storyteller's window", async () => {
