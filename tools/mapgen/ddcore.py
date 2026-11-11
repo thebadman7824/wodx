@@ -194,6 +194,7 @@ class Room:
             self.items, self.noise = [], .1 + t * .08
             if self.try_furnish():
                 dress(self)
+                orient(self)
                 return
         raise SystemExit(f"cannot furnish {self.name}: {self.last_fail} has no room after {tries} tries")
 
@@ -349,6 +350,57 @@ def dress(room):
     finally:
         R = keep
 
+# ------------------------------------------------------------------ which way things face
+# Forgotten Adventures draws furniture facing down the page (south): a bed's head, a shelf's back, a chair's back
+# and an oven's back at the top. So a piece against a wall is turned to put its back to that wall, and a seat is
+# turned to face its table (else the middle of the room). The turn keeps the piece's footprint: a piece laid along
+# a side wall (rot) is turned a quarter either way, one along the top or bottom wall none or a half.
+SEATS = re.compile(r"Chair|Stool|Armchair|Couch|Sofa|Throne", re.I)
+INSET = re.compile(r"Brick_Oven_.*_2x2")     # drawn 2 squares wide and 1 deep in a 2 by 2 square
+NO_FACE = re.compile(r"Table|Desk|Counter|Rug_|Stairs|Stair|Barrel|Keg|Sack|Crate|Basket|Plant|Pot_|Tree|Bush|Hay|Bucket|Firewood|Lift|StairUp", re.I)
+
+def centre(it):
+    """Where a piece's picture goes: the middle of its square, moved to its wall when the picture is shallower."""
+    nx, ny = it.get("nudge", (0, 0))
+    return it["x"] + it["w"] / 2 + nx, it["y"] + it["h"] / 2 + ny
+
+def facing_angle(dx, dy):
+    """The turn that points a south-facing piece along (dx, dy), on screen (y down, turns clockwise)."""
+    return math.atan2(-dx, dy)
+
+def orient(room):
+    tables = [i for i in room.items + getattr(room, "dressing", []) if TABLES.search(i["asset"]) and not SEATS.search(i["asset"])]
+    mx, my = room.ix + room.iw / 2, room.iy + room.ih / 2
+    for it in room.items + getattr(room, "dressing", []):
+        if it.get("layer", 100) != 100 or "spin" in it: continue
+        a = it["asset"]
+        cx, cy = it["x"] + it["w"] / 2, it["y"] + it["h"] / 2
+        if SEATS.search(a) and it["w"] == it["h"] or re.search(r"Chair|Stool", a, re.I):
+            near = min(tables, key=lambda t: rdist(cx, cy, t["x"], t["y"], t["w"], t["h"]), default=None)
+            if near and rdist(cx, cy, near["x"], near["y"], near["w"], near["h"]) < 1.5:
+                tx = min(max(cx, near["x"]), near["x"] + near["w"]); ty = min(max(cy, near["y"]), near["y"] + near["h"])
+                it["angle"] = facing_angle(tx - cx, ty - cy)
+            else:
+                it["angle"] = facing_angle(mx - cx, my - cy)
+            # square to the room: a quarter turn at a time (a long seat also keeps its footprint)
+            it["angle"] = snap(it["angle"], it["rot"]) if it["w"] != it["h"] else round(it["angle"] / (math.pi / 2)) * (math.pi / 2)
+            continue
+        if NO_FACE.search(a): continue
+        t = room.touching(it["x"], it["y"], it["w"], it["h"], .06)
+        long_h = it["w"] >= it["h"]                                  # lies along the top or bottom wall
+        order = (("N", "S", "W", "E") if long_h else ("W", "E", "N", "S")) if it["w"] != it["h"] else ("N", "S", "W", "E")
+        # the first wall it stands against that it can put its back to without changing its footprint
+        side = next((d for d in order if t[d] and (it["w"] == it["h"] or (d in "NS") == (not it["rot"]))), None)
+        if side:
+            it["angle"] = {"N": 0.0, "S": math.pi, "W": -math.pi / 2, "E": math.pi / 2}[side]
+            if INSET.search(a):                                      # the picture is half its square deep: move it to the wall
+                it["nudge"] = {"N": (0, -.5), "S": (0, .5), "W": (-.5, 0), "E": (.5, 0)}[side]
+
+def snap(angle, rot):
+    """The nearest turn that keeps a long piece's footprint (rot: laid along a side wall)."""
+    opts = (-math.pi / 2, math.pi / 2) if rot else (0.0, math.pi)
+    return min(opts, key=lambda o: abs(math.atan2(math.sin(angle - o), math.cos(angle - o))))
+
 def dressing_objects(room, under):
     """Dungeondraft objects for a room's dressing. under=True: the rugs, to write before the furniture on the same
     layer (Dungeondraft draws later objects on top); under=False: pieces, then clutter (layer 300) and lamps (400)."""
@@ -356,8 +408,8 @@ def dressing_objects(room, under):
     for it in sorted(getattr(room, "dressing", []), key=lambda i: i.get("layer", 100)):
         lay = it.get("layer", 100)
         if (lay < 100) != under: continue
-        rot = it.get("spin", math.pi / 2 if it["rot"] else 0.0)
-        out.append(obj(it["asset"], it["x"] + it["w"] / 2, it["y"] + it["h"] / 2, rot, it["scale"],
+        rot = it.get("spin", it.get("angle", math.pi / 2 if it["rot"] else 0.0))
+        out.append(obj(it["asset"], *centre(it), rot, it["scale"],
                        {50: 100, 150: 300}.get(lay, lay), shadow=lay >= 100 and lay < 400))
     if not under:
         for x, y, rng in getattr(room, "lights", []): light(x, y, rng)

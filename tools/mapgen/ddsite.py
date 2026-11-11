@@ -102,8 +102,8 @@ class Site:
                 self.patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], tex))
             self.objects.extend(C.dressing_objects(r, True))
             for it in r.items:
-                rot = math.pi / 2 if it["rot"] else 0.0
-                self.objects.append(obj(it["asset"], it["x"] + it["w"] / 2, it["y"] + it["h"] / 2, rot, it["scale"], 100))
+                rot = it.get("angle", math.pi / 2 if it["rot"] else 0.0)
+                self.objects.append(obj(it["asset"], *C.centre(it), rot, it["scale"], 100))
             self.objects.extend(C.dressing_objects(r, False))
             self.features += C.feature_entries(f"{b.key}-", r, b.t["fill"])
         self.openings += C.opening_entries(b.key, b.label, b.openings, (b.x + b.w / 2, b.y + b.h / 2))

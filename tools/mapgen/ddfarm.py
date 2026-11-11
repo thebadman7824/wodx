@@ -169,8 +169,8 @@ def build():
             objects.extend(C.dressing_objects(r, True))
             for it in r.items:
                 # a turned item: the asset's own size turned a quarter
-                rot = 0.0 if not it["rot"] else math.pi / 2
-                objects.append(obj(it["asset"], it["x"] + it["w"] / 2, it["y"] + it["h"] / 2, rot, it["scale"], 100))
+                rot = it.get("angle", 0.0 if not it["rot"] else math.pi / 2)
+                objects.append(obj(it["asset"], *C.centre(it), rot, it["scale"], 100))
             objects.extend(C.dressing_objects(r, False))
     # yard: fences, well, woodpile, block, haystack, sty, garden crops
     def fence_box(x, y, w, h, gap_side, g0, g1):
