@@ -655,7 +655,7 @@ function checkPoolText(actor, c) {
     return { pick, text: `${a.label} ${a.value}${pick.ability ? ` + ${pick.abilityName} ${ab?.value ?? 0}` : ""}${how}` };
 }
 
-export async function quickCheck({ actor: a, check = "notice" } = {}) {
+export async function quickCheck({ actor: a, check = "notice", extraDiff: preDiff = 0, bonus: preBonus = 0, desc: preDesc = "" } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const target = targetActor();
@@ -667,12 +667,12 @@ export async function quickCheck({ actor: a, check = "notice" } = {}) {
       <p class="vta-note vta-check-pool"></p>
       <p class="vta-note vta-check-note"></p>
       <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="${first.diff}" min="2" max="10"/></div>
-      <div class="form-group"><label>Bonus dice / extra difficulty</label><input type="number" name="bonus" value="0" style="width:4em"/> <input type="number" name="extraDiff" value="0" style="width:4em"/></div>
+      <div class="form-group"><label>Bonus dice / extra difficulty</label><input type="number" name="bonus" value="${num(preBonus)}" style="width:4em"/> <input type="number" name="extraDiff" value="${num(preDiff)}" style="width:4em"/></div>
       <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success) [${willpower(actor).temp}]</label></div>
       ${TH.ticksHtml(actor, esc)}${TH.luckyHtml(actor, esc)}
       ${isVampire(actor) ? `<div class="form-group"><label><input type="checkbox" name="daytime" ${day ? "checked" : ""}/> Acting during the day (pool capped at Road)</label></div>` : ""}
-      <div class="form-group"><label>Description</label><input type="text" name="desc" value=""/></div>
+      <div class="form-group"><label>Description</label><input type="text" name="desc" value="${esc(preDesc)}"/></div>
       <p class="vta-note">For a roll against someone, an extended roll or teamwork, use Any roll. Wound penalties apply.</p>
     </form>`;
     const render = root => {
