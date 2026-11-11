@@ -13,6 +13,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const gen = join(root, "tools/mapgen");
 const ASSETS = process.env.WODX_FA_ASSETS ?? "/mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt";
+const NEW_ASSETS = process.env.WODX_NEW_ASSETS ?? "/mnt/project-files/dd-assets-new-paths.txt";   // modern and sci-fi packs, for later eras
+const ERA_ASSETS = existsSync(NEW_ASSETS) ? `${ASSETS},${NEW_ASSETS}` : ASSETS;
 const SAMPLE_MAP = "/mnt/project-files/maps-ref/scripts/sample-walls-cottage inside.dungeondraft_map";
 const py = (() => { for ( const p of ["python3", "python"] ) { try { execFileSync(p, ["--version"]); return p; } catch (e) { /* next */ } } return null; })();
 const skip = !py || !existsSync(ASSETS) || !existsSync(SAMPLE_MAP) ? "needs Python 3, the asset list and the sample map" : false;
@@ -150,7 +152,7 @@ test("mapgen: a town on a river has its banks clear, bridges, water gates, a mil
 
 test("mapgen: a town grown to a later year has that era's layers and era id", {skip}, () => {
   const dir = mkdtempSync(join(tmpdir(), "wodx-y-"));
-  const out = run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--walls", "yes", "--river", "yes", "--year", "1950", "--assets", ASSETS, "--out", dir], dir);
+  const out = run([join(gen, "ddtown.py"), "--size", "town", "--seed", "1", "--part", "0", "--walls", "yes", "--river", "yes", "--year", "1950", "--assets", ERA_ASSETS, "--out", dir], dir);
   assert.match(out, /Railway station/);
   const s = JSON.parse(readFileSync(join(dir, "haselberg.wodx.json"), "utf8"));
   assert.deepEqual(A.parseSidecar(s).errors, []);
@@ -250,4 +252,24 @@ for kind, seed, river in (("hills", 3, True), ("upland", 3, True), ("mountain", 
         assert all(math.dist(p, q) > 60 * .5 for i, p in enumerate(ps) for q in ps[i + 1:]), (kind, ps)
 print("ok")`;
   assert.match(execFileSync(py, ["-c", code], {encoding: "utf8"}), /ok/);
+});
+
+test("mapgen: every era building type furnishes, and a 1950 town is rebuilt with era types", {skip: skip || (!existsSync(NEW_ASSETS) && "needs the new asset list")}, () => {
+  const code = `
+import sys, collections
+sys.path.insert(0, ${JSON.stringify(gen)})
+import ddcore as C, buildings as B, eratypes as E, organic as O
+C.init(1, ${JSON.stringify(ASSETS + "," + NEW_ASSETS)})
+for k, v in E.ERA_TYPES.items():
+    assert v["model"] and v["built"][0] <= v["built"][1], k
+    for s in range(8):
+        C.R.seed(s); B.Angled("x", k, 50, 50, 0).furnish()
+C.R.seed(3)
+t = O.OrganicTown(3, "town", year=1950).make()
+n = collections.Counter(b.type for b in t.blds)
+era = [k for k in n if k in E.ERA_TYPES]
+assert len(era) >= 6, n
+assert sum(n[k] for k in n if k == "ghetto-house") == 0 or t.quarter, n
+print("ok")`;
+  assert.match(execFileSync(py, ["-c", code], {encoding: "utf8", timeout: 300000}), /ok/);
 });
