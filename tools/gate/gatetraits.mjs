@@ -123,7 +123,9 @@ export async function run() {
       const app = [...foundry.applications.instances.values()].find(a => a.element === el || a.element?.contains?.(el));
       await app?.close();
       await p;
-      ok("12 window", rows === human.items.size && picks === rows, {rows, picks});
+      // only merit, flaw and background items are listed (the system may add other items of its own)
+      const want = T().view(human).features.length;
+      ok("12 window", want === 7 && rows === want && picks === rows, {rows, picks, want, items: human.items.size});
     });
 
     await step("13 other modules", async () => {
