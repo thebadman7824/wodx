@@ -398,3 +398,22 @@ test("Actions 3.32.0: the books' rituals and rites fill the Storyteller's window
   assert.match(fx, /name="st-book"/);
   assert.match(fx, /bookRitual\(set, n\(i\)\)/);
 });
+
+test("Move and its Undo jump with a displace move, so walls do not stop them (3.32.1)", async () => {
+  const {readFile} = await import("node:fs/promises");
+  const src = await readFile(new URL("../../modules/wodx-actions/scripts/effects.js", import.meta.url), "utf8");
+  assert.match(src, /async function jump\(tok, pos\)[\s\S]*?action: "displace"/);
+  const plain = src.split("\n").filter(l => /\.update\([^)]*teleport: true/.test(l));
+  assert.equal(plain.length, 1, "only the fallback inside jump() is a plain update");
+  assert.match(src, /case "move": \{[\s\S]*?await jump\(tok, pos\)/);
+});
+
+test("gates that make several actors at once match them by name", async () => {
+  const {readFile, readdir} = await import("node:fs/promises");
+  const dir = new URL("../gate/", import.meta.url);
+  for ( const f of (await readdir(dir)).filter(n => n.endsWith(".mjs")) ) {
+    const src = await readFile(new URL(f, dir), "utf8");
+    const batch = [...src.matchAll(/await Actor\.create\(\[\s*\{name: "([^"]+)"[^\n]*\n?[^\n]*?\{name:/g)];
+    assert.equal(batch.length, 0, `${f} makes a batch of actors with Actor.create([...]); use createActors`);
+  }
+});

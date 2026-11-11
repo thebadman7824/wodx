@@ -23,6 +23,9 @@ async function save(R, name) {
   return R.summary;
 }
 
+// Foundry 14 may hand back a batch of new actors out of order: match each one to its data by name
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
@@ -32,9 +35,10 @@ export async function run() {
   const scenes = [], actors = [];
   let rumourId = null;
   try {
-    const [A, B] = await Scene.create([{name: "WoDX gate: Road A", width: 1000, height: 1000, padding: 0}, {name: "WoDX gate: Road B", width: 1000, height: 1000, padding: 0}]);
+    const made0 = await Scene.create([{name: "WoDX gate: Road A", width: 1000, height: 1000, padding: 0}, {name: "WoDX gate: Road B", width: 1000, height: 1000, padding: 0}]);
+    const A = made0.find(x => x.name.endsWith("Road A")), B = made0.find(x => x.name.endsWith("Road B"));
     scenes.push(A, B);
-    const made = await Actor.create([{name: "WoDX gate: Traveller", type: "Mortal"}, {name: "WoDX gate: Gossip one", type: "Mortal"},
+    const made = await createActors([{name: "WoDX gate: Traveller", type: "Mortal"}, {name: "WoDX gate: Gossip one", type: "Mortal"},
       {name: "WoDX gate: Gossip two", type: "Mortal"}, {name: "WoDX gate: Gossip three", type: "Mortal"}]);
     actors.push(...made);
     await A.createEmbeddedDocuments("Token", made.map((a, i) => ({name: a.name, actorId: a.id, x: 100 * (i + 1), y: 100})));

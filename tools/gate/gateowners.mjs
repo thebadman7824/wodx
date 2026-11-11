@@ -34,6 +34,9 @@ async function openClose(fn, cls) {
   return seen;
 }
 
+// Foundry 14 may hand back a batch of new actors out of order: match each one to its data by name
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
@@ -52,7 +55,7 @@ export async function run() {
     await until(() => canvas.ready && canvas.scene?.id === scene.id, 10000);
     [region] = await scene.createEmbeddedDocuments("Region", [{name: "WoDX gate: the inn", shapes: [{type: "rectangle", x: 200, y: 200, width: 600, height: 600, rotation: 0, hole: false}]}]);
     [tile] = await scene.createEmbeddedDocuments("Tile", [{x: 300, y: 300, width: 100, height: 100, texture: {src: "icons/svg/chest.svg"}}]);
-    actors = await Actor.create([{name: "WoDX gate: Owner Anna", type: "Mortal"}, {name: "WoDX gate: Taker Bertold", type: "Mortal"}]);
+    actors = await createActors([{name: "WoDX gate: Owner Anna", type: "Mortal"}, {name: "WoDX gate: Taker Bertold", type: "Mortal"}]);
     [A, Bt] = actors;
 
     await step("api and button", async () => {

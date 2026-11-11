@@ -377,7 +377,7 @@ export async function applyItem(item, casterName = "the caster") {
       const was = {uuid: tok.uuid, x: tok.x, y: tok.y};
       const size = tok.parent?.grid?.size ?? 100;
       const pos = {x: Math.round(item.at.x - (n(tok.width) || 1) * size / 2), y: Math.round(item.at.y - (n(tok.height) || 1) * size / 2)};
-      await tok.update(pos, {animate: false, teleport: true});
+      await jump(tok, pos);
       return {token: was};
     }
     default:
@@ -388,6 +388,17 @@ export async function applyItem(item, casterName = "the caster") {
 /* ------------------------------------------------------------------ */
 /*  Areas: a circle on the scene that works on whoever enters          */
 /* ------------------------------------------------------------------ */
+
+/**
+ * 3.32.1: put a token straight on a spot. In Foundry 14 a plain x/y update is a move that stops at walls, so a Move
+ * through a wall (or its Undo) came up short; a "displace" move ignores walls. The plain update stays as a fallback.
+ */
+async function jump(tok, pos) {
+  if ( typeof tok.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
+    try { await tok.move([{x: pos.x, y: pos.y, action: "displace"}], {animate: false}); return; } catch (e) { /* plain update below */ }
+  }
+  await tok.update(pos, {animate: false, teleport: true});
+}
 
 const HOSTILE = ["harm", "hold", "fear", "trip"];
 const centerOf = tok => {
@@ -495,7 +506,11 @@ export async function undo(records = []) {
         for ( const k of ["elevation", "x", "y"] ) if ( k in r.token ) back[k] = r.token[k];
         if ( r.token.sight ) back.sight = r.token.sight;
         if ( r.token.light ) back.light = r.token.light;
-        if ( tok ) await tok.update(back, {animate: false, teleport: true});
+        if ( tok ) {
+          const {x, y, ...rest} = back;
+          if ( x !== undefined || y !== undefined ) await jump(tok, {x: x ?? tok.x, y: y ?? tok.y});
+          if ( Object.keys(rest).length ) await tok.update(rest, {animate: false});
+        }
       }
     } catch (e) { console.warn("WoDX | effect undo", e); }
   }

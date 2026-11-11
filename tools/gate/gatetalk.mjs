@@ -37,6 +37,9 @@ const SHEET = `[greet] Nods without looking up from the ledger.
 [the night porter] Names the night porter at the abbey gate. | codex WoDX gate: Talk page
 [the abbot] Crosses themself.`;
 
+// Foundry 14 may hand back a batch of new actors out of order: match each one to its data by name
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
+
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
@@ -54,7 +57,7 @@ export async function run() {
     await scene.view();
     await until(() => canvas.ready && canvas.scene?.id === scene.id, 10000);
     const own = player ? {default: 0, [player.id]: 3} : {default: 0};
-    actors = await Actor.create([{name: "WoDX gate: Talk NPC", type: "Mortal", flags: {[MOD]: {behavior: {talk: SHEET}}}},
+    actors = await createActors([{name: "WoDX gate: Talk NPC", type: "Mortal", flags: {[MOD]: {behavior: {talk: SHEET}}}},
       {name: "WoDX gate: Talk PC", type: "Mortal", ownership: own}]);
     journal = await JournalEntry.create({name: "WoDX gate: Talk page", pages: [{name: "WoDX gate: Talk page", type: "text", text: {content: "<p>A gate page.</p>"}}]});
     await scene.createEmbeddedDocuments("Token", [{name: "npc", actorId: actors[0].id, x: G * 5, y: G * 5}, {name: "pc", actorId: actors[1].id, actorLink: true, x: G * 6, y: G * 5}]);
