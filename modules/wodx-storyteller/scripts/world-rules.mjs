@@ -5,8 +5,8 @@
  *                 needs the Storyteller's eye (a sin, a frenzy, a Masquerade breach, a voice's proposal).
  *   Personal time Each character keeps a place in the night while acting alone. The world clock stays the
  *                 Storyteller's. A dawn the world clock passes ends every night that was still behind it.
- *   Travel        A trip takes the route's minutes (or the place's, or the world's default). Each hour on the road
- *                 may turn up one encounter. A place marked "ask first" waits for the Storyteller.
+ *   Travel        A trip takes the route's minutes (or the place's, or its distance by the way the year allows, or the
+ *                 world's default). Each hour on the road may turn up one encounter. A place marked "ask first" waits for the Storyteller.
  *   Solo play     Hunting, downtime, research, influence, talking to NPCs. A per-night limit, a pause while
  *                 convened, and anything that changes the world goes to the approval queue.
  *   Convening     The scene starts at the latest of the chosen characters' times. Whoever is ahead waits; whoever
@@ -15,6 +15,9 @@
  *   Spotlight     Acts and hours for each player, since a point in time.
  *   Reports       A night's summary, and a report of everything since the session ended.
  */
+
+import * as Road from "./road-rules.mjs";
+const ROAD_KINDS = Object.keys(Road.ROADS);
 
 export const LOG_VERSION = 1;
 export const LOG_CAP = 1500;
@@ -162,17 +165,33 @@ export function normPlace(p = {}) {
   const routes = {};
   for ( const [k, v] of Object.entries(p.routes ?? {}) ) { const n = Math.round(Number(v)); if ( k && n > 0 ) routes[k] = Math.min(24 * 60, n); }
   const minutes = Math.round(Number(p.minutes));
+  const km = Math.round(Number(p.km) * 10) / 10;
   return {on: p.on !== false, ask: !!p.ask, minutes: minutes > 0 ? Math.min(24 * 60, minutes) : null, routes,
+    km: km > 0 ? Math.min(2000, km) : null, road: ROAD_KINDS.includes(p.road) ? p.road : null,
     table: p.table ? String(p.table) : null, x: Number.isFinite(p.x) ? p.x : null, y: Number.isFinite(p.y) ? p.y : null};
 }
 
 /** Minutes from one place to another: the route either way, then the destination's own, then the default. */
 export function travelMinutes(from, to, fallback = 30) {
+  return tripPlan(from, to, {fallback}).minutes;
+}
+
+/**
+ * A trip's plan (0.22.0): hand-typed minutes on the route, then on the place, win; else the place's distance by the
+ * way the year allows (road-rules.mjs); else the default. ctx: {fallback, year, want, weather, night, future}.
+ * Returns {minutes, by: "route"|"place"|"distance"|"default", mode, modeLabel, road, why}.
+ */
+export function tripPlan(from, to, ctx = {}) {
   const a = normPlace(from?.travel ?? {}), b = normPlace(to?.travel ?? {});
-  if ( from?.id && b.routes[from.id] ) return b.routes[from.id];
-  if ( to?.id && a.routes[to.id] ) return a.routes[to.id];
-  if ( b.minutes ) return b.minutes;
-  return Math.max(1, Math.round(Number(fallback) || 30));
+  const none = {mode: null, modeLabel: null, road: b.road, why: []};
+  if ( from?.id && b.routes[from.id] ) return {...none, minutes: b.routes[from.id], by: "route"};
+  if ( to?.id && a.routes[to.id] ) return {...none, minutes: a.routes[to.id], by: "route"};
+  if ( b.minutes ) return {...none, minutes: b.minutes, by: "place"};
+  if ( b.km ) {
+    const t = Road.tripByDistance({km: b.km, road: b.road ?? "road", year: ctx.year, want: ctx.want, weather: ctx.weather, night: ctx.night, future: ctx.future});
+    if ( t ) return {...t, by: "distance"};
+  }
+  return {...none, minutes: Math.max(1, Math.round(Number(ctx.fallback) || 30)), by: "default"};
 }
 
 /** One check for each hour or part of an hour on the road. */

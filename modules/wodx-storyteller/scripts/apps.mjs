@@ -4,6 +4,7 @@
  * travel places, the night's summary and the report between sessions.
  */
 import * as W from "./world-rules.mjs";
+import * as Road from "./road-rules.mjs";
 import * as C from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -141,13 +142,17 @@ export async function openOnYourOwn(actorId = null) {
   if ( !list.length ) return ui.notifications.warn("You have no character to act for.");
   const actor = game.actors.get(actorId) ?? (list.includes(game.user.character) ? game.user.character : list[0]);
   const places = C.travelPlaces();
-  const plan = id => { const p = C.planTrip(actor, id); return p ? `${p.minutes ? W.spanLabel(p.minutes * 60) : "already there"}${p.ask ? ", asks first" : ""}` : ""; };
+  const plan = id => { const p = C.planTrip(actor, id); return p ? `${C.tripWords(p)}${p.ask ? ", asks first" : ""}` : ""; };
+  const at = C.tripContext(C.personalTime(actor.id));
+  const ways = new Map();
+  for ( const k of Object.keys(Road.ROADS) ) for ( const m of Road.modesFor(k, at.year, {future: at.future}) ) ways.set(m.id, m.label);
   const content = `<form class="wstory-own">
     <div class="wodx-field"><label>Character</label><span>${list.length > 5 ? searchBox("select[name=actor]", "Search…", "Search characters") : ""}<select name="actor" ${list.length > 5 ? "" : "data-fixed"}>${opt(Object.fromEntries(list.map(a => [a.id, a.name])), actor.id)}</select></span></div>
     ${statusLine(actor)}
     <fieldset><legend>Travel</legend>
       <div class="wodx-field"><label>Go to</label><span>${searchBox("select[name=dest]", "Search places…", "Search places")}<select name="dest"><option value="">Stay here</option>${places.map(p => `<option value="${esc(p.id)}">${esc(p.name)} (${esc(plan(p.id))})</option>`).join("")}</select></span></div>
-      <p class="wodx-quiet">A place marked "asks first" waits for the Storyteller. Each hour on the road may turn up an encounter.</p>
+      <div class="wodx-field"><label>How</label><select name="mode" data-fixed><option value="">The fastest way open</option>${[...ways].map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join("")}</select></div>
+      <p class="wodx-quiet">A place marked "asks first" waits for the Storyteller. Each hour on the road may turn up an encounter. A way the road cannot take (a train with no line) goes by the fastest way open instead.</p>
     </fieldset>
     <fieldset><legend>Act on your own</legend>
       <div class="wodx-field"><label>What</label><select name="kind" data-fixed><option value="">Nothing now</option>${opt(Object.fromEntries(Object.entries(W.SOLO_KINDS).map(([k, v]) => [k, v.label])), "")}</select></div>
@@ -161,7 +166,7 @@ export async function openOnYourOwn(actorId = null) {
   if ( !data || data === "cancel" ) return null;
   const who = game.actors.get(data.actor) ?? actor;
   const out = {};
-  if ( data.dest ) out.travel = await request("travel", {actorId: who.id, destId: data.dest});
+  if ( data.dest ) out.travel = await request("travel", {actorId: who.id, destId: data.dest, mode: data.mode || null});
   if ( data.kind ) out.solo = await request("solo", {actorId: who.id, kind: data.kind, hours: Number(data.hours) || null, note: data.note ?? "", changesWorld: !!data.world});
   return out;
 }
@@ -287,21 +292,25 @@ export async function placesDialog() {
       <td><input type="checkbox" name="on.${esc(s.id)}"${on ? " checked" : ""} aria-label="Open for travel"></td>
       <td><input type="checkbox" name="ask.${esc(s.id)}"${t.ask ? " checked" : ""} aria-label="Asks first"></td>
       <td><input type="number" name="min.${esc(s.id)}" min="0" max="1440" value="${t.minutes ?? ""}" placeholder="${C.setting("travelMinutes") ?? 30}" aria-label="Minutes"></td>
+      <td><input type="number" name="km.${esc(s.id)}" min="0" max="2000" step="0.1" value="${t.km ?? ""}" aria-label="Distance in km"></td>
+      <td><select name="road.${esc(s.id)}" data-fixed aria-label="Road"><option value="">Country road</option>${Object.entries(Road.ROADS).filter(([k]) => k !== "road").map(([k, v]) => `<option value="${k}"${t.road === k ? " selected" : ""}>${esc(v.label)}</option>`).join("")}</select></td>
       <td><input type="text" name="tab.${esc(s.id)}" maxlength="120" value="${esc(t.table ?? "")}" placeholder="world's table" aria-label="Encounter table"></td></tr>`;
   }).join("");
-  const content = `<p>Where players may travel. While no place is marked here, every scene that is not a battle map or a test is open. "Asks first" sends the trip to the approval queue. Minutes: how long it takes to get there (blank: ${C.setting("travelMinutes") ?? 30}). The table is a roll table's name for encounters on the way.</p>
+  const content = `<p>Where players may travel. While no place is marked here, every scene that is not a battle map or a test is open. "Asks first" sends the trip to the approval queue. Minutes: how long it takes to get there; filled in, they win. Left blank with a distance, the time comes from the distance, the road and the way of travelling the year allows, slowed by the weather and the dark (blank with no distance: ${C.setting("travelMinutes") ?? 30}). The table is a roll table's name for encounters on the way.</p>
     ${searchBox("table.wstory-places", "Search scenes…", "Search scenes")}
-    <div class="wodx-table-wrap wstory-places-wrap"><table class="wodx-table wstory-places"><thead><tr><th>Scene</th><th>Open</th><th>Asks first</th><th>Minutes</th><th>Encounter table</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-  const data = await wait({window: {title: "Travel places", resizable: true}, position: {width: 760, height: "auto"}, content,
+    <div class="wodx-table-wrap wstory-places-wrap"><table class="wodx-table wstory-places"><thead><tr><th>Scene</th><th>Open</th><th>Asks first</th><th>Minutes</th><th>Km</th><th>Road</th><th>Encounter table</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  const data = await wait({window: {title: "Travel places", resizable: true}, position: {width: 960, height: "auto"}, content,
     buttons: [{action: "save", label: "Save", default: true, callback: formData}, {action: "cancel", label: "Cancel"}]});
   if ( !data || data === "cancel" ) return null;
   for ( const s of scenes ) {
-    const next = {on: !!data[`on.${s.id}`], ask: !!data[`ask.${s.id}`], minutes: Number(data[`min.${s.id}`]) || null, table: String(data[`tab.${s.id}`] ?? "").trim() || null};
+    const next = {on: !!data[`on.${s.id}`], ask: !!data[`ask.${s.id}`], minutes: Number(data[`min.${s.id}`]) || null, table: String(data[`tab.${s.id}`] ?? "").trim() || null,
+      km: Number(data[`km.${s.id}`]) || null, road: data[`road.${s.id}`] || null};
     const was = s.flags?.[C.MOD]?.travel;
-    const plainDefault = !was && next.on === (!anyMarked && !W.NOT_A_PLACE.test(s.name ?? "")) && !next.ask && !next.minutes && !next.table;
+    const plainDefault = !was && next.on === (!anyMarked && !W.NOT_A_PLACE.test(s.name ?? "")) && !next.ask && !next.minutes && !next.table && !next.km && !next.road;
     if ( plainDefault ) continue;
     const cur = W.normPlace(was ?? {});
-    if ( was && cur.on === next.on && cur.ask === next.ask && cur.minutes === next.minutes && cur.table === next.table ) continue;
+    const fresh = W.normPlace({...cur, ...next});
+    if ( was && cur.on === fresh.on && cur.ask === fresh.ask && cur.minutes === fresh.minutes && cur.table === fresh.table && cur.km === fresh.km && cur.road === fresh.road ) continue;
     await C.setTravel(s, {...cur, ...next});
   }
   return true;

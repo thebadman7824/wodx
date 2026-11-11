@@ -10,11 +10,12 @@
  * characters together, a solo result that changes the world) waits in the approval queue.
  */
 import * as W from "./world-rules.mjs";
+import * as Road from "./road-rules.mjs";
 import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.21.0";
+export const VERSION = "0.22.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -207,17 +208,36 @@ export async function setTravel(scene, data) {
 }
 
 /** What a trip would be: minutes, arrival, dawn, and whether it waits for the Storyteller. */
-export function planTrip(actor, destId) {
+export function planTrip(actor, destId, {mode = null} = {}) {
   const dest = travelPlaces().find(p => p.id === destId);
   if ( !dest ) return null;
   const from = whereIs(actor);
   const fromPlace = from ? {id: from.id, travel: from.flags?.[MOD]?.travel ?? {}} : null;
-  const minutes = from?.id === dest.id ? 0 : W.travelMinutes(fromPlace, dest, setting("travelMinutes") ?? 30);
   const start = personalTime(actor.id);
+  const at = tripContext(start);
+  const trip = from?.id === dest.id ? {minutes: 0, by: "here", mode: null, modeLabel: null, road: null, why: []}
+    : W.tripPlan(fromPlace, dest, {fallback: setting("travelMinutes") ?? 30, want: mode, ...at});
+  const minutes = trip.minutes;
   const arrive = start + (minutes * 60);
   const dawnAt = dawnAfter(start);
   const ask = W.travelNeedsAsk({place: dest, arrive, dawnAt, sunBurns: sunBurns(actor)});
-  return {dest, from, minutes, start, arrive, dawnAt, ask};
+  return {dest, from, minutes, start, arrive, dawnAt, ask, trip, year: at.year, night: at.night};
+}
+
+/** The year, the dark, the weather and the branch at a time, for a trip (WoDX Atmosphere's weather when it is on). */
+export function tripContext(t) {
+  let year = 0, night = false, weather = null, future = false;
+  try { const d = describeTime(t, latitude()); year = d.year; night = !!d.isNight; } catch (e) { /* no calendar */ }
+  try { weather = game.modules.get("wodx-atmosphere")?.active ? (game.modules.get("wodx-atmosphere").api?.weather?.now?.() ?? null) : null; } catch (e) { weather = null; }
+  try { future = !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { future = false; }
+  return {year, night, weather, future};
+}
+/** Words for how a trip goes: "on foot, 2 hours (mud, the dark)". */
+export function tripWords(plan) {
+  const t = plan?.trip;
+  if ( !plan || !plan.minutes ) return "already there";
+  const how = t?.modeLabel ? `${t.modeLabel.toLowerCase()}, ` : "";
+  return `${how}${W.spanLabel(plan.minutes * 60)}${t?.why?.length ? ` (${t.why.join(", ")})` : ""}`;
 }
 
 /** Where a token lands on a scene: the place's own spot, else the middle of the scene. */
@@ -294,28 +314,30 @@ async function drawEncounter(dest) {
  * A trip, on the active Storyteller's client. A place that asks first, or a trip into the dawn for a character the sun
  * burns, goes to the approval queue unless approved is set.
  */
-export async function travel({actorId, destId, userId = null, approved = false} = {}) {
+export async function travel({actorId, destId, userId = null, approved = false, mode = null} = {}) {
   if ( !isActiveGM() ) return {ok: false, why: "Only the Storyteller's client moves tokens."};
   const actor = game.actors.get(actorId);
   if ( !actor ) return {ok: false, why: "That character is gone."};
   if ( convenedMap()[actorId] && !approved ) return {ok: false, why: "This character is in a scene the Storyteller called. Travel waits until it ends."};
-  const plan = planTrip(actor, destId);
+  const plan = planTrip(actor, destId, {mode});
   if ( !plan ) return {ok: false, why: "That place is not open for travel."};
   const user = userId ?? ownerOf(actor)?.id ?? null;
   if ( plan.ask && !approved ) {
     await chron()?.propose?.({type: T.travel, key: `travel:${actorId}:${destId}`, title: `${actor.name} wants to go to ${plan.dest.name}`,
-      detail: `${plan.ask} The trip takes ${W.spanLabel(plan.minutes * 60)} and would arrive at ${timeLabel(plan.arrive)}.`, data: {actorId, destId, userId: user}});
+      detail: `${plan.ask} The trip takes ${W.spanLabel(plan.minutes * 60)} and would arrive at ${timeLabel(plan.arrive)}.`, data: {actorId, destId, userId: user, mode}});
     await log({kind: "ask", actor: actorId, name: actor.name, user, scene: plan.dest.uuid, place: plan.dest.name, text: `Asked to go to ${plan.dest.name}: ${plan.ask}`});
     return {ok: true, waiting: true, why: plan.ask};
   }
   const tok = await moveToScene(actor, plan.dest.scene, {from: plan.from});
   if ( plan.minutes ) await advancePersonal(actorId, plan.minutes * 60);
   await log({kind: "travel", actor: actorId, name: actor.name, user, scene: plan.dest.uuid, place: plan.dest.name, hours: plan.minutes / 60,
-    text: `${plan.from ? `From ${sceneName(plan.from)} to` : "To"} ${plan.dest.name}, ${W.spanLabel(plan.minutes * 60)} on the way.`});
+    text: `${plan.from ? `From ${sceneName(plan.from)} to` : "To"} ${plan.dest.name}, ${plan.trip?.modeLabel ? `${plan.trip.modeLabel.toLowerCase()}, ` : ""}${W.spanLabel(plan.minutes * 60)} on the way${plan.trip?.why?.length ? ` (slowed by ${plan.trip.why.join(", ")})` : ""}.`});
   pull(user, plan.dest.id);
   // The road
   if ( setting("encounters") !== false && plan.minutes > 0 ) {
-    const hit = W.rollRoad(plan.minutes, setting("encounterChance") ?? 10, roadRand(`${actorId}:${plan.start}`));
+    const base = setting("encounterChance") ?? 10;
+    const chance = plan.trip?.road ? Road.encounterChance(base, plan.trip.road, plan.year, plan.night) : base;
+    const hit = W.rollRoad(plan.minutes, chance, roadRand(`${actorId}:${plan.start}`));
     if ( hit >= 0 ) {
       const {text, table} = await drawEncounter(plan.dest);
       await chron()?.propose?.({type: T.encounter, key: `encounter:${actorId}:${plan.start}`, title: `On the road: ${actor.name} meets something`,

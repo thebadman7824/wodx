@@ -645,20 +645,21 @@ export function normBreach(b = {}) {
 const PUBLIC_FIRST = ["tavern", "market", "church", "street", "workplace", "gate", "castle", "home", "wilds", "caern", "haven", "other"];
 
 /**
- * One day of a rumour: it reaches as many new places as its severity, public places first (a seeded shuffle within a
+ * One day of a rumour: it reaches as many new places as its severity (or perDay: the age's reach, from WoDX
+ * Chronicle's media-rules.mjs, where the papers carry a severe breach to every place in a day), public places first (a seeded shuffle within a
  * kind), and every faction that holds a place it has reached, or whose Contacts hear it (heard places at least 6 less
  * Contacts), knows of it. Then it may rise: to the Prince when the ruling faction knows; to the hunters when a hunters'
  * faction knows and the severity is 2 or more. Each rise is its own change, so the Storyteller can stop it there.
  *   places: [{id, kind}] every tagged place
  * Returns {changes, rise: null | {stage, faction}}.
  */
-export function spreadDay(state, b, places, rand, {now = 0} = {}) {
+export function spreadDay(state, b, places, rand, {now = 0, perDay = null} = {}) {
   const out = {changes: [], rise: null};
   if ( b.state !== "live" || b.severity <= 0 ) return out;
   const unheard = places.filter(p => !b.heard.includes(p.id));
   const ranked = PUBLIC_FIRST.flatMap(k => shuffle(rand, unheard.filter(p => (PUBLIC_FIRST.includes(p.kind) ? p.kind : "other") === k)));
   const reach = b.heard.length === 0 && b.place && !b.heard.includes(b.place) ? [b.place, ...ranked.filter(p => p.id !== b.place).map(p => p.id)] : ranked.map(p => p.id);
-  const fresh = reach.slice(0, b.severity);
+  const fresh = reach.slice(0, perDay === null ? b.severity : perDay);
   const heard = [...b.heard, ...fresh];
   const known = new Set(b.known);
   for ( const f of state.factions ) {
