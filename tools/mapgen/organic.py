@@ -135,6 +135,13 @@ def meander(R, th, length, B, K):
         i += 1
     return pts, oxbows
 
+def grown_margin(year):
+    """Room round the old town for what later eras build outside it: mills and schools on the roads out,
+    then estates of panel blocks. None (no era given) keeps the medieval map."""
+    if not year: return 0
+    return 0 if year < 1840 else 6 if year < 1900 else 12 if year < 1950 else 18
+
+
 class OrganicTown(T.Town):
     def __init__(self, seed, size, name=None, night=True, walls=None, river=None, year=None, part=None, land=None):
         self.R = R = C.R
@@ -150,7 +157,7 @@ class OrganicTown(T.Town):
         inner_pts = [lay.pt(v) for p in lay.inner for v in p["v"]]
         x0, x1 = min(p[0] for p in inner_pts), max(p[0] for p in inner_pts)
         y0, y1 = min(p[1] for p in inner_pts), max(p[1] for p in inner_pts)
-        m = cfg["margin"]
+        m = cfg["margin"] + grown_margin(year)
         self.cols, self.rows = math.ceil((x1 - x0) * s + 2 * m), math.ceil((y1 - y0) * s + 2 * m)
         mx = my = m
         if part:                                              # even parts: shift the town so no line crosses the market
@@ -1233,8 +1240,9 @@ class OrganicTown(T.Town):
             if not overlaps(b.rect, win) or not (self.mine(b, pt) or T.inside(b.rect[0], b.rect[1], win, .01) and T.inside(b.rect[0] + b.rect[2], b.rect[1] + b.rect[3], win, .01)): continue
             ops = [(k, x, y, None) for k, x, y, _ in b.openings_world()]
             wt = getattr(b, "wall_tex", None) or b.t["wall"]
-            walls.append(wall_with_portals(b.outline, wt, ops, True))
-            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False))
+            pk = b.t.get("portals")                            # a later era's doors and windows
+            walls.append(wall_with_portals(b.outline, wt, ops, True, pk))
+            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk))
             for r in b.rooms:
                 if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
                 for it, cx, cy, rot in b.items_world(r):
