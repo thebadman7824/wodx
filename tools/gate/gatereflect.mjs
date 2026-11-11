@@ -1,5 +1,5 @@
 /**
- * Umbral reflection gate (WoDX Otherworlds 0.9.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ * Umbral reflection gate (WoDX Otherworlds 0.10.0), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatereflect.mjs?${Date.now()}`)).run()
  * Needs Data/wodx-gate/reflecttown.wodx.json (copied from tools/mapgen/samples by the deploy job). Makes a scene
  * "WoDX gate: Reflect town" with no twin levels, reflects it, checks, reflects again, takes it off, then goes back to
@@ -61,7 +61,8 @@ export async function run() {
     await step("relics on the Shadowlands", async () => {
       const sha = twinLevel("shadowlands");
       const rel = scene.regions.filter(r => r.flags?.[M]?.reflection === "relic");
-      ok("relics on the Shadowlands", rel.length >= side.umbral.gone.filter(g => !String(g.why).startsWith("rebuild-")).length && rel.every(r => [...r.levels][0] === sha.id), {relics: rel.length, gone: side.umbral.gone.length});
+      // 0.10.0: only the newest house on each spot comes back, so fewer relics than buildings gone.
+      ok("relics on the Shadowlands", rel.length > 0 && rel.length < side.umbral.gone.length && rel.every(r => [...r.levels][0] === sha.id), {relics: rel.length, gone: side.umbral.gone.length});
     });
     await step("second run replaces", async () => {
       const n = [scene.tiles.size, scene.regions.size, scene.levels.size];
