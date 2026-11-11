@@ -298,6 +298,8 @@ def write_map(fname, cols, rows, seed, lvl):
     # editor state copied from a saved Dungeondraft map, so the editor finds every key it expects
     sample = json.load(open(SAMPLE))["header"]
     editor = dict(sample["editor_state"], current_level=0, camera_position=v2(P(cols / 2), P(rows / 2)), camera_zoom=1, trace_image=None)
+    if isinstance(editor.get("object_library_memory"), dict):     # the sample's last pick named a pack the maps do not use
+        editor["object_library_memory"] = dict(editor["object_library_memory"], selected=[])
     doc = {"header": {"creation_build": "1.0.1.0", "creation_date": sample["creation_date"], "uses_default_assets": True,
                       "asset_manifest": manifest, "editor_state": editor},
            "world": {"format": 2, "width": cols, "height": rows, "next_node_id": format(NID.n + 1, "x"),
