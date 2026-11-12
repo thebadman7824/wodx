@@ -158,10 +158,41 @@ export function kinFamily(house, p) {
  * Returns the people in order, each the drawn person with name and family set, plus its plan.
  */
 export const HOUSE_ROW = 31;
-export function nameHousehold(plans, draw, rand = Math.random) {
+/** Rows a retry steps by, so a retried draw never lands on another member's row. */
+export const RETRY_STEP = 100, RETRIES = 8;
+
+/**
+ * What a role asks of the person who fills it (house reading of the church in Moravia): Christian clergy are not
+ * Jewish, and priests, monks and friars are men, as are rabbis, who are Jewish; nuns are women. Protestant churches
+ * ordained women only in the twentieth century, so from 1950 a parson or vicar may be either. Returns
+ * {sex: "male"|"female"|null, origin: (origin) => boolean}.
+ */
+export function wantsFor(trade = "", {year = 0} = {}) {
+  const t = String(trade).toLowerCase(), y = Number(year) || 0;
+  if ( /rabbi/.test(t) ) return {sex: y >= 1990 ? null : "male", origin: o => o === "jewish"};
+  if ( /\bnun\b|abbess|prioress/.test(t) ) return {sex: "female", origin: o => o !== "jewish"};
+  if ( /parson|vicar|pastor|minister/.test(t) ) return {sex: y >= 1950 ? null : "male", origin: o => o !== "jewish"};
+  if ( /priest|chaplain|monk|friar|curate|canon|deacon|abbot|prior/.test(t) ) return {sex: "male", origin: o => o !== "jewish"};
+  return {sex: null, origin: () => true};
+}
+const fits = (p, want) => !!p && (!want.sex || p.sex === want.sex) && want.origin(p.origin ?? "");
+/** Draw until the person fits what the role asks, stepping rows; the last draw stands when none fits. */
+export function drawFit(draw, i, opts, want) {
+  let p = null;
+  for ( let k = 0; k < RETRIES; k++ ) {
+    p = draw(i + k * RETRY_STEP, {...opts, sex: want.sex ?? opts.sex});
+    if ( fits(p, want) ) return p;
+  }
+  return p;
+}
+
+export function nameHousehold(plans, draw, rand = Math.random, {year = 0} = {}) {
   if ( !plans.length ) return [];
-  const first = draw(0, {sex: "any", trade: plans[0].trade || plans[0].role});
-  const fam = draw(HOUSE_ROW, {sex: "male", trade: plans[0].trade || plans[0].role}) ?? {};
+  const trade0 = plans[0].trade || plans[0].role;
+  const want = plans[0].master ? wantsFor(trade0, {year}) : {sex: null, origin: () => true};
+  const first = drawFit(draw, 0, {sex: "any", trade: trade0}, want);
+  // The household's name is drawn from a man of the master's own origin, so a Czech master never heads a ben-or-bat household
+  const fam = drawFit(draw, HOUSE_ROW, {sex: "male", trade: trade0}, {sex: "male", origin: o => !first.origin || o === first.origin}) ?? {};
   const house = {family: fam.family ?? first.family ?? "", origin: fam.origin ?? first.origin, masterGiven: first.given, masterSex: first.sex};
   // A medieval Jewish household is named for the master's father; the master is ben or bat him
   if ( /^(ben|bat) /.test(house.family) ) house.family = `${first.sex === "female" ? "bat" : "ben"} ${house.family.replace(/^(ben|bat) /, "")}`;
@@ -170,7 +201,9 @@ export function nameHousehold(plans, draw, rand = Math.random) {
     let p = first;
     if ( i > 0 ) {
       const sex = plan.role === "partner" ? (rand() < 0.9 ? (first.sex === "female" ? "male" : "female") : first.sex) : "any";
-      p = draw(i, {sex, trade: plan.kin ? plan.label : plan.role});
+      // Kin of a Jewish household are Jewish, and kin of a Christian one are not (house reading of the Middle Ages to 1945)
+      const sameFaith = o => !first.origin || !o || (o === "jewish") === (first.origin === "jewish") || (Number(year) >= 1946);
+      p = plan.kin ? drawFit(draw, i, {sex, trade: plan.label}, {sex: null, origin: sameFaith}) : draw(i, {sex, trade: plan.role});
     }
     let family = p.family;
     if ( i === 0 ) family = /^(ben|bat) /.test(house.family) ? house.family : kinFamily({...house, masterGiven: null}, p);

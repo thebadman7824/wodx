@@ -122,3 +122,28 @@ test("residents: the flags give the routine, the household and the record", () =
   assert.equal(RS.countPeople(list), all - list[0].household.people.length);
   assert.equal(RS.countPeople(list, {again: true}), all);
 });
+
+test("residents: a priest is a Christian man, a rabbi Jewish, and kin keep the household's faith", () => {
+  // A stand-in generator whose early rows are Jewish women, then Czech people of both sexes
+  const draw = (row, {sex}) => {
+    const s = sex === "any" || !sex ? (row % 2 ? "female" : "male") : sex;
+    if ( row < 200 ) return {sex: "female", origin: "jewish", given: "Bella", family: "bat David"};
+    return {sex: s, origin: "czech", given: s === "female" ? "Anna" : "Jan", family: s === "female" ? "Nováková" : "Novák"};
+  };
+  const chapel = {region: "C", kind: "church", household: {trade: "priest", people: [{role: "priest"}, {role: "servant"}]}};
+  const [priest] = RS.nameHousehold(RS.planHousehold(chapel, {year: 1300}), draw, () => 0.5, {year: 1300});
+  assert.equal(priest.sex, "male");
+  assert.notEqual(priest.origin, "jewish");
+  assert.equal(priest.name, "Jan Novák");
+  assert.equal(RS.wantsFor("rabbi").origin("jewish"), true);
+  assert.equal(RS.wantsFor("rabbi").origin("czech"), false);
+  assert.equal(RS.wantsFor("nun").sex, "female");
+  assert.equal(RS.wantsFor("parson", {year: 1700}).sex, "male");
+  assert.equal(RS.wantsFor("parson", {year: 2000}).sex, null);
+  assert.equal(RS.wantsFor("smith").sex, null);
+  // A Czech smith's household never takes a ben-or-bat name, and the children are not drawn Jewish
+  const smithy = {region: "R", kind: "workplace", household: {trade: "smith", people: [{role: "smith"}, {role: "child"}]}};
+  const czechFirst = (row, o) => row === 0 ? {sex: "male", origin: "czech", given: "Jan", family: "Kovář"} : draw(row, o);
+  const out = RS.nameHousehold(RS.planHousehold(smithy, {year: 1300}), czechFirst, () => 0.5, {year: 1300});
+  assert.ok(out.every(p => !/^(ben|bat) /.test(p.family) && p.origin !== "jewish"), out.map(p => p.name).join(", "));
+});

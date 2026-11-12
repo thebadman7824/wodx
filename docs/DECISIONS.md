@@ -2982,3 +2982,9 @@ Reverse: pick Mortals for every household; clear the owner on the place.
 
 Reverse: nothing to reverse.
 
+
+## B2505. Clergy fit their church (2026-11-12, house reading)
+The testbed seeded a chapel's priest as "Bella bat David", because the People generator draws any origin and sex. Residents now draw again, up to eight times, until the person fits the role: Catholic priests, monks, friars, deacons and canons are Christian men; nuns, abbesses and prioresses Christian women; rabbis Jewish (men before 1990); Protestant parsons, vicars and ministers men before 1950, either after. The household's name comes from a man of the master's own origin, and kin keep the household's faith (Jewish or Christian) until 1946. When no draw fits, the last one stands.
+
+Reverse: change wantsFor and the sameFaith test in resident-rules.mjs.
+

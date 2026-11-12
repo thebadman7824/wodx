@@ -31,12 +31,12 @@ export function build({MOD, esc, chron}) {
       const plans = RS.planHousehold(h, {year: y});
       const draw = (i, {sex, trade}) => {
         if ( !ppl?.generate ) return {sex: sex === "any" ? "female" : sex, origin: "", given: "", family: "", name: ""};
-        try { return ppl.generate({batch, row: hi * 32 + i, nonce, kind: "mortal", sex, trade}); }
+        try { return ppl.generate({batch, row: hi * 1000 + i, nonce, kind: "mortal", sex, trade}); }
         catch (e) { console.warn(`${MOD} | residents: the People generator failed`, e); return {sex, origin: "", given: "", family: "", name: ""}; }
       };
       let rand = Math.random;
       try { rand = chron()?.gen?.random?.(`residents:${scene.uuid}:${hi}`, nonce) ?? Math.random; } catch (e) { rand = Math.random; }
-      const people = RS.nameHousehold(plans, draw, rand).map(p => ({...p, name: p.name || cap(p.plan.label)}));
+      const people = RS.nameHousehold(plans, draw, rand, {year: y}).map(p => ({...p, name: p.name || cap(p.plan.label)}));
       return {...h, index: hi, people};
     });
   }
