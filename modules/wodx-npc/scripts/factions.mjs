@@ -18,6 +18,7 @@
  * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
  */
 import * as F from "./faction-rules.mjs";
+import * as PO from "./politics-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -50,6 +51,10 @@ export function build(ctx) {
     game.settings.register(MOD, "playerFactions", {
       name: "Players may found factions", hint: "Players can ask to found a faction from their characters' own Backgrounds, and give orders to a faction they run. Every founding waits in the approval queue.",
       scope: "world", config: true, type: Boolean, default: true
+    });
+    game.settings.register(MOD, "factionPolitics", {
+      name: "Politics inside factions", hint: "Factions that keep a court, a diocese or a barony run their own politics each faction turn: seats, standing, charges and favours. Off by default; changes that touch a player character or the top seat wait in the approval queue.",
+      scope: "world", config: true, type: Boolean, default: false
     });
     game.settings.register(MOD, "turnDays", {
       name: "Days between faction turns", hint: "Each faction may act once in this many days of world time (a week by default).",
@@ -124,7 +129,8 @@ export function build(ctx) {
       faction: id => s.factions.find(f => f.id === id)?.name ?? "a faction gone",
       place: id => placeName(id, list),
       actor: id => game.actors?.get(id)?.name ?? "someone gone",
-      sphere: k => era.spheres[k] ?? F.sphereName(k)
+      sphere: k => era.spheres[k] ?? F.sphereName(k),
+      state: s
     };
   }
   const attrOf = (a, k) => { const x = a?.system?.attributes?.[k]; return num(x?.total ?? x?.value); };
@@ -138,6 +144,25 @@ export function build(ctx) {
     return out;
   }
   const pcActors = () => new Set(allActors().filter(a => a.hasPlayerOwner).map(a => a.id));
+  /** NPC 0.25.0: what the politics rules need to know of each member of a faction with a polity. */
+  const sheetText = (a, k) => { const v = a?.system?.[k]; return typeof v === "string" ? v : (typeof v?.value === "string" ? v.value : ""); };
+  function politicsInfo(s) {
+    const info = {};
+    for ( const f of s.factions ) for ( const id of f.members ) {
+      if ( info[id] ) continue;
+      const a = game.actors?.get(id);
+      if ( !a ) { info[id] = {name: "someone gone", alive: false}; continue; }
+      info[id] = {name: a.name, alive: !routines.downState?.(a), pc: !!a.hasPlayerOwner, clan: sheetText(a, "clan"), sect: sheetText(a, "sect"), status: bgValue(a, "status"),
+        attrs: Object.fromEntries(["charisma", "manipulation", "wits", "perception", "strength", "dexterity"].map(k => [k, attrOf(a, k)]))};
+    }
+    return info;
+  }
+  /** Open boons in WoDX Storyteller's Ledger, as {id, size, from, to} actor ids. */
+  function openBoons() {
+    let entries = [];
+    try { entries = game.settings.get("wodx-storyteller", "ledger")?.entries ?? []; } catch (e) { return []; }
+    return entries.filter(e => e?.kind === "boon" && (e.status ?? "open") === "open" && e.from?.id && e.to?.id).map(e => ({id: e.id, size: e.size, from: e.from.id, to: e.to.id}));
+  }
   const streamFor = key => {
     const g = chron()?.gen;
     if ( g?.random ) return g.random(`faction:${key}`);
@@ -224,13 +249,16 @@ export function build(ctx) {
         const gone = new Set(s.factions.map(f => f.leader).filter(id => id && !lead[s.factions.find(f => f.leader === id).id]));
         const alive = new Set(allActors().filter(a => !routines.downState?.(a)).map(a => a.id));
         const results = F.runTurn(s, {streamFor, seedKey: `turn:${turn}:${Math.floor(now)}`, leaders: lead, places: list, pcActors: pcActors(), spheres: era.spheres, turn, now, ids: newId,
-          year: era.year, gone, alive, splits: setting("factionSplits") !== false, name: id => game.actors?.get(id)?.name ?? null});
+          year: era.year, gone, alive, splits: setting("factionSplits") !== false, name: id => game.actors?.get(id)?.name ?? null,
+          politics: setting("factionPolitics") ? {info: politicsInfo(s), boons: openBoons()} : null});
         const lines = [];
         let undoAll = [];
         const n = names(s);
+        let polN = 0;
         for ( const r of results ) {
-          const words = r.changes.map(c => F.describeChange(c, n));
-          const roll = r.move === "wait" ? "No orders yet" : r.move === "split" ? "A split under strain" : `${F.MOVES[r.move].label}: ${r.pool} dice at ${r.difficulty}, ${r.botch ? "a botch" : `${r.net} success${r.net === 1 ? "" : "es"}`}${r.defence ? ` against ${r.defence.net}` : ""}`;
+          const words = r.move === "politics" ? [] : r.changes.map(c => F.describeChange(c, n));
+          const roll = r.move === "politics" ? (r.size === "big" ? "Needs the Storyteller" : r.gathering ? "Inner turn and gathering" : "Inner turn")
+            : r.move === "wait" ? "No orders yet" : r.move === "split" ? "A split under strain" : `${F.MOVES[r.move].label}: ${r.pool} dice at ${r.difficulty}, ${r.botch ? "a botch" : `${r.net} success${r.net === 1 ? "" : "es"}`}${r.defence ? ` against ${r.defence.net}` : ""}`;
           let status = "nothing changes";
           if ( r.changes.length ) {
             if ( m === "auto" && r.size === "small" ) {
@@ -238,7 +266,8 @@ export function build(ctx) {
               undoAll = [...done.inverse, ...undoAll];
               status = done.applied.length ? "applied" : "nothing to change";
             } else {
-              await proposeChanges(`${n.faction(r.faction)}: ${r.text}`, `${roll}. ${words.join("; ")}.`, r.changes, {key: `faction:${turn}:${r.faction}${r.move === "split" ? ":split" : ""}`, kind: r.move === "split" ? "split" : "turn", extra: {turn}});
+              const detail = r.move === "politics" ? r.changes.map(c => F.describeChange(c, n)).join("; ") : words.join("; ");
+              await proposeChanges(`${n.faction(r.faction)}: ${r.text}`, `${roll}. ${detail}.`, r.changes, {key: `faction:${turn}:${r.faction}${r.move === "split" ? ":split" : r.move === "politics" ? `:politics:${polN++}` : ""}`, kind: r.move === "split" ? "split" : "turn", extra: {turn}});
               status = r.size === "big" ? "sent to the approval queue (a big change)" : "sent to the approval queue";
             }
           }
@@ -256,7 +285,7 @@ export function build(ctx) {
     return work;
   }
   async function turnCard(turn, reason, lines, inverse, m) {
-    const body = lines.map(l => `<li><b>${esc(l.faction)}</b>: ${esc(l.text)} <span class="wodx-quiet">${esc(l.roll)} [${esc(l.dice)}]${l.words.length ? `; ${esc(l.words.join("; "))}` : ""}; ${esc(l.status)}.</span></li>`).join("");
+    const body = lines.map(l => `<li><b>${esc(l.faction)}</b>: ${esc(l.text)} <span class="wodx-quiet">${esc(l.roll)}${l.dice ? ` [${esc(l.dice)}]` : ""}${l.words.length ? `; ${esc(l.words.join("; "))}` : ""}; ${esc(l.status)}.</span></li>`).join("");
     return ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"},
       flags: {[MOD]: {factionTurn: {turn, inverse, undone: false}}},
       content: `<div class="wodx-card wnpc wnpc-faction"><h3>Faction turn ${turn}${reason ? `, ${esc(reason)}` : ""}</h3><ul class="wnpc-lines">${body || "<li>No faction acted.</li>"}</ul>
@@ -601,6 +630,24 @@ export function build(ctx) {
     const actorOpts = list => list.map(a => `<option value="${a.id}"${a.id === f.leader ? " selected" : ""}>${esc(a.name)}</option>`).join("");
     const goals = [...f.goals, {move: ""}, {move: ""}].slice(0, Math.max(3, f.goals.length + 1));
     const evs = (() => { try { return chron()?.events?.list?.() ?? []; } catch (e) { return []; } })();
+    // NPC 0.25.0: the faction's politics
+    const polKey = PO.polityFor(f, era.year), P = PO.POLITIES[polKey] ?? null, pol = f.politics ?? PO.normPolitics();
+    const mActors = f.members.map(id => game.actors?.get(id)).filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
+    const polityOpts = {"": "By its kind and age (a Kindred faction of three or more keeps a court)", none: "No politics",
+      ...Object.fromEntries(Object.entries(PO.POLITIES).map(([k, v]) => [k, `${v.label}${v.from ? `, from ${v.from}` : ""}`]))};
+    const seatOpts = cur => `<option value="">Empty</option>${mActors.map(a => `<option value="${a.id}"${a.id === cur ? " selected" : ""}>${esc(a.name)}</option>`).join("")}`;
+    const politicsHtml = `<fieldset><legend>Politics inside the faction</legend>
+      <div class="wodx-field"><label>Polity</label><select name="polity" data-fixed>${opt(polityOpts, f.polity ?? "")}</select></div>
+      ${P ? `<p class="wodx-quiet">In ${era.year}: ${esc(P.label)}. ${esc(P.notes)}${f.polity && f.polity !== polKey ? " Its chosen polity does not exist yet in this year, so the court of its age stands in." : ""}</p>
+        ${P.titles?.prince ? `<div class="wodx-field"><label>The top seat is called</label><input type="text" name="poltitle" value="${esc(pol.title ?? "")}" maxlength="40" placeholder="${esc(PO.topOffice(polKey)?.title ?? "")}" list="wnpc-pol-titles"><datalist id="wnpc-pol-titles">${P.titles.prince.map(t => `<option value="${esc(t)}">`).join("")}</datalist></div>` : ""}
+        ${mActors.length ? `<table class="wodx-table" data-fixed><thead><tr><th>Seat</th><th>Held by</th></tr></thead><tbody>
+          ${P.offices.map(o => Array.from({length: o.seats}, (_, i) => `<tr><td>${esc(PO.officeTitle(polKey, o.key, f))}${o.seats > 1 ? ` ${i + 1}` : ""}</td><td><select name="of.${o.key}.${i}">${seatOpts(PO.holdersOf(f, o.key)[i])}</select></td></tr>`).join("")).join("")}</tbody></table>
+        <fieldset><legend>${esc(P.rank)} inside the faction (0 to 5; empty follows the sheet)</legend><div class="wnpc-dots">
+          ${mActors.map(a => `<label>${esc(a.name)} <input type="number" name="rk.${a.id}" value="${pol.ranks[a.id] ?? ""}" min="0" max="5" placeholder="${bgValue(a, "status")}"></label>`).join("")}</div></fieldset>`
+        : `<p class="wodx-quiet">Add members and save, then open the faction again to seat them.</p>`}
+        ${pol.docket.length ? `<p><b>Charges to be heard:</b> ${pol.docket.map(d => esc(`${game.actors?.get(d.by)?.name ?? "someone"} against ${game.actors?.get(d.against)?.name ?? "someone"}: ${d.law}`)).join("; ")}.</p>` : ""}`
+      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred faction of three or more members keeps a court of its age unless set to No politics.</p>`}
+      <p class="wodx-quiet">Turn on Politics inside factions in the module settings for courts to move each faction turn.</p></fieldset>`;
     const eventOpts = evs.length ? cur => evs.map(e => `<option value="${esc(e.id)}"${e.id === cur ? " selected" : ""}>${esc(`${e.year} ${e.name}`)}</option>`).join("") : null;
     const content = `<div class="wnpc-faction-form">
       <div class="wodx-field"><label>Name</label><input type="text" name="name" value="${esc(f.name)}" maxlength="120"></div>
@@ -640,6 +687,7 @@ export function build(ctx) {
       <fieldset><legend>Places held (its domain)</legend>${searchBox(".wnpc-held", "Search places…", "Search places")}<div class="wnpc-held wnpc-list">
         ${places.map(p => `<label class="wnpc-check" data-search-item data-search-text="${esc(p.name)}"><input type="checkbox" name="p.${p.id}" ${f.places.includes(p.id) ? "checked" : ""}> ${esc(p.name)}</label>`).join("")}</div>
         ${places.length ? "" : `<p class="wodx-quiet">No places are tagged yet: tag them in WoDX places.</p>`}</fieldset>
+      ${politicsHtml}
       <div class="wodx-field"><label>Notes</label><textarea name="notes" rows="2">${esc(f.notes)}</textarea></div></div>`;
     const data = await foundry.applications.api.DialogV2.wait({window: {title: `Faction: ${f.name}`, resizable: true}, classes: ["wodx-dialog", "wodx-npc-dialog"], position: {width: 860, height: "auto"}, content,
       buttons: [{action: "save", label: "Save", default: true, callback: (ev, b) => new foundry.applications.ux.FormDataExtended(b.form).object}, {action: "cancel", label: "Cancel"}], rejectClose: false});
@@ -650,7 +698,29 @@ export function build(ctx) {
       assets: {influence: {}}, standing: {}, people: {...(f.people ?? {})}, goals: [], guard: f.guard, notes: data.notes ?? "",
       owners: pcs.length ? pcs.filter(a => data[`o.${a.id}`]).map(a => a.id) : f.owners, run: data.run ?? f.run, orders: f.orders,
       founded: data.founded, ended: data.ended, risesOn: data.risesOn ?? f.risesOn, endsOn: data.endsOn ?? f.endsOn,
-      dormantBy: data.dormant ? (f.dormant ? f.dormantBy : null) : null, fromEvent: f.fromEvent, parent: f.parent, absorbedBy: data.dormant ? f.absorbedBy : null};
+      dormantBy: data.dormant ? (f.dormant ? f.dormantBy : null) : null, fromEvent: f.fromEvent, parent: f.parent, absorbedBy: data.dormant ? f.absorbedBy : null,
+      polity: data.polity ?? f.polity, politics: foundry.utils.deepClone(pol)};
+    if ( P && mActors.length ) {
+      const offices = {...next.politics.offices};
+      for ( const o of P.offices ) {
+        const held = [];
+        for ( let i = 0; i < o.seats; i++ ) { const v = data[`of.${o.key}.${i}`]; if ( v && !held.includes(v) ) held.push(v); }
+        if ( held.length ) offices[o.key] = held; else delete offices[o.key];
+      }
+      // The leader and the top seat stay one: a new leader takes the seat, else the seat's holder leads
+      const top = PO.topOffice(polKey);
+      if ( top ) {
+        if ( (data.leader || null) !== (f.leader || null) && data.leader ) offices[top.key] = [data.leader];
+        else if ( offices[top.key]?.[0] ) next.leader = offices[top.key][0];
+      }
+      next.politics.offices = offices;
+      for ( const a of mActors ) {
+        const v = data[`rk.${a.id}`];
+        if ( v === "" || v === null || v === undefined ) delete next.politics.ranks[a.id];
+        else next.politics.ranks[a.id] = Math.max(0, Math.min(5, num(v)));
+      }
+      next.politics.title = String(data.poltitle ?? "").trim() || null;
+    }
     for ( const a of pcs ) { const v = num(data[`ps.${a.id}`]); if ( v ) next.people[a.id] = v; else delete next.people[a.id]; }
     for ( const k of ["herd", "resources", "status", "retainers", "contacts", "domain", "security"] ) next.assets[k] = num(data[`a.${k}`]);
     for ( const k of Object.keys(era.spheres) ) if ( num(data[`i.${k}`]) ) next.assets.influence[k] = num(data[`i.${k}`]);
@@ -878,6 +948,27 @@ export function build(ctx) {
 
   let lastDay = null;
   let founding = null;
+  /**
+   * NPC 0.25.0: a boon marked kept or broken in WoDX Storyteller's Ledger moves the debtor's standing in each faction
+   * with a polity (a broken boon costs standing; a large one paid earns a dot, a house rule). Small changes land by the
+   * mode; anything touching a player character waits in the queue.
+   */
+  async function onBoonSettled({entry, status} = {}) {
+    if ( !isActiveGM() || !setting("factionPolitics") || mode() === "off" ) return;
+    const s = state();
+    const changes = PO.boonChanges(s, entry, status, {info: politicsInfo(s), year: eraInfo().year});
+    if ( !changes.length ) return;
+    const n = names(s);
+    const why = status === "broken" ? "A boon is broken, and the Harpies spread the word" : "A large boon is paid in full";
+    const size = F.sizeOf(changes, {pcActors: pcActors(), state: s});
+    if ( mode() === "auto" && size === "small" ) {
+      const done = await applyNow(changes);
+      await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, flags: {[MOD]: {factionBoon: {inverse: done.inverse, undone: false}}},
+        content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(why)}</h3><ul class="wnpc-lines">${changes.map(c => `<li>${esc(F.describeChange(c, n))}</li>`).join("")}</ul>
+          ${done.inverse.length ? `<div class="wnpc-done"><button type="button" class="wnpc-f-undo" data-key="factionBoon">Undo</button></div>` : ""}</div>`});
+    } else await proposeChanges(why, changes.map(c => F.describeChange(c, n)).join("; ") + ".", changes, {key: `boon:${entry.id}:${status}`});
+  }
+
   function hooks() {
     Hooks.on("wodxChronicleReady", () => registerHandler());
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) onClock("skip").catch(e => console.error(`${MOD} |`, e)); });
@@ -892,6 +983,7 @@ export function build(ctx) {
       onClock("clock").catch(e => console.error(`${MOD} |`, e));
     });
     Hooks.on("wodxBreach", p => { onActionsBreach(p).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("wodxBoonSettled", p => { onBoonSettled(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxMapEvent", ev => { onMapEvent(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateSetting", s => { if ( s.key === `${MOD}.factions` ) FactionsAppClass().refresh(); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
@@ -937,5 +1029,5 @@ export function build(ctx) {
   return {adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
     setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F, ROTHENSTEIN,
-    applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }};
+    applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled};
 }
