@@ -1695,3 +1695,7 @@ Ben approved the Followers Review Desk. Part 1: the orders tool now reads every 
 ## 2026-11-12: followers, part 2 (NPC 0.38.0, Storyteller 0.42.0, Chronicle 0.41.0, Interactables 0.31.0)
 
 The rest of the Followers Review Desk. Errands as long tasks on the follower's own sheet, with a wodxTaskDone hook from Storyteller (B1810); helpers on long tasks (B1811); buying from the master's purse (B1812); dealing with a witness and breaches traced to masters (B1813); followers join chases through a new Interactables chase.join (B1814); watching a rival (B1815); loyalty drift through Actions' wodxFed and a new wodxGhoulFix (Chronicle) hook (B1816).
+
+## WoDX Voices 0.2.0, 2026-11-12
+
+- Kokoro in the Storyteller's browser, offline from Data/wodx-voices-engine (tools/voices/fetch-engine.mjs), lines cached in Data and played to the people who see them, from the token. The Storyteller's own lines as an NPC (Improvement Desk vo1). A tongue per NPC for the browser's speech (B2106-B2110). Harness voices.test.mjs (11 tests); gatevoices now 10 steps. In the cloud, kokoro.web.js loaded in Chromium and asked for its model at the engine folder; the model itself comes on the PC.

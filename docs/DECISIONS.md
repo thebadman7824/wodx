@@ -2138,3 +2138,28 @@ Reverse: doorsOf, exitFor, walkFor in wodx-npc passersby.mjs; planDoorWalk, near
 The Master Plan asked for the Mage Cast to fill in "with witnesses" from passers-by in sight. That already happens: since Actions 3.42.0 the Cast window asks the Masquerade sight check who can see the caster, passers-by are ordinary mortals to it, and only animals in the street are left out. A harness test now holds this in place.
 
 Reverse: nothing to reverse.
+
+## B2106. Kokoro runs offline from the Data folder (2026-11-12)
+WoDX Voices loads kokoro-js 1.2.1 (its web build), the ONNX runtime wasm and the Kokoro-82M model (quantized) from Data/wodx-voices-engine, which tools/voices/fetch-engine.mjs fills once on the PC. The library asks for its files at their online home; a narrow fetch shim on the Storyteller's client answers only those requests from the folder. Nothing goes in the module bundle. Licences in the folder's NOTICE.txt (Apache 2.0; the phonemizer is espeak-ng, GPL 3, fine for private use).
+
+Reverse: set Voice engine to the browser's own speech.
+
+## B2107. One render, shared by file (2026-11-12)
+Only the active Storyteller's client renders. It saves the line as a WAV in Data/wodx-voices-cache/g<n>/ (a name from the voice, speed and words, so a line said twice is rendered once) and sends the path over the module socket to the people who see the line. Players play the file. With no Storyteller online, players fall back to their own speech.
+
+Reverse: engine setting.
+
+## B2108. A Kokoro voice per NPC (2026-11-12)
+Two of Kokoro's 27 English voices of one accent (American or British, by seed), matched to a known sex, blended 50:50 to 80:20 by seed, with the speed from the profile. The Storyteller can name one voice or a blend in flags.wodx-voices.override.kokoro ("bm_george" or "bm_george*0.6+bm_lewis").
+
+Reverse: kokoroVoiceFor in voice-rules.mjs.
+
+## B2109. The Storyteller's own lines (2026-11-12)
+Improvement Desk vo1 (Ben approved 12 November 2026): chat in character from a Storyteller, as a token whose actor has no player owner, with no dice, is read in that NPC's voice to the people who see it. On by default.
+
+Reverse: the "Read the Storyteller's lines" setting.
+
+## B2110. Sound from the token (2026-11-12)
+When the NPC's scene is in view, the line plays at the token through Foundry's positional sound, fading over the set range (30 grid units by default) and muffled by walls; the Storyteller always hears. Otherwise it plays plainly.
+
+Reverse: the "Sound from the token" setting.
