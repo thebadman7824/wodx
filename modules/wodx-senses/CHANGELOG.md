@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.8.1 (fix: on a scene with no place set, the place guessed from the scene's name is now read as its kind; before, the Storyteller's copy of an answer could fail with an error and the place lines fell back to the plainest set)
 - 0.8.0 (the senses read how a character moves: from the air the eye reaches twice as far and sight is easier, low to the ground or in the water it reaches half as far, under the water 8 yards with no smell at all, inside the earth only dull sound; one line says where they are looking from; someone prone or under the water is picked out only on a closer look; Who sees them counts each side's stance)
 - 0.7.1 (Day and night follow a scene's own latitude and hour (WoDX Chronicle 0.39.0))
 - 0.7.0 (colour-blind safe colours for the sight rings, and words under every ring)
