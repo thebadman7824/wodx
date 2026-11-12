@@ -651,35 +651,6 @@ Ben approved every recommendation on the Followers Review Desk (https://claude.a
 
 Ben explicitly approved every row that was waiting for review ("Approve all items on pending review"). That includes deleting the four stale test combats on rothenstein-wodx, done by the PC helper with a backup first. 4 lifepath rows that were listed twice are left out here, since the 04:40 UTC lifepaths table above already holds them.
 
-## Approved by Ben, 12 November 2026, 04:02 UTC (NPC talk generator desk)
-
-All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dwuaWzsvFCh3
-
-| Date | Question | Choice made | How to reverse |
-|---|---|---|---|
-| 2026-11-12 | How should NPC talk be generated with no AI model? | A grammar with fact matching: symbols that expand, the rule that fits the most facts wins, slots filled from the scene (B1640) | setting "Talk generator" off; scripts/talk-grammar.mjs |
-| 2026-11-12 | Where does it sit among the lines? | After every Storyteller line, before the old stock pools, which now speak through it (B1641) | setting off restores the old stock picker |
-| 2026-11-12 | Mood | Worked out from what WoDX tracks, a Storyteller-set mood wins (PR 2) | |
-| 2026-11-12 | Clan, tribe, Tradition and kith | A flavour layer plus a few group-only rules (PR 2) | |
-| 2026-11-12 | Era split | Six bands plus lexicon entries with their own years (B1642) | data/grammar/house.mjs |
-| 2026-11-12 | Repeats | Steady per NPC, character and day, never the same line twice in a row, Reroll for the Storyteller (B1641; Reroll in PR 3) | |
-| 2026-11-12 | Storyteller grammar | A grammar journal in the world (PR 3) | |
-| 2026-11-12 | Keeping a line | A Keep button writes it to the NPC's talk sheet (PR 3) | |
-| 2026-11-12 | Coverage | Every kind of talk that exists today, plus asking about known people, places and factions (PR 1 ports the kinds; asking about names in PR 2) | |
-| 2026-11-12 | Build plan | Three PRs, priority 2; setting on in the testbed, off on Live | |
-
-### Approved by Ben, 12 November 2026, 18:50 UTC (body plan, "no suggestions")
-
-| Date | Question | Choice made | How to reverse it |
-|---|---|---|---|
-| 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
-| 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
-| 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
-| 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
-| 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |
-
-## Waiting for review
-
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-12 | Which factions keep a polity by default? | A Kindred faction of three or more members keeps the court of its age; a sect picked before it exists runs as the court of its age (B1101) | polityFor returns f.polity only |
@@ -765,7 +736,34 @@ All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dw
 | 2026-11-12 | Spark and Dreamers (B2223) | Spark 0 to 3 by age and kind of person; Reverie only on a Dreamer (2 or more) | AGE_SPARK, CAT_SPARK, DREAMER in crowd-rules.mjs |
 | 2026-11-12 | Ravaging a passer-by (B2224) | Once a night each; left dull and listless for the night and kept on the map | ravagedTonight in crowd-rules.mjs; the note in c20.js epiphany() |
 | 2026-11-12 | Doors for passers-by (B2225) | Ticked regions or regions named "Passers-by" / "Crowd door"; none means the map's edge | doorsOf in wodx-npc passersby.mjs |
-| 2026-11-12 | Stale started test combats on the testbed (deletion, needs Ben) | Not deleted. Dolany Village (gridless trial): HycTixYesQ6N8N3U, Rr8auYavW5NCPWRZ, oF3bqKk9zxBymlhc ("Thorn (test)", round 2); Gate 7b arena: YiItzosGS1aCjbrU (round 105). They freeze passers-by on those scenes. Recommend deleting all four on rothenstein-wodx | Say yes and the PC helper deletes them; NPC 0.40.2 already saves passer-by state during a fight |
+| 2026-11-12 | Stale started test combats on the testbed (deletion, needs Ben) | Deleted on the testbed 2026-11-12 after a backup (gates/delete-stale-combats-result-2026-11-12.md). Dolany Village (gridless trial): HycTixYesQ6N8N3U, Rr8auYavW5NCPWRZ, oF3bqKk9zxBymlhc ("Thorn (test)", round 2); Gate 7b arena: YiItzosGS1aCjbrU (round 105). They freeze passers-by on those scenes. Recommend deleting all four on rothenstein-wodx | Say yes and the PC helper deletes them; NPC 0.40.2 already saves passer-by state during a fight |
+
+## Approved by Ben, 12 November 2026, 04:02 UTC (NPC talk generator desk)
+
+All ten recommendations, no notes. Desk: https://claude.ai/artifact/3h11viGh11dwuaWzsvFCh3
+
+| Date | Question | Choice made | How to reverse |
+|---|---|---|---|
+| 2026-11-12 | How should NPC talk be generated with no AI model? | A grammar with fact matching: symbols that expand, the rule that fits the most facts wins, slots filled from the scene (B1640) | setting "Talk generator" off; scripts/talk-grammar.mjs |
+| 2026-11-12 | Where does it sit among the lines? | After every Storyteller line, before the old stock pools, which now speak through it (B1641) | setting off restores the old stock picker |
+| 2026-11-12 | Mood | Worked out from what WoDX tracks, a Storyteller-set mood wins (PR 2) | |
+| 2026-11-12 | Clan, tribe, Tradition and kith | A flavour layer plus a few group-only rules (PR 2) | |
+| 2026-11-12 | Era split | Six bands plus lexicon entries with their own years (B1642) | data/grammar/house.mjs |
+| 2026-11-12 | Repeats | Steady per NPC, character and day, never the same line twice in a row, Reroll for the Storyteller (B1641; Reroll in PR 3) | |
+| 2026-11-12 | Storyteller grammar | A grammar journal in the world (PR 3) | |
+| 2026-11-12 | Keeping a line | A Keep button writes it to the NPC's talk sheet (PR 3) | |
+| 2026-11-12 | Coverage | Every kind of talk that exists today, plus asking about known people, places and factions (PR 1 ports the kinds; asking about names in PR 2) | |
+| 2026-11-12 | Build plan | Three PRs, priority 2; setting on in the testbed, off on Live | |
+
+### Approved by Ben, 12 November 2026, 18:50 UTC (body plan, "no suggestions")
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-12 | How likely an unaimed blow is to hit each part | Body 4, each leg 1.5, each arm 1, head 1, wings 1, tail and fins 0.5 (B1203) | HIT_WEIGHTS in wodx-combat body-rules.js |
+| 2026-11-12 | When a maiming is offered | 3 or more lethal or aggravated levels after soak to a limb, hand, eye, wing, tail or fin; the Storyteller picks crippled or lost (B1204) | maimOffer in body-rules.js |
+| 2026-11-12 | Protean 2 claws at all times? | No: grown in the attack dialog for 1 blood, lasting the scene (B1202) | weaponList claw branch in wodx-combat main.js |
+| 2026-11-12 | Mist moves as a flier? | Yes, it drifts at flying speed (house rule) | mist moves in SHAPES |
+| 2026-11-12 | No legs left | Only crawls (house rule) | mobility in bodyOf |
 
 ## Approved by Ben, 12 November 2026, 12:42 UTC (battles, State of the Game review)
 
